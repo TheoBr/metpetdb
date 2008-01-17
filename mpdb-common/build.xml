@@ -1,0 +1,34 @@
+<project name="mpdb-common" basedir="." default="eclipse">
+
+	<property file="build.properties" />
+	<property name="ctx_lib" location="${basedir}/lib" />
+
+	<path id="libs">
+		<fileset dir="${ctx_lib}" includes="*.jar" />
+		<pathelement location="${gwt_home}/gwt-user.jar" />
+	</path>
+
+	<target name="eclipse">
+		<property name="name.e" value="MetPetDB" />
+
+		<pathconvert property="libs.e" dirsep="/" pathsep="&quot;/&gt;&#10;&#09;&lt;classpathentry kind=&quot;lib&quot; path=&quot;">
+			<path refid="libs" />
+			<map from="${basedir}/" to="" />
+		</pathconvert>
+
+		<pathconvert property="gwt.e" dirsep="/" pathsep=":">
+			<path>
+				<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
+			</path>
+		</pathconvert>
+
+		<echo file=".classpath">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;classpath&gt;
+	&lt;classpathentry kind="src" path="src" excluding="**/java_emu/**/*.java"/&gt;
+	&lt;classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/&gt;
+	&lt;classpathentry kind=&quot;lib&quot; path=&quot;${libs.e}&quot;/&gt;
+	&lt;classpathentry kind="output" path="bin"/&gt;
+&lt;/classpath&gt;
+</echo>
+	</target>
+</project>
