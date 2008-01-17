@@ -1,0 +1,54 @@
+<project name="mpdb" basedir="." default="compile-html">
+
+	<property name="build" location="${basedir}/build" />
+	<property name="ctx_lib" location="${basedir}/lib" />
+	<property name="app_name" value="edu.rpi.metpetdb.MetPetDBApplication" />
+	<property name="gwt_home" value="/home/anthony/development/gwt-linux-1.4.61" />
+
+	<path id="libs">
+		<fileset dir="${ctx_lib}" includes="*.jar" />
+		<pathelement location="${gwt_home}/gwt-user.jar" />
+		<pathelement location="../mpdb-common/src" />
+	</path>
+
+	<target name="compile-java">
+		<mkdir dir="${basedir}/bin" />
+		<javac destdir="${basedir}/bin" srcdir="${basedir}/src" classpathref="libs" source="1.4" debug="false" optimize="true" excludes="**/java_emu/**/*.java" />
+
+		<copy todir="${basedir}/bin" includeemptydirs="no">
+			<fileset dir="${basedir}/src" excludes="**/*.java" />
+		</copy>
+	</target>
+
+	<target name="compile-html" depends="compile-java">
+		<java fork="true" classname="com.google.gwt.dev.GWTCompiler" taskname="gwtc" maxmemory="256m">
+			<classpath>
+				<pathelement location="${basedir}/src" />
+				<pathelement location="${basedir}/bin" />
+				<path refid="libs" />
+				<path>
+					<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
+				</path>
+			</classpath>
+			<arg value="-out" />
+			<arg value="${build}" />
+			<arg value="${app_name}" />
+			<arg value="-style" />
+			<arg value="OBF" />
+		</java>
+	</target>
+
+	<target name="compile" depends="compile-html" />
+
+	<target name="clean">
+		<delete dir="${build}" />
+		<delete dir="${basedir}/bin" />
+		<delete dir="${basedir}/www" />
+		<delete dir="${basedir}/.gwt-cache" />
+		<delete>
+			<fileset dir="${basedir}/src">
+				<include name="${hibernate_cfg}" />
+			</fileset>
+		</delete>
+	</target>
+</project>
