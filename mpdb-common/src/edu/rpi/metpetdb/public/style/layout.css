@@ -1,0 +1,270 @@
+/*-------------------------------------
+                content
+ --------------------------------------*/
+body {
+	margin: 0;
+	width: 100%;
+	min-width: 600px;
+	font: 9pt/13pt "Lucida Grande",Verdana,Helvetica,Arial,sans-serif;
+	color: #000;
+	background: #fff url(../images/bg-sidebar.gif) repeat-y left top;
+}
+.pageWrapper {
+	background: transparent url(../images/bg-sidebar.gif) repeat-y left top;
+}
+#container {
+	margin-left: 201px;
+}
+#content {
+	margin: 0 1.5em 1.5em;
+}
+
+
+/*-------------------------------------
+                 header
+ --------------------------------------*/
+#header {
+	background: #585858 url(../images/header-bg.gif) repeat-x left top;
+	padding-top: 47px;
+}
+#mpdb-logo {
+	position: absolute;
+	left: 0;
+	top: 17px;
+	display: block;
+	width: 201px;
+	height: 74px;
+	background: transparent url(../images/mpdb-logo.gif) no-repeat left top;
+	cursor: pointer;
+}
+#mpdb-logo:focus,
+#mpdb-logo:hover,
+#mpdb-logo:active {
+	background-position: left bottom;
+}
+#header .hdrmsg {
+	position: absolute;
+	top: 26px;
+	left: 210px;
+	color: #e4e4e4;
+}
+
+/*-------------------------------------
+                 logbar
+ --------------------------------------*/
+#logbar-bg {
+	position: absolute;
+	right: 16px;
+	top: 0;
+	height: 30px;
+	background: transparent url(../images/logbar-left.gif) no-repeat left top;
+	padding-left: 2px;
+}
+#logbar-end {
+	height: 30px;
+	padding-right: 2px;
+	background: transparent url(../images/logbar-right.gif) no-repeat right top;
+}
+#logbar {
+	height: 20px;
+	background: transparent url(../images/logbar-bg.gif) repeat-x left top;
+	color: #404040;
+	padding: 5px 1em;
+}
+#logbar .logbar-username {
+	padding-right: 1em;
+	margin-right: 0.8em;
+	border-right: 1px solid #b4b7bc;
+}
+#logbar a,
+#logbar a:link {
+	text-decoration: none;
+	margin: 0 0.2em;
+}
+
+/*-------------------------------------
+               header nav
+ --------------------------------------*/
+#hdrnav {
+	margin-left: 201px;
+	border-top: 1px solid #b3d37f;
+	border-bottom: 1px solid #7ba041;
+	background: #d2eea5 url(../images/nav-left.gif) no-repeat 0% 50%;
+}
+#hdrnav .gwt-MenuBar {
+	padding-right: 16px;
+	margin-left: 2px;
+	background: transparent url(../images/nav-bg.gif) repeat-x 0% 50%;
+}
+#hdrnav td {
+	height: 42px;
+	vertical-align: middle;
+	overflow: hidden;
+}
+#hdrnav .gwt-MenuItem a,
+#hdrnav .gwt-MenuItem a:link,
+#hdrnav .gwt-MenuItem a:visited {
+	color: #601d08;
+	cursor:pointer;
+	font-size: 12px;
+	padding: 15px 18px 15px 16px;
+	background: transparent url(../images/nav-tab-right.gif) no-repeat 100% 50%;
+}
+#hdrnav .gwt-MenuItem a:focus,
+#hdrnav .gwt-MenuItem a:hover,
+#hdrnav .gwt-MenuItem a:active,
+#hdrnav .gwt-MenuItem-selected a,
+#hdrnav .gwt-MenuItem-selected a:link,
+#hdrnav .gwt-MenuItem-selected a:visited {
+	color: #000;
+}
+#hdrnav .gwt-MenuItem-selected {
+	background: transparent url(../images/nav-bg-hover.gif) repeat-x 0% 50%;
+}
+#hdrnav .gwt-MenuItem a.hasMenu,
+#hdrnav .gwt-MenuItem a.hasMenu:link,
+#hdrnav .gwt-MenuItem a.hasMenu:visited {
+	background: transparent url(../images/nav-tab-drop.gif) no-repeat 100% 50%;
+	padding-right: 34px;
+}
+div.hdrnavMenu {
+	border-left: 1px solid #7ba041;
+	border-top: 1px solid #7ba041;
+	background: transparent url(../images/nav-menu-bottom.gif) no-repeat 100% 100%;
+	padding: 1px 0 2px 1px;
+}
+div.hdrnavMenu table {
+	background: #d5f6a1 url(../images/nav-menu-bg.gif) repeat-x 0% 0%;
+}
+div.hdrnavMenu .gwt-MenuItem {
+	border-left: 1px solid #e0feb0;
+	border-top: 1px solid #e7ffc0;
+	border-right: 1px solid #7ba041;
+	border-bottom: 1px solid #d5f6a1;
+}
+div.hdrnavMenu .gwt-MenuItem a,
+div.hdrnavMenu .gwt-MenuItem a:link,
+div.hdrnavMenu .gwt-MenuItem a:visited {
+	cursor: pointer;
+	padding: 0.2em 10px 0.2em 16px;
+	color: #601d08;
+	display: block;
+}
+div.hdrnavMenu .gwt-MenuItem a:focus,			/* need to fix - should be <a> for ie6:hover */
+div.hdrnavMenu .gwt-MenuItem a:hover,
+div.hdrnavMenu .gwt-MenuItem a:active {
+	background-color: #245406;
+	color: #eafec8;
+}
+
+
+
+
+
+/*-------------------------------------
+              left col
+ --------------------------------------*/
+#leftcol {
+	float: left;
+	width: 201px;
+	color: #3a3436;
+	position: relative;
+}
+#leftcol ul.lcol-sectionList {
+	margin-bottom: 1.2em;
+	font-size: 0.9em;
+}
+#leftcol h1.header {
+	background: #dadada url(http://mpdb.zakness.com/samana/bg-leftcol-header.gif) repeat-y right top;
+	font: 0.8em Verdana, sans-serif;
+	padding: 0.8em 0.5em 0.5em;
+	color: #324453;
+	border-bottom: 1px solid #c8c8c8;
+	margin-top: 0;
+}
+#leftcol ul.lcol-sectionList a.gwt-Hyperlink,
+#leftcol ul.lcol-sectionList a.gwt-Hyperlink:link,
+#leftcol ul.lcol-sectionList a.gwt-Hyperlink:visited {
+	display: block;
+	padding: 0.3em 0.8em 0.3em 9px;
+	border-bottom: 1px solid #ddd;
+}
+#leftcol ul.lcol-sectionList a.gwt-Hyperlink:focus, 
+#leftcol ul.lcol-sectionList a.gwt-Hyperlink:hover,
+#leftcol ul.lcol-sectionList a.gwt-Hyperlink:active {
+	background-color: #fff;
+}
+#leftcol ul.lcol-sectionList li.evenRow {
+	background: #e6eaf1 url(http://mpdb.zakness.com/images/bg-sidebar-li-odd.gif) repeat-y right top;
+}
+#leftcol #notice {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	font-size: 0.8em;
+	color: #762525;
+}
+
+
+/*-------------------------------------
+                footer
+ --------------------------------------*/
+#footer {
+	clear: both;
+	position: relative;
+	color: #67765a;
+}
+#footer a:hover, #footer a:active {
+	color: #318fdf;
+}
+#nsf {
+	height: 40px;
+	margin: 2.5em 1em 1em 200px;
+	padding-bottom: 10px;
+	font-size: 0.8em;
+	text-align: left;
+}
+#nsf img {
+	background: #aaa;
+	float: left;
+	margin: -5px 0.7em 0 1.5em;
+	border: none;
+}
+#nsf a:hover img {
+	background: #000;
+}
+
+
+/*-------------------------------------
+            notices/messages
+ --------------------------------------*/
+#mpdb-notice {
+	background: transparent url(../images/notice-bg.png) repeat left top;
+	padding: 0.3em 0;
+	font-size: 0.8em;
+	text-align: center;
+	position: absolute;
+	width: 100%;
+	color: #fff;
+}
+#loadingmessage {
+	position: absolute;
+	background: #818181 url(../images/loading-bg.gif) repeat-x left top;
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+}
+#loadingmessage div {
+	width: 20em;
+	font-size: 1.4em;
+	margin: 46px auto 0;
+	padding-top: 170px;
+	background-color: #818181;
+	text-align: center;
+}
+#loadingmessage div span {
+	background: transparent url(../images/loading.gif) no-repeat 0% 50%;
+	padding-left: 25px;
+	margin-left: -25px;
+	color: #fff;
+}
+

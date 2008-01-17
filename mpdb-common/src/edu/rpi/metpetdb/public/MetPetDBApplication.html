@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MetPetDB</title>
+<link rel="shortcut icon" href="images/favicon.ico" /> 
+<link rel="stylesheet" type="text/css" href="style/mpdb-main.css" media="screen" />
+<!--[if IE]><link rel="stylesheet" type="text/css" href="style/mpdb-ie.css" media="screen" /><![endif]-->
+<meta name="gwt:module" content="edu.rpi.metpetdb.MetPetDBApplication" />
+</head>
+
+<body>
+
+<script language="javascript" src="gwt.js"></script>
+<iframe id="__gwt_historyFrame" style="width:0;height:0;border:0"></iframe>
+
+<div id="loadingmessage"><div><span>Starting MetPetDB. Please wait...</span></div></div>
+<div id="mpdb-notice"></div>
+
+<div id="header">
+	<div id="logbar-bg">
+		<div id="logbar-end">
+			<div id="logbar"></div>
+		</div>
+	</div>
+	<div class="hdrmsg">A Database for Metamorphic Petrology</div>
+	<div id="hdrnav"></div>
+	<a href="#" id="mpdb-logo"></a>
+</div> <!-- end #header -->
+
+<div class="pageWrapper clearfix">
+
+<div id="leftcol" class="page-leftcol">
+	<div id="tools"></div>
+</div>
+
+<div id="container" class="page-container">
+	<div id="breadcrumbs" style="display:none"></div>
+	<div id="content"></div>
+</div> <!-- end #container -->
+
+</div> <!-- end #pageWrapper -->
+
+<!-- source elements -->
+<div style="visibilty:hidden;display:none">
+<div id="screen-Introduction">
+	<h1>Welcome to MetPetDB</h1>
+
+	<img src="images/slices.jpg" alt="" class="r">
+	<p><strong>MetPetDB</strong> is a database for metamorphic petrology that is being designed and built by a global community of metamorphic petrologists in collaboration with computer scientists at Rensselaer Polytechnic Institute as part of the National Cyberinfrastructure Initiative and supported by the National Science Foundation.</p>
+	<p>This project will support the development, implementation and population of MetPetDB with the purpose of:</p>
+	<ol>
+		<li><span>archiving published data,</span></li>
+		<li><span>storing new data for ready access to researchers and students,</span></li>
+		<li><span>facilitating the gathering of information for researchers beginning new projects,</span></li>
+		<li><span>providing a search mechanism for data relating to anywhere on the globe,</span></li>
+		<li><span>providing a platform for collaborative studies among researchers, and</span></li>
+		<li><span>serving as a portal for students beginning their studies of metamorphic geology.</span></li>
+	</ol>
+	
+	<p>Read more about the MetPetDB project <a href="#" title="More about MetPetDB">here</a>.</p>
+	
+	<h2>Other Databases</h2>
+	
+	<table id="dblist" cellspacing="0">
+		<tbody><tr><td><a href="http://www.earthchem.org" title="EarthChem"><img src="images/earthchem-logo.jpg" alt="EarthChem"></a>Advanced Data Management in Solid Earth Geochemistry</td>
+		<td><a href="http://www.petdb.org" title="PETDB"><img src="images/petdb-logo.jpg" alt="PETDB"></a>Petrological Database of the Ocean Floor</td>
+		<td><a href="http://navdat.kgs.ku.edu" title="NAVDAT"><img src="images/navdat-logo.jpg" alt="NAVDAT"></a>The Western North American Volcanic and Intrusive Rock Database</td>
+		<td><a href="http://georoc.mpch-mainz.gwdg.de/georoc/Start.asp" title="GEOROC"><img src="images/georoc-logo.jpg" alt="GEOROC"></a>Geochemistry of Rocks of the Ocean and Continents</td>
+		<td><a href="http://www.geosamples.org" title="SESAR"><img src="images/sesar-logo.jpg" alt="SESAR"></a>System for Earth Sample Registration</td></tr>
+	</tbody></table>
+</div>
+
+<div id="sidebar-Default">
+<div id="sidebar">
+<div class="titlebar">User Information</div>
+<p class="notice">You are not logged in.</p>
+<p>Please <span id="sidebar-Login">Login</span> or <span id="sidebar-Register">Register</span> to gain full access to MetPetDB's features:</p>
+
+<ul class="bullet">
+	<li><strong>Upload sample data.</strong></li>
+	<li><strong>Save searches.</strong></li>
+	<li><strong>Create/Join projects.</strong></li>
+</ul> 
+</div> <!-- end #sidebar -->
+</div> <!-- end #sidebar-Default -->
+
+</div> <!-- end source elements -->
+
+<div id="footer">
+<div id="nsf">
+	<a href="http://www.nsf.gov" title="National Science Foundation"><img src="images/nsf-logo.png" alt="National Science Foundation"></a>
+	<a href="#" title="Copyright">Copyright</a> &copy; <script type="text/javascript">document.write((new Date()).getFullYear());</script> MetPetDB. 
+	<a href="#" title="Sitemap">Sitemap</a>. 
+	Data analysis stuff. 
+	Last updated: March 4<sup>th</sup>, 2007.<br />
+	This project is currently supported by <a href="http://www.nsf.gov" title="National Science Foundation">NSF</a>, EAR #0622345 starting September 1<sup>st</sup>, 2006.
+</div>
+</div> <!-- end #footer -->
+
+</body>
+</html>

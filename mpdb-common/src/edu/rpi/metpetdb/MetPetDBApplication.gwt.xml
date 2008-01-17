@@ -1,0 +1,22 @@
+<module>
+	<inherits name="rocket.User" />
+	<inherits name="com.google.gwt.user.User"/>
+	<inherits name="com.google.gwt.i18n.I18N"/>
+	<inherits name="org.gwtwidgets.WidgetLibrary"/>
+	<inherits name="edu.rpi.metpetdb.java_emu.Emulation"/>
+	
+	<entry-point class='edu.rpi.metpetdb.client.ui.MetPetDBApplication'/>
+
+	<servlet path="/constants.svc" class="edu.rpi.metpetdb.server.ConstantsServiceImpl"/>
+	<servlet path="/project.svc" class="edu.rpi.metpetdb.server.ProjectServiceImpl"/>
+	<servlet path="/sample.svc" class="edu.rpi.metpetdb.server.SampleServiceImpl"/>
+	<servlet path="/subsample.svc" class="edu.rpi.metpetdb.server.SubsampleServiceImpl"/>
+	<servlet path="/user.svc" class="edu.rpi.metpetdb.server.UserServiceImpl"/>
+	<servlet path="/imageBrowser.svc" class="edu.rpi.metpetdb.server.ImageBrowserServiceImpl"/>
+	<servlet path="/imageUpload" class="edu.rpi.metpetdb.server.ImageUploadServlet"/>
+	<servlet path="/bulkUpload" class="edu.rpi.metpetdb.server.BulkUploadServlet"/>
+	<servlet path="/image" class="edu.rpi.metpetdb.server.ImagesService"/>
+	<servlet path="/image.svc" class="edu.rpi.metpetdb.server.ImageServiceImpl"/>
+	<servlet path="/mineralAnalysis.svc" class="edu.rpi.metpetdb.server.MineralAnalysisServiceImpl"/>
+	<servlet path="/mpdbGeneric.svc" class="edu.rpi.metpetdb.server.MpDbGenericServiceImpl"/>
+</module>

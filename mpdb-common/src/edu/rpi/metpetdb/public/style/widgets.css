@@ -1,0 +1,129 @@
+/*-------------------------------------
+              vertical panel
+ --------------------------------------*/
+.gwt-VerticalPanel {
+	font-family: Helvetica,sans-serif;
+	font-size: 2em;
+	font-size-adjust: none;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	line-height: normal;
+	margin-top: 0.7em;
+}
+
+
+/*-------------------------------------
+             options list
+ --------------------------------------*/
+#content ul.options {
+	margin: 0.7em 0;
+}
+#content ul.options li {
+	display: inline;
+	margin-right: 1.5em;
+	line-height: 1em;
+}
+
+
+/*-------------------------------------
+          special links
+ --------------------------------------*/
+.addlink {
+	padding-left: 15px;
+	background-image: url(../images/add.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+}
+
+
+/*-------------------------------------
+			pagination
+ --------------------------------------*/
+.mpdb-pageTable {
+	margin: 1em 0;
+	clear: both;
+	float: right;
+}
+.mpdb-pageTable td {
+	padding: 0 0.1em;
+}
+.mpdb-pageTable .gwt-Hyperlink {
+	border-bottom: none !important;
+	cursor: default;
+}
+.mpdb-pageTable .gwt-Hyperlink a,
+.mpdb-pageTable .gwt-Hyperlink a:link,
+.mpdb-pageTable .gwt-Hyperlink a:visited {
+	border: 1px solid #9AAFE5 !important;
+	padding: 0.3em 0.5em;
+	color: #0c5ea3;
+	line-height: 1;
+}
+.mpdb-pageTable .gwt-Hyperlink a:focus, 
+.mpdb-pageTable .gwt-Hyperlink a:hover,
+.mpdb-pageTable .gwt-Hyperlink a:active {
+	border-color: #2E6AB1 !important;
+	background-color: #EFF8FF;
+}
+.mpdb-pageTable .currentPageCell a, .mpdb-pageTable .currentPageCell a:link, .mpdb-pageTable .currentPageCell a:visited,
+.mpdb-pageTable .currentPageCell a:focus, .mpdb-pageTable .currentPageCell a:hover, .mpdb-pageTable .currentPageCell a:active {
+	background-color: #2E6AB1;
+	border-color: #2E6AB1 !important;
+	font-weight:bold;
+	color: #fff !important;
+	cursor: default;
+}
+.mpdb-pageTable .noPreviousPageCell a, .mpdb-pageTable .noPreviousPageCell a:link, .mpdb-pageTable .noPreviousPageCell a:visited,
+.mpdb-pageTable .noPreviousPageCell a:focus, .mpdb-pageTable .noPreviousPageCell a:hover,.mpdb-pageTable .noPreviousPageCell a:active,
+.mpdb-pageTable .noNextPageCell a, .mpdb-pageTable .noNextPageCell a:link, .mpdb-pageTable .noNextPageCell a:visited, 
+.mpdb-pageTable .noNextPageCell a:focus, .mpdb-pageTable .noNextPageCell a:hover, .mpdb-pageTable .noNextPageCell a:active {
+	color: #898989 !important;
+	border: 1px solid #DDDDDD !important;
+	background-color: transparent;
+	cursor: default;
+}
+
+
+/*-------------------------------------
+			calendar popup
+ --------------------------------------*/
+
+div[title="Calendar"] {
+	background-color: #e6eaf1;
+	border: 1px solid #91a3c1;
+}
+table.calendar-panel {
+	width: 100%;
+	background-color: #F6FFDD;
+	border: none !important;
+}
+div.calendar-cell {
+	border: 1px solid #e4f0c3;
+	text-align: center;
+}
+div.calendar-headingCell {
+	background-color: #e4f0c3;
+	color: #55700a;
+	border-bottom: 1px solid #6fa4d5;
+}
+div.calendar-dateCell {
+	background-color: #fff;
+	color: #7d992f;
+}
+
+
+
+/*-------------------------------------
+                 random
+ --------------------------------------*/
+.gwt-container
+{
+	text-decoration: none;
+	color: #0c5ea3;
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: -moz-use-text-color;
+}
+
+

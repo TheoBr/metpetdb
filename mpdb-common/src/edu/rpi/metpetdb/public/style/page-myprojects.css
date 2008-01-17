@@ -1,0 +1,29 @@
+
+/*-------------------------------------
+             my projects
+			 
+			 * should just use the mpdb-dataTable class
+ --------------------------------------*/
+.project-name
+{
+	font-family: Helvetica,sans-serif;
+	font-size: 2em;
+	font-size-adjust: none;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	line-height: normal;
+	margin-top: 0.7em;
+	color: black;
+}
+/* Projects Label on the left container*/
+.gwt-projectsLabel{
+	font-family: Helvetica,sans-serif;
+	font-size: 3em;
+	font-size-adjust: none;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	line-height: normal;
+	margin-top: 0.7em;
+}

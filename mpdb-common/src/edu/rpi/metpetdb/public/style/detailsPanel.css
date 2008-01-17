@@ -1,0 +1,73 @@
+
+/*-------------------------------------
+             Details Panel
+ --------------------------------------*/
+ 
+.detailsPanel {
+	margin-top: 1em;
+	padding: 1em;
+}
+.detailsPanel-hasLegend {
+	border: 1px solid #b4d27c;
+	border-top: 2px solid #97b956;
+}
+.detailsPanel legend {
+	color: #4e681c;
+	font-weight: bold;
+	padding: 0.4em;
+}
+
+.pairedRow-label,
+.pairedRow-value {
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+	vertical-align: middle;
+}
+.pairedRow-label {
+	text-align: right;
+	padding-right: 0.5em;
+}
+.pairedRow-label label {
+	color: #64230f;
+}
+.pairedRow-label em {
+	color: #ff4545;
+	font-weight: bold;
+	font-style: normal;
+}
+.detailsPanel-showMode .pairedRow-label em {
+	display: none;
+}
+
+/* TODO these need to be abstracted */
+.detailsPanel .invalid-msg {
+	color: #ff4545 !important;
+	padding: 0.3em 0;
+	font-size: 0.95em;
+}
+.detailsPanel-editMode input {
+	border: 1px solid #ccc;
+	padding: 0.1em 0.3em;
+}
+.detailsPanel-editMode input:focus, 
+.detailsPanel-editMode input:hover {
+	border: 1px solid #999;
+}
+.detailsPanel-showMode td span {						/* need to fix */
+	padding: 0.1em 0.3em;
+	border: 1px solid transparent;
+	font-size: 1.1em;
+}
+.detailsPanel-editMode input.req {
+	background: #f6ffdd;
+}
+.detailsPanel-editMode input.invalid {
+	background: #eeeef7;
+}
+.detailsPanel-editMode input.invalidreq {
+	background: #eae1fa;
+}
+span.gwt-RadioButton label {
+    color: #000;
+    margin-right: 1em;
+}

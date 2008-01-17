@@ -1,0 +1,122 @@
+/*-------------------------------------
+                  type
+ --------------------------------------*/
+h1, .h1 {
+	font: 2em Helvetica, Arial, sans-serif;
+	padding-top: 0.7em;
+	margin-bottom: 0.5em;
+}
+h2, .h2 {
+	font: 1.5em Helvetica, Arial, sans-serif;
+	margin-top: 0.7em;
+}
+p {margin: 1em 0;}
+
+
+/*-------------------------------------
+               hyperlinks
+ --------------------------------------*/
+.gwt-Hyperlink {
+	cursor:pointer;
+}
+.page-container a, .page-container a:link,
+.page-leftcol a, .page-leftcol a:link,
+.page-footer a, .page-footer a:link,
+.gwt-Hyperlink {
+	text-decoration: underline;
+	color: #0c5ea3;
+}
+.page-container a:visited, #footer a:visited {
+	color: #7f15b0;
+}
+.page-leftcol a:visited { 
+	color: #0c5ea3;
+}
+.page-container a:focus, .page-container a:hover, .page-container a:active,
+.page-leftcol a:focus, .page-leftcol a:hover, .page-leftcol a:active,
+.page-footer a:focus, .page-footer a:hover, .page-footer a:active,
+.gwt-Hyperlink:focus, .gwt-Hyperlink:hover {
+	color: #318fdf;
+}
+
+
+
+/*-------------------------------------
+                 lists
+ --------------------------------------*/
+ul.bullet, ol {
+	margin-left: 2em;
+}
+ul.bullet li {
+	list-style-image: url(http://mpdb.zakness.com/images/li-bluearrow.gif);
+	text-indent: -5px;
+}
+ol li {
+	list-style-type: decimal;
+	line-height: 1em;
+	margin: 0.6em 0;
+	color: #39c;
+}
+ol li span {
+	color: #000;
+}
+
+/*-------------------------------------
+                 buttons
+ --------------------------------------*/
+button {
+	border: 1px solid #ccc;
+	padding: 0.3em;
+	cursor: pointer;
+	margin-right: 0.2em;
+}
+button:focus, button:hover {
+	border: 1px solid #999;
+}
+button.btnPrimary,
+button.submit {
+	font-weight: bold;
+}
+
+/*-------------------------------------
+                tables
+		 
+		 * need classname when .headerCell is the current sorting cell (instead of adding img)
+ --------------------------------------*/
+.mpdb-dataTable {
+	width: 100%;
+}
+.mpdb-dataTable .headerCell {
+	background-color: #faf4df;
+	font-weight: bold;
+	color: #64230f;
+	text-align: left;
+	vertical-align: middle;
+	padding: 0.3em 0.5em;
+	border-bottom: 1px solid #e2c798;
+} 
+.mpdb-dataTable .headerCell .gwt-Hyperlink {			/* need to fix */
+	border-bottom: none;
+}
+.mpdb-dataTable .headerCell .gwt-Hyperlink a {			/* need to fix */
+	color: #64230f;
+	border-bottom: none !important;
+	padding-right: 15px;
+	background: transparent url(http://mpdb.zakness.com/samana/headerCell-sort.gif) no-repeat right center;
+}
+.mpdb-dataTable .headerCell .gwt-Hyperlink a img {			/* need to fix */
+	background-color: #faf4df;
+	margin-right: -15px;
+	padding-top: 6px;
+}
+.mpdb-dataTable td {
+	vertical-align: middle;
+	padding: 0.3em 0.5em;
+	border-bottom: 1px dotted #ddd;
+	color: #333;
+}
+.mpdb-dataTable tr.oddRow {
+	background: #f9f9f9;
+}
+
+

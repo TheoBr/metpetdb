@@ -1,0 +1,41 @@
+
+/*-------------------------------------
+             project details
+			 
+			 * should just use the mpdb-dataTable class
+ --------------------------------------*/
+.table-List {
+	width: 100%;
+}
+.table-List .table-ListHead td {
+	background-color: #faf4df;
+	font-weight: bold;
+	color: #64230f;
+	text-align: left;
+	vertical-align: middle;
+	padding: 0.3em 0.5em;
+	border-bottom: 1px solid #e2c798;
+} 
+.table-List .table-ListHead td .gwt-Hyperlink {			/* need to fix */
+	border-bottom: none;
+}
+.table-List .table-ListHead td .gwt-Hyperlink a {			/* need to fix */
+	color: #64230f;
+	border-bottom: none !important;
+	padding-right: 15px;
+	background: transparent url(http://mpdb.zakness.com/samana/headerCell-sort.gif) no-repeat right center;
+}
+.table-List .table-ListHead td .gwt-Hyperlink a img {			/* need to fix */
+	background-color: #faf4df;
+	margin-right: -15px;
+	padding-top: 6px;
+}
+.table-List td {
+	vertical-align: middle;
+	padding: 0.3em 0.5em;
+	border-bottom: 1px dotted #ddd;
+	color: #333;
+}
+.table-List tr.oddRow {
+	background: #f9f9f9;
+}

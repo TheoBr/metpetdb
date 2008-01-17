@@ -1,0 +1,279 @@
+#canvas-wrap {
+	margin: 1em 0em;
+	position: relative;
+}
+#canvas {
+	border: 1px solid #9d9fa8;
+	background: transparent url(../images/canvas-bg.gif) repeat left top;
+	position: relative;
+	height: 500px;
+}
+#canvas a {
+	border-bottom: none !important;
+	color: #394486 !important;
+}
+#canvas .imageContainer {
+	background-color: #f1fbff;
+	/*border: 1px solid #bec7cf;*/
+	/*padding: 2px;*/
+	position: absolute;
+	z-index: 1;
+}
+#canvas .imageContainer ul {
+	display: none;
+	height: 15px;
+	padding: 0;
+	background-color: #f1fbff;
+}
+#canvas .imageContainer ul.imageMenu-top {padding-bottom: 4px;}
+#canvas .imageContainer ul.imageMenu-bottom {padding-top: 4px;}
+#canvas .imageContainer ul li {
+	display: inline;
+	padding: 2px 5px;
+	border-right: 1px dotted #a6c0ca;
+}
+#canvas .imageContainer ul li.last {border-right: none;}
+#canvas .imageContainer ul li a {
+	font-size: 0.8em;
+}
+#canvas .imageContainer .image {
+	background-repeat: no-repeat;
+	background-position: left top;
+	/*border: 1px solid #000;*/
+	cursor: pointer;
+}
+#canvas .imageContainer:hover {
+	margin-top: -19px;
+	z-index: 999;
+}
+#canvas .imageContainer:hover ul {
+	display: block;
+}
+#canvas .imageContainer:hover a.imagePoint {
+	margin-top: 19px;
+}
+#canvas .imageContainer a.imagePoint {
+	width: 9px;
+	height: 13px;
+	display: block;
+	position: absolute;
+	background-repeat: no-repeat;
+	background-position: left top;
+}
+#canvas .imageContainer .imageIdentifier {
+	position: absolute;
+	top: 10px;
+	left: -20px;
+	padding: 1px 3px;
+	background-color: #f1fbff;
+	border: 1px solid #bec7cf;
+}
+#canvas .imageContainer .imageIdentifier span {
+	font-size: 0.8em;
+}
+#canvas .imageContainer:hover .imageIdentifier {
+	top: 29px;
+}
+
+#canvas .imageContainerNoMenu ul {
+	display:none;
+}
+
+#canvas .imageContainerHidden, #canvas .imageContainerHidden ul, #canvas .imageContainerHidden image{
+	display:none;
+}
+
+
+#cExpand {
+	position: absolute;
+	left: 0;
+	top: 270px;
+	border-bottom: none !important;
+	text-indent: -9999px;
+	width: 1.5em;
+	height: 8px;
+	background: transparent url(../images/arrow-blue-left.gif) no-repeat 50% 50%;
+}
+
+/* zoom and pan controls */
+#viewControl {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	width: 51px;
+	z-index: 1000;
+border:solid 1px black;
+}
+#viewControl #panning {
+	height: 51px;
+}
+#viewControl #zoomSlider {
+	position: relative;
+	width: 15px;
+	margin: 10px 0 0 18px;
+	background: transparent url(../images/bg-zoom.gif) repeat-y 50% 50%;
+	height: 150px;
+}
+#viewControl a {
+	background-repeat: no-repeat;
+	background-position: left top;
+	display: block;
+	width: 15px;
+	height: 15px;
+	text-indent: -9999px;
+	position: absolute;
+}
+#viewControl #panUp {top: 0; left: 18px; background-image: url(../images/icon-pan-up.gif);}
+#viewControl #panRight {top: 18px; right: 0; background-image: url(../images/icon-pan-right.gif);}
+#viewControl #panDown {top: 36px; left: 18px; background-image: url(../images/icon-pan-down.gif);}
+#viewControl #panLeft {top: 18px; left: 0; background-image: url(../images/icon-pan-left.gif);}
+#viewControl #panHome {top: 18px; left: 18px; background-image: url(../images/icon-pan-home.gif);}
+#viewControl #zIn {top: 0; left: 0; background-image: url(../images/icon-zoom-in.gif);}
+#viewControl #zSlide {top: 60px; left: 0; background-image: url(../images/icon-zoom-slider.gif); height: 9px;}
+#viewControl #zOut {bottom: 0; left: 0; background-image: url(../images/icon-zoom-out.gif);}
+
+
+/* points */
+a.imagePoint span {
+	display: none;
+	margin-left: 12px;
+	background: transparent url(../images/trans-white-close.png) no-repeat right top;
+	border: 1px solid #fafafa;
+	color: #162767;
+	width: 100px;
+	padding: 2px;
+	font-size: 0.8em;
+}
+
+.image-moving {
+	cursor:move;
+}
+
+/* Subsample Images */
+.ssimg img, .ssimg:link img {
+	padding: 5px;
+	background: #f9f9f9;
+	border: 1px solid #f0f0f0 !important;
+}
+.ssimg img:hover, .ssimg img:active  {
+       padding: 5px;
+	background: #cfd6ef;
+	border: 1px solid #bdc6e5 !important;
+}
+.ssimg-checked img {
+    padding: 5px;
+	background: #cfd6ef;
+	border: 1px solid black !important;
+}
+
+
+.mpdb-AddExistingSubsamplePopup {
+	background-color:white;
+	border:solid black 1px;
+}
+
+.mpdb-SubsampleScrollPanel {
+	height:300px;
+	max-height:500px;
+	width:200px;
+}
+
+.mpdb-SubsampleListScrollPanel {
+	height:200px;
+	max-height:300px;
+	width:300px;
+}
+
+/* Add Point dialog */
+.mpdb-addPointCrosshair {
+cursor:crosshair;
+}
+
+/* Resizer Css */
+.topLeftResizer {
+cursor:nw-resize;
+
+}
+
+.topRightResizer {
+cursor:ne-resize;
+}
+
+.bottomLeftResizer {
+cursor:sw-resize;
+}
+
+.bottomRightResizer {
+cursor:se-resize;
+}
+
+.resizerSize {
+width:8px;
+height:8px;
+/*border:solid 1px black;*/
+}
+
+/* Progress Bar */
+ .progressbar-text {
+     font-weight: bold;
+ }
+ 
+ .progressbar-remaining {
+     font-size: 5px;
+     font-style: italic;
+ }
+ 
+ .progressbar-outer {
+     /*border: 1px solid black;*/
+ }
+ 
+ .progressbar-inner {
+    /* border: 1px solid black;*/
+     margin: 0px;
+     padding:0px;
+ }
+ 
+ .progressbar-bar {
+     width: 3px;
+     height: 15px;
+     margin: 0px;
+     padding:0px;
+ }
+ 
+ .progressbar-fullbar {
+     background: black;
+ }
+ 
+ .progressbar-blankbar {
+     background: #eee;
+ }
+ 
+ .hyperlink-Spacing {
+   padding-left:5px;
+   padding-right:5px;
+ }
+ 
+ .mpdb-pointPopup {
+ background:white;
+ opacity:.80;
+ filter:alpha(opacity=80);
+ border:solid 1px black;
+ z-index:400;
+ }
+ 
+.layer-Drag {
+	cursor: move;
+}
+
+.layer-Hover{
+	border:solid 1px black;
+}
+
+.mpdb-scale {
+	position:absolute;
+	bottom: 10px;
+	left:10px;
+	border:solid 1px black;
+	background:white;
+	z-index:1000;
+}

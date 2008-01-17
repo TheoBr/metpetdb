@@ -1,0 +1,60 @@
+
+/*=====================================
+       MetPetDB main CSS IE fixes
+                IE 6 + 7
+  =====================================*/
+
+
+
+
+/*=====================================
+                IE 6-only
+ ======================================*/
+
+
+/*-------------------------------------
+       general layout - left column
+ --------------------------------------*/
+ 
+* html #sidebar {
+	left: 1px;
+}
+* html #sidebar ul.bullet li {
+	text-indent: 0;
+}
+* html #sidebar div.titlebar {
+	float: left;
+	clear: both;
+	width: 190px;
+	padding-left: 5px;
+	padding-right: 5px; 
+}
+* html #sidebar ul li {
+	float: left;
+	clear: both;
+	width: 100%;
+}
+* html #sidebar ul li a {
+	line-height: 1.4em;
+	border: 0 !important;
+}
+* html #sidebar ul.user-list ul {
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+* html #sidebar ul.user-list ul li {
+	border-left: 1px solid #7e9dc3;
+	margin-right: -1px;
+}
+
+
+/*-------------------------------------
+        general layout - footer
+ --------------------------------------*/
+* html #footer {
+	left: 8px;
+}
+
+
+

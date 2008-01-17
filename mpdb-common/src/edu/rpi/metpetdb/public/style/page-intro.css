@@ -1,0 +1,37 @@
+/*-------------------------------------
+              introduction
+ --------------------------------------*/
+#screen-Introduction {margin-right: -1.5em;}
+#screen-Introduction td {
+	padding-right: 1.5em;
+	vertical-align: top;
+}
+#screen-Introduction-rcol {
+	width: 250px;
+	padding-right: 0 !important;
+	background: transparent url(http://mpdb.zakness.com/samana/bg-rcol.gif) repeat-y left top;
+}
+#screen-Introduction-title {
+	background-color: #F5F5F5;
+	color: #AEAEAE;
+	font: 0.8em Verdana,sans-serif;
+	padding: 0.8em 0.5em 0.5em;
+	border-bottom: 1px solid #EBEBEA;
+}
+#dblist {
+	margin: 1em;
+}
+#dblist td {
+	text-align: center;
+	vertical-align: top;
+}
+#dblist a {
+	display: block;
+} 
+#dblist a img {
+	border: 1px solid #aaa;
+	margin-bottom: 0.3em;
+}
+#dblist a:hover img {
+	border-color: #000;
+}
