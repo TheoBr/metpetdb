@@ -2,7 +2,7 @@
 
 	<property file="build.properties" />
 
-	<property name="build" location="${basedir}/../build" />
+	<property name="build" location="${basedir}/build" />
 	<property name="ctx_lib" location="${basedir}/lib" />
 	<property name="war" location="${build}/MetPetDB.war" />
 	<property name="hibernate_cfg" value="edu/rpi/metpetdb/server/dao/hibernate.cfg.xml" />
@@ -10,12 +10,12 @@
 
 	<property name="user_war" location="/local/db/tomcat/metpetwebtst/${user.name}/${user.name}.war" />
 	<property name="prod_war" location="/local/db/tomcat/metpetweb/metpetwb/metpetweb.war" />
-	<property name="catalina_home" location="/local/db/tomact/apache-tomcat-5.5.20"/>
-	
-	
+	<property name="catalina_home" location="/local/db/tomact/apache-tomcat-5.5.20" />
+
+
 	<propertyfile file="src/builddate.properties">
-		 <entry key="builddate" value="now" type="date" pattern="yyyy.MM.dd HH.mm.ss"/>
-		</propertyfile>
+		<entry key="builddate" value="now" type="date" pattern="yyyy.MM.dd HH.mm.ss" />
+	</propertyfile>
 
 	<filterset id="props">
 		<filter token="APPUSER" value="${APPUSER}" />
@@ -27,6 +27,15 @@
 	<path id="libs">
 		<fileset dir="${ctx_lib}" includes="*.jar" />
 		<pathelement location="${gwt_home}/gwt-user.jar" />
+		<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
+	</path>
+
+	<!-- Library files for compile-html -->
+	<path id="gwt-libs">
+		<fileset dir="${ctx_lib}" includes="*.jar" />
+		<pathelement location="${gwt_home}/gwt-user.jar" />
+		<pathelement location="../mpdb-common/src" />
+		<pathelement location="../mpdb-client/src" />
 	</path>
 
 	<target name="setup">
@@ -36,34 +45,26 @@
 			<filterset refid="props" />
 		</copy>
 
-		<copy tofile="${basedir}/src/${hibernate_cfg}"
-			file="${basedir}/hibernate.cfg.in">
+		<copy tofile="${basedir}/src/${hibernate_cfg}" file="${basedir}/hibernate.cfg.in">
 			<filterset refid="props" />
 		</copy>
 	</target>
 
 	<target name="compile-java" depends="setup">
 		<mkdir dir="${basedir}/bin" />
-		<javac destdir="${basedir}/bin"
-			srcdir="${basedir}/src"
-			classpathref="libs"
-			source="1.4"
-			debug="true"
-			optimize="true"
-			excludes="**/java_emu/**/*.java"  />
-		
+		<javac destdir="${basedir}/bin" srcdir="${basedir}/src" classpathref="libs" source="1.4" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
+
 		<copy todir="${basedir}/bin" includeemptydirs="no">
 			<fileset dir="${basedir}/src" excludes="**/*.java" />
 		</copy>
 	</target>
 
 	<target name="compile-html" depends="compile-java">
-		<java fork="true" classname="com.google.gwt.dev.GWTCompiler"
-			taskname="gwtc" maxmemory="256m">
+		<java fork="true" classname="com.google.gwt.dev.GWTCompiler" taskname="gwtc" maxmemory="256m">
 			<classpath>
 				<pathelement location="${basedir}/src" />
 				<pathelement location="${basedir}/bin" />
-				<path refid="libs" />
+				<path refid="gwt-libs" />
 				<path>
 					<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
 				</path>
@@ -79,9 +80,7 @@
 	<target name="compile" depends="compile-html" />
 
 	<target name="war" depends="compile">
-		<war destfile="${war}"
-			filesonly="true"
-			webxml="${basedir}/web.xml">
+		<war destfile="${war}" filesonly="true" webxml="${basedir}/web.xml">
 			<fileset dir="${build}/${app_name}" />
 			<classes dir="${basedir}/bin">
 				<include name="email.properties" />
@@ -102,6 +101,7 @@
 		<delete dir="${basedir}/bin" />
 		<delete dir="${basedir}/www" />
 		<delete dir="${basedir}/.gwt-cache" />
+		<delete dir="${basedir}/build" />
 		<delete>
 			<fileset dir="${basedir}/src">
 				<include name="${hibernate_cfg}" />
@@ -114,25 +114,16 @@
 	</target>
 
 	<target name="tomcat" depends="deploy-user">
-		<dirname
-			file="${user_war}"
-			property="user_webapps_dir" />
-		<basename
-			file="${user_war}"
-			property="user_war_name"
-			suffix=".war" />
+		<dirname file="${user_war}" property="user_webapps_dir" />
+		<basename file="${user_war}" property="user_war_name" suffix=".war" />
 		<delete dir="${user_webapps_dir}/${user_war_name}" />
-		<exec
-			executable="${catalina_home}/bin/catalina.sh"
-			taskname="tomcat">
+		<exec executable="${catalina_home}/bin/catalina.sh" taskname="tomcat">
 			<arg value="run" />
 		</exec>
 	</target>
 
 	<target name="hosted" depends="compile-java">
-		<java classname="com.google.gwt.dev.GWTShell"
-			fork="true"
-			taskname="host">
+		<java classname="com.google.gwt.dev.GWTShell" fork="true" taskname="host">
 			<classpath>
 				<pathelement location="${basedir}/src" />
 				<pathelement location="${basedir}/bin" />
@@ -141,10 +132,10 @@
 					<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
 				</path>
 			</classpath>
-		  <arg value="-out" />
-		  <arg value="${basedir}/www" />
-		  <arg value="${app_name}/MetPetDBApplication.html" />
-		  <!--<jvmarg value="-XstartOnFirstThread" />-->
+			<arg value="-out" />
+			<arg value="${basedir}/www" />
+			<arg value="${app_name}/MetPetDBApplication.html" />
+			<!--<jvmarg value="-XstartOnFirstThread" />-->
 		</java>
 	</target>
 
@@ -171,5 +162,31 @@
 	&lt;classpathentry combineaccessrules="false" kind="src" path="/mpdb-common"/&gt;
 &lt;/classpath&gt;
 </echo>
+		
+<echo file="mpdb-server.launch"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/mpdb-server"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="4"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
+<listAttribute key="org.eclipse.jdt.launching.CLASSPATH">
+<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry containerPath=&quot;org.eclipse.jdt.launching.JRE_CONTAINER&quot; javaProject=&quot;mpdb-server&quot; path=&quot;1&quot; type=&quot;4&quot;/&gt;&#10;"/>
+<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/mpdb-client/src&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#10;"/>
+<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/mpdb-common/src&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#10;"/>
+<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry id=&quot;org.eclipse.jdt.launching.classpathentry.defaultClasspath&quot;&gt;&#10;&lt;memento exportedEntriesOnly=&quot;false&quot; project=&quot;mpdb-server&quot;/&gt;&#10;&lt;/runtimeClasspathEntry&gt;&#10;"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.GWTShell"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="mpdb-server"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx256m"/>
+</launchConfiguration>
+]]>
+</echo>
+		<propertyfile file="src/files.properties">
+				<entry key="images.path" value="/path/to/images/" />
+			</propertyfile>
 	</target>
 </project>

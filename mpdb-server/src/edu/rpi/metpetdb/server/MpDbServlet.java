@@ -59,7 +59,7 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 		oc =  DataStore.getObjectConstraints();
 		loadPropertyFiles();
 		//TODO set this to your userid for automatic login
-		this.currentReq().userId = new Integer(1);
+		//this.currentReq().userId = new Integer(1);
 	}
 
 	public void destroy() {
