@@ -1,0 +1,20 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="Reference" table="reference">
+    <id name="id" column="reference_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">reference_seq</param>
+      </generator>
+    </id>
+    <property name="name" column="name"/>
+
+  <query name="Reference.byName">
+    from Reference r
+    where r.name = :name
+  </query>
+	
+  </class>
+</hibernate-mapping>

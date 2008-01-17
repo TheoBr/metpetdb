@@ -1,0 +1,325 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="Sample" table="samples">
+    <id name="id" column="sample_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">sample_seq</param>
+      </generator>
+    </id>
+    <version name="version" />
+    <property name="sesarNumber" column="sesar_number" length="9" />
+    <property name="location" column="location"
+              type="edu.rpi.metpetdb.server.dao.GeometryType" />
+    <property name="alias" column="alias" length="20" />
+    <property name="collectionDate" column="collection_date" />
+    <property name="publicData" column="public_data" type="yes_no" />
+    <property name="rockType" column="rock_type"/>
+    <property name="country" column="country" length="100" />
+    <property name="description" column="description" length="100" />
+    <property name="collector" column="collector" length="100" />
+    <property name="locationText" column="location_text" length="50" />
+    <property name="latitudeError" column="latitude_error" />
+    <property name="longitudeError" column="longitude_error" />
+    
+    <many-to-one name="owner" column="user_id" lazy="false" />
+
+	<set name="subsamples" inverse="true" cascade="all" >
+      <key column="sample_id"/>
+      <one-to-many class="Subsample" />
+    </set>
+    
+    <set name="projects" table="project_samples" cascade="none">
+      <key column="sample_id" />
+      <many-to-many class="Project" column="project_id" />
+    </set>
+
+    <set name="regions" table="sample_regions" cascade="persist,merge">
+      <key column="sample_id" />
+      <many-to-many class="Region" column="region_id" />
+    </set>
+
+    <set name="metamorphicGrades" table="sample_metamorphic_grades" cascade="persist,merge">
+      <key column="sample_id" />
+      <many-to-many class="MetamorphicGrade" column="metamorphic_grade_id" />
+    </set>
+
+    <set name="references" table="sample_reference" cascade="persist,merge">
+      <key column="sample_id" />
+      <many-to-many class="Reference" column="reference_id" />
+    </set>
+
+    <set name="images" inverse="true" >
+      <key column="sample_id" />
+      <one-to-many class="Image" />
+    </set>
+    
+    <!-- Hibernate updates sets by using insert/delete, not update -->
+    <set name="minerals" table="sample_minerals" cascade="save-update">
+      <key column="sample_id" />
+      <composite-element class="SampleMineral">
+      	<!--Composite elements CANNOT be null with a set -->
+      	<property name="amount" column="amount" type="float" not-null="true"/>
+	    <many-to-one name="mineral" class="Mineral" column="mineral_id" lazy="false"/>
+	  </composite-element>
+    </set>
+  </class>
+
+  <query name="Sample.byId">
+    from Sample s
+    inner join fetch s.owner
+    where s.id = :id
+  </query>
+  <query name="Sample.all,size">
+    select count(*) from Sample s
+  </query>
+  <query name="Sample.all/sesarNumber">
+    from Sample s
+    inner join fetch s.owner
+    order by s.sesarNumber
+  </query>
+  <query name="Sample.all/alias">
+    from Sample s
+    inner join fetch s.owner
+    order by s.alias
+  </query>
+  <query name="Sample.all/owner">
+    from Sample s
+    inner join fetch s.owner
+    order by s.owner.emailAddress
+  </query>
+  <query name="Sample.all/rockType">
+    from Sample s
+    inner join fetch s.owner
+    order by s.rockType
+  </query>
+  <query name="Sample.all/collectionDate">
+    from Sample s
+    inner join fetch s.owner
+    order by s.collectionDate
+  </query>
+  <query name="Sample.all/publicData">
+    from Sample s
+    inner join fetch s.owner
+    order by s.publicData
+  </query>
+  <query name="Sample.all/latitude">
+    from Sample s
+    inner join fetch s.owner
+    order by s.location
+  </query>
+  <query name="Sample.all/longitude">
+    from Sample s
+    inner join fetch s.owner
+    order by s.location
+  </query>
+  <query name="Sample.all/country">
+    from Sample s
+    inner join fetch s.owner
+    order by s.country
+  </query>
+  <query name="Sample.all/description">
+    from Sample s
+    inner join fetch s.owner
+    order by s.description
+  </query>
+  <query name="Sample.all/collector">
+    from Sample s
+    inner join fetch s.owner
+    order by s.collector
+  </query>
+  <query name="Sample.all/locationText">
+    from Sample s
+    inner join fetch s.owner
+    order by s.locationText
+  </query>
+  <query name="Sample.all/latitudeError">
+    from Sample s
+    inner join fetch s.owner
+    order by s.latitudeError
+  </query>
+  <query name="Sample.all/longitudeError">
+    from Sample s
+    inner join fetch s.owner
+    order by s.longitudeError
+  </query>
+
+  <query name="Sample.forUser,size">
+    select count(*) from Sample s
+    where s.owner.id = :id
+  </query>
+  <query name="Sample.forUser/sesarNumber">
+    from Sample s
+    inner join fetch s.owner
+    where s.owner.id = :id
+    order by s.sesarNumber
+  </query>
+  <query name="Sample.forUser/alias">
+    from Sample s
+    inner join fetch s.owner
+    where s.owner.id = :id
+    order by s.alias
+  </query>
+  <query name="Sample.forUser/owner">
+    from Sample s
+    inner join fetch s.owner
+    where s.owner.id = :id
+    order by s.owner.emailAddress
+  </query>
+  <query name="Sample.forUser/rockType">
+    from Sample s
+    inner join fetch s.owner
+    where s.owner.id = :id
+    order by s.rockType
+  </query>
+  <query name="Sample.forUser/collectionDate">
+    from Sample s
+    inner join fetch s.owner
+    where s.owner.id = :id
+    order by s.collectionDate
+  </query>
+  <query name="Sample.forUser/publicData">
+    from Sample s
+    inner join fetch s.owner
+    where s.owner.id = :id
+    order by s.publicData
+  </query>
+  <query name="Sample.forUser/country">
+    from Sample s
+    inner join fetch s.owner
+    where s.owner.id = :id
+    order by s.country
+  </query>
+  <query name="Sample.forUser/description">
+    from Sample s
+    inner join fetch s.owner
+    where s.owner.id = :id
+    order by s.description
+  </query>
+  <query name="Sample.forUser/collector">
+    from Sample s
+    inner join fetch s.owner
+    where s.owner.id = :id
+    order by s.collector
+  </query>
+  <query name="Sample.forUser/locationText">
+    from Sample s
+    inner join fetch s.owner
+    where s.owner.id = :id
+    order by s.locationText
+  </query>
+  <query name="Sample.forUser/latitudeError">
+    from Sample s
+    inner join fetch s.owner
+    where s.owner.id = :id
+    order by s.latitudeError
+  </query>
+  <query name="Sample.forUser/longitudeError">
+    from Sample s
+    inner join fetch s.owner
+    where s.owner.id = :id
+    order by s.longitudeError
+  </query>
+  
+  <query name="Sample.forProject,size">
+  	select count(*) from Sample s
+  	inner join s.projects as project with project.id = :id
+  </query>
+  <query name="Sample.forProject/alias">
+  	select s from Sample s
+  	inner join s.projects as project with project.id = :id
+  	order by s.alias
+  </query>
+  
+
+  <query name="Sample.allPublic,size">
+    select count(*) from Sample s
+  </query>
+  <query name="Sample.allPublic/sesarNumber">
+    from Sample s
+    inner join fetch s.owner
+    where s.publicData = 'Y'
+    order by s.sesarNumber
+  </query>
+  <query name="Sample.allPublic/alias">
+    from Sample s
+    inner join fetch s.owner
+    where s.publicData = 'Y'
+    order by s.alias
+  </query>
+  <query name="Sample.allPublic/owner">
+    from Sample s
+    inner join fetch s.owner
+    where s.publicData = 'Y'
+    order by s.owner.emailAddress
+  </query>
+  <query name="Sample.allPublic/rockType">
+    from Sample s
+    inner join fetch s.owner
+    where s.publicData = 'Y'
+    order by s.rockType
+  </query>
+  <query name="Sample.allPublic/collectionDate">
+    from Sample s
+    inner join fetch s.owner
+    where s.publicData = 'Y'
+    order by s.collectionDate
+  </query>
+  <query name="Sample.allPublic/publicData">
+    from Sample s
+    inner join fetch s.owner
+    where s.publicData = 'Y'
+    order by s.publicData
+  </query>
+  <query name="Sample.allPublic/latitude">
+    from Sample s
+    inner join fetch s.owner
+    where s.publicData = 'Y'
+    order by s.location
+  </query>
+  <query name="Sample.allPublic/longitude">
+    from Sample s
+    inner join fetch s.owner
+    where s.publicData = 'Y'
+    order by s.location
+  </query>
+  <query name="Sample.allPublic/country">
+    from Sample s
+    inner join fetch s.owner
+    where s.publicData = 'Y'
+    order by s.country
+  </query>
+  <query name="Sample.allPublic/description">
+    from Sample s
+    inner join fetch s.owner
+    where s.publicData = 'Y'
+    order by s.description
+  </query>
+  <query name="Sample.allPublic/collector">
+    from Sample s
+    inner join fetch s.owner
+    where s.publicData = 'Y'
+    order by s.collector
+  </query>
+  <query name="Sample.allPublic/locationText">
+    from Sample s
+    inner join fetch s.owner
+    where s.publicData = 'Y'
+    order by s.locationText
+  </query>
+  <query name="Sample.allPublic/latitudeError">
+    from Sample s
+    inner join fetch s.owner
+    where s.publicData = 'Y'
+    order by s.latitudeError
+  </query>
+  <query name="Sample.allPublic/longitudeError">
+    from Sample s
+    inner join fetch s.owner
+    where s.publicData = 'Y'
+    order by s.longitudeError
+  </query>
+
+</hibernate-mapping>

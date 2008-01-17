@@ -1,0 +1,26 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="Oxide" table="oxides">
+    <id name="oxideId" column="oxide_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">oxide_seq</param>
+      </generator>
+    </id>
+    
+    <many-to-one name="elementId" column="element_id" class="Element" lazy="false" cascade="none"/>
+    <property name="oxidationState" column="oxidation_state" />
+    <property name="species" column="species" length="20" />
+    <property name="weight" column="weight" />
+    <property name="cationsPerOxide" column="cations_per_oxide" />
+    <property name="conversionFactor" column="conversion_factor" />
+    <property name="mineralType" column="mineral_type" length="12" />
+  </class>
+  
+  <query name="Oxide.all">
+    from Oxide o
+    order by o.oxideId
+  </query>
+</hibernate-mapping>

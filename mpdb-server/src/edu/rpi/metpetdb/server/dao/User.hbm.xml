@@ -1,0 +1,32 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="User" table="users">
+    <id name="id" column="user_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">user_seq</param>
+      </generator>
+    </id>
+    <version name="version" />
+    <property name="username" length="50" />
+    <property name="emailAddress" column="email" length="255" />
+    <property name="encryptedPassword" column="password" />
+
+    <set name="projects" table="project_members" inverse="true">
+      <key column="user_id" />
+      <many-to-many class="Project" column="project_id" />
+    </set>
+  </class>
+
+  <query name="User.byId">
+    from User u
+    where u.id = :id
+  </query>
+
+  <query name="User.byUsername">
+    from User u
+    where u.username = :username
+  </query>
+</hibernate-mapping>

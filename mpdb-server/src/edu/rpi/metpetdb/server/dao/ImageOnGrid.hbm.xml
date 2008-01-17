@@ -1,0 +1,42 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="ImageOnGrid" table="image_on_grid">
+    <id name="id" column="image_on_grid_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">image_on_grid_seq</param>
+      </generator>
+    </id>
+    
+    <property name="topLeftX" column="top_left_x" />
+    <property name="topLeftY" column="top_left_y" />
+    <property name="zorder" column="z_order" />
+    <property name="opacity" column="opacity" />
+    <property name="resizeRatio" column="resize_ratio" />
+    
+    <property name="gwidth" column="width" />
+    <property name="gheight" column="height" />
+    <property name="gchecksum" column="checksum" />
+    <property name="gchecksum64x64" column="checksum_64x64" />
+    <property name="gchecksumHalf" column="checksum_half" />
+    
+    <many-to-one name="image" column="image_id" class="Image" lazy="false" cascade="none"/>
+    <many-to-one name="grid" column="grid_id" class="Grid" lazy="false" cascade="none"/>
+    
+    
+
+  </class>
+
+  <query name="ImageOnGrid.byGridId">
+    from ImageOnGrid iog
+    inner join fetch iog.image
+    inner join fetch iog.grid
+    where iog.grid.id = :gridId
+  </query>
+  <query name="ImageOnGrid.byGridId,size">
+    select count(*) from ImageOnGrid iog
+    where iog.grid.id = :id
+  </query>
+</hibernate-mapping>

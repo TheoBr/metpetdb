@@ -1,0 +1,25 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="Element" table="elements">
+    <id name="id" column="element_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">element_seq</param>
+      </generator>
+    </id>
+    
+    <property name="name" column="name" length="100" />
+    <property name="alternateName" column="alternate_name" length="100" />
+    <property name="symbol" column="symbol" length="4" />
+    <property name="atomicNumber" column="atomic_number" />
+    <property name="weight" column="weight" />
+    <property name="mineralType" column="mineral_type" length="12" />
+  </class>
+  
+  <query name="Element.all">
+    from Element e
+    order by e.name
+  </query>
+</hibernate-mapping>

@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<!DOCTYPE web-app PUBLIC
+  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+  "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+  <display-name>MetPetDB</display-name>
+
+  <welcome-file-list>
+    <welcome-file>MetPetDBApplication.html</welcome-file>
+  </welcome-file-list>
+  
+  <servlet>
+	<servlet-name>imageUpload</servlet-name>
+	<servlet-class>edu.rpi.metpetdb.server.ImageUploadServlet</servlet-class>
+	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>imageUpload</servlet-name>
+    <url-pattern>/imageUpload</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+	<servlet-name>bulkUpload</servlet-name>
+	<servlet-class>edu.rpi.metpetdb.server.BulkUploadServlet</servlet-class>
+	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>bulkUpload</servlet-name>
+    <url-pattern>/bulkUpload</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>constants</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.ConstantsServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>constants</servlet-name>
+    <url-pattern>/constants.svc</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>project</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.ProjectServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>project</servlet-name>
+    <url-pattern>/project.svc</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>sample</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.SampleServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>sample</servlet-name>
+    <url-pattern>/sample.svc</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>subsample</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.SubsampleServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>subsample</servlet-name>
+    <url-pattern>/subsample.svc</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>user</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.UserServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>user</servlet-name>
+    <url-pattern>/user.svc</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>imageBrowser</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.ImageBrowserServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>imageBrowser</servlet-name>
+    <url-pattern>/imageBrowser.svc</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>image</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.ImageServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>image</servlet-name>
+    <url-pattern>/image.svc</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>mineralAnalysis</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.MineralAnalysisServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>mineralAnalysis</servlet-name>
+    <url-pattern>/mineralAnalysis.svc</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>mpdbGeneric</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.MpDbGenericServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>mpdbGeneric</servlet-name>
+    <url-pattern>/mpdbGeneric.svc</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>images</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.ImagesService</servlet-class>
+  </servlet>
+  <servlet-mapping>
+	<servlet-name>images</servlet-name>
+	<url-pattern>/image/*</url-pattern>
+  </servlet-mapping>
+
+  <!--
+  * Our static data caching and compression servlet.
+  *
+  *    !!!! DO NOT MAP *.js TO THIS SERVLET !!!!
+  *
+  * Most browsers do not correctly handle compressed pure JavaScript, even
+  * though they advertise as being able to do so in the request.  But other
+  * types are OK, and hence we map those.
+  -->
+  <servlet>
+    <servlet-name>static-gz</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.StaticCompresser</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>static-gz</servlet-name>
+    <url-pattern>*.html</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>static-gz</servlet-name>
+    <url-pattern>*.xml</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>static-gz</servlet-name>
+    <url-pattern>*.css</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>static-gz</servlet-name>
+    <url-pattern>*.jpg</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>static-gz</servlet-name>
+    <url-pattern>*.gif</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>static-gz</servlet-name>
+    <url-pattern>*.png</url-pattern>
+  </servlet-mapping>
+</web-app>

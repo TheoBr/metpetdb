@@ -1,0 +1,65 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="Subsample" table="subsamples">
+    <id name="id" column="subsample_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">subsample_seq</param>
+      </generator>
+    </id>
+    <version name="version" />
+    <property name="name" column="name" />
+    <property name="type" column="type"/>
+    
+    <many-to-one name="sample" column="sample_id" class="Sample" lazy="false"/>
+    
+    <one-to-one name="grid" property-ref="subsample" />
+   
+   <set name="images" table="images" cascade="all-delete-orphan"> 
+      <key column="subsample_id" />
+      <one-to-many class="Image" />
+    </set>
+    
+    <set name="mineralAnalyses" inverse="true" table="mineral_analyses" cascade="all"> 
+      <key column="subsample_id" />
+      <one-to-many class="MineralAnalysis" />
+    </set>
+    
+  </class>
+
+  <query name="Subsample.byId">
+    from Subsample s
+    where s.id = :id
+  </query>
+  
+   <query name="Subsample.bySampleId,size">
+    select count(*) from Subsample s
+    where s.sample.id = :id
+  </query>
+  
+  <query name="Subsample.bySampleId">
+  	from Subsample s
+  	where s.sample.id = :id
+  </query>
+  
+  <query name="Subsample.allWithImages,size">
+    select count(*) from Subsample s
+    where s.sample.id = :id and size( s.images ) > 0
+  </query>
+  <query name="Subsample.allWithImages/name">
+    from Subsample s
+    where s.sample.id = :id and size( s.images ) > 0
+    order by s.name
+  </query>
+  <query name="Subsample.all,size">
+    select count(*) from Subsample s
+    where s.sample.id = :id
+  </query>
+  <query name="Subsample.all/name">
+    from Subsample s
+    where s.sample.id = :id
+    order by s.name
+  </query>
+</hibernate-mapping>

@@ -1,0 +1,55 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="Image" table="images">
+    <id name="id" column="image_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">image_seq</param>
+      </generator>
+    </id>
+    <version name="version" />
+    
+    <property name="checksum" column="checksum"/>
+    <property name="width" column="width" />
+    <property name="height" column="height" />
+    <property name="checksum64x64" column="checksum_64x64" />
+    <property name="checksumHalf" column="checksum_half" />
+    <property name="filename" column="filename" />
+    <property name="imageType" column="image_type" />
+    <property name="brightness" column="brightness" />
+    <property name="lut" column="lut"/>
+    <property name="contrast" column="contrast"/>
+    <property name="pixelsize" column="pixel_size"/>
+
+   <many-to-one name="subsample" column="subsample_id" class="Subsample" lazy="false"/>
+   <many-to-one name="sample" column="sample_id" class="Sample" lazy="false" cascade="none"/>
+   
+   <joined-subclass name="XrayImage" table="xray_image">
+	   	<key column="image_id"/>
+	   	<property name="radiation" column="radiation"/>
+	    <property name="lines" column="lines"/>
+	    <property name="dwelltime" column="dwelltime"/>
+	    <property name="current" column="current"/>
+	    <property name="voltage" column="voltage"/>
+	    
+	    <many-to-one name="element" column="element_id" class="Element" lazy="false"/>
+   </joined-subclass>
+  </class>
+
+  <query name="Image.id">
+    from Image i
+    where i.id = :id
+  </query>
+  
+  <query name="Image.bySubsampleId">
+    from Image i
+    where i.subsample.id = :subsampleId
+  </query>
+  <query name="Image.bySubsampleId,size">
+    select count(*) from Image i
+    where i.subsample.id = :id
+  </query>
+
+</hibernate-mapping>

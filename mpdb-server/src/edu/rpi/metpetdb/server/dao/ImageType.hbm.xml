@@ -1,0 +1,21 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="ImageType" table="image_types">
+    <id name="id" column="image_type_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">image_type_seq</param>
+      </generator>
+    </id>
+    
+    <property name="name" column="name" />
+
+  </class>
+
+  <query name="ImageType.byId">
+    from ImageType it
+    where it.id = :id
+  </query>
+</hibernate-mapping>

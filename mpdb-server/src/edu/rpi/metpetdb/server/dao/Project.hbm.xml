@@ -1,0 +1,111 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="Project" table="projects">
+    <id name="id" column="project_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">project_seq</param>
+      </generator>
+    </id>
+    <version name="version" />
+    <property name="name" column="name" />
+
+    <many-to-one name="owner" column="user_id" lazy="false" />
+
+    <set name="members" table="project_members">
+      <key column="project_id" />
+      <many-to-many class="User" column="user_id" />
+    </set>
+
+    <set name="samples" table="project_samples">
+      <key column="project_id" />
+      <many-to-many class="Sample" column="sample_id" />
+    </set>
+  </class>
+
+  <query name="Project.byId">
+    from Project p
+    inner join fetch p.owner
+    where p.id = :id
+  </query>
+  
+  <query name="Project.samples,size">
+  	select count(*) from Project p
+  	inner join p.samples
+	where p.id = :id
+  </query>
+  <query name="Project.samples/sesarNumber">
+  	from Project p
+  	inner join p.samples as sample with sample.id = :id
+  	order by sample.sesarNumber
+  </query>
+  <query name="Project.samples/alias">
+  	from Project p
+  	inner join p.samples
+	where p.id = :id
+  </query>
+  <query name="Project.samples/owner">
+  	from Project p
+  	inner join p.samples as sample with sample.id = :id
+  	order by sample.owner
+  </query>
+  <query name="Project.samples/rockType">
+  	from Project p
+  	inner join p.samples as sample with sample.id = :id
+  	order by sample.rockType
+  </query>
+  <query name="Project.samples/collectionDate">
+  	from Project p
+  	inner join p.samples as sample with sample.id = :id
+  	order by sample.collectionDate
+  </query>
+  <query name="Project.samples/publicData">
+  	from Project p
+  	inner join p.samples as sample with sample.id = :id
+  	order by sample.publicData
+  </query>
+  <query name="Project.samples/latitude">
+  	from Project p
+  	inner join p.samples as sample with sample.id = :id
+  	order by sample.location
+  </query>
+  <query name="Project.samples/longitude">
+  	from Project p
+  	inner join p.samples as sample with sample.id = :id
+  	order by sample.location
+  </query>
+  <query name="Project.samples/country">
+  	from Project p
+  	inner join p.samples as sample with sample.id = :id
+  	order by sample.country
+  </query>
+  <query name="Project.samples/description">
+  	from Project p
+  	inner join p.samples as sample with sample.id = :id
+  	order by sample.description
+  </query>
+  <query name="Project.samples/collector">
+  	from Project p
+  	inner join p.samples as sample with sample.id = :id
+  	order by sample.collector
+  </query>
+  <query name="Project.samples/locationText">
+  	from Project p
+  	inner join p.samples as sample with sample.id = :id
+  	order by sample.locationText
+  </query>
+  <query name="Project.samples/latitudeError">
+  	from Project p
+  	inner join p.samples as sample with sample.id = :id
+  	order by sample.latitudeError
+  </query>
+  
+  <query name="Project.samples/longitudeError">
+  	from Project p
+  	inner join p.samples as sample with sample.id = :id
+  	order by sample.longitudeError
+  </query>
+  
+</hibernate-mapping>

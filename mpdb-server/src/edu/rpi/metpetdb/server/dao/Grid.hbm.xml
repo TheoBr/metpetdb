@@ -1,0 +1,35 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="Grid" table="grids">
+    <id name="id" column="grid_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">grid_seq</param>
+      </generator>
+    </id>
+    
+    <version name="version" />
+    <property name="width" column="width" />
+    <property name="height" column="height" />
+    
+	<many-to-one name="subsample" column="subsample_id" unique="true" not-null="true" lazy="false" cascade="none"/>
+    
+    <set name="imagesOnGrid" inverse="true" cascade="all-delete-orphan">
+      <key column="grid_id" />
+      <one-to-many class="ImageOnGrid" />
+    </set>
+
+  </class>
+
+  <query name="Grid.byId">
+    from Grid g
+    where g.id = :id
+  </query>
+  
+  <query name="Grid.bySubsampleId">
+    from Grid g
+    where g.subsample.id = :id
+  </query>
+</hibernate-mapping>

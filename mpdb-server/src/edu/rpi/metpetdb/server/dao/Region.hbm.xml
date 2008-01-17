@@ -1,0 +1,20 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="Region" table="regions">
+    <id name="id" column="region_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">region_seq</param>
+      </generator>
+    </id>
+    <property name="name" column="name"/>
+    
+  <query name="Region.byName">
+    from Region r
+    where r.name = :name
+  </query>
+
+  </class>
+</hibernate-mapping>
