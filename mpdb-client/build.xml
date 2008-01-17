@@ -1,14 +1,13 @@
 <project name="mpdb" basedir="." default="compile-html">
 
+	<property file="build.properties" />
 	<property name="build" location="${basedir}/build" />
 	<property name="ctx_lib" location="${basedir}/lib" />
 	<property name="app_name" value="edu.rpi.metpetdb.MetPetDBApplication" />
-	<property name="gwt_home" value="/home/anthony/development/gwt-linux-1.4.61" />
 
 	<path id="libs">
 		<fileset dir="${ctx_lib}" includes="*.jar" />
 		<pathelement location="${gwt_home}/gwt-user.jar" />
-		<pathelement location="../mpdb-common/src" />
 	</path>
 
 	<target name="compile-java">
@@ -51,4 +50,29 @@
 			</fileset>
 		</delete>
 	</target>
+	
+	<target name="eclipse">
+			<property name="name.e" value="MetPetDB" />
+
+			<pathconvert property="libs.e" dirsep="/" pathsep="&quot;/&gt;&#10;&#09;&lt;classpathentry kind=&quot;lib&quot; path=&quot;">
+				<path refid="libs" />
+				<map from="${basedir}/" to="" />
+			</pathconvert>
+
+			<pathconvert property="gwt.e" dirsep="/" pathsep=":">
+				<path>
+					<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
+				</path>
+			</pathconvert>
+
+			<echo file=".classpath">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+	&lt;classpath&gt;
+		&lt;classpathentry kind="src" path="src" excluding="**/java_emu/**/*.java"/&gt;
+		&lt;classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/&gt;
+		&lt;classpathentry kind=&quot;lib&quot; path=&quot;${libs.e}&quot;/&gt;
+		&lt;classpathentry kind="output" path="bin"/&gt;
+		&lt;classpathentry combineaccessrules="false" kind="src" path="/mpdb-common"/&gt;
+	&lt;/classpath&gt;
+	</echo>
+		</target>
 </project>
