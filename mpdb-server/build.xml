@@ -139,7 +139,7 @@
 		</java>
 	</target>
 
-	<target name="eclipse">
+	<target name="eclipse" depends="setup">
 		<property name="name.e" value="MetPetDB" />
 
 		<pathconvert property="libs.e" dirsep="/" pathsep="&quot;/&gt;&#10;&#09;&lt;classpathentry kind=&quot;lib&quot; path=&quot;">
