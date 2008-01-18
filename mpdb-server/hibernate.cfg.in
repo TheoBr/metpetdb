@@ -17,7 +17,6 @@
 
     <mapping resource="edu/rpi/metpetdb/server/dao/Project.hbm.xml" />
     <mapping resource="edu/rpi/metpetdb/server/dao/Grid.hbm.xml" />
-    <mapping resource="edu/rpi/metpetdb/server/dao/ImageType.hbm.xml" />
     <mapping resource="edu/rpi/metpetdb/server/dao/Image.hbm.xml" />
     <mapping resource="edu/rpi/metpetdb/server/dao/ImageOnGrid.hbm.xml" />
     <mapping resource="edu/rpi/metpetdb/server/dao/MineralAnalysis.hbm.xml" />

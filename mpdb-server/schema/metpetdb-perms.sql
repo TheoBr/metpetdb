@@ -18,6 +18,7 @@ GRANT select,insert,update        ON metamorphic_grades TO @APPUSER@;
 GRANT select,insert,update        ON elements TO @APPUSER@;
 GRANT select,insert,update        ON reference TO @APPUSER@;
 GRANT select,insert,update,delete ON sample_reference TO @APPUSER@;
+GRANT select,insert,update		  ON oxides TO @APPUSER@;
 
 GRANT update ON mineral_seq   TO @APPUSER@;
 GRANT update ON project_seq   TO @APPUSER@;

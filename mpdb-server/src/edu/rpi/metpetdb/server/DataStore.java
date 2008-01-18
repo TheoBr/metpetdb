@@ -66,7 +66,7 @@ public class DataStore {
 		return factory;
 	}
 
-	static synchronized void init() {
+	public static synchronized void init() {
 		if (factory == null)
 			getFactory();
 	}
