@@ -5,9 +5,9 @@
 <hibernate-configuration>
   <session-factory>
     <property name="hibernate.connection.driver_class">org.postgis.DriverWrapper</property>
-    <property name="hibernate.connection.url">jdbc:postgresql_postGIS://localhost/mpdb_watera2_test</property>
-    <property name="hibernate.connection.username">metpetwebtst</property>
-    <property name="hibernate.connection.password"></property>
+    <property name="hibernate.connection.url">jdbc:postgresql_postGIS://localhost/@DATABASE@</property>
+    <property name="hibernate.connection.username">@APPUSER@</property>
+    <property name="hibernate.connection.password">@APPPASS@</property>
     <property name="hibernate.connection.pool_size">2</property>
 
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
