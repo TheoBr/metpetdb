@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server.test;
+package edu.rpi.metpetdb.server;
 
 import org.junit.After;
 import org.junit.Before;

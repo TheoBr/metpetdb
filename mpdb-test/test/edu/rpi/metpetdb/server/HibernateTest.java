@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server.test.database;
+package edu.rpi.metpetdb.server;
 
 import java.util.Iterator;
 import java.util.List;
@@ -12,7 +12,6 @@ import org.hibernate.persister.entity.EntityPersister;
 import org.junit.After;
 import org.junit.Before;
 
-import edu.rpi.metpetdb.server.DataStoreTest;
 
 public class HibernateTest extends TestCase {
 

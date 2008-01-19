@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server.test.beans;
+package edu.rpi.metpetdb.server;
 
 import junit.framework.TestCase;
 
@@ -11,7 +11,7 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.server.SampleServiceImpl;
 
-public class SampleTest extends TestCase {
+public class SampleServiceImplTest extends TestCase {
 
 	@Before
 	public void setUp() throws Exception {
