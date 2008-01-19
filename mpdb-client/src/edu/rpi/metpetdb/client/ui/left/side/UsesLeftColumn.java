@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.left_side;
+package edu.rpi.metpetdb.client.ui.left.side;
 
 public interface UsesLeftColumn {
 

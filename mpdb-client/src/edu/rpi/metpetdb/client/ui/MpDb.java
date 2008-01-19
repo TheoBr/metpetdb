@@ -25,8 +25,8 @@ import edu.rpi.metpetdb.client.service.SubsampleServiceAsync;
 import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.client.service.UserServiceAsync;
 import edu.rpi.metpetdb.client.ui.html.HtmlFactory;
-import edu.rpi.metpetdb.client.ui.left_side.MyProjects;
-import edu.rpi.metpetdb.client.ui.left_side.MySamples;
+import edu.rpi.metpetdb.client.ui.left.side.MyProjects;
+import edu.rpi.metpetdb.client.ui.left.side.MySamples;
 
 /**
  * Client side async service proxies and global constants.

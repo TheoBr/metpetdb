@@ -32,7 +32,7 @@ import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.client.service.ResumeSessionResponse;
 import edu.rpi.metpetdb.client.ui.dialogs.LoginDialog;
 import edu.rpi.metpetdb.client.ui.dialogs.UnknownErrorDialog;
-import edu.rpi.metpetdb.client.ui.left_side.UsesLeftColumn;
+import edu.rpi.metpetdb.client.ui.left.side.UsesLeftColumn;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MMenuBar;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
