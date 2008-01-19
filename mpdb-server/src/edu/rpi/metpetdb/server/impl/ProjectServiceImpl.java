@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server;
+package edu.rpi.metpetdb.server.impl;
 
 import org.gwtwidgets.client.ui.pagination.PaginationParameters;
 import org.gwtwidgets.client.ui.pagination.Results;
@@ -10,6 +10,7 @@ import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.service.ProjectService;
+import edu.rpi.metpetdb.server.MpDbServlet;
 
 public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	private static final long serialVersionUID = 1L;

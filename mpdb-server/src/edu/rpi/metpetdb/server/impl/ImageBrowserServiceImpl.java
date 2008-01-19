@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server;
+package edu.rpi.metpetdb.server.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,6 +14,7 @@ import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.model.Grid;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
 import edu.rpi.metpetdb.client.service.ImageBrowserService;
+import edu.rpi.metpetdb.server.MpDbServlet;
 
 public class ImageBrowserServiceImpl extends MpDbServlet
 		implements

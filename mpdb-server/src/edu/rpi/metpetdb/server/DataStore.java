@@ -40,7 +40,7 @@ import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
 public class DataStore {
 	private static final short attributeNullable = DatabaseMetaData.attributeNullable;
 
-	private static Configuration config;
+	protected static Configuration config;
 
 	private static SessionFactory factory;
 
@@ -48,7 +48,7 @@ public class DataStore {
 
 	private static ObjectConstraints objectConstraints;
 
-	static synchronized Configuration getConfiguration() {
+	protected static synchronized Configuration getConfiguration() {
 		if (config == null) {
 			final Configuration cfg = new Configuration();
 			final URL x = DataStore.class.getResource("dao/hibernate.cfg.xml");
@@ -381,6 +381,6 @@ public class DataStore {
 		return getFactory().openSession();
 	}
 
-	private DataStore() {
+	protected DataStore() {
 	}
 }

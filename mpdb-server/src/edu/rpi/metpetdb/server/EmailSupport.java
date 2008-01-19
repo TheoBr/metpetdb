@@ -17,7 +17,7 @@ import javax.servlet.GenericServlet;
 
 import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 
-class EmailSupport {
+public class EmailSupport {
 	private static final RecipientType TO = Message.RecipientType.TO;
 	private static String smtpServer;
 	private static InternetAddress fromAddress;
@@ -68,7 +68,7 @@ class EmailSupport {
 	 *             the message could not be sent, likely due to a server
 	 *             misconfiguration.
 	 */
-	static void sendMessage(final GenericServlet srv, final String to,
+	public static void sendMessage(final GenericServlet srv, final String to,
 			final String mid, final Object[] args)
 			throws UnableToSendEmailException {
 		try {

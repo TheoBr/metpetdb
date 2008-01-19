@@ -26,6 +26,7 @@ import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
+import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
 import edu.rpi.metpetdb.server.security.SessionEncrypter;
 
 /**

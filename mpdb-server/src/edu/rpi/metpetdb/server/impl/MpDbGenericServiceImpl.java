@@ -1,10 +1,12 @@
-package edu.rpi.metpetdb.server;
+package edu.rpi.metpetdb.server.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 import edu.rpi.metpetdb.client.service.MpDbGenericService;
+import edu.rpi.metpetdb.server.EmailSupport;
+import edu.rpi.metpetdb.server.MpDbServlet;
 
 public class MpDbGenericServiceImpl extends MpDbServlet
 		implements

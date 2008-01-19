@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server;
+package edu.rpi.metpetdb.server.impl;
 
 import java.util.ArrayList;
 
@@ -13,6 +13,7 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.MineralAnalysis;
 import edu.rpi.metpetdb.client.service.MineralAnalysisService;
+import edu.rpi.metpetdb.server.MpDbServlet;
 
 public class MineralAnalysisServiceImpl extends MpDbServlet
 		implements

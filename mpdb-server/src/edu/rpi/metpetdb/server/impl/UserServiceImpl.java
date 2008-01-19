@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server;
+package edu.rpi.metpetdb.server.impl;
 
 import org.hibernate.exception.ConstraintViolationException;
 
@@ -13,6 +13,8 @@ import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
 import edu.rpi.metpetdb.client.service.ResumeSessionResponse;
 import edu.rpi.metpetdb.client.service.UserService;
+import edu.rpi.metpetdb.server.EmailSupport;
+import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
 
 public class UserServiceImpl extends MpDbServlet implements UserService {

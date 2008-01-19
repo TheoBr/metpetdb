@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server;
+package edu.rpi.metpetdb.server.impl;
 
 import java.awt.RenderingHints;
 import java.awt.Transparency;
@@ -30,6 +30,8 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
 import edu.rpi.metpetdb.client.service.ImageService;
+import edu.rpi.metpetdb.server.ImageUploadServlet;
+import edu.rpi.metpetdb.server.MpDbServlet;
 
 public class ImageServiceImpl extends MpDbServlet implements ImageService {
 	private static final long serialVersionUID = 1L;

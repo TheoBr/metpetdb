@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server;
+package edu.rpi.metpetdb.server.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,6 +14,7 @@ import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.service.SubsampleService;
+import edu.rpi.metpetdb.server.MpDbServlet;
 
 public class SubsampleServiceImpl extends MpDbServlet
 		implements

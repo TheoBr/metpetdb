@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server;
+package edu.rpi.metpetdb.server.impl;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -18,6 +18,7 @@ import edu.rpi.metpetdb.client.model.MetamorphicGrade;
 import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.service.SampleService;
+import edu.rpi.metpetdb.server.MpDbServlet;
 
 public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	private static final long serialVersionUID = 1L;
