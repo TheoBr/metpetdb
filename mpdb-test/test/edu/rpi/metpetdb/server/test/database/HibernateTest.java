@@ -12,7 +12,7 @@ import org.hibernate.persister.entity.EntityPersister;
 import org.junit.After;
 import org.junit.Before;
 
-import edu.rpi.metpetdb.server.DataStore;
+import edu.rpi.metpetdb.server.DataStoreTest;
 
 public class HibernateTest extends TestCase {
 
@@ -27,8 +27,8 @@ public class HibernateTest extends TestCase {
 	 * @throws Exception
 	 */
 	public void testClassExistsInDatabase() throws Exception {
-		DataStore.init();
-		SessionFactory sessionFactory = DataStore.open().getSessionFactory();
+		DataStoreTest.init();
+		SessionFactory sessionFactory = DataStoreTest.open().getSessionFactory();
 		Map metadata = sessionFactory.getAllClassMetadata();
 		for (Iterator i = metadata.values().iterator(); i.hasNext();) {
 			Session session = sessionFactory.openSession();

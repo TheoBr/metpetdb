@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.server.test.beans;
 
+import edu.rpi.metpetdb.server.test.beans.SampleTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
