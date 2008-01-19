@@ -1,7 +1,7 @@
 package edu.rpi.metpetdb.client.error;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.validation.StringConstraint;
-import edu.rpi.metpetdb.client.ui.LocaleHandler;
 
 /** Indicates the value for a property is too long (and would truncate). */
 public class ValueTooLongException extends ValidationException {

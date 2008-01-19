@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui;
+package edu.rpi.metpetdb.client.locale;
 
 import com.google.gwt.i18n.client.Messages;
 

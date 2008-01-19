@@ -1,7 +1,7 @@
 package edu.rpi.metpetdb.client.error;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.ui.LocaleHandler;
 
 /** Indicates a particular property must use an ISO date format. */
 public class ValueNotIsoDateException extends ValidationException {

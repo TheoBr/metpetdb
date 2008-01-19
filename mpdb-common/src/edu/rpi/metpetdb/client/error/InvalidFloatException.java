@@ -1,7 +1,7 @@
 package edu.rpi.metpetdb.client.error;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.ui.LocaleHandler;
 
 public class InvalidFloatException extends ValidationException {
 	private static final long serialVersionUID = 1L;

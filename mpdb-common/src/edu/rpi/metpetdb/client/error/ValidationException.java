@@ -2,9 +2,9 @@ package edu.rpi.metpetdb.client.error;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.ui.LocaleHandler;
 
 /**
  * Throw when there is an input error detected.

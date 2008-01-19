@@ -1,7 +1,7 @@
 package edu.rpi.metpetdb.client.error;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.ui.LocaleHandler;
 
 /** Indicates a particular property value has already been taken. */
 public class DuplicateValueException extends ValidationException {
