@@ -8,11 +8,11 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.InvalidGeometryException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.model.validation.GeometryConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
-import edu.rpi.metpetdb.client.ui.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 

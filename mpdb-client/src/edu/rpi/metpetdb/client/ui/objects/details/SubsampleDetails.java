@@ -9,10 +9,10 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.ui.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;

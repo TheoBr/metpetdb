@@ -3,9 +3,9 @@ package edu.rpi.metpetdb.client.ui.objects.details;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.model.Project;
-import edu.rpi.metpetdb.client.ui.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;

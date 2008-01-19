@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.ui.LocaleHandler;
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;
 import edu.rpi.metpetdb.client.ui.widgets.MDialogBox;

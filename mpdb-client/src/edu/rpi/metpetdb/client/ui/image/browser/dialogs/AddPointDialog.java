@@ -14,10 +14,10 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
 import edu.rpi.metpetdb.client.model.MineralAnalysis;
 import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.ui.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 
 public class AddPointDialog extends DialogBox

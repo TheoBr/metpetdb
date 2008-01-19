@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.client.service.ResumeSessionResponse;

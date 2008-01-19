@@ -14,9 +14,9 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.locale.LocaleEntity;
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.ui.LocaleEntity;
-import edu.rpi.metpetdb.client.ui.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;

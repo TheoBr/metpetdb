@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.ui.LocaleHandler;
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.widgets.MDialogBox;
 
 public class UnknownErrorDialog extends MDialogBox implements ClickListener {

@@ -10,11 +10,11 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import edu.rpi.metpetdb.client.locale.LocaleEntity;
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MineralAnalysis;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.ui.LocaleEntity;
-import edu.rpi.metpetdb.client.ui.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.Styles;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;

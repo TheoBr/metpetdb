@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
-import edu.rpi.metpetdb.client.ui.LocaleHandler;
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.widgets.MDialogBox;
 
 public class NoObjectDialog extends MDialogBox implements ClickListener {

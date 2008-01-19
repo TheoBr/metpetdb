@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;

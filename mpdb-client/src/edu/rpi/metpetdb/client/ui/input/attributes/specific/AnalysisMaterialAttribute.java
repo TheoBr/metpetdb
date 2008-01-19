@@ -5,11 +5,11 @@ import java.util.HashMap;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.model.validation.BooleanConstraint;
 import edu.rpi.metpetdb.client.model.validation.MineralConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.ui.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
 

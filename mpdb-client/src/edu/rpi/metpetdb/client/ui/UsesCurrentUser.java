@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.ui;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.User;
 
 /**
