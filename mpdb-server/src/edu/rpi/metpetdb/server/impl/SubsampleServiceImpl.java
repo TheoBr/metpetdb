@@ -21,6 +21,7 @@ public class SubsampleServiceImpl extends MpDbServlet
 			SubsampleService {
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("unchecked")
 	public Results all(final PaginationParameters p, final long sampleId) {
 		final String name = "Subsample.all";
 		final Query sizeQuery = sizeQuery(name, sampleId);
@@ -48,6 +49,7 @@ public class SubsampleServiceImpl extends MpDbServlet
 				pageQuery(name, p, sampleId));
 	}
 
+	@SuppressWarnings("unchecked")
 	public Subsample details(final long id) throws NoSuchObjectException {
 		final Subsample s = (Subsample) byId("Subsample", id);
 		s.setImageCount(((Number) sizeQuery("Image.bySubsampleId", s.getId())
@@ -60,6 +62,7 @@ public class SubsampleServiceImpl extends MpDbServlet
 		return s;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Subsample saveSubsample(Subsample subsample)
 			throws ValidationException, LoginRequiredException {
 		doc.validate(subsample);

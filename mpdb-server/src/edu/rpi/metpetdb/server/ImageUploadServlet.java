@@ -49,8 +49,8 @@ public class ImageUploadServlet extends HttpServlet {
 		response.getWriter().write("{OK}" + writeFiles(uploadItem).toString());
 	}
 
-	private ArrayList writeFiles(FileItem uploadItem) {
-		ArrayList al = new ArrayList();
+	private ArrayList<String> writeFiles(FileItem uploadItem) {
+		ArrayList<String> al = new ArrayList<String>();
 		RenderedOp ro = loadImage(uploadItem);
 		// final String originalChecksum = writeFile(uploadItem.get());
 		al.add(generateFullsize(ro, false));
@@ -183,6 +183,7 @@ public class ImageUploadServlet extends HttpServlet {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private FileItem getFileItem(HttpServletRequest request) {
 		FileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);

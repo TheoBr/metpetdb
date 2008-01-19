@@ -24,6 +24,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return PasswordEncrypter.verify(u.getEncryptedPassword(), pw);
 	}
 
+	@SuppressWarnings("unchecked")
 	public User details(final String username) throws NoSuchObjectException {
 		User user = (User) byKey("User", "username", username);
 		user.setProjects(load(user.getProjects()));
@@ -31,6 +32,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return user;
 	}
 
+	@SuppressWarnings("unchecked")
 	public User startSession(final StartSessionRequest ssr)
 			throws LoginFailureException, ValidationException {
 		doc.validate(ssr);
@@ -48,6 +50,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public ResumeSessionResponse resumeSession() {
 		final ResumeSessionResponse r = new ResumeSessionResponse();
 		r.databaseObjectConstraints = doc;
@@ -69,6 +72,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return (User) byId("User", currentUser());
 	}
 
+	@SuppressWarnings("unchecked")
 	public User registerNewUser(final UserWithPassword newbie)
 			throws ValidationException, UnableToSendEmailException {
 		doc.UserWithPassword_user.validateEntity(newbie);

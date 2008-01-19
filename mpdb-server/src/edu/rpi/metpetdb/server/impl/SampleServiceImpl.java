@@ -43,6 +43,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		return toResults(sizeQuery(name, id), pageQuery(name, p, id));
 	}
 
+	@SuppressWarnings("unchecked")
 	public Sample details(final long id) throws NoSuchObjectException {
 		final Sample s = (Sample) byId("Sample", id);
 		s.setSubsampleCount(((Number) sizeQuery(
@@ -58,6 +59,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		return s;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Sample saveSample(Sample sample)
 			throws SampleAlreadyExistsException, ValidationException,
 			LoginRequiredException {
@@ -103,6 +105,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	}
 	
 	//TODO for some reason it does not get the named query
+	@SuppressWarnings("unchecked")
 	private void replaceRegion(final Sample s) {
 		final Iterator itr = s.getRegions().iterator();
 		final HashSet regionsToAdd = new HashSet();
@@ -118,9 +121,10 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		s.getRegions().addAll(regionsToAdd);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void replaceMetamorphicGrade(final Sample s) {
 		final Iterator itr = s.getMetamorphicGrades().iterator();
-		final HashSet metamorphicToAdd = new HashSet();
+		final HashSet<MetamorphicGrade> metamorphicToAdd = new HashSet<MetamorphicGrade>();
 		
 		while(itr.hasNext()) {
 			final MetamorphicGrade mg = (MetamorphicGrade) itr.next();
@@ -130,15 +134,16 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 			
 			if (grades.uniqueResult() != null) {
 				itr.remove();
-				metamorphicToAdd.add(grades.uniqueResult());
+				metamorphicToAdd.add((MetamorphicGrade)grades.uniqueResult());
 			}
 		}
 		s.getMetamorphicGrades().addAll(metamorphicToAdd);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void replaceReferences(final Sample s) {
 		final Iterator itr = s.getReferences().iterator();
-		final HashSet referencesToAdd = new HashSet();
+		final HashSet<Reference> referencesToAdd = new HashSet<Reference>();
 		
 		while(itr.hasNext()) {
 			final Reference r = (Reference) itr.next();
@@ -148,7 +153,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 			
 			if (references.uniqueResult() != null) {
 				itr.remove();
-				referencesToAdd.add(references.uniqueResult());
+				referencesToAdd.add((Reference)references.uniqueResult());
 			}
 		}
 		s.getReferences().addAll(referencesToAdd);

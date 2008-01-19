@@ -64,7 +64,7 @@ public class StaticCompresser extends HttpServlet {
 		S_LONG_AGE = "public, " + maxage(I_LONG_AGE);
 	}
 
-	private final Map files = new HashMap();
+	private final Map<String, FileData> files = new HashMap<String, FileData>();
 	private final MessageDigest etagComputer;
 	private long currentCacheSize;
 

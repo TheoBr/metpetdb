@@ -21,13 +21,13 @@ import edu.rpi.metpetdb.client.model.Sample;
 
 public class SampleParser {
 
-	private Set samples;
+	private Set<Sample> samples;
 
-	private Map mapping;
+	private Map<String, Method> mapping;
 
 	public SampleParser(final String filename) {
-		samples = new HashSet();
-		mapping = new HashMap();
+		samples = new HashSet<Sample>();
+		mapping = new HashMap<String, Method>();
 		mapping.put("Sample", getMethodWithName("setAlias"));
 		mapping.put("Rock Type", getMethodWithName("setRockType"));
 		mapping.put("Comment", null); // not yet
@@ -48,7 +48,7 @@ public class SampleParser {
 			final HSSFWorkbook wb = new HSSFWorkbook(fs);
 			final HSSFSheet sheet = wb.getSheetAt(0);
 			final HSSFRow header = sheet.getRow(0);
-			final ArrayList headerText = new ArrayList();
+			final ArrayList<String> headerText = new ArrayList<String>();
 			for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
 				final HSSFCell cell = header.getCell((short) i);
 				final HSSFRichTextString richText = cell
@@ -65,7 +65,8 @@ public class SampleParser {
 		}
 	}
 
-	private void parseRow(final ArrayList headerText, final HSSFRow row) {
+	@SuppressWarnings("unchecked")
+	private void parseRow(final ArrayList<String> headerText, final HSSFRow row) {
 		final Sample s = new Sample();
 		for(int i = 0;i<row.getPhysicalNumberOfCells();++i) {
 			//final HSSFCell cell = row.getCell((short)i);
@@ -81,6 +82,7 @@ public class SampleParser {
 		samples.add(s);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private Class getColumnType(final String headerText) {
 		if (headerText.equals("Latitude"))
 			return double.class;

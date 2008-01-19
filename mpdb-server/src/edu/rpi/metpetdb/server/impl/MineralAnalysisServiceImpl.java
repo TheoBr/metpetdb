@@ -34,6 +34,7 @@ public class MineralAnalysisServiceImpl extends MpDbServlet
 		return toResults(sizeQuery, pageQuery);
 	}
 
+	@SuppressWarnings("unchecked")
 	public ArrayList all(long subsampleId) throws NoSuchObjectException {
 		return (ArrayList) byKeySet("MineralAnalysis", "subsampleId",
 				subsampleId);

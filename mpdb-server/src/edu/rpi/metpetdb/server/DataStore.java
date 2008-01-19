@@ -100,6 +100,7 @@ public class DataStore {
 		return databaseObjectConstraints;
 	}
 
+	@SuppressWarnings("deprecation")
 	static synchronized void setConstraints(final DatabaseObjectConstraints oc) {
 		final Session s = open();
 		try {
@@ -127,6 +128,7 @@ public class DataStore {
 		oc.finishInitialization();
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void populateObjectConstraintField(
 			final DatabaseMetaData md, final DatabaseObjectConstraints oc,
 			final Field f) throws SQLException, IllegalAccessException,
@@ -154,14 +156,14 @@ public class DataStore {
 			if (prop.getValue().getClass() == org.hibernate.mapping.Set.class
 					|| prop.getValue().getClass() == org.hibernate.mapping.Bag.class) {
 				col = null;
-				//final Iterator fkItr = ((org.hibernate.mapping.Set) prop
-				//		.getValue()).getCollectionTable()
-				//		.getForeignKeyIterator();
-				//while (fkItr.hasNext()) {
-					// TODO make it get the constraints of referenced columns
-				//	final ForeignKey fk = (ForeignKey) fkItr.next();
-					// fk.getReferencedColumns().get(0);
-				//}
+				// final Iterator fkItr = ((org.hibernate.mapping.Set) prop
+				// .getValue()).getCollectionTable()
+				// .getForeignKeyIterator();
+				// while (fkItr.hasNext()) {
+				// TODO make it get the constraints of referenced columns
+				// final ForeignKey fk = (ForeignKey) fkItr.next();
+				// fk.getReferencedColumns().get(0);
+				// }
 			} else {
 				final Iterator i = prop.getColumnIterator();
 				if (!i.hasNext())
@@ -224,6 +226,7 @@ public class DataStore {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static Class clazz(final PersistentClass cm, final String entityName) {
 		if (cm != null)
 			return cm.getMappedClass();
@@ -235,6 +238,7 @@ public class DataStore {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static PropertyConstraint createPropertyConstraint(
 			final Property p, final Field f) throws IllegalAccessException,
 			InstantiationException {
@@ -255,20 +259,20 @@ public class DataStore {
 				rc.getName().lastIndexOf(".") + 1);
 
 		if (rc == String.class)
-			return StringConstraint.class.isAssignableFrom(c)
-					? (PropertyConstraint) c.newInstance()
+			return StringConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
+					.newInstance()
 					: new StringConstraint();
 		else if (rc == Geometry.class)
-			return GeometryConstraint.class.isAssignableFrom(c)
-					? (PropertyConstraint) c.newInstance()
+			return GeometryConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
+					.newInstance()
 					: new GeometryConstraint();
 		else if (rc == Integer.class)
-			return IntegerConstraint.class.isAssignableFrom(c)
-					? (PropertyConstraint) c.newInstance()
+			return IntegerConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
+					.newInstance()
 					: new IntegerConstraint();
 		else if (rc == Float.class)
-			return FloatConstraint.class.isAssignableFrom(c)
-					? (PropertyConstraint) c.newInstance()
+			return FloatConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
+					.newInstance()
 					: new FloatConstraint();
 		else if ("minerals".equals(name) || "mineral".equals(name)) {
 			MineralConstraint mc;
@@ -291,8 +295,8 @@ public class DataStore {
 				|| rc == java.util.Collection.class) {
 			// Many-to-many or one-to-many association
 			if ("images".equals(name)) {
-				return ImageConstraint.class.isAssignableFrom(c)
-						? (ImageConstraint) c.newInstance()
+				return ImageConstraint.class.isAssignableFrom(c) ? (ImageConstraint) c
+						.newInstance()
 						: new ImageConstraint();
 			} else {
 				MultiValuedStringConstraint rcc;
@@ -304,16 +308,16 @@ public class DataStore {
 				return rcc;
 			}
 		} else if ("timestamp".equals(tn)) {
-			return TimestampConstraint.class.isAssignableFrom(c)
-					? (TimestampConstraint) c.newInstance()
+			return TimestampConstraint.class.isAssignableFrom(c) ? (TimestampConstraint) c
+					.newInstance()
 					: new TimestampConstraint();
 		} else if (rc == Boolean.class || "yes_no".equals(tn)) {
-			return BooleanConstraint.class.isAssignableFrom(c)
-					? (BooleanConstraint) c.newInstance()
+			return BooleanConstraint.class.isAssignableFrom(c) ? (BooleanConstraint) c
+					.newInstance()
 					: new BooleanConstraint();
 		} else if ("image".equals(name)) {
-			return ImageConstraint.class.isAssignableFrom(c)
-					? (ImageConstraint) c.newInstance()
+			return ImageConstraint.class.isAssignableFrom(c) ? (ImageConstraint) c
+					.newInstance()
 					: new ImageConstraint();
 		} else if (c == CollectionConstraint.class) {
 			// We want to fetch the applicable values for the one end of a
@@ -337,6 +341,8 @@ public class DataStore {
 					+ p.getPersistentClass().getClassName() + " property "
 					+ p.getName() + ".");
 	}
+
+	@SuppressWarnings("unchecked")
 	private static int propertyId(final Class who, final String name)
 			throws IllegalAccessException {
 		try {
@@ -346,6 +352,7 @@ public class DataStore {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void appendToAllArray(final DatabaseObjectConstraints oc,
 			final PropertyConstraint pc) throws IllegalAccessException {
 		try {

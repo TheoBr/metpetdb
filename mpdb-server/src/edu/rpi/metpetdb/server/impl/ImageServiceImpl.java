@@ -42,6 +42,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		return i;
 	}
 
+	@SuppressWarnings("unchecked")
 	public ArrayList allImages(final long subsampleId)
 			throws NoSuchObjectException {
 		return (ArrayList) byKeySet("Image", "subsampleId", subsampleId);
@@ -67,6 +68,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public ImageOnGrid saveImageOnGrid(ImageOnGrid iog)
 			throws ValidationException, LoginRequiredException {
 		try {
@@ -202,6 +204,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static final void resetImage(final Set s) {
 		final Iterator itr = s.iterator();
 		while(itr.hasNext()) {

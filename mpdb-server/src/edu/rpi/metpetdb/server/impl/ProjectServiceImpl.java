@@ -15,6 +15,7 @@ import edu.rpi.metpetdb.server.MpDbServlet;
 public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("unchecked")
 	public Project details(final int projectId) throws NoSuchObjectException {
 		final Project p = (Project) byId("Project", projectId);
 		p.setMembers(load(p.getMembers()));
@@ -23,6 +24,7 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 		return p;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Project saveProject(Project p) throws ValidationException,
 			LoginRequiredException {
 		doc.validate(p);

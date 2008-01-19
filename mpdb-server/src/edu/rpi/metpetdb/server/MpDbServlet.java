@@ -46,6 +46,7 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	private static final long serialVersionUID = 1L;
 
 	/** The current thread's {@link Req}. */
+	@SuppressWarnings("unchecked")
 	private static final ThreadLocal perThreadReq = new ThreadLocal();
 
 	/** The server's object constraint instance. */
@@ -173,10 +174,10 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 *         process is necessary to support the GWT serializer avoiding the
 	 *         Hibernate specific PersistentSet type.
 	 */
-	protected static Set load(final Set s) {
+	protected static Set<Object> load(final Set<Object> s) {
 		if (s == null)
 			return s;
-		return s instanceof HashSet ? s : new HashSet(s);
+		return s instanceof HashSet ? s : new HashSet<Object>(s);
 	}
 
 	/**
@@ -420,7 +421,7 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 			final Object r = q.list();
 			return r;
 		} else {
-			return new ArrayList();
+			return new ArrayList<Object>();
 		}
 	}
 
@@ -437,9 +438,10 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 		final Number sz = (Number) szQuery.uniqueResult();
 		return new Results(sz.intValue(), sz.intValue() > 0
 				? objQuery.list()
-				: new ArrayList());
+				: new ArrayList<Object>());
 	}
 
+	@SuppressWarnings("unchecked")
 	public String processCall(final String payload)
 			throws SerializationException {
 		final Req r = new Req();

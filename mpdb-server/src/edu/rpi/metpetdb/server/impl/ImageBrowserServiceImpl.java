@@ -31,6 +31,7 @@ public class ImageBrowserServiceImpl extends MpDbServlet
 		return toResults(sizeQuery, pageQuery);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Grid details(final long id) throws NoSuchObjectException {
 		final Grid g = (Grid) byId("Grid", id);
 		g.setImagesOnGrid(load(g.getImagesOnGrid()));
@@ -40,10 +41,12 @@ public class ImageBrowserServiceImpl extends MpDbServlet
 		return g;
 	}
 
+	@SuppressWarnings("unchecked")
 	public ArrayList imagesOnGrid(long id) throws NoSuchObjectException {
 		return (ArrayList) byKeySet("ImageOnGrid", "gridId", id);
 	}
 
+	@SuppressWarnings("unchecked")
 	public Grid saveGrid(Grid g) throws LoginRequiredException {
 		if (g.getSubsample().getSample().getOwner().getId() != currentUser())
 			throw new SecurityException("Cannot modify grids you don't own.");

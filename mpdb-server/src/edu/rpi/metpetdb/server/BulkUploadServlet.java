@@ -33,6 +33,7 @@ public class BulkUploadServlet  extends HttpServlet {
 		
 	}
 
+	@SuppressWarnings("unchecked")
 	private FileItem getFileItem(HttpServletRequest request) {
 		FileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);

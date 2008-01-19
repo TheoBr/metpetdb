@@ -88,6 +88,7 @@ public class GeometryType implements UserType {
 		return original;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Class returnedClass() {
 		return Geometry.class;
 	}
