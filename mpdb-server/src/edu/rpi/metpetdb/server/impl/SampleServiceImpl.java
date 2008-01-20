@@ -32,10 +32,10 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		final String name = "Sample.forUser";
 		return toResults(sizeQuery(name, id), pageQuery(name, p, id));
 	}
-	
-	public Results allPublicSamples(final PaginationParameters p){
+
+	public Results allPublicSamples(final PaginationParameters p) {
 		final String name = "Sample.allPublic";
-		return toResults(sizeQuery(name), pageQuery(name,p));
+		return toResults(sizeQuery(name), pageQuery(name, p));
 	}
 
 	public Results projectSamples(final PaginationParameters p, long id) {
@@ -46,8 +46,8 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	@SuppressWarnings("unchecked")
 	public Sample details(final long id) throws NoSuchObjectException {
 		final Sample s = (Sample) byId("Sample", id);
-		s.setSubsampleCount(((Number) sizeQuery(
-				"Subsample.bySampleId", s.getId()).uniqueResult()).intValue());
+		s.setSubsampleCount(((Number) sizeQuery("Subsample.bySampleId",
+				s.getId()).uniqueResult()).intValue());
 		s.setProjects(load(s.getProjects()));
 		s.setMinerals(load(s.getMinerals()));
 		s.setSubsamples(load(s.getSubsamples()));
@@ -71,8 +71,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 			replaceRegion(sample);
 			replaceMetamorphicGrade(sample);
 			replaceReferences(sample);
-			
-			
+
 			if (sample.mIsNew())
 				insert(sample);
 			else {
@@ -90,7 +89,9 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 			if (sample.getRegions() != null)
 				sample.setRegions(load(sample.getRegions()));
 			if (sample.getMetamorphicGrades() != null)
-				sample.setMetamorphicGrades(load(sample.getMetamorphicGrades()));
+				sample
+						.setMetamorphicGrades(load(sample
+								.getMetamorphicGrades()));
 			if (sample.getReferences() != null)
 				sample.setReferences(load(sample.getReferences()));
 			sample.setImages(null);
@@ -103,75 +104,84 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 			throw cve;
 		}
 	}
-	
-	//TODO for some reason it does not get the named query
+
+	// TODO for some reason it does not get the named query
 	@SuppressWarnings("unchecked")
 	private void replaceRegion(final Sample s) {
-		final Iterator itr = s.getRegions().iterator();
-		final HashSet regionsToAdd = new HashSet();
-		while(itr.hasNext()) {
-			final Region r = (Region) itr.next();
-			final Query regions = namedQuery("edu.rpi.metpetdb.client.model.Region.Region.byName");
-			regions.setString("name", r.getName());
-			if (regions.uniqueResult() != null) {
-				itr.remove();
-				regionsToAdd.add(regions.uniqueResult());
+		if (s.getRegions() != null) {
+			final Iterator itr = s.getRegions().iterator();
+			final HashSet regionsToAdd = new HashSet();
+			while (itr.hasNext()) {
+				final Region r = (Region) itr.next();
+				final Query regions = namedQuery("edu.rpi.metpetdb.client.model.Region.Region.byName");
+				regions.setString("name", r.getName());
+				if (regions.uniqueResult() != null) {
+					itr.remove();
+					regionsToAdd.add(regions.uniqueResult());
+				}
 			}
+			s.getRegions().addAll(regionsToAdd);
 		}
-		s.getRegions().addAll(regionsToAdd);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void replaceMetamorphicGrade(final Sample s) {
-		final Iterator itr = s.getMetamorphicGrades().iterator();
-		final HashSet<MetamorphicGrade> metamorphicToAdd = new HashSet<MetamorphicGrade>();
-		
-		while(itr.hasNext()) {
-			final MetamorphicGrade mg = (MetamorphicGrade) itr.next();
-			final Query grades = namedQuery("edu.rpi.metpetdb.client.model.MetamorphicGrade.MetamorphicGrade.byName");
-			
-			grades.setString("name", mg.getName());
-			
-			if (grades.uniqueResult() != null) {
-				itr.remove();
-				metamorphicToAdd.add((MetamorphicGrade)grades.uniqueResult());
+		if (s.getMetamorphicGrades() != null) {
+			final Iterator itr = s.getMetamorphicGrades().iterator();
+			final HashSet<MetamorphicGrade> metamorphicToAdd = new HashSet<MetamorphicGrade>();
+
+			while (itr.hasNext()) {
+				final MetamorphicGrade mg = (MetamorphicGrade) itr.next();
+				final Query grades = namedQuery("edu.rpi.metpetdb.client.model.MetamorphicGrade.MetamorphicGrade.byName");
+
+				grades.setString("name", mg.getName());
+
+				if (grades.uniqueResult() != null) {
+					itr.remove();
+					metamorphicToAdd.add((MetamorphicGrade) grades
+							.uniqueResult());
+				}
 			}
+			s.getMetamorphicGrades().addAll(metamorphicToAdd);
 		}
-		s.getMetamorphicGrades().addAll(metamorphicToAdd);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void replaceReferences(final Sample s) {
-		final Iterator itr = s.getReferences().iterator();
-		final HashSet<Reference> referencesToAdd = new HashSet<Reference>();
-		
-		while(itr.hasNext()) {
-			final Reference r = (Reference) itr.next();
-			final Query references = namedQuery("edu.rpi.metpetdb.client.model.Reference.Reference.byName");
-			
-			references.setString("name", r.getName());
-			
-			if (references.uniqueResult() != null) {
-				itr.remove();
-				referencesToAdd.add((Reference)references.uniqueResult());
+		if (s.getReferences() != null) {
+			final Iterator itr = s.getReferences().iterator();
+			final HashSet<Reference> referencesToAdd = new HashSet<Reference>();
+
+			while (itr.hasNext()) {
+				final Reference r = (Reference) itr.next();
+				final Query references = namedQuery("edu.rpi.metpetdb.client.model.Reference.Reference.byName");
+
+				references.setString("name", r.getName());
+
+				if (references.uniqueResult() != null) {
+					itr.remove();
+					referencesToAdd.add((Reference) references.uniqueResult());
+				}
 			}
+			s.getReferences().addAll(referencesToAdd);
 		}
-		s.getReferences().addAll(referencesToAdd);
 	}
-	
-	public void delete(long id) throws NoSuchObjectException, LoginRequiredException {
+
+	public void delete(long id) throws NoSuchObjectException,
+			LoginRequiredException {
 		try {
 			Sample s = (Sample) byId("Sample", id);
 			if (s.getOwner().getId() != currentUser())
-				throw new SecurityException("Cannot modify samples you don't own.");
-			delete((Object)s);
+				throw new SecurityException(
+						"Cannot modify samples you don't own.");
+			delete((Object) s);
 			s = null;
 			commit();
 		} catch (ConstraintViolationException cve) {
-			
+
 		}
 	}
-	
+
 	public static final void resetSample(final Sample s) {
 		s.setImages(null);
 		s.setMetamorphicGrades(null);

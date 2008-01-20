@@ -31,7 +31,7 @@
 
   <servlet>
     <servlet-name>constants</servlet-name>
-    <servlet-class>edu.rpi.metpetdb.server.ConstantsServiceImpl</servlet-class>
+    <servlet-class>edu.rpi.metpetdb.server.impl.ConstantsServiceImpl</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
@@ -41,7 +41,7 @@
 
   <servlet>
     <servlet-name>project</servlet-name>
-    <servlet-class>edu.rpi.metpetdb.server.ProjectServiceImpl</servlet-class>
+    <servlet-class>edu.rpi.metpetdb.server.impl.ProjectServiceImpl</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
@@ -51,7 +51,7 @@
 
   <servlet>
     <servlet-name>sample</servlet-name>
-    <servlet-class>edu.rpi.metpetdb.server.SampleServiceImpl</servlet-class>
+    <servlet-class>edu.rpi.metpetdb.server.impl.SampleServiceImpl</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
@@ -61,7 +61,7 @@
 
   <servlet>
     <servlet-name>subsample</servlet-name>
-    <servlet-class>edu.rpi.metpetdb.server.SubsampleServiceImpl</servlet-class>
+    <servlet-class>edu.rpi.metpetdb.server.impl.SubsampleServiceImpl</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
@@ -71,7 +71,7 @@
 
   <servlet>
     <servlet-name>user</servlet-name>
-    <servlet-class>edu.rpi.metpetdb.server.UserServiceImpl</servlet-class>
+    <servlet-class>edu.rpi.metpetdb.server.impl.UserServiceImpl</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
@@ -81,7 +81,7 @@
   
   <servlet>
     <servlet-name>imageBrowser</servlet-name>
-    <servlet-class>edu.rpi.metpetdb.server.ImageBrowserServiceImpl</servlet-class>
+    <servlet-class>edu.rpi.metpetdb.server.impl.ImageBrowserServiceImpl</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
@@ -91,7 +91,7 @@
   
   <servlet>
     <servlet-name>image</servlet-name>
-    <servlet-class>edu.rpi.metpetdb.server.ImageServiceImpl</servlet-class>
+    <servlet-class>edu.rpi.metpetdb.server.impl.ImageServiceImpl</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
@@ -101,7 +101,7 @@
   
   <servlet>
     <servlet-name>mineralAnalysis</servlet-name>
-    <servlet-class>edu.rpi.metpetdb.server.MineralAnalysisServiceImpl</servlet-class>
+    <servlet-class>edu.rpi.metpetdb.server.impl.MineralAnalysisServiceImpl</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
@@ -111,7 +111,7 @@
   
   <servlet>
     <servlet-name>mpdbGeneric</servlet-name>
-    <servlet-class>edu.rpi.metpetdb.server.MpDbGenericServiceImpl</servlet-class>
+    <servlet-class>edu.rpi.metpetdb.server.impl.MpDbGenericServiceImpl</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>

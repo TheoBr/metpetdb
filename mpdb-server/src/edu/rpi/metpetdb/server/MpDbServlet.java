@@ -58,10 +58,8 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 		super.init(sc);
 		DataStore.init();
 		doc = DataStore.getDatabaseObjectConstraints();
-		oc =  DataStore.getObjectConstraints();
+		oc = DataStore.getObjectConstraints();
 		loadPropertyFiles();
-		//TODO set this to your userid for automatic login
-		//this.currentReq().userId = new Integer(1);
 	}
 
 	public void destroy() {
@@ -74,14 +72,14 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	private Req currentReq() {
 		return (Req) perThreadReq.get();
 	}
-	
+
 	private void loadPropertyFiles() {
 		final String propFile = "files.properties";
 		final InputStream i = ImageUploadServlet.class.getClassLoader()
 				.getResourceAsStream(propFile);
 		if (i == null)
 			throw new IllegalStateException("No " + propFile + " found");
-		
+
 		try {
 			fileProps.load(i);
 			i.close();
@@ -130,22 +128,26 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 *             invalid.
 	 */
 	protected int currentUser() throws LoginRequiredException {
-		final Req r = currentReq();
-		if (r.userId == null) {
-			final Cookie[] cookieJar = getThreadLocalRequest().getCookies();
-			if (cookieJar != null) {
-				for (int k = cookieJar.length - 1; k >= 0; k--) {
-					final Cookie c = cookieJar[k];
-					if (MpDbConstants.USERID_COOKIE.equals(c.getName())) {
-						r.userId = SessionEncrypter.verify(c.getValue());
-						break;
+		if (false) {
+			final Req r = currentReq();
+			if (r.userId == null) {
+				final Cookie[] cookieJar = getThreadLocalRequest().getCookies();
+				if (cookieJar != null) {
+					for (int k = cookieJar.length - 1; k >= 0; k--) {
+						final Cookie c = cookieJar[k];
+						if (MpDbConstants.USERID_COOKIE.equals(c.getName())) {
+							r.userId = SessionEncrypter.verify(c.getValue());
+							break;
+						}
 					}
 				}
+				if (r.userId == null)
+					throw new LoginRequiredException();
 			}
-			if (r.userId == null)
-				throw new LoginRequiredException();
+			return r.userId.intValue();
 		}
-		return r.userId.intValue();
+		//TODO for automatic login
+		return 1;
 	}
 
 	/**
@@ -436,8 +438,7 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 */
 	protected Results toResults(final Query szQuery, final Query objQuery) {
 		final Number sz = (Number) szQuery.uniqueResult();
-		return new Results(sz.intValue(), sz.intValue() > 0
-				? objQuery.list()
+		return new Results(sz.intValue(), sz.intValue() > 0 ? objQuery.list()
 				: new ArrayList<Object>());
 	}
 
