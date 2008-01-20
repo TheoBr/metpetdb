@@ -52,7 +52,7 @@
 
 	<target name="compile-java" depends="setup">
 		<mkdir dir="${basedir}/bin" />
-		<javac destdir="${basedir}/bin" srcdir="${basedir}/src" classpathref="libs" source="1.4" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
+		<javac destdir="${basedir}/bin" srcdir="${basedir}/src" classpathref="libs" source="1.5" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
 
 		<copy todir="${basedir}/bin" includeemptydirs="no">
 			<fileset dir="${basedir}/src" excludes="**/*.java" />
