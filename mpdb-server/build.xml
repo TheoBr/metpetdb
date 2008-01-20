@@ -12,6 +12,9 @@
 	<property name="prod_war" location="/local/db/tomcat/metpetweb/metpetwb/metpetweb.war" />
 	<property name="catalina_home" location="/local/db/tomact/apache-tomcat-5.5.20" />
 
+	<property name="mpdb-common-dir" location="../mpdb-common" />
+	<property name="mpdb-client-dir" location="../mpdb-client" />
+
 
 	<propertyfile file="src/builddate.properties">
 		<entry key="builddate" value="now" type="date" pattern="yyyy.MM.dd HH.mm.ss" />
@@ -28,8 +31,8 @@
 		<fileset dir="${ctx_lib}" includes="*.jar" />
 		<pathelement location="${gwt_home}/gwt-user.jar" />
 		<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
-		<pathelement location="../mpdb-client/src" />
-		<pathelement location="../mpdb-common/src" />
+		<pathelement location="../mpdb-client/bin" />
+		<pathelement location="../mpdb-common/bin" />
 	</path>
 
 	<!-- Library files for compile-html -->
@@ -52,7 +55,28 @@
 		</copy>
 	</target>
 
-	<target name="compile-java" depends="setup">
+	<!-- Compile the Java code in mpdb-common first -->
+	<target name="compile-java-mpdb-common" depends="setup">
+		<mkdir dir="${mpdb-common-dir}/bin" />
+		<javac destdir="${mpdb-common-dir}/bin" srcdir="${mpdb-common-dir}/src" classpathref="libs" source="1.4" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
+
+		<copy todir="${mpdb-common-dir}/bin" includeemptydirs="no">
+			<fileset dir="${mpdb-common-dir}/src" excludes="**/*.java" />
+		</copy>
+	</target>
+	
+	<!-- Compile the Java code in mpdb-client next -->
+		<target name="compile-java-mpdb-client" depends="compile-java-mpdb-common">
+			<mkdir dir="${mpdb-client-dir}/bin" />
+			<javac destdir="${mpdb-client-dir}/bin" srcdir="${mpdb-client-dir}/src" classpathref="libs" source="1.4" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
+
+			<copy todir="${mpdb-client-dir}/bin" includeemptydirs="no">
+				<fileset dir="${mpdb-client-dir}/src" excludes="**/*.java" />
+			</copy>
+		</target>
+
+	<!-- Compile the server side stuff -->
+	<target name="compile-java" depends="compile-java-mpdb-client">
 		<mkdir dir="${basedir}/bin" />
 		<javac destdir="${basedir}/bin" srcdir="${basedir}/src" classpathref="libs" source="1.5" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
 
@@ -164,31 +188,32 @@
 	&lt;classpathentry combineaccessrules="false" kind="src" path="/mpdb-common"/&gt;
 &lt;/classpath&gt;
 </echo>
-		
-<echo file="mpdb-server.launch"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
-<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/mpdb-server"/>
-</listAttribute>
-<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
-<listEntry value="4"/>
-</listAttribute>
-<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
-<listAttribute key="org.eclipse.jdt.launching.CLASSPATH">
-<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry containerPath=&quot;org.eclipse.jdt.launching.JRE_CONTAINER&quot; javaProject=&quot;mpdb-server&quot; path=&quot;1&quot; type=&quot;4&quot;/&gt;&#10;"/>
-<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/mpdb-client/src&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#10;"/>
-<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/mpdb-common/src&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#10;"/>
-<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry id=&quot;org.eclipse.jdt.launching.classpathentry.defaultClasspath&quot;&gt;&#10;&lt;memento exportedEntriesOnly=&quot;false&quot; project=&quot;mpdb-server&quot;/&gt;&#10;&lt;/runtimeClasspathEntry&gt;&#10;"/>
-</listAttribute>
-<booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.GWTShell"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="mpdb-server"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx256m"/>
-</launchConfiguration>
+
+		<echo file="mpdb-server.launch">
+			<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+			<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+				<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+					<listEntry value="/mpdb-server"/>
+				</listAttribute>
+				<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+					<listEntry value="4"/>
+				</listAttribute>
+				<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
+				<listAttribute key="org.eclipse.jdt.launching.CLASSPATH">
+					<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry containerPath=&quot;org.eclipse.jdt.launching.JRE_CONTAINER&quot; javaProject=&quot;mpdb-server&quot; path=&quot;1&quot; type=&quot;4&quot;/&gt;&#10;"/>
+					<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/mpdb-client/src&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#10;"/>
+					<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/mpdb-common/src&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#10;"/>
+					<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry id=&quot;org.eclipse.jdt.launching.classpathentry.defaultClasspath&quot;&gt;&#10;&lt;memento exportedEntriesOnly=&quot;false&quot; project=&quot;mpdb-server&quot;/&gt;&#10;&lt;/runtimeClasspathEntry&gt;&#10;"/>
+				</listAttribute>
+				<booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
+				<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.GWTShell"/>
+				<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="mpdb-server"/>
+				<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx256m"/>
+			</launchConfiguration>
 ]]>
 </echo>
 		<propertyfile file="src/files.properties">
-				<entry key="images.path" value="/path/to/images/" />
-			</propertyfile>
+			<entry key="images.path" value="/path/to/images/" />
+		</propertyfile>
 	</target>
 </project>
