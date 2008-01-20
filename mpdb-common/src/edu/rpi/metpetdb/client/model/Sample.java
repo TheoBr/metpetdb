@@ -5,9 +5,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.postgis.Geometry;
+import org.postgis.Point;
 
 import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
+import edu.rpi.metpetdb.client.service.MpDbConstants;
 
 public class Sample extends MObject implements IHasName {
 	public static final int P_sesarNumber = 0;
@@ -111,15 +113,18 @@ public class Sample extends MObject implements IHasName {
 	}
 	
 	public void setLatitude(final double d) {
-		//if (location == null)
-		//	location = new Point();
-		//((Point) location).setX(d);
+		if (location == null) {
+			location = new Point();
+			((Point)location).dimension = 2;
+			((Point)location).srid = MpDbConstants.WGS84;
+		}
+		((Point) location).x = d;
 	}
 	
 	public void setLongitude(final double d) {
-		//if (location == null)
-		//	location = new Point();
-		//((Point) location).setY(d);
+		if (location == null)
+			location = new Point();
+		((Point) location).y = d;
 	}
 
 	public User getOwner() {

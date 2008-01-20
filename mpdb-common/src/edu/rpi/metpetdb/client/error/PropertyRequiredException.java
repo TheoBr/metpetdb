@@ -16,4 +16,8 @@ public class PropertyRequiredException extends ValidationException {
 	public String format() {
 		return LocaleHandler.lc_text.errorDesc_Required(formatPropertyName());
 	}
+	
+	public String getMessage() {
+		return format() + super.getMessage();
+	}
 }
