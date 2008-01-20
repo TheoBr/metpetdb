@@ -28,6 +28,8 @@
 		<fileset dir="${ctx_lib}" includes="*.jar" />
 		<pathelement location="${gwt_home}/gwt-user.jar" />
 		<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
+		<pathelement location="../mpdb-client/src" />
+		<pathelement location="../mpdb-common/src" />
 	</path>
 
 	<!-- Library files for compile-html -->
