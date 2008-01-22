@@ -1,4 +1,4 @@
-<project name="mpdb" basedir="." default="compile-html">
+<project name="mpdb-client" basedir="." default="compile-html">
 
 	<property file="build.properties" />
 	<property name="build" location="${basedir}/build" />
@@ -68,13 +68,13 @@
 		</pathconvert>
 
 		<echo file=".classpath">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-	&lt;classpath&gt;
-		&lt;classpathentry kind="src" path="src" excluding="**/java_emu/**/*.java"/&gt;
-		&lt;classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/&gt;
-		&lt;classpathentry kind=&quot;lib&quot; path=&quot;${libs.e}&quot;/&gt;
-		&lt;classpathentry kind="output" path="bin"/&gt;
-		&lt;classpathentry combineaccessrules="false" kind="src" path="/mpdb-common"/&gt;
-	&lt;/classpath&gt;
+&lt;classpath&gt;
+&lt;classpathentry kind="src" path="src" excluding="**/java_emu/**/*.java"/&gt;
+&lt;classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/&gt;
+&lt;classpathentry kind=&quot;lib&quot; path=&quot;${libs.e}&quot;/&gt;
+&lt;classpathentry kind="output" path="bin"/&gt;
+&lt;classpathentry combineaccessrules="false" kind="src" path="/mpdb-common"/&gt;
+&lt;/classpath&gt;
 	</echo>
 		
 		<echo file="mpdb-client.launch"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
