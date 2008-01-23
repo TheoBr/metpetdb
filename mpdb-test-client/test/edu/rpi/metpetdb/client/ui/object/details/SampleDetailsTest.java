@@ -53,7 +53,7 @@ public class SampleDetailsTest extends GWTTestCase {
 	public void testLoadSample() {
 		new ServerOp() {
 			public void begin() {
-				MpDb.sample_svc.details(sampleId, this);
+				//MpDb.sample_svc.details(sampleId, this);
 			}
 
 			public void onSuccess(final Object result) {
