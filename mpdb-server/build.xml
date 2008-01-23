@@ -115,6 +115,12 @@
 				<include name="**/*.hbm.xml" />
 				<include name="**/*.class" />
 			</classes>
+			<classes dir="${mpdb-common-dir}/bin">
+				<include name="**/*.class" />
+			</classes>
+			<classes dir="${mpdb-client-dir}/bin">
+							<include name="**/*.class" />
+			</classes>
 			<lib dir="${basedir}/lib" includes="*" />
 			<lib dir="${gwt_home}" includes="gwt-servlet.jar" />
 		</war>
