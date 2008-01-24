@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <samples sample_id="1" version="0" sesar_number="000000000" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)" alias="TESTASDSA"/>
+</dataset>
