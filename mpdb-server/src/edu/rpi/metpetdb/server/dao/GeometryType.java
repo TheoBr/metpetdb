@@ -15,7 +15,7 @@ import org.postgis.binary.BinaryWriter;
 
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 
-public class GeometryType implements UserType {
+public class GeometryType implements UserType  {
 	private static final int[] SQL_TYPES = {Types.BLOB};
 
 	public Object deepCopy(Object value) throws HibernateException {
