@@ -1,4 +1,4 @@
-<project name="mpdb-test" basedir="." default="eclipse">
+<project name="mpdb-test-client" basedir="." default="eclipse">
 
 	<property file="build.properties" />
 	<property name="ctx_lib" location="${basedir}/lib" />
