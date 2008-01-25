@@ -100,7 +100,6 @@ public class DataStore {
 		return databaseObjectConstraints;
 	}
 
-	@SuppressWarnings("deprecation")
 	static synchronized void setConstraints(final DatabaseObjectConstraints oc) {
 		final Session s = open();
 		try {
