@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui;
+package edu.rpi.metpetdb.client.ui.user;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -9,6 +9,9 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
+import edu.rpi.metpetdb.client.ui.FormOp;
+import edu.rpi.metpetdb.client.ui.MpDb;
+import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 import edu.rpi.metpetdb.client.ui.input.FocusSupport;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;

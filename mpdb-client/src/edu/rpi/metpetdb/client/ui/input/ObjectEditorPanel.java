@@ -12,8 +12,8 @@ import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.UsesCurrentUser;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
 
 public abstract class ObjectEditorPanel extends DetailsPanel
 		implements
