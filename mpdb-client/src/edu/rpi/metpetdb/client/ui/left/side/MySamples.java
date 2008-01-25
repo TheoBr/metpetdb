@@ -4,11 +4,10 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.widgets.LeftColWidget;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
-public class MySamples extends LeftColWidget {
+public class MySamples extends LeftColWidget implements UsesLeftColumn {
 	
 	public MySamples() {
 		super("My Samples");
@@ -35,6 +34,11 @@ public class MySamples extends LeftColWidget {
 		list.add(favoriteSamples);
 		list.setStyleName("lcol-sectionList");
 		this.add(list);
+	}
+
+	public void onPageChanged() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

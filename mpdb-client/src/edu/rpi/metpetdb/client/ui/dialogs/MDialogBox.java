@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.widgets;
+package edu.rpi.metpetdb.client.ui.dialogs;
 
 import org.gwtwidgets.client.ui.PNGImage;
 
@@ -9,6 +9,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
+
 
 public class MDialogBox extends DialogBox
 		implements

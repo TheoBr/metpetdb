@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.objects.details;
+package edu.rpi.metpetdb.client.ui.user;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 

@@ -8,9 +8,9 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.ui.ServerOp;
+import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageList;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AddImageWizard;
-import edu.rpi.metpetdb.client.ui.widgets.MDialogBox;
 
 
 public class ChooseImageDialog extends MDialogBox implements ClickListener {

@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.widgets.MDialogBox;
+import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 
 /**
  * Basically accepts multple ObjectEditorPanels, and creates a wizard out of

@@ -15,7 +15,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package edu.rpi.metpetdb.client.ui.widgets;
+package edu.rpi.metpetdb.client.ui.dialogs;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;

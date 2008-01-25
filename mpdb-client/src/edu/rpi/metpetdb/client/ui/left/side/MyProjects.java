@@ -5,11 +5,10 @@ import java.util.Set;
 
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.widgets.LeftColWidget;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
-public class MyProjects extends LeftColWidget {
+public class MyProjects extends LeftColWidget implements UsesLeftColumn {
 	
 	public MyProjects(final Set projects) {
 		super("My Projects");
@@ -39,6 +38,11 @@ public class MyProjects extends LeftColWidget {
 
 		// myProjects.add(focusProject);
 		return focusProject;
+	}
+
+	public void onPageChanged() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

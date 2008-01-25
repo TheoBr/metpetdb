@@ -10,8 +10,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
+import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
 import edu.rpi.metpetdb.client.ui.left.side.UsesLeftColumn;
-import edu.rpi.metpetdb.client.ui.widgets.LeftColWidget;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
 public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {

@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.Styles;
-import edu.rpi.metpetdb.client.ui.widgets.MDialogBox;
+import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 
 public class BulkUploadPanel extends MDialogBox
 		implements

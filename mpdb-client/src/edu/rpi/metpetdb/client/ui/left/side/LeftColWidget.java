@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.widgets;
+package edu.rpi.metpetdb.client.ui.left.side;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -6,6 +6,8 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
+
+import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class LeftColWidget extends SimplePanel {
 

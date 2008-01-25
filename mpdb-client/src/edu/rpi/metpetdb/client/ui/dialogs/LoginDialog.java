@@ -26,7 +26,6 @@ import edu.rpi.metpetdb.client.ui.input.Submit;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.PasswordAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
-import edu.rpi.metpetdb.client.ui.widgets.MDialogBox;
 import edu.rpi.metpetdb.client.ui.widgets.MTabPanel;
 
 public class LoginDialog extends MDialogBox

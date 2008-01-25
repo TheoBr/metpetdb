@@ -30,10 +30,10 @@ import edu.rpi.metpetdb.client.ui.objects.details.MineralAnalysisDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.ProjectDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SubsampleDetails;
-import edu.rpi.metpetdb.client.ui.objects.details.UserDetails;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
 import edu.rpi.metpetdb.client.ui.objects.list.UserSampleList;
 import edu.rpi.metpetdb.client.ui.user.EditUserProfile;
+import edu.rpi.metpetdb.client.ui.user.UserDetails;
 import edu.rpi.metpetdb.client.ui.user.UserRegistrationPanel;
 
 /**

@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.widgets.MDialogBox;
 
 public class ValidationExceptionDialog extends MDialogBox implements ClickListener {
 	private final Button close;
