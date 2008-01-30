@@ -44,6 +44,8 @@ public class MetPetDBApplication implements EntryPoint {
 	
 	private static final String WIKI_URL = "http://trinity.db.cs.rpi.edu/xwiki/bin/view/Main/WebHome";
 	private static final String GIT_URL = "http://cgi2.cs.rpi.edu/~pearcs/gitweb.cgi?p=MetPetDB.git";
+	private static final String SVN_URL = "http://www.cs.rpi.edu/~watera2/websvn-2.0/index.php";
+	private static final String JAVADOC_URL = "http://samana.cs.rpi.edu:8080/watera2/api/index.html";
 	
 	private static RootPanel loginBar;
 	private static MMenuBar hdrnav;
@@ -298,6 +300,16 @@ public class MetPetDBApplication implements EntryPoint {
 		about.addItem(LocaleHandler.lc_text.aboutMenu_VersionControl(), new Command() {
 			public void execute() {
 				Window.open(GIT_URL, "mpdb_git", "");
+			}
+		});
+		about.addItem("SVN Version Control", new Command() {
+			public void execute() {
+				Window.open(SVN_URL, "mpdb_svn", "");
+			}
+		});
+		about.addItem("JavaDocs", new Command() {
+			public void execute() {
+				Window.open(JAVADOC_URL, "mpdb_javadoc", "");
 			}
 		});
 
