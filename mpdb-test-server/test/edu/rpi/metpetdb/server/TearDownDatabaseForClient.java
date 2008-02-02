@@ -1,8 +1,6 @@
 package edu.rpi.metpetdb.server;
 
-import java.io.FileOutputStream;
-
-import junit.framework.TestCase;
+import java.io.FileInputStream;
 
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
@@ -15,39 +13,48 @@ import org.dbunit.dataset.filter.DefaultTableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.hibernate.Session;
-import org.junit.Test;
+import org.hibernate.Transaction;
 
-public class InitDatabase extends TestCase {
+/**
+ * Basically same thing as SetupDatabaseForClient, but in reverse
+ * @author anthony
+ *
+ */
+public class TearDownDatabaseForClient {
 
 	private static Session s;
 
 	private static IDatabaseConnection conn;
-	
-	private IDataSet originalData;
+
+	private static IDataSet originalData;
+
+	public static void main(String[] args) {
+		DataStore.init();
+
+		s = DataStore.open();
+		Transaction tx = s.beginTransaction();
+
+		conn = new DatabaseConnection(s.connection());
+		
+		tearDown();
+		
+		try {
+			tx.commit();
+			s.close();
+			conn.close();
+			System.out.println("Database has been restored");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Tables excluded from the database backup
 	 */
 	private static final String excludedTables[] = { "geometry_columns",
-			"spatial_ref_sys"};
-	
-	public InitDatabase() {
-		DataStore.init();
+			"spatial_ref_sys" };
 
-		s = DataStore.open();
-		
-		conn = new DatabaseConnection(s.connection());
-	}
-
-	public static IDatabaseConnection getConnection() {
-		return conn;
-	}
-	
-	public static Session getSession() {
-		return s;
-	}
-
-	private void backupDatabase() {
+	private static void loadDatabase() {
 
 		try {
 			DatabaseConfig config = conn.getConfig();
@@ -64,44 +71,37 @@ public class InitDatabase extends TestCase {
 			for (final String s : excludedTables) {
 				tableFilter.excludeTable(s);
 			}
-			IDataSet filteredTable = new FilteredDataSet(tableFilter,conn.createDataSet());
-			DatabaseSequenceFilter sequenceFilter = new DatabaseSequenceFilter(conn, filteredTable.getTableNames());
+			IDataSet filteredTable = new FilteredDataSet(tableFilter, conn
+					.createDataSet());
+			DatabaseSequenceFilter sequenceFilter = new DatabaseSequenceFilter(
+					conn, filteredTable.getTableNames());
 			// Export the database excluding certain tables
-			originalData = new FilteredDataSet(sequenceFilter,
-					conn.createDataSet());
-			FlatXmlDataSet.write(originalData, new FileOutputStream(
-					"test-data/test-backup.xml"));
+			originalData = new FilteredDataSet(sequenceFilter, conn
+					.createDataSet());
 		} catch (Exception e) {
-
 			e.printStackTrace();
 		}
 	}
 	
-	@Test
-	public void testConnection() {
-		assertTrue(conn != null);
-	}
-
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		backupDatabase();
+	private static void tearDown()  {
+		//Delete test data
+		loadDatabase();
 		try {
-			DatabaseOperation.DELETE_ALL.execute(conn,originalData );
+			DatabaseOperation.DELETE_ALL.execute(conn, originalData);
 		} catch (Exception e) {
 
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+		
+		//put in backed up data
+		final IDataSet loadedDataSet;
 		try {
-			DatabaseOperation.INSERT.execute(conn, originalData);
-		} catch (Exception e) {
-
+			loadedDataSet = new FlatXmlDataSet(
+					new FileInputStream("test-data/test-backup.xml"));
+			//Insert test data
+			DatabaseOperation.INSERT.execute(conn, loadedDataSet);
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}	
 }

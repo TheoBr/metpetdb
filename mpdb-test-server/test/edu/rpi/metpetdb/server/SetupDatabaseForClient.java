@@ -1,8 +1,7 @@
 package edu.rpi.metpetdb.server;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-
-import junit.framework.TestCase;
 
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
@@ -15,60 +14,68 @@ import org.dbunit.dataset.filter.DefaultTableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.hibernate.Session;
-import org.junit.Test;
+import org.hibernate.Transaction;
 
-public class InitDatabase extends TestCase {
+/**
+ * Sets up the database for mpdb-test-client
+ * 
+ * @author anthony
+ * 
+ */
+public class SetupDatabaseForClient {
 
 	private static Session s;
 
 	private static IDatabaseConnection conn;
-	
-	private IDataSet originalData;
+
+	private static IDataSet originalData;
+
+	public static void main(String[] args) {
+		DataStore.init();
+
+		s = DataStore.open();
+		Transaction tx = s.beginTransaction();
+
+		conn = new DatabaseConnection(s.connection());
+
+		setUp();
+
+		try {
+			tx.commit();
+			s.close();
+			conn.close();
+			System.out.println("Database has been setup, don't forget to run TearDownDatabaseForClient when you are done");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Tables excluded from the database backup
 	 */
 	private static final String excludedTables[] = { "geometry_columns",
-			"spatial_ref_sys"};
-	
-	public InitDatabase() {
-		DataStore.init();
+			"spatial_ref_sys" };
 
-		s = DataStore.open();
-		
-		conn = new DatabaseConnection(s.connection());
-	}
-
-	public static IDatabaseConnection getConnection() {
-		return conn;
-	}
-	
-	public static Session getSession() {
-		return s;
-	}
-
-	private void backupDatabase() {
+	private static void backupDatabase() {
 
 		try {
 			DatabaseConfig config = conn.getConfig();
 			// We need this so that DbUnit can understand PostGIS geometry
 			config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY,
 					new PostGisDataTypeFactory());
-			// Change the table factory for more performance when backup up the
-			// database
-			config.setProperty(DatabaseConfig.PROPERTY_RESULTSET_TABLE_FACTORY,
-					new ForwardOnlyResultSetTableFactory());
 
 			// Setup the excluded tables
 			DefaultTableFilter tableFilter = new DefaultTableFilter();
 			for (final String s : excludedTables) {
 				tableFilter.excludeTable(s);
 			}
-			IDataSet filteredTable = new FilteredDataSet(tableFilter,conn.createDataSet());
-			DatabaseSequenceFilter sequenceFilter = new DatabaseSequenceFilter(conn, filteredTable.getTableNames());
+			IDataSet filteredTable = new FilteredDataSet(tableFilter, conn
+					.createDataSet());
+			DatabaseSequenceFilter sequenceFilter = new DatabaseSequenceFilter(
+					conn, filteredTable.getTableNames());
 			// Export the database excluding certain tables
-			originalData = new FilteredDataSet(sequenceFilter,
-					conn.createDataSet());
+			originalData = new FilteredDataSet(sequenceFilter, conn
+					.createDataSet());
 			FlatXmlDataSet.write(originalData, new FileOutputStream(
 					"test-data/test-backup.xml"));
 		} catch (Exception e) {
@@ -76,31 +83,25 @@ public class InitDatabase extends TestCase {
 			e.printStackTrace();
 		}
 	}
-	
-	@Test
-	public void testConnection() {
-		assertTrue(conn != null);
-	}
 
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
+	private static void setUp() {
+		// Backup the database
 		backupDatabase();
 		try {
-			DatabaseOperation.DELETE_ALL.execute(conn,originalData );
+			DatabaseOperation.DELETE_ALL.execute(conn, originalData);
 		} catch (Exception e) {
 
 			e.printStackTrace();
 		}
-	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
+		// put in test data
+		final IDataSet loadedDataSet;
 		try {
-			DatabaseOperation.INSERT.execute(conn, originalData);
-		} catch (Exception e) {
-
+			loadedDataSet = new FlatXmlDataSet(new FileInputStream(
+					"test-data/test-client-data.xml"));
+			// Insert test data
+			DatabaseOperation.INSERT.execute(conn, loadedDataSet);
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 	}
