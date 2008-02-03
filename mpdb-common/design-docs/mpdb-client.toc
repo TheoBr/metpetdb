@@ -1,0 +1,6 @@
+\contentsline {section}{\numberline {0.1}Introduction}{2}
+\contentsline {section}{\numberline {0.2}Bulk Upload}{2}
+\contentsline {subsection}{\numberline {0.2.1}Uploading the Document}{2}
+\contentsline {subsection}{\numberline {0.2.2}Parsing the Document}{2}
+\contentsline {subsection}{\numberline {0.2.3}Saving the objects in the database}{3}
+\contentsline {subsection}{\numberline {0.2.4}Reporting the status of the operation (success/failure)}{3}
