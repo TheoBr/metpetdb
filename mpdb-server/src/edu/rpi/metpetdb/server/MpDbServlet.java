@@ -310,7 +310,8 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 		q = currentSession().getNamedQuery(name + "/" + p.getParameter());
 		if (!p.isAscending())
 			q = currentSession().createQuery(q.getQueryString() + " desc");
-		q.setLong("id", id);
+		if (id != -1)
+			q.setLong("id", id);
 		q.setFirstResult(p.getOffset());
 		q.setMaxResults(p.getMaxResults());
 		return q;
@@ -337,7 +338,8 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 */
 	protected Query sizeQuery(final String name, final long id) {
 		Query q = currentSession().getNamedQuery(name + ",size");
-		q.setLong("id", id);
+		if (id != -1)
+			q.setLong("id", id);
 		return q;
 	}
 
@@ -425,7 +427,6 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 				: new ArrayList<Object>());
 	}
 
-	@SuppressWarnings("unchecked")
 	public String processCall(final String payload)
 			throws SerializationException {
 		final Req r = new Req();

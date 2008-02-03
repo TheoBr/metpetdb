@@ -16,6 +16,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.Column;
+import org.hibernate.mapping.ForeignKey;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
 import org.postgis.Geometry;
@@ -155,19 +156,19 @@ public class DataStore {
 			if (prop.getValue().getClass() == org.hibernate.mapping.Set.class
 					|| prop.getValue().getClass() == org.hibernate.mapping.Bag.class) {
 				col = null;
-				// final Iterator fkItr = ((org.hibernate.mapping.Set) prop
-				// .getValue()).getCollectionTable()
-				// .getForeignKeyIterator();
-				// while (fkItr.hasNext()) {
-				// TODO make it get the constraints of referenced columns
-				// final ForeignKey fk = (ForeignKey) fkItr.next();
-				// fk.getReferencedColumns().get(0);
-				// }
+//				final Iterator fkItr = ((org.hibernate.mapping.Set) prop
+//						.getValue()).getCollectionTable()
+//						.getForeignKeyIterator();
+//				while (fkItr.hasNext()) {
+//					// TODO make it get the constraints of referenced columns
+//					final ForeignKey fk = (ForeignKey) fkItr.next();
+//					fk.getReferencedColumns().get(0);
+//				}
 			} else {
-				final Iterator i = prop.getColumnIterator();
+				final Iterator<Column> i = prop.getColumnIterator();
 				if (!i.hasNext())
 					throw new RuntimeException("No cols: " + f.getName());
-				col = (Column) i.next();
+				col = i.next();
 				if (i.hasNext())
 					throw new RuntimeException("Too many cols: " + f.getName());
 			}

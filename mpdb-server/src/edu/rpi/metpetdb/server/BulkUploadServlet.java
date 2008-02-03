@@ -15,9 +15,11 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-public class BulkUploadServlet  extends HttpServlet {
+public class BulkUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	//private static String baseFolder = MpDbServlet.fileProps.getProperty("bulk.path");
+
+	// private static String baseFolder =
+	// MpDbServlet.fileProps.getProperty("bulk.path");
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -29,18 +31,16 @@ public class BulkUploadServlet  extends HttpServlet {
 			return;
 		}
 
-		
-		
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings( { "unchecked" })
 	private FileItem getFileItem(HttpServletRequest request) {
 		FileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
 
 		try {
-			List items = upload.parseRequest(request);
-			Iterator it = items.iterator();
+			List<FileItem> items = upload.parseRequest(request);
+			Iterator<FileItem> it = items.iterator();
 			while (it.hasNext()) {
 				FileItem item = (FileItem) it.next();
 				if (!item.isFormField()
