@@ -106,8 +106,13 @@ public class MetamorphicGradeAttribute extends GenericAttribute implements
 		});
 		final Button removeButton = new Button("Remove", new ClickListener() {
 			public void onClick(final Widget sender) {
-				editList.remove(hp);
-				realEditWidgets.remove(rText);
+				// If there are more than one entry spaces...
+				if(realEditWidgets.size() > 1)
+				{
+					// delete one
+					editList.remove(hp);
+					realEditWidgets.remove(rText);
+				}
 			}
 		});
 

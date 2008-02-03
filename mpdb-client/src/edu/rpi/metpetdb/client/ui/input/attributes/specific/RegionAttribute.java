@@ -79,9 +79,15 @@ public class RegionAttribute extends GenericAttribute implements ClickListener {
 			}
 		});
 		final Button removeButton = new Button("Remove", new ClickListener() {
-			public void onClick(final Widget sender) {
-				editList.remove(hp);
-				realEditWidgets.remove(rText);
+			public void onClick(final Widget sender) 
+			{
+				// If there are more than one entry spaces...				
+				if(realEditWidgets.size() > 1)
+				{
+					// remove one of them
+					editList.remove(hp);
+					realEditWidgets.remove(rText);
+				}
 			}
 		});
 		

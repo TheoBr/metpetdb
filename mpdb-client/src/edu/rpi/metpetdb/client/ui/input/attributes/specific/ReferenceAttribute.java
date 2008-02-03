@@ -80,8 +80,14 @@ public class ReferenceAttribute extends GenericAttribute implements ClickListene
 		});
 		final Button removeButton = new Button("Remove", new ClickListener() {
 			public void onClick(final Widget sender) {
-				editList.remove(hp);
-				realEditWidgets.remove(rText);
+				// If there are more than one entry spaces...				
+				if(realEditWidgets.size() > 1)
+				{
+					// remove one
+					editList.remove(hp);
+					realEditWidgets.remove(rText);					
+				}
+
 			}
 		});
 		
