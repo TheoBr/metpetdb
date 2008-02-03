@@ -13,9 +13,9 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.SampleAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.Region;
 import edu.rpi.metpetdb.client.model.MetamorphicGrade;
 import edu.rpi.metpetdb.client.model.Reference;
+import edu.rpi.metpetdb.client.model.Region;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
@@ -174,7 +174,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 			if (s.getOwner().getId() != currentUser())
 				throw new SecurityException(
 						"Cannot modify samples you don't own.");
-			delete((Object) s);
+			delete(s);
 			s = null;
 			commit();
 		} catch (ConstraintViolationException cve) {

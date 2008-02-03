@@ -45,7 +45,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 	@SuppressWarnings("unchecked")
 	public ArrayList allImages(final long subsampleId)
 			throws NoSuchObjectException {
-		return (ArrayList) byKeySet("Image", "subsampleId", subsampleId);
+		return (ArrayList) byKey(Image.class, "subsampleId", subsampleId);
 	}
 
 	public Image saveImage(Image image) throws ValidationException,

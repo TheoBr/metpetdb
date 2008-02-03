@@ -26,7 +26,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 	@SuppressWarnings("unchecked")
 	public User details(final String username) throws NoSuchObjectException {
-		User user = (User) byKey("User", "username", username);
+		User user = (User) byKey(User.class, "username", username);
 		user.setProjects(load(user.getProjects()));
 		forgetChanges();
 		return user;
@@ -37,7 +37,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			throws LoginFailureException, ValidationException {
 		doc.validate(ssr);
 		try {
-			final User u = (User) byKey("User", "username", ssr.getUsername());
+			final User u = (User) byKey(User.class, "username", ssr.getUsername());
 			if (!authenticate(u, ssr.getPassword()))
 				throw new LoginFailureException(doc.StartSessionRequest_password);
 			u.setProjects(load(u.getProjects()));
@@ -127,7 +127,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 	public void emailPassword(final String username)
 			throws NoSuchObjectException, UnableToSendEmailException {
-		final User u = (User) byKey("User", "username", username);
+		final User u = (User) byKey(User.class, "username", username);
 		if (u == null)
 			throw new NoSuchObjectException();
 		final String newpass = PasswordEncrypter.randomPassword();

@@ -93,7 +93,7 @@ public class SubsampleServiceImpl extends MpDbServlet
 			Subsample s = (Subsample) byId("Subsample", id);
 			if (s.getSample().getOwner().getId() != currentUser())
 				throw new SecurityException("Cannot modify subsamples you don't own.");
-			delete((Object)s);
+			delete(s);
 			s = null;
 			commit();
 		} catch (ConstraintViolationException cve) {

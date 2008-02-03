@@ -22,6 +22,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
+import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
@@ -46,8 +47,7 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	private static final long serialVersionUID = 1L;
 
 	/** The current thread's {@link Req}. */
-	@SuppressWarnings("unchecked")
-	private static final ThreadLocal perThreadReq = new ThreadLocal();
+	private static final ThreadLocal<Req> perThreadReq = new ThreadLocal<Req>();
 
 	/** The server's object constraint instance. */
 	protected DatabaseObjectConstraints doc;
@@ -70,7 +70,7 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	}
 
 	private Req currentReq() {
-		return (Req) perThreadReq.get();
+		return perThreadReq.get();
 	}
 
 	private void loadPropertyFiles() {
@@ -146,7 +146,7 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 			}
 			return r.userId.intValue();
 		}
-		//TODO for automatic login
+		// TODO for automatic login
 		return 1;
 	}
 
@@ -176,10 +176,10 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 *         process is necessary to support the GWT serializer avoiding the
 	 *         Hibernate specific PersistentSet type.
 	 */
-	protected static Set<Object> load(final Set<Object> s) {
+	protected static <T extends MObject> Set<T> load(final Set<T> s) {
 		if (s == null)
 			return s;
-		return s instanceof HashSet ? s : new HashSet<Object>(s);
+		return s instanceof HashSet ? s : new HashSet<T>(s);
 	}
 
 	/**
@@ -189,7 +189,7 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 *            object to be inserted. This object must not already exist in
 	 *            the database.
 	 */
-	protected void insert(final Object u) {
+	protected <T extends MObject> void insert(final T u) {
 		currentSession().persist(u);
 	}
 
@@ -200,7 +200,7 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 *            object to be deleted, must already exist in the database
 	 */
 
-	protected void delete(final Object u) {
+	protected <T extends MObject> void delete(final T u) {
 		currentSession().delete(u);
 	}
 
@@ -218,8 +218,9 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 *         member of the Hibernate session cache and therefore can be passed
 	 *         off to {@link #update(Object)} to actually be modified.
 	 */
-	protected Object merge(final Object u) {
-		return currentSession().merge(u);
+	@SuppressWarnings( { "unchecked" })
+	protected <T extends MObject> T merge(final T u) {
+		return (T) currentSession().merge(u);
 	}
 
 	/**
@@ -230,7 +231,7 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 *            database and must also already exist in the session.
 	 * @return always the reference <code>u</code>.
 	 */
-	protected Object update(final Object u) {
+	protected <T extends MObject> T update(final T u) {
 		currentSession().update(u);
 		return u;
 	}
@@ -278,6 +279,16 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	}
 
 	/**
+	 * @see{pageQuery}
+	 * @param name
+	 * @param p
+	 * @return
+	 */
+	protected Query pageQuery(final String name, final PaginationParameters p) {
+		return pageQuery(name, p, -1);
+	}
+
+	/**
 	 * Obtain a query to produce one page worth of rows.
 	 * 
 	 * @param name
@@ -289,18 +300,10 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 *            configure the query's result window before it gets returned,
 	 *            allowing the database to more efficiently select the proper
 	 *            rows.
+	 * @param id
+	 *            optional id for the query
 	 * @return the single page object query.
 	 */
-	protected Query pageQuery(final String name, final PaginationParameters p) {
-		Query q;
-		q = currentSession().getNamedQuery(name + "/" + p.getParameter());
-		if (!p.isAscending())
-			q = currentSession().createQuery(q.getQueryString() + " desc");
-		q.setFirstResult(p.getOffset());
-		q.setMaxResults(p.getMaxResults());
-		return q;
-	}
-
 	protected Query pageQuery(final String name, final PaginationParameters p,
 			final long id) {
 		Query q;
@@ -314,17 +317,24 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	}
 
 	/**
+	 * @see{sizeQuery}
+	 * @param name
+	 * @return
+	 */
+	protected Query sizeQuery(final String name) {
+		return sizeQuery(name, -1);
+	}
+
+	/**
 	 * Obtain a query to compute the total size of a result set.
 	 * 
 	 * @param name
 	 *            name of the list query. The list query must be a named HQL
 	 *            query of <code>name,size</code>.
+	 * @param id
+	 *            optional id for the query
 	 * @return the result set counting query. Never null.
 	 */
-	protected Query sizeQuery(final String name) {
-		return currentSession().getNamedQuery(name + ",size");
-	}
-
 	protected Query sizeQuery(final String name, final long id) {
 		Query q = currentSession().getNamedQuery(name + ",size");
 		q.setLong("id", id);
@@ -346,39 +356,15 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 *             the database. This error probably should be thrown back to
 	 *             the UI layer, so it can display a proper error message.
 	 */
-	protected Object byId(final String name, final int id)
-			throws NoSuchObjectException {
-		final Query q = currentSession().getNamedQuery(name + ".byId");
-		q.setInteger("id", id);
-		final Object r = q.uniqueResult();
-		if (r == null)
-			throw new NoSuchObjectException(name, String.valueOf(id));
-		return r;
-	}
-
-	/**
-	 * Locate an object by its unique identifier.
-	 * 
-	 * @param name
-	 *            simple type name of the object. The object must have defined a
-	 *            named HQL query of <code>name.byId</code>.
-	 * @param id
-	 *            the unique identifier of the object.
-	 * @return the single instance, after loading it from the database. Never
-	 *         null.
-	 * @throws NoSuchObjectException
-	 *             the object specified was not returned. It does not exist in
-	 *             the database. This error probably should be thrown back to
-	 *             the UI layer, so it can display a proper error message.
-	 */
-	protected Object byId(final String name, final long id)
+	@SuppressWarnings( { "unchecked" })
+	protected <T extends MObject> T byId(final String name, final long id)
 			throws NoSuchObjectException {
 		final Query q = currentSession().getNamedQuery(name + ".byId");
 		q.setLong("id", id);
 		final Object r = q.uniqueResult();
 		if (r == null)
 			throw new NoSuchObjectException(name, String.valueOf(id));
-		return r;
+		return (T) r;
 	}
 
 	/**
@@ -398,33 +384,30 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 *             the database. This error probably should be thrown back to
 	 *             the UI layer, so it can display a proper error message.
 	 */
-	protected Object byKey(final String name, final String attribute,
+	@SuppressWarnings( { "unchecked" })
+	protected <T extends MObject> ArrayList<T> byKey(final Class object, final String attribute,
+			final long id) throws NoSuchObjectException {
+		final Query q = currentSession().getNamedQuery(
+				object.getName() + ".by" + attribute.substring(0, 1).toUpperCase()
+						+ attribute.substring(1));
+		q.setLong(attribute, id);
+		final Object r = q.uniqueResult();
+		if (r == null)
+			throw new NoSuchObjectException(object.getName(), String.valueOf(id));
+		return (ArrayList<T>) r;
+	}
+	
+	@SuppressWarnings( { "unchecked" })
+	protected <T extends MObject> T byKey(final Class object, final String attribute,
 			final String id) throws NoSuchObjectException {
 		final Query q = currentSession().getNamedQuery(
-				name + ".by" + attribute.substring(0, 1).toUpperCase()
+				object.getName() + ".by" + attribute.substring(0, 1).toUpperCase()
 						+ attribute.substring(1));
 		q.setString(attribute, id);
 		final Object r = q.uniqueResult();
 		if (r == null)
-			throw new NoSuchObjectException(name, String.valueOf(id));
-		return r;
-	}
-
-	protected Object byKeySet(final String name, final String attribute,
-			final long id) throws NoSuchObjectException {
-		final Number sz = (Number) sizeQuery(
-				name + ".by" + attribute.substring(0, 1).toUpperCase()
-						+ attribute.substring(1), id).uniqueResult();
-		if (sz.intValue() > 0) {
-			final Query q = currentSession().getNamedQuery(
-					name + ".by" + attribute.substring(0, 1).toUpperCase()
-							+ attribute.substring(1));
-			q.setLong(attribute, id);
-			final Object r = q.list();
-			return r;
-		} else {
-			return new ArrayList<Object>();
-		}
+			throw new NoSuchObjectException(object.getName(), String.valueOf(id));
+		return (T) r;
 	}
 
 	/**

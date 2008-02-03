@@ -41,9 +41,8 @@ public class ImageBrowserServiceImpl extends MpDbServlet
 		return g;
 	}
 
-	@SuppressWarnings("unchecked")
-	public ArrayList imagesOnGrid(long id) throws NoSuchObjectException {
-		return (ArrayList) byKeySet("ImageOnGrid", "gridId", id);
+	public ArrayList<ImageOnGrid> imagesOnGrid(long id) throws NoSuchObjectException {
+		return byKey(ImageOnGrid.class, "gridId", id);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -36,7 +36,7 @@ public class MineralAnalysisServiceImpl extends MpDbServlet
 
 	@SuppressWarnings("unchecked")
 	public ArrayList all(long subsampleId) throws NoSuchObjectException {
-		return (ArrayList) byKeySet("MineralAnalysis", "subsampleId",
+		return (ArrayList) byKey(MineralAnalysis.class, "subsampleId",
 				subsampleId);
 	}
 
@@ -72,7 +72,7 @@ public class MineralAnalysisServiceImpl extends MpDbServlet
 	public void delete(long id) throws NoSuchObjectException, LoginRequiredException {
 		try {
 			MineralAnalysis m = (MineralAnalysis) byId("MineralAnalysis",id);
-			delete((Object)m);
+			delete(m);
 			m = null;
 			commit();
 		} catch (ConstraintViolationException cve) {
