@@ -70,7 +70,7 @@ public class DetailsPanel extends ComplexPanel {
 
 	private void showBlockOrHide(Element elem, String s) {
 		DOM.setInnerHTML(elem, s);
-		if (s.equals("")) DOM.setElementAttribute(elem, "class", Styles.HIDE);
+		if (s == null || s.equals("")) DOM.setElementAttribute(elem, "class", Styles.HIDE);
 		else DOM.setElementAttribute(elem, "class", Styles.SHOW_BLOCK);
 	}
 	
