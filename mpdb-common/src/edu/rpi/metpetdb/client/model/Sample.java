@@ -76,10 +76,11 @@ public class Sample extends MObject implements IHasName {
 	 */
 	private Set references;
 	private int subsampleCount;
-	
+
 	public long getId() {
 		return id;
 	}
+
 	public void setId(final long i) {
 		id = i;
 	}
@@ -87,6 +88,7 @@ public class Sample extends MObject implements IHasName {
 	public int getVersion() {
 		return version;
 	}
+
 	public void setVersion(final int v) {
 		version = v;
 	}
@@ -94,6 +96,7 @@ public class Sample extends MObject implements IHasName {
 	public int getSubsampleCount() {
 		return subsampleCount;
 	}
+
 	public void setSubsampleCount(final int i) {
 		subsampleCount = i;
 	}
@@ -101,6 +104,7 @@ public class Sample extends MObject implements IHasName {
 	public String getSesarNumber() {
 		return sesarNumber;
 	}
+
 	public void setSesarNumber(final String s) {
 		sesarNumber = s;
 	}
@@ -108,19 +112,20 @@ public class Sample extends MObject implements IHasName {
 	public Geometry getLocation() {
 		return location;
 	}
+
 	public void setLocation(final Geometry g) {
 		location = g;
 	}
-	
+
 	public void setLatitude(final double d) {
 		if (location == null) {
 			location = new Point();
-			((Point)location).dimension = 2;
-			((Point)location).srid = MpDbConstants.WGS84;
+			((Point) location).dimension = 2;
+			((Point) location).srid = MpDbConstants.WGS84;
 		}
 		((Point) location).x = d;
 	}
-	
+
 	public void setLongitude(final double d) {
 		if (location == null)
 			location = new Point();
@@ -130,6 +135,7 @@ public class Sample extends MObject implements IHasName {
 	public User getOwner() {
 		return owner;
 	}
+
 	public void setOwner(final User u) {
 		owner = u;
 	}
@@ -137,6 +143,7 @@ public class Sample extends MObject implements IHasName {
 	public String getAlias() {
 		return alias;
 	}
+
 	public void setAlias(final String s) {
 		alias = s;
 	}
@@ -144,6 +151,7 @@ public class Sample extends MObject implements IHasName {
 	public Timestamp getCollectionDate() {
 		return collectionDate;
 	}
+
 	public void setCollectionDate(final Timestamp date) {
 		collectionDate = date;
 	}
@@ -151,6 +159,7 @@ public class Sample extends MObject implements IHasName {
 	public String getRockType() {
 		return rockType;
 	}
+
 	public void setRockType(final String rt) {
 		rockType = rt;
 	}
@@ -161,6 +170,7 @@ public class Sample extends MObject implements IHasName {
 		else
 			return false;
 	}
+
 	public void setPublicData(final Boolean p) {
 		publicData = p;
 	}
@@ -170,6 +180,7 @@ public class Sample extends MObject implements IHasName {
 			subsamples = new HashSet();
 		return subsamples;
 	}
+
 	public void setSubsamples(final Set c) {
 		subsamples = c;
 	}
@@ -271,6 +282,7 @@ public class Sample extends MObject implements IHasName {
 	public void setRegions(final Set r) {
 		regions = r;
 	}
+
 	public void addRegion(final String name) {
 		if (regions == null)
 			regions = new HashSet();
@@ -294,7 +306,6 @@ public class Sample extends MObject implements IHasName {
 	public void setReferences(final Set r) {
 		references = r;
 	}
-	
 
 	public String getName() {
 		if (this.alias != null || !this.alias.equals(""))
@@ -312,110 +323,121 @@ public class Sample extends MObject implements IHasName {
 		return sesarNumber != null ? sesarNumber.hashCode() : 0;
 	}
 
-	public String toString() {
-		return sesarNumber;
-	}
-
 	public boolean mIsNew() {
 		return id == 0;
 	}
+
 	protected Object mSetGet(final int propertyId, final Object newValue) {
 		switch (propertyId) {
-			case P_sesarNumber :
-				if (newValue != GET_ONLY)
-					setSesarNumber((String) newValue);
-				return getSesarNumber();
+		case P_sesarNumber:
+			if (newValue != GET_ONLY)
+				setSesarNumber((String) newValue);
+			return getSesarNumber();
 
-			case P_location :
-				if (newValue != GET_ONLY)
-					setLocation((Geometry) newValue);
-				return getLocation();
+		case P_location:
+			if (newValue != GET_ONLY)
+				setLocation((Geometry) newValue);
+			return getLocation();
 
-			case P_owner :
-				if (newValue != GET_ONLY)
-					setOwner((User) newValue);
-				return getOwner();
+		case P_owner:
+			if (newValue != GET_ONLY)
+				setOwner((User) newValue);
+			return getOwner();
 
-			case P_alias :
-				if (newValue != GET_ONLY)
-					setAlias((String) newValue);
-				return getAlias();
+		case P_alias:
+			if (newValue != GET_ONLY)
+				setAlias((String) newValue);
+			return getAlias();
 
-			case P_collectionDate :
-				if (newValue != GET_ONLY)
-					setCollectionDate((Timestamp) newValue);
-				return getCollectionDate();
+		case P_collectionDate:
+			if (newValue != GET_ONLY)
+				setCollectionDate((Timestamp) newValue);
+			return getCollectionDate();
 
-			case P_publicData :
-				if (newValue != GET_ONLY)
-					setPublicData(((Boolean) newValue));
-				return isPublicData() ? Boolean.TRUE : Boolean.FALSE;
+		case P_publicData:
+			if (newValue != GET_ONLY)
+				setPublicData(((Boolean) newValue));
+			return isPublicData() ? Boolean.TRUE : Boolean.FALSE;
 
-			case P_rockType :
-				if (newValue != GET_ONLY)
-					setRockType((String) newValue);
-				return getRockType();
+		case P_rockType:
+			if (newValue != GET_ONLY)
+				setRockType((String) newValue);
+			return getRockType();
 
-			case P_images :
-				if (newValue != GET_ONLY)
-					setImages((Set) newValue);
-				return getImages();
+		case P_images:
+			if (newValue != GET_ONLY)
+				setImages((Set) newValue);
+			return getImages();
 
-			case P_minerals :
-				if (newValue != GET_ONLY)
-					setMinerals((Set) newValue);
-				return getMinerals();
+		case P_minerals:
+			if (newValue != GET_ONLY)
+				setMinerals((Set) newValue);
+			return getMinerals();
 
-			case P_country :
-				if (newValue != GET_ONLY)
-					setCountry((String) newValue);
-				return getCountry();
+		case P_country:
+			if (newValue != GET_ONLY)
+				setCountry((String) newValue);
+			return getCountry();
 
-			case P_description :
-				if (newValue != GET_ONLY)
-					setDescription((String) newValue);
-				return getDescription();
+		case P_description:
+			if (newValue != GET_ONLY)
+				setDescription((String) newValue);
+			return getDescription();
 
-			case P_collector :
-				if (newValue != GET_ONLY)
-					setCollector((String) newValue);
-				return getCollector();
+		case P_collector:
+			if (newValue != GET_ONLY)
+				setCollector((String) newValue);
+			return getCollector();
 
-			case P_locationText :
-				if (newValue != GET_ONLY)
-					setLocationText((String) newValue);
-				return getLocationText();
+		case P_locationText:
+			if (newValue != GET_ONLY)
+				setLocationText((String) newValue);
+			return getLocationText();
 
-			case P_latitudeError :
-				if (newValue != GET_ONLY)
-					setLatitudeError(setFloatValue(newValue));
-				return getLatitudeError();
+		case P_latitudeError:
+			if (newValue != GET_ONLY)
+				setLatitudeError(setFloatValue(newValue));
+			return getLatitudeError();
 
-			case P_longitudeError :
-				if (newValue != GET_ONLY)
-					setLongitudeError(setFloatValue(newValue));
-				return getLongitudeError();
+		case P_longitudeError:
+			if (newValue != GET_ONLY)
+				setLongitudeError(setFloatValue(newValue));
+			return getLongitudeError();
 
-			case P_regions :
-				if (newValue != GET_ONLY)
-					setRegions((Set) newValue);
-				return getRegions();
+		case P_regions:
+			if (newValue != GET_ONLY)
+				setRegions((Set) newValue);
+			return getRegions();
 
-			case P_metamorphicGrades :
-				if (newValue != GET_ONLY)
-					setMetamorphicGrades((Set) newValue);
-				return getMetamorphicGrades();
+		case P_metamorphicGrades:
+			if (newValue != GET_ONLY)
+				setMetamorphicGrades((Set) newValue);
+			return getMetamorphicGrades();
 
-			case P_references :
-				if (newValue != GET_ONLY)
-					setReferences((Set) newValue);
-				return getReferences();
+		case P_references:
+			if (newValue != GET_ONLY)
+				setReferences((Set) newValue);
+			return getReferences();
 
-			case P_subsampleCount :
-				if (newValue != GET_ONLY)
-					setSubsampleCount(Integer.parseInt(newValue.toString()));
-				return new Integer(getSubsampleCount());
+		case P_subsampleCount:
+			if (newValue != GET_ONLY)
+				setSubsampleCount(Integer.parseInt(newValue.toString()));
+			return new Integer(getSubsampleCount());
 		}
 		throw new InvalidPropertyException(propertyId);
+	}
+
+	public String toString() {
+		return "--- Sample ---\n" + "\tid\t\t" + String.valueOf(id)
+				+ "\n\tversion\t\t" + String.valueOf(version)
+				+ "\n\tsesarNumber\t\t" + sesarNumber + "\n\towner\t\t"
+				+ owner.getUsername() + "\n\talias\t\t" + alias
+				+ "\n\tcollectionData\t\t"
+				+ (collectionDate != null ? collectionDate.toString() : "")
+				+ "\n\tpublicData\t\t"
+				+ (publicData.booleanValue() ? "yes" : "no") + "\n\trockType\t\t"
+				+ rockType + "\n\tlocation\t\t" + location.toString()
+				+ "\n\tdescription\t\t" + description;
+
 	}
 }

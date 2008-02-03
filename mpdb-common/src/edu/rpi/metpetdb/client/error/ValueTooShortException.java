@@ -17,4 +17,8 @@ public class ValueTooShortException extends ValidationException {
 		final int n = ((StringConstraint) constraint).minLength;
 		return LocaleHandler.lc_text.errorDesc_TooShort(formatPropertyName(), n);
 	}
+	
+	public String getMessage() {
+		return format();
+	}
 }
