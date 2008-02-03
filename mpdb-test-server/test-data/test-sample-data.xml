@@ -1,5 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
   <users user_id="1" version="1" username="anthony" password="BCnxlteTnIP40jVqBXdVl+OZYUXFFy54Kw==" email="watera2@cs.rpi.edu"/>
-  <samples sample_id="1" version="0" sesar_number="000000000" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)" alias="TESTASDSA"/>
+  <samples sample_id="1" version="0" sesar_number="000000000" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)" alias="1"/>
+  <samples sample_id="2" version="0" sesar_number="000000001" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)" alias="2"/>
+  <samples sample_id="3" version="0" sesar_number="000000002" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)" alias="3"/>
+  <samples sample_id="4" version="0" sesar_number="000000003" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)" alias="4"/>
+  <samples sample_id="5" version="0" sesar_number="000000004" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)" alias="5"/>
 </dataset>
