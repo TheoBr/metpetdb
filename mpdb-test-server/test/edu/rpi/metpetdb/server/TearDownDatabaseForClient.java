@@ -36,7 +36,7 @@ public class TearDownDatabaseForClient {
 
 		conn = new DatabaseConnection(s.connection());
 		
-		tearDown();
+		tearDown(args[0]);
 		
 		try {
 			tx.commit();
@@ -54,7 +54,7 @@ public class TearDownDatabaseForClient {
 	private static final String excludedTables[] = { "geometry_columns",
 			"spatial_ref_sys" };
 
-	private static void loadDatabase() {
+	private static void loadDatabase(final String path) {
 
 		try {
 			DatabaseConfig config = conn.getConfig();
@@ -83,9 +83,9 @@ public class TearDownDatabaseForClient {
 		}
 	}
 	
-	private static void tearDown()  {
+	private static void tearDown(final String path)  {
 		//Delete test data
-		loadDatabase();
+		loadDatabase(path);
 		try {
 			DatabaseOperation.DELETE_ALL.execute(conn, originalData);
 		} catch (Exception e) {
@@ -97,7 +97,7 @@ public class TearDownDatabaseForClient {
 		final IDataSet loadedDataSet;
 		try {
 			loadedDataSet = new FlatXmlDataSet(
-					new FileInputStream("test-data/test-backup.xml"));
+					new FileInputStream(path + "/" + "test-data/test-backup.xml"));
 			//Insert test data
 			DatabaseOperation.INSERT.execute(conn, loadedDataSet);
 		} catch (final Exception e) {

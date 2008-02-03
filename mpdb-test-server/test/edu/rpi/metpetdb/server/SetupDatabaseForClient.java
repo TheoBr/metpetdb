@@ -38,7 +38,7 @@ public class SetupDatabaseForClient {
 
 		conn = new DatabaseConnection(s.connection());
 
-		setUp();
+		setUp(args[0]);
 
 		try {
 			tx.commit();
@@ -56,7 +56,7 @@ public class SetupDatabaseForClient {
 	private static final String excludedTables[] = { "geometry_columns",
 			"spatial_ref_sys" };
 
-	private static void backupDatabase() {
+	private static void backupDatabase(final String path) {
 
 		try {
 			DatabaseConfig config = conn.getConfig();
@@ -76,7 +76,7 @@ public class SetupDatabaseForClient {
 			// Export the database excluding certain tables
 			originalData = new FilteredDataSet(sequenceFilter, conn
 					.createDataSet());
-			FlatXmlDataSet.write(originalData, new FileOutputStream(
+			FlatXmlDataSet.write(originalData, new FileOutputStream(path + "/" +
 					"test-data/test-backup.xml"));
 		} catch (Exception e) {
 
@@ -84,9 +84,9 @@ public class SetupDatabaseForClient {
 		}
 	}
 
-	private static void setUp() {
+	private static void setUp(final String path) {
 		// Backup the database
-		backupDatabase();
+		backupDatabase(path);
 		try {
 			DatabaseOperation.DELETE_ALL.execute(conn, originalData);
 		} catch (Exception e) {
@@ -97,7 +97,7 @@ public class SetupDatabaseForClient {
 		// put in test data
 		final IDataSet loadedDataSet;
 		try {
-			loadedDataSet = new FlatXmlDataSet(new FileInputStream(
+			loadedDataSet = new FlatXmlDataSet(new FileInputStream(path + "/" + 
 					"test-data/test-client-data.xml"));
 			// Insert test data
 			DatabaseOperation.INSERT.execute(conn, loadedDataSet);
