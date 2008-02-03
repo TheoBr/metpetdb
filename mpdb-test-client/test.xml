@@ -1,0 +1,52 @@
+<project name="mpdb-test-client" basedir="." default="test">
+
+	<property file="build.properties" />
+	<property name="ctx_lib" location="${basedir}/lib" />
+
+	<property name="src" value="${basedir}/test" />
+	<property name="classes" value="${basedir}/bin" />
+	<property name="test.class.name" value="edu.rpi.metpetdb.AllTests" />
+
+
+	<path id="libs">
+		<fileset dir="${ctx_lib}" includes="*.jar" />
+		<fileset dir="${basedir}/../mpdb-test-server/lib" includes="*.jar"/>
+		<fileset dir="${basedir}/../mpdb-server/lib" includes="*.jar"/>
+		<pathelement location="${gwt_home}/gwt-user.jar" />
+		<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
+		<pathelement location="../mpdb-test-server/bin" />
+		<pathelement location="../mpdb-test-client/bin" />
+		<pathelement location="../mpdb-test-client/test" />
+		<pathelement location="../mpdb-server/bin" />
+		<pathelement location="../mpdb-client/bin" />
+		<pathelement location="../mpdb-common/bin" />
+		<pathelement location="../mpdb-server/src" />
+		<pathelement location="../mpdb-client/src" />
+		<pathelement location="../mpdb-common/src" />
+	</path>
+	
+	<target name="setupdb">
+		<java classname="edu.rpi.metpetdb.server.SetupDatabaseForClient">
+		<arg value="${basedir}/../mpdb-test-server/"/>
+         <classpath refid="libs" />
+       </java>
+	</target>
+	
+	<target name="runtest" depends="setupdb">
+		<junit fork="yes" haltonfailure="no" printsummary="yes">
+			<test name="${test.class.name}" />
+			<formatter type="plain" usefile="false" />
+			<classpath refid="libs" />
+			<jvmarg value="-Xmx300m"/>
+			
+		</junit>
+	</target>
+
+	<target name="test" depends="runtest">
+		<java classname="edu.rpi.metpetdb.server.TearDownDatabaseForClient">
+		<arg value="${basedir}/../mpdb-test-server/"/>
+         <classpath refid="libs" />
+       </java>
+	</target>
+
+</project>
