@@ -41,21 +41,9 @@ public class Sample extends MObject implements IHasName {
 	private Timestamp collectionDate;
 	private Boolean publicData;
 	private String rockType;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.Subsample>
-	 */
 	private Set subsamples;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.Project>
-	 */
 	private Set projects;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.SampleMineral>
-	 */
 	private Set minerals;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.Image>
-	 */
 	private Set images;
 	private String description;
 	private String country;
@@ -63,17 +51,8 @@ public class Sample extends MObject implements IHasName {
 	private String locationText;
 	private Float latitudeError;
 	private Float longitudeError;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.Region>
-	 */
 	private Set regions;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.MetamorphicGrade>
-	 */
 	private Set metamorphicGrades;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.Reference>
-	 */
 	private Set references;
 	private int subsampleCount;
 

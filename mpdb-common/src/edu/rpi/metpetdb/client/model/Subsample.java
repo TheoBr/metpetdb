@@ -19,14 +19,8 @@ public class Subsample extends MObject implements IHasImages {
 	private int version;
 	private String name;
 	private String type;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.Image>
-	 */
 	private Set images;
 	private Grid grid;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.MineralAnalysis>
-	 */
 	private Set mineralAnalyses;
 	private int imageCount;
 	private int analysisCount;

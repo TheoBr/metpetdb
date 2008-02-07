@@ -17,12 +17,6 @@ public interface MineralAnalysisService extends RemoteService {
 	MineralAnalysis details(long id) throws NoSuchObjectException;
 	MineralAnalysis saveMineralAnalysis(MineralAnalysis mineralAnalysis)
 			throws ValidationException, LoginRequiredException;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.MineralAnalysis>
-	 * @param subsampleId
-	 * @return
-	 * @throws NoSuchObjectException
-	 */
 	ArrayList all(long subsampleId) throws NoSuchObjectException;
 	void delete(long id) throws NoSuchObjectException, LoginRequiredException;
 }

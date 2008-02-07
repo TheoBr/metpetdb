@@ -14,9 +14,6 @@ public class Grid extends MObject {
 	private int width;
 	private int height;
 	private Subsample subsample;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.ImageOnGrid>
-	 */
 	private Set imagesOnGrid;
 
 	public int getId() {

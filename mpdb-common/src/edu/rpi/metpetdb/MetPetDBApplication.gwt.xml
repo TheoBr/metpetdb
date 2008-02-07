@@ -1,6 +1,7 @@
 <module>
-	<inherits name="rocket.User" />
+	
 	<inherits name="com.google.gwt.user.User"/>
+	<!--  <inherits name="rocket.User" />-->
 	<inherits name="com.google.gwt.i18n.I18N"/>
 	<inherits name="org.gwtwidgets.WidgetLibrary"/>
 	<inherits name="edu.rpi.metpetdb.java_emu.Emulation"/>

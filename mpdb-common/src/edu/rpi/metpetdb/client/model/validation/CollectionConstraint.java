@@ -14,9 +14,6 @@ import edu.rpi.metpetdb.client.model.interfaces.IHasName;
  */
 public class CollectionConstraint extends PropertyConstraint implements MaxLengthConstraint {
 
-	/**
-	 * @gwt.typeArgs <java.lang.String>
-	 */
 	private Collection values;
 
 	public CollectionConstraint() {

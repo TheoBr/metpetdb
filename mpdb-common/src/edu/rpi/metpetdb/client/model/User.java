@@ -13,13 +13,7 @@ public class User extends MObject {
 	private int version;
 	private String username;
 	private String emailAddress;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.Project>
-	 */
 	private Set projects;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.Sample>
-	 */
 	private Set samples;
 	private transient byte[] encryptedPassword;
 

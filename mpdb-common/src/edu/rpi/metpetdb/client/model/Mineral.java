@@ -12,9 +12,6 @@ public class Mineral extends MObject implements IHasChildren, IHasName {
 	private short id;
 	private Short parentId;
 	private String name;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.Mineral>
-	 */
 	private Set children;
 
 	public short getId() {

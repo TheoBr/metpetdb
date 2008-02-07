@@ -16,9 +16,6 @@ import edu.rpi.metpetdb.client.model.interfaces.IHasChildren;
 
 //TODO make this extend CollectionConstraint
 public class MineralConstraint extends PropertyConstraint {
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.Mineral>
-	 */
 	private Collection minerals;
 
 	public MineralConstraint() {

@@ -40,13 +40,7 @@ public class MineralAnalysis extends MObject {
 	private String description;
 	private Mineral mineral;
 	private Boolean largeRock;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.MineralAnalysisElement>
-	 */
 	private Set elements;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.MineralAnalysisOxide>
-	 */
 	private Set oxides;
 
 	private transient Widget actualImage;

@@ -13,13 +13,7 @@ public class Project extends MObject {
 	private int version;
 	private String name;
 	private User owner;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.User>
-	 */
 	private Set members;
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.Sample>
-	 */
 	private Set samples;
 
 	public int getId() {

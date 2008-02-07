@@ -1,0 +1,45 @@
+\documentclass[10pt,letterpaper,onecolumn,oneside]{report}
+\begin{document}
+\title{mpdb-client}
+\author{Anthony Waters}
+\date{February 2, 2008}
+\maketitle
+\tableofcontents
+\newpage
+\section{Introduction}
+The part of the project mpdb-client is responsible for creating, display, and updating the user interface of the application.  All of the source code within this project is converted to JavaScript through the use of Google Web Toolkit (GWT).
+\section{Bulk Upload}
+Bulk upload is the process in which a document in a preset format is parsed for data, basically a scientists adds a lot of samples to a spreadsheet and then the application parses the spreadsheet to add samples.  This is beneficial because it allows the scientists to circumvent the process of adding the samples individually by hand.  The process of performing a bulk upload can be summarized into four steps
+\begin{enumerate}
+\item Uploading the document
+\item Parsing the document
+\item Saving the objects in the database
+\item Reporting the status of the operation (success/failure)
+\end{enumerate}
+\subsection{Uploading the Document}
+In order to transfer documents from the client to the server a file upload needs to occur.  This is accomplished with a GWT widget named a
+\texttt{FormPanel}, this allows for sending POST request to the server.  Another situation that this is used in is in upload images to the server.  A very simple interface for testing bulk upload is located in the package 
+\texttt{edu.rpi.metpetdb.client.ui.bulk.upload} the name of the class is
+\texttt{BulkUploadPanel}.  If you look at it you will notice how simple it is, just a file upload control.  The interesting thing to note here though is where the \texttt{FormPanel} posts to, which is \texttt{fp.setAction(GWT.getModuleBaseURL() + "/bulkUpload");}.  What this means is it post to the bulkUpload servlet on the server, which brings us to the next section.
+\subsection{Parsing the Document}
+The post request is sent to the bulkUpload servlet which is located in the package \texttt{edu.rpi.metpetdb.server} within the class \texttt{BulkUploadServlet}.  This is a simple servlet whos only function is to save the file on the server, and then based on the type of bulk upload it passes the file onto the parsers located in the package \texttt{edu.rpi.metpetdb.server.bulk.upload}.  Parsing the files is a fairly simple task because there is a library already available from Apache called POI, which stands for ``Poor Obfuscation Implementation''.  The part of the libary that is used for handling the spreadsheets is called HSSF, which stands for ``Horrible SpreadSheet Format'' (it is refering to Microsoft Excel in this case).  A simple tutorial on how to use POI and in particular HSSF is located at http://poi.apache.org/hssf/how-to.html.  An example is also located in the source file \texttt{SampleParser.java} in the package \texttt{edu.rpi.metpetdb.server.bulk.upload.sample}.  It works exactly like going through a table, you go row by row and column by column.  So in order to parse the spreadsheet one would first read the first row, which contains the column headers, then subsequently read every other row parsing the data and determining what it is based on it's column header.  How to actually save that data is discussed in the next section.
+\subsection{Saving the objects in the database}
+In order to explain this section I will use a Sample object as an example, therefore the user uploaded a spreadsheet that contains just samples.  The java bean for the sample is located in the class \texttt{Sample} in the package \texttt{edu.rpi.metpetdb.client.model} this contains all of the properties for a sample that are read and written by the database.  With that in mind in order to save the data to the database the following has to happen
+\begin{enumerate}
+\item Create a new sample object
+\begin{itemize}
+\item \texttt{final Sample s = new Sample()}
+\end{itemize}
+\item Set the properties of the sample based on the data
+\begin{itemize}
+\item \texttt{s.setAlias(``My Lovely Sample'');}
+\end{itemize}
+\item Save the sample to the database
+\begin{itemize}
+\item \texttt{saveSample(s)}, located in \texttt{SampleServiceImpl}
+\end{itemize}
+\end{enumerate}
+The next step is to notify the user of the result of the operation.
+\subsection{Reporting the status of the operation (success/failure)}
+TODO
+\end{document}

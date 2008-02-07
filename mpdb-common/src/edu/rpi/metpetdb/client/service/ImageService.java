@@ -11,12 +11,6 @@ import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
 
 public interface ImageService extends RemoteService {
-	/**
-	 * @gwt.typeArgs <edu.rpi.metpetdb.client.model.Image>
-	 * @param subsampleId
-	 * @return
-	 * @throws NoSuchObjectException
-	 */
 	ArrayList allImages(final long subsampleId) throws NoSuchObjectException;
 	Image details(long id) throws NoSuchObjectException;
 	Image saveImage(Image image) throws ValidationException,
