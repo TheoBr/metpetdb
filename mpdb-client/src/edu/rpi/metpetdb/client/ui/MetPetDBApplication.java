@@ -4,11 +4,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import rocket.event.client.MouseClickEvent;
-import rocket.event.client.MouseEventAdapter;
-import rocket.widget.client.Html;
-import rocket.widget.client.Hyperlink;
-
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
@@ -56,8 +51,8 @@ public class MetPetDBApplication implements EntryPoint {
 	private static RootPanel leftContainer;
 	private static HashSet pageChangeWatchers;
 	
-	public static Html introduction;
-	public static Hyperlink logoLink;
+	//public static Html introduction;
+	//public static Hyperlink logoLink;
 
 	public void onModuleLoad() {
 		GWT.setUncaughtExceptionHandler(ErrorHandler.INSTANCE);
@@ -72,13 +67,13 @@ public class MetPetDBApplication implements EntryPoint {
 		leftContainer = RootPanel.get(Styles.LEFTCOL_ID);
 		
 		// make MPDB logo a link to the introduction screen
-		logoLink = MpDb.factory.getLogoLink();
+		/*logoLink = MpDb.factory.getLogoLink();
 		logoLink.setTargetHistoryToken(TokenSpace.introduction.makeToken(null));
 		logoLink.addMouseEventListener(new MouseEventAdapter() {
 			public void onClick(MouseClickEvent event) {
 				TokenSpace.introduction.execute();
 			}
-		});
+		});*/
 		
 		setupIntroduction();
 
@@ -100,16 +95,16 @@ public class MetPetDBApplication implements EntryPoint {
 				MpDb.oc = r.objectConstraints;
 				MpDb.setCurrentUser(r.user);
 				finishOnModuleLoad();
-				//TODO this is for automatic login
+				//TODO if you want automatic login fill int the correct values below
 				if (r.user == null) {
-					final User u = new User();
-					u.setEmailAddress("watera2@cs.rpi.edu");
-					u.setId(1);
-					u.setProjects(null);
-					u.setSamples(null);
-					u.setUsername("anthony");
-					u.setVersion(0);
-					MpDb.setCurrentUser(u);
+					//final User u = new User();
+					//u.setEmailAddress("watera2@cs.rpi.edu");
+					//u.setId(1);
+					//u.setProjects(null);
+					//u.setSamples(null);
+					//u.setUsername("anthony");
+					//u.setVersion(0);
+					//MpDb.setCurrentUser(u);
 				}
 			}
 		});
@@ -335,6 +330,6 @@ public class MetPetDBApplication implements EntryPoint {
 	 * links
 	 */
 	private static void setupIntroduction() {
-		introduction = MpDb.factory.getIntroduction();
+		//introduction = MpDb.factory.getIntroduction();
 	}
 }

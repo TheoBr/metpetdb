@@ -63,7 +63,7 @@ public class MpDb {
 
 	private static User currentUser;
 
-	public static final HtmlFactory factory;
+	//public static final HtmlFactory factory;
 
 	static {
 		constants_svc = (ConstantsServiceAsync) bindService(GWT
@@ -93,7 +93,7 @@ public class MpDb {
 		mpdbGeneric_svc = (MpDbGenericServiceAsync) bindService(GWT
 				.create(MpDbGenericService.class), "mpdbGeneric");
 
-		factory = (HtmlFactory) GWT.create(HtmlFactory.class);
+		//factory = (HtmlFactory) GWT.create(HtmlFactory.class);
 	}
 
 	private static Object bindService(final Object svc, final String name) {

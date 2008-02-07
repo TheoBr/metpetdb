@@ -32,7 +32,7 @@ public class MineralAnalysisDetails extends FlowPanel {
 			new TextAttribute(MpDb.doc.MineralAnalysis_location),
 			new TextAttribute(MpDb.doc.MineralAnalysis_analyst),
 			new DateAttribute(MpDb.doc.MineralAnalysis_analysisDate),
-			new TextAttribute(MpDb.doc.MineralAnalysis_referenceId),
+			//new TextAttribute(MpDb.doc.MineralAnalysis_referenceId),
 			new TextAreaAttribute(MpDb.doc.MineralAnalysis_description),
 			new AnalysisMaterialAttribute(MpDb.doc.MineralAnalysis_mineral,
 					MpDb.doc.MineralAnalysis_largeRock),};

@@ -294,7 +294,8 @@ public class TokenSpace implements HistoryListener {
 		MetPetDBApplication.show(content);
 	}
 	private static void showIntroduction() {
-		show(MetPetDBApplication.introduction);
+		//show(MetPetDBApplication.introduction);
+		show(RootPanel.get("screen-Introduction"));
 	}
 
 	public static String detailsOf(final Sample s) {
