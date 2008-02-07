@@ -128,26 +128,24 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 *             invalid.
 	 */
 	protected int currentUser() throws LoginRequiredException {
-		if (false) {
-			final Req r = currentReq();
-			if (r.userId == null) {
-				final Cookie[] cookieJar = getThreadLocalRequest().getCookies();
-				if (cookieJar != null) {
-					for (int k = cookieJar.length - 1; k >= 0; k--) {
-						final Cookie c = cookieJar[k];
-						if (MpDbConstants.USERID_COOKIE.equals(c.getName())) {
-							r.userId = SessionEncrypter.verify(c.getValue());
-							break;
-						}
+		final Req r = currentReq();
+		if (r.userId == null) {
+			final Cookie[] cookieJar = getThreadLocalRequest().getCookies();
+			if (cookieJar != null) {
+				for (int k = cookieJar.length - 1; k >= 0; k--) {
+					final Cookie c = cookieJar[k];
+					if (MpDbConstants.USERID_COOKIE.equals(c.getName())) {
+						r.userId = SessionEncrypter.verify(c.getValue());
+						break;
 					}
 				}
-				if (r.userId == null)
-					throw new LoginRequiredException();
 			}
-			return r.userId.intValue();
+			if (r.userId == null)
+				throw new LoginRequiredException();
 		}
-		// TODO for automatic login
-		return 1;
+		return r.userId.intValue();
+		//TODO if you want automatic login have this return your userid
+		// return 1;
 	}
 
 	/**
@@ -387,28 +385,33 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 *             the UI layer, so it can display a proper error message.
 	 */
 	@SuppressWarnings( { "unchecked" })
-	protected <T extends MObject> ArrayList<T> byKey(final Class object, final String attribute,
-			final long id) throws NoSuchObjectException {
+	protected <T extends MObject> ArrayList<T> byKey(final Class object,
+			final String attribute, final long id) throws NoSuchObjectException {
 		final Query q = currentSession().getNamedQuery(
-				object.getName() + ".by" + attribute.substring(0, 1).toUpperCase()
+				object.getName() + ".by"
+						+ attribute.substring(0, 1).toUpperCase()
 						+ attribute.substring(1));
 		q.setLong(attribute, id);
 		final Object r = q.uniqueResult();
 		if (r == null)
-			throw new NoSuchObjectException(object.getName(), String.valueOf(id));
+			throw new NoSuchObjectException(object.getName(), String
+					.valueOf(id));
 		return (ArrayList<T>) r;
 	}
-	
+
 	@SuppressWarnings( { "unchecked" })
-	protected <T extends MObject> T byKey(final Class object, final String attribute,
-			final String id) throws NoSuchObjectException {
+	protected <T extends MObject> T byKey(final Class object,
+			final String attribute, final String id)
+			throws NoSuchObjectException {
 		final Query q = currentSession().getNamedQuery(
-				object.getName() + ".by" + attribute.substring(0, 1).toUpperCase()
+				object.getName() + ".by"
+						+ attribute.substring(0, 1).toUpperCase()
 						+ attribute.substring(1));
 		q.setString(attribute, id);
 		final Object r = q.uniqueResult();
 		if (r == null)
-			throw new NoSuchObjectException(object.getName(), String.valueOf(id));
+			throw new NoSuchObjectException(object.getName(), String
+					.valueOf(id));
 		return (T) r;
 	}
 

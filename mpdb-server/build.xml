@@ -39,6 +39,8 @@
 		<pathelement location="${gwt_home}/gwt-user.jar" />
 		<pathelement location="../mpdb-common/src" />
 		<pathelement location="../mpdb-client/src" />
+		<pathelement location="../mpdb-common/bin" />
+				<pathelement location="../mpdb-client/bin" />
 	</path>
 
 	<target name="setup">
@@ -56,7 +58,7 @@
 	<!-- Compile the Java code in mpdb-common first -->
 	<target name="compile-java-mpdb-common" depends="setup">
 		<mkdir dir="${mpdb-common-dir}/bin" />
-		<javac destdir="${mpdb-common-dir}/bin" srcdir="${mpdb-common-dir}/src" classpathref="libs" source="1.4" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
+		<javac destdir="${mpdb-common-dir}/bin" srcdir="${mpdb-common-dir}/src" classpathref="gwt-libs" source="1.5" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
 
 		<copy todir="${mpdb-common-dir}/bin" includeemptydirs="no">
 			<fileset dir="${mpdb-common-dir}/src" excludes="**/*.java" />
@@ -66,7 +68,7 @@
 	<!-- Compile the Java code in mpdb-client next -->
 		<target name="compile-java-mpdb-client" depends="compile-java-mpdb-common">
 			<mkdir dir="${mpdb-client-dir}/bin" />
-			<javac destdir="${mpdb-client-dir}/bin" srcdir="${mpdb-client-dir}/src" classpathref="libs" source="1.4" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
+			<javac destdir="${mpdb-client-dir}/bin" srcdir="${mpdb-client-dir}/src" classpathref="gwt-libs" source="1.5" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
 
 			<copy todir="${mpdb-client-dir}/bin" includeemptydirs="no">
 				<fileset dir="${mpdb-client-dir}/src" excludes="**/*.java" />
@@ -76,7 +78,7 @@
 	<!-- Compile the server side stuff -->
 	<target name="compile-java" depends="compile-java-mpdb-client">
 		<mkdir dir="${basedir}/bin" />
-		<javac destdir="${basedir}/bin" srcdir="${basedir}/src" classpathref="libs" source="1.5" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
+		<javac destdir="${basedir}/bin" srcdir="${basedir}/src" classpathref="gwt-libs" source="1.5" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
 
 		<copy todir="${basedir}/bin" includeemptydirs="no">
 			<fileset dir="${basedir}/src" excludes="**/*.java" />
@@ -143,6 +145,10 @@
 		<delete dir="${basedir}/www" />
 		<delete dir="${basedir}/.gwt-cache" />
 		<delete dir="${basedir}/build" />
+		<delete dir="${mpdb-common-dir}/bin" />
+		<delete dir="${mpdb-common-dir}/.gwt-cache" />
+		<delete dir="${mpdb-client-dir}/bin" />
+		<delete dir="${mpdb-client-dir}/.gwt-cache" />
 		<delete>
 			<fileset dir="${basedir}/src">
 				<include name="${hibernate_cfg}" />
