@@ -35,7 +35,7 @@ public class ImageOnGrid extends MObject {
 	private transient int temporaryTopLeftX;
 	private transient int temporaryTopLeftY;
 	private transient boolean isShown;
-	private transient Set mineralAnalyses;
+	private transient Set<MineralAnalysis> mineralAnalyses;
 	private transient boolean isLocked;
 	private transient boolean isMenuHidden;
 	private transient int zoomLevelsSkipped;
@@ -140,7 +140,7 @@ public class ImageOnGrid extends MObject {
 	public void delete() {
 		this.getGrid().getImagesOnGrid().remove(this);
 		this.setGrid(null);
-		final Iterator itr = mineralAnalyses.iterator();
+		final Iterator<MineralAnalysis> itr = mineralAnalyses.iterator();
 		while (itr.hasNext()) {
 			((MineralAnalysis) itr.next()).setImage(null);
 		}
@@ -216,15 +216,15 @@ public class ImageOnGrid extends MObject {
 		isShown = b;
 	}
 
-	public Set getMineralAnalyses() {
+	public Set<MineralAnalysis> getMineralAnalyses() {
 		return mineralAnalyses;
 	}
-	public void setMineralAnalyses(final Set s) {
+	public void setMineralAnalyses(final Set<MineralAnalysis> s) {
 		mineralAnalyses = s;
 	}
 	public void addMineralAnalysis(final MineralAnalysis ma) {
 		if (mineralAnalyses == null)
-			mineralAnalyses = new HashSet();
+			mineralAnalyses = new HashSet<MineralAnalysis>();
 		mineralAnalyses.add(ma);
 	}
 
@@ -346,7 +346,7 @@ public class ImageOnGrid extends MObject {
 			this.setTemporaryTopLeftY(this.getTemporaryTopLeftY() - dheight);
 		}
 
-		final Iterator itr = this.getMineralAnalyses().iterator();
+		final Iterator<MineralAnalysis> itr = this.getMineralAnalyses().iterator();
 		while (itr.hasNext()) {
 			final MineralAnalysis ma = (MineralAnalysis) itr.next();
 			ma.setPointX((int) (width * ma.getPercentX()));

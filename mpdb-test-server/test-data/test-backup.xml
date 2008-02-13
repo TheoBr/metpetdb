@@ -1,190 +1,19 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
-  <elements element_id="1" name="1" alternate_name="1" symbol="1" atomic_number="1" weight="1.0" mineral_type="Silicates"/>
+  <elements/>
   <users user_id="1" version="1" username="anthony" password="BCnxlteTnIP40jVqBXdVl+OZYUXFFy54Kw==" email="watera2@cs.rpi.edu"/>
-  <samples sample_id="10" version="0" sesar_number="123456789" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="1" version="0" sesar_number="000000000" public_data="N" alias="1" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="2" version="0" sesar_number="000000001" public_data="N" alias="2" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="3" version="0" sesar_number="000000002" public_data="N" alias="3" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="4" version="0" sesar_number="000000003" public_data="N" alias="4" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="5" version="0" sesar_number="000000004" public_data="N" alias="5" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)"/>
   <subsamples/>
   <grids/>
-  <image_format image_format_id="1" name="image/tiff"/>
-  <image_format image_format_id="2" name="image/gif"/>
-  <image_format image_format_id="3" name="image/jpeg"/>
-  <image_format image_format_id="4" name="image/bmp"/>
-  <image_format image_format_id="5" name="image/png"/>
+  <image_format/>
   <images/>
   <image_on_grid/>
   <metamorphic_grades/>
-  <minerals mineral_id="1" name="Tectosilicates"/>
-  <minerals mineral_id="2" name="Silica"/>
-  <minerals mineral_id="3" name="Quartz"/>
-  <minerals mineral_id="4" name="Coesite"/>
-  <minerals mineral_id="5" name="Tridymite"/>
-  <minerals mineral_id="6" name="Cristobalite"/>
-  <minerals mineral_id="7" name="Feldspar"/>
-  <minerals mineral_id="8" name="Plagioclase"/>
-  <minerals mineral_id="9" name="Albite"/>
-  <minerals mineral_id="10" name="Oligoclase"/>
-  <minerals mineral_id="11" name="Andesine"/>
-  <minerals mineral_id="12" name="Labradorite"/>
-  <minerals mineral_id="13" name="Anorthite"/>
-  <minerals mineral_id="14" name="Alkali feldspar"/>
-  <minerals mineral_id="15" name="Orthoclase"/>
-  <minerals mineral_id="16" name="Sanadine"/>
-  <minerals mineral_id="17" name="Celsian"/>
-  <minerals mineral_id="18" name="Nepheline"/>
-  <minerals mineral_id="19" name="Kalsilite"/>
-  <minerals mineral_id="20" name="Leucite"/>
-  <minerals mineral_id="21" name="Sodalite"/>
-  <minerals mineral_id="22" name="Scapolite"/>
-  <minerals mineral_id="23" name="Analcite"/>
-  <minerals mineral_id="24" name="Zeolite"/>
-  <minerals mineral_id="25" name="Sheet silicates"/>
-  <minerals mineral_id="26" name="Mica"/>
-  <minerals mineral_id="27" name="Muscovite"/>
-  <minerals mineral_id="28" name="Paragonite"/>
-  <minerals mineral_id="29" name="Margarite"/>
-  <minerals mineral_id="30" name="Glauconite"/>
-  <minerals mineral_id="31" name="Biotite"/>
-  <minerals mineral_id="32" name="Phlogopite"/>
-  <minerals mineral_id="33" name="Annite"/>
-  <minerals mineral_id="34" name="Wonesite"/>
-  <minerals mineral_id="35" name="Lepidolite"/>
-  <minerals mineral_id="36" name="Clintonite"/>
-  <minerals mineral_id="37" name="Stilpnomelane"/>
-  <minerals mineral_id="38" name="Astrophyllite"/>
-  <minerals mineral_id="39" name="Pyrophyllite"/>
-  <minerals mineral_id="40" name="Talc"/>
-  <minerals mineral_id="41" name="Chlorite"/>
-  <minerals mineral_id="42" name="Serpentine"/>
-  <minerals mineral_id="43" name="Clay"/>
-  <minerals mineral_id="44" name="Kaolinite"/>
-  <minerals mineral_id="45" name="Illite"/>
-  <minerals mineral_id="46" name="Smectite"/>
-  <minerals mineral_id="47" name="Vermiculite"/>
-  <minerals mineral_id="48" name="Montmorillonite"/>
-  <minerals mineral_id="49" name="Apophyllite"/>
-  <minerals mineral_id="50" name="Prehnite"/>
-  <minerals mineral_id="51" name="Chain silicates"/>
-  <minerals mineral_id="52" name="Pyroxene"/>
-  <minerals mineral_id="53" name="Orthopyroxene"/>
-  <minerals mineral_id="54" name="Enstatite"/>
-  <minerals mineral_id="55" name="Ferrosilite"/>
-  <minerals mineral_id="56" name="Clinopyroxene"/>
-  <minerals mineral_id="57" name="Ca pyroxene"/>
-  <minerals mineral_id="58" name="Diopside"/>
-  <minerals mineral_id="59" name="Hedenbergite"/>
-  <minerals mineral_id="60" name="Augite"/>
-  <minerals mineral_id="61" name="Na pyroxene"/>
-  <minerals mineral_id="62" name="Jadeite"/>
-  <minerals mineral_id="63" name="Acmite"/>
-  <minerals mineral_id="64" name="Omphacite"/>
-  <minerals mineral_id="65" name="Aegirine"/>
-  <minerals mineral_id="66" name="Spodumene"/>
-  <minerals mineral_id="67" name="Clinoenstatite"/>
-  <minerals mineral_id="68" name="Wollastonite"/>
-  <minerals mineral_id="69" name="Pectolite"/>
-  <minerals mineral_id="70" name="Rhodonite"/>
-  <minerals mineral_id="71" name="Bustamite"/>
-  <minerals mineral_id="72" name="Pyroxmangite"/>
-  <minerals mineral_id="73" name="Sapphirine"/>
-  <minerals mineral_id="74" name="Aenigmatite"/>
-  <minerals mineral_id="75" name="Amphibole"/>
-  <minerals mineral_id="76" name="Orthoamphibole"/>
-  <minerals mineral_id="77" name="Anthophyllite"/>
-  <minerals mineral_id="78" name="Gedrite"/>
-  <minerals mineral_id="79" name="Clinoamphibole"/>
-  <minerals mineral_id="80" name="Cummingtonite"/>
-  <minerals mineral_id="81" name="Grunerite"/>
-  <minerals mineral_id="82" name="Tremolite"/>
-  <minerals mineral_id="83" name="Actinolite"/>
-  <minerals mineral_id="84" name="Hornblende"/>
-  <minerals mineral_id="85" name="Kaersutite"/>
-  <minerals mineral_id="86" name="Glaucophane"/>
-  <minerals mineral_id="87" name="Riebeckite"/>
-  <minerals mineral_id="88" name="Richterite"/>
-  <minerals mineral_id="89" name="Katophorite"/>
-  <minerals mineral_id="90" name="Ekermannite"/>
-  <minerals mineral_id="91" name="Arfvedsonite"/>
-  <minerals mineral_id="92" name="Ortho- and Ring Silicates"/>
-  <minerals mineral_id="93" name="Olivine"/>
-  <minerals mineral_id="94" name="Humite"/>
-  <minerals mineral_id="95" name="Zircon"/>
-  <minerals mineral_id="96" name="Sphene"/>
-  <minerals mineral_id="97" name="Garnet"/>
-  <minerals mineral_id="98" name="Vesuvanite"/>
-  <minerals mineral_id="99" name="Sillimanite"/>
-  <minerals mineral_id="100" name="Andalusite"/>
-  <minerals mineral_id="101" name="Kyanite"/>
-  <minerals mineral_id="102" name="Mullite"/>
-  <minerals mineral_id="103" name="Topaz"/>
-  <minerals mineral_id="104" name="Staurolite"/>
-  <minerals mineral_id="105" name="Chloritoid"/>
-  <minerals mineral_id="106" name="Larnite"/>
-  <minerals mineral_id="107" name="Merwinite"/>
-  <minerals mineral_id="108" name="Spurrite"/>
-  <minerals mineral_id="109" name="Epidote"/>
-  <minerals mineral_id="110" name="Zoisite"/>
-  <minerals mineral_id="111" name="Clinozoisite"/>
-  <minerals mineral_id="112" name="Piemontite"/>
-  <minerals mineral_id="113" name="Allanite"/>
-  <minerals mineral_id="114" name="Lawsonite"/>
-  <minerals mineral_id="115" name="Pumpellyite"/>
-  <minerals mineral_id="116" name="Melilite"/>
-  <minerals mineral_id="117" name="Rankinite"/>
-  <minerals mineral_id="118" name="Tilleyite"/>
-  <minerals mineral_id="119" name="Beryl"/>
-  <minerals mineral_id="120" name="Cordierite"/>
-  <minerals mineral_id="121" name="Tourmaline"/>
-  <minerals mineral_id="122" name="Axinite"/>
-  <minerals mineral_id="123" name="Oxides"/>
-  <minerals mineral_id="124" name="Ilmenite"/>
-  <minerals mineral_id="125" name="Hematite"/>
-  <minerals mineral_id="126" name="Rutile"/>
-  <minerals mineral_id="127" name="Spinel(1)"/>
-  <minerals mineral_id="128" name="Spinel(2)"/>
-  <minerals mineral_id="129" name="Magnetite"/>
-  <minerals mineral_id="130" name="Chromite"/>
-  <minerals mineral_id="131" name="Hercynite"/>
-  <minerals mineral_id="132" name="Ghanite"/>
-  <minerals mineral_id="133" name="Periclase"/>
-  <minerals mineral_id="134" name="Cassiterite"/>
-  <minerals mineral_id="135" name="Corundum"/>
-  <minerals mineral_id="136" name="Anatase"/>
-  <minerals mineral_id="137" name="Brookite"/>
-  <minerals mineral_id="138" name="Perovskite"/>
-  <minerals mineral_id="139" name="Hydroxides"/>
-  <minerals mineral_id="140" name="Brucite"/>
-  <minerals mineral_id="141" name="Gibbsite"/>
-  <minerals mineral_id="142" name="Diaspore"/>
-  <minerals mineral_id="143" name="Boehmite"/>
-  <minerals mineral_id="144" name="Goethite"/>
-  <minerals mineral_id="145" name="Lepidocrocite"/>
-  <minerals mineral_id="146" name="Limonite"/>
-  <minerals mineral_id="147" name="Sulphides"/>
-  <minerals mineral_id="148" name="Pyrite"/>
-  <minerals mineral_id="149" name="Pyrrhotite"/>
-  <minerals mineral_id="150" name="Chalcopyrite"/>
-  <minerals mineral_id="151" name="Sphalerite"/>
-  <minerals mineral_id="152" name="Galena"/>
-  <minerals mineral_id="153" name="Sulphates"/>
-  <minerals mineral_id="154" name="Baryte"/>
-  <minerals mineral_id="155" name="Celestine"/>
-  <minerals mineral_id="156" name="Gypsum"/>
-  <minerals mineral_id="157" name="Anhydrite"/>
-  <minerals mineral_id="158" name="Carbonates"/>
-  <minerals mineral_id="159" name="Calcite"/>
-  <minerals mineral_id="160" name="Dolomite"/>
-  <minerals mineral_id="161" name="Magnesite"/>
-  <minerals mineral_id="162" name="Rhodochrosite"/>
-  <minerals mineral_id="163" name="Siderite"/>
-  <minerals mineral_id="164" name="Ankerite"/>
-  <minerals mineral_id="165" name="Phosphates"/>
-  <minerals mineral_id="166" name="Apatite"/>
-  <minerals mineral_id="167" name="Monazite"/>
-  <minerals mineral_id="168" name="Xenotime"/>
-  <minerals mineral_id="169" name="Native Elements"/>
-  <minerals mineral_id="170" name="Carbon"/>
-  <minerals mineral_id="171" name="Graphite"/>
-  <minerals mineral_id="172" name="Diamond"/>
+  <minerals/>
   <reference/>
   <mineral_analyses/>
   <mineral_analysis_elements/>

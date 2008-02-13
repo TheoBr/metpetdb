@@ -14,7 +14,7 @@ public class Grid extends MObject {
 	private int width;
 	private int height;
 	private Subsample subsample;
-	private Set imagesOnGrid;
+	private Set<ImageOnGrid> imagesOnGrid;
 
 	public int getId() {
 		return id;
@@ -54,18 +54,18 @@ public class Grid extends MObject {
 		subsample = s;
 	}
 
-	public Set getImagesOnGrid() {
+	public Set<ImageOnGrid> getImagesOnGrid() {
 		if (imagesOnGrid == null)
-			imagesOnGrid = new HashSet();
+			imagesOnGrid = new HashSet<ImageOnGrid>();
 		return imagesOnGrid;
 	}
-	public void setImagesOnGrid(final Set s) {
+	public void setImagesOnGrid(final Set<ImageOnGrid> s) {
 		imagesOnGrid = s;
 	}
 	public void addImageOnGrid(final ImageOnGrid imageOnGrid) {
 		imageOnGrid.setGrid(this);
 		if (imagesOnGrid == null)
-			imagesOnGrid = new HashSet();
+			imagesOnGrid = new HashSet<ImageOnGrid>();
 		imagesOnGrid.add(imageOnGrid);
 	}
 

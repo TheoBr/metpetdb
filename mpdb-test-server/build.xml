@@ -2,12 +2,57 @@
 
 	<property file="build.properties" />
 	<property name="ctx_lib" location="${basedir}/lib" />
+	<property name="src" value="${basedir}/test" />
+	<property name="classes" value="${basedir}/bin" />
+	<property name="test.class.name" value="edu.rpi.metpetdb.AllTests" />
 
-	<path id="libs">
+	<property name="test.reports" value="${basedir}/../mpdb-common/reports/reports-server" />
+
+	<path id="classpath-libs">
 		<fileset dir="${ctx_lib}" includes="*.jar" />
 		<pathelement location="${gwt_home}/gwt-user.jar" />
 		<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
 	</path>
+
+	<path id="libs">
+		<fileset dir="${ctx_lib}" includes="*.jar" />
+		<fileset dir="${basedir}/../mpdb-test-server/lib" includes="*.jar" />
+		<fileset dir="${basedir}/../mpdb-server/lib" includes="*.jar" />
+		<pathelement location="${gwt_home}/gwt-user.jar" />
+		<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
+		<pathelement location="../mpdb-test-server/bin" />
+		<pathelement location="../mpdb-test-client/bin" />
+		<pathelement location="../mpdb-test-client/test" />
+		<pathelement location="../mpdb-server/bin" />
+		<pathelement location="../mpdb-client/bin" />
+		<pathelement location="../mpdb-common/bin" />
+		<pathelement location="../mpdb-server/src" />
+		<pathelement location="../mpdb-client/src" />
+		<pathelement location="../mpdb-common/src" />
+	</path>
+
+
+
+	<target name="runtest">
+		<mkdir dir="${test.reports}" />
+		<junit fork="yes" printsummary="yes" haltonfailure="no">
+			<test name="${test.class.name}" haltonfailure="no" todir="${test.reports}">
+				<formatter type="xml" />
+			</test>
+
+			<formatter type="xml" />
+			<classpath refid="libs" />
+			<jvmarg value="-Xmx300m" />
+		</junit>
+
+		<junitreport todir="${test.reports}">
+			<fileset dir="${test.reports}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report todir="${test.reports}" />
+		</junitreport>
+
+	</target>
 
 	<target name="eclipse">
 		<property name="name.e" value="MetPetDB" />
@@ -27,17 +72,15 @@
 &lt;classpath&gt;
 	&lt;classpathentry kind="src" path="test" excluding="**/java_emu/**/*.java"/&gt;
 	&lt;classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/&gt;
-	&lt;classpathentry kind=&quot;lib&quot; path=&quot;${libs.e}&quot;/&gt;
+	&lt;classpathentry kind=&quot;lib&quot; path=&quot;${classpath-libs.e}&quot;/&gt;
 	&lt;classpathentry kind="output" path="bin"/&gt;
 	&lt;classpathentry combineaccessrules="false" kind="src" path="/mpdb-common"/&gt;
 	&lt;classpathentry combineaccessrules="false" kind="src" path="/mpdb-server"/&gt;
-	&lt;classpathentry combineaccessrules="false" kind="src" path="/mpdb-client"/&gt;
 	&lt;classpathentry kind="lib" path="/mpdb-common/src"/&gt;
 	&lt;classpathentry kind="lib" path="/mpdb-server/src"/&gt;
-	&lt;classpathentry kind="lib" path="/mpdb-client/src"/&gt;
 	&lt;classpathentry kind="lib" path="bin"/&gt;
 &lt;/classpath&gt;
 </echo>
-		
+
 	</target>
 </project>

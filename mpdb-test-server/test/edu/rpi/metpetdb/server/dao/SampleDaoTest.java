@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.server.dao;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Query;

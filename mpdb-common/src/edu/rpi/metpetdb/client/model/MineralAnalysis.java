@@ -40,8 +40,8 @@ public class MineralAnalysis extends MObject {
 	private String description;
 	private Mineral mineral;
 	private Boolean largeRock;
-	private Set elements;
-	private Set oxides;
+	private Set<Element> elements;
+	private Set<Oxide> oxides;
 
 	private transient Widget actualImage;
 	private transient float percentX;
@@ -175,12 +175,12 @@ public class MineralAnalysis extends MObject {
 		this.largeRock = largeRock;
 	}
 	
-	public void setElements(final Set e) {
+	public void setElements(final Set<Element> e) {
 		elements = e;
 	}
-	public Set getElements() {
+	public Set<Element> getElements() {
 		if (elements == null)
-			elements = new HashSet();
+			elements = new HashSet<Element>();
 		return elements;
 	}
 

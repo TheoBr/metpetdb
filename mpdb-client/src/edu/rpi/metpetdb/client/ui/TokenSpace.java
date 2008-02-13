@@ -114,7 +114,7 @@ public class TokenSpace implements HistoryListener {
 	};
 	public static final Screen introduction = new Screen("Introduction") {
 		public void executeToken(final String args) {
-			showIntroduction();
+			//showIntroduction();
 		}
 	};
 	public static final Screen bulkUpload = new Screen("BulkUpload") {
