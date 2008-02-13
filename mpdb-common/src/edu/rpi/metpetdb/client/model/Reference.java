@@ -2,12 +2,26 @@ package edu.rpi.metpetdb.client.model;
 
 //import java.util.Set;
 
+import javax.persistence.Id;
+
+import org.hibernate.annotations.Entity;
+import org.hibernate.annotations.Index;
+import org.hibernate.search.annotations.DocumentId;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+
 import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 
+@Entity
+@Indexed(index="indices/Reference")
 public class Reference extends MObject {
 	public static final int P_name = 0;
 
+	@Id
+	@DocumentId
 	private short id;
+	
+	@Field
 	private String name;
 
 	public short getId() {

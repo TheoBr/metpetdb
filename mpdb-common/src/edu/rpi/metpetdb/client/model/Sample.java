@@ -4,13 +4,24 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.Entity;
+import org.hibernate.annotations.Index;
+import org.hibernate.search.annotations.DocumentId;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 import org.postgis.Geometry;
 import org.postgis.Point;
 
 import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
-
+@Entity
+@Indexed(index="indices/Sample")
 public class Sample extends MObject implements IHasName {
 	public static final int P_sesarNumber = 0;
 	public static final int P_location = 1;
@@ -32,28 +43,70 @@ public class Sample extends MObject implements IHasName {
 	public static final int P_references = 17;
 	public static final int P_subsampleCount = 18;
 
+	@Id
+	@DocumentId
 	private long id;
 	private int version;
+	
+	@Field
 	private String sesarNumber;
 	private Geometry location;
+	
+	
 	private User owner;
+	
+	@Field
 	private String alias;
 	private Timestamp collectionDate;
+	
+	@Field
 	private Boolean publicData;
+	
+	@Field
 	private String rockType;
-	private Set subsamples;
-	private Set projects;
-	private Set minerals;
-	private Set images;
+	
+	@OneToMany
+	@IndexedEmbedded(depth = 1)
+	private Set<Subsample> subsamples;
+	
+	@ManyToMany
+	@IndexedEmbedded(depth = 1)
+	// ?????????????? do it in both?
+	private Set<Project> projects;
+	
+	@ManyToMany
+	@IndexedEmbedded(depth = 1)
+	private Set<Mineral> minerals;
+	
+	private Set<Image> images;
+	
+	@Field
 	private String description;
+	
+	@Field
 	private String country;
+	
+	@Field	
 	private String collector;
+	
+	@Field
 	private String locationText;
+	
 	private Float latitudeError;
 	private Float longitudeError;
-	private Set regions;
-	private Set metamorphicGrades;
-	private Set references;
+	
+	@ManyToMany
+	@IndexedEmbedded(depth = 1)
+	private Set<Region> regions;
+	
+	@OneToMany
+	@IndexedEmbedded(depth = 1)
+	private Set<MetamorphicGrade> metamorphicGrades;
+	
+	@ManyToMany
+	@IndexedEmbedded(depth = 1)
+	private Set<Reference> references;
+	
 	private int subsampleCount;
 
 	public long getId() {
@@ -154,55 +207,55 @@ public class Sample extends MObject implements IHasName {
 		publicData = p;
 	}
 
-	public Set getSubsamples() {
+	public Set<Subsample> getSubsamples() {
 		if (subsamples == null)
-			subsamples = new HashSet();
+			subsamples = new HashSet<Subsample>();
 		return subsamples;
 	}
 
-	public void setSubsamples(final Set c) {
+	public void setSubsamples(final Set<Subsample> c) {
 		subsamples = c;
 	}
 
 	public void addSubsample(Subsample s) {
 		s.setSample(this);
 		if (subsamples == null)
-			subsamples = new HashSet();
+			subsamples = new HashSet<Subsample>();
 		subsamples.add(s);
 	}
 
-	public Set getProjects() {
+	public Set<Project> getProjects() {
 		if (projects == null)
-			projects = new HashSet();
+			projects = new HashSet<Project>();
 		return projects;
 	}
 
-	public void setProjects(final Set s) {
+	public void setProjects(final Set<Project> s) {
 		projects = s;
 	}
 
-	public void setImages(final Set s) {
+	public void setImages(final Set<Image> s) {
 		if (images == null)
-			images = new HashSet();
+			images = new HashSet<Image>();
 		images = s;
 	}
 
-	public Set getImages() {
+	public Set<Image> getImages() {
 		return images;
 	}
 
 	public void addImage(final Image i) {
 		i.setSample(this);
 		if (images == null)
-			images = new HashSet();
+			images = new HashSet<Image>();
 		images.add(i);
 	}
 
-	public Set getMinerals() {
+	public Set<Mineral> getMinerals() {
 		return minerals;
 	}
 
-	public void setMinerals(final Set c) {
+	public void setMinerals(final Set<Mineral> c) {
 		minerals = c;
 	}
 
@@ -254,35 +307,35 @@ public class Sample extends MObject implements IHasName {
 		longitudeError = le;
 	}
 
-	public Set getRegions() {
+	public Set<Region> getRegions() {
 		return regions;
 	}
 
-	public void setRegions(final Set r) {
+	public void setRegions(final Set<Region> r) {
 		regions = r;
 	}
 
 	public void addRegion(final String name) {
 		if (regions == null)
-			regions = new HashSet();
+			regions = new HashSet<Region>();
 		final Region r = new Region();
 		r.setName(name);
 		regions.add(r);
 	}
 
-	public Set getMetamorphicGrades() {
+	public Set<MetamorphicGrade> getMetamorphicGrades() {
 		return metamorphicGrades;
 	}
 
-	public void setMetamorphicGrades(final Set m) {
+	public void setMetamorphicGrades(final Set<MetamorphicGrade> m) {
 		metamorphicGrades = m;
 	}
 
-	public Set getReferences() {
+	public Set<Reference> getReferences() {
 		return references;
 	}
 
-	public void setReferences(final Set r) {
+	public void setReferences(final Set<Reference> r) {
 		references = r;
 	}
 
@@ -345,12 +398,12 @@ public class Sample extends MObject implements IHasName {
 
 		case P_images:
 			if (newValue != GET_ONLY)
-				setImages((Set) newValue);
+				setImages((Set<Image>) newValue);
 			return getImages();
 
 		case P_minerals:
 			if (newValue != GET_ONLY)
-				setMinerals((Set) newValue);
+				setMinerals((Set<Mineral>) newValue);
 			return getMinerals();
 
 		case P_country:
@@ -385,17 +438,17 @@ public class Sample extends MObject implements IHasName {
 
 		case P_regions:
 			if (newValue != GET_ONLY)
-				setRegions((Set) newValue);
+				setRegions((Set<Region>) newValue);
 			return getRegions();
 
 		case P_metamorphicGrades:
 			if (newValue != GET_ONLY)
-				setMetamorphicGrades((Set) newValue);
+				setMetamorphicGrades((Set<MetamorphicGrade>) newValue);
 			return getMetamorphicGrades();
 
 		case P_references:
 			if (newValue != GET_ONLY)
-				setReferences((Set) newValue);
+				setReferences((Set<Reference>) newValue);
 			return getReferences();
 
 		case P_subsampleCount:

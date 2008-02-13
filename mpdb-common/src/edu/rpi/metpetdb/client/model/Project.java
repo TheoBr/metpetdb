@@ -3,18 +3,46 @@ package edu.rpi.metpetdb.client.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.Entity;
+import org.hibernate.annotations.Index;
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.DocumentId;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+
 import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 
+@Entity
+@Indexed(index="indices/Project")
 public class Project extends MObject {
 	public static final int P_name = 0;
 	public static final int P_owner = 1;
 
+    @Id
+    @DocumentId
 	private int id;
 	private int version;
+	
+	@Field
 	private String name;
+	
+	@ManyToOne
+	@IndexedEmbedded(depth = 1)
 	private User owner;
-	private Set members;
-	private Set samples;
+	
+	@ManyToMany
+	@IndexedEmbedded(depth = 1)
+	private Set<User> members;
+	
+    @ContainedIn
+    @ManyToMany(mappedBy="address")
+	//????????????? do it in both
+	private Set<Sample> samples;
 
 	public int getId() {
 		return id;

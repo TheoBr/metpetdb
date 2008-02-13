@@ -9,12 +9,13 @@
     <property name="hibernate.connection.username">@APPUSER@</property>
     <property name="hibernate.connection.password">@APPPASS@</property>
     <property name="hibernate.connection.pool_size">2</property>
-
+    <property name="hibernate.search.default.indexBase">indices</property>
+	<property name="hibernate.search.default.directory_provider">org.hibernate.search.store.FSDirectoryProvider</property>
+  
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
     <property name="hibernate.query.substitutions">true 'Y', false 'N'</property>
     <property name="hibernate.jdbc.batch_size">0</property>
     <property name="hibernate.format_sql">true</property>
-
     <mapping resource="edu/rpi/metpetdb/server/dao/Project.hbm.xml" />
     <mapping resource="edu/rpi/metpetdb/server/dao/Grid.hbm.xml" />
     <mapping resource="edu/rpi/metpetdb/server/dao/Image.hbm.xml" />
@@ -29,6 +30,16 @@
 	<mapping resource="edu/rpi/metpetdb/server/dao/MetamorphicGrade.hbm.xml" />
 	<mapping resource="edu/rpi/metpetdb/server/dao/Reference.hbm.xml" />
 	<mapping resource="edu/rpi/metpetdb/server/dao/Oxide.hbm.xml" />
+	<mapping class="../mpdb-common/src/edu/rpi/metpetdb/client/model/Sample"/>
+    <event type="post-update"
+        <listener class="org.hibernate.search.event.FullTextIndexEventListener"/>
+    </event>
+    <event type="post-insert"
+        <listener class="org.hibernate.search.event.FullTextIndexEventListener"/>
+    </event>
+    <event type="post-delete"
+        <listener class="org.hibernate.search.event.FullTextIndexEventListener"/>
+    </event>	
   </session-factory>
 </hibernate-configuration>
 

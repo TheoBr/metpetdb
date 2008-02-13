@@ -2,16 +2,32 @@ package edu.rpi.metpetdb.client.model;
 
 import java.util.Set;
 
+import javax.persistence.Id;
+
+import org.hibernate.annotations.Entity;
+import org.hibernate.annotations.Index;
+import org.hibernate.search.annotations.DocumentId;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+
 import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasChildren;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 
+@Entity
+@Indexed(index="indices/Mineral")
 public class Mineral extends MObject implements IHasChildren, IHasName {
 	public static final int P_name = 0;
 
+	@Id
+	@DocumentId
 	private short id;
 	private Short parentId;
+	
+	@Field
 	private String name;
+	
+	
 	private Set children;
 
 	public short getId() {

@@ -15,13 +15,18 @@ public class Image extends MObject {
 
 	private long id;
 	private int version;
+	
 	private String imageType;
 	private int width;
 	private int height;
 	private String checksum;
 	private String checksum64x64;
 	private String checksumHalf;
+	
+	
 	private Subsample subsample;
+	
+	
 	private Sample sample;
 	private String filename;
 	private XrayImage xrayImage;

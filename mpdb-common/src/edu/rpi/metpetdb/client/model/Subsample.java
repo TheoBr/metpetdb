@@ -3,9 +3,23 @@ package edu.rpi.metpetdb.client.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.Entity;
+import org.hibernate.annotations.Index;
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.DocumentId;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+
 import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasImages;
 
+@Entity
+@Indexed(index="indices/Subsample")
 public class Subsample extends MObject implements IHasImages {
 	public static final int P_name = 0;
 	public static final int P_type = 1;
@@ -13,15 +27,29 @@ public class Subsample extends MObject implements IHasImages {
 	public static final int P_imageCount = 3;
 	public static final int P_analysisCount = 4;
 	public static final int P_sampleName = 5;
-	
+
+    @Id
+    @DocumentId
 	private long id;
+	
+	@ContainedIn
 	private Sample sample;
+		
 	private int version;
+	
+	@Field
 	private String name;
+	
+	@Field
 	private String type;
-	private Set images;
+	
+	private Set<Image> images;
+	
 	private Grid grid;
-	private Set mineralAnalyses;
+	
+	@OneToMany
+	@IndexedEmbedded(depth = 1)
+	private Set<MineralAnalysis> mineralAnalyses;
 	private int imageCount;
 	private int analysisCount;
 
@@ -63,11 +91,11 @@ public class Subsample extends MObject implements IHasImages {
 		type = t;
 	}
 	
-	public void setImages(final Set s) {
+	public void setImages(final Set<Image> s) {
 		images = s;
 	}
 
-	public Set getImages() {
+	public Set<Image> getImages() {
 		return images;
 	}
 
@@ -79,10 +107,10 @@ public class Subsample extends MObject implements IHasImages {
 		images.add(i);
 	}
 
-	public Set getMineralAnalyses() {
+	public Set<MineralAnalysis> getMineralAnalyses() {
 		return mineralAnalyses;
 	}
-	public void setMineralAnalyses(final Set s) {
+	public void setMineralAnalyses(final Set<MineralAnalysis> s) {
 		mineralAnalyses = s;
 	}
 	public void addMineralAnalysis(MineralAnalysis ma) {
@@ -141,7 +169,7 @@ public class Subsample extends MObject implements IHasImages {
 				return getType();
 			case P_images :
 				if (newValue != GET_ONLY)
-					setImages((Set) newValue);
+					setImages((Set<Image>) newValue);
 				return getImages();
 			case P_imageCount : 
 				if (newValue != GET_ONLY)
