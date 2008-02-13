@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.error;
 import java.util.Collection;
 import java.util.HashSet;
 
+import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 
 /**
@@ -12,7 +13,7 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 public class ValueNotInCollectionException extends ValidationException {
 	private static final long serialVersionUID = 1L;
 	
-	private Collection c;
+	private Collection<MObject> c;
 	private String value;
 
 	public ValueNotInCollectionException() {
@@ -21,11 +22,11 @@ public class ValueNotInCollectionException extends ValidationException {
 		super(pc);
 	}
 	
-	public ValueNotInCollectionException(final String value, final Collection c) {
+	public ValueNotInCollectionException(final String value, final Collection<MObject> c) {
 		this.c = c;
 		this.value = value == null ? "" : value.toString();
 		if (this.c == null)
-			this.c = new HashSet();
+			this.c = new HashSet<MObject>();
 	}
 
 	public String format() {
