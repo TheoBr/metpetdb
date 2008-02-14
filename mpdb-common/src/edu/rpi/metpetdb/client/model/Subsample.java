@@ -47,7 +47,6 @@ public class Subsample extends MObject implements IHasImages {
 	
 	private Grid grid;
 	
-	@OneToMany
 	@IndexedEmbedded(depth = 1)
 	private Set<MineralAnalysis> mineralAnalyses;
 	private int imageCount;

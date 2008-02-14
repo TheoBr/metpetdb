@@ -31,16 +31,13 @@ public class Project extends MObject {
 	@Field
 	private String name;
 	
-	@ManyToOne
 	@IndexedEmbedded(depth = 1)
 	private User owner;
 	
-	@ManyToMany
 	@IndexedEmbedded(depth = 1)
 	private Set<User> members;
 	
     @ContainedIn
-    @ManyToMany(mappedBy="address")
 	//????????????? do it in both
 	private Set<Sample> samples;
 

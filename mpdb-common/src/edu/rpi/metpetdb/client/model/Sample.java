@@ -65,16 +65,13 @@ public class Sample extends MObject implements IHasName {
 	@Field
 	private String rockType;
 	
-	@OneToMany
 	@IndexedEmbedded(depth = 1)
 	private Set<Subsample> subsamples;
 	
-	@ManyToMany
 	@IndexedEmbedded(depth = 1)
 	// ?????????????? do it in both?
 	private Set<Project> projects;
 	
-	@ManyToMany
 	@IndexedEmbedded(depth = 1)
 	private Set<Mineral> minerals;
 	
@@ -95,15 +92,12 @@ public class Sample extends MObject implements IHasName {
 	private Float latitudeError;
 	private Float longitudeError;
 	
-	@ManyToMany
 	@IndexedEmbedded(depth = 1)
 	private Set<Region> regions;
 	
-	@OneToMany
 	@IndexedEmbedded(depth = 1)
 	private Set<MetamorphicGrade> metamorphicGrades;
 	
-	@ManyToMany
 	@IndexedEmbedded(depth = 1)
 	private Set<Reference> references;
 	
