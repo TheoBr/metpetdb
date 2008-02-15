@@ -20,8 +20,6 @@ import org.postgis.Point;
 import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
-@Entity
-@Indexed(index="indices/Sample")
 public class Sample extends MObject implements IHasName {
 	public static final int P_sesarNumber = 0;
 	public static final int P_location = 1;
@@ -43,62 +41,45 @@ public class Sample extends MObject implements IHasName {
 	public static final int P_references = 17;
 	public static final int P_subsampleCount = 18;
 
-	@Id
-	@DocumentId
 	private long id;
 	private int version;
 	
-	@Field
 	private String sesarNumber;
 	private Geometry location;
 	
 	
 	private User owner;
 	
-	@Field
 	private String alias;
 	private Timestamp collectionDate;
 	
-	@Field
 	private Boolean publicData;
 	
-	@Field
 	private String rockType;
 	
-	@IndexedEmbedded(depth = 1)
 	private Set<Subsample> subsamples;
 	
-	@IndexedEmbedded(depth = 1)
-	// ?????????????? do it in both?
 	private Set<Project> projects;
 	
-	@IndexedEmbedded(depth = 1)
 	private Set<Mineral> minerals;
 	
 	private Set<Image> images;
 	
-	@Field
 	private String description;
 	
-	@Field
 	private String country;
 	
-	@Field	
 	private String collector;
 	
-	@Field
 	private String locationText;
 	
 	private Float latitudeError;
 	private Float longitudeError;
 	
-	@IndexedEmbedded(depth = 1)
 	private Set<Region> regions;
 	
-	@IndexedEmbedded(depth = 1)
 	private Set<MetamorphicGrade> metamorphicGrades;
 	
-	@IndexedEmbedded(depth = 1)
 	private Set<Reference> references;
 	
 	private int subsampleCount;

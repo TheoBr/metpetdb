@@ -18,8 +18,6 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasImages;
 
-@Entity
-@Indexed(index="indices/Subsample")
 public class Subsample extends MObject implements IHasImages {
 	public static final int P_name = 0;
 	public static final int P_type = 1;
@@ -28,26 +26,20 @@ public class Subsample extends MObject implements IHasImages {
 	public static final int P_analysisCount = 4;
 	public static final int P_sampleName = 5;
 
-    @Id
-    @DocumentId
 	private long id;
 	
-	@ContainedIn
 	private Sample sample;
 		
 	private int version;
 	
-	@Field
 	private String name;
 	
-	@Field
 	private String type;
 	
 	private Set<Image> images;
 	
 	private Grid grid;
 	
-	@IndexedEmbedded(depth = 1)
 	private Set<MineralAnalysis> mineralAnalyses;
 	private int imageCount;
 	private int analysisCount;

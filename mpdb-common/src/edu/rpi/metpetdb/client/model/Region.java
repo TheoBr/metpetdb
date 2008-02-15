@@ -12,16 +12,11 @@ import org.hibernate.search.annotations.Indexed;
 
 import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 
-@Entity
-@Indexed(index="indices/Region")
 public class Region extends MObject {
 	public static final int P_name = 0;
 
-	@Id
-	@DocumentId
 	private short id;
 	
-	@Field	
 	private String name;
 
 	public short getId() {

@@ -17,29 +17,20 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 
 import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 
-@Entity
-@Indexed(index="indices/Project")
 public class Project extends MObject {
 	public static final int P_name = 0;
 	public static final int P_owner = 1;
 
-    @Id
-    @DocumentId
 	private int id;
 	private int version;
 	
-	@Field
 	private String name;
 	
-	@IndexedEmbedded(depth = 1)
 	private User owner;
 	
-	@IndexedEmbedded(depth = 1)
 	private Set<User> members;
 	
-    @ContainedIn
-	//????????????? do it in both
-	private Set<Sample> samples;
+   	private Set<Sample> samples;
 
 	public int getId() {
 		return id;
