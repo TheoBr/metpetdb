@@ -68,6 +68,7 @@ public class Element extends MObject implements IHasName {
 		return mineralType;
 	}
 	
+	@Override
 	public boolean equals(final Object o) {
 		return o instanceof Element && ((Element) o).getId() == id;
 	}

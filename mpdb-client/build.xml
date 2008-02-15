@@ -1,10 +1,11 @@
-<project name="mpdb-client" basedir="." default="compile-html">
+<project name="mpdb-client" basedir="." default="mpdb-client-compile-html">
 
-	<property file="build.properties" />
+	<property file="../mpdb-common/build.properties" />
 	<property name="build" location="${basedir}/build" />
-	<property name="ctx_lib" location="${basedir}/lib" />
+	<property name="ctx_lib" location="${basedir}/../mpdb-common/lib" />
 	<property name="app_name" value="edu.rpi.metpetdb.MetPetDBApplication" />
 
+	<!-- Library files for the classpath -->
 	<path id="libs">
 		<fileset dir="${ctx_lib}" includes="*.jar" />
 		<pathelement location="${gwt_home}/gwt-user.jar" />
@@ -16,18 +17,19 @@
 		<fileset dir="${ctx_lib}" includes="*.jar" />
 		<pathelement location="${gwt_home}/gwt-user.jar" />
 		<pathelement location="../mpdb-common/src" />
+		<pathelement location="../mpdb-common/bin" />
 	</path>
 
-	<target name="compile-java">
+	<target name="mpdb-client-compile-java" description="Compiles the mpdb-client project">
 		<mkdir dir="${basedir}/bin" />
-		<javac destdir="${basedir}/bin" srcdir="${basedir}/src" classpathref="libs" source="1.4" debug="false" optimize="true" excludes="**/java_emu/**/*.java" />
+		<javac destdir="${basedir}/bin" srcdir="${basedir}/src" classpathref="libs" source="1.5" debug="false" optimize="true" excludes="**/java_emu/**/*.java" />
 
 		<copy todir="${basedir}/bin" includeemptydirs="no">
 			<fileset dir="${basedir}/src" excludes="**/*.java" />
 		</copy>
 	</target>
 
-	<target name="compile-html" depends="compile-java">
+	<target name="mpdb-client-compile-html" depends="mpdb-client-compile-java" description="Executes the GWT compiler to convert java code to javascript">
 		<java fork="true" classname="com.google.gwt.dev.GWTCompiler" taskname="gwtc" maxmemory="256m">
 			<classpath>
 				<pathelement location="${basedir}/src" />
@@ -45,7 +47,7 @@
 		</java>
 	</target>
 
-	<target name="compile" depends="compile-html" />
+	<target name="compile" depends="mpdb-client-compile-html" />
 
 	<target name="clean">
 		<delete dir="${build}" />
@@ -53,7 +55,7 @@
 		<delete dir="${basedir}/.gwt-cache" />
 	</target>
 
-	<target name="eclipse">
+	<target name="mpdb-client-eclipse" description="Sets up the Eclipse project mpdb-client">
 		<property name="name.e" value="MetPetDB" />
 
 		<pathconvert property="libs.e" dirsep="/" pathsep="&quot;/&gt;&#10;&#09;&lt;classpathentry kind=&quot;lib&quot; path=&quot;">

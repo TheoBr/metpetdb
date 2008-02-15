@@ -14,9 +14,9 @@ import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.Column;
-import org.hibernate.mapping.ForeignKey;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
 import org.postgis.Geometry;
@@ -51,7 +51,8 @@ public class DataStore {
 
 	protected static synchronized Configuration getConfiguration() {
 		if (config == null) {
-			final Configuration cfg = new Configuration();
+			
+			final Configuration cfg = new AnnotationConfiguration();
 			final URL x = DataStore.class.getResource("dao/hibernate.cfg.xml");
 			if (x == null)
 				throw new MappingException("Missing dao/hibernate.cfg.xml.");

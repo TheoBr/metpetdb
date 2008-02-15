@@ -1,14 +1,32 @@
-<project name="mpdb-common" basedir="." default="eclipse">
+<project name="mpdb-common" basedir="." default="mpdb-common-eclipse">
 
 	<property file="build.properties" />
 	<property name="ctx_lib" location="${basedir}/lib" />
+	<property name="build" location="${basedir}/build" />
+	<property name="app_name" value="edu.rpi.metpetdb.MetPetDBApplication" />
 
+	<property name="mpdb-common-dir" location="${basedir}" />
+	<property name="mpdb-client-dir" location="${basedir}/../mpdb-client" />
+	<property name="mpdb-server-dir" location="${basedir}/mpdb-server" />
+
+	<!-- Libs for the classpath-->
 	<path id="libs">
 		<fileset dir="${ctx_lib}" includes="*.jar" />
 		<pathelement location="${gwt_home}/gwt-user.jar" />
 	</path>
 
-	<target name="eclipse">
+	<target name="mpdb-common-compile-java" description="Compiles the java code of mpdb-common">
+		<mkdir dir="${mpdb-common-dir}/bin" />
+		<javac destdir="${mpdb-common-dir}/bin" srcdir="${mpdb-common-dir}/src" classpathref="mpdb-common-libs" source="1.5" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
+
+		<copy todir="${mpdb-common-dir}/bin" includeemptydirs="no">
+			<fileset dir="${mpdb-common-dir}/src" excludes="**/*.java" />
+		</copy>
+	</target>
+	
+	<target name="compile" depends="mpdb-common-compile-java" />
+
+	<target name="mpdb-common-eclipse" description="Sets up Eclipse for the mpdb-common project">
 		<property name="name.e" value="MetPetDB" />
 
 		<pathconvert property="libs.e" dirsep="/" pathsep="&quot;/&gt;&#10;&#09;&lt;classpathentry kind=&quot;lib&quot; path=&quot;">

@@ -31,13 +31,13 @@
 	<mapping resource="edu/rpi/metpetdb/server/dao/Reference.hbm.xml" />
 	<mapping resource="edu/rpi/metpetdb/server/dao/Oxide.hbm.xml" />
 	<mapping class="../mpdb-common/src/edu/rpi/metpetdb/client/model/Sample"/>
-    <event type="post-update"
+    <event type="post-update">
         <listener class="org.hibernate.search.event.FullTextIndexEventListener"/>
     </event>
-    <event type="post-insert"
+    <event type="post-insert">
         <listener class="org.hibernate.search.event.FullTextIndexEventListener"/>
     </event>
-    <event type="post-delete"
+    <event type="post-delete">
         <listener class="org.hibernate.search.event.FullTextIndexEventListener"/>
     </event>	
   </session-factory>
