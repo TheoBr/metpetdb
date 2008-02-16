@@ -2,13 +2,6 @@ package edu.rpi.metpetdb.client.model;
 
 import java.util.Set;
 
-import javax.persistence.Id;
-
-import org.hibernate.annotations.Entity;
-import org.hibernate.annotations.Index;
-import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
 
 import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasChildren;

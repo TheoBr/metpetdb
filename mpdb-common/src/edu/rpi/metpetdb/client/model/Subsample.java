@@ -3,17 +3,7 @@ package edu.rpi.metpetdb.client.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.Entity;
-import org.hibernate.annotations.Index;
-import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.DocumentId;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
 
 import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasImages;
