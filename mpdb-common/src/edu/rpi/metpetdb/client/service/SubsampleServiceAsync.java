@@ -4,7 +4,7 @@ import org.gwtwidgets.client.ui.pagination.PaginationParameters;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
 
 /** @see SubsampleService */
 public interface SubsampleServiceAsync {
@@ -12,6 +12,6 @@ public interface SubsampleServiceAsync {
 	void allWithImages(PaginationParameters pp, final long sampleId,
 			AsyncCallback ac);
 	void details(long id, AsyncCallback ac);
-	void saveSubsample(final Subsample s, AsyncCallback ac);
+	void saveSubsample(final SubsampleDTO s, AsyncCallback ac);
 	void delete(long id, AsyncCallback ac);
 }

@@ -6,7 +6,7 @@ import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
 
-import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 
 public class ZOrderManager {
 
@@ -16,7 +16,7 @@ public class ZOrderManager {
 
 	}
 
-	public void register(final ImageOnGrid iog) {
+	public void register(final ImageOnGridDTO iog) {
 		// iog.setZorder(this.getHighestZOrder()+1);
 		imagesOnGrid.add(iog);
 		DOM.setStyleAttribute(iog.getImageContainer().getElement(), "zIndex",
@@ -27,14 +27,14 @@ public class ZOrderManager {
 		imagesOnGrid.clear();
 	}
 
-	public void bringToFront(final ImageOnGrid iog) {
+	public void bringToFront(final ImageOnGridDTO iog) {
 		modifyAllZOrders(-1);
 		iog.setZorder(getHighestZOrder() + 1);
 		DOM.setStyleAttribute(iog.getImageContainer().getElement(), "zIndex",
 				String.valueOf(iog.getZorder()));
 	}
 
-	public void sendToBack(final ImageOnGrid iog) {
+	public void sendToBack(final ImageOnGridDTO iog) {
 		modifyAllZOrders(1);
 		iog.setZorder((getLowestZOrder() - 1));
 		DOM.setStyleAttribute(iog.getImageContainer().getElement(), "zIndex",
@@ -43,7 +43,7 @@ public class ZOrderManager {
 	public void modifyAllZOrders(final int offset) {
 		final Iterator itr = imagesOnGrid.iterator();
 		while (itr.hasNext()) {
-			final ImageOnGrid iog = (ImageOnGrid) itr.next();
+			final ImageOnGridDTO iog = (ImageOnGridDTO) itr.next();
 			iog.setZorder(iog.getZorder() + offset);
 			DOM.setStyleAttribute(iog.getImageContainer().getElement(),
 					"zIndex", String.valueOf(iog.getZorder()));
@@ -54,7 +54,7 @@ public class ZOrderManager {
 		final Iterator itr = imagesOnGrid.iterator();
 		int highestZOrder = 0;
 		while (itr.hasNext()) {
-			final ImageOnGrid iog = (ImageOnGrid) itr.next();
+			final ImageOnGridDTO iog = (ImageOnGridDTO) itr.next();
 			if (iog.getZorder() > highestZOrder) {
 				highestZOrder = iog.getZorder();
 			}
@@ -66,7 +66,7 @@ public class ZOrderManager {
 		final Iterator itr = imagesOnGrid.iterator();
 		int lowestZOrder = 9999;
 		while (itr.hasNext()) {
-			final ImageOnGrid iog = (ImageOnGrid) itr.next();
+			final ImageOnGridDTO iog = (ImageOnGridDTO) itr.next();
 			if (iog.getZorder() < lowestZOrder) {
 				lowestZOrder = iog.getZorder();
 			}

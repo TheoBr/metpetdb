@@ -15,9 +15,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.ImageOnGrid;
-import edu.rpi.metpetdb.client.model.MineralAnalysis;
-import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
+import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 
 public class AddPointDialog extends DialogBox
@@ -33,7 +33,7 @@ public class AddPointDialog extends DialogBox
 	private Set mineralAnalyses;
 	private final ServerOp continuation;
 
-	public AddPointDialog(final Subsample s, final ImageOnGrid iog,
+	public AddPointDialog(final SubsampleDTO s, final ImageOnGridDTO iog,
 			final ServerOp r, final int x, final int y) {
 		continuation = r;
 		submit = new Button(LocaleHandler.lc_text.buttonSubmit(), this);
@@ -46,7 +46,7 @@ public class AddPointDialog extends DialogBox
 		mineralAnalyses = s.getMineralAnalyses();
 		final Iterator itr = mineralAnalyses.iterator();
 		while (itr.hasNext()) {
-			final MineralAnalysis ma = (MineralAnalysis) itr.next();
+			final MineralAnalysisDTO ma = (MineralAnalysisDTO) itr.next();
 			if (ma.getImage() == null)
 				lb.addItem(ma.getSpotId());
 		}
@@ -89,7 +89,7 @@ public class AddPointDialog extends DialogBox
 			if (lb.getItemCount() > 0) {
 				final Iterator itr = mineralAnalyses.iterator();
 				while (itr.hasNext()) {
-					final MineralAnalysis ma = (MineralAnalysis) itr.next();
+					final MineralAnalysisDTO ma = (MineralAnalysisDTO) itr.next();
 					if (ma.getSpotId().equals(
 							lb.getItemText(lb.getSelectedIndex()))) {
 						continuation.onSuccess(ma);

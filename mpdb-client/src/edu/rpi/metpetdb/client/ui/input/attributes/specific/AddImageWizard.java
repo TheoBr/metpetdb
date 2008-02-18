@@ -2,8 +2,8 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 
 import com.google.gwt.user.client.ui.Button;
 
-import edu.rpi.metpetdb.client.model.Image;
-import edu.rpi.metpetdb.client.model.XrayImage;
+import edu.rpi.metpetdb.client.model.ImageDTO;
+import edu.rpi.metpetdb.client.model.XrayImageDTO;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
@@ -16,7 +16,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 public class AddImageWizard extends WizardDialog {
 	
 	public AddImageWizard(final ServerOp r) {
-		final XrayImage xray = new XrayImage();
+		final XrayImageDTO xray = new XrayImageDTO();
 		final UploadImageAttribute uploadImage = new UploadImageAttribute(
 				MpDb.doc.Subsample_images);
 		final GenericAttribute xray_attributes[] = {
@@ -59,10 +59,10 @@ public class AddImageWizard extends WizardDialog {
 				uploadImage.getStatus(this);
 			}
 			public void onSuccess(final Object result) {
-				if (((Image) result).getImageType().equals("X-ray")) {
+				if (((ImageDTO) result).getImageType().equals("X-ray")) {
 					r.onSuccess(result);
 				} else {
-					r.onSuccess(((XrayImage)result).getImage());
+					r.onSuccess(((XrayImageDTO)result).getImage());
 				}
 			}
 			public void onFailure(final Throwable e) {

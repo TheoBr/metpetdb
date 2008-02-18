@@ -10,9 +10,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.MObject;
-import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
@@ -50,34 +50,34 @@ public class SubsampleDetails extends FlowPanel {
 				.addSubsample(), LocaleHandler.lc_text
 				.addSubsampleDescription(sampleAlias)) {
 			protected void loadBean(final AsyncCallback ac) {
-				final Subsample s = (Subsample) getBean();
+				final SubsampleDTO s = (SubsampleDTO) getBean();
 				MpDb.subsample_svc.details(s != null && !s.mIsNew()
 						? s.getId()
 						: subsampleId, ac);
 			}
 			protected void saveBean(final AsyncCallback ac) {
-				MpDb.subsample_svc.saveSubsample((Subsample) getBean(), ac);
+				MpDb.subsample_svc.saveSubsample((SubsampleDTO) getBean(), ac);
 			}
 			protected void deleteBean(final AsyncCallback ac) {
-				MpDb.subsample_svc.delete(((Subsample)getBean()).getId(),ac);
+				MpDb.subsample_svc.delete(((SubsampleDTO)getBean()).getId(),ac);
 			}
 			protected boolean canEdit() {
-				final Sample s = ((Subsample) getBean()).getSample();
+				final SampleDTO s = ((SubsampleDTO) getBean()).getSample();
 				if (s.isPublicData())
 					return false;
 				if (MpDb.isCurrentUser(s.getOwner()))
 					return true;
 				return false;
 			}
-			protected void onSaveCompletion(final MObject result) {
+			protected void onSaveCompletion(final MObjectDTO result) {
 				if (continuation != null) {
-					continuation.onSuccess((MObject) result);
+					continuation.onSuccess((MObjectDTO) result);
 				} else
-					this.show((MObject) result);
+					this.show((MObjectDTO) result);
 			}
-			protected void onLoadCompletion(final MObject result) {
+			protected void onLoadCompletion(final MObjectDTO result) {
 				super.onLoadCompletion(result);
-				final Subsample s = (Subsample) result;
+				final SubsampleDTO s = (SubsampleDTO) result;
 				if (s.getGrid() == null) {
 					me.add(new MLink("Create Map", new ClickListener() {
 						public void onClick(final Widget sender) {
@@ -106,7 +106,7 @@ public class SubsampleDetails extends FlowPanel {
 						if (MpDb.isLoggedIn())
 							MetPetDBApplication
 									.show(new MineralAnalysisDetails()
-											.createNew((Subsample) p_subsample
+											.createNew((SubsampleDTO) p_subsample
 													.getBean()));
 						else
 							onFailure(new LoginRequiredException());
@@ -129,9 +129,9 @@ public class SubsampleDetails extends FlowPanel {
 		return this;
 	}
 
-	public SubsampleDetails createNew(final Sample s, final ServerOp r) {
+	public SubsampleDetails createNew(final SampleDTO s, final ServerOp r) {
 		continuation = r;
-		Subsample ss = new Subsample();
+		SubsampleDTO ss = new SubsampleDTO();
 		s.addSubsample(ss);
 		p_subsample.edit(ss);
 		sampleAlias = s.getAlias();
@@ -143,7 +143,7 @@ public class SubsampleDetails extends FlowPanel {
 		new ServerOp() {
 			public void begin() {
 				if (MpDb.isLoggedIn()) {
-					final Subsample s = (Subsample) p_subsample.getBean();
+					final SubsampleDTO s = (SubsampleDTO) p_subsample.getBean();
 					MpDb.subsample_svc.details(s != null && !s.mIsNew() ? s
 							.getId() : subsampleId, this);
 				} else {
@@ -151,7 +151,7 @@ public class SubsampleDetails extends FlowPanel {
 				}
 			}
 			public void onSuccess(final Object result) {
-				p_subsample.edit((Subsample) result);
+				p_subsample.edit((SubsampleDTO) result);
 			}
 			public void cancel() {
 				p_subsample.load();

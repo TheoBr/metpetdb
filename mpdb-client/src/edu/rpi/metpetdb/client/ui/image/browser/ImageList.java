@@ -45,7 +45,7 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 					if (images == null || images.size() <= 0) {
 						add(new Label("No Image"));
 					} else {
-						((edu.rpi.metpetdb.client.model.Image) images.get(0))
+						((edu.rpi.metpetdb.client.model.ImageDTO) images.get(0))
 								.getSubsample().setImages(new HashSet(images));
 						buildInterface(showAll);
 					}
@@ -80,7 +80,7 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 			while (itr.hasNext()) {
 				for (int i = 0; i < 3; ++i) {
 					if (itr.hasNext()) {
-						final edu.rpi.metpetdb.client.model.Image currentImage = (edu.rpi.metpetdb.client.model.Image) itr
+						final edu.rpi.metpetdb.client.model.ImageDTO currentImage = (edu.rpi.metpetdb.client.model.ImageDTO) itr
 								.next();
 						final Image image = new Image();
 						image.setUrl(currentImage.get64x64ServerPath());
@@ -102,7 +102,7 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 				}));
 
 			currentImage = new Image();
-			currentImage.setUrl(((edu.rpi.metpetdb.client.model.Image) images
+			currentImage.setUrl(((edu.rpi.metpetdb.client.model.ImageDTO) images
 					.get(0)).get64x64ServerPath());
 			final ImageHyperlink imageLink = new ImageHyperlink(currentImage,
 					this);
@@ -121,7 +121,7 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 		++currentIndex;
 		if (currentIndex >= images.size())
 			currentIndex = 0;
-		currentImage.setUrl(((edu.rpi.metpetdb.client.model.Image) images
+		currentImage.setUrl(((edu.rpi.metpetdb.client.model.ImageDTO) images
 				.get(currentIndex)).get64x64ServerPath());
 	}
 
@@ -129,7 +129,7 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 		--currentIndex;
 		if (currentIndex < 0)
 			currentIndex = images.size() - 1;
-		currentImage.setUrl(((edu.rpi.metpetdb.client.model.Image) images
+		currentImage.setUrl(((edu.rpi.metpetdb.client.model.ImageDTO) images
 				.get(currentIndex)).get64x64ServerPath());
 	}
 

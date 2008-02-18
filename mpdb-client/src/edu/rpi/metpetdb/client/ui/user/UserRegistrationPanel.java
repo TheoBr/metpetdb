@@ -6,9 +6,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.MObject;
-import edu.rpi.metpetdb.client.model.User;
-import edu.rpi.metpetdb.client.model.UserWithPassword;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.UserWithPasswordDTO;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
@@ -24,23 +24,23 @@ import edu.rpi.metpetdb.client.ui.widgets.MText;
 public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 	private static final GenericAttribute[] mainAttributes = {
 			new TextAttribute(MpDb.doc.User_username) {
-				protected MObject resolve(final MObject obj) {
-					return ((UserWithPassword) obj).getUser();
+				protected MObjectDTO resolve(final MObjectDTO obj) {
+					return ((UserWithPasswordDTO) obj).getUser();
 				}
 			}, new TextAttribute(MpDb.doc.User_emailAddress) {
-				protected MObject resolve(final MObject obj) {
-					return ((UserWithPassword) obj).getUser();
+				protected MObjectDTO resolve(final MObjectDTO obj) {
+					return ((UserWithPasswordDTO) obj).getUser();
 				}
 			}, new PasswordAttribute(MpDb.doc.UserWithPassword_newPassword),
 			new PasswordAttribute(MpDb.doc.UserWithPassword_vrfPassword),};
 
-	private final UserWithPassword newbie;
+	private final UserWithPasswordDTO newbie;
 	private final Button register;
 	private final Button toggle;
 	private final DetailsPanel p_main;
 
 	public UserRegistrationPanel() {
-		newbie = new UserWithPassword(new User());
+		newbie = new UserWithPasswordDTO(new UserDTO());
 		register = new Submit(LocaleHandler.lc_text.buttonRegister(), this);
 
 		toggle = new Button("show");
@@ -86,7 +86,7 @@ public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 				MpDb.user_svc.registerNewUser(newbie, this);
 			}
 			public void onSuccess(final Object result) {
-				MpDb.setCurrentUser((User) result);
+				MpDb.setCurrentUser((UserDTO) result);
 				TokenSpace.dispatch(TokenSpace.introduction.makeToken(null));
 			}
 		}.begin();

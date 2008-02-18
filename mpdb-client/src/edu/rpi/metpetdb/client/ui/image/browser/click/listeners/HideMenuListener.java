@@ -6,15 +6,15 @@ import java.util.Iterator;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class HideMenuListener implements ClickListener {
 
-	private final ImageOnGrid iog;
+	private final ImageOnGridDTO iog;
 	private final HashSet notifiers = new HashSet();
 
-	public HideMenuListener(final ImageOnGrid imageOnGrid) {
+	public HideMenuListener(final ImageOnGridDTO imageOnGrid) {
 		iog = imageOnGrid;
 	}
 

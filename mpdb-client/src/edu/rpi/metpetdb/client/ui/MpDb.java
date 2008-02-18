@@ -3,7 +3,7 @@ package edu.rpi.metpetdb.client.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 
-import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.service.ConstantsService;
@@ -61,7 +61,7 @@ public class MpDb {
 
 	public static ObjectConstraints oc;
 
-	private static User currentUser;
+	private static UserDTO currentUser;
 
 	//public static final HtmlFactory factory;
 
@@ -106,17 +106,17 @@ public class MpDb {
 		return currentUser != null;
 	}
 
-	public static boolean isCurrentUser(final User u) {
+	public static boolean isCurrentUser(final UserDTO u) {
 		return u != null && currentUser != null
 				&& u.getId() == currentUser.getId();
 	}
 
-	public static User currentUser() {
+	public static UserDTO currentUser() {
 		return currentUser;
 	}
 
-	public static void setCurrentUser(final User n) {
-		final User o = currentUser;
+	public static void setCurrentUser(final UserDTO n) {
+		final UserDTO o = currentUser;
 		currentUser = n;
 		if (o != n && (o == null || n == null || o.getId() != n.getId())) {
 			MetPetDBApplication.onCurrentUserChanged(n);
@@ -131,7 +131,7 @@ public class MpDb {
 
 	// Creates user history in the left column
 	// My Samples and My Projects history
-	public static void createUserHistory(User n) {
+	public static void createUserHistory(UserDTO n) {
 		MetPetDBApplication.clearLeftSide();
 
 		MetPetDBApplication.appendToLeft(new MySamples());

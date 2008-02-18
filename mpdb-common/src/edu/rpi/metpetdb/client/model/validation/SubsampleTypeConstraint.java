@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.model.validation;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.interfaces.IHasListItems;
 
 
 //TODO make this extend CollectionConstraint

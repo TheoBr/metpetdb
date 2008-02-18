@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.error.InvalidGeometryException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.MObject;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.GeometryConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
@@ -22,7 +22,7 @@ public class LocationAttribute extends GenericAttribute {
 		super(sc);
 	}
 
-	public Widget[] createDisplayWidget(final MObject obj) {
+	public Widget[] createDisplayWidget(final MObjectDTO obj) {
 		final Point p = get(obj);
 		final MText xText = new MText();
 		final MText yText = new MText();
@@ -33,7 +33,7 @@ public class LocationAttribute extends GenericAttribute {
 		return new Widget[]{xText, yText};
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id) {
+	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
 		final TextBox pointX = new TextBox();
 		final TextBox pointY = new TextBox();
 
@@ -79,7 +79,7 @@ public class LocationAttribute extends GenericAttribute {
 		return p;
 	}
 
-	protected Point get(final MObject obj) {
+	protected Point get(final MObjectDTO obj) {
 		final Point p = (Point) mGet(obj);
 		if (p != null) {
 			p.srid = MpDbConstants.WGS84;
@@ -88,7 +88,7 @@ public class LocationAttribute extends GenericAttribute {
 		return p;
 	}
 
-	protected void set(final MObject obj, final Object p) {
+	protected void set(final MObjectDTO obj, final Object p) {
 		mSet(obj, p);
 	}
 

@@ -17,7 +17,7 @@
 
 	<target name="mpdb-common-compile-java" description="Compiles the java code of mpdb-common">
 		<mkdir dir="${mpdb-common-dir}/bin" />
-		<javac destdir="${mpdb-common-dir}/bin" srcdir="${mpdb-common-dir}/src" classpathref="mpdb-common-libs" source="1.5" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
+		<javac destdir="${mpdb-common-dir}/bin" srcdir="${mpdb-common-dir}/src" classpathref="libs" source="1.5" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
 
 		<copy todir="${mpdb-common-dir}/bin" includeemptydirs="no">
 			<fileset dir="${mpdb-common-dir}/src" excludes="**/*.java" />

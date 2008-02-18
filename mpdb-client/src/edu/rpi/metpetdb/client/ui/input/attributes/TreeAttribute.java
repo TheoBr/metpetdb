@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.MObject;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.interfaces.IHasChildren;
 import edu.rpi.metpetdb.client.model.validation.MineralConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
@@ -78,7 +78,7 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 		selectedItems = al;
 	}
 
-	public Widget[] createDisplayWidget(final MObject obj) {
+	public Widget[] createDisplayWidget(final MObjectDTO obj) {
 		final MUnorderedList list = new MUnorderedList();
 		final Collection c = get(obj);
 		if (c != null) {
@@ -93,7 +93,7 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 		return new Widget[]{container};
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id,
+	public Widget[] createEditWidget(final MObjectDTO obj, final String id,
 			final GenericAttribute ga) {
 		final FlowPanel fp = new FlowPanel();
 		final HorizontalPanel hp = new HorizontalPanel();
@@ -126,7 +126,7 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 	}
 
 	private TreeItem makeChildren(final Collection parents,
-			final TreeItem root, final MObject obj) {
+			final TreeItem root, final MObjectDTO obj) {
 		if (parents != null) {
 			Iterator itr = parents.iterator();
 			while (itr.hasNext()) {
@@ -169,7 +169,7 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 		return root;
 	}
 
-	private Tree makeTree(final Collection parents, final MObject obj) {
+	private Tree makeTree(final Collection parents, final MObjectDTO obj) {
 		final Tree t = new Tree();
 		if (parents != null) {
 			Iterator itr = parents.iterator();
@@ -258,7 +258,7 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 		Collection v = ((MineralConstraint) ga.getConstraint()).getMinerals();
 		return v;
 	}
-	public Collection get(final MObject obj) {
+	public Collection get(final MObjectDTO obj) {
 		final Object o = mGet(obj);
 		if (o instanceof Collection)
 			return (Collection) mGet(obj);
@@ -270,7 +270,7 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 			return null;
 		}
 	}
-	public void set(final MObject obj, final Object v) {
+	public void set(final MObjectDTO obj, final Object v) {
 		if (v instanceof Collection) {
 			final Collection c = (Collection) (v != null
 					&& ((Collection) v).size() > 0 ? v : null);

@@ -4,12 +4,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
+
+import net.sf.hibernate4gwt.core.HibernateBeanManager;
+import net.sf.hibernate4gwt.core.beanlib.mapper.DirectoryClassMapper;
+import net.sf.hibernate4gwt.gwt.HibernateRemoteService;
 
 import org.gwtwidgets.client.ui.pagination.PaginationParameters;
 import org.gwtwidgets.client.ui.pagination.Results;
@@ -18,16 +24,17 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import com.google.gwt.user.client.rpc.SerializationException;
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
-import edu.rpi.metpetdb.client.model.MObject;
-import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
+import edu.rpi.metpetdb.server.model.MObject;
+import edu.rpi.metpetdb.server.model.Sample;
+import edu.rpi.metpetdb.server.model.User;
 import edu.rpi.metpetdb.server.security.SessionEncrypter;
 
 /**
@@ -43,7 +50,7 @@ import edu.rpi.metpetdb.server.security.SessionEncrypter;
  * recycled) at the end of the request.
  * </p>
  */
-public abstract class MpDbServlet extends RemoteServiceServlet {
+public abstract class MpDbServlet extends HibernateRemoteService {
 	private static final long serialVersionUID = 1L;
 
 	/** The current thread's {@link Req}. */
@@ -60,6 +67,17 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 		doc = DataStore.getDatabaseObjectConstraints();
 		oc = DataStore.getObjectConstraints();
 		loadPropertyFiles();
+
+		// Setup hibernate4gwt
+		HibernateBeanManager.getInstance().setSessionFactory(
+				DataStore.getFactory());
+		// Setup copying of java beans
+		DirectoryClassMapper cloneMapper = new DirectoryClassMapper();
+		cloneMapper.setRootDomainPackage("edu.rpi.metpetdb.server.model");
+		cloneMapper.setRootClonePackage("edu.rpi.metpetdb.client.model");
+		cloneMapper.setCloneSuffix("DTO");
+
+		HibernateBeanManager.getInstance().setClassMapper(cloneMapper);
 	}
 
 	public void destroy() {
@@ -144,7 +162,7 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 				throw new LoginRequiredException();
 		}
 		return r.userId.intValue();
-		//TODO if you want automatic login have this return your userid
+		// TODO if you want automatic login have this return your userid
 		// return 1;
 	}
 
@@ -174,6 +192,7 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 *         process is necessary to support the GWT serializer avoiding the
 	 *         Hibernate specific PersistentSet type.
 	 */
+	@Deprecated
 	protected static <T extends MObject> Set<T> load(final Set<T> s) {
 		if (s == null)
 			return s;
@@ -385,33 +404,29 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 *             the UI layer, so it can display a proper error message.
 	 */
 	@SuppressWarnings( { "unchecked" })
-	protected <T extends MObject> ArrayList<T> byKey(final Class object,
+	protected <T extends MObject> ArrayList<T> byKey(final String name,
 			final String attribute, final long id) throws NoSuchObjectException {
 		final Query q = currentSession().getNamedQuery(
-				object.getName() + ".by"
-						+ attribute.substring(0, 1).toUpperCase()
+				name + ".by" + attribute.substring(0, 1).toUpperCase()
 						+ attribute.substring(1));
 		q.setLong(attribute, id);
 		final Object r = q.uniqueResult();
 		if (r == null)
-			throw new NoSuchObjectException(object.getName(), String
-					.valueOf(id));
+			throw new NoSuchObjectException(name, String.valueOf(id));
 		return (ArrayList<T>) r;
 	}
 
 	@SuppressWarnings( { "unchecked" })
-	protected <T extends MObject> T byKey(final Class object,
+	protected <T extends MObject> T byKey(final String name,
 			final String attribute, final String id)
 			throws NoSuchObjectException {
 		final Query q = currentSession().getNamedQuery(
-				object.getName() + ".by"
-						+ attribute.substring(0, 1).toUpperCase()
+				name + ".by" + attribute.substring(0, 1).toUpperCase()
 						+ attribute.substring(1));
 		q.setString(attribute, id);
 		final Object r = q.uniqueResult();
 		if (r == null)
-			throw new NoSuchObjectException(object.getName(), String
-					.valueOf(id));
+			throw new NoSuchObjectException(name, String.valueOf(id));
 		return (T) r;
 	}
 
@@ -426,8 +441,9 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 	 */
 	protected Results toResults(final Query szQuery, final Query objQuery) {
 		final Number sz = (Number) szQuery.uniqueResult();
-		return new Results(sz.intValue(), sz.intValue() > 0 ? objQuery.list()
-				: new ArrayList<Object>());
+		return new Results(sz.intValue(),
+				sz.intValue() > 0 ? (List) clone(objQuery.list())
+						: new ArrayList<Object>());
 	}
 
 	public String processCall(final String payload)
@@ -442,6 +458,35 @@ public abstract class MpDbServlet extends RemoteServiceServlet {
 			r.finishRequest(response);
 		}
 		return response;
+	}
+
+	@Override
+	public Object merge(Object gwtPojo) {
+		Object cloned = super.merge(gwtPojo);
+		if (cloned instanceof Sample)
+			((Sample) cloned).setLocation(((SampleDTO) gwtPojo).getLocation());
+		return cloned;
+	}
+
+	@Override
+	public Object clone(Object pojo) {
+		Object gwtPojo = super.clone(pojo);
+		if (gwtPojo instanceof SampleDTO)
+			((SampleDTO) gwtPojo).setLocation(((Sample) pojo).getLocation());
+		else if (pojo instanceof ArrayList) {
+			final ArrayList pojoList = (ArrayList) pojo;
+			final ArrayList gwtPojoList = (ArrayList) gwtPojo;
+			if (!pojoList.isEmpty()) {
+				if (pojoList.get(0) instanceof Sample) {
+					for (int i = 0; i < pojoList.size(); ++i) {
+						((SampleDTO) gwtPojoList.get(i))
+								.setLocation(((Sample) pojoList.get(i))
+										.getLocation());
+					}
+				}
+			}
+		}
+		return gwtPojo;
 	}
 
 	static final class Req {

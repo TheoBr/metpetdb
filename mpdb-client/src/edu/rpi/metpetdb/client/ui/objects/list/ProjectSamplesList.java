@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.ui.Styles;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -50,7 +50,7 @@ public class ProjectSamplesList extends VerticalPanel {
 
 		public void populateRow(final PaginationBehavior pagination,
 				final int row, final Object object) {
-			final Sample s = (Sample) object;
+			final SampleDTO s = (SampleDTO) object;
 
 			setCell(row, 0, new MLink((s.getAlias() == null) ? " " : s
 					.getAlias(), TokenSpace.detailsOf(s)));

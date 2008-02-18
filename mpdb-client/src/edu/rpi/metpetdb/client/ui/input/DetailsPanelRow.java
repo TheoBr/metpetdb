@@ -3,7 +3,7 @@ package edu.rpi.metpetdb.client.ui.input;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 
-import edu.rpi.metpetdb.client.model.MObject;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
 
 /**
  * Holds a row in the DetailsPanel
@@ -14,7 +14,7 @@ public class DetailsPanelRow {
 	private Element tdLabel;
 	private Element tdValue;
 	private Element label;
-	private MObject bean;
+	private MObjectDTO bean;
 	private final String STYLENAME_DEFAULT = "pairedRow";
 
 	/**
@@ -41,7 +41,7 @@ public class DetailsPanelRow {
 	}
 	
 	public DetailsPanelRow(final Element row, final Element tdLabel,
-			final Element tdValue, final Element label, final MObject bean) {
+			final Element tdValue, final Element label, final MObjectDTO bean) {
 		this(row,tdLabel,tdValue,label);
 		this.bean = bean;
 	}
@@ -78,10 +78,10 @@ public class DetailsPanelRow {
 	public void setTdValue(Element tdValue) {
 		this.tdValue = tdValue;
 	}
-	public MObject getBean() {
+	public MObjectDTO getBean() {
 		return bean;
 	}
-	public void setBean(MObject bean) {
+	public void setBean(MObjectDTO bean) {
 		this.bean = bean;
 	}
 }

@@ -27,68 +27,70 @@ import org.hibernate.exception.ConstraintViolationException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.Image;
-import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.ImageDTO;
+import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 import edu.rpi.metpetdb.client.service.ImageService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.model.Image;
+import edu.rpi.metpetdb.server.model.ImageOnGrid;
 
 public class ImageServiceImpl extends MpDbServlet implements ImageService {
 	private static final long serialVersionUID = 1L;
 	private static String baseFolder = "";
 
-	public Image details(final long id) throws NoSuchObjectException {
-		final Image i = (Image) byId("Image", id);
+	public ImageDTO details(final long id) throws NoSuchObjectException {
+		final ImageDTO i = (ImageDTO) clone(byId("ImageDTO", id));
 		return i;
 	}
 
-	@SuppressWarnings("unchecked")
 	public ArrayList allImages(final long subsampleId)
 			throws NoSuchObjectException {
-		return (ArrayList) byKey(Image.class, "subsampleId", subsampleId);
+		return (ArrayList) byKey("Image", "subsampleId", subsampleId);
 	}
 
-	public Image saveImage(Image image) throws ValidationException,
+	public ImageDTO saveImage(ImageDTO image) throws ValidationException,
 			LoginRequiredException {
-		// oc.validate(image);
-		// if (image.getSample().getOwner().getId() != currentUser())
+		// oc.validate(ImageDTO);
+		// if (ImageDTO.getSample().getOwner().getId() != currentUser())
 		// throw new SecurityException("Cannot modify images you don't own.");
-
+		Image i = (Image) merge(image);
 		try {
-			if (image.mIsNew())
-				insert(image);
+			if (i.mIsNew())
+				insert(i);
 			else
-				image = (Image) update(merge(image));
+				i = (Image) update(merge(i));
 			commit();
-			SampleServiceImpl.resetSample(image.getSample());
+			SampleServiceImpl.resetSample(i.getSample());
 			forgetChanges();
-			return image;
+			return (ImageDTO) clone(i);
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public ImageOnGrid saveImageOnGrid(ImageOnGrid iog)
+	public ImageOnGridDTO saveImageOnGrid(ImageOnGridDTO iogDTO)
 			throws ValidationException, LoginRequiredException {
+		ImageOnGrid iog = (ImageOnGrid) merge(iogDTO);
 		try {
 			if (iog.mIsNew())
-					insert(iog);
+				insert(iog);
 			else
 				iog = (ImageOnGrid) update(merge(iog));
 			commit();
-			iog.getGrid().setImagesOnGrid(load(iog.getGrid().getImagesOnGrid()));
+			iog.getGrid()
+					.setImagesOnGrid(load(iog.getGrid().getImagesOnGrid()));
 			forgetChanges();
-			return iog;
+			return (ImageOnGridDTO) clone(iog);
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}
 	}
 
-	public ImageOnGrid rotate(ImageOnGrid iog, int degrees) {
+	public ImageOnGridDTO rotate(ImageOnGridDTO iog, int degrees) {
 		try {
 			final File file = new File(baseFolder
-					+ Image.getServerPath(iog.getImage().getChecksum()));
+					+ ImageDTO.getServerPath(iog.getImage().getChecksum()));
 			final FileInputStream stream = new FileInputStream(file);
 			final byte[] bytes = new byte[(int) file.length()];
 			stream.read(bytes);
@@ -99,7 +101,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 							.getHeight());
 
 			final File halfFile = new File(baseFolder
-					+ Image.getServerPath(iog.getImage().getChecksumHalf()));
+					+ ImageDTO.getServerPath(iog.getImage().getChecksumHalf()));
 			final FileInputStream halfStream = new FileInputStream(halfFile);
 			final byte[] halfBytes = new byte[(int) halfFile.length()];
 			halfStream.read(halfBytes);
@@ -109,8 +111,8 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 					(double) degrees, (float) halfsizeImage.getWidth(),
 					(float) halfsizeImage.getHeight());
 			deleteRotatedImages(iog);
-			iog.setGchecksum(ImageUploadServlet.generateFullsize(
-					rotatedImage, true));
+			iog.setGchecksum(ImageUploadServlet.generateFullsize(rotatedImage,
+					true));
 			iog.setGchecksumHalf(ImageUploadServlet.generateFullsize(
 					halfsizeRotated, true));
 			iog.setGchecksum64x64(ImageUploadServlet.generate64x64(
@@ -135,32 +137,32 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		return iog;
 	}
 
-	public RenderedOp rotate(RenderedOp image, double ang, float width,
+	public RenderedOp rotate(RenderedOp ImageDTO, double ang, float width,
 			float height) {
 		//
-		// Create a constant 1-band byte image to represent the alpha
+		// Create a constant 1-band byte ImageDTO to represent the alpha
 		// channel. It has the source dimensions and is filled with
 		// 255 to indicate that the entire source is opaque.
 		ParameterBlock pb = new ParameterBlock();
 		pb.add(width).add(height);
-		pb.add(new Byte[]{new Byte((byte) 0xFF)});
+		pb.add(new Byte[] { new Byte((byte) 0xFF) });
 		RenderedOp alpha = JAI.create("constant", pb);
 
-		// Combine the source and alpha images such that the source image
-		// occupies the first band(s) and the alpha image the last band.
+		// Combine the source and alpha images such that the source ImageDTO
+		// occupies the first band(s) and the alpha ImageDTO the last band.
 		// RenderingHints are used to specify the destination SampleModel and
 		// ColorModel.
 		pb = new ParameterBlock();
-		int numBands = image.getSampleModel().getNumBands();
-		pb.addSource(image).addSource(image);
+		int numBands = ImageDTO.getSampleModel().getNumBands();
+		pb.addSource(ImageDTO).addSource(ImageDTO);
 		pb.add(alpha).add(alpha).add(Boolean.FALSE);
 		pb.add(CompositeDescriptor.DESTINATION_ALPHA_LAST);
-		SampleModel sm = RasterFactory.createComponentSampleModel(image
-				.getSampleModel(), DataBuffer.TYPE_BYTE, image.getTileWidth(),
-				image.getTileHeight(), numBands + 1);
-		ColorSpace cs = ColorSpace.getInstance(numBands == 1
-				? ColorSpace.CS_GRAY
-				: ColorSpace.CS_sRGB);
+		SampleModel sm = RasterFactory.createComponentSampleModel(ImageDTO
+				.getSampleModel(), DataBuffer.TYPE_BYTE, ImageDTO
+				.getTileWidth(), ImageDTO.getTileHeight(), numBands + 1);
+		ColorSpace cs = ColorSpace
+				.getInstance(numBands == 1 ? ColorSpace.CS_GRAY
+						: ColorSpace.CS_sRGB);
 		ColorModel cm = RasterFactory.createComponentColorModel(
 				DataBuffer.TYPE_BYTE, cs, true, false, Transparency.BITMASK);
 		ImageLayout il = new ImageLayout();
@@ -168,7 +170,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		RenderingHints rh = new RenderingHints(JAI.KEY_IMAGE_LAYOUT, il);
 		RenderedOp srca = JAI.create("composite", pb, rh);
 		//
-		// Rotate the source+alpha image.
+		// Rotate the source+alpha ImageDTO.
 
 		pb = new ParameterBlock();
 		pb.addSource(srca);
@@ -179,36 +181,35 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		return JAI.create("rotate", pb);
 	}
 
-	public void deleteRotatedImages(final ImageOnGrid iog) {
+	public void deleteRotatedImages(final ImageOnGridDTO iog) {
 
 		if (!iog.getGchecksum().equals(iog.getImage().getChecksum())) {
-			new File(baseFolder + Image.getServerPath(iog.getGchecksum()))
+			new File(baseFolder + ImageDTO.getServerPath(iog.getGchecksum()))
 					.delete();
-			new File(baseFolder + Image.getServerPath(iog.getGchecksum64x64()))
-					.delete();
-			new File(baseFolder + Image.getServerPath(iog.getGchecksumHalf()))
-					.delete();
+			new File(baseFolder
+					+ ImageDTO.getServerPath(iog.getGchecksum64x64())).delete();
+			new File(baseFolder
+					+ ImageDTO.getServerPath(iog.getGchecksumHalf())).delete();
 		}
 	}
 
-	public void delete(Image i) {
+	public void delete(ImageDTO i) {
 
-		new File(baseFolder + Image.getServerPath(i.getChecksum())).delete();
-		new File(baseFolder + Image.getServerPath(i.getChecksum64x64()))
+		new File(baseFolder + ImageDTO.getServerPath(i.getChecksum())).delete();
+		new File(baseFolder + ImageDTO.getServerPath(i.getChecksum64x64()))
 				.delete();
-		new File(baseFolder + Image.getServerPath(i.getChecksumHalf()))
+		new File(baseFolder + ImageDTO.getServerPath(i.getChecksumHalf()))
 				.delete();
 	}
-	
-	public static final void resetImage(final Image i) {
-		
+
+	public static final void resetImage(final ImageDTO i) {
+
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	public static final void resetImage(final Set s) {
 		final Iterator itr = s.iterator();
-		while(itr.hasNext()) {
-			resetImage((Image) itr.next());
+		while (itr.hasNext()) {
+			resetImage((ImageDTO) itr.next());
 		}
 	}
 

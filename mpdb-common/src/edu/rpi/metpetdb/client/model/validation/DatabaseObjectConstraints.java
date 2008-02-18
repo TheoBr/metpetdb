@@ -3,23 +3,23 @@ package edu.rpi.metpetdb.client.model.validation;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.Image;
-import edu.rpi.metpetdb.client.model.MObject;
-import edu.rpi.metpetdb.client.model.MineralAnalysis;
-import edu.rpi.metpetdb.client.model.Project;
-import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.SampleMineral;
-import edu.rpi.metpetdb.client.model.StartSessionRequest;
-import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.model.User;
-import edu.rpi.metpetdb.client.model.XrayImage;
+import edu.rpi.metpetdb.client.model.ImageDTO;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
+import edu.rpi.metpetdb.client.model.ProjectDTO;
+import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.SampleMineralDTO;
+import edu.rpi.metpetdb.client.model.StartSessionRequestDTO;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.XrayImageDTO;
 
 /**
  * Constraints for objects in the database
  *
  */
 public class DatabaseObjectConstraints implements IsSerializable {
-	private static void validate(final MObject o, final PropertyConstraint[] pc)
+	private static void validate(final MObjectDTO o, final PropertyConstraint[] pc)
 			throws ValidationException {
 		if (pc == null)
 			return;
@@ -32,7 +32,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public PropertyConstraint[] Project__all;
 	public StringConstraint Project_name;
 	public UserConstraint Project_owner;
-	public void validate(final Project s) throws ValidationException {
+	public void validate(final ProjectDTO s) throws ValidationException {
 		validate(s, Project__all);
 	}
 
@@ -55,7 +55,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public MultiValuedStringConstraint Sample_regions;
 	public MultiValuedStringConstraint Sample_metamorphicGrades;
 	public MultiValuedStringConstraint Sample_references;
-	public void validate(final Sample s) throws ValidationException {
+	public void validate(final SampleDTO s) throws ValidationException {
 		validate(s, Sample__all);
 	}
 
@@ -64,14 +64,14 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint Subsample_name;
 	public SubsampleTypeConstraint Subsample_type;
 	public ImageConstraint Subsample_images;
-	public void validate(final Subsample s) throws ValidationException {
+	public void validate(final SubsampleDTO s) throws ValidationException {
 		validate(s, Subsample__all);
 	}
 
 	// ------ SampleMineral ------
 	public PropertyConstraint[] SampleMineral__all;
 	public FloatConstraint SampleMineral_amount;
-	public void validate(final SampleMineral m) throws ValidationException {
+	public void validate(final SampleMineralDTO m) throws ValidationException {
 		validate(m, SampleMineral__all);
 	}
 
@@ -82,7 +82,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public IntegerConstraint Image_contrast;
 	public IntegerConstraint Image_brightness;
 	public IntegerConstraint Image_pixelsize;
-	public void validate(final Image i) throws ValidationException {
+	public void validate(final ImageDTO i) throws ValidationException {
 		validate(i, Image_all);
 	}
 
@@ -94,7 +94,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public IntegerConstraint XrayImage_current;
 	public IntegerConstraint XrayImage_voltage;
 	public CollectionConstraint XrayImage_element;
-	public void validate(final XrayImage i) throws ValidationException {
+	public void validate(final XrayImageDTO i) throws ValidationException {
 		validate(i, XrayImage_all);
 	}
 
@@ -112,7 +112,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint MineralAnalysis_description;
 	public MineralConstraint MineralAnalysis_mineral;
 	public BooleanConstraint MineralAnalysis_largeRock;
-	public void validate(final MineralAnalysis ma) throws ValidationException {
+	public void validate(final MineralAnalysisDTO ma) throws ValidationException {
 		validate(ma, MineralAnalysis_all);
 	}
 
@@ -120,7 +120,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public PropertyConstraint[] User__all;
 	public RestrictedCharacterStringConstraint User_username;
 	public StringConstraint User_emailAddress;
-	public void validate(final User u) throws ValidationException {
+	public void validate(final UserDTO u) throws ValidationException {
 		validate(u, User__all);
 	}
 
@@ -134,7 +134,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public PropertyConstraint[] StartSessionRequest__all;
 	public RestrictedCharacterStringConstraint StartSessionRequest_username;
 	public StringConstraint StartSessionRequest_password;
-	public void validate(StartSessionRequest u) throws ValidationException {
+	public void validate(StartSessionRequestDTO u) throws ValidationException {
 		validate(u, StartSessionRequest__all);
 	}
 
@@ -160,9 +160,9 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		UserWithPassword_newPassword.required = true;
 		UserWithPassword_vrfPassword.required = true;
 
-		UserWithPassword_oldPassword.minLength = 0;
-		UserWithPassword_newPassword.minLength = 0;
-		UserWithPassword_vrfPassword.minLength = 0;
+		UserWithPassword_oldPassword.minLength = 1;
+		UserWithPassword_newPassword.minLength = 8;
+		UserWithPassword_vrfPassword.minLength = 8;
 
 		UserWithPassword_oldPassword.maxLength = 100;
 		UserWithPassword_newPassword.maxLength = 100;

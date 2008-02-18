@@ -3,12 +3,12 @@ package edu.rpi.metpetdb.server.search;
 import java.util.List;
 
 import org.hibernate.Session;
-import org.hibernate.search.FullTextSession;
 import org.hibernate.Transaction;
+import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 
-import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.server.DataStore;
+import edu.rpi.metpetdb.server.model.Sample;
 
 
 public class index

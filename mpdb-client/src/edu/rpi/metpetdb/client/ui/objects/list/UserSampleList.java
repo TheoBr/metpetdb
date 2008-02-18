@@ -26,9 +26,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.Project;
-import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.ProjectDTO;
+import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;
@@ -137,11 +137,11 @@ public class UserSampleList extends FlowPanel implements ClickListener {
 					}
 
 					public void onSuccess(Object result) {
-						User user = (User) result;
+						UserDTO user = (UserDTO) result;
 						Set projects = user.getProjects();
 						Iterator it = projects.iterator();
 						while (it.hasNext()) {
-							Project project = (Project) it.next();
+							ProjectDTO project = (ProjectDTO) it.next();
 							projectList.addItem(project.getName(), new Integer(
 									project.getId()).toString());
 						}
@@ -191,13 +191,13 @@ public class UserSampleList extends FlowPanel implements ClickListener {
 					}
 
 					public void onSuccess(Object result) {
-						final Project project = (Project) result;
+						final ProjectDTO project = (ProjectDTO) result;
 
 						// Add each selected sample to project
 						Set selectedSamples = table.getSelectedSamples();
 						Iterator it = selectedSamples.iterator();
 						while (it.hasNext()) {
-							final Sample sample = (Sample) it.next();
+							final SampleDTO sample = (SampleDTO) it.next();
 
 							// Sample is unique, project is unique now.
 							// Add sample to project and project to sample
@@ -272,7 +272,7 @@ public class UserSampleList extends FlowPanel implements ClickListener {
 
 		public void populateRow(final PaginationBehavior pagination,
 				final int row, final Object object) {
-			final Sample s = (Sample) object;
+			final SampleDTO s = (SampleDTO) object;
 
 			CheckBox checker = new CheckBox();
 			if (selectAllSamples)

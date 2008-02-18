@@ -12,8 +12,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.MObject;
-import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
@@ -61,26 +61,26 @@ public class SampleDetails extends FlowPanel {
 		p_sample = new ObjectEditorPanel(sampleAtts, LocaleHandler.lc_text.addSample(),
 				LocaleHandler.lc_text.addSampleDescription()) {
 			protected void loadBean(final AsyncCallback ac) {
-				final Sample s = (Sample) getBean();
+				final SampleDTO s = (SampleDTO) getBean();
 				MpDb.sample_svc.details(s != null && !s.mIsNew()
 						? s.getId()
 						: sampleId, ac);
 			}
 			protected void saveBean(final AsyncCallback ac) {
-				MpDb.sample_svc.saveSample((Sample) getBean(), ac);
+				MpDb.sample_svc.saveSample((SampleDTO) getBean(), ac);
 			}
 			protected void deleteBean(final AsyncCallback ac) {
-				MpDb.sample_svc.delete(((Sample) getBean()).getId(),ac);
+				MpDb.sample_svc.delete(((SampleDTO) getBean()).getId(),ac);
 			}
 			protected boolean canEdit() {
-				final Sample s = (Sample) getBean();
+				final SampleDTO s = (SampleDTO) getBean();
 				if (s.isPublicData())
 					return false;
 				if (MpDb.isCurrentUser(s.getOwner()))
 					return true;
 				return false;
 			}
-			protected void onSaveCompletion(final MObject result) {
+			protected void onSaveCompletion(final MObjectDTO result) {
 				super.onSaveCompletion(result);
 				// addExtraElements();
 			}
@@ -112,7 +112,7 @@ public class SampleDetails extends FlowPanel {
 									MetPetDBApplication
 											.show(new SubsampleDetails()
 													.createNew(
-															(Sample) p_sample
+															(SampleDTO) p_sample
 																	.getBean(),
 															null));
 								else
@@ -170,7 +170,7 @@ public class SampleDetails extends FlowPanel {
 	}
 
 	public SampleDetails createNew() {
-		final Sample s = new Sample();
+		final SampleDTO s = new SampleDTO();
 		s.setOwner(MpDb.currentUser());
 		p_sample.edit(s);
 		return this;

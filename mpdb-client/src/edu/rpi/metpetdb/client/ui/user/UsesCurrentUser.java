@@ -2,13 +2,13 @@ package edu.rpi.metpetdb.client.ui.user;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.UserDTO;
 
 /**
  * Marker interface for widgets that care about who the current user is.
  * <p>
  * Widgets should implement this interface if their display is affected by
- * {@link LocaleHandler#currentUser()}, or {@link LocaleHandler#isCurrentUser(User)}, or
+ * {@link LocaleHandler#currentUser()}, or {@link LocaleHandler#isCurrentUser(UserDTO)}, or
  * {@link LocaleHandler#isLoggedIn()}.
  * </p>
  */
@@ -25,6 +25,6 @@ public interface UsesCurrentUser {
 	 *             the application will redirect to the introduction page, or
 	 *             something otherwise suitable for a not-logged-in user.
 	 */
-	public void onCurrentUserChanged(User whoIsIt)
+	public void onCurrentUserChanged(UserDTO whoIsIt)
 			throws LoginRequiredException;
 }

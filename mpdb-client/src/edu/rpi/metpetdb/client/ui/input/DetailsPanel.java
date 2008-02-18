@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.MObject;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;
@@ -26,7 +26,7 @@ public class DetailsPanel extends ComplexPanel {
 	protected ArrayList attributes;
 	// HashMap<GenericAttribute, DetailsPanelEntry >
 	protected HashMap dpEntries;
-	private MObject bean;
+	private MObjectDTO bean;
 	protected int actionCount;
 	protected String editHeader;
 	protected String viewHeader;
@@ -198,14 +198,14 @@ public class DetailsPanel extends ComplexPanel {
 		}
 	}
 
-	public MObject getBean() {
+	public MObjectDTO getBean() {
 		return bean;
 	}
-	public void setBean(final MObject o) {
+	public void setBean(final MObjectDTO o) {
 		bean = o;
 	}
 
-	public void show(final MObject toShow) {
+	public void show(final MObjectDTO toShow) {
 		addStyleName(STYLENAME_DEFAULT + "-" + Styles.SHOWMODE);
 		removeStyleName(STYLENAME_DEFAULT + "-" + Styles.EDITMODE);
 		bean = toShow;
@@ -277,7 +277,7 @@ public class DetailsPanel extends ComplexPanel {
 		}
 	}
 
-	public void edit(final MObject toEdit) {
+	public void edit(final MObjectDTO toEdit) {
 		addStyleName(STYLENAME_DEFAULT + "-" + Styles.EDITMODE);
 		removeStyleName(STYLENAME_DEFAULT + "-" + Styles.SHOWMODE);
 		bean = toEdit;

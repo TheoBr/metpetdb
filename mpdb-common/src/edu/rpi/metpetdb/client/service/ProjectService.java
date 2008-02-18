@@ -8,10 +8,10 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.ProjectDTO;
 
 /**
- * Server operations to fetch and manipulate {@link Project}s.
+ * Server operations to fetch and manipulate {@link ProjectDTO}s.
  */
 public interface ProjectService extends RemoteService {
 	/**
@@ -23,7 +23,7 @@ public interface ProjectService extends RemoteService {
 	 * @throws NoSuchObjectException
 	 *             the project does not exist in the database.
 	 */
-	Project details(int projectId) throws NoSuchObjectException;
+	ProjectDTO details(int projectId) throws NoSuchObjectException;
 
 	/**
 	 * Create or update an existing project.
@@ -36,7 +36,7 @@ public interface ProjectService extends RemoteService {
 	 * @throws ValidationException
 	 *             something is wrong with the project specification.
 	 */
-	Project saveProject(Project proj) throws LoginRequiredException,
+	ProjectDTO saveProject(ProjectDTO proj) throws LoginRequiredException,
 			ValidationException;
 	
 	Results samplesFromProject(PaginationParameters parameters, long id);

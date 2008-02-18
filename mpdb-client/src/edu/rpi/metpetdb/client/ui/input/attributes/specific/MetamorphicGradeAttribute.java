@@ -16,8 +16,8 @@ import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.MObject;
-import edu.rpi.metpetdb.client.model.MetamorphicGrade;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.MetamorphicGradeDTO;
 import edu.rpi.metpetdb.client.model.validation.StringConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
@@ -43,7 +43,7 @@ public class MetamorphicGradeAttribute extends GenericAttribute implements
 		realEditWidgets = new ArrayList();
 	}
 
-	public Widget[] createDisplayWidget(final MObject obj) {
+	public Widget[] createDisplayWidget(final MObjectDTO obj) {
 		final MUnorderedList list = new MUnorderedList();
 
 		final Set s = get(obj);
@@ -58,7 +58,7 @@ public class MetamorphicGradeAttribute extends GenericAttribute implements
 		return new Widget[] { list };
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id) {
+	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
 		editList = new MUnorderedList();
 
 		realEditWidgets.clear();
@@ -130,7 +130,7 @@ public class MetamorphicGradeAttribute extends GenericAttribute implements
 		final Iterator itr = realEditWidgets.iterator();
 		while (itr.hasNext()) {
 			final Object obj = itr.next();
-			final MetamorphicGrade m = new MetamorphicGrade();
+			final MetamorphicGradeDTO m = new MetamorphicGradeDTO();
 			String name = ((HasText) obj).getText();
 			if (!name.equals("")) {
 				m.setName(name);
@@ -140,11 +140,11 @@ public class MetamorphicGradeAttribute extends GenericAttribute implements
 		return metamorphicGrades;
 	}
 
-	public Set get(final MObject obj) {
+	public Set get(final MObjectDTO obj) {
 		return (Set) mGet(obj);
 	}
 
-	protected void set(final MObject obj, final Object o) {
+	protected void set(final MObjectDTO obj, final Object o) {
 		mSet(obj, o);
 	}
 

@@ -14,12 +14,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
-import edu.rpi.metpetdb.client.model.Grid;
-import edu.rpi.metpetdb.client.model.MineralAnalysis;
-import edu.rpi.metpetdb.client.model.Project;
-import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.GridDTO;
+import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
+import edu.rpi.metpetdb.client.model.ProjectDTO;
+import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.ui.TokenHandler.IKey;
 import edu.rpi.metpetdb.client.ui.TokenHandler.LKey;
 import edu.rpi.metpetdb.client.ui.TokenHandler.SKey;
@@ -50,7 +50,7 @@ public class TokenSpace implements HistoryListener {
 	private static final Map handlers = new HashMap();
 	private static final TokenHandler sampleDetails = new LKey("SampleDetails") {
 		public long get(final Object obj) {
-			return ((Sample) obj).getId();
+			return ((SampleDTO) obj).getId();
 		}
 		public void execute(final long id) {
 			show(new SampleDetails().showById(id));
@@ -58,7 +58,7 @@ public class TokenSpace implements HistoryListener {
 	};
 	private static final TokenHandler userDetails = new SKey("UserDetails") {
 		public String get(final Object obj) {
-			return ((User) obj).getUsername();
+			return ((UserDTO) obj).getUsername();
 		}
 		public void execute(final String username) {
 			show(new UserDetails(username));
@@ -66,7 +66,7 @@ public class TokenSpace implements HistoryListener {
 	};
 	private static final TokenHandler projectDetails = new IKey("Project") {
 		public int get(final Object obj) {
-			return ((Project) obj).getId();
+			return ((ProjectDTO) obj).getId();
 		}
 		public void execute(final int id) {
 			show(new ProjectDetails().showById(id));
@@ -75,7 +75,7 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler subsampleDetails = new LKey(
 			"SubsampleDetails") {
 		public long get(final Object obj) {
-			return ((Subsample) obj).getId();
+			return ((SubsampleDTO) obj).getId();
 		}
 		public void execute(final long id) {
 			show(new SubsampleDetails().showById(id));
@@ -83,7 +83,7 @@ public class TokenSpace implements HistoryListener {
 	};
 	private static final TokenHandler subsampleEdit = new LKey("SubsampleEdit") {
 		public long get(final Object obj) {
-			return ((Subsample) obj).getId();
+			return ((SubsampleDTO) obj).getId();
 		}
 		public void execute(final long id) {
 			show(new SubsampleDetails().edit(id));
@@ -92,7 +92,7 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler imageBrowserDetails = new LKey(
 			"ImageBrowserDetails") {
 		public long get(final Object obj) {
-			return ((Grid) obj).getId();
+			return ((GridDTO) obj).getId();
 		}
 		public void execute(final long id) {
 			show(new ImageBrowserDetails().showById(id));
@@ -101,7 +101,7 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler mineralAnalysisDetails = new LKey(
 			"MineralAnalysis") {
 		public long get(final Object obj) {
-			return ((MineralAnalysis) obj).getId();
+			return ((MineralAnalysisDTO) obj).getId();
 		}
 		public void execute(final long id) {
 			show(new MineralAnalysisDetails().showById(id));
@@ -129,7 +129,7 @@ public class TokenSpace implements HistoryListener {
 					MpDb.user_svc.beginEditMyProfile(this);
 				}
 				public void onSuccess(final Object result) {
-					show(new EditUserProfile(((User) result)));
+					show(new EditUserProfile(((UserDTO) result)));
 				}
 			}.begin();
 		}
@@ -161,7 +161,7 @@ public class TokenSpace implements HistoryListener {
 
 	private static final TokenHandler projectSamples = new LKey("ProjectSamples") {
 		public long get(final Object obj) {
-			return ((Project) obj).getId();
+			return ((ProjectDTO) obj).getId();
 		}
 		public void execute(final long id) {
 			SampleList list = new SampleList(new DataProvider() {
@@ -298,25 +298,25 @@ public class TokenSpace implements HistoryListener {
 		show(RootPanel.get("screen-Introduction"));
 	}
 
-	public static String detailsOf(final Sample s) {
+	public static String detailsOf(final SampleDTO s) {
 		return sampleDetails.makeToken(s);
 	}
-	public static String detailsOf(final User u) {
+	public static String detailsOf(final UserDTO u) {
 		return userDetails.makeToken(u);
 	}
-	public static String detailsOf(final Subsample s) {
+	public static String detailsOf(final SubsampleDTO s) {
 		return subsampleDetails.makeToken(s);
 	}
-	public static String detailsOf(final Grid g) {
+	public static String detailsOf(final GridDTO g) {
 		return imageBrowserDetails.makeToken(g);
 	}
-	public static String detailsOf(final MineralAnalysis ma) {
+	public static String detailsOf(final MineralAnalysisDTO ma) {
 		return mineralAnalysisDetails.makeToken(ma);
 	}
-	public static String edit(final Subsample s) {
+	public static String edit(final SubsampleDTO s) {
 		return subsampleEdit.makeToken(s);
 	}
-	public static String listOf(final Project p) {
+	public static String listOf(final ProjectDTO p) {
 		return projectSamples.makeToken(p);
 	}
 

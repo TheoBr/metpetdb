@@ -7,12 +7,12 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.StartSessionRequest;
-import edu.rpi.metpetdb.client.model.User;
-import edu.rpi.metpetdb.client.model.UserWithPassword;
+import edu.rpi.metpetdb.client.model.StartSessionRequestDTO;
+import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.UserWithPasswordDTO;
 
 /**
- * Server operations to fetch and manipulate {@link User}s.
+ * Server operations to fetch and manipulate {@link UserDTO}s.
  */
 public interface UserService extends RemoteService {
 	/**
@@ -29,7 +29,7 @@ public interface UserService extends RemoteService {
 	 *             the username or password is invalid in some way. For security
 	 *             reasons the server does not actually respond with why.
 	 */
-	User startSession(StartSessionRequest ssr) throws LoginFailureException,
+	UserDTO startSession(StartSessionRequestDTO ssr) throws LoginFailureException,
 			ValidationException;
 
 	/**
@@ -44,7 +44,7 @@ public interface UserService extends RemoteService {
 	 */
 	ResumeSessionResponse resumeSession();
 
-	User beginEditMyProfile() throws NoSuchObjectException,
+	UserDTO beginEditMyProfile() throws NoSuchObjectException,
 			LoginRequiredException;
 
 	/**
@@ -62,7 +62,7 @@ public interface UserService extends RemoteService {
 	 * @throws UnableToSendEmailException
 	 *             the welcome message could not be sent to the user's account.
 	 */
-	User registerNewUser(UserWithPassword newbie) throws ValidationException,
+	UserDTO registerNewUser(UserWithPasswordDTO newbie) throws ValidationException,
 			UnableToSendEmailException;
 
 	/**
@@ -85,7 +85,7 @@ public interface UserService extends RemoteService {
 	 *             rules, or the verify password does not match the new
 	 *             password.
 	 */
-	void changePassword(UserWithPassword uwp) throws NoSuchObjectException,
+	void changePassword(UserWithPasswordDTO uwp) throws NoSuchObjectException,
 			LoginFailureException, LoginRequiredException, ValidationException;
 
 	/**
@@ -99,7 +99,7 @@ public interface UserService extends RemoteService {
 	 *             information and should reevaluate whatever source supplied it
 	 *             with this bad key.
 	 */
-	User details(String username) throws NoSuchObjectException;
+	UserDTO details(String username) throws NoSuchObjectException;
 
 	/**
 	 * Generates a new password for the user and emails it.

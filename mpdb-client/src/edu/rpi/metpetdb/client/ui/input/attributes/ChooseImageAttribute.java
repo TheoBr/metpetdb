@@ -8,9 +8,9 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.Image;
-import edu.rpi.metpetdb.client.model.MObject;
-import edu.rpi.metpetdb.client.model.MineralAnalysis;
+import edu.rpi.metpetdb.client.model.ImageDTO;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
 import edu.rpi.metpetdb.client.model.validation.ImageConstraint;
 import edu.rpi.metpetdb.client.model.validation.IntegerConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
@@ -18,7 +18,7 @@ import edu.rpi.metpetdb.client.ui.ServerOp;
 
 public class ChooseImageAttribute extends GenericAttribute {
 
-	private Image image;
+	private ImageDTO image;
 	private TextAttribute pointX;
 	private TextAttribute pointY;
 	public ChooseImageAttribute(final ImageConstraint ic,
@@ -29,13 +29,13 @@ public class ChooseImageAttribute extends GenericAttribute {
 		pointY = new TextAttribute(y);
 	}
 
-	public Widget[] createDisplayWidget(final MObject obj) {
+	public Widget[] createDisplayWidget(final MObjectDTO obj) {
 		if (get(obj) != null) {
-			final Image image = (Image) get(obj);
+			final ImageDTO image = (ImageDTO) get(obj);
 			final int x = Integer.parseInt(pointX.get(obj));
 			final int y = Integer.parseInt(pointY.get(obj));
 			final AbsolutePanel ap = new AbsolutePanel();
-			ap.add(new com.google.gwt.user.client.ui.Image(((Image) image)
+			ap.add(new com.google.gwt.user.client.ui.Image(((ImageDTO) image)
 					.get64x64ServerPath()), 0, 0);
 			final com.google.gwt.user.client.ui.Image i = new com.google.gwt.user.client.ui.Image(
 					GWT.getModuleBaseURL() + "/images/point0.gif");
@@ -49,22 +49,22 @@ public class ChooseImageAttribute extends GenericAttribute {
 		}
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id) {
+	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
 		image = get(obj);
 		final VerticalPanel vp = new VerticalPanel();
 		final Button b = new Button("Choose Image...", new ClickListener() {
 			public void onClick(final Widget sender) {
 				new ServerOp() {
 					public void begin() {
-						new ChooseImageDialog(this, ((MineralAnalysis) obj)
+						new ChooseImageDialog(this, ((MineralAnalysisDTO) obj)
 								.getSubsample()).show();
 					}
 					public void onSuccess(final Object result) {
 						if (result != null)
-							image = (Image) result;
+							image = (ImageDTO) result;
 						vp.remove(1);
 						vp.add(new com.google.gwt.user.client.ui.Image(
-								((Image) image).get64x64ServerPath()));
+								((ImageDTO) image).get64x64ServerPath()));
 					}
 				}.begin();
 			}
@@ -88,13 +88,13 @@ public class ChooseImageAttribute extends GenericAttribute {
 	protected Object get(final Widget editWidget) {
 		return image;
 	}
-	protected Image get(final MObject obj) {
-		return (Image) mGet(obj);
+	protected ImageDTO get(final MObjectDTO obj) {
+		return (ImageDTO) mGet(obj);
 	}
-	protected void set(final MObject obj, final Object v) {
+	protected void set(final MObjectDTO obj, final Object v) {
 		mSet(obj, v);
 	}
-	protected void set(final MObject obj, final Object v,
+	protected void set(final MObjectDTO obj, final Object v,
 			final PropertyConstraint pc) {
 		mSet(obj, v, pc);
 	}

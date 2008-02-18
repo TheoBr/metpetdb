@@ -11,10 +11,12 @@ import org.hibernate.exception.ConstraintViolationException;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
-import edu.rpi.metpetdb.client.model.Grid;
-import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.GridDTO;
+import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 import edu.rpi.metpetdb.client.service.ImageBrowserService;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.model.Grid;
+import edu.rpi.metpetdb.server.model.ImageOnGrid;
 
 public class ImageBrowserServiceImpl extends MpDbServlet
 		implements
@@ -32,24 +34,24 @@ public class ImageBrowserServiceImpl extends MpDbServlet
 	}
 
 	@SuppressWarnings("unchecked")
-	public Grid details(final long id) throws NoSuchObjectException {
+	public GridDTO details(final long id) throws NoSuchObjectException {
 		final Grid g = (Grid) byId("Grid", id);
 		g.setImagesOnGrid(load(g.getImagesOnGrid()));
 		g.getSubsample().setMineralAnalyses(
 				load(g.getSubsample().getMineralAnalyses()));
 		forgetChanges();
-		return g;
+		return (GridDTO) clone(g);
 	}
 
-	public ArrayList<ImageOnGrid> imagesOnGrid(long id) throws NoSuchObjectException {
-		return byKey(ImageOnGrid.class, "gridId", id);
+	public ArrayList<ImageOnGridDTO> imagesOnGrid(long id) throws NoSuchObjectException {
+		return (ArrayList<ImageOnGridDTO>) clone(byKey("ImageOnGrid", "gridId", id));
 	}
 
 	@SuppressWarnings("unchecked")
-	public Grid saveGrid(Grid g) throws LoginRequiredException {
-		if (g.getSubsample().getSample().getOwner().getId() != currentUser())
+	public GridDTO saveGrid(GridDTO grid) throws LoginRequiredException {
+		if (grid.getSubsample().getSample().getOwner().getId() != currentUser())
 			throw new SecurityException("Cannot modify grids you don't own.");
-
+		Grid g = (Grid) merge(grid);
 		try {
 			if (g.mIsNew())
 				insert(g);
@@ -65,8 +67,6 @@ public class ImageBrowserServiceImpl extends MpDbServlet
 					imageOnGrid = (ImageOnGrid) itr.next();
 					SampleServiceImpl.resetSample(imageOnGrid.getImage()
 							.getSubsample().getSample());
-					SubsampleServiceImpl.resetSubsample(imageOnGrid.getImage()
-							.getSubsample());
 				}
 				g.setImagesOnGrid(imagesOnGridLoaded);
 			}
@@ -75,12 +75,13 @@ public class ImageBrowserServiceImpl extends MpDbServlet
 			g.getSubsample().setMineralAnalyses(
 					load(g.getSubsample().getMineralAnalyses()));
 			forgetChanges();
-			return g;
+			return (GridDTO) clone(g);
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}
 	}
 	
+	@Deprecated
 	public static final void resetGrid(final Grid g) {
 		g.setImagesOnGrid(null);
 	}

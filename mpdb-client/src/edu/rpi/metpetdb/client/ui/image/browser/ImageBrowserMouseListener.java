@@ -11,9 +11,9 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ImageOnGrid;
-import edu.rpi.metpetdb.client.model.MineralAnalysis;
-import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
+import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.image.browser.dialogs.AddPointDialog;
 import edu.rpi.metpetdb.client.ui.image.browser.dialogs.PointPopup;
@@ -23,8 +23,8 @@ public class ImageBrowserMouseListener implements MouseListener {
 
 	private final MAbsolutePanel grid;
 	private Set imagesOnGrid;
-	private ImageOnGrid currentImage;
-	private MineralAnalysis currentPoint;
+	private ImageOnGridDTO currentImage;
+	private MineralAnalysisDTO currentPoint;
 	private boolean isBeingDragged = false;
 	private int startX;
 	private int startY;
@@ -38,7 +38,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 	private float aspectRatio;
 	private float aspectRatioHeight;
 	private final ZOrderManager zOrderManager;
-	private final Subsample subsample;
+	private final SubsampleDTO subsample;
 	private Widget pointer;
 	private final ImageBrowserDetails imageBrowser;
 	private final FlowPanel viewControls;
@@ -51,12 +51,12 @@ public class ImageBrowserMouseListener implements MouseListener {
 		mode = i;
 	}
 
-	public void setCurrentImage(final ImageOnGrid iog) {
+	public void setCurrentImage(final ImageOnGridDTO iog) {
 		currentImage = iog;
 	}
 
 	public ImageBrowserMouseListener(final MAbsolutePanel ap, final Set s,
-			final ZOrderManager z, final Subsample ss,
+			final ZOrderManager z, final SubsampleDTO ss,
 			final ImageBrowserDetails ibd, final FlowPanel fp) {
 		grid = ap;
 		imagesOnGrid = s;
@@ -86,7 +86,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 					if (result == null) {
 						currentImage.getImagePanel().remove(pointer);
 					} else {
-						addMineralAnalysis((MineralAnalysis) result, x, y);
+						addMineralAnalysis((MineralAnalysisDTO) result, x, y);
 					}
 					mode = -1;
 				}
@@ -155,9 +155,9 @@ public class ImageBrowserMouseListener implements MouseListener {
 				grid.addStyleName("image-moving");
 				if (imagesOnGrid != null) {
 					final Iterator itr = imagesOnGrid.iterator();
-					ImageOnGrid iog;
+					ImageOnGridDTO iog;
 					while (itr.hasNext()) {
-						iog = (ImageOnGrid) itr.next();
+						iog = (ImageOnGridDTO) itr.next();
 						iog.setPanTopLeftX(iog.getTemporaryTopLeftX());
 						iog.setPanTopLeftY(iog.getTemporaryTopLeftY());
 					}
@@ -166,7 +166,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 		}
 	}
 
-	private void addMineralAnalysis(final MineralAnalysis ma, final int x,
+	private void addMineralAnalysis(final MineralAnalysisDTO ma, final int x,
 			final int y) {
 		ma.setImage(currentImage.getImage());
 		int pointX = x;
@@ -245,11 +245,11 @@ public class ImageBrowserMouseListener implements MouseListener {
 		return "";
 	}
 
-	public MineralAnalysis findPointOnGrid(final int x, final int y) {
+	public MineralAnalysisDTO findPointOnGrid(final int x, final int y) {
 		// x,y should be with respect to image
 		final Iterator itr = currentImage.getMineralAnalyses().iterator();
 		while (itr.hasNext()) {
-			final MineralAnalysis ma = (MineralAnalysis) itr.next();
+			final MineralAnalysisDTO ma = (MineralAnalysisDTO) itr.next();
 			if (x >= ma.getPointX() - 5 && x <= ma.getPointX() + 5) {
 				if (y >= ma.getPointY() - 5 && y <= ma.getPointY() + 5) {
 					return ma;
@@ -259,11 +259,11 @@ public class ImageBrowserMouseListener implements MouseListener {
 		return null;
 	}
 
-	public ImageOnGrid findImageOnGrid(final int x, final int y) {
+	public ImageOnGridDTO findImageOnGrid(final int x, final int y) {
 		final Iterator itr = imagesOnGrid.iterator();
 		final ArrayList candidates = new ArrayList();
 		while (itr.hasNext()) {
-			final ImageOnGrid iog = ((ImageOnGrid) itr.next());
+			final ImageOnGridDTO iog = ((ImageOnGridDTO) itr.next());
 			if (x >= iog.getTemporaryTopLeftX()
 					&& x <= iog.getTemporaryTopLeftX()
 							+ iog.getImageContainer().getOffsetWidth()) {
@@ -275,10 +275,10 @@ public class ImageBrowserMouseListener implements MouseListener {
 			}
 		}
 		if (candidates.size() > 0) {
-			ImageOnGrid topmost = (ImageOnGrid) candidates.get(0);
+			ImageOnGridDTO topmost = (ImageOnGridDTO) candidates.get(0);
 			final Iterator candidatesItr = candidates.iterator();
 			while (candidatesItr.hasNext()) {
-				final ImageOnGrid iog = (ImageOnGrid) candidatesItr.next();
+				final ImageOnGridDTO iog = (ImageOnGridDTO) candidatesItr.next();
 				if (iog.getZorder() > topmost.getZorder())
 					topmost = iog;
 			}
@@ -295,9 +295,9 @@ public class ImageBrowserMouseListener implements MouseListener {
 
 		if (imagesOnGrid != null) {
 			final Iterator itr = imagesOnGrid.iterator();
-			ImageOnGrid iog;
+			ImageOnGridDTO iog;
 			while (itr.hasNext()) {
-				iog = (ImageOnGrid) itr.next();
+				iog = (ImageOnGridDTO) itr.next();
 				newX = iog.getTemporaryTopLeftX() + (x - startX);
 				newY = iog.getTemporaryTopLeftY() + (y - startY);
 				grid.setWidgetPosition(iog.getImageContainer(), newX, newY);
@@ -395,9 +395,9 @@ public class ImageBrowserMouseListener implements MouseListener {
 		imageBrowser.addToTotalYOffset((y - startY));
 		if (imagesOnGrid != null) {
 			final Iterator itr = imagesOnGrid.iterator();
-			ImageOnGrid iog;
+			ImageOnGridDTO iog;
 			while (itr.hasNext()) {
-				iog = (ImageOnGrid) itr.next();
+				iog = (ImageOnGridDTO) itr.next();
 				iog.setTemporaryTopLeftX(iog.getPanTopLeftX());
 				iog.setTemporaryTopLeftY(iog.getPanTopLeftY());
 			}

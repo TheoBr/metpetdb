@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.MObject;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;
@@ -170,13 +170,13 @@ public abstract class GenericAttribute {
 		return this;
 	}
 
-	protected MObject resolve(final MObject obj) {
+	protected MObjectDTO resolve(final MObjectDTO obj) {
 		return obj;
 	}
-	protected Object mGet(final MObject obj) {
+	protected Object mGet(final MObjectDTO obj) {
 		return resolve(obj).mGet(constraints[0].propertyId);
 	}
-	protected HashMap mGetAll(final MObject obj) {
+	protected HashMap mGetAll(final MObjectDTO obj) {
 		final HashMap map = new HashMap();
 		for (int i = 0; i < constraints.length; ++i) {
 			map.put(constraints[i], resolve(obj)
@@ -184,31 +184,31 @@ public abstract class GenericAttribute {
 		}
 		return map;
 	}
-	protected void mSet(final MObject obj, final Object val) {
+	protected void mSet(final MObjectDTO obj, final Object val) {
 		mSet(obj, val, constraints[0]);
 	}
-	protected void mSet(final MObject obj, final Object val,
+	protected void mSet(final MObjectDTO obj, final Object val,
 			final PropertyConstraint constraint) {
 		resolve(obj).mSet(constraint.propertyId, val);
 	}
 
-	public abstract Widget[] createDisplayWidget(MObject obj);
+	public abstract Widget[] createDisplayWidget(MObjectDTO obj);
 
-	public Widget[] createEditWidget(final MObject obj, final String id) {
+	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
 		return createDisplayWidget(obj);
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id,
+	public Widget[] createEditWidget(final MObjectDTO obj, final String id,
 			final GenericAttribute ga) {
 		return createEditWidget(obj, id);
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id,
+	public Widget[] createEditWidget(final MObjectDTO obj, final String id,
 			final GenericAttribute ga, final int row) {
 		return createEditWidget(obj, id, ga);
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id,
+	public Widget[] createEditWidget(final MObjectDTO obj, final String id,
 			final int row) {
 		return createEditWidget(obj, id);
 	}
@@ -233,7 +233,7 @@ public abstract class GenericAttribute {
 		}
 	}
 
-	public void commitEdit(final MObject obj, final Widget[] editWidget,
+	public void commitEdit(final MObjectDTO obj, final Widget[] editWidget,
 			final CurrentError err, final ServerOp r) {
 		for (int i = 0; i < constraints.length; ++i) {
 			try {
@@ -272,12 +272,12 @@ public abstract class GenericAttribute {
 		return null;
 	}
 
-	protected void set(final MObject obj, final Object value,
+	protected void set(final MObjectDTO obj, final Object value,
 			final PropertyConstraint constraint) {
 		set(obj, value);
 	}
 
-	protected abstract void set(final MObject obj, final Object value);
+	protected abstract void set(final MObjectDTO obj, final Object value);
 
 	public void setFocus(final Widget editWidget, final boolean focus) {
 		if (editWidget instanceof HasFocus)

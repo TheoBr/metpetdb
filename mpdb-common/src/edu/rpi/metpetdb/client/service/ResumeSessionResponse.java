@@ -1,8 +1,10 @@
 package edu.rpi.metpetdb.client.service;
 
+import net.sf.hibernate4gwt.pojo.gwt.LazyGwtPojo;
+
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 
@@ -17,7 +19,7 @@ import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
  * server and pack a bunch of the data into an instance of this class.
  * </p>
  */
-public class ResumeSessionResponse implements IsSerializable {
+public class ResumeSessionResponse extends LazyGwtPojo implements IsSerializable {
 	/**
 	 * Logged in user; null if the user is not logged in.
 	 * <p>
@@ -27,7 +29,7 @@ public class ResumeSessionResponse implements IsSerializable {
 	 * The client is not informed as to why the user could not be obtained.
 	 * </p>
 	 */
-	public User user;
+	public UserDTO user;
 
 	/**
 	 * System-wide entity constraint information.

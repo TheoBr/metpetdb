@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;
@@ -54,7 +54,7 @@ public class SubsampleList extends VerticalPanel {
 
 		public void populateRow(final PaginationBehavior pagination,
 				final int row, final Object object) {
-			final Subsample s = (Subsample) object;
+			final SubsampleDTO s = (SubsampleDTO) object;
 			final ImageList imageList = new ImageList(s.getId(), subsamples,
 					false);
 			setCell(row, 0, imageList);

@@ -14,14 +14,13 @@ import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.Column;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
 import org.postgis.Geometry;
 
-import edu.rpi.metpetdb.client.model.MObject;
+import edu.rpi.metpetdb.server.model.MObject;
 import edu.rpi.metpetdb.client.model.validation.BooleanConstraint;
 import edu.rpi.metpetdb.client.model.validation.CollectionConstraint;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
@@ -52,7 +51,7 @@ public class DataStore {
 	protected static synchronized Configuration getConfiguration() {
 		if (config == null) {
 			
-			final Configuration cfg = new AnnotationConfiguration();
+			final Configuration cfg = new Configuration();
 			final URL x = DataStore.class.getResource("dao/hibernate.cfg.xml");
 			if (x == null)
 				throw new MappingException("Missing dao/hibernate.cfg.xml.");
@@ -62,7 +61,7 @@ public class DataStore {
 		return config;
 	}
 
-	private static synchronized SessionFactory getFactory() {
+	protected static synchronized SessionFactory getFactory() {
 		if (factory == null)
 			factory = getConfiguration().buildSessionFactory();
 		return factory;
@@ -140,7 +139,7 @@ public class DataStore {
 		if (v.length != 2)
 			throw new RuntimeException("Cannot populate field " + f.getName());
 
-		final String pkg = "edu.rpi.metpetdb.client.model";
+		final String pkg = "edu.rpi.metpetdb.server.model";
 		final String entityName = v[0];
 		final String attributeName = v[1];
 		final PersistentClass cm;
@@ -232,7 +231,7 @@ public class DataStore {
 		if (cm != null)
 			return cm.getMappedClass();
 		try {
-			final String pkg = "edu.rpi.metpetdb.client.model";
+			final String pkg = "edu.rpi.metpetdb.server.model";
 			return Class.forName(pkg + "." + entityName);
 		} catch (ClassNotFoundException cnfe) {
 			throw new RuntimeException("No " + entityName + " in Hibernate?");

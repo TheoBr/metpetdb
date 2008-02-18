@@ -19,7 +19,7 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.MObject;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
@@ -34,11 +34,11 @@ public class DateAttribute extends GenericAttribute {
 		super(sc);
 	}
 
-	public Widget[] createDisplayWidget(final MObject obj) {
+	public Widget[] createDisplayWidget(final MObjectDTO obj) {
 		return new Widget[]{new MText(dateToString(get(obj)))};
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id) {
+	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
 		final CalendarPanel cp = new CalendarPanel();
 		final PopupPanel pp = new PopupPanel(true);
 		CalendarEvent event;
@@ -167,10 +167,10 @@ public class DateAttribute extends GenericAttribute {
 	protected Object get(final Widget editWidget) {
 		return newValue;
 	}
-	protected Timestamp get(final MObject obj) {
+	protected Timestamp get(final MObjectDTO obj) {
 		return (Timestamp) mGet(obj);
 	}
-	protected void set(final MObject obj, final Object v) {
+	protected void set(final MObjectDTO obj, final Object v) {
 		mSet(obj, v);
 	}
 

@@ -8,8 +8,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.MObject;
-import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
@@ -75,7 +75,7 @@ public abstract class ObjectEditorPanel extends DetailsPanel
 		b.removeStyleName("btnSecondary");
 	}
 
-	public void onCurrentUserChanged(final User whoIsIt)
+	public void onCurrentUserChanged(final UserDTO whoIsIt)
 			throws LoginRequiredException {
 		if (edit.isVisible() || (!cancel.isVisible() && !save.isVisible())) {
 			// We are in 'show' mode. The user might be able to do an
@@ -116,7 +116,7 @@ public abstract class ObjectEditorPanel extends DetailsPanel
 				saveBean(this);
 			}
 			public void onSuccess(final Object result) {
-				onSaveCompletion((MObject) result);
+				onSaveCompletion((MObjectDTO) result);
 			}
 		}.begin();
 	}
@@ -127,7 +127,7 @@ public abstract class ObjectEditorPanel extends DetailsPanel
 				deleteBean(this);
 			}
 			public void onSuccess(final Object result) {
-				onDeleteCompletion((MObject) result);
+				onDeleteCompletion((MObjectDTO) result);
 			}
 		}.begin();
 	}
@@ -138,12 +138,12 @@ public abstract class ObjectEditorPanel extends DetailsPanel
 				loadBean(this);
 			}
 			public void onSuccess(final Object result) {
-				onLoadCompletion((MObject) result);
+				onLoadCompletion((MObjectDTO) result);
 			}
 		}.begin();
 	}
 
-	public void show(final MObject obj) {
+	public void show(final MObjectDTO obj) {
 		super.show(obj);
 		final boolean ed = canEdit();
 		final boolean del = canDelete();
@@ -156,7 +156,7 @@ public abstract class ObjectEditorPanel extends DetailsPanel
 		setActiveButton(edit);
 	}
 
-	public void edit(final MObject obj) {
+	public void edit(final MObjectDTO obj) {
 		final boolean nn = !obj.mIsNew();
 		super.edit(obj);
 		edit.setVisible(false);
@@ -180,10 +180,10 @@ public abstract class ObjectEditorPanel extends DetailsPanel
 	protected void saveBean(final AsyncCallback ac) {
 		throw new UnsupportedOperationException();
 	}
-	protected void onSaveCompletion(final MObject result) {
+	protected void onSaveCompletion(final MObjectDTO result) {
 		ObjectEditorPanel.this.show(result);
 	}
-	protected void onLoadCompletion(final MObject result) {
+	protected void onLoadCompletion(final MObjectDTO result) {
 		ObjectEditorPanel.this.show(result);
 	}
 	protected void onDeleteCompletion(final Object result) {

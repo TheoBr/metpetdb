@@ -8,4 +8,3 @@ public class ConstantsServiceImpl extends MpDbServlet
 			ConstantsService {
 	private static final long serialVersionUID = 1L;
 }
-//blah

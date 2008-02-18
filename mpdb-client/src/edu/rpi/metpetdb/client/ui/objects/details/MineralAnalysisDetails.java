@@ -5,9 +5,9 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 
-import edu.rpi.metpetdb.client.model.MineralAnalysis;
-import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
+import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
@@ -44,7 +44,7 @@ public class MineralAnalysisDetails extends FlowPanel {
 	public MineralAnalysisDetails() {
 		p_mineralAnalysis = new ObjectEditorPanel(mineralAnalysisAtts) {
 			protected void loadBean(final AsyncCallback ac) {
-				final MineralAnalysis ma = (MineralAnalysis) getBean();
+				final MineralAnalysisDTO ma = (MineralAnalysisDTO) getBean();
 				MpDb.mineralAnalysis_svc.details(ma != null && !ma.mIsNew()
 						? ma.getId()
 						: mineralAnalysisId, ac);
@@ -54,13 +54,13 @@ public class MineralAnalysisDetails extends FlowPanel {
 				// ((MineralAnalysis) getBean()).getSubsample().addImage(
 				// (Image) mineralAnalysisAtts[3];
 				MpDb.mineralAnalysis_svc.saveMineralAnalysis(
-						(MineralAnalysis) getBean(), ac);
+						(MineralAnalysisDTO) getBean(), ac);
 			}
 			protected void deleteBean(final AsyncCallback ac) {
-				MpDb.mineralAnalysis_svc.delete(((MineralAnalysis)getBean()).getId(),ac);
+				MpDb.mineralAnalysis_svc.delete(((MineralAnalysisDTO)getBean()).getId(),ac);
 			}
 			protected boolean canEdit() {
-				final Sample s = ((MineralAnalysis) getBean()).getSubsample()
+				final SampleDTO s = ((MineralAnalysisDTO) getBean()).getSubsample()
 						.getSample();
 				if (s.isPublicData())
 					return false;
@@ -112,8 +112,8 @@ public class MineralAnalysisDetails extends FlowPanel {
 		return this;
 	}
 
-	public MineralAnalysisDetails createNew(final Subsample ss) {
-		final MineralAnalysis ma = new MineralAnalysis();
+	public MineralAnalysisDetails createNew(final SubsampleDTO ss) {
+		final MineralAnalysisDTO ma = new MineralAnalysisDTO();
 		ss.addMineralAnalysis(ma);
 		p_mineralAnalysis.edit(ma);
 		return this;

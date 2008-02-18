@@ -17,7 +17,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
-import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.server.model.Sample;
 
 public class SampleParser {
 

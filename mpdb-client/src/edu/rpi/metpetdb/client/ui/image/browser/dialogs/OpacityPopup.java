@@ -7,7 +7,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.image.browser.widgets.DraggableProgressBarWidget;
 
@@ -16,10 +16,10 @@ public class OpacityPopup extends DialogBox implements ClickListener {
 	final ServerOp continuation;
 	final Button cancel;
 	final Button ok;
-	final ImageOnGrid iog;
+	final ImageOnGridDTO iog;
 	final DraggableProgressBarWidget dpb;
 
-	public OpacityPopup(final ImageOnGrid iog, final ServerOp r, final int x,
+	public OpacityPopup(final ImageOnGridDTO iog, final ServerOp r, final int x,
 			final int y) {
 		this.iog = iog;
 		continuation = r;

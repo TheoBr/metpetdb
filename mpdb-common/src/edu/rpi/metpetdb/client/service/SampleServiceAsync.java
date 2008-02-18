@@ -4,7 +4,7 @@ import org.gwtwidgets.client.ui.pagination.PaginationParameters;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SampleDTO;
 
 /** @see SampleService */
 public interface SampleServiceAsync {
@@ -13,6 +13,6 @@ public interface SampleServiceAsync {
 	void allSamplesForUser(PaginationParameters p, long id, AsyncCallback ac);
 	void projectSamples(PaginationParameters p, long id, AsyncCallback ac);
 	void details(long id, AsyncCallback ac);
-	void saveSample(Sample sample, AsyncCallback ac);
+	void saveSample(SampleDTO sample, AsyncCallback ac);
 	void delete(long id, AsyncCallback ac);
 }

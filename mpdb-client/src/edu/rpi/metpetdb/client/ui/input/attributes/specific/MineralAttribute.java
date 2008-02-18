@@ -10,10 +10,10 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.MObject;
-import edu.rpi.metpetdb.client.model.Mineral;
-import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.SampleMineral;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.MineralDTO;
+import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.SampleMineralDTO;
 import edu.rpi.metpetdb.client.model.validation.MineralConstraint;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
@@ -27,7 +27,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.TreeAttribute;
 public class MineralAttribute extends GenericAttribute implements ClickListener {
 
 	private final Button chooseMinerals;
-	private MObject obj;
+	private MObjectDTO obj;
 	private GenericAttribute ga;
 	private final SimplePanel container;
 	private TreeAttribute tree;
@@ -46,19 +46,19 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 		tree = new TreeAttribute(mc, 4, maxMinerals);
 	}
 	
-	public Widget[] createDisplayWidget(final MObject obj) {
+	public Widget[] createDisplayWidget(final MObjectDTO obj) {
 		remakeContainer(obj);
 		return new Widget[] {container};
 	}
 	
-	private void remakeContainer(final MObject obj) {
+	private void remakeContainer(final MObjectDTO obj) {
 		final Widget[] widgets = tree.createDisplayWidget(obj);
 		container.clear();
 		for(int i = 0;i<widgets.length;++i)
 			container.add(widgets[i]);
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id,
+	public Widget[] createEditWidget(final MObjectDTO obj, final String id,
 			final GenericAttribute ga) {
 		final VerticalPanel vp = new VerticalPanel();
 		chooseMinerals.setEnabled(true);
@@ -95,14 +95,14 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 				final Iterator itr = tree.getSelectedItems().iterator();
 				final ArrayList newSelectedItems = new ArrayList();
 				while (itr.hasNext()) {
-					final Mineral mineral = (Mineral) itr.next();
+					final MineralDTO mineral = (MineralDTO) itr.next();
 					final Object object = containsObject(
-							((Sample) MineralAttribute.this.obj).getMinerals(),
+							((SampleDTO) MineralAttribute.this.obj).getMinerals(),
 							mineral);
 					if (object != null) {
 						newSelectedItems.add(object);
 					} else {
-						final SampleMineral sampleMineral = new SampleMineral();
+						final SampleMineralDTO sampleMineral = new SampleMineralDTO();
 						sampleMineral.setMineral(mineral);
 						newSelectedItems.add(sampleMineral);
 					}
@@ -127,7 +127,7 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 	}
 
 	
-	protected void set(final MObject obj, final Object v) {
+	protected void set(final MObjectDTO obj, final Object v) {
 		tree.set(obj, v);
 	}
 	
@@ -135,7 +135,7 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 		return tree.get(editWidget);
 	}
 	
-	protected Collection get(final MObject obj) {
+	protected Collection get(final MObjectDTO obj) {
 		return tree.get(obj);
 	}
 

@@ -4,12 +4,12 @@ import java.sql.Timestamp;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.ValueNotAfterException;
-import edu.rpi.metpetdb.client.model.MObject;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
 
 public class Sample_collectionEnded extends TimestampConstraint {
 	TimestampConstraint collectionBegan;
 
-	public void validateEntity(final MObject obj) throws ValidationException {
+	public void validateEntity(final MObjectDTO obj) throws ValidationException {
 		super.validateEntity(obj);
 		final Timestamp b = (Timestamp) obj.mGet(collectionBegan.propertyId);
 		final Timestamp e = (Timestamp) obj.mGet(propertyId);

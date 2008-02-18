@@ -6,16 +6,16 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserMouseListener;
 
 public class AddPointListener implements ClickListener {
 
 	private final ImageBrowserMouseListener mouseListener;
-	private final ImageOnGrid iog;
+	private final ImageOnGridDTO iog;
 
 	public AddPointListener(final ImageBrowserMouseListener ibml,
-			final ImageOnGrid imageOnGrid) {
+			final ImageOnGridDTO imageOnGrid) {
 		mouseListener = ibml;
 		iog = imageOnGrid;
 	}

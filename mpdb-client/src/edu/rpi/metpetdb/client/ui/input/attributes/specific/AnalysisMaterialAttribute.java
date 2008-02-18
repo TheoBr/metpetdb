@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.MObject;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.BooleanConstraint;
 import edu.rpi.metpetdb.client.model.validation.MineralConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
@@ -28,7 +28,7 @@ public class AnalysisMaterialAttribute extends GenericAttribute {
 		rb = new RadioButtonAttribute(bc);
 	}
 
-	public Widget[] createDisplayWidget(final MObject obj) {
+	public Widget[] createDisplayWidget(final MObjectDTO obj) {
 		final HashMap values = this.mGetAll(obj);
 		if (((Boolean)values.get(this.getConstraints()[1])).booleanValue()) {
 			return new Widget[] {new Label(LocaleHandler.lc_entity.MineralAnalysis_largeRock())} ;
@@ -37,7 +37,7 @@ public class AnalysisMaterialAttribute extends GenericAttribute {
 		}
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id) {
+	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
 		final Widget[] mineralWidgets = ma.createEditWidget(obj, id, ma);
 		final Widget[] rbWidgets = rb.createEditWidget(obj, id);
 		return new Widget[]{mineralWidgets[0], rbWidgets[0]};
@@ -51,10 +51,10 @@ public class AnalysisMaterialAttribute extends GenericAttribute {
 		}
 		return null;
 	}
-	protected void set(final MObject obj, final Object v, final PropertyConstraint pc) {
+	protected void set(final MObjectDTO obj, final Object v, final PropertyConstraint pc) {
 		mSet(obj, v, pc);
 	}
-	protected void set(final MObject obj, final Object v) {
+	protected void set(final MObjectDTO obj, final Object v) {
 		
 	}
 }

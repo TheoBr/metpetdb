@@ -15,8 +15,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.MObject;
-import edu.rpi.metpetdb.client.model.Reference;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.ReferenceDTO;
 import edu.rpi.metpetdb.client.model.validation.StringConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
@@ -31,7 +31,7 @@ public class ReferenceAttribute extends GenericAttribute implements ClickListene
 		realEditWidgets = new ArrayList();
 	}
 
-	public Widget[] createDisplayWidget(final MObject obj) {
+	public Widget[] createDisplayWidget(final MObjectDTO obj) {
 		final MUnorderedList list = new MUnorderedList();
 
 		final Set s = get(obj);
@@ -46,7 +46,7 @@ public class ReferenceAttribute extends GenericAttribute implements ClickListene
 		return new Widget[]{list};
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id) {
+	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
 		editList = new MUnorderedList();
 		
 		realEditWidgets.clear();
@@ -105,7 +105,7 @@ public class ReferenceAttribute extends GenericAttribute implements ClickListene
 		final Iterator itr = realEditWidgets.iterator();
 		while(itr.hasNext()) {
 			final Object obj = itr.next();
-			final Reference r = new Reference();
+			final ReferenceDTO r = new ReferenceDTO();
 			String name = ((HasText) obj).getText();
 			if(!name.equals("")){
 				r.setName(name);
@@ -115,11 +115,11 @@ public class ReferenceAttribute extends GenericAttribute implements ClickListene
 		return references;
 	}
 
-	public Set get(final MObject obj) {
+	public Set get(final MObjectDTO obj) {
 		return (Set) mGet(obj);
 	}
 	
-	protected void set(final MObject obj, final Object o) {
+	protected void set(final MObjectDTO obj, final Object o) {
 		mSet(obj, o);
 	}
 

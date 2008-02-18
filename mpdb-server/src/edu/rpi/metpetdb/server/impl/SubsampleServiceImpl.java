@@ -12,16 +12,16 @@ import org.hibernate.exception.ConstraintViolationException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.service.SubsampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.model.Subsample;
 
 public class SubsampleServiceImpl extends MpDbServlet
 		implements
 			SubsampleService {
 	private static final long serialVersionUID = 1L;
 
-	@SuppressWarnings("unchecked")
 	public Results all(final PaginationParameters p, final long sampleId) {
 		final String name = "Subsample.all";
 		final Query sizeQuery = sizeQuery(name, sampleId);
@@ -31,7 +31,7 @@ public class SubsampleServiceImpl extends MpDbServlet
 			final List l = pageQuery.list();
 			final Iterator itr = l.iterator();
 			while (itr.hasNext()) {
-				final Subsample s = (Subsample) itr.next();
+				final SubsampleDTO s = (SubsampleDTO) itr.next();
 				s.setImageCount(((Number) sizeQuery("Image.bySubsampleId",
 						s.getId()).uniqueResult()).intValue());
 				s.setAnalysisCount(((Number) sizeQuery(
@@ -44,14 +44,13 @@ public class SubsampleServiceImpl extends MpDbServlet
 	}
 	public Results allWithImages(final PaginationParameters p,
 			final long sampleId) {
-		final String name = "Subsample.allWithImages";
+		final String name = "SubsampleDTO.allWithImages";
 		return toResults(sizeQuery(name, sampleId),
 				pageQuery(name, p, sampleId));
 	}
-
-	@SuppressWarnings("unchecked")
-	public Subsample details(final long id) throws NoSuchObjectException {
-		final Subsample s = (Subsample) byId("Subsample", id);
+	
+	public SubsampleDTO details(final long id) throws NoSuchObjectException {
+		final Subsample s = (Subsample) clone(byId("Subsample", id));
 		s.setImageCount(((Number) sizeQuery("Image.bySubsampleId", s.getId())
 				.uniqueResult()).intValue());
 		s.setAnalysisCount(((Number) sizeQuery("MineralAnalysis.bySubsampleId",
@@ -59,19 +58,18 @@ public class SubsampleServiceImpl extends MpDbServlet
 		s.setImages(load(s.getImages()));
 		s.setMineralAnalyses(load(s.getMineralAnalyses()));
 		forgetChanges();
-		return s;
+		return (SubsampleDTO) clone(s);
 	}
 
-	@SuppressWarnings("unchecked")
-	public Subsample saveSubsample(Subsample subsample)
+	public SubsampleDTO saveSubsample(SubsampleDTO subsampleDTO)
 			throws ValidationException, LoginRequiredException {
-		doc.validate(subsample);
-		if (subsample.getSample().getOwner().getId() != currentUser())
+		doc.validate(subsampleDTO);
+		if (subsampleDTO.getSample().getOwner().getId() != currentUser())
 			throw new SecurityException(
 					"Cannot modify subsamples you don't own.");
-
+		Subsample subsample = (Subsample) merge(subsampleDTO);
 		try {
-			if (subsample.mIsNew())
+			if (subsampleDTO.mIsNew())
 				insert(subsample);
 			else
 				subsample = (Subsample) update(merge(subsample));
@@ -81,7 +79,7 @@ public class SubsampleServiceImpl extends MpDbServlet
 			ImageServiceImpl.resetImage(subsample.getImages());
 			SampleServiceImpl.resetSample(subsample.getSample());
 			forgetChanges();
-			return subsample;
+			return (SubsampleDTO) clone(subsample);
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}
@@ -90,21 +88,13 @@ public class SubsampleServiceImpl extends MpDbServlet
 	public void delete(long id) throws NoSuchObjectException,
 			LoginRequiredException {
 		try {
-			Subsample s = (Subsample) byId("Subsample", id);
+			final Subsample s = (Subsample) byId("SubsampleDTO", id);
 			if (s.getSample().getOwner().getId() != currentUser())
 				throw new SecurityException("Cannot modify subsamples you don't own.");
 			delete(s);
-			s = null;
 			commit();
 		} catch (ConstraintViolationException cve) {
 
 		}
-	}
-
-	public static final void resetSubsample(final Subsample s) {
-		s.setImages(null);
-		s.setMineralAnalyses(null);
-		if (s.getGrid() != null)
-			ImageBrowserServiceImpl.resetGrid(s.getGrid());
 	}
 }

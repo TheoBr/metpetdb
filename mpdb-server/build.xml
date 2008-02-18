@@ -35,6 +35,15 @@
 		<pathelement location="${gwt_home}/gwt-user.jar" />
 		<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
 	</path>
+	
+	<!-- Library files for compiling java code-->
+		<path id="compile-libs">
+			<fileset dir="${ctx_lib_server}" includes="*.jar" />
+			<fileset dir="${ctx_lib}" includes="*.jar" />
+			<pathelement location="${gwt_home}/gwt-user.jar" />
+			<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
+			<pathelement location="../mpdb-common/bin" />
+		</path>
 
 	<target name="setup" description="Generates the .sql files and hibernate.cfg.xml">
 		<mkdir dir="${build}/schema" />
@@ -55,7 +64,7 @@
 	<!-- Compile the server side stuff -->
 	<target name="mpdb-server-compile-java" description="Compiles the java code of mpdb-server">
 		<mkdir dir="${basedir}/bin" />
-		<javac destdir="${basedir}/bin" srcdir="${basedir}/src" classpathref="gwt-libs" source="1.5" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
+		<javac destdir="${basedir}/bin" srcdir="${basedir}/src" classpathref="compile-libs" source="1.5" debug="true" optimize="true" excludes="**/java_emu/**/*.java" />
 
 		<copy todir="${basedir}/bin" includeemptydirs="no">
 			<fileset dir="${basedir}/src" excludes="**/*.java" />
@@ -63,8 +72,8 @@
 	</target>
 
 	<target name="compile" description="Compiles the whole project">
-		<ant antfile="${basedir}/../mpdb-common/build.xml" target="compile"/>
-		<ant antfile="${basedir}/../mpdb-client/build.xml" target="compile"/>
+		<ant antfile="${basedir}/../mpdb-common/build.xml" target="compile" inheritAll="false" />
+		<ant antfile="${basedir}/../mpdb-client/build.xml" target="compile" inheritAll="false" />
 		<antcall target="mpdb-server-compile-java"/>
 	</target>
 
@@ -75,8 +84,9 @@
 	</target>
 
 	<target name="war" depends="compile, javadoc" description="Generates a .war file for use with a servlet container(Apache Tomcat)">
+		<mkdir dir="${build}" />
 		<war destfile="${war}" filesonly="true" webxml="${basedir}/web.xml">
-			<fileset dir="${build}/${app_name}" />
+			<fileset dir="${mpdb-client-dir}/build/${app_name}" />
 			<classes dir="${basedir}/bin">
 				<include name="email.properties" />
 				<include name="log4j.properties" />
@@ -94,7 +104,8 @@
 			</classes>
 			<fileset dir="${mpdb-common-dir}/docs" />
 			<fileset dir="${mpdb-common-dir}/reports" />
-			<lib dir="${basedir}/lib" includes="*" />
+			<lib dir="${ctx_lib_server}" includes="*" />
+			<lib dir="${ctx_lib}" includes="*" />
 			<lib dir="${gwt_home}" includes="gwt-servlet.jar" />
 		</war>
 	</target>
@@ -128,6 +139,16 @@
 			<arg value="run" />
 		</exec>
 	</target>
+	
+	<target name="tomcat-anthony" depends="war">
+			
+			<exec executable="/opt/apache-tomcat-5.5.26/bin/shutdown.sh" taskname="tomcat">
+			</exec>
+		<copy file="${war}" tofile="/opt/apache-tomcat-5.5.26/webapps/MetPetDB.war" />
+		<delete dir="/opt/apache-tomcat-5.5.26/webapps/MetPetDB/" />
+		<exec executable="/opt/apache-tomcat-5.5.26/bin/startup.sh" taskname="tomcat">
+					</exec>
+		</target>
 
 	<target name="eclipse" depends="setup" description="Sets up eclipse by generating the .classpath file and the launch configuration">
 		<property name="name.e" value="MetPetDB" />

@@ -8,13 +8,14 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.StartSessionRequest;
-import edu.rpi.metpetdb.client.model.User;
-import edu.rpi.metpetdb.client.model.UserWithPassword;
+import edu.rpi.metpetdb.client.model.StartSessionRequestDTO;
+import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.UserWithPasswordDTO;
 import edu.rpi.metpetdb.client.service.ResumeSessionResponse;
 import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.model.User;
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
 
 public class UserServiceImpl extends MpDbServlet implements UserService {
@@ -24,39 +25,34 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return PasswordEncrypter.verify(u.getEncryptedPassword(), pw);
 	}
 
-	@SuppressWarnings("unchecked")
-	public User details(final String username) throws NoSuchObjectException {
-		User user = (User) byKey(User.class, "username", username);
-		user.setProjects(load(user.getProjects()));
-		forgetChanges();
-		return user;
+	public UserDTO details(final String username) throws NoSuchObjectException {
+		UserDTO UserDTO = (UserDTO) clone( byKey("User", "username", username));
+		return UserDTO;
 	}
 
-	@SuppressWarnings("unchecked")
-	public User startSession(final StartSessionRequest ssr)
+	public UserDTO startSession(final StartSessionRequestDTO ssr)
 			throws LoginFailureException, ValidationException {
 		doc.validate(ssr);
 		try {
-			final User u = (User) byKey(User.class, "username", ssr.getUsername());
+			final User u = (User) byKey("User", "username", ssr.getUsername());
 			if (!authenticate(u, ssr.getPassword()))
 				throw new LoginFailureException(doc.StartSessionRequest_password);
 			u.setProjects(load(u.getProjects()));
 			setCurrentUser(u);
 			forgetChanges();
-			return u;
+			return (UserDTO) clone(u);
 		} catch (NoSuchObjectException nsoe) {
 			setCurrentUser(null);
 			throw new LoginFailureException(doc.StartSessionRequest_password);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public ResumeSessionResponse resumeSession() {
 		final ResumeSessionResponse r = new ResumeSessionResponse();
 		r.databaseObjectConstraints = doc;
 		r.objectConstraints = oc;
 		try {
-			r.user = (User) byId("User", currentUser());
+			r.user =  (UserDTO) clone( byId("User", (long) currentUser()));
 			r.user.setProjects(load(r.user.getProjects()));
 		} catch (NoSuchObjectException err) {
 			r.user = null;
@@ -67,45 +63,44 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return r;
 	}
 
-	public User beginEditMyProfile() throws NoSuchObjectException,
+	public UserDTO beginEditMyProfile() throws NoSuchObjectException,
 			LoginRequiredException {
-		return (User) byId("User", currentUser());
+		return (UserDTO)clone( byId("User", (long)currentUser()));
 	}
 
-	@SuppressWarnings("unchecked")
-	public User registerNewUser(final UserWithPassword newbie)
+	public UserDTO registerNewUser(final UserWithPasswordDTO newbie)
 			throws ValidationException, UnableToSendEmailException {
 		doc.UserWithPassword_user.validateEntity(newbie);
 		doc.UserWithPassword_newPassword.validateEntity(newbie);
 		doc.UserWithPassword_vrfPassword.validateEntity(newbie);
 
-		final User user = newbie.getUser();
-		if (!user.mIsNew())
-			throw new SecurityException("Cannot register non-new user.");
+		final UserDTO UserDTO = newbie.getUser();
+		if (!UserDTO.mIsNew())
+			throw new SecurityException("Cannot register non-new UserDTO.");
 
 		final String pass = newbie.getNewPassword();
-		user.setEncryptedPassword(PasswordEncrypter.crypt(pass));
-		doc.validate(user);
-
+		UserDTO.setEncryptedPassword(PasswordEncrypter.crypt(pass));
+		doc.validate(UserDTO);
+		User u = (User) merge(newbie);
 		try {
-			insert(user);
+			insert(u);
 			commit();
-			EmailSupport.sendMessage(this, user.getEmailAddress(),
-					"registerNewUser", new Object[]{user.getUsername(),
+			EmailSupport.sendMessage(this, u.getEmailAddress(),
+					"registerNewUser", new Object[]{u.getUsername(),
 							getModuleBaseURL()});
-			user.setProjects(load(user.getProjects()));
-			setCurrentUser(user);
+			UserDTO.setProjects(load(u.getProjects()));
+			setCurrentUser(u);
 			forgetChanges();
-			return user;
+			return (UserDTO) clone(u);
 		} catch (ConstraintViolationException cve) {
-			final String who = user.getUsername();
+			final String who = UserDTO.getUsername();
 			if ("users_nk_username".equals(cve.getConstraintName()))
 				throw new DuplicateValueException(doc.User_username, who);
 			throw new DuplicateValueException(doc.User_username, who);
 		}
 	}
 
-	public void changePassword(final UserWithPassword uwp)
+	public void changePassword(final UserWithPasswordDTO uwp)
 			throws LoginRequiredException, LoginFailureException,
 			NoSuchObjectException, ValidationException {
 		doc.UserWithPassword_user.validateEntity(uwp);
@@ -113,11 +108,11 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		doc.UserWithPassword_newPassword.validateEntity(uwp);
 		doc.UserWithPassword_vrfPassword.validateEntity(uwp);
 
-		final User user = uwp.getUser();
-		if (user.getId() != currentUser())
+		final UserDTO UserDTO = uwp.getUser();
+		if (UserDTO.getId() != currentUser())
 			throw new SecurityException("Administrators are not supported!");
 
-		final User u = (User) byId("User", user.getId());
+		final User u = (User) byId("UserDTO", UserDTO.getId());
 		if (!authenticate(u, uwp.getOldPassword()))
 			throw new LoginFailureException(doc.UserWithPassword_oldPassword);
 		u.setEncryptedPassword(PasswordEncrypter.crypt(uwp.getNewPassword()));
@@ -127,7 +122,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 	public void emailPassword(final String username)
 			throws NoSuchObjectException, UnableToSendEmailException {
-		final User u = (User) byKey(User.class, "username", username);
+		final User u = (User) byKey("UserDTO", "username", username);
 		if (u == null)
 			throw new NoSuchObjectException();
 		final String newpass = PasswordEncrypter.randomPassword();

@@ -13,12 +13,16 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.SampleAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.MetamorphicGrade;
-import edu.rpi.metpetdb.client.model.Reference;
-import edu.rpi.metpetdb.client.model.Region;
-import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.MetamorphicGradeDTO;
+import edu.rpi.metpetdb.client.model.ReferenceDTO;
+import edu.rpi.metpetdb.client.model.RegionDTO;
+import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.model.MetamorphicGrade;
+import edu.rpi.metpetdb.server.model.Reference;
+import edu.rpi.metpetdb.server.model.Region;
+import edu.rpi.metpetdb.server.model.Sample;
 
 public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	private static final long serialVersionUID = 1L;
@@ -42,62 +46,38 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		final String name = "Sample.forProject";
 		return toResults(sizeQuery(name, id), pageQuery(name, p, id));
 	}
-
-	@SuppressWarnings("unchecked")
-	public Sample details(final long id) throws NoSuchObjectException {
+	
+	public SampleDTO details(final long id) throws NoSuchObjectException {
 		final Sample s = (Sample) byId("Sample", id);
 		s.setSubsampleCount(((Number) sizeQuery("Subsample.bySampleId",
 				s.getId()).uniqueResult()).intValue());
-		s.setProjects(load(s.getProjects()));
-		s.setMinerals(load(s.getMinerals()));
-		s.setSubsamples(load(s.getSubsamples()));
-		s.setImages(null);
-		s.setRegions(load(s.getRegions()));
-		s.setMetamorphicGrades(load(s.getMetamorphicGrades()));
-		s.setReferences(load(s.getReferences()));
-		forgetChanges();
-		return s;
+		return (SampleDTO) clone(s);
 	}
 
-	@SuppressWarnings("unchecked")
-	public Sample saveSample(Sample sample)
+	public SampleDTO saveSample(SampleDTO sample)
 			throws SampleAlreadyExistsException, ValidationException,
 			LoginRequiredException {
 		doc.validate(sample);
 		if (sample.getOwner().getId() != currentUser())
 			throw new SecurityException("Cannot modify samples you don't own.");
-
+		replaceRegion(sample);
+		replaceMetamorphicGrade(sample);
+		replaceReferences(sample);
+		Sample s = (Sample) merge(sample);
 		try {
-			replaceRegion(sample);
-			replaceMetamorphicGrade(sample);
-			replaceReferences(sample);
+			
 
-			if (sample.mIsNew())
-				insert(sample);
+			if (s.mIsNew())
+				insert(s);
 			else {
 				try {
-					sample = (Sample) update(merge(sample));
+					s = (Sample) update(merge(s));
 				} catch (TransientObjectException toe) {
 					throw (toe);
 				}
 			}
 			commit();
-			if (sample.getProjects() != null)
-				sample.setProjects(load(sample.getProjects()));
-			if (sample.getMinerals() != null)
-				sample.setMinerals(load(sample.getMinerals()));
-			if (sample.getRegions() != null)
-				sample.setRegions(load(sample.getRegions()));
-			if (sample.getMetamorphicGrades() != null)
-				sample
-						.setMetamorphicGrades(load(sample
-								.getMetamorphicGrades()));
-			if (sample.getReferences() != null)
-				sample.setReferences(load(sample.getReferences()));
-			sample.setImages(null);
-			sample.setSubsamples(null);
-			forgetChanges();
-			return sample;
+			return (SampleDTO) clone(s);
 		} catch (ConstraintViolationException cve) {
 			if ("samples_nk".equals(cve.getConstraintName()))
 				throw new SampleAlreadyExistsException();
@@ -106,26 +86,25 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	}
 
 	// TODO for some reason it does not get the named query
-	@SuppressWarnings("unchecked")
-	private void replaceRegion(final Sample s) {
+	private void replaceRegion(final SampleDTO s) {
 		if (s.getRegions() != null) {
 			final Iterator itr = s.getRegions().iterator();
-			final HashSet regionsToAdd = new HashSet();
+			final HashSet<Region> regionsToAdd = new HashSet<Region>();
 			while (itr.hasNext()) {
 				final Region r = (Region) itr.next();
 				final Query regions = namedQuery("edu.rpi.metpetdb.client.model.Region.Region.byName");
 				regions.setString("name", r.getName());
 				if (regions.uniqueResult() != null) {
 					itr.remove();
-					regionsToAdd.add(regions.uniqueResult());
+					regionsToAdd.add((Region) regions.uniqueResult());
 				}
 			}
-			s.getRegions().addAll(regionsToAdd);
+			final HashSet<RegionDTO> regionsToAddDTO = (HashSet<RegionDTO>) clone(regionsToAdd);
+			s.getRegions().addAll(regionsToAddDTO);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private void replaceMetamorphicGrade(final Sample s) {
+	private void replaceMetamorphicGrade(final SampleDTO s) {
 		if (s.getMetamorphicGrades() != null) {
 			final Iterator itr = s.getMetamorphicGrades().iterator();
 			final HashSet<MetamorphicGrade> metamorphicToAdd = new HashSet<MetamorphicGrade>();
@@ -142,12 +121,12 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 							.uniqueResult());
 				}
 			}
-			s.getMetamorphicGrades().addAll(metamorphicToAdd);
+			final HashSet<MetamorphicGradeDTO> metamorphicToAddDTO = (HashSet<MetamorphicGradeDTO>) clone(metamorphicToAdd);
+			s.getMetamorphicGrades().addAll(metamorphicToAddDTO);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private void replaceReferences(final Sample s) {
+	private void replaceReferences(final SampleDTO s) {
 		if (s.getReferences() != null) {
 			final Iterator itr = s.getReferences().iterator();
 			final HashSet<Reference> referencesToAdd = new HashSet<Reference>();
@@ -163,7 +142,8 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 					referencesToAdd.add((Reference) references.uniqueResult());
 				}
 			}
-			s.getReferences().addAll(referencesToAdd);
+			final HashSet<ReferenceDTO> referencesToAddDTO = (HashSet<ReferenceDTO>) clone(referencesToAdd);
+			s.getReferences().addAll(referencesToAddDTO);
 		}
 	}
 
@@ -182,6 +162,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		}
 	}
 
+	@Deprecated
 	public static final void resetSample(final Sample s) {
 		s.setImages(null);
 		s.setMetamorphicGrades(null);

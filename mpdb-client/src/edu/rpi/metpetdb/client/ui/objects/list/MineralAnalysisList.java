@@ -12,9 +12,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.MineralAnalysis;
-import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
+import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.Styles;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
@@ -52,9 +52,9 @@ public class MineralAnalysisList extends VerticalPanel {
 
 		public void populateRow(final PaginationBehavior pagination,
 				final int row, final Object object) {
-			final MineralAnalysis ma = (MineralAnalysis) object;
-			final Sample s = ma.getSubsample().getSample();
-			final Subsample ss = ma.getSubsample();
+			final MineralAnalysisDTO ma = (MineralAnalysisDTO) object;
+			final SampleDTO s = ma.getSubsample().getSample();
+			final SubsampleDTO ss = ma.getSubsample();
 			
 			setCell(row, 0, new MLink(String.valueOf(ma.getSpotId()),
 					TokenSpace.detailsOf(ma)));

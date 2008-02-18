@@ -5,9 +5,10 @@
 	<inherits name="com.google.gwt.i18n.I18N"/>
 	<inherits name="org.gwtwidgets.WidgetLibrary"/>
 	<inherits name="edu.rpi.metpetdb.java_emu.Emulation"/>
+	<inherits name='net.sf.hibernate4gwt.Hibernate4Gwt'/>
 	
 	<entry-point class='edu.rpi.metpetdb.client.ui.MetPetDBApplication'/>
-	
+
 	<source path="client" />
     <source path="test" /> 
 

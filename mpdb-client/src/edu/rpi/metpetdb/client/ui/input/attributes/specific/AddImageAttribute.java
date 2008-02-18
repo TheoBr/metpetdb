@@ -12,9 +12,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.Image;
-import edu.rpi.metpetdb.client.model.MObject;
-import edu.rpi.metpetdb.client.model.XrayImage;
+import edu.rpi.metpetdb.client.model.ImageDTO;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.XrayImageDTO;
 import edu.rpi.metpetdb.client.model.validation.ImageConstraint;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
@@ -42,7 +42,7 @@ public class AddImageAttribute extends GenericAttribute
 		vp.add(addImage);
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id,
+	public Widget[] createEditWidget(final MObjectDTO obj, final String id,
 			final GenericAttribute ga) {
 		if (list != null)
 			vp.remove(list);
@@ -59,17 +59,17 @@ public class AddImageAttribute extends GenericAttribute
 		return new Widget[]{vp};
 	}
 	
-	public Widget[] createDisplayWidget(final MObject obj) {
+	public Widget[] createDisplayWidget(final MObjectDTO obj) {
 		return createDisplayWidget(obj,false);
 	}
 
-	public Widget[] createDisplayWidget(final MObject obj, final boolean editMode) {
+	public Widget[] createDisplayWidget(final MObjectDTO obj, final boolean editMode) {
 		final VerticalPanel vp = new VerticalPanel();
 		if (get(obj) != null) {
 			final Collection images = (Collection) get(obj);
 			Iterator itr = images.iterator();
 			while (itr.hasNext()) {
-				final edu.rpi.metpetdb.client.model.Image image = (edu.rpi.metpetdb.client.model.Image) itr
+				final edu.rpi.metpetdb.client.model.ImageDTO image = (edu.rpi.metpetdb.client.model.ImageDTO) itr
 						.next();
 				vp.add(makeImageContainer(image,editMode));
 			}
@@ -78,7 +78,7 @@ public class AddImageAttribute extends GenericAttribute
 	}
 
 	private VerticalPanel makeImageContainer(
-			final edu.rpi.metpetdb.client.model.Image image, final boolean editMode) {
+			final edu.rpi.metpetdb.client.model.ImageDTO image, final boolean editMode) {
 		final VerticalPanel imageContainer = new VerticalPanel();
 		imageContainer.add(new com.google.gwt.user.client.ui.Image(image
 				.get64x64ServerPath()));
@@ -88,7 +88,7 @@ public class AddImageAttribute extends GenericAttribute
 		imageContainer.add(new Label("Brightness: " + (image.getBrightness() != null ? image.getBrightness().toString() : "")));
 		imageContainer.add(new Label("Pixel Size: " +( image.getPixelsize() != null ? image.getPixelsize().toString() : "")));
 		if (image.getImageType().equals("X-ray")) {
-			final XrayImage xray = (XrayImage) image;
+			final XrayImageDTO xray = (XrayImageDTO) image;
 			imageContainer.add(new Label("Current: " +( xray.getCurrent() != null ? xray.getCurrent().toString() : "")));
 			imageContainer.add(new Label("Voltage: " +( xray.getVoltage() != null ? xray.getVoltage().toString() : "")));
 			imageContainer.add(new Label("Dwelltime: " +( xray.getDwelltime() != null ? xray.getDwelltime().toString() : "")));
@@ -108,7 +108,7 @@ public class AddImageAttribute extends GenericAttribute
 	}
 
 	private WizardDialog makeWizardDialog() {
-		final XrayImage xray = new XrayImage();
+		final XrayImageDTO xray = new XrayImageDTO();
 		final WizardDialog wd = new WizardDialog();
 		final UploadImageAttribute uploadImage = new UploadImageAttribute(
 				MpDb.doc.Subsample_images);
@@ -152,13 +152,13 @@ public class AddImageAttribute extends GenericAttribute
 				uploadImage.getStatus(this);
 			}
 			public void onSuccess(final Object result) {
-				if (((Image) result).getImageType().equals("X-ray")) {
+				if (((ImageDTO) result).getImageType().equals("X-ray")) {
 					AddImageAttribute.this.images.add(result);
 				} else {
-					AddImageAttribute.this.images.add(((XrayImage)result).getImage());
+					AddImageAttribute.this.images.add(((XrayImageDTO)result).getImage());
 				}
 				AddImageAttribute.this.list
-						.add(makeImageContainer((edu.rpi.metpetdb.client.model.Image) result,true));
+						.add(makeImageContainer((edu.rpi.metpetdb.client.model.ImageDTO) result,true));
 			}
 			public void onFailure(final Throwable e) {
 				uploadImage.getMyPanel().forceFailure(
@@ -170,11 +170,11 @@ public class AddImageAttribute extends GenericAttribute
 		return wd;
 	}
 
-	public void set(final MObject obj, final Object images) {
+	public void set(final MObjectDTO obj, final Object images) {
 		mSet(obj, images);
 	}
 
-	protected Set get(final MObject obj) {
+	protected Set get(final MObjectDTO obj) {
 		return (Set) mGet(obj);
 	}
 

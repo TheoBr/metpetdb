@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
@@ -24,13 +24,13 @@ public class RotateDialog extends MDialogBox implements ClickListener {
 	private final Button ok;
 	private final Button cancel;
 	private final ServerOp continuation;
-	private final ImageOnGrid imageOnGrid;
+	private final ImageOnGridDTO imageOnGrid;
 	private final Image image;
 	private final Label loading;
 	private final TextBox angle;
 	private final Button update;
 
-	public RotateDialog(final ImageOnGrid iog, final ServerOp r) {
+	public RotateDialog(final ImageOnGridDTO iog, final ServerOp r) {
 		final VerticalPanel vp = new VerticalPanel();
 		final FocusPanel fp = new FocusPanel();
 		image = new Image(iog.getGoodLookingPicture(true));
@@ -96,7 +96,7 @@ public class RotateDialog extends MDialogBox implements ClickListener {
 				loading.setText("Please Wait");
 			}
 			public void onSuccess(final Object result) {
-				final ImageOnGrid iog = (ImageOnGrid) result;
+				final ImageOnGridDTO iog = (ImageOnGridDTO) result;
 				imageOnGrid.setGchecksum(iog.getGchecksum());
 				imageOnGrid.setGchecksum64x64(iog.getGchecksum64x64());
 				imageOnGrid.setGchecksumHalf(iog.getGchecksumHalf());

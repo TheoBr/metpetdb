@@ -15,8 +15,8 @@ import edu.rpi.metpetdb.client.error.LoginFailureException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.StartSessionRequest;
-import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.StartSessionRequestDTO;
+import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
@@ -40,7 +40,7 @@ public class LoginDialog extends MDialogBox
 			MpDb.doc.StartSessionRequest_username),};
 
 	private final ServerOp continuation;
-	private final StartSessionRequest ssr;
+	private final StartSessionRequestDTO ssr;
 	private final MTabPanel tabs;
 	private final DetailsPanel p_main;
 	private final DetailsPanel p_email;
@@ -53,7 +53,7 @@ public class LoginDialog extends MDialogBox
 
 	public LoginDialog(final ServerOp r) {
 		continuation = r;
-		ssr = new StartSessionRequest();
+		ssr = new StartSessionRequestDTO();
 		setText("Please Login");
 
 		loginC = new Button(LocaleHandler.lc_text.buttonCancel(), this);
@@ -94,8 +94,6 @@ public class LoginDialog extends MDialogBox
 	protected void onLoad() {
 		super.onLoad();
 		FocusSupport.requestFocus(p_main);
-		
-		
 	}
 
 	public boolean onBeforeTabSelected(final SourcesTabEvents s, final int idx) {
@@ -192,7 +190,7 @@ public class LoginDialog extends MDialogBox
 				super.onFailure(e);
 			}
 			public void onSuccess(final Object result) {
-				MpDb.setCurrentUser((User) result);
+				MpDb.setCurrentUser((UserDTO) result);
 				hide();
 				if (continuation != null)
 					continuation.begin();

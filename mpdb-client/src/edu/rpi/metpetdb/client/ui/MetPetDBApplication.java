@@ -23,7 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.client.service.ResumeSessionResponse;
 import edu.rpi.metpetdb.client.ui.dialogs.LoginDialog;
@@ -148,7 +148,7 @@ public class MetPetDBApplication implements EntryPoint {
 		}
 	}
 
-	static void onCurrentUserChanged(final User n) {
+	static void onCurrentUserChanged(final UserDTO n) {
 		loginBar.clear();
 		if (n != null)
 			createLoginBarLoggedIn();
@@ -157,7 +157,7 @@ public class MetPetDBApplication implements EntryPoint {
 		dispatchCurrentUserChanged(contentContainer, n);
 	}
 
-	private static void dispatchCurrentUserChanged(final Widget w, final User u) {
+	private static void dispatchCurrentUserChanged(final Widget w, final UserDTO u) {
 		if (w instanceof UsesCurrentUser) {
 			try {
 				((UsesCurrentUser) w).onCurrentUserChanged(u);

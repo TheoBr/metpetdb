@@ -10,23 +10,24 @@ import org.hibernate.exception.ConstraintViolationException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.Image;
-import edu.rpi.metpetdb.client.model.MineralAnalysis;
+import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
 import edu.rpi.metpetdb.client.service.MineralAnalysisService;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.model.Image;
+import edu.rpi.metpetdb.server.model.MineralAnalysis;
 
 public class MineralAnalysisServiceImpl extends MpDbServlet
 		implements
 			MineralAnalysisService {
 	private static final long serialVersionUID = 1L;
 
-	public MineralAnalysis details(long id) throws NoSuchObjectException {
-		final MineralAnalysis ma = (MineralAnalysis) byId("MineralAnalysis", id);
+	public MineralAnalysisDTO details(long id) throws NoSuchObjectException {
+		final MineralAnalysisDTO ma = (MineralAnalysisDTO) clone(byId("MineralAnalysisDTO", id));
 		return ma;
 	}
 
 	public Results all(PaginationParameters parameters, final long subsampleId) {
-		final String name = "MineralAnalysis.bySubsampleId";
+		final String name = "MineralAnalysisDTO.bySubsampleId";
 		final Query sizeQuery = sizeQuery(name);
 		final Query pageQuery = pageQuery(name, parameters);
 		sizeQuery.setLong("id", subsampleId);
@@ -34,36 +35,33 @@ public class MineralAnalysisServiceImpl extends MpDbServlet
 		return toResults(sizeQuery, pageQuery);
 	}
 
-	@SuppressWarnings("unchecked")
 	public ArrayList all(long subsampleId) throws NoSuchObjectException {
-		return (ArrayList) byKey(MineralAnalysis.class, "subsampleId",
-				subsampleId);
+		return (ArrayList) clone(byKey("MineralAnalysis", "subsampleId",
+				subsampleId));
 	}
 
-	public MineralAnalysis saveMineralAnalysis(MineralAnalysis mineralAnalysis)
+	public MineralAnalysisDTO saveMineralAnalysis(MineralAnalysisDTO maDTO)
 			throws ValidationException, LoginRequiredException {
-		doc.validate(mineralAnalysis);
-		if (mineralAnalysis.getSubsample().getSample().getOwner().getId() != currentUser())
+		doc.validate(maDTO);
+		if (maDTO.getSubsample().getSample().getOwner().getId() != currentUser())
 			throw new SecurityException(
 					"Cannot modify subsamples you don't own.");
-
+		MineralAnalysis ma = (MineralAnalysis) merge(maDTO);
 		try {
-			if (mineralAnalysis.getImage() != null
-					&& mineralAnalysis.getImage().mIsNew()) {
-				mineralAnalysis
-						.setImage((Image) update(merge(mineralAnalysis
+			if (ma.getImage() != null
+					&& ma.getImage().mIsNew()) {
+				ma
+						.setImage((Image) update(merge(ma
 								.getImage())));
 			}
-			if (mineralAnalysis.mIsNew()) {
-				insert(mineralAnalysis);
+			if (ma.mIsNew()) {
+				insert(ma);
 			} else
-				mineralAnalysis = (MineralAnalysis) update(merge(mineralAnalysis));
+				ma = (MineralAnalysis) update(merge(ma));
 			commit();
-			SubsampleServiceImpl.resetSubsample(mineralAnalysis.getSubsample());
-			SampleServiceImpl.resetSample(mineralAnalysis.getSubsample().getSample());
-			ImageServiceImpl.resetImage(mineralAnalysis.getImage());
+			SampleServiceImpl.resetSample(ma.getSubsample().getSample());
 			forgetChanges();
-			return mineralAnalysis;
+			return (MineralAnalysisDTO) clone(ma);
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}
@@ -71,9 +69,8 @@ public class MineralAnalysisServiceImpl extends MpDbServlet
 	
 	public void delete(long id) throws NoSuchObjectException, LoginRequiredException {
 		try {
-			MineralAnalysis m = (MineralAnalysis) byId("MineralAnalysis",id);
-			delete(m);
-			m = null;
+			final MineralAnalysis ma = (MineralAnalysis) byId("MineralAnalysis",id);
+			delete(ma);
 			commit();
 		} catch (ConstraintViolationException cve) {
 			throw cve;

@@ -7,16 +7,16 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.Image;
-import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.ImageDTO;
+import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 
 public interface ImageService extends RemoteService {
 	ArrayList allImages(final long subsampleId) throws NoSuchObjectException;
-	Image details(long id) throws NoSuchObjectException;
-	Image saveImage(Image image) throws ValidationException,
+	ImageDTO details(long id) throws NoSuchObjectException;
+	ImageDTO saveImage(ImageDTO image) throws ValidationException,
 			LoginRequiredException;
-	ImageOnGrid saveImageOnGrid(ImageOnGrid iog) throws ValidationException,
+	ImageOnGridDTO saveImageOnGrid(ImageOnGridDTO iog) throws ValidationException,
 			LoginRequiredException;
-	void delete(Image i);
-	ImageOnGrid rotate(ImageOnGrid iog, int degrees);
+	void delete(ImageDTO i);
+	ImageOnGridDTO rotate(ImageOnGridDTO iog, int degrees);
 }

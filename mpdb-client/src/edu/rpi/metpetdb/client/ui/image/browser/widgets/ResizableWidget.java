@@ -8,13 +8,13 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel;
 
 public class ResizableWidget extends Composite {
 
 	public ResizableWidget(final Widget w, final MAbsolutePanel ma,
-			final FlowPanel imageContainer, final ImageOnGrid iog) {
+			final FlowPanel imageContainer, final ImageOnGridDTO iog) {
 		final Grid g = new Grid(3, 3);
 
 		final Label topLeft = new Label();

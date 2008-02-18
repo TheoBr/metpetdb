@@ -5,8 +5,8 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.Image;
-import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.ImageDTO;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageList;
@@ -20,10 +20,10 @@ public class ChooseImageDialog extends MDialogBox implements ClickListener {
 	private Button ok;
 	private Button newImage;
 	private ImageList list;
-	private Subsample s;
+	private SubsampleDTO s;
 	
 	
-	public ChooseImageDialog(final ServerOp r, final Subsample s) {
+	public ChooseImageDialog(final ServerOp r, final SubsampleDTO s) {
 		final FlowPanel fp = new FlowPanel();
 		continuation = r;
 		
@@ -57,7 +57,7 @@ public class ChooseImageDialog extends MDialogBox implements ClickListener {
 				}
 				public void onSuccess(final Object result) {
 					if (result != null) {
-						s.addImage((Image) result);
+						s.addImage((ImageDTO) result);
 						if (continuation != null)
 							continuation.onSuccess(result);
 						ChooseImageDialog.this.hide();

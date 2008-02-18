@@ -7,8 +7,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.User;
-import edu.rpi.metpetdb.client.model.UserWithPassword;
+import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.UserWithPasswordDTO;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
@@ -19,15 +19,15 @@ import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.PasswordAttribute;
 
 public class EditUserProfile extends FlowPanel implements UsesCurrentUser {
-	private final User user;
+	private final UserDTO user;
 
-	public EditUserProfile(final User whoToEdit) {
+	public EditUserProfile(final UserDTO whoToEdit) {
 		user = whoToEdit;
 		if (MpDb.isCurrentUser(user))
 			add(new PasswordChanger(user));
 	}
 
-	public void onCurrentUserChanged(final User whoIsIt)
+	public void onCurrentUserChanged(final UserDTO whoIsIt)
 			throws LoginRequiredException {
 		if (whoIsIt == null)
 			throw new LoginRequiredException();
@@ -38,12 +38,12 @@ public class EditUserProfile extends FlowPanel implements UsesCurrentUser {
 				new PasswordAttribute(MpDb.doc.UserWithPassword_oldPassword),
 				new PasswordAttribute(MpDb.doc.UserWithPassword_newPassword),
 				new PasswordAttribute(MpDb.doc.UserWithPassword_vrfPassword),};
-		private final UserWithPassword uwp;
+		private final UserWithPasswordDTO uwp;
 		private final DetailsPanel p_password;
 		private final Button changePassword;
 
-		PasswordChanger(final User whoToEdit) {
-			uwp = new UserWithPassword(whoToEdit);
+		PasswordChanger(final UserDTO whoToEdit) {
+			uwp = new UserWithPasswordDTO(whoToEdit);
 
 			changePassword = new Submit(LocaleHandler.lc_text.buttonChangePassword());
 			changePassword.addClickListener(this);

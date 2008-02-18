@@ -6,8 +6,8 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.InvalidPropertyException;
-import edu.rpi.metpetdb.client.model.MObject;
-import edu.rpi.metpetdb.client.model.validation.IHasListItems;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.IHasListItems;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
@@ -25,11 +25,11 @@ public class ListboxAttribute extends GenericAttribute {
 		notifier = r;
 	}
 
-	public Widget[] createDisplayWidget(final MObject obj) {
+	public Widget[] createDisplayWidget(final MObjectDTO obj) {
 		return new Widget[]{new MText(get(obj))};
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id,
+	public Widget[] createEditWidget(final MObjectDTO obj, final String id,
 			final GenericAttribute attr) {
 		if (attr instanceof ListboxAttribute) {
 			String selectedValue = get(obj);			
@@ -74,12 +74,12 @@ public class ListboxAttribute extends GenericAttribute {
 		return v != null && v.length() > 0 ? v : null;
 	}
 
-	protected String get(final MObject obj) {
+	protected String get(final MObjectDTO obj) {
 		final String v = (String) mGet(obj);
 		return v != null ? v : "";
 	}
 
-	protected void set(final MObject obj, final Object v) {
+	protected void set(final MObjectDTO obj, final Object v) {
 		mSet(obj, v != null && ((String) v).length() > 0 ? v : null);
 	}
 }
