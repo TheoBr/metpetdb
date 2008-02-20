@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.MineralDTO;
 import edu.rpi.metpetdb.client.model.interfaces.IHasChildren;
 
 /**
@@ -14,9 +15,9 @@ import edu.rpi.metpetdb.client.model.interfaces.IHasChildren;
  * 
  */
 
-//TODO make this extend CollectionConstraint
+// TODO make this extend CollectionConstraint
 public class MineralConstraint extends PropertyConstraint {
-	private Collection minerals;
+	private Collection<MineralDTO> minerals;
 
 	public MineralConstraint() {
 
@@ -25,17 +26,18 @@ public class MineralConstraint extends PropertyConstraint {
 	/**
 	 * TODO make this validate that the value is in the collection minerals
 	 */
-	public void validateValue(final Object value) throws ValidationException {
+	public void validateValue(final MineralDTO value)
+			throws ValidationException {
 		super.validateValue(value);
 	}
 
-	public Collection getMinerals() {
+	public Collection<MineralDTO> getMinerals() {
 		return minerals;
 	}
 
-	public void setMinerals(final Collection m) {
+	public void setMinerals(final Collection<MineralDTO> m) {
 		minerals = m;
-		fixChildren(m);
+		//fixChildren(m);
 	}
 
 	/**
@@ -44,16 +46,14 @@ public class MineralConstraint extends PropertyConstraint {
 	 * 
 	 * @param m
 	 */
-	public void fixChildren(final Collection m) {
-		final Iterator itr = m.iterator();
+	@Deprecated
+	public <T extends IHasChildren> void fixChildren(final Collection<T> m) {
+		final Iterator<T> itr = m.iterator();
 		while (itr.hasNext()) {
-			final Object obj = itr.next();
-			if (obj instanceof IHasChildren) {
-				final IHasChildren parent = (IHasChildren) obj;
-				if (parent.getChildren().size() > 0)
-					fixChildren(parent.getChildren());
-				parent.setChildren(new HashSet(parent.getChildren()));
-			}
+			final T parent = itr.next();
+			if (parent.getChildren() != null && parent.getChildren().size() > 0)
+				fixChildren(parent.getChildren());
+			parent.setChildren(new HashSet<IHasChildren>(parent.getChildren()));
 		}
 	}
 }

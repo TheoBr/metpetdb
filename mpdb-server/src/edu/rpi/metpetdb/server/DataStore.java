@@ -9,6 +9,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Iterator;
+import java.util.List;
+
+import net.sf.hibernate4gwt.gwt.HibernateRemoteService;
 
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
@@ -20,7 +23,7 @@ import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
 import org.postgis.Geometry;
 
-import edu.rpi.metpetdb.server.model.MObject;
+import edu.rpi.metpetdb.client.model.MineralDTO;
 import edu.rpi.metpetdb.client.model.validation.BooleanConstraint;
 import edu.rpi.metpetdb.client.model.validation.CollectionConstraint;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
@@ -35,9 +38,11 @@ import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.StringConstraint;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
+import edu.rpi.metpetdb.server.model.MObject;
+import edu.rpi.metpetdb.server.model.Mineral;
 
 /** Global service support. */
-public class DataStore {
+public class DataStore  extends HibernateRemoteService {
 	private static final short attributeNullable = DatabaseMetaData.attributeNullable;
 
 	protected static Configuration config;
@@ -47,6 +52,12 @@ public class DataStore {
 	private static DatabaseObjectConstraints databaseObjectConstraints;
 
 	private static ObjectConstraints objectConstraints;
+	
+	private final static DataStore instance = new DataStore();
+	
+	public static DataStore getInstance() {
+		return instance;
+	}
 
 	protected static synchronized Configuration getConfiguration() {
 		if (config == null) {
@@ -67,12 +78,12 @@ public class DataStore {
 		return factory;
 	}
 
-	public static synchronized void init() {
+	public static synchronized void initFactory() {
 		if (factory == null)
 			getFactory();
 	}
 
-	static synchronized void destroy() {
+	static synchronized void destoryFactory() {
 		final SessionFactory f = factory;
 		config = null;
 		factory = null;
@@ -83,7 +94,7 @@ public class DataStore {
 		}
 	}
 
-	static synchronized ObjectConstraints getObjectConstraints() {
+	synchronized ObjectConstraints getObjectConstraints() {
 		if (objectConstraints == null) {
 			final ObjectConstraints oc = new ObjectConstraints();
 			setConstraints(oc);
@@ -92,7 +103,7 @@ public class DataStore {
 		return objectConstraints;
 	}
 
-	static synchronized DatabaseObjectConstraints getDatabaseObjectConstraints() {
+	synchronized DatabaseObjectConstraints getDatabaseObjectConstraints() {
 		if (databaseObjectConstraints == null) {
 			final DatabaseObjectConstraints oc = new DatabaseObjectConstraints();
 			setConstraints(oc);
@@ -101,7 +112,7 @@ public class DataStore {
 		return databaseObjectConstraints;
 	}
 
-	static synchronized void setConstraints(final DatabaseObjectConstraints oc) {
+	synchronized void setConstraints(final DatabaseObjectConstraints oc) {
 		final Session s = open();
 		try {
 			final Connection conn = s.connection();
@@ -127,9 +138,8 @@ public class DataStore {
 		}
 		oc.finishInitialization();
 	}
-
-	@SuppressWarnings("unchecked")
-	private static void populateObjectConstraintField(
+	
+	private void populateObjectConstraintField(
 			final DatabaseMetaData md, final DatabaseObjectConstraints oc,
 			final Field f) throws SQLException, IllegalAccessException,
 			InstantiationException {
@@ -226,7 +236,6 @@ public class DataStore {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private static Class clazz(final PersistentClass cm, final String entityName) {
 		if (cm != null)
 			return cm.getMappedClass();
@@ -238,8 +247,7 @@ public class DataStore {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private static PropertyConstraint createPropertyConstraint(
+	private PropertyConstraint createPropertyConstraint(
 			final Property p, final Field f) throws IllegalAccessException,
 			InstantiationException {
 		try {
@@ -283,7 +291,8 @@ public class DataStore {
 			}
 			final Session session = open();
 			try {
-				mc.setMinerals(session.getNamedQuery("Mineral.parents").list());
+				final List<Mineral> minerals =session.getNamedQuery("Mineral.parents").list();
+				mc.setMinerals((List<MineralDTO>) clone(minerals));
 			} catch (org.hibernate.exception.GenericJDBCException dbe) {
 				session.cancelQuery();
 			} finally {

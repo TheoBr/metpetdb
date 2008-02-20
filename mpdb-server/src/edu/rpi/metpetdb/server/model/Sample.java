@@ -53,7 +53,7 @@ public class Sample extends MObject implements IHasName {
 	
 	private Set<Project> projects;
 	
-	private Set<Mineral> minerals;
+	private Set<SampleMineral> minerals;
 	
 	private Set<Image> images;
 	
@@ -218,11 +218,11 @@ public class Sample extends MObject implements IHasName {
 		images.add(i);
 	}
 
-	public Set<Mineral> getMinerals() {
+	public Set<SampleMineral> getMinerals() {
 		return minerals;
 	}
 
-	public void setMinerals(final Set<Mineral> c) {
+	public void setMinerals(final Set<SampleMineral> c) {
 		minerals = c;
 	}
 
@@ -370,7 +370,7 @@ public class Sample extends MObject implements IHasName {
 
 		case P_minerals:
 			if (newValue != GET_ONLY)
-				setMinerals((Set<Mineral>) newValue);
+				setMinerals((Set<SampleMineral>) newValue);
 			return getMinerals();
 
 		case P_country:

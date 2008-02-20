@@ -63,11 +63,6 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 
 	public void init(final ServletConfig sc) throws ServletException {
 		super.init(sc);
-		DataStore.init();
-		doc = DataStore.getDatabaseObjectConstraints();
-		oc = DataStore.getObjectConstraints();
-		loadPropertyFiles();
-
 		// Setup hibernate4gwt
 		HibernateBeanManager.getInstance().setSessionFactory(
 				DataStore.getFactory());
@@ -78,12 +73,16 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		cloneMapper.setCloneSuffix("DTO");
 
 		HibernateBeanManager.getInstance().setClassMapper(cloneMapper);
+		
+		DataStore.initFactory();
+		doc = DataStore.getInstance().getDatabaseObjectConstraints();
+		oc = DataStore.getInstance().getObjectConstraints();
 	}
 
 	public void destroy() {
 		doc = null;
 		oc = null;
-		DataStore.destroy();
+		DataStore.destoryFactory();
 		super.destroy();
 	}
 

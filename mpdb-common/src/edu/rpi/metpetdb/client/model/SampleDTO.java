@@ -51,7 +51,7 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 	
 	private Set<ProjectDTO> projects;
 	
-	private Set<MineralDTO> minerals;
+	private Set<SampleMineralDTO> minerals;
 	
 	private Set<ImageDTO> images;
 	
@@ -216,11 +216,11 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 		images.add(i);
 	}
 
-	public Set<MineralDTO> getMinerals() {
+	public Set<SampleMineralDTO> getMinerals() {
 		return minerals;
 	}
 
-	public void setMinerals(final Set<MineralDTO> c) {
+	public void setMinerals(final Set<SampleMineralDTO> c) {
 		minerals = c;
 	}
 
@@ -368,7 +368,7 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 
 		case P_minerals:
 			if (newValue != GET_ONLY)
-				setMinerals((Set<MineralDTO>) newValue);
+				setMinerals((Set<SampleMineralDTO>) newValue);
 			return getMinerals();
 
 		case P_country:

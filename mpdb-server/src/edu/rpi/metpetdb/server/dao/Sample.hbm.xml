@@ -57,7 +57,7 @@
     </set>
     
     <!-- Hibernate updates sets by using insert/delete, not update -->
-    <set name="minerals" table="sample_minerals" cascade="save-update">
+    <set name="minerals" table="sample_minerals" cascade="save-update" lazy="false">
       <key column="sample_id" />
       <composite-element class="SampleMineral">
       	<!--Composite elements CANNOT be null with a set -->

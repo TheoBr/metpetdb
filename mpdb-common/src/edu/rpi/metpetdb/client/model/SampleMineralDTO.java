@@ -11,6 +11,7 @@ public class SampleMineralDTO extends MineralDTO {
 	public void setAmount(final Float f) {
 		amount = f;
 	}
+
 	public Float getAmount() {
 		if (amount == null)
 			return new Float(0);
@@ -27,6 +28,7 @@ public class SampleMineralDTO extends MineralDTO {
 			this.setId(m.getId());
 		}
 	}
+
 	public MineralDTO getMineral() {
 		return mineral;
 	}
@@ -36,18 +38,22 @@ public class SampleMineralDTO extends MineralDTO {
 	}
 
 	public String toString() {
-		if (amount != null)
-			return mineral.getName() + " (" + amount + ")";
-		else
-			return mineral.getName();
+		if (mineral != null) {
+			if (amount != null)
+				return mineral.getName() + " (" + amount + ")";
+			else
+				return mineral.getName();
+		} else {
+			return super.toString();
+		}
 	}
 
 	public boolean equals(final Object o) {
 		if (o instanceof SampleMineralDTO) {
-			final boolean one = ((SampleMineralDTO) o).getMineral()
-					.equals(mineral);
-			final boolean two = ((SampleMineralDTO) o).getAmount() == null
-					? ((SampleMineralDTO) o).getAmount() == amount
+			final boolean one = ((SampleMineralDTO) o).getMineral().equals(
+					mineral);
+			final boolean two = ((SampleMineralDTO) o).getAmount() == null ? ((SampleMineralDTO) o)
+					.getAmount() == amount
 					: ((SampleMineralDTO) o).getAmount().equals(amount);
 			return one && two;
 		} else if (o instanceof MineralDTO) {
@@ -65,10 +71,10 @@ public class SampleMineralDTO extends MineralDTO {
 	protected Object mSetGet(final int propertyId, final Object newValue) {
 
 		switch (propertyId) {
-			case P_amount :
-				if (newValue != GET_ONLY)
-					setAmount(setFloatValue(newValue));
-				return getAmount();
+		case P_amount:
+			if (newValue != GET_ONLY)
+				setAmount(setFloatValue(newValue));
+			return getAmount();
 		}
 		throw new InvalidPropertyException(propertyId);
 	}
