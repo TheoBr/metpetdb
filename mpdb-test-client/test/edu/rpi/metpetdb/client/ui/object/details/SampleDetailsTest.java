@@ -3,20 +3,20 @@ package edu.rpi.metpetdb.client.ui.object.details;
 import java.util.Iterator;
 import java.util.List;
 
+import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.SampleDTO;
 import org.gwtwidgets.client.ui.pagination.PaginationParameters;
 import org.gwtwidgets.client.ui.pagination.Results;
 
 import com.google.gwt.junit.client.GWTTestCase;
 
-import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 
 //TODO put in checks to make sure the exact amount comes back
 public class SampleDetailsTest extends GWTTestCase {
 
-	private User owner;
+	private UserDTO owner;
 
 	public String getModuleName() {
 		return "edu.rpi.metpetdb.MetPetDBApplication";
@@ -26,7 +26,7 @@ public class SampleDetailsTest extends GWTTestCase {
 	 * Sets up the test by logining in a valid user
 	 */
 	public void setUp() {
-		owner = new User();
+		owner = new UserDTO();
 		owner.setId(1);
 	}
 
@@ -35,7 +35,7 @@ public class SampleDetailsTest extends GWTTestCase {
 	 * authentication works and the object constraints
 	 */
 	public void testSaveSample() {
-		final Sample s = new Sample();
+		final SampleDTO s = new SampleDTO();
 		s.setSesarNumber("000000006");
 		s.setLatitude(1);
 		s.setLongitude(1);
@@ -71,7 +71,7 @@ public class SampleDetailsTest extends GWTTestCase {
 			}
 
 			public void onSuccess(final Object result) {
-				final Sample s = (Sample) result;
+				final SampleDTO s = (SampleDTO) result;
 				assertTrue(s.getId() == 1);
 				System.out.println(s.toString());
 				finishTest();
@@ -122,7 +122,7 @@ public class SampleDetailsTest extends GWTTestCase {
 				// Start with 2 beause 1 was deleted
 				int count = 2;
 				while (itr.hasNext()) {
-					final Sample s = (Sample) itr.next();
+					final SampleDTO s = (SampleDTO) itr.next();
 					System.out.println(s.toString());
 					assertEquals(s.getAlias(), String.valueOf(count));
 					++count;
@@ -154,7 +154,7 @@ public class SampleDetailsTest extends GWTTestCase {
 				// verify they are all public
 				final Iterator itr = l.iterator();
 				while (itr.hasNext()) {
-					final Sample s = (Sample) itr.next();
+					final SampleDTO s = (SampleDTO) itr.next();
 					System.out.println(s.toString());
 					assertTrue(s.isPublicData());
 				}
@@ -185,7 +185,7 @@ public class SampleDetailsTest extends GWTTestCase {
 				// verify they are all public
 				final Iterator itr = l.iterator();
 				while (itr.hasNext()) {
-					final Sample s = (Sample) itr.next();
+					final SampleDTO s = (SampleDTO) itr.next();
 					System.out.println(s.toString());
 					assertEquals(s.getOwner(), owner);
 				}
