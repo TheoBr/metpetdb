@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb;
+package edu.rpi.metpetdb.client;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;

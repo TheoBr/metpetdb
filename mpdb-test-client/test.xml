@@ -5,7 +5,7 @@
 
 	<property name="src" value="${basedir}/test" />
 	<property name="classes" value="${basedir}/bin" />
-	<property name="test.class.name" value="edu.rpi.metpetdb.AllTests" />
+	<property name="test.class.name" value="edu.rpi.metpetdb.client.AllTests" />
 	
 	<property name="test.reports" value="${basedir}/../mpdb-common/reports/reports-client" />
 
