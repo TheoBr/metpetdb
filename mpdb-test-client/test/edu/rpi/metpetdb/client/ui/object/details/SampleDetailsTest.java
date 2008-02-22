@@ -58,7 +58,7 @@ public class SampleDetailsTest extends GWTTestCase {
 				System.out.println(e.getMessage());
 			}
 		}.begin();
-		delayTestFinish(5000);
+		delayTestFinish(10000);
 	}
 
 	/**

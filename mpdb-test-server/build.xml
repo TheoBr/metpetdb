@@ -1,14 +1,18 @@
 <project name="mpdb-test-server" basedir="." default="eclipse">
 
-	<property file="build.properties" />
-	<property name="ctx_lib" location="${basedir}/lib" />
+	<property file="../mpdb-common/build.properties" />
+	<property name="ctx_lib_server" location="${basedir}/../mpdb-common/lib-server" />
+	<property name="ctx_lib_test" location="${basedir}/../mpdb-common/lib-test" />
+	<property name="ctx_lib" location="${basedir}/../mpdb-common/lib" />
 	<property name="src" value="${basedir}/test" />
 	<property name="classes" value="${basedir}/bin" />
-	<property name="test.class.name" value="edu.rpi.metpetdb.AllTests" />
+	<property name="test.class.name" value="edu.rpi.metpetdb.server.AllTests" />
 
 	<property name="test.reports" value="${basedir}/../mpdb-common/reports/reports-server" />
 
 	<path id="classpath-libs">
+		<fileset dir="${ctx_lib_server}" includes="*.jar" />
+		<fileset dir="${ctx_lib_test}" includes="*.jar" />
 		<fileset dir="${ctx_lib}" includes="*.jar" />
 		<pathelement location="${gwt_home}/gwt-user.jar" />
 		<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
@@ -16,6 +20,8 @@
 
 	<path id="libs">
 		<fileset dir="${ctx_lib}" includes="*.jar" />
+		<fileset dir="${ctx_lib2}" includes="*.jar" />
+		<fileset dir="${ctx_lib3}" includes="*.jar" />
 		<fileset dir="${basedir}/../mpdb-test-server/lib" includes="*.jar" />
 		<fileset dir="${basedir}/../mpdb-server/lib" includes="*.jar" />
 		<pathelement location="${gwt_home}/gwt-user.jar" />
@@ -35,6 +41,9 @@
 
 	<target name="runtest">
 		<mkdir dir="${test.reports}" />
+		<delete defaultexcludes="false">
+			<fileset dir="${test.reports}" includes="**/*.*" />
+		</delete>
 		<junit fork="yes" printsummary="yes" haltonfailure="no">
 			<test name="${test.class.name}" haltonfailure="no" todir="${test.reports}">
 				<formatter type="xml" />
@@ -57,8 +66,8 @@
 	<target name="eclipse">
 		<property name="name.e" value="MetPetDB" />
 
-		<pathconvert property="libs.e" dirsep="/" pathsep="&quot;/&gt;&#10;&#09;&lt;classpathentry kind=&quot;lib&quot; path=&quot;">
-			<path refid="libs" />
+		<pathconvert property="classpath-libs.e" dirsep="/" pathsep="&quot;/&gt;&#10;&#09;&lt;classpathentry kind=&quot;lib&quot; path=&quot;">
+			<path refid="classpath-libs" />
 			<map from="${basedir}/" to="" />
 		</pathconvert>
 

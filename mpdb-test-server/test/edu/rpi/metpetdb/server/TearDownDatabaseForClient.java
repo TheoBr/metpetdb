@@ -29,7 +29,7 @@ public class TearDownDatabaseForClient {
 	private static IDataSet originalData;
 
 	public static void main(String[] args) {
-		DataStore.init();
+		DataStore.initFactory();
 
 		s = DataStore.open();
 		Transaction tx = s.beginTransaction();

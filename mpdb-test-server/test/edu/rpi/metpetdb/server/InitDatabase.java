@@ -32,7 +32,7 @@ public class InitDatabase extends TestCase {
 			"spatial_ref_sys"};
 	
 	public InitDatabase() {
-		DataStore.init();
+		DataStore.initFactory();
 
 		s = DataStore.open();
 		
