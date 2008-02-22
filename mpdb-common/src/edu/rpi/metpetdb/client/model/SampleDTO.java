@@ -423,18 +423,4 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 		}
 		throw new InvalidPropertyException(propertyId);
 	}
-
-	public String toString() {
-		return "--- Sample ---\n" + "\tid\t\t" + String.valueOf(id)
-				+ "\n\tversion\t\t" + String.valueOf(version)
-				+ "\n\tsesarNumber\t\t" + sesarNumber + "\n\towner\t\t"
-				+ owner.getUsername() + "\n\talias\t\t" + alias
-				+ "\n\tcollectionData\t\t"
-				+ (collectionDate != null ? collectionDate.toString() : "")
-				+ "\n\tpublicData\t\t"
-				+ (publicData.booleanValue() ? "yes" : "no") + "\n\trockType\t\t"
-				+ rockType + "\n\tlocation\t\t" + location.toString()
-				+ "\n\tdescription\t\t" + description;
-
-	}
 }
