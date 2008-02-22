@@ -8,6 +8,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -339,7 +340,7 @@ public class DataStore  extends HibernateRemoteService {
 				cc = new CollectionConstraint();
 			}
 			final Session session = open();
-			cc.setValues(session.getNamedQuery(className + ".all").list());
+			cc.setValues((Collection) clone(session.getNamedQuery(className + ".all").list()));
 			session.clear();
 			session.close();
 			return cc;
