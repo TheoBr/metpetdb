@@ -1,6 +1,12 @@
-\contentsline {section}{\numberline {0.1}Introduction}{2}
-\contentsline {section}{\numberline {0.2}Bulk Upload}{2}
-\contentsline {subsection}{\numberline {0.2.1}Uploading the Document}{2}
-\contentsline {subsection}{\numberline {0.2.2}Parsing the Document}{2}
-\contentsline {subsection}{\numberline {0.2.3}Saving the objects in the database}{3}
-\contentsline {subsection}{\numberline {0.2.4}Reporting the status of the operation (success/failure)}{3}
+\contentsline {part}{I\hspace {1em}Introduction}{2}
+\contentsline {chapter}{\numberline {1}Bulk Upload}{4}
+\contentsline {section}{\numberline {1.1}Uploading the Document}{4}
+\contentsline {section}{\numberline {1.2}Parsing the Document}{5}
+\contentsline {section}{\numberline {1.3}Saving the objects in the database}{5}
+\contentsline {section}{\numberline {1.4}Reporting the status of the operation (success/failure)}{6}
+\contentsline {chapter}{\numberline {2}Adding/Editing Objects}{7}
+\contentsline {section}{\numberline {2.1}Adding Objects}{7}
+\contentsline {subsection}{\numberline {2.1.1}What are these GenericAttributes?}{8}
+\contentsline {subsection}{\numberline {2.1.2}The Attributes}{8}
+\contentsline {subsubsection}{How the Attributes Work}{8}
+\contentsline {subsection}{\numberline {2.1.3}The Constraints}{8}
