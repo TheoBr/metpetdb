@@ -32,7 +32,6 @@ public class Sample extends MObject implements IHasName {
 	public static final int P_references = 17;
 	public static final int P_subsampleCount = 18;
 
-	@Field
 	private long id;
 	private int version;
 	
