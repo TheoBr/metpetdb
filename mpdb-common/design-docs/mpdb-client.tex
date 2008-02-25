@@ -107,9 +107,44 @@ of this specific attribute is the fact that it makes use of a regular
 attribute, the \texttt{TreeAttribute}.  In describing the attribute I
 will refer to the \texttt{TextAttribute} as the example.
 \subsubsection{Creating an Attribute}
-First off attribute are \textbf{required} to extend a 
-\texttt{GenericAttribute}.
+First off attributes are \textbf{required} to extend a \texttt{GenericAttribute}
+, along with extending that class a few methods need to be implemented
+\begin{itemize}
+\item constructor that calls \texttt{protected GenericAttribute(final PropertyConstraint pc}
+\begin{itemize}
+\item This is necessary because it initializes the \texttt{GenericAttribute}
+with things like the label (which is displayed to the left of the attribute).  An example of a label would be ''Sesar Number''
+\end{itemize}
+\item \texttt{public abstract Widget[] createDisplayWidget(MObjectDTO obj)}
+\begin{itemize}
+\item Whatever that is returned here will be added to the DOM when an object
+is being viewed.  For example with the \texttt{TextAttribute} this method
+returns just a \texttt{Label} because it is used to show data.  The reason
+that this methods returns an array of \texttt{Widget}s is because for each
+widget in the array a new row in the display table will be added.
+\end{itemize}
+\item \texttt{public abtract void set(final MObjectDTO obj, final Object value)}
+\begin{itemize}
+\item When the user clicks Save the new object is passed in as the first
+parameter, and then the value for that object is passed in as the second
+parameter.  Usually this method just calls \texttt{mSet} which sets the value
+in the object itself.  For more understanding look at the \texttt{mSetGet}
+method of any of the Java Beans, i.e. \texttt{Sample}.
+\end{itemize}
+\end{itemize}
+while the following methods are generally implemented as well
+\begin{itemize}
+\item \texttt{public Widget[] createEditWidget(final MObjectDTO obj, final String id)}
+\begin{itemize}
+\item TODO
+\end{itemize}
+\item \texttt{protected Object get(final Widget editWidget)}
+\begin{itemize}
+\item TODO
+\end{itemize}
+\end{itemize}
+More advanced attributes have more methods, for example the \texttt{TreeAttribute}.
+
 \subsubsection{Simplified Flow of an Attribute}
 \subsection{The Constraints}
-\section
 \end{document}
