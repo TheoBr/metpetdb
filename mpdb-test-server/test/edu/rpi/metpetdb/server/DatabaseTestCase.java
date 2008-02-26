@@ -19,12 +19,30 @@ public class DatabaseTestCase extends TestCase {
 
 	private IDataSet loadedDataSet;
 
+	/**
+	 * When true it backups/restores the database this is false when running the
+	 * test suite
+	 */
+	public static boolean BACKUP_DATABASE = true;
+
+	private InitDatabase initDb = null;
+
 	public DatabaseTestCase(final String xmlFile) {
 		this.xmlFile = xmlFile;
+		if (BACKUP_DATABASE) {
+			initDb = new InitDatabase();
+		}
 	}
 
 	@Override
 	public void setUp() {
+		if (BACKUP_DATABASE) {
+			try {
+				initDb.setUp();
+			} catch (final Exception e) {
+				e.printStackTrace();
+			}
+		}
 		try {
 			loadedDataSet = new FlatXmlDataSet(new FileInputStream(xmlFile));
 			// Insert test data
@@ -45,6 +63,13 @@ public class DatabaseTestCase extends TestCase {
 
 			e.printStackTrace();
 		}
+		if (BACKUP_DATABASE) {
+			try {
+				initDb.tearDown();
+			} catch (final Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@SuppressWarnings( { "unchecked" })
@@ -57,7 +82,7 @@ public class DatabaseTestCase extends TestCase {
 			throw new NoSuchObjectException(name, String.valueOf(id));
 		return (T) r;
 	}
-	
+
 	/**
 	 * Obtain a query to produce one page worth of rows.
 	 * 
@@ -73,13 +98,16 @@ public class DatabaseTestCase extends TestCase {
 	 * @return the single page object query.
 	 */
 	@SuppressWarnings( { "unchecked" })
-	protected <T extends MObject> List<T> pageQuery(final String name, final String parameter, final boolean assending, final int firstResult, final int maxResults) {
+	protected <T extends MObject> List<T> pageQuery(final String name,
+			final String parameter, final boolean assending,
+			final int firstResult, final int maxResults) {
 		Query q;
 		q = InitDatabase.getSession().getNamedQuery(name + ".all/" + parameter);
 		if (!assending)
-			q = InitDatabase.getSession().createQuery(q.getQueryString() + " desc");
+			q = InitDatabase.getSession().createQuery(
+					q.getQueryString() + " desc");
 		q.setFirstResult(firstResult);
 		q.setMaxResults(maxResults);
-		return (List<T>)q.list();
+		return (List<T>) q.list();
 	}
 }

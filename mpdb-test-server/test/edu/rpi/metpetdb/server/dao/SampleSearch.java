@@ -33,7 +33,7 @@ public class SampleSearch extends DatabaseTestCase {
 		}
 	*/	
 		
-		assertEquals(results.size(), 1);		
+		assertEquals(5,results.size());		
 		session.close();
 	}
 	
@@ -58,9 +58,9 @@ public class SampleSearch extends DatabaseTestCase {
 	public void testSearch3() 
 	{
 		Session session = DataStore.open();
-		List results = session.createSQLQuery("select * from users u where u.username like :name").setParameter("name", "fyffem").list();
+		List results = session.createSQLQuery("select * from users u where u.username like :name").setParameter("name", "anthony").list();
 		
-		assertEquals(results.size(), 1);		
+		assertEquals(1,results.size());		
 		session.close();
 	}
 	

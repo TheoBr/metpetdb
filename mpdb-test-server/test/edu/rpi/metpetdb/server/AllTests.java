@@ -19,6 +19,7 @@ public class AllTests {
 		catch (final Exception e) {
 			e.printStackTrace();
 		}
+		DatabaseTestCase.BACKUP_DATABASE = false;
 		//$JUnit-BEGIN$
 		suite.addTestSuite(SampleDaoTest.class);
 		suite.addTestSuite(UserDaoTest.class);
