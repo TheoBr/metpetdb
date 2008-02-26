@@ -9,6 +9,7 @@ import org.junit.Test;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
+import edu.rpi.metpetdb.server.InitDatabase;
 import edu.rpi.metpetdb.server.model.User;
 
 //TODO make some generic methods in databasetestcase
@@ -25,7 +26,8 @@ public class SampleSearch extends DatabaseTestCase {
 	 */
 	@Test
 	public void testSearch() 
-	{		Session session = DataStore.open();
+	{
+		final Session session = InitDatabase.getSession();
 		List results = session.createSQLQuery("select s.sample_id from samples s").list();
 /*		for(int i = 0; i < results.size(); i++)
 		{
@@ -34,13 +36,12 @@ public class SampleSearch extends DatabaseTestCase {
 	*/	
 		
 		assertEquals(5,results.size());		
-		session.close();
 	}
 	
 	@Test
 	public void testSearch2() 
 	{
-		Session session = DataStore.open();
+		final Session session = InitDatabase.getSession();
 		List results = session.createSQLQuery("select * from users u where u.user_id = :id").addEntity(User.class).setParameter("id", 1).list();
 		Iterator iter = results.iterator();
 		while(iter.hasNext())
@@ -51,17 +52,15 @@ public class SampleSearch extends DatabaseTestCase {
 		
 		}
 		assertEquals(results.size(), 1);		
-		session.close();
 	}
 
 	@Test
 	public void testSearch3() 
 	{
-		Session session = DataStore.open();
+		final Session session = InitDatabase.getSession();
 		List results = session.createSQLQuery("select * from users u where u.username like :name").setParameter("name", "anthony").list();
 		
 		assertEquals(1,results.size());		
-		session.close();
 	}
 	
 }

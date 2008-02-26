@@ -19,15 +19,15 @@ public class UserDaoTest extends DatabaseTestCase {
 		final Query q = InitDatabase.getSession().getNamedQuery("User.byId");
 		q.setLong("id", 1);
 		final User u = (User) q.uniqueResult();
-		assertEquals(u.getId(),1);
+		assertEquals(1,u.getId());
 	}
-	
+
 	@Test
 	public void testUserByUsername() {
 		final Query q = InitDatabase.getSession().getNamedQuery("User.byUsername");
 		q.setString("username", "anthony");
 		final User u = (User) q.uniqueResult();
-		assertEquals(u.getUsername(), "anthony");
+		assertEquals("anthony",u.getUsername());
 	}
 
 }

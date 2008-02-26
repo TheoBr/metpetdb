@@ -27,7 +27,7 @@ public class SampleDaoTest extends DatabaseTestCase {
 	@Test
 	public void testSampleById() throws NoSuchObjectException {
 		final Sample s = (Sample) super.byId(typeName, 1);
-		assertEquals(s.getId(), 1);
+		assertEquals(1,s.getId());
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class SampleDaoTest extends DatabaseTestCase {
 	public void testSampleAllSize() {
 		final Query q = InitDatabase.getSession().getNamedQuery(
 				"Sample.all,size");
-		assertEquals(((Number) q.uniqueResult()).intValue(), 5);
+		assertEquals(5,((Number) q.uniqueResult()).intValue());
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class SampleDaoTest extends DatabaseTestCase {
 	public void testSampleAllSesarNumberAsc() {
 		final List<Sample> l = pageQuery(typeName, "sesarNumber", true, 0, 5);
 		// Verify the size
-		assertEquals(l.size(), 5);
+		assertEquals(5,l.size());
 		// Now verify the correct order
 		for (int i = 0; i < l.size() - 1; ++i) {
 			final Sample first = l.get(i);
