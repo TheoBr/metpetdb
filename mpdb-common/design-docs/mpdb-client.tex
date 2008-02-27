@@ -2,7 +2,6 @@
 \begin{document}
 \title{mpdb-client}
 \author{Anthony Waters}
-\date{February 2, 2008}
 \maketitle
 \tableofcontents
 \newpage
@@ -113,7 +112,7 @@ First off attributes are \textbf{required} to extend a \texttt{GenericAttribute}
 \item constructor that calls \texttt{protected GenericAttribute(final PropertyConstraint pc}
 \begin{itemize}
 \item This is necessary because it initializes the \texttt{GenericAttribute}
-with things like the label (which is displayed to the left of the attribute).  An example of a label would be ''Sesar Number''
+with things like the label (which is displayed to the left of the attribute).  An example of a label would be ``Sesar Number''
 \end{itemize}
 \item \texttt{public abstract Widget[] createDisplayWidget(MObjectDTO obj)}
 \begin{itemize}
@@ -136,15 +135,56 @@ while the following methods are generally implemented as well
 \begin{itemize}
 \item \texttt{public Widget[] createEditWidget(final MObjectDTO obj, final String id)}
 \begin{itemize}
-\item TODO
+\item This method is very similar to \texttt{createDisplayWidget} however
+instead it is used when adding/editing objects as opposed to viewing them.  In
+the case of the \texttt{TextAttribute} this method would return a GWT
+\texttt{TextBox}.
 \end{itemize}
 \item \texttt{protected Object get(final Widget editWidget)}
 \begin{itemize}
-\item TODO
+\item As mentioned before when the \texttt{set} method is called the second
+parameter is the value to set, well the \texttt{get} method is responsible
+for getting this value from the \texttt{Widget} that is being edited.  For
+example with the \texttt{TextAttribute} the \texttt{get} method would be called
+with the \texttt{TextBox} passed in as the editWidget.  Then the method 
+proceeds to extract the text from the \texttt{TextBox} and returns it.  In more
+advanced attributes usually editWidget is never used and the attribute itself
+keeps track of its value through alternate means.
 \end{itemize}
 \end{itemize}
-More advanced attributes have more methods, for example the \texttt{TreeAttribute}.
-
-\subsubsection{Simplified Flow of an Attribute}
+More advanced attributes have more methods take a look at the \texttt{TreeAttribute} if you want to see them.
 \subsection{The Constraints}
+The constraints are for validating the data that is contained within the 
+attribute.  For example the constraint would be responsible for making sure
+that the user entered an integer in a whole number only field.  There are more
+advanced instances than that, like verifying that the user chooses an element
+is in a predefined list.  In order to explain constraints better I will use the
+\texttt{StringConstraint} in the package \texttt{edu\ .rpi\ .metpetdb\ .client\
+.model\ .validation}
+\footnote{It is located in the mpdb-common project}
+\subsubsection{Creating a Constraint}
+Constraints are easier to create than attributes in the sense that they are not
+required to extend any methods.  However to make the constraint actually do
+something useful some methods are helpful to extend.  Before the methods
+are explained it is important to note that the each constraint needs to extend
+a \texttt{PropertyConstraint}, which by default verifies only that required
+attributes have non null values.
+\begin{itemize}
+\item \texttt{public void validateValue(final Object value) throws 
+ValidationException}
+\begin{itemize}
+\item This method is responsible for validating the passed in value.  If the
+value fails validation this method should throw an instance of a
+\texttt{ValidationException}.  In the \texttt{StringConstraint} the purpose
+of \texttt{validateValue} is to verify that the \texttt{String} meets the
+requirements of minimum length and maximum length
+\footnote{It also verifies that the \texttt{String} is not null by using the superclass method \texttt{validateValue}}
+\footnote{You may be wondering where these minimum and maximum length values 
+come from, well so do I.  Actually these values are obtained from the server
+and is out of scope of this document.}
+.
+\end{itemize}
+\end{itemize}
+\subsection{ObjectEditorPanel Who?}
+TODO
 \end{document}

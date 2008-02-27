@@ -268,8 +268,10 @@ public abstract class GenericAttribute {
 		return get(editWidget);
 	}
 
+	//TODO maybe make this abstract???
 	protected Object get(final Widget editWidget) throws ValidationException {
 		return null;
+		
 	}
 
 	protected void set(final MObjectDTO obj, final Object value,
