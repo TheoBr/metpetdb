@@ -17,6 +17,6 @@ public interface MineralAnalysisService extends RemoteService {
 	MineralAnalysisDTO details(long id) throws NoSuchObjectException;
 	MineralAnalysisDTO saveMineralAnalysis(MineralAnalysisDTO mineralAnalysis)
 			throws ValidationException, LoginRequiredException;
-	ArrayList all(long subsampleId) throws NoSuchObjectException;
+	ArrayList<MineralAnalysisDTO> all(long subsampleId) throws NoSuchObjectException;
 	void delete(long id) throws NoSuchObjectException, LoginRequiredException;
 }

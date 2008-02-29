@@ -11,7 +11,7 @@ import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 
 public interface ImageService extends RemoteService {
-	ArrayList allImages(final long subsampleId) throws NoSuchObjectException;
+	ArrayList<ImageDTO> allImages(final long subsampleId) throws NoSuchObjectException;
 	ImageDTO details(long id) throws NoSuchObjectException;
 	ImageDTO saveImage(ImageDTO image) throws ValidationException,
 			LoginRequiredException;

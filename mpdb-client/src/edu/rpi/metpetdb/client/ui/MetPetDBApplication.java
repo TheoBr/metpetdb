@@ -96,16 +96,17 @@ public class MetPetDBApplication implements EntryPoint {
 				MpDb.oc = r.objectConstraints;
 				MpDb.setCurrentUser(r.user);
 				finishOnModuleLoad();
-				//TODO if you want automatic login fill int the correct values below
 				if (r.user == null) {
-					//final User u = new User();
-					//u.setEmailAddress("watera2@cs.rpi.edu");
-					//u.setId(1);
-					//u.setProjects(null);
-					//u.setSamples(null);
-					//u.setUsername("anthony");
-					//u.setVersion(0);
-					//MpDb.setCurrentUser(u);
+					new ServerOp() {
+						public void begin() {
+							MpDb.mpdbGeneric_svc.getAutomaticLoginUser(this);
+						}
+						public void onSuccess(final Object result) {
+							if (result != null) {
+								MpDb.setCurrentUser((UserDTO)result);
+							}
+						}
+					}.begin();
 				}
 			}
 		});

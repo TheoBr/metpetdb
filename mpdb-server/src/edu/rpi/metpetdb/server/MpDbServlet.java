@@ -57,6 +57,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	protected DatabaseObjectConstraints doc;
 	protected ObjectConstraints oc;
 	protected static final Properties fileProps = new Properties();
+	
+	private static int autoLoginId = -1;
 
 	/**
 	 * This is called when the servlet is initially loaded. It first sets up
@@ -82,6 +84,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		oc = DataStore.getInstance().getObjectConstraints();
 
 		loadPropertyFiles();
+		loadAutomaticLogin();
 	}
 
 	public void destroy() {
@@ -110,6 +113,24 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		}
 		ImageUploadServlet.setBaseFolder(fileProps.getProperty("images.path"));
 		ImageServiceImpl.setBaseFolder(fileProps.getProperty("images.path"));
+	}
+	
+	private void loadAutomaticLogin() {
+		final String propFile = "autologin.properties";
+		final InputStream i = MpDbServlet.class.getClassLoader()
+				.getResourceAsStream(propFile);
+		if (i == null)
+			return;
+		try {
+			fileProps.load(i);
+			i.close();
+		} catch (IOException ioe) {
+			return;
+		}
+		final boolean enabled = (Integer.parseInt(fileProps.getProperty("enabled")) == 1 ? true
+				: false);
+		if (enabled) 
+			MpDbServlet.autoLoginId = Integer.parseInt(fileProps.getProperty("userid"));
 	}
 
 	/**
@@ -150,7 +171,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 *             invalid.
 	 */
 	protected int currentUser() throws LoginRequiredException {
-
+		if (autoLoginId != -1)
+			return autoLoginId;
 		final Req r = currentReq();
 		if (r.userId == null) {
 			final Cookie[] cookieJar = getThreadLocalRequest().getCookies();
@@ -171,6 +193,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		// TODO if you want automatic login have this return your userid
 		// return 1;
 	}
+	
+	
 
 	/**
 	 * Obtain a session for the current thread.
