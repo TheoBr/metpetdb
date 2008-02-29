@@ -4,13 +4,19 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
 import org.postgis.Geometry;
 import org.postgis.Point;
 
 import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
+
+@Indexed
 public class Sample extends MObject implements IHasName {
 	public static final int P_sesarNumber = 0;
 	public static final int P_location = 1;
@@ -32,47 +38,49 @@ public class Sample extends MObject implements IHasName {
 	public static final int P_references = 17;
 	public static final int P_subsampleCount = 18;
 
+	@DocumentId
 	private long id;
 	private int version;
-	
+
+	@Field(index=Index.TOKENIZED, store=Store.NO)
 	private String sesarNumber;
 	private Geometry location;
-	
-	
+
 	private User owner;
-	
+
 	private String alias;
 	private Timestamp collectionDate;
-	
+
 	private Boolean publicData;
-	
+
+	@Field(index=Index.TOKENIZED, store=Store.NO)
 	private String rockType;
-	
+
 	private Set<Subsample> subsamples;
-	
+
 	private Set<Project> projects;
-	
+
 	private Set<SampleMineral> minerals;
-	
+
 	private Set<Image> images;
-	
+
 	private String description;
-	
+
 	private String country;
-	
+
 	private String collector;
-	
+
 	private String locationText;
-	
+
 	private Float latitudeError;
 	private Float longitudeError;
-	
+
 	private Set<Region> regions;
-	
+
 	private Set<MetamorphicGrade> metamorphicGrades;
-	
+
 	private Set<Reference> references;
-	
+
 	private int subsampleCount;
 
 	public long getId() {
@@ -423,19 +431,5 @@ public class Sample extends MObject implements IHasName {
 			return new Integer(getSubsampleCount());
 		}
 		throw new InvalidPropertyException(propertyId);
-	}
-
-	public String toString() {
-		return "--- Sample ---\n" + "\tid\t\t" + String.valueOf(id)
-				+ "\n\tversion\t\t" + String.valueOf(version)
-				+ "\n\tsesarNumber\t\t" + sesarNumber + "\n\towner\t\t"
-				+ owner.getUsername() + "\n\talias\t\t" + alias
-				+ "\n\tcollectionData\t\t"
-				+ (collectionDate != null ? collectionDate.toString() : "")
-				+ "\n\tpublicData\t\t"
-				+ (publicData.booleanValue() ? "yes" : "no") + "\n\trockType\t\t"
-				+ rockType + "\n\tlocation\t\t" + location.toString()
-				+ "\n\tdescription\t\t" + description;
-
 	}
 }

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -27,13 +26,11 @@ import com.google.gwt.user.client.rpc.SerializationException;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
-import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
 import edu.rpi.metpetdb.server.model.MObject;
-import edu.rpi.metpetdb.server.model.Sample;
 import edu.rpi.metpetdb.server.model.User;
 import edu.rpi.metpetdb.server.security.SessionEncrypter;
 
@@ -457,35 +454,6 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 			r.finishRequest(response);
 		}
 		return response;
-	}
-
-	@Override
-	public Object merge(Object gwtPojo) {
-		Object cloned = super.merge(gwtPojo);
-		if (cloned instanceof Sample)
-			((Sample) cloned).setLocation(((SampleDTO) gwtPojo).getLocation());
-		return cloned;
-	}
-
-	@Override
-	public Object clone(Object pojo) {
-		Object gwtPojo = super.clone(pojo);
-		if (gwtPojo instanceof SampleDTO)
-			((SampleDTO) gwtPojo).setLocation(((Sample) pojo).getLocation());
-		else if (pojo instanceof ArrayList) {
-			final ArrayList pojoList = (ArrayList) pojo;
-			final ArrayList gwtPojoList = (ArrayList) gwtPojo;
-			if (!pojoList.isEmpty()) {
-				if (pojoList.get(0) instanceof Sample) {
-					for (int i = 0; i < pojoList.size(); ++i) {
-						((SampleDTO) gwtPojoList.get(i))
-								.setLocation(((Sample) pojoList.get(i))
-										.getLocation());
-					}
-				}
-			}
-		}
-		return gwtPojo;
 	}
 
 	static final class Req {
