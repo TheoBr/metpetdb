@@ -128,6 +128,8 @@
 	</target>
 
 	<target name="deploy-user" depends="war">
+		<ant antfile="${basedir}/../mpdb-test-client/test.xml" target="test" inheritAll="false" />
+		<ant antfile="${basedir}/../mpdb-test-server/build.xml" target="runtest" inheritAll="false" />
 		<copy file="${war}" tofile="${user_war}" />
 	</target>
 
