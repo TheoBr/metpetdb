@@ -150,18 +150,26 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 *             invalid.
 	 */
 	protected int currentUser() throws LoginRequiredException {
-		/*
-		 * final Req r = currentReq(); if (r.userId == null) { final Cookie[]
-		 * cookieJar = getThreadLocalRequest().getCookies(); if (cookieJar !=
-		 * null) { for (int k = cookieJar.length - 1; k >= 0; k--) { final
-		 * Cookie c = cookieJar[k]; if
-		 * (MpDbConstants.USERID_COOKIE.equals(c.getName())) { r.userId =
-		 * SessionEncrypter.verify(c.getValue()); break; } } } if (r.userId ==
-		 * null) throw new LoginRequiredException(); } return
-		 * r.userId.intValue();
-		 */
+
+		final Req r = currentReq();
+		if (r.userId == null) {
+			final Cookie[] cookieJar = getThreadLocalRequest().getCookies();
+			if (cookieJar != null) {
+				for (int k = cookieJar.length - 1; k >= 0; k--) {
+					final Cookie c = cookieJar[k];
+					if (MpDbConstants.USERID_COOKIE.equals(c.getName())) {
+						r.userId = SessionEncrypter.verify(c.getValue());
+						break;
+					}
+				}
+			}
+			if (r.userId == null)
+				throw new LoginRequiredException();
+		}
+		return r.userId.intValue();
+
 		// TODO if you want automatic login have this return your userid
-		return 1;
+		// return 1;
 	}
 
 	/**
