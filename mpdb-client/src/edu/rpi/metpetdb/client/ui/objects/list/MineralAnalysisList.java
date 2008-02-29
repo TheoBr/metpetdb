@@ -47,8 +47,7 @@ public class MineralAnalysisList extends VerticalPanel {
 				new Column(enttxt.MineralAnalysis_analyst(), "analyst"),
 				new Column(enttxt.MineralAnalysis_analysisDate(),
 						"analysisDate"),
-				new Column(enttxt.MineralAnalysis_reference(), "reference"),
-				new Column(enttxt.MineralAnalysis_comment(), "comment"),};
+		};
 
 		public void populateRow(final PaginationBehavior pagination,
 				final int row, final Object object) {
@@ -68,8 +67,6 @@ public class MineralAnalysisList extends VerticalPanel {
 			setCell(row, 8, new Label(ma.getAnalysisDate() == null
 					? ""
 					: DateAttribute.dateToString(ma.getAnalysisDate())));
-			setCell(row, 9, new Label(ma.getReferenceId().toString()));
-			setCell(row, 10, new Label(ma.getDescription()));
 		}
 
 		private final DataProvider dataProvider;

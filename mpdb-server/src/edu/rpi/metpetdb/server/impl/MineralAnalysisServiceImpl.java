@@ -22,12 +22,12 @@ public class MineralAnalysisServiceImpl extends MpDbServlet
 	private static final long serialVersionUID = 1L;
 
 	public MineralAnalysisDTO details(long id) throws NoSuchObjectException {
-		final MineralAnalysisDTO ma = (MineralAnalysisDTO) clone(byId("MineralAnalysisDTO", id));
+		final MineralAnalysisDTO ma = (MineralAnalysisDTO) clone(byId("MineralAnalysis", id));
 		return ma;
 	}
 
 	public Results all(PaginationParameters parameters, final long subsampleId) {
-		final String name = "MineralAnalysisDTO.bySubsampleId";
+		final String name = "MineralAnalysis.bySubsampleId";
 		final Query sizeQuery = sizeQuery(name);
 		final Query pageQuery = pageQuery(name, parameters);
 		sizeQuery.setLong("id", subsampleId);

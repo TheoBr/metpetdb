@@ -17,7 +17,7 @@
     <property name="location" column="where_done" type="java.lang.String"/>
     <property name="analyst" column="analyst" type="java.lang.String"/>
     <property name="analysisDate" column="analysis_date" />
-    <property name="referenceId" column="reference_id" />
+    <!--  <property name="referenceId" column="reference_id" />-->
     <property name="description" column="description" type="java.lang.String"/>
 
 	<many-to-one name="image" column="image_id" class="Image" lazy="false" cascade="none"/>
@@ -96,11 +96,6 @@
     from MineralAnalysis ma
     where ma.subsample.id = :id
     order by ma.analysisDate
-  </query>
-  <query name="MineralAnalysis.bySubsampleId/referenceId">
-    from MineralAnalysis ma
-    where ma.subsample.id = :id
-    order by ma.referenceId
   </query>
   <query name="MineralAnalysis.bySubsampleId/description">
     from MineralAnalysis ma

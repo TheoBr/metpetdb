@@ -108,7 +108,6 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint MineralAnalysis_location;
 	public StringConstraint MineralAnalysis_analyst;
 	public TimestampConstraint MineralAnalysis_analysisDate;
-	public IntegerConstraint MineralAnalysis_referenceId;
 	public StringConstraint MineralAnalysis_description;
 	public MineralConstraint MineralAnalysis_mineral;
 	public BooleanConstraint MineralAnalysis_largeRock;

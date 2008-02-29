@@ -10,10 +10,10 @@ CREATE TABLE mineral_analyses
    where_done VARCHAR(50),
    analyst VARCHAR(50),
    analysis_date TIMESTAMP,
-   reference_id INT8 NOT NULL,
+   -- reference_id INT8 NOT NULL,
    description VARCHAR(50),
    mineral_id int2,
-   user_id INT4 NOT NULL,
+   -- user_id INT4 NOT NULL,
    large_rock CHAR(1) CHECK (large_rock IN ('Y','N')) NOT NULL,
    CONSTRAINT mineral_analyses_sk PRIMARY KEY (mineral_analysis_id),
    CONSTRAINT mineral_analyses_fk_subsamples FOREIGN KEY (subsample_id)

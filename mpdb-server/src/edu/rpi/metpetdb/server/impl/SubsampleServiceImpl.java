@@ -31,33 +31,31 @@ public class SubsampleServiceImpl extends MpDbServlet
 			final List l = pageQuery.list();
 			final Iterator itr = l.iterator();
 			while (itr.hasNext()) {
-				final SubsampleDTO s = (SubsampleDTO) itr.next();
+				final Subsample s = (Subsample) itr.next();
 				s.setImageCount(((Number) sizeQuery("Image.bySubsampleId",
 						s.getId()).uniqueResult()).intValue());
 				s.setAnalysisCount(((Number) sizeQuery(
 						"MineralAnalysis.bySubsampleId", s.getId())
 						.uniqueResult()).intValue());
 			}
-			return new Results(sz.intValue(), l);
+			
+			return new Results(sz.intValue(), (List) (clone(l)));
 		} else
 			return new Results(sz.intValue(), new ArrayList());
 	}
 	public Results allWithImages(final PaginationParameters p,
 			final long sampleId) {
-		final String name = "SubsampleDTO.allWithImages";
+		final String name = "Subsample.allWithImages";
 		return toResults(sizeQuery(name, sampleId),
 				pageQuery(name, p, sampleId));
 	}
 	
 	public SubsampleDTO details(final long id) throws NoSuchObjectException {
-		final Subsample s = (Subsample) clone(byId("Subsample", id));
+		final Subsample s = (Subsample) byId("Subsample", id);
 		s.setImageCount(((Number) sizeQuery("Image.bySubsampleId", s.getId())
 				.uniqueResult()).intValue());
 		s.setAnalysisCount(((Number) sizeQuery("MineralAnalysis.bySubsampleId",
 				s.getId()).uniqueResult()).intValue());
-		s.setImages(load(s.getImages()));
-		s.setMineralAnalyses(load(s.getMineralAnalyses()));
-		forgetChanges();
 		return (SubsampleDTO) clone(s);
 	}
 
@@ -88,7 +86,7 @@ public class SubsampleServiceImpl extends MpDbServlet
 	public void delete(long id) throws NoSuchObjectException,
 			LoginRequiredException {
 		try {
-			final Subsample s = (Subsample) byId("SubsampleDTO", id);
+			final Subsample s = (Subsample) byId("Subsample", id);
 			if (s.getSample().getOwner().getId() != currentUser())
 				throw new SecurityException("Cannot modify subsamples you don't own.");
 			delete(s);

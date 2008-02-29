@@ -58,6 +58,12 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	protected ObjectConstraints oc;
 	protected static final Properties fileProps = new Properties();
 
+	/**
+	 * This is called when the servlet is initially loaded. It first sets up
+	 * hibernate4gwt to be used with this project, then it initializes the
+	 * DataStore (which handles the database specific things). Lastly it fetches
+	 * the object constraints for the client.
+	 */
 	public void init(final ServletConfig sc) throws ServletException {
 		super.init(sc);
 		// Setup hibernate4gwt
@@ -70,10 +76,12 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		cloneMapper.setCloneSuffix("DTO");
 
 		HibernateBeanManager.getInstance().setClassMapper(cloneMapper);
-		
+
 		DataStore.initFactory();
 		doc = DataStore.getInstance().getDatabaseObjectConstraints();
 		oc = DataStore.getInstance().getObjectConstraints();
+
+		loadPropertyFiles();
 	}
 
 	public void destroy() {
@@ -142,24 +150,18 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 *             invalid.
 	 */
 	protected int currentUser() throws LoginRequiredException {
-		final Req r = currentReq();
-		if (r.userId == null) {
-			final Cookie[] cookieJar = getThreadLocalRequest().getCookies();
-			if (cookieJar != null) {
-				for (int k = cookieJar.length - 1; k >= 0; k--) {
-					final Cookie c = cookieJar[k];
-					if (MpDbConstants.USERID_COOKIE.equals(c.getName())) {
-						r.userId = SessionEncrypter.verify(c.getValue());
-						break;
-					}
-				}
-			}
-			if (r.userId == null)
-				throw new LoginRequiredException();
-		}
-		return r.userId.intValue();
+		/*
+		 * final Req r = currentReq(); if (r.userId == null) { final Cookie[]
+		 * cookieJar = getThreadLocalRequest().getCookies(); if (cookieJar !=
+		 * null) { for (int k = cookieJar.length - 1; k >= 0; k--) { final
+		 * Cookie c = cookieJar[k]; if
+		 * (MpDbConstants.USERID_COOKIE.equals(c.getName())) { r.userId =
+		 * SessionEncrypter.verify(c.getValue()); break; } } } if (r.userId ==
+		 * null) throw new LoginRequiredException(); } return
+		 * r.userId.intValue();
+		 */
 		// TODO if you want automatic login have this return your userid
-		// return 1;
+		return 1;
 	}
 
 	/**
