@@ -12,12 +12,12 @@ import org.hibernate.search.annotations.Store;
 import org.postgis.Geometry;
 import org.postgis.Point;
 
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 
 @Indexed
 public class Sample extends MObject implements IHasName {
+	private static final long serialVersionUID = 1L;
 	public static final int P_sesarNumber = 0;
 	public static final int P_location = 1;
 	public static final int P_owner = 2;
@@ -42,7 +42,7 @@ public class Sample extends MObject implements IHasName {
 	private long id;
 	private int version;
 
-	@Field(index=Index.TOKENIZED, store=Store.NO)
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String sesarNumber;
 	private Geometry location;
 
@@ -53,7 +53,7 @@ public class Sample extends MObject implements IHasName {
 
 	private Boolean publicData;
 
-	@Field(index=Index.TOKENIZED, store=Store.NO)
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String rockType;
 
 	private Set<Subsample> subsamples;
@@ -331,105 +331,5 @@ public class Sample extends MObject implements IHasName {
 
 	public boolean mIsNew() {
 		return id == 0;
-	}
-
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-		case P_sesarNumber:
-			if (newValue != GET_ONLY)
-				setSesarNumber((String) newValue);
-			return getSesarNumber();
-
-		case P_location:
-			if (newValue != GET_ONLY)
-				setLocation((Geometry) newValue);
-			return getLocation();
-
-		case P_owner:
-			if (newValue != GET_ONLY)
-				setOwner((User) newValue);
-			return getOwner();
-
-		case P_alias:
-			if (newValue != GET_ONLY)
-				setAlias((String) newValue);
-			return getAlias();
-
-		case P_collectionDate:
-			if (newValue != GET_ONLY)
-				setCollectionDate((Timestamp) newValue);
-			return getCollectionDate();
-
-		case P_publicData:
-			if (newValue != GET_ONLY)
-				setPublicData(((Boolean) newValue));
-			return isPublicData() ? Boolean.TRUE : Boolean.FALSE;
-
-		case P_rockType:
-			if (newValue != GET_ONLY)
-				setRockType((String) newValue);
-			return getRockType();
-
-		case P_images:
-			if (newValue != GET_ONLY)
-				setImages((Set<Image>) newValue);
-			return getImages();
-
-		case P_minerals:
-			if (newValue != GET_ONLY)
-				setMinerals((Set<SampleMineral>) newValue);
-			return getMinerals();
-
-		case P_country:
-			if (newValue != GET_ONLY)
-				setCountry((String) newValue);
-			return getCountry();
-
-		case P_description:
-			if (newValue != GET_ONLY)
-				setDescription((String) newValue);
-			return getDescription();
-
-		case P_collector:
-			if (newValue != GET_ONLY)
-				setCollector((String) newValue);
-			return getCollector();
-
-		case P_locationText:
-			if (newValue != GET_ONLY)
-				setLocationText((String) newValue);
-			return getLocationText();
-
-		case P_latitudeError:
-			if (newValue != GET_ONLY)
-				setLatitudeError(setFloatValue(newValue));
-			return getLatitudeError();
-
-		case P_longitudeError:
-			if (newValue != GET_ONLY)
-				setLongitudeError(setFloatValue(newValue));
-			return getLongitudeError();
-
-		case P_regions:
-			if (newValue != GET_ONLY)
-				setRegions((Set<Region>) newValue);
-			return getRegions();
-
-		case P_metamorphicGrades:
-			if (newValue != GET_ONLY)
-				setMetamorphicGrades((Set<MetamorphicGrade>) newValue);
-			return getMetamorphicGrades();
-
-		case P_references:
-			if (newValue != GET_ONLY)
-				setReferences((Set<Reference>) newValue);
-			return getReferences();
-
-		case P_subsampleCount:
-			if (newValue != GET_ONLY)
-				setSubsampleCount(Integer.parseInt(newValue.toString()));
-			return new Integer(getSubsampleCount());
-		}
-		throw new InvalidPropertyException(propertyId);
 	}
 }

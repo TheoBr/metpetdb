@@ -3,12 +3,10 @@ package edu.rpi.metpetdb.server.model;
 import java.util.HashSet;
 import java.util.Set;
 
-
-
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasImages;
 
 public class Subsample extends MObject implements IHasImages {
+	private static final long serialVersionUID = 1L;
 	public static final int P_name = 0;
 	public static final int P_type = 1;
 	public static final int P_images = 2;
@@ -17,19 +15,19 @@ public class Subsample extends MObject implements IHasImages {
 	public static final int P_sampleName = 5;
 
 	private long id;
-	
+
 	private Sample sample;
-		
+
 	private int version;
-	
+
 	private String name;
-	
+
 	private String type;
-	
+
 	private Set<Image> images;
-	
+
 	private Grid grid;
-	
+
 	private Set<MineralAnalysis> mineralAnalyses;
 	private int imageCount;
 	private int analysisCount;
@@ -37,6 +35,7 @@ public class Subsample extends MObject implements IHasImages {
 	public long getId() {
 		return id;
 	}
+
 	public void setId(final long i) {
 		id = i;
 	}
@@ -44,6 +43,7 @@ public class Subsample extends MObject implements IHasImages {
 	public Sample getSample() {
 		return sample;
 	}
+
 	public void setSample(final Sample s) {
 		sample = s;
 	}
@@ -63,15 +63,15 @@ public class Subsample extends MObject implements IHasImages {
 	public void setName(final String s) {
 		name = s;
 	}
-	
-	public String getType(){
+
+	public String getType() {
 		return type;
 	}
 
-	public void setType(String t){
+	public void setType(String t) {
 		type = t;
 	}
-	
+
 	public void setImages(final Set<Image> s) {
 		images = s;
 	}
@@ -84,20 +84,22 @@ public class Subsample extends MObject implements IHasImages {
 		i.setSubsample(this);
 		this.getSample().addImage(i);
 		if (images == null)
-			images = new HashSet();
+			images = new HashSet<Image>();
 		images.add(i);
 	}
 
 	public Set<MineralAnalysis> getMineralAnalyses() {
 		return mineralAnalyses;
 	}
+
 	public void setMineralAnalyses(final Set<MineralAnalysis> s) {
 		mineralAnalyses = s;
 	}
+
 	public void addMineralAnalysis(MineralAnalysis ma) {
 		ma.setSubsample(this);
 		if (mineralAnalyses == null)
-			mineralAnalyses = new HashSet();
+			mineralAnalyses = new HashSet<MineralAnalysis>();
 		mineralAnalyses.add(ma);
 	}
 
@@ -108,21 +110,23 @@ public class Subsample extends MObject implements IHasImages {
 	public Grid getGrid() {
 		return grid;
 	}
-	
-	public int getImageCount(){
+
+	public int getImageCount() {
 		return imageCount;
 	}
-	public void setImageCount(final int i){
+
+	public void setImageCount(final int i) {
 		imageCount = i;
 	}
-	
-	public int getAnalysisCount(){
+
+	public int getAnalysisCount() {
 		return analysisCount;
 	}
-	public void setAnalysisCount(final int i){
+
+	public void setAnalysisCount(final int i) {
 		analysisCount = i;
 	}
-	
+
 	public boolean equals(final Object o) {
 		return o instanceof Subsample && id == ((Subsample) o).id;
 	}
@@ -137,32 +141,5 @@ public class Subsample extends MObject implements IHasImages {
 
 	public boolean mIsNew() {
 		return id == 0;
-	}
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-			case P_name :
-				if (newValue != GET_ONLY)
-					setName((String) newValue);
-				return getName();
-			case P_type :
-				if (newValue != GET_ONLY)
-					setType((String) newValue);
-				return getType();
-			case P_images :
-				if (newValue != GET_ONLY)
-					setImages((Set<Image>) newValue);
-				return getImages();
-			case P_imageCount : 
-				if (newValue != GET_ONLY)
-					setImageCount(Integer.parseInt(newValue.toString()));
-				return new Integer(getImageCount());
-			case P_analysisCount : 
-				if (newValue != GET_ONLY)
-					setAnalysisCount(Integer.parseInt(newValue.toString()));
-				return new Integer(getAnalysisCount());
-			case P_sampleName :
-				return this.getSample().getName();
-		}
-		throw new InvalidPropertyException(propertyId);
 	}
 }

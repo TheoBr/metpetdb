@@ -3,9 +3,8 @@ package edu.rpi.metpetdb.server.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
-
 public class Grid extends MObject {
+	private static final long serialVersionUID = 1L;
 	public static final int P_width = 0;
 	public static final int P_height = 1;
 
@@ -19,6 +18,7 @@ public class Grid extends MObject {
 	public int getId() {
 		return id;
 	}
+
 	public void setId(final int i) {
 		id = i;
 	}
@@ -26,6 +26,7 @@ public class Grid extends MObject {
 	public int getVersion() {
 		return version;
 	}
+
 	public void setVersion(final int v) {
 		version = v;
 	}
@@ -59,9 +60,11 @@ public class Grid extends MObject {
 			imagesOnGrid = new HashSet<ImageOnGrid>();
 		return imagesOnGrid;
 	}
+
 	public void setImagesOnGrid(final Set<ImageOnGrid> s) {
 		imagesOnGrid = s;
 	}
+
 	public void addImageOnGrid(final ImageOnGrid imageOnGrid) {
 		imageOnGrid.setGrid(this);
 		if (imagesOnGrid == null)
@@ -79,10 +82,5 @@ public class Grid extends MObject {
 
 	public boolean mIsNew() {
 		return id == 0;
-	}
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-		}
-		throw new InvalidPropertyException(propertyId);
 	}
 }

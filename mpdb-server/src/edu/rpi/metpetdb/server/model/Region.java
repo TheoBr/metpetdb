@@ -2,13 +2,13 @@ package edu.rpi.metpetdb.server.model;
 
 //import java.util.Set;
 
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 
 public class Region extends MObject {
+	private static final long serialVersionUID = 1L;
 	public static final int P_name = 0;
 
 	private short id;
-	
+
 	private String name;
 
 	public short getId() {
@@ -29,8 +29,7 @@ public class Region extends MObject {
 
 	public boolean equals(final Object o) {
 		return name != null && o instanceof Region
-				&& name.equals(((Region) o).name)
-				&& ((Region) o).getId() == id;
+				&& name.equals(((Region) o).name) && ((Region) o).getId() == id;
 	}
 
 	public int hashCode() {
@@ -43,14 +42,5 @@ public class Region extends MObject {
 
 	public boolean mIsNew() {
 		return id == 0;
-	}
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-			case P_name :
-				if (newValue != GET_ONLY)
-					setName((String) newValue);
-				return getName();
-		}
-		throw new InvalidPropertyException(propertyId);
 	}
 }

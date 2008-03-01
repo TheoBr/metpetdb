@@ -6,9 +6,8 @@ import java.util.Set;
 
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
-
 public class MineralAnalysis extends MObject {
+	private static final long serialVersionUID = 1L;
 	public static final int P_spotId = 0;
 	public static final int P_pointX = 1;
 	public static final int P_pointY = 2;
@@ -51,6 +50,7 @@ public class MineralAnalysis extends MObject {
 	public int getId() {
 		return id;
 	}
+
 	public void setId(final int i) {
 		id = i;
 	}
@@ -58,13 +58,15 @@ public class MineralAnalysis extends MObject {
 	public String getSpotId() {
 		return spotId;
 	}
+
 	public void setSpotId(final String i) {
 		spotId = i;
 	}
-	
+
 	public Subsample getSubsample() {
 		return subsample;
 	}
+
 	public void setSubsample(final Subsample s) {
 		subsample = s;
 	}
@@ -72,6 +74,7 @@ public class MineralAnalysis extends MObject {
 	public int getPointX() {
 		return pointX;
 	}
+
 	public void setPointX(final int i) {
 		pointX = i;
 	}
@@ -79,6 +82,7 @@ public class MineralAnalysis extends MObject {
 	public int getPointY() {
 		return pointY;
 	}
+
 	public void setPointY(final int i) {
 		pointY = i;
 	}
@@ -86,6 +90,7 @@ public class MineralAnalysis extends MObject {
 	public Image getImage() {
 		return image;
 	}
+
 	public void setImage(final Image i) {
 		image = i;
 	}
@@ -93,6 +98,7 @@ public class MineralAnalysis extends MObject {
 	public Widget getActualImage() {
 		return actualImage;
 	}
+
 	public void setActualImage(final Widget w) {
 		actualImage = w;
 	}
@@ -100,6 +106,7 @@ public class MineralAnalysis extends MObject {
 	public float getPercentX() {
 		return percentX;
 	}
+
 	public void setPercentX(final float f) {
 		percentX = f;
 	}
@@ -107,6 +114,7 @@ public class MineralAnalysis extends MObject {
 	public float getPercentY() {
 		return percentY;
 	}
+
 	public void setPercentY(final float f) {
 		percentY = f;
 	}
@@ -114,6 +122,7 @@ public class MineralAnalysis extends MObject {
 	public boolean getIsLocked() {
 		return isLocked;
 	}
+
 	public void setIsLocked(final boolean b) {
 		isLocked = b;
 	}
@@ -121,6 +130,7 @@ public class MineralAnalysis extends MObject {
 	public String getAnalysisMethod() {
 		return analysisMethod;
 	}
+
 	public void setAnalysisMethod(final String m) {
 		analysisMethod = m;
 	}
@@ -128,6 +138,7 @@ public class MineralAnalysis extends MObject {
 	public String getLocation() {
 		return location;
 	}
+
 	public void setLocation(final String l) {
 		location = l;
 	}
@@ -135,6 +146,7 @@ public class MineralAnalysis extends MObject {
 	public String getAnalyst() {
 		return analyst;
 	}
+
 	public void setAnalyst(final String a) {
 		analyst = a;
 	}
@@ -142,6 +154,7 @@ public class MineralAnalysis extends MObject {
 	public Timestamp getAnalysisDate() {
 		return analysisDate;
 	}
+
 	public void setAnalysisDate(Timestamp d) {
 		analysisDate = d;
 	}
@@ -149,6 +162,7 @@ public class MineralAnalysis extends MObject {
 	public Integer getReferenceId() {
 		return referenceId;
 	}
+
 	public void setReferenceId(final Integer r) {
 		referenceId = r;
 	}
@@ -156,6 +170,7 @@ public class MineralAnalysis extends MObject {
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(final String d) {
 		description = d;
 	}
@@ -171,102 +186,43 @@ public class MineralAnalysis extends MObject {
 	public Boolean getLargeRock() {
 		return largeRock;
 	}
+
 	public void setLargeRock(Boolean largeRock) {
 		this.largeRock = largeRock;
 	}
-	
+
 	public void setElements(final Set<Element> e) {
 		elements = e;
 	}
+
 	public Set<Element> getElements() {
 		if (elements == null)
 			elements = new HashSet<Element>();
 		return elements;
 	}
 
-	public void setOxides(final Set o) {
+	public void setOxides(final Set<Oxide> o) {
 		oxides = o;
 	}
-	public Set getOxides() {
+
+	public Set<Oxide> getOxides() {
 		if (oxides == null)
-			oxides = new HashSet();
+			oxides = new HashSet<Oxide>();
 		return oxides;
 	}
 
+	@Override
 	public boolean equals(final Object o) {
 		return o instanceof MineralAnalysis && id == ((MineralAnalysis) o).id;
 	}
 
+	@Override
 	public int hashCode() {
 		return id;
 	}
 
+	@Override
 	public boolean mIsNew() {
 		return id == 0;
-	}
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-			case P_spotId :
-				if (newValue != GET_ONLY)
-					setSpotId((String) newValue);
-				return getSpotId();
-			case P_pointX :
-				if (newValue != GET_ONLY)
-					setPointX(Integer.parseInt((String) newValue));
-				return String.valueOf(getPointX());
-			case P_pointY :
-				if (newValue != GET_ONLY)
-					setPointY(Integer.parseInt((String) newValue));
-				return String.valueOf(getPointY());
-			case P_analysisMethod :
-				if (newValue != GET_ONLY)
-					setAnalysisMethod((String) newValue);
-				return getAnalysisMethod();
-			case P_location :
-				if (newValue != GET_ONLY)
-					setLocation((String) newValue);
-				return getLocation();
-			case P_analyst :
-				if (newValue != GET_ONLY)
-					setAnalyst((String) newValue);
-				return getAnalyst();
-			case P_analysisDate :
-				if (newValue != GET_ONLY)
-					setAnalysisDate((Timestamp) newValue);
-				return getAnalysisDate();
-			case P_referenceId :
-				if (newValue != GET_ONLY)
-					setReferenceId(setIntegerValue(newValue));
-				return getReferenceId();
-			case P_description :
-				if (newValue != GET_ONLY)
-					setDescription((String) newValue);
-				return getDescription();
-			case P_mineral :
-				if (newValue != GET_ONLY)
-					setMineral((Mineral) newValue);
-				return getMineral();
-			case P_subsampleName :
-				return getSubsample().getName();
-			case P_sampleName :
-				return getSubsample().getSample().getAlias();
-			case P_image :
-				if (newValue != GET_ONLY)
-					setImage((Image) newValue);
-				return getImage();
-			case P_largeRock :
-				if (newValue != GET_ONLY)
-					setLargeRock((Boolean) newValue);
-				return getLargeRock();
-			case P_elements :
-				if(newValue != GET_ONLY)
-					setElements((Set)newValue);
-				return getElements();
-			case P_oxides :
-				if(newValue != GET_ONLY)
-					setOxides((Set)newValue);
-				return getOxides();
-		}
-		throw new InvalidPropertyException(propertyId);
 	}
 }

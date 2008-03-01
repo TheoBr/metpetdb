@@ -1,8 +1,8 @@
 package edu.rpi.metpetdb.server.model;
 
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 
 public class ImageType extends MObject {
+	private static final long serialVersionUID = 1L;
 	public static final int P_name = 0;
 
 	private short id;
@@ -11,6 +11,7 @@ public class ImageType extends MObject {
 	public short getId() {
 		return id;
 	}
+
 	public void setId(final short i) {
 		id = i;
 	}
@@ -18,6 +19,7 @@ public class ImageType extends MObject {
 	public String getName() {
 		return name;
 	}
+
 	public void setName(final String s) {
 		name = s;
 	}
@@ -37,14 +39,5 @@ public class ImageType extends MObject {
 
 	public boolean mIsNew() {
 		return id == 0;
-	}
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-			case P_name :
-				if (newValue != GET_ONLY)
-					setName((String) newValue);
-				return getName();
-		}
-		throw new InvalidPropertyException(propertyId);
 	}
 }

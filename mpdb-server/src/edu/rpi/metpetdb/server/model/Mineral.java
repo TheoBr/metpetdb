@@ -2,20 +2,19 @@ package edu.rpi.metpetdb.server.model;
 
 import java.util.Set;
 
-
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasChildren;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 
 public class Mineral extends MObject implements IHasChildren, IHasName {
+	private static final long serialVersionUID = 1L;
 	public static final int P_name = 0;
 
 	private short id;
 	private Short parentId;
-	
+
 	private String name;
-	
-	private Set children;
+
+	private Set<IHasChildren> children;
 
 	public short getId() {
 		return id;
@@ -41,11 +40,11 @@ public class Mineral extends MObject implements IHasChildren, IHasName {
 		parentId = i;
 	}
 
-	public void setChildren(final Set c) {
+	public void setChildren(final Set<IHasChildren> c) {
 		children = c;
 	}
 
-	public Set getChildren() {
+	public Set<IHasChildren> getChildren() {
 		return children;
 	}
 
@@ -71,14 +70,5 @@ public class Mineral extends MObject implements IHasChildren, IHasName {
 
 	public boolean mIsNew() {
 		return id == 0;
-	}
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-			case P_name :
-				if (newValue != GET_ONLY)
-					setName((String) newValue);
-				return getName();
-		}
-		throw new InvalidPropertyException(propertyId);
 	}
 }

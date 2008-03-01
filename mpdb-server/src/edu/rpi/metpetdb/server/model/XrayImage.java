@@ -1,8 +1,8 @@
 package edu.rpi.metpetdb.server.model;
 
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 
 public class XrayImage extends Image {
+	private static final long serialVersionUID = 1L;
 	public static final int P_imageType = 0;
 	public static final int P_subsample = 1;
 	public static final int P_pixelsize = 2;
@@ -26,6 +26,7 @@ public class XrayImage extends Image {
 	public Boolean getRadiation() {
 		return radiation;
 	}
+
 	public void setRadiation(final Boolean b) {
 		radiation = b;
 	}
@@ -33,6 +34,7 @@ public class XrayImage extends Image {
 	public String getLines() {
 		return lines;
 	}
+
 	public void setLines(final String s) {
 		lines = s;
 	}
@@ -40,6 +42,7 @@ public class XrayImage extends Image {
 	public Integer getDwelltime() {
 		return dwelltime;
 	}
+
 	public void setDwelltime(final Integer i) {
 		dwelltime = i;
 	}
@@ -47,6 +50,7 @@ public class XrayImage extends Image {
 	public Integer getCurrent() {
 		return current;
 	}
+
 	public void setCurrent(final Integer i) {
 		current = i;
 	}
@@ -54,6 +58,7 @@ public class XrayImage extends Image {
 	public Integer getVoltage() {
 		return voltage;
 	}
+
 	public void setVoltage(final Integer i) {
 		voltage = i;
 	}
@@ -61,6 +66,7 @@ public class XrayImage extends Image {
 	public Element getElement() {
 		return element;
 	}
+
 	public void setElement(final Element e) {
 		element = e;
 	}
@@ -83,55 +89,5 @@ public class XrayImage extends Image {
 		i.setLut(this.getLut());
 		i.setPixelsize(this.getPixelsize());
 		return i;
-	}
-
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-			case P_imageType :
-				if (newValue != GET_ONLY)
-					setImageType((String) newValue);
-				return getImageType();
-			case P_contrast :
-				if (newValue != GET_ONLY)
-					setContrast(setIntegerValue(newValue));
-				return getContrast();
-			case P_lut :
-				if (newValue != GET_ONLY)
-					setLut(setIntegerValue(newValue));
-				return getLut();
-			case P_brightness :
-				if (newValue != GET_ONLY)
-					setBrightness(setIntegerValue(newValue));
-				return getBrightness();
-			case P_pixelsize :
-				if (newValue != GET_ONLY)
-					setPixelsize(setIntegerValue(newValue));
-				return getPixelsize();
-			case P_radiation :
-				if (newValue != GET_ONLY)
-					setRadiation((Boolean) newValue);
-				return getRadiation();
-			case P_dwelltime :
-				if (newValue != GET_ONLY)
-					setDwelltime(setIntegerValue(newValue));
-				return getDwelltime();
-			case P_current :
-				if (newValue != GET_ONLY)
-					setCurrent(setIntegerValue(newValue));
-				return getCurrent();
-			case P_voltage :
-				if (newValue != GET_ONLY)
-					setVoltage(setIntegerValue(newValue));
-				return getVoltage();
-			case P_lines :
-				if (newValue != GET_ONLY)
-					setLines((String) newValue);
-				return getLines();
-			case P_element :
-				if (newValue != GET_ONLY)
-					setElement((Element) newValue);
-				return getElement();
-		}
-		throw new InvalidPropertyException(propertyId);
 	}
 }

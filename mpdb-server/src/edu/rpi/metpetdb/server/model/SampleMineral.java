@@ -1,8 +1,8 @@
 package edu.rpi.metpetdb.server.model;
 
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 
 public class SampleMineral extends Mineral {
+	private static final long serialVersionUID = 1L;
 	public static final int P_amount = 0;
 
 	private Float amount;
@@ -66,16 +66,5 @@ public class SampleMineral extends Mineral {
 		return mineral != null && amount != null ? mineral.hashCode()
 				+ amount.intValue() : mineral.hashCode();
 		// return mineral.hashCode();
-	}
-
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-
-		switch (propertyId) {
-		case P_amount:
-			if (newValue != GET_ONLY)
-				setAmount(setFloatValue(newValue));
-			return getAmount();
-		}
-		throw new InvalidPropertyException(propertyId);
 	}
 }

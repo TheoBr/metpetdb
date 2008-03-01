@@ -3,9 +3,8 @@ package edu.rpi.metpetdb.server.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
-
 public class User extends MObject {
+	private static final long serialVersionUID = 1L;
 	public static final int P_username = 0;
 	public static final int P_emailAddress = 1;
 
@@ -13,13 +12,14 @@ public class User extends MObject {
 	private int version;
 	private String username;
 	private String emailAddress;
-	private Set projects;
-	private Set samples;
+	private Set<Project> projects;
+	private Set<Sample> samples;
 	private transient byte[] encryptedPassword;
 
 	public int getId() {
 		return id;
 	}
+
 	public void setId(final int v) {
 		id = v;
 	}
@@ -56,23 +56,23 @@ public class User extends MObject {
 		encryptedPassword = p;
 	}
 
-	public Set getProjects() {
+	public Set<Project> getProjects() {
 		if (projects == null)
-			projects = new HashSet();
+			projects = new HashSet<Project>();
 		return projects;
 	}
 
-	public void setProjects(final Set c) {
+	public void setProjects(final Set<Project> c) {
 		projects = c;
 	}
 
-	public Set getSamples() {
+	public Set<Sample> getSamples() {
 		if (samples == null)
-			samples = new HashSet();
+			samples = new HashSet<Sample>();
 		return samples;
 	}
 
-	public void setSamples(final Set s) {
+	public void setSamples(final Set<Sample> s) {
 		samples = s;
 	}
 
@@ -83,27 +83,12 @@ public class User extends MObject {
 	public boolean equals(final Object o) {
 		return o instanceof User && id == ((User) o).id;
 	}
-	
+
 	public String toString() {
 		return this.username;
 	}
 
 	public boolean mIsNew() {
 		return id == 0;
-	}
-
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-			case P_username :
-				if (newValue != GET_ONLY)
-					setUsername((String) newValue);
-				return getUsername();
-
-			case P_emailAddress :
-				if (newValue != GET_ONLY)
-					setEmailAddress((String) newValue);
-				return getEmailAddress();
-		}
-		throw new InvalidPropertyException(propertyId);
 	}
 }
