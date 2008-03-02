@@ -15,6 +15,10 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import edu.rpi.metpetdb.server.model.Sample;
+import edu.rpi.metpetdb.server.bulk.upload.sample.SampleParser;
+import edu.rpi.metpetdb.server.impl.SampleServiceImpl;
+
 public class BulkUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -29,6 +33,19 @@ public class BulkUploadServlet extends HttpServlet {
 		if (uploadItem == null) {
 			response.getWriter().write("NO-SCRIPT-DATA");
 			return;
+		}
+
+		SampleParser sp = new SampleParser(uploadItem.getInputStream());
+		sp.initialize();
+
+		SampleServiceImpl ssi = new SampleServiceImpl();
+
+		for (Sample s : sp.getSamples()) {
+			try {
+				ssi.saveSample(s);
+			} catch (Exception e) {
+				//response.getWriter().write(e.getMessage());
+			}
 		}
 
 	}

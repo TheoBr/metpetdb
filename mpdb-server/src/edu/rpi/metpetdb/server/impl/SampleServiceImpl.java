@@ -46,7 +46,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		final String name = "Sample.forProject";
 		return toResults(sizeQuery(name, id), pageQuery(name, p, id));
 	}
-	
+
 	public SampleDTO details(final long id) throws NoSuchObjectException {
 		final Sample s = (Sample) byId("Sample", id);
 		s.setSubsampleCount(((Number) sizeQuery("Subsample.bySampleId",
@@ -58,26 +58,33 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 			throws SampleAlreadyExistsException, ValidationException,
 			LoginRequiredException {
 		doc.validate(sample);
+		Sample s = (Sample) merge(sample);
+		s = saveSample(s);
+		return (SampleDTO) clone(s);
+	}
+
+	public Sample saveSample(Sample sample)
+			throws SampleAlreadyExistsException, ValidationException,
+			LoginRequiredException {
 		if (sample.getOwner().getId() != currentUser())
 			throw new SecurityException("Cannot modify samples you don't own.");
 		replaceRegion(sample);
 		replaceMetamorphicGrade(sample);
 		replaceReferences(sample);
-		Sample s = (Sample) merge(sample);
 		try {
-			
 
-			if (s.mIsNew())
-				insert(s);
+			if (sample.mIsNew())
+				insert(sample);
 			else {
 				try {
-					s = (Sample) update(merge(s));
+					sample = (Sample) update(merge(sample));
+					// Not sure about this line -David
 				} catch (TransientObjectException toe) {
 					throw (toe);
 				}
 			}
 			commit();
-			return (SampleDTO) clone(s);
+			return sample;
 		} catch (ConstraintViolationException cve) {
 			if ("samples_nk".equals(cve.getConstraintName()))
 				throw new SampleAlreadyExistsException();
@@ -86,7 +93,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	}
 
 	// TODO for some reason it does not get the named query
-	private void replaceRegion(final SampleDTO s) {
+	private void replaceRegion(final Sample s) {
 		if (s.getRegions() != null) {
 			final Iterator itr = s.getRegions().iterator();
 			final HashSet<Region> regionsToAdd = new HashSet<Region>();
@@ -99,12 +106,11 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 					regionsToAdd.add((Region) regions.uniqueResult());
 				}
 			}
-			final HashSet<RegionDTO> regionsToAddDTO = (HashSet<RegionDTO>) clone(regionsToAdd);
-			s.getRegions().addAll(regionsToAddDTO);
+			s.getRegions().addAll(regionsToAdd);
 		}
 	}
 
-	private void replaceMetamorphicGrade(final SampleDTO s) {
+	private void replaceMetamorphicGrade(final Sample s) {
 		if (s.getMetamorphicGrades() != null) {
 			final Iterator itr = s.getMetamorphicGrades().iterator();
 			final HashSet<MetamorphicGrade> metamorphicToAdd = new HashSet<MetamorphicGrade>();
@@ -121,12 +127,11 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 							.uniqueResult());
 				}
 			}
-			final HashSet<MetamorphicGradeDTO> metamorphicToAddDTO = (HashSet<MetamorphicGradeDTO>) clone(metamorphicToAdd);
-			s.getMetamorphicGrades().addAll(metamorphicToAddDTO);
+			s.getMetamorphicGrades().addAll(metamorphicToAdd);
 		}
 	}
 
-	private void replaceReferences(final SampleDTO s) {
+	private void replaceReferences(final Sample s) {
 		if (s.getReferences() != null) {
 			final Iterator itr = s.getReferences().iterator();
 			final HashSet<Reference> referencesToAdd = new HashSet<Reference>();
@@ -142,8 +147,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 					referencesToAdd.add((Reference) references.uniqueResult());
 				}
 			}
-			final HashSet<ReferenceDTO> referencesToAddDTO = (HashSet<ReferenceDTO>) clone(referencesToAdd);
-			s.getReferences().addAll(referencesToAddDTO);
+			s.getReferences().addAll(referencesToAdd);
 		}
 	}
 
