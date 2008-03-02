@@ -3,8 +3,8 @@ package edu.rpi.metpetdb.server;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import edu.rpi.metpetdb.server.dao.SampleDaoTest;
-import edu.rpi.metpetdb.server.dao.SampleSearch;
 import edu.rpi.metpetdb.server.dao.UserDaoTest;
+import edu.rpi.metpetdb.server.search.HibernateSearchTest;
 
 public class AllTests {
 
@@ -23,7 +23,7 @@ public class AllTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(SampleDaoTest.class);
 		suite.addTestSuite(UserDaoTest.class);
-		suite.addTestSuite(SampleSearch.class);
+		suite.addTestSuite(HibernateSearchTest.class);
 		//$JUnit-END$
 		//Clear database and restore it
 		try {

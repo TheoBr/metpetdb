@@ -1,13 +1,15 @@
 package edu.rpi.metpetdb.server.dao;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.junit.Test;
 
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
-import edu.rpi.metpetdb.server.DataStore;
+import edu.rpi.metpetdb.client.model.AttributeDTO;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
 import edu.rpi.metpetdb.server.model.User;
@@ -62,5 +64,38 @@ public class SampleSearch extends DatabaseTestCase {
 		
 		assertEquals(1,results.size());		
 	}
-	
+
+	@Test
+	public void testSearch4() 
+	{
+		final Session session = InitDatabase.getSession();
+		List<AttributeDTO> AttributePairs = new LinkedList<AttributeDTO>();
+		AttributePairs.add(new AttributeDTO("u.username", "anthony"));		
+		AttributePairs.add(new AttributeDTO("u.user_id", "1"));
+		
+		System.out.println("making the string");
+		String query = new String("select * from users u where");
+		int i = 0;
+		for(AttributeDTO attr : AttributePairs){
+			if(i == 0){
+				query = query.concat(" " + attr.getAttribute() + " like :attr" + i);
+			}
+			else{
+				query = query.concat(" and " + attr.getAttribute() + " like :attr" + i);
+			}
+			i++;		
+		}
+		Query q = session.createSQLQuery(query);		
+		i = 0;	
+		for(AttributeDTO attr : AttributePairs){
+			String param1 = "attr" + i;
+			q.setParameter(param1, attr.getValue());
+			i++;		
+		}
+			
+		List results = q.list();
+		session.close();
+		
+		assertEquals(1,results.size());		
+	}	
 }

@@ -3,16 +3,29 @@ package edu.rpi.metpetdb.server.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.DocumentId;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
+
+@Indexed
 public class User extends MObject {
 	private static final long serialVersionUID = 1L;
 	public static final int P_username = 0;
 	public static final int P_emailAddress = 1;
 
+	@DocumentId
 	private int id;
 	private int version;
+	
+	@Field(index = Index.TOKENIZED, store = Store.NO)	
 	private String username;
 	private String emailAddress;
 	private Set<Project> projects;
+	
+	@ContainedIn
 	private Set<Sample> samples;
 	private transient byte[] encryptedPassword;
 
