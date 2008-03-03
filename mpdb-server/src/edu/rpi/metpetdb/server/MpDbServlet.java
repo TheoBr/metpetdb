@@ -79,6 +79,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 
 		HibernateBeanManager.getInstance().setClassMapper(cloneMapper);
 
+		DataStore.setHibernateBeanManager(HibernateBeanManager.getInstance());
 		DataStore.initFactory();
 		doc = DataStore.getInstance().getDatabaseObjectConstraints();
 		oc = DataStore.getInstance().getObjectConstraints();
@@ -189,9 +190,6 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 				throw new LoginRequiredException();
 		}
 		return r.userId.intValue();
-
-		// TODO if you want automatic login have this return your userid
-		// return 1;
 	}
 	
 	
@@ -469,10 +467,11 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 *            the query that will generate the current page's row data.
 	 * @return the results object to return back to the UI layer.
 	 */
-	protected Results toResults(final Query szQuery, final Query objQuery) {
+	@SuppressWarnings( { "unchecked" })
+	protected <T extends MObject> Results toResults(final Query szQuery, final Query objQuery) {
 		final Number sz = (Number) szQuery.uniqueResult();
 		return new Results(sz.intValue(),
-				sz.intValue() > 0 ? (List) clone(objQuery.list())
+				sz.intValue() > 0 ? (List<T>) clone(objQuery.list())
 						: new ArrayList<Object>());
 	}
 

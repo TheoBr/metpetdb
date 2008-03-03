@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import net.sf.hibernate4gwt.gwt.HibernateRemoteService;
+import net.sf.hibernate4gwt.core.HibernateBeanManager;
 
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
@@ -43,7 +43,7 @@ import edu.rpi.metpetdb.server.model.MObject;
 import edu.rpi.metpetdb.server.model.Mineral;
 
 /** Global service support. */
-public class DataStore  extends HibernateRemoteService {
+public class DataStore {
 	private static final short attributeNullable = DatabaseMetaData.attributeNullable;
 
 	protected static Configuration config;
@@ -55,6 +55,8 @@ public class DataStore  extends HibernateRemoteService {
 	private static ObjectConstraints objectConstraints;
 	
 	private final static DataStore instance = new DataStore();
+	
+	private static HibernateBeanManager hbm;
 	
 	public static DataStore getInstance() {
 		return instance;
@@ -77,6 +79,10 @@ public class DataStore  extends HibernateRemoteService {
 		if (factory == null)
 			factory = getConfiguration().buildSessionFactory();
 		return factory;
+	}
+	
+	public static void setHibernateBeanManager(final HibernateBeanManager hbm) {
+		DataStore.hbm = hbm;
 	}
 
 	public static synchronized void initFactory() {
@@ -116,7 +122,7 @@ public class DataStore  extends HibernateRemoteService {
 	synchronized void setConstraints(final DatabaseObjectConstraints oc) {
 		final Session s = open();
 		try {
-			final Connection conn = s.connection();
+			final Connection conn = getConfiguration().buildSettings().getConnectionProvider().getConnection();
 			try {
 				final DatabaseMetaData md = conn.getMetaData();
 				final Field[] fields = oc.getClass().getDeclaredFields();
@@ -134,6 +140,8 @@ public class DataStore  extends HibernateRemoteService {
 				} catch (SQLException err) {
 				}
 			}
+		}catch (SQLException err) {
+			throw new HibernateException("getConnection() error");
 		} finally {
 			s.close();
 		}
@@ -292,8 +300,8 @@ public class DataStore  extends HibernateRemoteService {
 			}
 			final Session session = open();
 			try {
-				final List<Mineral> minerals =session.getNamedQuery("Mineral.parents").list();
-				mc.setMinerals((List<MineralDTO>) clone(minerals));
+				final List<Mineral> minerals = session.getNamedQuery("Mineral.parents").list();
+				mc.setMinerals((List<MineralDTO>) hbm.clone(minerals));
 			} catch (org.hibernate.exception.GenericJDBCException dbe) {
 				session.cancelQuery();
 			} finally {
@@ -340,7 +348,7 @@ public class DataStore  extends HibernateRemoteService {
 				cc = new CollectionConstraint();
 			}
 			final Session session = open();
-			cc.setValues((Collection) clone(session.getNamedQuery(className + ".all").list()));
+			cc.setValues((Collection) hbm.clone(session.getNamedQuery(className + ".all").list()));
 			session.clear();
 			session.close();
 			return cc;

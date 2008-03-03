@@ -28,8 +28,8 @@ public class SubsampleServiceImpl extends MpDbServlet
 		final Query pageQuery = pageQuery(name, p, sampleId);
 		final Number sz = (Number) sizeQuery.uniqueResult();
 		if (sz.intValue() > 0) {
-			final List l = pageQuery.list();
-			final Iterator itr = l.iterator();
+			final List<Subsample> l = pageQuery.list();
+			final Iterator<Subsample> itr = l.iterator();
 			while (itr.hasNext()) {
 				final Subsample s = (Subsample) itr.next();
 				s.setImageCount(((Number) sizeQuery("Image.bySubsampleId",
@@ -41,7 +41,7 @@ public class SubsampleServiceImpl extends MpDbServlet
 			
 			return new Results(sz.intValue(), (List) (clone(l)));
 		} else
-			return new Results(sz.intValue(), new ArrayList());
+			return new Results(sz.intValue(), new ArrayList<Subsample>());
 	}
 	public Results allWithImages(final PaginationParameters p,
 			final long sampleId) {
@@ -65,19 +65,14 @@ public class SubsampleServiceImpl extends MpDbServlet
 		if (subsampleDTO.getSample().getOwner().getId() != currentUser())
 			throw new SecurityException(
 					"Cannot modify subsamples you don't own.");
-		Subsample subsample = (Subsample) merge(subsampleDTO);
+		Subsample subsample = merge(subsampleDTO);
 		try {
 			if (subsampleDTO.mIsNew())
 				insert(subsample);
 			else
-				subsample = (Subsample) update(merge(subsample));
+				subsample = update(merge(subsample));
 			commit();
-			subsample.setImages(load(subsample.getImages()));
-			subsample.setMineralAnalyses(null);
-			ImageServiceImpl.resetImage(subsample.getImages());
-			SampleServiceImpl.resetSample(subsample.getSample());
-			forgetChanges();
-			return (SubsampleDTO) clone(subsample);
+			return clone(subsample);
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}
@@ -86,7 +81,7 @@ public class SubsampleServiceImpl extends MpDbServlet
 	public void delete(long id) throws NoSuchObjectException,
 			LoginRequiredException {
 		try {
-			final Subsample s = (Subsample) byId("Subsample", id);
+			final Subsample s = byId("Subsample", id);
 			if (s.getSample().getOwner().getId() != currentUser())
 				throw new SecurityException("Cannot modify subsamples you don't own.");
 			delete(s);

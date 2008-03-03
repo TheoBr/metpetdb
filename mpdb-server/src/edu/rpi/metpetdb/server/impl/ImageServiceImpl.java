@@ -40,13 +40,13 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 	private static String baseFolder = "";
 
 	public ImageDTO details(final long id) throws NoSuchObjectException {
-		final ImageDTO i = (ImageDTO) clone(byId("ImageDTO", id));
+		final ImageDTO i = clone(byId("Image", id));
 		return i;
 	}
 
-	public ArrayList allImages(final long subsampleId)
+	public ArrayList<ImageDTO> allImages(final long subsampleId)
 			throws NoSuchObjectException {
-		return (ArrayList) byKey("Image", "subsampleId", subsampleId);
+		return clone(byKey("Image", "subsampleId", subsampleId));
 	}
 
 	public ImageDTO saveImage(ImageDTO image) throws ValidationException,
@@ -54,16 +54,14 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		// oc.validate(ImageDTO);
 		// if (ImageDTO.getSample().getOwner().getId() != currentUser())
 		// throw new SecurityException("Cannot modify images you don't own.");
-		Image i = (Image) merge(image);
+		Image i = merge(image);
 		try {
 			if (i.mIsNew())
 				insert(i);
 			else
-				i = (Image) update(merge(i));
+				i = update(merge(i));
 			commit();
-			SampleServiceImpl.resetSample(i.getSample());
-			forgetChanges();
-			return (ImageDTO) clone(i);
+			return clone(i);
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}
@@ -71,17 +69,14 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 
 	public ImageOnGridDTO saveImageOnGrid(ImageOnGridDTO iogDTO)
 			throws ValidationException, LoginRequiredException {
-		ImageOnGrid iog = (ImageOnGrid) merge(iogDTO);
+		ImageOnGrid iog = merge(iogDTO);
 		try {
 			if (iog.mIsNew())
 				insert(iog);
 			else
-				iog = (ImageOnGrid) update(merge(iog));
+				iog = update(merge(iog));
 			commit();
-			iog.getGrid()
-					.setImagesOnGrid(load(iog.getGrid().getImagesOnGrid()));
-			forgetChanges();
-			return (ImageOnGridDTO) clone(iog);
+			return clone(iog);
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}
@@ -202,14 +197,16 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 				.delete();
 	}
 
+	@Deprecated
 	public static final void resetImage(final ImageDTO i) {
 
 	}
 
-	public static final void resetImage(final Set s) {
-		final Iterator itr = s.iterator();
+	@Deprecated
+	public static final void resetImage(final Set<ImageDTO> s) {
+		final Iterator<ImageDTO> itr = s.iterator();
 		while (itr.hasNext()) {
-			resetImage((ImageDTO) itr.next());
+			resetImage(itr.next());
 		}
 	}
 
