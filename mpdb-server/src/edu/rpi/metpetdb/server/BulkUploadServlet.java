@@ -14,10 +14,13 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.hibernate.Query;
 
-import edu.rpi.metpetdb.server.model.Sample;
+import edu.rpi.metpetdb.server.bulk.upload.sample.InvalidFormatException;
 import edu.rpi.metpetdb.server.bulk.upload.sample.SampleParser;
 import edu.rpi.metpetdb.server.impl.SampleServiceImpl;
+import edu.rpi.metpetdb.server.model.Sample;
+import edu.rpi.metpetdb.server.model.User;
 
 public class BulkUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -34,18 +37,21 @@ public class BulkUploadServlet extends HttpServlet {
 			response.getWriter().write("NO-SCRIPT-DATA");
 			return;
 		}
+		//TODO: this needs the current user!
+		SampleParser sp = new SampleParser(uploadItem.getInputStream(), null);
+		try {
+			sp.initialize();
+			SampleServiceImpl ssi = new SampleServiceImpl();
 
-		SampleParser sp = new SampleParser(uploadItem.getInputStream());
-		sp.initialize();
-
-		SampleServiceImpl ssi = new SampleServiceImpl();
-
-		for (Sample s : sp.getSamples()) {
-			try {
-				ssi.saveSample(s);
-			} catch (Exception e) {
-				//response.getWriter().write(e.getMessage());
+			for (Sample s : sp.getSamples()) {
+				try {
+					ssi.saveSample(s);
+				} catch (Exception e) {
+					response.getWriter().write(e.getMessage());
+				}
 			}
+		} catch (InvalidFormatException ife) {
+			response.getWriter().write(ife.getMessage());
 		}
 
 	}

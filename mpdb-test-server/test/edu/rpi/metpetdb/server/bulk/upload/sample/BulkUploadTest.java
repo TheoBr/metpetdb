@@ -4,9 +4,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.hibernate.Query;
 import org.junit.Test;
 
 import edu.rpi.metpetdb.server.DatabaseTestCase;
+import edu.rpi.metpetdb.server.InitDatabase;
+import edu.rpi.metpetdb.server.model.User;
 
 public class BulkUploadTest extends DatabaseTestCase {
 
@@ -17,43 +20,50 @@ public class BulkUploadTest extends DatabaseTestCase {
 
 	}
 
-	/**
-	 * load up the valhalla data file. This will only fail if the file is in the
-	 * wrong place
-	 */
 	@Test
-	public void load_file() {
-
+	public void test_easy() {
 		try {
+			final Query q = InitDatabase.getSession().getNamedQuery(
+					"User.byUsername");
+			q.setString("username", "anthony");
+			final User u = (User) q.uniqueResult();
 			sp = new SampleParser(new FileInputStream(
-					"../mpdb-common/sample-data/Valhalla_samples_upload.xls"));
-		} catch (FileNotFoundException fnfe) {
-			fail("File Not Found");
-		}
-
-	}
-
-	/**
-	 * the "bulk" of the bulk upload process.
-	 */
-	@Test
-	public void parse_file() {
-		try {
+					"../mpdb-common/sample-data/easy_samples.xls"), u);
 			sp.initialize();
 		} catch (IOException ioe) {
 			fail("IO Exception");
+		} catch (InvalidFormatException ife) {
+			fail("Invalid Format Exception");
 		}
-	}
 
-	@Test
-	public void parser_count() {
 		assertEquals(sp.getSamples().size(), 29);
-		// should be 29 samples in the spreadsheet.
+		final Query sq = InitDatabase.getSession().getNamedQuery(
+		"Sample.all,size");
+		assertEquals(34, ((Number)sq.uniqueResult()).intValue());
+		// 29 + the five from the sample data
 	}
 
 	@Test
-	public void saved_count() {
-		fail("Not written yet.");
+	public void test_valhalla() {
+		try {
+			final Query q = InitDatabase.getSession().getNamedQuery(
+					"User.byUsername");
+			q.setString("username", "anthony");
+			final User u = (User) q.uniqueResult();
+			sp = new SampleParser(new FileInputStream(
+					"../mpdb-common/sample-data/Valhalla_samples_upload.xls"), u);
+			sp.initialize();
+		} catch (IOException ioe) {
+			fail("IO Exception");
+		} catch (InvalidFormatException ife) {
+			fail("Invalid Format Exception");
+		}
+
+		assertEquals(sp.getSamples().size(), 29);
+		final Query sq = InitDatabase.getSession().getNamedQuery(
+		"Sample.all,size");
+		assertEquals(34, ((Number)sq.uniqueResult()).intValue());
+		
 		// 29 + the five from the sample data
 	}
 }
