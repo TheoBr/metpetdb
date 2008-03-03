@@ -13,9 +13,6 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.SampleAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.MetamorphicGradeDTO;
-import edu.rpi.metpetdb.client.model.ReferenceDTO;
-import edu.rpi.metpetdb.client.model.RegionDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
@@ -53,38 +50,37 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 				s.getId()).uniqueResult()).intValue());
 		return (SampleDTO) clone(s);
 	}
-
+	
 	public SampleDTO saveSample(SampleDTO sample)
 			throws SampleAlreadyExistsException, ValidationException,
 			LoginRequiredException {
-		doc.validate(sample);
-		Sample s = (Sample) merge(sample);
-		s = saveSample(s);
-		return (SampleDTO) clone(s);
+		return clone(saveSample((Sample) merge(sample)));
 	}
 
-	public Sample saveSample(Sample sample)
+	public Sample saveSample(Sample s)
 			throws SampleAlreadyExistsException, ValidationException,
 			LoginRequiredException {
-		if (sample.getOwner().getId() != currentUser())
+		doc.validate((SampleDTO)clone(s));
+		if (s.getOwner() == null)
+			throw new LoginRequiredException();
+		if (s.getOwner().getId() != currentUser())
 			throw new SecurityException("Cannot modify samples you don't own.");
-		replaceRegion(sample);
-		replaceMetamorphicGrade(sample);
-		replaceReferences(sample);
+		replaceRegion(s);
+		replaceMetamorphicGrade(s);
+		replaceReferences(s);
 		try {
 
-			if (sample.mIsNew())
-				insert(sample);
+			if (s.mIsNew())
+				insert(s);
 			else {
 				try {
-					sample = (Sample) update(merge(sample));
-					// Not sure about this line -David
+					s = update(merge(s));
 				} catch (TransientObjectException toe) {
 					throw (toe);
 				}
 			}
 			commit();
-			return sample;
+			return s;
 		} catch (ConstraintViolationException cve) {
 			if ("samples_nk".equals(cve.getConstraintName()))
 				throw new SampleAlreadyExistsException();
@@ -95,7 +91,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	// TODO for some reason it does not get the named query
 	private void replaceRegion(final Sample s) {
 		if (s.getRegions() != null) {
-			final Iterator itr = s.getRegions().iterator();
+			final Iterator<Region> itr = s.getRegions().iterator();
 			final HashSet<Region> regionsToAdd = new HashSet<Region>();
 			while (itr.hasNext()) {
 				final Region r = (Region) itr.next();
@@ -112,15 +108,13 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 
 	private void replaceMetamorphicGrade(final Sample s) {
 		if (s.getMetamorphicGrades() != null) {
-			final Iterator itr = s.getMetamorphicGrades().iterator();
+			final Iterator<MetamorphicGrade> itr = s.getMetamorphicGrades()
+					.iterator();
 			final HashSet<MetamorphicGrade> metamorphicToAdd = new HashSet<MetamorphicGrade>();
-
 			while (itr.hasNext()) {
 				final MetamorphicGrade mg = (MetamorphicGrade) itr.next();
 				final Query grades = namedQuery("edu.rpi.metpetdb.client.model.MetamorphicGrade.MetamorphicGrade.byName");
-
 				grades.setString("name", mg.getName());
-
 				if (grades.uniqueResult() != null) {
 					itr.remove();
 					metamorphicToAdd.add((MetamorphicGrade) grades
@@ -133,7 +127,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 
 	private void replaceReferences(final Sample s) {
 		if (s.getReferences() != null) {
-			final Iterator itr = s.getReferences().iterator();
+			final Iterator<Reference> itr = s.getReferences().iterator();
 			final HashSet<Reference> referencesToAdd = new HashSet<Reference>();
 
 			while (itr.hasNext()) {
