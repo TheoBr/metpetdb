@@ -1,17 +1,16 @@
 package edu.rpi.metpetdb.client.model;
 
-import java.util.Set;
-
-
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
-import edu.rpi.metpetdb.client.model.interfaces.IHasChildren;
-import edu.rpi.metpetdb.client.model.interfaces.IHasName;
-
 public class AttributeDTO 
 {
 	private String attribute;
 	private String value;
 
+	public AttributeDTO(String aAttribute, String aValue)
+	{
+		attribute = aAttribute;
+		value = aValue;
+	}
+	
 	public String getAttribute() {
 		return attribute;
 	}
