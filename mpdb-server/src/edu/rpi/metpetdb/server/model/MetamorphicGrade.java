@@ -1,14 +1,22 @@
 package edu.rpi.metpetdb.server.model;
 
+import org.hibernate.search.annotations.DocumentId;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
+
 //import java.util.Set;
 
-
+@Indexed
 public class MetamorphicGrade extends MObject {
 	private static final long serialVersionUID = 1L;
 	public static final int P_name = 0;
 
+	@DocumentId
 	private short id;
 
+	@Field(index = Index.TOKENIZED, store = Store.NO)	
 	private String name;
 
 	public short getId() {

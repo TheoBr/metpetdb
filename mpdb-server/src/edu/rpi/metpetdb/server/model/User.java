@@ -22,6 +22,8 @@ public class User extends MObject {
 	
 	@Field(index = Index.TOKENIZED, store = Store.NO)	
 	private String username;
+	
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String emailAddress;
 	private Set<Project> projects;
 	

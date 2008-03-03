@@ -3,8 +3,16 @@ package edu.rpi.metpetdb.server.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.DocumentId;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.Store;
+
 import edu.rpi.metpetdb.client.model.interfaces.IHasImages;
 
+@Indexed
 public class Subsample extends MObject implements IHasImages {
 	private static final long serialVersionUID = 1L;
 	public static final int P_name = 0;
@@ -14,14 +22,18 @@ public class Subsample extends MObject implements IHasImages {
 	public static final int P_analysisCount = 4;
 	public static final int P_sampleName = 5;
 
+	@DocumentId
 	private long id;
 
+	@ContainedIn
 	private Sample sample;
 
 	private int version;
 
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String name;
 
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String type;
 
 	private Set<Image> images;
