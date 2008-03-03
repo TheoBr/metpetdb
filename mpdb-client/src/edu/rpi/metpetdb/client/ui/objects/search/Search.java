@@ -11,22 +11,23 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.AttributeDTO;
 import edu.rpi.metpetdb.client.ui.input.attributes.NamedTextBox;
-import edu.rpi.metpetdb.server.search.SearchDB;
 
-public class Search extends FlowPanel {
+public class Search extends FlowPanel implements ClickListener {
 	private static TextBox[] SearchInput = { new NamedTextBox("user_username"),
 			new NamedTextBox("sesarNumber") };
+	
+	final Button search;
 
 	public Search() {
 		for (TextBox box : SearchInput) {
 			add(box);
 		}
-		Button b = new Button("Search", new ClickListener() {
+		search = new Button("Search", new ClickListener() {
 			public void onClick(Widget sender) {
 				processResults();
 			}
 		});
-		add(b);
+		add(search);
 	}
 
 	public void processResults() {
@@ -37,7 +38,18 @@ public class Search extends FlowPanel {
 			}
 		}
 		if (attributes.size() > 0) {
-			SearchDB.SampleSearch(attributes);
+			/* FIXME: in order to make a call to the server we need to use an RPC call
+			 * for example see how SampleDetails loads  a bean, it calls MpDb.sample_svc.details(...)
+			 * in your case you need to make a new Async class under client.service to handle
+			 * search service calls
+			 */
+			//SearchDB.SampleSearch(attributes);
+		}
+	}
+	
+	public void onClick(final Widget sender) {
+		if (sender == search) {
+			processResults();
 		}
 	}
 }
