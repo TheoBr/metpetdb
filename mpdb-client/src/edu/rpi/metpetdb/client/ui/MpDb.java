@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
+import edu.rpi.metpetdb.client.service.BulkUploadServiceAsync;
 import edu.rpi.metpetdb.client.service.ConstantsService;
 import edu.rpi.metpetdb.client.service.ConstantsServiceAsync;
 import edu.rpi.metpetdb.client.service.ImageBrowserService;
@@ -24,7 +25,6 @@ import edu.rpi.metpetdb.client.service.SubsampleService;
 import edu.rpi.metpetdb.client.service.SubsampleServiceAsync;
 import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.client.service.UserServiceAsync;
-import edu.rpi.metpetdb.client.ui.html.HtmlFactory;
 import edu.rpi.metpetdb.client.ui.left.side.MyProjects;
 import edu.rpi.metpetdb.client.ui.left.side.MySamples;
 
@@ -56,6 +56,8 @@ public class MpDb {
 	public static final MineralAnalysisServiceAsync mineralAnalysis_svc;
 
 	public static final MpDbGenericServiceAsync mpdbGeneric_svc;
+	
+	public static final BulkUploadServiceAsync bulkUpload_svc;
 
 	public static DatabaseObjectConstraints doc;
 
@@ -92,6 +94,9 @@ public class MpDb {
 
 		mpdbGeneric_svc = (MpDbGenericServiceAsync) bindService(GWT
 				.create(MpDbGenericService.class), "mpdbGeneric");
+		
+		bulkUpload_svc = (BulkUploadServiceAsync) bindService(GWT
+				.create(BulkUploadServiceAsync.class), "bulkUpload");
 
 		//factory = (HtmlFactory) GWT.create(HtmlFactory.class);
 	}

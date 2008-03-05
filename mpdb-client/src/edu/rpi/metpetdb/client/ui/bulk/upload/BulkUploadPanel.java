@@ -22,6 +22,8 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.service.BulkUploadService;
 import edu.rpi.metpetdb.client.service.BulkUploadServiceAsync;
+import edu.rpi.metpetdb.client.ui.MpDb;
+import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 
@@ -69,29 +71,22 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 				// we can get the result text here (see the FormPanel
 				// documentation for
 				// further explanation).
-				String fileOnServer = event.getResults();
+				final String fileOnServer = event.getResults();
 				BulkUploadServiceAsync bulkUploadService = (BulkUploadServiceAsync) GWT
 						.create(BulkUploadService.class);
 				ServiceDefTarget endpoint = (ServiceDefTarget) bulkUploadService;
 				String moduleRelativeURL = GWT.getModuleBaseURL() + "/bulkUpload.svc";
 				endpoint.setServiceEntryPoint(moduleRelativeURL);
 
-				AsyncCallback callback = new AsyncCallback() {
-					public void onSuccess(Object result) {
+				new ServerOp() {
+					public void begin() {
+						MpDb.bulkUpload_svc.validate(fileOnServer, this);
+					}
+					public void onSuccess(final Object result) {
 						Grid spreadsheet = (Grid)result;
 						vp.add(spreadsheet);
 					}
-
-					public void onFailure(Throwable caught) {
-						error.setText("Internal Server Error");
-					}
-				};
-				try {
-					bulkUploadService.validate(fileOnServer, callback);
-				} catch (IOException ioe) {
-					error
-							.setText("Internal Server Error: Uploaded file not found");
-				}
+				}.begin();
 
 			}
 
