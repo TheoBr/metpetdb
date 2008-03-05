@@ -11,8 +11,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.media.jai.ImageLayout;
@@ -44,7 +44,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		return i;
 	}
 
-	public ArrayList<ImageDTO> allImages(final long subsampleId)
+	public List<ImageDTO> allImages(final long subsampleId)
 			throws NoSuchObjectException {
 		return clone(byKey("Image", "subsampleId", subsampleId));
 	}

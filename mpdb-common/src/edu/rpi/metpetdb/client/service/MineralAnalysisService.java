@@ -1,6 +1,6 @@
 package edu.rpi.metpetdb.client.service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.gwtwidgets.client.ui.pagination.PaginationParameters;
 import org.gwtwidgets.client.ui.pagination.Results;
@@ -17,6 +17,6 @@ public interface MineralAnalysisService extends RemoteService {
 	MineralAnalysisDTO details(long id) throws NoSuchObjectException;
 	MineralAnalysisDTO saveMineralAnalysis(MineralAnalysisDTO mineralAnalysis)
 			throws ValidationException, LoginRequiredException;
-	ArrayList<MineralAnalysisDTO> all(long subsampleId) throws NoSuchObjectException;
+	List<MineralAnalysisDTO> all(long subsampleId) throws NoSuchObjectException;
 	void delete(long id) throws NoSuchObjectException, LoginRequiredException;
 }

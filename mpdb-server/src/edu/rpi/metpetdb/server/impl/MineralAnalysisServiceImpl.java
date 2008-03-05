@@ -1,6 +1,6 @@
 package edu.rpi.metpetdb.server.impl;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.gwtwidgets.client.ui.pagination.PaginationParameters;
 import org.gwtwidgets.client.ui.pagination.Results;
@@ -34,7 +34,7 @@ public class MineralAnalysisServiceImpl extends MpDbServlet
 		return toResults(sizeQuery, pageQuery);
 	}
 
-	public ArrayList<MineralAnalysisDTO> all(long subsampleId) throws NoSuchObjectException {
+	public List<MineralAnalysisDTO> all(long subsampleId) throws NoSuchObjectException {
 		return clone(byKey("MineralAnalysis", "subsampleId",
 				subsampleId));
 	}

@@ -1,6 +1,6 @@
 package edu.rpi.metpetdb.server.impl;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.gwtwidgets.client.ui.pagination.PaginationParameters;
 import org.gwtwidgets.client.ui.pagination.Results;
@@ -35,7 +35,7 @@ public class ImageBrowserServiceImpl extends MpDbServlet
 		return clone(g);
 	}
 
-	public ArrayList<ImageOnGridDTO> imagesOnGrid(long id) throws NoSuchObjectException {
+	public List<ImageOnGridDTO> imagesOnGrid(long id) throws NoSuchObjectException {
 		return clone(byKey("ImageOnGrid", "gridId", id));
 	}
 

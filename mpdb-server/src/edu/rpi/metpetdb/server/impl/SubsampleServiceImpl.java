@@ -25,10 +25,9 @@ public class SubsampleServiceImpl extends MpDbServlet
 	public Results all(final PaginationParameters p, final long sampleId) {
 		final String name = "Subsample.all";
 		final Query sizeQuery = sizeQuery(name, sampleId);
-		final Query pageQuery = pageQuery(name, p, sampleId);
+		final List<Subsample> l = pageList(name, p, sampleId);
 		final Number sz = (Number) sizeQuery.uniqueResult();
 		if (sz.intValue() > 0) {
-			final List<Subsample> l = pageQuery.list();
 			final Iterator<Subsample> itr = l.iterator();
 			while (itr.hasNext()) {
 				final Subsample s = (Subsample) itr.next();
@@ -39,7 +38,7 @@ public class SubsampleServiceImpl extends MpDbServlet
 						.uniqueResult()).intValue());
 			}
 			
-			return new Results(sz.intValue(), (List) (clone(l)));
+			return new Results(sz.intValue(),  clone(l));
 		} else
 			return new Results(sz.intValue(), new ArrayList<Subsample>());
 	}

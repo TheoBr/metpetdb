@@ -57,7 +57,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	protected DatabaseObjectConstraints doc;
 	protected ObjectConstraints oc;
 	protected static final Properties fileProps = new Properties();
-	
+
 	private static int autoLoginId = -1;
 
 	/**
@@ -115,7 +115,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		ImageUploadServlet.setBaseFolder(fileProps.getProperty("images.path"));
 		ImageServiceImpl.setBaseFolder(fileProps.getProperty("images.path"));
 	}
-	
+
 	private void loadAutomaticLogin() {
 		final String propFile = "autologin.properties";
 		final InputStream i = MpDbServlet.class.getClassLoader()
@@ -128,10 +128,11 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		} catch (IOException ioe) {
 			return;
 		}
-		final boolean enabled = (Integer.parseInt(fileProps.getProperty("enabled")) == 1 ? true
-				: false);
-		if (enabled) 
-			MpDbServlet.autoLoginId = Integer.parseInt(fileProps.getProperty("userid"));
+		final boolean enabled = (Integer.parseInt(fileProps
+				.getProperty("enabled")) == 1 ? true : false);
+		if (enabled)
+			MpDbServlet.autoLoginId = Integer.parseInt(fileProps
+					.getProperty("userid"));
 	}
 
 	/**
@@ -191,8 +192,6 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		}
 		return r.userId.intValue();
 	}
-	
-	
 
 	/**
 	 * Obtain a session for the current thread.
@@ -362,6 +361,13 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		return q;
 	}
 
+	@SuppressWarnings({"unchecked"})
+	protected <T extends MObject> List<T> pageList(final String name,
+			final PaginationParameters p, final long id) {
+		final Query q = pageQuery(name,p,id);
+		return (List<T>) q.list();
+	}
+
 	/**
 	 * @see{sizeQuery}
 	 * @param name
@@ -432,7 +438,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 *             the UI layer, so it can display a proper error message.
 	 */
 	@SuppressWarnings( { "unchecked" })
-	protected <T extends MObject> ArrayList<T> byKey(final String name,
+	protected <T extends MObject> List<T> byKey(final String name,
 			final String attribute, final long id) throws NoSuchObjectException {
 		final Query q = currentSession().getNamedQuery(
 				name + ".by" + attribute.substring(0, 1).toUpperCase()
@@ -468,7 +474,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 * @return the results object to return back to the UI layer.
 	 */
 	@SuppressWarnings( { "unchecked" })
-	protected <T extends MObject> Results toResults(final Query szQuery, final Query objQuery) {
+	protected <T extends MObject> Results toResults(final Query szQuery,
+			final Query objQuery) {
 		final Number sz = (Number) szQuery.uniqueResult();
 		return new Results(sz.intValue(),
 				sz.intValue() > 0 ? (List<T>) clone(objQuery.list())
