@@ -186,5 +186,74 @@ and is out of scope of this document.}
 \end{itemize}
 \end{itemize}
 \subsection{ObjectEditorPanel Who?}
+As mentioned before all of the attributes are layed out on an \texttt{ObjectEditorPanel},
+which is an extension of a \texttt{DetailsPanel} with a few features including
+\begin{itemize}
+\item Default edit,cancel,save, and delete buttons
+\item Handles when the current user changes (to update the UI)
+\item Handles events like loading, saving, and deleting
+\item Has callbacks for the event completions above
+\end{itemize}
+This allows for easy creation of pages that need to edit objects.  However there are a few
+things that need to be implemented specifically for each newly created object.  They are
+\begin{itemize}
+\item \texttt{protected void loadBean(final AsyncCallback ac)}
+\begin{itemize}
+\item Within this method should be the service call that is responsible for
+loading the bean from the server.  Usually it is something like
+\texttt{MpDb.sample\_svc.details(...)}.  This method is \textbf{required}.
+\end{itemize}
+\item \texttt{protected void saveBean(final AsyncCallback ac)}
+\begin{itemize}
+\item Similar to the \texttt{loadBean} method this method usually contains a service call
+that saves the bean, i.e. \texttt{MpDb.sample\_svc.saveSample(...)}.  This method is 
+\textbf{not required}, however, an attempt to save will result in an exception.
+\end{itemize}
+\item \texttt{protected void deleteBean(final AsyncCallback ac)}
+\begin{itemize}
+\item Again similar to \texttt{loadBean}, except it is responsible for deleting a bean, the
+service call is usually \texttt{MpDb.sample\_svc.delete(...)}.  This method is \textbf{required}.
+\end{itemize}
+\item \texttt{protected boolean canEdit()}
+\begin{itemize}
+\item This method just returns whether the current user is allowed to edit this bean.
+An example where this is used is that only the owner of a \texttt{Sample} is allowed to 
+edit it, so this method \textit{only} returns true when the current user is the owner.
+This method is \textbf{not required}, however, it always returns false if not implemented.
+\end{itemize}
+\end{itemize}
+\subsection{Where the Action Happens: DetailsPanel}
+The last part of this section describes the majority of where the work of laying out the UI
+occurs that is in the class \texttt{DetailsPanel} located in the package 
+\texttt{edu\ .rpi\ .metpetdb\ .client\ .ui\ .input}.
+A summary of what the \texttt{DetailsPanel} does is as follows
+\begin{enumerate}
+\item Makes a \texttt{fieldset} and a \texttt{table}
+\item For each \texttt{GenericAttribute} it receives it creates
+a new row in the table
+\item When \texttt{show} is called it calls \texttt{createDisplayWidget}
+on each \texttt{GenericAttribute} and adds that widget to the appropriate row
+\item When \texttt{edit} is called it calls \texttt{createEditWidget} on each
+\texttt{GenericAttribute} and adds that widget to the appropriate row
+\item Lastly when the object is done being edited/added the \texttt{validateEdit} 
+method is invoked, which validates each \texttt{GenericAttribute} according to its
+constraint
+\end{enumerate}
+\subsubsection{Creating the Table and Rows}
+Within the \texttt{init} method the \texttt{fieldset}, \texttt{table}, and rows are
+created.  The creation of the \texttt{fieldset} and \texttt{table} is a simple process
+of adding them to the \texttt{DOM}.  Next it iterates over each \texttt{GenericAttribute}
+and creates a new instance of a \texttt{DetailsPanelRow} which is a data structure that holds
+information about the newly created table row.  It also creates a \texttt{DetailsPanelEntry}
+for each \texttt{GenericAttribute} which holds more information about the table row.  It is
+necessary to have the \texttt{DetailsPanelEntry} because a \texttt{GenericAttribute} can contain
+more than one \texttt{DetailsPanelRow}.  The last step of creating the \texttt{table} and 
+the rows is to add an actions to the panel.  Actions are usually buttons, in the case of the
+\texttt{ObjectEditorPanel} the actions would be the edit, save, cancel, and delete buttons.
+\subsubsection{The show Method}
+TODO
+\subsubsection{The edit Method}
+TODO
+\subsubsection{Validation}
 TODO
 \end{document}

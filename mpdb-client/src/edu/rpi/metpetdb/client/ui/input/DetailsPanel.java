@@ -23,9 +23,9 @@ public class DetailsPanel extends ComplexPanel {
 	private Element fieldset;
 	private Element legend;
 	// ArrayList<GenericAttribute>
-	protected ArrayList attributes;
+	protected ArrayList<GenericAttribute> attributes;
 	// HashMap<GenericAttribute, DetailsPanelEntry >
-	protected HashMap dpEntries;
+	protected HashMap<GenericAttribute, DetailsPanelEntry> dpEntries;
 	private MObjectDTO bean;
 	protected int actionCount;
 	protected String editHeader;
