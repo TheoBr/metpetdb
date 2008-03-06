@@ -1,29 +1,26 @@
 package edu.rpi.metpetdb.client.model;
 
-public class AttributeDTO 
-{
-	private String attribute;
-	private String value;
+public class AttributeDTO {
+	private String type;
+	private boolean required;
 
-	public AttributeDTO(String aAttribute, String aValue)
-	{
-		attribute = aAttribute;
-		value = aValue;
-	}
-	
-	public String getAttribute() {
-		return attribute;
-	}
-
-	public void setAttribute(final String s) {
-		attribute = s;
+	/**
+	 * The base attribute type. It id's if a property is required or not, and
+	 * what kind of property it is. Used by Search to understand what it is
+	 * looking for
+	 */
+	public AttributeDTO(String aType, boolean aRequired) {
+		type = aType;
+		required = aRequired;
 	}
 
-	public String getValue() {
-		return value;
+	/** The subclass of this attribute */
+	public String getType() {
+		return type;
 	}
 
-	public void setValue(final String s) {
-		value = s;
+	/** Is this property required in search or is it simply preferable? */
+	public boolean isRequired() {
+		return required;
 	}
 }
