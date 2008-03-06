@@ -27,15 +27,14 @@ public class SearchDb {
 				.createFullTextSession(session);
 		final Transaction tx = fullTextSession.beginTransaction();
 
-		System.out.println("in test join");
 		final ArrayList<String> searchFor = new ArrayList<String>();
 		final ArrayList<String> columnsIn = new ArrayList<String>();
 		final ArrayList<BooleanClause.Occur> flags = new ArrayList<BooleanClause.Occur>();
-		for (final AttributeDTO attribute : AttributePairs) {
+/*		for (final AttributeDTO attribute : AttributePairs) {
 			searchFor.add(attribute.getValue());
 			columnsIn.add(attribute.getAttribute());
 			flags.add(BooleanClause.Occur.MUST);
-		}
+		}*/
 
 		/*
 		 * BooleanClause.Occur[] flags = {BooleanClause.Occur.SHOULD,
