@@ -33,9 +33,9 @@ public class Search extends FlowPanel implements ClickListener {
 	public void processResults() {
 		List<AttributeDTO> attributes = new ArrayList<AttributeDTO>();
 		for (TextBox box : SearchInput) {
-			if (box.getText().length() > 0) {
+/*			if (box.getText().length() > 0) {
 				attributes.add(new AttributeDTO(box.getName(), box.getText()));
-			}
+			}*/
 		}
 		if (attributes.size() > 0) {
 			/* FIXME: in order to make a call to the server we need to use an RPC call
