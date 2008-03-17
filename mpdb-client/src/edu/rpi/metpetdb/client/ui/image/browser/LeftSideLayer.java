@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
 import edu.rpi.metpetdb.client.ui.left.side.UsesLeftColumn;
@@ -18,11 +17,11 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 
 	private final MUnorderedList ul;
 	private final LayerDragMouseListener layerDragger;
-	private final HashSet layerItems;
+	private final HashSet<LayerItem> layerItems;
 
 	public LeftSideLayer(final String subsampleName) {
 		super(subsampleName + "'s Layers");
-		layerItems = new HashSet();
+		layerItems = new HashSet<LayerItem>();
 		ul = new MUnorderedList();
 		this.add(ul);
 		MetPetDBApplication.registerPageWatcher(this);
@@ -30,11 +29,11 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 		ul.addMouseListener(layerDragger);
 	}
 
-	public void registerImage(final ImageOnGridDTO iog) {
+	public void registerImage(final ImageOnGrid iog) {
 		final SimplePanel container = new SimplePanel();
-		final String checkBoxText = iog.getImage().getFilename().equals("")
-				? iog.getImage().getChecksum()
-				: iog.getImage().getFilename();
+		final String checkBoxText = iog.getIog().getImage().getFilename().equals("")
+				? iog.getIog().getImage().getChecksum()
+				: iog.getIog().getImage().getFilename();
 		final CheckBox checkBox = new CheckBox(checkBoxText);
 		checkBox.addClickListener(new ClickListener() {
 			public void onClick(final Widget sender) {
@@ -42,7 +41,7 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 					iog.getImageContainer()
 							.setStyleName("imageContainerHidden");
 				} else {
-					if (iog.getIsMenuHidden())
+					if (iog.isMenuHidden())
 						iog.getImageContainer().setStyleName(
 								"imageContainerNoMenu");
 					else
@@ -56,12 +55,12 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 		ul.add(container, insertLayer(iog));
 	}
 
-	public int insertLayer(final ImageOnGridDTO iog) {
-		final Iterator itr = layerItems.iterator();
+	public int insertLayer(final ImageOnGrid iog) {
+		final Iterator<LayerItem> itr = layerItems.iterator();
 		int newIndex = layerItems.size();
 		while (itr.hasNext()) {
-			final LayerItem layerItem = (LayerItem) itr.next();
-			if (layerItem.getImageOnGrid().getZorder() > iog.getZorder()) {
+			final LayerItem layerItem = itr.next();
+			if (layerItem.getImageOnGrid().getIog().getZorder() > iog.getIog().getZorder()) {
 				if (layerItem.getIndex() < newIndex) {
 					// newIndex = layerItem.getIndex();
 				}
@@ -76,10 +75,10 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 		return newIndex;
 	}
 
-	public void removeImage(final ImageOnGridDTO iog) {
+	public void removeImage(final ImageOnGrid iog) {
 		final LayerItem removeItem = findItemWithIog(iog);
 		if (removeItem != null) {
-			final Iterator itr = layerItems.iterator();
+			final Iterator<LayerItem> itr = layerItems.iterator();
 			final int removeItemIndex = removeItem.getIndex();
 			while (itr.hasNext()) {
 				final LayerItem layerItem = (LayerItem) itr.next();
@@ -92,8 +91,8 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 		}
 	}
 
-	private LayerItem findItemWithIog(final ImageOnGridDTO iog) {
-		final Iterator itr = layerItems.iterator();
+	private LayerItem findItemWithIog(final ImageOnGrid iog) {
+		final Iterator<LayerItem> itr = layerItems.iterator();
 		while (itr.hasNext()) {
 			final LayerItem layerItem = (LayerItem) itr.next();
 			if (layerItem.getImageOnGrid().equals(iog)) {
@@ -109,18 +108,18 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 	}
 
 	public class LayerItem {
-		private ImageOnGridDTO iog;
+		private ImageOnGrid iog;
 		private int index;
 
-		public LayerItem(final ImageOnGridDTO imageOnGrid, final int i) {
+		public LayerItem(final ImageOnGrid imageOnGrid, final int i) {
 			iog = imageOnGrid;
 			index = i;
 		}
 
-		public ImageOnGridDTO getImageOnGrid() {
+		public ImageOnGrid getImageOnGrid() {
 			return iog;
 		}
-		public void setImageOnGrid(final ImageOnGridDTO imageOnGrid) {
+		public void setImageOnGrid(final ImageOnGrid imageOnGrid) {
 			iog = imageOnGrid;
 		}
 

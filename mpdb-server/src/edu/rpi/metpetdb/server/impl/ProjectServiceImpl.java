@@ -17,7 +17,7 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	private static final long serialVersionUID = 1L;
 
 	public ProjectDTO details(final int projectId) throws NoSuchObjectException {
-		final ProjectDTO p = clone(byId("Project", projectId));
+		final ProjectDTO p = cloneBean(byId("Project", projectId));
 		return p;
 	}
 
@@ -26,7 +26,7 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 		doc.validate(projectDTO);
 		if (projectDTO.getOwner().getId() != currentUser())
 			throw new SecurityException("Cannot modify projects you don't own.");
-		Project project = merge(projectDTO);
+		Project project = mergeBean(projectDTO);
 		try {
 			if (project.mIsNew()) {
 				project.getMembers().add(project.getOwner());
@@ -34,7 +34,7 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 			} else
 				project = update(merge(project));
 			commit();
-			return clone(project);
+			return cloneBean(project);
 		} catch (ConstraintViolationException cve) {
 			if ("projects_nk".equals(cve.getConstraintName()))
 				throw new DuplicateValueException(doc.Project_name, project.getName());

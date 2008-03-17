@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.objects.search;
+package edu.rpi.metpetdb.client.ui.search;
 
 import java.util.ArrayList;
 import java.util.List;

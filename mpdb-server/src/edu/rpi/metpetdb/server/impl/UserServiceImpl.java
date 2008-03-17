@@ -37,9 +37,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			final User u = (User) byKey("User", "username", ssr.getUsername());
 			if (!authenticate(u, ssr.getPassword()))
 				throw new LoginFailureException(doc.StartSessionRequest_password);
-			u.setProjects(load(u.getProjects()));
 			setCurrentUser(u);
-			forgetChanges();
 			return (UserDTO) clone(u);
 		} catch (NoSuchObjectException nsoe) {
 			setCurrentUser(null);
@@ -53,7 +51,6 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		r.objectConstraints = oc;
 		try {
 			r.user =  (UserDTO) clone( byId("User", (long) currentUser()));
-			r.user.setProjects(load(r.user.getProjects()));
 		} catch (NoSuchObjectException err) {
 			r.user = null;
 		} catch (LoginRequiredException err) {
@@ -88,9 +85,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			EmailSupport.sendMessage(this, u.getEmailAddress(),
 					"registerNewUser", new Object[]{u.getUsername(),
 							getModuleBaseURL()});
-			UserDTO.setProjects(load(u.getProjects()));
 			setCurrentUser(u);
-			forgetChanges();
 			return (UserDTO) clone(u);
 		} catch (ConstraintViolationException cve) {
 			final String who = UserDTO.getUsername();

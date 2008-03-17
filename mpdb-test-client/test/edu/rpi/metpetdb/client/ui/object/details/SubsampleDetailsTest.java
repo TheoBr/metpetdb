@@ -10,26 +10,28 @@ import edu.rpi.metpetdb.client.MpDbTestCase;
 import edu.rpi.metpetdb.client.TestServerOp;
 import edu.rpi.metpetdb.client.VoidTestServerOp;
 import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.MpDb;
-import edu.rpi.metpetdb.client.ui.ServerOp;
 
-public class SampleDetailsTest extends MpDbTestCase {
-
+public class SubsampleDetailsTest extends MpDbTestCase {
+	
+	private SampleDTO sample;
+	
+	public void setUp() {
+		super.setUp();
+		sample = new SampleDTO();
+		
+	}
 	/**
 	 * Test saving a sample to the database, which in turns test that
 	 * authentication works and the object constraints
 	 */
-	public void testSaveSample() {
-		final SampleDTO s = new SampleDTO();
-		s.setSesarNumber("000000006");
-		s.setLatitude(1);
-		s.setLongitude(1);
-		s.setRockType("rockie rock");
-		s.setOwner(this.getUser());
-		s.setAlias("6");
+	public void testSaveSubsample() {
+		final SubsampleDTO s = new SubsampleDTO();
+		
 		new TestServerOp<SampleDTO>(this) {
 			public void begin() {
-				MpDb.sample_svc.save(s, this);
+				//MpDb.sample_svc.save(s, this);
 			}
 
 			public void onSuccess(final SampleDTO sample) {
@@ -79,11 +81,12 @@ public class SampleDetailsTest extends MpDbTestCase {
 		p.setMaxResults(10);
 		p.setOffset(0);
 		p.setParameter("alias");
-		
+
 		new TestServerOp<Results>(this) {
 			public void begin() {
 				MpDb.sample_svc.all(p, this);
 			}
+
 			public void onSuccess(final Results result) {
 				final Results results = (Results) result;
 				final List l = results.getList();

@@ -67,7 +67,7 @@ public class SampleDetails extends FlowPanel {
 						: sampleId, ac);
 			}
 			protected void saveBean(final AsyncCallback ac) {
-				MpDb.sample_svc.saveSample((SampleDTO) getBean(), ac);
+				MpDb.sample_svc.save((SampleDTO) getBean(), ac);
 			}
 			protected void deleteBean(final AsyncCallback ac) {
 				MpDb.sample_svc.delete(((SampleDTO) getBean()).getId(),ac);

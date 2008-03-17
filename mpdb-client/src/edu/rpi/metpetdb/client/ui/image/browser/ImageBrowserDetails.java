@@ -1,8 +1,10 @@
 package edu.rpi.metpetdb.client.ui.image.browser;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
@@ -19,6 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.GridDTO;
+import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
@@ -82,6 +85,8 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	"µm", /* micrometer 10x10^-6 */
 	"nm", /* nanometer 10x10^-9 */
 	};
+	
+	private final Map<ImageDTO, ImageOnGrid> imagesOnGrid;
 
 	public ImageBrowserDetails() {
 		info = new Label();
@@ -95,6 +100,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		save = new Button(LocaleHandler.lc_text.buttonSave(), this);
 		grid = new MAbsolutePanel();
 		grid.add(scaleDisplay);
+		imagesOnGrid = new HashMap<ImageDTO, ImageOnGrid>();
 	}
 
 	public ImageBrowserDetails createNew(final long subsampleId) {
@@ -122,7 +128,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 			public void onSuccess(final Object result) {
 				g = (GridDTO) result;
 				buildInterface();
-				addExistingImages(true);
+				addImagesOnGrid(true);
 			}
 		}.begin();
 		return this;
@@ -154,7 +160,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		layers = new LeftSideLayer(g.getSubsample().getName());
 		MetPetDBApplication.appendToLeft(layers);
 		mouseListener = new ImageBrowserMouseListener(grid,
-				g.getImagesOnGrid(), zOrderManager, g.getSubsample(), this, fp);
+				this.imagesOnGrid.values(), zOrderManager, g.getSubsample(), this, fp);
 		grid.addMouseListener(mouseListener);
 	}
 
@@ -183,24 +189,25 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		super.onLoad();
 	}
 
-	private void addExistingImages(boolean firstTime) {
-		final Iterator itr = g.getImagesOnGrid().iterator();
+	private void addImagesOnGrid(boolean firstTime) {
+		final Iterator<ImageOnGridDTO> itr = g.getImagesOnGrid().iterator();
 		while (itr.hasNext()) {
-			final ImageOnGridDTO iog = (ImageOnGridDTO) itr.next();
+			final ImageOnGridDTO iog = itr.next();
+			final ImageOnGrid imageOnGrid = new ImageOnGrid();
+			imageOnGrid.setIog(iog);
 			if (firstTime) {
-				iog.setWidth(Math.round((iog.getImage().getWidth() * iog
+				imageOnGrid.setWidth(Math.round((iog.getImage().getWidth() * iog
 						.getResizeRatio())));
-				iog.setHeight(Math.round((iog.getImage().getHeight() * iog
+				imageOnGrid.setHeight(Math.round((iog.getImage().getHeight() * iog
 						.getResizeRatio())));
 			}
-
-			addImage(iog);
+			addImage(imageOnGrid);
 		}
 	}
 
-	private void addImage(final edu.rpi.metpetdb.client.model.ImageDTO i,
+	private void addImage(final ImageDTO i,
 			int[] cascade) {
-		ImageOnGridDTO iog = new ImageOnGridDTO();
+		final ImageOnGridDTO iog = new ImageOnGridDTO();
 		iog.setGrid(g);
 		iog.setImage(i);
 		iog.setOpacity(100);
@@ -208,29 +215,31 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		iog.setZorder(1);
 		iog.setTopLeftX(cascade[0]);
 		iog.setTopLeftY(cascade[0]);
-		iog.setWidth(Math.round((iog.getImage().getWidth() * (iog
-				.getResizeRatio()))));
-		iog.setHeight(Math.round((iog.getImage().getHeight() * (iog
-				.getResizeRatio()))));
 		iog.setZorder(zOrderManager.getHighestZOrder() + 1);
 		iog.setGwidth(i.getWidth());
 		iog.setGheight(i.getHeight());
 		iog.setGchecksum(i.getChecksum());
 		iog.setGchecksum64x64(i.getChecksum64x64());
 		iog.setGchecksumHalf(i.getChecksumHalf());
-		addImage(iog);
+		final ImageOnGrid imageOnGrid = new ImageOnGrid();
+		imageOnGrid.setIog(iog);
+		imageOnGrid.setWidth(Math.round((iog.getImage().getWidth() * (iog
+				.getResizeRatio()))));
+		imageOnGrid.setHeight(Math.round((iog.getImage().getHeight() * (iog
+				.getResizeRatio()))));
+		addImage(imageOnGrid);
 		cascade[0] += 10;
 		g.addImageOnGrid(iog);
 	}
 
-	public void addImage(final ImageOnGridDTO iog) {
+	public void addImage(final ImageOnGrid iog) {
 		final DCFlowPanel imageContainer = new DCFlowPanel();
 		imageContainer.setStyleName("imageContainer");
 		iog.setImageContainer(imageContainer);
 		scale(iog);
 
-		iog.setTemporaryTopLeftX(iog.getTopLeftX());
-		iog.setTemporaryTopLeftY(iog.getTopLeftY());
+		iog.setTemporaryTopLeftX(iog.getIog().getTopLeftX());
+		iog.setTemporaryTopLeftY(iog.getIog().getTopLeftY());
 
 		final SimplePanel imagePanel = createImagePanel(iog);
 
@@ -245,9 +254,9 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		imageContainer.setPopupMenu(popupMenu);
 
 		DOM.setStyleAttribute(imageContainer.getElement(), "zIndex", String
-				.valueOf(iog.getZorder()));
-		setOpacity(iog.getActualImage().getElement(), iog.getOpacity());
-		setOpacity(imageContainer.getElement(), iog.getOpacity());
+				.valueOf(iog.getIog().getZorder()));
+		setOpacity(iog.getActualImage().getElement(), iog.getIog().getOpacity());
+		setOpacity(imageContainer.getElement(), iog.getIog().getOpacity());
 
 		layers.registerImage(iog);
 		zOrderManager.register(iog);
@@ -256,7 +265,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 				.getTemporaryTopLeftY());
 	}
 
-	private PopupMenu createPopupMenu(final ImageOnGridDTO iog) {
+	private PopupMenu createPopupMenu(final ImageOnGrid iog) {
 		final PopupMenu popupMenu = new PopupMenu();
 		popupMenu.addItem(new ImageHyperlink(new Image(GWT.getModuleBaseURL()
 				+ "/images/icon-details.gif"), "Details", TokenSpace
@@ -282,21 +291,21 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		return popupMenu;
 	}
 
-	private SimplePanel createImagePanel(final ImageOnGridDTO iog) {
+	private SimplePanel createImagePanel(final ImageOnGrid iog) {
 		final SimplePanel imagePanel = new SimplePanel();
 		final AbsolutePanel ap = new AbsolutePanel();
 		ap.setHeight(iog.getHeight() + "px");
 		ap.setWidth(iog.getWidth() + "px");
 		final Image image = new Image(iog.getGoodLookingPicture());
 		ap.add(image, 0, 0);
-		final HashSet mineralAnalyses = getMineralAnalyses(iog.getImage(), g
+		final HashSet<MineralAnalysisDTO> mineralAnalyses = getMineralAnalyses(iog.getIog().getImage(), g
 				.getSubsample().getMineralAnalyses());
 		iog.setMineralAnalyses(mineralAnalyses);
 
 		image.setWidth(iog.getWidth() + "px");
 		image.setHeight(iog.getHeight() + "px");
 		final ResizableWidget rw = new ResizableWidget(ap, grid, iog
-				.getImageContainer(), iog);
+				.getImageContainer(), iog.getIog());
 		imagePanel.setWidget(rw);
 		iog.setActualImage(image);
 		iog.setImagePanel(ap);
@@ -312,8 +321,8 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		totalYOffset += amount;
 	}
 
-	private void addPoints(final ImageOnGridDTO iog) {
-		final Iterator itr = iog.getMineralAnalyses().iterator();
+	private void addPoints(final ImageOnGrid iog) {
+		final Iterator<MineralAnalysisDTO> itr = iog.getMineralAnalyses().iterator();
 		while (itr.hasNext()) {
 			final MineralAnalysisDTO ma = (MineralAnalysisDTO) itr.next();
 			final Image i = new Image(GWT.getModuleBaseURL()
@@ -332,11 +341,11 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		}
 	}
 
-	private HashSet getMineralAnalyses(
+	private HashSet<MineralAnalysisDTO> getMineralAnalyses(
 			final edu.rpi.metpetdb.client.model.ImageDTO i,
-			final Set mineralAnalyses) {
-		final Iterator itr = mineralAnalyses.iterator();
-		final HashSet mas = new HashSet();
+			final Set<MineralAnalysisDTO> mineralAnalyses) {
+		final Iterator<MineralAnalysisDTO> itr = mineralAnalyses.iterator();
+		final HashSet<MineralAnalysisDTO> mas = new HashSet<MineralAnalysisDTO>();
 		while (itr.hasNext()) {
 			final MineralAnalysisDTO ma = (MineralAnalysisDTO) itr.next();
 			if (ma.getImage() != null) {
@@ -347,16 +356,15 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		return mas;
 	}
 
-	private void scale(final ImageOnGridDTO iog) {
-		// final int multiplier = zoomHandler.getCurrentScale();
+	private void scale(final ImageOnGrid iog) {
 		final int multiplier = 1;
-		iog.setWidth(Math.round((iog.getImage().getWidth() * multiplier * iog
+		iog.setWidth(Math.round((iog.getIog().getImage().getWidth() * multiplier * iog.getIog()
 				.getResizeRatio())));
-		iog.setHeight(Math.round((iog.getImage().getHeight() * multiplier * iog
+		iog.setHeight(Math.round((iog.getIog().getImage().getHeight() * multiplier * iog.getIog()
 				.getResizeRatio())));
 	}
 
-	private MUnorderedList makeBottomMenu(final ImageOnGridDTO iog) {
+	private MUnorderedList makeBottomMenu(final ImageOnGrid iog) {
 		final MUnorderedList ulBottom = new MUnorderedList();
 		final MLink details = new ImageHyperlink(new Image(GWT
 				.getModuleBaseURL()
@@ -378,7 +386,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		return ulBottom;
 	}
 
-	private MUnorderedList makeTopMenu(final ImageOnGridDTO iog) {
+	private MUnorderedList makeTopMenu(final ImageOnGrid iog) {
 		// Top Menu
 		final MUnorderedList ulTop = new MUnorderedList();
 		final MLink rotate = new ImageHyperlink(new Image(GWT
@@ -418,9 +426,9 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		DOM.setElementAttribute(viewControls.getElement(), "id", "viewControl");
 		final MLink zSlide = new MLink("", this);
 		DOM.setStyleAttribute(zSlide.getElement(), "top", "60px");
-		final MLink zIn = new MLink("", new ZoomInListener(g, zSlide
+		final MLink zIn = new MLink("", new ZoomInListener(this.imagesOnGrid.values(), zSlide
 				.getElement(), this));
-		final MLink zOut = new MLink("", new ZoomOutListener(g, zSlide
+		final MLink zOut = new MLink("", new ZoomOutListener(this.imagesOnGrid.values(), zSlide
 				.getElement(), this));
 		panUp.setStyleName("imageBrowser-hyperlink");
 		panRight.setStyleName("imageBrowser-hyperlink");
@@ -483,7 +491,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	}
 
 	private void doAddNewImageToSubsample() {
-
+		
 	}
 
 	private void doBringToFront() {
@@ -521,44 +529,6 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 				info.setText("");
 			}
 			public void onSuccess(final Object result) {
-				// TODO double check this works (itr might return wrong object)
-				info.setText("Grid Saved Successfully");
-				final Iterator itr = g.getImagesOnGrid().iterator();
-				final Iterator itrNew = ((GridDTO) result).getImagesOnGrid()
-						.iterator();
-				while (itr.hasNext()) {
-					final ImageOnGridDTO iog = (ImageOnGridDTO) itr.next();
-					final ImageOnGridDTO iogNew = (ImageOnGridDTO) itrNew.next();
-					iogNew.setActualImage(iog.getActualImage());
-					iogNew.setImageContainer(iog.getImageContainer());
-					iogNew.setTemporaryTopLeftX(iog.getTemporaryTopLeftX());
-					iogNew.setTemporaryTopLeftY(iog.getTemporaryTopLeftY());
-					iogNew.setPanTopLeftX(iog.getPanTopLeftX());
-					iogNew.setPanTopLeftY(iog.getPanTopLeftY());
-					iogNew.setWidth(iog.getWidth());
-					iogNew.setHeight(iog.getHeight());
-					iogNew.setIsShown(iog.getIsShown());
-					iogNew.setImagePanel(iog.getImagePanel());
-					iogNew.setMineralAnalyses(iog.getMineralAnalyses());
-					iogNew.setIsMenuHidden(iog.getIsMenuHidden());
-					iogNew.setIsLocked(iog.getIsLocked());
-					iogNew.setZoomLevelsSkipped(iog.getZoomLevelsSkipped());
-					final Iterator itrMa = iog.getMineralAnalyses().iterator();
-					final Iterator itrMaNew = iogNew.getMineralAnalyses()
-							.iterator();
-					while (itrMa.hasNext()) {
-						final MineralAnalysisDTO ma = (MineralAnalysisDTO) itrMa
-								.next();
-						final MineralAnalysisDTO maNew = (MineralAnalysisDTO) itrMaNew
-								.next();
-						maNew.setActualImage(ma.getActualImage());
-						maNew.setPercentX(ma.getPercentX());
-						maNew.setPercentY(ma.getPercentY());
-						maNew.setIsLocked(ma.getIsLocked());
-					}
-				}
-				g = (GridDTO) result;
-				ImageBrowserDetails.this.mouseListener.setImagesOnGrid(g.getImagesOnGrid());
 			}
 		}.begin();
 
@@ -615,10 +585,9 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		DOM.setStyleAttribute(grid.getElement(), "backgroundPosition",
 				(x + xoffset) + "px " + (y + yoffset) + "px");
 		if (g.getImagesOnGrid() != null) {
-			final Iterator itr = g.getImagesOnGrid().iterator();
-			ImageOnGridDTO iog;
+			final Iterator<ImageOnGrid> itr = this.imagesOnGrid.values().iterator();
 			while (itr.hasNext()) {
-				iog = (ImageOnGridDTO) itr.next();
+				final ImageOnGrid iog =  itr.next();
 				int newX = iog.getTemporaryTopLeftX() + xoffset;
 				int newY = iog.getTemporaryTopLeftY() + yoffset;
 				grid.setWidgetPosition(iog.getImageContainer(), newX, newY);

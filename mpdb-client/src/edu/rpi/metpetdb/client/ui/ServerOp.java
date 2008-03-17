@@ -16,7 +16,7 @@ import edu.rpi.metpetdb.client.ui.dialogs.ValidationExceptionDialog;
  * of caught exceptions (such as {@link LoginRequiredException}).
  * </p>
  */
-public abstract class ServerOp implements AsyncCallback, Command {
+public abstract class ServerOp<T> implements AsyncCallback<T>, Command {
 	/** Automatically invoke {@link #begin()}. */
 	public void execute() {
 		begin();

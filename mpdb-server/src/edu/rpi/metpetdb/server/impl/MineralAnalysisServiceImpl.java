@@ -21,7 +21,7 @@ public class MineralAnalysisServiceImpl extends MpDbServlet
 	private static final long serialVersionUID = 1L;
 
 	public MineralAnalysisDTO details(long id) throws NoSuchObjectException {
-		final MineralAnalysisDTO ma = clone(byId("MineralAnalysis", id));
+		final MineralAnalysisDTO ma = cloneBean(byId("MineralAnalysis", id));
 		return ma;
 	}
 
@@ -35,7 +35,7 @@ public class MineralAnalysisServiceImpl extends MpDbServlet
 	}
 
 	public List<MineralAnalysisDTO> all(long subsampleId) throws NoSuchObjectException {
-		return clone(byKey("MineralAnalysis", "subsampleId",
+		return cloneBean(byKey("MineralAnalysis", "subsampleId",
 				subsampleId));
 	}
 
@@ -45,7 +45,7 @@ public class MineralAnalysisServiceImpl extends MpDbServlet
 		if (maDTO.getSubsample().getSample().getOwner().getId() != currentUser())
 			throw new SecurityException(
 					"Cannot modify subsamples you don't own.");
-		MineralAnalysis ma = merge(maDTO);
+		MineralAnalysis ma = mergeBean(maDTO);
 		try {
 			if (ma.getImage() != null
 					&& ma.getImage().mIsNew()) {
@@ -58,7 +58,7 @@ public class MineralAnalysisServiceImpl extends MpDbServlet
 			} else
 				ma = update(merge(ma));
 			commit();
-			return clone(ma);
+			return cloneBean(ma);
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}

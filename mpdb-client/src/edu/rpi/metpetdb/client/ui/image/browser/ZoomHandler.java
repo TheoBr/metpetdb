@@ -1,16 +1,14 @@
 package edu.rpi.metpetdb.client.ui.image.browser;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 
-import edu.rpi.metpetdb.client.model.GridDTO;
-import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
-
 public class ZoomHandler {
 
-	public final GridDTO grid;
+	private Collection<ImageOnGrid> imagesOnGrid;
 	public final Element zSlide;
 	public final ImageBrowserDetails imageBrowser;
 	private final static int zoomMultiplier = 2;
@@ -19,9 +17,9 @@ public class ZoomHandler {
 	private int referenceX = 0;
 	private int referenceY = 0;
 
-	public ZoomHandler(final GridDTO g, final Element e,
+	public ZoomHandler(final Collection<ImageOnGrid> imagesOnGrid, final Element e,
 			final ImageBrowserDetails ibm) {
-		grid = g;
+		this.imagesOnGrid = imagesOnGrid;
 		zSlide = e;
 		imageBrowser = ibm;
 	}
@@ -50,8 +48,7 @@ public class ZoomHandler {
 	}
 
 	public void zoom(final int level) {
-		final Iterator itr = grid.getImagesOnGrid().iterator();
-		ImageOnGridDTO iog;
+		final Iterator<ImageOnGrid> itr = imagesOnGrid.iterator();
 		/* by default put refence in the center */
 		referenceY = imageBrowser.getGrid().getOffsetHeight() / 2;
 		referenceX = imageBrowser.getGrid().getOffsetWidth() / 2;
@@ -59,7 +56,7 @@ public class ZoomHandler {
 				? zoomMultiplier
 				: (1 / (float) zoomMultiplier));
 		while (itr.hasNext()) {
-			iog = (ImageOnGridDTO) itr.next();
+			final ImageOnGrid iog = itr.next();
 			final int newWidth = Math.round((iog.getWidth() * (level == 1
 					? zoomMultiplier
 					: 1 / (float) zoomMultiplier)));
@@ -77,7 +74,7 @@ public class ZoomHandler {
 		}
 	}
 
-	private void changePosition(final ImageOnGridDTO iog, final int level) {
+	private void changePosition(final ImageOnGrid iog, final int level) {
 		int centerX = getCenterX(iog);
 		int centerY = getCenterY(iog);
 
@@ -102,23 +99,23 @@ public class ZoomHandler {
 				- Math.round((getCurrentHeight(iog) / (float) 2)));
 	}
 
-	private int getCenterX(final ImageOnGridDTO iog) {
+	private int getCenterX(final ImageOnGrid iog) {
 		return Math.round(iog.getTemporaryTopLeftX()
 				+ (getCurrentWidth(iog) / (float) 2));
 	}
 
-	private int getCenterY(final ImageOnGridDTO iog) {
+	private int getCenterY(final ImageOnGrid iog) {
 		return Math.round(iog.getTemporaryTopLeftY()
 				+ (getCurrentHeight(iog) / (float) 2));
 	}
 
-	private int getCurrentWidth(final ImageOnGridDTO iog) {
+	private int getCurrentWidth(final ImageOnGrid iog) {
 		// return Math.round((iog.getImage().getWidth() *
 		// (iog.getResizeRatio())));
 		return iog.getWidth();
 	}
 
-	private int getCurrentHeight(final ImageOnGridDTO iog) {
+	private int getCurrentHeight(final ImageOnGrid iog) {
 		// return Math.round( (iog.getImage().getHeight() *
 		// (iog.getResizeRatio())));
 		return iog.getHeight();

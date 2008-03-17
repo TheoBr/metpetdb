@@ -15,6 +15,7 @@ import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGrid;
 
 public class RotateDialog extends MDialogBox implements ClickListener {
 
@@ -24,13 +25,13 @@ public class RotateDialog extends MDialogBox implements ClickListener {
 	private final Button ok;
 	private final Button cancel;
 	private final ServerOp continuation;
-	private final ImageOnGridDTO imageOnGrid;
+	private final ImageOnGrid imageOnGrid;
 	private final Image image;
 	private final Label loading;
 	private final TextBox angle;
 	private final Button update;
 
-	public RotateDialog(final ImageOnGridDTO iog, final ServerOp r) {
+	public RotateDialog(final ImageOnGrid iog, final ServerOp r) {
 		final VerticalPanel vp = new VerticalPanel();
 		final FocusPanel fp = new FocusPanel();
 		image = new Image(iog.getGoodLookingPicture(true));
@@ -92,16 +93,16 @@ public class RotateDialog extends MDialogBox implements ClickListener {
 	public void rotate(final int degrees) {
 		new ServerOp() {
 			public void begin() {
-				MpDb.image_svc.rotate(imageOnGrid, degrees, this);
+				MpDb.image_svc.rotate(imageOnGrid.getIog(), degrees, this);
 				loading.setText("Please Wait");
 			}
 			public void onSuccess(final Object result) {
 				final ImageOnGridDTO iog = (ImageOnGridDTO) result;
-				imageOnGrid.setGchecksum(iog.getGchecksum());
-				imageOnGrid.setGchecksum64x64(iog.getGchecksum64x64());
-				imageOnGrid.setGchecksumHalf(iog.getGchecksumHalf());
-				imageOnGrid.setGheight(iog.getGheight());
-				imageOnGrid.setGwidth(iog.getGwidth());
+				imageOnGrid.getIog().setGchecksum(iog.getGchecksum());
+				imageOnGrid.getIog().setGchecksum64x64(iog.getGchecksum64x64());
+				imageOnGrid.getIog().setGchecksumHalf(iog.getGchecksumHalf());
+				imageOnGrid.getIog().setGheight(iog.getGheight());
+				imageOnGrid.getIog().setGwidth(iog.getGwidth());
 				image.setUrl(imageOnGrid.getGoodLookingPicture());
 				loading.setText("Done");
 			}

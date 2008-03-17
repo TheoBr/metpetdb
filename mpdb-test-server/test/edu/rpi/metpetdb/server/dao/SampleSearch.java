@@ -70,8 +70,8 @@ public class SampleSearch extends DatabaseTestCase {
 	{
 		final Session session = InitDatabase.getSession();
 		List<AttributeDTO> AttributePairs = new LinkedList<AttributeDTO>();
-		AttributePairs.add(new AttributeDTO("u.username", "anthony"));		
-		AttributePairs.add(new AttributeDTO("u.user_id", "1"));
+		//AttributePairs.add(new AttributeDTO("u.username", "anthony"));		
+		//AttributePairs.add(new AttributeDTO("u.user_id", "1"));
 		
 		System.out.println("making the string");
 		String query = new String("select * from users u where");

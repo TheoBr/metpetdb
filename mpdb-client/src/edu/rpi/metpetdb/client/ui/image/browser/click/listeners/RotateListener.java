@@ -4,16 +4,16 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
-import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGrid;
 import edu.rpi.metpetdb.client.ui.image.browser.dialogs.RotateDialog;
 
 public class RotateListener implements ClickListener {
 
-	private final ImageOnGridDTO iog;
+	private final ImageOnGrid iog;
 
-	public RotateListener(final ImageOnGridDTO imageOnGrid) {
+	public RotateListener(final ImageOnGrid imageOnGrid) {
 		iog = imageOnGrid;
 	}
 
@@ -30,12 +30,12 @@ public class RotateListener implements ClickListener {
 				// final float widthRatio = iog.getWidth()
 				// / (float) iog.getImage().getWidth();
 				final float heightRatio = iog.getHeight()
-						/ (float) iog.getImage().getHeight();
-				iog.setImage((((ImageOnGridDTO) result).getImage()));
+						/ (float) iog.getIog().getImage().getHeight();
+				iog.getIog().setImage((((ImageOnGrid) result).getIog().getImage()));
 				iog.getActualImage().setUrl(
-						((ImageOnGridDTO) result).getGoodLookingPicture());
-				iog.resizeImage(Math.round(iog.getImage().getWidth()
-						* heightRatio), Math.round(iog.getImage().getHeight()
+						((ImageOnGrid) result).getGoodLookingPicture());
+				iog.resizeImage(Math.round(iog.getIog().getImage().getWidth()
+						* heightRatio), Math.round(iog.getIog().getImage().getHeight()
 						* heightRatio), false);
 
 			}

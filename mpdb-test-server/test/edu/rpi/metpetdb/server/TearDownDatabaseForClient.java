@@ -36,7 +36,10 @@ public class TearDownDatabaseForClient {
 
 		conn = new DatabaseConnection(s.connection());
 		
-		tearDown(args[0]);
+		if (args.length > 0)
+			tearDown(args[0]);
+		else
+			tearDown(".");
 		
 		try {
 			tx.commit();

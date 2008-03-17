@@ -38,7 +38,7 @@ public class SubsampleServiceImpl extends MpDbServlet
 						.uniqueResult()).intValue());
 			}
 			
-			return new Results(sz.intValue(),  clone(l));
+			return new Results(sz.intValue(),  cloneBean(l));
 		} else
 			return new Results(sz.intValue(), new ArrayList<Subsample>());
 	}
@@ -64,14 +64,14 @@ public class SubsampleServiceImpl extends MpDbServlet
 		if (subsampleDTO.getSample().getOwner().getId() != currentUser())
 			throw new SecurityException(
 					"Cannot modify subsamples you don't own.");
-		Subsample subsample = merge(subsampleDTO);
+		Subsample subsample = mergeBean(subsampleDTO);
 		try {
 			if (subsampleDTO.mIsNew())
 				insert(subsample);
 			else
 				subsample = update(merge(subsample));
 			commit();
-			return clone(subsample);
+			return cloneBean(subsample);
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}

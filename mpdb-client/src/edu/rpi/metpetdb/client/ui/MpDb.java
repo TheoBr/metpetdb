@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
+import edu.rpi.metpetdb.client.service.BulkUploadService;
 import edu.rpi.metpetdb.client.service.BulkUploadServiceAsync;
 import edu.rpi.metpetdb.client.service.ConstantsService;
 import edu.rpi.metpetdb.client.service.ConstantsServiceAsync;
@@ -96,7 +97,7 @@ public class MpDb {
 				.create(MpDbGenericService.class), "mpdbGeneric");
 		
 		bulkUpload_svc = (BulkUploadServiceAsync) bindService(GWT
-				.create(BulkUploadServiceAsync.class), "bulkUpload");
+				.create(BulkUploadService.class), "bulkUpload");
 
 		//factory = (HtmlFactory) GWT.create(HtmlFactory.class);
 	}

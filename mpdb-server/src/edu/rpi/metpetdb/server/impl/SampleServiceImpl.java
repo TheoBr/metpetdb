@@ -51,20 +51,15 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		return (SampleDTO) clone(s);
 	}
 	
-	public SampleDTO saveSample(SampleDTO sample)
+	public SampleDTO save(SampleDTO sample)
 			throws SampleAlreadyExistsException, ValidationException,
 			LoginRequiredException {
-		return clone(saveSample((Sample) merge(sample)));
-	}
-
-	public Sample saveSample(Sample s)
-			throws SampleAlreadyExistsException, ValidationException,
-			LoginRequiredException {
-		doc.validate((SampleDTO)clone(s));
-		if (s.getOwner() == null)
+		doc.validate(sample);
+		if (sample.getOwner() == null)
 			throw new LoginRequiredException();
-		if (s.getOwner().getId() != currentUser())
+		if (sample.getOwner().getId() != currentUser())
 			throw new SecurityException("Cannot modify samples you don't own.");
+		Sample s = mergeBean(sample);
 		replaceRegion(s);
 		replaceMetamorphicGrade(s);
 		replaceReferences(s);
@@ -80,7 +75,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 				}
 			}
 			commit();
-			return s;
+			return cloneBean(s);
 		} catch (ConstraintViolationException cve) {
 			if ("samples_nk".equals(cve.getConstraintName()))
 				throw new SampleAlreadyExistsException();

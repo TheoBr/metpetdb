@@ -32,24 +32,24 @@ public class ImageBrowserServiceImpl extends MpDbServlet
 
 	public GridDTO details(final long id) throws NoSuchObjectException {
 		final Grid g = byId("Grid", id);
-		return clone(g);
+		return cloneBean(g);
 	}
 
 	public List<ImageOnGridDTO> imagesOnGrid(long id) throws NoSuchObjectException {
-		return clone(byKey("ImageOnGrid", "gridId", id));
+		return cloneBean(byKey("ImageOnGrid", "gridId", id));
 	}
 
 	public GridDTO saveGrid(GridDTO grid) throws LoginRequiredException {
 		if (grid.getSubsample().getSample().getOwner().getId() != currentUser())
 			throw new SecurityException("Cannot modify grids you don't own.");
-		Grid g = merge(grid);
+		Grid g = mergeBean(grid);
 		try {
 			if (g.mIsNew())
 				insert(g);
 			else
 				g = (Grid) update(merge(g));
 			commit();
-			return clone(g);
+			return cloneBean(g);
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}

@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.ui.image.browser;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -11,7 +12,6 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.ServerOp;
@@ -22,8 +22,8 @@ import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel;
 public class ImageBrowserMouseListener implements MouseListener {
 
 	private final MAbsolutePanel grid;
-	private Set imagesOnGrid;
-	private ImageOnGridDTO currentImage;
+	private Collection<ImageOnGrid> imagesOnGrid;
+	private ImageOnGrid currentImage;
 	private MineralAnalysisDTO currentPoint;
 	private boolean isBeingDragged = false;
 	private int startX;
@@ -51,11 +51,11 @@ public class ImageBrowserMouseListener implements MouseListener {
 		mode = i;
 	}
 
-	public void setCurrentImage(final ImageOnGridDTO iog) {
+	public void setCurrentImage(final ImageOnGrid iog) {
 		currentImage = iog;
 	}
 
-	public ImageBrowserMouseListener(final MAbsolutePanel ap, final Set s,
+	public ImageBrowserMouseListener(final MAbsolutePanel ap, final Collection<ImageOnGrid> s,
 			final ZOrderManager z, final SubsampleDTO ss,
 			final ImageBrowserDetails ibd, final FlowPanel fp) {
 		grid = ap;
@@ -105,8 +105,8 @@ public class ImageBrowserMouseListener implements MouseListener {
 			isBeingDragged = true;
 			startX = x;
 			startY = y;
-			if (currentImage != null && !currentImage.getIsLocked()) {
-				if (!currentImage.getIsLocked()) {
+			if (currentImage != null && !currentImage.isLocked()) {
+				if (!currentImage.isLocked()) {
 					currentPoint = findPointOnGrid(
 							x
 									- (currentImage.getImagePanel()
@@ -154,10 +154,9 @@ public class ImageBrowserMouseListener implements MouseListener {
 				mode = 1;
 				grid.addStyleName("image-moving");
 				if (imagesOnGrid != null) {
-					final Iterator itr = imagesOnGrid.iterator();
-					ImageOnGridDTO iog;
+					final Iterator<ImageOnGrid> itr = imagesOnGrid.iterator();
 					while (itr.hasNext()) {
-						iog = (ImageOnGridDTO) itr.next();
+						final ImageOnGrid iog = itr.next();
 						iog.setPanTopLeftX(iog.getTemporaryTopLeftX());
 						iog.setPanTopLeftY(iog.getTemporaryTopLeftY());
 					}
@@ -168,7 +167,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 
 	private void addMineralAnalysis(final MineralAnalysisDTO ma, final int x,
 			final int y) {
-		ma.setImage(currentImage.getImage());
+		ma.setImage(currentImage.getIog().getImage());
 		int pointX = x;
 		int pointY = y;
 		pointX -= currentImage.getImagePanel().getAbsoluteLeft()
@@ -188,7 +187,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 		});
 		ma.setPercentX(pointX / (float) currentImage.getWidth());
 		ma.setPercentY(pointY / (float) currentImage.getHeight());
-		currentImage.addMineralAnalysis(ma);
+		currentImage.getMineralAnalyses().add(ma);
 	}
 
 	private boolean isInViewControl(final int x, final int y) {
@@ -247,7 +246,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 
 	public MineralAnalysisDTO findPointOnGrid(final int x, final int y) {
 		// x,y should be with respect to image
-		final Iterator itr = currentImage.getMineralAnalyses().iterator();
+		final Iterator<MineralAnalysisDTO> itr = currentImage.getMineralAnalyses().iterator();
 		while (itr.hasNext()) {
 			final MineralAnalysisDTO ma = (MineralAnalysisDTO) itr.next();
 			if (x >= ma.getPointX() - 5 && x <= ma.getPointX() + 5) {
@@ -259,11 +258,11 @@ public class ImageBrowserMouseListener implements MouseListener {
 		return null;
 	}
 
-	public ImageOnGridDTO findImageOnGrid(final int x, final int y) {
-		final Iterator itr = imagesOnGrid.iterator();
-		final ArrayList candidates = new ArrayList();
+	public ImageOnGrid findImageOnGrid(final int x, final int y) {
+		final Iterator<ImageOnGrid> itr = imagesOnGrid.iterator();
+		final ArrayList<ImageOnGrid> candidates = new ArrayList<ImageOnGrid>();
 		while (itr.hasNext()) {
-			final ImageOnGridDTO iog = ((ImageOnGridDTO) itr.next());
+			final ImageOnGrid iog = itr.next();
 			if (x >= iog.getTemporaryTopLeftX()
 					&& x <= iog.getTemporaryTopLeftX()
 							+ iog.getImageContainer().getOffsetWidth()) {
@@ -275,11 +274,11 @@ public class ImageBrowserMouseListener implements MouseListener {
 			}
 		}
 		if (candidates.size() > 0) {
-			ImageOnGridDTO topmost = (ImageOnGridDTO) candidates.get(0);
-			final Iterator candidatesItr = candidates.iterator();
+			ImageOnGrid topmost = candidates.get(0);
+			final Iterator<ImageOnGrid> candidatesItr = candidates.iterator();
 			while (candidatesItr.hasNext()) {
-				final ImageOnGridDTO iog = (ImageOnGridDTO) candidatesItr.next();
-				if (iog.getZorder() > topmost.getZorder())
+				final ImageOnGrid iog = candidatesItr.next();
+				if (iog.getIog().getZorder() > topmost.getIog().getZorder())
 					topmost = iog;
 			}
 			return topmost;
@@ -294,10 +293,9 @@ public class ImageBrowserMouseListener implements MouseListener {
 				+ "px " + y + "px");
 
 		if (imagesOnGrid != null) {
-			final Iterator itr = imagesOnGrid.iterator();
-			ImageOnGridDTO iog;
+			final Iterator<ImageOnGrid> itr = imagesOnGrid.iterator();
 			while (itr.hasNext()) {
-				iog = (ImageOnGridDTO) itr.next();
+				final ImageOnGrid iog = itr.next();
 				newX = iog.getTemporaryTopLeftX() + (x - startX);
 				newY = iog.getTemporaryTopLeftY() + (y - startY);
 				grid.setWidgetPosition(iog.getImageContainer(), newX, newY);
@@ -394,10 +392,9 @@ public class ImageBrowserMouseListener implements MouseListener {
 		imageBrowser.addToTotalXOffset((x - startX));
 		imageBrowser.addToTotalYOffset((y - startY));
 		if (imagesOnGrid != null) {
-			final Iterator itr = imagesOnGrid.iterator();
-			ImageOnGridDTO iog;
+			final Iterator<ImageOnGrid> itr = imagesOnGrid.iterator();
 			while (itr.hasNext()) {
-				iog = (ImageOnGridDTO) itr.next();
+				final ImageOnGrid iog = itr.next();
 				iog.setTemporaryTopLeftX(iog.getPanTopLeftX());
 				iog.setTemporaryTopLeftY(iog.getPanTopLeftY());
 			}
@@ -409,12 +406,12 @@ public class ImageBrowserMouseListener implements MouseListener {
 				.getImageContainer()));
 		currentImage.setTemporaryTopLeftY(grid.getWidgetTop(currentImage
 				.getImageContainer()));
-		currentImage.setTopLeftX(currentImage.getTemporaryTopLeftX());
-		currentImage.setTopLeftY(currentImage.getTemporaryTopLeftY());
+		currentImage.getIog().setTopLeftX(currentImage.getTemporaryTopLeftX());
+		currentImage.getIog().setTopLeftY(currentImage.getTemporaryTopLeftY());
 		currentImage.setWidth(currentImage.getActualImage().getOffsetWidth());
 		currentImage.setHeight(currentImage.getActualImage().getOffsetHeight());
-		currentImage.setResizeRatio(currentImage.getWidth()
-				/ (float) (currentImage.getImage().getWidth()));
+		currentImage.getIog().setResizeRatio(currentImage.getWidth()
+				/ (float) (currentImage.getIog().getImage().getWidth()));
 		if (!((Image) currentImage.getActualImage()).getUrl().equals(
 				currentImage.getGoodLookingPicture()))
 			((Image) currentImage.getActualImage()).setUrl(currentImage
@@ -449,9 +446,9 @@ public class ImageBrowserMouseListener implements MouseListener {
 			grid.setCanDrag(true);
 			switch (mode) {
 				case 0 :
-					currentImage.setTopLeftX(currentImage
+					currentImage.getIog().setTopLeftX(currentImage
 							.getTemporaryTopLeftX());
-					currentImage.setTopLeftY(currentImage
+					currentImage.getIog().setTopLeftY(currentImage
 							.getTemporaryTopLeftY());
 					currentImage.getImageContainer().removeStyleName(
 							"image-moving");
@@ -469,11 +466,11 @@ public class ImageBrowserMouseListener implements MouseListener {
 		}
 	}
 
-	public Set getImagesOnGrid() {
+	public Collection<ImageOnGrid> getImagesOnGrid() {
 		return imagesOnGrid;
 	}
 
-	public void setImagesOnGrid(Set imagesOnGrid) {
+	public void setImagesOnGrid(Set<ImageOnGrid> imagesOnGrid) {
 		this.imagesOnGrid = imagesOnGrid;
 	}
 }

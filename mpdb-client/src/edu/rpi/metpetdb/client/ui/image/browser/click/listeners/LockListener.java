@@ -6,27 +6,27 @@ import java.util.Iterator;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGrid;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class LockListener implements ClickListener {
 
-	private final ImageOnGridDTO iog;
-	private HashSet notifiers = new HashSet();
+	private final ImageOnGrid iog;
+	private HashSet<MLink> notifiers = new HashSet<MLink>();
 
-	public LockListener(final ImageOnGridDTO imageOnGrid) {
+	public LockListener(final ImageOnGrid imageOnGrid) {
 		iog = imageOnGrid;
 	}
 
 	public void onClick(final Widget sender) {
 		String text;
-		if (iog.getIsLocked()) {
+		if (iog.isLocked()) {
 			text = "Lock";
 		} else {
 			text = "Unlock";
 		}
-		iog.setIsLocked(!iog.getIsLocked());
-		final Iterator itr = notifiers.iterator();
+		iog.setLocked(!iog.isLocked());
+		final Iterator<MLink> itr = notifiers.iterator();
 		while (itr.hasNext()) {
 			((MLink) itr.next()).setText(text);
 		}

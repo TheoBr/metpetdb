@@ -113,12 +113,12 @@ public class LayerDragMouseListener implements MouseListener {
 				if (layerItem.getIndex() <= target
 						&& layerItem.getIndex() >= source) {
 					if (layerItem.getIndex() != source) {
-						layerItem.getImageOnGrid().setZorder(
-								layerItem.getImageOnGrid().getZorder() + 1);
+						layerItem.getImageOnGrid().getIog().setZorder(
+								layerItem.getImageOnGrid().getIog().getZorder() + 1);
 						layerItem.decrementIndex();
 					} else {
-						layerItem.getImageOnGrid().setZorder(
-								layerItem.getImageOnGrid().getZorder() - 1);
+						layerItem.getImageOnGrid().getIog().setZorder(
+								layerItem.getImageOnGrid().getIog().getZorder() - 1);
 						layerItem.incrementIndex();
 					}
 
@@ -128,19 +128,19 @@ public class LayerDragMouseListener implements MouseListener {
 						&& layerItem.getIndex() <= source) {
 					if (layerItem.getIndex() != source) {
 						layerItem.incrementIndex();
-						layerItem.getImageOnGrid().setZorder(
-								layerItem.getImageOnGrid().getZorder() - 1);
+						layerItem.getImageOnGrid().getIog().setZorder(
+								layerItem.getImageOnGrid().getIog().getZorder() - 1);
 					} else {
 						layerItem.decrementIndex();
-						layerItem.getImageOnGrid().setZorder(
-								layerItem.getImageOnGrid().getZorder() + 1);
+						layerItem.getImageOnGrid().getIog().setZorder(
+								layerItem.getImageOnGrid().getIog().getZorder() + 1);
 					}
 
 				}
 			}
 			DOM.setStyleAttribute(layerItem.getImageOnGrid()
 					.getImageContainer().getElement(), "zIndex", String
-					.valueOf(layerItem.getImageOnGrid().getZorder()));
+					.valueOf(layerItem.getImageOnGrid().getIog().getZorder()));
 		}
 	}
 

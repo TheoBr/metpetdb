@@ -37,7 +37,10 @@ public class SetupDatabaseForClient {
 
 		conn = new DatabaseConnection(s.connection());
 
-		setUp(args[0]);
+		if (args.length > 0)
+			setUp(args[0]);
+		else
+			setUp(".");
 
 		try {
 			tx.commit();

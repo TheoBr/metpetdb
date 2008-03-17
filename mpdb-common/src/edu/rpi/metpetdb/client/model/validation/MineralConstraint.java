@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.model.validation;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.MineralDTO;
@@ -35,7 +36,7 @@ public class MineralConstraint extends PropertyConstraint {
 		return minerals;
 	}
 
-	public void setMinerals(final Collection<MineralDTO> m) {
+	public void setMinerals(final List<MineralDTO> m) {
 		minerals = m;
 		//fixChildren(m);
 	}

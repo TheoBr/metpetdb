@@ -26,6 +26,7 @@ import com.google.gwt.user.client.rpc.SerializationException;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
@@ -473,14 +474,26 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 *            the query that will generate the current page's row data.
 	 * @return the results object to return back to the UI layer.
 	 */
-	@SuppressWarnings( { "unchecked" })
-	protected <T extends MObject> Results toResults(final Query szQuery,
+	protected <T extends MObjectDTO> Results toResults(final Query szQuery,
 			final Query objQuery) {
 		final Number sz = (Number) szQuery.uniqueResult();
 		return new Results(sz.intValue(),
-				sz.intValue() > 0 ? (List<T>) clone(objQuery.list())
+				sz.intValue() > 0 ?  cloneBean(objQuery.list())
 						: new ArrayList<Object>());
 	}
+	
+	public <T,K> T cloneBean(K obj) {
+		return (T) super.clone(obj);
+	}
+	
+	public <T,K> List<T> cloneBean(List<K> obj) {
+		return (List<T>) super.clone(obj);
+	}
+	
+	public <T,K> T mergeBean(K obj) {
+		return (T) super.merge(obj);
+	}
+	
 
 	public String processCall(final String payload)
 			throws SerializationException {

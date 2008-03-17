@@ -40,13 +40,13 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 	private static String baseFolder = "";
 
 	public ImageDTO details(final long id) throws NoSuchObjectException {
-		final ImageDTO i = clone(byId("Image", id));
+		final ImageDTO i = cloneBean(byId("Image", id));
 		return i;
 	}
 
 	public List<ImageDTO> allImages(final long subsampleId)
 			throws NoSuchObjectException {
-		return clone(byKey("Image", "subsampleId", subsampleId));
+		return cloneBean(byKey("Image", "subsampleId", subsampleId));
 	}
 
 	public ImageDTO saveImage(ImageDTO image) throws ValidationException,
@@ -54,14 +54,14 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		// oc.validate(ImageDTO);
 		// if (ImageDTO.getSample().getOwner().getId() != currentUser())
 		// throw new SecurityException("Cannot modify images you don't own.");
-		Image i = merge(image);
+		Image i = mergeBean(image);
 		try {
 			if (i.mIsNew())
 				insert(i);
 			else
 				i = update(merge(i));
 			commit();
-			return clone(i);
+			return cloneBean(i);
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}
@@ -69,14 +69,14 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 
 	public ImageOnGridDTO saveImageOnGrid(ImageOnGridDTO iogDTO)
 			throws ValidationException, LoginRequiredException {
-		ImageOnGrid iog = merge(iogDTO);
+		ImageOnGrid iog = mergeBean(iogDTO);
 		try {
 			if (iog.mIsNew())
 				insert(iog);
 			else
 				iog = update(merge(iog));
 			commit();
-			return clone(iog);
+			return cloneBean(iog);
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}

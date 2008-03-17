@@ -40,7 +40,7 @@
 
 	<target name="runtest" depends="setupdb">
 		<mkdir dir="${test.reports}" />
-		<junit fork="yes" printsummary="yes" haltonfailure="no">
+		<junit fork="no" printsummary="yes" haltonfailure="no">
 			<batchtest fork="yes" todir="${test.reports}">
 				<fileset dir="${classes}">
 					<include name="**/*Test.class" />

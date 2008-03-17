@@ -1,12 +1,12 @@
 package edu.rpi.metpetdb.server.bulk.upload.sample;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.hibernate.Query;
 import org.junit.Test;
 
+import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
 import edu.rpi.metpetdb.server.model.User;

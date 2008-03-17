@@ -15,10 +15,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.ServerOp;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGrid;
 
 public class AddPointDialog extends DialogBox
 		implements
@@ -33,7 +33,7 @@ public class AddPointDialog extends DialogBox
 	private Set mineralAnalyses;
 	private final ServerOp continuation;
 
-	public AddPointDialog(final SubsampleDTO s, final ImageOnGridDTO iog,
+	public AddPointDialog(final SubsampleDTO s, final ImageOnGrid iog,
 			final ServerOp r, final int x, final int y) {
 		continuation = r;
 		submit = new Button(LocaleHandler.lc_text.buttonSubmit(), this);

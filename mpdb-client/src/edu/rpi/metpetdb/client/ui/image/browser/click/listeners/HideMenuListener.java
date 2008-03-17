@@ -6,15 +6,15 @@ import java.util.Iterator;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGrid;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class HideMenuListener implements ClickListener {
 
-	private final ImageOnGridDTO iog;
-	private final HashSet notifiers = new HashSet();
+	private final ImageOnGrid iog;
+	private final HashSet<MLink> notifiers = new HashSet<MLink>();
 
-	public HideMenuListener(final ImageOnGridDTO imageOnGrid) {
+	public HideMenuListener(final ImageOnGrid imageOnGrid) {
 		iog = imageOnGrid;
 	}
 
@@ -23,13 +23,13 @@ public class HideMenuListener implements ClickListener {
 		if (iog.getImageContainer().getStyleName().equals("imageContainer")) {
 			text = "Show Menu";
 			iog.getImageContainer().setStyleName("imageContainerNoMenu");
-			iog.setIsMenuHidden(true);
+			iog.setMenuHidden(true);
 		} else {
 			text = "Hide Menu";
 			iog.getImageContainer().setStyleName("imageContainer");
-			iog.setIsMenuHidden(false);
+			iog.setMenuHidden(false);
 		}
-		final Iterator itr = notifiers.iterator();
+		final Iterator<MLink> itr = notifiers.iterator();
 		while (itr.hasNext()) {
 			((MLink) itr.next()).setText(text);
 		}
