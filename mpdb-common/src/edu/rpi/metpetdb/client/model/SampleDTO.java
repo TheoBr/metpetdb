@@ -7,71 +7,51 @@ import java.util.Set;
 import org.postgis.Geometry;
 import org.postgis.Point;
 
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
+
 public class SampleDTO extends MObjectDTO implements IHasName {
-	public static final int P_sesarNumber = 0;
-	public static final int P_location = 1;
-	public static final int P_owner = 2;
-	public static final int P_alias = 3;
-	public static final int P_collectionDate = 4;
-	public static final int P_publicData = 5;
-	public static final int P_rockType = 6;
-	public static final int P_images = 7;
-	public static final int P_minerals = 8;
-	public static final int P_country = 9;
-	public static final int P_description = 10;
-	public static final int P_collector = 11;
-	public static final int P_locationText = 12;
-	public static final int P_latitudeError = 13;
-	public static final int P_longitudeError = 14;
-	public static final int P_regions = 15;
-	public static final int P_metamorphicGrades = 16;
-	public static final int P_references = 17;
-	public static final int P_subsampleCount = 18;
 
 	private long id;
 	private int version;
-	
+
 	private String sesarNumber;
 	private Geometry location;
-	
-	
+
 	private UserDTO owner;
-	
+
 	private String alias;
 	private Timestamp collectionDate;
-	
+
 	private Boolean publicData;
-	
+
 	private String rockType;
-	
+
 	private Set<SubsampleDTO> subsamples;
-	
+
 	private Set<ProjectDTO> projects;
-	
+
 	private Set<SampleMineralDTO> minerals;
-	
+
 	private Set<ImageDTO> images;
-	
+
 	private String description;
-	
+
 	private String country;
-	
+
 	private String collector;
-	
+
 	private String locationText;
-	
+
 	private Float latitudeError;
 	private Float longitudeError;
-	
+
 	private Set<RegionDTO> regions;
-	
+
 	private Set<MetamorphicGradeDTO> metamorphicGrades;
-	
+
 	private Set<ReferenceDTO> references;
-	
+
 	private int subsampleCount;
 
 	public long getId() {
@@ -322,105 +302,5 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 
 	public boolean mIsNew() {
 		return id == 0;
-	}
-
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-		case P_sesarNumber:
-			if (newValue != GET_ONLY)
-				setSesarNumber((String) newValue);
-			return getSesarNumber();
-
-		case P_location:
-			if (newValue != GET_ONLY)
-				setLocation((Geometry) newValue);
-			return getLocation();
-
-		case P_owner:
-			if (newValue != GET_ONLY)
-				setOwner((UserDTO) newValue);
-			return getOwner();
-
-		case P_alias:
-			if (newValue != GET_ONLY)
-				setAlias((String) newValue);
-			return getAlias();
-
-		case P_collectionDate:
-			if (newValue != GET_ONLY)
-				setCollectionDate((Timestamp) newValue);
-			return getCollectionDate();
-
-		case P_publicData:
-			if (newValue != GET_ONLY)
-				setPublicData(((Boolean) newValue));
-			return isPublicData() ? Boolean.TRUE : Boolean.FALSE;
-
-		case P_rockType:
-			if (newValue != GET_ONLY)
-				setRockType((String) newValue);
-			return getRockType();
-
-		case P_images:
-			if (newValue != GET_ONLY)
-				setImages((Set<ImageDTO>) newValue);
-			return getImages();
-
-		case P_minerals:
-			if (newValue != GET_ONLY)
-				setMinerals((Set<SampleMineralDTO>) newValue);
-			return getMinerals();
-
-		case P_country:
-			if (newValue != GET_ONLY)
-				setCountry((String) newValue);
-			return getCountry();
-
-		case P_description:
-			if (newValue != GET_ONLY)
-				setDescription((String) newValue);
-			return getDescription();
-
-		case P_collector:
-			if (newValue != GET_ONLY)
-				setCollector((String) newValue);
-			return getCollector();
-
-		case P_locationText:
-			if (newValue != GET_ONLY)
-				setLocationText((String) newValue);
-			return getLocationText();
-
-		case P_latitudeError:
-			if (newValue != GET_ONLY)
-				setLatitudeError(setFloatValue(newValue));
-			return getLatitudeError();
-
-		case P_longitudeError:
-			if (newValue != GET_ONLY)
-				setLongitudeError(setFloatValue(newValue));
-			return getLongitudeError();
-
-		case P_regions:
-			if (newValue != GET_ONLY)
-				setRegions((Set<RegionDTO>) newValue);
-			return getRegions();
-
-		case P_metamorphicGrades:
-			if (newValue != GET_ONLY)
-				setMetamorphicGrades((Set<MetamorphicGradeDTO>) newValue);
-			return getMetamorphicGrades();
-
-		case P_references:
-			if (newValue != GET_ONLY)
-				setReferences((Set<ReferenceDTO>) newValue);
-			return getReferences();
-
-		case P_subsampleCount:
-			if (newValue != GET_ONLY)
-				setSubsampleCount(Integer.parseInt(newValue.toString()));
-			return new Integer(getSubsampleCount());
-		}
-		throw new InvalidPropertyException(propertyId);
 	}
 }

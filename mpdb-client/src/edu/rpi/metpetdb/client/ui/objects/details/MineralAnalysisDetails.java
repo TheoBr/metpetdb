@@ -5,7 +5,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ListBox;
 
-import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.MpDb;
@@ -44,7 +44,7 @@ public class MineralAnalysisDetails extends FlowPanel {
 	public MineralAnalysisDetails() {
 		p_mineralAnalysis = new ObjectEditorPanel(mineralAnalysisAtts) {
 			protected void loadBean(final AsyncCallback ac) {
-				final MineralAnalysisDTO ma = (MineralAnalysisDTO) getBean();
+				final ChemicalAnalysisDTO ma = (ChemicalAnalysisDTO) getBean();
 				MpDb.mineralAnalysis_svc.details(ma != null && !ma.mIsNew()
 						? ma.getId()
 						: mineralAnalysisId, ac);
@@ -54,13 +54,13 @@ public class MineralAnalysisDetails extends FlowPanel {
 				// ((MineralAnalysis) getBean()).getSubsample().addImage(
 				// (Image) mineralAnalysisAtts[3];
 				MpDb.mineralAnalysis_svc.saveMineralAnalysis(
-						(MineralAnalysisDTO) getBean(), ac);
+						(ChemicalAnalysisDTO) getBean(), ac);
 			}
 			protected void deleteBean(final AsyncCallback ac) {
-				MpDb.mineralAnalysis_svc.delete(((MineralAnalysisDTO)getBean()).getId(),ac);
+				MpDb.mineralAnalysis_svc.delete(((ChemicalAnalysisDTO)getBean()).getId(),ac);
 			}
 			protected boolean canEdit() {
-				final SampleDTO s = ((MineralAnalysisDTO) getBean()).getSubsample()
+				final SampleDTO s = ((ChemicalAnalysisDTO) getBean()).getSubsample()
 						.getSample();
 				if (s.isPublicData())
 					return false;
@@ -113,8 +113,8 @@ public class MineralAnalysisDetails extends FlowPanel {
 	}
 
 	public MineralAnalysisDetails createNew(final SubsampleDTO ss) {
-		final MineralAnalysisDTO ma = new MineralAnalysisDTO();
-		ss.addMineralAnalysis(ma);
+		final ChemicalAnalysisDTO ma = new ChemicalAnalysisDTO();
+		ss.addChemicalAnalysis(ma);
 		p_mineralAnalysis.edit(ma);
 		return this;
 	}

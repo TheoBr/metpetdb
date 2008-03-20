@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.gwtwidgets.client.ui.pagination.PaginationParameters;
-import org.gwtwidgets.client.ui.pagination.Results;
 import org.hibernate.Query;
 import org.hibernate.exception.ConstraintViolationException;
 
@@ -13,6 +11,8 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SubsampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.model.Subsample;
@@ -58,7 +58,7 @@ public class SubsampleServiceImpl extends MpDbServlet
 		return (SubsampleDTO) clone(s);
 	}
 
-	public SubsampleDTO saveSubsample(SubsampleDTO subsampleDTO)
+	public SubsampleDTO save(SubsampleDTO subsampleDTO)
 			throws ValidationException, LoginRequiredException {
 		doc.validate(subsampleDTO);
 		if (subsampleDTO.getSample().getOwner().getId() != currentUser())

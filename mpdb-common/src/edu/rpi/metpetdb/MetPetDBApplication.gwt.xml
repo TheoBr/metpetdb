@@ -3,9 +3,10 @@
 	<inherits name="com.google.gwt.user.User"/>
 	<!--  <inherits name="rocket.User" />-->
 	<inherits name="com.google.gwt.i18n.I18N"/>
-	<inherits name="org.gwtwidgets.WidgetLibrary"/>
 	<inherits name="edu.rpi.metpetdb.java_emu.Emulation"/>
 	<inherits name='net.sf.hibernate4gwt.Hibernate4Gwt'/>
+	<inherits name='com.google.gwt.widgetideas.WidgetIdeas'/>
+	
 	
 	<entry-point class='edu.rpi.metpetdb.client.ui.MetPetDBApplication'/>
 

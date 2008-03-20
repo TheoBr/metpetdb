@@ -88,7 +88,9 @@ public abstract class MObjectDTO extends LazyGwtPojo {
 	 *         method returns is <code>newValue</code> if
 	 *         <code>newValue != {@link #GET_ONLY}</code>.
 	 */
-	protected abstract Object mSetGet(int propertyId, Object newValue);
+	protected Object mSetGet(int propertyId, Object newValue) {
+		return null;
+	}
 
 	protected Integer setIntegerValue(final Object newValue) {
 		if (newValue == null)
@@ -96,7 +98,7 @@ public abstract class MObjectDTO extends LazyGwtPojo {
 		else
 			return new Integer((String) newValue);
 	}
-	
+
 	protected Float setFloatValue(final Object newValue) {
 		if (newValue == null)
 			return null;

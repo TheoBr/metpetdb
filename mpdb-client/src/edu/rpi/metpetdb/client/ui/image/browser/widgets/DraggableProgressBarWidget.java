@@ -13,9 +13,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.ServerOp;
 
-public class DraggableProgressBarWidget extends VerticalPanel
-		implements
-			ClickListener {
+public class DraggableProgressBarWidget extends VerticalPanel implements
+		ClickListener {
 
 	private final Button increase;
 	private final Button decrease;
@@ -36,16 +35,20 @@ public class DraggableProgressBarWidget extends VerticalPanel
 		dpb.addMouseListener(new MouseListener() {
 			public void onMouseEnter(final Widget sender) {
 			}
+
 			public void onMouseUp(final Widget sender, final int x, final int y) {
 				dpb.setProgress((int) (x / (float) dpb.getOffsetWidth() * 100));
 				value.setText(String.valueOf(dpb.getProgress()));
 				r.onSuccess(String.valueOf(dpb.getProgress()));
 			}
+
 			public void onMouseDown(final Widget sender, final int x,
 					final int y) {
 			}
+
 			public void onMouseLeave(final Widget sender) {
 			}
+
 			public void onMouseMove(final Widget sender, final int x,
 					final int y) {
 			}
@@ -80,6 +83,7 @@ public class DraggableProgressBarWidget extends VerticalPanel
 		min = minOpacity;
 		max = maxOpacity;
 	}
+
 	public DraggableProgressBarWidget(final int elements, final int minOpacity,
 			final int maxOpacity, int start, final ServerOp r) {
 		this(elements, minOpacity, maxOpacity, r);
@@ -108,8 +112,9 @@ public class DraggableProgressBarWidget extends VerticalPanel
 		changeProgress(-1);
 	}
 
+	// FIXME verify this works with gwt progress bar
 	public void changeProgress(final int multiplier) {
-		int newValue = dpb.getProgress() + 1 * multiplier;
+		int newValue = (int) dpb.getProgress() + 1 * multiplier;
 		if (newValue < min)
 			newValue = min;
 		if (newValue > max)
@@ -118,8 +123,9 @@ public class DraggableProgressBarWidget extends VerticalPanel
 		value.setText(String.valueOf(newValue));
 	}
 
+	// FIXME verify this works with gwt progress bar
 	public int getProgress() {
-		return dpb.getProgress();
+		return (int) dpb.getProgress();
 	}
 
 }

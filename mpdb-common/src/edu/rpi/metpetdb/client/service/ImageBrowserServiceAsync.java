@@ -1,10 +1,9 @@
 package edu.rpi.metpetdb.client.service;
 
-import org.gwtwidgets.client.ui.pagination.PaginationParameters;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.model.GridDTO;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
 
 /** @see ImageBrowserService */
 public interface ImageBrowserServiceAsync {

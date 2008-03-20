@@ -1,10 +1,9 @@
 package edu.rpi.metpetdb.client.service;
 
-import org.gwtwidgets.client.ui.pagination.PaginationParameters;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
 
 /** @see SubsampleService */
 public interface SubsampleServiceAsync {
@@ -12,6 +11,6 @@ public interface SubsampleServiceAsync {
 	void allWithImages(PaginationParameters pp, final long sampleId,
 			AsyncCallback ac);
 	void details(long id, AsyncCallback ac);
-	void saveSubsample(final SubsampleDTO s, AsyncCallback ac);
+	void save(final SubsampleDTO s, AsyncCallback ac);
 	void delete(long id, AsyncCallback ac);
 }

@@ -12,7 +12,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.image.browser.dialogs.AddPointDialog;
@@ -24,7 +24,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 	private final MAbsolutePanel grid;
 	private Collection<ImageOnGrid> imagesOnGrid;
 	private ImageOnGrid currentImage;
-	private MineralAnalysisDTO currentPoint;
+	private ChemicalAnalysisDTO currentPoint;
 	private boolean isBeingDragged = false;
 	private int startX;
 	private int startY;
@@ -55,9 +55,10 @@ public class ImageBrowserMouseListener implements MouseListener {
 		currentImage = iog;
 	}
 
-	public ImageBrowserMouseListener(final MAbsolutePanel ap, final Collection<ImageOnGrid> s,
-			final ZOrderManager z, final SubsampleDTO ss,
-			final ImageBrowserDetails ibd, final FlowPanel fp) {
+	public ImageBrowserMouseListener(final MAbsolutePanel ap,
+			final Collection<ImageOnGrid> s, final ZOrderManager z,
+			final SubsampleDTO ss, final ImageBrowserDetails ibd,
+			final FlowPanel fp) {
 		grid = ap;
 		imagesOnGrid = s;
 		zOrderManager = z;
@@ -69,9 +70,11 @@ public class ImageBrowserMouseListener implements MouseListener {
 	public void onMouseEnter(final Widget sender) {
 
 	}
+
 	public void onMouseLeave(final Widget sender) {
 		DOM.releaseCapture(sender.getElement());
 	}
+
 	public void onMouseDown(final Widget sender, final int x, final int y) {
 		// DOM.addEventPreview(eventPreview);
 		if (mode == 3) {
@@ -82,11 +85,12 @@ public class ImageBrowserMouseListener implements MouseListener {
 					new AddPointDialog(subsample, currentImage, this, x, y)
 							.show();
 				}
+
 				public void onSuccess(final Object result) {
 					if (result == null) {
 						currentImage.getImagePanel().remove(pointer);
 					} else {
-						addMineralAnalysis((MineralAnalysisDTO) result, x, y);
+						addChemicalAnalysis((ChemicalAnalysisDTO) result, x, y);
 					}
 					mode = -1;
 				}
@@ -165,7 +169,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 		}
 	}
 
-	private void addMineralAnalysis(final MineralAnalysisDTO ma, final int x,
+	private void addChemicalAnalysis(final ChemicalAnalysisDTO ma, final int x,
 			final int y) {
 		ma.setImage(currentImage.getIog().getImage());
 		int pointX = x;
@@ -187,7 +191,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 		});
 		ma.setPercentX(pointX / (float) currentImage.getWidth());
 		ma.setPercentY(pointY / (float) currentImage.getHeight());
-		currentImage.getMineralAnalyses().add(ma);
+		currentImage.getChemicalAnalyses().add(ma);
 	}
 
 	private boolean isInViewControl(final int x, final int y) {
@@ -244,11 +248,12 @@ public class ImageBrowserMouseListener implements MouseListener {
 		return "";
 	}
 
-	public MineralAnalysisDTO findPointOnGrid(final int x, final int y) {
+	public ChemicalAnalysisDTO findPointOnGrid(final int x, final int y) {
 		// x,y should be with respect to image
-		final Iterator<MineralAnalysisDTO> itr = currentImage.getMineralAnalyses().iterator();
+		final Iterator<ChemicalAnalysisDTO> itr = currentImage
+				.getChemicalAnalyses().iterator();
 		while (itr.hasNext()) {
-			final MineralAnalysisDTO ma = (MineralAnalysisDTO) itr.next();
+			final ChemicalAnalysisDTO ma = (ChemicalAnalysisDTO) itr.next();
 			if (x >= ma.getPointX() - 5 && x <= ma.getPointX() + 5) {
 				if (y >= ma.getPointY() - 5 && y <= ma.getPointY() + 5) {
 					return ma;
@@ -310,31 +315,32 @@ public class ImageBrowserMouseListener implements MouseListener {
 			int newX = positionOnGridX + (x - startX);
 			int newY = positionOnGridY + (y - startY);
 			switch (mode) {
-				case 0 :
-					grid.setWidgetPosition(currentImage.getImageContainer(),
-							newX, newY);
-					currentImage.setTemporaryTopLeftX(newX);
-					currentImage.setTemporaryTopLeftY(newY);
-					break;
-				case 1 :
-					handlePan(x, y);
-					break;
-				case 2 :
-					resize(x, y);
-					break;
-				case 4 :
-					currentImage.getImagePanel().setWidgetPosition(
-							currentPoint.getActualImage(),
-							x
-									- (currentImage.getImagePanel()
-											.getAbsoluteLeft()
-											- grid.getAbsoluteLeft() + 4),
-							y
-									- (currentImage.getImagePanel()
-											.getAbsoluteTop()
-											- grid.getAbsoluteTop() + 13));
-					break;
-			};
+			case 0:
+				grid.setWidgetPosition(currentImage.getImageContainer(), newX,
+						newY);
+				currentImage.setTemporaryTopLeftX(newX);
+				currentImage.setTemporaryTopLeftY(newY);
+				break;
+			case 1:
+				handlePan(x, y);
+				break;
+			case 2:
+				resize(x, y);
+				break;
+			case 4:
+				currentImage.getImagePanel().setWidgetPosition(
+						currentPoint.getActualImage(),
+						x
+								- (currentImage.getImagePanel()
+										.getAbsoluteLeft()
+										- grid.getAbsoluteLeft() + 4),
+						y
+								- (currentImage.getImagePanel()
+										.getAbsoluteTop()
+										- grid.getAbsoluteTop() + 13));
+				break;
+			}
+			;
 		}
 		if (mode == 3) {
 			currentImage.getImagePanel().setWidgetPosition(
@@ -410,8 +416,11 @@ public class ImageBrowserMouseListener implements MouseListener {
 		currentImage.getIog().setTopLeftY(currentImage.getTemporaryTopLeftY());
 		currentImage.setWidth(currentImage.getActualImage().getOffsetWidth());
 		currentImage.setHeight(currentImage.getActualImage().getOffsetHeight());
-		currentImage.getIog().setResizeRatio(currentImage.getWidth()
-				/ (float) (currentImage.getIog().getImage().getWidth()));
+		currentImage.getIog()
+				.setResizeRatio(
+						currentImage.getWidth()
+								/ (float) (currentImage.getIog().getImage()
+										.getWidth()));
 		if (!((Image) currentImage.getActualImage()).getUrl().equals(
 				currentImage.getGoodLookingPicture()))
 			((Image) currentImage.getActualImage()).setUrl(currentImage
@@ -445,23 +454,23 @@ public class ImageBrowserMouseListener implements MouseListener {
 
 			grid.setCanDrag(true);
 			switch (mode) {
-				case 0 :
-					currentImage.getIog().setTopLeftX(currentImage
-							.getTemporaryTopLeftX());
-					currentImage.getIog().setTopLeftY(currentImage
-							.getTemporaryTopLeftY());
-					currentImage.getImageContainer().removeStyleName(
-							"image-moving");
-					break;
-				case 1 :
-					handleEndPan(x, y);
-					break;
-				case 2 :
-					handleEndResize(x, y);
-					break;
-				case 4 :
-					handleEndMovePoint(x, y);
-					break;
+			case 0:
+				currentImage.getIog().setTopLeftX(
+						currentImage.getTemporaryTopLeftX());
+				currentImage.getIog().setTopLeftY(
+						currentImage.getTemporaryTopLeftY());
+				currentImage.getImageContainer()
+						.removeStyleName("image-moving");
+				break;
+			case 1:
+				handleEndPan(x, y);
+				break;
+			case 2:
+				handleEndResize(x, y);
+				break;
+			case 4:
+				handleEndMovePoint(x, y);
+				break;
 			}
 		}
 	}

@@ -1,7 +1,5 @@
 package edu.rpi.metpetdb.server.impl;
 
-import org.gwtwidgets.client.ui.pagination.PaginationParameters;
-import org.gwtwidgets.client.ui.pagination.Results;
 import org.hibernate.exception.ConstraintViolationException;
 
 import edu.rpi.metpetdb.client.error.DuplicateValueException;
@@ -9,6 +7,8 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ProjectDTO;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.ProjectService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.model.Project;

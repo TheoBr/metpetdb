@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGrid;
 import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -18,35 +18,35 @@ import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 public class PointPopup extends DialogBox implements ClickListener {
 
 	private final ImageOnGrid imageOnGrid;
-	private final MineralAnalysisDTO mineralAnalysis;
+	private final ChemicalAnalysisDTO chemicalAnalysis;
 	private final FocusPanel fp;
 	private final MLink remove;
 	private final MLink lock;
 	private boolean locked;
 
-	public PointPopup(final MineralAnalysisDTO ma, final ImageOnGrid iog,
+	public PointPopup(final ChemicalAnalysisDTO ma, final ImageOnGrid iog,
 			final int x, final int y) {
-		imageOnGrid = iog;
-		mineralAnalysis = ma;
+		this.imageOnGrid = iog;
+		this.chemicalAnalysis = ma;
 
-		locked = ma.getIsLocked();
+		this.locked = ma.getIsLocked();
 
 		final FlowPanel panel = new FlowPanel();
 		panel.add(new Label("Spot Id: " + ma.getSpotId()));
 		final MUnorderedList ul = new MUnorderedList();
 		ul.setStyleName("options");
-		remove = new ImageHyperlink(new Image(GWT.getModuleBaseURL()
+		this.remove = new ImageHyperlink(new Image(GWT.getModuleBaseURL()
 				+ "/images/icon-remove.gif"), "Remove", this, false);
-		lock = new MLink(locked ? "Unlock" : "Lock", this);
-		ul.add(remove);
-		ul.add(lock);
+		this.lock = new MLink(this.locked ? "Unlock" : "Lock", this);
+		ul.add(this.remove);
+		ul.add(this.lock);
 		panel.add(ul);
 
-		fp = new FocusPanel();
-		fp.addClickListener(this);
-		fp.add(panel);
+		this.fp = new FocusPanel();
+		this.fp.addClickListener(this);
+		this.fp.add(panel);
 
-		this.setWidget(fp);
+		this.setWidget(this.fp);
 
 		this.setStyleName("mpdb-pointPopup");
 		this.setPopupPosition(x + 10, y);
@@ -54,18 +54,18 @@ public class PointPopup extends DialogBox implements ClickListener {
 	}
 
 	public void onClick(final Widget sender) {
-		if (sender == fp) {
+		if (sender == this.fp)
 			this.hide();
-		} else if (sender == remove) {
-			imageOnGrid.getImagePanel()
-					.remove(mineralAnalysis.getActualImage());
-			mineralAnalysis.setImage(null);
-			mineralAnalysis.setActualImage(null);
+		else if (sender == this.remove) {
+			this.imageOnGrid.getImagePanel().remove(
+					this.chemicalAnalysis.getActualImage());
+			this.chemicalAnalysis.setImage(null);
+			this.chemicalAnalysis.setActualImage(null);
 			this.hide();
-		} else if (sender == lock) {
-			lock.setText(locked ? "Lock" : "Unlock");
-			locked = !locked;
-			mineralAnalysis.setIsLocked(locked);
+		} else if (sender == this.lock) {
+			this.lock.setText(this.locked ? "Lock" : "Unlock");
+			this.locked = !this.locked;
+			this.chemicalAnalysis.setIsLocked(this.locked);
 		}
 	}
 

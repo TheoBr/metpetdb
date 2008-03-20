@@ -3,8 +3,6 @@ package edu.rpi.metpetdb.client.model;
 import java.util.HashSet;
 import java.util.Set;
 
-
-
 import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasImages;
 
@@ -17,151 +15,164 @@ public class SubsampleDTO extends MObjectDTO implements IHasImages {
 	public static final int P_sampleName = 5;
 
 	private long id;
-	
+
 	private SampleDTO sample;
-		
+
 	private int version;
-	
+
 	private String name;
-	
+
 	private String type;
-	
+
 	private Set<ImageDTO> images;
-	
+
 	private GridDTO grid;
-	
-	private Set<MineralAnalysisDTO> mineralAnalyses;
+
+	private Set<ChemicalAnalysisDTO> chemicalAnalyses;
 	private int imageCount;
 	private int analysisCount;
 
 	public long getId() {
-		return id;
+		return this.id;
 	}
+
 	public void setId(final long i) {
-		id = i;
+		this.id = i;
 	}
 
 	public SampleDTO getSample() {
-		return sample;
+		return this.sample;
 	}
+
 	public void setSample(final SampleDTO s) {
-		sample = s;
+		this.sample = s;
 	}
 
 	public int getVersion() {
-		return version;
+		return this.version;
 	}
 
 	public void setVersion(final int v) {
-		version = v;
+		this.version = v;
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(final String s) {
-		name = s;
-	}
-	
-	public String getType(){
-		return type;
+		this.name = s;
 	}
 
-	public void setType(String t){
-		type = t;
+	public String getType() {
+		return this.type;
 	}
-	
+
+	public void setType(final String t) {
+		this.type = t;
+	}
+
 	public void setImages(final Set<ImageDTO> s) {
-		images = s;
+		this.images = s;
 	}
 
 	public Set<ImageDTO> getImages() {
-		return images;
+		return this.images;
 	}
 
-	public void addImage(ImageDTO i) {
+	public void addImage(final ImageDTO i) {
 		i.setSubsample(this);
 		this.getSample().addImage(i);
-		if (images == null)
-			images = new HashSet();
-		images.add(i);
+		if (this.images == null)
+			this.images = new HashSet();
+		this.images.add(i);
 	}
 
-	public Set<MineralAnalysisDTO> getMineralAnalyses() {
-		return mineralAnalyses;
+	public Set<ChemicalAnalysisDTO> getChemicalAnalyses() {
+		return this.chemicalAnalyses;
 	}
-	public void setMineralAnalyses(final Set<MineralAnalysisDTO> s) {
-		mineralAnalyses = s;
+
+	public void setChemicalAnalyses(final Set<ChemicalAnalysisDTO> s) {
+		this.chemicalAnalyses = s;
 	}
-	public void addMineralAnalysis(MineralAnalysisDTO ma) {
+
+	public void addChemicalAnalysis(final ChemicalAnalysisDTO ma) {
 		ma.setSubsample(this);
-		if (mineralAnalyses == null)
-			mineralAnalyses = new HashSet();
-		mineralAnalyses.add(ma);
+		if (this.chemicalAnalyses == null)
+			this.chemicalAnalyses = new HashSet();
+		this.chemicalAnalyses.add(ma);
 	}
 
 	public void setGrid(final GridDTO g) {
-		grid = g;
+		this.grid = g;
 	}
 
 	public GridDTO getGrid() {
-		return grid;
+		return this.grid;
 	}
-	
-	public int getImageCount(){
-		return imageCount;
+
+	public int getImageCount() {
+		return this.imageCount;
 	}
-	public void setImageCount(final int i){
-		imageCount = i;
+
+	public void setImageCount(final int i) {
+		this.imageCount = i;
 	}
-	
-	public int getAnalysisCount(){
-		return analysisCount;
+
+	public int getAnalysisCount() {
+		return this.analysisCount;
 	}
-	public void setAnalysisCount(final int i){
-		analysisCount = i;
+
+	public void setAnalysisCount(final int i) {
+		this.analysisCount = i;
 	}
-	
+
+	@Override
 	public boolean equals(final Object o) {
-		return o instanceof SubsampleDTO && id == ((SubsampleDTO) o).id;
+		return (o instanceof SubsampleDTO)
+				&& (this.id == ((SubsampleDTO) o).id);
 	}
 
+	@Override
 	public int hashCode() {
-		return name != null ? name.hashCode() + (int) id : 0;
+		return this.name != null ? this.name.hashCode() + (int) this.id : 0;
 	}
 
+	@Override
 	public String toString() {
-		return name;
+		return this.name;
 	}
 
+	@Override
 	public boolean mIsNew() {
-		return id == 0;
+		return this.id == 0;
 	}
+
+	@Override
 	protected Object mSetGet(final int propertyId, final Object newValue) {
 		switch (propertyId) {
-			case P_name :
-				if (newValue != GET_ONLY)
-					setName((String) newValue);
-				return getName();
-			case P_type :
-				if (newValue != GET_ONLY)
-					setType((String) newValue);
-				return getType();
-			case P_images :
-				if (newValue != GET_ONLY)
-					setImages((Set<ImageDTO>) newValue);
-				return getImages();
-			case P_imageCount : 
-				if (newValue != GET_ONLY)
-					setImageCount(Integer.parseInt(newValue.toString()));
-				return new Integer(getImageCount());
-			case P_analysisCount : 
-				if (newValue != GET_ONLY)
-					setAnalysisCount(Integer.parseInt(newValue.toString()));
-				return new Integer(getAnalysisCount());
-			case P_sampleName :
-				return this.getSample().getName();
+		case P_name:
+			if (newValue != MObjectDTO.GET_ONLY)
+				this.setName((String) newValue);
+			return this.getName();
+		case P_type:
+			if (newValue != MObjectDTO.GET_ONLY)
+				this.setType((String) newValue);
+			return this.getType();
+		case P_images:
+			if (newValue != MObjectDTO.GET_ONLY)
+				this.setImages((Set<ImageDTO>) newValue);
+			return this.getImages();
+		case P_imageCount:
+			if (newValue != MObjectDTO.GET_ONLY)
+				this.setImageCount(Integer.parseInt(newValue.toString()));
+			return new Integer(this.getImageCount());
+		case P_analysisCount:
+			if (newValue != MObjectDTO.GET_ONLY)
+				this.setAnalysisCount(Integer.parseInt(newValue.toString()));
+			return new Integer(this.getAnalysisCount());
+		case P_sampleName:
+			return this.getSample().getName();
 		}
 		throw new InvalidPropertyException(propertyId);
 	}

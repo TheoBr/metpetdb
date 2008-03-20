@@ -1,8 +1,5 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
-import org.gwtwidgets.client.ui.pagination.DataProvider;
-import org.gwtwidgets.client.ui.pagination.PaginationParameters;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -30,7 +27,6 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.MetamorphicGradeAttr
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MineralAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.ReferenceAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.RegionAttribute;
-import edu.rpi.metpetdb.client.ui.objects.list.SubsampleList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class SampleDetails extends FlowPanel {
@@ -52,26 +48,28 @@ public class SampleDetails extends FlowPanel {
 			new RegionAttribute(MpDb.doc.Sample_regions),
 			new MetamorphicGradeAttribute(MpDb.doc.Sample_metamorphicGrades),
 			new ReferenceAttribute(MpDb.doc.Sample_references),
-			new TextAttribute(MpDb.oc.Sample_subsampleCount).setReadOnly(true),};
+			new TextAttribute(MpDb.oc.Sample_subsampleCount).setReadOnly(true), };
 
 	private final ObjectEditorPanel p_sample;
 	private long sampleId;
 
 	public SampleDetails() {
-		p_sample = new ObjectEditorPanel(sampleAtts, LocaleHandler.lc_text.addSample(),
-				LocaleHandler.lc_text.addSampleDescription()) {
+		p_sample = new ObjectEditorPanel(sampleAtts, LocaleHandler.lc_text
+				.addSample(), LocaleHandler.lc_text.addSampleDescription()) {
 			protected void loadBean(final AsyncCallback ac) {
 				final SampleDTO s = (SampleDTO) getBean();
-				MpDb.sample_svc.details(s != null && !s.mIsNew()
-						? s.getId()
+				MpDb.sample_svc.details(s != null && !s.mIsNew() ? s.getId()
 						: sampleId, ac);
 			}
+
 			protected void saveBean(final AsyncCallback ac) {
 				MpDb.sample_svc.save((SampleDTO) getBean(), ac);
 			}
+
 			protected void deleteBean(final AsyncCallback ac) {
-				MpDb.sample_svc.delete(((SampleDTO) getBean()).getId(),ac);
+				MpDb.sample_svc.delete(((SampleDTO) getBean()).getId(), ac);
 			}
+
 			protected boolean canEdit() {
 				final SampleDTO s = (SampleDTO) getBean();
 				if (s.isPublicData())
@@ -80,6 +78,7 @@ public class SampleDetails extends FlowPanel {
 					return true;
 				return false;
 			}
+
 			protected void onSaveCompletion(final MObjectDTO result) {
 				super.onSaveCompletion(result);
 				// addExtraElements();
@@ -93,79 +92,76 @@ public class SampleDetails extends FlowPanel {
 
 	private void addExtraElements() {
 		// Add subsample list to sample details
-		final SubsampleList list = new SubsampleList(new DataProvider() {
-			public void update(final PaginationParameters p,
-					final AsyncCallback ac) {
-				MpDb.subsample_svc.all(p, sampleId, ac);
-			}
-		}, null);
-		list.setStyleName("sd-subsamples");
-		add(list);
+		// final SubsampleList list = new SubsampleList(new DataProvider() {
+		// public void update(final PaginationParameters p,
+		// final AsyncCallback ac) {
+		// MpDb.subsample_svc.all(p, sampleId, ac);
+		// }
+		// }, null);
+		// list.setStyleName("sd-subsamples");
+		// add(list);
 		// Add MLinks that will be used to add subsample
 
-		final MLink addSubsample = new MLink(LocaleHandler.lc_text.addSubsample(),
-				new ClickListener() {
-					public void onClick(final Widget sender) {
-						new ServerOp() {
-							public void begin() {
-								if (MpDb.isLoggedIn())
-									MetPetDBApplication
-											.show(new SubsampleDetails()
-													.createNew(
-															(SampleDTO) p_sample
-																	.getBean(),
-															null));
-								else
-									onFailure(new LoginRequiredException());
-							}
-							public void onSuccess(Object result) {
-							}
-						}.begin();
+		final MLink addSubsample = new MLink(LocaleHandler.lc_text
+				.addSubsample(), new ClickListener() {
+			public void onClick(final Widget sender) {
+				new ServerOp() {
+					public void begin() {
+						if (MpDb.isLoggedIn())
+							MetPetDBApplication.show(new SubsampleDetails()
+									.createNew((SampleDTO) p_sample.getBean(),
+											null));
+						else
+							onFailure(new LoginRequiredException());
 					}
-				});
+
+					public void onSuccess(Object result) {
+					}
+				}.begin();
+			}
+		});
 		addSubsample.addStyleName(Styles.ADDLINK);
 		add(addSubsample);
 	}
-	
-	public void addChemistry(){
-		//final Label adder = new Label("Add:");
-		
+
+	public void addChemistry() {
+		// final Label adder = new Label("Add:");
+
 		final HorizontalPanel hp = new HorizontalPanel();
-		
+
 		final ListBox species = new ListBox();
 		species.addItem("Species...", "Species...");
 		species.addItem("Element", "Element");
 		species.addItem("Oxide", "Oxide");
 		species.setVisibleItemCount(1);
-		
+
 		final ListBox type = new ListBox();
-		type.addItem("Type...","Type...");
+		type.addItem("Type...", "Type...");
 		type.addItem("Silicate", "Silicate");
 		type.addItem("Oxide", "Oxide");
 		type.addItem("Carbonate", "Carbonate");
 		type.addItem("Phosphate", "Phosphate");
 		type.addItem("Other", "Other");
 		type.setVisibleItemCount(1);
-		
-		if(species.getSelectedIndex() != -1 && !(species.isItemSelected(1)) ){
-			if(type.getSelectedIndex() != -1 && !(type.isItemSelected(1)) ){
-				
+
+		if (species.getSelectedIndex() != -1 && !(species.isItemSelected(1))) {
+			if (type.getSelectedIndex() != -1 && !(type.isItemSelected(1))) {
+
 			}
 		}
-		
-		//add(adder);
+
+		// add(adder);
 		hp.add(species);
 		hp.add(type);
-		
+
 		add(hp);
 	}
-
 
 	public SampleDetails showById(final long id) {
 		sampleId = id;
 		p_sample.load();
 		addExtraElements();
-		//addChemistry();
+		// addChemistry();
 		return this;
 	}
 

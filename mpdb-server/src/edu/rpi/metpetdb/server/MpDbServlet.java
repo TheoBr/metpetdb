@@ -16,8 +16,6 @@ import net.sf.hibernate4gwt.core.HibernateBeanManager;
 import net.sf.hibernate4gwt.core.beanlib.mapper.DirectoryClassMapper;
 import net.sf.hibernate4gwt.gwt.HibernateRemoteService;
 
-import org.gwtwidgets.client.ui.pagination.PaginationParameters;
-import org.gwtwidgets.client.ui.pagination.Results;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -29,6 +27,8 @@ import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
 import edu.rpi.metpetdb.server.model.MObject;
@@ -357,15 +357,15 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 			q = currentSession().createQuery(q.getQueryString() + " desc");
 		if (id != -1)
 			q.setLong("id", id);
-		q.setFirstResult(p.getOffset());
+		q.setFirstResult(p.getFirstResult());
 		q.setMaxResults(p.getMaxResults());
 		return q;
 	}
 
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings( { "unchecked" })
 	protected <T extends MObject> List<T> pageList(final String name,
 			final PaginationParameters p, final long id) {
-		final Query q = pageQuery(name,p,id);
+		final Query q = pageQuery(name, p, id);
 		return (List<T>) q.list();
 	}
 
@@ -478,22 +478,21 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 			final Query objQuery) {
 		final Number sz = (Number) szQuery.uniqueResult();
 		return new Results(sz.intValue(),
-				sz.intValue() > 0 ?  cloneBean(objQuery.list())
+				sz.intValue() > 0 ? cloneBean(objQuery.list())
 						: new ArrayList<Object>());
 	}
-	
-	public <T,K> T cloneBean(K obj) {
+
+	public <T, K> T cloneBean(K obj) {
 		return (T) super.clone(obj);
 	}
-	
-	public <T,K> List<T> cloneBean(List<K> obj) {
+
+	public <T, K> List<T> cloneBean(List<K> obj) {
 		return (List<T>) super.clone(obj);
 	}
-	
-	public <T,K> T mergeBean(K obj) {
+
+	public <T, K> T mergeBean(K obj) {
 		return (T) super.merge(obj);
 	}
-	
 
 	public String processCall(final String payload)
 			throws SerializationException {

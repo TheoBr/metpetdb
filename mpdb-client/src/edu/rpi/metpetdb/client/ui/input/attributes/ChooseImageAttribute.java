@@ -8,9 +8,9 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
 import edu.rpi.metpetdb.client.model.validation.ImageConstraint;
 import edu.rpi.metpetdb.client.model.validation.IntegerConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
@@ -56,7 +56,7 @@ public class ChooseImageAttribute extends GenericAttribute {
 			public void onClick(final Widget sender) {
 				new ServerOp() {
 					public void begin() {
-						new ChooseImageDialog(this, ((MineralAnalysisDTO) obj)
+						new ChooseImageDialog(this, ((ChemicalAnalysisDTO) obj)
 								.getSubsample()).show();
 					}
 					public void onSuccess(final Object result) {

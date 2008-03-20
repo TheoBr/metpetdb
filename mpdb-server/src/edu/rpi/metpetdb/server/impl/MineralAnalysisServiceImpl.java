@@ -2,15 +2,15 @@ package edu.rpi.metpetdb.server.impl;
 
 import java.util.List;
 
-import org.gwtwidgets.client.ui.pagination.PaginationParameters;
-import org.gwtwidgets.client.ui.pagination.Results;
 import org.hibernate.Query;
 import org.hibernate.exception.ConstraintViolationException;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MineralAnalysisService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.model.MineralAnalysis;
@@ -20,8 +20,8 @@ public class MineralAnalysisServiceImpl extends MpDbServlet
 			MineralAnalysisService {
 	private static final long serialVersionUID = 1L;
 
-	public MineralAnalysisDTO details(long id) throws NoSuchObjectException {
-		final MineralAnalysisDTO ma = cloneBean(byId("MineralAnalysis", id));
+	public ChemicalAnalysisDTO details(long id) throws NoSuchObjectException {
+		final ChemicalAnalysisDTO ma = cloneBean(byId("MineralAnalysis", id));
 		return ma;
 	}
 
@@ -34,12 +34,12 @@ public class MineralAnalysisServiceImpl extends MpDbServlet
 		return toResults(sizeQuery, pageQuery);
 	}
 
-	public List<MineralAnalysisDTO> all(long subsampleId) throws NoSuchObjectException {
+	public List<ChemicalAnalysisDTO> all(long subsampleId) throws NoSuchObjectException {
 		return cloneBean(byKey("MineralAnalysis", "subsampleId",
 				subsampleId));
 	}
 
-	public MineralAnalysisDTO saveMineralAnalysis(MineralAnalysisDTO maDTO)
+	public ChemicalAnalysisDTO saveMineralAnalysis(ChemicalAnalysisDTO maDTO)
 			throws ValidationException, LoginRequiredException {
 		doc.validate(maDTO);
 		if (maDTO.getSubsample().getSample().getOwner().getId() != currentUser())

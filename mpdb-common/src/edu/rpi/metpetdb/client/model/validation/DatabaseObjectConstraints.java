@@ -5,7 +5,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.ProjectDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SampleMineralDTO;
@@ -111,7 +111,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint MineralAnalysis_description;
 	public MineralConstraint MineralAnalysis_mineral;
 	public BooleanConstraint MineralAnalysis_largeRock;
-	public void validate(final MineralAnalysisDTO ma) throws ValidationException {
+	public void validate(final ChemicalAnalysisDTO ma) throws ValidationException {
 		validate(ma, MineralAnalysis_all);
 	}
 

@@ -6,8 +6,8 @@ import java.util.Set;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
-import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
 
 public class ImageOnGrid {
 
@@ -22,7 +22,7 @@ public class ImageOnGrid {
 	private int temporaryTopLeftX;
 	private int temporaryTopLeftY;
 	private boolean isShown;
-	private Set<MineralAnalysisDTO> mineralAnalyses;
+	private Set<ChemicalAnalysisDTO> chemicalAnalyses;
 	private boolean isLocked;
 	private boolean isMenuHidden;
 	private int zoomLevelsSkipped;
@@ -80,10 +80,10 @@ public class ImageOnGrid {
 			this.setTemporaryTopLeftY(this.getTemporaryTopLeftY() - dheight);
 		}
 
-		final Iterator<MineralAnalysisDTO> itr = this.getMineralAnalyses()
+		final Iterator<ChemicalAnalysisDTO> itr = this.getChemicalAnalyses()
 				.iterator();
 		while (itr.hasNext()) {
-			final MineralAnalysisDTO ma = (MineralAnalysisDTO) itr.next();
+			final ChemicalAnalysisDTO ma = (ChemicalAnalysisDTO) itr.next();
 			ma.setPointX((int) (width * ma.getPercentX()));
 			ma.setPointY((int) (height * ma.getPercentY()));
 			this.getImagePanel().setWidgetPosition(ma.getActualImage(),
@@ -202,12 +202,12 @@ public class ImageOnGrid {
 		this.isShown = isShown;
 	}
 
-	public Set<MineralAnalysisDTO> getMineralAnalyses() {
-		return mineralAnalyses;
+	public Set<ChemicalAnalysisDTO> getChemicalAnalyses() {
+		return chemicalAnalyses;
 	}
 
-	public void setMineralAnalyses(Set<MineralAnalysisDTO> mineralAnalyses) {
-		this.mineralAnalyses = mineralAnalyses;
+	public void setChemicalAnalyses(Set<ChemicalAnalysisDTO> chemicalAnalyses) {
+		this.chemicalAnalyses = chemicalAnalyses;
 	}
 
 	public boolean isLocked() {

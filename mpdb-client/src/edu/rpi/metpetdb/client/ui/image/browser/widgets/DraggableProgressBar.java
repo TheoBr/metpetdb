@@ -1,7 +1,5 @@
 package edu.rpi.metpetdb.client.ui.image.browser.widgets;
 
-import org.gwtwidgets.client.ui.ProgressBar;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -10,11 +8,10 @@ import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.MouseListenerCollection;
 import com.google.gwt.user.client.ui.SourcesClickEvents;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
+import com.google.gwt.widgetideas.client.ProgressBar;
 
-public class DraggableProgressBar extends ProgressBar
-		implements
-			SourcesMouseEvents,
-			SourcesClickEvents {
+public class DraggableProgressBar extends ProgressBar implements
+		SourcesMouseEvents, SourcesClickEvents {
 
 	private MouseListenerCollection mouseListeners;
 	private ClickListenerCollection clickListeners;
@@ -36,6 +33,7 @@ public class DraggableProgressBar extends ProgressBar
 			mouseListeners = new MouseListenerCollection();
 		mouseListeners.add(listener);
 	}
+
 	public void removeMouseListener(final MouseListener listener) {
 		if (mouseListeners != null)
 			mouseListeners.remove(listener);
@@ -46,6 +44,7 @@ public class DraggableProgressBar extends ProgressBar
 			clickListeners = new ClickListenerCollection();
 		clickListeners.add(listener);
 	}
+
 	public void removeClickListener(final ClickListener listener) {
 		if (clickListeners != null)
 			clickListeners.remove(listener);
@@ -54,17 +53,18 @@ public class DraggableProgressBar extends ProgressBar
 	public void onBrowserEvent(Event event) {
 		if (mouseListeners != null) {
 			switch (DOM.eventGetType(event)) {
-				case Event.ONMOUSEDOWN :
-				case Event.ONMOUSEMOVE :
-				case Event.ONMOUSEOUT :
-				case Event.ONMOUSEOVER :
-				case Event.ONMOUSEUP :
-					mouseListeners.fireMouseEvent(this, event);
-					break;
-				case Event.ONCLICK :
-					clickListeners.fireClick(this);
-					break;
-			};
+			case Event.ONMOUSEDOWN:
+			case Event.ONMOUSEMOVE:
+			case Event.ONMOUSEOUT:
+			case Event.ONMOUSEOVER:
+			case Event.ONMOUSEUP:
+				mouseListeners.fireMouseEvent(this, event);
+				break;
+			case Event.ONCLICK:
+				clickListeners.fireClick(this);
+				break;
+			}
+			;
 			// DOM.eventPreventDefault(event);
 		}
 	}

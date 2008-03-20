@@ -1,8 +1,5 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
-import org.gwtwidgets.client.ui.pagination.DataProvider;
-import org.gwtwidgets.client.ui.pagination.PaginationParameters;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -25,7 +22,6 @@ import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AddImageAttribute;
-import edu.rpi.metpetdb.client.ui.objects.list.MineralAnalysisList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class SubsampleDetails extends FlowPanel {
@@ -34,10 +30,9 @@ public class SubsampleDetails extends FlowPanel {
 			new TextAttribute(MpDb.doc.Subsample_name),
 			new ListboxAttribute(MpDb.doc.Subsample_type),
 			new AddImageAttribute(MpDb.doc.Subsample_images),
-			new TextAttribute(MpDb.oc.Subsample_imageCount)
-			.setReadOnly(true),
+			new TextAttribute(MpDb.oc.Subsample_imageCount).setReadOnly(true),
 			new TextAttribute(MpDb.oc.Subsample_analysisCount)
-			.setReadOnly(true),};
+					.setReadOnly(true), };
 
 	private final ObjectEditorPanel p_subsample;
 	private long subsampleId;
@@ -46,21 +41,24 @@ public class SubsampleDetails extends FlowPanel {
 
 	public SubsampleDetails() {
 		final SubsampleDetails me = this;
-		p_subsample = new ObjectEditorPanel(subsampleAtts, LocaleHandler.lc_text
-				.addSubsample(), LocaleHandler.lc_text
-				.addSubsampleDescription(sampleAlias)) {
+		p_subsample = new ObjectEditorPanel(subsampleAtts,
+				LocaleHandler.lc_text.addSubsample(), LocaleHandler.lc_text
+						.addSubsampleDescription(sampleAlias)) {
 			protected void loadBean(final AsyncCallback ac) {
 				final SubsampleDTO s = (SubsampleDTO) getBean();
-				MpDb.subsample_svc.details(s != null && !s.mIsNew()
-						? s.getId()
+				MpDb.subsample_svc.details(s != null && !s.mIsNew() ? s.getId()
 						: subsampleId, ac);
 			}
+
 			protected void saveBean(final AsyncCallback ac) {
-				MpDb.subsample_svc.saveSubsample((SubsampleDTO) getBean(), ac);
+				MpDb.subsample_svc.save((SubsampleDTO) getBean(), ac);
 			}
+
 			protected void deleteBean(final AsyncCallback ac) {
-				MpDb.subsample_svc.delete(((SubsampleDTO)getBean()).getId(),ac);
+				MpDb.subsample_svc.delete(((SubsampleDTO) getBean()).getId(),
+						ac);
 			}
+
 			protected boolean canEdit() {
 				final SampleDTO s = ((SubsampleDTO) getBean()).getSample();
 				if (s.isPublicData())
@@ -69,12 +67,14 @@ public class SubsampleDetails extends FlowPanel {
 					return true;
 				return false;
 			}
+
 			protected void onSaveCompletion(final MObjectDTO result) {
 				if (continuation != null) {
 					continuation.onSuccess((MObjectDTO) result);
 				} else
 					this.show((MObjectDTO) result);
 			}
+
 			protected void onLoadCompletion(final MObjectDTO result) {
 				super.onLoadCompletion(result);
 				final SubsampleDTO s = (SubsampleDTO) result;
@@ -111,6 +111,7 @@ public class SubsampleDetails extends FlowPanel {
 						else
 							onFailure(new LoginRequiredException());
 					}
+
 					public void onSuccess(Object result) {
 					}
 				}.begin();
@@ -118,14 +119,14 @@ public class SubsampleDetails extends FlowPanel {
 		});
 		addMineralAnalysis.addStyleName(Styles.ADDLINK);
 		add(addMineralAnalysis);
-		final MineralAnalysisList list = new MineralAnalysisList(
-				new DataProvider() {
-					public void update(final PaginationParameters p,
-							final AsyncCallback ac) {
-						MpDb.mineralAnalysis_svc.all(p, subsampleId, ac);
-					}
-				});
-		add(list);
+		// final MineralAnalysisList list = new MineralAnalysisList(
+		// new DataProvider() {
+		// public void update(final PaginationParameters p,
+		// final AsyncCallback ac) {
+		// MpDb.mineralAnalysis_svc.all(p, subsampleId, ac);
+		// }
+		// });
+		// add(list);
 		return this;
 	}
 
@@ -150,9 +151,11 @@ public class SubsampleDetails extends FlowPanel {
 					onFailure(new LoginRequiredException());
 				}
 			}
+
 			public void onSuccess(final Object result) {
 				p_subsample.edit((SubsampleDTO) result);
 			}
+
 			public void cancel() {
 				p_subsample.load();
 			}

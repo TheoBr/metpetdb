@@ -20,10 +20,10 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.GridDTO;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
-import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
@@ -79,42 +79,43 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	private final Label scaleDisplay;
 	private float scale = 30; /* in milli meters */
 	private int unit = 1;
-	private static String[] units = {
-	"m", /* meter 10x10^0 */
+	private static String[] units = { "m", /* meter 10x10^0 */
 	"mm", /* millimeter 10x10^-3 */
 	"µm", /* micrometer 10x10^-6 */
 	"nm", /* nanometer 10x10^-9 */
 	};
-	
+
 	private final Map<ImageDTO, ImageOnGrid> imagesOnGrid;
 
 	public ImageBrowserDetails() {
-		info = new Label();
-		scaleDisplay = new Label();
-		scaleDisplay.setStyleName("mpdb-scale");
-		scaleDisplay.setText(String.valueOf(scale));
-		addExistingImage = new MLink("Add Existing Image", this);
-		addExistingImage.setStyleName("addlink");
-		bringToFront = new MLink("Bring To Front", this);
-		sendToBack = new MLink("Send To Back", this);
-		save = new Button(LocaleHandler.lc_text.buttonSave(), this);
-		grid = new MAbsolutePanel();
-		grid.add(scaleDisplay);
-		imagesOnGrid = new HashMap<ImageDTO, ImageOnGrid>();
+		this.info = new Label();
+		this.scaleDisplay = new Label();
+		this.scaleDisplay.setStyleName("mpdb-scale");
+		this.scaleDisplay.setText(String.valueOf(this.scale));
+		this.addExistingImage = new MLink("Add Existing Image", this);
+		this.addExistingImage.setStyleName("addlink");
+		this.bringToFront = new MLink("Bring To Front", this);
+		this.sendToBack = new MLink("Send To Back", this);
+		this.save = new Button(LocaleHandler.lc_text.buttonSave(), this);
+		this.grid = new MAbsolutePanel();
+		this.grid.add(this.scaleDisplay);
+		this.imagesOnGrid = new HashMap<ImageDTO, ImageOnGrid>();
 	}
 
 	public ImageBrowserDetails createNew(final long subsampleId) {
 		new ServerOp() {
+			@Override
 			public void begin() {
 				MpDb.subsample_svc.details(subsampleId, this);
 			}
+
 			public void onSuccess(final Object result) {
 				final SubsampleDTO s = (SubsampleDTO) result;
-				g = new GridDTO();
-				g.setSubsample(s);
-				s.setGrid(g);
-				buildInterface();
-				doSave();
+				ImageBrowserDetails.this.g = new GridDTO();
+				ImageBrowserDetails.this.g.setSubsample(s);
+				s.setGrid(ImageBrowserDetails.this.g);
+				ImageBrowserDetails.this.buildInterface();
+				ImageBrowserDetails.this.doSave();
 			}
 		}.begin();
 		return this;
@@ -122,13 +123,15 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 
 	public ImageBrowserDetails showById(final long id) {
 		new ServerOp() {
+			@Override
 			public void begin() {
 				MpDb.imageBrowser_svc.details(id, this);
 			}
+
 			public void onSuccess(final Object result) {
-				g = (GridDTO) result;
-				buildInterface();
-				addImagesOnGrid(true);
+				ImageBrowserDetails.this.g = (GridDTO) result;
+				ImageBrowserDetails.this.buildInterface();
+				ImageBrowserDetails.this.addImagesOnGrid(true);
 			}
 		}.begin();
 		return this;
@@ -137,85 +140,90 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	private void buildInterface() {
 		final Element header = DOM.createElement("h2");
 		final Element sampleHeader = DOM.createElement("h1");
-		DOM.setInnerText(header, g.getSubsample().getName() + "'s Map");
-		DOM.setInnerText(sampleHeader, g.getSubsample().getSample().getAlias());
+		DOM.setInnerText(header, this.g.getSubsample().getName() + "'s Map");
+		DOM.setInnerText(sampleHeader, this.g.getSubsample().getSample()
+				.getAlias());
 		DOM.appendChild(this.getElement(), sampleHeader);
 		DOM.appendChild(this.getElement(), header);
-		DOM.setElementAttribute(grid.getElement(), "id", "canvas");
-		final FlowPanel fp = createViewControls();
-		grid.add(fp);
+		DOM.setElementAttribute(this.grid.getElement(), "id", "canvas");
+		final FlowPanel fp = this.createViewControls();
+		this.grid.add(fp);
 		final MUnorderedList ul = new MUnorderedList();
-		addNewImageToSubsample = new MLink("Add New Image to Subsample",
-				TokenSpace.edit(g.getSubsample()));
-		addNewImageToSubsample.setStyleName("addlink");
+		this.addNewImageToSubsample = new MLink("Add New Image to Subsample",
+				TokenSpace.edit(this.g.getSubsample()));
+		this.addNewImageToSubsample.setStyleName("addlink");
 		ul.setStyleName("options");
-		ul.add(addExistingImage);
-		ul.add(addNewImageToSubsample);
-		ul.add(bringToFront);
-		ul.add(sendToBack);
-		add(ul);
-		add(grid);
-		add(save);
-		add(info);
-		layers = new LeftSideLayer(g.getSubsample().getName());
-		MetPetDBApplication.appendToLeft(layers);
-		mouseListener = new ImageBrowserMouseListener(grid,
-				this.imagesOnGrid.values(), zOrderManager, g.getSubsample(), this, fp);
-		grid.addMouseListener(mouseListener);
+		ul.add(this.addExistingImage);
+		ul.add(this.addNewImageToSubsample);
+		ul.add(this.bringToFront);
+		ul.add(this.sendToBack);
+		this.add(ul);
+		this.add(this.grid);
+		this.add(this.save);
+		this.add(this.info);
+		this.layers = new LeftSideLayer(this.g.getSubsample().getName());
+		MetPetDBApplication.appendToLeft(this.layers);
+		this.mouseListener = new ImageBrowserMouseListener(this.grid,
+				this.imagesOnGrid.values(), this.zOrderManager, this.g
+						.getSubsample(), this, fp);
+		this.grid.addMouseListener(this.mouseListener);
 	}
 
 	public void updateScale(final float multiplier) {
-		scale *= multiplier;
+		this.scale *= multiplier;
 
-		while (String.valueOf((int) scale).length() > 3) {
-			++unit;
-			if (unit == units.length) {
-				--unit;
-			} else {
-				scale *= 1000;
-			}
+		while (String.valueOf((int) this.scale).length() > 3) {
+			++this.unit;
+			if (this.unit == ImageBrowserDetails.units.length)
+				--this.unit;
+			else
+				this.scale *= 1000;
 		}
-		if ((int) scale == 0) {
-			--unit;
-			scale /= 1000;
+		if ((int) this.scale == 0) {
+			--this.unit;
+			this.scale /= 1000;
 		}
 
-		if (unit >= units.length || unit < 0)
+		if ((this.unit >= ImageBrowserDetails.units.length) || (this.unit < 0))
 			return;
-		scaleDisplay.setText(String.valueOf(scale) + " " + units[unit]);
+		this.scaleDisplay.setText(String.valueOf(this.scale) + " "
+				+ ImageBrowserDetails.units[this.unit]);
 	}
 
+	@Override
 	public void onLoad() {
 		super.onLoad();
 	}
 
-	private void addImagesOnGrid(boolean firstTime) {
-		final Iterator<ImageOnGridDTO> itr = g.getImagesOnGrid().iterator();
+	private void addImagesOnGrid(final boolean firstTime) {
+		final Iterator<ImageOnGridDTO> itr = this.g.getImagesOnGrid()
+				.iterator();
 		while (itr.hasNext()) {
 			final ImageOnGridDTO iog = itr.next();
 			final ImageOnGrid imageOnGrid = new ImageOnGrid();
 			imageOnGrid.setIog(iog);
 			if (firstTime) {
-				imageOnGrid.setWidth(Math.round((iog.getImage().getWidth() * iog
-						.getResizeRatio())));
-				imageOnGrid.setHeight(Math.round((iog.getImage().getHeight() * iog
-						.getResizeRatio())));
+				imageOnGrid.setWidth(Math
+						.round((iog.getImage().getWidth() * iog
+								.getResizeRatio())));
+				imageOnGrid.setHeight(Math
+						.round((iog.getImage().getHeight() * iog
+								.getResizeRatio())));
 			}
-			addImage(imageOnGrid);
+			this.addImage(imageOnGrid);
 		}
 	}
 
-	private void addImage(final ImageDTO i,
-			int[] cascade) {
+	private void addImage(final ImageDTO i, final int[] cascade) {
 		final ImageOnGridDTO iog = new ImageOnGridDTO();
-		iog.setGrid(g);
+		iog.setGrid(this.g);
 		iog.setImage(i);
 		iog.setOpacity(100);
 		iog.setResizeRatio(1);
 		iog.setZorder(1);
 		iog.setTopLeftX(cascade[0]);
 		iog.setTopLeftY(cascade[0]);
-		iog.setZorder(zOrderManager.getHighestZOrder() + 1);
+		iog.setZorder(this.zOrderManager.getHighestZOrder() + 1);
 		iog.setGwidth(i.getWidth());
 		iog.setGheight(i.getHeight());
 		iog.setGchecksum(i.getChecksum());
@@ -227,41 +235,42 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 				.getResizeRatio()))));
 		imageOnGrid.setHeight(Math.round((iog.getImage().getHeight() * (iog
 				.getResizeRatio()))));
-		addImage(imageOnGrid);
+		this.addImage(imageOnGrid);
 		cascade[0] += 10;
-		g.addImageOnGrid(iog);
+		this.g.addImageOnGrid(iog);
 	}
 
 	public void addImage(final ImageOnGrid iog) {
 		final DCFlowPanel imageContainer = new DCFlowPanel();
 		imageContainer.setStyleName("imageContainer");
 		iog.setImageContainer(imageContainer);
-		scale(iog);
+		this.scale(iog);
 
 		iog.setTemporaryTopLeftX(iog.getIog().getTopLeftX());
 		iog.setTemporaryTopLeftY(iog.getIog().getTopLeftY());
 
-		final SimplePanel imagePanel = createImagePanel(iog);
+		final SimplePanel imagePanel = this.createImagePanel(iog);
 
-		lockListener = new LockListener(iog);
-		hideMenuListener = new HideMenuListener(iog);
+		this.lockListener = new LockListener(iog);
+		this.hideMenuListener = new HideMenuListener(iog);
 
-		imageContainer.add(makeTopMenu(iog));
+		imageContainer.add(this.makeTopMenu(iog));
 		imageContainer.add(imagePanel);
-		imageContainer.add(makeBottomMenu(iog));
+		imageContainer.add(this.makeBottomMenu(iog));
 
-		final PopupMenu popupMenu = createPopupMenu(iog);
+		final PopupMenu popupMenu = this.createPopupMenu(iog);
 		imageContainer.setPopupMenu(popupMenu);
 
 		DOM.setStyleAttribute(imageContainer.getElement(), "zIndex", String
 				.valueOf(iog.getIog().getZorder()));
-		setOpacity(iog.getActualImage().getElement(), iog.getIog().getOpacity());
-		setOpacity(imageContainer.getElement(), iog.getIog().getOpacity());
+		this.setOpacity(iog.getActualImage().getElement(), iog.getIog()
+				.getOpacity());
+		this.setOpacity(imageContainer.getElement(), iog.getIog().getOpacity());
 
-		layers.registerImage(iog);
-		zOrderManager.register(iog);
+		this.layers.registerImage(iog);
+		this.zOrderManager.register(iog);
 
-		grid.add(imageContainer, iog.getTemporaryTopLeftX(), iog
+		this.grid.add(imageContainer, iog.getTemporaryTopLeftX(), iog
 				.getTemporaryTopLeftY());
 	}
 
@@ -269,24 +278,24 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		final PopupMenu popupMenu = new PopupMenu();
 		popupMenu.addItem(new ImageHyperlink(new Image(GWT.getModuleBaseURL()
 				+ "/images/icon-details.gif"), "Details", TokenSpace
-				.detailsOf(g.getSubsample()), false));
+				.detailsOf(this.g.getSubsample()), false));
 		popupMenu.addItem(new ImageHyperlink(new Image(GWT.getModuleBaseURL()
 				+ "/images/icon-addpoint.gif"), "Add Point",
-				new AddPointListener(mouseListener, iog), false));
+				new AddPointListener(this.mouseListener, iog), false));
 		popupMenu.addItem(new ImageHyperlink(new Image(GWT.getModuleBaseURL()
 				+ "/images/icon-remove.gif"), "Remove", new RemoveListener(iog,
-				layers), false));
+				this.layers), false));
 		popupMenu.addItem(new ImageHyperlink(new Image(GWT.getModuleBaseURL()
 				+ "/images/icon-rotate.gif"), "Rotate",
 				new RotateListener(iog), false));
 		popupMenu.addItem(new ImageHyperlink(new Image(GWT.getModuleBaseURL()
 				+ "/images/icon-opacity.gif"), "Opacity", new OpacityListener(
-				iog, grid), false));
-		final MLink lock = new MLink("Lock", lockListener);
-		lockListener.addNotifier(lock);
+				iog, this.grid), false));
+		final MLink lock = new MLink("Lock", this.lockListener);
+		this.lockListener.addNotifier(lock);
 		popupMenu.addItem(lock);
-		final MLink hideMenu = new MLink("Hide Menu", hideMenuListener);
-		hideMenuListener.addNotifier(hideMenu);
+		final MLink hideMenu = new MLink("Hide Menu", this.hideMenuListener);
+		this.hideMenuListener.addNotifier(hideMenu);
 		popupMenu.addItem(hideMenu);
 		return popupMenu;
 	}
@@ -298,33 +307,35 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		ap.setWidth(iog.getWidth() + "px");
 		final Image image = new Image(iog.getGoodLookingPicture());
 		ap.add(image, 0, 0);
-		final HashSet<MineralAnalysisDTO> mineralAnalyses = getMineralAnalyses(iog.getIog().getImage(), g
-				.getSubsample().getMineralAnalyses());
-		iog.setMineralAnalyses(mineralAnalyses);
+		final HashSet<ChemicalAnalysisDTO> chemicalAnalyses = this
+				.getChemicalAnalyses(iog.getIog().getImage(), this.g
+						.getSubsample().getChemicalAnalyses());
+		iog.setChemicalAnalyses(chemicalAnalyses);
 
 		image.setWidth(iog.getWidth() + "px");
 		image.setHeight(iog.getHeight() + "px");
-		final ResizableWidget rw = new ResizableWidget(ap, grid, iog
+		final ResizableWidget rw = new ResizableWidget(ap, this.grid, iog
 				.getImageContainer(), iog.getIog());
 		imagePanel.setWidget(rw);
 		iog.setActualImage(image);
 		iog.setImagePanel(ap);
-		addPoints(iog);
+		this.addPoints(iog);
 		return imagePanel;
 	}
 
 	public void addToTotalXOffset(final int amount) {
-		totalXOffset += amount;
+		this.totalXOffset += amount;
 	}
 
 	public void addToTotalYOffset(final int amount) {
-		totalYOffset += amount;
+		this.totalYOffset += amount;
 	}
 
 	private void addPoints(final ImageOnGrid iog) {
-		final Iterator<MineralAnalysisDTO> itr = iog.getMineralAnalyses().iterator();
+		final Iterator<ChemicalAnalysisDTO> itr = iog.getChemicalAnalyses()
+				.iterator();
 		while (itr.hasNext()) {
-			final MineralAnalysisDTO ma = (MineralAnalysisDTO) itr.next();
+			final ChemicalAnalysisDTO ma = itr.next();
 			final Image i = new Image(GWT.getModuleBaseURL()
 					+ "/images/point0.gif");
 			iog.getImagePanel().add(i, ma.getPointX(), ma.getPointY());
@@ -341,27 +352,26 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		}
 	}
 
-	private HashSet<MineralAnalysisDTO> getMineralAnalyses(
+	private HashSet<ChemicalAnalysisDTO> getChemicalAnalyses(
 			final edu.rpi.metpetdb.client.model.ImageDTO i,
-			final Set<MineralAnalysisDTO> mineralAnalyses) {
-		final Iterator<MineralAnalysisDTO> itr = mineralAnalyses.iterator();
-		final HashSet<MineralAnalysisDTO> mas = new HashSet<MineralAnalysisDTO>();
+			final Set<ChemicalAnalysisDTO> chemicalAnalyses) {
+		final Iterator<ChemicalAnalysisDTO> itr = chemicalAnalyses.iterator();
+		final HashSet<ChemicalAnalysisDTO> mas = new HashSet<ChemicalAnalysisDTO>();
 		while (itr.hasNext()) {
-			final MineralAnalysisDTO ma = (MineralAnalysisDTO) itr.next();
-			if (ma.getImage() != null) {
+			final ChemicalAnalysisDTO ma = itr.next();
+			if (ma.getImage() != null)
 				if (ma.getImage().equals(i))
 					mas.add(ma);
-			}
 		}
 		return mas;
 	}
 
 	private void scale(final ImageOnGrid iog) {
 		final int multiplier = 1;
-		iog.setWidth(Math.round((iog.getIog().getImage().getWidth() * multiplier * iog.getIog()
-				.getResizeRatio())));
-		iog.setHeight(Math.round((iog.getIog().getImage().getHeight() * multiplier * iog.getIog()
-				.getResizeRatio())));
+		iog.setWidth(Math.round((iog.getIog().getImage().getWidth()
+				* multiplier * iog.getIog().getResizeRatio())));
+		iog.setHeight(Math.round((iog.getIog().getImage().getHeight()
+				* multiplier * iog.getIog().getResizeRatio())));
 	}
 
 	private MUnorderedList makeBottomMenu(final ImageOnGrid iog) {
@@ -369,15 +379,15 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		final MLink details = new ImageHyperlink(new Image(GWT
 				.getModuleBaseURL()
 				+ "/images/icon-details.gif"), "Details", TokenSpace
-				.detailsOf(g.getSubsample()), false);
+				.detailsOf(this.g.getSubsample()), false);
 		final MLink addPoint = new ImageHyperlink(new Image(GWT
 				.getModuleBaseURL()
 				+ "/images/icon-addpoint.gif"), "Add Point",
-				new AddPointListener(mouseListener, iog), false);
+				new AddPointListener(this.mouseListener, iog), false);
 		final MLink remove = new ImageHyperlink(new Image(GWT
 				.getModuleBaseURL()
 				+ "/images/icon-remove.gif"), "Remove", new RemoveListener(iog,
-				layers), false);
+				this.layers), false);
 		ulBottom.add(details);
 		ulBottom.add(addPoint);
 		ulBottom.add(remove);
@@ -396,11 +406,11 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		final MLink opacity = new ImageHyperlink(new Image(GWT
 				.getModuleBaseURL()
 				+ "/images/icon-opacity.gif"), "Opacity", new OpacityListener(
-				iog, grid), false);
-		final MLink hideMenu = new MLink("Hide Menu", hideMenuListener);
-		hideMenuListener.addNotifier(hideMenu);
-		final MLink lock = new MLink("Lock", lockListener);
-		lockListener.addNotifier(lock);
+				iog, this.grid), false);
+		final MLink hideMenu = new MLink("Hide Menu", this.hideMenuListener);
+		this.hideMenuListener.addNotifier(hideMenu);
+		final MLink lock = new MLink("Lock", this.lockListener);
+		this.lockListener.addNotifier(lock);
 		ulTop.add(rotate);
 		ulTop.add(opacity);
 		ulTop.add(hideMenu);
@@ -426,32 +436,32 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		DOM.setElementAttribute(viewControls.getElement(), "id", "viewControl");
 		final MLink zSlide = new MLink("", this);
 		DOM.setStyleAttribute(zSlide.getElement(), "top", "60px");
-		final MLink zIn = new MLink("", new ZoomInListener(this.imagesOnGrid.values(), zSlide
-				.getElement(), this));
-		final MLink zOut = new MLink("", new ZoomOutListener(this.imagesOnGrid.values(), zSlide
-				.getElement(), this));
-		panUp.setStyleName("imageBrowser-hyperlink");
-		panRight.setStyleName("imageBrowser-hyperlink");
-		panDown.setStyleName("imageBrowser-hyperlink");
-		panLeft.setStyleName("imageBrowser-hyperlink");
-		panHome.setStyleName("imageBrowser-hyperlink");
+		final MLink zIn = new MLink("", new ZoomInListener(this.imagesOnGrid
+				.values(), zSlide.getElement(), this));
+		final MLink zOut = new MLink("", new ZoomOutListener(this.imagesOnGrid
+				.values(), zSlide.getElement(), this));
+		this.panUp.setStyleName("imageBrowser-hyperlink");
+		this.panRight.setStyleName("imageBrowser-hyperlink");
+		this.panDown.setStyleName("imageBrowser-hyperlink");
+		this.panLeft.setStyleName("imageBrowser-hyperlink");
+		this.panHome.setStyleName("imageBrowser-hyperlink");
 		zIn.setStyleName("imageBrowser-hyperlink");
 		zSlide.setStyleName("imageBrowser-hyperlink");
 		zOut.setStyleName("imageBrowser-hyperlink");
-		DOM.setElementAttribute(panUp.getElement(), "id", "panUp");
-		DOM.setElementAttribute(panRight.getElement(), "id", "panRight");
-		DOM.setElementAttribute(panDown.getElement(), "id", "panDown");
-		DOM.setElementAttribute(panLeft.getElement(), "id", "panLeft");
-		DOM.setElementAttribute(panHome.getElement(), "id", "panHome");
+		DOM.setElementAttribute(this.panUp.getElement(), "id", "panUp");
+		DOM.setElementAttribute(this.panRight.getElement(), "id", "panRight");
+		DOM.setElementAttribute(this.panDown.getElement(), "id", "panDown");
+		DOM.setElementAttribute(this.panLeft.getElement(), "id", "panLeft");
+		DOM.setElementAttribute(this.panHome.getElement(), "id", "panHome");
 		DOM.setElementAttribute(zIn.getElement(), "id", "zIn");
 		DOM.setElementAttribute(zSlide.getElement(), "id", "zSlide");
 		DOM.setElementAttribute(zOut.getElement(), "id", "zOut");
-		panning.add(panUp);
-		panning.add(panRight);
-		panning.add(panDown);
-		panning.add(panLeft);
-		panning.add(panLeft);
-		panning.add(panHome);
+		panning.add(this.panUp);
+		panning.add(this.panRight);
+		panning.add(this.panDown);
+		panning.add(this.panLeft);
+		panning.add(this.panLeft);
+		panning.add(this.panHome);
 		zoomSlider.add(zIn);
 		zoomSlider.add(zSlide);
 		zoomSlider.add(zOut);
@@ -467,54 +477,58 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	}
 
 	public void onClick(final Widget sender) {
-		if (sender == save) {
-			doSave();
-		} else if (sender == panUp) {
-			doPanUp();
-		} else if (sender == panLeft) {
-			doPanLeft();
-		} else if (sender == panRight) {
-			doPanRight();
-		} else if (sender == panDown) {
-			doPanDown();
-		} else if (sender == panHome) {
-			doPanHome();
-		} else if (sender == bringToFront) {
-			doBringToFront();
-		} else if (sender == sendToBack) {
-			doSendToBack();
-		} else if (sender == addExistingImage) {
-			doAddExistingImage();
-		} else if (sender == addNewImageToSubsample) {
-			doAddNewImageToSubsample();
-		}
+		if (sender == this.save)
+			this.doSave();
+		else if (sender == this.panUp)
+			this.doPanUp();
+		else if (sender == this.panLeft)
+			this.doPanLeft();
+		else if (sender == this.panRight)
+			this.doPanRight();
+		else if (sender == this.panDown)
+			this.doPanDown();
+		else if (sender == this.panHome)
+			this.doPanHome();
+		else if (sender == this.bringToFront)
+			this.doBringToFront();
+		else if (sender == this.sendToBack)
+			this.doSendToBack();
+		else if (sender == this.addExistingImage)
+			this.doAddExistingImage();
+		else if (sender == this.addNewImageToSubsample)
+			this.doAddNewImageToSubsample();
 	}
 
 	private void doAddNewImageToSubsample() {
-		
+
 	}
 
 	private void doBringToFront() {
-		grid.setZMode(1);
+		this.grid.setZMode(1);
 	}
 
 	private void doSendToBack() {
-		grid.setZMode(2);
+		this.grid.setZMode(2);
 	}
 
 	private void doAddExistingImage() {
 		final ImageBrowserDetails imageBrowser = this;
 		new ServerOp() {
+			@Override
 			public void begin() {
-				new AddExistingImagePopup(addExistingImage, this, g
-						.getSubsample()).show();
+				new AddExistingImagePopup(
+						ImageBrowserDetails.this.addExistingImage, this,
+						ImageBrowserDetails.this.g.getSubsample()).show();
 			}
+
 			public void onSuccess(final Object result) {
-				Iterator itr = ((Collection) result).iterator();
-				int[] cascade = {100};
+				final Iterator itr = ((Collection) result).iterator();
+				final int[] cascade = { 100 };
 				while (itr.hasNext()) {
-					addImage((edu.rpi.metpetdb.client.model.ImageDTO) itr.next(),
-							cascade);
+					ImageBrowserDetails.this
+							.addImage(
+									(edu.rpi.metpetdb.client.model.ImageDTO) itr
+											.next(), cascade);
 					cascade[0] += 20;
 				}
 				MetPetDBApplication.show(imageBrowser);
@@ -524,10 +538,13 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 
 	private void doSave() {
 		new ServerOp() {
+			@Override
 			public void begin() {
-				MpDb.imageBrowser_svc.saveGrid(g, this);
-				info.setText("");
+				MpDb.imageBrowser_svc
+						.saveGrid(ImageBrowserDetails.this.g, this);
+				ImageBrowserDetails.this.info.setText("");
 			}
+
 			public void onSuccess(final Object result) {
 			}
 		}.begin();
@@ -535,62 +552,62 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	}
 
 	private void doPanUp() {
-		pan(0, 201);
+		this.pan(0, 201);
 	}
 
 	private void doPanLeft() {
-		pan(201, 0);
+		this.pan(201, 0);
 	}
 
 	private void doPanRight() {
-		pan(-201, 0);
+		this.pan(-201, 0);
 	}
 
 	private void doPanDown() {
-		pan(0, -201);
+		this.pan(0, -201);
 	}
 
 	private void doPanHome() {
-		pan(-this.totalXOffset, -this.totalYOffset);
+		this.pan(-this.totalXOffset, -this.totalYOffset);
 		this.totalXOffset = 0;
 		this.totalYOffset = 0;
 	}
 
 	public void pan(final int xoffset, final int yoffset) {
-		String currentBackgroundPosition = DOM.getStyleAttribute(grid
-				.getElement(), "backgroundPosition");
+		final String currentBackgroundPosition = DOM.getStyleAttribute(
+				this.grid.getElement(), "backgroundPosition");
 		this.totalXOffset += xoffset;
 		this.totalYOffset += yoffset;
 		int x = 0;
 		int y = 0;
 		if (!currentBackgroundPosition.equals("")) {
-			String currentX = currentBackgroundPosition.split(" ")[0]
+			final String currentX = currentBackgroundPosition.split(" ")[0]
 					.toString();
-			String currentY = currentBackgroundPosition.split(" ")[1]
+			final String currentY = currentBackgroundPosition.split(" ")[1]
 					.toString();
 
-			for (int i = 0; i < currentX.length(); ++i) {
+			for (int i = 0; i < currentX.length(); ++i)
 				if (Character.isLetter(currentX.charAt(i))) {
 					x = Integer.parseInt(currentX.substring(0, i));
 					break;
 				}
-			}
-			for (int i = 0; i < currentY.length(); ++i) {
+			for (int i = 0; i < currentY.length(); ++i)
 				if (Character.isLetter(currentY.charAt(i))) {
 					y = Integer.parseInt(currentY.substring(0, i));
 					break;
 				}
-			}
 		}
-		DOM.setStyleAttribute(grid.getElement(), "backgroundPosition",
+		DOM.setStyleAttribute(this.grid.getElement(), "backgroundPosition",
 				(x + xoffset) + "px " + (y + yoffset) + "px");
-		if (g.getImagesOnGrid() != null) {
-			final Iterator<ImageOnGrid> itr = this.imagesOnGrid.values().iterator();
+		if (this.g.getImagesOnGrid() != null) {
+			final Iterator<ImageOnGrid> itr = this.imagesOnGrid.values()
+					.iterator();
 			while (itr.hasNext()) {
-				final ImageOnGrid iog =  itr.next();
-				int newX = iog.getTemporaryTopLeftX() + xoffset;
-				int newY = iog.getTemporaryTopLeftY() + yoffset;
-				grid.setWidgetPosition(iog.getImageContainer(), newX, newY);
+				final ImageOnGrid iog = itr.next();
+				final int newX = iog.getTemporaryTopLeftX() + xoffset;
+				final int newY = iog.getTemporaryTopLeftY() + yoffset;
+				this.grid
+						.setWidgetPosition(iog.getImageContainer(), newX, newY);
 				iog.setTemporaryTopLeftX(newX);
 				iog.setTemporaryTopLeftY(newY);
 			}
@@ -598,7 +615,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	}
 
 	public MAbsolutePanel getGrid() {
-		return grid;
+		return this.grid;
 	}
 
 }

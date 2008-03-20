@@ -36,13 +36,13 @@ import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 /** Main application entry point. */
 public class MetPetDBApplication implements EntryPoint {
-	
+
 	private static final String WIKI_URL = "http://trinity.db.cs.rpi.edu/xwiki/bin/view/Main/WebHome";
 	private static final String GIT_URL = "http://cgi2.cs.rpi.edu/~pearcs/gitweb.cgi?p=MetPetDB.git";
 	private static final String SVN_URL = "http://www.cs.rpi.edu/~watera2/websvn-2.0/index.php";
 	private static final String JAVADOC_URL = "http://samana.cs.rpi.edu:8080/watera2/api/index.html";
 	private static final String JUNIT_URL = "http://samana.cs.rpi.edu:8080/watera2/reports/index.html";
-	
+
 	private static RootPanel loginBar;
 	private static MMenuBar hdrnav;
 	// private static RootPanel breadcrumbsBar;
@@ -51,9 +51,9 @@ public class MetPetDBApplication implements EntryPoint {
 	private static RootPanel noticeContainer;
 	private static RootPanel leftContainer;
 	private static HashSet pageChangeWatchers;
-	
-	//public static Html introduction;
-	//public static Hyperlink logoLink;
+
+	// public static Html introduction;
+	// public static Hyperlink logoLink;
 
 	public void onModuleLoad() {
 		GWT.setUncaughtExceptionHandler(ErrorHandler.INSTANCE);
@@ -66,16 +66,16 @@ public class MetPetDBApplication implements EntryPoint {
 		contentContainer = RootPanel.get(Styles.CONTENT_ID);
 		noticeContainer = RootPanel.get(Styles.NOTICE_ID);
 		leftContainer = RootPanel.get(Styles.LEFTCOL_ID);
-		
+
 		// make MPDB logo a link to the introduction screen
-		/*logoLink = MpDb.factory.getLogoLink();
-		logoLink.setTargetHistoryToken(TokenSpace.introduction.makeToken(null));
-		logoLink.addMouseEventListener(new MouseEventAdapter() {
-			public void onClick(MouseClickEvent event) {
-				TokenSpace.introduction.execute();
-			}
-		});*/
-		
+		/*
+		 * logoLink = MpDb.factory.getLogoLink();
+		 * logoLink.setTargetHistoryToken(TokenSpace.introduction.makeToken(null));
+		 * logoLink.addMouseEventListener(new MouseEventAdapter() { public void
+		 * onClick(MouseClickEvent event) { TokenSpace.introduction.execute(); }
+		 * });
+		 */
+
 		setupIntroduction();
 
 		pageChangeWatchers = new HashSet();
@@ -101,9 +101,10 @@ public class MetPetDBApplication implements EntryPoint {
 						public void begin() {
 							MpDb.mpdbGeneric_svc.getAutomaticLoginUser(this);
 						}
+
 						public void onSuccess(final Object result) {
 							if (result != null) {
-								MpDb.setCurrentUser((UserDTO)result);
+								MpDb.setCurrentUser((UserDTO) result);
 							}
 						}
 					}.begin();
@@ -112,12 +113,14 @@ public class MetPetDBApplication implements EntryPoint {
 		});
 
 	}
+
 	private void finishOnModuleLoad() {
 		createHdrNav();
 
 		// If there is no user we didn't receive a user change event,
 		// as null (initial user) == null (current user).
-		if (!MpDb.isLoggedIn()) createLoginBarLoggedOut();
+		if (!MpDb.isLoggedIn())
+			createLoginBarLoggedOut();
 
 		// Throw away the loading message that users see while GWT
 		// starts up and is able to finish loading its resources.
@@ -158,7 +161,8 @@ public class MetPetDBApplication implements EntryPoint {
 		dispatchCurrentUserChanged(contentContainer, n);
 	}
 
-	private static void dispatchCurrentUserChanged(final Widget w, final UserDTO u) {
+	private static void dispatchCurrentUserChanged(final Widget w,
+			final UserDTO u) {
 		if (w instanceof UsesCurrentUser) {
 			try {
 				((UsesCurrentUser) w).onCurrentUserChanged(u);
@@ -193,11 +197,12 @@ public class MetPetDBApplication implements EntryPoint {
 	}
 
 	private static void createLoginBarLoggedOut() {
-		loginBar.add(new MLink(LocaleHandler.lc_text.buttonLogin(), new ClickListener() {
-			public void onClick(final Widget sender) {
-				new LoginDialog(null).show();
-			}
-		}));
+		loginBar.add(new MLink(LocaleHandler.lc_text.buttonLogin(),
+				new ClickListener() {
+					public void onClick(final Widget sender) {
+						new LoginDialog(null).show();
+					}
+				}));
 		loginBar.add(new MLink(LocaleHandler.lc_text.buttonRegister(),
 				TokenSpace.register));
 		Cookies.setCookie(MpDbConstants.USERID_COOKIE, "", new Date());
@@ -222,6 +227,7 @@ public class MetPetDBApplication implements EntryPoint {
 	public static void show(final Widget w) {
 		contentContainer.clear();
 		contentContainer.add(w);
+		contentContainer.setHeight("100%");
 	}
 
 	public static void notice(final String text) {
@@ -269,7 +275,8 @@ public class MetPetDBApplication implements EntryPoint {
 		mySamples.addItem(LocaleHandler.lc_text.mySamplesMenu_AllMySamples(),
 				TokenSpace.samplesForUser);
 
-		mySamples.addItem(LocaleHandler.lc_text.mySamplesMenu_FavoriteSamples(),
+		mySamples.addItem(
+				LocaleHandler.lc_text.mySamplesMenu_FavoriteSamples(),
 				new MMenuBar(false));
 		mySamples.addItem(LocaleHandler.lc_text.mySamplesMenu_NewestSamples(),
 				new MMenuBar(false));
@@ -294,11 +301,12 @@ public class MetPetDBApplication implements EntryPoint {
 				Window.open(WIKI_URL, "mpdb_wiki", "");
 			}
 		});
-		about.addItem(LocaleHandler.lc_text.aboutMenu_VersionControl(), new Command() {
-			public void execute() {
-				Window.open(GIT_URL, "mpdb_git", "");
-			}
-		});
+		about.addItem(LocaleHandler.lc_text.aboutMenu_VersionControl(),
+				new Command() {
+					public void execute() {
+						Window.open(GIT_URL, "mpdb_git", "");
+					}
+				});
 		about.addItem("SVN Version Control", new Command() {
 			public void execute() {
 				Window.open(SVN_URL, "mpdb_svn", "");
@@ -319,7 +327,8 @@ public class MetPetDBApplication implements EntryPoint {
 		final MMenuBar faq = new MMenuBar(false);
 		final MMenuBar wiki = new MMenuBar(false);
 
-		hdrnav.addItem(LocaleHandler.lc_text.homeMenu(), TokenSpace.introduction);
+		hdrnav.addItem(LocaleHandler.lc_text.homeMenu(),
+				TokenSpace.introduction);
 		hdrnav.addItem(LocaleHandler.lc_text.mySamplesMenu(), mySamples);
 		hdrnav.addItem(LocaleHandler.lc_text.projectMenu(), projects);
 		hdrnav.addItem(LocaleHandler.lc_text.searchMenu(), search);
@@ -328,7 +337,7 @@ public class MetPetDBApplication implements EntryPoint {
 		hdrnav.addItem(LocaleHandler.lc_text.peopleMenu(), people);
 		hdrnav.addItem(LocaleHandler.lc_text.faqMenu(), faq);
 		hdrnav.addItem(LocaleHandler.lc_text.wikiMenu(), wiki);
-		hdrnav.addItem("test bulk upload",TokenSpace.bulkUpload);
+		hdrnav.addItem("test bulk upload", TokenSpace.bulkUpload);
 
 	}
 
@@ -337,6 +346,6 @@ public class MetPetDBApplication implements EntryPoint {
 	 * links
 	 */
 	private static void setupIntroduction() {
-		//introduction = MpDb.factory.getIntroduction();
+		// introduction = MpDb.factory.getIntroduction();
 	}
 }

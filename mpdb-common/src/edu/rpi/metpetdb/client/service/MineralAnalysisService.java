@@ -2,21 +2,20 @@ package edu.rpi.metpetdb.client.service;
 
 import java.util.List;
 
-import org.gwtwidgets.client.ui.pagination.PaginationParameters;
-import org.gwtwidgets.client.ui.pagination.Results;
-
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.MineralAnalysisDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 
 public interface MineralAnalysisService extends RemoteService {
 	Results all(PaginationParameters parameters, final long subsampleId);
-	MineralAnalysisDTO details(long id) throws NoSuchObjectException;
-	MineralAnalysisDTO saveMineralAnalysis(MineralAnalysisDTO mineralAnalysis)
+	ChemicalAnalysisDTO details(long id) throws NoSuchObjectException;
+	ChemicalAnalysisDTO saveMineralAnalysis(ChemicalAnalysisDTO mineralAnalysis)
 			throws ValidationException, LoginRequiredException;
-	List<MineralAnalysisDTO> all(long subsampleId) throws NoSuchObjectException;
+	List<ChemicalAnalysisDTO> all(long subsampleId) throws NoSuchObjectException;
 	void delete(long id) throws NoSuchObjectException, LoginRequiredException;
 }
