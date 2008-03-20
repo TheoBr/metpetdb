@@ -1,10 +1,6 @@
 package edu.rpi.metpetdb.client.ui.bulk.upload;
 
-import java.io.IOException;
-
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FileUpload;
@@ -13,15 +9,12 @@ import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.service.BulkUploadService;
-import edu.rpi.metpetdb.client.service.BulkUploadServiceAsync;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;
@@ -31,15 +24,16 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 
 	private final FormPanel fp;
 	private final FileUpload fu;
-	private final Button submit;
+	private final Button upload;
 	private final VerticalPanel vp;
 	private final Label error;
 	private final HorizontalPanel hp;
 
 	public BulkUploadPanel() {
-		submit = new Button(LocaleHandler.lc_text.buttonUploadImage(), this);
-		submit.setStyleName(Styles.PRIMARY_BUTTON);
-		
+		upload = new Button(LocaleHandler.lc_text.buttonUploadSpreadsheet(),
+				this);
+		upload.setStyleName(Styles.PRIMARY_BUTTON);
+
 		fp = new FormPanel();
 		fp.setMethod(FormPanel.METHOD_POST);
 		fp.setEncoding(FormPanel.ENCODING_MULTIPART);
@@ -51,7 +45,7 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 		fu.setStyleName(Styles.REQUIRED_FIELD);
 
 		hp = new HorizontalPanel();
-		hp.add(submit);
+		hp.add(upload);
 
 		error = new Label("...");
 
@@ -63,7 +57,7 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 		fp.setWidget(vp);
 
 		fp.addFormHandler(new FormHandler() {
-			public void onSubmitComplete(FormSubmitCompleteEvent event) {
+			public void onSubmitComplete(final FormSubmitCompleteEvent event) {
 				// When the form submission is successfully completed, this
 				// event is
 				// fired. Assuming the service returned a response of type
@@ -71,26 +65,44 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 				// we can get the result text here (see the FormPanel
 				// documentation for
 				// further explanation).
-				final String fileOnServer = event.getResults();
-				BulkUploadServiceAsync bulkUploadService = (BulkUploadServiceAsync) GWT
-						.create(BulkUploadService.class);
-				ServiceDefTarget endpoint = (ServiceDefTarget) bulkUploadService;
-				String moduleRelativeURL = GWT.getModuleBaseURL() + "/bulkUpload.svc";
-				endpoint.setServiceEntryPoint(moduleRelativeURL);
+				final String results = event.getResults();
+				if (results != "NO-SCRIPT-DATA" && results != "") {
+					error.setText("File uploaded successfully, please"
+							+ " wait while it is saved to the database...");
+					// TODO: This is bad! It's to strip the <pre> and </pre>
+					// tags
+					// that get stuck on the string for some reason
+					final String fileOnServer = results.substring(5, results
+							.length() - 6);
+					new ServerOp<String>() {
+						public void begin() {
+							MpDb.bulkUpload_svc.saveSamplesFromSpreadsheet(
+									fileOnServer, this);
+						}
 
-				new ServerOp() {
-					public void begin() {
-						MpDb.bulkUpload_svc.validate(fileOnServer, this);
-					}
-					public void onSuccess(final Object result) {
-						Grid spreadsheet = (Grid)result;
-						vp.add(spreadsheet);
-					}
-				}.begin();
-
+						public void onSuccess(final String result) {
+							error.setText(result);
+							// List<List<String>> spreadsheet =
+							// (List<List<String>>)
+							// result;
+							// Grid g = new Grid(spreadsheet.size(), spreadsheet
+							// .get(0).size());
+							// int i = 0, j = 0;
+							// for (List<String> lst : spreadsheet) {
+							// j = 0;
+							// for (String str : lst) {
+							// g.setText(i, j, str);
+							// ++j;
+							// }
+							// ++i;
+							// }
+							// vp.add(g);
+						}
+					}.begin();
+				}
 			}
 
-			public void onSubmit(FormSubmitEvent event) {
+			public void onSubmit(final FormSubmitEvent event) {
 				// This event is fired just before the form is submitted. We can
 				// take
 				// this opportunity to perform validation.
@@ -113,7 +125,7 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 	}
 
 	public void onClick(final Widget sender) {
-		if (submit == sender)
+		if (upload == sender)
 			doUpload();
 	}
 

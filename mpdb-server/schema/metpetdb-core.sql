@@ -188,6 +188,17 @@ CREATE TABLE elements
      CHECK (mineral_type IN ('Silicates','Oxides', 'Carbonates','Phosphates','Other'))
 ) WITHOUT OIDS;
 
+CREATE TABLE uploaded_files
+(
+   hash      CHAR(50) NOT NULL,
+   filename  VARCHAR(255) NOT NULL,
+   time      TIMESTAMP NOT NULL,
+   user_id   INT4,
+   CONSTRAINT uploaded_files_pk PRIMARY KEY (hash),
+   CONSTRAINT uploaded_files_fk_user FOREIGN KEY(user_id)
+      REFERENCES users (user_id) MATCH SIMPLE
+) WITHOUT OIDS;
+
 CREATE SEQUENCE mineral_seq;
 CREATE SEQUENCE project_seq;
 CREATE SEQUENCE region_seq;

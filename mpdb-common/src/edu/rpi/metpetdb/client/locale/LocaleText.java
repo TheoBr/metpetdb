@@ -77,6 +77,7 @@ public interface LocaleText extends Messages {
 	String tab_Login();
 	String tab_ForgotPassword();
 	String buttonUploadImage();
+	String buttonUploadSpreadsheet();
 	String buttonSubmit();
 
 	/* Errors */

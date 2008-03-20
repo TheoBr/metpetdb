@@ -5,10 +5,10 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,15 +20,15 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
+import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.server.model.Sample;
-import edu.rpi.metpetdb.server.model.User;
 
 public class SampleParser {
 
 	public final class Index {
 		public final int row, col;
 
-		public Index(int r, int c) {
+		public Index(final int r, final int c) {
 			row = r;
 			col = c;
 		}
@@ -36,7 +36,7 @@ public class SampleParser {
 
 	private final InputStream is;
 	private HSSFSheet sheet;
-	private final Set<Sample> samples;
+	private final Set<SampleDTO> samples;
 	/**
 	 * sampleMethodMap[][0] === name in table sampleMethodMap[][1] === method to
 	 * call on Sample to store data sampleMethodMap[][2] === parameter to the
@@ -71,7 +71,7 @@ public class SampleParser {
 	 *            the user to whom to attribute the samples created
 	 */
 	public SampleParser(final InputStream is) {
-		samples = new HashSet<Sample>();
+		samples = new HashSet<SampleDTO>();
 		colMethods = new HashMap<Integer, Method>();
 		this.is = is;
 	}
@@ -93,22 +93,23 @@ public class SampleParser {
 	 * validate validates the spreadsheet, setting errors as necessary.
 	 * 
 	 * @param cell_errors
-	 * 	a set to be populated with the indices of cell errors
+	 *            a set to be populated with the indices of cell errors
 	 * @param col_errors
-	 * 	a set to be populated with the indices of column errors
+	 *            a set to be populated with the indices of column errors
 	 * @param row_errors
-	 *  a set to be populated with the indices of row errors
+	 *            a set to be populated with the indices of row errors
 	 * @return a list of lists of strings that represent the excel sheet.
 	 */
-	public List<List<String>> validate(final Set<Index> cell_errors, final Set<Integer> col_errors, final Set<Integer> row_errors) {
-		List<List<String>> rows = new LinkedList<List<String>>();
+	public List<List<String>> validate(final Set<Index> cell_errors,
+			final Set<Integer> col_errors, final Set<Integer> row_errors) {
+		final List<List<String>> rows = new ArrayList<List<String>>();
 		final HSSFRow header = sheet.getRow(0);
 		for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
 			final HSSFCell cell = header.getCell((short) i);
 			final String text;
 			try {
 				text = cell.toString(); // getString();
-			} catch (NullPointerException npe) {
+			} catch (final NullPointerException npe) {
 				// blank column
 				continue;
 			}
@@ -123,12 +124,13 @@ public class SampleParser {
 					if (methodName == null || dataType == null) {
 						System.out.println("\tNo method for (" + text + ")");
 						col_errors.add(new Integer(j));
+						continue;
 					}
 					try {
 						final Method method = Sample.class.getMethod(
 								methodName, dataType);
 						colMethods.put(new Integer(i), method);
-					} catch (NoSuchMethodException nsme) {
+					} catch (final NoSuchMethodException nsme) {
 						System.out.println("\tMethod not found (" + methodName
 								+ ")");
 						// don't add anything.
@@ -138,29 +140,31 @@ public class SampleParser {
 			}
 		}
 		// Loop through the rows
-			Set<Index> new_errors = new HashSet<Index>();
+		final Set<Index> new_errors = new HashSet<Index>();
 		for (int i = 1; i < sheet.getPhysicalNumberOfRows(); ++i) {
 			new_errors.clear();
 			System.out.println("Parsing Row " + i);
-			validateRow(sheet.getRow(i), new_errors);
-			if(!new_errors.isEmpty()){
+			rows.add(validateRow(sheet.getRow(i), new_errors));
+			if (!new_errors.isEmpty()) {
 				cell_errors.addAll(new_errors);
 				row_errors.add(new Integer(i));
 			}
 		}
-		
-		
+
 		return rows;
 	}
 
 	public void parse() throws InvalidFormatException {
 		final HSSFRow header = sheet.getRow(0);
+		if (header == null) {
+			throw new InvalidFormatException();
+		}
 		for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
 			final HSSFCell cell = header.getCell((short) i);
 			final String text;
 			try {
 				text = cell.toString(); // getString();
-			} catch (NullPointerException npe) {
+			} catch (final NullPointerException npe) {
 				// blank column
 				continue;
 			}
@@ -174,13 +178,14 @@ public class SampleParser {
 					final Class dataType = (Class) sampleMethodMap[j][2];
 					if (methodName == null || dataType == null) {
 						System.out.println("\tNo method for (" + text + ")");
-						throw new InvalidFormatException();
+						// throw new InvalidFormatException();
+						continue;
 					}
 					try {
-						final Method method = Sample.class.getMethod(
+						final Method method = SampleDTO.class.getMethod(
 								methodName, dataType);
 						colMethods.put(new Integer(i), method);
-					} catch (NoSuchMethodException nsme) {
+					} catch (final NoSuchMethodException nsme) {
 						System.out.println("\tMethod not found (" + methodName
 								+ ")");
 						// don't add anything.
@@ -196,8 +201,8 @@ public class SampleParser {
 		}
 	}
 
-	private List<String> validateRow(final HSSFRow row, final Set<Index> errors){
-		List<String> output = new LinkedList<String>();
+	private List<String> validateRow(final HSSFRow row, final Set<Index> errors) {
+		final List<String> output = new ArrayList<String>();
 		for (Integer i = 0; i < row.getPhysicalNumberOfCells(); ++i) {
 			final HSSFCell cell = row.getCell((short) i.intValue());
 			try {
@@ -220,23 +225,27 @@ public class SampleParser {
 				} else if (dataType == Timestamp.class) {
 					try {
 						cell.getDateCellValue();
-					} catch (NumberFormatException nfe) {
+					} catch (final NumberFormatException nfe) {
 						errors.add(new Index(row.getRowNum(), i));
 					}
 				}
 
-			} catch (NullPointerException npe) {
+			} catch (final NullPointerException npe) {
 				// empty cell
-				continue;
-			} catch (NumberFormatException nfe){
+				// continue;
+			} catch (final NumberFormatException nfe) {
 				errors.add(new Index(row.getRowNum(), i));
-			} finally{
-				output.add(cell.toString());
+			} finally {
+				try {
+					output.add(cell.toString());
+				} catch (final NullPointerException npe) {
+					output.add("");
+				}
 			}
 		}
 		return output;
 	}
-	
+
 	/**
 	 * 
 	 * @param row
@@ -245,7 +254,7 @@ public class SampleParser {
 	 *             if the row isn't of the format designated by the headers
 	 */
 	private void parseRow(final HSSFRow row) throws InvalidFormatException {
-		final Sample s = new Sample();
+		final SampleDTO s = new SampleDTO();
 
 		for (Integer i = 0; i < row.getPhysicalNumberOfCells(); ++i) {
 			final HSSFCell cell = row.getCell((short) i.intValue());
@@ -253,7 +262,7 @@ public class SampleParser {
 				final Method storeMethod = colMethods.get(i);
 				System.out.println("\t Parsing Column " + i + ": "
 						+ storeMethod.getName());
-				
+
 				if (storeMethod == null)
 					continue;
 
@@ -273,18 +282,18 @@ public class SampleParser {
 					try {
 						final Date data = cell.getDateCellValue();
 						storeMethod.invoke(s, new Timestamp(data.getTime()));
-					} catch (NumberFormatException nfe) {
-						throw new InvalidFormatException();
+					} catch (final NumberFormatException nfe) {
+						// throw new InvalidFormatException();
 					}
 				}
 
-			} catch (NullPointerException npe) {
+			} catch (final NullPointerException npe) {
 				// empty cell
 				continue;
-			} catch (InvocationTargetException ie) {
+			} catch (final InvocationTargetException ie) {
 				// hopefully it will have been thrown already.
 				throw new InvalidFormatException();
-			} catch (IllegalAccessException iae) {
+			} catch (final IllegalAccessException iae) {
 				// I believe this is when a method is private and we don't have
 				// access. It should never get here.
 				throw new InvalidFormatException(/*
@@ -296,7 +305,7 @@ public class SampleParser {
 		samples.add(s);
 	}
 
-	public Set<Sample> getSamples() {
+	public Set<SampleDTO> getSamples() {
 		return samples;
 	}
 
