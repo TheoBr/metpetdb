@@ -10,17 +10,9 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
-import edu.rpi.metpetdb.client.model.interfaces.IHasImages;
-
 @Indexed
-public class Subsample extends MObject implements IHasImages {
+public class Subsample extends MObject {
 	private static final long serialVersionUID = 1L;
-	public static final int P_name = 0;
-	public static final int P_type = 1;
-	public static final int P_images = 2;
-	public static final int P_imageCount = 3;
-	public static final int P_analysisCount = 4;
-	public static final int P_sampleName = 5;
 
 	@DocumentId
 	private long id;
@@ -40,7 +32,7 @@ public class Subsample extends MObject implements IHasImages {
 
 	private Grid grid;
 
-	private Set<MineralAnalysis> mineralAnalyses;
+	private Set<ChemicalAnalysis> mineralAnalyses;
 	private int imageCount;
 	private int analysisCount;
 
@@ -100,18 +92,18 @@ public class Subsample extends MObject implements IHasImages {
 		images.add(i);
 	}
 
-	public Set<MineralAnalysis> getMineralAnalyses() {
+	public Set<ChemicalAnalysis> getMineralAnalyses() {
 		return mineralAnalyses;
 	}
 
-	public void setMineralAnalyses(final Set<MineralAnalysis> s) {
+	public void setMineralAnalyses(final Set<ChemicalAnalysis> s) {
 		mineralAnalyses = s;
 	}
 
-	public void addMineralAnalysis(MineralAnalysis ma) {
+	public void addMineralAnalysis(ChemicalAnalysis ma) {
 		ma.setSubsample(this);
 		if (mineralAnalyses == null)
-			mineralAnalyses = new HashSet<MineralAnalysis>();
+			mineralAnalyses = new HashSet<ChemicalAnalysis>();
 		mineralAnalyses.add(ma);
 	}
 

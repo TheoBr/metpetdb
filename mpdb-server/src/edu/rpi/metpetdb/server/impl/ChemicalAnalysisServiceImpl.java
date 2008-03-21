@@ -11,22 +11,21 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
-import edu.rpi.metpetdb.client.service.MineralAnalysisService;
+import edu.rpi.metpetdb.client.service.ChemicalAnalyisService;
 import edu.rpi.metpetdb.server.MpDbServlet;
-import edu.rpi.metpetdb.server.model.MineralAnalysis;
+import edu.rpi.metpetdb.server.model.ChemicalAnalysis;
 
-public class MineralAnalysisServiceImpl extends MpDbServlet
-		implements
-			MineralAnalysisService {
+public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
+		ChemicalAnalyisService {
 	private static final long serialVersionUID = 1L;
 
 	public ChemicalAnalysisDTO details(long id) throws NoSuchObjectException {
-		final ChemicalAnalysisDTO ma = cloneBean(byId("MineralAnalysis", id));
+		final ChemicalAnalysisDTO ma = cloneBean(byId("ChemicalAnalysis", id));
 		return ma;
 	}
 
 	public Results all(PaginationParameters parameters, final long subsampleId) {
-		final String name = "MineralAnalysis.bySubsampleId";
+		final String name = "ChemicalAnalysis.bySubsampleId";
 		final Query sizeQuery = sizeQuery(name);
 		final Query pageQuery = pageQuery(name, parameters);
 		sizeQuery.setLong("id", subsampleId);
@@ -34,24 +33,21 @@ public class MineralAnalysisServiceImpl extends MpDbServlet
 		return toResults(sizeQuery, pageQuery);
 	}
 
-	public List<ChemicalAnalysisDTO> all(long subsampleId) throws NoSuchObjectException {
-		return cloneBean(byKey("MineralAnalysis", "subsampleId",
-				subsampleId));
+	public List<ChemicalAnalysisDTO> all(long subsampleId)
+			throws NoSuchObjectException {
+		return cloneBean(byKey("ChemicalAnalysis", "subsampleId", subsampleId));
 	}
 
-	public ChemicalAnalysisDTO saveMineralAnalysis(ChemicalAnalysisDTO maDTO)
+	public ChemicalAnalysisDTO save(ChemicalAnalysisDTO maDTO)
 			throws ValidationException, LoginRequiredException {
 		doc.validate(maDTO);
 		if (maDTO.getSubsample().getSample().getOwner().getId() != currentUser())
 			throw new SecurityException(
 					"Cannot modify subsamples you don't own.");
-		MineralAnalysis ma = mergeBean(maDTO);
+		ChemicalAnalysis ma = mergeBean(maDTO);
 		try {
-			if (ma.getImage() != null
-					&& ma.getImage().mIsNew()) {
-				ma
-						.setImage(update(merge(ma
-								.getImage())));
+			if (ma.getImage() != null && ma.getImage().mIsNew()) {
+				ma.setImage(update(merge(ma.getImage())));
 			}
 			if (ma.mIsNew()) {
 				insert(ma);
@@ -63,10 +59,11 @@ public class MineralAnalysisServiceImpl extends MpDbServlet
 			throw cve;
 		}
 	}
-	
-	public void delete(long id) throws NoSuchObjectException, LoginRequiredException {
+
+	public void delete(long id) throws NoSuchObjectException,
+			LoginRequiredException {
 		try {
-			final MineralAnalysis ma = byId("MineralAnalysis",id);
+			final ChemicalAnalysis ma = byId("ChemicalAnalysis", id);
 			delete(ma);
 			commit();
 		} catch (ConstraintViolationException cve) {

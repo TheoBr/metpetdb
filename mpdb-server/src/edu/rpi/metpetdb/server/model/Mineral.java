@@ -12,7 +12,7 @@ import edu.rpi.metpetdb.client.model.interfaces.IHasChildren;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 
 @Indexed
-public class Mineral extends MObject implements IHasChildren, IHasName {
+public class Mineral extends MObject implements IHasName {
 	private static final long serialVersionUID = 1L;
 	public static final int P_name = 0;
 

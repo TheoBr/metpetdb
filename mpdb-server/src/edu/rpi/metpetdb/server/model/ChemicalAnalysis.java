@@ -6,7 +6,7 @@ import java.util.Set;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public class MineralAnalysis extends MObject {
+public class ChemicalAnalysis extends MObject {
 	private static final long serialVersionUID = 1L;
 	public static final int P_spotId = 0;
 	public static final int P_pointX = 1;
@@ -213,7 +213,7 @@ public class MineralAnalysis extends MObject {
 
 	@Override
 	public boolean equals(final Object o) {
-		return o instanceof MineralAnalysis && id == ((MineralAnalysis) o).id;
+		return o instanceof ChemicalAnalysis && id == ((ChemicalAnalysis) o).id;
 	}
 
 	@Override

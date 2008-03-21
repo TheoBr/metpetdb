@@ -53,18 +53,18 @@ public class DataStore {
 	private static DatabaseObjectConstraints databaseObjectConstraints;
 
 	private static ObjectConstraints objectConstraints;
-	
+
 	private final static DataStore instance = new DataStore();
-	
+
 	private static HibernateBeanManager hbm;
-	
+
 	public static DataStore getInstance() {
 		return instance;
 	}
 
 	protected static synchronized Configuration getConfiguration() {
 		if (config == null) {
-			
+
 			final Configuration cfg = new Configuration();
 			final URL x = DataStore.class.getResource("dao/hibernate.cfg.xml");
 			if (x == null)
@@ -80,7 +80,7 @@ public class DataStore {
 			factory = getConfiguration().buildSessionFactory();
 		return factory;
 	}
-	
+
 	public static void setHibernateBeanManager(final HibernateBeanManager hbm) {
 		DataStore.hbm = hbm;
 	}
@@ -122,7 +122,8 @@ public class DataStore {
 	synchronized void setConstraints(final DatabaseObjectConstraints oc) {
 		final Session s = open();
 		try {
-			final Connection conn = getConfiguration().buildSettings().getConnectionProvider().getConnection();
+			final Connection conn = getConfiguration().buildSettings()
+					.getConnectionProvider().getConnection();
 			try {
 				final DatabaseMetaData md = conn.getMetaData();
 				final Field[] fields = oc.getClass().getDeclaredFields();
@@ -140,18 +141,17 @@ public class DataStore {
 				} catch (SQLException err) {
 				}
 			}
-		}catch (SQLException err) {
+		} catch (SQLException err) {
 			throw new HibernateException("getConnection() error");
 		} finally {
 			s.close();
 		}
 		oc.finishInitialization();
 	}
-	
-	private void populateObjectConstraintField(
-			final DatabaseMetaData md, final DatabaseObjectConstraints oc,
-			final Field f) throws SQLException, IllegalAccessException,
-			InstantiationException {
+
+	private void populateObjectConstraintField(final DatabaseMetaData md,
+			final DatabaseObjectConstraints oc, final Field f)
+			throws SQLException, IllegalAccessException, InstantiationException {
 		if (f.getType().isArray())
 			return;
 		final String[] v = f.getName().split("_");
@@ -175,14 +175,14 @@ public class DataStore {
 			if (prop.getValue().getClass() == org.hibernate.mapping.Set.class
 					|| prop.getValue().getClass() == org.hibernate.mapping.Bag.class) {
 				col = null;
-//				final Iterator fkItr = ((org.hibernate.mapping.Set) prop
-//						.getValue()).getCollectionTable()
-//						.getForeignKeyIterator();
-//				while (fkItr.hasNext()) {
-//					// TODO make it get the constraints of referenced columns
-//					final ForeignKey fk = (ForeignKey) fkItr.next();
-//					fk.getReferencedColumns().get(0);
-//				}
+				// final Iterator fkItr = ((org.hibernate.mapping.Set) prop
+				// .getValue()).getCollectionTable()
+				// .getForeignKeyIterator();
+				// while (fkItr.hasNext()) {
+				// // TODO make it get the constraints of referenced columns
+				// final ForeignKey fk = (ForeignKey) fkItr.next();
+				// fk.getReferencedColumns().get(0);
+				// }
 			} else {
 				final Iterator<Column> i = prop.getColumnIterator();
 				if (!i.hasNext())
@@ -203,7 +203,7 @@ public class DataStore {
 
 		pc.entityName = entityName;
 		pc.propertyName = attributeName;
-		pc.propertyId = propertyId(clazz(cm, entityName), pc.propertyName);
+		pc.property = property(clazz(cm, entityName), pc.propertyName);
 		appendToAllArray(oc, pc);
 
 		if (cm != null && col != null) {
@@ -256,8 +256,8 @@ public class DataStore {
 		}
 	}
 
-	private PropertyConstraint createPropertyConstraint(
-			final Property p, final Field f) throws IllegalAccessException,
+	private PropertyConstraint createPropertyConstraint(final Property p,
+			final Field f) throws IllegalAccessException,
 			InstantiationException {
 		try {
 			final String pkg = "edu.rpi.metpetdb.client.model.validation";
@@ -300,7 +300,8 @@ public class DataStore {
 			}
 			final Session session = open();
 			try {
-				final List<Mineral> minerals = session.getNamedQuery("Mineral.parents").list();
+				final List<Mineral> minerals = session.getNamedQuery(
+						"Mineral.parents").list();
 				mc.setMinerals((List<MineralDTO>) hbm.clone(minerals));
 			} catch (org.hibernate.exception.GenericJDBCException dbe) {
 				session.cancelQuery();
@@ -348,7 +349,8 @@ public class DataStore {
 				cc = new CollectionConstraint();
 			}
 			final Session session = open();
-			cc.setValues((Collection) hbm.clone(session.getNamedQuery(className + ".all").list()));
+			cc.setValues((Collection) hbm.clone(session.getNamedQuery(
+					className + ".all").list()));
 			session.clear();
 			session.close();
 			return cc;
@@ -360,13 +362,18 @@ public class DataStore {
 					+ p.getName() + ".");
 	}
 
-	@SuppressWarnings("unchecked")
-	private static int propertyId(final Class who, final String name)
-			throws IllegalAccessException {
+	private static edu.rpi.metpetdb.client.model.properties.Property property(
+			final Class who, final String name) throws IllegalAccessException {
 		try {
-			return ((Integer) who.getField("P_" + name).get(null)).intValue();
-		} catch (NoSuchFieldException nsfe) {
-			throw new RuntimeException("No P_" + name + " in " + who.getName());
+			// Get the enum class
+			final Class enumClass = Class
+					.forName("edu.rpi.metpetdb.client.model.properties."
+							+ who.getSimpleName() + "Property");
+			return (edu.rpi.metpetdb.client.model.properties.Property) Enum
+					.valueOf(enumClass, name);
+		} catch (ClassNotFoundException nsfe) {
+			throw new RuntimeException("Class not found " + name + " in "
+					+ who.getName());
 		}
 	}
 
