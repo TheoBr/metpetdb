@@ -20,7 +20,7 @@
     <mapping resource="edu/rpi/metpetdb/server/dao/Grid.hbm.xml" />
     <mapping resource="edu/rpi/metpetdb/server/dao/Image.hbm.xml" />
     <mapping resource="edu/rpi/metpetdb/server/dao/ImageOnGrid.hbm.xml" />
-    <mapping resource="edu/rpi/metpetdb/server/dao/MineralAnalysis.hbm.xml" />
+    <mapping resource="edu/rpi/metpetdb/server/dao/ChemicalAnalysis.hbm.xml" />
     <mapping resource="edu/rpi/metpetdb/server/dao/Sample.hbm.xml" />
     <mapping resource="edu/rpi/metpetdb/server/dao/Subsample.hbm.xml" />
     <mapping resource="edu/rpi/metpetdb/server/dao/User.hbm.xml" />
