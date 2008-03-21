@@ -32,7 +32,7 @@ public class Subsample extends MObject {
 
 	private Grid grid;
 
-	private Set<ChemicalAnalysis> mineralAnalyses;
+	private Set<ChemicalAnalysis> chemicalAnalysis;
 	private int imageCount;
 	private int analysisCount;
 
@@ -92,19 +92,19 @@ public class Subsample extends MObject {
 		images.add(i);
 	}
 
-	public Set<ChemicalAnalysis> getMineralAnalyses() {
-		return mineralAnalyses;
+	public Set<ChemicalAnalysis> getChemicalAnalyses() {
+		return chemicalAnalysis;
 	}
 
-	public void setMineralAnalyses(final Set<ChemicalAnalysis> s) {
-		mineralAnalyses = s;
+	public void setChemicalAnalyses(final Set<ChemicalAnalysis> s) {
+		chemicalAnalysis = s;
 	}
 
-	public void addMineralAnalysis(ChemicalAnalysis ma) {
+	public void addChemicalAnalysis(ChemicalAnalysis ma) {
 		ma.setSubsample(this);
-		if (mineralAnalyses == null)
-			mineralAnalyses = new HashSet<ChemicalAnalysis>();
-		mineralAnalyses.add(ma);
+		if (chemicalAnalysis == null)
+			chemicalAnalysis = new HashSet<ChemicalAnalysis>();
+		chemicalAnalysis.add(ma);
 	}
 
 	public void setGrid(final Grid g) {

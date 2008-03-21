@@ -24,6 +24,6 @@
 	<servlet path="/bulkUpload.svc" class="edu.rpi.metpetdb.server.impl.BulkUploadServiceImpl"></servlet>
 	<servlet path="/image" class="edu.rpi.metpetdb.server.ImagesService"/>
 	<servlet path="/image.svc" class="edu.rpi.metpetdb.server.impl.ImageServiceImpl"/>
-	<servlet path="/mineralAnalysis.svc" class="edu.rpi.metpetdb.server.impl.MineralAnalysisServiceImpl"/>
+	<servlet path="/chemicalAnalysis.svc" class="edu.rpi.metpetdb.server.impl.ChemicalAnalysisServiceImpl"/>
 	<servlet path="/mpdbGeneric.svc" class="edu.rpi.metpetdb.server.impl.MpDbGenericServiceImpl"/>
 </module>

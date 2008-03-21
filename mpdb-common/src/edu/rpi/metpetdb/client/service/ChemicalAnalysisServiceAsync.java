@@ -10,7 +10,7 @@ public interface ChemicalAnalysisServiceAsync {
 
 	void details(long id, AsyncCallback ac);
 
-	void save(ChemicalAnalysisDTO mineralAnalysis, AsyncCallback ac);
+	void save(ChemicalAnalysisDTO chemicalAnalysis, AsyncCallback ac);
 
 	void all(long subsampleId, AsyncCallback ac);
 

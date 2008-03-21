@@ -98,8 +98,8 @@ public class SubsampleDetails extends FlowPanel {
 	public SubsampleDetails showById(final long id) {
 		subsampleId = id;
 		p_subsample.load();
-		final MLink addMineralAnalysis = new MLink(LocaleHandler.lc_text
-				.addMineralAnalysis(), new ClickListener() {
+		final MLink addChemicalAnalysis = new MLink(LocaleHandler.lc_text
+				.addChemicalAnalysis(), new ClickListener() {
 			public void onClick(final Widget sender) {
 				new ServerOp() {
 					public void begin() {
@@ -117,16 +117,8 @@ public class SubsampleDetails extends FlowPanel {
 				}.begin();
 			}
 		});
-		addMineralAnalysis.addStyleName(Styles.ADDLINK);
-		add(addMineralAnalysis);
-		// final MineralAnalysisList list = new MineralAnalysisList(
-		// new DataProvider() {
-		// public void update(final PaginationParameters p,
-		// final AsyncCallback ac) {
-		// MpDb.mineralAnalysis_svc.all(p, subsampleId, ac);
-		// }
-		// });
-		// add(list);
+		addChemicalAnalysis.addStyleName(Styles.ADDLINK);
+		add(addChemicalAnalysis);
 		return this;
 	}
 

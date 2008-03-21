@@ -43,7 +43,7 @@ public interface LocaleText extends Messages {
 	String addSubsampleDescription(String sampleAlias);
 
 	/* Mineral Analyses */
-	String addMineralAnalysis();
+	String addChemicalAnalysis();
 
 	/* Projects */
 	String addProject();

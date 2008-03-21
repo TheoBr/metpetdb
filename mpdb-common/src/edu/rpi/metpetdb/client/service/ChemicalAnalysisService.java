@@ -11,12 +11,12 @@ import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 
-public interface ChemicalAnalyisService extends RemoteService {
+public interface ChemicalAnalysisService extends RemoteService {
 	Results all(PaginationParameters parameters, final long subsampleId);
 
 	ChemicalAnalysisDTO details(long id) throws NoSuchObjectException;
 
-	ChemicalAnalysisDTO save(ChemicalAnalysisDTO mineralAnalysis)
+	ChemicalAnalysisDTO save(ChemicalAnalysisDTO chemicalAnalysis)
 			throws ValidationException, LoginRequiredException;
 
 	List<ChemicalAnalysisDTO> all(long subsampleId)

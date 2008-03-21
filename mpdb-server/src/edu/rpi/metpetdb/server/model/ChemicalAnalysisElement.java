@@ -1,7 +1,7 @@
 package edu.rpi.metpetdb.server.model;
 
 
-public class MineralAnalysisOxide extends Element {
+public class ChemicalAnalysisElement extends Element {
 	private static final long serialVersionUID = 1L;
 	public static final int P_amount = 0;
 	public static final int P_precision = 1;
@@ -10,7 +10,7 @@ public class MineralAnalysisOxide extends Element {
 	private Float amount;
 	private Float precision;
 	private String precisionUnit;
-	private Oxide oxide;
+	private Element element;
 
 	public void setAmount(final Float f) {
 		amount = f;
@@ -42,18 +42,16 @@ public class MineralAnalysisOxide extends Element {
 		return precisionUnit;
 	}
 
-	public void setOxide(final Oxide m) {
-		oxide = m;
+	public void setElement(final Element m) {
+		element = m;
 		if (m != null) {
-			this.setName(m.getSpecies());
-			this.setId(m.getOxideId());
-			// this.setName(m.getName());
-			// this.setId(m.getId());
+			this.setName(m.getName());
+			this.setId(m.getId());
 		}
 	}
 
-	public Oxide getOxide() {
-		return oxide;
+	public Element getElement() {
+		return element;
 	}
 
 	public String getName() {
@@ -62,28 +60,28 @@ public class MineralAnalysisOxide extends Element {
 
 	public String toString() {
 		if (amount != null)
-			return oxide.getSpecies() + " (" + amount + ")";
+			return element.getName() + " (" + amount + ")";
 		else
-			return oxide.getSpecies();
+			return element.getName();
 	}
 
 	public boolean equals(final Object o) {
-		if (o instanceof MineralAnalysisElement) {
-			final boolean one = ((MineralAnalysisOxide) o).getOxide().equals(
-					oxide);
-			final boolean two = ((MineralAnalysisOxide) o).getAmount() == null ? ((MineralAnalysisOxide) o)
+		if (o instanceof ChemicalAnalysisElement) {
+			final boolean one = ((ChemicalAnalysisElement) o).getElement()
+					.equals(element);
+			final boolean two = ((ChemicalAnalysisElement) o).getAmount() == null ? ((ChemicalAnalysisElement) o)
 					.getAmount() == amount
-					: ((MineralAnalysisOxide) o).getAmount().equals(amount);
+					: ((ChemicalAnalysisElement) o).getAmount().equals(amount);
 			return one && two;
-		} else if (o instanceof Oxide) {
-			return ((Oxide) o).equals(oxide);
+		} else if (o instanceof Element) {
+			return ((Element) o).equals(element);
 		}
 		return false;
 	}
 
 	public int hashCode() {
-		return oxide != null && amount != null ? oxide.hashCode()
-				+ amount.intValue() : oxide.hashCode();
+		return element != null && amount != null ? element.hashCode()
+				+ amount.intValue() : element.hashCode();
 		// return mineral.hashCode();
 	}
 }

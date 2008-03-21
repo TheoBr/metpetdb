@@ -4,7 +4,6 @@ import java.util.Set;
 
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 
 public enum SubsampleProperty implements Property {
@@ -59,14 +58,15 @@ public enum SubsampleProperty implements Property {
 					.setAnalysisCount((Integer) analysisCount);
 		}
 	},
-	sample {
-		public <T extends MObjectDTO> SampleDTO get(final T subsample) {
-			return ((SubsampleDTO) subsample).getSample();
+	sampleName {
+		public <T extends MObjectDTO> String get(final T subsample) {
+			return ((SubsampleDTO) subsample).getSample().getAlias();
 		}
 
 		public <T extends MObjectDTO, K> void set(final T subsample,
 				final K sample) {
-			((SubsampleDTO) subsample).setSample((SampleDTO) sample);
+
+			// FIXME this should thrown an exception
 		}
 	},
 }

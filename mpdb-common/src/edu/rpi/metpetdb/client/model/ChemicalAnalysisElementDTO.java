@@ -1,16 +1,13 @@
-package edu.rpi.metpetdb.server.model;
+package edu.rpi.metpetdb.client.model;
 
 
-public class MineralAnalysisElement extends Element {
+public class ChemicalAnalysisElementDTO extends ElementDTO {
+
 	private static final long serialVersionUID = 1L;
-	public static final int P_amount = 0;
-	public static final int P_precision = 1;
-	public static final int P_precisionUnit = 2;
-
 	private Float amount;
 	private Float precision;
 	private String precisionUnit;
-	private Element element;
+	private ElementDTO element;
 
 	public void setAmount(final Float f) {
 		amount = f;
@@ -42,7 +39,7 @@ public class MineralAnalysisElement extends Element {
 		return precisionUnit;
 	}
 
-	public void setElement(final Element m) {
+	public void setElement(final ElementDTO m) {
 		element = m;
 		if (m != null) {
 			this.setName(m.getName());
@@ -50,7 +47,7 @@ public class MineralAnalysisElement extends Element {
 		}
 	}
 
-	public Element getElement() {
+	public ElementDTO getElement() {
 		return element;
 	}
 
@@ -66,15 +63,16 @@ public class MineralAnalysisElement extends Element {
 	}
 
 	public boolean equals(final Object o) {
-		if (o instanceof MineralAnalysisElement) {
-			final boolean one = ((MineralAnalysisElement) o).getElement()
+		if (o instanceof ChemicalAnalysisElementDTO) {
+			final boolean one = ((ChemicalAnalysisElementDTO) o).getElement()
 					.equals(element);
-			final boolean two = ((MineralAnalysisElement) o).getAmount() == null ? ((MineralAnalysisElement) o)
+			final boolean two = ((ChemicalAnalysisElementDTO) o).getAmount() == null ? ((ChemicalAnalysisElementDTO) o)
 					.getAmount() == amount
-					: ((MineralAnalysisElement) o).getAmount().equals(amount);
+					: ((ChemicalAnalysisElementDTO) o).getAmount()
+							.equals(amount);
 			return one && two;
-		} else if (o instanceof Element) {
-			return ((Element) o).equals(element);
+		} else if (o instanceof ElementDTO) {
+			return ((ElementDTO) o).equals(element);
 		}
 		return false;
 	}

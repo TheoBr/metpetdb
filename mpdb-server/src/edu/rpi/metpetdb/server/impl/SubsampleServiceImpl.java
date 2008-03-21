@@ -17,9 +17,8 @@ import edu.rpi.metpetdb.client.service.SubsampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.model.Subsample;
 
-public class SubsampleServiceImpl extends MpDbServlet
-		implements
-			SubsampleService {
+public class SubsampleServiceImpl extends MpDbServlet implements
+		SubsampleService {
 	private static final long serialVersionUID = 1L;
 
 	public Results all(final PaginationParameters p, final long sampleId) {
@@ -34,27 +33,29 @@ public class SubsampleServiceImpl extends MpDbServlet
 				s.setImageCount(((Number) sizeQuery("Image.bySubsampleId",
 						s.getId()).uniqueResult()).intValue());
 				s.setAnalysisCount(((Number) sizeQuery(
-						"MineralAnalysis.bySubsampleId", s.getId())
+						"ChemicalAnalysis.bySubsampleId", s.getId())
 						.uniqueResult()).intValue());
 			}
-			
-			return new Results(sz.intValue(),  cloneBean(l));
+
+			return new Results(sz.intValue(), cloneBean(l));
 		} else
 			return new Results(sz.intValue(), new ArrayList<Subsample>());
 	}
+
 	public Results allWithImages(final PaginationParameters p,
 			final long sampleId) {
 		final String name = "Subsample.allWithImages";
 		return toResults(sizeQuery(name, sampleId),
 				pageQuery(name, p, sampleId));
 	}
-	
+
 	public SubsampleDTO details(final long id) throws NoSuchObjectException {
 		final Subsample s = (Subsample) byId("Subsample", id);
 		s.setImageCount(((Number) sizeQuery("Image.bySubsampleId", s.getId())
 				.uniqueResult()).intValue());
-		s.setAnalysisCount(((Number) sizeQuery("MineralAnalysis.bySubsampleId",
-				s.getId()).uniqueResult()).intValue());
+		s.setAnalysisCount(((Number) sizeQuery(
+				"ChemicalAnalysis.bySubsampleId", s.getId()).uniqueResult())
+				.intValue());
 		return (SubsampleDTO) clone(s);
 	}
 
@@ -82,7 +83,8 @@ public class SubsampleServiceImpl extends MpDbServlet
 		try {
 			final Subsample s = byId("Subsample", id);
 			if (s.getSample().getOwner().getId() != currentUser())
-				throw new SecurityException("Cannot modify subsamples you don't own.");
+				throw new SecurityException(
+						"Cannot modify subsamples you don't own.");
 			delete(s);
 			commit();
 		} catch (ConstraintViolationException cve) {

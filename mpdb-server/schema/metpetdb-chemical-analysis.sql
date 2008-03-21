@@ -18,11 +18,11 @@ CREATE TABLE chemical_analyses
    CONSTRAINT chemical_analyses_sk PRIMARY KEY (chemical_analysis_id),
    CONSTRAINT chemical_analyses_fk_subsamples FOREIGN KEY (subsample_id)
       REFERENCES subsamples(subsample_id),
-   CONSTRAINT chemical_analyses_fk_user FOREIGN KEY (user_id)
-     REFERENCES users (user_id),
-   CONSTRAINT chemical_analyses_fk_reference FOREIGN KEY (reference_id)
-      REFERENCES reference (reference_id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION,
+   --CONSTRAINT chemical_analyses_fk_user FOREIGN KEY (user_id)
+  --   REFERENCES users (user_id),
+  -- CONSTRAINT chemical_analyses_fk_reference FOREIGN KEY (reference_id)
+  --    REFERENCES reference (reference_id) MATCH SIMPLE
+ --     ON UPDATE NO ACTION ON DELETE NO ACTION,
    CONSTRAINT chemical_analyses_fk_images FOREIGN KEY (image_id)
       REFERENCES images(image_id) ON DELETE SET NULL,
    CONSTRAINT chemical_analyses_fk_mineral FOREIGN KEY (mineral_id)

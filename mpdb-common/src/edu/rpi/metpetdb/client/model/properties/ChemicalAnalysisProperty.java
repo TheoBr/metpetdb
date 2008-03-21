@@ -123,15 +123,27 @@ public enum ChemicalAnalysisProperty implements Property {
 					.setMineral((MineralDTO) mineral);
 		}
 	},
-	subsample {
-		public <T extends MObjectDTO> SubsampleDTO get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getSubsample();
+	subsampleName {
+		public <T extends MObjectDTO> String get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysisDTO) chemicalAnalysis).getSubsample()
+					.getName();
 		}
 
 		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
 				final K subsample) {
 			((ChemicalAnalysisDTO) chemicalAnalysis)
 					.setSubsample((SubsampleDTO) subsample);
+		}
+	},
+	sampleName {
+		public <T extends MObjectDTO> String get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysisDTO) chemicalAnalysis).getSubsample()
+					.getSample().getAlias();
+		}
+
+		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+				final K subsample) {
+			// FIXME this should throw an exception
 		}
 	},
 	image {

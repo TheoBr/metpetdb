@@ -102,8 +102,8 @@ public class TokenSpace implements HistoryListener {
 			show(new ImageBrowserDetails().showById(id));
 		}
 	};
-	private static final TokenHandler mineralAnalysisDetails = new LKey(
-			"MineralAnalysis") {
+	private static final TokenHandler chemicalAnalysisDetails = new LKey(
+			"ChemicalAnalysis") {
 		public long get(final Object obj) {
 			return ((ChemicalAnalysisDTO) obj).getId();
 		}
@@ -290,7 +290,7 @@ public class TokenSpace implements HistoryListener {
 		register(projectSamples);
 		register(editProfile);
 		register(imageBrowserDetails);
-		register(mineralAnalysisDetails);
+		register(chemicalAnalysisDetails);
 		register(enterSample);
 		register(newProject);
 		register(bulkUpload);
@@ -335,7 +335,7 @@ public class TokenSpace implements HistoryListener {
 	}
 
 	public static String detailsOf(final ChemicalAnalysisDTO ma) {
-		return mineralAnalysisDetails.makeToken(ma);
+		return chemicalAnalysisDetails.makeToken(ma);
 	}
 
 	public static String edit(final SubsampleDTO s) {

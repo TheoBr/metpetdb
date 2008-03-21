@@ -1,13 +1,13 @@
 package edu.rpi.metpetdb.client.model;
 
 
-public class MineralAnalysisElementDTO extends ElementDTO {
+public class ChemicalAnalysisOxideDTO extends ElementDTO {
 
 	private static final long serialVersionUID = 1L;
 	private Float amount;
 	private Float precision;
 	private String precisionUnit;
-	private ElementDTO element;
+	private OxideDTO oxide;
 
 	public void setAmount(final Float f) {
 		amount = f;
@@ -39,16 +39,18 @@ public class MineralAnalysisElementDTO extends ElementDTO {
 		return precisionUnit;
 	}
 
-	public void setElement(final ElementDTO m) {
-		element = m;
+	public void setOxide(final OxideDTO m) {
+		oxide = m;
 		if (m != null) {
-			this.setName(m.getName());
-			this.setId(m.getId());
+			this.setName(m.getSpecies());
+			this.setId(m.getOxideId());
+			// this.setName(m.getName());
+			// this.setId(m.getId());
 		}
 	}
 
-	public ElementDTO getElement() {
-		return element;
+	public OxideDTO getOxide() {
+		return oxide;
 	}
 
 	public String getName() {
@@ -57,29 +59,28 @@ public class MineralAnalysisElementDTO extends ElementDTO {
 
 	public String toString() {
 		if (amount != null)
-			return element.getName() + " (" + amount + ")";
+			return oxide.getSpecies() + " (" + amount + ")";
 		else
-			return element.getName();
+			return oxide.getSpecies();
 	}
 
 	public boolean equals(final Object o) {
-		if (o instanceof MineralAnalysisElementDTO) {
-			final boolean one = ((MineralAnalysisElementDTO) o).getElement()
-					.equals(element);
-			final boolean two = ((MineralAnalysisElementDTO) o).getAmount() == null ? ((MineralAnalysisElementDTO) o)
+		if (o instanceof ChemicalAnalysisElementDTO) {
+			final boolean one = ((ChemicalAnalysisOxideDTO) o).getOxide()
+					.equals(oxide);
+			final boolean two = ((ChemicalAnalysisOxideDTO) o).getAmount() == null ? ((ChemicalAnalysisOxideDTO) o)
 					.getAmount() == amount
-					: ((MineralAnalysisElementDTO) o).getAmount()
-							.equals(amount);
+					: ((ChemicalAnalysisOxideDTO) o).getAmount().equals(amount);
 			return one && two;
-		} else if (o instanceof ElementDTO) {
-			return ((ElementDTO) o).equals(element);
+		} else if (o instanceof OxideDTO) {
+			return ((OxideDTO) o).equals(oxide);
 		}
 		return false;
 	}
 
 	public int hashCode() {
-		return element != null && amount != null ? element.hashCode()
-				+ amount.intValue() : element.hashCode();
+		return oxide != null && amount != null ? oxide.hashCode()
+				+ amount.intValue() : oxide.hashCode();
 		// return mineral.hashCode();
 	}
 }

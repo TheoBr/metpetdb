@@ -11,12 +11,12 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
-import edu.rpi.metpetdb.client.service.ChemicalAnalyisService;
+import edu.rpi.metpetdb.client.service.ChemicalAnalysisService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.model.ChemicalAnalysis;
 
 public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
-		ChemicalAnalyisService {
+		ChemicalAnalysisService {
 	private static final long serialVersionUID = 1L;
 
 	public ChemicalAnalysisDTO details(long id) throws NoSuchObjectException {

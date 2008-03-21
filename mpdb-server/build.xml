@@ -83,7 +83,7 @@
 		</javadoc >
 	</target>
 
-	<target name="war" depends="compile, javadoc" description="Generates a .war file for use with a servlet container(Apache Tomcat)">
+	<target name="war" depends="compile" description="Generates a .war file for use with a servlet container(Apache Tomcat)">
 		<mkdir dir="${build}" />
 		<war destfile="${war}" filesonly="true" webxml="${basedir}/web.xml">
 			<fileset dir="${mpdb-client-dir}/build/${app_name}" />

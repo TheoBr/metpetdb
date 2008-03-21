@@ -100,8 +100,8 @@
   </servlet-mapping>
   
   <servlet>
-    <servlet-name>mineralAnalysis</servlet-name>
-    <servlet-class>edu.rpi.metpetdb.server.impl.MineralAnalysisServiceImpl</servlet-class>
+    <servlet-name>chemicalAnalysis</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.impl.ChemicalAnalysisServiceImpl</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>

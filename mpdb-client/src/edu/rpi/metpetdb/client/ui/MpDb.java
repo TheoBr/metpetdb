@@ -8,14 +8,14 @@ import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.service.BulkUploadService;
 import edu.rpi.metpetdb.client.service.BulkUploadServiceAsync;
+import edu.rpi.metpetdb.client.service.ChemicalAnalysisService;
+import edu.rpi.metpetdb.client.service.ChemicalAnalysisServiceAsync;
 import edu.rpi.metpetdb.client.service.ConstantsService;
 import edu.rpi.metpetdb.client.service.ConstantsServiceAsync;
 import edu.rpi.metpetdb.client.service.ImageBrowserService;
 import edu.rpi.metpetdb.client.service.ImageBrowserServiceAsync;
 import edu.rpi.metpetdb.client.service.ImageService;
 import edu.rpi.metpetdb.client.service.ImageServiceAsync;
-import edu.rpi.metpetdb.client.service.ChemicalAnalyisService;
-import edu.rpi.metpetdb.client.service.ChemicalAnalysisServiceAsync;
 import edu.rpi.metpetdb.client.service.MpDbGenericService;
 import edu.rpi.metpetdb.client.service.MpDbGenericServiceAsync;
 import edu.rpi.metpetdb.client.service.ProjectService;
@@ -54,10 +54,10 @@ public class MpDb {
 
 	public static final ImageServiceAsync image_svc;
 
-	public static final ChemicalAnalysisServiceAsync mineralAnalysis_svc;
+	public static final ChemicalAnalysisServiceAsync chemicalAnalysis_svc;
 
 	public static final MpDbGenericServiceAsync mpdbGeneric_svc;
-	
+
 	public static final BulkUploadServiceAsync bulkUpload_svc;
 
 	public static DatabaseObjectConstraints doc;
@@ -66,7 +66,7 @@ public class MpDb {
 
 	private static UserDTO currentUser;
 
-	//public static final HtmlFactory factory;
+	// public static final HtmlFactory factory;
 
 	static {
 		constants_svc = (ConstantsServiceAsync) bindService(GWT
@@ -90,16 +90,16 @@ public class MpDb {
 		image_svc = (ImageServiceAsync) bindService(GWT
 				.create(ImageService.class), "image");
 
-		mineralAnalysis_svc = (ChemicalAnalysisServiceAsync) bindService(GWT
-				.create(ChemicalAnalyisService.class), "mineralAnalysis");
+		chemicalAnalysis_svc = (ChemicalAnalysisServiceAsync) bindService(GWT
+				.create(ChemicalAnalysisService.class), "chemicalAnalysis");
 
 		mpdbGeneric_svc = (MpDbGenericServiceAsync) bindService(GWT
 				.create(MpDbGenericService.class), "mpdbGeneric");
-		
+
 		bulkUpload_svc = (BulkUploadServiceAsync) bindService(GWT
 				.create(BulkUploadService.class), "bulkUpload");
 
-		//factory = (HtmlFactory) GWT.create(HtmlFactory.class);
+		// factory = (HtmlFactory) GWT.create(HtmlFactory.class);
 	}
 
 	private static Object bindService(final Object svc, final String name) {

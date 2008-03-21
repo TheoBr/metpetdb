@@ -45,20 +45,18 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 		p_chemicalAnalysis = new ObjectEditorPanel(chemicalAnalysisAtts) {
 			protected void loadBean(final AsyncCallback ac) {
 				final ChemicalAnalysisDTO ma = (ChemicalAnalysisDTO) getBean();
-				MpDb.mineralAnalysis_svc.details(
+				MpDb.chemicalAnalysis_svc.details(
 						ma != null && !ma.mIsNew() ? ma.getId()
 								: chemicalAnalysisId, ac);
 			}
 
 			protected void saveBean(final AsyncCallback ac) {
-				// ((MineralAnalysis) getBean()).getSubsample().addImage(
-				// (Image) mineralAnalysisAtts[3];
-				MpDb.mineralAnalysis_svc.save((ChemicalAnalysisDTO) getBean(),
+				MpDb.chemicalAnalysis_svc.save((ChemicalAnalysisDTO) getBean(),
 						ac);
 			}
 
 			protected void deleteBean(final AsyncCallback ac) {
-				MpDb.mineralAnalysis_svc.delete(
+				MpDb.chemicalAnalysis_svc.delete(
 						((ChemicalAnalysisDTO) getBean()).getId(), ac);
 			}
 
