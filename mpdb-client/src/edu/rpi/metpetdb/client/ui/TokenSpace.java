@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.HistoryListener;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -16,6 +17,8 @@ import edu.rpi.metpetdb.client.model.ProjectDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.TokenHandler.IKey;
 import edu.rpi.metpetdb.client.ui.TokenHandler.LKey;
 import edu.rpi.metpetdb.client.ui.TokenHandler.SKey;
@@ -140,13 +143,29 @@ public class TokenSpace implements HistoryListener {
 
 	public static final Screen allSamples = new Screen("AllSamples") {
 		public void executeToken(final String args) {
-			show(new SampleListEx());
+			show(new SampleListEx() {
+
+				@Override
+				public void update(PaginationParameters p,
+						AsyncCallback<Results<SampleDTO>> ac) {
+					MpDb.sample_svc.all(p, ac);
+				}
+
+			});
 		}
 	};
 
 	public static final Screen allPublicSamples = new Screen("AllPublicSamples") {
 		public void executeToken(final String args) {
-			show(new SampleListEx());
+			show(new SampleListEx() {
+
+				@Override
+				public void update(PaginationParameters p,
+						AsyncCallback<Results<SampleDTO>> ac) {
+					MpDb.sample_svc.all(p, ac);
+				}
+
+			});
 		}
 	};
 

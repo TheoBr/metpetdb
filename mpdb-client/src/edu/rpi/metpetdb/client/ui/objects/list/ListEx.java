@@ -12,47 +12,19 @@ import com.google.gwt.widgetideas.table.client.PagingGrid;
 import com.google.gwt.widgetideas.table.client.PagingScrollTable;
 import com.google.gwt.widgetideas.table.client.ReadOnlyTableModel;
 
-import edu.rpi.metpetdb.client.locale.LocaleEntity;
-import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.model.properties.SampleProperty;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
-import edu.rpi.metpetdb.client.paging.Results;
-import edu.rpi.metpetdb.client.ui.MpDb;
-import edu.rpi.metpetdb.client.ui.ServerOp;
 
-public class ListEx extends FlowPanel {
+public abstract class ListEx extends FlowPanel {
 
-	private static final String DEFAULT_PARAMETER = "alias";
 	private static final boolean DEFAULT_SORT_ORDER = true;
 
-	private final PagingGrid dataTable;
+	protected final PagingGrid dataTable;
 
-	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
+	private Column[] columns;
 
-	private static Column[] columns = {
-			new Column(""), // Column for Checkboxes
-			new Column(enttxt.Sample_alias(), SampleProperty.alias),
-			new Column(enttxt.Sample_sesarNumber(), SampleProperty.sesarNumber),
-			new Column(enttxt.Sample_owner(), SampleProperty.owner),
-			new Column(enttxt.Sample_collectionDate(),
-					SampleProperty.collectionDate),
-			new Column(enttxt.Sample_rockType(), SampleProperty.rockType),
-			new Column(enttxt.Sample_publicData(), SampleProperty.publicData),
-			new Column("Location", SampleProperty.location),
-			new Column(enttxt.Sample_country(), SampleProperty.country),
-			new Column(enttxt.Sample_description(), SampleProperty.description),
-			new Column(enttxt.Sample_collector(), SampleProperty.collector),
-			new Column(enttxt.Sample_locationText(),
-					SampleProperty.locationText),
-			new Column(enttxt.Sample_latitudeError(),
-					SampleProperty.latitudeError),
-			new Column(enttxt.Sample_longitudeError(),
-					SampleProperty.longitudeError),
-			new Column(enttxt.Sample_subsampleCount()), };
-
-	private class TableModel extends ReadOnlyTableModel {
+	protected class TableModel extends ReadOnlyTableModel {
 		public void requestRows(final Request request, final Callback callback) {
 			final int startRow = request.getStartRow();
 			final int numRows = request.getNumRows();
@@ -60,52 +32,51 @@ public class ListEx extends FlowPanel {
 			final ColumnSortList sortList = request.getColumnSortList();
 			// Get column to sort
 			final ColumnSortInfo sortInfo = sortList.getPrimaryColumnSortInfo();
-
-			new ServerOp<Results<SampleDTO>>() {
-				public void begin() {
-					final PaginationParameters p = new PaginationParameters();
-					if (sortInfo != null) {
-						p.setParameter(columns[sortInfo.getColumn()]
-								.getProperty().name());
-						p.setAscending(sortInfo.isAscending());
-					} else {
-						p.setAscending(DEFAULT_SORT_ORDER);
-						p.setParameter(DEFAULT_PARAMETER);
-					}
-					p.setFirstResult(startRow);
-					p.setMaxResults(numRows);
-					MpDb.sample_svc.all(p, this);
-				}
-
-				public void onSuccess(final Results<SampleDTO> result) {
-					final List<SampleDTO> samples = result.getList();
-					final Iterator<SampleDTO> itr = samples.iterator();
-					final List<List<Object>> rows = new ArrayList<List<Object>>();
-					int currentRow = 0;
-					while (itr.hasNext()) {
-						final List<Object> data = new ArrayList<Object>();
-						final SampleDTO sample = (SampleDTO) itr.next();
-						for (int i = 0; i < columns.length; ++i) {
-							if (columns[i].getWidget(sample, currentRow) != null) {
-								data.add(columns[i].getWidget(sample,
-										currentRow));
-							} else if (columns[i].getProperty() != null) {
-								data.add(columns[i].getProperty().get(sample));
-							} else
-								data.add(columns[i].getTitle());
-						}
-						rows.add(data);
-						++currentRow;
-					}
-					dataTable.setNumRows(result.getCount());
-					Response response = new SerializableResponse(rows, samples);
-					callback.onRowsReady(request, response);
-				}
-			}.begin();
+			final PaginationParameters p = new PaginationParameters();
+			if (sortInfo != null) {
+				p.setParameter(columns[sortInfo.getColumn()].getProperty()
+						.name());
+				p.setAscending(sortInfo.isAscending());
+			} else {
+				p.setAscending(DEFAULT_SORT_ORDER);
+				p.setParameter(getDefaultSortParameter());
+			}
+			p.setFirstResult(startRow);
+			p.setMaxResults(numRows);
+			handleResults(p, request, callback);
 		}
 	}
 
-	public ListEx() {
+	public abstract void handleResults(final PaginationParameters p,
+			final TableModel.Request request, final TableModel.Callback callback);
+
+	public abstract String getDefaultSortParameter();
+
+	public <T extends MObjectDTO> List<List<Object>> getList(final List<T> data) {
+		final List<List<Object>> rows = new ArrayList<List<Object>>();
+		final Iterator<T> itr = data.iterator();
+		int currentRow = 0;
+		while (itr.hasNext()) {
+			rows.add(processRow(itr.next(), currentRow++));
+		}
+		return rows;
+	}
+
+	public List<Object> processRow(final MObjectDTO object, final int currentRow) {
+		final List<Object> data = new ArrayList<Object>();
+		for (int i = 0; i < columns.length; ++i) {
+			if (columns[i].getWidget(object, currentRow) != null) {
+				data.add(columns[i].getWidget(object, currentRow));
+			} else if (columns[i].getProperty() != null) {
+				data.add(columns[i].getProperty().get(object));
+			} else
+				data.add(columns[i].getTitle());
+		}
+		return data;
+	}
+
+	public ListEx(final Column[] columns) {
+		this.columns = columns;
 		TableModel tableModel = new TableModel();
 		dataTable = new PagingGrid(tableModel);
 
@@ -137,8 +108,13 @@ public class ListEx extends FlowPanel {
 		});
 
 		scrollTable.setHeight("100%");
+		scrollTable.setWidth("100%");
+		dataTable.setWidth("100%");
+		dataTable.setHeight("100%");
+		headerTable.setWidth("100%");
 		this.add(scrollTable);
-		this.setHeight("100%");
+		this.setHeight("400px");
+		this.setWidth("100%");
 	}
 
 }
