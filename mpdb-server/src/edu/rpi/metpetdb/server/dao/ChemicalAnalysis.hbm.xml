@@ -3,10 +3,10 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="edu.rpi.metpetdb.server.model">
-  <class name="MineralAnalysis" table="mineral_analyses">
-    <id name="id" column="mineral_analysis_id" unsaved-value="0">
+  <class name="ChemicalAnalysis" table="chemical_analyses">
+    <id name="id" column="chemical_analysis_id" unsaved-value="0">
       <generator class="sequence">
-        <param name="sequence">mineral_analyses_seq</param>
+        <param name="sequence">chemical_analyses_seq</param>
       </generator>
     </id>
     
@@ -26,9 +26,9 @@
 	<property name="largeRock" column="large_rock" type="yes_no" />
 	<many-to-one name="mineral" column="mineral_id" class="Mineral" lazy="false" cascade="none"/>
 
-    <set name="elements" table="mineral_analysis_elements" cascade="save-update">
-      <key column="mineral_analysis_id" />
-      <composite-element class="MineralAnalysisElement">
+    <set name="elements" table="chemical_analysis_elements" cascade="save-update">
+      <key column="chemical_analysis_id" />
+      <composite-element class="ChemicalAnalysisElement">
       	<!--Composite elements CANNOT be null with a set -->
       	<property name="amount" column="amount" type="float" not-null="true"/>
       	<property name="precision" column="precision" type="float" />
@@ -37,9 +37,9 @@
 	  </composite-element>
     </set>
 
-    <set name="oxides" table="mineral_analysis_oxides" cascade="save-update">
-      <key column="mineral_analysis_id" />
-      <composite-element class="MineralAnalysisOxide">
+    <set name="oxides" table="chemical_analysis_oxides" cascade="save-update">
+      <key column="chemical_analysis_id" />
+      <composite-element class="ChemicalAnalysisOxide">
       	<!--Composite elements CANNOT be null with a set -->
       	<property name="amount" column="amount" type="float" not-null="true"/>
       	<property name="precision" column="precision" type="float" />
@@ -50,55 +50,55 @@
 
   </class>
 
-  <query name="MineralAnalysis.byId">
-    from MineralAnalysis ma
+  <query name="ChemicalAnalysis.byId">
+    from ChemicalAnalysis ma
     where ma.id = :id
   </query>
-  <query name="MineralAnalysis.bySubsampleId">
-    from MineralAnalysis ma
+  <query name="ChemicalAnalysis.bySubsampleId">
+    from ChemicalAnalysis ma
     where ma.subsample.id = :subsampleId
   </query>
-  <query name="MineralAnalysis.bySubsampleId,size">
-    select count(*) from MineralAnalysis ma
+  <query name="ChemicalAnalysis.bySubsampleId,size">
+    select count(*) from ChemicalAnalysis ma
     where ma.subsample.id = :id
   </query>
-  <query name="MineralAnalysis.bySubsampleId/spotId">
-    from MineralAnalysis ma
+  <query name="ChemicalAnalysis.bySubsampleId/spotId">
+    from ChemicalAnalysis ma
     where ma.subsample.id = :id
     order by ma.spotId
   </query>
-  <query name="MineralAnalysis.bySubsampleId/pointX">
-    from MineralAnalysis ma
+  <query name="ChemicalAnalysis.bySubsampleId/pointX">
+    from ChemicalAnalysis ma
     where ma.subsample.id = :id
     order by ma.pointX
   </query>
-  <query name="MineralAnalysis.bySubsampleId/pointY">
-    from MineralAnalysis ma
+  <query name="ChemicalAnalysis.bySubsampleId/pointY">
+    from ChemicalAnalysis ma
     where ma.subsample.id = :id
     order by ma.pointY
   </query>
-  <query name="MineralAnalysis.bySubsampleId/analysisMethod">
-    from MineralAnalysis ma
+  <query name="ChemicalAnalysis.bySubsampleId/analysisMethod">
+    from ChemicalAnalysis ma
     where ma.subsample.id = :id
     order by ma.analysisMethod
   </query>
-  <query name="MineralAnalysis.bySubsampleId/location">
-    from MineralAnalysis ma
+  <query name="ChemicalAnalysis.bySubsampleId/location">
+    from ChemicalAnalysis ma
     where ma.subsample.id = :id
     order by ma.location
   </query>
-  <query name="MineralAnalysis.bySubsampleId/analyst">
-    from MineralAnalysis ma
+  <query name="ChemicalAnalysis.bySubsampleId/analyst">
+    from ChemicalAnalysis ma
     where ma.subsample.id = :id
     order by ma.analyst
   </query>
-  <query name="MineralAnalysis.bySubsampleId/analysisDate">
-    from MineralAnalysis ma
+  <query name="ChemicalAnalysis.bySubsampleId/analysisDate">
+    from ChemicalAnalysis ma
     where ma.subsample.id = :id
     order by ma.analysisDate
   </query>
-  <query name="MineralAnalysis.bySubsampleId/description">
-    from MineralAnalysis ma
+  <query name="ChemicalAnalysis.bySubsampleId/description">
+    from ChemicalAnalysis ma
     where ma.subsample.id = :id
     order by ma.description
   </query>
