@@ -50,10 +50,10 @@ CREATE TABLE samples
 (
   sample_id INT8 NOT NULL,
   version INT4 NOT NULL,
-  sesar_number CHAR(9) NOT NULL,
+  sesar_number CHAR(9),
   public_data CHAR(1) CHECK (public_data IN ('Y','N')) NOT NULL,
   collection_date TIMESTAMP,
-  alias VARCHAR(20),
+  alias VARCHAR(20) NOT NULL,
   rock_type VARCHAR(100) NOT NULL,
   user_id INT4 NOT NULL,
   longitude_error FLOAT4,

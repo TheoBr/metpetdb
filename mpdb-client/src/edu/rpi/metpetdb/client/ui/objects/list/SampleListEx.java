@@ -1,9 +1,14 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
+import org.postgis.Point;
+
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.HTML;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 import edu.rpi.metpetdb.client.paging.Column;
@@ -21,14 +26,27 @@ public abstract class SampleListEx extends ListEx {
 
 	private static Column[] columns = {
 			new Column(""), // Column for Checkboxes
-			new Column(enttxt.Sample_alias(), SampleProperty.alias),
+			new Column(enttxt.Sample_alias(), SampleProperty.alias) {
+				public void handleClickEvent(final MObjectDTO data,
+						final int row) {
+					Window.alert("you clicked "
+							+ data.mGet(SampleProperty.alias));
+				}
+			},
 			new Column(enttxt.Sample_sesarNumber(), SampleProperty.sesarNumber),
 			new Column(enttxt.Sample_owner(), SampleProperty.owner),
 			new Column(enttxt.Sample_collectionDate(),
 					SampleProperty.collectionDate),
 			new Column(enttxt.Sample_rockType(), SampleProperty.rockType),
 			new Column(enttxt.Sample_publicData(), SampleProperty.publicData),
-			new Column("Location", SampleProperty.location),
+			new Column("Location", SampleProperty.location, true) {
+				protected Object getText(final MObjectDTO data,
+						final int currentRow) {
+					final Point location = (Point) data
+							.mGet(SampleProperty.location);
+					return "(" + location.x + "," + location.y + ")";
+				}
+			},
 			new Column(enttxt.Sample_country(), SampleProperty.country),
 			new Column(enttxt.Sample_description(), SampleProperty.description),
 			new Column(enttxt.Sample_collector(), SampleProperty.collector),
@@ -56,7 +74,14 @@ public abstract class SampleListEx extends ListEx {
 				SampleListEx.this.dataTable.setNumRows(result.getCount());
 				final TableModel.SerializableResponse sr = new TableModel.SerializableResponse(
 						getList(result.getList()), result.getList());
-				callback.onRowsReady(request, sr);
+				if (result.getCount() == 0) {
+					SampleListEx.this.clear();
+					SampleListEx.this
+							.add(new HTML(
+									"nothing to see here...move along<br/><br/><br/><br/><br/>Seriously though, i did not find any samples that match your criteria"));
+				} else {
+					callback.onRowsReady(request, sr);
+				}
 			}
 
 		}.begin();

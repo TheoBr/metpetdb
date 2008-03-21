@@ -50,7 +50,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 				s.getId()).uniqueResult()).intValue());
 		return (SampleDTO) clone(s);
 	}
-	
+
 	public SampleDTO save(SampleDTO sample)
 			throws SampleAlreadyExistsException, ValidationException,
 			LoginRequiredException {

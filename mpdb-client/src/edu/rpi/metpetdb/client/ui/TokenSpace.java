@@ -3,13 +3,11 @@ package edu.rpi.metpetdb.client.ui;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.GridDTO;
@@ -45,7 +43,7 @@ import edu.rpi.metpetdb.client.ui.user.UserRegistrationPanel;
  */
 public class TokenSpace implements HistoryListener {
 	public static final TokenSpace INSTANCE = new TokenSpace();
-	private static final Map handlers = new HashMap();
+	private static final Map<String, TokenHandler> handlers = new HashMap<String, TokenHandler>();
 	private static final TokenHandler sampleDetails = new LKey("SampleDetails") {
 		public long get(final Object obj) {
 			return ((SampleDTO) obj).getId();
@@ -129,12 +127,12 @@ public class TokenSpace implements HistoryListener {
 	};
 	public static final Screen editProfile = new Screen("EditProfile") {
 		public void executeToken(final String args) {
-			new ServerOp() {
+			new ServerOp<UserDTO>() {
 				public void begin() {
 					MpDb.user_svc.beginEditMyProfile(this);
 				}
 
-				public void onSuccess(final Object result) {
+				public void onSuccess(final UserDTO result) {
 					show(new EditUserProfile(((UserDTO) result)));
 				}
 			}.begin();
@@ -162,7 +160,7 @@ public class TokenSpace implements HistoryListener {
 				@Override
 				public void update(PaginationParameters p,
 						AsyncCallback<Results<SampleDTO>> ac) {
-					MpDb.sample_svc.all(p, ac);
+					MpDb.sample_svc.allPublicSamples(p, ac);
 				}
 
 			});
@@ -188,84 +186,38 @@ public class TokenSpace implements HistoryListener {
 
 	public static final Screen samplesForUser = new Screen("SamplesForUser") {
 		public void executeToken(final String args) {
-			if (this.getName().equals(History.getToken()))
-				new ServerOp() {
-					public void begin() {
-						if (MpDb.isLoggedIn()) {
-							// final UserSampleList list = new UserSampleList(
-							// new DataProvider() {
-							// public void update(
-							// final PaginationParameters p,
-							// final AsyncCallback ac) {
-							// long id = (long) (MpDb
-							// .currentUser().getId());
-							// MpDb.sample_svc.allSamplesForUser(
-							// p, id, ac);
-							// }
-							// });
-							// show(list);
-						} else
-							onFailure(new LoginRequiredException());
-					}
+			new LoggedInServerOp() {
+				public void command() {
+					show(new SampleListEx() {
+						public void update(final PaginationParameters p,
+								final AsyncCallback<Results<SampleDTO>> ac) {
+							long id = (long) (MpDb.currentUser().getId());
+							MpDb.sample_svc.allSamplesForUser(p, id, ac);
+						}
+					});
+				}
+			}.begin();
 
-					public void onSuccess(Object result) {
-					}
-
-					public void cancel() {
-						// Go back to revert the history token
-						History.back();
-					}
-				}.begin();
-			else
-				History.newItem(this.getName());
 		}
 	};
 
 	public static final Screen enterSample = new Screen("EnterSample") {
 		public void executeToken(final String args) {
-			if (this.getName().equals(History.getToken()))
-				new ServerOp() {
-					public void begin() {
-						if (MpDb.isLoggedIn())
-							show(new SampleDetails().createNew());
-						else
-							onFailure(new LoginRequiredException());
-					}
-
-					public void onSuccess(Object result) {
-					}
-
-					public void cancel() {
-						// Revert the history token
-						History.back();
-					}
-				}.begin();
-			else
-				History.newItem(this.getName());
+			new LoggedInServerOp() {
+				public void command() {
+					show(new SampleDetails().createNew());
+				}
+			}.begin();
 		}
 	};
 
 	public static final Screen newProject = new Screen("NewProject") {
 		public void executeToken(final String args) {
-			if (this.getName().equals(History.getToken()))
-				new ServerOp() {
-					public void begin() {
-						if (MpDb.isLoggedIn())
-							show(new ProjectDetails().createNew());
-						else
-							onFailure(new LoginRequiredException());
-					}
-
-					public void onSuccess(Object result) {
-					}
-
-					public void cancel() {
-						// Go back to revert the history token
-						History.back();
-					}
-				}.begin();
-			else
-				History.newItem(this.getName());
+			new LoggedInServerOp() {
+				public void command() {
+					show(new ProjectDetails().createNew());
+				}
+			}.begin();
 		}
 	};
 
@@ -313,10 +265,10 @@ public class TokenSpace implements HistoryListener {
 		MetPetDBApplication.show(content);
 	}
 
-	private static void showIntroduction() {
-		// show(MetPetDBApplication.introduction);
-		show(RootPanel.get("screen-Introduction"));
-	}
+	// private static void showIntroduction() {
+	// // show(MetPetDBApplication.introduction);
+	// show(RootPanel.get("screen-Introduction"));
+	// }
 
 	public static String detailsOf(final SampleDTO s) {
 		return sampleDetails.makeToken(s);

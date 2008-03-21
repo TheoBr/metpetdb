@@ -357,6 +357,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 			q = currentSession().createQuery(q.getQueryString() + " desc");
 		if (id != -1)
 			q.setLong("id", id);
+
 		q.setFirstResult(p.getFirstResult());
 		q.setMaxResults(p.getMaxResults());
 		return q;

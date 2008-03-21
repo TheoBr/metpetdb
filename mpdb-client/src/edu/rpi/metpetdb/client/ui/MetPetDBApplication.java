@@ -50,7 +50,7 @@ public class MetPetDBApplication implements EntryPoint {
 	private static RootPanel contentContainer;
 	private static RootPanel noticeContainer;
 	private static RootPanel leftContainer;
-	private static HashSet pageChangeWatchers;
+	private static HashSet<Widget> pageChangeWatchers;
 
 	// public static Html introduction;
 	// public static Hyperlink logoLink;
@@ -78,11 +78,11 @@ public class MetPetDBApplication implements EntryPoint {
 
 		setupIntroduction();
 
-		pageChangeWatchers = new HashSet();
+		pageChangeWatchers = new HashSet<Widget>();
 
 		// Try to restore the user's current session.
 		//
-		MpDb.user_svc.resumeSession(new AsyncCallback() {
+		MpDb.user_svc.resumeSession(new AsyncCallback<ResumeSessionResponse>() {
 			public void onFailure(final Throwable caught) {
 				// Dead. As a doornail. We cannot let the user
 				// continue as we have no ObjectConstraints!
@@ -90,19 +90,19 @@ public class MetPetDBApplication implements EntryPoint {
 				new UnknownErrorDialog(caught, false).show();
 			}
 
-			public void onSuccess(final Object result) {
+			public void onSuccess(final ResumeSessionResponse result) {
 				final ResumeSessionResponse r = (ResumeSessionResponse) result;
 				MpDb.doc = r.databaseObjectConstraints;
 				MpDb.oc = r.objectConstraints;
 				MpDb.setCurrentUser(r.user);
 				finishOnModuleLoad();
 				if (r.user == null) {
-					new ServerOp() {
+					new ServerOp<UserDTO>() {
 						public void begin() {
 							MpDb.mpdbGeneric_svc.getAutomaticLoginUser(this);
 						}
 
-						public void onSuccess(final Object result) {
+						public void onSuccess(final UserDTO result) {
 							if (result != null) {
 								MpDb.setCurrentUser((UserDTO) result);
 							}
@@ -133,12 +133,12 @@ public class MetPetDBApplication implements EntryPoint {
 		// If we were given a state to jump to, go there. Otherwise
 		// go to the introduction state, which displays some pretty
 		// message about what we are all about.
-		new ServerOp() {
+		new ServerOp<String>() {
 			public void begin() {
 				MpDb.mpdbGeneric_svc.getBuildDate(this);
 			}
 
-			public void onSuccess(final Object result) {
+			public void onSuccess(final String result) {
 				notice("Build Date: " + (String) result);
 			}
 		}.begin();
@@ -172,14 +172,14 @@ public class MetPetDBApplication implements EntryPoint {
 			}
 		}
 		if (w instanceof Panel) {
-			final Iterator i = ((Panel) w).iterator();
+			final Iterator<Widget> i = ((Panel) w).iterator();
 			while (i.hasNext())
 				dispatchCurrentUserChanged((Widget) i.next(), u);
 		}
 	}
 
 	public static void dispatchCurrentPageChanged() {
-		final Iterator itr = pageChangeWatchers.iterator();
+		final Iterator<Widget> itr = pageChangeWatchers.iterator();
 		while (itr.hasNext()) {
 			final Widget w = (Widget) itr.next();
 			if (w instanceof UsesLeftColumn) {

@@ -65,8 +65,8 @@ public abstract class ListEx extends FlowPanel {
 	public List<Object> processRow(final MObjectDTO object, final int currentRow) {
 		final List<Object> data = new ArrayList<Object>();
 		for (int i = 0; i < columns.length; ++i) {
-			if (columns[i].getWidget(object, currentRow) != null) {
-				data.add(columns[i].getWidget(object, currentRow));
+			if (columns[i].isCustomFormat()) {
+				data.add(columns[i].getRepresentation(object, currentRow));
 			} else if (columns[i].getProperty() != null) {
 				data.add(columns[i].getProperty().get(object));
 			} else
@@ -88,7 +88,7 @@ public abstract class ListEx extends FlowPanel {
 			headerTable.setText(0, i, columns[i].getTitle());
 		}
 
-		PagingScrollTable scrollTable = new PagingScrollTable(dataTable,
+		final PagingScrollTable scrollTable = new PagingScrollTable(dataTable,
 				headerTable);
 
 		// Setup sortable/unsortable columns
@@ -100,8 +100,8 @@ public abstract class ListEx extends FlowPanel {
 
 			public void onCellClicked(SourcesTableEvents sender, int row,
 					int cell) {
-				columns[cell].handleClickEvent(dataTable.getRowValue(row - 1),
-						row - 1);
+				columns[cell].handleClickEvent((MObjectDTO) dataTable
+						.getRowValue(row - 1), row - 1);
 
 			}
 
@@ -112,9 +112,8 @@ public abstract class ListEx extends FlowPanel {
 		dataTable.setWidth("100%");
 		dataTable.setHeight("100%");
 		headerTable.setWidth("100%");
-		this.add(scrollTable);
+		add(scrollTable);
 		this.setHeight("400px");
 		this.setWidth("100%");
 	}
-
 }

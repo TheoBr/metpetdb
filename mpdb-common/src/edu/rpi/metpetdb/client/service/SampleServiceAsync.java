@@ -15,7 +15,7 @@ public interface SampleServiceAsync {
 			AsyncCallback<Results<SampleDTO>> ac);
 
 	void allSamplesForUser(PaginationParameters p, long id,
-			AsyncCallback<Results> ac);
+			AsyncCallback<Results<SampleDTO>> ac);
 
 	void projectSamples(PaginationParameters p, long id,
 			AsyncCallback<Results> ac);

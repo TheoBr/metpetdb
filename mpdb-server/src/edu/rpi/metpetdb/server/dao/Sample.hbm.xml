@@ -156,6 +156,12 @@
     where s.owner.id = :id
     order by s.sesarNumber
   </query>
+  <query name="Sample.forUser/location">
+    from Sample s
+    inner join fetch s.owner
+    where s.owner.id = :id
+    order by s.location
+  </query>
   <query name="Sample.forUser/alias">
     from Sample s
     inner join fetch s.owner
@@ -236,6 +242,7 @@
 
   <query name="Sample.allPublic,size">
     select count(*) from Sample s
+    where s.publicData = 'Y'
   </query>
   <query name="Sample.allPublic/sesarNumber">
     from Sample s

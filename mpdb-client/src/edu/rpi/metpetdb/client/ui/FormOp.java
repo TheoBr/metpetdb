@@ -5,8 +5,9 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.ui.input.FocusSupport;
 
-public abstract class FormOp extends ServerOp {
+public abstract class FormOp<T> extends ServerOp<T> {
 	private final Widget root;
+
 	protected FormOp(final Widget p) {
 		root = p;
 	}

@@ -30,7 +30,7 @@ public class ListboxAttribute extends GenericAttribute {
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id,
 			final GenericAttribute attr) {
-		if (attr instanceof IHasListItems) {
+		if (attr.getConstraint() instanceof IHasListItems) {
 			String selectedValue = get(obj);
 			return new Widget[] { createListBox(((IHasListItems) attr
 					.getConstraint()).getListItems(), id, selectedValue) };

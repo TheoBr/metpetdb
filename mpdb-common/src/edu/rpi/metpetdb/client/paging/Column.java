@@ -1,7 +1,6 @@
 package edu.rpi.metpetdb.client.paging;
 
-import com.google.gwt.user.client.ui.Widget;
-
+import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.properties.Property;
 
 public class Column {
@@ -9,31 +8,27 @@ public class Column {
 	private String title;
 	private Property property;
 	private boolean sortable;
-	private ColumnEvent event;
+	private boolean customFormat;
 
 	public Column(final String title, final Property property) {
-		this(title, property, true, null);
+		this(title, property, true, false);
+	}
+
+	public Column(final String title, final Property property,
+			final boolean customFormat) {
+		this(title, property, true, customFormat);
 	}
 
 	public Column(final String title) {
-		this(title, null, false, null);
+		this(title, null, false, false);
 	}
 
 	public Column(final String title, final Property property,
-			final boolean sortable) {
-		this(title, property, sortable, null);
-	}
-
-	public Column(final String title, final ColumnEvent event) {
-		this(title, null, false, event);
-	}
-
-	public Column(final String title, final Property property,
-			final boolean sortable, final ColumnEvent event) {
+			final boolean sortable, final boolean customFormat) {
 		this.title = title;
 		this.sortable = sortable;
 		this.property = property;
-		this.event = event;
+		this.customFormat = customFormat;
 	}
 
 	public boolean isSortable() {
@@ -48,13 +43,32 @@ public class Column {
 		return this.property;
 	}
 
-	public void handleClickEvent(final Object data, final int row) {
-		if (event != null)
-			event.handleClickEvent(data, row);
+	public void handleClickEvent(final MObjectDTO data, final int row) {
+
 	}
 
-	public Widget getWidget(final Object data, final int row) {
+	public Object getRepresentation(final MObjectDTO data, final int row) {
+		if (getWidget(data, row) == null)
+			return getText(data, row);
+		else
+			return getWidget(data, row);
+	}
+
+	protected Object getWidget(final MObjectDTO data, final int row) {
 		return null;
+	}
+
+	protected Object getText(final MObjectDTO data, final int row) {
+		return "";
+	}
+
+	public boolean isCustomFormat() {
+		return customFormat;
+	}
+
+	public Column setCustomFormat(boolean customFormat) {
+		this.customFormat = customFormat;
+		return this;
 	}
 
 }
