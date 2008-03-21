@@ -3,16 +3,11 @@ package edu.rpi.metpetdb.client.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasImages;
 
 public class SubsampleDTO extends MObjectDTO implements IHasImages {
-	public static final int P_name = 0;
-	public static final int P_type = 1;
-	public static final int P_images = 2;
-	public static final int P_imageCount = 3;
-	public static final int P_analysisCount = 4;
-	public static final int P_sampleName = 5;
+
+	private static final long serialVersionUID = 1L;
 
 	private long id;
 
@@ -84,7 +79,7 @@ public class SubsampleDTO extends MObjectDTO implements IHasImages {
 		i.setSubsample(this);
 		this.getSample().addImage(i);
 		if (this.images == null)
-			this.images = new HashSet();
+			this.images = new HashSet<ImageDTO>();
 		this.images.add(i);
 	}
 
@@ -99,7 +94,7 @@ public class SubsampleDTO extends MObjectDTO implements IHasImages {
 	public void addChemicalAnalysis(final ChemicalAnalysisDTO ma) {
 		ma.setSubsample(this);
 		if (this.chemicalAnalyses == null)
-			this.chemicalAnalyses = new HashSet();
+			this.chemicalAnalyses = new HashSet<ChemicalAnalysisDTO>();
 		this.chemicalAnalyses.add(ma);
 	}
 
@@ -146,34 +141,5 @@ public class SubsampleDTO extends MObjectDTO implements IHasImages {
 	@Override
 	public boolean mIsNew() {
 		return this.id == 0;
-	}
-
-	@Override
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-		case P_name:
-			if (newValue != MObjectDTO.GET_ONLY)
-				this.setName((String) newValue);
-			return this.getName();
-		case P_type:
-			if (newValue != MObjectDTO.GET_ONLY)
-				this.setType((String) newValue);
-			return this.getType();
-		case P_images:
-			if (newValue != MObjectDTO.GET_ONLY)
-				this.setImages((Set<ImageDTO>) newValue);
-			return this.getImages();
-		case P_imageCount:
-			if (newValue != MObjectDTO.GET_ONLY)
-				this.setImageCount(Integer.parseInt(newValue.toString()));
-			return new Integer(this.getImageCount());
-		case P_analysisCount:
-			if (newValue != MObjectDTO.GET_ONLY)
-				this.setAnalysisCount(Integer.parseInt(newValue.toString()));
-			return new Integer(this.getAnalysisCount());
-		case P_sampleName:
-			return this.getSample().getName();
-		}
-		throw new InvalidPropertyException(propertyId);
 	}
 }

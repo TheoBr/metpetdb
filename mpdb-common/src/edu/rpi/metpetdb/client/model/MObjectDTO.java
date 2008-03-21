@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.model;
 
 import net.sf.hibernate4gwt.pojo.gwt.LazyGwtPojo;
+import edu.rpi.metpetdb.client.model.properties.Property;
 
 /**
  * Base class for all data model beans.
@@ -33,8 +34,8 @@ public abstract class MObjectDTO extends LazyGwtPojo {
 	 * @return the value of the property; null if the property value is null and
 	 *         allows nulls (it is not a primitive).
 	 */
-	public final Object mGet(final int propertyId) {
-		return mSetGet(propertyId, GET_ONLY);
+	public Object mGet(final Property property) {
+		return property.get(this);
 	}
 
 	/**
@@ -55,8 +56,8 @@ public abstract class MObjectDTO extends LazyGwtPojo {
 	 *             the property is a primitive type and cannot accept a null,
 	 *             but the new value was null.
 	 */
-	public final void mSet(final int propertyId, final Object newVal) {
-		mSetGet(propertyId, newVal);
+	public void mSet(final Property property, final Object newVal) {
+		property.set(this, newVal);
 	}
 
 	/**
@@ -65,32 +66,6 @@ public abstract class MObjectDTO extends LazyGwtPojo {
 	 * @return true if this object has not yet been written to the database.
 	 */
 	public abstract boolean mIsNew();
-
-	/**
-	 * Perform an optional mSet, then an mGet.
-	 * <p>
-	 * This method provides the implementation of both {@link #mGet(int)} and
-	 * {@link #mSet(int, Object)}. Its a single method as the switch tables in
-	 * the implementations are hand-coded; writing the table once reduces
-	 * errors.
-	 * </p>
-	 * 
-	 * @param propertyId
-	 *            unique identifier of the property, within this concrete class.
-	 *            See the P_* constants in the relevant concrete class for valid
-	 *            values.
-	 * @param newVal
-	 *            the new value to set. Type must match that of the property,
-	 *            and the value must not be null if the property is a primitive
-	 *            type. Must be exactly the {@link #GET_ONLY} instance reference
-	 *            to prevent assignment/mSet behavior.
-	 * @return the current value of the property. The current value when this
-	 *         method returns is <code>newValue</code> if
-	 *         <code>newValue != {@link #GET_ONLY}</code>.
-	 */
-	protected Object mSetGet(int propertyId, Object newValue) {
-		return null;
-	}
 
 	protected Integer setIntegerValue(final Object newValue) {
 		if (newValue == null)

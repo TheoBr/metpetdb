@@ -2,13 +2,13 @@ package edu.rpi.metpetdb.client.model;
 
 //import java.util.Set;
 
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 
 public class RegionDTO extends MObjectDTO {
-	public static final int P_name = 0;
+
+	private static final long serialVersionUID = 1L;
 
 	private short id;
-	
+
 	private String name;
 
 	public short getId() {
@@ -44,13 +44,5 @@ public class RegionDTO extends MObjectDTO {
 	public boolean mIsNew() {
 		return id == 0;
 	}
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-			case P_name :
-				if (newValue != GET_ONLY)
-					setName((String) newValue);
-				return getName();
-		}
-		throw new InvalidPropertyException(propertyId);
-	}
+
 }

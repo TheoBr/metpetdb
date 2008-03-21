@@ -1,12 +1,12 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
 
 public interface Property {
 
-	abstract Object get(final SampleDTO sample);
+	abstract <T extends MObjectDTO> Object get(final T object);
 
-	abstract <T> void set(final SampleDTO sample, final T value);
+	abstract <T extends MObjectDTO, K> void set(final T object, final K value);
 
 	abstract int ordinal();
 

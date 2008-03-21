@@ -2,20 +2,18 @@ package edu.rpi.metpetdb.client.model;
 
 import java.util.Set;
 
-
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
-import edu.rpi.metpetdb.client.model.interfaces.IHasChildren;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 
-public class MineralDTO extends MObjectDTO implements IHasChildren, IHasName {
-	public static final int P_name = 0;
+public class MineralDTO extends MObjectDTO implements IHasName {
+
+	private static final long serialVersionUID = 1L;
 
 	private short id;
 	private Short parentId;
-	
+
 	private String name;
-	
-	private Set children;
+
+	private Set<MineralDTO> children;
 
 	public short getId() {
 		return id;
@@ -41,11 +39,11 @@ public class MineralDTO extends MObjectDTO implements IHasChildren, IHasName {
 		parentId = i;
 	}
 
-	public void setChildren(final Set c) {
+	public void setChildren(final Set<MineralDTO> c) {
 		children = c;
 	}
 
-	public Set getChildren() {
+	public Set<MineralDTO> getChildren() {
 		return children;
 	}
 
@@ -55,7 +53,8 @@ public class MineralDTO extends MObjectDTO implements IHasChildren, IHasName {
 					&& name.equals(((MineralDTO) o).name)
 					&& ((MineralDTO) o).getId() == id;
 		else if (o instanceof SampleMineralDTO) {
-			return name != null && name.equals(((SampleMineralDTO) o).getName())
+			return name != null
+					&& name.equals(((SampleMineralDTO) o).getName())
 					&& ((SampleMineralDTO) o).getId() == id;
 		} else
 			return false;
@@ -71,14 +70,5 @@ public class MineralDTO extends MObjectDTO implements IHasChildren, IHasName {
 
 	public boolean mIsNew() {
 		return id == 0;
-	}
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-			case P_name :
-				if (newValue != GET_ONLY)
-					setName((String) newValue);
-				return getName();
-		}
-		throw new InvalidPropertyException(propertyId);
 	}
 }

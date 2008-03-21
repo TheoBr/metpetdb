@@ -12,11 +12,17 @@ import edu.rpi.metpetdb.client.paging.Results;
 
 public interface SampleService extends RemoteService {
 	Results all(PaginationParameters parameters);
+
 	Results allPublicSamples(final PaginationParameters p);
+
 	Results allSamplesForUser(PaginationParameters parameters, long id);
+
 	Results projectSamples(final PaginationParameters p, long id);
+
 	SampleDTO details(long id) throws NoSuchObjectException;
+
 	SampleDTO save(SampleDTO sample) throws SampleAlreadyExistsException,
 			ValidationException, LoginRequiredException;
+
 	void delete(long id) throws NoSuchObjectException, LoginRequiredException;
 }

@@ -12,6 +12,7 @@ import edu.rpi.metpetdb.client.service.MpDbConstants;
 
 public class SampleDTO extends MObjectDTO implements IHasName {
 
+	private static final long serialVersionUID = 1L;
 	private long id;
 	private int version;
 

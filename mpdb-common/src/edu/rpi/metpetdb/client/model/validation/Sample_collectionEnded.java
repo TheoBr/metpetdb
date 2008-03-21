@@ -11,8 +11,8 @@ public class Sample_collectionEnded extends TimestampConstraint {
 
 	public void validateEntity(final MObjectDTO obj) throws ValidationException {
 		super.validateEntity(obj);
-		final Timestamp b = (Timestamp) obj.mGet(collectionBegan.propertyId);
-		final Timestamp e = (Timestamp) obj.mGet(propertyId);
+		final Timestamp b = (Timestamp) obj.mGet(collectionBegan.property);
+		final Timestamp e = (Timestamp) obj.mGet(property);
 		if (b == e)
 			return;
 		if (b == null || e == null || e.getTime() < b.getTime())

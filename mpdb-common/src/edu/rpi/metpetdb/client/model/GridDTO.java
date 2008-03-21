@@ -3,12 +3,9 @@ package edu.rpi.metpetdb.client.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
-
 public class GridDTO extends MObjectDTO {
-	public static final int P_width = 0;
-	public static final int P_height = 1;
 
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private int version;
 	private int width;
@@ -19,6 +16,7 @@ public class GridDTO extends MObjectDTO {
 	public int getId() {
 		return id;
 	}
+
 	public void setId(final int i) {
 		id = i;
 	}
@@ -26,6 +24,7 @@ public class GridDTO extends MObjectDTO {
 	public int getVersion() {
 		return version;
 	}
+
 	public void setVersion(final int v) {
 		version = v;
 	}
@@ -59,9 +58,11 @@ public class GridDTO extends MObjectDTO {
 			imagesOnGrid = new HashSet<ImageOnGridDTO>();
 		return imagesOnGrid;
 	}
+
 	public void setImagesOnGrid(final Set<ImageOnGridDTO> s) {
 		imagesOnGrid = s;
 	}
+
 	public void addImageOnGrid(final ImageOnGridDTO imageOnGrid) {
 		imageOnGrid.setGrid(this);
 		if (imagesOnGrid == null)
@@ -79,10 +80,5 @@ public class GridDTO extends MObjectDTO {
 
 	public boolean mIsNew() {
 		return id == 0;
-	}
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-		}
-		throw new InvalidPropertyException(propertyId);
 	}
 }

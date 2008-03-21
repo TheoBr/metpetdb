@@ -2,10 +2,9 @@ package edu.rpi.metpetdb.client.model;
 
 import com.google.gwt.core.client.GWT;
 
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
-
 public class ImageOnGridDTO extends MObjectDTO {
 
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private GridDTO grid;
 	private ImageDTO image;
@@ -172,10 +171,4 @@ public class ImageOnGridDTO extends MObjectDTO {
 		return id == 0;
 	}
 
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-
-		}
-		throw new InvalidPropertyException(propertyId);
-	}
 }

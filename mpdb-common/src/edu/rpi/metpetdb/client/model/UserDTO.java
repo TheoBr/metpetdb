@@ -3,23 +3,21 @@ package edu.rpi.metpetdb.client.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
-
 public class UserDTO extends MObjectDTO {
-	public static final int P_username = 0;
-	public static final int P_emailAddress = 1;
 
+	private static final long serialVersionUID = 1L;
 	private int id;
 	private int version;
 	private String username;
 	private String emailAddress;
-	private Set projects;
-	private Set samples;
+	private Set<ProjectDTO> projects;
+	private Set<SampleDTO> samples;
 	private transient byte[] encryptedPassword;
 
 	public int getId() {
 		return id;
 	}
+
 	public void setId(final int v) {
 		id = v;
 	}
@@ -56,23 +54,23 @@ public class UserDTO extends MObjectDTO {
 		encryptedPassword = p;
 	}
 
-	public Set getProjects() {
+	public Set<ProjectDTO> getProjects() {
 		if (projects == null)
-			projects = new HashSet();
+			projects = new HashSet<ProjectDTO>();
 		return projects;
 	}
 
-	public void setProjects(final Set c) {
+	public void setProjects(final Set<ProjectDTO> c) {
 		projects = c;
 	}
 
-	public Set getSamples() {
+	public Set<SampleDTO> getSamples() {
 		if (samples == null)
-			samples = new HashSet();
+			samples = new HashSet<SampleDTO>();
 		return samples;
 	}
 
-	public void setSamples(final Set s) {
+	public void setSamples(final Set<SampleDTO> s) {
 		samples = s;
 	}
 
@@ -83,27 +81,12 @@ public class UserDTO extends MObjectDTO {
 	public boolean equals(final Object o) {
 		return o instanceof UserDTO && id == ((UserDTO) o).id;
 	}
-	
+
 	public String toString() {
 		return this.username;
 	}
 
 	public boolean mIsNew() {
 		return id == 0;
-	}
-
-	protected Object mSetGet(final int propertyId, final Object newValue) {
-		switch (propertyId) {
-			case P_username :
-				if (newValue != GET_ONLY)
-					setUsername((String) newValue);
-				return getUsername();
-
-			case P_emailAddress :
-				if (newValue != GET_ONLY)
-					setEmailAddress((String) newValue);
-				return getEmailAddress();
-		}
-		throw new InvalidPropertyException(propertyId);
 	}
 }
