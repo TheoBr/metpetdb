@@ -14,8 +14,8 @@ import edu.rpi.metpetdb.client.service.ImageBrowserService;
 import edu.rpi.metpetdb.client.service.ImageBrowserServiceAsync;
 import edu.rpi.metpetdb.client.service.ImageService;
 import edu.rpi.metpetdb.client.service.ImageServiceAsync;
-import edu.rpi.metpetdb.client.service.MineralAnalysisService;
-import edu.rpi.metpetdb.client.service.MineralAnalysisServiceAsync;
+import edu.rpi.metpetdb.client.service.ChemicalAnalyisService;
+import edu.rpi.metpetdb.client.service.ChemicalAnalysisServiceAsync;
 import edu.rpi.metpetdb.client.service.MpDbGenericService;
 import edu.rpi.metpetdb.client.service.MpDbGenericServiceAsync;
 import edu.rpi.metpetdb.client.service.ProjectService;
@@ -54,7 +54,7 @@ public class MpDb {
 
 	public static final ImageServiceAsync image_svc;
 
-	public static final MineralAnalysisServiceAsync mineralAnalysis_svc;
+	public static final ChemicalAnalysisServiceAsync mineralAnalysis_svc;
 
 	public static final MpDbGenericServiceAsync mpdbGeneric_svc;
 	
@@ -90,8 +90,8 @@ public class MpDb {
 		image_svc = (ImageServiceAsync) bindService(GWT
 				.create(ImageService.class), "image");
 
-		mineralAnalysis_svc = (MineralAnalysisServiceAsync) bindService(GWT
-				.create(MineralAnalysisService.class), "mineralAnalysis");
+		mineralAnalysis_svc = (ChemicalAnalysisServiceAsync) bindService(GWT
+				.create(ChemicalAnalyisService.class), "mineralAnalysis");
 
 		mpdbGeneric_svc = (MpDbGenericServiceAsync) bindService(GWT
 				.create(MpDbGenericService.class), "mpdbGeneric");

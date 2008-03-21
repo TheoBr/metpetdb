@@ -105,7 +105,7 @@ public class SubsampleDetails extends FlowPanel {
 					public void begin() {
 						if (MpDb.isLoggedIn())
 							MetPetDBApplication
-									.show(new MineralAnalysisDetails()
+									.show(new ChemicalAnalysisDetails()
 											.createNew((SubsampleDTO) p_subsample
 													.getBean()));
 						else

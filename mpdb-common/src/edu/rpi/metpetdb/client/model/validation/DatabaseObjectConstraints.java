@@ -3,9 +3,9 @@ package edu.rpi.metpetdb.client.model.validation;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.ProjectDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SampleMineralDTO;
@@ -16,11 +16,11 @@ import edu.rpi.metpetdb.client.model.XrayImageDTO;
 
 /**
  * Constraints for objects in the database
- *
+ * 
  */
 public class DatabaseObjectConstraints implements IsSerializable {
-	private static void validate(final MObjectDTO o, final PropertyConstraint[] pc)
-			throws ValidationException {
+	private static void validate(final MObjectDTO o,
+			final PropertyConstraint[] pc) throws ValidationException {
 		if (pc == null)
 			return;
 		for (int k = 0; k < pc.length; k++) {
@@ -32,6 +32,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public PropertyConstraint[] Project__all;
 	public StringConstraint Project_name;
 	public UserConstraint Project_owner;
+
 	public void validate(final ProjectDTO s) throws ValidationException {
 		validate(s, Project__all);
 	}
@@ -55,6 +56,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public MultiValuedStringConstraint Sample_regions;
 	public MultiValuedStringConstraint Sample_metamorphicGrades;
 	public MultiValuedStringConstraint Sample_references;
+
 	public void validate(final SampleDTO s) throws ValidationException {
 		validate(s, Sample__all);
 	}
@@ -64,6 +66,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint Subsample_name;
 	public SubsampleTypeConstraint Subsample_type;
 	public ImageConstraint Subsample_images;
+
 	public void validate(final SubsampleDTO s) throws ValidationException {
 		validate(s, Subsample__all);
 	}
@@ -71,6 +74,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ SampleMineral ------
 	public PropertyConstraint[] SampleMineral__all;
 	public FloatConstraint SampleMineral_amount;
+
 	public void validate(final SampleMineralDTO m) throws ValidationException {
 		validate(m, SampleMineral__all);
 	}
@@ -82,6 +86,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public IntegerConstraint Image_contrast;
 	public IntegerConstraint Image_brightness;
 	public IntegerConstraint Image_pixelsize;
+
 	public void validate(final ImageDTO i) throws ValidationException {
 		validate(i, Image_all);
 	}
@@ -94,31 +99,35 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public IntegerConstraint XrayImage_current;
 	public IntegerConstraint XrayImage_voltage;
 	public CollectionConstraint XrayImage_element;
+
 	public void validate(final XrayImageDTO i) throws ValidationException {
 		validate(i, XrayImage_all);
 	}
 
-	// ------ MineralAnalysis ------
-	public PropertyConstraint[] MineralAnalysis_all;
-	public ImageConstraint MineralAnalysis_image;
-	public StringConstraint MineralAnalysis_spotId;
-	public IntegerConstraint MineralAnalysis_pointX;
-	public IntegerConstraint MineralAnalysis_pointY;
-	public StringConstraint MineralAnalysis_analysisMethod;
-	public StringConstraint MineralAnalysis_location;
-	public StringConstraint MineralAnalysis_analyst;
-	public TimestampConstraint MineralAnalysis_analysisDate;
-	public StringConstraint MineralAnalysis_description;
-	public MineralConstraint MineralAnalysis_mineral;
-	public BooleanConstraint MineralAnalysis_largeRock;
-	public void validate(final ChemicalAnalysisDTO ma) throws ValidationException {
-		validate(ma, MineralAnalysis_all);
+	// ------ ChemicalAnalysis ------
+	public PropertyConstraint[] ChemicalAnalysis_all;
+	public ImageConstraint ChemicalAnalysis_image;
+	public StringConstraint ChemicalAnalysis_spotId;
+	public IntegerConstraint ChemicalAnalysis_pointX;
+	public IntegerConstraint ChemicalAnalysis_pointY;
+	public StringConstraint ChemicalAnalysis_analysisMethod;
+	public StringConstraint ChemicalAnalysis_location;
+	public StringConstraint ChemicalAnalysis_analyst;
+	public TimestampConstraint ChemicalAnalysis_analysisDate;
+	public StringConstraint ChemicalAnalysis_description;
+	public MineralConstraint ChemicalAnalysis_mineral;
+	public BooleanConstraint ChemicalAnalysis_largeRock;
+
+	public void validate(final ChemicalAnalysisDTO ma)
+			throws ValidationException {
+		validate(ma, ChemicalAnalysis_all);
 	}
 
 	// ------ User ------
 	public PropertyConstraint[] User__all;
 	public RestrictedCharacterStringConstraint User_username;
 	public StringConstraint User_emailAddress;
+
 	public void validate(final UserDTO u) throws ValidationException {
 		validate(u, User__all);
 	}
@@ -133,6 +142,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public PropertyConstraint[] StartSessionRequest__all;
 	public RestrictedCharacterStringConstraint StartSessionRequest_username;
 	public StringConstraint StartSessionRequest_password;
+
 	public void validate(StartSessionRequestDTO u) throws ValidationException {
 		validate(u, StartSessionRequest__all);
 	}

@@ -5,7 +5,6 @@ import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.error.InvalidPropertyException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.interfaces.IHasListItems;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
@@ -13,50 +12,49 @@ import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class ListboxAttribute extends GenericAttribute {
-	
+
 	private ServerOp notifier;
 
 	public ListboxAttribute(final PropertyConstraint pc) {
 		super(pc);
 	}
-	
+
 	public ListboxAttribute(final PropertyConstraint pc, final ServerOp r) {
 		super(pc);
 		notifier = r;
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
-		return new Widget[]{new MText(get(obj))};
+		return new Widget[] { new MText(get(obj)) };
 	}
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id,
 			final GenericAttribute attr) {
-		if (attr instanceof ListboxAttribute) {
-			String selectedValue = get(obj);			
-			return new Widget[]{createListBox(((IHasListItems) attr
-					.getConstraint()).getListItems(), id, selectedValue)};
+		if (attr instanceof IHasListItems) {
+			String selectedValue = get(obj);
+			return new Widget[] { createListBox(((IHasListItems) attr
+					.getConstraint()).getListItems(), id, selectedValue) };
 		} else {
-			throw new InvalidPropertyException(attr.getConstraint().propertyId);
+			throw new RuntimeException("Wrong Attribute for a list box");
 		}
 	}
 
-	private Widget createListBox(final String[] items, final String id, final String selected) {
+	private Widget createListBox(final String[] items, final String id,
+			final String selected) {
 		final ListBox lb = new ListBox();
 		DOM.setElementAttribute(lb.getElement(), "id", id);
 
 		lb.setVisibleItemCount(1);
 
-		for (int i = 0; i < items.length; i++)
-		{
+		for (int i = 0; i < items.length; i++) {
 			lb.addItem(items[i], items[i]);
-			if(items[i].equals(selected))
-			{
+			if (items[i].equals(selected)) {
 				lb.setItemSelected(i, true);
 			}
 		}
 
 		lb.setItemSelected(lb.getSelectedIndex(), true);
-		
+
 		lb.addChangeListener(new ChangeListener() {
 			public void onChange(final Widget w) {
 				if (notifier != null)

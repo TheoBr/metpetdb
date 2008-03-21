@@ -25,7 +25,7 @@ import edu.rpi.metpetdb.client.ui.TokenHandler.SKey;
 import edu.rpi.metpetdb.client.ui.TokenHandler.Screen;
 import edu.rpi.metpetdb.client.ui.bulk.upload.BulkUploadPanel;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserDetails;
-import edu.rpi.metpetdb.client.ui.objects.details.MineralAnalysisDetails;
+import edu.rpi.metpetdb.client.ui.objects.details.ChemicalAnalysisDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.ProjectDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SubsampleDetails;
@@ -109,7 +109,7 @@ public class TokenSpace implements HistoryListener {
 		}
 
 		public void execute(final long id) {
-			show(new MineralAnalysisDetails().showById(id));
+			show(new ChemicalAnalysisDetails().showById(id));
 		}
 	};
 	public static final Screen register = new Screen("Register") {

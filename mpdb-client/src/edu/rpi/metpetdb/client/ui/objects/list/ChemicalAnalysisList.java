@@ -2,7 +2,7 @@ package edu.rpi.metpetdb.client.ui.objects.list;
 
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class MineralAnalysisList extends VerticalPanel {
+public class ChemicalAnalysisList extends VerticalPanel {
 	// public MineralAnalysisList(final DataProvider prov) {
 	// final FlexTable data = new FlexTable();
 	// final FlexTable page = new FlexTable();

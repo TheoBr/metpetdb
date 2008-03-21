@@ -174,13 +174,13 @@ public abstract class GenericAttribute {
 		return obj;
 	}
 	protected Object mGet(final MObjectDTO obj) {
-		return resolve(obj).mGet(constraints[0].propertyId);
+		return resolve(obj).mGet(constraints[0].property);
 	}
 	protected HashMap mGetAll(final MObjectDTO obj) {
 		final HashMap map = new HashMap();
 		for (int i = 0; i < constraints.length; ++i) {
 			map.put(constraints[i], resolve(obj)
-					.mGet(constraints[i].propertyId));
+					.mGet(constraints[i].property));
 		}
 		return map;
 	}
@@ -189,7 +189,7 @@ public abstract class GenericAttribute {
 	}
 	protected void mSet(final MObjectDTO obj, final Object val,
 			final PropertyConstraint constraint) {
-		resolve(obj).mSet(constraint.propertyId, val);
+		resolve(obj).mSet(constraint.property, val);
 	}
 
 	public abstract Widget[] createDisplayWidget(MObjectDTO obj);
