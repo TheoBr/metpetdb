@@ -338,6 +338,19 @@ public class MetPetDBApplication implements EntryPoint {
 		hdrnav.addItem(LocaleHandler.lc_text.faqMenu(), faq);
 		hdrnav.addItem(LocaleHandler.lc_text.wikiMenu(), wiki);
 		hdrnav.addItem("test bulk upload", TokenSpace.bulkUpload);
+		hdrnav.addItem("regenerate constraints", new Command() {
+			public void execute() {
+				new ServerOp() {
+					public void begin() {
+						MpDb.mpdbGeneric_svc.regenerateConstraints(this);
+					}
+
+					public void onSuccess(final Object result) {
+
+					}
+				}.begin();
+			}
+		});
 
 	}
 

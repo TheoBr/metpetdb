@@ -2,7 +2,6 @@ package edu.rpi.metpetdb.client.ui.objects.list;
 
 import org.postgis.Point;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 
@@ -10,11 +9,14 @@ import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.ServerOp;
+import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public abstract class SampleListEx extends ListEx {
 
@@ -26,15 +28,33 @@ public abstract class SampleListEx extends ListEx {
 
 	private static Column[] columns = {
 			new Column(""), // Column for Checkboxes
-			new Column(enttxt.Sample_alias(), SampleProperty.alias) {
-				public void handleClickEvent(final MObjectDTO data,
-						final int row) {
-					Window.alert("you clicked "
-							+ data.mGet(SampleProperty.alias));
+			new Column(enttxt.Sample_alias(), SampleProperty.alias, true) {
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					return new MLink((String) data.mGet(SampleProperty.alias),
+							TokenSpace.detailsOf((SampleDTO) data));
 				}
 			},
-			new Column(enttxt.Sample_sesarNumber(), SampleProperty.sesarNumber),
-			new Column(enttxt.Sample_owner(), SampleProperty.owner),
+			new Column(enttxt.Sample_sesarNumber(), SampleProperty.sesarNumber,
+					true) {
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					return new MLink((String) data
+							.mGet(SampleProperty.sesarNumber), TokenSpace
+							.detailsOf((SampleDTO) data));
+				}
+			},
+			new Column(enttxt.Sample_owner(), SampleProperty.owner, true) {
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					return new MLink(
+							((UserDTO) data.mGet(SampleProperty.owner))
+									.getUsername(), TokenSpace
+									.detailsOf((UserDTO) data
+											.mGet(SampleProperty.owner)));
+				}
+			},
+			new Column(enttxt.Sample_collector(), SampleProperty.collector),
 			new Column(enttxt.Sample_collectionDate(),
 					SampleProperty.collectionDate),
 			new Column(enttxt.Sample_rockType(), SampleProperty.rockType),
@@ -48,14 +68,6 @@ public abstract class SampleListEx extends ListEx {
 				}
 			},
 			new Column(enttxt.Sample_country(), SampleProperty.country),
-			new Column(enttxt.Sample_description(), SampleProperty.description),
-			new Column(enttxt.Sample_collector(), SampleProperty.collector),
-			new Column(enttxt.Sample_locationText(),
-					SampleProperty.locationText),
-			new Column(enttxt.Sample_latitudeError(),
-					SampleProperty.latitudeError),
-			new Column(enttxt.Sample_longitudeError(),
-					SampleProperty.longitudeError),
 			new Column(enttxt.Sample_subsampleCount(),
 					SampleProperty.subsampleCount), };
 
