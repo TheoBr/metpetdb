@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.service.MpDbGenericService;
+import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
 
@@ -67,6 +68,11 @@ public class MpDbGenericServiceImpl extends MpDbServlet implements
 		} else {
 			return null;
 		}
+	}
+
+	public void regenerateConstraints() {
+		doc = DataStore.getInstance().getDatabaseObjectConstraints();
+		oc = DataStore.getInstance().getObjectConstraints();
 	}
 
 }

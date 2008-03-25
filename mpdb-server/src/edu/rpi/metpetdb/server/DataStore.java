@@ -20,6 +20,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.Column;
+import org.hibernate.mapping.ForeignKey;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
 import org.postgis.Geometry;
@@ -101,7 +102,7 @@ public class DataStore {
 		}
 	}
 
-	synchronized ObjectConstraints getObjectConstraints() {
+	public synchronized ObjectConstraints getObjectConstraints() {
 		if (objectConstraints == null) {
 			final ObjectConstraints oc = new ObjectConstraints();
 			setConstraints(oc);
@@ -110,7 +111,7 @@ public class DataStore {
 		return objectConstraints;
 	}
 
-	synchronized DatabaseObjectConstraints getDatabaseObjectConstraints() {
+	public synchronized DatabaseObjectConstraints getDatabaseObjectConstraints() {
 		if (databaseObjectConstraints == null) {
 			final DatabaseObjectConstraints oc = new DatabaseObjectConstraints();
 			setConstraints(oc);
@@ -175,14 +176,19 @@ public class DataStore {
 			if (prop.getValue().getClass() == org.hibernate.mapping.Set.class
 					|| prop.getValue().getClass() == org.hibernate.mapping.Bag.class) {
 				col = null;
-				// final Iterator fkItr = ((org.hibernate.mapping.Set) prop
-				// .getValue()).getCollectionTable()
-				// .getForeignKeyIterator();
-				// while (fkItr.hasNext()) {
-				// // TODO make it get the constraints of referenced columns
-				// final ForeignKey fk = (ForeignKey) fkItr.next();
-				// fk.getReferencedColumns().get(0);
-				// }
+				final Iterator fkItr = ((org.hibernate.mapping.Set) prop
+						.getValue()).getCollectionTable()
+						.getForeignKeyIterator();
+				while (fkItr.hasNext()) {
+					// TODO make it get the constraints of referenced columns
+					final ForeignKey fk = (ForeignKey) fkItr.next();
+					// fk.getReferencedColumns().get(0);
+					// The from of the foreign key
+					final String fromEntity = entityName;
+					// The to of the foreign key
+					final String toEntity = fk.getReferencedEntityName();
+
+				}
 			} else {
 				final Iterator<Column> i = prop.getColumnIterator();
 				if (!i.hasNext())
