@@ -7,6 +7,9 @@ import edu.rpi.metpetdb.client.model.UserDTO;
 public interface MpDbGenericService extends RemoteService {
 
 	String getBuildDate();
+
 	UserDTO getAutomaticLoginUser();
+
+	void regenerateConstraints();
 
 }
