@@ -15,6 +15,7 @@ import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 import org.junit.Test;
 
+import edu.rpi.metpetdb.client.model.SearchSampleDTO;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
 import edu.rpi.metpetdb.server.model.Sample;
@@ -161,6 +162,43 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		String[] columnsIn = { "sesarNumber", "user_username" };
 		BooleanClause.Occur[] flags = { BooleanClause.Occur.MUST,
 				BooleanClause.Occur.MUST };// , BooleanClause.Occur.MUST};
+
+		/*
+		 * BooleanClause.Occur[] flags = {BooleanClause.Occur.SHOULD,
+		 * BooleanClause.Occur.MUST, BooleanClause.Occur.MUST_NOT};
+		 */
+		try {
+			Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
+					.parse(searchFor, columnsIn, flags, new StandardAnalyzer());
+			org.hibernate.Query hibQuery = fullTextSession.createFullTextQuery(
+					query, Sample.class);
+			List<Sample> result = hibQuery.list();
+
+			for (Sample s : result) {
+				System.out.println("found sample, sesar number is "
+						+ s.getSesarNumber() + " username is "
+						+ s.getOwner().getUsername());
+			}
+		} catch (ParseException e) {
+		}
+
+		tx.commit();
+	}
+
+	@Test
+	public void testSearchSampleSearch() {
+		SearchSampleDTO searchSamp = new SearchSampleDTO();
+		searchSamp.setSesarNumber("000000000");
+		final Session session = InitDatabase.getSession();
+		FullTextSession fullTextSession = Search.createFullTextSession(session);
+
+		Transaction tx = fullTextSession.beginTransaction();
+
+		System.out.println("in test join");
+		String[] searchFor = { searchSamp.getSesarNumber() };
+		String[] columnsIn = { "sesarNumber" };
+		BooleanClause.Occur[] flags = { BooleanClause.Occur.MUST };// ,
+																	// BooleanClause.Occur.MUST};
 
 		/*
 		 * BooleanClause.Occur[] flags = {BooleanClause.Occur.SHOULD,

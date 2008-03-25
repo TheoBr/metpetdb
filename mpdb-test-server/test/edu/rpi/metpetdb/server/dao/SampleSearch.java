@@ -68,34 +68,5 @@ public class SampleSearch extends DatabaseTestCase {
 	@Test
 	public void testSearch4() 
 	{
-		final Session session = InitDatabase.getSession();
-		List<AttributeDTO> AttributePairs = new LinkedList<AttributeDTO>();
-		//AttributePairs.add(new AttributeDTO("u.username", "anthony"));		
-		//AttributePairs.add(new AttributeDTO("u.user_id", "1"));
-		
-		System.out.println("making the string");
-		String query = new String("select * from users u where");
-		int i = 0;
-		for(AttributeDTO attr : AttributePairs){
-			if(i == 0){
-				query = query.concat(" " + attr.getAttribute() + " like :attr" + i);
-			}
-			else{
-				query = query.concat(" and " + attr.getAttribute() + " like :attr" + i);
-			}
-			i++;		
-		}
-		Query q = session.createSQLQuery(query);		
-		i = 0;	
-		for(AttributeDTO attr : AttributePairs){
-			String param1 = "attr" + i;
-			q.setParameter(param1, attr.getValue());
-			i++;		
-		}
-			
-		List results = q.list();
-		session.close();
-		
-		assertEquals(1,results.size());		
-	}	
+	}
 }
