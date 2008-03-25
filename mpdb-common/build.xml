@@ -1,4 +1,4 @@
-<project name="mpdb-common" basedir="." default="mpdb-common-eclipse">
+<project name="mpdb-common" basedir="." default="eclipse">
 
 	<property file="build.properties" />
 	<property name="ctx_lib" location="${basedir}/lib" />
@@ -26,7 +26,7 @@
 	
 	<target name="compile" depends="mpdb-common-compile-java" />
 
-	<target name="mpdb-common-eclipse" description="Sets up Eclipse for the mpdb-common project">
+	<target name="eclipse" description="Sets up Eclipse for the mpdb-common project">
 		<property name="name.e" value="MetPetDB" />
 
 		<pathconvert property="libs.e" dirsep="/" pathsep="&quot;/&gt;&#10;&#09;&lt;classpathentry kind=&quot;lib&quot; path=&quot;">
@@ -48,5 +48,11 @@
 	&lt;classpathentry kind="output" path="bin"/&gt;
 &lt;/classpath&gt;
 </echo>
+	</target>
+	
+	<target name="all-eclipse" description="Sets up mpdb-client,mpdb-common and mpdb-server for use with eclipse">
+		<ant antfile="${basedir}/../mpdb-client/build.xml" target="eclipse" inheritAll="false" />
+		<ant antfile="${basedir}/../mpdb-common/build.xml" target="eclipse" inheritAll="false" />
+			<ant antfile="${basedir}/../mpdb-server/build.xml" target="eclipse" inheritAll="false" />
 	</target>
 </project>

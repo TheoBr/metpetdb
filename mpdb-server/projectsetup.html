@@ -12,16 +12,17 @@ reading this manual, you will hopefully have everything on your machine
 and ready to run, as well as a decent understanding of the project as a
 whole.</p>
 <ul>
-	<li>Background Information
+	<li>
+	<h3>Background Information</h3>
 	<ul>
-		<li>Wiki:
+		<li><b>Wiki</b>:
 		http://trinity.db.cs.rpi.edu/xwiki/bin/view/Main/WebHome</li>
-		<li>Bugtracker:
+		<li><b>Bugtracker (aka Mantis)</b>:
 		http://trinity.db.cs.rpi.edu:8080/mantis/my_view_page.php</li>
-		<li>Design: http://mpdb.zakness.com</li>
-		<li>Stable Build:
-		http://samana.cs.rpi.edu/metpetweb/#Introduction</li>
-		<li>Development Build: http://samana.cs.rpi.edu:8080/watera2</li>
+		<li><b>Design</b>: http://mpdb.zakness.com</li>
+		<li><b>Stable Build</b>: http://samana.cs.rpi.edu/metpetweb</li>
+		<li><b>Development Build</b>:
+		http://samana.cs.rpi.edu:8080/watera2</li>
 	</ul>
 	</li>
 </ul>
@@ -70,7 +71,7 @@ whole.</p>
 		NetBeans, or JRE. A 1.5.x or later JDK is required to compile
 		MetPetDB. A JRE is NOT sufficient for compiliation, as it does not
 		include the Java compiler. To be sure you have the JDK, a folder
-		should be created on your system that is named “jdk(Version#)”. It can
+		should be created on your system that is named "jdk(Version#)". It can
 		be downloaded at: http://java.sun.com/ On Windows, when you have
 		installed Java Development Kit, return to the Environment Variables
 		screen. 1. Under user variables, change PATH to be the address of the
@@ -138,37 +139,74 @@ whole.</p>
 		of the projects</li>
 		<li>Right click on each of the projects and select Refresh</li>
 		<li>All of the errors for the projects will magically disappear</li>
+		<li>Setting up the .property files
+		<p>Under the directory mpdb-server/src there are several .property
+		files that need to be created in order for the application to work,
+		they are
+		<ul>
+			<li>files.properties
+			<p>This properties file contains the paths to where upload files
+			are stored and it should contain the following: (see files.properties.base)</p>
+			<p>fileUpload.path=/full/path/to/store/uploaded_files/<br />
+			images.path=/full/path/to/store/uploaded_images/</p>
+			</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li>Database Initialization
+	<p>NOTE: For this initialization to work properly, you must have
+	the files "lwpostgis.sql" and "spatial_ref_sys.sql" in the directory
+	specified by postgis = during eclipse set-up.</p>
+	<ul>
+		<li>Start up psql (POSIX users can type the command in the
+		terminal, Windows users can go to Start->Programs->PostgreSql->psql)</li>
+		<li>Enter the password for the account you created when you
+		installed PostgreSQL</li>
+		<li>Change directory to mpdb-server/build/schema, An example of
+		this is \cd C:/workspace/mpdb-server/build/schema</li>
+		<li>Execute "\i recreate-database.sql"</li>
+	</ul>
+
+	</li>
+	<li>Running the Project
+	<ul>
+		<li>In eclipse, Go to Run->Open Run Dialog...</li>
+		<li>Select mpdb-server under Java Application and click Run</li>
+		<li>Select mpdb-client under Java Application and click Run
+		MetPetDB</li>
 	</ul>
 	</li>
 </ul>
-4. Database Initialization NOTE: For this initialization to work
-properly, you must have the files “lwpostgis.sql” and
-“spatial_ref_sys.sql” in the directory specified by postgis = during
-eclipse set-up. a. Start up psql (POSIX users can type the command in
-the terminal, Windows users can go to Start->Programs->PostgreSql->psql)
-b. Enter the password for the account you created when you installed
-PostgreSQL c. Change directory to workspace/mpdb-server/build/schema i.
-An example of this is \cd C:/workspace/mpdb-server/build/schema d.
-Execute “\i recreate-database.sql” 5. Running the Project a. In eclipse,
-Go to Run->Open Run Dialog... b. Select mpdb-server under Java
-Application and click Run c. Select mpdb-client under Java Application
-and click Run MetPetDB General Practices 6. Source Control (Keeping the
-code up-to-date) a. Getting the latest code i. In eclipse, right click
-on the project name ii. Select Team ->Synchronize With Repository iii.
-This will bring up the Synchronize Perspective. iv. On this page, right
-click the project name and select Synchronize v. This will show you the
-changes that have occurred in the source code, it will not update the
-code nor commit any of your changes you need to choose the Update...
-option to do that. b. Committing the Code i. In eclipse, right click on
-the project name ii. Select Team ->Commit iii. This will bring up a view
-with check boxes next to the files you have modified. iv. Place a
-comment in the top box describing the changes you made. v. Click OK to
-commit the changes. 7. Viewing the Javadoc a. In eclipse, expand the
-mpdb-common folder in the Java view. b. Right click on javadoc.xml c.
-Select Run As->Ant Build d. To view the javadoc, click index.html in the
-folder mpdb-common/doc.
-
-
-
+<h3>General Practices</h3>
+<ul>
+	<li>Source Control (Keeping the code up-to-date)
+	<ul>
+		<li>Getting the latest code
+		<ul>
+			<li>In eclipse, right click on the project name</li>
+			<li>Select Team ->Synchronize With Repository. This will bring
+			up the Synchronize Perspective.</li>
+			<li>On this page, right click the project name and select
+			Synchronize</li>
+			<li>This will show you the changes that have occurred in the
+			source code, it will not update the code nor commit any of your
+			changes you need to choose the Update... option to do that.</li>
+		</ul>
+		</li>
+		<li>Committing the Code
+		<ul>
+			<li>In eclipse, right click on the project name. Select Team
+			->Commit</li>
+			<li>This will bring up a view with check boxes next to the files
+			you have modified</li>
+			<li>Place a comment in the top box describing the changes you
+			made.</li>
+			<li>Click OK to commit the changes.</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+</ul>
 </body>
 </html>

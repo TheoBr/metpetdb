@@ -20,7 +20,7 @@ import edu.rpi.metpetdb.server.security.PasswordEncrypter;
 
 public class FileUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String baseFolder = "bulkUpload";
+	private static String baseFolder = "";
 
 	// private static final String baseFolder =
 	// MpDbServlet.fileProps.getProperty("bulk.path");
@@ -93,5 +93,13 @@ public class FileUploadServlet extends HttpServlet {
 			throw new IllegalStateException("filePath=" + baseFolder
 					+ " IO error: " + ioe.getMessage());
 		}
+	}
+
+	public static String getBaseFolder() {
+		return baseFolder;
+	}
+
+	public static void setBaseFolder(String baseFolder) {
+		FileUploadServlet.baseFolder = baseFolder;
 	}
 }

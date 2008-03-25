@@ -198,8 +198,5 @@
 </launchConfiguration>
 ]]>
 </echo>
-		<propertyfile file="src/files.properties">
-			<entry key="images.path" value="/path/to/images/" />
-		</propertyfile>
 	</target>
 </project>

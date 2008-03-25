@@ -115,6 +115,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		}
 		ImageUploadServlet.setBaseFolder(fileProps.getProperty("images.path"));
 		ImageServiceImpl.setBaseFolder(fileProps.getProperty("images.path"));
+		FileUploadServlet.setBaseFolder(fileProps
+				.getProperty("fileUpload.path"));
 	}
 
 	private void loadAutomaticLogin() {

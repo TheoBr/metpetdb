@@ -1,0 +1,12 @@
+#To enable autologin set enabled=1, and userid equal to your user id 
+# to find out your user id open up psql, and connect to your metpetdb database
+# then issue the query select * from users;
+# it will return all of the users and their respective userid
+
+
+enabled=1
+userid=1
+
+#User values (these can be anything)
+username=anthony
+emailaddress=watera2@cs.rpi.edu

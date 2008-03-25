@@ -55,7 +55,7 @@
 		<delete dir="${basedir}/.gwt-cache" />
 	</target>
 
-	<target name="mpdb-client-eclipse" description="Sets up the Eclipse project mpdb-client">
+	<target name="eclipse" description="Sets up the Eclipse project mpdb-client">
 		<property name="name.e" value="MetPetDB" />
 
 		<pathconvert property="libs.e" dirsep="/" pathsep="&quot;/&gt;&#10;&#09;&lt;classpathentry kind=&quot;lib&quot; path=&quot;">
