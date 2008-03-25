@@ -1,0 +1,174 @@
+<html>
+
+<head>
+<title>MetPetDB Setup Guide</title>
+</head>
+
+<body>
+<h1>MetPetDB Introduction</h1>
+<p>Welcome to the MetPetDB project. This guide serves as a
+step-by-step instruction manual on joining the MetPetDB team. After
+reading this manual, you will hopefully have everything on your machine
+and ready to run, as well as a decent understanding of the project as a
+whole.</p>
+<ul>
+	<li>Background Information
+	<ul>
+		<li>Wiki:
+		http://trinity.db.cs.rpi.edu/xwiki/bin/view/Main/WebHome</li>
+		<li>Bugtracker:
+		http://trinity.db.cs.rpi.edu:8080/mantis/my_view_page.php</li>
+		<li>Design: http://mpdb.zakness.com</li>
+		<li>Stable Build:
+		http://samana.cs.rpi.edu/metpetweb/#Introduction</li>
+		<li>Development Build: http://samana.cs.rpi.edu:8080/watera2</li>
+	</ul>
+	</li>
+</ul>
+<h2>MetPetDB Start-Up Guide</h2>
+<ul>
+	<li>Development Tools
+	<p>IMPORTANT: On windows machines, avoid spaces like the plague. Do
+	not place any of these tools in a file path that has spaces. So
+	installing to My Documents or Program Files is bad. While some of these
+	may work fine under these circumstances, it will save a lot of grief if
+	you just avoid it.</p>
+	<ul>
+		<li>PostgreSQL (Version 8.1.x or 8.2.x seem to work) The SQL
+		database behind MetPetDB is PostgreSQL. The database software can be
+		acquired at: http://www.postgresql.org/ Install the server according
+		to the documented guidelines for your platform. However, do not check
+		the box to install PostGIS as that will be done separately. Be sure to
+		keep the password and username you provide in a readily accessible
+		location as you will need this data again at a later time. Throughout
+		the installation, use the default settings.</li>
+		<li>PostGIS To enable spatial operators (for geopositioning)
+		MetPetDB uses the PostGIS database extension. The database software
+		can be acquired at: http://www.postgis.org/ The PostGIS installation
+		procedure is fairly well documented in the PostGIS documentation
+		itself . During the installation process, you will be given the chance
+		to create a database, but you don’t have to worry about this stuff.
+		We’ve got that covered, so just hang tight!</li>
+		<li>(Optional) Apache Tomcat To run the MetPetDB server-side
+		components, Java Servlets are used. To make use of these, Apache
+		Tomcat 5.5.x is needed, which can be found below:
+		http://tomcat.apache.org/ Standard tomcat installation instructions
+		should be followed for your platform. It is usually just a matter of
+		downloading the binary distribution and expanding it to a directory on
+		your drive.</li>
+		<li>(Optional, Eclipse includes a built in ant) Apache Ant The
+		MetPetDB build scripts use Apache Ant. It can be found at:
+
+		http://ant.apache.org/ Ant installation is just a matter of
+		decompressing the binary distribution and adding the bin/ subdirectory
+		to your PATH. To do this on a windows machine, right click My Computer
+		and traverse the following. My
+		Computer->Properties->Advanced->Environment Variables Under System
+		Variables, click Path. Select edit and then add a semi-colon and the
+		address of the ant bin.</li>
+		<li>Java Development Kit NOTE: You do not need Java EE SDK,
+		NetBeans, or JRE. A 1.5.x or later JDK is required to compile
+		MetPetDB. A JRE is NOT sufficient for compiliation, as it does not
+		include the Java compiler. To be sure you have the JDK, a folder
+		should be created on your system that is named “jdk(Version#)”. It can
+		be downloaded at: http://java.sun.com/ On Windows, when you have
+		installed Java Development Kit, return to the Environment Variables
+		screen. 1. Under user variables, change PATH to be the address of the
+		bin in the jdk. 2. In addition, create a new variable JAVA_HOME as a
+		system variable and give it the address of the jdk folder. 3. Under
+		Path in System Variables, add %JAVA_HOME%\bin.</li>
+		<li>Google Web Toolkit The MetPetDB client side components must
+		be translated from Java source code to HTML+JavaScript before they can
+		be utilized by a browser. This translator is built into GWT which can
+		be downloaded from: http://code.google.com/webtoolkit/ Download
+		version 1.4.61. Installation of GWT is a simple matter of expanding
+		the binary distribution for your platform into a directory. (Currently
+		GWT is located in the repository under the directory mpdb-common/gwt)</li>
+		<li>Eclipse (version 3.3x and up) Download eclipse IDE for java
+		development at: http://www.eclipse.org/downloads/ Subclipse is
+		necessary in order to use eclipse’s source control. Found at:
+		http://subclipse.tigris.org/download.html installation guide:
+		http://subclipse.tigris.org/install.html</li>
+	</ul>
+	</li>
+	<li>Setting Up The Project
+	<ul>
+		<li>With Eclipse open go to Window->Open Perspective->Other...
+		and select SVN Repository Exploring</li>
+		<li>Right click on the Left Pane (SVN Repository) and go to
+		New->Repository Location
+		<ul>
+			<li>Url is svn+ssh://mary-kate.cs.rpi.edu/projects/metpetdb/svn
+			[mary-kate.cs.rpi.edu could also be replaced with any other CS server
+			i.e. monica.cs.rpi.edu, ashley.cs.rpi.edu]</li>
+			<li>If you have problems see
+			http://subclipse.tigris.org/faq.html</li>
+		</ul>
+		</li>
+		<li>The repository location will show up in the Left Pane</li>
+		<li>Expand the newly create repository location, and also expand
+		the trunk directory</li>
+		<li>Right click on mpdb-client and select Checkout...</li>
+		<li>Keep the default settings and click Finish</li>
+		<li>Repeat steps e and f for mpdb-common and mpdb-server</li>
+		<li>Switch back to the Java perspective (Window->Open
+		Perspective->Other... and select Java (Default))</li>
+		<li>You will see three newly created Projects (mpdb-client,
+		mpdb-common, and mpdb-server) they will all have approximately
+		infinity+1 errors</li>
+		<li>Expand the Project mpdb-common</li>
+		<li>Create a new document in the root of the project named
+		build.properties</li>
+		<li>Add to build.properties the following:<br />
+		gwt_home=[your path to gwt]<br />
+		postgis=[your path to postgis]<br />
+		DATABASE=[name you want the database to be] <br />
+		APPUSER=[name of the user you want for the database] <br />
+		APPPASS=[password of the above user] <br />
+		<br />
+		As an example:<br />
+		gwt_home=/home/anthony/development/gwt-linux<br />
+		postgis=/usr/share/postgresql-8.2-postgis<br />
+		DATABASE=mpdb_watera2<br />
+		APPUSER=metpetwebtst <br />
+		APPPASS=</li>
+		<li>Right click on build.xml and select Run As->Ant Build...</li>
+		<li>Under Targets select all-eclipse and click Run</li>
+		<li>This will generate the appropriate .classpath file for each
+		of the projects</li>
+		<li>Right click on each of the projects and select Refresh</li>
+		<li>All of the errors for the projects will magically disappear</li>
+	</ul>
+	</li>
+</ul>
+4. Database Initialization NOTE: For this initialization to work
+properly, you must have the files “lwpostgis.sql” and
+“spatial_ref_sys.sql” in the directory specified by postgis = during
+eclipse set-up. a. Start up psql (POSIX users can type the command in
+the terminal, Windows users can go to Start->Programs->PostgreSql->psql)
+b. Enter the password for the account you created when you installed
+PostgreSQL c. Change directory to workspace/mpdb-server/build/schema i.
+An example of this is \cd C:/workspace/mpdb-server/build/schema d.
+Execute “\i recreate-database.sql” 5. Running the Project a. In eclipse,
+Go to Run->Open Run Dialog... b. Select mpdb-server under Java
+Application and click Run c. Select mpdb-client under Java Application
+and click Run MetPetDB General Practices 6. Source Control (Keeping the
+code up-to-date) a. Getting the latest code i. In eclipse, right click
+on the project name ii. Select Team ->Synchronize With Repository iii.
+This will bring up the Synchronize Perspective. iv. On this page, right
+click the project name and select Synchronize v. This will show you the
+changes that have occurred in the source code, it will not update the
+code nor commit any of your changes you need to choose the Update...
+option to do that. b. Committing the Code i. In eclipse, right click on
+the project name ii. Select Team ->Commit iii. This will bring up a view
+with check boxes next to the files you have modified. iv. Place a
+comment in the top box describing the changes you made. v. Click OK to
+commit the changes. 7. Viewing the Javadoc a. In eclipse, expand the
+mpdb-common folder in the Java view. b. Right click on javadoc.xml c.
+Select Run As->Ant Build d. To view the javadoc, click index.html in the
+folder mpdb-common/doc.
+
+
+
+</body>
+</html>
