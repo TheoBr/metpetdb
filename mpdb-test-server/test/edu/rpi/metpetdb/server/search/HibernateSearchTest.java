@@ -1,6 +1,10 @@
 package edu.rpi.metpetdb.server.search;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.Term;
@@ -189,24 +193,70 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	public void testSearchSampleSearch() {
 		SearchSampleDTO searchSamp = new SearchSampleDTO();
 		searchSamp.setSesarNumber("000000000");
+		searchSamp.setAlias("1");
+		Class c = searchSamp.getClass();
+		Method[] allMethods = c.getDeclaredMethods();
+
 		final Session session = InitDatabase.getSession();
 		FullTextSession fullTextSession = Search.createFullTextSession(session);
 
 		Transaction tx = fullTextSession.beginTransaction();
 
-		System.out.println("in test join");
-		String[] searchFor = { searchSamp.getSesarNumber() };
-		String[] columnsIn = { "sesarNumber" };
-		BooleanClause.Occur[] flags = { BooleanClause.Occur.MUST };// ,
-																	// BooleanClause.Occur.MUST};
+		List<String> searchForValue = new LinkedList<String>();
+		List<String> columnsIn = new LinkedList<String>();
+		List<BooleanClause.Occur> flags = new LinkedList<BooleanClause.Occur>();
+
+		String methodName;
+		Object methodResult = null;
+		for (int i = 0; i < allMethods.length; i++) {
+			methodName = allMethods[i].getName();
+			if (methodName.indexOf("get") == 0) {
+				try {
+					methodResult = allMethods[i].invoke(searchSamp, null);
+					Class<?> temp = allMethods[i].getReturnType();
+					System.out.println(temp.getName());
+				} catch (InvocationTargetException E) {
+					System.out.println("Invocation Exception");
+				} catch (IllegalAccessException E) {
+					System.out.println("Illegal Access Exception");
+				}
+				System.out.println(methodName);
+
+				if (methodResult == null) {
+					System.out.println(allMethods[i].getName());
+				} else if ((methodName.equals("getId")
+						|| methodName.equals("getVersion") || methodName
+						.equals("getSubsampleCount"))
+						&& Integer.parseInt(methodResult.toString()) == 0) {
+					System.out.println(allMethods[i].getName());
+				} else if ((methodName.equals("getProjects") || methodName
+						.equals("getSubsamples"))
+						&& ((Set) methodResult).size() == 0) {
+					System.out.println(allMethods[i].getName());
+				} else {
+					searchForValue.add(methodResult.toString());
+					columnsIn.add(methodName.substring(3));
+					flags.add(BooleanClause.Occur.MUST);
+					System.out.println("has value" + methodResult.toString());
+				}
+
+			}
+		}
 
 		/*
 		 * BooleanClause.Occur[] flags = {BooleanClause.Occur.SHOULD,
 		 * BooleanClause.Occur.MUST, BooleanClause.Occur.MUST_NOT};
 		 */
+		String searchArray[] = new String[searchForValue.size()];
+		searchForValue.toArray(searchArray);
+		String columnsArray[] = new String[columnsIn.size()];
+		columnsIn.toArray(columnsArray);
+		BooleanClause.Occur flagsArray[] = new BooleanClause.Occur[flags.size()];
+		flags.toArray(flagsArray);
 		try {
 			Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
-					.parse(searchFor, columnsIn, flags, new StandardAnalyzer());
+					.parse(searchArray, columnsArray, flagsArray,
+							new StandardAnalyzer());
 			org.hibernate.Query hibQuery = fullTextSession.createFullTextQuery(
 					query, Sample.class);
 			List<Sample> result = hibQuery.list();
