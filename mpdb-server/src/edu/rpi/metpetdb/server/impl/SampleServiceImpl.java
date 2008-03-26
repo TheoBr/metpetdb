@@ -83,14 +83,13 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		}
 	}
 
-	// TODO for some reason it does not get the named query
 	private void replaceRegion(final Sample s) {
 		if (s.getRegions() != null) {
 			final Iterator<Region> itr = s.getRegions().iterator();
 			final HashSet<Region> regionsToAdd = new HashSet<Region>();
 			while (itr.hasNext()) {
 				final Region r = (Region) itr.next();
-				final Query regions = namedQuery("edu.rpi.metpetdb.client.model.Region.Region.byName");
+				final Query regions = namedQuery("edu.rpi.metpetdb.server.model.Region.Region.byName");
 				regions.setString("name", r.getName());
 				if (regions.uniqueResult() != null) {
 					itr.remove();
@@ -108,7 +107,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 			final HashSet<MetamorphicGrade> metamorphicToAdd = new HashSet<MetamorphicGrade>();
 			while (itr.hasNext()) {
 				final MetamorphicGrade mg = (MetamorphicGrade) itr.next();
-				final Query grades = namedQuery("edu.rpi.metpetdb.client.model.MetamorphicGrade.MetamorphicGrade.byName");
+				final Query grades = namedQuery("edu.rpi.metpetdb.server.model.MetamorphicGrade.MetamorphicGrade.byName");
 				grades.setString("name", mg.getName());
 				if (grades.uniqueResult() != null) {
 					itr.remove();

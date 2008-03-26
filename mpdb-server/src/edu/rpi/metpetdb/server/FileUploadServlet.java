@@ -20,10 +20,7 @@ import edu.rpi.metpetdb.server.security.PasswordEncrypter;
 
 public class FileUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static String baseFolder = "";
-
-	// private static final String baseFolder =
-	// MpDbServlet.fileProps.getProperty("bulk.path");
+	private static String baseFolder;
 
 	protected void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException {
@@ -35,13 +32,15 @@ public class FileUploadServlet extends HttpServlet {
 				return;
 			}
 			final String hash = writeFile(uploadItem);
-
-			DataStore
-					.open()
-					.createSQLQuery(
-							"INSERT INTO uploaded_files(hash, filename, time) VALUES(:hash, :filename, NOW())")
-					.setParameter("hash", hash).setParameter("filename",
-							uploadItem.getName()).executeUpdate();
+			// boolean ctype = uploadItem.getContentType() ==
+			// "application/ms-excel";
+			// DataStore
+			// .open()
+			// .createSQLQuery(
+			// "INSERT INTO uploaded_files(hash, filename, time) VALUES(:hash,
+			// :filename, NOW())")
+			// .setParameter("hash", hash).setParameter("filename",
+			// uploadItem.getName()).executeUpdate();
 			response.getWriter().write(baseFolder + "/" + hash);
 
 		} catch (final IOException ioe) {
@@ -90,8 +89,8 @@ public class FileUploadServlet extends HttpServlet {
 			writer.close();
 			return filename;
 		} catch (final IOException ioe) {
-			throw new IllegalStateException("filePath=" + baseFolder
-					+ " IO error: " + ioe.getMessage());
+			throw new IllegalStateException("Error writing file filePath="
+					+ baseFolder + " IO error: " + ioe.getMessage());
 		}
 	}
 

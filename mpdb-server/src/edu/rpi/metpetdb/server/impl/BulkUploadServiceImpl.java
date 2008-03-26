@@ -58,14 +58,16 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 
 			sp.parse();
 			final Set<SampleDTO> samples = sp.getSamples();
+			System.out.println("got list of samples");
 			final UserDTO u = (UserDTO) cloneBean(byId("User", currentUser()));
+			System.out.println("got current user");
 			for (final SampleDTO s : samples) {
 				try {
 					System.out.println("Saving Sample" + s.toString());
 					s.setOwner(u);
-					System.out.println("check");
+					System.out.println("\towner set");
 					super.save(s);
-					System.out.println("check");
+					System.out.println("\tsample saved");
 					savedSamples++;
 				} catch (final SampleAlreadyExistsException saee) {
 					System.err.println(saee.getMessage());
