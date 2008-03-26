@@ -26,7 +26,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 	}
 
 	public UserDTO details(final String username) throws NoSuchObjectException {
-		UserDTO UserDTO = (UserDTO) clone( byKey("User", "username", username));
+		UserDTO UserDTO = (UserDTO) clone(byKey("User", "username", username));
 		return UserDTO;
 	}
 
@@ -36,7 +36,8 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		try {
 			final User u = (User) byKey("User", "username", ssr.getUsername());
 			if (!authenticate(u, ssr.getPassword()))
-				throw new LoginFailureException(doc.StartSessionRequest_password);
+				throw new LoginFailureException(
+						doc.StartSessionRequest_password);
 			setCurrentUser(u);
 			return (UserDTO) clone(u);
 		} catch (NoSuchObjectException nsoe) {
@@ -50,7 +51,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		r.databaseObjectConstraints = doc;
 		r.objectConstraints = oc;
 		try {
-			r.user =  (UserDTO) clone( byId("User", (long) currentUser()));
+			r.user = (UserDTO) clone(byId("User", (long) currentUser()));
 		} catch (NoSuchObjectException err) {
 			r.user = null;
 		} catch (LoginRequiredException err) {
@@ -62,7 +63,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 	public UserDTO beginEditMyProfile() throws NoSuchObjectException,
 			LoginRequiredException {
-		return (UserDTO)clone( byId("User", (long)currentUser()));
+		return (UserDTO) clone(byId("User", (long) currentUser()));
 	}
 
 	public UserDTO registerNewUser(final UserWithPasswordDTO newbie)
@@ -71,24 +72,24 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		doc.UserWithPassword_newPassword.validateEntity(newbie);
 		doc.UserWithPassword_vrfPassword.validateEntity(newbie);
 
-		final UserDTO UserDTO = newbie.getUser();
-		if (!UserDTO.mIsNew())
-			throw new SecurityException("Cannot register non-new UserDTO.");
+		final UserDTO newUser = newbie.getUser();
+		if (!newUser.mIsNew())
+			throw new SecurityException("Cannot register non-new user.");
 
 		final String pass = newbie.getNewPassword();
-		UserDTO.setEncryptedPassword(PasswordEncrypter.crypt(pass));
-		doc.validate(UserDTO);
-		User u = (User) merge(newbie);
+		newUser.setEncryptedPassword(PasswordEncrypter.crypt(pass));
+		doc.validate(newUser);
+		User u = (User) merge(newUser);
 		try {
 			insert(u);
 			commit();
 			EmailSupport.sendMessage(this, u.getEmailAddress(),
-					"registerNewUser", new Object[]{u.getUsername(),
-							getModuleBaseURL()});
+					"registerNewUser", new Object[] { u.getUsername(),
+							getModuleBaseURL() });
 			setCurrentUser(u);
 			return (UserDTO) clone(u);
 		} catch (ConstraintViolationException cve) {
-			final String who = UserDTO.getUsername();
+			final String who = newUser.getUsername();
 			if ("users_nk_username".equals(cve.getConstraintName()))
 				throw new DuplicateValueException(doc.User_username, who);
 			throw new DuplicateValueException(doc.User_username, who);
@@ -125,6 +126,6 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		update(u);
 		commit();
 		EmailSupport.sendMessage(this, u.getEmailAddress(), "emailPassword",
-				new Object[]{u.getUsername(), newpass, getModuleBaseURL()});
+				new Object[] { u.getUsername(), newpass, getModuleBaseURL() });
 	}
 }
