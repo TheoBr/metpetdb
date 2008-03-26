@@ -20,13 +20,13 @@
   </servlet-mapping>
   
   <servlet>
-	<servlet-name>bulkUpload</servlet-name>
-	<servlet-class>edu.rpi.metpetdb.server.BulkUploadServlet</servlet-class>
+	<servlet-name>fileUpload</servlet-name>
+	<servlet-class>edu.rpi.metpetdb.server.FileUploadServlet</servlet-class>
 	<load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-    <servlet-name>bulkUpload</servlet-name>
-    <url-pattern>/bulkUpload</url-pattern>
+    <servlet-name>fileUpload</servlet-name>
+    <url-pattern>/fileUpload</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -105,8 +105,8 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-    <servlet-name>mineralAnalysis</servlet-name>
-    <url-pattern>/mineralAnalysis.svc</url-pattern>
+    <servlet-name>chemicalAnalysis</servlet-name>
+    <url-pattern>/chemicalAnalysis.svc</url-pattern>
   </servlet-mapping>
   
   <servlet>
