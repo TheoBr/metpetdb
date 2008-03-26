@@ -43,3 +43,4 @@ DROP TABLE samples CASCADE;
 DROP TABLE regions CASCADE;
 DROP TABLE minerals CASCADE;
 DROP TABLE xray_image CASCADE;
+DROP TABLE uploaded_files CASCADE;
