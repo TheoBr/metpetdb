@@ -194,6 +194,9 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		SearchSampleDTO searchSamp = new SearchSampleDTO();
 		searchSamp.setSesarNumber("000000000");
 		searchSamp.setAlias("1");
+		searchSamp.addRockType("BLAHHHH");
+		searchSamp.addRockType("rockie rock");
+
 		Class c = searchSamp.getClass();
 		Method[] allMethods = c.getDeclaredMethods();
 
@@ -208,36 +211,43 @@ public class HibernateSearchTest extends DatabaseTestCase {
 
 		String methodName;
 		Object methodResult = null;
+		Class<?> returnType = null;
 		for (int i = 0; i < allMethods.length; i++) {
 			methodName = allMethods[i].getName();
 			if (methodName.indexOf("get") == 0) {
 				try {
 					methodResult = allMethods[i].invoke(searchSamp, null);
-					Class<?> temp = allMethods[i].getReturnType();
-					System.out.println(temp.getName());
+					returnType = allMethods[i].getReturnType();
 				} catch (InvocationTargetException E) {
 					System.out.println("Invocation Exception");
 				} catch (IllegalAccessException E) {
 					System.out.println("Illegal Access Exception");
 				}
-				System.out.println(methodName);
 
 				if (methodResult == null) {
-					System.out.println(allMethods[i].getName());
 				} else if ((methodName.equals("getId")
 						|| methodName.equals("getVersion") || methodName
 						.equals("getSubsampleCount"))
 						&& Integer.parseInt(methodResult.toString()) == 0) {
-					System.out.println(allMethods[i].getName());
 				} else if ((methodName.equals("getProjects") || methodName
 						.equals("getSubsamples"))
 						&& ((Set) methodResult).size() == 0) {
-					System.out.println(allMethods[i].getName());
 				} else {
-					searchForValue.add(methodResult.toString());
-					columnsIn.add(methodName.substring(3));
-					flags.add(BooleanClause.Occur.MUST);
-					System.out.println("has value" + methodResult.toString());
+					if (returnType.equals(Set.class)) {
+						for (Object o : (Set) methodResult) {
+							System.out.println("adding a should for variable " + methodName.substring(3) + "with value"
+									+ o.toString());
+							searchForValue.add(o.toString());
+							columnsIn.add(methodName.substring(3));
+							flags.add(BooleanClause.Occur.SHOULD);
+						}
+					} else {
+						System.out.println("adding a must for variable " + methodName.substring(3) + "with value"
+								+ methodResult.toString());
+						searchForValue.add(methodResult.toString());
+						columnsIn.add(methodName.substring(3));
+						flags.add(BooleanClause.Occur.MUST);
+					}
 				}
 
 			}

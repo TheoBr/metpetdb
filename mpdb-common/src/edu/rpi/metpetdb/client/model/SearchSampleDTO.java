@@ -7,12 +7,11 @@ import java.util.Set;
 import org.postgis.Geometry;
 import org.postgis.Point;
 
-import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 
-public class SearchSampleDTO extends MObjectDTO implements IHasName {
+public class SearchSampleDTO extends MObjectDTO {
 
-	private Set<String> possibleRockTypes;
+	private Set<String> possibleRockTypes = new HashSet();
 
 	private static final long serialVersionUID = 1L;
 	private long id;
@@ -47,6 +46,8 @@ public class SearchSampleDTO extends MObjectDTO implements IHasName {
 	private Float latitudeError;
 	private Float longitudeError;
 
+	private String rockType;
+
 	private Set<RegionDTO> regions;
 
 	private Set<MetamorphicGradeDTO> metamorphicGrades;
@@ -63,13 +64,21 @@ public class SearchSampleDTO extends MObjectDTO implements IHasName {
 		id = i;
 	}
 
-	public Set<String> getPossibleRockTypes() {
+	public Set<String> getRockType() {
 		return possibleRockTypes;
 	}
+
+	/*
+	 * public String getRockType() { return rockType; }
+	 */
 
 	public void addRockType(final String rt) {
 		possibleRockTypes.add(rt);
 	}
+
+	/*
+	 * public void setRockType(final String rt) { rockType = rt; }
+	 */
 
 	public int getVersion() {
 		return version;
@@ -280,13 +289,6 @@ public class SearchSampleDTO extends MObjectDTO implements IHasName {
 
 	public void setReferences(final Set<ReferenceDTO> r) {
 		references = r;
-	}
-
-	public String getName() {
-		if (this.alias != null || !this.alias.equals(""))
-			return this.alias;
-		else
-			return this.sesarNumber;
 	}
 
 	public boolean equals(final Object o) {
