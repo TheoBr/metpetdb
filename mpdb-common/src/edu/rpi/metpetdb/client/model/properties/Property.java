@@ -1,8 +1,10 @@
 package edu.rpi.metpetdb.client.model.properties;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 
-public interface Property {
+public interface Property extends IsSerializable {
 
 	abstract <T extends MObjectDTO> Object get(final T object);
 

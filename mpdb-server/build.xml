@@ -26,6 +26,7 @@
 		<filter token="APPPASS" value="${APPPASS}" />
 		<filter token="DATABASE" value="${DATABASE}" />
 		<filter token="postgis" value="${postgis}" />
+		<filter token="INDICES" value="${INDICES}" />
 	</filterset>
 	
 	<!-- Library files for classpath -->

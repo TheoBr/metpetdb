@@ -9,7 +9,7 @@
     <property name="hibernate.connection.username">@APPUSER@</property>
     <property name="hibernate.connection.password">@APPPASS@</property>
     <property name="hibernate.connection.pool_size">2</property>
-    <property name="hibernate.search.default.indexBase">indices</property>
+    <property name="hibernate.search.default.indexBase">@INDICES@</property>
 	<property name="hibernate.search.default.directory_provider">org.hibernate.search.store.FSDirectoryProvider</property>
   
     <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
