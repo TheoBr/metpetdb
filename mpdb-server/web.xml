@@ -20,13 +20,23 @@
   </servlet-mapping>
   
   <servlet>
-	<servlet-name>fileUpload</servlet-name>
+	<servlet-name>spreadsheetUpload</servlet-name>
 	<servlet-class>edu.rpi.metpetdb.server.FileUploadServlet</servlet-class>
 	<load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-    <servlet-name>fileUpload</servlet-name>
-    <url-pattern>/fileUpload</url-pattern>
+    <servlet-name>spreadsheetUpload</servlet-name>
+    <url-pattern>/spreadsheetUpload</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+	<servlet-name>bulkUpload</servlet-name>
+	<servlet-class>edu.rpi.metpetdb.server.impl.BulkUploadServiceImpl</servlet-class>
+	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>bulkUpload</servlet-name>
+    <url-pattern>/bulkUpload.svc</url-pattern>
   </servlet-mapping>
 
   <servlet>
