@@ -38,6 +38,7 @@ import edu.rpi.metpetdb.client.model.validation.MineralConstraint;
 import edu.rpi.metpetdb.client.model.validation.MultiValuedStringConstraint;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.model.validation.RockTypeConstraint;
 import edu.rpi.metpetdb.client.model.validation.StringConstraint;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
 import edu.rpi.metpetdb.server.model.MObject;
@@ -281,7 +282,11 @@ public class DataStore {
 		final String className = rc.getName().substring(
 				rc.getName().lastIndexOf(".") + 1);
 
-		if (rc == String.class)
+		if ("rockType".equals(name)) {
+			return RockTypeConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
+					.newInstance()
+					: new RockTypeConstraint();
+		} else if (rc == String.class)
 			return StringConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
 					.newInstance()
 					: new StringConstraint();

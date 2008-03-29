@@ -19,7 +19,11 @@ import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
  * server and pack a bunch of the data into an instance of this class.
  * </p>
  */
-public class ResumeSessionResponse extends LazyGwtPojo implements IsSerializable {
+public class ResumeSessionResponse extends LazyGwtPojo implements
+		IsSerializable {
+
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Logged in user; null if the user is not logged in.
 	 * <p>
@@ -35,8 +39,8 @@ public class ResumeSessionResponse extends LazyGwtPojo implements IsSerializable
 	 * System-wide entity constraint information.
 	 * <p>
 	 * Never null. This attribute provides the system-wide singleton instance of
-	 * {@link DatabaseObjectConstraints} and can be used by the client and the server to
-	 * validate properties of objects.
+	 * {@link DatabaseObjectConstraints} and can be used by the client and the
+	 * server to validate properties of objects.
 	 * </p>
 	 */
 	public DatabaseObjectConstraints databaseObjectConstraints;

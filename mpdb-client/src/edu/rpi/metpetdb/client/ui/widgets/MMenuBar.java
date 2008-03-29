@@ -12,7 +12,8 @@ public class MMenuBar extends MenuBar {
 
 	public MMenuBar(final boolean b) {
 		super(b);
-		if (b) setStyleName("hdrnavMenu");
+		if (b)
+			setStyleName("hdrnavMenu");
 	}
 
 	public MMenuBar() {
@@ -20,8 +21,8 @@ public class MMenuBar extends MenuBar {
 	}
 
 	public MenuItem addItem(final String text, final MMenuBar menuBar) {
-		String anchor = (menuBar.getItems() != null && !menuBar.getItems().isEmpty()) ?
-			"<a class=\"hasMenu\">" : "<a>";
+		String anchor = (menuBar.getItems() != null && !menuBar.getItems()
+				.isEmpty()) ? "<a class=\"hasMenu\">" : "<a>";
 		anchor += text + "</a>";
 		return super.addItem(anchor, true, menuBar);
 	}
@@ -35,12 +36,12 @@ public class MMenuBar extends MenuBar {
 		DOM.appendChild(menuItem.getElement(), anchor);
 		return menuItem;
 	}
-	
+
 	public MenuItem addItem(final String text, final Command cmd) {
 		return super.addItem("<a>" + text + "</a>", true, cmd);
 	}
 
-	public List getItems() {
+	public List<MenuItem> getItems() {
 		return super.getItems();
 	}
 

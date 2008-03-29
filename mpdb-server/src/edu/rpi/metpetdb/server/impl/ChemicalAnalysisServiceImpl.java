@@ -24,7 +24,8 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		return ma;
 	}
 
-	public Results all(PaginationParameters parameters, final long subsampleId) {
+	public Results<ChemicalAnalysisDTO> all(PaginationParameters parameters,
+			final long subsampleId) {
 		final String name = "ChemicalAnalysis.bySubsampleId";
 		final Query sizeQuery = sizeQuery(name);
 		final Query pageQuery = pageQuery(name, parameters);

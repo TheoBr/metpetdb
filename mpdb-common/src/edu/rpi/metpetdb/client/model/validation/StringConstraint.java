@@ -5,9 +5,8 @@ import edu.rpi.metpetdb.client.error.ValueTooLongException;
 import edu.rpi.metpetdb.client.error.ValueTooShortException;
 
 /** Applies to any string value. */
-public class StringConstraint extends PropertyConstraint
-		implements
-			MaxLengthConstraint {
+public class StringConstraint extends PropertyConstraint implements
+		MaxLengthConstraint {
 	/**
 	 * Minimum length of this field.
 	 * <p>
@@ -29,6 +28,7 @@ public class StringConstraint extends PropertyConstraint
 	 */
 	public int maxLength;
 
+	@Override
 	public void validateValue(final Object value) throws ValidationException {
 		super.validateValue(value);
 		if (value == null)

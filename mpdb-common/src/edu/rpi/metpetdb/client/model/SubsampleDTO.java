@@ -7,22 +7,14 @@ import edu.rpi.metpetdb.client.model.interfaces.IHasImages;
 
 public class SubsampleDTO extends MObjectDTO implements IHasImages {
 
-	private static final Long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 1L;
 	private Long id;
-
 	private SampleDTO sample;
-
 	private int version;
-
 	private String name;
-
 	private String type;
-
 	private Set<ImageDTO> images;
-
 	private GridDTO grid;
-
 	private Set<ChemicalAnalysisDTO> chemicalAnalyses;
 	private int imageCount;
 	private int analysisCount;
@@ -141,6 +133,6 @@ public class SubsampleDTO extends MObjectDTO implements IHasImages {
 
 	@Override
 	public boolean mIsNew() {
-		return this.id == 0;
+		return this.id == null || this.id == 0;
 	}
 }

@@ -1,26 +1,37 @@
 package edu.rpi.metpetdb.client.model.validation;
 
+import edu.rpi.metpetdb.client.error.InvalidRockTypeException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.interfaces.IHasListItems;
 
+public class RockTypeConstraint extends StringConstraint implements
+		IHasListItems {
 
-//TODO make this extend CollectionConstraint
-public class RockTypeConstraint extends StringConstraint
-		implements
-			IHasListItems {
+	private String[] rockTypes = {
+			"Amphibolite", "Blueschist", "Calc-silicate", "Eclogite", "Gneiss",
+			"Granofels", "Greenschist", "Hornfels", "Marble", "Metabasite",
+			"Metagreywacke", "Metapelite", "Meta-arkose", "Migmatite",
+			"Mylonite", "Phyllite", "Quartzite", "Schist", "Serpentinite",
+			"Skarn", "Slate",
+	};
 
-	private String[] rockNames = {"Amphibolite", "Blueschist", "Calc-silicate",
-			"Eclogite", "Gneiss", "Granofels", "Greenschist", "Hornfels",
-			"Marble", "Metabasite", "Metagreywacke", "Metapelite",
-			"Meta-arkose", "Migmatite", "Mylonite", "Phyllite", "Quartzite",
-			"Schist", "Serpentinite", "Skarn", "Slate",};
-
+	@Override
 	public void validateValue(final Object value) throws ValidationException {
-		super.validateValue(value);
+		if (!isValidRockName(value.toString())) {
+			throw new InvalidRockTypeException(value.toString(), rockTypes);
+		}
 	}
 
 	public String[] getListItems() {
-		return rockNames;
+		return rockTypes;
+	}
+
+	private boolean isValidRockName(final String rockName) {
+		for (int i = 0; i < rockTypes.length; ++i) {
+			if (rockName.equals(rockTypes[i]))
+				return true;
+		}
+		return false;
 	}
 
 }

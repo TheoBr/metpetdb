@@ -15,12 +15,11 @@ import edu.rpi.metpetdb.client.service.ImageBrowserService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.model.Grid;
 
-public class ImageBrowserServiceImpl extends MpDbServlet
-		implements
-			ImageBrowserService {
+public class ImageBrowserServiceImpl extends MpDbServlet implements
+		ImageBrowserService {
 	private static final long serialVersionUID = 1L;
 
-	public Results bySampleId(long id, PaginationParameters p)
+	public Results<GridDTO> bySampleId(long id, PaginationParameters p)
 			throws NoSuchObjectException {
 		final String name = "Grid.bySampleId";
 		final Query sizeQuery = sizeQuery(name);
@@ -35,7 +34,8 @@ public class ImageBrowserServiceImpl extends MpDbServlet
 		return cloneBean(g);
 	}
 
-	public List<ImageOnGridDTO> imagesOnGrid(long id) throws NoSuchObjectException {
+	public List<ImageOnGridDTO> imagesOnGrid(long id)
+			throws NoSuchObjectException {
 		return cloneBean(byKey("ImageOnGrid", "gridId", id));
 	}
 
@@ -54,7 +54,7 @@ public class ImageBrowserServiceImpl extends MpDbServlet
 			throw cve;
 		}
 	}
-	
+
 	@Deprecated
 	public static final void resetGrid(final Grid g) {
 		g.setImagesOnGrid(null);

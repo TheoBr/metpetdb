@@ -6,32 +6,24 @@ import com.google.gwt.i18n.client.Messages;
 public interface LocaleText extends Messages {
 	/* Menus */
 	String homeMenu();
-
 	String mySamplesMenu();
 	String mySamplesMenu_AllMySamples();
 	String mySamplesMenu_NewestSamples();
 	String mySamplesMenu_FavoriteSamples();
 	String mySamplesMenu_EnterSample();
-
 	String projectMenu();
 	String projectsMenu_NewProject();
 	String projectsMenu_MyProjects();
 	String projectsMenu_EnterSample();
-
 	String searchMenu();
 	String searchMenu_AllPublicSamples();
-
 	String newsMenu();
-
 	String aboutMenu();
 	String aboutMenu_Introduction();
 	String aboutMenu_Wiki();
 	String aboutMenu_VersionControl();
-
 	String peopleMenu();
-
 	String faqMenu();
-
 	String wikiMenu();
 
 	/* Samples */
@@ -100,6 +92,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_NotAfter(String fieldA, String fieldB);
 	String errorDesc_Duplicate(String field, String taken);
 	String errorDesc_UnableToSendEmail();
+	String errorDesc_InvalidRockType(String rockType, String rockTypes);
 
 	/* Character Names */
 	String character_space();

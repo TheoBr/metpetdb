@@ -10,10 +10,16 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 
 public interface SubsampleService extends RemoteService {
-	Results all(PaginationParameters parameters, final long sampleId);
-	Results allWithImages(PaginationParameters parameters, final long sampleId);
+	Results<SubsampleDTO> all(PaginationParameters parameters,
+			final long sampleId);
+
+	Results<SubsampleDTO> allWithImages(PaginationParameters parameters,
+			final long sampleId);
+
 	SubsampleDTO details(long id) throws NoSuchObjectException;
+
 	SubsampleDTO save(final SubsampleDTO s) throws ValidationException,
 			LoginRequiredException;
+
 	void delete(long id) throws NoSuchObjectException, LoginRequiredException;
 }

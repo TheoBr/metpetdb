@@ -1,4 +1,4 @@
-GRANT select,insert       ,delete ON chemicals        TO @APPUSER@;
+GRANT select,insert       ,delete ON minerals        TO @APPUSER@;
 GRANT select,insert,update,delete        ON projects        TO @APPUSER@;
 GRANT select,insert       ,delete ON project_members TO @APPUSER@;
 GRANT select,insert       ,delete ON project_samples TO @APPUSER@;
@@ -6,7 +6,7 @@ GRANT select,insert       ,delete        ON regions         TO @APPUSER@;
 GRANT select,insert,update,delete ON samples         TO @APPUSER@;
 GRANT select,insert,update,delete ON subsamples      TO @APPUSER@;
 GRANT select,insert,update,delete        ON users           TO @APPUSER@;
-GRANT select,insert       ,delete ON sample_chemicals TO @APPUSER@;
+GRANT select,insert       ,delete ON sample_minerals TO @APPUSER@;
 GRANT select,insert,update,delete ON grids           TO @APPUSER@;
 GRANT select,insert,update,delete ON images          TO @APPUSER@;
 GRANT select,insert,update,delete ON image_on_grid   TO @APPUSER@;

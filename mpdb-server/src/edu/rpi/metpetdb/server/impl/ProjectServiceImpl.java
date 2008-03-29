@@ -7,6 +7,7 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ProjectDTO;
+import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.ProjectService;
@@ -21,8 +22,8 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 		return p;
 	}
 
-	public ProjectDTO saveProject(ProjectDTO projectDTO) throws ValidationException,
-			LoginRequiredException {
+	public ProjectDTO saveProject(ProjectDTO projectDTO)
+			throws ValidationException, LoginRequiredException {
 		doc.validate(projectDTO);
 		if (projectDTO.getOwner().getId() != currentUser())
 			throw new SecurityException("Cannot modify projects you don't own.");
@@ -37,12 +38,14 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 			return cloneBean(project);
 		} catch (ConstraintViolationException cve) {
 			if ("projects_nk".equals(cve.getConstraintName()))
-				throw new DuplicateValueException(doc.Project_name, project.getName());
+				throw new DuplicateValueException(doc.Project_name, project
+						.getName());
 			throw cve;
 		}
 	}
-	
-	public Results samplesFromProject(PaginationParameters parameters, long id) {
+
+	public Results<SampleDTO> samplesFromProject(
+			PaginationParameters parameters, long id) {
 		final String name = "Sample.forProject";
 		return toResults(sizeQuery(name, id), pageQuery(name, parameters, id));
 	}

@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
+import edu.rpi.metpetdb.client.model.ElementDTO;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.ProjectDTO;
@@ -98,7 +99,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public IntegerConstraint XrayImage_dwelltime;
 	public IntegerConstraint XrayImage_current;
 	public IntegerConstraint XrayImage_voltage;
-	public CollectionConstraint XrayImage_element;
+	public CollectionConstraint<ElementDTO> XrayImage_element;
 
 	public void validate(final XrayImageDTO i) throws ValidationException {
 		validate(i, XrayImage_all);

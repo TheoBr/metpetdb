@@ -57,6 +57,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	/** The server's object constraint instance. */
 	protected DatabaseObjectConstraints doc;
 	protected ObjectConstraints oc;
+
 	protected static final Properties fileProps = new Properties();
 
 	private static int autoLoginId = -1;
@@ -265,7 +266,9 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 *         member of the Hibernate session cache and therefore can be passed
 	 *         off to {@link #update(Object)} to actually be modified.
 	 */
-	@SuppressWarnings( { "unchecked" })
+	@SuppressWarnings( {
+		"unchecked"
+	})
 	protected <T extends MObject> T merge(final T u) {
 		return (T) currentSession().merge(u);
 	}
@@ -365,7 +368,9 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		return q;
 	}
 
-	@SuppressWarnings( { "unchecked" })
+	@SuppressWarnings( {
+		"unchecked"
+	})
 	protected <T extends MObject> List<T> pageList(final String name,
 			final PaginationParameters p, final long id) {
 		final Query q = pageQuery(name, p, id);
@@ -413,7 +418,9 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 *             the database. This error probably should be thrown back to
 	 *             the UI layer, so it can display a proper error message.
 	 */
-	@SuppressWarnings( { "unchecked" })
+	@SuppressWarnings( {
+		"unchecked"
+	})
 	protected <T extends MObject> T byId(final String name, final long id)
 			throws NoSuchObjectException {
 		final Query q = currentSession().getNamedQuery(name + ".byId");
@@ -441,7 +448,9 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 *             the database. This error probably should be thrown back to
 	 *             the UI layer, so it can display a proper error message.
 	 */
-	@SuppressWarnings( { "unchecked" })
+	@SuppressWarnings( {
+		"unchecked"
+	})
 	protected <T extends MObject> List<T> byKey(final String name,
 			final String attribute, final long id) throws NoSuchObjectException {
 		final Query q = currentSession().getNamedQuery(
@@ -454,7 +463,9 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		return (ArrayList<T>) r;
 	}
 
-	@SuppressWarnings( { "unchecked" })
+	@SuppressWarnings( {
+		"unchecked"
+	})
 	protected <T extends MObject> T byKey(final String name,
 			final String attribute, final String id)
 			throws NoSuchObjectException {
@@ -477,7 +488,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 *            the query that will generate the current page's row data.
 	 * @return the results object to return back to the UI layer.
 	 */
-	protected <T extends MObjectDTO> Results toResults(final Query szQuery,
+	protected <T extends MObjectDTO> Results<T> toResults(final Query szQuery,
 			final Query objQuery) {
 		final Number sz = (Number) szQuery.uniqueResult();
 		return new Results(sz.intValue(),

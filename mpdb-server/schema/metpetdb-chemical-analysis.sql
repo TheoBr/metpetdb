@@ -78,5 +78,5 @@ CREATE TABLE chemical_analysis_oxides
 CREATE SEQUENCE chemical_analyses_seq;
 CREATE SEQUENCE element_seq;
 CREATE SEQUENCE oxide_seq;
-CREATE SEQUENCE analysis_oxides_seq;
-CREATE SEQUENCE analysis_elements_seq;
+CREATE SEQUENCE chemical_analysis_oxides_seq;
+CREATE SEQUENCE chemical_analysis_elements_seq;

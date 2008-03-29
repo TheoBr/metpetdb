@@ -24,22 +24,24 @@ import edu.rpi.metpetdb.server.model.Sample;
 public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	private static final long serialVersionUID = 1L;
 
-	public Results all(final PaginationParameters p) {
+	public Results<SampleDTO> all(final PaginationParameters p) {
 		final String name = "Sample.all";
 		return toResults(sizeQuery(name), pageQuery(name, p));
 	}
 
-	public Results allSamplesForUser(final PaginationParameters p, long id) {
+	public Results<SampleDTO> allSamplesForUser(final PaginationParameters p,
+			long id) {
 		final String name = "Sample.forUser";
 		return toResults(sizeQuery(name, id), pageQuery(name, p, id));
 	}
 
-	public Results allPublicSamples(final PaginationParameters p) {
+	public Results<SampleDTO> allPublicSamples(final PaginationParameters p) {
 		final String name = "Sample.allPublic";
 		return toResults(sizeQuery(name), pageQuery(name, p));
 	}
 
-	public Results projectSamples(final PaginationParameters p, long id) {
+	public Results<SampleDTO> projectSamples(final PaginationParameters p,
+			long id) {
 		final String name = "Sample.forProject";
 		return toResults(sizeQuery(name, id), pageQuery(name, p, id));
 	}

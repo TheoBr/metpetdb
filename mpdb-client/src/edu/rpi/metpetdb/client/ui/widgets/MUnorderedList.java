@@ -13,24 +13,22 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
 
-public class MUnorderedList extends Panel
-		implements
-			IndexedPanel,
-			SourcesMouseEvents {
+public class MUnorderedList extends Panel implements IndexedPanel,
+		SourcesMouseEvents {
 
 	private final Element ul;
-	private final HashSet items;
+	private final HashSet<ListItem> items;
 	private MouseListenerCollection mouseListeners;
 
 	public MUnorderedList() {
 		super();
 		ul = DOM.createElement("ul");
 		this.setElement(ul);
-		items = new HashSet();
+		items = new HashSet<ListItem>();
 		sinkEvents(Event.MOUSEEVENTS);
 	}
 
-	public HashSet getItems() {
+	public HashSet<ListItem> getItems() {
 		return items;
 	}
 
@@ -59,7 +57,7 @@ public class MUnorderedList extends Panel
 		DOM.appendChild(li, w.getElement());
 		DOM.insertChild(ul, li, index);
 		final ListItem item = new ListItem(w, li, index);
-		final Iterator itr = items.iterator();
+		final Iterator<ListItem> itr = items.iterator();
 		while (itr.hasNext()) {
 			final ListItem listItem = (ListItem) itr.next();
 			if (listItem.getIndex() >= index) {
@@ -84,7 +82,7 @@ public class MUnorderedList extends Panel
 		} else {
 			DOM.removeChild(ul, item.getLi());
 			items.remove(item);
-			final Iterator itr = items.iterator();
+			final Iterator<ListItem> itr = items.iterator();
 			while (itr.hasNext()) {
 				final ListItem listItem = (ListItem) itr.next();
 				if (listItem.getIndex() > item.index) {
@@ -125,8 +123,8 @@ public class MUnorderedList extends Panel
 			return ((ListItem) getListItemAtIndex(i)).getWidget();
 	}
 
-	public Iterator iterator() {
-		return new Iterator() {
+	public Iterator<Widget> iterator() {
+		return new Iterator<Widget>() {
 			Widget returned = null;
 			int currentIndex = 0;
 
@@ -142,7 +140,7 @@ public class MUnorderedList extends Panel
 				}
 			}
 
-			public Object next() {
+			public Widget next() {
 				if (hasNext()) {
 					final ListItem item = ((ListItem) getListItemAtIndex(currentIndex));
 					if (item != null) {
@@ -168,7 +166,7 @@ public class MUnorderedList extends Panel
 		final int newIndex = index;
 		DOM.removeChild(ul, item.getLi());
 		DOM.insertChild(ul, item.getLi(), newIndex);
-		final Iterator itr = items.iterator();
+		final Iterator<ListItem> itr = items.iterator();
 		final boolean movedDown = item.getIndex() < index ? true : false;
 		while (itr.hasNext()) {
 			final ListItem listItem = (ListItem) itr.next();
@@ -192,6 +190,7 @@ public class MUnorderedList extends Panel
 			mouseListeners = new MouseListenerCollection();
 		mouseListeners.add(listener);
 	}
+
 	public void removeMouseListener(final MouseListener listener) {
 		if (mouseListeners != null)
 			mouseListeners.remove(listener);
@@ -199,20 +198,20 @@ public class MUnorderedList extends Panel
 
 	public void onBrowserEvent(Event event) {
 		switch (DOM.eventGetType(event)) {
-			case Event.ONMOUSEDOWN :
-			case Event.ONMOUSEUP :
-			case Event.ONMOUSEMOVE :
-			case Event.ONMOUSEOUT :
-			case Event.ONMOUSEOVER :
-				if (mouseListeners != null)
-					mouseListeners.fireMouseEvent(this, event);
-				break;
+		case Event.ONMOUSEDOWN:
+		case Event.ONMOUSEUP:
+		case Event.ONMOUSEMOVE:
+		case Event.ONMOUSEOUT:
+		case Event.ONMOUSEOVER:
+			if (mouseListeners != null)
+				mouseListeners.fireMouseEvent(this, event);
+			break;
 		};
 
 	}
 
 	public ListItem getListItemAtIndex(final int index) {
-		final Iterator itr = items.iterator();
+		final Iterator<ListItem> itr = items.iterator();
 		while (itr.hasNext()) {
 			final ListItem item = (ListItem) itr.next();
 			if (item.getIndex() == index) {
@@ -223,7 +222,7 @@ public class MUnorderedList extends Panel
 	}
 
 	public ListItem getListItemWithWidget(final Widget w) {
-		final Iterator itr = items.iterator();
+		final Iterator<ListItem> itr = items.iterator();
 		while (itr.hasNext()) {
 			final ListItem item = (ListItem) itr.next();
 			if (item.getWidget().equals(w)) {
@@ -237,6 +236,7 @@ public class MUnorderedList extends Panel
 		private Widget widget;
 		private Element li;
 		private int index;
+
 		public ListItem(final Widget w, final Element e, final int i) {
 			widget = w;
 			li = e;
@@ -246,6 +246,7 @@ public class MUnorderedList extends Panel
 		public Widget getWidget() {
 			return widget;
 		}
+
 		public void setWidget(final Widget w) {
 			widget = w;
 		}
@@ -253,6 +254,7 @@ public class MUnorderedList extends Panel
 		public Element getLi() {
 			return li;
 		}
+
 		public void setLi(final Element e) {
 			li = e;
 		}
@@ -260,6 +262,7 @@ public class MUnorderedList extends Panel
 		public int getIndex() {
 			return index;
 		}
+
 		public void setIndex(final int i) {
 			index = i;
 		}
@@ -267,6 +270,7 @@ public class MUnorderedList extends Panel
 		public void incrementIndex() {
 			++index;
 		}
+
 		public void decrementIndex() {
 			--index;
 		}

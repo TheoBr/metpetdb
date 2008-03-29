@@ -21,7 +21,8 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 		SubsampleService {
 	private static final long serialVersionUID = 1L;
 
-	public Results all(final PaginationParameters p, final long sampleId) {
+	public Results<SubsampleDTO> all(final PaginationParameters p,
+			final long sampleId) {
 		final String name = "Subsample.all";
 		final Query sizeQuery = sizeQuery(name, sampleId);
 		final List<Subsample> l = pageList(name, p, sampleId);
@@ -36,13 +37,14 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 						"ChemicalAnalysis.bySubsampleId", s.getId())
 						.uniqueResult()).intValue());
 			}
-
-			return new Results(sz.intValue(), cloneBean(l));
+			final List<SubsampleDTO> subsamples = cloneBean(l);
+			return new Results<SubsampleDTO>(sz.intValue(), subsamples);
 		} else
-			return new Results(sz.intValue(), new ArrayList<Subsample>());
+			return new Results<SubsampleDTO>(sz.intValue(),
+					new ArrayList<SubsampleDTO>());
 	}
 
-	public Results allWithImages(final PaginationParameters p,
+	public Results<SubsampleDTO> allWithImages(final PaginationParameters p,
 			final long sampleId) {
 		final String name = "Subsample.allWithImages";
 		return toResults(sizeQuery(name, sampleId),
@@ -62,7 +64,9 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 	public SubsampleDTO save(SubsampleDTO subsampleDTO)
 			throws ValidationException, LoginRequiredException {
 		doc.validate(subsampleDTO);
-		if (subsampleDTO.getSample().getOwner().getId() != currentUser())
+		if (subsampleDTO.getSample() == null
+				|| subsampleDTO.getSample().getOwner() == null
+				|| subsampleDTO.getSample().getOwner().getId() != currentUser())
 			throw new SecurityException(
 					"Cannot modify subsamples you don't own.");
 		Subsample subsample = mergeBean(subsampleDTO);

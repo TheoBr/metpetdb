@@ -11,7 +11,7 @@ import edu.rpi.metpetdb.client.service.MpDbConstants;
 
 public class SearchSampleDTO extends MObjectDTO {
 
-	private Set<String> possibleRockTypes = new HashSet();
+	private Set<String> possibleRockTypes = new HashSet<String>();
 
 	private static final long serialVersionUID = 1L;
 	private long id;
@@ -45,8 +45,6 @@ public class SearchSampleDTO extends MObjectDTO {
 
 	private Float latitudeError;
 	private Float longitudeError;
-
-	private String rockType;
 
 	private Set<RegionDTO> regions;
 

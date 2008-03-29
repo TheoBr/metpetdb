@@ -11,13 +11,14 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 
 public interface SampleService extends RemoteService {
-	Results all(PaginationParameters parameters);
+	Results<SampleDTO> all(PaginationParameters parameters);
 
-	Results allPublicSamples(final PaginationParameters p);
+	Results<SampleDTO> allPublicSamples(final PaginationParameters p);
 
-	Results allSamplesForUser(PaginationParameters parameters, long id);
+	Results<SampleDTO> allSamplesForUser(PaginationParameters parameters,
+			long id);
 
-	Results projectSamples(final PaginationParameters p, long id);
+	Results<SampleDTO> projectSamples(final PaginationParameters p, long id);
 
 	SampleDTO details(long id) throws NoSuchObjectException;
 
