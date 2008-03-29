@@ -1,31 +1,86 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
-import com.google.gwt.widgetideas.table.client.PagingGrid;
+import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
 import com.google.gwt.widgetideas.table.client.PagingScrollTable;
 import com.google.gwt.widgetideas.table.client.ReadOnlyTableModel;
+import com.google.gwt.widgetideas.table.client.TableModel.Response;
 
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.PagingResponseIterator;
+import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.ui.ServerOp;
 
-public abstract class ListEx extends FlowPanel {
+public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 
 	private static final boolean DEFAULT_SORT_ORDER = true;
 
-	protected final PagingGrid dataTable;
-
 	private Column[] columns;
 
-	protected class TableModel extends ReadOnlyTableModel {
-		public void requestRows(final Request request, final Callback callback) {
+	protected class PagingResponse extends Response<T> {
+
+		/**
+		 * The 2D {@link Collection} of serializable cell data.
+		 */
+		private Collection<Collection<Object>> rows;
+
+		/**
+		 * Default constructor.
+		 */
+		public PagingResponse() {
+			this(null);
+		}
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param rows
+		 *            the row data
+		 */
+		public PagingResponse(Collection<Collection<Object>> rows) {
+			this(rows, null);
+		}
+
+		/**
+		 * Constructor.
+		 * 
+		 * @param rows
+		 *            the row data
+		 * @param rowValues
+		 *            the values to associate with each row
+		 */
+		public PagingResponse(Collection<Collection<Object>> rows,
+				List<T> rowValues) {
+			super(rowValues);
+			this.rows = rows;
+		}
+
+		@Override
+		public Iterator<Iterator<Object>> getIterator() {
+			if (rows == null) {
+				return null;
+			}
+			return new PagingResponseIterator(rows);
+		}
+
+	}
+
+	protected class TableModel extends ReadOnlyTableModel<T> {
+		public void requestRows(final Request request,
+				final Callback<T> callback) {
 			final int startRow = request.getStartRow();
 			final int numRows = request.getNumRows();
 
@@ -43,17 +98,38 @@ public abstract class ListEx extends FlowPanel {
 			}
 			p.setFirstResult(startRow);
 			p.setMaxResults(numRows);
-			handleResults(p, request, callback);
+
+			new ServerOp<Results<T>>() {
+				@Override
+				public void begin() {
+					update(p, this);
+				}
+
+				public void onSuccess(final Results<T> result) {
+					TableModel.this.setRowCount(result.getCount());
+					final PagingResponse response = new PagingResponse(
+							getList(result.getList()), result.getList());
+					if (result.getCount() == 0) {
+						ListEx.this.clear();
+						ListEx.this
+								.add(new HTML(
+										"nothing to see here...move along<br/><br/><br/><br/><br/>Seriously though, i did not find any samples that match your criteria"));
+					} else {
+						callback.onRowsReady(request, response);
+					}
+				}
+
+			}.begin();
 		}
 	}
 
-	public abstract void handleResults(final PaginationParameters p,
-			final TableModel.Request request, final TableModel.Callback callback);
-
 	public abstract String getDefaultSortParameter();
 
-	public <T extends MObjectDTO> List<List<Object>> getList(final List<T> data) {
-		final List<List<Object>> rows = new ArrayList<List<Object>>();
+	public abstract void update(final PaginationParameters p,
+			final AsyncCallback<Results<T>> ac);
+
+	public Collection<Collection<Object>> getList(final List<T> data) {
+		final Collection<Collection<Object>> rows = new HashSet<Collection<Object>>();
 		final Iterator<T> itr = data.iterator();
 		int currentRow = 0;
 		while (itr.hasNext()) {
@@ -62,8 +138,9 @@ public abstract class ListEx extends FlowPanel {
 		return rows;
 	}
 
-	public List<Object> processRow(final MObjectDTO object, final int currentRow) {
-		final List<Object> data = new ArrayList<Object>();
+	public Collection<Object> processRow(final MObjectDTO object,
+			final int currentRow) {
+		final Collection<Object> data = new ArrayList<Object>();
 		for (int i = 0; i < columns.length; ++i) {
 			if (columns[i].isCustomFormat()) {
 				data.add(columns[i].getRepresentation(object, currentRow));
@@ -78,18 +155,17 @@ public abstract class ListEx extends FlowPanel {
 	public ListEx(final Column[] columns) {
 		this.columns = columns;
 		TableModel tableModel = new TableModel();
-		dataTable = new PagingGrid(tableModel);
-
-		dataTable.setPageSize(2);
-		dataTable.setNumRows(100);
+		final FixedWidthGrid dataTable = new FixedWidthGrid();
 		FixedWidthFlexTable headerTable = new FixedWidthFlexTable();
+		final PagingScrollTable<T> scrollTable = new PagingScrollTable<T>(
+				tableModel, dataTable, headerTable);
+
+		scrollTable.setPageSize(2);
+		tableModel.setRowCount(1);
 
 		for (int i = 0; i < columns.length; ++i) {
 			headerTable.setText(0, i, columns[i].getTitle());
 		}
-
-		final PagingScrollTable scrollTable = new PagingScrollTable(dataTable,
-				headerTable);
 
 		// Setup sortable/unsortable columns
 		for (int i = 0; i < columns.length; ++i) {
@@ -100,7 +176,7 @@ public abstract class ListEx extends FlowPanel {
 
 			public void onCellClicked(SourcesTableEvents sender, int row,
 					int cell) {
-				columns[cell].handleClickEvent((MObjectDTO) dataTable
+				columns[cell].handleClickEvent((MObjectDTO) scrollTable
 						.getRowValue(row - 1), row - 1);
 
 			}

@@ -3,7 +3,6 @@ package edu.rpi.metpetdb.client.ui.objects.list;
 import org.postgis.Point;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -14,11 +13,10 @@ import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
-import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
-public abstract class SampleListEx extends ListEx {
+public abstract class SampleListEx extends ListEx<SampleDTO> {
 
 	public SampleListEx() {
 		super(columns);
@@ -69,35 +67,11 @@ public abstract class SampleListEx extends ListEx {
 			},
 			new Column(enttxt.Sample_country(), SampleProperty.country),
 			new Column(enttxt.Sample_subsampleCount(),
-					SampleProperty.subsampleCount), };
+					SampleProperty.subsampleCount),
+	};
 
 	public abstract void update(final PaginationParameters p,
 			final AsyncCallback<Results<SampleDTO>> ac);
-
-	public void handleResults(final PaginationParameters p,
-			final TableModel.Request request, final TableModel.Callback callback) {
-		new ServerOp<Results<SampleDTO>>() {
-			@Override
-			public void begin() {
-				update(p, this);
-			}
-
-			public void onSuccess(Results<SampleDTO> result) {
-				SampleListEx.this.dataTable.setNumRows(result.getCount());
-				final TableModel.SerializableResponse sr = new TableModel.SerializableResponse(
-						getList(result.getList()), result.getList());
-				if (result.getCount() == 0) {
-					SampleListEx.this.clear();
-					SampleListEx.this
-							.add(new HTML(
-									"nothing to see here...move along<br/><br/><br/><br/><br/>Seriously though, i did not find any samples that match your criteria"));
-				} else {
-					callback.onRowsReady(request, sr);
-				}
-			}
-
-		}.begin();
-	}
 
 	public String getDefaultSortParameter() {
 		return SampleProperty.alias.name();
