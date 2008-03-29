@@ -57,28 +57,24 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 			sp.initialize();
 
 			sp.parse();
-			final Set<SampleDTO> samples = sp.getSamples();
-			System.out.println("got list of samples");
 			final UserDTO u = (UserDTO) cloneBean(byId("User", currentUser()));
+			final Set<SampleDTO> samples = sp.getSamples();
+			// TODO maybe have sp.getSamples() take in the owner??
+			for (SampleDTO s : samples)
+				s.setOwner(u);
+			System.out.println("got list of samples");
 			System.out.println("got current user");
-			for (final SampleDTO s : samples) {
-				try {
-					System.out.println("Saving Sample" + s.toString());
-					s.setOwner(u);
-					System.out.println("\towner set");
-					super.save(s);
-					System.out.println("\tsample saved");
-					savedSamples++;
-				} catch (final SampleAlreadyExistsException saee) {
-					System.err.println(saee.getMessage());
-					// TODO: what to do?
-				} catch (final ValidationException ve) {
-					System.err.println("Validation Exception!");
-					// TODO: what to do?
-				} catch (final LoginRequiredException lre) {
-					System.out.println("uncheck");
-					throw lre;
-				}
+			try {
+				save(samples);
+			} catch (final SampleAlreadyExistsException saee) {
+				System.err.println(saee.getMessage());
+				// TODO: what to do?
+			} catch (final ValidationException ve) {
+				System.err.println("Validation Exception!");
+				// TODO: what to do?
+			} catch (final LoginRequiredException lre) {
+				System.out.println("uncheck");
+				throw lre;
 			}
 		} catch (final FileNotFoundException fnfe) {
 			throw new IllegalStateException(fnfe.getMessage());

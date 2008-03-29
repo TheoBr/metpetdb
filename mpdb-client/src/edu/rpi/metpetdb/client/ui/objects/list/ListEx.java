@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
+import com.google.gwt.widgetideas.table.client.PagingOptions;
 import com.google.gwt.widgetideas.table.client.PagingScrollTable;
 import com.google.gwt.widgetideas.table.client.ReadOnlyTableModel;
 import com.google.gwt.widgetideas.table.client.TableModel.Response;
@@ -159,6 +160,7 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		FixedWidthFlexTable headerTable = new FixedWidthFlexTable();
 		final PagingScrollTable<T> scrollTable = new PagingScrollTable<T>(
 				tableModel, dataTable, headerTable);
+		PagingOptions options = new PagingOptions(scrollTable);
 
 		scrollTable.setPageSize(2);
 		tableModel.setRowCount(1);
@@ -189,6 +191,7 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		dataTable.setHeight("100%");
 		headerTable.setWidth("100%");
 		add(scrollTable);
+		add(options);
 		this.setHeight("400px");
 		this.setWidth("100%");
 	}

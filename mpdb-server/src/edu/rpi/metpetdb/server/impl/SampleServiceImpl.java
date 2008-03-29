@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.server.impl;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.TransientObjectException;
@@ -53,15 +54,18 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		return (SampleDTO) clone(s);
 	}
 
-	public SampleDTO save(SampleDTO sample)
+	protected void save(final Set<SampleDTO> samples)
 			throws SampleAlreadyExistsException, ValidationException,
 			LoginRequiredException {
-		doc.validate(sample);
-		if (sample.getOwner() == null)
-			throw new LoginRequiredException();
-		if (sample.getOwner().getId() != currentUser())
-			throw new SecurityException("Cannot modify samples you don't own.");
-		Sample s = mergeBean(sample);
+		for (SampleDTO sample : samples) {
+			doc.validate(sample);
+			Sample s = mergeBean(sample);
+			save(s);
+		}
+		commit();
+	}
+
+	public Sample save(Sample s) throws SampleAlreadyExistsException {
 		replaceRegion(s);
 		replaceMetamorphicGrade(s);
 		replaceReferences(s);
@@ -76,13 +80,27 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 					throw (toe);
 				}
 			}
-			commit();
-			return cloneBean(s);
+			return s;
 		} catch (ConstraintViolationException cve) {
 			if ("samples_nk".equals(cve.getConstraintName()))
 				throw new SampleAlreadyExistsException();
 			throw cve;
 		}
+	}
+
+	public SampleDTO save(SampleDTO sample)
+			throws SampleAlreadyExistsException, ValidationException,
+			LoginRequiredException {
+		doc.validate(sample);
+		if (sample.getOwner() == null)
+			throw new LoginRequiredException();
+		if (sample.getOwner().getId() != currentUser())
+			throw new SecurityException("Cannot modify samples you don't own.");
+		Sample s = mergeBean(sample);
+		s = save(s);
+		commit();
+		return cloneBean(s);
+
 	}
 
 	private void replaceRegion(final Sample s) {

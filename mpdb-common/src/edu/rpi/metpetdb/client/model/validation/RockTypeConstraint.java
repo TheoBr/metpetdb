@@ -17,8 +17,9 @@ public class RockTypeConstraint extends StringConstraint implements
 
 	@Override
 	public void validateValue(final Object value) throws ValidationException {
-		if (!isValidRockName(value.toString())) {
-			throw new InvalidRockTypeException(value.toString(), rockTypes);
+		if (value == null || !isValidRockName(value.toString())) {
+			throw new InvalidRockTypeException(value == null ? "" : value
+					.toString(), rockTypes);
 		}
 	}
 
