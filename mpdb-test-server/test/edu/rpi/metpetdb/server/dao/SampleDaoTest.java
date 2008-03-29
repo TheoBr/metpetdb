@@ -6,11 +6,10 @@ import org.hibernate.Query;
 import org.junit.Test;
 
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
-import edu.rpi.metpetdb.server.model.Sample;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
+import edu.rpi.metpetdb.server.model.Sample;
 
-//TODO make some generic methods in databasetestcase
 public class SampleDaoTest extends DatabaseTestCase {
 
 	private final static String typeName = "Sample";
@@ -27,7 +26,7 @@ public class SampleDaoTest extends DatabaseTestCase {
 	@Test
 	public void testSampleById() throws NoSuchObjectException {
 		final Sample s = (Sample) super.byId(typeName, 1);
-		assertEquals(1,s.getId());
+		assertEquals(1, s.getId());
 	}
 
 	/**
@@ -52,7 +51,7 @@ public class SampleDaoTest extends DatabaseTestCase {
 	public void testSampleAllSize() {
 		final Query q = InitDatabase.getSession().getNamedQuery(
 				"Sample.all,size");
-		assertEquals(9,((Number) q.uniqueResult()).intValue());
+		assertEquals(9, ((Number) q.uniqueResult()).intValue());
 	}
 
 	/**
@@ -63,7 +62,7 @@ public class SampleDaoTest extends DatabaseTestCase {
 	public void testSampleAllSesarNumberAsc() {
 		final List<Sample> l = pageQuery(typeName, "sesarNumber", true, 0, 5);
 		// Verify the size
-		assertEquals(5,l.size());
+		assertEquals(5, l.size());
 		// Now verify the correct order
 		for (int i = 0; i < l.size() - 1; ++i) {
 			final Sample first = l.get(i);

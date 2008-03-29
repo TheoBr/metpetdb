@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.server;
 
 import java.io.FileInputStream;
+import java.sql.SQLException;
 
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
@@ -17,8 +18,9 @@ import org.hibernate.Transaction;
 
 /**
  * Basically same thing as SetupDatabaseForClient, but in reverse
+ * 
  * @author anthony
- *
+ * 
  */
 public class TearDownDatabaseForClient {
 
@@ -34,13 +36,18 @@ public class TearDownDatabaseForClient {
 		s = DataStore.open();
 		Transaction tx = s.beginTransaction();
 
-		conn = new DatabaseConnection(s.connection());
-		
+		try {
+			conn = new DatabaseConnection(DataStore.getConfiguration()
+					.buildSettings().getConnectionProvider().getConnection());
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+
 		if (args.length > 0)
 			tearDown(args[0]);
 		else
 			tearDown(".");
-		
+
 		try {
 			tx.commit();
 			s.close();
@@ -85,9 +92,9 @@ public class TearDownDatabaseForClient {
 			e.printStackTrace();
 		}
 	}
-	
-	private static void tearDown(final String path)  {
-		//Delete test data
+
+	private static void tearDown(final String path) {
+		// Delete test data
 		loadDatabase(path);
 		try {
 			DatabaseOperation.DELETE_ALL.execute(conn, originalData);
@@ -95,16 +102,16 @@ public class TearDownDatabaseForClient {
 
 			e.printStackTrace();
 		}
-		
-		//put in backed up data
+
+		// put in backed up data
 		final IDataSet loadedDataSet;
 		try {
-			loadedDataSet = new FlatXmlDataSet(
-					new FileInputStream(path + "/" + "test-data/test-backup.xml"));
-			//Insert test data
+			loadedDataSet = new FlatXmlDataSet(new FileInputStream(path + "/"
+					+ "test-data/test-backup.xml"));
+			// Insert test data
 			DatabaseOperation.INSERT.execute(conn, loadedDataSet);
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
-	}	
+	}
 }

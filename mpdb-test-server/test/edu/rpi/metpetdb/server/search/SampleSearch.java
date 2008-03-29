@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server.dao;
+package edu.rpi.metpetdb.server.search;
 
 import java.util.Iterator;
 import java.util.LinkedList;

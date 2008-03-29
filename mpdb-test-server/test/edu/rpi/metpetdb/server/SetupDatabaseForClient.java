@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.server;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.sql.SQLException;
 
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
@@ -35,7 +36,12 @@ public class SetupDatabaseForClient {
 		s = DataStore.open();
 		Transaction tx = s.beginTransaction();
 
-		conn = new DatabaseConnection(s.connection());
+		try {
+			conn = new DatabaseConnection(DataStore.getConfiguration()
+					.buildSettings().getConnectionProvider().getConnection());
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
 
 		if (args.length > 0)
 			setUp(args[0]);
@@ -46,7 +52,8 @@ public class SetupDatabaseForClient {
 			tx.commit();
 			s.close();
 			conn.close();
-			System.out.println("Database has been setup, don't forget to run TearDownDatabaseForClient when you are done");
+			System.out
+					.println("Database has been setup, don't forget to run TearDownDatabaseForClient when you are done");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -78,8 +85,8 @@ public class SetupDatabaseForClient {
 			// Export the database excluding certain tables
 			originalData = new FilteredDataSet(sequenceFilter, conn
 					.createDataSet());
-			FlatXmlDataSet.write(originalData, new FileOutputStream(path + "/" +
-					"test-data/test-backup.xml"));
+			FlatXmlDataSet.write(originalData, new FileOutputStream(path + "/"
+					+ "test-data/test-backup.xml"));
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -99,8 +106,8 @@ public class SetupDatabaseForClient {
 		// put in test data
 		final IDataSet loadedDataSet;
 		try {
-			loadedDataSet = new FlatXmlDataSet(new FileInputStream(path + "/" + 
-					"test-data/test-client-data.xml"));
+			loadedDataSet = new FlatXmlDataSet(new FileInputStream(path + "/"
+					+ "test-data/test-client-data.xml"));
 			// Insert test data
 			DatabaseOperation.INSERT.execute(conn, loadedDataSet);
 		} catch (final Exception e) {

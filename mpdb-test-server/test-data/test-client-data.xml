@@ -6,4 +6,9 @@
   <samples sample_id="3" version="0" sesar_number="000000002" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)" alias="3"/>
   <samples sample_id="4" version="0" sesar_number="000000003" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)" alias="4"/>
   <samples sample_id="5" version="0" sesar_number="000000004" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)" alias="5"/>
+  <subsamples subsample_id="1" version="0" sample_id="1" name="1" type="1"/>
+  <subsamples subsample_id="2" version="0" sample_id="1" name="2" type="2"/>
+  <subsamples subsample_id="3" version="0" sample_id="1" name="3" type="3"/>
+  <subsamples subsample_id="4" version="0" sample_id="1" name="4" type="4"/>
+  <subsamples subsample_id="5" version="0" sample_id="1" name="5" type="5"/>
 </dataset>

@@ -1,19 +1,19 @@
-package edu.rpi.metpetdb.client.ui.object.details;
+package edu.rpi.metpetdb.client.ui.sample;
 
 import java.util.Iterator;
 import java.util.List;
-
-import org.gwtwidgets.client.ui.pagination.PaginationParameters;
-import org.gwtwidgets.client.ui.pagination.Results;
 
 import edu.rpi.metpetdb.client.MpDbTestCase;
 import edu.rpi.metpetdb.client.TestServerOp;
 import edu.rpi.metpetdb.client.VoidTestServerOp;
 import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
-import edu.rpi.metpetdb.client.ui.ServerOp;
 
 public class SampleDetailsTest extends MpDbTestCase {
+
+	private final static int SAMPLE_ID = 2;
 
 	/**
 	 * Test saving a sample to the database, which in turns test that
@@ -37,7 +37,7 @@ public class SampleDetailsTest extends MpDbTestCase {
 				finishTest();
 			}
 		}.begin();
-		delayTestFinish(10000);
+		delayTestFinish(20000);
 	}
 
 	/**
@@ -46,11 +46,11 @@ public class SampleDetailsTest extends MpDbTestCase {
 	public void testLoadSample() {
 		new TestServerOp<SampleDTO>(this) {
 			public void begin() {
-				MpDb.sample_svc.details(1, this);
+				MpDb.sample_svc.details(SAMPLE_ID, this);
 			}
 
 			public void onSuccess(final SampleDTO sample) {
-				assertEquals(1, sample.getId());
+				assertEquals(SAMPLE_ID, sample.getId());
 				finishTest();
 			}
 		}.begin();
@@ -63,7 +63,7 @@ public class SampleDetailsTest extends MpDbTestCase {
 	public void testDeleteSample() {
 		new VoidTestServerOp(this) {
 			public void begin() {
-				MpDb.sample_svc.delete(1, this);
+				MpDb.sample_svc.delete(SAMPLE_ID, this);
 			}
 		}.begin();
 		delayTestFinish(5000);
@@ -77,26 +77,27 @@ public class SampleDetailsTest extends MpDbTestCase {
 		final PaginationParameters p = new PaginationParameters();
 		p.setAscending(true);
 		p.setMaxResults(10);
-		p.setOffset(0);
+		p.setFirstResult(0);
 		p.setParameter("alias");
-		
-		new TestServerOp<Results>(this) {
+
+		new TestServerOp<Results<SampleDTO>>(this) {
 			public void begin() {
 				MpDb.sample_svc.all(p, this);
 			}
-			public void onSuccess(final Results result) {
-				final Results results = (Results) result;
-				final List l = results.getList();
+
+			public void onSuccess(final Results<SampleDTO> results) {
+				final List<SampleDTO> l = results.getList();
+				final String[] aliases = { "1", "3", "4", "5", "6" };
 				// verify the size
-				assertEquals(5, results.getSize());
+				assertEquals(5, results.getCount());
 				// Verify the order, also verifies we got the right ones
-				final Iterator itr = l.iterator();
-				// Start with 2 beause 1 was deleted
-				int count = 2;
-				while (itr.hasNext()) {
-					final SampleDTO s = (SampleDTO) itr.next();
-					assertEquals(count, Integer.parseInt(s.getAlias()));
-					++count;
+				for (int i = 0; i < l.size(); ++i) {
+					final SampleDTO s = l.get(i);
+					assertEquals(aliases[i], s.getAlias());
+					if (i + 1 < l.size()) {
+						assertTrue(s.getAlias().compareTo(
+								l.get(i + 1).getAlias()) < 0);
+					}
 				}
 				finishTest();
 			}
@@ -112,18 +113,17 @@ public class SampleDetailsTest extends MpDbTestCase {
 		final PaginationParameters p = new PaginationParameters();
 		p.setAscending(true);
 		p.setMaxResults(10);
-		p.setOffset(0);
+		p.setFirstResult(0);
 		p.setParameter("alias");
-		new TestServerOp<Results>(this) {
+		new TestServerOp<Results<SampleDTO>>(this) {
 			public void begin() {
 				MpDb.sample_svc.allPublicSamples(p, this);
 			}
 
-			public void onSuccess(final Results result) {
-				final Results results = (Results) result;
-				final List l = results.getList();
+			public void onSuccess(final Results<SampleDTO> results) {
+				final List<SampleDTO> l = results.getList();
 				// verify they are all public
-				final Iterator itr = l.iterator();
+				final Iterator<SampleDTO> itr = l.iterator();
 				while (itr.hasNext()) {
 					final SampleDTO s = (SampleDTO) itr.next();
 					System.out.println(s.toString());
@@ -143,18 +143,17 @@ public class SampleDetailsTest extends MpDbTestCase {
 		final PaginationParameters p = new PaginationParameters();
 		p.setAscending(true);
 		p.setMaxResults(10);
-		p.setOffset(0);
+		p.setFirstResult(0);
 		p.setParameter("alias");
-		new TestServerOp<Results>(this) {
+		new TestServerOp<Results<SampleDTO>>(this) {
 			public void begin() {
 				MpDb.sample_svc.allSamplesForUser(p, getUser().getId(), this);
 			}
 
-			public void onSuccess(final Results result) {
-				final Results results = (Results) result;
-				final List l = results.getList();
+			public void onSuccess(final Results<SampleDTO> results) {
+				final List<SampleDTO> l = results.getList();
 				// verify they are all public
-				final Iterator itr = l.iterator();
+				final Iterator<SampleDTO> itr = l.iterator();
 				while (itr.hasNext()) {
 					final SampleDTO s = (SampleDTO) itr.next();
 					System.out.println(s.toString());

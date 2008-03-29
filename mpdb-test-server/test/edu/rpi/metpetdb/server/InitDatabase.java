@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.server;
 
 import java.io.FileOutputStream;
+import java.sql.SQLException;
 
 import junit.framework.TestCase;
 
@@ -22,27 +23,32 @@ public class InitDatabase extends TestCase {
 	private static Session s;
 
 	private static IDatabaseConnection conn;
-	
+
 	private IDataSet originalData;
 
 	/**
 	 * Tables excluded from the database backup
 	 */
 	private static final String excludedTables[] = { "geometry_columns",
-			"spatial_ref_sys"};
-	
+			"spatial_ref_sys" };
+
 	public InitDatabase() {
 		DataStore.initFactory();
 
 		s = DataStore.open();
-		
-		conn = new DatabaseConnection(s.connection());
+
+		try {
+			conn = new DatabaseConnection(DataStore.getConfiguration()
+					.buildSettings().getConnectionProvider().getConnection());
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
 	}
 
 	public static IDatabaseConnection getConnection() {
 		return conn;
 	}
-	
+
 	public static Session getSession() {
 		return s;
 	}
@@ -64,11 +70,13 @@ public class InitDatabase extends TestCase {
 			for (final String s : excludedTables) {
 				tableFilter.excludeTable(s);
 			}
-			IDataSet filteredTable = new FilteredDataSet(tableFilter,conn.createDataSet());
-			DatabaseSequenceFilter sequenceFilter = new DatabaseSequenceFilter(conn, filteredTable.getTableNames());
+			IDataSet filteredTable = new FilteredDataSet(tableFilter, conn
+					.createDataSet());
+			DatabaseSequenceFilter sequenceFilter = new DatabaseSequenceFilter(
+					conn, filteredTable.getTableNames());
 			// Export the database excluding certain tables
-			originalData = new FilteredDataSet(sequenceFilter,
-					conn.createDataSet());
+			originalData = new FilteredDataSet(sequenceFilter, conn
+					.createDataSet());
 			FlatXmlDataSet.write(originalData, new FileOutputStream(
 					"test-data/test-backup.xml"));
 		} catch (Exception e) {
@@ -76,7 +84,7 @@ public class InitDatabase extends TestCase {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public void testConnection() {
 		assertTrue(conn != null);
@@ -87,7 +95,7 @@ public class InitDatabase extends TestCase {
 		super.setUp();
 		backupDatabase();
 		try {
-			DatabaseOperation.DELETE_ALL.execute(conn,originalData );
+			DatabaseOperation.DELETE_ALL.execute(conn, originalData);
 		} catch (Exception e) {
 
 			e.printStackTrace();

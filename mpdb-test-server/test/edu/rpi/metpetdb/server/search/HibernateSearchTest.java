@@ -44,38 +44,38 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	@Test
 	public void testCreateIndices() {
 		final Session session = InitDatabase.getSession();
-		FullTextSession fullTextSession = Search.createFullTextSession(session);
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
 		Transaction tx = fullTextSession.beginTransaction();
-		List<Sample> samples = session.createQuery("from Sample as sample")
-				.list();
-		for (Sample sample : samples) {
+		final List<Sample> samples = session.createQuery(
+				"from Sample as sample").list();
+		for (final Sample sample : samples)
 			fullTextSession.index(sample);
-		}
 		tx.commit(); // index are written at commit time
 
 		tx = fullTextSession.beginTransaction();
-		List<User> users = session.createQuery("from User as user").list();
-		for (User user : users) {
+		final List<User> users = session.createQuery("from User as user")
+				.list();
+		for (final User user : users)
 			fullTextSession.index(user);
-		}
 		tx.commit(); // index are written at commit time
 	}
 
 	@Test
 	public void testTermSearch() {
 		final Session session = InitDatabase.getSession();
-		FullTextSession fullTextSession = Search.createFullTextSession(session);
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
 
-		Transaction tx = fullTextSession.beginTransaction();
+		final Transaction tx = fullTextSession.beginTransaction();
 
-		TermQuery termQuery = new TermQuery(new Term("rockType", "rock"));
-		org.hibernate.Query hibQuery = fullTextSession.createFullTextQuery(
-				termQuery, Sample.class);
-		List<Sample> result = hibQuery.list();
+		final TermQuery termQuery = new TermQuery(new Term("rockType", "rock"));
+		final org.hibernate.Query hibQuery = fullTextSession
+				.createFullTextQuery(termQuery, Sample.class);
+		final List<Sample> result = hibQuery.list();
 
-		for (Sample s : result) {
+		for (final Sample s : result)
 			System.out.println("found sample, rock type is " + s.getRockType());
-		}
 
 		tx.commit();
 	}
@@ -83,18 +83,18 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	@Test
 	public void testTermSearch2() {
 		final Session session = InitDatabase.getSession();
-		FullTextSession fullTextSession = Search.createFullTextSession(session);
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
 
-		Transaction tx = fullTextSession.beginTransaction();
+		final Transaction tx = fullTextSession.beginTransaction();
 
-		TermQuery termQuery = new TermQuery(new Term("rockType", "ibm"));
-		org.hibernate.Query hibQuery = fullTextSession.createFullTextQuery(
-				termQuery, Sample.class);
-		List<Sample> result = hibQuery.list();
+		final TermQuery termQuery = new TermQuery(new Term("rockType", "ibm"));
+		final org.hibernate.Query hibQuery = fullTextSession
+				.createFullTextQuery(termQuery, Sample.class);
+		final List<Sample> result = hibQuery.list();
 
-		for (Sample s : result) {
+		for (final Sample s : result)
 			System.out.println("found sample, rock type is " + s.getRockType());
-		}
 
 		tx.commit();
 	}
@@ -102,20 +102,20 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	@Test
 	public void testRangeSearch() {
 		final Session session = InitDatabase.getSession();
-		FullTextSession fullTextSession = Search.createFullTextSession(session);
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
 
-		Transaction tx = fullTextSession.beginTransaction();
+		final Transaction tx = fullTextSession.beginTransaction();
 
-		RangeQuery rangeQuery = new RangeQuery(new Term("sesarNumber",
+		final RangeQuery rangeQuery = new RangeQuery(new Term("sesarNumber",
 				"000000004"), new Term("sesarNumber", "000000009"), true);
-		org.hibernate.Query hibQuery = fullTextSession.createFullTextQuery(
-				rangeQuery, Sample.class);
-		List<Sample> result = hibQuery.list();
+		final org.hibernate.Query hibQuery = fullTextSession
+				.createFullTextQuery(rangeQuery, Sample.class);
+		final List<Sample> result = hibQuery.list();
 
-		for (Sample s : result) {
+		for (final Sample s : result)
 			System.out.println("found sample, sesar number is "
 					+ s.getSesarNumber());
-		}
 
 		tx.commit();
 	}
@@ -123,14 +123,15 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	@Test
 	public void testMultiFields() {
 		final Session session = InitDatabase.getSession();
-		FullTextSession fullTextSession = Search.createFullTextSession(session);
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
 
-		Transaction tx = fullTextSession.beginTransaction();
+		final Transaction tx = fullTextSession.beginTransaction();
 
 		System.out.println("in multifield search");
-		String[] searchFor = { "000000004", "rockie rock" };
-		String[] columnsIn = { "sesarNumber", "rockType" };
-		BooleanClause.Occur[] flags = { BooleanClause.Occur.MUST,
+		final String[] searchFor = { "000000004", "rockie rock" };
+		final String[] columnsIn = { "sesarNumber", "rockType" };
+		final BooleanClause.Occur[] flags = { BooleanClause.Occur.MUST,
 				BooleanClause.Occur.MUST };
 
 		/*
@@ -138,17 +139,16 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		 * BooleanClause.Occur.MUST, BooleanClause.Occur.MUST_NOT};
 		 */
 		try {
-			Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
+			final Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
 					.parse(searchFor, columnsIn, flags, new StandardAnalyzer());
-			org.hibernate.Query hibQuery = fullTextSession.createFullTextQuery(
-					query, Sample.class);
-			List<Sample> result = hibQuery.list();
+			final org.hibernate.Query hibQuery = fullTextSession
+					.createFullTextQuery(query, Sample.class);
+			final List<Sample> result = hibQuery.list();
 
-			for (Sample s : result) {
+			for (final Sample s : result)
 				System.out.println("found sample, sesar number is "
 						+ s.getSesarNumber());
-			}
-		} catch (ParseException e) {
+		} catch (final ParseException e) {
 		}
 
 		tx.commit();
@@ -157,14 +157,15 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	@Test
 	public void testJoin() {
 		final Session session = InitDatabase.getSession();
-		FullTextSession fullTextSession = Search.createFullTextSession(session);
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
 
-		Transaction tx = fullTextSession.beginTransaction();
+		final Transaction tx = fullTextSession.beginTransaction();
 
 		System.out.println("in test join");
-		String[] searchFor = { "000000004", "anthony" };
-		String[] columnsIn = { "sesarNumber", "user_username" };
-		BooleanClause.Occur[] flags = { BooleanClause.Occur.MUST,
+		final String[] searchFor = { "000000004", "anthony" };
+		final String[] columnsIn = { "sesarNumber", "user_username" };
+		final BooleanClause.Occur[] flags = { BooleanClause.Occur.MUST,
 				BooleanClause.Occur.MUST };// , BooleanClause.Occur.MUST};
 
 		/*
@@ -172,18 +173,17 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		 * BooleanClause.Occur.MUST, BooleanClause.Occur.MUST_NOT};
 		 */
 		try {
-			Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
+			final Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
 					.parse(searchFor, columnsIn, flags, new StandardAnalyzer());
-			org.hibernate.Query hibQuery = fullTextSession.createFullTextQuery(
-					query, Sample.class);
-			List<Sample> result = hibQuery.list();
+			final org.hibernate.Query hibQuery = fullTextSession
+					.createFullTextQuery(query, Sample.class);
+			final List<Sample> result = hibQuery.list();
 
-			for (Sample s : result) {
+			for (final Sample s : result)
 				System.out.println("found sample, sesar number is "
 						+ s.getSesarNumber() + " username is "
 						+ s.getOwner().getUsername());
-			}
-		} catch (ParseException e) {
+		} catch (final ParseException e) {
 		}
 
 		tx.commit();
@@ -191,36 +191,37 @@ public class HibernateSearchTest extends DatabaseTestCase {
 
 	@Test
 	public void testSearchSampleSearch() {
-		SearchSampleDTO searchSamp = new SearchSampleDTO();
+		final SearchSampleDTO searchSamp = new SearchSampleDTO();
 		searchSamp.setSesarNumber("000000000");
 		searchSamp.setAlias("1");
 		searchSamp.addRockType("BLAHHHH");
 		searchSamp.addRockType("rockie rock");
 
-		Class c = searchSamp.getClass();
-		Method[] allMethods = c.getDeclaredMethods();
+		final Class c = searchSamp.getClass();
+		final Method[] allMethods = c.getDeclaredMethods();
 
 		final Session session = InitDatabase.getSession();
-		FullTextSession fullTextSession = Search.createFullTextSession(session);
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
 
-		Transaction tx = fullTextSession.beginTransaction();
+		final Transaction tx = fullTextSession.beginTransaction();
 
-		List<String> searchForValue = new LinkedList<String>();
-		List<String> columnsIn = new LinkedList<String>();
-		List<BooleanClause.Occur> flags = new LinkedList<BooleanClause.Occur>();
+		final List<String> searchForValue = new LinkedList<String>();
+		final List<String> columnsIn = new LinkedList<String>();
+		final List<BooleanClause.Occur> flags = new LinkedList<BooleanClause.Occur>();
 
 		String methodName;
 		Object methodResult = null;
 		Class<?> returnType = null;
-		for (int i = 0; i < allMethods.length; i++) {
-			methodName = allMethods[i].getName();
+		for (final Method element : allMethods) {
+			methodName = element.getName();
 			if (methodName.indexOf("get") == 0) {
 				try {
-					methodResult = allMethods[i].invoke(searchSamp, null);
-					returnType = allMethods[i].getReturnType();
-				} catch (InvocationTargetException E) {
+					methodResult = element.invoke(searchSamp, new Object[] {});
+					returnType = element.getReturnType();
+				} catch (final InvocationTargetException E) {
 					System.out.println("Invocation Exception");
-				} catch (IllegalAccessException E) {
+				} catch (final IllegalAccessException E) {
 					System.out.println("Illegal Access Exception");
 				}
 
@@ -228,26 +229,26 @@ public class HibernateSearchTest extends DatabaseTestCase {
 				} else if ((methodName.equals("getId")
 						|| methodName.equals("getVersion") || methodName
 						.equals("getSubsampleCount"))
-						&& Integer.parseInt(methodResult.toString()) == 0) {
+						&& (Integer.parseInt(methodResult.toString()) == 0)) {
 				} else if ((methodName.equals("getProjects") || methodName
 						.equals("getSubsamples"))
-						&& ((Set) methodResult).size() == 0) {
-				} else {
-					if (returnType.equals(Set.class)) {
-						for (Object o : (Set) methodResult) {
-							System.out.println("adding a should for variable " + methodName.substring(3) + "with value"
-									+ o.toString());
-							searchForValue.add(o.toString());
-							columnsIn.add(methodName.substring(3));
-							flags.add(BooleanClause.Occur.SHOULD);
-						}
-					} else {
-						System.out.println("adding a must for variable " + methodName.substring(3) + "with value"
-								+ methodResult.toString());
-						searchForValue.add(methodResult.toString());
+						&& (((Set) methodResult).size() == 0)) {
+				} else if (returnType.equals(Set.class))
+					for (final Object o : (Set) methodResult) {
+						System.out.println("adding a should for variable "
+								+ methodName.substring(3) + "with value"
+								+ o.toString());
+						searchForValue.add(o.toString());
 						columnsIn.add(methodName.substring(3));
-						flags.add(BooleanClause.Occur.MUST);
+						flags.add(BooleanClause.Occur.SHOULD);
 					}
+				else {
+					System.out.println("adding a must for variable "
+							+ methodName.substring(3) + "with value"
+							+ methodResult.toString());
+					searchForValue.add(methodResult.toString());
+					columnsIn.add(methodName.substring(3));
+					flags.add(BooleanClause.Occur.MUST);
 				}
 
 			}
@@ -257,26 +258,26 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		 * BooleanClause.Occur[] flags = {BooleanClause.Occur.SHOULD,
 		 * BooleanClause.Occur.MUST, BooleanClause.Occur.MUST_NOT};
 		 */
-		String searchArray[] = new String[searchForValue.size()];
+		final String searchArray[] = new String[searchForValue.size()];
 		searchForValue.toArray(searchArray);
-		String columnsArray[] = new String[columnsIn.size()];
+		final String columnsArray[] = new String[columnsIn.size()];
 		columnsIn.toArray(columnsArray);
-		BooleanClause.Occur flagsArray[] = new BooleanClause.Occur[flags.size()];
+		final BooleanClause.Occur flagsArray[] = new BooleanClause.Occur[flags
+				.size()];
 		flags.toArray(flagsArray);
 		try {
-			Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
+			final Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
 					.parse(searchArray, columnsArray, flagsArray,
 							new StandardAnalyzer());
-			org.hibernate.Query hibQuery = fullTextSession.createFullTextQuery(
-					query, Sample.class);
-			List<Sample> result = hibQuery.list();
+			final org.hibernate.Query hibQuery = fullTextSession
+					.createFullTextQuery(query, Sample.class);
+			final List<Sample> result = hibQuery.list();
 
-			for (Sample s : result) {
+			for (final Sample s : result)
 				System.out.println("found sample, sesar number is "
 						+ s.getSesarNumber() + " username is "
 						+ s.getOwner().getUsername());
-			}
-		} catch (ParseException e) {
+		} catch (final ParseException e) {
 		}
 
 		tx.commit();
