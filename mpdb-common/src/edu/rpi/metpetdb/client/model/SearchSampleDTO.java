@@ -62,21 +62,17 @@ public class SearchSampleDTO extends MObjectDTO {
 		id = i;
 	}
 
-	public Set<String> getRockType() {
+	public Set<String> getPossibleRockTypes() {
 		return possibleRockTypes;
 	}
 
-	/*
-	 * public String getRockType() { return rockType; }
-	 */
-
-	public void addRockType(final String rt) {
+	public void addPossibleRockType(final String rt) {
 		possibleRockTypes.add(rt);
 	}
 
-	/*
-	 * public void setRockType(final String rt) { rockType = rt; }
-	 */
+	public void setPossibleRockTypes(final Set<String> rt) {
+		possibleRockTypes = rt;
+	}
 
 	public int getVersion() {
 		return version;

@@ -20,6 +20,8 @@ import org.hibernate.search.Search;
 import org.junit.Test;
 
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
+import edu.rpi.metpetdb.client.model.properties.SearchProperty;
+import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
 import edu.rpi.metpetdb.server.model.Sample;
@@ -194,8 +196,8 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final SearchSampleDTO searchSamp = new SearchSampleDTO();
 		searchSamp.setSesarNumber("000000000");
 		searchSamp.setAlias("1");
-		searchSamp.addRockType("BLAHHHH");
-		searchSamp.addRockType("rockie rock");
+		searchSamp.addPossibleRockType("BLAHHHH");
+		searchSamp.addPossibleRockType("rockie rock");
 
 		final Class c = searchSamp.getClass();
 		final Method[] allMethods = c.getDeclaredMethods();
@@ -210,8 +212,36 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final List<String> columnsIn = new LinkedList<String>();
 		final List<BooleanClause.Occur> flags = new LinkedList<BooleanClause.Occur>();
 
-		String methodName;
+		String columnName;
 		Object methodResult = null;
+<<<<<<< .mine
+		Object returnType = null;
+		SearchProperty[] enums = SearchSampleProperty.class.getEnumConstants();
+		for(SearchProperty i : enums)
+		{
+			System.out.println(i.name());
+		}
+		for (SearchProperty i: enums) {
+			columnName = i.columnName();
+			methodResult = i.get(searchSamp);
+			if (methodResult == null) {
+			} 
+			else {
+				if (methodResult instanceof Set) {
+					for (Object o : (Set) methodResult) {
+						System.out.println("adding a should for variable " + columnName + " with value"
+								+ o.toString());
+						searchForValue.add(o.toString());
+						columnsIn.add(columnName.substring(3));
+						flags.add(BooleanClause.Occur.SHOULD);
+					}
+				} else {
+					System.out.println("adding a must for variable " + columnName + " with value"
+							+ methodResult.toString());
+					searchForValue.add(methodResult.toString());
+					columnsIn.add(columnName.substring(3));
+					flags.add(BooleanClause.Occur.MUST);
+=======
 		Class<?> returnType = null;
 		for (final Method element : allMethods) {
 			methodName = element.getName();
@@ -242,6 +272,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 						columnsIn.add(methodName.substring(3));
 						flags.add(BooleanClause.Occur.SHOULD);
 					}
+>>>>>>> .r209
 				else {
 					System.out.println("adding a must for variable "
 							+ methodName.substring(3) + "with value"
@@ -250,7 +281,6 @@ public class HibernateSearchTest extends DatabaseTestCase {
 					columnsIn.add(methodName.substring(3));
 					flags.add(BooleanClause.Occur.MUST);
 				}
-
 			}
 		}
 
