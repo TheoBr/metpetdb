@@ -198,9 +198,6 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		searchSamp.addPossibleRockType("logitech");
 		searchSamp.addPossibleRockType("rockie rock");
 
-		final Class c = searchSamp.getClass();
-		final Method[] allMethods = c.getDeclaredMethods();
-
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
 				.createFullTextSession(session);

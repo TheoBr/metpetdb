@@ -22,6 +22,8 @@ import edu.rpi.metpetdb.client.service.ProjectService;
 import edu.rpi.metpetdb.client.service.ProjectServiceAsync;
 import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.client.service.SampleServiceAsync;
+import edu.rpi.metpetdb.client.service.SearchService;
+import edu.rpi.metpetdb.client.service.SearchServiceAsync;
 import edu.rpi.metpetdb.client.service.SubsampleService;
 import edu.rpi.metpetdb.client.service.SubsampleServiceAsync;
 import edu.rpi.metpetdb.client.service.UserService;
@@ -59,6 +61,8 @@ public class MpDb {
 	public static final MpDbGenericServiceAsync mpdbGeneric_svc;
 
 	public static final BulkUploadServiceAsync bulkUpload_svc;
+
+	public static final SearchServiceAsync search_svc;
 
 	public static DatabaseObjectConstraints doc;
 
@@ -98,6 +102,9 @@ public class MpDb {
 
 		bulkUpload_svc = (BulkUploadServiceAsync) bindService(GWT
 				.create(BulkUploadService.class), "bulkUpload");
+
+		search_svc = (SearchServiceAsync) bindService(GWT
+				.create(SearchService.class), "search");
 
 		// factory = (HtmlFactory) GWT.create(HtmlFactory.class);
 	}
