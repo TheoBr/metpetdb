@@ -22,7 +22,7 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 
 		public String columnName() {
-			return "SesarNumber";
+			return "sesarNumber";
 		}
 	},
 	location {
@@ -36,7 +36,7 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 
 		public String columnName() {
-			return "Location";
+			return "location";
 		}
 	},
 	owner {
@@ -49,7 +49,7 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 
 		public String columnName() {
-			return "Owner";
+			return "owner";
 		}
 	},
 	alias {
@@ -62,7 +62,7 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 
 		public String columnName() {
-			return "Alias";
+			return "alias";
 		}
 	},
 	collectionDate {
@@ -77,7 +77,7 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 
 		public String columnName() {
-			return "CollectionDate";
+			return "collectionDate";
 		}
 	},
 	publicData {
@@ -91,7 +91,7 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 
 		public String columnName() {
-			return "PublicData";
+			return "publicData";
 		}
 	},
 	possibleRockTypes {
@@ -106,7 +106,7 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 
 		public String columnName() {
-			return "RockType";
+			return "rockType";
 		}
 	};
 

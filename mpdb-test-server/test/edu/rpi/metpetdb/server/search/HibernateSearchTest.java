@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.server.search;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
@@ -131,8 +130,8 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final Transaction tx = fullTextSession.beginTransaction();
 
 		System.out.println("in multifield search");
-		final String[] searchFor = { "000000004", "rockie rock" };
-		final String[] columnsIn = { "sesarNumber", "rockType" };
+		final String[] searchFor = { "000000004", "rockie rock"};
+		final String[] columnsIn = { "sesarNumber", "rockType"};
 		final BooleanClause.Occur[] flags = { BooleanClause.Occur.MUST,
 				BooleanClause.Occur.MUST };
 
@@ -194,9 +193,9 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	@Test
 	public void testSearchSampleSearch() {
 		final SearchSampleDTO searchSamp = new SearchSampleDTO();
-		searchSamp.setSesarNumber("000000000");
-		searchSamp.setAlias("1");
-		searchSamp.addPossibleRockType("BLAHHHH");
+		//searchSamp.setSesarNumber("000000000");
+//		searchSamp.setAlias("1");
+		searchSamp.addPossibleRockType("logitech");
 		searchSamp.addPossibleRockType("rockie rock");
 
 		final Class c = searchSamp.getClass();
@@ -214,76 +213,35 @@ public class HibernateSearchTest extends DatabaseTestCase {
 
 		String columnName;
 		Object methodResult = null;
-<<<<<<< .mine
-		Object returnType = null;
 		SearchProperty[] enums = SearchSampleProperty.class.getEnumConstants();
-		for(SearchProperty i : enums)
-		{
-			System.out.println(i.name());
-		}
 		for (SearchProperty i: enums) {
 			columnName = i.columnName();
 			methodResult = i.get(searchSamp);
 			if (methodResult == null) {
-			} 
+			} 			
 			else {
 				if (methodResult instanceof Set) {
 					for (Object o : (Set) methodResult) {
-						System.out.println("adding a should for variable " + columnName + " with value"
+						System.out.println("adding a should for variable " + columnName + " with value "
 								+ o.toString());
 						searchForValue.add(o.toString());
-						columnsIn.add(columnName.substring(3));
+						columnsIn.add(columnName);
 						flags.add(BooleanClause.Occur.SHOULD);
 					}
 				} else {
-					System.out.println("adding a must for variable " + columnName + " with value"
-							+ methodResult.toString());
-					searchForValue.add(methodResult.toString());
-					columnsIn.add(columnName.substring(3));
-					flags.add(BooleanClause.Occur.MUST);
-=======
-		Class<?> returnType = null;
-		for (final Method element : allMethods) {
-			methodName = element.getName();
-			if (methodName.indexOf("get") == 0) {
-				try {
-					methodResult = element.invoke(searchSamp, new Object[] {});
-					returnType = element.getReturnType();
-				} catch (final InvocationTargetException E) {
-					System.out.println("Invocation Exception");
-				} catch (final IllegalAccessException E) {
-					System.out.println("Illegal Access Exception");
-				}
-
-				if (methodResult == null) {
-				} else if ((methodName.equals("getId")
-						|| methodName.equals("getVersion") || methodName
-						.equals("getSubsampleCount"))
-						&& (Integer.parseInt(methodResult.toString()) == 0)) {
-				} else if ((methodName.equals("getProjects") || methodName
-						.equals("getSubsamples"))
-						&& (((Set) methodResult).size() == 0)) {
-				} else if (returnType.equals(Set.class))
-					for (final Object o : (Set) methodResult) {
-						System.out.println("adding a should for variable "
-								+ methodName.substring(3) + "with value"
-								+ o.toString());
-						searchForValue.add(o.toString());
-						columnsIn.add(methodName.substring(3));
-						flags.add(BooleanClause.Occur.SHOULD);
+					if(columnName.equals("publicData"))
+					{}
+					else
+					{
+						System.out.println("adding a must for variable " + columnName + " with value "
+								+ methodResult.toString());
+						searchForValue.add(methodResult.toString());
+						columnsIn.add(columnName);
+						flags.add(BooleanClause.Occur.MUST);
 					}
->>>>>>> .r209
-				else {
-					System.out.println("adding a must for variable "
-							+ methodName.substring(3) + "with value"
-							+ methodResult.toString());
-					searchForValue.add(methodResult.toString());
-					columnsIn.add(methodName.substring(3));
-					flags.add(BooleanClause.Occur.MUST);
 				}
 			}
 		}
-
 		/*
 		 * BooleanClause.Occur[] flags = {BooleanClause.Occur.SHOULD,
 		 * BooleanClause.Occur.MUST, BooleanClause.Occur.MUST_NOT};
@@ -292,8 +250,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		searchForValue.toArray(searchArray);
 		final String columnsArray[] = new String[columnsIn.size()];
 		columnsIn.toArray(columnsArray);
-		final BooleanClause.Occur flagsArray[] = new BooleanClause.Occur[flags
-				.size()];
+		final BooleanClause.Occur flagsArray[] = new BooleanClause.Occur[flags.size()];
 		flags.toArray(flagsArray);
 		try {
 			final Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
