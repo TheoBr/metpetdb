@@ -41,6 +41,9 @@ public interface LocaleText extends Messages {
 	String addProject();
 	String addProjectDescription();
 
+	/* Search */
+	String search();
+
 	/* Tools */
 	String tools_EditProfile();
 

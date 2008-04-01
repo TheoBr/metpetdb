@@ -60,6 +60,16 @@
   </servlet-mapping>
 
   <servlet>
+    <servlet-name>search</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.impl.SearchServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>search</servlet-name>
+    <url-pattern>/search.svc</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>sample</servlet-name>
     <servlet-class>edu.rpi.metpetdb.server.impl.SampleServiceImpl</servlet-class>
     <load-on-startup>1</load-on-startup>
