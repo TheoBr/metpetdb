@@ -47,9 +47,10 @@ public class Sample extends MObject implements IHasName {
 	private String sesarNumber;
 	private Geometry location;
 
-	@IndexedEmbedded(depth=1, prefix="user_")
+	@IndexedEmbedded(depth = 1, prefix = "user_")
 	private User owner;
 
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String alias;
 	private Timestamp collectionDate;
 
@@ -58,12 +59,12 @@ public class Sample extends MObject implements IHasName {
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String rockType;
 
-	@IndexedEmbedded(depth=1, prefix="subsample_")
+	@IndexedEmbedded(depth = 1, prefix = "subsample_")
 	private Set<Subsample> subsamples;
 
 	private Set<Project> projects;
 
-	@IndexedEmbedded(depth=1, prefix="mineral_")
+	@IndexedEmbedded(depth = 1, prefix = "mineral_")
 	private Set<SampleMineral> minerals;
 
 	private Set<Image> images;
@@ -85,7 +86,7 @@ public class Sample extends MObject implements IHasName {
 
 	private Set<Region> regions;
 
-	@IndexedEmbedded(depth=1, prefix="metamorphicGrade_")
+	@IndexedEmbedded(depth = 1, prefix = "metamorphicGrade_")
 	private Set<MetamorphicGrade> metamorphicGrades;
 
 	private Set<Reference> references;
