@@ -70,7 +70,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 
 		final Transaction tx = fullTextSession.beginTransaction();
 
-		final TermQuery termQuery = new TermQuery(new Term("rockType", "rock"));
+		final TermQuery termQuery = new TermQuery(new Term("alias", "1"));
 		final org.hibernate.Query hibQuery = fullTextSession
 				.createFullTextQuery(termQuery, Sample.class);
 		final List<Sample> result = hibQuery.list();
@@ -78,6 +78,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		for (final Sample s : result)
 			System.out.println("found sample, rock type is " + s.getRockType());
 
+		assertEquals(1, result.size());
 		tx.commit();
 	}
 
@@ -194,7 +195,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	public void testSearchSampleSearch() {
 		final SearchSampleDTO searchSamp = new SearchSampleDTO();
 		//searchSamp.setSesarNumber("000000000");
-//		searchSamp.setAlias("1");
+		searchSamp.setAlias("1");
 		searchSamp.addPossibleRockType("logitech");
 		searchSamp.addPossibleRockType("rockie rock");
 
@@ -256,7 +257,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 			final org.hibernate.Query hibQuery = fullTextSession
 					.createFullTextQuery(query, Sample.class);
 			final List<Sample> result = hibQuery.list();
-
+			assertEquals(1, result.size());
 			for (final Sample s : result)
 				System.out.println("found sample, sesar number is "
 						+ s.getSesarNumber() + " username is "
