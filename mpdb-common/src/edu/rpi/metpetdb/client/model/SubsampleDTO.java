@@ -8,7 +8,7 @@ import edu.rpi.metpetdb.client.model.interfaces.IHasImages;
 public class SubsampleDTO extends MObjectDTO implements IHasImages {
 
 	private static final long serialVersionUID = 1L;
-	private Long id;
+	private long id;
 	private SampleDTO sample;
 	private int version;
 	private String name;
@@ -19,11 +19,11 @@ public class SubsampleDTO extends MObjectDTO implements IHasImages {
 	private int imageCount;
 	private int analysisCount;
 
-	public Long getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(final Long i) {
+	public void setId(final long i) {
 		this.id = i;
 	}
 
@@ -122,8 +122,7 @@ public class SubsampleDTO extends MObjectDTO implements IHasImages {
 
 	@Override
 	public int hashCode() {
-		return this.name != null ? this.name.hashCode() + this.id.intValue()
-				: 0;
+		return this.name != null ? this.name.hashCode() + (int) this.id : 0;
 	}
 
 	@Override
@@ -133,6 +132,6 @@ public class SubsampleDTO extends MObjectDTO implements IHasImages {
 
 	@Override
 	public boolean mIsNew() {
-		return this.id == null || this.id == 0;
+		return this.id == 0;
 	}
 }
