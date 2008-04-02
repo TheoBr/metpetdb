@@ -25,12 +25,33 @@ import edu.rpi.metpetdb.client.paging.PagingResponseIterator;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 
+/**
+ * An abstract class that pieces together the different parts for creating a
+ * paginated table.
+ * 
+ * @author anthony
+ * 
+ * @param <T>
+ *            the types of objects that will be paginated in this table
+ */
 public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 
+	/**
+	 * How we sort by default (true means ascending, false is descending)
+	 */
 	private static final boolean DEFAULT_SORT_ORDER = true;
 
+	/**
+	 * The instance of columns that are layed out on the table
+	 */
 	private Column[] columns;
 
+	/**
+	 * Response to send back to the callback so that it can draw the table
+	 * 
+	 * @author anthony
+	 * 
+	 */
 	protected class PagingResponse extends Response<T> {
 
 		/**
@@ -79,7 +100,18 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 
 	}
 
+	/**
+	 * The table model that is used to draw the table
+	 * 
+	 * @author anthony
+	 * 
+	 */
 	protected class TableModel extends ReadOnlyTableModel<T> {
+
+		/**
+		 * Called automatically when new rows are requested, i.e. when the user
+		 * navitages to a new page.
+		 */
 		public void requestRows(final Request request,
 				final Callback<T> callback) {
 			final int startRow = request.getStartRow();
@@ -124,11 +156,35 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		}
 	}
 
+	/**
+	 * The default column to be sorted by the table
+	 * 
+	 * @return the column name according to hibernate
+	 */
 	public abstract String getDefaultSortParameter();
 
+	/**
+	 * The method that is called by the underlining table model to fetch more
+	 * data from the server.
+	 * 
+	 * @param p
+	 *            the pagination parameters that are used to specify the special
+	 *            properties of the requisted data
+	 * @param ac
+	 *            the callback to signal when we are done fetching data
+	 */
 	public abstract void update(final PaginationParameters p,
 			final AsyncCallback<Results<T>> ac);
 
+	/**
+	 * From a list of objects it generates the data that will be displayed in
+	 * the table
+	 * 
+	 * @param data
+	 *            the list of data
+	 * @return a collection of collections of data to be shown in the table
+	 *         (basically what is going to be in each cell)
+	 */
 	public Collection<Collection<Object>> getList(final List<T> data) {
 		final Collection<Collection<Object>> rows = new HashSet<Collection<Object>>();
 		final Iterator<T> itr = data.iterator();
@@ -139,6 +195,24 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		return rows;
 	}
 
+	/**
+	 * Gets the data for only one row in the table from an object. Data is
+	 * generated in one of two ways <br/>
+	 * <ol>
+	 * <li>From the widget/text that is returned from the column
+	 * {@link Column#getRepresentation(MObjectDTO, int)}</li>
+	 * <li>From the data of the object
+	 * {@link MObjectDTO#mGet(edu.rpi.metpetdb.client.model.properties.Property)}</li>
+	 * </ol>
+	 * If either of those two scenarios are not possible it sets the data to be
+	 * the header of the column
+	 * 
+	 * @param object
+	 *            the current object
+	 * @param currentRow
+	 *            the current row
+	 * @return the list of data
+	 */
 	public Collection<Object> processRow(final MObjectDTO object,
 			final int currentRow) {
 		final Collection<Object> data = new ArrayList<Object>();
@@ -153,6 +227,12 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		return data;
 	}
 
+	/**
+	 * Creates a new paginated table from an array of columns
+	 * 
+	 * @param columns
+	 *            the columns that will be used in this table
+	 */
 	public ListEx(final Column[] columns) {
 		this.columns = columns;
 		TableModel tableModel = new TableModel();
@@ -185,6 +265,7 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 
 		});
 
+		// TODO: can you say we need CSS?
 		scrollTable.setHeight("100%");
 		scrollTable.setWidth("100%");
 		dataTable.setWidth("100%");
