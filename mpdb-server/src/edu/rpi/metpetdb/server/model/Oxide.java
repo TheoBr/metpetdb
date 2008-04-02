@@ -1,14 +1,7 @@
 package edu.rpi.metpetdb.server.model;
 
-
 public class Oxide extends MObject {
 	private static final long serialVersionUID = 1L;
-	public static final int P_oxidationState = 0;
-	public static final int P_species = 1;
-	public static final int P_weight = 2;
-	public static final int P_cationsPerOxide = 3;
-	public static final int P_conversionFactor = 4;
-	public static final int P_mineralType = 5;
 
 	private short elementId;
 	private short oxideId;

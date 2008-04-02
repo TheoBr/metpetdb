@@ -5,8 +5,6 @@ import java.util.Set;
 
 public class Project extends MObject {
 	private static final long serialVersionUID = 1L;
-	public static final int P_name = 0;
-	public static final int P_owner = 1;
 
 	private int id;
 	private int version;

@@ -14,7 +14,6 @@ import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 @Indexed
 public class Mineral extends MObject implements IHasName {
 	private static final long serialVersionUID = 1L;
-	public static final int P_name = 0;
 
 	@DocumentId
 	private short id;
@@ -23,7 +22,7 @@ public class Mineral extends MObject implements IHasName {
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String name;
 
-	private Set<IHasChildren> children;
+	private Set<IHasChildren<Mineral>> children;
 
 	public short getId() {
 		return id;
@@ -49,11 +48,11 @@ public class Mineral extends MObject implements IHasName {
 		parentId = i;
 	}
 
-	public void setChildren(final Set<IHasChildren> c) {
+	public void setChildren(final Set<IHasChildren<Mineral>> c) {
 		children = c;
 	}
 
-	public Set<IHasChildren> getChildren() {
+	public Set<IHasChildren<Mineral>> getChildren() {
 		return children;
 	}
 
@@ -64,7 +63,7 @@ public class Mineral extends MObject implements IHasName {
 					&& ((Mineral) o).getId() == id;
 		else if (o instanceof SampleMineral) {
 			return name != null && name.equals(((SampleMineral) o).getName())
-					&& ((SampleMineral) o).getId() == id;
+					&& ((SampleMineral) o).getMineral().getId() == id;
 		} else
 			return false;
 	}

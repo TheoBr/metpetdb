@@ -2,10 +2,8 @@ package edu.rpi.metpetdb.server.model;
 
 //import java.util.Set;
 
-
 public class Reference extends MObject {
 	private static final long serialVersionUID = 1L;
-	public static final int P_name = 0;
 
 	private short id;
 

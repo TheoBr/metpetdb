@@ -4,12 +4,6 @@ import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 
 public class Element extends MObject implements IHasName {
 	private static final long serialVersionUID = 1L;
-	public static final int P_name = 0;
-	public static final int P_alternateName = 1;
-	public static final int P_symbol = 2;
-	public static final int P_atomicNumber = 3;
-	public static final int P_weight = 4;
-	public static final int P_mineralType = 5;
 
 	private short id;
 	private String name;

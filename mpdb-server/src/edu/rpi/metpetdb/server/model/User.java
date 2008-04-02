@@ -13,20 +13,18 @@ import org.hibernate.search.annotations.Store;
 @Indexed
 public class User extends MObject {
 	private static final long serialVersionUID = 1L;
-	public static final int P_username = 0;
-	public static final int P_emailAddress = 1;
 
 	@DocumentId
 	private int id;
 	private int version;
-	
-	@Field(index = Index.TOKENIZED, store = Store.NO)	
+
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String username;
-	
+
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String emailAddress;
 	private Set<Project> projects;
-	
+
 	@ContainedIn
 	private Set<Sample> samples;
 	private transient byte[] encryptedPassword;

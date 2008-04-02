@@ -77,6 +77,17 @@ CREATE INDEX samples_ix_loc ON samples
   USING GIST (location GIST_GEOMETRY_OPS);
 ALTER TABLE samples ALTER location SET NOT NULL;
 
+CREATE TABLE sample_comments
+(
+	comment_id INT8 NOT NULL,
+	sample_id INT8 NOT NULL,
+	comment_text TEXT NOT NULL,
+	version INT4 NOT NULL,
+	CONSTRAINT sample_comments_sk PRIMARY KEY (comment_id),
+	CONSTRAINT sample_comments_fk_sample FOREIGN KEY (sample_id)
+    REFERENCES samples (sample_id)
+) WITHOUT OIDS;
+
 CREATE TABLE subsamples
 (
   subsample_id INT8 NOT NULL,
@@ -211,3 +222,4 @@ CREATE SEQUENCE user_seq;
 CREATE SEQUENCE metamorphic_grade_seq;
 CREATE SEQUENCE reference_seq;
 CREATE SEQUENCE uploaded_files_seq;
+CREATE SEQUENCE sample_comments_seq;

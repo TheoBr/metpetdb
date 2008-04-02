@@ -1,9 +1,7 @@
 package edu.rpi.metpetdb.server.model;
 
-
-public class SampleMineral extends Mineral {
+public class SampleMineral extends MObject {
 	private static final long serialVersionUID = 1L;
-	public static final int P_amount = 0;
 
 	private Float amount;
 	private Mineral mineral;
@@ -21,12 +19,6 @@ public class SampleMineral extends Mineral {
 
 	public void setMineral(final Mineral m) {
 		mineral = m;
-		if (m != null) {
-			this.setName(m.getName());
-			this.setParentId(m.getParentId());
-			this.setChildren(m.getChildren());
-			this.setId(m.getId());
-		}
 	}
 
 	public Mineral getMineral() {
@@ -66,5 +58,10 @@ public class SampleMineral extends Mineral {
 		return mineral != null && amount != null ? mineral.hashCode()
 				+ amount.intValue() : mineral.hashCode();
 		// return mineral.hashCode();
+	}
+
+	@Override
+	public boolean mIsNew() {
+		return false;
 	}
 }

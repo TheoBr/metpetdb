@@ -4,13 +4,6 @@ import com.google.gwt.core.client.GWT;
 
 public class Image extends MObject {
 	private static final long serialVersionUID = 1L;
-	public static final int P_imageType = 0;
-	public static final int P_subsample = 1;
-	public static final int P_pixelsize = 2;
-	public static final int P_contrast = 3;
-	public static final int P_brightness = 4;
-	public static final int P_lut = 5;
-	public static final int P_checksum = 6;
 
 	private long id;
 	private int version;

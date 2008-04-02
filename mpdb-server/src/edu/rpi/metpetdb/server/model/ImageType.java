@@ -1,9 +1,7 @@
 package edu.rpi.metpetdb.server.model;
 
-
 public class ImageType extends MObject {
 	private static final long serialVersionUID = 1L;
-	public static final int P_name = 0;
 
 	private short id;
 	private String name;

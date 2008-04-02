@@ -1,20 +1,7 @@
 package edu.rpi.metpetdb.server.model;
 
-
 public class XrayImage extends Image {
 	private static final long serialVersionUID = 1L;
-	public static final int P_imageType = 0;
-	public static final int P_subsample = 1;
-	public static final int P_pixelsize = 2;
-	public static final int P_contrast = 3;
-	public static final int P_brightness = 4;
-	public static final int P_lut = 5;
-	public static final int P_radiation = 6;
-	public static final int P_lines = 8;
-	public static final int P_dwelltime = 9;
-	public static final int P_current = 10;
-	public static final int P_voltage = 11;
-	public static final int P_element = 12;
 
 	private Boolean radiation;
 	private String lines;

@@ -31,6 +31,11 @@
       <one-to-many class="Subsample" />
     </set>
     
+    <set name="comments" inverse="true" cascade="all" >
+      <key column="sample_id"/>
+      <one-to-many class="SampleComment" />
+    </set>
+    
     <set name="projects" table="project_samples" cascade="none">
       <key column="sample_id" />
       <many-to-many class="Project" column="project_id" />

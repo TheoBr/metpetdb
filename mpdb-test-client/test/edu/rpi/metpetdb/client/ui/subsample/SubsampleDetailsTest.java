@@ -38,7 +38,7 @@ public class SubsampleDetailsTest extends MpDbTestCase {
 				finishTest();
 			}
 		}.begin();
-		delayTestFinish(5000);
+		delayTestFinish(10000);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class SubsampleDetailsTest extends MpDbTestCase {
 			}
 
 			public void onSuccess(final SubsampleDTO subsample) {
-				assertEquals(SUBSAMPLE_ID, subsample.getId().longValue());
+				assertEquals(SUBSAMPLE_ID, subsample.getId());
 				finishTest();
 			}
 		}.begin();

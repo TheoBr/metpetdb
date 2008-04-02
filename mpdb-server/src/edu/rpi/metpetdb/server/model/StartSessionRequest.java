@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.server.model;
 
-
 /**
  * Sent by the browser to log a user into the application.
  * <p>
@@ -10,8 +9,6 @@ package edu.rpi.metpetdb.server.model;
  */
 public class StartSessionRequest extends MObject {
 	private static final long serialVersionUID = 1L;
-	public static final int P_username = 0;
-	public static final int P_password = 1;
 
 	private String username;
 	private String password;

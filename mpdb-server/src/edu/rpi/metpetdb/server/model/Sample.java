@@ -19,25 +19,6 @@ import edu.rpi.metpetdb.client.service.MpDbConstants;
 @Indexed
 public class Sample extends MObject implements IHasName {
 	private static final long serialVersionUID = 1L;
-	public static final int P_sesarNumber = 0;
-	public static final int P_location = 1;
-	public static final int P_owner = 2;
-	public static final int P_alias = 3;
-	public static final int P_collectionDate = 4;
-	public static final int P_publicData = 5;
-	public static final int P_rockType = 6;
-	public static final int P_images = 7;
-	public static final int P_minerals = 8;
-	public static final int P_country = 9;
-	public static final int P_description = 10;
-	public static final int P_collector = 11;
-	public static final int P_locationText = 12;
-	public static final int P_latitudeError = 13;
-	public static final int P_longitudeError = 14;
-	public static final int P_regions = 15;
-	public static final int P_metamorphicGrades = 16;
-	public static final int P_references = 17;
-	public static final int P_subsampleCount = 18;
 
 	@DocumentId
 	private long id;
@@ -90,6 +71,8 @@ public class Sample extends MObject implements IHasName {
 	private Set<MetamorphicGrade> metamorphicGrades;
 
 	private Set<Reference> references;
+
+	private Set<SampleComment> comments;
 
 	private int subsampleCount;
 
@@ -243,14 +226,6 @@ public class Sample extends MObject implements IHasName {
 		minerals = c;
 	}
 
-	public void addMineral(final String name) {
-		if (minerals == null)
-			minerals = new HashSet<SampleMineral>();
-		final SampleMineral m = new SampleMineral();
-		m.setName(name);
-		minerals.add(m);
-	}
-
 	public String getCountry() {
 		return country;
 	}
@@ -323,14 +298,6 @@ public class Sample extends MObject implements IHasName {
 		metamorphicGrades = m;
 	}
 
-	public void addMetamorphicGrade(final String name) {
-		if (metamorphicGrades == null)
-			metamorphicGrades = new HashSet<MetamorphicGrade>();
-		final MetamorphicGrade m = new MetamorphicGrade();
-		m.setName(name);
-		metamorphicGrades.add(m);
-	}
-
 	public Set<Reference> getReferences() {
 		return references;
 	}
@@ -338,6 +305,16 @@ public class Sample extends MObject implements IHasName {
 	public void setReferences(final Set<Reference> r) {
 		references = r;
 	}
+
+	public final Set<SampleComment> getComments() {
+		return comments;
+	}
+
+	public final void setComments(Set<SampleComment> comments) {
+		this.comments = comments;
+	}
+	
+		
 
 	public void addReference(final String name) {
 		if (references == null)

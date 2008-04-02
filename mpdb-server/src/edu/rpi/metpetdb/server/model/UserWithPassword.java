@@ -1,12 +1,7 @@
 package edu.rpi.metpetdb.server.model;
 
-
 public class UserWithPassword extends MObject {
 	private static final long serialVersionUID = 1L;
-	public static final int P_oldPassword = 0;
-	public static final int P_newPassword = 1;
-	public static final int P_vrfPassword = 2;
-	public static final int P_user = 3;
 
 	private User user;
 	private String oldPassword;

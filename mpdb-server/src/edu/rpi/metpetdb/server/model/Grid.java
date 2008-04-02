@@ -5,8 +5,6 @@ import java.util.Set;
 
 public class Grid extends MObject {
 	private static final long serialVersionUID = 1L;
-	public static final int P_width = 0;
-	public static final int P_height = 1;
 
 	private int id;
 	private int version;

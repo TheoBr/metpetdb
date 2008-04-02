@@ -1,11 +1,7 @@
 package edu.rpi.metpetdb.server.model;
 
-
 public class ChemicalAnalysisElement extends Element {
 	private static final long serialVersionUID = 1L;
-	public static final int P_amount = 0;
-	public static final int P_precision = 1;
-	public static final int P_precisionUnit = 2;
 
 	private Float amount;
 	private Float precision;
