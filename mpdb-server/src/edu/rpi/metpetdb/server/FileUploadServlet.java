@@ -15,6 +15,8 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
 
@@ -31,17 +33,24 @@ public class FileUploadServlet extends HttpServlet {
 				response.getWriter().write("NO-SCRIPT-DATA");
 				return;
 			}
+			// if (uploadItem.getContentType() != "application/ms-excel") {
+			// response
+			// .getWriter()
+			// .write(
+			// "Uploaded spreadsheets must be in Microsoft Excel .xls format.");
+			// return;
+			// }
 			final String hash = writeFile(uploadItem);
-			// boolean ctype = uploadItem.getContentType() ==
-			// "application/ms-excel";
-			// DataStore
-			// .open()
-			// .createSQLQuery(
-			// "INSERT INTO uploaded_files(hash, filename, time) VALUES(:hash,
-			// :filename, NOW())")
-			// .setParameter("hash", hash).setParameter("filename",
-			// uploadItem.getName()).executeUpdate();
-			response.getWriter().write(baseFolder + "/" + hash);
+
+			Session s = DataStore.open();
+			Transaction t = s.beginTransaction();
+			s
+					.createSQLQuery(
+							"INSERT INTO uploaded_files(uploaded_file_id, hash, filename, time) VALUES(nextval('uploaded_file_seq'), :hash, :filename, NOW())")
+					.setParameter("hash", hash).setParameter("filename",
+							uploadItem.getName()).executeUpdate();
+			t.commit();
+			response.getWriter().write(hash);
 
 		} catch (final IOException ioe) {
 			throw new IllegalStateException(ioe.getMessage());
@@ -50,7 +59,9 @@ public class FileUploadServlet extends HttpServlet {
 
 	}
 
-	@SuppressWarnings( { "unchecked" })
+	@SuppressWarnings( {
+		"unchecked"
+	})
 	private FileItem getFileItem(final HttpServletRequest request) {
 		final FileItemFactory factory = new DiskFileItemFactory();
 		final ServletFileUpload upload = new ServletFileUpload(factory);

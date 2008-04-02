@@ -146,7 +146,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 
 			while (itr.hasNext()) {
 				final Reference r = (Reference) itr.next();
-				final Query references = namedQuery("edu.rpi.metpetdb.client.model.Reference.Reference.byName");
+				final Query references = namedQuery("edu.rpi.metpetdb.server.model.Reference.Reference.byName");
 
 				references.setString("name", r.getName());
 

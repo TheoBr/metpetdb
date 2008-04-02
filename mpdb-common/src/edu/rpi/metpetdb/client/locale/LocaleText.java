@@ -96,6 +96,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_Duplicate(String field, String taken);
 	String errorDesc_UnableToSendEmail();
 	String errorDesc_InvalidRockType(String rockType, String rockTypes);
+	String errorDesc_InvalidFormat();
 
 	/* Character Names */
 	String character_space();

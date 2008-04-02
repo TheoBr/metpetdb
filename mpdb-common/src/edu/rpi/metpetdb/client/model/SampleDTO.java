@@ -205,6 +205,14 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 		minerals = c;
 	}
 
+	public void addMineral(final String name) {
+		if (minerals == null)
+			minerals = new HashSet<SampleMineralDTO>();
+		final SampleMineralDTO m = new SampleMineralDTO();
+		m.setName(name);
+		minerals.add(m);
+	}
+
 	public String getCountry() {
 		return country;
 	}
@@ -277,12 +285,28 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 		metamorphicGrades = m;
 	}
 
+	public void addMetamorphicGrade(final String name) {
+		if (metamorphicGrades == null)
+			metamorphicGrades = new HashSet<MetamorphicGradeDTO>();
+		final MetamorphicGradeDTO m = new MetamorphicGradeDTO();
+		m.setName(name);
+		metamorphicGrades.add(m);
+	}
+
 	public Set<ReferenceDTO> getReferences() {
 		return references;
 	}
 
 	public void setReferences(final Set<ReferenceDTO> r) {
 		references = r;
+	}
+
+	public void addReference(final String name) {
+		if (references == null)
+			references = new HashSet<ReferenceDTO>();
+		final ReferenceDTO m = new ReferenceDTO();
+		m.setName(name);
+		references.add(m);
 	}
 
 	public String getName() {

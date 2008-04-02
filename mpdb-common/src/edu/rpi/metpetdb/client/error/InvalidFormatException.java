@@ -1,9 +1,10 @@
 package edu.rpi.metpetdb.client.error;
 
-public class InvalidFormatException extends ValidationException {
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+public class InvalidFormatException extends Exception implements IsSerializable {
 	static final long serialVersionUID = 1L;
-	
-	public String format() {
-		return "";
+
+	public InvalidFormatException() {
 	}
 }

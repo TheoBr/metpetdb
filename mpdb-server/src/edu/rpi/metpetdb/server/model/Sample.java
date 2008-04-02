@@ -243,6 +243,14 @@ public class Sample extends MObject implements IHasName {
 		minerals = c;
 	}
 
+	public void addMineral(final String name) {
+		if (minerals == null)
+			minerals = new HashSet<SampleMineral>();
+		final SampleMineral m = new SampleMineral();
+		m.setName(name);
+		minerals.add(m);
+	}
+
 	public String getCountry() {
 		return country;
 	}
@@ -315,12 +323,28 @@ public class Sample extends MObject implements IHasName {
 		metamorphicGrades = m;
 	}
 
+	public void addMetamorphicGrade(final String name) {
+		if (metamorphicGrades == null)
+			metamorphicGrades = new HashSet<MetamorphicGrade>();
+		final MetamorphicGrade m = new MetamorphicGrade();
+		m.setName(name);
+		metamorphicGrades.add(m);
+	}
+
 	public Set<Reference> getReferences() {
 		return references;
 	}
 
 	public void setReferences(final Set<Reference> r) {
 		references = r;
+	}
+
+	public void addReference(final String name) {
+		if (references == null)
+			references = new HashSet<Reference>();
+		final Reference m = new Reference();
+		m.setName(name);
+		references.add(m);
 	}
 
 	public String getName() {

@@ -5,13 +5,15 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -21,7 +23,6 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.server.model.Sample;
 
 public class SampleParser {
 
@@ -44,19 +45,47 @@ public class SampleParser {
 	 * 
 	 * TODO: make this a Set of objects.
 	 */
-	private final Object[][] sampleMethodMap = {
-			{ "sample", "setAlias", String.class },
-			{ "rock type", "setRockType", String.class },
-			{ "comment", "addComment", String.class },
-			{ "latitude", "setLatitude", double.class },
-			{ "longitude", "setLongitude", double.class },
-			{ "region", "addRegion", String.class },
-			{ "country", "setCountry", String.class },
-			{ "collection", "setCollector", String.class },
-			{ "when collected", "setCollectionDate", Timestamp.class },
-			{ "present sample location", "setLocationText", String.class },
-			{ "reference", null, null }, { "grade", null, null },
-			{ "minerals present", null, null } };
+	private static final Object[][] sampleMethodMap = {
+			{
+					"present.+location", "setLocationText", String.class
+			},
+			{
+					"sample", "setAlias", String.class
+			},
+			{
+					"type", "setRockType", String.class
+			},
+			// {
+			// "comment", "addComment", String.class
+			// },
+			{
+					"latitude", "setLatitude", double.class
+			},
+			{
+					"longitude", "setLongitude", double.class
+			},
+			{
+					"region", "addRegion", String.class
+			},
+			{
+					"country", "setCountry", String.class
+			},
+			{
+					"collector", "setCollector", String.class
+			},
+			{
+					"(collected)|(collection.+date)", "setCollectionDate",
+					Timestamp.class
+			}, {
+					"reference", "addReference", String.class
+			}, {
+					"grade", "addMetamorphicGrade", String.class
+			}, /*
+			 * { "mineral", "addMineral", String.class }
+			 */
+	};
+
+	private final static List<MethodAssociation<SampleDTO>> methodAssociations = new LinkedList<MethodAssociation<SampleDTO>>();
 
 	/**
 	 * relates columns to entries in map
@@ -74,90 +103,30 @@ public class SampleParser {
 		samples = new HashSet<SampleDTO>();
 		colMethods = new HashMap<Integer, Method>();
 		this.is = is;
+
 	}
 
 	/**
-	 * Does the bulk of the bulk upload work.
+	 * 
 	 * 
 	 * @throws IOException
 	 *             if the file could not be read.
 	 */
-	public void initialize() throws IOException {
+	public void initialize() throws IOException, NoSuchMethodException {
+
+		for (Object[] row : sampleMethodMap)
+			methodAssociations.add(new MethodAssociation<SampleDTO>(
+					(String) row[0], (String) row[1], (Class) row[2]));
 
 		final POIFSFileSystem fs = new POIFSFileSystem(is);
 		final HSSFWorkbook wb = new HSSFWorkbook(fs);
 		sheet = wb.getSheetAt(0);
 	}
-
-	/**
-	 * validate validates the spreadsheet, setting errors as necessary.
-	 * 
-	 * @param cell_errors
-	 *            a set to be populated with the indices of cell errors
-	 * @param col_errors
-	 *            a set to be populated with the indices of column errors
-	 * @param row_errors
-	 *            a set to be populated with the indices of row errors
-	 * @return a list of lists of strings that represent the excel sheet.
-	 */
-	public List<List<String>> validate(final Set<Index> cell_errors,
-			final Set<Integer> col_errors, final Set<Integer> row_errors) {
-		final List<List<String>> rows = new ArrayList<List<String>>();
-		final HSSFRow header = sheet.getRow(0);
-		for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
-			final HSSFCell cell = header.getCell((short) i);
-			final String text;
-			try {
-				text = cell.toString(); // getString();
-			} catch (final NullPointerException npe) {
-				// blank column
-				continue;
-			}
-			System.out.println("Validating header " + i + ": " + text);
-			// this seems inefficient, but since it's an array,
-			// this is what a search would do anyway.
-			for (int j = 0; j < sampleMethodMap.length; ++j) {
-				final String expectedName = (String) sampleMethodMap[j][0];
-				if (expectedName.equalsIgnoreCase(text)) {
-					final String methodName = (String) sampleMethodMap[j][1];
-					final Class dataType = (Class) sampleMethodMap[j][2];
-					if (methodName == null || dataType == null) {
-						System.out.println("\tNo method for (" + text + ")");
-						col_errors.add(new Integer(j));
-						continue;
-					}
-					try {
-						final Method method = Sample.class.getMethod(
-								methodName, dataType);
-						colMethods.put(new Integer(i), method);
-					} catch (final NoSuchMethodException nsme) {
-						System.out.println("\tMethod not found (" + methodName
-								+ ")");
-						// don't add anything.
-					}
-					break;
-				}
-			}
-		}
-		// Loop through the rows
-		final Set<Index> new_errors = new HashSet<Index>();
-		for (int i = 1; i < sheet.getPhysicalNumberOfRows(); ++i) {
-			new_errors.clear();
-			System.out.println("Parsing Row " + i);
-			rows.add(validateRow(sheet.getRow(i), new_errors));
-			if (!new_errors.isEmpty()) {
-				cell_errors.addAll(new_errors);
-				row_errors.add(new Integer(i));
-			}
-		}
-
-		return rows;
-	}
-
-	public void parse() throws InvalidFormatException {
-		final HSSFRow header = sheet.getRow(0);
-		if (header == null) {
-			throw new InvalidFormatException();
+	public void parse() {
+		HSSFRow header = null;
+		int k = 0;
+		while (header == null) {
+			header = sheet.getRow(k);
 		}
 		for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
 			final HSSFCell cell = header.getCell((short) i);
@@ -169,28 +138,12 @@ public class SampleParser {
 				continue;
 			}
 			System.out.println("Parsing header " + i + ": " + text);
-			// this seems inefficient, but since it's an array,
-			// this is what a search would do anyway.
 			for (int j = 0; j < sampleMethodMap.length; ++j) {
-				final String expectedName = (String) sampleMethodMap[j][0];
-				if (expectedName.equalsIgnoreCase(text)) {
-					final String methodName = (String) sampleMethodMap[j][1];
-					final Class dataType = (Class) sampleMethodMap[j][2];
-					if (methodName == null || dataType == null) {
-						System.out.println("\tNo method for (" + text + ")");
-						// throw new InvalidFormatException();
-						continue;
+				for (MethodAssociation<SampleDTO> sma : methodAssociations) {
+					if (sma.matches(text)) {
+						colMethods.put(new Integer(i), sma.getMethod());
+						break;
 					}
-					try {
-						final Method method = SampleDTO.class.getMethod(
-								methodName, dataType);
-						colMethods.put(new Integer(i), method);
-					} catch (final NoSuchMethodException nsme) {
-						System.out.println("\tMethod not found (" + methodName
-								+ ")");
-						// don't add anything.
-					}
-					break;
 				}
 			}
 		}
@@ -201,51 +154,6 @@ public class SampleParser {
 		}
 	}
 
-	private List<String> validateRow(final HSSFRow row, final Set<Index> errors) {
-		final List<String> output = new ArrayList<String>();
-		for (Integer i = 0; i < row.getPhysicalNumberOfCells(); ++i) {
-			final HSSFCell cell = row.getCell((short) i.intValue());
-			try {
-				final Method storeMethod = colMethods.get(i);
-				System.out.println("\t Validating Column " + i + ": "
-						+ storeMethod.getName());
-				if (storeMethod == null)
-					continue;
-
-				final Class dataType = storeMethod.getParameterTypes()[0];
-
-				if (dataType == String.class) {
-
-					cell.toString();
-
-				} else if (dataType == double.class) {
-
-					cell.getNumericCellValue();
-
-				} else if (dataType == Timestamp.class) {
-					try {
-						cell.getDateCellValue();
-					} catch (final NumberFormatException nfe) {
-						errors.add(new Index(row.getRowNum(), i));
-					}
-				}
-
-			} catch (final NullPointerException npe) {
-				// empty cell
-				// continue;
-			} catch (final NumberFormatException nfe) {
-				errors.add(new Index(row.getRowNum(), i));
-			} finally {
-				try {
-					output.add(cell.toString());
-				} catch (final NullPointerException npe) {
-					output.add("");
-				}
-			}
-		}
-		return output;
-	}
-
 	/**
 	 * 
 	 * @param row
@@ -253,7 +161,7 @@ public class SampleParser {
 	 * @throws InvalidFormatException
 	 *             if the row isn't of the format designated by the headers
 	 */
-	private void parseRow(final HSSFRow row) throws InvalidFormatException {
+	private void parseRow(final HSSFRow row) {
 		final SampleDTO s = new SampleDTO();
 
 		for (Integer i = 0; i < row.getPhysicalNumberOfCells(); ++i) {
@@ -270,8 +178,15 @@ public class SampleParser {
 
 				if (dataType == String.class) {
 
-					final String data = cell.toString();
-					storeMethod.invoke(s, data);
+					if (storeMethod.getName() != "addReference") {
+						final String[] data = cell.toString()
+								.split("\\s*,\\s*");
+						for (String str : data)
+							storeMethod.invoke(s, str);
+					} else {
+						final String data = cell.toString();
+						storeMethod.invoke(s, data);
+					}
 
 				} else if (dataType == double.class) {
 
@@ -281,9 +196,14 @@ public class SampleParser {
 				} else if (dataType == Timestamp.class) {
 					try {
 						final Date data = cell.getDateCellValue();
-						storeMethod.invoke(s, new Timestamp(data.getTime()));
+						s.setCollectionDate(new Timestamp(data.getTime()));
+						// storeMethod.invoke(s, new Timestamp(data.getTime()));
 					} catch (final NumberFormatException nfe) {
-						// throw new InvalidFormatException();
+						System.out.println("parsing date");
+						final String data = cell.toString();
+						Integer precision = new Integer(0);
+						Timestamp date = parseDate(data, precision);
+						s.setCollectionDate(date);
 					}
 				}
 
@@ -291,22 +211,49 @@ public class SampleParser {
 				// empty cell
 				continue;
 			} catch (final InvocationTargetException ie) {
-				// hopefully it will have been thrown already.
-				throw new InvalidFormatException();
+				// this indicates a bug.
+				ie.printStackTrace();
+				throw new IllegalStateException(ie.getMessage());
 			} catch (final IllegalAccessException iae) {
 				// I believe this is when a method is private and we don't have
 				// access. It should never get here.
-				throw new InvalidFormatException(/*
-													 * "Internal System Error:
-													 * Illegal Method Access"
-													 */);
+				iae.printStackTrace();
+				throw new IllegalStateException(iae.getMessage());
 			}
 		}
 		samples.add(s);
 	}
-
 	public Set<SampleDTO> getSamples() {
 		return samples;
 	}
 
+	private Timestamp parseDate(final String date, Integer precision) {
+		precision = 0;
+		String day = "01", month = "01", year = "1900";
+		// DD-MM-YYYY
+		final Pattern datepat = Pattern
+				.compile("((\\d{2})([-/]))?((\\d{2})([-/]))?(\\d{4})");
+		final Matcher datematch = datepat.matcher(date);
+
+		if (!datematch.find()) {
+			return null;
+		}
+
+		// do we have a month?
+		if (datematch.group(2) != null) {
+			month = datematch.group(2);
+			precision = 365;
+		}
+		// do we have a day?
+		if (datematch.group(5) != null) {
+			day = datematch.group(5);
+			precision = 31;
+		}
+
+		year = datematch.group(7);
+		System.out.println(year + "-" + month + "-" + day
+				+ " 00:00:00.000000000");
+		return Timestamp.valueOf(year + "-" + month + "-" + day
+				+ " 00:00:00.000000000");
+	}
 }
