@@ -11,7 +11,8 @@ public enum SampleMineralProperty implements Property {
 
 		public <T extends MObjectDTO, K> void set(final T sampleMineral,
 				final K amount) {
-			((SampleMineralDTO) sampleMineral).setAmount((Float) amount);
+			((SampleMineralDTO) sampleMineral).setAmount(Float
+					.valueOf((String) amount));
 		}
 	},
 }

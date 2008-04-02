@@ -1,7 +1,6 @@
 package edu.rpi.metpetdb.client.model;
 
-
-public class SampleMineralDTO extends MineralDTO {
+public class SampleMineralDTO extends MObjectDTO {
 
 	private static final long serialVersionUID = 1L;
 	private Float amount;
@@ -21,10 +20,10 @@ public class SampleMineralDTO extends MineralDTO {
 	public void setMineral(final MineralDTO m) {
 		mineral = m;
 		if (m != null) {
-			this.setName(m.getName());
-			this.setParentId(m.getParentId());
-			this.setChildren(m.getChildren());
-			this.setId(m.getId());
+			// this.setName(m.getName());
+			// this.setParentId(m.getParentId());
+			// this.setChildren(m.getChildren());
+			// this.setId(m.getId());
 		}
 	}
 
@@ -65,5 +64,9 @@ public class SampleMineralDTO extends MineralDTO {
 		return mineral != null && amount != null ? mineral.hashCode()
 				+ amount.intValue() : mineral.hashCode();
 		// return mineral.hashCode();
+	}
+
+	public boolean mIsNew() {
+		return false;
 	}
 }

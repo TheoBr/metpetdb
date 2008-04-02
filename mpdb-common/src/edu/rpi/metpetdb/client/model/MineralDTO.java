@@ -2,9 +2,11 @@ package edu.rpi.metpetdb.client.model;
 
 import java.util.Set;
 
+import edu.rpi.metpetdb.client.model.interfaces.IHasChildren;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 
-public class MineralDTO extends MObjectDTO implements IHasName {
+public class MineralDTO extends MObjectDTO implements IHasName,
+		IHasChildren<MineralDTO> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -55,11 +57,10 @@ public class MineralDTO extends MObjectDTO implements IHasName {
 		else if (o instanceof SampleMineralDTO) {
 			return name != null
 					&& name.equals(((SampleMineralDTO) o).getName())
-					&& ((SampleMineralDTO) o).getId() == id;
+					&& ((SampleMineralDTO) o).getMineral().getId() == id;
 		} else
 			return false;
 	}
-
 	public int hashCode() {
 		return name != null ? name.hashCode() + id : 0;
 	}

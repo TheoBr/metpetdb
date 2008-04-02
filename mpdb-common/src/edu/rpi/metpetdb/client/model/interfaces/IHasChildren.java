@@ -1,11 +1,9 @@
 package edu.rpi.metpetdb.client.model.interfaces;
 
-import java.util.List;
+import java.util.Collection;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+public interface IHasChildren<T> {
 
-public interface IHasChildren {
-
-	public <T extends MObjectDTO> List<T> getChildren();
+	public Collection<T> getChildren();
 
 }
