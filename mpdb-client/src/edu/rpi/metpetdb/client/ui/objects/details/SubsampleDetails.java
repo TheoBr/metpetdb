@@ -32,29 +32,30 @@ public class SubsampleDetails extends FlowPanel {
 			new AddImageAttribute(MpDb.doc.Subsample_images),
 			new TextAttribute(MpDb.oc.Subsample_imageCount).setReadOnly(true),
 			new TextAttribute(MpDb.oc.Subsample_analysisCount)
-					.setReadOnly(true), };
+					.setReadOnly(true),
+	};
 
-	private final ObjectEditorPanel p_subsample;
+	private final ObjectEditorPanel<SubsampleDTO> p_subsample;
 	private long subsampleId;
 	private ServerOp continuation;
 	private String sampleAlias;
 
 	public SubsampleDetails() {
 		final SubsampleDetails me = this;
-		p_subsample = new ObjectEditorPanel(subsampleAtts,
+		p_subsample = new ObjectEditorPanel<SubsampleDTO>(subsampleAtts,
 				LocaleHandler.lc_text.addSubsample(), LocaleHandler.lc_text
 						.addSubsampleDescription(sampleAlias)) {
-			protected void loadBean(final AsyncCallback ac) {
+			protected void loadBean(final AsyncCallback<SubsampleDTO> ac) {
 				final SubsampleDTO s = (SubsampleDTO) getBean();
 				MpDb.subsample_svc.details(s != null && !s.mIsNew() ? s.getId()
 						: subsampleId, ac);
 			}
 
-			protected void saveBean(final AsyncCallback ac) {
+			protected void saveBean(final AsyncCallback<SubsampleDTO> ac) {
 				MpDb.subsample_svc.save((SubsampleDTO) getBean(), ac);
 			}
 
-			protected void deleteBean(final AsyncCallback ac) {
+			protected void deleteBean(final AsyncCallback<Object> ac) {
 				MpDb.subsample_svc.delete(((SubsampleDTO) getBean()).getId(),
 						ac);
 			}

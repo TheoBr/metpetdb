@@ -15,14 +15,12 @@ import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
 
-public abstract class ObjectEditorPanel extends DetailsPanel
-		implements
-			ClickListener,
-			UsesCurrentUser {
+public abstract class ObjectEditorPanel<T> extends DetailsPanel implements
+		ClickListener, UsesCurrentUser {
 	private final Button edit;
 	private final Button delete;
-	 final Button cancel;
-	 final Button save;
+	final Button cancel;
+	final Button save;
 
 	protected ObjectEditorPanel(final GenericAttribute[] atts,
 			final String header, final String description) {
@@ -36,7 +34,9 @@ public abstract class ObjectEditorPanel extends DetailsPanel
 		save.setVisible(false);
 		delete.setVisible(false);
 
-		init(atts, new Button[]{edit, cancel, save, delete},true,true);
+		init(atts, new Button[] {
+				edit, cancel, save, delete
+		}, true, true);
 	}
 
 	protected ObjectEditorPanel(final GenericAttribute[] atts) {
@@ -99,7 +99,7 @@ public abstract class ObjectEditorPanel extends DetailsPanel
 				throw new LoginRequiredException();
 		}
 	}
-	
+
 	void doDelete() {
 		setEnabled(false);
 		delete();
@@ -111,18 +111,18 @@ public abstract class ObjectEditorPanel extends DetailsPanel
 	}
 
 	void doSave() {
-		new FormOp(this) {
+		new FormOp<T>(this) {
 			protected void onSubmit() {
 				saveBean(this);
 			}
-			public void onSuccess(final Object result) {
+			public void onSuccess(final T result) {
 				onSaveCompletion((MObjectDTO) result);
 			}
 		}.begin();
 	}
-	
+
 	public void delete() {
-		new ServerOp() {
+		new ServerOp<Object>() {
 			public void begin() {
 				deleteBean(this);
 			}
@@ -133,11 +133,11 @@ public abstract class ObjectEditorPanel extends DetailsPanel
 	}
 
 	public void load() {
-		new ServerOp() {
+		new ServerOp<T>() {
 			public void begin() {
 				loadBean(this);
 			}
-			public void onSuccess(final Object result) {
+			public void onSuccess(final T result) {
 				onLoadCompletion((MObjectDTO) result);
 			}
 		}.begin();
@@ -166,10 +166,10 @@ public abstract class ObjectEditorPanel extends DetailsPanel
 		save.setEnabled(true);
 		setActiveButton(save);
 	}
-	
-	protected abstract void deleteBean(final AsyncCallback ac);
 
-	protected abstract void loadBean(final AsyncCallback ac);
+	protected abstract void deleteBean(final AsyncCallback<Object> ac);
+
+	protected abstract void loadBean(final AsyncCallback<T> ac);
 
 	protected boolean canEdit() {
 		return false;
@@ -177,7 +177,7 @@ public abstract class ObjectEditorPanel extends DetailsPanel
 	protected boolean canDelete() {
 		return canEdit();
 	}
-	protected void saveBean(final AsyncCallback ac) {
+	protected void saveBean(final AsyncCallback<T> ac) {
 		throw new UnsupportedOperationException();
 	}
 	protected void onSaveCompletion(final MObjectDTO result) {

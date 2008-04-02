@@ -259,7 +259,7 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 			public void onCellClicked(SourcesTableEvents sender, int row,
 					int cell) {
 				columns[cell].handleClickEvent((MObjectDTO) scrollTable
-						.getRowValue(row - 1), row - 1);
+						.getRowValue(row), row);
 
 			}
 

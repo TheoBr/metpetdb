@@ -43,7 +43,7 @@
 			<arg value="${build}" />
 			<arg value="${app_name}" />
 			<arg value="-style" />
-			<arg value="OBF" />
+			<arg value="PRETTY" />
 		</java>
 	</target>
 
