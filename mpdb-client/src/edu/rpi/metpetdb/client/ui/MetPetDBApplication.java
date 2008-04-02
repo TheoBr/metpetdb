@@ -275,11 +275,11 @@ public class MetPetDBApplication implements EntryPoint {
 		mySamples.addItem(LocaleHandler.lc_text.mySamplesMenu_AllMySamples(),
 				TokenSpace.samplesForUser);
 
-		mySamples.addItem(
-				LocaleHandler.lc_text.mySamplesMenu_FavoriteSamples(),
-				new MMenuBar(false));
-		mySamples.addItem(LocaleHandler.lc_text.mySamplesMenu_NewestSamples(),
-				new MMenuBar(false));
+		// mySamples.addItem(
+		// LocaleHandler.lc_text.mySamplesMenu_FavoriteSamples(),
+		// new MMenuBar(false));
+		// mySamples.addItem(LocaleHandler.lc_text.mySamplesMenu_NewestSamples(),
+		// new MMenuBar(false));
 		mySamples.addItem(LocaleHandler.lc_text.mySamplesMenu_EnterSample(),
 				TokenSpace.enterSample);
 
@@ -291,7 +291,7 @@ public class MetPetDBApplication implements EntryPoint {
 		search.addItem(LocaleHandler.lc_text.searchMenu_AllPublicSamples(),
 				TokenSpace.allPublicSamples);
 
-		final MMenuBar news = new MMenuBar(false);
+		// final MMenuBar news = new MMenuBar(false);
 
 		final MMenuBar about = new MMenuBar(true);
 		about.addItem(LocaleHandler.lc_text.aboutMenu_Introduction(),
@@ -323,20 +323,20 @@ public class MetPetDBApplication implements EntryPoint {
 			}
 		});
 
-		final MMenuBar people = new MMenuBar(false);
-		final MMenuBar faq = new MMenuBar(false);
-		final MMenuBar wiki = new MMenuBar(false);
+		// final MMenuBar people = new MMenuBar(false);
+		// final MMenuBar faq = new MMenuBar(false);
+		// final MMenuBar wiki = new MMenuBar(false);
 
 		hdrnav.addItem(LocaleHandler.lc_text.homeMenu(),
 				TokenSpace.introduction);
 		hdrnav.addItem(LocaleHandler.lc_text.mySamplesMenu(), mySamples);
 		hdrnav.addItem(LocaleHandler.lc_text.projectMenu(), projects);
 		hdrnav.addItem(LocaleHandler.lc_text.searchMenu(), search);
-		hdrnav.addItem(LocaleHandler.lc_text.newsMenu(), news);
+		// hdrnav.addItem(LocaleHandler.lc_text.newsMenu(), news);
 		hdrnav.addItem(LocaleHandler.lc_text.aboutMenu(), about);
-		hdrnav.addItem(LocaleHandler.lc_text.peopleMenu(), people);
-		hdrnav.addItem(LocaleHandler.lc_text.faqMenu(), faq);
-		hdrnav.addItem(LocaleHandler.lc_text.wikiMenu(), wiki);
+		// hdrnav.addItem(LocaleHandler.lc_text.peopleMenu(), people);
+		// hdrnav.addItem(LocaleHandler.lc_text.faqMenu(), faq);
+		// hdrnav.addItem(LocaleHandler.lc_text.wikiMenu(), wiki);
 		hdrnav.addItem("test bulk upload", TokenSpace.bulkUpload);
 		hdrnav.addItem("regenerate constraints", new Command() {
 			public void execute() {
