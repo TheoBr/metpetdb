@@ -111,7 +111,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		if (s.getMinerals() != null) {
 			final Set<SampleMineral> mineralsToAdd = new HashSet<SampleMineral>();
 			for (SampleMineral sm : s.getMinerals()) {
-				final Query minerals = namedQuery("edu.rpi.metpetdb.server.model.SampleMinerals");
+				final Query minerals = namedQuery("Mineral.byName");
 				minerals.setString("name", sm.getMineral().getName());
 				if (minerals.uniqueResult() != null) {
 					s.getMinerals().remove(sm);
