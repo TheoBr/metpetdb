@@ -45,7 +45,7 @@ public class Sample extends MObject implements IHasName {
 
 	private Set<Project> projects;
 
-	@IndexedEmbedded(depth = 1, prefix = "mineral_")
+	@IndexedEmbedded(prefix = "sampleMineral_")
 	private Set<SampleMineral> minerals;
 
 	private Set<Image> images;
@@ -306,15 +306,13 @@ public class Sample extends MObject implements IHasName {
 		references = r;
 	}
 
-	public final Set<SampleComment> getComments() {
+	public Set<SampleComment> getComments() {
 		return comments;
 	}
 
-	public final void setComments(Set<SampleComment> comments) {
+	public void setComments(Set<SampleComment> comments) {
 		this.comments = comments;
 	}
-	
-		
 
 	public void addReference(final String name) {
 		if (references == null)

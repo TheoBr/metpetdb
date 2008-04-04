@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.server.search;
 
-import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +22,9 @@ import edu.rpi.metpetdb.client.model.properties.SearchProperty;
 import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
+import edu.rpi.metpetdb.server.model.Mineral;
 import edu.rpi.metpetdb.server.model.Sample;
+import edu.rpi.metpetdb.server.model.SampleMineral;
 import edu.rpi.metpetdb.server.model.User;
 
 public class HibernateSearchTest extends DatabaseTestCase {
@@ -131,10 +132,15 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final Transaction tx = fullTextSession.beginTransaction();
 
 		System.out.println("in multifield search");
-		final String[] searchFor = { "000000004", "rockie rock"};
-		final String[] columnsIn = { "sesarNumber", "rockType"};
-		final BooleanClause.Occur[] flags = { BooleanClause.Occur.MUST,
-				BooleanClause.Occur.MUST };
+		final String[] searchFor = {
+				"000000004", "rockie rock"
+		};
+		final String[] columnsIn = {
+				"sesarNumber", "rockType"
+		};
+		final BooleanClause.Occur[] flags = {
+				BooleanClause.Occur.MUST, BooleanClause.Occur.MUST
+		};
 
 		/*
 		 * BooleanClause.Occur[] flags = {BooleanClause.Occur.SHOULD,
@@ -165,10 +171,15 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final Transaction tx = fullTextSession.beginTransaction();
 
 		System.out.println("in test join");
-		final String[] searchFor = { "000000004", "anthony" };
-		final String[] columnsIn = { "sesarNumber", "user_username" };
-		final BooleanClause.Occur[] flags = { BooleanClause.Occur.MUST,
-				BooleanClause.Occur.MUST };// , BooleanClause.Occur.MUST};
+		final String[] searchFor = {
+				"000000004", "anthony"
+		};
+		final String[] columnsIn = {
+				"sesarNumber", "user_username"
+		};
+		final BooleanClause.Occur[] flags = {
+				BooleanClause.Occur.MUST, BooleanClause.Occur.MUST
+		};// , BooleanClause.Occur.MUST};
 
 		/*
 		 * BooleanClause.Occur[] flags = {BooleanClause.Occur.SHOULD,
@@ -194,7 +205,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	@Test
 	public void testSearchSampleSearch() {
 		final SearchSampleDTO searchSamp = new SearchSampleDTO();
-		//searchSamp.setSesarNumber("000000000");
+		// searchSamp.setSesarNumber("000000000");
 		searchSamp.setAlias("1");
 		searchSamp.addPossibleRockType("logitech");
 		searchSamp.addPossibleRockType("rockie rock");
@@ -212,26 +223,24 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		String columnName;
 		Object methodResult = null;
 		SearchProperty[] enums = SearchSampleProperty.class.getEnumConstants();
-		for (SearchProperty i: enums) {
+		for (SearchProperty i : enums) {
 			columnName = i.columnName();
 			methodResult = i.get(searchSamp);
 			if (methodResult == null) {
-			} 			
-			else {
+			} else {
 				if (methodResult instanceof Set) {
 					for (Object o : (Set) methodResult) {
-						System.out.println("adding a should for variable " + columnName + " with value "
-								+ o.toString());
+						System.out.println("adding a should for variable "
+								+ columnName + " with value " + o.toString());
 						searchForValue.add(o.toString());
 						columnsIn.add(columnName);
 						flags.add(BooleanClause.Occur.SHOULD);
 					}
 				} else {
-					if(columnName.equals("publicData"))
-					{}
-					else
-					{
-						System.out.println("adding a must for variable " + columnName + " with value "
+					if (columnName.equals("publicData")) {
+					} else {
+						System.out.println("adding a must for variable "
+								+ columnName + " with value "
 								+ methodResult.toString());
 						searchForValue.add(methodResult.toString());
 						columnsIn.add(columnName);
@@ -248,7 +257,8 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		searchForValue.toArray(searchArray);
 		final String columnsArray[] = new String[columnsIn.size()];
 		columnsIn.toArray(columnsArray);
-		final BooleanClause.Occur flagsArray[] = new BooleanClause.Occur[flags.size()];
+		final BooleanClause.Occur flagsArray[] = new BooleanClause.Occur[flags
+				.size()];
 		flags.toArray(flagsArray);
 		try {
 			final Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
@@ -265,6 +275,34 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		} catch (final ParseException e) {
 		}
 
+		tx.commit();
+	}
+
+	@Test
+	public void testSampleContainsMineral() {
+		final Session session = InitDatabase.getSession();
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
+
+		final Transaction tx = fullTextSession.beginTransaction();
+
+		final TermQuery termQuery = new TermQuery(new Term(
+				"sampleMineral_mineral_name", "silicates"));
+		// final TermQuery termQuery = new TermQuery(new Term(
+		// "sampleMineral_amount", "0.0"));
+		final org.hibernate.Query hibQuery = fullTextSession
+				.createFullTextQuery(termQuery, Sample.class);
+		final List<Sample> result = hibQuery.list();
+
+		for (final Sample s : result) {
+			final Set<SampleMineral> minerals = s.getMinerals();
+			for (final SampleMineral sm : minerals) {
+				final Mineral m = sm.getMineral();
+				System.out.println("find sample with mineral " + m.getName());
+			}
+		}
+
+		assertEquals(1, result.size());
 		tx.commit();
 	}
 }

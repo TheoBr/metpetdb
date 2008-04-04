@@ -1,9 +1,17 @@
 package edu.rpi.metpetdb.server.model;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.Store;
+
 public class SampleMineral extends MObject {
 	private static final long serialVersionUID = 1L;
 
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private Float amount;
+
+	@IndexedEmbedded(depth = 1, prefix = "mineral_")
 	private Mineral mineral;
 
 	public void setAmount(final Float f) {

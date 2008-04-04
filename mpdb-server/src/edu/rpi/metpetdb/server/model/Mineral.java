@@ -2,23 +2,17 @@ package edu.rpi.metpetdb.server.model;
 
 import java.util.Set;
 
-import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
 import edu.rpi.metpetdb.client.model.interfaces.IHasChildren;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 
-@Indexed
 public class Mineral extends MObject implements IHasName {
 	private static final long serialVersionUID = 1L;
-
-	@DocumentId
 	private short id;
 	private Short parentId;
-
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String name;
 
