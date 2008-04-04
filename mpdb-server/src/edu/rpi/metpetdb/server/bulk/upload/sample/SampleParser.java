@@ -7,11 +7,9 @@ import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,7 +35,7 @@ public class SampleParser {
 
 	private final InputStream is;
 	private HSSFSheet sheet;
-	private final Set<SampleDTO> samples;
+	private final List<SampleDTO> samples;
 	/**
 	 * sampleMethodMap[][0] === name in table sampleMethodMap[][1] === method to
 	 * call on Sample to store data sampleMethodMap[][2] === parameter to the
@@ -55,9 +53,9 @@ public class SampleParser {
 			{
 					"type", "setRockType", String.class
 			},
-			// {
-			// "comment", "addComment", String.class
-			// },
+			{
+					"comment", "addComment", String.class
+			},
 			{
 					"latitude", "setLatitude", double.class
 			},
@@ -80,9 +78,10 @@ public class SampleParser {
 					"reference", "addReference", String.class
 			}, {
 					"grade", "addMetamorphicGrade", String.class
-			}, /*
-			 * { "mineral", "addMineral", String.class }
-			 */
+			}, {
+					"mineral", "addMineral", String.class
+			}
+
 	};
 
 	private final static List<MethodAssociation<SampleDTO>> methodAssociations = new LinkedList<MethodAssociation<SampleDTO>>();
@@ -96,11 +95,9 @@ public class SampleParser {
 	 * 
 	 * @param is
 	 *            the input stream that points to a spreadsheet
-	 * @param u
-	 *            the user to whom to attribute the samples created
 	 */
 	public SampleParser(final InputStream is) {
-		samples = new HashSet<SampleDTO>();
+		samples = new LinkedList<SampleDTO>();
 		colMethods = new HashMap<Integer, Method>();
 		this.is = is;
 
@@ -112,15 +109,22 @@ public class SampleParser {
 	 * @throws IOException
 	 *             if the file could not be read.
 	 */
-	public void initialize() throws IOException, NoSuchMethodException {
+	public void initialize() throws InvalidFormatException,
+			NoSuchMethodException {
 
-		for (Object[] row : sampleMethodMap)
-			methodAssociations.add(new MethodAssociation<SampleDTO>(
-					(String) row[0], (String) row[1], (Class) row[2]));
+		try {
+			if (methodAssociations.isEmpty())
+				for (Object[] row : sampleMethodMap)
+					methodAssociations.add(new MethodAssociation<SampleDTO>(
+							(String) row[0], (String) row[1], (Class) row[2],
+							new SampleDTO()));
 
-		final POIFSFileSystem fs = new POIFSFileSystem(is);
-		final HSSFWorkbook wb = new HSSFWorkbook(fs);
-		sheet = wb.getSheetAt(0);
+			final POIFSFileSystem fs = new POIFSFileSystem(is);
+			final HSSFWorkbook wb = new HSSFWorkbook(fs);
+			sheet = wb.getSheetAt(0);
+		} catch (IOException e) {
+			throw new InvalidFormatException();
+		}
 	}
 	public void parse() {
 		HSSFRow header = null;
@@ -212,8 +216,9 @@ public class SampleParser {
 				continue;
 			} catch (final InvocationTargetException ie) {
 				// this indicates a bug.
-				ie.printStackTrace();
-				throw new IllegalStateException(ie.getMessage());
+				ie.getTargetException().printStackTrace();
+				// ie.printStackTrace();
+				// throw new IllegalStateException(ie.getMessage());
 			} catch (final IllegalAccessException iae) {
 				// I believe this is when a method is private and we don't have
 				// access. It should never get here.
@@ -223,7 +228,7 @@ public class SampleParser {
 		}
 		samples.add(s);
 	}
-	public Set<SampleDTO> getSamples() {
+	public List<SampleDTO> getSamples() {
 		return samples;
 	}
 

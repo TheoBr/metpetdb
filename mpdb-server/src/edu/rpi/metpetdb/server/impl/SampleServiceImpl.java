@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -18,9 +19,11 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.model.MetamorphicGrade;
+import edu.rpi.metpetdb.server.model.Mineral;
 import edu.rpi.metpetdb.server.model.Reference;
 import edu.rpi.metpetdb.server.model.Region;
 import edu.rpi.metpetdb.server.model.Sample;
+import edu.rpi.metpetdb.server.model.SampleMineral;
 
 public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	private static final long serialVersionUID = 1L;
@@ -54,7 +57,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		return (SampleDTO) clone(s);
 	}
 
-	protected void save(final Set<SampleDTO> samples)
+	protected void save(final Collection<SampleDTO> samples)
 			throws SampleAlreadyExistsException, ValidationException,
 			LoginRequiredException {
 		for (SampleDTO sample : samples) {
@@ -69,6 +72,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		replaceRegion(s);
 		replaceMetamorphicGrade(s);
 		replaceReferences(s);
+		replaceSampleMinerals(s);
 		try {
 
 			if (s.mIsNew())
@@ -101,6 +105,23 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		commit();
 		return cloneBean(s);
 
+	}
+
+	private void replaceSampleMinerals(final Sample s) {
+		if (s.getMinerals() != null) {
+			final Set<SampleMineral> mineralsToAdd = new HashSet<SampleMineral>();
+			for (SampleMineral sm : s.getMinerals()) {
+				final Query minerals = namedQuery("edu.rpi.metpetdb.server.model.SampleMinerals");
+				minerals.setString("name", sm.getMineral().getName());
+				if (minerals.uniqueResult() != null) {
+					s.getMinerals().remove(sm);
+					final SampleMineral newsm = new SampleMineral();
+					newsm.setMineral((Mineral) minerals.uniqueResult());
+					mineralsToAdd.add(newsm);
+				}
+			}
+			s.getMinerals().addAll(mineralsToAdd);
+		}
 	}
 
 	private void replaceRegion(final Sample s) {

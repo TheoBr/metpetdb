@@ -24,6 +24,11 @@
     where m.id = :id
   </query>
  
+  <query name="Mineral.byName">
+    from Mineral m
+    where m.name = :name
+  </query>
+  
   <query name="Mineral.all,size">
     select count(*) from Mineral m
   </query>

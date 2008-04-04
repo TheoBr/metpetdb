@@ -2,7 +2,9 @@ package edu.rpi.metpetdb.server.impl;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -19,9 +21,11 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 	private static final long serialVersionUID = 1L;
 	private static String baseFolder;
 
-	public String saveSamplesFromSpreadsheet(final String fileOnServer)
-			throws InvalidFormatException, LoginRequiredException,
-			SampleAlreadyExistsException, ValidationException {
+	public Map<Integer, ValidationException> saveSamplesFromSpreadsheet(
+			final String fileOnServer) throws InvalidFormatException,
+			LoginRequiredException, SampleAlreadyExistsException,
+			ValidationException {
+		final Map<Integer, ValidationException> errors = new TreeMap<Integer, ValidationException>();
 		try {
 			currentSession()
 					.createSQLQuery(
@@ -34,35 +38,39 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 				sp.initialize();
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
-			} catch (IOException e) {
-				throw new InvalidFormatException();
 			}
 
 			sp.parse();
 			final UserDTO u = (UserDTO) cloneBean(byId("User", currentUser()));
-			final Set<SampleDTO> samples = sp.getSamples();
+			final List<SampleDTO> samples = sp.getSamples();
 			// TODO maybe have sp.getSamples() take in the owner??
-			for (SampleDTO s : samples)
+			Integer i = 2;
+			for (SampleDTO s : samples) {
 				s.setOwner(u);
-
-			try {
-				save(samples);
-			} catch (final SampleAlreadyExistsException saee) {
-				throw saee;
-			} catch (final ValidationException ve) {
-				throw ve;
-			} catch (final LoginRequiredException lre) {
-				throw lre;
+				try {
+					doc.validate(s);
+				} catch (ValidationException e) {
+					errors.put(i, e);
+				}
+				++i;
 			}
+
+			if (errors.isEmpty())
+				try {
+					save(samples);
+					return null;
+				} catch (final ValidationException e) {
+					throw new IllegalStateException(
+							"Objects passed and subsequently failed validation.");
+				}
 		} catch (final NoSuchObjectException nsoe) {
 			throw new LoginRequiredException();
 		} catch (final IOException ioe) {
 			throw new IllegalStateException(ioe.getMessage());
 		}
 
-		return "Samples saved.";
+		return errors;
 	}
-
 	public static void setBaseFolder(String baseFolder) {
 		BulkUploadServiceImpl.baseFolder = baseFolder;
 	}

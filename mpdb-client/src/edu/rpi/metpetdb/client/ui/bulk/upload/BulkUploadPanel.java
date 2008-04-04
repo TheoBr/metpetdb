@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.ui.bulk.upload;
 
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -9,11 +11,14 @@ import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
@@ -28,6 +33,9 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 	private final VerticalPanel vp;
 	private final Label error;
 	private final HorizontalPanel hp;
+	private final RadioButton samples;
+	private final RadioButton analyses;
+	private final Grid grid;
 
 	public BulkUploadPanel() {
 		upload = new Button(LocaleHandler.lc_text.buttonUploadSpreadsheet(),
@@ -44,15 +52,23 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 		fu.setWidth("300");
 		fu.setStyleName(Styles.REQUIRED_FIELD);
 
+		samples = new RadioButton("type", "Samples");
+		samples.setChecked(true);
+		analyses = new RadioButton("type", "Chemical Analyses");
 		hp = new HorizontalPanel();
+		hp.add(samples);
+		hp.add(analyses);
 		hp.add(upload);
 
 		error = new Label("...");
+
+		grid = new Grid();
 
 		vp = new VerticalPanel();
 		vp.add(error);
 		vp.add(fu);
 		vp.add(hp);
+		vp.add(grid);
 
 		fp.setWidget(vp);
 
@@ -70,33 +86,34 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 					error.setText("File uploaded successfully, please"
 							+ " wait while it is saved to the database...");
 					// TODO: This is bad! It's to strip the <pre> and </pre>
-					// tags
-					// that get stuck on the string for some reason
+					// tags that get stuck on the string for some reason
 					final String fileOnServer = results.substring(5, results
 							.length() - 6);
-					new ServerOp<String>() {
+					new ServerOp<Map<Integer, ValidationException>>() {
 						public void begin() {
-							MpDb.bulkUpload_svc.saveSamplesFromSpreadsheet(
-									fileOnServer, this);
+							if (samples.isChecked()) {
+								MpDb.bulkUpload_svc.saveSamplesFromSpreadsheet(
+										fileOnServer, this);
+							} else {
+								// TODO: chemical analyses
+							}
 						}
 
-						public void onSuccess(final String result) {
-							error.setText(result);
-							// List<List<String>> spreadsheet =
-							// (List<List<String>>)
-							// result;
-							// Grid g = new Grid(spreadsheet.size(), spreadsheet
-							// .get(0).size());
-							// int i = 0, j = 0;
-							// for (List<String> lst : spreadsheet) {
-							// j = 0;
-							// for (String str : lst) {
-							// g.setText(i, j, str);
-							// ++j;
-							// }
-							// ++i;
-							// }
-							// vp.add(g);
+						public void onSuccess(
+								final Map<Integer, ValidationException> result) {
+							if (result == null)
+								error.setText("Items Saved Successfully");
+							else {
+								grid.resize(result.size() + 1, 2);
+								int i = 1;
+								grid.setText(0, 0, "Spreadsheet Line:");
+								grid.setText(0, 1, "Error:");
+								for (Map.Entry<Integer, ValidationException> e : result
+										.entrySet()) {
+									grid.setText(i, 0, e.getKey().toString());
+									grid.setText(i++, 1, e.getValue().format());
+								}
+							}
 						}
 					}.begin();
 				}
@@ -119,7 +136,6 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 
 		setWidget(f);
 	}
-
 	protected void onLoad() {
 		super.onLoad();
 	}

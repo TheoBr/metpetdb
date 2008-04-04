@@ -53,6 +53,8 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 
 	private Set<ReferenceDTO> references;
 
+	private Set<SampleCommentDTO> comments;
+
 	private int subsampleCount;
 
 	public long getId() {
@@ -307,6 +309,23 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 		final ReferenceDTO m = new ReferenceDTO();
 		m.setName(name);
 		references.add(m);
+	}
+
+	public Set<SampleCommentDTO> getComments() {
+		return comments;
+	}
+
+	public void setComments(Set<SampleCommentDTO> comments) {
+		this.comments = comments;
+	}
+
+	public void addComment(final String comment) {
+		if (comments == null)
+			comments = new HashSet<SampleCommentDTO>();
+		SampleCommentDTO sc = new SampleCommentDTO();
+		sc.setSample(this);
+		sc.setText(comment);
+		this.comments.add(sc);
 	}
 
 	public String getName() {
