@@ -4,11 +4,11 @@ import java.sql.Timestamp;
 import java.util.Set;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
-import edu.rpi.metpetdb.client.model.ElementDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisElementDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxideDTO;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.MineralDTO;
-import edu.rpi.metpetdb.client.model.OxideDTO;
 import edu.rpi.metpetdb.client.model.ReferenceDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 
@@ -168,7 +168,7 @@ public enum ChemicalAnalysisProperty implements Property {
 		}
 	},
 	elements {
-		public <T extends MObjectDTO> Set<ElementDTO> get(
+		public <T extends MObjectDTO> Set<ChemicalAnalysisElementDTO> get(
 				final T chemicalAnalysis) {
 			return ((ChemicalAnalysisDTO) chemicalAnalysis).getElements();
 		}
@@ -176,18 +176,19 @@ public enum ChemicalAnalysisProperty implements Property {
 		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
 				final K elements) {
 			((ChemicalAnalysisDTO) chemicalAnalysis)
-					.setElements((Set<ElementDTO>) elements);
+					.setElements((Set<ChemicalAnalysisElementDTO>) elements);
 		}
 	},
 	oxides {
-		public <T extends MObjectDTO> Set<OxideDTO> get(final T chemicalAnalysis) {
+		public <T extends MObjectDTO> Set<ChemicalAnalysisOxideDTO> get(
+				final T chemicalAnalysis) {
 			return ((ChemicalAnalysisDTO) chemicalAnalysis).getOxides();
 		}
 
 		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
 				final K oxides) {
 			((ChemicalAnalysisDTO) chemicalAnalysis)
-					.setOxides((Set<OxideDTO>) oxides);
+					.setOxides((Set<ChemicalAnalysisOxideDTO>) oxides);
 		}
 	};
 }

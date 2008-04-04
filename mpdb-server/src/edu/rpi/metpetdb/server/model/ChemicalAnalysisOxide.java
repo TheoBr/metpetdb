@@ -1,6 +1,6 @@
 package edu.rpi.metpetdb.server.model;
 
-public class ChemicalAnalysisOxide extends Element {
+public class ChemicalAnalysisOxide extends MObject {
 	private static final long serialVersionUID = 1L;
 
 	private Float amount;
@@ -40,12 +40,6 @@ public class ChemicalAnalysisOxide extends Element {
 
 	public void setOxide(final Oxide m) {
 		oxide = m;
-		if (m != null) {
-			this.setName(m.getSpecies());
-			this.setId(m.getOxideId());
-			// this.setName(m.getName());
-			// this.setId(m.getId());
-		}
 	}
 
 	public Oxide getOxide() {
@@ -81,5 +75,10 @@ public class ChemicalAnalysisOxide extends Element {
 		return oxide != null && amount != null ? oxide.hashCode()
 				+ amount.intValue() : oxide.hashCode();
 		// return mineral.hashCode();
+	}
+
+	@Override
+	public boolean mIsNew() {
+		return false;
 	}
 }

@@ -1,7 +1,6 @@
 package edu.rpi.metpetdb.client.model;
 
-
-public class ChemicalAnalysisElementDTO extends ElementDTO {
+public class ChemicalAnalysisElementDTO extends MObjectDTO {
 
 	private static final long serialVersionUID = 1L;
 	private Float amount;
@@ -41,10 +40,6 @@ public class ChemicalAnalysisElementDTO extends ElementDTO {
 
 	public void setElement(final ElementDTO m) {
 		element = m;
-		if (m != null) {
-			this.setName(m.getName());
-			this.setId(m.getId());
-		}
 	}
 
 	public ElementDTO getElement() {
@@ -68,8 +63,8 @@ public class ChemicalAnalysisElementDTO extends ElementDTO {
 					.equals(element);
 			final boolean two = ((ChemicalAnalysisElementDTO) o).getAmount() == null ? ((ChemicalAnalysisElementDTO) o)
 					.getAmount() == amount
-					: ((ChemicalAnalysisElementDTO) o).getAmount()
-							.equals(amount);
+					: ((ChemicalAnalysisElementDTO) o).getAmount().equals(
+							amount);
 			return one && two;
 		} else if (o instanceof ElementDTO) {
 			return ((ElementDTO) o).equals(element);
@@ -81,5 +76,10 @@ public class ChemicalAnalysisElementDTO extends ElementDTO {
 		return element != null && amount != null ? element.hashCode()
 				+ amount.intValue() : element.hashCode();
 		// return mineral.hashCode();
+	}
+
+	@Override
+	public boolean mIsNew() {
+		return false;
 	}
 }

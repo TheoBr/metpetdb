@@ -23,8 +23,8 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 	private String description;
 	private MineralDTO mineral;
 	private Boolean largeRock;
-	private Set<ElementDTO> elements;
-	private Set<OxideDTO> oxides;
+	private Set<ChemicalAnalysisElementDTO> elements;
+	private Set<ChemicalAnalysisOxideDTO> oxides;
 
 	private transient Widget actualImage;
 	private transient float percentX;
@@ -175,23 +175,23 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 		this.largeRock = largeRock;
 	}
 
-	public void setElements(final Set<ElementDTO> e) {
+	public void setElements(final Set<ChemicalAnalysisElementDTO> e) {
 		elements = e;
 	}
 
-	public Set<ElementDTO> getElements() {
+	public Set<ChemicalAnalysisElementDTO> getElements() {
 		if (elements == null)
-			elements = new HashSet<ElementDTO>();
+			elements = new HashSet<ChemicalAnalysisElementDTO>();
 		return elements;
 	}
 
-	public void setOxides(final Set<OxideDTO> o) {
+	public void setOxides(final Set<ChemicalAnalysisOxideDTO> o) {
 		oxides = o;
 	}
 
-	public Set<OxideDTO> getOxides() {
+	public Set<ChemicalAnalysisOxideDTO> getOxides() {
 		if (oxides == null)
-			oxides = new HashSet<OxideDTO>();
+			oxides = new HashSet<ChemicalAnalysisOxideDTO>();
 		return oxides;
 	}
 

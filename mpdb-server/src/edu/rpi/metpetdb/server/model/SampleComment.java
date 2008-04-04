@@ -8,35 +8,35 @@ public class SampleComment extends MObject {
 	private String text;
 	private int version;
 
-	public final long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public final void setId(long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public final int getVersion() {
+	public int getVersion() {
 		return version;
 	}
 
-	public final void setVersion(int version) {
+	public void setVersion(int version) {
 		this.version = version;
 	}
 
-	public final Sample getSample() {
+	public Sample getSample() {
 		return sample;
 	}
 
-	public final void setSample(Sample sample) {
+	public void setSample(Sample sample) {
 		this.sample = sample;
 	}
 
-	public final String getText() {
+	public String getText() {
 		return text;
 	}
 
-	public final void setText(String text) {
+	public void setText(String text) {
 		this.text = text;
 	}
 

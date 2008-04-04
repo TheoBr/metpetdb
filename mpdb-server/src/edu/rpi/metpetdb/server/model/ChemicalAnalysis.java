@@ -20,8 +20,8 @@ public class ChemicalAnalysis extends MObject {
 	private String description;
 	private Mineral mineral;
 	private Boolean largeRock;
-	private Set<Element> elements;
-	private Set<Oxide> oxides;
+	private Set<ChemicalAnalysisElement> elements;
+	private Set<ChemicalAnalysisOxide> oxides;
 
 	public int getId() {
 		return id;
@@ -127,23 +127,23 @@ public class ChemicalAnalysis extends MObject {
 		this.largeRock = largeRock;
 	}
 
-	public void setElements(final Set<Element> e) {
+	public void setElements(final Set<ChemicalAnalysisElement> e) {
 		elements = e;
 	}
 
-	public Set<Element> getElements() {
+	public Set<ChemicalAnalysisElement> getElements() {
 		if (elements == null)
-			elements = new HashSet<Element>();
+			elements = new HashSet<ChemicalAnalysisElement>();
 		return elements;
 	}
 
-	public void setOxides(final Set<Oxide> o) {
+	public void setOxides(final Set<ChemicalAnalysisOxide> o) {
 		oxides = o;
 	}
 
-	public Set<Oxide> getOxides() {
+	public Set<ChemicalAnalysisOxide> getOxides() {
 		if (oxides == null)
-			oxides = new HashSet<Oxide>();
+			oxides = new HashSet<ChemicalAnalysisOxide>();
 		return oxides;
 	}
 
