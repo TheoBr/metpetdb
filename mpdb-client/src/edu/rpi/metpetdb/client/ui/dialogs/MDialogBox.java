@@ -31,7 +31,7 @@ public class MDialogBox extends DialogBox implements PopupListener,
 	}
 
 	public void show() {
-		hideSelects();
+		// hideSelects();
 		RootPanel.get().add(glassPanel, 0, 0);
 		Window.addWindowResizeListener(this);
 

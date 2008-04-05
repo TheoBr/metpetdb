@@ -12,146 +12,36 @@ import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class DateAttribute extends GenericAttribute {
 	private Timestamp newValue;
-	private static final String[] months = { "January", "February", "March",
-			"April", "May", "June", "July", "August", "September", "October",
-			"November", "December", };
+	private static final String[] months = {
+			"January", "February", "March", "April", "May", "June", "July",
+			"August", "September", "October", "November", "December",
+	};
 
 	public DateAttribute(final TimestampConstraint sc) {
 		super(sc);
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
-		return new Widget[] { new MText(dateToString(get(obj))) };
+		return new Widget[] {
+			new MText(dateToString(get(obj)))
+		};
 	}
 
 	// FIXME update to use gwt incubator date picker
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
-		// final CalendarPanel cp = new CalendarPanel();
-		// final PopupPanel pp = new PopupPanel(true);
-		// CalendarEvent event;
-		//
-		// newValue = get(obj);
-		// event = newValue != null ? cp.addEvent(newValue, false) : null;
-		//
-		// final MLink nextMonth = new MLink("next", "");
-		// final MLink prevMonth = new MLink("prev", "");
-		// final MLink nextYear = new MLink("next", "");
-		// final MLink prevYear = new MLink("prev", "");
-		// final Label currentDate = new Label();
-		// if (event != null)
-		// currentDate.setText(dateToString(event.getEnd()));
-		// final ListBox monthLb = new ListBox();
-		// String[] monthName = {"January", "February", "March", "April", "May",
-		// "June", "July", "August", "September", "October", "November",
-		// "December"};
-		// for (int i = 0; i < monthName.length; ++i) {
-		// monthLb.addItem(monthName[i]);
-		// }
-		// monthLb.addChangeListener(new ChangeListener() {
-		// public void onChange(Widget w) {
-		// cp.setCalendarMonth(((ListBox) w).getSelectedIndex(), Integer
-		// .parseInt(cp.getCurrentYear()));
-		// }
+		// final DatePicker to = new DatePicker();
+		// to.addChangeHandler(new ChangeHandler<Date>() {
+		// public void onChange(ChangeEvent<Date> change) {
+		// newValue.setTime(to.getSelectedDate().getTime());
+		// / }
 		// });
-		// monthLb.setSelectedIndex(cp.getCurrentMonth());
-		//
-		// final ListBox yearLb = new ListBox();
-		// yearLb.addItem(String
-		// .valueOf(Integer.parseInt(cp.getCurrentYear()) - 1));
-		// yearLb.addItem(String.valueOf(Integer.parseInt(cp.getCurrentYear())));
-		// yearLb.addItem(String
-		// .valueOf(Integer.parseInt(cp.getCurrentYear()) + 1));
-		// yearLb.addChangeListener(new ChangeListener() {
-		// public void onChange(Widget w) {
-		// cp.setCalendarMonth(cp.getCurrentMonth(),
-		// Integer.parseInt(yearLb.getItemText(yearLb
-		// .getSelectedIndex())));
-		// }
-		// });
-		// yearLb.setSelectedIndex(1);
-		//
-		// final HorizontalPanel topNav = new HorizontalPanel();
-		// topNav.add(prevYear);
-		// topNav.add(yearLb);
-		// topNav.add(nextYear);
-		//
-		// final HorizontalPanel bottomNav = new HorizontalPanel();
-		// bottomNav.add(prevMonth);
-		// bottomNav.add(monthLb);
-		// bottomNav.add(nextMonth);
-		//
-		// final CalendarListener eventListener = new CalendarListener() {
-		// public void onDateClick(final CalendarDate date) {
-		// final String text = dateToString(date.getDate());
-		// currentDate.setText(text);
-		// newValue = new Timestamp(date.getDate().getTime());
-		// pp.hide();
-		// }
-		// public boolean onEventDateClick(final CalendarDate date) {
-		// return false;
-		// }
-		// public void onMonthChange(final CalendarMonth month) {
-		// // monthName.setText(cp.getCurrentMonthName());
-		// monthLb.setItemSelected(cp.getCurrentMonth(), true);
-		// // yearName.setText(cp.getCurrentYear());
-		// if (cp.getCurrentYear() != yearLb.getItemText(yearLb
-		// .getSelectedIndex())) {
-		// // update lb
-		// yearLb.removeItem(0);
-		// yearLb.removeItem(0);
-		// yearLb.removeItem(0);
-		// yearLb.addItem(String.valueOf(Integer.parseInt(cp
-		// .getCurrentYear()) - 1));
-		// yearLb.addItem(String.valueOf(Integer.parseInt(cp
-		// .getCurrentYear())));
-		// yearLb.addItem(String.valueOf(Integer.parseInt(cp
-		// .getCurrentYear()) + 1));
-		// yearLb.setSelectedIndex(1);
-		// }
-		// }
+		// return new Widget[] {
+		// to
 		// };
-		//
-		// cp.addNextMonthActivator(nextMonth);
-		// cp.addPrevMonthActivator(prevMonth);
-		// cp.addNextYearActivator(nextYear);
-		// cp.addPrevYearActivator(prevYear);
-		// cp.addCalendarListener(eventListener);
-		//
-		// final VerticalPanel vpCal = new VerticalPanel();
-		// // vpCal.add(currentDate);
-		// vpCal.add(topNav);
-		// vpCal.add(cp);
-		// vpCal.add(bottomNav);
-		//
-		// pp.setWidget(vpCal);
-		// pp.setStyleName("calendar");
-		// pp.setVisible(false);
-		//
-		// final HorizontalPanel hp = new HorizontalPanel();
-		// //TODO this is where we change what the calendar link looks like
-		// final MLink showCal = new MLink("show cal", "");
-		//
-		// pp.addPopupListener(new PopupListener() {
-		// public void onPopupClosed(PopupPanel pp, boolean b) {
-		// }
-		// });
-		//
-		// showCal.addClickListener(new ClickListener() {
-		// public void onClick(final Widget w) {
-		// pp.show();
-		// pp.setVisible(true);
-		// pp.setPopupPosition(w.getAbsoluteLeft() - 25, w
-		// .getAbsoluteTop() + 25);
-		// }
-		// });
-		//
-		// hp.add(currentDate);
-		// hp.add(showCal);
-		//
-		// return new Widget[]{hp};
-		return new Widget[] { new Label("broked") };
+		return new Widget[] {
+			new Label("broken")
+		};
 	}
-
 	protected Object get(final Widget editWidget) {
 		return newValue;
 	}

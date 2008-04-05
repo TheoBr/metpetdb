@@ -298,11 +298,12 @@ public class HibernateSearchTest extends DatabaseTestCase {
 			final Set<SampleMineral> minerals = s.getMinerals();
 			for (final SampleMineral sm : minerals) {
 				final Mineral m = sm.getMineral();
-				System.out.println("find sample with mineral " + m.getName());
+				System.out.println("find sample with mineral " + m.getName()
+						+ " my id was " + s.getId());
 			}
 		}
 
-		assertEquals(1, result.size());
+		assertEquals(3, result.size());
 		tx.commit();
 	}
 }

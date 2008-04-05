@@ -1,12 +1,13 @@
 package edu.rpi.metpetdb.server.model;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Store;
 
-import edu.rpi.metpetdb.client.model.interfaces.IHasChildren;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 
 public class Mineral extends MObject implements IHasName {
@@ -16,7 +17,7 @@ public class Mineral extends MObject implements IHasName {
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String name;
 
-	private Set<IHasChildren<Mineral>> children;
+	private Set<Mineral> children;
 
 	public short getId() {
 		return id;
@@ -42,11 +43,11 @@ public class Mineral extends MObject implements IHasName {
 		parentId = i;
 	}
 
-	public void setChildren(final Set<IHasChildren<Mineral>> c) {
+	public void setChildren(final Set<Mineral> c) {
 		children = c;
 	}
 
-	public Set<IHasChildren<Mineral>> getChildren() {
+	public Set<Mineral> getChildren() {
 		return children;
 	}
 
@@ -72,5 +73,21 @@ public class Mineral extends MObject implements IHasName {
 
 	public boolean mIsNew() {
 		return id == 0;
+	}
+
+	/**
+	 * Forces hibernate to load the children as well. We could have put
+	 * lazy=false in Mineral.hbm.xml but then that would cause the children to
+	 * be loaded all the time when we only want it for this constraint.
+	 * 
+	 * @param minerals
+	 */
+	public static void loadChildren(final Collection<Mineral> minerals) {
+		if (minerals == null)
+			return;
+		final Iterator<Mineral> itr = minerals.iterator();
+		while (itr.hasNext()) {
+			loadChildren(itr.next().getChildren());
+		}
 	}
 }

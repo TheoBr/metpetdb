@@ -29,8 +29,9 @@ public class InitDatabase extends TestCase {
 	/**
 	 * Tables excluded from the database backup
 	 */
-	private static final String excludedTables[] = { "geometry_columns",
-			"spatial_ref_sys" };
+	private static final String excludedTables[] = {
+			"geometry_columns", "spatial_ref_sys"
+	};
 
 	public InitDatabase() {
 		DataStore.initFactory();
@@ -38,8 +39,12 @@ public class InitDatabase extends TestCase {
 		s = DataStore.open();
 
 		try {
-			conn = new DatabaseConnection(DataStore.getConfiguration()
-					.buildSettings().getConnectionProvider().getConnection());
+			// conn = new DatabaseConnection(DataStore.getConfiguration()
+			// .buildSettings().getConnectionProvider().getConnection());
+			conn = new DatabaseConnection(
+					((org.hibernate.engine.SessionFactoryImplementor) DataStore
+							.getFactory()).getConnectionProvider()
+							.getConnection());
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
 		}

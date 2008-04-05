@@ -2,11 +2,11 @@ package edu.rpi.metpetdb.client.model;
 
 import java.util.Set;
 
-import edu.rpi.metpetdb.client.model.interfaces.IHasChildren;
+import edu.rpi.metpetdb.client.model.interfaces.HasChildren;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 
 public class MineralDTO extends MObjectDTO implements IHasName,
-		IHasChildren<MineralDTO> {
+		HasChildren<MineralDTO> {
 
 	private static final long serialVersionUID = 1L;
 

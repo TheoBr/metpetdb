@@ -2,7 +2,14 @@ package edu.rpi.metpetdb.client.model.interfaces;
 
 import java.util.Collection;
 
-public interface IHasChildren<T> {
+/**
+ * 
+ * @author anthony
+ * 
+ * @param <T>
+ *            type of the children
+ */
+public interface HasChildren<T> {
 
 	public Collection<T> getChildren();
 

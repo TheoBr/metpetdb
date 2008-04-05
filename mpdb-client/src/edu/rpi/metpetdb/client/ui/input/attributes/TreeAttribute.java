@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.interfaces.IHasChildren;
+import edu.rpi.metpetdb.client.model.interfaces.HasChildren;
 import edu.rpi.metpetdb.client.model.validation.MineralConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
@@ -90,7 +90,9 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 			}
 		}
 		container.setWidget(list);
-		return new Widget[]{container};
+		return new Widget[] {
+			container
+		};
 	}
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id,
@@ -122,7 +124,9 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 			fp.add(expand);
 			fp.add(collapse);
 		}
-		return new Widget[]{fp};
+		return new Widget[] {
+			fp
+		};
 	}
 
 	private TreeItem makeChildren(final Collection parents,
@@ -130,7 +134,7 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 		if (parents != null) {
 			Iterator itr = parents.iterator();
 			while (itr.hasNext()) {
-				final IHasChildren ihc = (IHasChildren) itr.next();
+				final HasChildren ihc = (HasChildren) itr.next();
 				final CheckBox cb = new CheckBox(ihc.toString());
 
 				if (get(obj) != null && get(obj).contains(ihc)
@@ -174,7 +178,7 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 		if (parents != null) {
 			Iterator itr = parents.iterator();
 			while (itr.hasNext()) {
-				final IHasChildren ihc = (IHasChildren) itr.next();
+				final HasChildren ihc = (HasChildren) itr.next();
 				final CheckBox cb = new CheckBox(ihc.toString());
 
 				if (get(obj) != null && get(obj).contains(ihc)

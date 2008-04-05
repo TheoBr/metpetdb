@@ -2,13 +2,14 @@ package edu.rpi.metpetdb.server.bulk.upload.sample;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Set;
+import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.Test;
 
+import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
@@ -32,6 +33,10 @@ public class BulkUploadTest extends DatabaseTestCase {
 			} catch (final NoSuchMethodException nsme) {
 				nsme.printStackTrace();
 				fail("NoSuchMethodException");
+				// } catch (final ValidationException ve) {
+				// ve.printStackTrace();
+			} catch (final InvalidFormatException ife) {
+				ife.printStackTrace();
 			}
 			// final List<List<String>> output = sp.validate(
 			// new HashSet<SampleParser.Index>(), new HashSet<Integer>(),
@@ -58,10 +63,12 @@ public class BulkUploadTest extends DatabaseTestCase {
 				sp.initialize();
 			} catch (final NoSuchMethodException e) {
 				fail("NoSuchMethodException");
+			} catch (final InvalidFormatException ife) {
+				ife.printStackTrace();
 			}
 			sp.parse();
 
-			final Set<SampleDTO> samples = sp.getSamples();
+			final List<SampleDTO> samples = sp.getSamples();
 
 		} catch (final IOException ioe) {
 			fail("IO Exception");

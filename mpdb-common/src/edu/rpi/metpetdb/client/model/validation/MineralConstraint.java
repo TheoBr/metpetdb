@@ -35,6 +35,9 @@ public class MineralConstraint extends PropertyConstraint {
 
 	public void setMinerals(final List<MineralDTO> m) {
 		minerals = m;
-		// fixChildren(m);
+	}
+
+	public Collection<MineralDTO> getParents() {
+		return minerals;
 	}
 }

@@ -313,6 +313,7 @@ public class DataStore {
 			try {
 				final List<Mineral> minerals = session.getNamedQuery(
 						"Mineral.parents").list();
+				Mineral.loadChildren(minerals);
 				mc.setMinerals((List<MineralDTO>) hbm.clone(minerals));
 			} catch (org.hibernate.exception.GenericJDBCException dbe) {
 				session.cancelQuery();
@@ -372,7 +373,6 @@ public class DataStore {
 					+ p.getPersistentClass().getClassName() + " property "
 					+ p.getName() + ".");
 	}
-
 	private static edu.rpi.metpetdb.client.model.properties.Property property(
 			final Class who, final String name) throws IllegalAccessException {
 		try {
