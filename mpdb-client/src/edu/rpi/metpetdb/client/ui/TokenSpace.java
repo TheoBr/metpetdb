@@ -252,6 +252,7 @@ public class TokenSpace implements HistoryListener {
 		register(enterSample);
 		register(newProject);
 		register(bulkUpload);
+		register(search);
 
 		// DefaultPaginationBehavior
 		register(new TokenHandler.NoOp("previousPage"));
