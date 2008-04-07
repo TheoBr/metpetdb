@@ -28,6 +28,7 @@ import edu.rpi.metpetdb.client.ui.objects.details.ProjectDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SubsampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
+import edu.rpi.metpetdb.client.ui.search.Search;
 import edu.rpi.metpetdb.client.ui.user.EditUserProfile;
 import edu.rpi.metpetdb.client.ui.user.UserDetails;
 import edu.rpi.metpetdb.client.ui.user.UserRegistrationPanel;
@@ -123,6 +124,11 @@ public class TokenSpace implements HistoryListener {
 	public static final Screen bulkUpload = new Screen("BulkUpload") {
 		public void executeToken(final String args) {
 			show(new BulkUploadPanel());
+		}
+	};
+	public static final Screen search = new Screen("Search") {
+		public void executeToken(final String args) {
+			show(new Search());
 		}
 	};
 	public static final Screen editProfile = new Screen("EditProfile") {

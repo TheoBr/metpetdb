@@ -290,6 +290,8 @@ public class MetPetDBApplication implements EntryPoint {
 		final MMenuBar search = new MMenuBar(true);
 		search.addItem(LocaleHandler.lc_text.searchMenu_AllPublicSamples(),
 				TokenSpace.allPublicSamples);
+		search.addItem(LocaleHandler.lc_text.searchMenu_TestSearch(),
+				TokenSpace.search);
 
 		// final MMenuBar news = new MMenuBar(false);
 

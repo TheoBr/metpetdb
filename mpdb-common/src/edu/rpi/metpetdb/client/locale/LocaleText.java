@@ -17,6 +17,7 @@ public interface LocaleText extends Messages {
 	String projectsMenu_EnterSample();
 	String searchMenu();
 	String searchMenu_AllPublicSamples();
+	String searchMenu_TestSearch();
 	String newsMenu();
 	String aboutMenu();
 	String aboutMenu_Introduction();
