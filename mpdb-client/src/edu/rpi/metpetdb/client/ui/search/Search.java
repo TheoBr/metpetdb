@@ -10,7 +10,6 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 
 public class Search extends FlowPanel {
@@ -19,7 +18,7 @@ public class Search extends FlowPanel {
 			new TextAttribute(MpDb.doc.Sample_sesarNumber),
 			new TextAttribute(MpDb.doc.Sample_alias),
 			new DateAttribute(MpDb.doc.Sample_collectionDate),
-			new ListboxAttribute(MpDb.doc.Sample_rockType)
+	// new ListboxAttribute(MpDb.doc.Sample_rockType)
 	};
 
 	private final ObjectSearchPanel p_sample;
