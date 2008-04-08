@@ -18,7 +18,7 @@ import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
-public class DetailsPanel extends ComplexPanel {
+public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 	private String panelId;
 	private Element fieldset;
 	private Element legend;
@@ -26,7 +26,7 @@ public class DetailsPanel extends ComplexPanel {
 	protected ArrayList<GenericAttribute> attributes;
 	// HashMap<GenericAttribute, DetailsPanelEntry >
 	protected HashMap<GenericAttribute, DetailsPanelEntry> dpEntries;
-	private MObjectDTO bean;
+	private T bean;
 	protected int actionCount;
 	protected String editHeader;
 	protected String viewHeader;
@@ -51,29 +51,56 @@ public class DetailsPanel extends ComplexPanel {
 		init(atts, actions, showHeaders, true);
 	}
 
-	protected DetailsPanel() {}
+	protected DetailsPanel() {
+	}
 
-	public void setViewHeader(final String s) 		{ viewHeader = s; }
-	public void setViewDescription(final String s) 	{ viewDescription = s; }
-	public void setEditHeader(final String s) 		{ editHeader = s; }
-	public void setEditDescription(final String s) 	{ editDescription = s; }
-	
-	public String getViewHeader() 					{ return viewHeader; }
-	public String getViewDescription() 				{ return viewDescription; }
-	public String getEditHeader() 					{ return editHeader; }
-	public String getEditDescription() 				{ return editDescription; }
-	
-	public void setPanelHeader() 					{ showBlockOrHide(panelHeader, ""); }
-	public void setPanelHeader(final String s) 		{ showBlockOrHide(panelHeader, s); }
-	public void setPanelDescription() 				{ showBlockOrHide(panelDescription, ""); }
-	public void setPanelDescription(final String s) { showBlockOrHide(panelDescription, s); }
+	public void setViewHeader(final String s) {
+		viewHeader = s;
+	}
+	public void setViewDescription(final String s) {
+		viewDescription = s;
+	}
+	public void setEditHeader(final String s) {
+		editHeader = s;
+	}
+	public void setEditDescription(final String s) {
+		editDescription = s;
+	}
+
+	public String getViewHeader() {
+		return viewHeader;
+	}
+	public String getViewDescription() {
+		return viewDescription;
+	}
+	public String getEditHeader() {
+		return editHeader;
+	}
+	public String getEditDescription() {
+		return editDescription;
+	}
+
+	public void setPanelHeader() {
+		showBlockOrHide(panelHeader, "");
+	}
+	public void setPanelHeader(final String s) {
+		showBlockOrHide(panelHeader, s);
+	}
+	public void setPanelDescription() {
+		showBlockOrHide(panelDescription, "");
+	}
+	public void setPanelDescription(final String s) {
+		showBlockOrHide(panelDescription, s);
+	}
 
 	private void showBlockOrHide(Element elem, String s) {
 		DOM.setInnerHTML(elem, s);
-		if (s == null || s.equals("")) DOM.setElementAttribute(elem, "class", Styles.HIDE);
-		else DOM.setElementAttribute(elem, "class", Styles.SHOW_BLOCK);
+		if (s == null || s.equals(""))
+			DOM.setElementAttribute(elem, "class", Styles.HIDE);
+		else
+			DOM.setElementAttribute(elem, "class", Styles.SHOW_BLOCK);
 	}
-	
+
 	protected void init(final GenericAttribute[] atts, final Widget[] actions) {
 		init(atts, actions, false, true);
 	}
@@ -106,10 +133,10 @@ public class DetailsPanel extends ComplexPanel {
 						+ "editHeader");
 				viewHeader = LocaleHandler.lc_entity.getString(entityName + "_"
 						+ "viewHeader");
-				editDescription = LocaleHandler.lc_entity.getString(entityName + "_"
-						+ "editDescription");
-				viewDescription = LocaleHandler.lc_entity.getString(entityName + "_"
-						+ "viewDescription");
+				editDescription = LocaleHandler.lc_entity.getString(entityName
+						+ "_" + "editDescription");
+				viewDescription = LocaleHandler.lc_entity.getString(entityName
+						+ "_" + "viewDescription");
 			} catch (MissingResourceException mre) {
 				// Failed to get header/descriptions
 				editHeader = "";
@@ -130,14 +157,16 @@ public class DetailsPanel extends ComplexPanel {
 		DOM.appendChild(fieldset, table);
 		DOM.appendChild(table, tbody);
 
-		attributes = new ArrayList();
-		dpEntries = new HashMap();
+		attributes = new ArrayList<GenericAttribute>();
+		dpEntries = new HashMap<GenericAttribute, DetailsPanelEntry>();
 		for (int row = 0; row < atts.length; ++row) {
 			attributes.add(atts[row]);
 			final DetailsPanelRow newRow = createRow(atts[row], row);
 			if (!showInitial) {
-				//TODO: stupid ie does not support visibility:collapse..................
-				//DOM.setStyleAttribute(newRow.getRow(), "visibility", "collapse");
+				// TODO: stupid ie does not support
+				// visibility:collapse..................
+				// DOM.setStyleAttribute(newRow.getRow(), "visibility",
+				// "collapse");
 				DOM.setStyleAttribute(newRow.getRow(), "display", "none");
 			}
 			DOM.insertChild(tbody, newRow.getRow(), row);
@@ -171,7 +200,7 @@ public class DetailsPanel extends ComplexPanel {
 		DOM.appendChild(tr, labelTD);
 		final Element label = DOM.createLabel();
 		DOM.appendChild(labelTD, label);
-		//DOM.setElementAttribute(label, "for", idForRow(row));
+		// DOM.setElementAttribute(label, "for", idForRow(row));
 		DOM.setInnerText(label, labelText);
 
 		if (attr.getConstraint().required) {
@@ -198,14 +227,14 @@ public class DetailsPanel extends ComplexPanel {
 		}
 	}
 
-	public MObjectDTO getBean() {
+	public T getBean() {
 		return bean;
 	}
-	public void setBean(final MObjectDTO o) {
+	public void setBean(final T o) {
 		bean = o;
 	}
 
-	public void show(final MObjectDTO toShow) {
+	public void show(final T toShow) {
 		addStyleName(STYLENAME_DEFAULT + "-" + Styles.SHOWMODE);
 		removeStyleName(STYLENAME_DEFAULT + "-" + Styles.EDITMODE);
 		bean = toShow;
@@ -277,7 +306,7 @@ public class DetailsPanel extends ComplexPanel {
 		}
 	}
 
-	public void edit(final MObjectDTO toEdit) {
+	public void edit(final T toEdit) {
 		addStyleName(STYLENAME_DEFAULT + "-" + Styles.EDITMODE);
 		removeStyleName(STYLENAME_DEFAULT + "-" + Styles.SHOWMODE);
 		bean = toEdit;
@@ -301,6 +330,7 @@ public class DetailsPanel extends ComplexPanel {
 	public void startValidation(final ServerOp r) {
 		new ServerOp() {
 			int succeeded;
+
 			public void begin() {
 				validateEdit(this);
 			}
@@ -333,9 +363,9 @@ public class DetailsPanel extends ComplexPanel {
 				if ((attr.getImmutable() && bean.mIsNew())
 						|| !attr.getImmutable())
 					attr.commitEdit(bean, getEditWidgets(attr), err, r);
-			} else if (r!=null){
+			} else if (r != null) {
 				r.onSuccess(null);
-			} 
+			}
 			if (attr.getReadOnly())
 				err.setText("");
 			if (err.isVisible())

@@ -31,8 +31,8 @@ public enum ChemicalAnalysisProperty implements Property {
 
 		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
 				final K pointX) {
-			((ChemicalAnalysisDTO) chemicalAnalysis)
-					.setPointX((Integer) pointX);
+			((ChemicalAnalysisDTO) chemicalAnalysis).setPointX(Integer
+					.valueOf(pointX.toString()));
 		}
 	},
 	pointY {
@@ -42,8 +42,8 @@ public enum ChemicalAnalysisProperty implements Property {
 
 		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
 				final K pointY) {
-			((ChemicalAnalysisDTO) chemicalAnalysis)
-					.setPointY((Integer) pointY);
+			((ChemicalAnalysisDTO) chemicalAnalysis).setPointY(Integer
+					.valueOf(pointY.toString()));
 		}
 	},
 	analysisMethod {
