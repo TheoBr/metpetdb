@@ -5,6 +5,7 @@ import java.util.Set;
 
 public class SearchSampleDTO extends SampleDTO {
 
+	private static final long serialVersionUID = 1L;
 	private Set<String> possibleRockTypes = new HashSet<String>();
 
 	public Set<String> getPossibleRockTypes() {

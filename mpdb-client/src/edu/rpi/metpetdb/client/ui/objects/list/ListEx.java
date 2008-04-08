@@ -40,6 +40,7 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 	 * How we sort by default (true means ascending, false is descending)
 	 */
 	private static final boolean DEFAULT_SORT_ORDER = true;
+	final PagingScrollTable<T> scrollTable;
 
 	/**
 	 * The instance of columns that are layed out on the table
@@ -238,8 +239,8 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		TableModel tableModel = new TableModel();
 		final FixedWidthGrid dataTable = new FixedWidthGrid();
 		FixedWidthFlexTable headerTable = new FixedWidthFlexTable();
-		final PagingScrollTable<T> scrollTable = new PagingScrollTable<T>(
-				tableModel, dataTable, headerTable);
+		scrollTable = new PagingScrollTable<T>(tableModel, dataTable,
+				headerTable);
 		PagingOptions options = new PagingOptions(scrollTable);
 
 		scrollTable.setPageSize(2);
@@ -275,5 +276,9 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		add(options);
 		this.setHeight("400px");
 		this.setWidth("100%");
+
+	}
+	public void refresh() {
+		scrollTable.reloadPage();
 	}
 }

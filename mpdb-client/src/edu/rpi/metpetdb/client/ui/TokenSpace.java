@@ -128,7 +128,7 @@ public class TokenSpace implements HistoryListener {
 	};
 	public static final Screen search = new Screen("Search") {
 		public void executeToken(final String args) {
-			show(new Search());
+			show(new Search().createNew());
 		}
 	};
 	public static final Screen editProfile = new Screen("EditProfile") {

@@ -2,6 +2,10 @@ package edu.rpi.metpetdb.client.ui.input;
 
 // probably should have result return list, but not sure how to do that yet 
 
+import java.util.List;
+
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -9,12 +13,14 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
-public abstract class ObjectSearchPanel<T> extends DetailsPanel implements
+public abstract class ObjectSearchPanel extends DetailsPanel implements
 		ClickListener {
 	final Button search;
+	final Element resultsTd;
 
 	protected ObjectSearchPanel(final GenericAttribute[] atts,
 			final String header, final String description) {
@@ -25,6 +31,9 @@ public abstract class ObjectSearchPanel<T> extends DetailsPanel implements
 		init(atts, new Button[] {
 			search
 		}, true, true);
+
+		resultsTd = DOM.createTD();
+		DOM.appendChild(this.tbody, resultsTd);
 	}
 
 	protected ObjectSearchPanel(final GenericAttribute[] atts) {
@@ -56,27 +65,25 @@ public abstract class ObjectSearchPanel<T> extends DetailsPanel implements
 	}
 
 	void doSearch() {
-		new FormOp<T>(this) {
+		new FormOp<List<SampleDTO>>(this) {
 			protected void onSubmit() {
 				searchBean(this);
 			}
-			public void onSuccess(final T result) {
-				onSearchCompletion((MObjectDTO) result);
+			public void onSuccess(final List<SampleDTO> result) {
+				onSearchCompletion(result);
 			}
 		}.begin();
 	}
+	public void show(final List<SampleDTO> obj) {
 
-	public void show(final MObjectDTO obj) {
-		super.show(obj);
 		search.setVisible(true);
 		search.setEnabled(true);
 		setActiveButton(search);
 	}
-
-	protected void searchBean(final AsyncCallback<T> ac) {
+	protected void searchBean(final AsyncCallback<List<SampleDTO>> ac) {
 		throw new UnsupportedOperationException();
 	}
-	protected void onSearchCompletion(final MObjectDTO result) {
+	protected void onSearchCompletion(final List<SampleDTO> result) {
 		ObjectSearchPanel.this.show(result);
 	}
 }
