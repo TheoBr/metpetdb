@@ -38,6 +38,7 @@ import edu.rpi.metpetdb.client.model.validation.MineralConstraint;
 import edu.rpi.metpetdb.client.model.validation.MultiValuedStringConstraint;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.model.validation.ReferenceConstraint;
 import edu.rpi.metpetdb.client.model.validation.RockTypeConstraint;
 import edu.rpi.metpetdb.client.model.validation.StringConstraint;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
@@ -334,10 +335,12 @@ public class DataStore {
 			} else {
 				cc = new CollectionConstraint();
 			}
-			if (className == "elements")
-				queryName = "Element.all";
-			else if (className == "oxides")
-				queryName = "Oxide.all";
+			if (className.equals("Set")) {
+				if (name.equals("elements"))
+					queryName = "Element.all";
+				else if (name.equals("oxides"))
+					queryName = "Oxide.all";
+			}
 			final Session session = open();
 			cc.setValues((Collection) hbm.clone(session
 					.getNamedQuery(queryName).list()));
@@ -372,22 +375,10 @@ public class DataStore {
 			return ImageConstraint.class.isAssignableFrom(c) ? (ImageConstraint) c
 					.newInstance()
 					: new ImageConstraint();
-			// } else if (c == CollectionConstraint.class) {
-			// // We want to fetch the applicable values for the one end of a
-			// // Many-to-one
-			// // association
-			// CollectionConstraint cc;
-			// if (CollectionConstraint.class.isAssignableFrom(c)) {
-			// cc = (CollectionConstraint) c.newInstance();
-			// } else {
-			// cc = new CollectionConstraint();
-			// }
-			// final Session session = open();
-			// cc.setValues((Collection) hbm.clone(session.getNamedQuery(
-			// className + ".all").list()));
-			// session.clear();
-			// session.close();
-			// return cc;
+		} else if ("reference".equals(name)) {
+			return ReferenceConstraint.class.isAssignableFrom(c) ? (ReferenceConstraint) c
+					.newInstance()
+					: new ReferenceConstraint();
 		} else if (MObject.class.isAssignableFrom(rc))
 			return (MObjectConstraint) c.newInstance();
 		else

@@ -18,6 +18,8 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 	public StringConstraint ChemicalAnalysis_sampleName;
 	public StringConstraint ChemicalAnalysis_subsampleName;
 
+	public StringConstraint SearchSample_alias;
+
 	public void finishInitialization() {
 	}
 
