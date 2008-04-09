@@ -323,6 +323,27 @@ public class DataStore {
 				session.close();
 			}
 			return mc;
+		} else if (c == CollectionConstraint.class) {
+			// We want to fetch the applicable values for the one end of a
+			// Many-to-one
+			// association
+			CollectionConstraint cc;
+			String queryName = className + ".all";
+			if (CollectionConstraint.class.isAssignableFrom(c)) {
+				cc = (CollectionConstraint) c.newInstance();
+			} else {
+				cc = new CollectionConstraint();
+			}
+			if (className == "elements")
+				queryName = "Element.all";
+			else if (className == "oxides")
+				queryName = "Oxide.all";
+			final Session session = open();
+			cc.setValues((Collection) hbm.clone(session
+					.getNamedQuery(queryName).list()));
+			session.clear();
+			session.close();
+			return cc;
 		} else if (rc == java.util.Set.class
 				|| rc == java.util.Collection.class) {
 			// Many-to-many or one-to-many association
@@ -351,22 +372,22 @@ public class DataStore {
 			return ImageConstraint.class.isAssignableFrom(c) ? (ImageConstraint) c
 					.newInstance()
 					: new ImageConstraint();
-		} else if (c == CollectionConstraint.class) {
-			// We want to fetch the applicable values for the one end of a
-			// Many-to-one
-			// association
-			CollectionConstraint cc;
-			if (CollectionConstraint.class.isAssignableFrom(c)) {
-				cc = (CollectionConstraint) c.newInstance();
-			} else {
-				cc = new CollectionConstraint();
-			}
-			final Session session = open();
-			cc.setValues((Collection) hbm.clone(session.getNamedQuery(
-					className + ".all").list()));
-			session.clear();
-			session.close();
-			return cc;
+			// } else if (c == CollectionConstraint.class) {
+			// // We want to fetch the applicable values for the one end of a
+			// // Many-to-one
+			// // association
+			// CollectionConstraint cc;
+			// if (CollectionConstraint.class.isAssignableFrom(c)) {
+			// cc = (CollectionConstraint) c.newInstance();
+			// } else {
+			// cc = new CollectionConstraint();
+			// }
+			// final Session session = open();
+			// cc.setValues((Collection) hbm.clone(session.getNamedQuery(
+			// className + ".all").list()));
+			// session.clear();
+			// session.close();
+			// return cc;
 		} else if (MObject.class.isAssignableFrom(rc))
 			return (MObjectConstraint) c.newInstance();
 		else
