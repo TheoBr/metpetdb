@@ -14,6 +14,7 @@ import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.ChooseImageAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAreaAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AnalysisMaterialAttribute;
@@ -32,10 +33,13 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 			new TextAttribute(MpDb.doc.ChemicalAnalysis_location),
 			new TextAttribute(MpDb.doc.ChemicalAnalysis_analyst),
 			new DateAttribute(MpDb.doc.ChemicalAnalysis_analysisDate),
-			// new TextAttribute(MpDb.doc.ChemicalAnalysis_referenceId),
+			new TextAttribute(MpDb.doc.ChemicalAnalysis_reference),
 			new TextAreaAttribute(MpDb.doc.ChemicalAnalysis_description),
 			new AnalysisMaterialAttribute(MpDb.doc.ChemicalAnalysis_mineral,
-					MpDb.doc.ChemicalAnalysis_largeRock), };
+					MpDb.doc.ChemicalAnalysis_largeRock),
+			new ListboxAttribute(MpDb.doc.ChemicalAnalysis_elements),
+			new ListboxAttribute(MpDb.doc.ChemicalAnalysis_oxides),
+	};
 
 	private final ObjectEditorPanel p_chemicalAnalysis;
 
@@ -96,6 +100,14 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 		if (species.getSelectedIndex() != -1 && !(species.isItemSelected(1))) {
 			if (type.getSelectedIndex() != -1 && !(type.isItemSelected(1))) {
 
+				// add specific elements/oxides here
+				final ListBox element_oxide = null;
+
+				if (species.getSelectedIndex() == 2) {
+					// ???
+				} else {
+					// ???
+				}
 			}
 		}
 
@@ -105,7 +117,6 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 
 		add(hp);
 	}
-
 	public ChemicalAnalysisDetails showById(final long id) {
 		chemicalAnalysisId = id;
 		p_chemicalAnalysis.load();
