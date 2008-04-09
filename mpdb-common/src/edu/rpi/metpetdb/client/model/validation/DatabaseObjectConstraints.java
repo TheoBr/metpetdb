@@ -7,6 +7,7 @@ import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.ElementDTO;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.OxideDTO;
 import edu.rpi.metpetdb.client.model.ProjectDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SampleMineralDTO;
@@ -115,9 +116,14 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint ChemicalAnalysis_location;
 	public StringConstraint ChemicalAnalysis_analyst;
 	public TimestampConstraint ChemicalAnalysis_analysisDate;
+	public ReferenceConstraint ChemicalAnalysis_reference;
 	public StringConstraint ChemicalAnalysis_description;
 	public MineralConstraint ChemicalAnalysis_mineral;
 	public BooleanConstraint ChemicalAnalysis_largeRock;
+	// public ElementConstraint ChemicalAnalysis_element;
+	// public OxideConstraint ChemicalAnalysis_oxide;
+	public CollectionConstraint<ElementDTO> ChemicalAnalysis_elements;
+	public CollectionConstraint<OxideDTO> ChemicalAnalysis_oxides;
 
 	public void validate(final ChemicalAnalysisDTO ma)
 			throws ValidationException {
