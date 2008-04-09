@@ -10,7 +10,7 @@
       </generator>
     </id>
     
-    <many-to-one name="elementId" column="element_id" class="Element" lazy="false" cascade="none"/>
+    <many-to-one name="element" column="element_id" class="Element" lazy="false" cascade="none"/>
     <property name="oxidationState" column="oxidation_state" />
     <property name="species" column="species" length="20" />
     <property name="weight" column="weight" />

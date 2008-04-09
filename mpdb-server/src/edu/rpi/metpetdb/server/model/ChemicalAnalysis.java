@@ -18,6 +18,7 @@ public class ChemicalAnalysis extends MObject {
 	private String analyst;
 	private Timestamp analysisDate;
 	private String description;
+	private Reference reference;
 	private Mineral mineral;
 	private Boolean largeRock;
 	private Set<ChemicalAnalysisElement> elements;
@@ -160,5 +161,13 @@ public class ChemicalAnalysis extends MObject {
 	@Override
 	public boolean mIsNew() {
 		return id == 0;
+	}
+
+	public Reference getReference() {
+		return reference;
+	}
+
+	public void setReference(Reference reference) {
+		this.reference = reference;
 	}
 }

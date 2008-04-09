@@ -17,9 +17,9 @@
     <property name="location" column="where_done" type="java.lang.String"/>
     <property name="analyst" column="analyst" type="java.lang.String"/>
     <property name="analysisDate" column="analysis_date" />
-    <!--  <property name="referenceId" column="reference_id" />-->
     <property name="description" column="description" type="java.lang.String"/>
 
+	<many-to-one name="reference" column="reference_id" class="Reference" lazy="false" cascade="none"/>
 	<many-to-one name="image" column="image_id" class="Image" lazy="false" cascade="none"/>
     <many-to-one name="subsample" column="subsample_id" class="Subsample" lazy="false" cascade="none"/>
 

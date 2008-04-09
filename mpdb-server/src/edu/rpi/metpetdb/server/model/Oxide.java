@@ -3,7 +3,7 @@ package edu.rpi.metpetdb.server.model;
 public class Oxide extends MObject {
 	private static final long serialVersionUID = 1L;
 
-	private short elementId;
+	private Element element;
 	private short oxideId;
 	private short oxidationState;
 	private String species;
@@ -12,12 +12,12 @@ public class Oxide extends MObject {
 	private Float conversionFactor;
 	private String mineralType;
 
-	public void setElementId(final short s) {
-		elementId = s;
+	public Element getElement() {
+		return element;
 	}
 
-	public short getElementId() {
-		return elementId;
+	public void setElement(Element element) {
+		this.element = element;
 	}
 
 	public void setOxideId(final short s) {
