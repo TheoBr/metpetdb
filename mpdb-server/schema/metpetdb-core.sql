@@ -53,6 +53,7 @@ CREATE TABLE samples
   sesar_number CHAR(9),
   public_data CHAR(1) CHECK (public_data IN ('Y','N')) NOT NULL,
   collection_date TIMESTAMP,
+  date_precision INT2,
   alias VARCHAR(20) NOT NULL,
   rock_type VARCHAR(100) NOT NULL,
   user_id INT4 NOT NULL,

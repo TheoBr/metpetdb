@@ -37,6 +37,7 @@ public class BulkUploadTest extends DatabaseTestCase {
 				// ve.printStackTrace();
 			} catch (final InvalidFormatException ife) {
 				ife.printStackTrace();
+				fail("InvalidFormatException");
 			}
 			// final List<List<String>> output = sp.validate(
 			// new HashSet<SampleParser.Index>(), new HashSet<Integer>(),
@@ -65,6 +66,7 @@ public class BulkUploadTest extends DatabaseTestCase {
 				fail("NoSuchMethodException");
 			} catch (final InvalidFormatException ife) {
 				ife.printStackTrace();
+				fail("InvalidFormatException");
 			}
 			sp.parse();
 

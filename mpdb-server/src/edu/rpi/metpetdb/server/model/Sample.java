@@ -33,7 +33,9 @@ public class Sample extends MObject implements IHasName {
 
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String alias;
+
 	private Timestamp collectionDate;
+	private short datePrecision;
 
 	private Boolean publicData;
 
@@ -340,5 +342,13 @@ public class Sample extends MObject implements IHasName {
 
 	public boolean mIsNew() {
 		return id == 0;
+	}
+
+	public short getDatePrecision() {
+		return datePrecision;
+	}
+
+	public void setDatePrecision(short datePrecision) {
+		this.datePrecision = datePrecision;
 	}
 }

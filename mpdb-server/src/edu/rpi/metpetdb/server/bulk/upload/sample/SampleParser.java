@@ -24,15 +24,6 @@ import edu.rpi.metpetdb.client.model.SampleDTO;
 
 public class SampleParser {
 
-	public final class Index {
-		public final int row, col;
-
-		public Index(final int r, final int c) {
-			row = r;
-			col = c;
-		}
-	}
-
 	private final InputStream is;
 	private HSSFSheet sheet;
 	private final List<SampleDTO> samples;
@@ -142,12 +133,10 @@ public class SampleParser {
 				continue;
 			}
 			System.out.println("Parsing header " + i + ": " + text);
-			for (int j = 0; j < sampleMethodMap.length; ++j) {
-				for (MethodAssociation<SampleDTO> sma : methodAssociations) {
-					if (sma.matches(text)) {
-						colMethods.put(new Integer(i), sma.getMethod());
-						break;
-					}
+			for (MethodAssociation<SampleDTO> sma : methodAssociations) {
+				if (sma.matches(text)) {
+					colMethods.put(new Integer(i), sma.getMethod());
+					break;
 				}
 			}
 		}
@@ -201,13 +190,12 @@ public class SampleParser {
 					try {
 						final Date data = cell.getDateCellValue();
 						s.setCollectionDate(new Timestamp(data.getTime()));
+						s.setDatePrecision((short) 1);
 						// storeMethod.invoke(s, new Timestamp(data.getTime()));
 					} catch (final NumberFormatException nfe) {
 						System.out.println("parsing date");
 						final String data = cell.toString();
-						Integer precision = new Integer(0);
-						Timestamp date = parseDate(data, precision);
-						s.setCollectionDate(date);
+						parseDate(s, data);
 					}
 				}
 
@@ -232,33 +220,35 @@ public class SampleParser {
 		return samples;
 	}
 
-	private Timestamp parseDate(final String date, Integer precision) {
-		precision = 0;
-		String day = "01", month = "01", year = "1900";
+	private void parseDate(final SampleDTO s, final String date) {
+		Short precision = 365;
+		String day, month, year;
 		// DD-MM-YYYY
 		final Pattern datepat = Pattern
-				.compile("((\\d{2})([-/]))?((\\d{2})([-/]))?(\\d{4})");
+				.compile("^((\\d{2})([-/]))?((\\d{2})([-/]))?(\\d{4})$");
 		final Matcher datematch = datepat.matcher(date);
 
 		if (!datematch.find()) {
-			return null;
+			throw new IllegalStateException();
 		}
 
 		// do we have a month?
 		if (datematch.group(2) != null) {
 			month = datematch.group(2);
-			precision = 365;
-		}
-		// do we have a day?
-		if (datematch.group(5) != null) {
-			day = datematch.group(5);
 			precision = 31;
-		}
+		} else
+			month = "01";
+		// do we have a day?
+		if ((day = datematch.group(5)) != null) {
+			precision = 1;
+		} else
+			day = "01";
 
 		year = datematch.group(7);
-		System.out.println(year + "-" + month + "-" + day
+		Timestamp time = Timestamp.valueOf(year + "-" + month + "-" + day
 				+ " 00:00:00.000000000");
-		return Timestamp.valueOf(year + "-" + month + "-" + day
-				+ " 00:00:00.000000000");
+
+		s.setCollectionDate(time);
+		s.setDatePrecision(precision);
 	}
 }

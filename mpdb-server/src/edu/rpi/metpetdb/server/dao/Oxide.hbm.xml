@@ -23,4 +23,9 @@
     from Oxide o
     order by o.oxideId
   </query>
+  
+  <query name="Oxide.bySpecies">
+    from Oxide o
+    where o.species = :species
+  </query>
 </hibernate-mapping>

@@ -15,6 +15,7 @@
               type="edu.rpi.metpetdb.server.dao.GeometryType" />
     <property name="alias" column="alias" length="20" />
     <property name="collectionDate" column="collection_date" />
+    <property name="datePrecision" column="date_precision" />
     <property name="publicData" column="public_data" type="yes_no" />
     <property name="rockType" column="rock_type"/>
     <property name="country" column="country" length="100" />

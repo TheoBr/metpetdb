@@ -1,28 +1,34 @@
 package edu.rpi.metpetdb.client.ui.bulk.upload;
 
+import java.util.Map;
+
 import edu.rpi.metpetdb.client.MpDbTestCase;
+import edu.rpi.metpetdb.client.TestServerOp;
+import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.ui.MpDb;
 
 public class BulkUploadTest extends MpDbTestCase {
 
-	public void setUp() {
-		super.setUp();
-	}
+	// public void setUp() {
+	// super.setUp();
+	// }
 
-	public void testUpload() {
+	public void testBulkUpload() {
 
-		// new TestServerOp<String>(this) {
-		// public void begin() {
-		// MpDb.bulkUpload_svc.saveSamplesFromSpreadsheet(
-		// "04425e49edbfc6ff428a80fb19d9528767a1e86819a2baa5be",
-		// this);
-		// }
-		//
-		// public void onSuccess(final String s) {
-		//
-		// finishTest();
-		// }
-		// }.begin();
-		// delayTestFinish(10000);
+		new TestServerOp<Map<Integer, ValidationException>>(this) {
+			public void begin() {
+				MpDb.bulkUpload_svc
+						.saveSamplesFromSpreadsheet(
+								"/home/arnold/workspace/mpdb-common/sample-data/easy_samples.xls",
+								this);
+			}
+
+			public void onSuccess(final Map<Integer, ValidationException> s) {
+
+				finishTest();
+			}
+		}.begin();
+		delayTestFinish(10000);
 	}
 
 	public String getTestName() {

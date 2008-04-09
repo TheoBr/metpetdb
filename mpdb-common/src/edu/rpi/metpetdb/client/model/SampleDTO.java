@@ -22,7 +22,9 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 	private UserDTO owner;
 
 	private String alias;
+
 	private Timestamp collectionDate;
+	private short datePrecision;
 
 	private Boolean publicData;
 
@@ -346,5 +348,13 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 
 	public boolean mIsNew() {
 		return id == 0;
+	}
+
+	public short getDatePrecision() {
+		return datePrecision;
+	}
+
+	public void setDatePrecision(short datePrecision) {
+		this.datePrecision = datePrecision;
 	}
 }
