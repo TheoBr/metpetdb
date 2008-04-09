@@ -38,7 +38,7 @@ import edu.rpi.metpetdb.client.model.validation.MineralConstraint;
 import edu.rpi.metpetdb.client.model.validation.MultiValuedStringConstraint;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.model.validation.ReferenceConstraint;
+import edu.rpi.metpetdb.client.model.validation.RockTypeConstraint;
 import edu.rpi.metpetdb.client.model.validation.StringConstraint;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
 import edu.rpi.metpetdb.server.model.MObject;
@@ -210,7 +210,8 @@ public class DataStore {
 
 		pc.entityName = entityName;
 		pc.propertyName = attributeName;
-		pc.property = property(clazz(cm, entityName), pc.propertyName);
+		if (cm != null)
+			pc.property = property(clazz(cm, entityName), pc.propertyName);
 		appendToAllArray(oc, pc);
 
 		if (cm != null && col != null) {
@@ -282,7 +283,11 @@ public class DataStore {
 		final String className = rc.getName().substring(
 				rc.getName().lastIndexOf(".") + 1);
 
-		if (rc == String.class)
+		if ("rockType".equals(name)) {
+			return RockTypeConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
+					.newInstance()
+					: new RockTypeConstraint();
+		} else if (rc == String.class)
 			return StringConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
 					.newInstance()
 					: new StringConstraint();
@@ -309,6 +314,7 @@ public class DataStore {
 			try {
 				final List<Mineral> minerals = session.getNamedQuery(
 						"Mineral.parents").list();
+				Mineral.loadChildren(minerals);
 				mc.setMinerals((List<MineralDTO>) hbm.clone(minerals));
 			} catch (org.hibernate.exception.GenericJDBCException dbe) {
 				session.cancelQuery();
@@ -345,10 +351,6 @@ public class DataStore {
 			return ImageConstraint.class.isAssignableFrom(c) ? (ImageConstraint) c
 					.newInstance()
 					: new ImageConstraint();
-		} else if ("reference".equals(name)) {
-			return ReferenceConstraint.class.isAssignableFrom(c) ? (ReferenceConstraint) c
-					.newInstance()
-					: new ImageConstraint();
 		} else if (c == CollectionConstraint.class) {
 			// We want to fetch the applicable values for the one end of a
 			// Many-to-one
@@ -372,7 +374,6 @@ public class DataStore {
 					+ p.getPersistentClass().getClassName() + " property "
 					+ p.getName() + ".");
 	}
-
 	private static edu.rpi.metpetdb.client.model.properties.Property property(
 			final Class who, final String name) throws IllegalAccessException {
 		try {
