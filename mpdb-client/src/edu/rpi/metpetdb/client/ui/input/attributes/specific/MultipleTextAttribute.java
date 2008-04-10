@@ -1,7 +1,6 @@
 package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -19,70 +18,80 @@ import edu.rpi.metpetdb.client.model.validation.StringConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
-public class MultipleTextAttribute extends GenericAttribute implements ClickListener {
+public abstract class MultipleTextAttribute<T> extends GenericAttribute
+		implements ClickListener {
 
 	private MUnorderedList editList;
-	private final ArrayList realEditWidgets;
+	protected final ArrayList<Widget> realEditWidgets;
 
 	public MultipleTextAttribute(final StringConstraint sc) {
 		super(sc);
-		realEditWidgets = new ArrayList();
+		realEditWidgets = new ArrayList<Widget>();
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
 		final MUnorderedList list = new MUnorderedList();
 
-		final Set s = get(obj);
+		final Set<T> s = get(obj);
 		if (s != null) {
-			final Iterator iter = s.iterator();
-			while (iter.hasNext()) {
-				final Object object = iter.next();
-				final Label r = new Label(object.toString());
+			final Iterator<T> itr = s.iterator();
+			while (itr.hasNext()) {
+				final Label r = new Label(itr.next().toString());
 				list.add(r);
 			}
 		}
-		return new Widget[]{list};
+		return new Widget[] {
+			list
+		};
 	}
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
 		editList = new MUnorderedList();
-		
+
 		realEditWidgets.clear();
 
 		DOM.setElementAttribute(editList.getElement(), "id", id);
 
-		final Set s = get(obj);
+		final Set<T> s = get(obj);
 		if (s != null) {
-			final Iterator iter = s.iterator();
+			final Iterator<T> iter = s.iterator();
 			while (iter.hasNext()) {
 				final Object object = iter.next();
-				editList.add(MultipleTextAttribute.this.createOptionalTextBox(object.toString()));
+				editList.add(MultipleTextAttribute.this
+						.createOptionalTextBox(object.toString()));
 			}
 		}
-		
+
 		editList.add(createOptionalTextBox(null));
 
-		return new Widget[]{editList};
+		return new Widget[] {
+			editList
+		};
 	}
 
 	public HorizontalPanel createOptionalTextBox(String s) {
 		final HorizontalPanel hp = new HorizontalPanel();
 		final TextBox rText = new TextBox();
-		if(s != null)
+		if (s != null)
 			rText.setText(s);
 		final Button addButton = new Button("Add", new ClickListener() {
 			public void onClick(final Widget sender) {
-				editList.add(MultipleTextAttribute.this.createOptionalTextBox(null));
-				
+				editList.add(MultipleTextAttribute.this
+						.createOptionalTextBox(null));
+
 			}
 		});
 		final Button removeButton = new Button("Remove", new ClickListener() {
 			public void onClick(final Widget sender) {
-				editList.remove(hp);
-				realEditWidgets.remove(rText);
+				// If there are more than one entry spaces...
+				if (realEditWidgets.size() > 1) {
+					// remove one
+					editList.remove(hp);
+					realEditWidgets.remove(rText);
+				}
 			}
 		});
-		
+
 		realEditWidgets.add(rText);
 
 		hp.add(rText);
@@ -92,41 +101,11 @@ public class MultipleTextAttribute extends GenericAttribute implements ClickList
 		return hp;
 	}
 
-	protected Object get(final Widget editWidget) throws ValidationException {
-		final HashSet texts = new HashSet();
-		//final Iterator itr = realEditWidgets.iterator();
-		
-		//CANNOT USE REFLECTION WITH GWT
-		/*if(!texts.isEmpty() && texts.getClass() == Region.class){
-			while(itr.hasNext()) {
-				final Object obj = itr.next();
-				final Region r = new Region();
-				String name = ((HasText) obj).getText();
-				if(!name.equals("")){
-					r.setName(name);
-					texts.add(r);
-				}
-			}
-		}
-		else if(!texts.isEmpty() && texts.getClass() == Reference.class){
-			while(itr.hasNext()) {
-				final Object obj = itr.next();
-				final Reference r = new Reference();
-				String name = ((HasText) obj).getText();
-				if(!name.equals("")){
-					r.setName(name);
-					texts.add(r);
-				}
-			}
-		}*/
-		
-		return texts;
-	}
+	public abstract Set<T> get(final MObjectDTO obj);
 
-	public Set get(final MObjectDTO obj) {
-		return (Set) mGet(obj);
-	}
-	
+	protected abstract Object get(final Widget editWidget)
+			throws ValidationException;
+
 	protected void set(final MObjectDTO obj, final Object o) {
 		mSet(obj, o);
 	}

@@ -59,6 +59,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public MultiValuedStringConstraint Sample_regions;
 	public MultiValuedStringConstraint Sample_metamorphicGrades;
 	public MultiValuedStringConstraint Sample_references;
+	public MultiValuedStringConstraint Sample_comments;
 
 	public void validate(final SampleDTO s) throws ValidationException {
 		validate(s, Sample__all);

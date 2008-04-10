@@ -46,4 +46,8 @@ public class SampleCommentDTO extends MObjectDTO {
 		return false;
 	}
 
+	public String toString() {
+		return text;
+	}
+
 }

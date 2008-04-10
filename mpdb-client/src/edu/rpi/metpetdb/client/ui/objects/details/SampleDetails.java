@@ -22,6 +22,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.CommentAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.LocationAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MetamorphicGradeAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MineralAttribute;
@@ -49,6 +50,7 @@ public class SampleDetails extends FlowPanel {
 			new RegionAttribute(MpDb.doc.Sample_regions),
 			new MetamorphicGradeAttribute(MpDb.doc.Sample_metamorphicGrades),
 			new ReferenceAttribute(MpDb.doc.Sample_references),
+			new CommentAttribute(MpDb.doc.Sample_comments),
 			new TextAttribute(MpDb.oc.Sample_subsampleCount).setReadOnly(true),
 	};
 

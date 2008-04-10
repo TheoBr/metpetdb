@@ -10,6 +10,7 @@ import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.MetamorphicGradeDTO;
 import edu.rpi.metpetdb.client.model.ReferenceDTO;
 import edu.rpi.metpetdb.client.model.RegionDTO;
+import edu.rpi.metpetdb.client.model.SampleCommentDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SampleMineralDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
@@ -193,6 +194,17 @@ public enum SampleProperty implements Property {
 		public <T extends MObjectDTO, K> void set(final T sample,
 				final K references) {
 			((SampleDTO) sample).setReferences((Set<ReferenceDTO>) references);
+		}
+	},
+	comments {
+		public <T extends MObjectDTO> Object get(final T sample) {
+			return ((SampleDTO) sample).getComments();
+		}
+
+		public <T extends MObjectDTO, K> void set(final T sample,
+				final K comments) {
+			((SampleDTO) sample)
+					.setComments((Set<SampleCommentDTO>) comments);
 		}
 	},
 	subsampleCount {

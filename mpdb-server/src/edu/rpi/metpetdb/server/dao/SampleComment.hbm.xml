@@ -11,7 +11,5 @@
     </id>
     <version name="version" />
     <property name="text" column="comment_text" />
-    
-    <many-to-one name="sample" column="sample_id" lazy="false" />
     </class>
 </hibernate-mapping>
