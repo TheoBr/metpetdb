@@ -5,69 +5,12 @@ import java.util.List;
 
 import edu.rpi.metpetdb.client.MpDbTestCase;
 import edu.rpi.metpetdb.client.TestServerOp;
-import edu.rpi.metpetdb.client.VoidTestServerOp;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 
 public class SampleDetailsTest extends MpDbTestCase {
-
-	private final static int SAMPLE_ID = 2;
-
-	/**
-	 * Test saving a sample to the database, which in turns test that
-	 * authentication works and the object constraints
-	 */
-	public void testSaveSample() {
-		final SampleDTO s = new SampleDTO();
-		s.setSesarNumber("000000006");
-		s.setLatitude(1);
-		s.setLongitude(1);
-		s.setRockType("rockie rock");
-		s.setOwner(this.getUser());
-		s.setAlias("6");
-		new TestServerOp<SampleDTO>(this) {
-			public void begin() {
-				MpDb.sample_svc.save(s, this);
-			}
-
-			public void onSuccess(final SampleDTO sample) {
-				assertEquals(sample, s);
-				finishTest();
-			}
-		}.begin();
-		delayTestFinish(20000);
-	}
-
-	/**
-	 * Test loading a sample by verifying the id's are the same
-	 */
-	public void testLoadSample() {
-		new TestServerOp<SampleDTO>(this) {
-			public void begin() {
-				MpDb.sample_svc.details(SAMPLE_ID, this);
-			}
-
-			public void onSuccess(final SampleDTO sample) {
-				assertEquals(SAMPLE_ID, sample.getId());
-				finishTest();
-			}
-		}.begin();
-		delayTestFinish(5000);
-	}
-
-	/**
-	 * Test if a sample can be deleted
-	 */
-	public void testDeleteSample() {
-		new VoidTestServerOp(this) {
-			public void begin() {
-				MpDb.sample_svc.delete(SAMPLE_ID, this);
-			}
-		}.begin();
-		delayTestFinish(5000);
-	}
 
 	/**
 	 * Test loading all samples and verfies the correct amount, and the correct
@@ -87,7 +30,9 @@ public class SampleDetailsTest extends MpDbTestCase {
 
 			public void onSuccess(final Results<SampleDTO> results) {
 				final List<SampleDTO> l = results.getList();
-				final String[] aliases = { "1", "3", "4", "5", "6" };
+				final String[] aliases = {
+						"1", "3", "4", "5", "6"
+				};
 				// verify the size
 				assertEquals(5, results.getCount());
 				// Verify the order, also verifies we got the right ones

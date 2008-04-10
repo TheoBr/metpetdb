@@ -351,6 +351,8 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 	}
 
 	public short getDatePrecision() {
+		if (datePrecision == null)
+			datePrecision = Short.parseShort("0");
 		return datePrecision;
 	}
 
