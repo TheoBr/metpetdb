@@ -17,6 +17,7 @@ public class ChemicalAnalysis extends MObject {
 	private String location;
 	private String analyst;
 	private Timestamp analysisDate;
+	private Short datePrecision;
 	private String description;
 	private Reference reference;
 	private Mineral mineral;
@@ -102,6 +103,14 @@ public class ChemicalAnalysis extends MObject {
 
 	public void setAnalysisDate(Timestamp d) {
 		analysisDate = d;
+	}
+
+	public Short getDatePrecision() {
+		return datePrecision;
+	}
+
+	public void setDatePrecision(Short datePrecision) {
+		this.datePrecision = datePrecision;
 	}
 
 	public String getDescription() {

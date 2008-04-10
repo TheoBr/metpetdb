@@ -40,6 +40,7 @@ import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.ReferenceConstraint;
 import edu.rpi.metpetdb.client.model.validation.RockTypeConstraint;
+import edu.rpi.metpetdb.client.model.validation.ShortConstraint;
 import edu.rpi.metpetdb.client.model.validation.StringConstraint;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
 import edu.rpi.metpetdb.server.model.MObject;
@@ -303,6 +304,10 @@ public class DataStore {
 			return FloatConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
 					.newInstance()
 					: new FloatConstraint();
+		else if (rc == Short.class)
+			return ShortConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
+					.newInstance()
+					: new ShortConstraint();
 		else if ("minerals".equals(name) || "mineral".equals(name)) {
 			MineralConstraint mc;
 			if (MineralConstraint.class.isAssignableFrom(c)) {

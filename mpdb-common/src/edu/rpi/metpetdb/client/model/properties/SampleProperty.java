@@ -204,6 +204,17 @@ public enum SampleProperty implements Property {
 				final K subsampleCount) {
 			((SampleDTO) sample).setSubsampleCount((Integer) subsampleCount);
 		}
+	},
+	datePrecision {
+		public <T extends MObjectDTO> Object get(final T sample) {
+			return ((SampleDTO) sample).getDatePrecision();
+		}
+
+		public <T extends MObjectDTO, K> void set(final T sample,
+				final K datePrecision) {
+			((SampleDTO) sample).setDatePrecision(Short
+					.parseShort(datePrecision.toString()));
+		}
 	};
 
 }

@@ -32,7 +32,7 @@
       <one-to-many class="Subsample" />
     </set>
     
-    <set name="comments" inverse="true" cascade="all" >
+    <set name="comments" inverse="true" cascade="all" lazy="false" >
       <key column="sample_id"/>
       <one-to-many class="SampleComment" />
     </set>
@@ -42,22 +42,22 @@
       <many-to-many class="Project" column="project_id" />
     </set>
 
-    <set name="regions" table="sample_regions" cascade="persist,merge">
+    <set name="regions" table="sample_regions" cascade="persist,merge" lazy="false">
       <key column="sample_id" />
       <many-to-many class="Region" column="region_id" />
     </set>
 
-    <set name="metamorphicGrades" table="sample_metamorphic_grades" cascade="persist,merge">
+    <set name="metamorphicGrades" table="sample_metamorphic_grades" cascade="persist,merge" lazy="false">
       <key column="sample_id" />
       <many-to-many class="MetamorphicGrade" column="metamorphic_grade_id" />
     </set>
 
-    <set name="references" table="sample_reference" cascade="persist,merge">
+    <set name="references" table="sample_reference" cascade="persist,merge" lazy="false">
       <key column="sample_id" />
       <many-to-many class="Reference" column="reference_id" />
     </set>
 
-    <set name="images" inverse="true" >
+    <set name="images" inverse="true" lazy="false">
       <key column="sample_id" />
       <one-to-many class="Image" />
     </set>

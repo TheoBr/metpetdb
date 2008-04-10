@@ -34,7 +34,8 @@ public class SampleDetails extends FlowPanel {
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
 			new TextAttribute(MpDb.doc.Sample_sesarNumber).setImmutable(true),
 			new TextAttribute(MpDb.doc.Sample_alias),
-			new DateAttribute(MpDb.doc.Sample_collectionDate),
+			new DateAttribute(MpDb.doc.Sample_collectionDate,
+					MpDb.doc.Sample_datePrecision),
 			new ListboxAttribute(MpDb.doc.Sample_rockType),
 			new RadioButtonAttribute(MpDb.doc.Sample_publicData),
 			new LocationAttribute(MpDb.doc.Sample_location),
@@ -48,7 +49,8 @@ public class SampleDetails extends FlowPanel {
 			new RegionAttribute(MpDb.doc.Sample_regions),
 			new MetamorphicGradeAttribute(MpDb.doc.Sample_metamorphicGrades),
 			new ReferenceAttribute(MpDb.doc.Sample_references),
-			new TextAttribute(MpDb.oc.Sample_subsampleCount).setReadOnly(true), };
+			new TextAttribute(MpDb.oc.Sample_subsampleCount).setReadOnly(true),
+	};
 
 	private final ObjectEditorPanel p_sample;
 	private long sampleId;

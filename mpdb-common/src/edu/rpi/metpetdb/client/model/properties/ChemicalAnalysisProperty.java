@@ -190,5 +190,16 @@ public enum ChemicalAnalysisProperty implements Property {
 			((ChemicalAnalysisDTO) chemicalAnalysis)
 					.setOxides((Set<ChemicalAnalysisOxideDTO>) oxides);
 		}
+	},
+	datePrecision {
+		public <T extends MObjectDTO> Object get(final T sample) {
+			return ((ChemicalAnalysisDTO) sample).getDatePrecision();
+		}
+
+		public <T extends MObjectDTO, K> void set(final T sample,
+				final K datePrecision) {
+			((ChemicalAnalysisDTO) sample).setDatePrecision(Short
+					.parseShort(datePrecision.toString()));
+		}
 	};
 }

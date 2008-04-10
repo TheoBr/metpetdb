@@ -46,6 +46,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public MineralConstraint Sample_minerals;
 	public GeometryConstraint Sample_location;
 	public TimestampConstraint Sample_collectionDate;
+	public ShortConstraint Sample_datePrecision;
 	public BooleanConstraint Sample_publicData;
 	public RockTypeConstraint Sample_rockType;
 	public UserConstraint Sample_owner;
@@ -120,6 +121,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint ChemicalAnalysis_description;
 	public MineralConstraint ChemicalAnalysis_mineral;
 	public BooleanConstraint ChemicalAnalysis_largeRock;
+	public ShortConstraint ChemicalAnalysis_datePrecision;
 	// public ElementConstraint ChemicalAnalysis_element;
 	// public OxideConstraint ChemicalAnalysis_oxide;
 	public CollectionConstraint<ElementDTO> ChemicalAnalysis_elements;

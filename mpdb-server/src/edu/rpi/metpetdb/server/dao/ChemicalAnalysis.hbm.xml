@@ -12,6 +12,7 @@
     
     <property name="pointX" column="point_x" />
     <property name="pointY" column="point_y" />
+    <property name="datePrecision" column="date_precision" />
     <property name="spotId" column="spot_id" type="java.lang.String"/>
     <property name="analysisMethod" column="analysis_method" type="java.lang.String"/>
     <property name="location" column="where_done" type="java.lang.String"/>

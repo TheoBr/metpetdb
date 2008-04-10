@@ -19,6 +19,7 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 	private String location;
 	private String analyst;
 	private Timestamp analysisDate;
+	private Short datePrecision;
 	private ReferenceDTO reference;
 	private String description;
 	private MineralDTO mineral;
@@ -141,6 +142,14 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 
 	public void setAnalysisDate(Timestamp d) {
 		analysisDate = d;
+	}
+
+	public Short getDatePrecision() {
+		return datePrecision;
+	}
+
+	public void setDatePrecision(Short datePrecision) {
+		this.datePrecision = datePrecision;
 	}
 
 	public ReferenceDTO getReference() {

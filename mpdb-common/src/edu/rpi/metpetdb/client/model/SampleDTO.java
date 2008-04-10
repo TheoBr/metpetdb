@@ -24,7 +24,7 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 	private String alias;
 
 	private Timestamp collectionDate;
-	private short datePrecision;
+	private Short datePrecision;
 
 	private Boolean publicData;
 

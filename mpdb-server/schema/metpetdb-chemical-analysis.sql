@@ -10,6 +10,7 @@ CREATE TABLE chemical_analyses
    where_done VARCHAR(50),
    analyst VARCHAR(50),
    analysis_date TIMESTAMP,
+   date_precision INT2,
    reference_id INT8 NOT NULL,
    description VARCHAR(50),
    mineral_id int2,
