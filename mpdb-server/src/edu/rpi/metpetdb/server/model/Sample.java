@@ -35,7 +35,7 @@ public class Sample extends MObject implements IHasName {
 	private String alias;
 
 	private Timestamp collectionDate;
-	private short datePrecision;
+	private Short datePrecision;
 
 	private Boolean publicData;
 
@@ -344,11 +344,11 @@ public class Sample extends MObject implements IHasName {
 		return id == 0;
 	}
 
-	public short getDatePrecision() {
+	public Short getDatePrecision() {
 		return datePrecision;
 	}
 
-	public void setDatePrecision(short datePrecision) {
+	public void setDatePrecision(Short datePrecision) {
 		this.datePrecision = datePrecision;
 	}
 }

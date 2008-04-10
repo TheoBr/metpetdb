@@ -211,8 +211,7 @@ public class DataStore {
 
 		pc.entityName = entityName;
 		pc.propertyName = attributeName;
-		if (cm != null)
-			pc.property = property(clazz(cm, entityName), pc.propertyName);
+		pc.property = property(clazz(cm, entityName), pc.propertyName);
 		appendToAllArray(oc, pc);
 
 		if (cm != null && col != null) {
