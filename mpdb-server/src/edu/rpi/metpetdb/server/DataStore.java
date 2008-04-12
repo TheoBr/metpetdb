@@ -150,7 +150,7 @@ public class DataStore {
 		} finally {
 			s.close();
 		}
-		oc.finishInitialization();
+		oc.finishInitialization(databaseObjectConstraints);
 	}
 
 	private void populateObjectConstraintField(final DatabaseMetaData md,

@@ -166,7 +166,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	 * perform other work based on the newly created constraint instances.
 	 * </p>
 	 */
-	public void finishInitialization() {
+	public void finishInitialization(DatabaseObjectConstraints oc) {
 		User_username.pattern = "A-Z0-9a-z_\\.@";
 		// Sample_collectionEnded.collectionBegan = Sample_collectionBegan;
 

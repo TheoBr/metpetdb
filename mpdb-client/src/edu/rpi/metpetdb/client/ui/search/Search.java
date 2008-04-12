@@ -17,10 +17,11 @@ import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 
 public class Search extends FlowPanel {
 	private static GenericAttribute[] searchAtts = {
-		/* Keep it simple for now */
-		// new TextAttribute(MpDb.doc.Sample_owner),
-		// new TextAttribute(MpDb.doc.Sample_sesarNumber),
-		new TextAttribute(MpDb.doc.Sample_alias),
+			/* Keep it simple for now */
+			// new TextAttribute(MpDb.doc.Sample_owner),
+			// new TextAttribute(MpDb.doc.Sample_sesarNumber),
+			new TextAttribute(MpDb.oc.SearchSample_alias),
+			new TextAttribute(MpDb.oc.SearchSample_sesarNumber),
 	// new DateAttribute(MpDb.doc.Sample_collectionDate),
 	// new ListboxAttribute(MpDb.doc.Sample_rockType)
 	};
