@@ -6,6 +6,7 @@ import java.util.Set;
 import org.postgis.Geometry;
 
 import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.SampleMineralDTO;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
 
@@ -52,6 +53,20 @@ public enum SearchSampleProperty implements SearchProperty {
 			return "owner";
 		}
 	},
+	minerals {
+		public <T extends MObjectDTO> Set<SampleMineralDTO> get(final T sample) {
+			return ((SearchSampleDTO) sample).getMinerals();
+		}
+
+		public <T extends MObjectDTO, K> void set(final T sample,
+				final K minerals) {
+			((SearchSampleDTO) sample)
+					.setMinerals((Set<SampleMineralDTO>) minerals);
+		}
+		public String columnName() {
+			return "sample_minerals_minerals";
+		}
+	},
 	alias {
 		public <T extends MObjectDTO> String get(final T sample) {
 			return ((SearchSampleDTO) sample).getAlias();
@@ -78,20 +93,6 @@ public enum SearchSampleProperty implements SearchProperty {
 
 		public String columnName() {
 			return "collectionDate";
-		}
-	},
-	publicData {
-		public <T extends MObjectDTO> Boolean get(final T sample) {
-			return ((SearchSampleDTO) sample).isPublicData();
-		}
-
-		public <T extends MObjectDTO, K> void set(final T sample,
-				final K publicData) {
-			((SearchSampleDTO) sample).setPublicData((Boolean) publicData);
-		}
-
-		public String columnName() {
-			return "publicData";
 		}
 	},
 	possibleRockTypes {

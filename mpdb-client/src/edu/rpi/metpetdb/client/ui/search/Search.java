@@ -14,16 +14,20 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.LocationAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.MineralAttribute;
 
 public class Search extends FlowPanel {
 	private static GenericAttribute[] searchAtts = {
 			/* Keep it simple for now */
-			// new TextAttribute(MpDb.doc.Sample_owner),
-			// new TextAttribute(MpDb.doc.Sample_sesarNumber),
-			new TextAttribute(MpDb.oc.SearchSample_alias),
+			// new TextAttribute(MpDb.oc.SearchSample_owner),
 			new TextAttribute(MpDb.oc.SearchSample_sesarNumber),
-	// new DateAttribute(MpDb.doc.Sample_collectionDate),
-	// new ListboxAttribute(MpDb.doc.Sample_rockType)
+			new TextAttribute(MpDb.oc.SearchSample_alias),
+			// new DateAttribute(MpDb.oc.SearchSample_collectionDate,
+			// MpDb.doc.Sample_datePrecision),
+			// new ListboxAttribute(MpDb.oc.SearchSample_possibleRockTypes),
+			new LocationAttribute(MpDb.oc.SearchSample_location),
+			new MineralAttribute(MpDb.oc.SearchSample_minerals)
 	};
 
 	private final ObjectSearchPanel p_searchSample;

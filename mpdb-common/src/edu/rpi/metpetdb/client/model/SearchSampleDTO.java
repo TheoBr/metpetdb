@@ -27,8 +27,6 @@ public class SearchSampleDTO extends MObjectDTO {
 	private Timestamp collectionDate;
 	private Short datePrecision;
 
-	private Boolean publicData;
-
 	private Set<SubsampleDTO> subsamples;
 
 	private Set<ProjectDTO> projects;
@@ -147,17 +145,6 @@ public class SearchSampleDTO extends MObjectDTO {
 
 	public void setCollectionDate(final Timestamp date) {
 		collectionDate = date;
-	}
-
-	public boolean isPublicData() {
-		if (publicData != null)
-			return publicData.booleanValue();
-		else
-			return false;
-	}
-
-	public void setPublicData(final Boolean p) {
-		publicData = p;
 	}
 
 	public Set<ProjectDTO> getProjects() {
