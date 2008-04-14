@@ -89,7 +89,7 @@
 			calendar popup
  --------------------------------------*/
 
-div[title="Calendar"] {
+.gwt-DatePicker {
 	background-color: #e6eaf1;
 	border: 1px solid #91a3c1;
 }
@@ -98,20 +98,45 @@ table.calendar-panel {
 	background-color: #F6FFDD;
 	border: none !important;
 }
-div.calendar-cell {
+
+.weekend {
+	background-color: #eee;
+}
+
+.date-cell, .filler-cell {
 	border: 1px solid #e4f0c3;
 	text-align: center;
 }
-div.calendar-headingCell {
+.day-title {
 	background-color: #e4f0c3;
 	color: #55700a;
 	border-bottom: 1px solid #6fa4d5;
 }
-div.calendar-dateCell {
+.date-cell {
 	background-color: #fff;
 	color: #7d992f;
+	padding:3px 3px 3px 3px;
 }
 
+.highlighted-cell {
+	background-color: #111;
+	color: #fff;
+	cursor:pointer;	
+}
+
+.selected-cell {
+	background-color:#222;
+	color: #fff;
+}
+
+.month-label {
+	width:100%;
+	text-align:center;
+}
+
+.month-forward, .month-backward {
+	cursor:pointer;
+}
 
 
 /*-------------------------------------

@@ -4,12 +4,14 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.PopupListener;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.widgetideas.client.events.ChangeEvent;
 import com.google.gwt.widgetideas.client.events.ChangeHandler;
 import com.google.gwt.widgetideas.datepicker.client.CalendarModel;
@@ -21,12 +23,12 @@ import edu.rpi.metpetdb.client.model.validation.ShortConstraint;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
-public class DateAttribute extends GenericAttribute {
+public class DateAttribute extends GenericAttribute implements ChangeListener {
 	private static final String[] months = {
 			"January", "February", "March", "April", "May", "June", "July",
 			"August", "September", "October", "November", "December",
 	};
-	private Timestamp newDate = new Timestamp(0);
+	private Timestamp newDate;
 	private final TextBox month = new TextBox();
 	private final TextBox day = new TextBox();
 	private final TextBox year = new TextBox();
@@ -45,8 +47,6 @@ public class DateAttribute extends GenericAttribute {
 	}
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
-		final HorizontalPanel hp = new HorizontalPanel();
-
 		final Timestamp currentDate = get(obj);
 
 		if (currentDate != null) {
@@ -55,22 +55,41 @@ public class DateAttribute extends GenericAttribute {
 			year.setText(currentDate.getYear() + 1900 + "");
 		}
 
+		/* Setup textboxes for user input */
+		final HorizontalPanel dateInput = new HorizontalPanel();
+		dateInput.add(new Label("Month:"));
+		dateInput.add(month);
+		dateInput.add(new Label("Day:"));
+		dateInput.add(day);
+		dateInput.add(new Label("Year:"));
+		dateInput.add(year);
+
 		month.setMaxLength(2);
+		month.setVisibleLength(2);
+		month.addChangeListener(this);
 		day.setMaxLength(2);
+		day.setVisibleLength(2);
+		day.addChangeListener(this);
 		year.setMaxLength(4);
-		hp.add(month);
-		hp.add(day);
-		hp.add(year);
+		year.setVisibleLength(4);
+		year.addChangeListener(this);
 		final Button chooseDate = new Button("Choose Date",
 				new ClickListener() {
 					public void onClick(final Widget sender) {
 						final PopupPanel p = new PopupPanel(true);
 						final CalendarModel cm = new CalendarModel();
 						final DatePicker to = new DatePicker();
+						if (currentDate != null) {
+							to.showDate(currentDate);
+							to.setSelectedDate(currentDate);
+						} else if (newDate != null) {
+							to.showDate(newDate);
+							to.setSelectedDate(newDate);
+						}
 						to.addChangeHandler(new ChangeHandler<Date>() {
 							public void onChange(ChangeEvent<Date> change) {
 								month.setText(change.getNewValue().getMonth()
-										+ "");
+										+ 1 + "");
 								day
 										.setText(change.getNewValue().getDate()
 												+ "");
@@ -81,39 +100,36 @@ public class DateAttribute extends GenericAttribute {
 								cm.setCurrentMonthAndYear(newDate);
 								daysInMonth = cm
 										.getCurrentNumberOfDaysInMonth();
-
+								p.hide();
 							}
 						});
 						p.setWidget(to);
-						p.addPopupListener(new PopupListener() {
+						p.show();
+						p.setPopupPositionAndShow(new PositionCallback() {
 
-							public void onPopupClosed(PopupPanel sender,
-									boolean autoClosed) {
+							public void setPosition(int offsetWidth,
+									int offsetHeight) {
+								p.setPopupPosition(sender.getAbsoluteLeft(),
+										sender.getAbsoluteTop());
 
 							}
 
 						});
-						p.show();
 					}
 				});
 		return new Widget[] {
-				chooseDate, hp
+				chooseDate, dateInput
 		};
 	}
 	protected Object get(final Widget editWidget,
 			final PropertyConstraint constraint) {
 		if (constraint instanceof TimestampConstraint) {
-			if (month.getText().length() != 0)
-				newDate.setMonth(Integer.parseInt(month.getText()) - 1);
-			if (day.getText().length() != 0)
-				newDate.setDate(Integer.parseInt(day.getText()));
-			if (year.getText().length() != 0)
-				newDate.setYear(Integer.parseInt(year.getText()) - 1900);
+			createDateFromInput();
 			return newDate;
 		} else if (constraint instanceof ShortConstraint) {
 			short datePrecision = 0;
 			if (month.getText().length() == 0)
-				datePrecision += 365;
+				datePrecision += daysInYear;
 			else if (day.getText().length() == 0)
 				datePrecision += daysInMonth;
 			return datePrecision;
@@ -154,5 +170,24 @@ public class DateAttribute extends GenericAttribute {
 			return year + "";
 		else
 			return m + " " + year;
+	}
+
+	private void createDateFromInput() {
+		if (newDate == null)
+			newDate = new Timestamp(0);
+		try {
+			if (month.getText().length() != 0)
+				newDate.setMonth(Integer.parseInt(month.getText()) - 1);
+			if (day.getText().length() != 0)
+				newDate.setDate(Integer.parseInt(day.getText()));
+			if (year.getText().length() != 0)
+				newDate.setYear(Integer.parseInt(year.getText()) - 1900);
+		} catch (NumberFormatException nfe) {
+			// TODO display validation exception
+		}
+	}
+
+	public void onChange(Widget sender) {
+		createDateFromInput();
 	}
 }

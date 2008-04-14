@@ -44,6 +44,7 @@ public class Search extends FlowPanel {
 				for (SampleDTO s : r) {
 					results.add(new Label(s.getAlias()));
 				}
+				p_searchSample.setEnabled(true);
 			}
 
 		};
