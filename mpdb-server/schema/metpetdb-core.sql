@@ -224,3 +224,4 @@ CREATE SEQUENCE metamorphic_grade_seq;
 CREATE SEQUENCE reference_seq;
 CREATE SEQUENCE uploaded_files_seq;
 CREATE SEQUENCE sample_comments_seq;
+CREATE SEQUENCE uploaded_files_seq;

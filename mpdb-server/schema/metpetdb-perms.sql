@@ -38,5 +38,5 @@ GRANT update ON grid_seq TO @APPUSER@;
 GRANT update ON chemical_analyses_seq TO @APPUSER@;
 GRANT update ON metamorphic_grade_seq TO @APPUSER@;
 GRANT update ON reference_seq TO @APPUSER@;
-GRANT update ON uploaded_file_seq TO @APPUSER@;
+GRANT update ON uploaded_files_seq TO @APPUSER@;
 GRANT update ON sample_comments_seq TO @APPUSER@;
