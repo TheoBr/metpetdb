@@ -101,14 +101,6 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 		if (species.getSelectedIndex() != -1 && !(species.isItemSelected(1))) {
 			if (type.getSelectedIndex() != -1 && !(type.isItemSelected(1))) {
 
-				// add specific elements/oxides here
-				final ListBox element_oxide = null;
-
-				if (species.getSelectedIndex() == 2) {
-					// ???
-				} else {
-					// ???
-				}
 			}
 		}
 
