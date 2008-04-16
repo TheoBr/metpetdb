@@ -6,6 +6,7 @@ import java.util.Iterator;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.ValueNotInCollectionException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.IHasListItems;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 
 /**
@@ -14,8 +15,21 @@ import edu.rpi.metpetdb.client.model.interfaces.IHasName;
  * 
  */
 public class CollectionConstraint<T extends MObjectDTO> extends
-		PropertyConstraint implements MaxLengthConstraint {
+		PropertyConstraint implements IHasListItems
+// implements MaxLengthConstraint
+{
 
+	public String[] getListItems() {
+		// TODO Auto-generated method stub
+		return (String[]) values.toArray();
+	}
+
+	// // TODO when IHasListItems uses Collection instead of String[]
+	// // Gives error "Type mismatch: cannot convert from Collection<T> to
+	// // Collection<MObjectDTO>"
+	// public Collection<MObjectDTO> getListItems() {
+	// return values;
+	// }
 	private Collection<T> values;
 
 	public CollectionConstraint() {
