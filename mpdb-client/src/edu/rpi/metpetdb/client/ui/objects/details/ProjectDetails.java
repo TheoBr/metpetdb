@@ -13,8 +13,9 @@ import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 
 public class ProjectDetails extends FlowPanel {
-	private static GenericAttribute[] projectAtts = {new TextAttribute(
-			MpDb.doc.Project_name)};
+	private static GenericAttribute[] projectAtts = {
+		new TextAttribute(MpDb.doc.Project_name)
+	};
 
 	private final ObjectEditorPanel p_project;
 	private int projectId;
@@ -23,10 +24,10 @@ public class ProjectDetails extends FlowPanel {
 		p_project = new ObjectEditorPanel(projectAtts, LocaleHandler.lc_text
 				.addProject(), LocaleHandler.lc_text.addProjectDescription()) {
 			private boolean savedNew;
+
 			protected void loadBean(final AsyncCallback ac) {
 				final ProjectDTO p = (ProjectDTO) getBean();
-				MpDb.project_svc.details(p != null && !p.mIsNew()
-						? p.getId()
+				MpDb.project_svc.details(p != null && !p.mIsNew() ? p.getId()
 						: projectId, ac);
 			}
 			protected void saveBean(final AsyncCallback ac) {
@@ -38,7 +39,7 @@ public class ProjectDetails extends FlowPanel {
 				MpDb.project_svc.saveProject(p, ac);
 			}
 			protected void deleteBean(final AsyncCallback ac) {
-				//TODO: implement delete for project
+				// TODO: implement delete for project
 			}
 			protected boolean canEdit() {
 				return MpDb.isCurrentUser(((ProjectDTO) getBean()).getOwner());

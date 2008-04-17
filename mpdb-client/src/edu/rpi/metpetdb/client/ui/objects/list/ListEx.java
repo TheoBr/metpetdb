@@ -243,7 +243,7 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 				headerTable);
 		PagingOptions options = new PagingOptions(scrollTable);
 
-		scrollTable.setPageSize(2);
+		scrollTable.setPageSize(20);
 		tableModel.setRowCount(1);
 
 		for (int i = 0; i < columns.length; ++i) {

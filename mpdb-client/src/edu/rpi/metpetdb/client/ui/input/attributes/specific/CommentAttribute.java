@@ -10,11 +10,11 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.SampleCommentDTO;
-import edu.rpi.metpetdb.client.model.validation.StringConstraint;
+import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 
 public class CommentAttribute extends MultipleTextAttribute<SampleCommentDTO> {
 
-	public CommentAttribute(StringConstraint sc) {
+	public CommentAttribute(final ObjectConstraint sc) {
 		super(sc);
 	}
 

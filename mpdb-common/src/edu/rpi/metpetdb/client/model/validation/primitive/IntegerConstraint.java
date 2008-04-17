@@ -1,7 +1,9 @@
-package edu.rpi.metpetdb.client.model.validation;
+package edu.rpi.metpetdb.client.model.validation.primitive;
 
 import edu.rpi.metpetdb.client.error.InvalidIntegerException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.model.validation.interfaces.MaxLengthConstraint;
 
 public class IntegerConstraint extends PropertyConstraint
 		implements

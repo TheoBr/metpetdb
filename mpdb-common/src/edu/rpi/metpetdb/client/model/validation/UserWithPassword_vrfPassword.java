@@ -4,6 +4,7 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.ValueNotEqualException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.properties.UserWithPasswordProperty;
+import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 
 public class UserWithPassword_vrfPassword extends StringConstraint {
 	PropertyConstraint newPassword;

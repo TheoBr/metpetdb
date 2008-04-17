@@ -1,22 +1,28 @@
 package edu.rpi.metpetdb.client.model.validation;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.interfaces.IHasListItems;
+import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 
+public class SubsampleTypeConstraint extends PropertyConstraint implements
+		HasValues {
 
-//TODO make this extend CollectionConstraint
-public class SubsampleTypeConstraint extends StringConstraint
-		implements
-			IHasListItems {
+	private ArrayList<String> subsampleTypeNames = new ArrayList<String>();
 
-	private String[] subsampleTypeNames = {"Thin section", "Polished thin section",
-										   "Rock Chip", "Mineral separate",};
+	public SubsampleTypeConstraint() {
+		subsampleTypeNames.add("Thin section");
+		subsampleTypeNames.add("Polished thin section");
+		subsampleTypeNames.add("Rock Chip");
+		subsampleTypeNames.add("Mineral separate");
+	}
 
 	public void validateValue(final Object value) throws ValidationException {
 		super.validateValue(value);
 	}
 
-	public String[] getListItems() {
+	public Collection<?> getValues() {
 		return subsampleTypeNames;
 	}
 

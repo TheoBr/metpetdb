@@ -11,9 +11,9 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.validation.ImageConstraint;
-import edu.rpi.metpetdb.client.model.validation.IntegerConstraint;
+import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 
 public class ChooseImageAttribute extends GenericAttribute {
@@ -21,9 +21,12 @@ public class ChooseImageAttribute extends GenericAttribute {
 	private ImageDTO image;
 	private TextAttribute pointX;
 	private TextAttribute pointY;
-	public ChooseImageAttribute(final ImageConstraint ic,
+
+	public ChooseImageAttribute(final ObjectConstraint ic,
 			final IntegerConstraint x, final IntegerConstraint y) {
-		super(new PropertyConstraint[]{ic, x, y});
+		super(new PropertyConstraint[] {
+				ic, x, y
+		});
 		image = null;
 		pointX = new TextAttribute(x);
 		pointY = new TextAttribute(y);
@@ -39,13 +42,18 @@ public class ChooseImageAttribute extends GenericAttribute {
 					.get64x64ServerPath()), 0, 0);
 			final com.google.gwt.user.client.ui.Image i = new com.google.gwt.user.client.ui.Image(
 					GWT.getModuleBaseURL() + "/images/point0.gif");
-			ap.add(i,(int)((64 / (float)image.getWidth()) * x) - 4,(int) ((64 / (float)image.getWidth())* y)- 7);
+			ap.add(i, (int) ((64 / (float) image.getWidth()) * x) - 4,
+					(int) ((64 / (float) image.getWidth()) * y) - 7);
 			ap.setWidth("64px");
 			ap.setHeight((image.getHeight() / (image.getWidth() / 64)) + "px");
-			return new Widget[]{ap, pointX.createDisplayWidget(obj)[0],
-					pointY.createDisplayWidget(obj)[0],};
+			return new Widget[] {
+					ap, pointX.createDisplayWidget(obj)[0],
+					pointY.createDisplayWidget(obj)[0],
+			};
 		} else {
-			return new Widget[]{new Label("No Image")};
+			return new Widget[] {
+				new Label("No Image")
+			};
 		}
 	}
 
@@ -71,8 +79,10 @@ public class ChooseImageAttribute extends GenericAttribute {
 		});
 		vp.add(b);
 		vp.add(createDisplayWidget(obj)[0]);
-		return new Widget[]{vp, pointX.createEditWidget(obj, id)[0],
-				pointY.createEditWidget(obj, id)[0],};
+		return new Widget[] {
+				vp, pointX.createEditWidget(obj, id)[0],
+				pointY.createEditWidget(obj, id)[0],
+		};
 	}
 
 	protected Object get(final Widget editWidget,

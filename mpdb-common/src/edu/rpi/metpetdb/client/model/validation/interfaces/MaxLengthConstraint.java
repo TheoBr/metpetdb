@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.model.validation;
+package edu.rpi.metpetdb.client.model.validation.interfaces;
 
 public interface MaxLengthConstraint {
 

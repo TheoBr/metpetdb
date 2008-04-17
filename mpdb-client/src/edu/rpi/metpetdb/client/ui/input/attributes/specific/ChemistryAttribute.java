@@ -20,7 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.ReferenceDTO;
-import edu.rpi.metpetdb.client.model.validation.ChemistryConstraint;
+import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.ui.Styles;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
@@ -31,7 +31,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 	private MUnorderedList editList;
 	private final ArrayList<Widget> realEditWidgets;
 
-	public ChemistryAttribute(final ChemistryConstraint sc) {
+	public ChemistryAttribute(final ObjectConstraint sc) {
 		super(sc);
 		realEditWidgets = new ArrayList<Widget>();
 	}

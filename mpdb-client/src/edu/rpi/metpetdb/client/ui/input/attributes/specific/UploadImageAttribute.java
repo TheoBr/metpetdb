@@ -14,7 +14,7 @@ import edu.rpi.metpetdb.client.error.InvalidImageException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.validation.ImageConstraint;
+import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;
@@ -32,7 +32,7 @@ public class UploadImageAttribute extends GenericAttribute {
 	private boolean hasBeenErrored = false;
 	private String previousFilename;
 
-	public UploadImageAttribute(final ImageConstraint ic) {
+	public UploadImageAttribute(final ObjectConstraint ic) {
 		super(ic);
 		final VerticalPanel vp = new VerticalPanel();
 
@@ -84,8 +84,9 @@ public class UploadImageAttribute extends GenericAttribute {
 
 			public void onSubmit(FormSubmitEvent event) {
 				if (previousFilename != null
-						&& !previousFilename.equals(fu.getFilename()) && obj != null
-						&& !previousFilename.equals("") && !hasBeenErrored) {
+						&& !previousFilename.equals(fu.getFilename())
+						&& obj != null && !previousFilename.equals("")
+						&& !hasBeenErrored) {
 					// User uploaded a different image, so delete the old one
 					new ServerOp() {
 						public void begin() {
@@ -121,15 +122,21 @@ public class UploadImageAttribute extends GenericAttribute {
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
 		final Object image = get(obj);
 		if (image != null) {
-			return new Widget[]{new com.google.gwt.user.client.ui.Image(
-					((ImageDTO) image).get64x64ServerPath())};
+			return new Widget[] {
+				new com.google.gwt.user.client.ui.Image(((ImageDTO) image)
+						.get64x64ServerPath())
+			};
 		} else
-			return new Widget[]{new Label("No Images")};
+			return new Widget[] {
+				new Label("No Images")
+			};
 	}
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
 		this.obj = obj;
-		return new Widget[]{fp};
+		return new Widget[] {
+			fp
+		};
 	}
 
 	public void commitEdit(final MObjectDTO obj, final Widget[] editWidget,

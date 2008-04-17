@@ -1,11 +1,12 @@
-package edu.rpi.metpetdb.client.model.validation;
+package edu.rpi.metpetdb.client.model.validation.primitive;
 
 import edu.rpi.metpetdb.client.error.InvalidFloatException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.model.validation.interfaces.MaxLengthConstraint;
 
-public class FloatConstraint extends PropertyConstraint
-		implements
-			MaxLengthConstraint {
+public class FloatConstraint extends PropertyConstraint implements
+		MaxLengthConstraint {
 
 	public void validateValue(Object value) throws ValidationException {
 		super.validateValue(value);
@@ -14,6 +15,8 @@ public class FloatConstraint extends PropertyConstraint
 		try {
 			if (value instanceof String)
 				Float.parseFloat((String) value);
+			else
+				throw new InvalidFloatException(this);
 		} catch (NumberFormatException nfe) {
 			throw new InvalidFloatException(this);
 		}

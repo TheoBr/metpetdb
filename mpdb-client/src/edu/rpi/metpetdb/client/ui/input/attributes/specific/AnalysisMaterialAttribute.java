@@ -7,9 +7,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.validation.BooleanConstraint;
-import edu.rpi.metpetdb.client.model.validation.MineralConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.BooleanConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
 
@@ -23,9 +23,11 @@ public class AnalysisMaterialAttribute extends GenericAttribute {
 	private MineralAttribute ma;
 	private RadioButtonAttribute rb;
 
-	public AnalysisMaterialAttribute(final MineralConstraint mc,
+	public AnalysisMaterialAttribute(final ValueInCollectionConstraint mc,
 			final BooleanConstraint bc) {
-		super(new PropertyConstraint[] { mc, bc });
+		super(new PropertyConstraint[] {
+				mc, bc
+		});
 		ma = new MineralAttribute(mc, 1);
 		rb = new RadioButtonAttribute(bc);
 	}
@@ -33,8 +35,9 @@ public class AnalysisMaterialAttribute extends GenericAttribute {
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
 		final HashMap values = this.mGetAll(obj);
 		if (((Boolean) values.get(this.getConstraints()[1])).booleanValue()) {
-			return new Widget[] { new Label(LocaleHandler.lc_entity
-					.ChemicalAnalysis_largeRock()) };
+			return new Widget[] {
+				new Label(LocaleHandler.lc_entity.ChemicalAnalysis_largeRock())
+			};
 		} else {
 			return ma.createDisplayWidget(obj);
 		}
@@ -43,7 +46,9 @@ public class AnalysisMaterialAttribute extends GenericAttribute {
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
 		final Widget[] mineralWidgets = ma.createEditWidget(obj, id, ma);
 		final Widget[] rbWidgets = rb.createEditWidget(obj, id);
-		return new Widget[] { mineralWidgets[0], rbWidgets[0] };
+		return new Widget[] {
+				mineralWidgets[0], rbWidgets[0]
+		};
 	}
 
 	protected Object get(final Widget editWidget,

@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.model.validation;
 import edu.rpi.metpetdb.client.error.InvalidSESARNumberException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 
 /** Applies only to {@link SampleDTO#getSesarNumber()}. */
 public class Sample_sesarNumber extends StringConstraint {

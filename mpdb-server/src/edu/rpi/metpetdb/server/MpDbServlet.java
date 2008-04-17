@@ -460,7 +460,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 				name + ".by" + attribute.substring(0, 1).toUpperCase()
 						+ attribute.substring(1));
 		q.setLong(attribute, id);
-		final Object r = q.uniqueResult();
+		final Object r = q.list();
 		if (r == null)
 			throw new NoSuchObjectException(name, String.valueOf(id));
 		return (ArrayList<T>) r;

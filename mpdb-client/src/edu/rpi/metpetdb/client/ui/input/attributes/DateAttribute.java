@@ -19,8 +19,8 @@ import com.google.gwt.widgetideas.datepicker.client.DatePicker;
 
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.model.validation.ShortConstraint;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.ShortConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class DateAttribute extends GenericAttribute implements ChangeListener {

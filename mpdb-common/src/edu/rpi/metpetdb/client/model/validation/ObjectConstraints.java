@@ -1,6 +1,8 @@
 package edu.rpi.metpetdb.client.model.validation;
 
 import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
+import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 
 /**
  * Represents constraints that may or may not exist in the database
@@ -22,7 +24,7 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 
 	public StringConstraint SearchSample_alias;
 	public Sample_sesarNumber SearchSample_sesarNumber;
-	public MineralConstraint SearchSample_minerals;
+	// public ValuesInCollectionConstraint<MineralDTO> SearchSample_minerals;
 	public GeometryConstraint SearchSample_location;
 	public TimestampConstraint SearchSample_collectionDate;
 	public RockTypeConstraint SearchSample_possibleRockTypes;
@@ -39,14 +41,16 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 		SearchSample_sesarNumber.entityName = "SearchSample";
 		SearchSample_sesarNumber.property = SearchSampleProperty.sesarNumber;
 		SearchSample_sesarNumber.propertyName = "Sesar Number";
-		SearchSample_sesarNumber.maxLength = doc.Sample_sesarNumber.maxLength;
-		SearchSample_sesarNumber.minLength = doc.Sample_sesarNumber.minLength;
+		// SearchSample_sesarNumber.maxLength =
+		// doc.Sample_sesarNumber.maxLength;
+		// SearchSample_sesarNumber.minLength =
+		// doc.Sample_sesarNumber.minLength;
 		SearchSample_sesarNumber.required = false;
 
-		SearchSample_minerals.entityName = "SearchSample";
-		SearchSample_minerals.property = SearchSampleProperty.minerals;
-		SearchSample_minerals.propertyName = "Minerals";
-		SearchSample_minerals.required = false;
+		// SearchSample_minerals.entityName = "SearchSample";
+		// SearchSample_minerals.property = SearchSampleProperty.minerals;
+		// SearchSample_minerals.propertyName = "Minerals";
+		// SearchSample_minerals.required = false;
 
 		SearchSample_location.entityName = "SearchSample";
 		SearchSample_location.property = SearchSampleProperty.location;
@@ -61,8 +65,10 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 		SearchSample_possibleRockTypes.entityName = "SearchSample";
 		SearchSample_possibleRockTypes.property = SearchSampleProperty.possibleRockTypes;
 		SearchSample_possibleRockTypes.propertyName = "Rock Type";
-		SearchSample_possibleRockTypes.maxLength = doc.Sample_rockType.maxLength;
-		SearchSample_possibleRockTypes.minLength = doc.Sample_rockType.minLength;
+		// SearchSample_possibleRockTypes.maxLength =
+		// doc.Sample_rockType.maxLength;
+		// SearchSample_possibleRockTypes.minLength =
+		// doc.Sample_rockType.minLength;
 		SearchSample_possibleRockTypes.required = false;
 
 		SearchSample_owner.entityName = "SearchSample";

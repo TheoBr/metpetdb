@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.validation.StringConstraint;
+import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
@@ -24,7 +24,7 @@ public abstract class MultipleTextAttribute<T> extends GenericAttribute
 	private MUnorderedList editList;
 	protected final ArrayList<Widget> realEditWidgets;
 
-	public MultipleTextAttribute(final StringConstraint sc) {
+	public MultipleTextAttribute(final ObjectConstraint sc) {
 		super(sc);
 		realEditWidgets = new ArrayList<Widget>();
 	}

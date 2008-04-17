@@ -1,19 +1,39 @@
 package edu.rpi.metpetdb.client.model.validation;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import edu.rpi.metpetdb.client.error.InvalidRockTypeException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.interfaces.IHasListItems;
+import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 
-public class RockTypeConstraint extends StringConstraint implements
-		IHasListItems {
+public class RockTypeConstraint extends PropertyConstraint implements HasValues {
 
-	private String[] rockTypes = {
-			"Amphibolite", "Blueschist", "Calc-silicate", "Eclogite", "Gneiss",
-			"Granofels", "Greenschist", "Hornfels", "Marble", "Metabasite",
-			"Metagreywacke", "Metapelite", "Meta-arkose", "Migmatite",
-			"Mylonite", "Phyllite", "Quartzite", "Schist", "Serpentinite",
-			"Skarn", "Slate",
-	};
+	private ArrayList<String> rockTypes = new ArrayList<String>();
+
+	public RockTypeConstraint() {
+		rockTypes.add("Amphibolite");
+		rockTypes.add("Blueschist");
+		rockTypes.add("Calc-silicate");
+		rockTypes.add("Eclogite");
+		rockTypes.add("Gneiss");
+		rockTypes.add("Granofels");
+		rockTypes.add("Greenschist");
+		rockTypes.add("Hornfels");
+		rockTypes.add("Marble");
+		rockTypes.add("Metabasite");
+		rockTypes.add("Metagreywacke");
+		rockTypes.add("Metapelite");
+		rockTypes.add("Meta-arkose");
+		rockTypes.add("Migmatite");
+		rockTypes.add("Mylonite");
+		rockTypes.add("Phyllite");
+		rockTypes.add("Quartzite");
+		rockTypes.add("Schist");
+		rockTypes.add("Serpentinite");
+		rockTypes.add("Skarn");
+		rockTypes.add("Slate");
+	}
 
 	@Override
 	public void validateValue(final Object value) throws ValidationException {
@@ -23,13 +43,13 @@ public class RockTypeConstraint extends StringConstraint implements
 		}
 	}
 
-	public String[] getListItems() {
+	public Collection<?> getValues() {
 		return rockTypes;
 	}
 
 	private boolean isValidRockName(final String rockName) {
-		for (int i = 0; i < rockTypes.length; ++i) {
-			if (rockName.equals(rockTypes[i]))
+		for (int i = 0; i < rockTypes.size(); ++i) {
+			if (rockName.equals(rockTypes.get(i)))
 				return true;
 		}
 		return false;

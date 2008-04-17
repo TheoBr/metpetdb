@@ -6,8 +6,8 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.validation.IntegerConstraint;
-import edu.rpi.metpetdb.client.model.validation.StringConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class TextAreaAttribute extends GenericAttribute {

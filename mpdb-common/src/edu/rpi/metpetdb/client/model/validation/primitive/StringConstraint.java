@@ -1,8 +1,10 @@
-package edu.rpi.metpetdb.client.model.validation;
+package edu.rpi.metpetdb.client.model.validation.primitive;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.ValueTooLongException;
 import edu.rpi.metpetdb.client.error.ValueTooShortException;
+import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.model.validation.interfaces.MaxLengthConstraint;
 
 /** Applies to any string value. */
 public class StringConstraint extends PropertyConstraint implements

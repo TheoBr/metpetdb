@@ -11,7 +11,6 @@ import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.error.LoginFailureException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -28,16 +27,15 @@ import edu.rpi.metpetdb.client.ui.input.attributes.PasswordAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MTabPanel;
 
-public class LoginDialog extends MDialogBox
-		implements
-			ClickListener,
-			KeyboardListener,
-			TabListener {
+public class LoginDialog extends MDialogBox implements ClickListener,
+		KeyboardListener, TabListener {
 	private static final GenericAttribute[] mainAttributes = {
 			new TextAttribute(MpDb.doc.StartSessionRequest_username),
-			new PasswordAttribute(MpDb.doc.StartSessionRequest_password),};
-	private static final GenericAttribute[] emailAttributes = {new TextAttribute(
-			MpDb.doc.StartSessionRequest_username),};
+			new PasswordAttribute(MpDb.doc.StartSessionRequest_password),
+	};
+	private static final GenericAttribute[] emailAttributes = {
+		new TextAttribute(MpDb.doc.StartSessionRequest_username),
+	};
 
 	private final ServerOp continuation;
 	private final StartSessionRequestDTO ssr;
@@ -61,11 +59,15 @@ public class LoginDialog extends MDialogBox
 
 		emailC = new Button(LocaleHandler.lc_text.buttonCancel(), this);
 		email = new Submit(LocaleHandler.lc_text.buttonEmailPassword(), this);
-		
-		p_main = new DetailsPanel(mainAttributes, new Button[]{login, loginC});
+
+		p_main = new DetailsPanel(mainAttributes, new Button[] {
+				login, loginC
+		});
 		p_main.edit(ssr);
 
-		p_email = new DetailsPanel(emailAttributes, new Button[]{email, emailC});
+		p_email = new DetailsPanel(emailAttributes, new Button[] {
+				email, emailC
+		});
 
 		tabs = new MTabPanel();
 		{
@@ -154,8 +156,9 @@ public class LoginDialog extends MDialogBox
 					super.onFailure(e);
 				} else if (e instanceof NoSuchObjectException) {
 					enable(true);
-					p_email.showValidationException(new LoginFailureException(
-							MpDb.doc.StartSessionRequest_username));
+					// p_email.showValidationException(new
+					// LoginFailureException(
+					// MpDb.doc.StartSessionRequest_username));
 				} else {
 					super.onFailure(e);
 				}
@@ -163,15 +166,16 @@ public class LoginDialog extends MDialogBox
 			public void onSuccess(final Object result) {
 				enable(true);
 				final Widget old = getWidget();
-				final Button close = new Button(LocaleHandler.lc_text.buttonClose(),
-						new ClickListener() {
-							public void onClick(final Widget sender) {
-								setWidget(old);
-								tabs.selectTab(p_mainIdx);
-							}
-						});
+				final Button close = new Button(LocaleHandler.lc_text
+						.buttonClose(), new ClickListener() {
+					public void onClick(final Widget sender) {
+						setWidget(old);
+						tabs.selectTab(p_mainIdx);
+					}
+				});
 				final VerticalPanel p = new VerticalPanel();
-				p.add(new Label(LocaleHandler.lc_text.message_NewPasswordSet(), true));
+				p.add(new Label(LocaleHandler.lc_text.message_NewPasswordSet(),
+						true));
 				p.add(close);
 				p.setCellHorizontalAlignment(close, VerticalPanel.ALIGN_CENTER);
 				setWidget(p);

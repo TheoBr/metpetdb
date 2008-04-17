@@ -54,23 +54,24 @@ public class SampleDetails extends FlowPanel {
 			new TextAttribute(MpDb.oc.Sample_subsampleCount).setReadOnly(true),
 	};
 
-	private final ObjectEditorPanel p_sample;
+	private final ObjectEditorPanel<SampleDTO> p_sample;
 	private long sampleId;
 
 	public SampleDetails() {
-		p_sample = new ObjectEditorPanel(sampleAtts, LocaleHandler.lc_text
-				.addSample(), LocaleHandler.lc_text.addSampleDescription()) {
-			protected void loadBean(final AsyncCallback ac) {
+		p_sample = new ObjectEditorPanel<SampleDTO>(sampleAtts,
+				LocaleHandler.lc_text.addSample(), LocaleHandler.lc_text
+						.addSampleDescription()) {
+			protected void loadBean(final AsyncCallback<SampleDTO> ac) {
 				final SampleDTO s = (SampleDTO) getBean();
 				MpDb.sample_svc.details(s != null && !s.mIsNew() ? s.getId()
 						: sampleId, ac);
 			}
 
-			protected void saveBean(final AsyncCallback ac) {
+			protected void saveBean(final AsyncCallback<SampleDTO> ac) {
 				MpDb.sample_svc.save((SampleDTO) getBean(), ac);
 			}
 
-			protected void deleteBean(final AsyncCallback ac) {
+			protected void deleteBean(final AsyncCallback<Object> ac) {
 				MpDb.sample_svc.delete(((SampleDTO) getBean()).getId(), ac);
 			}
 
@@ -109,7 +110,7 @@ public class SampleDetails extends FlowPanel {
 		final MLink addSubsample = new MLink(LocaleHandler.lc_text
 				.addSubsample(), new ClickListener() {
 			public void onClick(final Widget sender) {
-				new ServerOp() {
+				new ServerOp<Object>() {
 					public void begin() {
 						if (MpDb.isLoggedIn())
 							MetPetDBApplication.show(new SubsampleDetails()

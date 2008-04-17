@@ -17,16 +17,17 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.RegionDTO;
-import edu.rpi.metpetdb.client.model.validation.StringConstraint;
+import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
+//TODO extend MultipleTextAttribute
 public class RegionAttribute extends GenericAttribute implements ClickListener {
 
 	private MUnorderedList editList;
 	private final ArrayList realEditWidgets;
 
-	public RegionAttribute(final StringConstraint sc) {
+	public RegionAttribute(final ObjectConstraint sc) {
 		super(sc);
 		realEditWidgets = new ArrayList();
 	}
@@ -43,12 +44,14 @@ public class RegionAttribute extends GenericAttribute implements ClickListener {
 				list.add(r);
 			}
 		}
-		return new Widget[]{list};
+		return new Widget[] {
+			list
+		};
 	}
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
 		editList = new MUnorderedList();
-		
+
 		realEditWidgets.clear();
 
 		DOM.setElementAttribute(editList.getElement(), "id", id);
@@ -58,39 +61,40 @@ public class RegionAttribute extends GenericAttribute implements ClickListener {
 			final Iterator iter = s.iterator();
 			while (iter.hasNext()) {
 				final Object object = iter.next();
-				editList.add(RegionAttribute.this.createOptionalTextBox(object.toString()));
+				editList.add(RegionAttribute.this.createOptionalTextBox(object
+						.toString()));
 			}
 		}
-		
+
 		editList.add(createOptionalTextBox(null));
 
-		return new Widget[]{editList};
+		return new Widget[] {
+			editList
+		};
 	}
 
 	public HorizontalPanel createOptionalTextBox(String s) {
 		final HorizontalPanel hp = new HorizontalPanel();
 		final TextBox rText = new TextBox();
-		if(s != null)
+		if (s != null)
 			rText.setText(s);
 		final Button addButton = new Button("Add", new ClickListener() {
 			public void onClick(final Widget sender) {
 				editList.add(RegionAttribute.this.createOptionalTextBox(null));
-				
+
 			}
 		});
 		final Button removeButton = new Button("Remove", new ClickListener() {
-			public void onClick(final Widget sender) 
-			{
-				// If there are more than one entry spaces...				
-				if(realEditWidgets.size() > 1)
-				{
+			public void onClick(final Widget sender) {
+				// If there are more than one entry spaces...
+				if (realEditWidgets.size() > 1) {
 					// remove one of them
 					editList.remove(hp);
 					realEditWidgets.remove(rText);
 				}
 			}
 		});
-		
+
 		realEditWidgets.add(rText);
 
 		hp.add(rText);
@@ -103,13 +107,13 @@ public class RegionAttribute extends GenericAttribute implements ClickListener {
 	protected Object get(final Widget editWidget) throws ValidationException {
 		final HashSet regions = new HashSet();
 		final Iterator itr = realEditWidgets.iterator();
-		while(itr.hasNext()) {
+		while (itr.hasNext()) {
 			final Object obj = itr.next();
 			final String name = ((HasText) obj).getText();
-			if(!name.equals("")){
+			if (!name.equals("")) {
 				final RegionDTO r = new RegionDTO();
-					r.setName(name);
-					regions.add(r);
+				r.setName(name);
+				regions.add(r);
 			}
 		}
 		return regions;
@@ -118,7 +122,7 @@ public class RegionAttribute extends GenericAttribute implements ClickListener {
 	public Set get(final MObjectDTO obj) {
 		return (Set) mGet(obj);
 	}
-	
+
 	protected void set(final MObjectDTO obj, final Object o) {
 		mSet(obj, o);
 	}

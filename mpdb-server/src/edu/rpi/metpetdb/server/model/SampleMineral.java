@@ -14,6 +14,8 @@ public class SampleMineral extends MObject {
 	@IndexedEmbedded(depth = 1, prefix = "mineral_")
 	private Mineral mineral;
 
+	private Sample sample;
+
 	public void setAmount(final Float f) {
 		amount = f;
 	}
@@ -31,6 +33,14 @@ public class SampleMineral extends MObject {
 
 	public Mineral getMineral() {
 		return mineral;
+	}
+
+	public Sample getSample() {
+		return sample;
+	}
+
+	public void setSample(Sample sample) {
+		this.sample = sample;
 	}
 
 	public String getName() {

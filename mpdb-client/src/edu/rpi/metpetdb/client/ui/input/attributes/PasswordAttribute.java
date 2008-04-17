@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.validation.StringConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class PasswordAttribute extends GenericAttribute {

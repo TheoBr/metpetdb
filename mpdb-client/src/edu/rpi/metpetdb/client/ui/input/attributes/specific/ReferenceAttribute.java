@@ -10,11 +10,11 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.ReferenceDTO;
-import edu.rpi.metpetdb.client.model.validation.StringConstraint;
+import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 
 public class ReferenceAttribute extends MultipleTextAttribute<ReferenceDTO> {
 
-	public ReferenceAttribute(StringConstraint sc) {
+	public ReferenceAttribute(final ObjectConstraint sc) {
 		super(sc);
 	}
 

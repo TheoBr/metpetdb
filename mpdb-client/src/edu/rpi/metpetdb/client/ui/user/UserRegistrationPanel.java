@@ -6,7 +6,6 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.UserWithPasswordDTO;
 import edu.rpi.metpetdb.client.ui.FormOp;
@@ -17,22 +16,21 @@ import edu.rpi.metpetdb.client.ui.input.FocusSupport;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.Submit;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.PasswordAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 	private static final GenericAttribute[] mainAttributes = {
-			new TextAttribute(MpDb.doc.User_username) {
-				protected MObjectDTO resolve(final MObjectDTO obj) {
-					return ((UserWithPasswordDTO) obj).getUser();
-				}
-			}, new TextAttribute(MpDb.doc.User_emailAddress) {
-				protected MObjectDTO resolve(final MObjectDTO obj) {
-					return ((UserWithPasswordDTO) obj).getUser();
-				}
-			}, new PasswordAttribute(MpDb.doc.UserWithPassword_newPassword),
-			new PasswordAttribute(MpDb.doc.UserWithPassword_vrfPassword),};
+	// new TextAttribute(MpDb.doc.User_username) {
+	// protected MObjectDTO resolve(final MObjectDTO obj) {
+	// return ((UserWithPasswordDTO) obj).getUser();
+	// }
+	// }, new TextAttribute(MpDb.doc.User_emailAddress) {
+	// protected MObjectDTO resolve(final MObjectDTO obj) {
+	// return ((UserWithPasswordDTO) obj).getUser();
+	// }
+	// }, new PasswordAttribute(MpDb.doc.UserWithPassword_newPassword),
+	// new PasswordAttribute(MpDb.doc.UserWithPassword_vrfPassword),
+	};
 
 	private final UserWithPasswordDTO newbie;
 	private final Button register;
@@ -46,8 +44,9 @@ public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 		toggle = new Button("show");
 		toggle.addClickListener(this);
 
-		p_main = new DetailsPanel(mainAttributes,
-				new Button[]{toggle, register});
+		p_main = new DetailsPanel(mainAttributes, new Button[] {
+				toggle, register
+		});
 		p_main.setLegend(LocaleHandler.lc_text.title_RegisterAccountInfo());
 		p_main.edit(newbie);
 

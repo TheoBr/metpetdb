@@ -1,69 +1,10 @@
 package edu.rpi.metpetdb.client.model.properties;
 
+import edu.rpi.metpetdb.client.model.ElementDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.model.XrayImageDTO;
 
 public enum XrayImageProperty implements Property {
-	imageType {
-		public <T extends MObjectDTO> String get(final T xrayImage) {
-			return ((XrayImageDTO) xrayImage).getImageType();
-		}
-
-		public <T extends MObjectDTO, K> void set(final T xrayImage,
-				final K imageType) {
-			((XrayImageDTO) xrayImage).setImageType((String) imageType);
-		}
-	},
-	subsample {
-		public <T extends MObjectDTO> SubsampleDTO get(final T xrayImage) {
-			return ((XrayImageDTO) xrayImage).getSubsample();
-		}
-
-		public <T extends MObjectDTO, K> void set(final T xrayImage,
-				final K subsample) {
-			((XrayImageDTO) xrayImage).setSubsample((SubsampleDTO) subsample);
-		}
-	},
-	pixelsize {
-		public <T extends MObjectDTO> Integer get(final T xrayImage) {
-			return ((XrayImageDTO) xrayImage).getPixelsize();
-		}
-
-		public <T extends MObjectDTO, K> void set(final T xrayImage,
-				final K pixelsize) {
-			((XrayImageDTO) xrayImage).setPixelsize((Integer) pixelsize);
-		}
-	},
-	contrast {
-		public <T extends MObjectDTO> Integer get(final T xrayImage) {
-			return ((XrayImageDTO) xrayImage).getContrast();
-		}
-
-		public <T extends MObjectDTO, K> void set(final T xrayImage,
-				final K contrast) {
-			((XrayImageDTO) xrayImage).setContrast((Integer) contrast);
-		}
-	},
-	brightness {
-		public <T extends MObjectDTO> Integer get(final T xrayImage) {
-			return ((XrayImageDTO) xrayImage).getBrightness();
-		}
-
-		public <T extends MObjectDTO, K> void set(final T xrayImage,
-				final K brightness) {
-			((XrayImageDTO) xrayImage).setBrightness((Integer) brightness);
-		}
-	},
-	lut {
-		public <T extends MObjectDTO> Integer get(final T xrayImage) {
-			return ((XrayImageDTO) xrayImage).getLut();
-		}
-
-		public <T extends MObjectDTO, K> void set(final T xrayImage, final K lut) {
-			((XrayImageDTO) xrayImage).setLut((Integer) lut);
-		}
-	},
 	radiation {
 		public <T extends MObjectDTO> Boolean get(final T xrayImage) {
 			return ((XrayImageDTO) xrayImage).getRadiation();
@@ -91,7 +32,8 @@ public enum XrayImageProperty implements Property {
 
 		public <T extends MObjectDTO, K> void set(final T xrayImage,
 				final K dwelltime) {
-			((XrayImageDTO) xrayImage).setDwelltime((Integer) dwelltime);
+			((XrayImageDTO) xrayImage).setDwelltime(Integer.parseInt(dwelltime
+					.toString()));
 		}
 	},
 	current {
@@ -101,7 +43,8 @@ public enum XrayImageProperty implements Property {
 
 		public <T extends MObjectDTO, K> void set(final T xrayImage,
 				final K current) {
-			((XrayImageDTO) xrayImage).setCurrent((Integer) current);
+			((XrayImageDTO) xrayImage).setCurrent(Integer.parseInt(current
+					.toString()));
 		}
 	},
 	voltage {
@@ -111,16 +54,18 @@ public enum XrayImageProperty implements Property {
 
 		public <T extends MObjectDTO, K> void set(final T xrayImage,
 				final K voltage) {
-			((XrayImageDTO) xrayImage).setVoltage((Integer) voltage);
+			((XrayImageDTO) xrayImage).setVoltage(Integer.parseInt(voltage
+					.toString()));
 		}
 	},
 	element {
-		public <T extends MObjectDTO> Integer get(final T xrayImage) {
-			return ((XrayImageDTO) xrayImage).getLut();
+		public <T extends MObjectDTO> Object get(final T xrayImage) {
+			return ((XrayImageDTO) xrayImage).getElement();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T xrayImage, final K element) {
-			((XrayImageDTO) xrayImage).setLut((Integer) element);
+		public <T extends MObjectDTO, K> void set(final T xrayImage,
+				final K element) {
+			((XrayImageDTO) xrayImage).setElement((ElementDTO) element);
 		}
 	};
 }

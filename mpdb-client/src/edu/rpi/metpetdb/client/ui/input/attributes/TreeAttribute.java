@@ -18,8 +18,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.interfaces.HasChildren;
-import edu.rpi.metpetdb.client.model.validation.MineralConstraint;
+import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
 public class TreeAttribute extends GenericAttribute implements ClickListener {
@@ -259,8 +260,19 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 			return null;
 	}
 	public Collection get(final GenericAttribute ga) {
-		Collection v = ((MineralConstraint) ga.getConstraint()).getMinerals();
-		return v;
+		final PropertyConstraint pc = ga.getConstraint();
+		if (pc instanceof ObjectConstraint) {
+			final ObjectConstraint oc = (ObjectConstraint) ga.getConstraint();
+			final PropertyConstraint[] pcs = oc.getConstraints();
+			for (int i = 0; i < pcs.length; ++i) {
+				if (pcs[i] instanceof ValueInCollectionConstraint) {
+					return ((ValueInCollectionConstraint) pcs[i]).getValues();
+				}
+			}
+		} else {
+			return ((ValueInCollectionConstraint) pc).getValues();
+		}
+		return null;
 	}
 	public Collection get(final MObjectDTO obj) {
 		final Object o = mGet(obj);

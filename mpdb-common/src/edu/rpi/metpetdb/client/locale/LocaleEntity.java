@@ -60,6 +60,8 @@ public interface LocaleEntity extends ConstantsWithLookup {
 
 	String Sample_viewHeader();
 
+	String Sample_datePrecision();
+
 	String SampleMineral_amount();
 
 	/* User */
@@ -137,6 +139,8 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String ChemicalAnalysis_image();
 
 	String ChemicalAnalysis_largeRock();
+
+	String ChemicalAnalysis_description();
 
 	/* Image */
 	String Image_imageType();

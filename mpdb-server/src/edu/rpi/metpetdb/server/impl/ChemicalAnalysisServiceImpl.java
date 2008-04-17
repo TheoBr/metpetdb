@@ -14,6 +14,7 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.ChemicalAnalysisService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.server.model.Reference;
 
 public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		ChemicalAnalysisService {
@@ -41,11 +42,12 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 
 	public ChemicalAnalysisDTO save(ChemicalAnalysisDTO maDTO)
 			throws ValidationException, LoginRequiredException {
-		doc.validate(maDTO);
+		// doc.validate(maDTO);
 		if (maDTO.getSubsample().getSample().getOwner().getId() != currentUser())
 			throw new SecurityException(
 					"Cannot modify subsamples you don't own.");
 		ChemicalAnalysis ma = mergeBean(maDTO);
+		replaceReferences(ma);
 		try {
 			if (ma.getImage() != null && ma.getImage().mIsNew()) {
 				ma.setImage(update(merge(ma.getImage())));
@@ -71,4 +73,21 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 			throw cve;
 		}
 	}
+
+	// FIXME this is a copy of the method in SampleServiceImpl we should
+	// implemement some sort of utility class to take care of this (maybe?)
+	private void replaceReferences(final ChemicalAnalysis ca) {
+		if (ca.getReference() != null) {
+
+			final Reference r = ca.getReference();
+			final Query references = namedQuery("edu.rpi.metpetdb.server.model.Reference.Reference.byName");
+
+			references.setString("name", r.getName());
+
+			if (references.uniqueResult() != null) {
+				ca.setReference((Reference) references.uniqueResult());
+			}
+		}
+	}
+
 }

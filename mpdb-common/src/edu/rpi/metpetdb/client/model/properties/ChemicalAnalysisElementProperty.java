@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.model.properties;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisElementDTO;
+import edu.rpi.metpetdb.client.model.ElementDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 
 public enum ChemicalAnalysisElementProperty implements Property {
@@ -38,6 +39,18 @@ public enum ChemicalAnalysisElementProperty implements Property {
 				final T chemicalAnalysisElement, final K precisionUnit) {
 			((ChemicalAnalysisElementDTO) chemicalAnalysisElement)
 					.setPrecisionUnit((String) precisionUnit);
+		}
+	},
+	element {
+		public <T extends MObjectDTO> Object get(final T chemicalAnalysisElement) {
+			return ((ChemicalAnalysisElementDTO) chemicalAnalysisElement)
+					.getElement();
+		}
+
+		public <T extends MObjectDTO, K> void set(
+				final T chemicalAnalysisElement, final K element) {
+			((ChemicalAnalysisElementDTO) chemicalAnalysisElement)
+					.setElement((ElementDTO) element);
 		}
 	};
 }

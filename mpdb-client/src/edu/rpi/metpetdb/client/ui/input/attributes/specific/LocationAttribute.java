@@ -30,7 +30,9 @@ public class LocationAttribute extends GenericAttribute {
 			xText.setText(new Double(p.x).toString());
 			yText.setText(new Double(p.y).toString());
 		}
-		return new Widget[]{xText, yText};
+		return new Widget[] {
+				xText, yText
+		};
 	}
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
@@ -53,30 +55,42 @@ public class LocationAttribute extends GenericAttribute {
 
 		pointY.setMaxLength(20);
 		applyStyle(pointY, true);
-		return new Widget[]{pointX, pointY};
+		return new Widget[] {
+				pointX, pointY
+		};
 	}
 
-	protected Object get(final Widget[] editWidget, final PropertyConstraint constraint,final int i) throws ValidationException {
+	protected Object get(final Widget[] editWidget,
+			final PropertyConstraint constraint, final int i)
+			throws ValidationException {
 		final String latitude = ((TextBox) editWidget[0]).getText();
 		final String longitude = ((TextBox) editWidget[1]).getText();
 		final Point p = new Point();
 		p.srid = MpDbConstants.WGS84;
 		p.dimension = 2;
-		try {
-			final double x = Double.parseDouble(latitude);
-			p.x = x;
-		} catch (NumberFormatException nfe) {
-			throw new InvalidGeometryException(this.getConstraint(), LocaleHandler.lc_entity
-					.getString("Sample_latitude"));
+		if (latitude.length() > 0) {
+			try {
+				final double x = Double.parseDouble(latitude);
+				p.x = x;
+			} catch (NumberFormatException nfe) {
+				throw new InvalidGeometryException(this.getConstraint(),
+						LocaleHandler.lc_entity.getString("Sample_latitude"));
+			}
 		}
-		try {
-			final double y = Double.parseDouble(longitude);
-			p.y = y;
-		} catch (NumberFormatException nfe) {
-			throw new InvalidGeometryException(this.getConstraint(), LocaleHandler.lc_entity
-					.getString("Sample_longitude"));
+		if (longitude.length() > 0) {
+
+			try {
+				final double y = Double.parseDouble(longitude);
+				p.y = y;
+			} catch (NumberFormatException nfe) {
+				throw new InvalidGeometryException(this.getConstraint(),
+						LocaleHandler.lc_entity.getString("Sample_longitude"));
+			}
 		}
-		return p;
+		if (latitude.length() == 0 || longitude.length() == 0)
+			return null;
+		else
+			return p;
 	}
 
 	protected Point get(final MObjectDTO obj) {

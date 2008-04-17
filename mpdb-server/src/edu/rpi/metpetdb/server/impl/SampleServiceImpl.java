@@ -110,14 +110,17 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	private void replaceSampleMinerals(final Sample s) {
 		if (s.getMinerals() != null) {
 			final Set<SampleMineral> mineralsToAdd = new HashSet<SampleMineral>();
-			for (SampleMineral sm : s.getMinerals()) {
+			final Iterator<SampleMineral> itr = s.getMinerals().iterator();
+			while (itr.hasNext()) {
+				final SampleMineral sm = itr.next();
 				final Query minerals = namedQuery("Mineral.byName");
 				minerals.setString("name", sm.getMineral().getName());
 				if (minerals.uniqueResult() != null) {
-					s.getMinerals().remove(sm);
 					final SampleMineral newsm = new SampleMineral();
 					newsm.setMineral((Mineral) minerals.uniqueResult());
+					newsm.setAmount(sm.getAmount());
 					mineralsToAdd.add(newsm);
+					itr.remove();
 				}
 			}
 			s.getMinerals().addAll(mineralsToAdd);

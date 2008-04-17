@@ -1,7 +1,7 @@
 package edu.rpi.metpetdb.client.error;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.validation.MObjectConstraint;
+import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 
 /**
  * Indicates the value for a property is the wrong Java object type.
@@ -16,7 +16,7 @@ public class ValueWrongTypeException extends ValidationException {
 
 	public ValueWrongTypeException() {
 	}
-	public ValueWrongTypeException(final MObjectConstraint pc) {
+	public ValueWrongTypeException(final PropertyConstraint pc) {
 		super(pc);
 	}
 

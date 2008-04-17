@@ -14,7 +14,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 
 public class AddImageWizard extends WizardDialog {
-	
+
 	public AddImageWizard(final ServerOp r) {
 		final XrayImageDTO xray = new XrayImageDTO();
 		final UploadImageAttribute uploadImage = new UploadImageAttribute(
@@ -25,11 +25,11 @@ public class AddImageWizard extends WizardDialog {
 				new TextAttribute(MpDb.doc.XrayImage_dwelltime),
 				new TextAttribute(MpDb.doc.XrayImage_lines),
 				new RadioButtonAttribute(MpDb.doc.XrayImage_radiation),
-				new TextAttribute(MpDb.doc.XrayImage_element),
-				};
+				new ListboxAttribute(MpDb.doc.XrayImage_element),
+		};
 
 		final DetailsPanel p_xray = new DetailsPanel(xray_attributes,
-				new Button[]{});
+				new Button[] {});
 		final ServerOp notifier = new ServerOp() {
 			public void begin() {
 			}
@@ -37,7 +37,8 @@ public class AddImageWizard extends WizardDialog {
 				if (result instanceof String) {
 					if (result.equals("X-ray")) {
 						p_xray.edit(xray);
-						AddImageWizard.this.addStep(p_xray, 1, "X-ray Attributes");
+						AddImageWizard.this.addStep(p_xray, 1,
+								"X-ray Attributes");
 					} else {
 						AddImageWizard.this.removeStep(1);
 					}
@@ -46,12 +47,13 @@ public class AddImageWizard extends WizardDialog {
 		};
 		final ListboxAttribute imageType = new ListboxAttribute(
 				MpDb.doc.Image_imageType, notifier);
-		final GenericAttribute image[] = {uploadImage, imageType,
-				new TextAttribute(MpDb.doc.Image_lut),
+		final GenericAttribute image[] = {
+				uploadImage, imageType, new TextAttribute(MpDb.doc.Image_lut),
 				new TextAttribute(MpDb.doc.Image_contrast),
 				new TextAttribute(MpDb.doc.Image_brightness),
-				new TextAttribute(MpDb.doc.Image_pixelsize),};
-		final DetailsPanel p_image = new DetailsPanel(image, new Button[]{});
+				new TextAttribute(MpDb.doc.Image_pixelsize),
+		};
+		final DetailsPanel p_image = new DetailsPanel(image, new Button[] {});
 		p_image.edit(xray);
 
 		final ServerOp dialog_finish = new ServerOp() {
@@ -62,7 +64,7 @@ public class AddImageWizard extends WizardDialog {
 				if (((ImageDTO) result).getImageType().equals("X-ray")) {
 					r.onSuccess(result);
 				} else {
-					r.onSuccess(((XrayImageDTO)result).getImage());
+					r.onSuccess(((XrayImageDTO) result).getImage());
 				}
 			}
 			public void onFailure(final Throwable e) {

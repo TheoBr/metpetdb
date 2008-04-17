@@ -15,6 +15,8 @@
     from Region r
     where r.name = :name
   </query>
-
+	<query name="Region.all">
+    from Region r
+  </query>
   </class>
 </hibernate-mapping>

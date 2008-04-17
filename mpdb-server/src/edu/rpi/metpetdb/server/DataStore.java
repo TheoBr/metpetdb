@@ -9,8 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 
 import net.sf.hibernate4gwt.core.HibernateBeanManager;
 
@@ -20,31 +20,33 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.Column;
+import org.hibernate.mapping.Component;
 import org.hibernate.mapping.ForeignKey;
+import org.hibernate.mapping.OneToMany;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
+import org.hibernate.mapping.Set;
+import org.hibernate.mapping.Value;
 import org.postgis.Geometry;
 
-import edu.rpi.metpetdb.client.model.MineralDTO;
-import edu.rpi.metpetdb.client.model.validation.BooleanConstraint;
-import edu.rpi.metpetdb.client.model.validation.CollectionConstraint;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
-import edu.rpi.metpetdb.client.model.validation.FloatConstraint;
 import edu.rpi.metpetdb.client.model.validation.GeometryConstraint;
-import edu.rpi.metpetdb.client.model.validation.ImageConstraint;
-import edu.rpi.metpetdb.client.model.validation.IntegerConstraint;
+import edu.rpi.metpetdb.client.model.validation.ImageTypeConstraint;
 import edu.rpi.metpetdb.client.model.validation.MObjectConstraint;
-import edu.rpi.metpetdb.client.model.validation.MineralConstraint;
-import edu.rpi.metpetdb.client.model.validation.MultiValuedStringConstraint;
+import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.model.validation.ReferenceConstraint;
 import edu.rpi.metpetdb.client.model.validation.RockTypeConstraint;
-import edu.rpi.metpetdb.client.model.validation.ShortConstraint;
-import edu.rpi.metpetdb.client.model.validation.StringConstraint;
+import edu.rpi.metpetdb.client.model.validation.SubsampleTypeConstraint;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
+import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.BooleanConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.ShortConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.server.model.MObject;
-import edu.rpi.metpetdb.server.model.Mineral;
 
 /** Global service support. */
 public class DataStore {
@@ -115,11 +117,11 @@ public class DataStore {
 	}
 
 	public synchronized DatabaseObjectConstraints getDatabaseObjectConstraints() {
-		if (databaseObjectConstraints == null) {
-			final DatabaseObjectConstraints oc = new DatabaseObjectConstraints();
-			setConstraints(oc);
-			databaseObjectConstraints = oc;
-		}
+		// if (databaseObjectConstraints == null) {
+		final DatabaseObjectConstraints oc = new DatabaseObjectConstraints();
+		databaseObjectConstraints = oc;
+		setConstraints(oc);
+		// }
 		return databaseObjectConstraints;
 	}
 
@@ -159,26 +161,57 @@ public class DataStore {
 		if (f.getType().isArray())
 			return;
 		final String[] v = f.getName().split("_");
-		if (v.length != 2)
-			throw new RuntimeException("Cannot populate field " + f.getName());
+		// if (v.length != 2)
+		// throw new RuntimeException("Cannot populate field " + f.getName());
 
 		final String pkg = "edu.rpi.metpetdb.server.model";
-		final String entityName = v[0];
-		final String attributeName = v[1];
+		final String entityName;
+		if (v.length == 2)
+			entityName = v[0];
+		else
+			entityName = v[1];
+		final String entityNameProperty;
+		if (v.length == 2)
+			entityNameProperty = entityName;
+		else
+			entityNameProperty = v[0];
+		final String attributeName;
+		if (v.length == 2)
+			attributeName = v[1];
+		else
+			attributeName = v[2];
+		final String attributeNameProperty;
+		if (v.length == 2)
+			attributeNameProperty = attributeName;
+		else
+			attributeNameProperty = v[3];
 		final PersistentClass cm;
 		final Property prop;
 		final Column col;
+		final Property tempProp;
 
 		if (oc instanceof ObjectConstraints)
 			cm = null;
 		else
 			cm = DataStore.getConfiguration().getClassMapping(
 					pkg + "." + entityName);
-		prop = cm != null ? cm.getProperty(attributeName) : null;
+
+		tempProp = cm != null ? cm.getProperty(attributeName) : null;
+		if (v.length == 2)
+			prop = tempProp;
+		else if (v.length == 4) {
+			prop = ((Component) ((Set) tempProp.getValue()).getElement())
+					.getProperty(v[3]);
+		} else {
+			prop = null;
+		}
+
+		Class toClass = null;
 		if (prop != null) {
 			if (prop.getValue().getClass() == org.hibernate.mapping.Set.class
 					|| prop.getValue().getClass() == org.hibernate.mapping.Bag.class) {
 				col = null;
+				// prop.getGetter(cm.getMappedClass()).getReturnType()
 				final Iterator fkItr = ((org.hibernate.mapping.Set) prop
 						.getValue()).getCollectionTable()
 						.getForeignKeyIterator();
@@ -190,7 +223,12 @@ public class DataStore {
 					final String fromEntity = entityName;
 					// The to of the foreign key
 					final String toEntity = fk.getReferencedEntityName();
+					try {
+						if (!toEntity.equals(pkg + "." + entityName))
+							toClass = Class.forName(toEntity);
+					} catch (ClassNotFoundException cnfe) {
 
+					}
 				}
 			} else {
 				final Iterator<Column> i = prop.getColumnIterator();
@@ -206,18 +244,21 @@ public class DataStore {
 
 		PropertyConstraint pc = (PropertyConstraint) f.get(oc);
 		if (pc == null) {
-			pc = createPropertyConstraint(prop, f);
+			pc = createPropertyConstraint(prop, f, toClass);
 			f.set(oc, pc);
 		}
 
-		pc.entityName = entityName;
-		pc.propertyName = attributeName;
-		pc.property = property(clazz(cm, entityName), pc.propertyName);
+		pc.entityName = entityNameProperty;
+		pc.propertyName = attributeNameProperty;
+		if (v.length == 2)
+			pc.property = property(clazz(cm, pc.entityName), pc.propertyName);
+		else
+			pc.property = property(clazz(null, v[0]), pc.propertyName);
 		appendToAllArray(oc, pc);
 
 		if (cm != null && col != null) {
-			final ResultSet rs = md.getColumns(null, null, cm.getTable()
-					.getName(), col.getName());
+			final ResultSet rs = md.getColumns(null, null, prop.getValue()
+					.getTable().getName(), col.getName());
 			try {
 				if (!rs.next())
 					throw new RuntimeException("No cols: " + f.getName());
@@ -253,7 +294,6 @@ public class DataStore {
 			}
 		}
 	}
-
 	private static Class clazz(final PersistentClass cm, final String entityName) {
 		if (cm != null)
 			return cm.getMappedClass();
@@ -266,7 +306,7 @@ public class DataStore {
 	}
 
 	private PropertyConstraint createPropertyConstraint(final Property p,
-			final Field f) throws IllegalAccessException,
+			final Field f, final Class toClass) throws IllegalAccessException,
 			InstantiationException {
 		try {
 			final String pkg = "edu.rpi.metpetdb.client.model.validation";
@@ -288,6 +328,14 @@ public class DataStore {
 			return RockTypeConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
 					.newInstance()
 					: new RockTypeConstraint();
+		} else if ("type".equals(name)) {
+			return SubsampleTypeConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
+					.newInstance()
+					: new SubsampleTypeConstraint();
+		} else if ("imageType".equals(name)) {
+			return ImageTypeConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
+					.newInstance()
+					: new ImageTypeConstraint();
 		} else if (rc == String.class)
 			return StringConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
 					.newInstance()
@@ -308,36 +356,16 @@ public class DataStore {
 			return ShortConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
 					.newInstance()
 					: new ShortConstraint();
-		else if ("minerals".equals(name) || "mineral".equals(name)) {
-			MineralConstraint mc;
-			if (MineralConstraint.class.isAssignableFrom(c)) {
-				mc = (MineralConstraint) c.newInstance();
-			} else {
-				mc = new MineralConstraint();
-			}
-			final Session session = open();
-			try {
-				final List<Mineral> minerals = session.getNamedQuery(
-						"Mineral.parents").list();
-				Mineral.loadChildren(minerals);
-				mc.setMinerals((List<MineralDTO>) hbm.clone(minerals));
-			} catch (org.hibernate.exception.GenericJDBCException dbe) {
-				session.cancelQuery();
-			} finally {
-				session.clear();
-				session.close();
-			}
-			return mc;
-		} else if (c == CollectionConstraint.class) {
+		else if (c == ValueInCollectionConstraint.class) {
 			// We want to fetch the applicable values for the one end of a
 			// Many-to-one
 			// association
-			CollectionConstraint cc;
+			ValueInCollectionConstraint cc;
 			String queryName = className + ".all";
-			if (CollectionConstraint.class.isAssignableFrom(c)) {
-				cc = (CollectionConstraint) c.newInstance();
+			if (ValueInCollectionConstraint.class.isAssignableFrom(c)) {
+				cc = (ValueInCollectionConstraint) c.newInstance();
 			} else {
-				cc = new CollectionConstraint();
+				cc = new ValueInCollectionConstraint();
 			}
 			if (className.equals("Set")) {
 				if (name.equals("elements"))
@@ -345,28 +373,16 @@ public class DataStore {
 				else if (name.equals("oxides"))
 					queryName = "Oxide.all";
 			}
-			final Session session = open();
-			cc.setValues((Collection) hbm.clone(session
-					.getNamedQuery(queryName).list()));
-			session.clear();
-			session.close();
-			return cc;
-		} else if (rc == java.util.Set.class
-				|| rc == java.util.Collection.class) {
-			// Many-to-many or one-to-many association
-			if ("images".equals(name)) {
-				return ImageConstraint.class.isAssignableFrom(c) ? (ImageConstraint) c
-						.newInstance()
-						: new ImageConstraint();
-			} else {
-				MultiValuedStringConstraint rcc;
-				if (MultiValuedStringConstraint.class.isAssignableFrom(c)) {
-					rcc = (MultiValuedStringConstraint) c.newInstance();
-				} else {
-					rcc = new MultiValuedStringConstraint();
-				}
-				return rcc;
+			try {
+				final Session session = open();
+				cc.setValues((Collection<? extends MObjectDTO>) hbm
+						.clone(session.getNamedQuery(queryName).list()));
+				session.clear();
+				session.close();
+			} catch (MappingException me) {
+				cc.setValues(new HashSet<MObjectDTO>());
 			}
+			return cc;
 		} else if ("timestamp".equals(tn)) {
 			return TimestampConstraint.class.isAssignableFrom(c) ? (TimestampConstraint) c
 					.newInstance()
@@ -375,14 +391,35 @@ public class DataStore {
 			return BooleanConstraint.class.isAssignableFrom(c) ? (BooleanConstraint) c
 					.newInstance()
 					: new BooleanConstraint();
-		} else if ("image".equals(name)) {
-			return ImageConstraint.class.isAssignableFrom(c) ? (ImageConstraint) c
-					.newInstance()
-					: new ImageConstraint();
-		} else if ("reference".equals(name)) {
-			return ReferenceConstraint.class.isAssignableFrom(c) ? (ReferenceConstraint) c
-					.newInstance()
-					: new ReferenceConstraint();
+		} else if (c == ObjectConstraint.class) {
+			final Value v = p.getValue();
+			final ObjectConstraint oc = new ObjectConstraint();
+			if (v instanceof Set) {
+				final Set s = (Set) v;
+				final Class componentClass;
+				if (s.getElement() instanceof Component) {
+					final Component component = (Component) s.getElement();
+					componentClass = component.getComponentClass();
+				} else if (s.getElement() instanceof OneToMany) {
+					componentClass = ((OneToMany) s.getElement())
+							.getAssociatedClass().getMappedClass();
+				} else {
+					componentClass = toClass;
+				}
+				try {
+					final Field componentField = DatabaseObjectConstraints.class
+							.getField(componentClass.getSimpleName() + "__all");
+					oc.setConstraints((PropertyConstraint[]) componentField
+							.get(DataStore.databaseObjectConstraints));
+				} catch (NoSuchFieldException nsfe) {
+					throw new RuntimeException(
+							"Unable to find the correct field("
+									+ componentClass.getSimpleName() + "__all"
+									+ ")  to set the constraints to");
+				}
+
+			}
+			return oc;
 		} else if (MObject.class.isAssignableFrom(rc))
 			return (MObjectConstraint) c.newInstance();
 		else
@@ -390,6 +427,7 @@ public class DataStore {
 					+ p.getPersistentClass().getClassName() + " property "
 					+ p.getName() + ".");
 	}
+
 	private static edu.rpi.metpetdb.client.model.properties.Property property(
 			final Class who, final String name) throws IllegalAccessException {
 		try {

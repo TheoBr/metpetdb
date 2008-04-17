@@ -96,9 +96,17 @@ public enum ChemicalAnalysisProperty implements Property {
 		}
 
 		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
-				final K reference) {
-			((ChemicalAnalysisDTO) chemicalAnalysis)
-					.setReference((ReferenceDTO) reference);
+				final K ref) {
+			final ReferenceDTO reference;
+			if (ref instanceof String) {
+				reference = new ReferenceDTO();
+				reference.setName(ref.toString());
+			} else if (ref instanceof ReferenceDTO) {
+				reference = (ReferenceDTO) ref;
+			} else {
+				reference = null;
+			}
+			((ChemicalAnalysisDTO) chemicalAnalysis).setReference(reference);
 		}
 	},
 	description {

@@ -63,7 +63,7 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 
 	public SubsampleDTO save(SubsampleDTO subsampleDTO)
 			throws ValidationException, LoginRequiredException {
-		doc.validate(subsampleDTO);
+		// doc.validate(subsampleDTO);
 		if (subsampleDTO.getSample() == null
 				|| subsampleDTO.getSample().getOwner() == null
 				|| subsampleDTO.getSample().getOwner().getId() != currentUser())

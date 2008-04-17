@@ -6,10 +6,10 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.validation.CollectionConstraint;
-import edu.rpi.metpetdb.client.model.validation.MaxLengthConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.model.validation.StringConstraint;
+import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
+import edu.rpi.metpetdb.client.model.validation.interfaces.MaxLengthConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class TextAttribute extends GenericAttribute {
@@ -19,14 +19,16 @@ public class TextAttribute extends GenericAttribute {
 		super(sc);
 		visibleLength = sc.maxLength < 30 ? sc.maxLength : 30;
 	}
-	
+
 	public TextAttribute(final PropertyConstraint pc) {
 		super(pc);
 		visibleLength = 30;
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
-		return new Widget[]{new MText(get(obj))};
+		return new Widget[] {
+			new MText(get(obj))
+		};
 	}
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
@@ -34,16 +36,21 @@ public class TextAttribute extends GenericAttribute {
 		DOM.setElementAttribute(b.getElement(), "id", id);
 		b.setText(get(obj));
 		b.setVisibleLength(visibleLength);
-		b.setMaxLength(((MaxLengthConstraint) getConstraint()).getMaxLength());
+		if (getConstraint() instanceof MaxLengthConstraint)
+			b.setMaxLength(((MaxLengthConstraint) getConstraint())
+					.getMaxLength());
 		applyStyle(b, true);
-		return new Widget[]{b};
+		return new Widget[] {
+			b
+		};
 	}
 
 	protected Object get(final Widget editWidget) {
 		final String v = ((HasText) editWidget).getText();
-		if (this.getConstraint() instanceof CollectionConstraint) {
-			//Get the real instance of the object instead of the string
-			return ((CollectionConstraint)this.getConstraint()).getObjectWithName(v);
+		if (this.getConstraint() instanceof ValueInCollectionConstraint) {
+			// Get the real instance of the object instead of the string
+			return ((ValueInCollectionConstraint) this.getConstraint())
+					.getObjectWithName(v);
 		}
 		return v != null && v.length() > 0 ? v : null;
 	}

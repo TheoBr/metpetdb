@@ -16,7 +16,6 @@ import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.Submit;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.PasswordAttribute;
 
 public class EditUserProfile extends FlowPanel implements UsesCurrentUser {
 	private final UserDTO user;
@@ -35,9 +34,10 @@ public class EditUserProfile extends FlowPanel implements UsesCurrentUser {
 
 	static class PasswordChanger extends FlowPanel implements ClickListener {
 		private static final GenericAttribute[] passwordAttributes = {
-				new PasswordAttribute(MpDb.doc.UserWithPassword_oldPassword),
-				new PasswordAttribute(MpDb.doc.UserWithPassword_newPassword),
-				new PasswordAttribute(MpDb.doc.UserWithPassword_vrfPassword),};
+		// new PasswordAttribute(MpDb.doc.UserWithPassword_oldPassword),
+		// new PasswordAttribute(MpDb.doc.UserWithPassword_newPassword),
+		// new PasswordAttribute(MpDb.doc.UserWithPassword_vrfPassword),
+		};
 		private final UserWithPasswordDTO uwp;
 		private final DetailsPanel p_password;
 		private final Button changePassword;
@@ -45,13 +45,16 @@ public class EditUserProfile extends FlowPanel implements UsesCurrentUser {
 		PasswordChanger(final UserDTO whoToEdit) {
 			uwp = new UserWithPasswordDTO(whoToEdit);
 
-			changePassword = new Submit(LocaleHandler.lc_text.buttonChangePassword());
+			changePassword = new Submit(LocaleHandler.lc_text
+					.buttonChangePassword());
 			changePassword.addClickListener(this);
 
 			final String n = uwp.getUser().getUsername();
-			p_password = new DetailsPanel(passwordAttributes,
-					new Button[]{changePassword});
-			p_password.setLegend(LocaleHandler.lc_text.title_ChangeAccountPassword(n));
+			p_password = new DetailsPanel(passwordAttributes, new Button[] {
+				changePassword
+			});
+			p_password.setLegend(LocaleHandler.lc_text
+					.title_ChangeAccountPassword(n));
 			p_password.edit(uwp);
 
 			add(new OnEnterPanel(p_password) {
@@ -83,8 +86,9 @@ public class EditUserProfile extends FlowPanel implements UsesCurrentUser {
 					uwp.setVrfPassword(null);
 					p_password.edit(uwp);
 					MetPetDBApplication
-							.notice(LocaleHandler.lc_text.notice_PasswordChanged(uwp
-									.getUser().getUsername()));
+							.notice(LocaleHandler.lc_text
+									.notice_PasswordChanged(uwp.getUser()
+											.getUsername()));
 				}
 			}.begin();
 		}

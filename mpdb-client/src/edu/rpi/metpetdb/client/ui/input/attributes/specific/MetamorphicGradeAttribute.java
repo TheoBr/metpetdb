@@ -10,12 +10,12 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.MetamorphicGradeDTO;
-import edu.rpi.metpetdb.client.model.validation.StringConstraint;
+import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 
 public class MetamorphicGradeAttribute extends
 		MultipleTextAttribute<MetamorphicGradeDTO> {
 
-	public MetamorphicGradeAttribute(StringConstraint sc) {
+	public MetamorphicGradeAttribute(ObjectConstraint sc) {
 		super(sc);
 	}
 

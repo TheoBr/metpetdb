@@ -11,15 +11,14 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
  * 
  * @see PropertyConstraint
  */
-public abstract class ValidationException extends Exception
-		implements
-			IsSerializable {
+public abstract class ValidationException extends Exception implements
+		IsSerializable {
 	private static final long serialVersionUID = 1L;
 
 	protected static String formatPropertyName(final PropertyConstraint c) {
 		final String p = c.propertyName;
-		final String r = LocaleHandler.lc_entity.getString(c.entityName + "_" +
-								p);
+		final String r = LocaleHandler.lc_entity.getString(c.entityName + "_"
+				+ p);
 		return r != null ? r : p;
 	}
 
@@ -35,8 +34,9 @@ public abstract class ValidationException extends Exception
 	 * Get the constraint that has failed.
 	 * <p>
 	 * Note that the returned constraint object is probably not reference equal
-	 * with one that is a constant in {@link DatabaseObjectConstraints}. So use the
-	 * overriden equals methods to test if two constraints are the same, not ==.
+	 * with one that is a constant in {@link DatabaseObjectConstraints}. So use
+	 * the overriden equals methods to test if two constraints are the same, not
+	 * ==.
 	 * </p>
 	 * 
 	 * @return the constraint that has failed.

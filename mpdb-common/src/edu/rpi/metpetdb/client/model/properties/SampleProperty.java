@@ -151,7 +151,8 @@ public enum SampleProperty implements Property {
 
 		public <T extends MObjectDTO, K> void set(final T sample,
 				final K latitudeError) {
-			((SampleDTO) sample).setLatitudeError((Float) latitudeError);
+			((SampleDTO) sample).setLatitudeError(Float
+					.parseFloat(latitudeError.toString()));
 		}
 	},
 	longitudeError {
@@ -161,7 +162,8 @@ public enum SampleProperty implements Property {
 
 		public <T extends MObjectDTO, K> void set(final T sample,
 				final K longitudeError) {
-			((SampleDTO) sample).setLongitudeError((Float) longitudeError);
+			((SampleDTO) sample).setLongitudeError(Float
+					.parseFloat(longitudeError.toString()));
 		}
 	},
 	regions {
@@ -203,8 +205,7 @@ public enum SampleProperty implements Property {
 
 		public <T extends MObjectDTO, K> void set(final T sample,
 				final K comments) {
-			((SampleDTO) sample)
-					.setComments((Set<SampleCommentDTO>) comments);
+			((SampleDTO) sample).setComments((Set<SampleCommentDTO>) comments);
 		}
 	},
 	subsampleCount {

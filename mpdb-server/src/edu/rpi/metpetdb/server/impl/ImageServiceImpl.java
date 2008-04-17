@@ -46,9 +46,9 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 
 	public List<ImageDTO> allImages(final long subsampleId)
 			throws NoSuchObjectException {
-		return cloneBean(byKey("Image", "subsampleId", subsampleId));
+		final List<Image> images = byKey("Image", "subsampleId", subsampleId);
+		return cloneBean(images);
 	}
-
 	public ImageDTO saveImage(ImageDTO image) throws ValidationException,
 			LoginRequiredException {
 		// oc.validate(ImageDTO);
@@ -140,7 +140,9 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		// 255 to indicate that the entire source is opaque.
 		ParameterBlock pb = new ParameterBlock();
 		pb.add(width).add(height);
-		pb.add(new Byte[] { new Byte((byte) 0xFF) });
+		pb.add(new Byte[] {
+			new Byte((byte) 0xFF)
+		});
 		RenderedOp alpha = JAI.create("constant", pb);
 
 		// Combine the source and alpha images such that the source ImageDTO

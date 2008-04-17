@@ -14,7 +14,6 @@ import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.ChooseImageAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAreaAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AnalysisMaterialAttribute;
@@ -38,16 +37,15 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 			new TextAreaAttribute(MpDb.doc.ChemicalAnalysis_description),
 			new AnalysisMaterialAttribute(MpDb.doc.ChemicalAnalysis_mineral,
 					MpDb.doc.ChemicalAnalysis_largeRock),
-			new ListboxAttribute(MpDb.doc.ChemicalAnalysis_elements),
-			new ListboxAttribute(MpDb.doc.ChemicalAnalysis_oxides),
 	};
 
-	private final ObjectEditorPanel p_chemicalAnalysis;
+	private final ObjectEditorPanel<ChemicalAnalysisDTO> p_chemicalAnalysis;
 
 	private long chemicalAnalysisId;
 
 	public ChemicalAnalysisDetails() {
-		p_chemicalAnalysis = new ObjectEditorPanel(chemicalAnalysisAtts) {
+		p_chemicalAnalysis = new ObjectEditorPanel<ChemicalAnalysisDTO>(
+				chemicalAnalysisAtts) {
 			protected void loadBean(final AsyncCallback ac) {
 				final ChemicalAnalysisDTO ma = (ChemicalAnalysisDTO) getBean();
 				MpDb.chemicalAnalysis_svc.details(
