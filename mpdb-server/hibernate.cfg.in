@@ -31,7 +31,6 @@
 	<mapping resource="edu/rpi/metpetdb/server/dao/Reference.hbm.xml" />
 	<mapping resource="edu/rpi/metpetdb/server/dao/Oxide.hbm.xml" />
 	<mapping resource="edu/rpi/metpetdb/server/dao/SampleComment.hbm.xml" />
-	<mapping resource="edu/rpi/metpetdb/server/dao/SampleMineral.hbm.xml" />
     <event type="post-update">
         <listener class="org.hibernate.search.event.FullTextIndexEventListener"/>
     </event>
