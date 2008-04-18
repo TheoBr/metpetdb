@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
@@ -144,10 +143,12 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 					final PagingResponse response = new PagingResponse(
 							getList(result.getList()), result.getList());
 					if (result.getCount() == 0) {
-						ListEx.this.clear();
-						ListEx.this
-								.add(new HTML(
-										"nothing to see here...move along<br/><br/><br/><br/><br/>Seriously though, i did not find any samples that match your criteria"));
+						// ListEx.this.clear();
+						// ListEx.this
+						// .add(new HTML(
+						// "nothing to see here...move
+						// along<br/><br/><br/><br/><br/>Seriously though, i did
+						// not find any samples that match your criteria"));
 					} else {
 						callback.onRowsReady(request, response);
 					}
@@ -278,6 +279,10 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		this.setWidth("100%");
 
 	}
+
+	/**
+	 * Reloads the current page to force a refresh of the data
+	 */
 	public void refresh() {
 		scrollTable.reloadPage();
 	}

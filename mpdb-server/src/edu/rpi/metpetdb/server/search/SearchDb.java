@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.Query;
@@ -76,9 +77,8 @@ public class SearchDb {
 		flags.toArray(flagsArray);
 		List<Sample> result = null;
 		try {
-			final Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
-					.parse(searchArray, columnsArray, flagsArray,
-							new StandardAnalyzer());
+			final Query query = MultiFieldQueryParser.parse(searchArray,
+					columnsArray, flagsArray, new StandardAnalyzer());
 			final org.hibernate.Query hibQuery = fullTextSession
 					.createFullTextQuery(query, Sample.class);
 			result = hibQuery.list();

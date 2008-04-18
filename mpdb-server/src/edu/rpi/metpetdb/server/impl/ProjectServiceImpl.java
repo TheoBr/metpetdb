@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.server.impl;
 
 import org.hibernate.exception.ConstraintViolationException;
 
+import edu.rpi.metpetdb.client.error.DuplicateValueException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -23,7 +24,7 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 
 	public ProjectDTO saveProject(ProjectDTO projectDTO)
 			throws ValidationException, LoginRequiredException {
-		// doc.validate(projectDTO);
+		doc.validate(projectDTO);
 		if (projectDTO.getOwner().getId() != currentUser())
 			throw new SecurityException("Cannot modify projects you don't own.");
 		Project project = mergeBean(projectDTO);
@@ -36,9 +37,9 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 			commit();
 			return cloneBean(project);
 		} catch (ConstraintViolationException cve) {
-			// if ("projects_nk".equals(cve.getConstraintName()))
-			// throw new DuplicateValueException(doc.Project_name, project
-			// .getName());
+			if ("projects_nk".equals(cve.getConstraintName()))
+				throw new DuplicateValueException(doc.Project_name, project
+						.getName());
 			throw cve;
 		}
 	}

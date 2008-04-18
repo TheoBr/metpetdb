@@ -16,6 +16,7 @@ import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.Submit;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.PasswordAttribute;
 
 public class EditUserProfile extends FlowPanel implements UsesCurrentUser {
 	private final UserDTO user;
@@ -34,12 +35,12 @@ public class EditUserProfile extends FlowPanel implements UsesCurrentUser {
 
 	static class PasswordChanger extends FlowPanel implements ClickListener {
 		private static final GenericAttribute[] passwordAttributes = {
-		// new PasswordAttribute(MpDb.doc.UserWithPassword_oldPassword),
-		// new PasswordAttribute(MpDb.doc.UserWithPassword_newPassword),
-		// new PasswordAttribute(MpDb.doc.UserWithPassword_vrfPassword),
+				new PasswordAttribute(MpDb.doc.UserWithPassword_oldPassword),
+				new PasswordAttribute(MpDb.doc.UserWithPassword_newPassword),
+				new PasswordAttribute(MpDb.doc.UserWithPassword_vrfPassword),
 		};
 		private final UserWithPasswordDTO uwp;
-		private final DetailsPanel p_password;
+		private final DetailsPanel<UserWithPasswordDTO> p_password;
 		private final Button changePassword;
 
 		PasswordChanger(final UserDTO whoToEdit) {
@@ -50,9 +51,10 @@ public class EditUserProfile extends FlowPanel implements UsesCurrentUser {
 			changePassword.addClickListener(this);
 
 			final String n = uwp.getUser().getUsername();
-			p_password = new DetailsPanel(passwordAttributes, new Button[] {
-				changePassword
-			});
+			p_password = new DetailsPanel<UserWithPasswordDTO>(
+					passwordAttributes, new Button[] {
+						changePassword
+					});
 			p_password.setLegend(LocaleHandler.lc_text
 					.title_ChangeAccountPassword(n));
 			p_password.edit(uwp);
@@ -70,7 +72,7 @@ public class EditUserProfile extends FlowPanel implements UsesCurrentUser {
 		}
 
 		protected void doChangePassword() {
-			new FormOp(p_password) {
+			new FormOp<Object>(p_password) {
 				protected void onSubmit() {
 					MpDb.user_svc.changePassword(uwp, this);
 				}

@@ -1,20 +1,22 @@
 package edu.rpi.metpetdb.client.ui.search;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.LocationAttribute;
+import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 
 public class Search extends FlowPanel {
 	private static GenericAttribute[] searchAtts = {
@@ -30,7 +32,23 @@ public class Search extends FlowPanel {
 	};
 
 	private final ObjectSearchPanel p_searchSample;
-	private final VerticalPanel results = new VerticalPanel();
+	private final SampleListEx sampleList = new SampleListEx() {
+
+		@Override
+		public void update(PaginationParameters p,
+				AsyncCallback<Results<SampleDTO>> ac) {
+			/*
+			 * in reality this would somehow tie into the search rpc call to
+			 * pass in sorting data and pagination data to the server
+			 */
+			final Results<SampleDTO> r = new Results<SampleDTO>();
+			r.setCount(results.size());
+			r.setList(results);
+			ac.onSuccess(r);
+		}
+
+	};
+	private List<SampleDTO> results = new ArrayList<SampleDTO>();
 
 	public Search() {
 		p_searchSample = new ObjectSearchPanel(searchAtts,
@@ -39,16 +57,16 @@ public class Search extends FlowPanel {
 				MpDb.search_svc.search((SearchSampleDTO) getBean(), ac);
 			}
 			protected void onSearchCompletion(final List<SampleDTO> r) {
-				results.clear();
-				for (SampleDTO s : r) {
-					results.add(new Label(s.getAlias()));
+				if (r != null) {
+					results = r;
+					sampleList.refresh();
 				}
 				p_searchSample.setEnabled(true);
 			}
 
 		};
 		add(p_searchSample);
-		add(results);
+		add(sampleList);
 	}
 
 	public Search createNew() {

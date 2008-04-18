@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.server.impl;
 
 import org.hibernate.exception.ConstraintViolationException;
 
+import edu.rpi.metpetdb.client.error.DuplicateValueException;
 import edu.rpi.metpetdb.client.error.LoginFailureException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
@@ -31,19 +32,17 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 	public UserDTO startSession(final StartSessionRequestDTO ssr)
 			throws LoginFailureException, ValidationException {
-		// doc.validate(ssr);
+		doc.validate(ssr);
 		try {
 			final User u = (User) byKey("User", "username", ssr.getUsername());
 			if (!authenticate(u, ssr.getPassword()))
-				// throw new LoginFailureException(
-				// doc.StartSessionRequest_password);
-				setCurrentUser(u);
+				throw new LoginFailureException(
+						doc.StartSessionRequest_password);
+			setCurrentUser(u);
 			return (UserDTO) clone(u);
 		} catch (NoSuchObjectException nsoe) {
 			setCurrentUser(null);
-			return null;
-			// throw new
-			// LoginFailureException(doc.StartSessionRequest_password);
+			throw new LoginFailureException(doc.StartSessionRequest_password);
 		}
 	}
 
@@ -69,9 +68,9 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 	public UserDTO registerNewUser(final UserWithPasswordDTO newbie)
 			throws ValidationException, UnableToSendEmailException {
-		// doc.UserWithPassword_user.validateEntity(newbie);
-		// doc.UserWithPassword_newPassword.validateEntity(newbie);
-		// doc.UserWithPassword_vrfPassword.validateEntity(newbie);
+		doc.UserWithPassword_user.validateEntity(newbie);
+		doc.UserWithPassword_newPassword.validateEntity(newbie);
+		doc.UserWithPassword_vrfPassword.validateEntity(newbie);
 
 		final UserDTO newUser = newbie.getUser();
 		if (!newUser.mIsNew())
@@ -79,7 +78,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 		final String pass = newbie.getNewPassword();
 		newUser.setEncryptedPassword(PasswordEncrypter.crypt(pass));
-		// doc.validate(newUser);
+		doc.validate(newUser);
 		User u = (User) merge(newUser);
 		try {
 			insert(u);
@@ -92,19 +91,20 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			return (UserDTO) clone(u);
 		} catch (ConstraintViolationException cve) {
 			final String who = newUser.getUsername();
-			// if ("users_nk_username".equals(cve.getConstraintName()))
-			// throw new DuplicateValueException(doc.User_username, who);
-			// throw new DuplicateValueException(doc.User_username, who);
-			return null;
+			if ("users_nk_username".equals(cve.getConstraintName()))
+				throw new DuplicateValueException(doc.User_username, who);
+			else
+				throw new RuntimeException("i dont know what happened");
+
 		}
 	}
 	public void changePassword(final UserWithPasswordDTO uwp)
 			throws LoginRequiredException, LoginFailureException,
 			NoSuchObjectException, ValidationException {
-		// doc.UserWithPassword_user.validateEntity(uwp);
-		// doc.UserWithPassword_oldPassword.validateEntity(uwp);
-		// doc.UserWithPassword_newPassword.validateEntity(uwp);
-		// doc.UserWithPassword_vrfPassword.validateEntity(uwp);
+		doc.UserWithPassword_user.validateEntity(uwp);
+		doc.UserWithPassword_oldPassword.validateEntity(uwp);
+		doc.UserWithPassword_newPassword.validateEntity(uwp);
+		doc.UserWithPassword_vrfPassword.validateEntity(uwp);
 
 		final UserDTO UserDTO = uwp.getUser();
 		if (UserDTO.getId() != currentUser())
@@ -112,10 +112,8 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 		final User u = (User) byId("UserDTO", UserDTO.getId());
 		if (!authenticate(u, uwp.getOldPassword()))
-			// throw new
-			// LoginFailureException(doc.UserWithPassword_oldPassword);
-			u.setEncryptedPassword(PasswordEncrypter
-					.crypt(uwp.getNewPassword()));
+			throw new LoginFailureException(doc.UserWithPassword_oldPassword);
+		u.setEncryptedPassword(PasswordEncrypter.crypt(uwp.getNewPassword()));
 		update(u);
 		commit();
 	}

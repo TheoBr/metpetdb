@@ -42,7 +42,7 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 
 	public ChemicalAnalysisDTO save(ChemicalAnalysisDTO maDTO)
 			throws ValidationException, LoginRequiredException {
-		// doc.validate(maDTO);
+		doc.validate(maDTO);
 		if (maDTO.getSubsample().getSample().getOwner().getId() != currentUser())
 			throw new SecurityException(
 					"Cannot modify subsamples you don't own.");

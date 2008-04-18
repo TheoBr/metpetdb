@@ -9,6 +9,7 @@ import edu.rpi.metpetdb.client.model.ProjectDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.StartSessionRequestDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.validation.primitive.BooleanConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
@@ -141,6 +142,12 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		validate(u, ChemicalAnalysis__all);
 	}
 
+	// ------ UserWithPassword ------
+	public UserConstraint UserWithPassword_user;
+	public StringConstraint UserWithPassword_oldPassword;
+	public StringConstraint UserWithPassword_newPassword;
+	public UserWithPassword_vrfPassword UserWithPassword_vrfPassword;
+
 	// ------ StartSessionRequest ------
 	public PropertyConstraint[] StartSessionRequest__all;
 	public RestrictedCharacterStringConstraint StartSessionRequest_username;
@@ -150,6 +157,14 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		validate(u, StartSessionRequest__all);
 	}
 
+	// ------ User ------
+	public PropertyConstraint[] User__all;
+	public RestrictedCharacterStringConstraint User_username;
+	public StringConstraint User_emailAddress;
+
+	public void validate(final UserDTO u) throws ValidationException {
+		validate(u, User__all);
+	}
 	/**
 	 * Called just before this instance is first used.
 	 * <p>
@@ -160,5 +175,36 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	 * </p>
 	 */
 	public void finishInitialization(DatabaseObjectConstraints oc) {
+		User_username.pattern = "A-Z0-9a-z_\\.@";
+		// Sample_collectionEnded.collectionBegan = Sample_collectionBegan;
+
+		// UserWithPassword is not available in the database like this,
+		// so we need to manually configure the values that we normally
+		// acquire automatically.
+		//
+		UserWithPassword_user.required = true;
+		UserWithPassword_oldPassword.required = true;
+		UserWithPassword_newPassword.required = true;
+		UserWithPassword_vrfPassword.required = true;
+
+		UserWithPassword_oldPassword.minLength = 1;
+		UserWithPassword_newPassword.minLength = 8;
+		UserWithPassword_vrfPassword.minLength = 8;
+
+		UserWithPassword_oldPassword.maxLength = 100;
+		UserWithPassword_newPassword.maxLength = 100;
+		UserWithPassword_vrfPassword.maxLength = 100;
+		UserWithPassword_vrfPassword.newPassword = UserWithPassword_newPassword;
+
+		// StartSessionRequest is not available in the database.
+		//
+		StartSessionRequest_username.required = true;
+		StartSessionRequest_username.minLength = User_username.minLength;
+		StartSessionRequest_username.maxLength = User_username.maxLength;
+		StartSessionRequest_username.pattern = User_username.pattern;
+
+		StartSessionRequest_password.required = true;
+		StartSessionRequest_password.minLength = UserWithPassword_oldPassword.minLength;
+		StartSessionRequest_password.maxLength = UserWithPassword_oldPassword.maxLength;
 	}
 }
