@@ -7,7 +7,7 @@ import edu.rpi.metpetdb.client.error.InvalidRockTypeException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 
-public class RockTypeConstraint extends PropertyConstraint implements HasValues {
+public class RockTypeConstraint extends ObjectConstraint implements HasValues {
 
 	private ArrayList<String> rockTypes = new ArrayList<String>();
 

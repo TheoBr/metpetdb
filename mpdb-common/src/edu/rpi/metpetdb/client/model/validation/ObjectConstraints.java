@@ -41,10 +41,8 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 		SearchSample_sesarNumber.entityName = "SearchSample";
 		SearchSample_sesarNumber.property = SearchSampleProperty.sesarNumber;
 		SearchSample_sesarNumber.propertyName = "Sesar Number";
-		// SearchSample_sesarNumber.maxLength =
-		// doc.Sample_sesarNumber.maxLength;
-		// SearchSample_sesarNumber.minLength =
-		// doc.Sample_sesarNumber.minLength;
+		SearchSample_sesarNumber.maxLength = doc.Sample_sesarNumber.maxLength;
+		SearchSample_sesarNumber.minLength = doc.Sample_sesarNumber.minLength;
 		SearchSample_sesarNumber.required = false;
 
 		// SearchSample_minerals.entityName = "SearchSample";
@@ -65,10 +63,6 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 		SearchSample_possibleRockTypes.entityName = "SearchSample";
 		SearchSample_possibleRockTypes.property = SearchSampleProperty.possibleRockTypes;
 		SearchSample_possibleRockTypes.propertyName = "Rock Type";
-		// SearchSample_possibleRockTypes.maxLength =
-		// doc.Sample_rockType.maxLength;
-		// SearchSample_possibleRockTypes.minLength =
-		// doc.Sample_rockType.minLength;
 		SearchSample_possibleRockTypes.required = false;
 
 		SearchSample_owner.entityName = "SearchSample";

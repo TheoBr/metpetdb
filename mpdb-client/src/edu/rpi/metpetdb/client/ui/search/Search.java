@@ -13,9 +13,9 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
+import edu.rpi.metpetdb.client.ui.input.attributes.CheckBoxesAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.LocationAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 
 public class Search extends FlowPanel {
@@ -26,8 +26,8 @@ public class Search extends FlowPanel {
 			new TextAttribute(MpDb.oc.SearchSample_alias),
 			// new DateAttribute(MpDb.oc.SearchSample_collectionDate,
 			// MpDb.doc.Sample_datePrecision),
-			// new ListboxAttribute(MpDb.oc.SearchSample_possibleRockTypes),
-			new LocationAttribute(MpDb.oc.SearchSample_location),
+			new CheckBoxesAttribute(MpDb.oc.SearchSample_possibleRockTypes),
+	// new LocationAttribute(MpDb.oc.SearchSample_location),
 	// new MineralAttribute(MpDb.oc.SearchSample_minerals)
 	};
 
