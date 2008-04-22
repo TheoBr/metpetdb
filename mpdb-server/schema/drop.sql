@@ -4,7 +4,7 @@ DROP SEQUENCE region_seq;
 DROP SEQUENCE rock_type_seq;
 DROP SEQUENCE sample_seq;
 DROP SEQUENCE subsample_seq;
-DROP SEQUENCE user_seq;
+--DROP SEQUENCE user_seq;
 DROP SEQUENCE metamorphic_grade_seq;
 DROP SEQUENCE reference_seq;
 DROP SEQUENCE image_seq;

@@ -31,7 +31,7 @@ public class InvalidRockTypeException extends ValidationException {
 		for (int i = 0; i < rockTypes.size(); ++i) {
 
 			sb.append(rockTypes.get(i));
-			if (i != 0 && i != rockTypes.size() - 1)
+			if (i != rockTypes.size() - 1)
 				sb.append(", ");
 		}
 		return sb.toString();

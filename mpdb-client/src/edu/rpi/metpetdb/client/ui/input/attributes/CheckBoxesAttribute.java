@@ -1,38 +1,41 @@
 package edu.rpi.metpetdb.client.ui.input.attributes;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.SampleCommentDTO;
-import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
+import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
+/* TODO make generic, i.e. CheckBoxesAttribute<T>, where T is the type of object that the checkbox is representing */
 public class CheckBoxesAttribute extends GenericAttribute {
 	private MUnorderedList editList;
-	protected final ArrayList<Widget> realEditWidgets;
+	/* To keep track of the physical object that is attached to the checkbox */
+	private Map<CheckBox, Object> items;
 
-	public CheckBoxesAttribute(final ObjectConstraint sc) {
+	public CheckBoxesAttribute(final PropertyConstraint sc) {
 		super(sc);
-		realEditWidgets = new ArrayList<Widget>();
+		items = new HashMap<CheckBox, Object>();
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
 		final MUnorderedList list = new MUnorderedList();
 
-		final Set<CheckBox> s = get(obj);
+		final Set<?> s = get(obj);
 		if (s != null) {
-			final Iterator<CheckBox> itr = s.iterator();
+			final Iterator<?> itr = s.iterator();
 			while (itr.hasNext()) {
 				final Label r = new Label(itr.next().toString());
 				list.add(r);
@@ -46,36 +49,39 @@ public class CheckBoxesAttribute extends GenericAttribute {
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
 		editList = new MUnorderedList();
 
-		realEditWidgets.clear();
+		items.clear();
 
 		DOM.setElementAttribute(editList.getElement(), "id", id);
 
-		final Set<CheckBox> s = get(obj);
-		if (s != null) {
-			final Iterator<CheckBox> iter = s.iterator();
+		final Set<?> chosenItems = get(obj);
+		final Collection<?> availableItems = ((HasValues) this.getConstraint())
+				.getValues();
+		if (availableItems != null) {
+			final Iterator<?> iter = availableItems.iterator();
 			while (iter.hasNext()) {
 				final Object object = iter.next();
 				// add all standard check boxes
-				editList.add(this.createCheckBoxes(object.toString()));
+				editList.add(this.createCheckBoxes(object.toString(),
+						chosenItems.contains(object), object));
 			}
 		}
-
-		// change to add all standard check boxes
-		editList.add(createCheckBoxes(null));
 
 		return new Widget[] {
 			editList
 		};
 	}
 
-	public HorizontalPanel createCheckBoxes(String s) {
+	public HorizontalPanel createCheckBoxes(final String s,
+			final boolean chosen, final Object value) {
 		final HorizontalPanel hp = new HorizontalPanel();
 		final CheckBox rCheck = new CheckBox();
 		if (s != null) {
 			rCheck.setText(s);
 		}
 
-		realEditWidgets.add(rCheck);
+		rCheck.setChecked(chosen);
+
+		items.put(rCheck, value);
 
 		hp.add(rCheck);
 
@@ -90,22 +96,18 @@ public class CheckBoxesAttribute extends GenericAttribute {
 
 	}
 
-	public Set<CheckBox> get(MObjectDTO obj) {
-		return (Set<CheckBox>) obj.mGet(this.getConstraint().property);
+	public Set<?> get(final MObjectDTO obj) {
+		return (Set<?>) obj.mGet(this.getConstraint().property);
 	}
 
 	protected Object get(Widget editWidget) throws ValidationException {
-		final HashSet items = new HashSet();
-		final Iterator itr = realEditWidgets.iterator();
+		final Iterator<CheckBox> itr = items.keySet().iterator();
+		final Set<Object> chosenItems = new HashSet<Object>();
 		while (itr.hasNext()) {
-			final Object obj = itr.next();
-			final SampleCommentDTO m = new SampleCommentDTO();
-			String name = ((HasText) obj).getText();
-			if (!name.equals("")) {
-				m.setText(name);
-				items.add(m);
-			}
+			final CheckBox cb = itr.next();
+			if (cb.isChecked())
+				chosenItems.add(items.get(cb));
 		}
-		return items;
+		return chosenItems;
 	}
 }

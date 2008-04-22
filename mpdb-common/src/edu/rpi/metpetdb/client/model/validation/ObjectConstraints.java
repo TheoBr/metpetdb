@@ -27,7 +27,7 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 	// public ValuesInCollectionConstraint<MineralDTO> SearchSample_minerals;
 	public GeometryConstraint SearchSample_location;
 	public TimestampConstraint SearchSample_collectionDate;
-	public RockTypeConstraint SearchSample_possibleRockTypes;
+	public MultipleRockTypeConstraint SearchSample_possibleRockTypes;
 	public UserConstraint SearchSample_owner;
 
 	public void finishInitialization(DatabaseObjectConstraints doc) {
