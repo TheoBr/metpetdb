@@ -2,8 +2,6 @@ package edu.rpi.metpetdb.client.ui.objects.details;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.ListBox;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
@@ -17,6 +15,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAreaAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AnalysisMaterialAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.ChemistryAttribute;
 
 public class ChemicalAnalysisDetails extends FlowPanel {
 	private static GenericAttribute[] chemicalAnalysisAtts = {
@@ -37,6 +36,8 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 			new TextAreaAttribute(MpDb.doc.ChemicalAnalysis_description),
 			new AnalysisMaterialAttribute(MpDb.doc.ChemicalAnalysis_mineral,
 					MpDb.doc.ChemicalAnalysis_largeRock),
+			new ChemistryAttribute(MpDb.doc.ChemicalAnalysis_elements,
+					MpDb.doc.ChemicalAnalysis_oxides),
 	};
 
 	private final ObjectEditorPanel<ChemicalAnalysisDTO> p_chemicalAnalysis;
@@ -75,43 +76,9 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 		};
 		add(new OnEnterPanel.ObjectEditor(p_chemicalAnalysis));
 	}
-
-	public void addChemistry() {
-		// final Label adder = new Label("Add:");
-
-		final HorizontalPanel hp = new HorizontalPanel();
-
-		final ListBox species = new ListBox();
-		species.addItem("Species...", "Species...");
-		species.addItem("Element", "Element");
-		species.addItem("Oxide", "Oxide");
-		species.setVisibleItemCount(1);
-
-		final ListBox type = new ListBox();
-		type.addItem("Type...", "Type...");
-		type.addItem("Silicate", "Silicate");
-		type.addItem("Oxide", "Oxide");
-		type.addItem("Carbonate", "Carbonate");
-		type.addItem("Phosphate", "Phosphate");
-		type.addItem("Other", "Other");
-		type.setVisibleItemCount(1);
-
-		if (species.getSelectedIndex() != -1 && !(species.isItemSelected(1))) {
-			if (type.getSelectedIndex() != -1 && !(type.isItemSelected(1))) {
-
-			}
-		}
-
-		// add(adder);
-		hp.add(species);
-		hp.add(type);
-
-		add(hp);
-	}
 	public ChemicalAnalysisDetails showById(final long id) {
 		chemicalAnalysisId = id;
 		p_chemicalAnalysis.load();
-		// addChemistry();
 		return this;
 	}
 

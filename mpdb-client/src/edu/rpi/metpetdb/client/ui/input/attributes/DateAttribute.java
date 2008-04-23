@@ -12,8 +12,8 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
-import com.google.gwt.widgetideas.client.events.ChangeEvent;
-import com.google.gwt.widgetideas.client.events.ChangeHandler;
+import com.google.gwt.widgetideas.client.event.ChangeEvent;
+import com.google.gwt.widgetideas.client.event.ChangeHandler;
 import com.google.gwt.widgetideas.datepicker.client.CalendarModel;
 import com.google.gwt.widgetideas.datepicker.client.DatePicker;
 
