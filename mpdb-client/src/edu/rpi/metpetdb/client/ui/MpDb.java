@@ -6,6 +6,8 @@ import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
+import edu.rpi.metpetdb.client.service.BulkUploadChemicalAnalysesService;
+import edu.rpi.metpetdb.client.service.BulkUploadChemicalAnalysesServiceAsync;
 import edu.rpi.metpetdb.client.service.BulkUploadService;
 import edu.rpi.metpetdb.client.service.BulkUploadServiceAsync;
 import edu.rpi.metpetdb.client.service.ChemicalAnalysisService;
@@ -62,6 +64,8 @@ public class MpDb {
 
 	public static final BulkUploadServiceAsync bulkUpload_svc;
 
+	public static final BulkUploadChemicalAnalysesServiceAsync bulkUploadChemicalAnalyses_svc;
+
 	public static final SearchServiceAsync search_svc;
 
 	public static DatabaseObjectConstraints doc;
@@ -102,6 +106,10 @@ public class MpDb {
 
 		bulkUpload_svc = (BulkUploadServiceAsync) bindService(GWT
 				.create(BulkUploadService.class), "bulkUpload");
+
+		bulkUploadChemicalAnalyses_svc = (BulkUploadChemicalAnalysesServiceAsync) bindService(
+				GWT.create(BulkUploadChemicalAnalysesService.class),
+				"bulkUploadChemicalAnalyses");
 
 		search_svc = (SearchServiceAsync) bindService(GWT
 				.create(SearchService.class), "search");

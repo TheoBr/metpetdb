@@ -34,6 +34,12 @@
     where s.id = :id
   </query>
   
+  <query name="Subsample.bySample.byName">
+    from Subsample s
+    where s.sample.id = :id
+    and s.name = :name
+  </query>
+  
    <query name="Subsample.bySampleId,size">
     select count(*) from Subsample s
     where s.sample.id = :id

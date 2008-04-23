@@ -23,15 +23,14 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 
 	public Map<Integer, ValidationException> saveSamplesFromSpreadsheet(
 			final String fileOnServer) throws InvalidFormatException,
-			LoginRequiredException, SampleAlreadyExistsException,
-			ValidationException {
+			LoginRequiredException, SampleAlreadyExistsException {
 		final Map<Integer, ValidationException> errors = new TreeMap<Integer, ValidationException>();
 		try {
 			currentSession()
 					.createSQLQuery(
 							"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
 					.setParameter("user_id", currentUser()).setParameter(
-							"hash", fileOnServer);
+							"hash", fileOnServer).executeUpdate();
 			final SampleParser sp = new SampleParser(new FileInputStream(
 					baseFolder + "/" + fileOnServer));
 			try {
@@ -43,7 +42,6 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 			sp.parse();
 			final UserDTO u = (UserDTO) cloneBean(byId("User", currentUser()));
 			final List<SampleDTO> samples = sp.getSamples();
-			// TODO maybe have sp.getSamples() take in the owner??
 			Integer i = 2;
 			for (SampleDTO s : samples) {
 				s.setOwner(u);
@@ -70,6 +68,14 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 		}
 
 		return errors;
+	}
+	// TODO: implement this. It might need some real Hibernate objects.
+	public Boolean deleteOldFiles() {
+		List oldfiles = currentSession()
+				.createSQLQuery(
+						"SELECT * FROM uploaded_files WHERE AGE(time) > interval '7 days'")
+				.list();
+		return true;
 	}
 	public static void setBaseFolder(String baseFolder) {
 		BulkUploadServiceImpl.baseFolder = baseFolder;

@@ -160,6 +160,11 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 		reference = r;
 	}
 
+	public void setReference(final String r) {
+		reference = new ReferenceDTO();
+		reference.setName(r);
+	}
+
 	public String getDescription() {
 		return description;
 	}
@@ -174,6 +179,11 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 
 	public void setMineral(final MineralDTO m) {
 		mineral = m;
+	}
+
+	public void setMineral(final String m) {
+		mineral = new MineralDTO();
+		mineral.setName(m);
 	}
 
 	public Boolean getLargeRock() {
@@ -194,6 +204,15 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 		return elements;
 	}
 
+	public void addElement(final ElementDTO e, final Float amount) {
+		if (elements == null)
+			elements = new HashSet<ChemicalAnalysisElementDTO>();
+		ChemicalAnalysisElementDTO c = new ChemicalAnalysisElementDTO();
+		c.setElement(e);
+		c.setAmount(amount);
+		elements.add(c);
+	}
+
 	public void setOxides(final Set<ChemicalAnalysisOxideDTO> o) {
 		oxides = o;
 	}
@@ -202,6 +221,15 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 		if (oxides == null)
 			oxides = new HashSet<ChemicalAnalysisOxideDTO>();
 		return oxides;
+	}
+
+	public void addOxide(final OxideDTO e, final Float amount) {
+		if (oxides == null)
+			oxides = new HashSet<ChemicalAnalysisOxideDTO>();
+		ChemicalAnalysisOxideDTO c = new ChemicalAnalysisOxideDTO();
+		c.setOxide(e);
+		c.setAmount(amount);
+		oxides.add(c);
 	}
 
 	public boolean equals(final Object o) {

@@ -30,6 +30,7 @@ import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
+import edu.rpi.metpetdb.server.impl.BulkUploadChemicalAnalysesServiceImpl;
 import edu.rpi.metpetdb.server.impl.BulkUploadServiceImpl;
 import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
 import edu.rpi.metpetdb.server.model.MObject;
@@ -120,6 +121,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		FileUploadServlet.setBaseFolder(fileProps
 				.getProperty("fileUpload.path"));
 		BulkUploadServiceImpl.setBaseFolder(fileProps
+				.getProperty("fileUpload.path"));
+		BulkUploadChemicalAnalysesServiceImpl.setBaseFolder(fileProps
 				.getProperty("fileUpload.path"));
 	}
 

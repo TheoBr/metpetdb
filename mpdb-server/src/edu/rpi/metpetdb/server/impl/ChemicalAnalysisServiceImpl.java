@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -14,7 +15,10 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.ChemicalAnalysisService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.server.model.Mineral;
 import edu.rpi.metpetdb.server.model.Reference;
+import edu.rpi.metpetdb.server.model.Sample;
+import edu.rpi.metpetdb.server.model.Subsample;
 
 public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		ChemicalAnalysisService {
@@ -40,13 +44,40 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		return cloneBean(byKey("ChemicalAnalysis", "subsampleId", subsampleId));
 	}
 
-	public ChemicalAnalysisDTO save(ChemicalAnalysisDTO maDTO)
+	protected void save(final Collection<ChemicalAnalysisDTO> analyses)
 			throws ValidationException, LoginRequiredException {
-		doc.validate(maDTO);
-		if (maDTO.getSubsample().getSample().getOwner().getId() != currentUser())
-			throw new SecurityException(
-					"Cannot modify subsamples you don't own.");
-		ChemicalAnalysis ma = mergeBean(maDTO);
+		try {
+			for (ChemicalAnalysisDTO analysis : analyses) {
+				doc.validate(analysis);
+				save((ChemicalAnalysis) mergeBean(analysis));
+			}
+		} catch (ValidationException e) {
+			forgetChanges();
+			throw e;
+		}
+		commit();
+	}
+
+	public ChemicalAnalysisDTO save(ChemicalAnalysisDTO caDTO)
+			throws ValidationException, LoginRequiredException {
+		doc.validate(caDTO);
+		ChemicalAnalysis ca = mergeBean(caDTO);
+		ca = save(ca);
+		commit();
+		return cloneBean(ca);
+	}
+
+	public ChemicalAnalysis save(ChemicalAnalysis ma)
+			throws ValidationException, LoginRequiredException {
+		replaceSample(ma);
+		replaceReferences(ma);
+		replaceMineral(ma);
+
+		if (ma.getSubsample().getSample().getOwner() == null)
+			throw new LoginRequiredException();
+		if (ma.getSubsample().getSample().getOwner().getId() != currentUser())
+			throw new SecurityException("Cannot modify samples you don't own.");
+
 		replaceReferences(ma);
 		try {
 			if (ma.getImage() != null && ma.getImage().mIsNew()) {
@@ -56,8 +87,7 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 				insert(ma);
 			} else
 				ma = update(merge(ma));
-			commit();
-			return cloneBean(ma);
+			return ma;
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}
@@ -72,6 +102,34 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}
+	}
+
+	private void replaceMineral(final ChemicalAnalysis ca) {
+		if (ca.getMineral() != null) {
+			final Query minerals = namedQuery("Mineral.byName");
+
+			minerals.setString("name", ca.getMineral().getName());
+
+			if (minerals.uniqueResult() != null)
+				ca.setMineral((Mineral) minerals.uniqueResult());
+		}
+	}
+
+	private void replaceSample(final ChemicalAnalysis ca)
+			throws ValidationException, LoginRequiredException {
+		// TODO: once this is debugged, Null Pointer exceptions should indicate
+		// when samples or subsamples are not in the database, and should be
+		// handled accordingly
+		final Query sample = namedQuery("Sample.byUser.byAlias");
+		final Query subsample = namedQuery("Subsample.bySample.byName");
+
+		sample.setParameter("id", currentUser());
+		sample.setParameter("alias", ca.getSubsample().getSample().getAlias());
+
+		subsample.setParameter("id", ((Sample) sample.uniqueResult()).getId());
+		subsample.setParameter("name", ca.getSubsample().getName());
+
+		ca.setSubsample((Subsample) subsample.uniqueResult());
 	}
 
 	// FIXME this is a copy of the method in SampleServiceImpl we should
@@ -89,5 +147,4 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 			}
 		}
 	}
-
 }

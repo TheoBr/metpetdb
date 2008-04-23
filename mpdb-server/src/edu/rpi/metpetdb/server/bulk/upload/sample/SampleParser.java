@@ -118,11 +118,11 @@ public class SampleParser {
 		}
 	}
 	public void parse() {
-		HSSFRow header = null;
 		int k = 0;
-		while (header == null) {
-			header = sheet.getRow(k);
+		while (sheet.getRow(k) == null) {
+			k++;
 		}
+		HSSFRow header = sheet.getRow(k);
 		for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
 			final HSSFCell cell = header.getCell((short) i);
 			final String text;
@@ -141,7 +141,7 @@ public class SampleParser {
 			}
 		}
 		// Loop through the rows
-		for (int i = 1; i < sheet.getPhysicalNumberOfRows(); ++i) {
+		for (int i = k + 1; i < sheet.getPhysicalNumberOfRows(); ++i) {
 			System.out.println("Parsing Row " + i);
 			parseRow(sheet.getRow(i));
 		}
@@ -171,7 +171,8 @@ public class SampleParser {
 
 				if (dataType == String.class) {
 
-					if (storeMethod.getName() != "addReference") {
+					if (storeMethod.getName().equals("addReference")
+							&& !storeMethod.getName().equals("addComment")) {
 						final String[] data = cell.toString()
 								.split("\\s*,\\s*");
 						for (String str : data)

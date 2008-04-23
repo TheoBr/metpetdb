@@ -235,6 +235,13 @@
     order by s.longitudeError
   </query>
   
+  <query name="Sample.byUser.byAlias">
+    from Sample s
+    inner join fetch s.owner
+    where s.owner.id = :id
+    and s.alias = :alias
+  </query>
+  
   <query name="Sample.forProject,size">
   	select count(*) from Sample s
   	inner join s.projects as project with project.id = :id

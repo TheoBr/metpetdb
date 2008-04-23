@@ -21,7 +21,8 @@
 	<servlet path="/imageBrowser.svc" class="edu.rpi.metpetdb.server.impl.ImageBrowserServiceImpl"/>
 	<servlet path="/imageUpload" class="edu.rpi.metpetdb.server.ImageUploadServlet"/>
 	<servlet path="/spreadsheetUpload" class="edu.rpi.metpetdb.server.FileUploadServlet"/>
-	<servlet path="/bulkUpload.svc" class="edu.rpi.metpetdb.server.impl.BulkUploadServiceImpl"></servlet>
+	<servlet path="/bulkUpload.svc" class="edu.rpi.metpetdb.server.impl.BulkUploadServiceImpl" />
+	<servlet path="/bulkUploadChemicalAnalyses.svc" class="edu.rpi.metpetdb.server.impl.BulkUploadChemicalAnalysesServiceImpl" />
 	<servlet path="/search.svc" class="edu.rpi.metpetdb.server.impl.SearchServiceImpl"/>
 	<servlet path="/image" class="edu.rpi.metpetdb.server.ImagesService"/>
 	<servlet path="/image.svc" class="edu.rpi.metpetdb.server.impl.ImageServiceImpl"/>

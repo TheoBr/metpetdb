@@ -96,6 +96,9 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 										fileOnServer, this);
 							} else {
 								// TODO: chemical analyses
+								MpDb.bulkUploadChemicalAnalyses_svc
+										.saveAnalysesFromSpreadsheet(
+												fileOnServer, this);
 							}
 						}
 
