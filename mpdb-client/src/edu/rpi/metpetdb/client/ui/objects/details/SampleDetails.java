@@ -11,6 +11,9 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
@@ -28,6 +31,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.MetamorphicGradeAttr
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MineralAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.ReferenceAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.RegionAttribute;
+import edu.rpi.metpetdb.client.ui.objects.list.SubsampleListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class SampleDetails extends FlowPanel {
@@ -106,6 +110,13 @@ public class SampleDetails extends FlowPanel {
 		// list.setStyleName("sd-subsamples");
 		// add(list);
 		// Add MLinks that will be used to add subsample
+		final SubsampleListEx list = new SubsampleListEx() {
+			public void update(final PaginationParameters p,
+					final AsyncCallback<Results<SubsampleDTO>> ac) {
+				MpDb.subsample_svc.all(p, sampleId, ac);
+			}
+		};
+		this.add(list);
 
 		final MLink addSubsample = new MLink(LocaleHandler.lc_text
 				.addSubsample(), new ClickListener() {
@@ -128,7 +139,6 @@ public class SampleDetails extends FlowPanel {
 		addSubsample.addStyleName(Styles.ADDLINK);
 		add(addSubsample);
 	}
-
 	public void addChemistry() {
 		// final Label adder = new Label("Add:");
 
