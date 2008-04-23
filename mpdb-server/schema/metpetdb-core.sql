@@ -193,12 +193,9 @@ CREATE TABLE elements
    symbol     VARCHAR(4)  NOT NULL,
    atomic_number INT4 NOT NULL,
    weight        FLOAT4,
-   mineral_type  VARCHAR(12),
    CONSTRAINT elements_sk PRIMARY KEY (element_id),
    CONSTRAINT elements_nk1 UNIQUE (name),
-   CONSTRAINT elements_nk2 UNIQUE (symbol),
-   CONSTRAINT element_type_ck
-     CHECK (mineral_type IN ('Silicates','Oxides', 'Carbonates','Phosphates','Other'))
+   CONSTRAINT elements_nk2 UNIQUE (symbol)
 ) WITHOUT OIDS;
 
 CREATE TABLE uploaded_files

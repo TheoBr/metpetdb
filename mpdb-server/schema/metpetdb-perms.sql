@@ -24,6 +24,9 @@ GRANT select,insert,update,delete		  ON chemical_analysis_elements to @APPUSER@;
 GRANT select,insert,update,delete		  ON chemical_analysis_oxides to @APPUSER@;
 GRANT select,insert,update,delete		  ON uploaded_files to @APPUSER@;
 GRANT select,insert,update,delete ON sample_comments to @APPUSER@;
+GRANT select,insert,update,delete ON mineral_types to @APPUSER@;
+GRANT select,insert,update,delete ON oxide_mineral_types to @APPUSER@;
+GRANT select,insert,update,delete ON element_mineral_types to @APPUSER@;
 
 GRANT update ON mineral_seq   TO @APPUSER@;
 GRANT update ON project_seq   TO @APPUSER@;
@@ -40,3 +43,4 @@ GRANT update ON metamorphic_grade_seq TO @APPUSER@;
 GRANT update ON reference_seq TO @APPUSER@;
 GRANT update ON uploaded_files_seq TO @APPUSER@;
 GRANT update ON sample_comments_seq TO @APPUSER@;
+GRANT update ON mineral_types_seq TO @APPUSER@;

@@ -18,6 +18,8 @@ DROP SEQUENCE oxide_seq;
 DROP SEQUENCE chemical_analysis_oxides_seq;
 DROP SEQUENCE chemical_analysis_elements_seq;
 DROP SEQUENCE uploaded_files_seq;
+DROP SEQUENCE sample_comments_seq;
+DROP SEQUENCE mineral_types_seq;
 
 
 DROP TABLE chemical_analysis_elements CASCADE;
@@ -45,3 +47,7 @@ DROP TABLE regions CASCADE;
 DROP TABLE minerals CASCADE;
 DROP TABLE xray_image CASCADE;
 DROP TABLE uploaded_files CASCADE;
+DROP TABLE sample_comments CASCADE;
+DROP TABLE mineral_types CASCADE;
+DROP TABLE oxide_mineral_types CASCADE;
+DROP TABLE element_mineral_types CASCADE;
