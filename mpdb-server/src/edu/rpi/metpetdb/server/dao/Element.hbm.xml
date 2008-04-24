@@ -15,7 +15,12 @@
     <property name="symbol" column="symbol" length="4" />
     <property name="atomicNumber" column="atomic_number" />
     <property name="weight" column="weight" />
-    <property name="mineralType" column="mineral_type" length="12" />
+    
+
+	<set name="mineralTypes" table="element_mineral_types" cascade="none" lazy="false">
+      <key column="element_id" />
+      <many-to-many class="MineralType" column="mineral_type_id" />
+    </set>
   </class>
   
   <query name="Element.all">

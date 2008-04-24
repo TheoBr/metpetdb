@@ -11,4 +11,13 @@ public class PropertyUtils {
 			return null;
 	}
 
+	public static Integer convertToInteger(final Object o) {
+		if (o instanceof Integer) {
+			return (Integer) o;
+		} else if (o instanceof String) {
+			return Integer.parseInt(o.toString());
+		} else
+			return null;
+	}
+
 }

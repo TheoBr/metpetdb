@@ -32,8 +32,8 @@ public enum XrayImageProperty implements Property {
 
 		public <T extends MObjectDTO, K> void set(final T xrayImage,
 				final K dwelltime) {
-			((XrayImageDTO) xrayImage).setDwelltime(Integer.parseInt(dwelltime
-					.toString()));
+			((XrayImageDTO) xrayImage).setDwelltime(PropertyUtils
+					.convertToInteger(dwelltime));
 		}
 	},
 	current {
@@ -43,8 +43,8 @@ public enum XrayImageProperty implements Property {
 
 		public <T extends MObjectDTO, K> void set(final T xrayImage,
 				final K current) {
-			((XrayImageDTO) xrayImage).setCurrent(Integer.parseInt(current
-					.toString()));
+			((XrayImageDTO) xrayImage).setCurrent(PropertyUtils
+					.convertToInteger(current));
 		}
 	},
 	voltage {
@@ -54,8 +54,8 @@ public enum XrayImageProperty implements Property {
 
 		public <T extends MObjectDTO, K> void set(final T xrayImage,
 				final K voltage) {
-			((XrayImageDTO) xrayImage).setVoltage(Integer.parseInt(voltage
-					.toString()));
+			((XrayImageDTO) xrayImage).setVoltage(PropertyUtils
+					.convertToInteger(voltage));
 		}
 	},
 	element {

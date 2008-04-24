@@ -1,23 +1,25 @@
 package edu.rpi.metpetdb.client.model;
 
+import java.util.Set;
+
 public class OxideDTO extends MObjectDTO {
 
 	private static final long serialVersionUID = 1L;
-	private short elementId;
+	private ElementDTO element;
 	private short oxideId;
 	private short oxidationState;
 	private String species;
 	private Float weight;
 	private short cationsPerOxide;
 	private Float conversionFactor;
-	private String mineralType;
+	private Set<MineralTypeDTO> mineralTypes;
 
-	public void setElementId(final short s) {
-		elementId = s;
+	public void setElement(final ElementDTO s) {
+		element = s;
 	}
 
-	public short getElementId() {
-		return elementId;
+	public ElementDTO getElement() {
+		return element;
 	}
 
 	public void setOxideId(final short s) {
@@ -68,12 +70,12 @@ public class OxideDTO extends MObjectDTO {
 		return conversionFactor;
 	}
 
-	public void setMineralType(final String t) {
-		mineralType = t;
+	public Set<MineralTypeDTO> getMineralTypes() {
+		return mineralTypes;
 	}
 
-	public String getMineralType() {
-		return mineralType;
+	public void setMineralTypes(Set<MineralTypeDTO> mineralTypes) {
+		this.mineralTypes = mineralTypes;
 	}
 
 	public boolean equals(final Object o) {

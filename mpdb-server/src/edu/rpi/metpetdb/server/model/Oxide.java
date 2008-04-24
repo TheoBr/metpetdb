@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.server.model;
 
+import java.util.Set;
+
 public class Oxide extends MObject {
 	private static final long serialVersionUID = 1L;
 
@@ -10,7 +12,7 @@ public class Oxide extends MObject {
 	private Float weight;
 	private short cationsPerOxide;
 	private Float conversionFactor;
-	private String mineralType;
+	private Set<MineralType> mineralTypes;
 
 	public Element getElement() {
 		return element;
@@ -68,12 +70,12 @@ public class Oxide extends MObject {
 		return conversionFactor;
 	}
 
-	public void setMineralType(final String t) {
-		mineralType = t;
+	public Set<MineralType> getMineralTypes() {
+		return mineralTypes;
 	}
 
-	public String getMineralType() {
-		return mineralType;
+	public void setMineralTypes(Set<MineralType> mineralTypes) {
+		this.mineralTypes = mineralTypes;
 	}
 
 	public boolean equals(final Object o) {

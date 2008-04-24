@@ -142,8 +142,7 @@ public class AddImageAttribute extends GenericAttribute implements
 					if (((ImageDTO) result).getImageType().equals("X-ray")) {
 						AddImageAttribute.this.images.add(result);
 					} else {
-						AddImageAttribute.this.images
-								.add(((XrayImageDTO) result).getImage());
+						AddImageAttribute.this.images.add(result);
 					}
 					AddImageAttribute.this.list.add(makeImageContainer(
 							(edu.rpi.metpetdb.client.model.ImageDTO) result,

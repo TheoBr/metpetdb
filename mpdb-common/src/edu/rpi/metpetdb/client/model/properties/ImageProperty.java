@@ -32,8 +32,8 @@ public enum ImageProperty implements Property {
 
 		public <T extends MObjectDTO, K> void set(final T image,
 				final K pixelsize) {
-			((ImageDTO) image).setPixelsize(Integer.parseInt(pixelsize
-					.toString()));
+			((ImageDTO) image).setPixelsize(PropertyUtils
+					.convertToInteger(pixelsize));
 		}
 	},
 	contrast {
@@ -43,8 +43,8 @@ public enum ImageProperty implements Property {
 
 		public <T extends MObjectDTO, K> void set(final T image,
 				final K contrast) {
-			((ImageDTO) image).setContrast(Integer
-					.parseInt(contrast.toString()));
+			((ImageDTO) image).setContrast(PropertyUtils
+					.convertToInteger(contrast));
 		}
 	},
 	brightness {
@@ -54,8 +54,8 @@ public enum ImageProperty implements Property {
 
 		public <T extends MObjectDTO, K> void set(final T image,
 				final K brightness) {
-			((ImageDTO) image).setBrightness(Integer.parseInt(brightness
-					.toString()));
+			((ImageDTO) image).setBrightness(PropertyUtils
+					.convertToInteger(brightness));
 		}
 	},
 	lut {
@@ -64,7 +64,7 @@ public enum ImageProperty implements Property {
 		}
 
 		public <T extends MObjectDTO, K> void set(final T image, final K lut) {
-			((ImageDTO) image).setLut(Integer.parseInt(lut.toString()));
+			((ImageDTO) image).setLut(PropertyUtils.convertToInteger(lut));
 		}
 	},
 	checksum {

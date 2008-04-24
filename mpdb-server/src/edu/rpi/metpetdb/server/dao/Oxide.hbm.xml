@@ -16,7 +16,11 @@
     <property name="weight" column="weight" />
     <property name="cationsPerOxide" column="cations_per_oxide" />
     <property name="conversionFactor" column="conversion_factor" />
-    <property name="mineralType" column="mineral_type" length="12" />
+    
+    <set name="mineralTypes" table="oxide_mineral_types" cascade="none" lazy="false">
+      <key column="oxide_id" />
+      <many-to-many class="MineralType" column="mineral_type_id" />
+    </set>
   </class>
   
   <query name="Oxide.all">

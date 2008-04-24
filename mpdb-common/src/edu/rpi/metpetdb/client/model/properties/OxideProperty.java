@@ -1,6 +1,9 @@
 package edu.rpi.metpetdb.client.model.properties;
 
+import java.util.Set;
+
 import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.MineralTypeDTO;
 import edu.rpi.metpetdb.client.model.OxideDTO;
 
 public enum OxideProperty implements Property {
@@ -52,13 +55,15 @@ public enum OxideProperty implements Property {
 			((OxideDTO) oxide).setConversionFactor((Float) conversionFactor);
 		}
 	},
-	mineralType {
-		public <T extends MObjectDTO> String get(final T oxide) {
-			return ((OxideDTO) oxide).getMineralType();
+	mineralTypes {
+		public <T extends MObjectDTO> Object get(final T oxide) {
+			return ((OxideDTO) oxide).getMineralTypes();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T oxide, final K mineralType) {
-			((OxideDTO) oxide).setMineralType((String) mineralType);
+		public <T extends MObjectDTO, K> void set(final T oxide,
+				final K mineralTypes) {
+			((OxideDTO) oxide)
+					.setMineralTypes((Set<MineralTypeDTO>) mineralTypes);
 		}
 	},
 }

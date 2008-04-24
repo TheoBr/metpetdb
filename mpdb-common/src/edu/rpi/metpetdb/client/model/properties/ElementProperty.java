@@ -1,7 +1,10 @@
 package edu.rpi.metpetdb.client.model.properties;
 
+import java.util.Set;
+
 import edu.rpi.metpetdb.client.model.ElementDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.MineralTypeDTO;
 
 public enum ElementProperty implements Property {
 	name {
@@ -53,14 +56,15 @@ public enum ElementProperty implements Property {
 			((ElementDTO) element).setWeight((Float) weight);
 		}
 	},
-	mineralType {
-		public <T extends MObjectDTO> String get(final T element) {
-			return ((ElementDTO) element).getMineralType();
+	mineralTypes {
+		public <T extends MObjectDTO> Object get(final T element) {
+			return ((ElementDTO) element).getMineralTypes();
 		}
 
 		public <T extends MObjectDTO, K> void set(final T element,
-				final K mineralType) {
-			((ElementDTO) element).setMineralType((String) mineralType);
+				final K mineralTypes) {
+			((ElementDTO) element)
+					.setMineralTypes((Set<MineralTypeDTO>) mineralTypes);
 		}
 	},
 }

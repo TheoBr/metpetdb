@@ -53,11 +53,17 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 	// ------ ChemicalAnalysisOxide ------
 	public PropertyConstraint[] ChemicalAnalysisOxide__all;
-	public ValueInCollectionConstraint ChemicalAnalysisOxide_oxide;
+	public ValueInCollectionConstraint ChemicalAnalysisOxide_ChemicalAnalysis_oxides_oxide;
+	public FloatConstraint ChemicalAnalysisOxide_ChemicalAnalysis_oxides_amount;
+	public FloatConstraint ChemicalAnalysisOxide_ChemicalAnalysis_oxides_precision;
+	public StringConstraint ChemicalAnalysisOxide_ChemicalAnalysis_oxides_precisionUnit;
 
 	// ------ ChemicalAnalysisElement ------
 	public PropertyConstraint[] ChemicalAnalysisElement__all;
-	public ValueInCollectionConstraint ChemicalAnalysisElement_element;
+	public ValueInCollectionConstraint ChemicalAnalysisElement_ChemicalAnalysis_elements_element;
+	public FloatConstraint ChemicalAnalysisElement_ChemicalAnalysis_elements_amount;
+	public FloatConstraint ChemicalAnalysisElement_ChemicalAnalysis_elements_precision;
+	public StringConstraint ChemicalAnalysisElement_ChemicalAnalysis_elements_precisionUnit;
 
 	// ------ XrayImage ------
 	public PropertyConstraint[] XrayImage__all;

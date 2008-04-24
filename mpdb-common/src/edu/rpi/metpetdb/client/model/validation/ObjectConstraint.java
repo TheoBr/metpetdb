@@ -26,6 +26,14 @@ public class ObjectConstraint extends PropertyConstraint {
 		return this.constraints;
 	}
 
+	public ValueInCollectionConstraint getValueInCollectionConstraint() {
+		for (PropertyConstraint pc : this.constraints) {
+			if (pc instanceof ValueInCollectionConstraint)
+				return (ValueInCollectionConstraint) pc;
+		}
+		return null;
+	}
+
 	@Override
 	public void validateEntity(final MObjectDTO obj) throws ValidationException {
 		final Object value = obj.mGet(this.property);

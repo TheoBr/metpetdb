@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.server.model;
 
+import java.util.Set;
+
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 
 public class Element extends MObject implements IHasName {
@@ -11,7 +13,7 @@ public class Element extends MObject implements IHasName {
 	private String symbol;
 	private int atomicNumber;
 	private Float weight;
-	private String mineralType;
+	private Set<MineralType> mineralTypes;
 
 	public void setId(final short s) {
 		id = s;
@@ -61,12 +63,12 @@ public class Element extends MObject implements IHasName {
 		return weight;
 	}
 
-	public void setMineralType(final String t) {
-		mineralType = t;
+	public Set<MineralType> getMineralTypes() {
+		return mineralTypes;
 	}
 
-	public String getMineralType() {
-		return mineralType;
+	public void setMineralTypes(Set<MineralType> mineralTypes) {
+		this.mineralTypes = mineralTypes;
 	}
 
 	@Override
