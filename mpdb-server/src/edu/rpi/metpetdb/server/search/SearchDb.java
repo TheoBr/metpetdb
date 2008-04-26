@@ -53,7 +53,9 @@ public class SearchDb {
 					}
 				} else {
 					if (columnName.equals("publicData")) {
-					} else {
+					} else if(columnName.equals("collectionDate")) {
+					}
+					else {
 						System.out.println("adding a must for variable "
 								+ columnName + " with value "
 								+ methodResult.toString());

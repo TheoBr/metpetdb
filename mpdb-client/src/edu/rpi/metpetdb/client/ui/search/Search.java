@@ -14,6 +14,7 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.CheckBoxesAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.DateRangeAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
@@ -21,10 +22,10 @@ import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 public class Search extends FlowPanel {
 	private static GenericAttribute[] searchAtts = {
 			/* Keep it simple for now */
-			// new TextAttribute(MpDb.oc.SearchSample_owner),
+			new TextAttribute(MpDb.oc.SearchSample_owner),
 			new TextAttribute(MpDb.oc.SearchSample_sesarNumber),
 			new TextAttribute(MpDb.oc.SearchSample_alias),
-			// new DateAttribute(MpDb.oc.SearchSample_collectionDate,
+			new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange),
 			// MpDb.doc.Sample_datePrecision),
 			new CheckBoxesAttribute(MpDb.oc.SearchSample_possibleRockTypes),
 	// new LocationAttribute(MpDb.oc.SearchSample_location),

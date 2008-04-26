@@ -1,10 +1,10 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-import java.sql.Timestamp;
 import java.util.Set;
 
 import org.postgis.Geometry;
 
+import edu.rpi.metpetdb.client.model.DateSpan;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.SampleMineralDTO;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
@@ -81,14 +81,14 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 	},
 	collectionDate {
-		public <T extends MObjectDTO> Timestamp get(final T sample) {
-			return ((SearchSampleDTO) sample).getCollectionDate();
+		public <T extends MObjectDTO> DateSpan get(final T sample) {
+			return ((SearchSampleDTO) sample).getCollectionDateRange();
 		}
 
 		public <T extends MObjectDTO, K> void set(final T sample,
-				final K collectionDate) {
+				final K collectionDateRange) {
 			((SearchSampleDTO) sample)
-					.setCollectionDate((Timestamp) collectionDate);
+					.setCollectionDateRange((DateSpan) collectionDateRange);
 		}
 
 		public String columnName() {

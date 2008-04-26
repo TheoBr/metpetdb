@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.client.model;
 
-import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +23,7 @@ public class SearchSampleDTO extends MObjectDTO {
 
 	private String alias;
 
-	private Timestamp collectionDate;
+	private DateSpan collectionDateRange;
 	private Short datePrecision;
 
 	private Set<SubsampleDTO> subsamples;
@@ -139,12 +138,12 @@ public class SearchSampleDTO extends MObjectDTO {
 		alias = s;
 	}
 
-	public Timestamp getCollectionDate() {
-		return collectionDate;
+	public DateSpan getCollectionDateRange() {
+		return collectionDateRange;
 	}
 
-	public void setCollectionDate(final Timestamp date) {
-		collectionDate = date;
+	public void setCollectionDateRange(final DateSpan dateRange) {
+		collectionDateRange = dateRange;
 	}
 
 	public Set<ProjectDTO> getProjects() {

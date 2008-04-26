@@ -26,9 +26,9 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 	public Sample_sesarNumber SearchSample_sesarNumber;
 	// public ValuesInCollectionConstraint<MineralDTO> SearchSample_minerals;
 	public GeometryConstraint SearchSample_location;
-	public TimestampConstraint SearchSample_collectionDate;
+	public DateSpanConstraint SearchSample_collectionDateRange;
 	public MultipleRockTypeConstraint SearchSample_possibleRockTypes;
-	public UserConstraint SearchSample_owner;
+	public StringConstraint SearchSample_owner;
 
 	public void finishInitialization(DatabaseObjectConstraints doc) {
 		SearchSample_alias.entityName = "SearchSample";
@@ -55,18 +55,22 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 		SearchSample_location.propertyName = "Location";
 		SearchSample_location.required = false;
 
-		SearchSample_collectionDate.entityName = "SearchSample";
-		SearchSample_collectionDate.property = SearchSampleProperty.collectionDate;
-		SearchSample_collectionDate.propertyName = "Collection Date";
-		SearchSample_collectionDate.required = false;
+		SearchSample_collectionDateRange.entityName = "SearchSample";
+		SearchSample_collectionDateRange.property = SearchSampleProperty.collectionDate;
+		SearchSample_collectionDateRange.propertyName = "Collection Date Range";
+		SearchSample_collectionDateRange.required = false;
 
 		SearchSample_possibleRockTypes.entityName = "SearchSample";
 		SearchSample_possibleRockTypes.property = SearchSampleProperty.possibleRockTypes;
 		SearchSample_possibleRockTypes.propertyName = "Rock Type";
 		SearchSample_possibleRockTypes.required = false;
 
+		// Should be a user constraint, but needs a max length... what should
+		// max length be?
 		SearchSample_owner.entityName = "SearchSample";
 		SearchSample_owner.property = SearchSampleProperty.owner;
+		SearchSample_owner.minLength = 0;
+		SearchSample_owner.maxLength = 50;
 		SearchSample_owner.propertyName = "Owner";
 		SearchSample_owner.required = false;
 
