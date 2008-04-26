@@ -56,7 +56,7 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 		SearchSample_location.required = false;
 
 		SearchSample_collectionDateRange.entityName = "SearchSample";
-		SearchSample_collectionDateRange.property = SearchSampleProperty.collectionDate;
+		SearchSample_collectionDateRange.property = SearchSampleProperty.collectionDateRange;
 		SearchSample_collectionDateRange.propertyName = "Collection Date Range";
 		SearchSample_collectionDateRange.required = false;
 

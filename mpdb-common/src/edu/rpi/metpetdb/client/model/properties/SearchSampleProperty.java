@@ -80,7 +80,7 @@ public enum SearchSampleProperty implements SearchProperty {
 			return "alias";
 		}
 	},
-	collectionDate {
+	collectionDateRange {
 		public <T extends MObjectDTO> DateSpan get(final T sample) {
 			return ((SearchSampleDTO) sample).getCollectionDateRange();
 		}
