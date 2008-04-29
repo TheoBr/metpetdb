@@ -28,8 +28,6 @@ public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
 	// new Column(enttxt.Subsample_analysisCount()),};
 	public static Column[] columns = {
 			new Column(""), // Column for Check boxes
-			new Column(enttxt.Subsample_images(), SubsampleProperty.images,
-					true), // not sure how to set up images
 			new Column(enttxt.Subsample_name(), SubsampleProperty.name, true) {
 				protected Object getWidget(final MObjectDTO data,
 						final int currentRow) {
@@ -41,6 +39,17 @@ public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
 			new Column(enttxt.Subsample_type(), SubsampleProperty.type),
 			new Column(enttxt.Subsample_imageCount(),
 					SubsampleProperty.imageCount),
+			new Column(enttxt.Subsample_images(), SubsampleProperty.images,
+					true) {
+				// protected Object getWidget(final MObjectDTO data,
+				// final int currentRow) {
+				// return new ImageList(data.mGet(getId()),
+				// (ArrayList) data.images, false);
+				// }
+			}, // TODO image thumbnail browser
+			new Column("Image Map") {
+				// TODO Mlink to create map/view map
+			},
 			new Column(enttxt.Subsample_analysisCount(),
 					SubsampleProperty.analysisCount),
 
