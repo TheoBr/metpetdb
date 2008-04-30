@@ -110,7 +110,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		if (UserDTO.getId() != currentUser())
 			throw new SecurityException("Administrators are not supported!");
 
-		final User u = (User) byId("UserDTO", UserDTO.getId());
+		final User u = (User) byId("User", UserDTO.getId());
 		if (!authenticate(u, uwp.getOldPassword()))
 			throw new LoginFailureException(doc.UserWithPassword_oldPassword);
 		u.setEncryptedPassword(PasswordEncrypter.crypt(uwp.getNewPassword()));
@@ -120,7 +120,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 	public void emailPassword(final String username)
 			throws NoSuchObjectException, UnableToSendEmailException {
-		final User u = (User) byKey("UserDTO", "username", username);
+		final User u = (User) byKey("User", "username", username);
 		if (u == null)
 			throw new NoSuchObjectException();
 		final String newpass = PasswordEncrypter.randomPassword();

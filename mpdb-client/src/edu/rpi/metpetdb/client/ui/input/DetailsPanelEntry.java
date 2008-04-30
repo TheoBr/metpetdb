@@ -15,7 +15,7 @@ public class DetailsPanelEntry {
 
 	private GenericAttribute attr;
 	// ArrayList<DetailsPanelRow>
-	private ArrayList entryRows;
+	private ArrayList<DetailsPanelRow> entryRows;
 	private CurrentError currentError;
 	private Widget[] currentEditWidgets;
 	private Widget[] currentDisplayWidgets;
@@ -31,21 +31,21 @@ public class DetailsPanelEntry {
 	 */
 	public DetailsPanelEntry(final GenericAttribute ga,
 			final DetailsPanelRow row) {
-		this.entryRows = new ArrayList();
+		this.entryRows = new ArrayList<DetailsPanelRow>();
 		this.entryRows.add(row);
 		this.attr = ga;
 	}
-	
+
 	public DetailsPanelEntry() {
-		
+
 	}
-	
+
 	/**
 	 * Removes all of the rows from the table
 	 */
 	public void remove() {
-		final Iterator itr = entryRows.iterator();
-		while(itr.hasNext()) {
+		final Iterator<DetailsPanelRow> itr = entryRows.iterator();
+		while (itr.hasNext()) {
 			final DetailsPanelRow dpRow = (DetailsPanelRow) itr.next();
 			dpRow.remove();
 		}
@@ -72,7 +72,7 @@ public class DetailsPanelEntry {
 
 	public void addRow(final DetailsPanelRow row) {
 		if (this.entryRows == null)
-			this.entryRows = new ArrayList();
+			this.entryRows = new ArrayList<DetailsPanelRow>();
 		this.entryRows.add(row);
 	}
 
@@ -82,10 +82,10 @@ public class DetailsPanelEntry {
 	public void setAttr(GenericAttribute ga) {
 		this.attr = ga;
 	}
-	public ArrayList getEntryRows() {
+	public ArrayList<DetailsPanelRow> getEntryRows() {
 		return entryRows;
 	}
-	public void setEntryRows(ArrayList entryRows) {
+	public void setEntryRows(ArrayList<DetailsPanelRow> entryRows) {
 		this.entryRows = entryRows;
 	}
 

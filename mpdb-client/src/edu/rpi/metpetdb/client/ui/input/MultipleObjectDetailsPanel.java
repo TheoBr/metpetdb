@@ -12,9 +12,10 @@ import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
-public class MultipleObjectDetailsPanel extends DetailsPanel {
+public class MultipleObjectDetailsPanel<T extends MObjectDTO> extends
+		DetailsPanel<T> {
 	// HashMap<MObject, HashMap<GenericAttribute, DetailsPanelEntry >
-	protected HashMap dpBeans;
+	protected HashMap<T, HashMap<GenericAttribute, DetailsPanelEntry>> dpBeans;
 
 	public MultipleObjectDetailsPanel(final GenericAttribute[] atts) {
 		this.init(atts, null, false, false);
@@ -23,20 +24,20 @@ public class MultipleObjectDetailsPanel extends DetailsPanel {
 	protected MultipleObjectDetailsPanel() {
 	}
 
-	public MObjectDTO getBean() {
+	public T getBean() {
 		return null;
 	}
 
-	public void show(final ArrayList beans) {
+	public void show(final ArrayList<T> beans) {
 		addStyleName(STYLENAME_DEFAULT + "-" + Styles.SHOWMODE);
 		removeStyleName(STYLENAME_DEFAULT + "-" + Styles.EDITMODE);
 		clearNonActions();
 		if (dpBeans == null)
-			dpBeans = new HashMap();
-		final Iterator itr = beans.iterator();
+			dpBeans = new HashMap<T, HashMap<GenericAttribute, DetailsPanelEntry>>();
+		final Iterator<T> itr = beans.iterator();
 		while (itr.hasNext()) {
-			final MObjectDTO bean = (MObjectDTO) itr.next();
-			final HashMap dpEntries = new HashMap();
+			final T bean = itr.next();
+			final HashMap<GenericAttribute, DetailsPanelEntry> dpEntries = new HashMap<GenericAttribute, DetailsPanelEntry>();
 			for (int row = 0; row < attributes.size(); row++) {
 				final GenericAttribute attr = (GenericAttribute) attributes
 						.get(row);
@@ -62,7 +63,7 @@ public class MultipleObjectDetailsPanel extends DetailsPanel {
 			final MObjectDTO bean) {
 		final DetailsPanelEntry copy = new DetailsPanelEntry();
 		copy.setAttr(original.getAttr());
-		final ArrayList rows = new ArrayList();
+		final ArrayList<DetailsPanelRow> rows = new ArrayList<DetailsPanelRow>();
 		final DetailsPanelRow dpRow = createRow(copy.getAttr(), 1, bean
 				.toString());
 		rows.add(dpRow);
@@ -71,8 +72,9 @@ public class MultipleObjectDetailsPanel extends DetailsPanel {
 		return copy;
 	}
 
-	public void updateEditWidget(final GenericAttribute attr, final MObjectDTO bean) {
-		final HashMap dpEntries = (HashMap) dpBeans.get(bean);
+	public void updateEditWidget(final GenericAttribute attr, final T bean) {
+		final HashMap<GenericAttribute, DetailsPanelEntry> dpEntries = dpBeans
+				.get(bean);
 		final DetailsPanelEntry dpEntry = (DetailsPanelEntry) dpEntries
 				.get(attr);
 		for (int i = 0; i < dpEntry.getCurrentEditWidgets().length; ++i)
@@ -101,17 +103,20 @@ public class MultipleObjectDetailsPanel extends DetailsPanel {
 		}
 	}
 
-	public void edit(final ArrayList beans) {
+	public void edit(final ArrayList<T> beans) {
 		addStyleName(STYLENAME_DEFAULT + "-" + Styles.EDITMODE);
 		removeStyleName(STYLENAME_DEFAULT + "-" + Styles.SHOWMODE);
 		clearNonActions();
 		if (dpBeans == null)
-			dpBeans = new HashMap();
-		final Iterator entriesItr = dpBeans.values().iterator();
+			dpBeans = new HashMap<T, HashMap<GenericAttribute, DetailsPanelEntry>>();
+		final Iterator<HashMap<GenericAttribute, DetailsPanelEntry>> entriesItr = dpBeans
+				.values().iterator();
 		while (entriesItr.hasNext()) {
-			final HashMap dpEntries = (HashMap) entriesItr.next();
+			final HashMap<GenericAttribute, DetailsPanelEntry> dpEntries = entriesItr
+					.next();
 			if (dpEntries != null) {
-				final Iterator dpItr = dpEntries.keySet().iterator();
+				final Iterator<GenericAttribute> dpItr = dpEntries.keySet()
+						.iterator();
 				while (dpItr.hasNext()) {
 					final DetailsPanelEntry dpEntry = (DetailsPanelEntry) dpEntries
 							.get(dpItr.next());
@@ -120,14 +125,14 @@ public class MultipleObjectDetailsPanel extends DetailsPanel {
 			}
 		}
 		dpBeans.clear();
-		final Iterator itr = beans.iterator();
+		final Iterator<T> itr = beans.iterator();
 		while (itr.hasNext()) {
-			final MObjectDTO bean = (MObjectDTO) itr.next();
-			HashMap dpEntries;
+			final T bean = itr.next();
+			HashMap<GenericAttribute, DetailsPanelEntry> dpEntries;
 			if (dpBeans.containsKey(bean))
-				dpEntries = (HashMap) dpBeans.get(bean);
+				dpEntries = dpBeans.get(bean);
 			else {
-				dpEntries = new HashMap();
+				dpEntries = new HashMap<GenericAttribute, DetailsPanelEntry>();
 				dpBeans.put(bean, dpEntries);
 			}
 			for (int row = 0; row < attributes.size(); row++) {
@@ -152,14 +157,13 @@ public class MultipleObjectDetailsPanel extends DetailsPanel {
 		setPanelDescription(editDescription);
 		isEditMode = true;
 	}
-
 	public boolean validateEdit(final ServerOp r) {
 		if (!isEditMode())
 			return true;
 		int failed = 0;
-		final Iterator itr = dpBeans.keySet().iterator();
+		final Iterator<T> itr = dpBeans.keySet().iterator();
 		while (itr.hasNext()) {
-			final MObjectDTO bean = (MObjectDTO) itr.next();
+			final T bean = itr.next();
 			for (int row = 0; row < attributes.size(); row++) {
 				final GenericAttribute attr = (GenericAttribute) attributes
 						.get(row);
@@ -175,20 +179,17 @@ public class MultipleObjectDetailsPanel extends DetailsPanel {
 			r.onFailure(null);
 		return failed == 0;
 	}
-
 	private Widget[] getEditWidgets(final GenericAttribute attr,
 			final MObjectDTO bean) {
 		if (!isEditMode())
 			throw new IllegalStateException();
-		final DetailsPanelEntry dpEntry = (DetailsPanelEntry) ((HashMap) dpBeans
-				.get(bean)).get(attr);
+		final DetailsPanelEntry dpEntry = dpBeans.get(bean).get(attr);
 		return dpEntry.getCurrentEditWidgets();
 	}
 	private CurrentError getCurrentError(final GenericAttribute attr,
 			final MObjectDTO bean) {
 		if (!isEditMode())
 			throw new IllegalStateException();;
-		return ((DetailsPanelEntry) ((HashMap) dpBeans.get(bean)).get(attr))
-				.getCurrentError();
+		return dpBeans.get(bean).get(attr).getCurrentError();
 	}
 }

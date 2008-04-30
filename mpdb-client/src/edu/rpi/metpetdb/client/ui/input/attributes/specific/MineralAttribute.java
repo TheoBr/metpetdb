@@ -29,13 +29,13 @@ import edu.rpi.metpetdb.client.ui.input.attributes.TreeAttribute;
 public class MineralAttribute extends GenericAttribute implements ClickListener {
 
 	private final Button chooseMinerals;
-	private MObjectDTO obj;
+	private SampleDTO obj;
 	private GenericAttribute ga;
 	private final SimplePanel container;
-	private TreeAttribute tree;
+	private TreeAttribute<MineralDTO> tree;
 	private WizardDialog dialog;
 
-	private DetailsPanel p_mineral;
+	private DetailsPanel<SampleDTO> p_mineral;
 
 	public MineralAttribute(final ObjectConstraint mc) {
 		this(mc, 0);
@@ -48,7 +48,7 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 		super(mc);
 		chooseMinerals = new Button("Choose Minerals...", this);
 		container = new SimplePanel();
-		tree = new TreeAttribute(mc, 4, maxMinerals);
+		tree = new TreeAttribute<MineralDTO>(mc, 4, maxMinerals);
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
@@ -59,19 +59,21 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 	}
 
 	private void remakeContainer(final MObjectDTO obj) {
-		final Widget[] widgets = tree.createDisplayWidget(obj);
+		final Widget[] widgets = tree.createDisplayWidget(obj,
+				((SampleDTO) obj).getMinerals());
 		container.clear();
 		for (int i = 0; i < widgets.length; ++i)
 			container.add(widgets[i]);
 	}
 
+	@Override
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id,
 			final GenericAttribute ga) {
 		final VerticalPanel vp = new VerticalPanel();
 		chooseMinerals.setEnabled(true);
-		this.obj = obj;
+		this.obj = (SampleDTO) obj;
 		vp.add(chooseMinerals);
-		final ArrayList tempList = new ArrayList();
+		final ArrayList<MineralDTO> tempList = new ArrayList<MineralDTO>();
 		if (get(obj) != null)
 			tempList.addAll(get(obj));
 		tree.setSelectedItems(tempList);
@@ -86,7 +88,7 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 	private WizardDialog makeWizardDialog() {
 		final WizardDialog wd = new WizardDialog();
 
-		final MultipleObjectDetailsPanel p_amounts = new MultipleObjectDetailsPanel(
+		final MultipleObjectDetailsPanel<SampleMineralDTO> p_amounts = new MultipleObjectDetailsPanel<SampleMineralDTO>(
 				new GenericAttribute[] {
 					new TextAttribute(
 							MpDb.doc.SampleMineral_Sample_minerals_amount)
@@ -96,7 +98,7 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 			tree
 		};
 
-		p_mineral = new DetailsPanel(mineral_attributes, null, false);
+		p_mineral = new DetailsPanel<SampleDTO>(mineral_attributes, null, false);
 
 		p_mineral.edit(this.obj);
 
@@ -104,13 +106,13 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 			public void begin() {
 				// Before we edit the minerals we have to convert them to
 				// SampleMineral
-				final Iterator itr = tree.getSelectedItems().iterator();
-				final ArrayList newSelectedItems = new ArrayList();
+				final Iterator<MineralDTO> itr = (Iterator<MineralDTO>) tree
+						.getSelectedItems().iterator();
+				final ArrayList<SampleMineralDTO> newSelectedItems = new ArrayList<SampleMineralDTO>();
 				while (itr.hasNext()) {
 					final MineralDTO mineral = (MineralDTO) itr.next();
-					final Object object = containsObject(
-							((SampleDTO) MineralAttribute.this.obj)
-									.getMinerals(), mineral);
+					final SampleMineralDTO object = containsObject(
+							MineralAttribute.this.obj.getMinerals(), mineral);
 					if (object != null) {
 						newSelectedItems.add(object);
 					} else {
@@ -134,10 +136,6 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 		return wd;
 	}
 
-	protected Collection get(final GenericAttribute ga) {
-		return tree.get(ga);
-	}
-
 	protected void set(final MObjectDTO obj, final Object v) {
 		tree.set(obj, v);
 	}
@@ -146,7 +144,7 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 		return tree.get(editWidget);
 	}
 
-	protected Collection get(final MObjectDTO obj) {
+	protected Collection<MineralDTO> get(final MObjectDTO obj) {
 		return tree.get(obj);
 	}
 
@@ -157,12 +155,13 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 	 * @param o
 	 * @return
 	 */
-	private Object containsObject(final Collection c, final Object o) {
+	private SampleMineralDTO containsObject(
+			final Collection<SampleMineralDTO> c, final MineralDTO o) {
 		if (c == null || o == null)
 			return null;
-		final Iterator itr = c.iterator();
+		final Iterator<SampleMineralDTO> itr = c.iterator();
 		while (itr.hasNext()) {
-			final Object object = itr.next();
+			final SampleMineralDTO object = itr.next();
 			if (o.equals(object)) {
 				return object;
 			}

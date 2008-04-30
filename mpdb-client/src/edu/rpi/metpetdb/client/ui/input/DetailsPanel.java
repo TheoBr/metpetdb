@@ -358,11 +358,18 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 		for (int row = 0; row < attributes.size(); row++) {
 			final GenericAttribute attr = (GenericAttribute) attributes
 					.get(row);
+			// Window.alert("validing attribute " + attr.getLabel());
 			final CurrentError err = getCurrentError(attr);
+			// Window.alert("attr readonly?" + attr.getReadOnly());
+			// Window.alert("attr immutable?" + attr.getImmutable());
+			// Window.alert("bean new?" + bean.mIsNew());
 			if (!attr.getReadOnly()) {
+				// Window.alert("we not read only");
 				if ((attr.getImmutable() && bean.mIsNew())
-						|| !attr.getImmutable())
+						|| !attr.getImmutable()) {
+					// Window.alert("committing edit");
 					attr.commitEdit(bean, getEditWidgets(attr), err, r);
+				}
 			} else if (r != null) {
 				r.onSuccess(null);
 			}

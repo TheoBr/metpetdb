@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -118,7 +119,7 @@ public class TokenSpace implements HistoryListener {
 	};
 	public static final Screen introduction = new Screen("Introduction") {
 		public void executeToken(final String args) {
-			// showIntroduction();
+			show(new Label("Introduction"));
 		}
 	};
 	public static final Screen bulkUpload = new Screen("BulkUpload") {

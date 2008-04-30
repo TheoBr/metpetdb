@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.ui.user;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -9,6 +10,7 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.UserWithPasswordDTO;
+import edu.rpi.metpetdb.client.model.properties.UserWithPasswordProperty;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
@@ -86,6 +88,15 @@ public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 	protected void doRegister() {
 		new FormOp<UserDTO>(p_main) {
 			protected void onSubmit() {
+				Window.alert("register new user-username is "
+						+ newbie.getUser().getUsername() + " email is "
+						+ newbie.getUser().getEmailAddress() + " password is "
+						+ newbie.getNewPassword());
+				newbie.mSet(UserWithPasswordProperty.newPassword, "testing");
+				Window.alert("register new user-username is "
+						+ newbie.getUser().getUsername() + " email is "
+						+ newbie.getUser().getEmailAddress() + " password is "
+						+ newbie.getNewPassword());
 				MpDb.user_svc.registerNewUser(newbie, this);
 			}
 			public void onSuccess(final UserDTO result) {

@@ -23,38 +23,46 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
-public class TreeAttribute extends GenericAttribute implements ClickListener {
+/**
+ * 
+ * @author anthony
+ * 
+ * @param <T>
+ *            the type of the items in the tree
+ */
+public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
+		implements ClickListener {
 
 	protected final SimplePanel container;
 
 	private class ExtendedTreeItem extends TreeItem {
-		private Object obj;
+		private T obj;
 
-		public ExtendedTreeItem(final Widget w, final Object o) {
+		public ExtendedTreeItem(final Widget w, final T o) {
 			super(w);
 			obj = o;
 		}
 
-		public ExtendedTreeItem(final String s, final Object o) {
+		public ExtendedTreeItem(final String s, final T o) {
 			super(s);
 			obj = o;
 		}
 
-		public Object getObject() {
+		public T getObject() {
 			return obj;
 		}
 
-		public void setObject(final Object o) {
+		public void setObject(final T o) {
 			obj = o;
 		}
 	}
 
 	private ArrayList selectedItems = new ArrayList();
-	private ArrayList selectedWidgets = new ArrayList();
+	private ArrayList<Widget> selectedWidgets = new ArrayList<Widget>();
 	private final int numberOfColumns;
 	private final Button collapse;
 	private final Button expand;
-	private final ArrayList trees;
+	private final ArrayList<Tree> trees;
 	private final int maxSelectable;
 
 	public TreeAttribute(final PropertyConstraint pc, final int i) {
@@ -68,22 +76,27 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 		numberOfColumns = i;
 		expand = new Button("Expand", this);
 		collapse = new Button("Collapse", this);
-		trees = new ArrayList();
+		trees = new ArrayList<Tree>();
 		this.maxSelectable = maxSelectable;
 	}
 
-	public ArrayList getSelectedItems() {
+	public ArrayList<?> getSelectedItems() {
 		return selectedItems;
 	}
-	public void setSelectedItems(final ArrayList al) {
+	public void setSelectedItems(final ArrayList<?> al) {
 		selectedItems = al;
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
+		final Collection<T> c = get(obj);
+		return createDisplayWidget(obj, c);
+	}
+
+	public Widget[] createDisplayWidget(final MObjectDTO obj,
+			final Collection<?> c) {
 		final MUnorderedList list = new MUnorderedList();
-		final Collection c = get(obj);
 		if (c != null) {
-			final Iterator itr = c.iterator();
+			final Iterator<?> itr = c.iterator();
 			while (itr.hasNext()) {
 				final Object object = itr.next();
 				final Label l = new Label(object.toString());
@@ -102,20 +115,20 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 		final HorizontalPanel hp = new HorizontalPanel();
 		selectedItems.clear();
 		selectedWidgets.clear();
-		final Collection allMinerals = get(ga);
-		if (allMinerals != null) {
-			final Iterator itr = allMinerals.iterator();
-			final int numMinerals = (int) Math.ceil((double) (allMinerals
-					.size() / (double) numberOfColumns));
+		final Collection<T> treeItems = get(ga);
+		if (treeItems != null) {
+			final Iterator<T> itr = treeItems.iterator();
+			final int numMinerals = (int) Math
+					.ceil((double) (treeItems.size() / (double) numberOfColumns));
 			int count = 0;
 			for (int i = 0; i < numberOfColumns; ++i) {
-				// Find out how many minerals go in this tree
-				final Collection mineralSubset = new HashSet();
+				// Find out how many items go in this tree
+				final Collection<T> treeItemSubset = new ArrayList<T>();
 				while (itr.hasNext() && count < numMinerals) {
-					mineralSubset.add(itr.next());
+					treeItemSubset.add(itr.next());
 					count++;
 				}
-				final Tree t = makeTree(mineralSubset, obj);
+				final Tree t = makeTree(treeItemSubset, obj);
 				applyStyle(t, true);
 				hp.add(t);
 				trees.add(t);
@@ -130,32 +143,35 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 		};
 	}
 
-	private TreeItem makeChildren(final Collection parents,
+	private TreeItem makeChildren(final Collection<T> parents,
 			final TreeItem root, final MObjectDTO obj) {
 		if (parents != null) {
-			Iterator itr = parents.iterator();
+			Iterator<T> itr = parents.iterator();
 			while (itr.hasNext()) {
-				final HasChildren ihc = (HasChildren) itr.next();
-				final CheckBox cb = new CheckBox(ihc.toString());
+				final T parent = itr.next();
+				final CheckBox cb = new CheckBox(parent.toString());
 
-				if (get(obj) != null && get(obj).contains(ihc)
-						|| contains(get(obj), ihc)) {
+				if (get(obj) != null && get(obj).contains(parent)
+						|| contains(get(obj), parent)) {
 					cb.setChecked(true);
-					selectedItems.add(ihc);
+					selectedItems.add(parent);
 					selectedWidgets.add(cb);
 				}
-				final ExtendedTreeItem parent = new ExtendedTreeItem(cb, ihc);
-				if (ihc.getChildren() != null && ihc.getChildren().size() > 0) {
-					root.addItem(makeChildren(ihc.getChildren(), parent, obj));
+				final ExtendedTreeItem parentTreeItem = new ExtendedTreeItem(
+						cb, parent);
+				if (parent.getChildren() != null
+						&& parent.getChildren().size() > 0) {
+					root.addItem(makeChildren(parent.getChildren(),
+							parentTreeItem, obj));
 				} else
-					root.addItem(parent);
+					root.addItem(parentTreeItem);
 
 				cb.addClickListener(new ClickListener() {
 					public void onClick(final Widget w) {
 						if (cb.isChecked()) {
 							selectedWidgets.add(w);
-							selectedItems.add(ihc);
-							checkChildren(parent);
+							selectedItems.add(parent);
+							checkChildren(parentTreeItem);
 							if (maxSelectable != 0
 									&& selectedWidgets.size() > maxSelectable) {
 								((CheckBox) selectedWidgets.get(0))
@@ -164,7 +180,7 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 								selectedWidgets.remove(0);
 							}
 						} else {
-							selectedItems.remove(ihc);
+							selectedItems.remove(parent);
 							selectedWidgets.remove(w);
 						}
 					}
@@ -173,33 +189,35 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 		}
 		return root;
 	}
-
-	private Tree makeTree(final Collection parents, final MObjectDTO obj) {
+	private Tree makeTree(final Collection<T> parents, final MObjectDTO obj) {
 		final Tree t = new Tree();
 		if (parents != null) {
-			Iterator itr = parents.iterator();
+			Iterator<T> itr = parents.iterator();
 			while (itr.hasNext()) {
-				final HasChildren ihc = (HasChildren) itr.next();
-				final CheckBox cb = new CheckBox(ihc.toString());
+				final T parent = itr.next();
+				final CheckBox cb = new CheckBox(parent.toString());
 
-				if (get(obj) != null && get(obj).contains(ihc)
-						|| contains(get(obj), ihc)) {
+				if (get(obj) != null && get(obj).contains(parent)
+						|| contains(get(obj), parent)) {
 					cb.setChecked(true);
-					selectedItems.add(ihc);
+					selectedItems.add(parent);
 					selectedWidgets.add(cb);
 				}
-				final ExtendedTreeItem parent = new ExtendedTreeItem(cb, ihc);
-				if (ihc.getChildren() != null && ihc.getChildren().size() > 0) {
-					t.addItem(makeChildren(ihc.getChildren(), parent, obj));
+				final ExtendedTreeItem parentTreeItem = new ExtendedTreeItem(
+						cb, parent);
+				if (parent.getChildren() != null
+						&& parent.getChildren().size() > 0) {
+					t.addItem(makeChildren(parent.getChildren(),
+							parentTreeItem, obj));
 				} else
-					t.addItem(parent);
+					t.addItem(parentTreeItem);
 
 				cb.addClickListener(new ClickListener() {
 					public void onClick(final Widget w) {
 						if (cb.isChecked()) {
 							selectedWidgets.add(w);
-							selectedItems.add(ihc);
-							checkChildren(parent);
+							selectedItems.add(parent);
+							checkChildren(parentTreeItem);
 							if (maxSelectable != 0
 									&& selectedWidgets.size() > maxSelectable) {
 								((CheckBox) selectedWidgets.get(0))
@@ -208,7 +226,7 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 								selectedWidgets.remove(0);
 							}
 						} else {
-							selectedItems.remove(ihc);
+							selectedItems.remove(parent);
 							selectedWidgets.remove(w);
 						}
 					}
@@ -237,10 +255,10 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 	 * @param o
 	 * @return
 	 */
-	public static boolean contains(final Collection c, final Object o) {
+	public static boolean contains(final Collection<?> c, final Object o) {
 		if (c == null)
 			return false;
-		final Iterator itr = c.iterator();
+		final Iterator<?> itr = c.iterator();
 		if (o == null)
 			return false;
 		while (itr.hasNext()) {
@@ -255,32 +273,29 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 		if (maxSelectable == 1 && selectedItems.size() > 0)
 			return selectedItems.get(0);
 		else if (selectedItems.size() > 0)
-			return new HashSet(selectedItems);
+			return new HashSet<T>(selectedItems);
 		else
 			return null;
 	}
-	public Collection get(final GenericAttribute ga) {
+	public Collection<T> get(final GenericAttribute ga) {
 		final PropertyConstraint pc = ga.getConstraint();
 		if (pc instanceof ObjectConstraint) {
 			final ObjectConstraint oc = (ObjectConstraint) ga.getConstraint();
-			final PropertyConstraint[] pcs = oc.getConstraints();
-			for (int i = 0; i < pcs.length; ++i) {
-				if (pcs[i] instanceof ValueInCollectionConstraint) {
-					return ((ValueInCollectionConstraint) pcs[i]).getValues();
-				}
-			}
+			return (Collection<T>) oc.getValueInCollectionConstraint()
+					.getValues();
 		} else {
-			return ((ValueInCollectionConstraint) pc).getValues();
+			final ValueInCollectionConstraint voc = (ValueInCollectionConstraint) ga
+					.getConstraint();
+			return (Collection<T>) voc.getValues();
 		}
-		return null;
 	}
-	public Collection get(final MObjectDTO obj) {
+	public Collection<T> get(final MObjectDTO obj) {
 		final Object o = mGet(obj);
 		if (o instanceof Collection)
-			return (Collection) mGet(obj);
+			return (Collection<T>) mGet(obj);
 		else if (o != null) {
-			final HashSet temp = new HashSet();
-			temp.add(o);
+			final Collection<T> temp = new HashSet<T>();
+			temp.add((T) o);
 			return temp;
 		} else {
 			return null;
@@ -301,24 +316,26 @@ public class TreeAttribute extends GenericAttribute implements ClickListener {
 
 	public void onClick(final Widget sender) {
 		if (sender == expand) {
-			final Iterator treeItr = trees.iterator();
+			final Iterator<Tree> treeItr = trees.iterator();
 			while (treeItr.hasNext()) {
-				final Iterator itr = ((Tree) treeItr.next()).treeItemIterator();
+				final Iterator<TreeItem> itr = ((Tree) treeItr.next())
+						.treeItemIterator();
 				while (itr.hasNext()) {
-					final Object obj = itr.next();
-					if (obj instanceof ExtendedTreeItem) {
+					final TreeItem obj = itr.next();
+					if (obj instanceof TreeAttribute.ExtendedTreeItem) {
 						((ExtendedTreeItem) obj).setState(true);
 					}
 				}
 			}
 
 		} else if (sender == collapse) {
-			final Iterator treeItr = trees.iterator();
+			final Iterator<Tree> treeItr = trees.iterator();
 			while (treeItr.hasNext()) {
-				final Iterator itr = ((Tree) treeItr.next()).treeItemIterator();
+				final Iterator<TreeItem> itr = ((Tree) treeItr.next())
+						.treeItemIterator();
 				while (itr.hasNext()) {
 					final Object obj = itr.next();
-					if (obj instanceof ExtendedTreeItem) {
+					if (obj instanceof TreeAttribute.ExtendedTreeItem) {
 						((ExtendedTreeItem) obj).setState(false);
 					}
 				}
