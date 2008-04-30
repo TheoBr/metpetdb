@@ -55,7 +55,9 @@ public class AnalysisParser {
 					"reference", "setReference", String.class
 			}, {
 					"(point)|(spot)", "setSpotId", String.class
-			},
+			}, {
+					"rock", "setLargeRock", Boolean.class
+			}
 
 	};
 
@@ -255,6 +257,11 @@ public class AnalysisParser {
 						Timestamp date = parseDate(data, precision);
 						ca.setAnalysisDate(date);
 					}
+				} else if (dataType == Boolean.class) {
+					final String data = cell.toString();
+					ca
+							.setLargeRock(data.matches("yes")
+									|| data.matches("true"));
 				}
 
 			} catch (final NullPointerException npe) {
