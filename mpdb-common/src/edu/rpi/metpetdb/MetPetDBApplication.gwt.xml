@@ -28,4 +28,5 @@
 	<servlet path="/image.svc" class="edu.rpi.metpetdb.server.impl.ImageServiceImpl"/>
 	<servlet path="/chemicalAnalysis.svc" class="edu.rpi.metpetdb.server.impl.ChemicalAnalysisServiceImpl"/>
 	<servlet path="/mpdbGeneric.svc" class="edu.rpi.metpetdb.server.impl.MpDbGenericServiceImpl"/>
+	<servlet path="/BasicKML.kml" class="edu.rpi.metpetdb.server.BasicKML"/>
 </module>
