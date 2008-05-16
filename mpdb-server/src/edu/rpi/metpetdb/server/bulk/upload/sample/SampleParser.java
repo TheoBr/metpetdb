@@ -250,28 +250,42 @@ public class SampleParser {
 	private void parseDate(final SampleDTO s, final String date) {
 		Short precision = 365;
 		String day, month, year;
-		// DD-MM-YYYY
-		final Pattern datepat = Pattern
-				.compile("^((\\d{2})([-/]))?((\\d{2})([-/]))?(\\d{4})$");
-		final Matcher datematch = datepat.matcher(date);
 
-		if (!datematch.find()) {
-			throw new IllegalStateException();
+		// Regexes for acceptable date formats
+		final Pattern datepat_mmddyyyy = Pattern
+				.compile("^((\\d{2})([-/]))?((\\d{2})([-/]))?(\\d{4})$");
+		final Pattern datepat_yyyymmdd = Pattern
+				.compile("^(\\d{4})(([-/])(\\d{2}))?(([-/])(\\d{2}))?$");
+
+		// See what regular expression matches our input, and then parse
+		Matcher datematch;
+		if ((datematch = datepat_mmddyyyy.matcher(date)).find()) {
+			// MM-DD-YYYY
+			month = datematch.group(2);
+			day = datematch.group(5);
+			year = datematch.group(7);
+		} else if ((datematch = datepat_yyyymmdd.matcher(date)).find()) {
+			// YYYY-MM-DD
+			year = datematch.group(1);
+			month = datematch.group(4);
+			day = datematch.group(7);
+		} else {
+			throw new IllegalStateException("Couldn't parse Date: " + date);
 		}
 
-		// do we have a month?
-		if (datematch.group(2) != null) {
-			month = datematch.group(2);
+		// Set precisions, etc according to what was observed
+		if (month != null) {
 			precision = 31;
-		} else
+		} else {
 			month = "01";
-		// do we have a day?
-		if ((day = datematch.group(5)) != null) {
-			precision = 1;
-		} else
-			day = "01";
+		}
 
-		year = datematch.group(7);
+		if (day != null) {
+			precision = 1;
+		} else {
+			day = "01";
+		}
+
 		Timestamp time = Timestamp.valueOf(year + "-" + month + "-" + day
 				+ " 00:00:00.000000000");
 
