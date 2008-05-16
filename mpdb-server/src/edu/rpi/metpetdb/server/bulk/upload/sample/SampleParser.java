@@ -119,11 +119,17 @@ public class SampleParser {
 	}
 	public void parse() {
 		int k = 0;
+
+		// Skip empty rows at the start
 		while (sheet.getRow(k) == null) {
 			k++;
 		}
+
+		// First non-empty row is the header, want to associate what
+		// we know how to parse with what is observed
 		HSSFRow header = sheet.getRow(k);
 		for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
+			// Convert header title to String
 			final HSSFCell cell = header.getCell((short) i);
 			final String text;
 			try {
@@ -133,6 +139,8 @@ public class SampleParser {
 				continue;
 			}
 			System.out.println("Parsing header " + i + ": " + text);
+
+			// Determine method to be used for data in this column
 			for (MethodAssociation<SampleDTO> sma : methodAssociations) {
 				if (sma.matches(text)) {
 					colMethods.put(new Integer(i), sma.getMethod());
@@ -140,7 +148,9 @@ public class SampleParser {
 				}
 			}
 		}
-		// Loop through the rows
+
+		// Loop through the remaining data rows, parsing based upon the column
+		// determinations
 		for (int i = k + 1; i < sheet.getPhysicalNumberOfRows(); ++i) {
 			System.out.println("Parsing Row " + i);
 			parseRow(sheet.getRow(i));
@@ -155,11 +165,17 @@ public class SampleParser {
 	 *             if the row isn't of the format designated by the headers
 	 */
 	private void parseRow(final HSSFRow row) {
-		final SampleDTO s = new SampleDTO();
+		if (row == null) {
+			return;
+		}
 
-		for (Integer i = 0; i < row.getPhysicalNumberOfCells(); ++i) {
+		final SampleDTO s = new SampleDTO();
+		boolean sawDataInRow = false;
+
+		for (Integer i = 0; i <= row.getPhysicalNumberOfCells(); ++i) {
 			final HSSFCell cell = row.getCell((short) i.intValue());
 			try {
+				// Get the method we'll be using to parse this particular cell
 				final Method storeMethod = colMethods.get(i);
 				System.out.println("\t Parsing Column " + i + ": "
 						+ storeMethod.getName());
@@ -167,10 +183,13 @@ public class SampleParser {
 				if (storeMethod == null)
 					continue;
 
+				// Determine what class the method wants the content of the cell
+				// to be so it can parse it
 				final Class dataType = storeMethod.getParameterTypes()[0];
 
 				if (dataType == String.class) {
-
+					// TODO: Q? if storeMethod name is addReference, how can it
+					// equal addComment?
 					if (storeMethod.getName().equals("addReference")
 							&& !storeMethod.getName().equals("addComment")) {
 						final String[] data = cell.toString()
@@ -198,8 +217,12 @@ public class SampleParser {
 						final String data = cell.toString();
 						parseDate(s, data);
 					}
+				} else {
+					throw new IllegalStateException(
+							"Don't know how to convert to datatype: "
+									+ dataType.toString());
 				}
-
+				sawDataInRow = true;
 			} catch (final NullPointerException npe) {
 				// empty cell
 				continue;
@@ -215,7 +238,10 @@ public class SampleParser {
 				throw new IllegalStateException(iae.getMessage());
 			}
 		}
-		samples.add(s);
+
+		if (sawDataInRow) {
+			samples.add(s);
+		}
 	}
 	public List<SampleDTO> getSamples() {
 		return samples;
