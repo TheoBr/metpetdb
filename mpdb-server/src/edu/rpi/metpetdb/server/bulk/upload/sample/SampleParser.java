@@ -188,9 +188,7 @@ public class SampleParser {
 				final Class dataType = storeMethod.getParameterTypes()[0];
 
 				if (dataType == String.class) {
-					// TODO: Q? if storeMethod name is addReference, how can it
-					// equal addComment?
-					if (storeMethod.getName().equals("addReference")
+					if (!storeMethod.getName().equals("addReference")
 							&& !storeMethod.getName().equals("addComment")) {
 						final String[] data = cell.toString()
 								.split("\\s*,\\s*");
