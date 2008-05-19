@@ -184,17 +184,19 @@ public class SampleParser {
 			try {
 				// Get the method we'll be using to parse this particular cell
 				final Method storeMethod = colMethods.get(i);
-				System.out.println("\t Parsing Column " + i + ": "
-						+ storeMethod.getName());
 
 				if (storeMethod == null)
 					continue;
+
+				System.out.println("\t Parsing Column " + i + ": "
+						+ storeMethod.getName());
 
 				// Determine what class the method wants the content of the cell
 				// to be so it can parse it
 				final Class dataType = storeMethod.getParameterTypes()[0];
 
 				if (dataType == String.class) {
+
 					if (!storeMethod.getName().equals("addReference")
 							&& !storeMethod.getName().equals("addComment")) {
 						final String[] data = cell.toString()
@@ -212,6 +214,7 @@ public class SampleParser {
 					storeMethod.invoke(s, data);
 
 				} else if (dataType == Timestamp.class) {
+
 					try {
 						final Date data = cell.getDateCellValue();
 						s.setCollectionDate(new Timestamp(data.getTime()));
