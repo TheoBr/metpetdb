@@ -40,6 +40,7 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 			}
 
 			sp.parse();
+			errors.putAll(sp.getErrors());
 			final UserDTO u = (UserDTO) cloneBean(byId("User", currentUser()));
 			final List<SampleDTO> samples = sp.getSamples();
 			Integer i = 2;

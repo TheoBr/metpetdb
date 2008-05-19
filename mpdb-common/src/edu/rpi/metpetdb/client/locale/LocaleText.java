@@ -98,6 +98,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_UnableToSendEmail();
 	String errorDesc_InvalidRockType(String rockType, String rockTypes);
 	String errorDesc_InvalidFormat();
+	String errorDesc_InvalidDateString();
 
 	/* Character Names */
 	String character_space();

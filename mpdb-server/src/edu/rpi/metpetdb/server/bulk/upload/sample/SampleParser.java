@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,13 +21,17 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
+import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.validation.DateStringConstraint;
 
 public class SampleParser {
 
 	private final InputStream is;
 	private HSSFSheet sheet;
 	private final List<SampleDTO> samples;
+	private final Map<Integer, ValidationException> errors = new TreeMap<Integer, ValidationException>();
+
 	/**
 	 * sampleMethodMap[][0] === name in table sampleMethodMap[][1] === method to
 	 * call on Sample to store data sampleMethodMap[][2] === parameter to the
@@ -153,7 +158,7 @@ public class SampleParser {
 		// determinations
 		for (int i = k + 1; i < sheet.getPhysicalNumberOfRows(); ++i) {
 			System.out.println("Parsing Row " + i);
-			parseRow(sheet.getRow(i));
+			parseRow(i);
 		}
 	}
 
@@ -164,7 +169,9 @@ public class SampleParser {
 	 * @throws InvalidFormatException
 	 *             if the row isn't of the format designated by the headers
 	 */
-	private void parseRow(final HSSFRow row) {
+	private void parseRow(final int rowindex) {
+		final HSSFRow row = sheet.getRow(rowindex);
+
 		if (row == null) {
 			return;
 		}
@@ -213,7 +220,12 @@ public class SampleParser {
 					} catch (final NumberFormatException nfe) {
 						System.out.println("parsing date");
 						final String data = cell.toString();
-						parseDate(s, data);
+						try {
+							(new DateStringConstraint()).validateValue(data);
+							parseDate(s, data);
+						} catch (final ValidationException ife) {
+							errors.put(new Integer(samples.size() + 2), ife);
+						}
 					}
 				} else {
 					throw new IllegalStateException(
@@ -289,5 +301,9 @@ public class SampleParser {
 
 		s.setCollectionDate(time);
 		s.setDatePrecision(precision);
+	}
+
+	public Map<Integer, ValidationException> getErrors() {
+		return errors;
 	}
 }
