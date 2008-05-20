@@ -113,8 +113,12 @@ public class AnalysisParser {
 		while (sheet.getRow(k) == null) {
 			k++;
 		}
+
+		// First non-empty row is the header, want to associate what
+		// we know how to parse with what is observed
 		HSSFRow header = sheet.getRow(k);
 		for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
+			// Convert header title to String
 			final HSSFCell cell = header.getCell((short) i);
 			final String text;
 			boolean done = false;
@@ -126,20 +130,25 @@ public class AnalysisParser {
 			}
 			System.out.println("Parsing header " + i + ": " + text);
 
+			// Determine method to be used for data in this column
 			for (MethodAssociation<ChemicalAnalysisDTO> sma : methodAssociations) {
 				// special case for sample
 				if (text.matches("[Ss][Aa][Mm][Pp][Ll][Ee]"))
 					colObjects.put(new Integer(i), new SampleDTO());
 
+				// Generic title => method check
 				if (sma.matches(text)) {
 					colMethods.put(new Integer(i), sma.getMethod());
 					done = true;
 					break;
 				}
 			}
+
 			if (done)
 				continue;
-			// if it wasn't a specific method, maybe it's an element or oxide
+
+			// The string didn't match anything we explicitly check for, so
+			// maybe it is an element or an oxide
 			try {
 				for (ElementDTO e : elements) {
 					if (e.getName().equalsIgnoreCase(text)
@@ -157,6 +166,7 @@ public class AnalysisParser {
 
 				if (done)
 					continue;
+
 				for (OxideDTO o : oxides) {
 					if (o.getSpecies().equalsIgnoreCase(text)) {
 						colMethods.put(new Integer(i),
@@ -171,7 +181,9 @@ public class AnalysisParser {
 						"Programming Error -- Invalid Chemical Analysis Method");
 			}
 		}
-		// Loop through the rows
+
+		// Loop through the remaining data rows, parsing based upon the column
+		// determination
 		for (int i = k + 1; i < sheet.getPhysicalNumberOfRows(); ++i) {
 			System.out.println("Parsing Row " + i);
 			parseRow(sheet.getRow(i));
@@ -191,6 +203,7 @@ public class AnalysisParser {
 		for (Integer i = 0; i < row.getPhysicalNumberOfCells(); ++i) {
 			final HSSFCell cell = row.getCell((short) i.intValue());
 			try {
+				// Get the method we'll be using to parse this particular cell
 				final Method storeMethod = colMethods.get(i);
 
 				if (storeMethod == null)
@@ -199,10 +212,11 @@ public class AnalysisParser {
 				System.out.println("\t Parsing Column " + i + ": "
 						+ storeMethod.getName());
 
-				// Elements and Oxides (and Sample)
+				// If an object for the column exists then handle accordingly
 				if (colObjects.get(i) != null) {
-					// special case for Sample, I don't like it, but it wasn't
-					// hard to do...
+
+					// If the object is a sample, we want the chemical analysis
+					// to be related to a subsample of that sample
 					if (colObjects.get(i) instanceof SampleDTO) {
 						final String data = cell.toString();
 						System.out.println("\t\t(Sample)");
@@ -214,12 +228,17 @@ public class AnalysisParser {
 						ca.getSubsample().getSample().setAlias(data);
 						continue;
 					}
+
+					// Otherwise it is an Element or Oxide, so just handle
+					// create one
 					final Object o = colObjects.get(i);
 					final Float data = (float) cell.getNumericCellValue();
 					storeMethod.invoke(ca, o, data);
 					continue;
 				}
 
+				// Determine which class the method wants the content of the
+				// cell to be so it can parse it
 				final Class dataType = storeMethod.getParameterTypes()[0];
 
 				if (dataType == String.class) {
@@ -234,18 +253,21 @@ public class AnalysisParser {
 						final String data = cell.toString();
 						storeMethod.invoke(ca, data);
 					}
-				} else if (dataType == SubsampleDTO.class) {
-					final String data = cell.toString();
 
+				} else if (dataType == SubsampleDTO.class) {
+
+					final String data = cell.toString();
 					if (ca.getSubsample() == null)
 						ca.setSubsample(new SubsampleDTO());
 					ca.getSubsample().setName(data);
+
 				} else if (dataType == double.class) {
 
 					final double data = cell.getNumericCellValue();
 					storeMethod.invoke(ca, data);
 
 				} else if (dataType == Timestamp.class) {
+
 					try {
 						final Date data = cell.getDateCellValue();
 						ca.setAnalysisDate(new Timestamp(data.getTime()));
@@ -257,13 +279,18 @@ public class AnalysisParser {
 						Timestamp date = parseDate(data, precision);
 						ca.setAnalysisDate(date);
 					}
+
 				} else if (dataType == Boolean.class) {
+
 					final String data = cell.toString();
 					ca
 							.setLargeRock(data.matches("yes")
 									|| data.matches("true"));
+				} else {
+					throw new IllegalStateException(
+							"Don't know how to convert to datatype: "
+									+ dataType.toString());
 				}
-
 			} catch (final NullPointerException npe) {
 				// empty cell
 				continue;
