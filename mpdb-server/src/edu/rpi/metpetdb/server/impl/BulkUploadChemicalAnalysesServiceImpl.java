@@ -6,12 +6,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.hibernate.Query;
+
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.service.BulkUploadChemicalAnalysesService;
 import edu.rpi.metpetdb.server.bulk.upload.sample.AnalysisParser;
+import edu.rpi.metpetdb.server.model.Mineral;
 
 public class BulkUploadChemicalAnalysesServiceImpl extends
 		ChemicalAnalysisServiceImpl implements
@@ -50,6 +53,16 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 			Integer i = 2; // if the spreadsheet had blank lines at the top,
 			// the line numbers will be wrong accordingly.
 			for (ChemicalAnalysisDTO s : analyses) {
+
+				// Minerals need id's so equality can be checked
+				final Query minerals = namedQuery("Mineral.byName");
+				minerals.setString("name", s.getMineral().getName());
+				if (minerals.uniqueResult() != null) {
+					Mineral m = (Mineral) minerals.uniqueResult();
+					s.getMineral().setParentId(m.getParentId());
+					s.getMineral().setId(m.getId());
+				}
+
 				try {
 					doc.validate(s);
 				} catch (ValidationException e) {
