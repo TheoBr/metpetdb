@@ -58,7 +58,7 @@ public class ChemicalAnalysisOxide extends MObject {
 	}
 
 	public boolean equals(final Object o) {
-		if (o instanceof ChemicalAnalysisElement) {
+		if (o instanceof ChemicalAnalysisOxide) {
 			final boolean one = ((ChemicalAnalysisOxide) o).getOxide().equals(
 					oxide);
 			final boolean two = ((ChemicalAnalysisOxide) o).getAmount() == null ? ((ChemicalAnalysisOxide) o)
