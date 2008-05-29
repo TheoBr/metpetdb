@@ -8,13 +8,14 @@ import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
 public class MySamples extends LeftColWidget implements UsesLeftColumn {
-	
+
 	public MySamples() {
 		super("My Samples");
-		
+
 		this.setStyleName("lcol-MySamples");
 
 		final MUnorderedList list = new MUnorderedList();
+		final MLink addSamples = new MLink("Add Sample", TokenSpace.enterSample);
 		final MLink allOfMySamples = new MLink("All", TokenSpace.samplesForUser);
 		final MLink recentSamples = new MLink("Recent Samples",
 				new ClickListener() {
@@ -29,6 +30,7 @@ public class MySamples extends LeftColWidget implements UsesLeftColumn {
 					}
 				});
 
+		list.add(addSamples);
 		list.add(allOfMySamples);
 		list.add(recentSamples);
 		list.add(favoriteSamples);
@@ -38,7 +40,7 @@ public class MySamples extends LeftColWidget implements UsesLeftColumn {
 
 	public void onPageChanged() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

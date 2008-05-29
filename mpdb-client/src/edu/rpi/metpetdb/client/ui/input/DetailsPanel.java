@@ -57,12 +57,15 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 	public void setViewHeader(final String s) {
 		viewHeader = s;
 	}
+
 	public void setViewDescription(final String s) {
 		viewDescription = s;
 	}
+
 	public void setEditHeader(final String s) {
 		editHeader = s;
 	}
+
 	public void setEditDescription(final String s) {
 		editDescription = s;
 	}
@@ -70,12 +73,15 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 	public String getViewHeader() {
 		return viewHeader;
 	}
+
 	public String getViewDescription() {
 		return viewDescription;
 	}
+
 	public String getEditHeader() {
 		return editHeader;
 	}
+
 	public String getEditDescription() {
 		return editDescription;
 	}
@@ -83,12 +89,15 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 	public void setPanelHeader() {
 		showBlockOrHide(panelHeader, "");
 	}
+
 	public void setPanelHeader(final String s) {
 		showBlockOrHide(panelHeader, s);
 	}
+
 	public void setPanelDescription() {
 		showBlockOrHide(panelDescription, "");
 	}
+
 	public void setPanelDescription(final String s) {
 		showBlockOrHide(panelDescription, s);
 	}
@@ -122,8 +131,8 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 		setElement(fieldset);
 		setStyleName(STYLENAME_DEFAULT);
 
-		legend = DOM.createLegend();
-		DOM.appendChild(fieldset, legend);
+		// legend = DOM.createLegend();
+		// DOM.appendChild(fieldset, legend);
 
 		// Get the edit/view description/header
 		if (atts != null && atts.length > 0 && showHeaders) {
@@ -146,11 +155,11 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 			}
 		}
 
-		panelHeader = DOM.createElement("h3");
-		DOM.appendChild(fieldset, panelHeader);
-
-		panelDescription = DOM.createElement("p");
-		DOM.appendChild(fieldset, panelDescription);
+		// panelHeader = DOM.createElement("h3");
+		// DOM.appendChild(fieldset, panelHeader);
+		//
+		// panelDescription = DOM.createElement("p");
+		// DOM.appendChild(fieldset, panelDescription);
 
 		final Element table = DOM.createTable();
 		tbody = DOM.createTBody();
@@ -209,6 +218,10 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 			DOM.appendChild(labelTD, em);
 		}
 
+		final Element padding = DOM.createElement("padding");
+		DOM.setInnerText(padding, " ");
+		DOM.appendChild(labelTD, padding);
+
 		final Element valueTD = DOM.createTD();
 		DOM.appendChild(tr, valueTD);
 
@@ -230,6 +243,7 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 	public T getBean() {
 		return bean;
 	}
+
 	public void setBean(final T o) {
 		bean = o;
 	}
@@ -252,8 +266,8 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 			dpEntry.setCurrentDisplayWidgets(widgets);
 		}
 		// Set the header/description text
-		setPanelHeader(viewHeader);
-		setPanelDescription(viewDescription);
+		// setPanelHeader(viewHeader);
+		// setPanelDescription(viewDescription);
 		isEditMode = false;
 	}
 
@@ -322,8 +336,8 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 			add(err, dpEntry.getLastRow().getTdValue());
 		}
 		// Set the header/description text
-		setPanelHeader(editHeader);
-		setPanelDescription(editDescription);
+		// setPanelHeader(editHeader);
+		// setPanelDescription(editDescription);
 		isEditMode = true;
 	}
 
@@ -334,12 +348,14 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 			public void begin() {
 				validateEdit(this);
 			}
+
 			public void onSuccess(final Object result) {
 				succeeded++;
 				if (succeeded == attributes.size()) {
 					r.onSuccess(null);
 				}
 			}
+
 			public void onFailure(final Throwable e) {
 				r.onFailure(e);
 				// super.onFailure(e);
@@ -445,9 +461,11 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 
 	private CurrentError getCurrentError(final GenericAttribute attr) {
 		if (!isEditMode())
-			throw new IllegalStateException();;
+			throw new IllegalStateException();
+		;
 		return ((DetailsPanelEntry) dpEntries.get(attr)).getCurrentError();
 	}
+
 	protected boolean isEditMode() {
 		return isEditMode;
 	}

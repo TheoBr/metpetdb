@@ -8,6 +8,8 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
@@ -153,9 +155,9 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 						callback.onRowsReady(request, response);
 					}
 				}
-
 			}.begin();
 		}
+
 	}
 
 	/**
@@ -244,11 +246,16 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 				headerTable);
 		PagingOptions options = new PagingOptions(scrollTable);
 
-		scrollTable.setPageSize(20);
+		scrollTable.setPageSize(10);
 		tableModel.setRowCount(1);
 
 		for (int i = 0; i < columns.length; ++i) {
 			headerTable.setText(0, i, columns[i].getTitle());
+			headerTable.getCellFormatter().addStyleName(0, i, "bold");
+			headerTable.getCellFormatter().addStyleName(0, i, "brown");
+			headerTable.getCellFormatter().setAlignment(0, i,
+					HasHorizontalAlignment.ALIGN_LEFT,
+					HasVerticalAlignment.ALIGN_MIDDLE);
 		}
 
 		// Setup sortable/unsortable columns
@@ -268,16 +275,17 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		});
 
 		// TODO: can you say we need CSS?
-		scrollTable.setHeight("100%");
 		scrollTable.setWidth("100%");
 		dataTable.setWidth("100%");
-		dataTable.setHeight("100%");
 		headerTable.setWidth("100%");
+		headerTable.setHeight("30px");
+		headerTable.getRowFormatter().addStyleName(0, "mpdb-dataTablePink");
+		dataTable.addStyleName("mpdb-dataTable");
+
 		add(scrollTable);
 		add(options);
-		this.setHeight("400px");
 		this.setWidth("100%");
-
+		dataTable.setHeight("400px");
 	}
 
 	/**

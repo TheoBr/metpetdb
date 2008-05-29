@@ -7,35 +7,52 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisElementDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxideDTO;
 import edu.rpi.metpetdb.client.model.ElementDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.MineralTypeDTO;
 import edu.rpi.metpetdb.client.model.OxideDTO;
-import edu.rpi.metpetdb.client.model.ReferenceDTO;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class ChemistryAttribute extends GenericAttribute implements
 		ClickListener, ChangeListener {
+
 	private final ArrayList<Widget> realEditWidgets;
+
 	private Button add;
 	private ListBox species;
 	private ListBox type;
 	private ListBox choice;
+	private FlexTable ft;
+	private int rows;
+
+	// keeps track of what species type we have in each row
+	private ArrayList<String> species_type;
+	// keeps track of whether the species selected is an element or oxide
+	private ArrayList<String> element_or_oxide_id;
+
+	private Label no_chemistry_label;
 
 	public ChemistryAttribute(final ObjectConstraint elements,
 			final ObjectConstraint oxides) {
@@ -50,7 +67,13 @@ public class ChemistryAttribute extends GenericAttribute implements
 			new Label("...")
 		};
 	}
+
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
+		species_type = new ArrayList<String>();
+		element_or_oxide_id = new ArrayList<String>();
+		no_chemistry_label = new Label("No chemical species specified yet.");
+		rows = 2;
+
 		species = new ListBox();
 		species.addItem("Species...");
 		species.addItem("Element");
@@ -70,22 +93,53 @@ public class ChemistryAttribute extends GenericAttribute implements
 
 		species.addChangeListener(this);
 		type.addChangeListener(this);
-
 		choice.addChangeListener(this);
 
-		final HorizontalPanel hp = new HorizontalPanel();
-
+		ft = new FlexTable();
 		add = new Button("Add", this);
+		add.setSize("40px", "25px");
 
-		hp.add(species);
-		hp.add(type);
-		hp.add(choice);
-		hp.add(add);
+		final Label label_add = new Label("Add:");
+		final Label label_amount = new Label("Amount (% wt)");
+		final Label label_precision = new Label("Precision");
+
+		label_add.addStyleName("bold");
+		label_add.addStyleName("gray");
+		label_amount.addStyleName("bold");
+		label_amount.addStyleName("brown");
+		label_precision.addStyleName("bold");
+		label_precision.addStyleName("brown");
+
+		ft.setWidget(0, 0, label_add);
+		ft.setWidget(0, 1, species);
+		ft.setWidget(0, 3, type);
+		ft.setWidget(0, 5, choice);
+		ft.setWidget(0, 7, add);
+		ft.setWidget(1, 0, label_amount);
+		ft.setWidget(1, 1, label_precision);
+		format_top_two_rows();
+		no_chemistry_row();
 
 		return new Widget[] {
-			hp
+				ft, ft
 		};
 	}
+
+	/**
+	 * If there are no elements/oxides added to the widget, display this label
+	 */
+	private void no_chemistry_row() {
+		if (rows == 2) {
+			ft.insertRow(2);
+			ft.setWidget(2, 0, no_chemistry_label);
+			format_no_chemical_analysis_row();
+			rows++;
+		} else if (rows > 2 && ft.getWidget(2, 0) == no_chemistry_label) {
+			ft.removeRow(2);
+			rows--;
+		}
+	}
+
 	private Collection<OxideDTO> getOxidesOfMineralType(final String mineralType) {
 		final Collection<OxideDTO> oxidesOfMineralType = new ArrayList<OxideDTO>();
 		final ObjectConstraint oxideConstraint = (ObjectConstraint) this.constraints[1];
@@ -108,11 +162,51 @@ public class ChemistryAttribute extends GenericAttribute implements
 				.getValueInCollectionConstraint().getValues();
 		final Iterator<?> itr = elements.iterator();
 		while (itr.hasNext()) {
-			final ElementDTO oxide = (ElementDTO) itr.next();
-			if (contains(oxide.getMineralTypes(), mineralType))
-				elementsOfMineralType.add(oxide);
+			final ElementDTO element = (ElementDTO) itr.next();
+			if (contains(element.getMineralTypes(), mineralType))
+				elementsOfMineralType.add(element);
 		}
 		return elementsOfMineralType;
+	}
+
+	/**
+	 * Given an Element's ID, get the corresponding OxideDTO
+	 * 
+	 * @param id
+	 * @return
+	 */
+	private ElementDTO getElementwithID(final String id) {
+		ElementDTO elementwithID = new ElementDTO();
+		final ObjectConstraint elementConstraint = (ObjectConstraint) this.constraints[0];
+		Collection<?> elements = elementConstraint
+				.getValueInCollectionConstraint().getValues();
+		final Iterator<?> itr = elements.iterator();
+		while (itr.hasNext()) {
+			final ElementDTO element = (ElementDTO) itr.next();
+			if (String.valueOf(element.getId()).equals(id))
+				elementwithID = element;
+		}
+		return elementwithID;
+	}
+
+	/**
+	 * Given an Oxide's ID, get the corresponding OxideDTO
+	 * 
+	 * @param id
+	 * @return
+	 */
+	private OxideDTO getOxidewithID(final String id) {
+		OxideDTO oxidewithID = new OxideDTO();
+		final ObjectConstraint oxideConstraint = (ObjectConstraint) this.constraints[1];
+		Collection<?> oxides = oxideConstraint.getValueInCollectionConstraint()
+				.getValues();
+		final Iterator<?> itr = oxides.iterator();
+		while (itr.hasNext()) {
+			final OxideDTO oxide = (OxideDTO) itr.next();
+			if (String.valueOf(oxide.getOxideId()).equals(id))
+				oxidewithID = oxide;
+		}
+		return oxidewithID;
 	}
 
 	private boolean contains(final Set<MineralTypeDTO> mineralTypes,
@@ -126,41 +220,172 @@ public class ChemistryAttribute extends GenericAttribute implements
 		return false;
 	}
 
-	protected Object get(final Widget editWidget) throws ValidationException {
-		final HashSet references = new HashSet();
-		final Iterator itr = realEditWidgets.iterator();
-		while (itr.hasNext()) {
-			final Object obj = itr.next();
-			final ReferenceDTO r = new ReferenceDTO();
-			String name = ((HasText) obj).getText();
-			if (!name.equals("")) {
-				r.setName(name);
-				references.add(r);
+	protected Object get(final Widget editWidget,
+			final PropertyConstraint constraint) throws ValidationException {
+		if (constraint == this.constraints[1]) {
+			final HashSet<ChemicalAnalysisOxideDTO> Oxides = new HashSet();
+			// Add only Oxides
+			for (int i = 2; i < element_or_oxide_id.size() + 2; i++) {
+				if (species_type.get(i - 2).equals("Oxide")) {
+					final ChemicalAnalysisOxideDTO r = new ChemicalAnalysisOxideDTO();
+					r.setAmount(Float.valueOf(
+							((TextBox) ft.getWidget(i, 1)).getText())
+							.floatValue());
+					r.setOxide(getOxidewithID(element_or_oxide_id.get(i - 2)));
+					r.setPrecision(Float.valueOf(
+							((TextBox) ft.getWidget(i, 3)).getText())
+							.floatValue());
+					r.setPrecisionUnit(((ListBox) ft.getWidget(i, 4))
+							.getItemText(
+									((ListBox) ft.getWidget(i, 4))
+											.getSelectedIndex()).toUpperCase());
+					Oxides.add(r);
+				}
 			}
+			return Oxides;
+		} else {
+			final HashSet<ChemicalAnalysisElementDTO> Elements = new HashSet();
+			// Add only Elements
+			for (int i = 2; i < element_or_oxide_id.size() + 2; i++) {
+				if (species_type.get(i - 2).equals("Element")) {
+					final ChemicalAnalysisElementDTO r = new ChemicalAnalysisElementDTO();
+					r.setAmount(Float.valueOf(
+							((TextBox) ft.getWidget(i, 1)).getText())
+							.floatValue());
+					r.setElement(getElementwithID(element_or_oxide_id
+							.get(i - 2)));
+					r.setPrecision(Float.valueOf(
+							((TextBox) ft.getWidget(i, 3)).getText())
+							.floatValue());
+					r.setPrecisionUnit(((ListBox) ft.getWidget(i, 4))
+							.getItemText(
+									((ListBox) ft.getWidget(i, 4))
+											.getSelectedIndex()).toUpperCase());
+					Elements.add(r);
+				}
+			}
+			return Elements;
 		}
-		return references;
 	}
 
 	public Set get(final MObjectDTO obj) {
 		return (Set) mGet(obj);
 	}
 
-	protected void set(final MObjectDTO obj, final Object o) {
-		mSet(obj, o);
+	protected void set(final MObjectDTO obj, final Object v,
+			final PropertyConstraint pc) {
+		mSet(obj, v, pc);
+	}
+
+	protected void set(final MObjectDTO obj, final Object v) {
+
+	}
+
+	/**
+	 * Don't allow users to add chemical analysis for the same element/oxide
+	 * 
+	 * @return
+	 */
+	private boolean checkDuplicateAdd() {
+		int i = 2;
+		if (ft.getWidget(2, 0) == no_chemistry_label)
+			i = 3;
+		for (; i < rows; i++) {
+			MText tempMText = new MText();
+			tempMText = (MText) ft.getWidget(i, 2);
+			if (tempMText.getText().equals(
+					choice.getItemText(choice.getSelectedIndex())))
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * create new row for user to input amount and precision for selected
+	 * element/oxide
+	 */
+	private void add_row() {
+		no_chemistry_row();
+		ft.insertRow(rows);
+		Button remove = new Button();
+
+		ListBox listbox_precison = new ListBox();
+		listbox_precison.addItem("Abs");
+		listbox_precison.addItem("Rel");
+
+		ChemicalAnalysisElementDTO tryme = new ChemicalAnalysisElementDTO();
+
+		TextAttribute amount_input_text = new TextAttribute(
+				MpDb.doc.ChemicalAnalysisElement_ChemicalAnalysis_elements_amount);
+		amount_input_text.setVisibleLength(5);
+
+		TextAttribute precision_input_text = new TextAttribute(
+				MpDb.doc.ChemicalAnalysisElement_ChemicalAnalysis_elements_precision);
+		precision_input_text.setVisibleLength(5);
+
+		TextAttribute choice_label = new TextAttribute(
+				MpDb.doc.ChemicalAnalysisElement_ChemicalAnalysis_elements_element);
+		choice_label.setVisibleLength(5);
+
+		remove.setStyleName("remove");
+		remove.setPixelSize(14, 15);
+		remove.addClickListener(new ClickListener() {
+			public void onClick(final Widget sender1) {
+				delete_row(sender1);
+			}
+		});
+
+		ft.setWidget(rows, 1,
+				amount_input_text.createEditWidget(tryme, "test")[0]);
+		ft.setWidget(rows, 2, choice_label.createDisplayWidget(tryme)[0]);
+		MText temp = new MText();
+		temp = (MText) ft.getWidget(rows, 2);
+		temp.setText(choice.getItemText(choice.getSelectedIndex()));
+		ft.setWidget(rows, 3, precision_input_text.createEditWidget(tryme,
+				"test")[0]);
+		ft.setWidget(rows, 4, listbox_precison);
+		ft.setWidget(rows, 5, remove);
+		format_analysis_rows();
+
+		species_type.add(species.getItemText(species.getSelectedIndex()));
+		element_or_oxide_id.add(choice.getValue(choice.getSelectedIndex()));
+
+		rows++;
+	}
+
+	/**
+	 * remove selected row from our widget and our 2 arrays
+	 * 
+	 * @param sender
+	 */
+	private void delete_row(final Widget sender) {
+		for (int i = 2; i < rows; i++) {
+			if (sender == ft.getWidget(i, 5)) {
+				ft.removeRow(i);
+				species_type.remove(i - 2);
+				element_or_oxide_id.remove(i - 2);
+				rows--;
+				no_chemistry_row();
+			}
+		}
 	}
 
 	public void onClick(final Widget sender) {
 		if (sender == add) {
-			Window.alert("You want to add "
-					+ species.getItemText(species.getSelectedIndex())
-					+ " of type " + type.getItemText(type.getSelectedIndex())
-					+ " for choice "
-					+ choice.getItemText(choice.getSelectedIndex()));
+			if (choice.getSelectedIndex() != -1 && choice.isVisible() == true) {
+				if (!checkDuplicateAdd()) {
+					add_row();
+				}
+			}
 		}
 	}
 
 	public void onChange(final Widget sender) {
 		if (sender == type || sender == species) {
+			if (type.getSelectedIndex() != 0 && species.getSelectedIndex() != 0) {
+				choice.setVisible(true);
+			} else
+				choice.setVisible(false);
 			choice.clear();
 			final String selectedMineralType = type.getItemText(type
 					.getSelectedIndex());
@@ -168,18 +393,31 @@ public class ChemistryAttribute extends GenericAttribute implements
 					.getSelectedIndex());
 			final Collection<?> itemsToAdd;
 			if ("Element".equals(selectedSpecies)) {
-				itemsToAdd = getElementsOfMineralType(selectedMineralType);
+				// itemsToAdd = getElementsOfMineralType(selectedMineralType);
+				itemsToAdd = ((ObjectConstraint) ChemistryAttribute.this.constraints[0])
+						.getValueInCollectionConstraint().getValues();
 			} else if ("Oxide".equals(selectedSpecies)) {
-				itemsToAdd = getOxidesOfMineralType(selectedMineralType);
+				// itemsToAdd = getOxidesOfMineralType(selectedMineralType);
+				itemsToAdd = ((ObjectConstraint) ChemistryAttribute.this.constraints[1])
+						.getValueInCollectionConstraint().getValues();
 			} else {
 				itemsToAdd = new ArrayList<Object>();
 			}
 			final Iterator<?> itr = itemsToAdd.iterator();
 			while (itr.hasNext()) {
-				choice.addItem(itr.next().toString());
+				if ("Element".equals(selectedSpecies)) {
+					ElementDTO temp = (ElementDTO) itr.next();
+					choice.addItem(temp.getSymbol(), String.valueOf(temp
+							.getId()));
+				} else if ("Oxide".equals(selectedSpecies)) {
+					OxideDTO temp = (OxideDTO) itr.next();
+					choice.addItem(temp.getSpecies(), String.valueOf(temp
+							.getOxideId()));
+				}
 			}
-			if (!itemsToAdd.isEmpty())
+			if (!itemsToAdd.isEmpty()) {
 				choice.addItem("Custom...");
+			}
 		} else if (sender == choice) {
 			final String selectedChoice = choice.getItemText(choice
 					.getSelectedIndex());
@@ -239,5 +477,51 @@ public class ChemistryAttribute extends GenericAttribute implements
 
 		}
 
+	}
+
+	private void format_top_two_rows() {
+		ft.getFlexCellFormatter().setColSpan(1, 0, 4);
+		ft.getFlexCellFormatter().setColSpan(1, 1, 4);
+		ft.getCellFormatter().setWidth(0, 0, "60px");
+		ft.getCellFormatter().setWidth(0, 2, "60px");
+		ft.getCellFormatter().setWidth(0, 4, "60px");
+		ft.getCellFormatter().setWidth(0, 6, "60px");
+
+		for (int i = 0; i < 8; i++)
+			ft.getFlexCellFormatter().setAlignment(0, 0,
+					HasHorizontalAlignment.ALIGN_LEFT,
+					HasVerticalAlignment.ALIGN_MIDDLE);
+		ft.getFlexCellFormatter().setAlignment(1, 0,
+				HasHorizontalAlignment.ALIGN_CENTER,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		ft.getFlexCellFormatter().setAlignment(1, 1,
+				HasHorizontalAlignment.ALIGN_LEFT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		ft.getWidget(0, 5).setVisible(false);
+		ft.getRowFormatter().setStyleName(0, "mpdb-dataTableBlue");
+		ft.getRowFormatter().setStyleName(1, "mpdb-dataTablePink");
+		ft.getFlexCellFormatter().setHeight(0, 0, "29px");
+		ft.getFlexCellFormatter().setHeight(1, 0, "29px");
+	}
+
+	private void format_analysis_rows() {
+		ft.getCellFormatter().setWidth(rows, 0, "80px");
+		ft.getFlexCellFormatter().setAlignment(rows, 1,
+				HasHorizontalAlignment.ALIGN_RIGHT,
+				HasVerticalAlignment.ALIGN_BOTTOM);
+		ft.getFlexCellFormatter().setAlignment(rows, 3,
+				HasHorizontalAlignment.ALIGN_RIGHT,
+				HasVerticalAlignment.ALIGN_BOTTOM);
+		ft.getFlexCellFormatter().setAlignment(rows, 5,
+				HasHorizontalAlignment.ALIGN_CENTER,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		ft.getRowFormatter().setStyleName(rows, "mpdb-dataTable");
+	}
+
+	private void format_no_chemical_analysis_row() {
+		ft.getFlexCellFormatter().setColSpan(2, 0, 8);
+		ft.getFlexCellFormatter().setAlignment(2, 0,
+				HasHorizontalAlignment.ALIGN_CENTER,
+				HasVerticalAlignment.ALIGN_MIDDLE);
 	}
 }

@@ -9,18 +9,21 @@ import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
 public class MyProjects extends LeftColWidget implements UsesLeftColumn {
-	
+
 	public MyProjects(final Set projects) {
 		super("My Projects");
 		this.setStyleName("lcol-MyProjects");
 
-		final MUnorderedList pList = addProjects(projects);
+		final MUnorderedList pList = new MUnorderedList();
+		final MLink addProject = new MLink("Add Project", TokenSpace.newProject);
+		pList.add(addProject);
+		pList.add(addProjects(projects));
 		pList.setStyleName("lcol-sectionList");
-		
+
 		this.add(pList);
 
 	}
-	
+
 	public static MUnorderedList addProjects(Set projects) {
 		final MUnorderedList list = new MUnorderedList();
 
@@ -32,9 +35,12 @@ public class MyProjects extends LeftColWidget implements UsesLeftColumn {
 
 		return list;
 	}
-	
+
 	public static MLink showProjectDetails(final ProjectDTO project) {
-		final MLink focusProject = new MLink(project.getName(),TokenSpace.listOf(project)); // End of ClickListener
+		final MLink focusProject = new MLink(project.getName(), TokenSpace
+				.listOf(project)); // End
+		// of
+		// ClickListener
 
 		// myProjects.add(focusProject);
 		return focusProject;
@@ -42,7 +48,7 @@ public class MyProjects extends LeftColWidget implements UsesLeftColumn {
 
 	public void onPageChanged() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

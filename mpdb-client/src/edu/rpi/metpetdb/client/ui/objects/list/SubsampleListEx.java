@@ -27,7 +27,7 @@ public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
 	// new Column(enttxt.Subsample_imageCount()),
 	// new Column(enttxt.Subsample_analysisCount()),};
 	public static Column[] columns = {
-			new Column(""), // Column for Check boxes
+			new Column("Check"), // Column for Check boxes
 			new Column(enttxt.Subsample_name(), SubsampleProperty.name, true) {
 				protected Object getWidget(final MObjectDTO data,
 						final int currentRow) {

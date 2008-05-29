@@ -2,7 +2,11 @@ package edu.rpi.metpetdb.client.ui.objects.details;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -25,6 +29,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.AddImageAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class SubsampleDetails extends FlowPanel {
+	private FlexTable ft;
 	private static GenericAttribute[] subsampleAtts = {
 			new TextAttribute(MpDb.oc.Subsample_sampleName).setReadOnly(true),
 			new TextAttribute(MpDb.doc.Subsample_name),
@@ -93,7 +98,25 @@ public class SubsampleDetails extends FlowPanel {
 				// DOM.setInnerText(header,s.getSample().getAlias());
 			}
 		};
-		add(new OnEnterPanel.ObjectEditor(p_subsample));
+		final OnEnterPanel.ObjectEditor oep = new OnEnterPanel.ObjectEditor(
+				p_subsample);
+		ft = new FlexTable();
+		Label details_label = new Label("Attributes");
+		details_label.addStyleName("bold");
+		ft.setWidget(0, 0, details_label);
+		ft.setWidget(1, 0, oep);
+		ft.getFlexCellFormatter().setAlignment(0, 0,
+				HasHorizontalAlignment.ALIGN_LEFT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		// ft.getFlexCellFormatter().setWidth(0, 0, "20%");
+		// ft.getFlexCellFormatter().setWidth(1, 0, "40%");
+		ft.getFlexCellFormatter().setHeight(0, 0, "35px");
+		ft.getFlexCellFormatter().setAlignment(1, 0,
+				HasHorizontalAlignment.ALIGN_LEFT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		ft.getRowFormatter().setStyleName(0, "mpdb-dataTableLightBlue");
+
+		add(ft);
 	}
 
 	public SubsampleDetails showById(final long id) {

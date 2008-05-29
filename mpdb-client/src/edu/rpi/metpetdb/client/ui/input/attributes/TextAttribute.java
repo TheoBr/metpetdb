@@ -25,6 +25,14 @@ public class TextAttribute extends GenericAttribute {
 		visibleLength = 30;
 	}
 
+	public int getVisibleLength() {
+		return visibleLength;
+	}
+
+	public void setVisibleLength(final int length) {
+		visibleLength = length;
+	}
+
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
 		return new Widget[] {
 			new MText(get(obj))
@@ -54,6 +62,7 @@ public class TextAttribute extends GenericAttribute {
 		}
 		return v != null && v.length() > 0 ? v : null;
 	}
+
 	protected String get(final MObjectDTO obj) {
 		final Object value = mGet(obj);
 		if (value != null)
@@ -61,6 +70,7 @@ public class TextAttribute extends GenericAttribute {
 		else
 			return "";
 	}
+
 	protected void set(final MObjectDTO obj, final Object v) {
 		mSet(obj, v);
 	}

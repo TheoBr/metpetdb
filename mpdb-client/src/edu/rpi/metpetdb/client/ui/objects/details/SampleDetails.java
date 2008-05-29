@@ -2,8 +2,12 @@ package edu.rpi.metpetdb.client.ui.objects.details;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -35,6 +39,7 @@ import edu.rpi.metpetdb.client.ui.objects.list.SubsampleListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class SampleDetails extends FlowPanel {
+	private FlexTable ft;
 	private static GenericAttribute[] sampleAtts = {
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
 			new TextAttribute(MpDb.doc.Sample_sesarNumber).setImmutable(true),
@@ -92,11 +97,32 @@ public class SampleDetails extends FlowPanel {
 				super.onSaveCompletion(result);
 				// addExtraElements();
 			}
+
 		};
 		final OnEnterPanel.ObjectEditor oep = new OnEnterPanel.ObjectEditor(
 				p_sample);
 		oep.setStyleName("sd-details");
-		add(oep);
+		ft = new FlexTable();
+		Label details_label = new Label("Details");
+		ft.setWidget(0, 0, details_label);
+		ft.setWidget(1, 1, oep);
+
+		// format to look pretty
+		details_label.addStyleName("bold");
+		ft.getFlexCellFormatter().setAlignment(0, 0,
+				HasHorizontalAlignment.ALIGN_LEFT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		ft.getFlexCellFormatter().setWidth(0, 0, "100%");
+		ft.getFlexCellFormatter().setWidth(1, 1, "100%");
+		ft.getFlexCellFormatter().setHeight(0, 0, "35px");
+		ft.getFlexCellFormatter().setColSpan(0, 0, 3);
+		ft.getFlexCellFormatter().setAlignment(1, 0,
+				HasHorizontalAlignment.ALIGN_CENTER,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		ft.getRowFormatter().setStyleName(0, "mpdb-dataTableLightBlue");
+
+		add(ft);
+		// add(oep);
 	}
 
 	private void addExtraElements() {
@@ -110,13 +136,10 @@ public class SampleDetails extends FlowPanel {
 		// list.setStyleName("sd-subsamples");
 		// add(list);
 		// Add MLinks that will be used to add subsample
-		final SubsampleListEx list = new SubsampleListEx() {
-			public void update(final PaginationParameters p,
-					final AsyncCallback<Results<SubsampleDTO>> ac) {
-				MpDb.subsample_svc.all(p, sampleId, ac);
-			}
-		};
-		this.add(list);
+
+		ft.getWidget(1, 1).addStyleName("mpdb-dataTable");
+
+		final FlexTable subsamples_ft = new FlexTable();
 
 		final MLink addSubsample = new MLink(LocaleHandler.lc_text
 				.addSubsample(), new ClickListener() {
@@ -137,8 +160,58 @@ public class SampleDetails extends FlowPanel {
 			}
 		});
 		addSubsample.addStyleName(Styles.ADDLINK);
-		add(addSubsample);
+		subsamples_ft.setWidget(0, 1, addSubsample);
+
+		Label Subsamples_label = new Label("Subsamples");;
+		subsamples_ft.setWidget(0, 0, Subsamples_label);
+
+		final SubsampleListEx list = new SubsampleListEx() {
+			public void update(final PaginationParameters p,
+					final AsyncCallback<Results<SubsampleDTO>> ac) {
+				MpDb.subsample_svc.all(p, sampleId, ac);
+			}
+		};
+		subsamples_ft.setWidget(1, 0, list);
+		subsamples_ft.getFlexCellFormatter().setColSpan(1, 0, 2);
+
+		// format to look pretty
+		subsamples_ft.setWidth("100%");
+		Subsamples_label.addStyleName("bold");
+		subsamples_ft.getFlexCellFormatter().setWidth(0, 0, "50%");
+		subsamples_ft.getFlexCellFormatter().setWidth(0, 1, "50%");
+		subsamples_ft.getFlexCellFormatter().setHeight(0, 0, "35px");
+		subsamples_ft.getRowFormatter().setStyleName(0,
+				"mpdb-dataTableLightBlue");
+		subsamples_ft.getFlexCellFormatter().setAlignment(0, 0,
+				HasHorizontalAlignment.ALIGN_LEFT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		subsamples_ft.getFlexCellFormatter().setAlignment(0, 1,
+				HasHorizontalAlignment.ALIGN_RIGHT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+
+		this.add(subsamples_ft);
+
 	}
+
+	public void addComments() {
+		final FlexTable comments_ft = new FlexTable();
+		Label comments_label = new Label("Comments");
+		comments_ft.setWidget(0, 0, comments_label);
+
+		// format to look pretty
+		comments_ft.setWidth("100%");
+		comments_label.addStyleName("bold");
+		comments_ft.getFlexCellFormatter().setWidth(0, 0, "100%");
+		comments_ft.getFlexCellFormatter().setHeight(0, 0, "35px");
+		comments_ft.getRowFormatter()
+				.setStyleName(0, "mpdb-dataTableLightBlue");
+		comments_ft.getFlexCellFormatter().setAlignment(0, 0,
+				HasHorizontalAlignment.ALIGN_LEFT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+
+		this.add(comments_ft);
+	}
+
 	public void addChemistry() {
 		// final Label adder = new Label("Add:");
 
@@ -176,6 +249,7 @@ public class SampleDetails extends FlowPanel {
 		sampleId = id;
 		p_sample.load();
 		addExtraElements();
+		addComments();
 		// addChemistry();
 		return this;
 	}
