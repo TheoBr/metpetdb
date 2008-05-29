@@ -119,4 +119,37 @@ button.submit {
 	background: #f9f9f9;
 }
 
+.mpdb-dataTableBlue {
+	background-color: #E6EAF6;
+	}
+.mpdb-dataTablePink {
+	background-color: #FAF4DF;
+}
+
+.mpdb-dataTablePink td {
+	vertical-align: middle;
+	padding: 0.3em 0.5em;
+	border-bottom: 1px solid #E2C798;
+}
+
+.mpdb-dataTableLightBlue {
+	background-color: #ECF5FD;
+}
+
+.mpdb-dataTableLightBlue td {
+	vertical-align: middle;
+	padding: 0.3em 0.5em;
+	border-top: 1px solid #DBE2EC;
+	border-bottom: 1px solid #DFECF9;
+}
+
+
+button.remove {
+ 	background-image: url(../images/icon-remove.gif);
+ 	padding-left: 15px;
+	background-repeat: no-repeat;
+	background-position: left center;
+	background-color: #FFFFFF;
+	border: none;
+}
 
