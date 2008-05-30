@@ -143,6 +143,15 @@ button.submit {
 	border-bottom: 1px solid #DFECF9;
 }
 
+.mpdb-dataTableUserSamples .gwt-Label {
+	font-family: Helvetica;
+	font-size:9pt;
+}
+
+.mpdb-dataTableUserSamples .gwt-Hyperlink {
+	font-family: Helvetica;
+	font-size:9pt;	
+}
 
 button.remove {
  	background-image: url(../images/icon-remove.gif);
@@ -151,5 +160,10 @@ button.remove {
 	background-position: left center;
 	background-color: #FFFFFF;
 	border: none;
+}
+
+.beta {
+	/*background-color: #FF0000;*/
+	border: 3px solid #FF0000;
 }
 

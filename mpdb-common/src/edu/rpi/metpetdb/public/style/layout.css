@@ -279,3 +279,9 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 .gray{
 	color: #333333
 }
+
+.big{
+	font-family:Helvetica,sans-serif;
+	font-size:2em;	
+}
+
