@@ -131,8 +131,8 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 		setElement(fieldset);
 		setStyleName(STYLENAME_DEFAULT);
 
-		// legend = DOM.createLegend();
-		// DOM.appendChild(fieldset, legend);
+		legend = DOM.createLegend();
+		DOM.appendChild(fieldset, legend);
 
 		// Get the edit/view description/header
 		if (atts != null && atts.length > 0 && showHeaders) {
@@ -155,11 +155,11 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 			}
 		}
 
-		// panelHeader = DOM.createElement("h3");
-		// DOM.appendChild(fieldset, panelHeader);
-		//
-		// panelDescription = DOM.createElement("p");
-		// DOM.appendChild(fieldset, panelDescription);
+		panelHeader = DOM.createElement("h3");
+		DOM.appendChild(fieldset, panelHeader);
+
+		panelDescription = DOM.createElement("p");
+		DOM.appendChild(fieldset, panelDescription);
 
 		final Element table = DOM.createTable();
 		tbody = DOM.createTBody();
@@ -461,8 +461,7 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 
 	private CurrentError getCurrentError(final GenericAttribute attr) {
 		if (!isEditMode())
-			throw new IllegalStateException();
-		;
+			throw new IllegalStateException();;
 		return ((DetailsPanelEntry) dpEntries.get(attr)).getCurrentError();
 	}
 
