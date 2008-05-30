@@ -10,7 +10,6 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.UserWithPasswordDTO;
-import edu.rpi.metpetdb.client.model.properties.UserWithPasswordProperty;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
@@ -92,7 +91,7 @@ public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 						+ newbie.getUser().getUsername() + " email is "
 						+ newbie.getUser().getEmailAddress() + " password is "
 						+ newbie.getNewPassword());
-				newbie.mSet(UserWithPasswordProperty.newPassword, "testing");
+				// newbie.mSet(UserWithPasswordProperty.newPassword, "testing");
 				Window.alert("register new user-username is "
 						+ newbie.getUser().getUsername() + " email is "
 						+ newbie.getUser().getEmailAddress() + " password is "
