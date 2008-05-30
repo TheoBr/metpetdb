@@ -22,7 +22,9 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.ElementDTO;
+import edu.rpi.metpetdb.client.model.MineralDTO;
 import edu.rpi.metpetdb.client.model.OxideDTO;
+import edu.rpi.metpetdb.client.model.ReferenceDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 
@@ -42,7 +44,7 @@ public class AnalysisParser {
 			}, {
 					"sample", "setSubsample", SubsampleDTO.class
 			}, {
-					"mineral", "setMineral", String.class
+					"mineral", "setMineral", MineralDTO.class
 			}, {
 					"analyst", "setAnalyst", String.class
 			}, {
@@ -52,7 +54,7 @@ public class AnalysisParser {
 					// }, {
 					"location", "setLocation", String.class
 			}, {
-					"reference", "setReference", String.class
+					"reference", "setReference", ReferenceDTO.class
 			}, {
 					"(point)|(spot)", "setSpotId", String.class
 			}, {
@@ -198,6 +200,9 @@ public class AnalysisParser {
 	 *             if the row isn't of the format designated by the headers
 	 */
 	private void parseRow(final HSSFRow row) {
+		if (row == null)
+			return;
+
 		final ChemicalAnalysisDTO ca = new ChemicalAnalysisDTO();
 
 		for (Integer i = 0; i < row.getPhysicalNumberOfCells(); ++i) {
@@ -260,6 +265,20 @@ public class AnalysisParser {
 					if (ca.getSubsample() == null)
 						ca.setSubsample(new SubsampleDTO());
 					ca.getSubsample().setName(data);
+
+				} else if (dataType == MineralDTO.class) {
+
+					final String data = cell.toString();
+					if (ca.getMineral() == null)
+						ca.setMineral(new MineralDTO());
+					ca.getMineral().setName(data);
+
+				} else if (dataType == ReferenceDTO.class) {
+
+					final String data = cell.toString();
+					if (ca.getReference() == null)
+						ca.setReference(new ReferenceDTO());
+					ca.getReference().setName(data);
 
 				} else if (dataType == double.class) {
 

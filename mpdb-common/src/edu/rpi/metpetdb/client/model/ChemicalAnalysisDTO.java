@@ -160,11 +160,6 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 		reference = r;
 	}
 
-	public void setReference(final String r) {
-		reference = new ReferenceDTO();
-		reference.setName(r);
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -179,11 +174,6 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 
 	public void setMineral(final MineralDTO m) {
 		mineral = m;
-	}
-
-	public void setMineral(final String m) {
-		mineral = new MineralDTO();
-		mineral.setName(m);
 	}
 
 	public Boolean getLargeRock() {
