@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.client.ui;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -14,7 +13,6 @@ public abstract class FormOp<T> extends ServerOp<T> {
 	}
 
 	public final void begin() {
-		Window.alert("form op begin");
 		if (FocusSupport.validateEdit(root)) {
 			enable(false);
 			onSubmit();

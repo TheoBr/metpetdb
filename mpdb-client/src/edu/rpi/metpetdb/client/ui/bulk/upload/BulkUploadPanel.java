@@ -57,6 +57,7 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 		analyses = new RadioButton("type", "Chemical Analyses");
 		hp = new HorizontalPanel();
 		hp.add(samples);
+		analyses.addStyleName("beta");
 		hp.add(analyses);
 		hp.add(upload);
 

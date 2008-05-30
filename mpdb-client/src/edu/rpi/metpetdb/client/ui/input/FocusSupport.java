@@ -2,7 +2,6 @@ package edu.rpi.metpetdb.client.ui.input;
 
 import java.util.Iterator;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasFocus;
@@ -21,14 +20,11 @@ public class FocusSupport {
 	 *         false otherwise. True is returned if no DetailsPanels were found.
 	 */
 	public static boolean validateEdit(final Widget w) {
-		Window.alert("focus support validate edit");
 		if (w instanceof DetailsPanel) {
-			Window.alert("w is instance of details panel");
 			return ((DetailsPanel) w).validateEdit();
 		}
 
 		if (w instanceof Panel) {
-			Window.alert("w is instance of panel");
 			boolean valid = true;
 			final Iterator i = ((Panel) w).iterator();
 			while (i.hasNext())

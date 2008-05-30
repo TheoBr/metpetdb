@@ -29,6 +29,7 @@ import edu.rpi.metpetdb.client.ui.objects.details.ProjectDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SubsampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
+import edu.rpi.metpetdb.client.ui.objects.list.UserSamplesList;
 import edu.rpi.metpetdb.client.ui.search.Search;
 import edu.rpi.metpetdb.client.ui.user.EditUserProfile;
 import edu.rpi.metpetdb.client.ui.user.UserDetails;
@@ -149,13 +150,11 @@ public class TokenSpace implements HistoryListener {
 	public static final Screen allSamples = new Screen("AllSamples") {
 		public void executeToken(final String args) {
 			show(new SampleListEx() {
-
 				@Override
 				public void update(PaginationParameters p,
 						AsyncCallback<Results<SampleDTO>> ac) {
 					MpDb.sample_svc.all(p, ac);
 				}
-
 			});
 		}
 	};
@@ -191,17 +190,29 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 
+	// public static final Screen samplesForUser = new Screen("SamplesForUser")
+	// {
+	// public void executeToken(final String args) {
+	// new LoggedInServerOp() {
+	// public void command() {
+	// show(new SampleListEx() {
+	// public void update(final PaginationParameters p,
+	// final AsyncCallback<Results<SampleDTO>> ac) {
+	// long id = (long) (MpDb.currentUser().getId());
+	// MpDb.sample_svc.allSamplesForUser(p, id, ac);
+	// }
+	// });
+	// }
+	// }.begin();
+	//
+	// }
+	// };
+
 	public static final Screen samplesForUser = new Screen("SamplesForUser") {
 		public void executeToken(final String args) {
 			new LoggedInServerOp() {
 				public void command() {
-					show(new SampleListEx() {
-						public void update(final PaginationParameters p,
-								final AsyncCallback<Results<SampleDTO>> ac) {
-							long id = (long) (MpDb.currentUser().getId());
-							MpDb.sample_svc.allSamplesForUser(p, id, ac);
-						}
-					});
+					show(new UserSamplesList().display());
 				}
 			}.begin();
 

@@ -87,16 +87,9 @@ public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 	protected void doRegister() {
 		new FormOp<UserDTO>(p_main) {
 			protected void onSubmit() {
-				Window.alert("register new user-username is "
-						+ newbie.getUser().getUsername() + " email is "
-						+ newbie.getUser().getEmailAddress() + " password is "
-						+ newbie.getNewPassword());
-				// newbie.mSet(UserWithPasswordProperty.newPassword, "testing");
-				Window.alert("register new user-username is "
-						+ newbie.getUser().getUsername() + " email is "
-						+ newbie.getUser().getEmailAddress() + " password is "
-						+ newbie.getNewPassword());
 				MpDb.user_svc.registerNewUser(newbie, this);
+				Window.alert("You've been registered as "
+						+ newbie.getUser().getUsername());
 			}
 			public void onSuccess(final UserDTO result) {
 				MpDb.setCurrentUser((UserDTO) result);

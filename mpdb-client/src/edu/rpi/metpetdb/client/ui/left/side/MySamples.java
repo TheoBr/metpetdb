@@ -30,6 +30,8 @@ public class MySamples extends LeftColWidget implements UsesLeftColumn {
 					}
 				});
 
+		recentSamples.addStyleName("beta");
+		favoriteSamples.addStyleName("beta");
 		list.add(addSamples);
 		list.add(allOfMySamples);
 		list.add(recentSamples);
