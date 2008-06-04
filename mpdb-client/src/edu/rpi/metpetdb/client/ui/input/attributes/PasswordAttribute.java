@@ -10,19 +10,27 @@ import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class PasswordAttribute extends GenericAttribute {
+	protected int visibleLength;
+
 	public PasswordAttribute(final StringConstraint sc) {
 		super(sc);
+		visibleLength = 30;
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
-		return new Widget[]{new MText()};
+		return new Widget[] {
+			new MText()
+		};
 	}
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
 		final PasswordTextBox b = new PasswordTextBox();
 		DOM.setElementAttribute(b.getElement(), "id", id);
+		b.setVisibleLength(visibleLength);
 		applyStyle(b, true);
-		return new Widget[]{b};
+		return new Widget[] {
+			b
+		};
 	}
 
 	public void commitEdit(final MObjectDTO obj, final Widget editWidget) {

@@ -45,7 +45,7 @@ public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 		newbie = new UserWithPasswordDTO(new UserDTO());
 		register = new Submit(LocaleHandler.lc_text.buttonRegister(), this);
 
-		toggle = new Button("show");
+		toggle = new Button("Show");
 		toggle.addClickListener(this);
 
 		p_main = new DetailsPanel<UserWithPasswordDTO>(mainAttributes,
