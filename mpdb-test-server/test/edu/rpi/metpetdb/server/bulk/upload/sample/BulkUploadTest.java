@@ -82,7 +82,7 @@ public class BulkUploadTest extends DatabaseTestCase {
 		final Transaction t = s.beginTransaction();
 		s
 				.createSQLQuery(
-						"INSERT INTO uploaded_files(uploaded_file_id, hash, filename, time) VALUES(nextval('uploaded_file_seq'), :hash, :filename, NOW())")
+						"INSERT INTO uploaded_files(uploaded_file_id, hash, filename, time) VALUES(nextval('uploaded_files_seq'), :hash, :filename, NOW())")
 				.setParameter("hash", "hash").setParameter("filename",
 						"filename").executeUpdate();
 		t.commit();
