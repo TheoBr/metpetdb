@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -34,6 +35,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
+import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
 public class ChemistryAttribute extends GenericAttribute implements
 		ClickListener, ChangeListener {
@@ -63,8 +65,21 @@ public class ChemistryAttribute extends GenericAttribute implements
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
+		final MUnorderedList list = new MUnorderedList();
+		final HashMap s = this.mGetAll(obj);
+		if (s != null) {
+			final Collection<?> elementsOxides = s.values();
+			if (elementsOxides != null) {
+				final Iterator<?> iter = elementsOxides.iterator();
+				while (iter.hasNext()) {
+					final Object object = iter.next();
+					final Label r = new Label(object.toString());
+					list.add(r);
+				}
+			}
+		}
 		return new Widget[] {
-			new Label("...")
+			list
 		};
 	}
 
