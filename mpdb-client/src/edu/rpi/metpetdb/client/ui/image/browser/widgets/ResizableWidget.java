@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.client.ui.image.browser.widgets;
 
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
@@ -48,20 +47,20 @@ public class ResizableWidget extends Composite {
 		g.setCellSpacing(0);
 		g.setBorderWidth(0);
 
-		for (int i = 0; i < g.getRowCount(); ++i) {
-			for (int j = 0; j < g.getColumnCount(); ++j) {
-				DOM.setStyleAttribute(g.getCellFormatter().getElement(i, j),
-						"display", "table-cell");
-				DOM.setStyleAttribute(g.getCellFormatter().getElement(i, j),
-						"border", "none");
-				DOM.setStyleAttribute(g.getCellFormatter().getElement(i, j),
-						"padding", "0");
-				DOM.setStyleAttribute(g.getCellFormatter().getElement(i, j),
-						"margin", "0");
-			}
-		}
+		// for (int i = 0; i < g.getRowCount(); ++i) {
+		// for (int j = 0; j < g.getColumnCount(); ++j) {
+		// DOM.setStyleAttribute(g.getCellFormatter().getElement(i, j),
+		// "display", "table-cell");
+		// DOM.setStyleAttribute(g.getCellFormatter().getElement(i, j),
+		// "border", "none");
+		// DOM.setStyleAttribute(g.getCellFormatter().getElement(i, j),
+		// "padding", "0");
+		// DOM.setStyleAttribute(g.getCellFormatter().getElement(i, j),
+		// "margin", "0");
+		// }
+		// }
 
-		DOM.setStyleAttribute(g.getElement(), "display", "table");
+		// DOM.setStyleAttribute(g.getElement(), "display", "table");
 
 		this.initWidget(g);
 	}

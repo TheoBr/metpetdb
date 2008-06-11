@@ -4,12 +4,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -79,10 +81,11 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	private final Label scaleDisplay;
 	private float scale = 30; /* in milli meters */
 	private int unit = 1;
-	private static String[] units = { "m", /* meter 10x10^0 */
-	"mm", /* millimeter 10x10^-3 */
-	"µm", /* micrometer 10x10^-6 */
-	"nm", /* nanometer 10x10^-9 */
+	private static String[] units = {
+			"m", /* meter 10x10^0 */
+			"mm", /* millimeter 10x10^-3 */
+			"µm", /* micrometer 10x10^-6 */
+			"nm", /* nanometer 10x10^-9 */
 	};
 
 	private final Map<ImageDTO, ImageOnGrid> imagesOnGrid;
@@ -113,11 +116,28 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 				final SubsampleDTO s = (SubsampleDTO) result;
 				ImageBrowserDetails.this.g = new GridDTO();
 				ImageBrowserDetails.this.g.setSubsample(s);
-				s.setGrid(ImageBrowserDetails.this.g);
-				ImageBrowserDetails.this.buildInterface();
-				ImageBrowserDetails.this.doSave();
+				new ServerOp() {
+					@Override
+					public void begin() {
+						MpDb.chemicalAnalysis_svc.all(subsampleId, this);
+					}
+
+					public void onSuccess(final Object result) {
+						final List<ChemicalAnalysisDTO> ss = (List<ChemicalAnalysisDTO>) result;
+						ImageBrowserDetails.this.g.getSubsample()
+								.setChemicalAnalyses(
+										new HashSet<ChemicalAnalysisDTO>(ss));
+						// s.setGrid(ImageBrowserDetails.this.g);
+						// ImageBrowserDetails.this.buildInterface();
+						// ImageBrowserDetails.this.doSave();
+						s.setGrid(ImageBrowserDetails.this.g);
+						ImageBrowserDetails.this.buildInterface();
+						ImageBrowserDetails.this.doSave();
+					}
+				}.begin();
 			}
 		}.begin();
+
 		return this;
 	}
 
@@ -130,8 +150,28 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 
 			public void onSuccess(final Object result) {
 				ImageBrowserDetails.this.g = (GridDTO) result;
-				ImageBrowserDetails.this.buildInterface();
-				ImageBrowserDetails.this.addImagesOnGrid(true);
+				new ServerOp() {
+					@Override
+					public void begin() {
+						MpDb.chemicalAnalysis_svc.all(((GridDTO) result)
+								.getSubsample().getId(), this);
+					}
+
+					public void onSuccess(final Object result2) {
+						final List<ChemicalAnalysisDTO> s = (List<ChemicalAnalysisDTO>) result2;
+						ImageBrowserDetails.this.g.getSubsample()
+								.setChemicalAnalyses(
+										new HashSet<ChemicalAnalysisDTO>(s));
+						// s.setGrid(ImageBrowserDetails.this.g);
+						// ImageBrowserDetails.this.buildInterface();
+						// ImageBrowserDetails.this.doSave();
+						ImageBrowserDetails.this.buildInterface();
+						ImageBrowserDetails.this.addImagesOnGrid(true);
+					}
+					public void onFailure(final Throwable e) {
+						Window.alert(e.getMessage());
+					}
+				}.begin();
 			}
 		}.begin();
 		return this;
@@ -523,7 +563,9 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 
 			public void onSuccess(final Object result) {
 				final Iterator itr = ((Collection) result).iterator();
-				final int[] cascade = { 100 };
+				final int[] cascade = {
+					100
+				};
 				while (itr.hasNext()) {
 					ImageBrowserDetails.this
 							.addImage(
