@@ -167,6 +167,7 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 								.getFlexCellFormatter().setAlignment(1, 0,
 										HasHorizontalAlignment.ALIGN_CENTER,
 										HasVerticalAlignment.ALIGN_MIDDLE);
+						ListEx.this.scrollTable.setHeight("125px");
 					} else {
 						if (ListEx.this.scrollTable.getHeaderTable()
 								.getRowCount() > 1)
@@ -184,10 +185,13 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 					int displaySize = 100 + (displayRows * 40);
 					if (displaySize > 500)
 						displaySize = 500;
-					ListEx.this.scrollTable.getDataTable().setHeight("100%");
-					ListEx.this.scrollTable.setHeight(String
-							.valueOf(displaySize)
-							+ "px");
+					if (result.getCount() > 0) {
+						ListEx.this.scrollTable.getDataTable()
+								.setHeight("100%");
+						ListEx.this.scrollTable.setHeight(String
+								.valueOf(displaySize)
+								+ "px");
+					}
 					if (ListEx.this.scrollTable.getFooterTable() != null)
 						((CheckBox) ((FlexTable) ListEx.this.scrollTable
 								.getFooterTable().getWidget(0, 0)).getWidget(0,
