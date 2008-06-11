@@ -26,6 +26,11 @@ public class Column {
 		this(title, property, true, false);
 	}
 
+	public Column(final String title, final boolean sortable,
+			final boolean customFormat) {
+		this(title, null, sortable, customFormat);
+	}
+
 	/**
 	 * {@link #Column(String, Property, boolean, boolean)}
 	 * 

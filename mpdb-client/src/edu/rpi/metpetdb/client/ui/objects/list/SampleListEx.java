@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.objects.list;
 import org.postgis.Point;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.CheckBox;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -13,8 +14,11 @@ import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
+import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public abstract class SampleListEx extends ListEx<SampleDTO> {
 
@@ -25,7 +29,13 @@ public abstract class SampleListEx extends ListEx<SampleDTO> {
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
 	private static Column[] columns = {
-			new Column(""), // Column for Checkboxes
+			// Column for Checkboxes
+			new Column("Check", true, true) {
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					return new CheckBox();
+				}
+			},
 			new Column(enttxt.Sample_alias(), SampleProperty.alias, true) {
 				protected Object getWidget(final MObjectDTO data,
 						final int currentRow) {
@@ -54,7 +64,16 @@ public abstract class SampleListEx extends ListEx<SampleDTO> {
 			},
 			new Column(enttxt.Sample_collector(), SampleProperty.collector),
 			new Column(enttxt.Sample_collectionDate(),
-					SampleProperty.collectionDate),
+					SampleProperty.collectionDate, true) {
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					DateAttribute temp = new DateAttribute(
+							MpDb.doc.Sample_collectionDate,
+							MpDb.doc.Sample_datePrecision);
+					return ((MText) temp.createDisplayWidget(data)[0])
+							.getText();
+				}
+			},
 			new Column(enttxt.Sample_rockType(), SampleProperty.rockType),
 			new Column(enttxt.Sample_publicData(), SampleProperty.publicData),
 			new Column("Location", SampleProperty.location, true) {
@@ -76,4 +95,5 @@ public abstract class SampleListEx extends ListEx<SampleDTO> {
 	public String getDefaultSortParameter() {
 		return SampleProperty.alias.name();
 	}
+
 }

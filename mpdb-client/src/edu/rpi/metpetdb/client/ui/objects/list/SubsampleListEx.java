@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.CheckBox;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -27,7 +28,12 @@ public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
 	// new Column(enttxt.Subsample_imageCount()),
 	// new Column(enttxt.Subsample_analysisCount()),};
 	public static Column[] columns = {
-			new Column("Check"), // Column for Check boxes
+			new Column("Check", true, true) {
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					return new CheckBox();
+				}
+			},
 			new Column(enttxt.Subsample_name(), SubsampleProperty.name, true) {
 				protected Object getWidget(final MObjectDTO data,
 						final int currentRow) {

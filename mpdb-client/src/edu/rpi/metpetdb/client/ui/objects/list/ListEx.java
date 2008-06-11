@@ -7,7 +7,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
@@ -42,6 +45,10 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 	 */
 	private static final boolean DEFAULT_SORT_ORDER = true;
 	final PagingScrollTable<T> scrollTable;
+
+	public PagingScrollTable<T> getScrollTable() {
+		return scrollTable;
+	}
 
 	/**
 	 * The instance of columns that are layed out on the table
@@ -145,15 +152,46 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 					final PagingResponse response = new PagingResponse(
 							getList(result.getList()), result.getList());
 					if (result.getCount() == 0) {
-						// ListEx.this.clear();
-						// ListEx.this
-						// .add(new HTML(
-						// "nothing to see here...move
-						// along<br/><br/><br/><br/><br/>Seriously though, i did
-						// not find any samples that match your criteria"));
+						callback.onRowsReady(request, response);
+						ListEx.this.scrollTable
+								.getHeaderTable()
+								.setWidget(
+										1,
+										0,
+										new HTML(
+												"<Strong>We were unable to find anything that matched your current criteria</Strong>"));
+						ListEx.this.scrollTable.getHeaderTable()
+								.getFlexCellFormatter().setColSpan(1, 0,
+										ListEx.this.columns.length);
+						ListEx.this.scrollTable.getHeaderTable()
+								.getFlexCellFormatter().setAlignment(1, 0,
+										HasHorizontalAlignment.ALIGN_CENTER,
+										HasVerticalAlignment.ALIGN_MIDDLE);
 					} else {
+						if (ListEx.this.scrollTable.getHeaderTable()
+								.getRowCount() > 1)
+							ListEx.this.scrollTable.getHeaderTable().removeRow(
+									1);
 						callback.onRowsReady(request, response);
 					}
+					int displayRows = 0;
+					if (result.getCount() - p.getFirstResult() >= p
+							.getMaxResults())
+						displayRows = p.getMaxResults();
+					else
+						displayRows = result.getCount() - p.getFirstResult();
+
+					int displaySize = 100 + (displayRows * 40);
+					if (displaySize > 500)
+						displaySize = 500;
+					ListEx.this.scrollTable.getDataTable().setHeight("100%");
+					ListEx.this.scrollTable.setHeight(String
+							.valueOf(displaySize)
+							+ "px");
+					if (ListEx.this.scrollTable.getFooterTable() != null)
+						((CheckBox) ((FlexTable) ListEx.this.scrollTable
+								.getFooterTable().getWidget(0, 0)).getWidget(0,
+								0)).setChecked(false);
 				}
 			}.begin();
 		}
@@ -231,6 +269,10 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		return data;
 	}
 
+	public Column[] getColumns() {
+		return columns;
+	}
+
 	/**
 	 * Creates a new paginated table from an array of columns
 	 * 
@@ -285,13 +327,14 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		add(scrollTable);
 		add(options);
 		this.setWidth("100%");
-		dataTable.setHeight("400px");
+		// dataTable.setHeight("400px");
 	}
 
 	/**
 	 * Reloads the current page to force a refresh of the data
 	 */
 	public void refresh() {
+		scrollTable.gotoFirstPage();
 		scrollTable.reloadPage();
 	}
 }

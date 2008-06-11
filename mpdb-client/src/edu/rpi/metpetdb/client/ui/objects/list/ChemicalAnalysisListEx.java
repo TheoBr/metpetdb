@@ -5,12 +5,19 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
+import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.properties.ChemicalAnalysisProperty;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.ui.MpDb;
+import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.MLink;
+import edu.rpi.metpetdb.client.ui.widgets.MText;
 
-public class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysisDTO> {
+public abstract class ChemicalAnalysisListEx extends
+		ListEx<ChemicalAnalysisDTO> {
 
 	public ChemicalAnalysisListEx() {
 		super(columns);
@@ -18,27 +25,24 @@ public class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysisDTO> {
 
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
-	// new Column(enttxt.MineralAnalysis_spotId(), "spotId"),
-	// new Column(enttxt.MineralAnalysis_sample(), "spotId"), // not ordered
-	// properly
-	// new Column(enttxt.MineralAnalysis_subsample(), "spotId"), // not ordered
-	// properly
-	// new Column(enttxt.MineralAnalysis_pointX(), "pointX"),
-	// new Column(enttxt.MineralAnalysis_pointY(), "pointY"),
-	// new Column(enttxt.MineralAnalysis_method(), "method"),
-	// new Column(enttxt.MineralAnalysis_location(), "location"),
-	// new Column(enttxt.MineralAnalysis_analyst(), "analyst"),
-	// new Column(enttxt.MineralAnalysis_analysisDate(),
-	// "analysisDate"),
 	public static Column[] columns = {
 			new Column(enttxt.ChemicalAnalysis_spotId(),
-					ChemicalAnalysisProperty.spotId),
+					ChemicalAnalysisProperty.spotId, true) {
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					return new MLink((String) data
+							.mGet(ChemicalAnalysisProperty.spotId), TokenSpace
+							.detailsOf((ChemicalAnalysisDTO) data));
+				}
+			},
 
 			// not ordered properly
-			new Column(enttxt.ChemicalAnalysis_sample()),
-
-			// not ordered properly
-			new Column(enttxt.ChemicalAnalysis_subsample()),
+			// new Column(enttxt.ChemicalAnalysis_sample(),
+			// ChemicalAnalysisProperty.sampleName),
+			//
+			// // not ordered properly
+			// new Column(enttxt.ChemicalAnalysis_subsample(),
+			// ChemicalAnalysisProperty.subsampleName),
 			new Column(enttxt.ChemicalAnalysis_pointX(),
 					ChemicalAnalysisProperty.pointX),
 			new Column(enttxt.ChemicalAnalysis_pointY(),
@@ -50,20 +54,26 @@ public class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysisDTO> {
 			new Column(enttxt.ChemicalAnalysis_analyst(),
 					ChemicalAnalysisProperty.analyst),
 			new Column(enttxt.ChemicalAnalysis_analysisDate(),
-					ChemicalAnalysisProperty.analysisDate),
+					ChemicalAnalysisProperty.analysisDate, true) {
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					DateAttribute temp = new DateAttribute(
+							MpDb.doc.ChemicalAnalysis_analysisDate,
+							MpDb.doc.ChemicalAnalysis_datePrecision);
+					return ((MText) temp.createDisplayWidget(data)[0])
+							.getText();
+				}
+			}
 	};
 
 	@Override
 	public String getDefaultSortParameter() {
 		// TODO Auto-generated method stub
-		return null;
+		return ChemicalAnalysisProperty.analysisDate.name();
 	}
 
 	@Override
-	public void update(PaginationParameters p,
-			AsyncCallback<Results<ChemicalAnalysisDTO>> ac) {
-		// TODO Auto-generated method stub
-
-	}
+	public abstract void update(PaginationParameters p,
+			AsyncCallback<Results<ChemicalAnalysisDTO>> ac);
 
 }

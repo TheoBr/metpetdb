@@ -3,14 +3,18 @@ package edu.rpi.metpetdb.client.ui.objects.list;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 
 import edu.rpi.metpetdb.client.model.ProjectDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
@@ -18,13 +22,15 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MTabBar;
 
-public class UserSamplesList extends FlowPanel {
+public class UserSamplesList extends FlowPanel implements ClickListener {
 	private FlexTable header1;
 	private FlexTable projects;
 	private ScrollPanel projectScroll;
+	private SampleListEx list;
 
 	public UserSamplesList() {
 
@@ -57,11 +63,7 @@ public class UserSamplesList extends FlowPanel {
 			}
 		});
 
-		final MLink createView = new MLink("Create New View",
-				new ClickListener() {
-					public void onClick(Widget sender) {
-					}
-				});
+		final MLink createView = new MLink("Create New View", this);
 
 		final Label mySamples_label = new Label("My Samples");
 		final Label quickfilters_label = new Label("Quick Filters:");
@@ -133,6 +135,10 @@ public class UserSamplesList extends FlowPanel {
 		this.add(header1);
 	}
 
+	public void onClick(Widget sender) {
+		CustomTableView myView = new CustomTableView(list, this);
+	}
+
 	private void populateProjects() {
 		projectScroll = new ScrollPanel();
 		projects = new FlexTable();
@@ -154,10 +160,11 @@ public class UserSamplesList extends FlowPanel {
 			i++;
 		}
 		projectScroll.add(projects);
+
 	}
 
 	private void addSamples() {
-		final SampleListEx list = new SampleListEx() {
+		list = new SampleListEx() {
 			public void update(final PaginationParameters p,
 					final AsyncCallback<Results<SampleDTO>> ac) {
 				long id = (long) (MpDb.currentUser().getId());
@@ -167,6 +174,50 @@ public class UserSamplesList extends FlowPanel {
 		final FlexTable Samples_ft = new FlexTable();
 		Samples_ft.setWidth("100%");
 		Samples_ft.setWidget(0, 0, list);
+
+		FixedWidthFlexTable footer = new FixedWidthFlexTable();
+		CheckBox cb = new CheckBox("Select All");
+		cb.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				for (int i = 0; i < list.scrollTable.getDataTable()
+						.getRowCount(); i++)
+					((CheckBox) list.scrollTable.getDataTable().getWidget(i, 0))
+							.setChecked(((CheckBox) sender).isChecked());
+			}
+		});
+		ListBox lb = new ListBox();
+
+		Iterator<ProjectDTO> it = MpDb.currentUser().getProjects().iterator();
+		while (it.hasNext()) {
+			final ProjectDTO project = (ProjectDTO) it.next();
+			lb.addItem("Add to '" + project.getName() + "'");
+		}
+		lb.addItem("Remove");
+		lb.addItem("Make Public");
+
+		Button btn = new Button("Apply to Selected");
+		btn.setHeight("30px");
+		FlexTable realFooter = new FlexTable();
+
+		realFooter.setWidget(0, 0, cb);
+		realFooter.setWidget(0, 1, lb);
+		realFooter.setWidget(0, 2, btn);
+		realFooter.addStyleName("mpdb-dataTableBlue");
+		realFooter.getFlexCellFormatter().setWidth(0, 0, "85px");
+		realFooter.getFlexCellFormatter().setWidth(0, 1, "100px");
+		realFooter.getFlexCellFormatter().setAlignment(0, 0,
+				HasHorizontalAlignment.ALIGN_LEFT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		realFooter.getFlexCellFormatter().setAlignment(0, 1,
+				HasHorizontalAlignment.ALIGN_LEFT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		realFooter.setWidth("100%");
+		realFooter.setCellSpacing(5);
+		footer.setWidget(0, 0, realFooter);
+		footer.getFlexCellFormatter().setColSpan(0, 0, 4);
+		footer.setWidth("100%");
+		list.scrollTable.setFooterTable(footer);
+
 		this.add(Samples_ft);
 	}
 

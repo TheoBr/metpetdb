@@ -42,9 +42,15 @@ public class Search extends FlowPanel {
 			 * in reality this would somehow tie into the search rpc call to
 			 * pass in sorting data and pagination data to the server
 			 */
+			int displayResults;
+			if (results.size() - p.getFirstResult() >= p.getMaxResults())
+				displayResults = p.getMaxResults();
+			else
+				displayResults = results.size() - p.getFirstResult();
 			final Results<SampleDTO> r = new Results<SampleDTO>();
 			r.setCount(results.size());
-			r.setList(results);
+			r.setList(results.subList(p.getFirstResult(), p.getFirstResult()
+					+ displayResults));
 			ac.onSuccess(r);
 		}
 
@@ -61,6 +67,7 @@ public class Search extends FlowPanel {
 				if (r != null) {
 					results = r;
 					sampleList.refresh();
+					// sampleList.
 				}
 				p_searchSample.setEnabled(true);
 			}
