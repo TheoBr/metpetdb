@@ -1,19 +1,26 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
@@ -26,10 +33,15 @@ import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AddImageAttribute;
+import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class SubsampleDetails extends FlowPanel {
 	private FlexTable ft;
+	private HorizontalPanel Header;
+	private Label pageHeader;
+	final Element sampleHeader;
+
 	private static GenericAttribute[] subsampleAtts = {
 			new TextAttribute(MpDb.oc.Subsample_sampleName).setReadOnly(true),
 			new TextAttribute(MpDb.doc.Subsample_name),
@@ -44,6 +56,7 @@ public class SubsampleDetails extends FlowPanel {
 	private long subsampleId;
 	private ServerOp continuation;
 	private String sampleAlias;
+	private MLink map;
 
 	public SubsampleDetails() {
 		final SubsampleDetails me = this;
@@ -85,19 +98,39 @@ public class SubsampleDetails extends FlowPanel {
 				super.onLoadCompletion(result);
 				final SubsampleDTO s = (SubsampleDTO) result;
 				if (s.getGrid() == null) {
-					me.add(new MLink("Create Map", new ClickListener() {
+					map.setText("Create Map");
+					map.addClickListener(new ClickListener() {
 						public void onClick(final Widget sender) {
 							MetPetDBApplication.show(new ImageBrowserDetails()
 									.createNew(s.getId()));
 						}
-					}));
+					});
 				} else {
-					me.add(new MLink("View Map", TokenSpace.detailsOf(s
-							.getGrid())));
+					map.setText("View Map");
+					map
+							.setTargetHistoryToken(TokenSpace.detailsOf(s
+									.getGrid()));
 				}
-				// DOM.setInnerText(header,s.getSample().getAlias());
+
+				Label description = new Label("Subsample of");
+				MLink sample = new MLink(s.getSample().getName(), TokenSpace
+						.detailsOf((SampleDTO) s.getSample()));
+
+				Header.add(description);
+				Header.add(sample);
+				Header.setSpacing(5);
+
+				DOM.setInnerText(sampleHeader, s.getName());
+
 			}
 		};
+
+		sampleHeader = DOM.createElement("h1");
+		DOM.appendChild(this.getElement(), sampleHeader);
+		Header = new HorizontalPanel();
+		pageHeader = new Label("");
+		pageHeader.addStyleName("big");
+
 		final OnEnterPanel.ObjectEditor oep = new OnEnterPanel.ObjectEditor(
 				p_subsample);
 		ft = new FlexTable();
@@ -110,18 +143,30 @@ public class SubsampleDetails extends FlowPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		// ft.getFlexCellFormatter().setWidth(0, 0, "20%");
 		// ft.getFlexCellFormatter().setWidth(1, 0, "40%");
+		ft.setWidth("40%");
 		ft.getFlexCellFormatter().setHeight(0, 0, "35px");
 		ft.getFlexCellFormatter().setAlignment(1, 0,
 				HasHorizontalAlignment.ALIGN_LEFT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		ft.getRowFormatter().setStyleName(0, "mpdb-dataTableLightBlue");
 
+		// add(pageHeader);
+		// add(pageDescription);
+		add(Header);
 		add(ft);
 	}
 
-	public SubsampleDetails showById(final long id) {
-		subsampleId = id;
-		p_subsample.load();
+	public void showChemicalAnalysis() {
+		FlexTable chemft = new FlexTable();
+		final ChemicalAnalysisListEx list = new ChemicalAnalysisListEx() {
+			public void update(final PaginationParameters p,
+					final AsyncCallback<Results<ChemicalAnalysisDTO>> ac) {
+				MpDb.chemicalAnalysis_svc.all(p, subsampleId, ac);
+			}
+		};
+		chemft.setWidget(1, 0, list);
+		chemft.getFlexCellFormatter().setColSpan(1, 0, 10);
+
 		final MLink addChemicalAnalysis = new MLink(LocaleHandler.lc_text
 				.addChemicalAnalysis(), new ClickListener() {
 			public void onClick(final Widget sender) {
@@ -142,7 +187,23 @@ public class SubsampleDetails extends FlowPanel {
 			}
 		});
 		addChemicalAnalysis.addStyleName(Styles.ADDLINK);
-		add(addChemicalAnalysis);
+		chemft.setWidget(0, 0, new HTML("<Strong>Mineral Analysis</Strong>"));
+		chemft.setWidget(0, 1, addChemicalAnalysis);
+		chemft.getFlexCellFormatter().setAlignment(0, 1,
+				HasHorizontalAlignment.ALIGN_RIGHT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		chemft.setWidget(0, 2, new MLink("View All", "blah"));
+		chemft.getRowFormatter().setStyleName(0, "mpdb-dataTableLightBlue");
+		chemft.setWidth("100%");
+		add(chemft);
+	}
+
+	public SubsampleDetails showById(final long id) {
+		subsampleId = id;
+		p_subsample.load();
+		map = new MLink();
+		add(map);
+		showChemicalAnalysis();
 		return this;
 	}
 

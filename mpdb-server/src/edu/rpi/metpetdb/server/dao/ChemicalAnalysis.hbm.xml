@@ -27,22 +27,22 @@
 	<property name="largeRock" column="large_rock" type="yes_no" />
 	<many-to-one name="mineral" column="mineral_id" class="Mineral" lazy="false" cascade="none"/>
 
-    <set name="elements" table="chemical_analysis_elements" cascade="save-update">
+    <set name="elements" table="chemical_analysis_elements" lazy="false" cascade="save-update">
       <key column="chemical_analysis_id" />
       <composite-element class="ChemicalAnalysisElement">
       	<!--Composite elements CANNOT be null with a set -->
-      	<property name="amount" column="amount" type="float" not-null="true"/>
+      	<property name="amount" column="amount" type="float" not-null="true" lazy="false"/>
       	<property name="precision" column="precision" type="float" />
       	<property name="precisionUnit" column="precision_type" />
         <many-to-one name="element" class="Element" column="element_id" lazy="false"/>
 	  </composite-element>
     </set>
 
-    <set name="oxides" table="chemical_analysis_oxides" cascade="save-update">
+    <set name="oxides" table="chemical_analysis_oxides" lazy="false" cascade="save-update">
       <key column="chemical_analysis_id" />
       <composite-element class="ChemicalAnalysisOxide">
       	<!--Composite elements CANNOT be null with a set -->
-      	<property name="amount" column="amount" type="float" not-null="true"/>
+      	<property name="amount" column="amount" type="float" not-null="true" lazy="false"/>
       	<property name="precision" column="precision" type="float" />
       	<property name="precisionUnit" column="precision_type" />
         <many-to-one name="oxide" class="Oxide" column="oxide_id" lazy="false"/>
@@ -103,5 +103,6 @@
     where ma.subsample.id = :id
     order by ma.description
   </query>
+
    
 </hibernate-mapping>
