@@ -76,8 +76,7 @@ public class MetPetDBApplication implements EntryPoint {
 		 * });
 		 */
 
-		setupIntroduction();
-
+		// setupIntroduction();
 		pageChangeWatchers = new HashSet<Widget>();
 
 		// Try to restore the user's current session.
@@ -303,17 +302,17 @@ public class MetPetDBApplication implements EntryPoint {
 				Window.open(WIKI_URL, "mpdb_wiki", "");
 			}
 		});
-		about.addItem(LocaleHandler.lc_text.aboutMenu_VersionControl(),
-				new Command() {
-					public void execute() {
-						Window.open(GIT_URL, "mpdb_git", "");
-					}
-				});
-		about.addItem("SVN Version Control", new Command() {
-			public void execute() {
-				Window.open(SVN_URL, "mpdb_svn", "");
-			}
-		});
+		// about.addItem(LocaleHandler.lc_text.aboutMenu_VersionControl(),
+		// new Command() {
+		// public void execute() {
+		// Window.open(GIT_URL, "mpdb_git", "");
+		// }
+		// });
+		// about.addItem("SVN Version Control", new Command() {
+		// public void execute() {
+		// Window.open(SVN_URL, "mpdb_svn", "");
+		// }
+		// });
 		about.addItem("JavaDocs", new Command() {
 			public void execute() {
 				Window.open(JAVADOC_URL, "mpdb_javadoc", "");

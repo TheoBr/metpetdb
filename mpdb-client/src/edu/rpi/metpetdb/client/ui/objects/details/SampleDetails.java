@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -40,6 +42,8 @@ import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class SampleDetails extends FlowPanel {
 	private FlexTable ft;
+	final Element sampleHeader;
+
 	private static GenericAttribute[] sampleAtts = {
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
 			new TextAttribute(MpDb.doc.Sample_sesarNumber).setImmutable(true),
@@ -98,10 +102,18 @@ public class SampleDetails extends FlowPanel {
 				// addExtraElements();
 			}
 
+			protected void onLoadCompletion(final MObjectDTO result) {
+				super.onLoadCompletion(result);
+				final SampleDTO s = (SampleDTO) result;
+				DOM.setInnerText(sampleHeader, s.getName());
+			}
+
 		};
 		final OnEnterPanel.ObjectEditor oep = new OnEnterPanel.ObjectEditor(
 				p_sample);
 		oep.setStyleName("sd-details");
+		sampleHeader = DOM.createElement("h1");
+		DOM.appendChild(this.getElement(), sampleHeader);
 		ft = new FlexTable();
 		Label details_label = new Label("Details");
 		ft.setWidget(0, 0, details_label);
@@ -120,7 +132,6 @@ public class SampleDetails extends FlowPanel {
 				HasHorizontalAlignment.ALIGN_CENTER,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		ft.getRowFormatter().setStyleName(0, "mpdb-dataTableLightBlue");
-
 		add(ft);
 		// add(oep);
 	}
@@ -171,6 +182,7 @@ public class SampleDetails extends FlowPanel {
 				MpDb.subsample_svc.all(p, sampleId, ac);
 			}
 		};
+
 		subsamples_ft.setWidget(1, 0, list);
 		subsamples_ft.getFlexCellFormatter().setColSpan(1, 0, 2);
 
@@ -244,12 +256,16 @@ public class SampleDetails extends FlowPanel {
 
 		add(hp);
 	}
+	public void addSubsamplesToLeft() {
+
+	};
 
 	public SampleDetails showById(final long id) {
 		sampleId = id;
 		p_sample.load();
 		addExtraElements();
 		addComments();
+		// addSubsamplesToLeft();
 		// addChemistry();
 		return this;
 	}

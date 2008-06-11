@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.InvalidGeometryException;
+import edu.rpi.metpetdb.client.error.PropertyRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
@@ -87,8 +88,12 @@ public class LocationAttribute extends GenericAttribute {
 						LocaleHandler.lc_entity.getString("Sample_longitude"));
 			}
 		}
-		if (latitude.length() == 0 || longitude.length() == 0)
-			return null;
+		if (latitude.length() == 0)
+			throw new PropertyRequiredException(this.getConstraint(),
+					LocaleHandler.lc_entity.getString("Sample_latitude"));
+		else if (longitude.length() == 0)
+			throw new PropertyRequiredException(this.getConstraint(),
+					LocaleHandler.lc_entity.getString("Sample_longitude"));
 		else
 			return p;
 	}

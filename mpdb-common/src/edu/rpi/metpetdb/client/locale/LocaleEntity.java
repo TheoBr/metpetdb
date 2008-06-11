@@ -62,6 +62,8 @@ public interface LocaleEntity extends ConstantsWithLookup {
 
 	String Sample_datePrecision();
 
+	String Sample_comments();
+
 	String SampleMineral_amount();
 
 	/* User */
@@ -141,6 +143,18 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String ChemicalAnalysis_largeRock();
 
 	String ChemicalAnalysis_description();
+
+	String ChemicalAnalysis_sampleName();
+
+	String ChemicalAnalysis_subsampleName();
+
+	String ChemicalAnalysis_elements();
+
+	String ChemicalAnalysis_oxides();
+
+	String ChemicalAnalysis_analysisMethod();
+
+	String ChemicalAnalysis_datePrecision();
 
 	/* Image */
 	String Image_imageType();
