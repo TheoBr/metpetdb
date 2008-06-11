@@ -10,7 +10,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
@@ -151,29 +150,32 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 					TableModel.this.setRowCount(result.getCount());
 					final PagingResponse response = new PagingResponse(
 							getList(result.getList()), result.getList());
+					callback.onRowsReady(request, response);
 					if (result.getCount() == 0) {
-						callback.onRowsReady(request, response);
-						ListEx.this.scrollTable
-								.getHeaderTable()
-								.setWidget(
-										1,
-										0,
-										new HTML(
-												"<Strong>We were unable to find anything that matched your current criteria</Strong>"));
-						ListEx.this.scrollTable.getHeaderTable()
-								.getFlexCellFormatter().setColSpan(1, 0,
-										ListEx.this.columns.length);
-						ListEx.this.scrollTable.getHeaderTable()
-								.getFlexCellFormatter().setAlignment(1, 0,
-										HasHorizontalAlignment.ALIGN_CENTER,
-										HasVerticalAlignment.ALIGN_MIDDLE);
+						// callback.onRowsReady(request, response);
+						// ListEx.this.scrollTable
+						// .getHeaderTable()
+						// .setWidget(
+						// 1,
+						// 0,
+						// new HTML(
+						// "<Strong>We were unable to find anything that matched
+						// your current
+						// criteria</Strong>"));
+						// ListEx.this.scrollTable.getHeaderTable()
+						// .getFlexCellFormatter().setColSpan(1, 0,
+						// ListEx.this.columns.length);
+						// ListEx.this.scrollTable.getHeaderTable()
+						// .getFlexCellFormatter().setAlignment(1, 0,
+						// HasHorizontalAlignment.ALIGN_CENTER,
+						// HasVerticalAlignment.ALIGN_MIDDLE);
 						ListEx.this.scrollTable.setHeight("125px");
-					} else {
-						if (ListEx.this.scrollTable.getHeaderTable()
-								.getRowCount() > 1)
-							ListEx.this.scrollTable.getHeaderTable().removeRow(
-									1);
-						callback.onRowsReady(request, response);
+						// } else {
+						// if (ListEx.this.scrollTable.getHeaderTable()
+						// .getRowCount() > 1)
+						// ListEx.this.scrollTable.getHeaderTable().removeRow(
+						// 1);
+						// callback.onRowsReady(request, response);
 					}
 					int displayRows = 0;
 					if (result.getCount() - p.getFirstResult() >= p
