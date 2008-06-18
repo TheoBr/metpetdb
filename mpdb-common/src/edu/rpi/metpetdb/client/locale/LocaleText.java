@@ -99,7 +99,8 @@ public interface LocaleText extends Messages {
 	String errorDesc_InvalidRockType(String rockType, String rockTypes);
 	String errorDesc_InvalidFormat();
 	String errorDesc_InvalidDateString();
-	String errorDesc_InvalidLocation(String field);
+	String errorDesc_InvalidLongitude(String field);
+	String errorDesc_InvalidLatitude(String field);
 
 	/* Character Names */
 	String character_space();

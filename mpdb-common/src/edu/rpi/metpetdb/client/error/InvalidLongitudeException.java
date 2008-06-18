@@ -3,18 +3,18 @@ package edu.rpi.metpetdb.client.error;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 
-public class InvalidLocationException extends ValidationException {
+public class InvalidLongitudeException extends ValidationException {
 	private static final long serialVersionUID = 1L;
 	private String propertyName;
 
-	public InvalidLocationException() {
+	public InvalidLongitudeException() {
 	}
 
-	public InvalidLocationException(final PropertyConstraint pc) {
+	public InvalidLongitudeException(final PropertyConstraint pc) {
 		super(pc);
 	}
 
-	public InvalidLocationException(final PropertyConstraint pc,
+	public InvalidLongitudeException(final PropertyConstraint pc,
 			final String propertyName) {
 		super(pc);
 		this.propertyName = propertyName;
@@ -22,7 +22,7 @@ public class InvalidLocationException extends ValidationException {
 
 	public String format() {
 		return LocaleHandler.lc_text
-				.errorDesc_InvalidLocation(propertyName != null ? propertyName
+				.errorDesc_InvalidLongitude(propertyName != null ? propertyName
 						: formatPropertyName());
 	}
 }
