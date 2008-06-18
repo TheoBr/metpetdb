@@ -2,6 +2,8 @@ package edu.rpi.metpetdb.client.ui.objects.list;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -11,7 +13,9 @@ import edu.rpi.metpetdb.client.model.properties.SubsampleProperty;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserDetails;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
@@ -21,12 +25,7 @@ public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
 	}
 
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
-	// new Column("Image", "name"),
-	// new Column("Name", "name"),
-	// new Column(enttxt.Subsample_type(), "name"),
-	// new Column("Map", "name"),
-	// new Column(enttxt.Subsample_imageCount()),
-	// new Column(enttxt.Subsample_analysisCount()),};
+
 	public static Column[] columns = {
 			new Column("Check", true, true) {
 				protected Object getWidget(final MObjectDTO data,
@@ -47,14 +46,29 @@ public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
 					SubsampleProperty.imageCount),
 			new Column(enttxt.Subsample_images(), SubsampleProperty.images,
 					true) {
-				// protected Object getWidget(final MObjectDTO data,
-				// final int currentRow) {
-				// return new ImageList(data.mGet(getId()),
-				// (ArrayList) data.images, false);
-				// }
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					return new MLink("Images", TokenSpace
+							.ViewOf((SubsampleDTO) data));
+				}
 			}, // TODO image thumbnail browser
-			new Column("Image Map") {
-				// TODO Mlink to create map/view map
+			new Column("Image Map", true) {
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					final SubsampleDTO s = (SubsampleDTO) data;
+					if (s.getGrid() == null) {
+						return new MLink("Create Map", new ClickListener() {
+							public void onClick(final Widget sender) {
+								MetPetDBApplication
+										.show(new ImageBrowserDetails()
+												.createNew(s.getId()));
+							}
+						});
+					} else {
+						return new MLink("View Map", TokenSpace.detailsOf(s
+								.getGrid()));
+					}
+				}
 			},
 			new Column(enttxt.Subsample_analysisCount(),
 					SubsampleProperty.analysisCount),

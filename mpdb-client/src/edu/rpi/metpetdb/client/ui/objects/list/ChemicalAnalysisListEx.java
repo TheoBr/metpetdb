@@ -48,11 +48,38 @@ public abstract class ChemicalAnalysisListEx extends
 			new Column(enttxt.ChemicalAnalysis_pointY(),
 					ChemicalAnalysisProperty.pointY),
 			new Column(enttxt.ChemicalAnalysis_method(),
-					ChemicalAnalysisProperty.analysisMethod),
+					ChemicalAnalysisProperty.analysisMethod, true) {
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					String text = ((String) data
+							.mGet(ChemicalAnalysisProperty.analysisMethod));
+					if (text == null)
+						text = "------";
+					return new MText(text);
+				}
+			},
 			new Column(enttxt.ChemicalAnalysis_location(),
-					ChemicalAnalysisProperty.location),
+					ChemicalAnalysisProperty.location, true) {
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					String text = ((String) data
+							.mGet(ChemicalAnalysisProperty.location));
+					if (text == null)
+						text = "------";
+					return new MText(text);
+				}
+			},
 			new Column(enttxt.ChemicalAnalysis_analyst(),
-					ChemicalAnalysisProperty.analyst),
+					ChemicalAnalysisProperty.analyst, true) {
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					String text = ((String) data
+							.mGet(ChemicalAnalysisProperty.analyst));
+					if (text == null)
+						text = "------";
+					return new MText(text);
+				}
+			},
 			new Column(enttxt.ChemicalAnalysis_analysisDate(),
 					ChemicalAnalysisProperty.analysisDate, true) {
 				protected Object getWidget(final MObjectDTO data,

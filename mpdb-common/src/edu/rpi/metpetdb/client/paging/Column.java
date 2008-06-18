@@ -22,6 +22,10 @@ public class Column {
 	 * @param title
 	 * @param property
 	 */
+	public Column(final String title, final boolean customFormat) {
+		this(title, null, false, customFormat);
+	}
+
 	public Column(final String title, final Property property) {
 		this(title, property, true, false);
 	}

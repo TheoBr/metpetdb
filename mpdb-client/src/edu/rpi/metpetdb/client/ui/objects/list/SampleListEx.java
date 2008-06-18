@@ -29,7 +29,6 @@ public abstract class SampleListEx extends ListEx<SampleDTO> {
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
 	private static Column[] columns = {
-			// Column for Checkboxes
 			new Column("Check", true, true) {
 				protected Object getWidget(final MObjectDTO data,
 						final int currentRow) {
@@ -62,15 +61,25 @@ public abstract class SampleListEx extends ListEx<SampleDTO> {
 											.mGet(SampleProperty.owner)));
 				}
 			},
-			new Column(enttxt.Sample_collector(), SampleProperty.collector),
+			new Column(enttxt.Sample_collector(), SampleProperty.collector,
+					true) {
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					String text = ((String) data.mGet(SampleProperty.collector));
+					if (text == null)
+						text = "------";
+					return new MText(text);
+
+				}
+			},
 			new Column(enttxt.Sample_collectionDate(),
 					SampleProperty.collectionDate, true) {
 				protected Object getWidget(final MObjectDTO data,
 						final int currentRow) {
-					DateAttribute temp = new DateAttribute(
+					DateAttribute dateTemp = new DateAttribute(
 							MpDb.doc.Sample_collectionDate,
 							MpDb.doc.Sample_datePrecision);
-					return ((MText) temp.createDisplayWidget(data)[0])
+					return ((MText) dateTemp.createDisplayWidget(data)[0])
 							.getText();
 				}
 			},
@@ -81,10 +90,20 @@ public abstract class SampleListEx extends ListEx<SampleDTO> {
 						final int currentRow) {
 					final Point location = (Point) data
 							.mGet(SampleProperty.location);
-					return "(" + location.x + "," + location.y + ")";
+					return "(" + format(location.x) + "," + format(location.y)
+							+ ")";
 				}
 			},
-			new Column(enttxt.Sample_country(), SampleProperty.country),
+			new Column(enttxt.Sample_country(), SampleProperty.country, true) {
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					String text = ((String) data.mGet(SampleProperty.country));
+					if (text == null)
+						text = "------";
+					return new MText(text);
+
+				}
+			},
 			new Column(enttxt.Sample_subsampleCount(),
 					SampleProperty.subsampleCount),
 	};
@@ -94,6 +113,14 @@ public abstract class SampleListEx extends ListEx<SampleDTO> {
 
 	public String getDefaultSortParameter() {
 		return SampleProperty.alias.name();
+	}
+
+	public static String format(final double loc) {
+		final String locStr = String.valueOf(loc);
+		final int decPos = locStr.toString().indexOf(".");
+		if (locStr.length() < decPos + 4 && decPos >= 0)
+			return locStr;
+		return locStr.substring(0, decPos + 4);
 	}
 
 }

@@ -10,6 +10,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
@@ -150,54 +151,48 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 					TableModel.this.setRowCount(result.getCount());
 					final PagingResponse response = new PagingResponse(
 							getList(result.getList()), result.getList());
-					callback.onRowsReady(request, response);
 					if (result.getCount() == 0) {
-						// callback.onRowsReady(request, response);
-						// ListEx.this.scrollTable
-						// .getHeaderTable()
-						// .setWidget(
-						// 1,
-						// 0,
-						// new HTML(
-						// "<Strong>We were unable to find anything that matched
-						// your current
-						// criteria</Strong>"));
-						// ListEx.this.scrollTable.getHeaderTable()
-						// .getFlexCellFormatter().setColSpan(1, 0,
-						// ListEx.this.columns.length);
-						// ListEx.this.scrollTable.getHeaderTable()
-						// .getFlexCellFormatter().setAlignment(1, 0,
-						// HasHorizontalAlignment.ALIGN_CENTER,
-						// HasVerticalAlignment.ALIGN_MIDDLE);
-						ListEx.this.scrollTable.setHeight("125px");
-						// } else {
-						// if (ListEx.this.scrollTable.getHeaderTable()
-						// .getRowCount() > 1)
-						// ListEx.this.scrollTable.getHeaderTable().removeRow(
-						// 1);
-						// callback.onRowsReady(request, response);
+						callback.onRowsReady(request, response);
+						ListEx.this.scrollTable
+								.getHeaderTable()
+								.setWidget(
+										1,
+										0,
+										new HTML(
+												"<Strong>We were unable to find anything that matched your current criteria</Strong>"));
+						ListEx.this.scrollTable.getHeaderTable()
+								.getFlexCellFormatter().setColSpan(1, 0,
+										ListEx.this.columns.length);
+						ListEx.this.scrollTable.getHeaderTable()
+								.getFlexCellFormatter().setAlignment(1, 0,
+										HasHorizontalAlignment.ALIGN_CENTER,
+										HasVerticalAlignment.ALIGN_MIDDLE);
+					} else {
+						if (ListEx.this.scrollTable.getHeaderTable()
+								.getRowCount() > 1)
+							ListEx.this.scrollTable.getHeaderTable().removeRow(
+									1);
+						callback.onRowsReady(request, response);
 					}
-					int displayRows = 0;
-					if (result.getCount() - p.getFirstResult() >= p
-							.getMaxResults())
-						displayRows = p.getMaxResults();
-					else
-						displayRows = result.getCount() - p.getFirstResult();
 
-					int displaySize = 100 + (displayRows * 40);
-					if (displaySize > 500)
-						displaySize = 500;
-					if (result.getCount() > 0) {
-						ListEx.this.scrollTable.getDataTable()
-								.setHeight("100%");
-						ListEx.this.scrollTable.setHeight(String
-								.valueOf(displaySize)
-								+ "px");
-					}
-					if (ListEx.this.scrollTable.getFooterTable() != null)
+					int size = ListEx.this.scrollTable.getHeaderTable()
+							.getOffsetHeight()
+							+ ListEx.this.scrollTable.getDataTable()
+									.getOffsetHeight();
+
+					if (ListEx.this.scrollTable.getFooterTable() != null) {
 						((CheckBox) ((FlexTable) ListEx.this.scrollTable
 								.getFooterTable().getWidget(0, 0)).getWidget(0,
 								0)).setChecked(false);
+						size += ListEx.this.scrollTable.getFooterTable()
+								.getOffsetHeight();
+					}
+
+					if (result.getCount() > 0) {
+						ListEx.this.scrollTable.setHeight(String.valueOf(size)
+								+ "px");
+					}
+
 				}
 			}.begin();
 		}
