@@ -22,6 +22,7 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.MineralDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.validation.DateStringConstraint;
 
@@ -82,10 +83,13 @@ public class SampleParser {
 
 	private final static List<MethodAssociation<SampleDTO>> methodAssociations = new LinkedList<MethodAssociation<SampleDTO>>();
 
+	private static List<MineralDTO> minerals = null;
+
 	/**
 	 * relates columns to entries in map
 	 */
 	private final Map<Integer, Method> colMethods;
+	private final Map<Integer, Object> colObjects;
 
 	/**
 	 * 
@@ -95,6 +99,7 @@ public class SampleParser {
 	public SampleParser(final InputStream is) {
 		samples = new LinkedList<SampleDTO>();
 		colMethods = new HashMap<Integer, Method>();
+		colObjects = new HashMap<Integer, Object>();
 		this.is = is;
 
 	}
@@ -137,6 +142,8 @@ public class SampleParser {
 			// Convert header title to String
 			final HSSFCell cell = header.getCell((short) i);
 			final String text;
+			boolean done = false;
+
 			try {
 				text = cell.toString(); // getString();
 			} catch (final NullPointerException npe) {
@@ -149,8 +156,30 @@ public class SampleParser {
 			for (MethodAssociation<SampleDTO> sma : methodAssociations) {
 				if (sma.matches(text)) {
 					colMethods.put(new Integer(i), sma.getMethod());
+					done = true;
 					break;
 				}
+			}
+
+			if (done)
+				continue;
+
+			// If we don't have an explicit match for the header, it could be a
+			// mineral, check for that
+			try {
+				for (MineralDTO m : minerals) {
+					if (m.getName().equalsIgnoreCase(text)) {
+						colMethods.put(new Integer(i), SampleDTO.class
+								.getMethod("addMineral", MineralDTO.class,
+										Float.class));
+						colObjects.put(new Integer(i), m);
+						done = true;
+						break;
+					}
+				}
+			} catch (NoSuchMethodException e) {
+				throw new IllegalStateException(
+						"Programming Error -- Invalid Sample Method");
 			}
 		}
 
@@ -190,6 +219,27 @@ public class SampleParser {
 
 				System.out.println("\t Parsing Column " + i + ": "
 						+ storeMethod.getName());
+
+				// If this has an object then it isn't a normal header, handle
+				// accordingly
+				if (colObjects.get(i) != null) {
+					final Object o = colObjects.get(i);
+
+					// Created for Mineral Processing:
+					// * If cell is empty, keep moving
+					// * If there is a number, then that is the amount
+					// * Anything else is taken as an "unknown quantity"
+					if (cell.toString().length() > 0) {
+						try {
+							final Float data = Float
+									.parseFloat(cell.toString());
+							storeMethod.invoke(s, o, data);
+						} catch (NumberFormatException e) {
+							storeMethod.invoke(s, o, new Float(0));
+						}
+					}
+					continue;
+				}
 
 				// Determine what class the method wants the content of the cell
 				// to be so it can parse it
@@ -308,5 +358,13 @@ public class SampleParser {
 
 	public Map<Integer, ValidationException> getErrors() {
 		return errors;
+	}
+
+	public static boolean areMineralsSet() {
+		return !(minerals == null);
+	}
+
+	public static void setMinerals(final List<MineralDTO> minerals) {
+		SampleParser.minerals = minerals;
 	}
 }

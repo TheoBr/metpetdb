@@ -209,11 +209,16 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 		minerals = c;
 	}
 
-	public void addMineral(final String name) {
+	public void addMineral(final MineralDTO min) {
+		this.addMineral(min, new Float(0));
+	}
+
+	public void addMineral(final MineralDTO min, final Float amount) {
 		if (minerals == null)
 			minerals = new HashSet<SampleMineralDTO>();
 		final SampleMineralDTO m = new SampleMineralDTO();
-		// m.setName(name);
+		m.setAmount(amount);
+		m.setMineral(min);
 		minerals.add(m);
 	}
 

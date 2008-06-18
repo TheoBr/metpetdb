@@ -11,6 +11,7 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.SampleAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.MineralDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.service.BulkUploadService;
@@ -31,6 +32,14 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 							"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
 					.setParameter("user_id", currentUser()).setParameter(
 							"hash", fileOnServer).executeUpdate();
+
+			// Locate and set Valid Potential Minerals for the parser
+			List<MineralDTO> minerals = cloneBean(currentSession()
+					.getNamedQuery("Mineral.all").list());
+			minerals.addAll(cloneBean(currentSession().getNamedQuery(
+					"Mineral.children").list()));
+			SampleParser.setMinerals(minerals);
+
 			final SampleParser sp = new SampleParser(new FileInputStream(
 					baseFolder + "/" + fileOnServer));
 			try {
