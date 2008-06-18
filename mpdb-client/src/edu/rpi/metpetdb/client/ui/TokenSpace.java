@@ -24,6 +24,7 @@ import edu.rpi.metpetdb.client.ui.TokenHandler.SKey;
 import edu.rpi.metpetdb.client.ui.TokenHandler.Screen;
 import edu.rpi.metpetdb.client.ui.bulk.upload.BulkUploadPanel;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserDetails;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageListViewer;
 import edu.rpi.metpetdb.client.ui.objects.details.ChemicalAnalysisDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.ProjectDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SampleDetails;
@@ -111,6 +112,16 @@ public class TokenSpace implements HistoryListener {
 
 		public void execute(final long id) {
 			show(new ChemicalAnalysisDetails().showById(id));
+		}
+	};
+	private static final TokenHandler ImageListViewer = new LKey(
+			"ImageListViewer") {
+		public long get(final Object obj) {
+			return ((SubsampleDTO) obj).getId();
+		}
+
+		public void execute(final long id) {
+			show(new ImageListViewer(id));
 		}
 	};
 	public static final Screen register = new Screen("Register") {
@@ -266,6 +277,7 @@ public class TokenSpace implements HistoryListener {
 		register(newProject);
 		register(bulkUpload);
 		register(search);
+		register(ImageListViewer);
 
 		// DefaultPaginationBehavior
 		register(new TokenHandler.NoOp("previousPage"));
@@ -316,6 +328,10 @@ public class TokenSpace implements HistoryListener {
 
 	public static String listOf(final ProjectDTO p) {
 		return projectSamples.makeToken(p);
+	}
+
+	public static String ViewOf(final SubsampleDTO p) {
+		return ImageListViewer.makeToken(p);
 	}
 
 	public static void dispatch(final String historyToken) {

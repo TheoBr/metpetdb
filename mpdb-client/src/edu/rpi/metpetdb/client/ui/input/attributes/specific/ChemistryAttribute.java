@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisElementDTO;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxideDTO;
 import edu.rpi.metpetdb.client.model.ElementDTO;
@@ -82,8 +83,9 @@ public class ChemistryAttribute extends GenericAttribute implements
 			list
 		};
 	}
-
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
+		ChemicalAnalysisDTO ca = (ChemicalAnalysisDTO) obj;
+
 		species_type = new ArrayList<String>();
 		element_or_oxide_id = new ArrayList<String>();
 		no_chemistry_label = new Label("No chemical species specified yet.");
@@ -134,6 +136,42 @@ public class ChemistryAttribute extends GenericAttribute implements
 		ft.setWidget(1, 1, label_precision);
 		format_top_two_rows();
 		no_chemistry_row();
+
+		final Iterator<ChemicalAnalysisElementDTO> itr = ca.getElements()
+				.iterator();
+		while (itr.hasNext()) {
+			final ChemicalAnalysisElementDTO element = (ChemicalAnalysisElementDTO) itr
+					.next();
+			add_row("Element", String.valueOf(element.getElement().getId()));
+			((TextBox) ft.getWidget(rows - 1, 1)).setText(String
+					.valueOf(element.getAmount()));
+			((MText) ft.getWidget(rows - 1, 2)).setText(element.getElement()
+					.getName());
+			((TextBox) ft.getWidget(rows - 1, 3)).setText(String
+					.valueOf(element.getPrecision()));
+			if (element.getPrecisionUnit().equalsIgnoreCase("ABS"))
+				((ListBox) ft.getWidget(rows - 1, 4)).setSelectedIndex(0);
+			else
+				((ListBox) ft.getWidget(rows - 1, 4)).setSelectedIndex(1);
+		}
+
+		final Iterator<ChemicalAnalysisOxideDTO> itr2 = ca.getOxides()
+				.iterator();
+		while (itr2.hasNext()) {
+			final ChemicalAnalysisOxideDTO oxide = (ChemicalAnalysisOxideDTO) itr2
+					.next();
+			add_row("Oxide", String.valueOf(oxide.getOxide().getOxideId()));
+			((TextBox) ft.getWidget(rows - 1, 1)).setText(String.valueOf(oxide
+					.getAmount()));
+			((MText) ft.getWidget(rows - 1, 2)).setText(oxide.getOxide()
+					.getSpecies());
+			((TextBox) ft.getWidget(rows - 1, 3)).setText(String.valueOf(oxide
+					.getPrecision()));
+			if (oxide.getPrecisionUnit().equalsIgnoreCase("ABS"))
+				((ListBox) ft.getWidget(rows - 1, 4)).setSelectedIndex(0);
+			else
+				((ListBox) ft.getWidget(rows - 1, 4)).setSelectedIndex(1);
+		}
 
 		return new Widget[] {
 				ft, ft
@@ -319,7 +357,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 	 * create new row for user to input amount and precision for selected
 	 * element/oxide
 	 */
-	private void add_row() {
+	private void add_row(String element_or_oxide, String id) {
 		no_chemistry_row();
 		ft.insertRow(rows);
 		Button remove = new Button();
@@ -355,15 +393,16 @@ public class ChemistryAttribute extends GenericAttribute implements
 		ft.setWidget(rows, 2, choice_label.createDisplayWidget(tryme)[0]);
 		MText temp = new MText();
 		temp = (MText) ft.getWidget(rows, 2);
-		temp.setText(choice.getItemText(choice.getSelectedIndex()));
+		if (choice.getSelectedIndex() != -1)
+			temp.setText(choice.getItemText(choice.getSelectedIndex()));
 		ft.setWidget(rows, 3, precision_input_text.createEditWidget(tryme,
 				"test")[0]);
 		ft.setWidget(rows, 4, listbox_precison);
 		ft.setWidget(rows, 5, remove);
 		format_analysis_rows();
 
-		species_type.add(species.getItemText(species.getSelectedIndex()));
-		element_or_oxide_id.add(choice.getValue(choice.getSelectedIndex()));
+		species_type.add(element_or_oxide);
+		element_or_oxide_id.add(id);
 
 		rows++;
 	}
@@ -389,7 +428,8 @@ public class ChemistryAttribute extends GenericAttribute implements
 		if (sender == add) {
 			if (choice.getSelectedIndex() != -1 && choice.isVisible() == true) {
 				if (!checkDuplicateAdd()) {
-					add_row();
+					add_row(species.getValue(species.getSelectedIndex()),
+							choice.getValue(choice.getSelectedIndex()));
 				}
 			}
 		}
@@ -408,13 +448,15 @@ public class ChemistryAttribute extends GenericAttribute implements
 					.getSelectedIndex());
 			final Collection<?> itemsToAdd;
 			if ("Element".equals(selectedSpecies)) {
-				// itemsToAdd = getElementsOfMineralType(selectedMineralType);
-				itemsToAdd = ((ObjectConstraint) ChemistryAttribute.this.constraints[0])
-						.getValueInCollectionConstraint().getValues();
+				itemsToAdd = getElementsOfMineralType(selectedMineralType);
+				// itemsToAdd = ((ObjectConstraint)
+				// ChemistryAttribute.this.constraints[0])
+				// .getValueInCollectionConstraint().getValues();
 			} else if ("Oxide".equals(selectedSpecies)) {
-				// itemsToAdd = getOxidesOfMineralType(selectedMineralType);
-				itemsToAdd = ((ObjectConstraint) ChemistryAttribute.this.constraints[1])
-						.getValueInCollectionConstraint().getValues();
+				itemsToAdd = getOxidesOfMineralType(selectedMineralType);
+				// itemsToAdd = ((ObjectConstraint)
+				// ChemistryAttribute.this.constraints[1])
+				// .getValueInCollectionConstraint().getValues();
 			} else {
 				itemsToAdd = new ArrayList<Object>();
 			}

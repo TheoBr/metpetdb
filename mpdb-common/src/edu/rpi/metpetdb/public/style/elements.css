@@ -167,3 +167,36 @@ button.remove {
 	border: 3px solid #FF0000;
 }
 
+.resizeable{
+	display: table-cell;
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+
+.resizeable2{
+	display: table;
+}
+
+.subsample-imagetypes {
+	/*background:#696969 url(../images/loading-bg.gif) repeat-x scroll left top;*/
+	background:#696969
+}
+
+.subsample-header{
+	background: #F9F9F9;
+	width: 100%;
+	spacing-top: 15px;
+	margin-bottom: 15px;
+	margin-top: 15px;	
+	border-bottom: 1px solid #EFEFEF;
+}
+
+.lbCloseLink {
+	background:transparent url(../images/closelabel.gif) no-repeat scroll center;
+	display:block;
+	float:right;
+	height:22px;
+	margin:5px 0pt;
+	width:75px;
+}
