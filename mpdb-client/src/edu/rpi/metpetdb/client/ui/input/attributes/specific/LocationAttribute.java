@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.InvalidGeometryException;
+import edu.rpi.metpetdb.client.error.InvalidLocationException;
 import edu.rpi.metpetdb.client.error.PropertyRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -72,7 +73,12 @@ public class LocationAttribute extends GenericAttribute {
 		if (latitude.length() > 0) {
 			try {
 				final double x = Double.parseDouble(latitude);
-				p.x = x;
+				if (x > 180 || x < -180)
+					throw new InvalidLocationException(this.getConstraint(),
+							LocaleHandler.lc_entity
+									.getString("Sample_latitude"));
+				else
+					p.x = x;
 			} catch (NumberFormatException nfe) {
 				throw new InvalidGeometryException(this.getConstraint(),
 						LocaleHandler.lc_entity.getString("Sample_latitude"));
@@ -82,7 +88,12 @@ public class LocationAttribute extends GenericAttribute {
 
 			try {
 				final double y = Double.parseDouble(longitude);
-				p.y = y;
+				if (y > 180 || y < -180)
+					throw new InvalidLocationException(this.getConstraint(),
+							LocaleHandler.lc_entity
+									.getString("Sample_longitude"));
+				else
+					p.y = y;
 			} catch (NumberFormatException nfe) {
 				throw new InvalidGeometryException(this.getConstraint(),
 						LocaleHandler.lc_entity.getString("Sample_longitude"));
@@ -91,7 +102,7 @@ public class LocationAttribute extends GenericAttribute {
 		if (latitude.length() == 0)
 			throw new PropertyRequiredException(this.getConstraint(),
 					LocaleHandler.lc_entity.getString("Sample_latitude"));
-		else if (longitude.length() == 0)
+		if (longitude.length() == 0)
 			throw new PropertyRequiredException(this.getConstraint(),
 					LocaleHandler.lc_entity.getString("Sample_longitude"));
 		else
