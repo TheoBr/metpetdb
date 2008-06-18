@@ -1,8 +1,10 @@
 package edu.rpi.metpetdb.client.ui.image.browser;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.user.client.ui.ClickListener;
@@ -12,6 +14,7 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
@@ -21,26 +24,49 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 	private ArrayList images;
 	private int currentIndex = 0;
 	private Image currentImage;
-	//Set<Image>
+	// Set<Image>
 	private final Set selectedImages;
 	private Widget lastImage;
 	boolean selected = false;
 	private boolean onlySelectOne;
 	int counter = 0;
+
 	public ImageList(final long subsampleId, final ArrayList sal,
 			final boolean showAll) {
-		this(subsampleId, showAll, false);
+		this(subsampleId, showAll, false, null);
 	}
 
-	public ImageList(final long subsampleId, final boolean showAll, final boolean onlySelectOne) {
+	public ImageList(final long subsampleId, final ArrayList sal,
+			final boolean showAll, final Collection<ImageOnGrid> imagesOnGrid) {
+		this(subsampleId, showAll, false, imagesOnGrid);
+	}
+
+	public ImageList(final long subsampleId, final boolean showAll,
+			final boolean onlySelectOne) {
+		this(subsampleId, showAll, onlySelectOne, null);
+	}
+
+	public ImageList(final long subsampleId, final boolean showAll,
+			final boolean onlySelectOne,
+			final Collection<ImageOnGrid> imagesOnGrid) {
 		new ServerOp() {
 			public void begin() {
 				MpDb.image_svc.allImages(subsampleId, this);
 			}
 			public void onSuccess(final Object result) {
-				if (result == null)
+				if (result == null) {
 					return;
-				else {
+				} else {
+					if (imagesOnGrid != null) {
+						Iterator<ImageOnGrid> itr = imagesOnGrid.iterator();
+						while (itr.hasNext()) {
+							final ImageDTO image = itr.next().getIog()
+									.getImage();
+							if (((List<ImageDTO>) result).contains(image)) {
+								((List<ImageDTO>) result).remove(image);
+							}
+						}
+					}
 					images = (ArrayList) ((ArrayList) result).clone();
 					if (images == null || images.size() <= 0) {
 						add(new Label("No Image"));
@@ -102,8 +128,9 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 				}));
 
 			currentImage = new Image();
-			currentImage.setUrl(((edu.rpi.metpetdb.client.model.ImageDTO) images
-					.get(0)).get64x64ServerPath());
+			currentImage
+					.setUrl(((edu.rpi.metpetdb.client.model.ImageDTO) images
+							.get(0)).get64x64ServerPath());
 			final ImageHyperlink imageLink = new ImageHyperlink(currentImage,
 					this);
 			imageLink.setStyleName("ssimg");
@@ -150,10 +177,10 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 						if (lastImage != null && onlySelectOne) {
 							selectedImages.clear();
 							lastImage.setStyleName("ssimg");
-						} 
+						}
 						selectedImages.add(((ImageHyperlink) sender)
 								.getObject());
-						
+
 					}
 				}
 				lastImage = sender;

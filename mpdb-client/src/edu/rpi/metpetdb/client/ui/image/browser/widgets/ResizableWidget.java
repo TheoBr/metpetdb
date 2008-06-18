@@ -47,20 +47,13 @@ public class ResizableWidget extends Composite {
 		g.setCellSpacing(0);
 		g.setBorderWidth(0);
 
-		// for (int i = 0; i < g.getRowCount(); ++i) {
-		// for (int j = 0; j < g.getColumnCount(); ++j) {
-		// DOM.setStyleAttribute(g.getCellFormatter().getElement(i, j),
-		// "display", "table-cell");
-		// DOM.setStyleAttribute(g.getCellFormatter().getElement(i, j),
-		// "border", "none");
-		// DOM.setStyleAttribute(g.getCellFormatter().getElement(i, j),
-		// "padding", "0");
-		// DOM.setStyleAttribute(g.getCellFormatter().getElement(i, j),
-		// "margin", "0");
-		// }
-		// }
+		for (int i = 0; i < g.getRowCount(); ++i) {
+			for (int j = 0; j < g.getColumnCount(); ++j) {
+				g.getCellFormatter().setStyleName(i, j, "resizeable");
+			}
+		}
 
-		// DOM.setStyleAttribute(g.getElement(), "display", "table");
+		g.setStyleName("resizeable2");
 
 		this.initWidget(g);
 	}

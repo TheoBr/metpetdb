@@ -30,10 +30,10 @@ public class OpacityListener implements ClickListener {
 			}
 			public void onSuccess(final Object result) {
 				if (result instanceof String) {
-					setOpacity(iog.getActualImage().getElement(), Integer
-							.parseInt((String) result));
-					setOpacity(iog.getImageContainer().getElement(), Integer
-							.parseInt((String) result));
+					setOpacity(iog.getActualImage().getElement(), (int) Double
+							.parseDouble((String) result));
+					setOpacity(iog.getImageContainer().getElement(),
+							(int) Double.parseDouble((String) result));
 				}
 			}
 		}.begin();

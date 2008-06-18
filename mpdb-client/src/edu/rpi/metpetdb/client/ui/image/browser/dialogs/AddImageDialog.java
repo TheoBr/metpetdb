@@ -21,10 +21,8 @@ import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 
-public class AddImageDialog extends MDialogBox
-		implements
-			ClickListener,
-			KeyboardListener {
+public class AddImageDialog extends MDialogBox implements ClickListener,
+		KeyboardListener {
 
 	private final ServerOp continuation;
 	private final FormPanel fp;
@@ -36,11 +34,13 @@ public class AddImageDialog extends MDialogBox
 	private final HorizontalPanel hp;
 	private final ListBox imageTypes;
 
-	private static String[] IMAGE_TYPES = {"Transmitted Unpolarized",
-			"Transmitted Plane polarized", "Transmitted Crossed Polars",
-			"Reflected Unpolarized", "Reflected Plane polarized",
-			"Reflected Crossed Polars", "SE Secondary Electron",
-			"BSE Backscattered Electron", "CL Cathodoluminescence", "X-ray",};
+	private static String[] IMAGE_TYPES = {
+			"Transmitted Unpolarized", "Transmitted Plane polarized",
+			"Transmitted Crossed Polars", "Reflected Unpolarized",
+			"Reflected Plane polarized", "Reflected Crossed Polars",
+			"SE Secondary Electron", "BSE Backscattered Electron",
+			"CL Cathodoluminescence", "X-ray",
+	};
 
 	public AddImageDialog(final ServerOp r) {
 		continuation = r;
@@ -48,7 +48,7 @@ public class AddImageDialog extends MDialogBox
 		submit.setStyleName(Styles.PRIMARY_BUTTON);
 
 		cancel = new Button(LocaleHandler.lc_text.buttonCancel(), this);
-		submit.setStyleName(Styles.SECONDARY_BUTTON);
+		cancel.setStyleName(Styles.SECONDARY_BUTTON);
 
 		fp = new FormPanel();
 		fp.setMethod(FormPanel.METHOD_POST);

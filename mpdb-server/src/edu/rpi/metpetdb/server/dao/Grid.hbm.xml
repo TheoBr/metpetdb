@@ -16,7 +16,7 @@
     
 	<many-to-one name="subsample" column="subsample_id" unique="true" not-null="true" lazy="false" cascade="none"/>
     
-    <set name="imagesOnGrid" inverse="true" cascade="all-delete-orphan">
+    <set name="imagesOnGrid" inverse="true" cascade="all-delete-orphan" lazy="false">
       <key column="grid_id" />
       <one-to-many class="ImageOnGrid" />
     </set>

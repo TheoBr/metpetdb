@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -82,8 +83,10 @@ public class ImageBrowserMouseListener implements MouseListener {
 					"cursor", "default");
 			new ServerOp() {
 				public void begin() {
-					new AddPointDialog(subsample, currentImage, this, x, y)
-							.show();
+					if (validateAddChemicalAnalysis(x, y)) {
+						new AddPointDialog(subsample, currentImage, this, x, y)
+								.show();
+					}
 				}
 
 				public void onSuccess(final Object result) {
@@ -194,6 +197,22 @@ public class ImageBrowserMouseListener implements MouseListener {
 		currentImage.getChemicalAnalyses().add(ma);
 	}
 
+	private boolean validateAddChemicalAnalysis(final int x, final int y) {
+		int pointX = x;
+		int pointY = y;
+		pointX -= currentImage.getImagePanel().getAbsoluteLeft()
+				- grid.getAbsoluteLeft() + 4;
+		pointY -= currentImage.getImagePanel().getAbsoluteTop()
+				- grid.getAbsoluteTop() + 13;
+		if (pointX < 0 || pointX > currentImage.getWidth()) {
+			return false;
+		}
+		if (pointY < 0 || pointY > currentImage.getHeight()) {
+			return false;
+		}
+		return true;
+	}
+
 	private boolean isInViewControl(final int x, final int y) {
 		final int absoluteX = x + grid.getAbsoluteLeft();
 		final int absoluteY = y + grid.getAbsoluteTop();
@@ -255,7 +274,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 		while (itr.hasNext()) {
 			final ChemicalAnalysisDTO ma = (ChemicalAnalysisDTO) itr.next();
 			if (x >= ma.getPointX() - 5 && x <= ma.getPointX() + 5) {
-				if (y >= ma.getPointY() - 5 && y <= ma.getPointY() + 5) {
+				if (y >= ma.getPointY() - 15 && y <= ma.getPointY() + 5) {
 					return ma;
 				}
 			}
@@ -339,8 +358,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 										.getAbsoluteTop()
 										- grid.getAbsoluteTop() + 13));
 				break;
-			}
-			;
+			};
 		}
 		if (mode == 3) {
 			currentImage.getImagePanel().setWidgetPosition(

@@ -23,7 +23,8 @@ public class OpacityPopup extends DialogBox implements ClickListener {
 			final int y) {
 		this.iog = iog;
 		continuation = r;
-		dpb = new DraggableProgressBarWidget(100, 0, 100, iog.getIog().getOpacity(), r);
+		dpb = new DraggableProgressBarWidget(100, 0, 100, iog.getIog()
+				.getOpacity(), r);
 		ok = new Button("Ok", this);
 		cancel = new Button("Cancel", this);
 		final VerticalPanel vp = new VerticalPanel();
@@ -45,13 +46,14 @@ public class OpacityPopup extends DialogBox implements ClickListener {
 	public void onClick(final Widget sender) {
 		if (sender == ok) {
 			iog.getIog().setOpacity(dpb.getProgress());
-			((DialogBox) sender.getParent().getParent().getParent()).hide();
+			((DialogBox) sender.getParent().getParent()).hide();
 			if (continuation != null)
 				continuation.onSuccess(String.valueOf(dpb.getProgress()));
 		} else if (sender == cancel) {
-			((DialogBox) sender.getParent().getParent().getParent()).hide();
+			((DialogBox) sender.getParent().getParent()).hide();
 			if (continuation != null)
-				continuation.onSuccess(String.valueOf(iog.getIog().getOpacity()));
+				continuation.onSuccess(String
+						.valueOf(iog.getIog().getOpacity()));
 		}
 	}
 

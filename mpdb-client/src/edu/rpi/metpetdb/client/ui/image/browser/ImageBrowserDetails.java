@@ -11,7 +11,6 @@ import java.util.Set;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -60,6 +59,9 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	private final MLink panDown = new MLink("", this);
 	private final MLink panLeft = new MLink("", this);
 	private final MLink panHome = new MLink("", this);
+	private MLink zIn;
+	private MLink zOut;
+	private MLink zSlide;
 
 	// Buttons/Labels/Widgets
 	private final Button save;
@@ -127,9 +129,6 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 						ImageBrowserDetails.this.g.getSubsample()
 								.setChemicalAnalyses(
 										new HashSet<ChemicalAnalysisDTO>(ss));
-						// s.setGrid(ImageBrowserDetails.this.g);
-						// ImageBrowserDetails.this.buildInterface();
-						// ImageBrowserDetails.this.doSave();
 						s.setGrid(ImageBrowserDetails.this.g);
 						ImageBrowserDetails.this.buildInterface();
 						ImageBrowserDetails.this.doSave();
@@ -162,14 +161,8 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 						ImageBrowserDetails.this.g.getSubsample()
 								.setChemicalAnalyses(
 										new HashSet<ChemicalAnalysisDTO>(s));
-						// s.setGrid(ImageBrowserDetails.this.g);
-						// ImageBrowserDetails.this.buildInterface();
-						// ImageBrowserDetails.this.doSave();
 						ImageBrowserDetails.this.buildInterface();
 						ImageBrowserDetails.this.addImagesOnGrid(true);
-					}
-					public void onFailure(final Throwable e) {
-						Window.alert(e.getMessage());
 					}
 				}.begin();
 			}
@@ -312,6 +305,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 
 		this.grid.add(imageContainer, iog.getTemporaryTopLeftX(), iog
 				.getTemporaryTopLeftY());
+		this.imagesOnGrid.put(iog.getIog().getImage(), iog);
 	}
 
 	private PopupMenu createPopupMenu(final ImageOnGrid iog) {
@@ -474,12 +468,12 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		DOM.setElementAttribute(zoomSlider.getElement(), "id", "zoomSlider");
 		DOM.setElementAttribute(panning.getElement(), "id", "panning");
 		DOM.setElementAttribute(viewControls.getElement(), "id", "viewControl");
-		final MLink zSlide = new MLink("", this);
+		zSlide = new MLink("", this);
 		DOM.setStyleAttribute(zSlide.getElement(), "top", "60px");
-		final MLink zIn = new MLink("", new ZoomInListener(this.imagesOnGrid
-				.values(), zSlide.getElement(), this));
-		final MLink zOut = new MLink("", new ZoomOutListener(this.imagesOnGrid
-				.values(), zSlide.getElement(), this));
+		zIn = new MLink("", new ZoomInListener(this.imagesOnGrid.values(),
+				zSlide.getElement(), this));
+		zOut = new MLink("", new ZoomOutListener(this.imagesOnGrid.values(),
+				zSlide.getElement(), this));
 		this.panUp.setStyleName("imageBrowser-hyperlink");
 		this.panRight.setStyleName("imageBrowser-hyperlink");
 		this.panDown.setStyleName("imageBrowser-hyperlink");
@@ -517,9 +511,14 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	}
 
 	public void onClick(final Widget sender) {
-		if (sender == this.save)
+		if (sender == this.save) {
+			Iterator<ChemicalAnalysisDTO> itr = ImageBrowserDetails.this.g
+					.getSubsample().getChemicalAnalyses().iterator();
+			while (itr.hasNext()) {
+				this.doSaveChemicalAnalysis(itr.next());
+			}
 			this.doSave();
-		else if (sender == this.panUp)
+		} else if (sender == this.panUp)
 			this.doPanUp();
 		else if (sender == this.panLeft)
 			this.doPanLeft();
@@ -558,7 +557,8 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 			public void begin() {
 				new AddExistingImagePopup(
 						ImageBrowserDetails.this.addExistingImage, this,
-						ImageBrowserDetails.this.g.getSubsample()).show();
+						ImageBrowserDetails.this.g.getSubsample(),
+						ImageBrowserDetails.this.imagesOnGrid).show();
 			}
 
 			public void onSuccess(final Object result) {
@@ -591,6 +591,17 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 			}
 		}.begin();
 
+	}
+
+	private void doSaveChemicalAnalysis(final ChemicalAnalysisDTO ma) {
+		new ServerOp() {
+			public void begin() {
+				MpDb.chemicalAnalysis_svc.save(ma, this);
+			}
+			public void onSuccess(final Object result) {
+
+			}
+		}.begin();
 	}
 
 	private void doPanUp() {
