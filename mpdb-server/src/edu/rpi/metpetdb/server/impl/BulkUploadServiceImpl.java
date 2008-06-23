@@ -22,6 +22,30 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 	private static final long serialVersionUID = 1L;
 	private static String baseFolder;
 
+	public Map<Integer, String[]> getHeaderMapping(final String fileOnServer)
+			throws InvalidFormatException {
+		try {
+			// Locate and set Valid Potential Minerals for the parser
+			List<MineralDTO> minerals = cloneBean(currentSession()
+					.getNamedQuery("Mineral.all").list());
+			minerals.addAll(cloneBean(currentSession().getNamedQuery(
+					"Mineral.children").list()));
+			SampleParser.setMinerals(minerals);
+
+			final SampleParser sp = new SampleParser(new FileInputStream(
+					baseFolder + "/" + fileOnServer));
+			try {
+				sp.initialize();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			}
+
+			return sp.getHeaders();
+		} catch (final IOException ioe) {
+			throw new IllegalStateException(ioe.getMessage());
+		}
+	}
+	
 	public Map<Integer, ValidationException> saveSamplesFromSpreadsheet(
 			final String fileOnServer) throws InvalidFormatException,
 			LoginRequiredException, SampleAlreadyExistsException {
