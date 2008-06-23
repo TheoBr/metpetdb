@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.ui.bulk.upload;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -19,6 +21,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
@@ -29,18 +32,25 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 
 	private final FormPanel fp;
 	private final FileUpload fu;
-	private final Button upload;
+	private final Button submit_button;
 	private final VerticalPanel vp;
 	private final Label error;
 	private final HorizontalPanel hp;
 	private final RadioButton samples;
 	private final RadioButton analyses;
-	private final Grid grid;
+	private final RadioButton justparse;
+	private final RadioButton upload;
+	private final Grid errorgrid;
+	private final Grid headergrid;
+	private final Label errorgrid_label;
+	private final Label headergrid_label;
+
+	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
 	public BulkUploadPanel() {
-		upload = new Button(LocaleHandler.lc_text.buttonUploadSpreadsheet(),
-				this);
-		upload.setStyleName(Styles.PRIMARY_BUTTON);
+		submit_button = new Button(LocaleHandler.lc_text
+				.buttonUploadSpreadsheet(), this);
+		submit_button.setStyleName(Styles.PRIMARY_BUTTON);
 
 		fp = new FormPanel();
 		fp.setMethod(FormPanel.METHOD_POST);
@@ -59,17 +69,33 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 		hp.add(samples);
 		analyses.addStyleName("beta");
 		hp.add(analyses);
+		hp.add(submit_button);
+
+		justparse = new RadioButton("submitType", "Parse");
+		justparse.setChecked(true);
+		upload = new RadioButton("submitType", "Commit");
+		hp.add(justparse);
 		hp.add(upload);
 
 		error = new Label("...");
 
-		grid = new Grid();
+		errorgrid = new Grid();
+		errorgrid.setBorderWidth(3);
+		headergrid = new Grid();
+		headergrid.setBorderWidth(3);
+		errorgrid_label = new Label("Errors Listed Below:");
+		errorgrid_label.setStylePrimaryName("bold");
+		headergrid_label = new Label("Headers Listed Below:");
+		headergrid_label.setStylePrimaryName("bold");
 
 		vp = new VerticalPanel();
 		vp.add(error);
 		vp.add(fu);
 		vp.add(hp);
-		vp.add(grid);
+		vp.add(errorgrid_label);
+		vp.add(errorgrid);
+		vp.add(headergrid_label);
+		vp.add(headergrid);
 
 		fp.setWidget(vp);
 
@@ -90,36 +116,92 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 					// tags that get stuck on the string for some reason
 					final String fileOnServer = results.substring(5, results
 							.length() - 6);
-					new ServerOp<Map<Integer, ValidationException>>() {
-						public void begin() {
-							if (samples.isChecked()) {
-								MpDb.bulkUpload_svc.saveSamplesFromSpreadsheet(
-										fileOnServer, this);
-							} else {
-								// TODO: chemical analyses
-								MpDb.bulkUploadChemicalAnalyses_svc
-										.saveAnalysesFromSpreadsheet(
-												fileOnServer, this);
-							}
-						}
 
-						public void onSuccess(
-								final Map<Integer, ValidationException> result) {
-							if (result == null)
-								error.setText("Items Saved Successfully");
-							else {
-								grid.resize(result.size() + 1, 2);
-								int i = 1;
-								grid.setText(0, 0, "Spreadsheet Line:");
-								grid.setText(0, 1, "Error:");
-								for (Map.Entry<Integer, ValidationException> e : result
-										.entrySet()) {
-									grid.setText(i, 0, e.getKey().toString());
-									grid.setText(i++, 1, e.getValue().format());
+					// What are we being asked to do? Choices are:
+					// *upload => Actually perform the upload
+					// *justparse => provide some feedback
+					if (upload.isChecked()) {
+						new ServerOp<Map<Integer, ValidationException>>() {
+							public void begin() {
+								if (samples.isChecked()) {
+									MpDb.bulkUpload_svc
+											.saveSamplesFromSpreadsheet(
+													fileOnServer, this);
+								} else {
+									// TODO: chemical analyses
+									MpDb.bulkUploadChemicalAnalyses_svc
+											.saveAnalysesFromSpreadsheet(
+													fileOnServer, this);
 								}
 							}
-						}
-					}.begin();
+
+							public void onSuccess(
+									final Map<Integer, ValidationException> result) {
+								if (result == null)
+									error.setText("Items Saved Successfully");
+								else {
+									errorgrid.resize(result.size() + 1, 2);
+									int i = 1;
+									errorgrid
+											.setText(0, 0, "Spreadsheet Line:");
+									errorgrid.setText(0, 1, "Error:");
+									for (Map.Entry<Integer, ValidationException> e : result
+											.entrySet()) {
+										errorgrid.setText(i, 0, e.getKey()
+												.toString());
+										errorgrid.setText(i++, 1, e.getValue()
+												.format());
+									}
+								}
+							}
+						}.begin();
+					} else if (justparse.isChecked()) {
+						new ServerOp<Map<Integer, String[]>>() {
+							public void begin() {
+								if (samples.isChecked()) {
+									MpDb.bulkUpload_svc.getHeaderMapping(
+											fileOnServer, this);
+								} else {
+									MpDb.bulkUploadChemicalAnalyses_svc
+											.getHeaderMapping(fileOnServer,
+													this);
+								}
+							}
+
+							public void onSuccess(
+									final Map<Integer, String[]> headers) {
+								if (headers == null) {
+									error
+											.setText("Spreadsheet Not Parsed Successfully");
+								} else {
+									error
+											.setText("Spreadsheet Parsed Successfully");
+									headergrid.resize(headers.size() + 1, 3);
+									headergrid.setText(0, 0, "Location");
+									headergrid.setText(0, 1, "Header Text");
+									headergrid
+											.setText(0, 2, "My Understanding");
+									int i = 1;
+									ArrayList<Integer> keys = new ArrayList<Integer>(
+											headers.keySet());
+									Collections.sort(keys);
+
+									for (Integer k : keys) {
+										headergrid.setText(i, 0, k.toString());
+										headergrid.setText(i, 1,
+												headers.get(k)[0]);
+										if (headers.get(k)[1].length() > 0) {
+											headergrid.setText(i, 2,
+													enttxt.getString(headers
+															.get(k)[1]));
+										}
+										i++;
+									}
+
+								}
+							}
+						}.begin();
+					}
 				}
 			}
 
@@ -132,6 +214,10 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 					fu.setStyleName(Styles.INVALID_REQUIRED_FIELD);
 					event.setCancelled(true);
 				}
+
+				// Clear out grids from any previous runs
+				errorgrid.resize(0, 0);
+				headergrid.resize(0, 0);
 			}
 		});
 
@@ -145,7 +231,7 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 	}
 
 	public void onClick(final Widget sender) {
-		if (upload == sender)
+		if (submit_button == sender)
 			doUpload();
 	}
 
