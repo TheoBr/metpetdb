@@ -145,6 +145,8 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 	}
 
 	public Short getDatePrecision() {
+		if (datePrecision == null)
+			datePrecision = Short.parseShort("0");
 		return datePrecision;
 	}
 
