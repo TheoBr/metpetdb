@@ -40,6 +40,16 @@
   </servlet-mapping>
 
   <servlet>
+	<servlet-name>bulkUploadChemicalAnalyses</servlet-name>
+	<servlet-class>edu.rpi.metpetdb.server.impl.BulkUploadChemicalAnalysesServiceImpl</servlet-class>
+	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>bulkUploadChemicalAnalyses</servlet-name>
+    <url-pattern>/bulkUploadChemicalAnalyses.svc</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>constants</servlet-name>
     <servlet-class>edu.rpi.metpetdb.server.impl.ConstantsServiceImpl</servlet-class>
     <load-on-startup>1</load-on-startup>
