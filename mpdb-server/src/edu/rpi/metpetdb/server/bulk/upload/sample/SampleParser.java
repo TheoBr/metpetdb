@@ -83,10 +83,7 @@ public class SampleParser {
 			{
 					"grade", "addMetamorphicGrade", String.class,
 					"Sample_metamorphicGrades"
-			}, {
-					"mineral", "addMineral", String.class, "Sample_minerals"
 			}
-
 	};
 
 	private final static List<MethodAssociation<SampleDTO>> methodAssociations = new LinkedList<MethodAssociation<SampleDTO>>();
