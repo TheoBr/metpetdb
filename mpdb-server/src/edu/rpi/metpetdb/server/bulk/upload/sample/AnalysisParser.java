@@ -40,25 +40,42 @@ public class AnalysisParser {
 	 */
 	private static final Object[][] analysisMethodMap = {
 			{
-					"subsample", "setSubsample", SubsampleDTO.class
-			}, {
-					"sample", "setSubsample", SubsampleDTO.class
-			}, {
-					"mineral", "setMineral", MineralDTO.class
-			}, {
-					"analyst", "setAnalyst", String.class
-			}, {
-					"date", "setAnalysisDate", Timestamp.class
-			}, {
+					"subsample", "setSubsample", SubsampleDTO.class,
+					"ChemicalAnalysis_subsample"
+			},
+			{
+					"sample", "setSubsample", SubsampleDTO.class,
+					"ChemicalAnalysis_subsample"
+			},
+			{
+					"mineral", "setMineral", MineralDTO.class,
+					"ChemicalAnalysis_mineral"
+			},
+			{
+					"analyst", "setAnalyst", String.class,
+					"ChemicalAnalysis_analyst"
+			},
+			{
+					"date", "setAnalysisDate", Timestamp.class,
+					"ChemicalAnalysis_analysisDate"
+			},
+			{
 					// "(comment)|(description)", "setDescription", String.class
 					// }, {
-					"location", "setLocation", String.class
-			}, {
-					"reference", "setReference", ReferenceDTO.class
-			}, {
-					"(point)|(spot)", "setSpotId", String.class
-			}, {
-					"rock", "setLargeRock", Boolean.class
+					"location", "setLocation", String.class,
+					"ChemicalAnalysis_location"
+			},
+			{
+					"reference", "setReference", ReferenceDTO.class,
+					"ChemicalAnalysis_reference"
+			},
+			{
+					"(point)|(spot)", "setSpotId", String.class,
+					"ChemicalAnalysis_spotId"
+			},
+			{
+					"rock", "setLargeRock", Boolean.class,
+					"ChemicalAnalysis_largeRock"
 			}
 
 	};
@@ -73,6 +90,7 @@ public class AnalysisParser {
 	 */
 	private final Map<Integer, Method> colMethods;
 	private final Map<Integer, Object> colObjects;
+	private final Map<Integer, String> colName;
 
 	/**
 	 * 
@@ -83,6 +101,7 @@ public class AnalysisParser {
 		analyses = new LinkedList<ChemicalAnalysisDTO>();
 		colMethods = new HashMap<Integer, Method>();
 		colObjects = new HashMap<Integer, Object>();
+		colName = new HashMap<Integer, String>();
 		this.is = is;
 	}
 
@@ -101,7 +120,8 @@ public class AnalysisParser {
 					methodAssociations
 							.add(new MethodAssociation<ChemicalAnalysisDTO>(
 									(String) row[0], (String) row[1],
-									(Class) row[2], new ChemicalAnalysisDTO()));
+									(Class) row[2], new ChemicalAnalysisDTO(),
+									(String) row[3]));
 
 			final POIFSFileSystem fs = new POIFSFileSystem(is);
 			final HSSFWorkbook wb = new HSSFWorkbook(fs);
@@ -118,7 +138,59 @@ public class AnalysisParser {
 
 		// First non-empty row is the header, want to associate what
 		// we know how to parse with what is observed
+		parseHeader(k);
+
+		// Loop through the remaining data rows, parsing based upon the column
+		// determination
+		for (int i = k + 1; i < sheet.getPhysicalNumberOfRows(); ++i) {
+			System.out.println("Parsing Row " + i);
+			parseRow(i);
+		}
+	}
+
+	public Map<Integer, String[]> getHeaders() {
+		int k = 0;
+		Map<Integer, String[]> headers = new HashMap<Integer, String[]>();
+
+		// Skip empty rows at the start
+		while (sheet.getRow(k) == null) {
+			k++;
+		}
+
+		// First non-empty row is the header, want to associate what
+		// we know how to parse with what is observed
+		parseHeader(k);
+
+		// Now that we've assigned columns to methods, create the column text to
+		// data mapping
 		HSSFRow header = sheet.getRow(k);
+		for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
+			final HSSFCell cell = header.getCell((short) i);
+			final String text;
+
+			try {
+				text = cell.toString();
+			} catch (final NullPointerException npe) {
+				continue;
+			}
+
+			String[] this_header = {
+					text, colName.get(new Integer(i))
+			};
+			if (this_header[1] == null) {
+				this_header[1] = "";
+			}
+
+			headers.put(new Integer(i), this_header);
+		}
+
+		return headers;
+	}
+
+	private void parseHeader(final int rownum) {
+		// First non-empty row is the header, want to associate what
+		// we know how to parse with what is observed
+		HSSFRow header = sheet.getRow(rownum);
 		for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
 			// Convert header title to String
 			final HSSFCell cell = header.getCell((short) i);
@@ -141,6 +213,7 @@ public class AnalysisParser {
 				// Generic title => method check
 				if (sma.matches(text)) {
 					colMethods.put(new Integer(i), sma.getMethod());
+					colName.put(new Integer(i), sma.getName());
 					done = true;
 					break;
 				}
@@ -161,6 +234,9 @@ public class AnalysisParser {
 										"addElement", ElementDTO.class,
 										Float.class));
 						colObjects.put(new Integer(i), e);
+						colName
+								.put(new Integer(i),
+										"ChemicalAnalysis_elements");
 						done = true;
 						break;
 					}
@@ -175,6 +251,7 @@ public class AnalysisParser {
 								ChemicalAnalysisDTO.class.getMethod("addOxide",
 										OxideDTO.class, Float.class));
 						colObjects.put(new Integer(i), o);
+						colName.put(new Integer(i), "ChemicalAnalysis_oxides");
 						break;
 					}
 				}
@@ -183,23 +260,16 @@ public class AnalysisParser {
 						"Programming Error -- Invalid Chemical Analysis Method");
 			}
 		}
-
-		// Loop through the remaining data rows, parsing based upon the column
-		// determination
-		for (int i = k + 1; i < sheet.getPhysicalNumberOfRows(); ++i) {
-			System.out.println("Parsing Row " + i);
-			parseRow(sheet.getRow(i));
-		}
 	}
-
 	/**
 	 * 
-	 * @param row
-	 *            the row to parse
+	 * @param rownum
+	 *            the row number to parse
 	 * @throws InvalidFormatException
 	 *             if the row isn't of the format designated by the headers
 	 */
-	private void parseRow(final HSSFRow row) {
+	private void parseRow(final int rownum) {
+		HSSFRow row = sheet.getRow(rownum);
 		if (row == null)
 			return;
 

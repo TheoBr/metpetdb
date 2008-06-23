@@ -34,49 +34,57 @@ public class SampleParser {
 	private final Map<Integer, ValidationException> errors = new TreeMap<Integer, ValidationException>();
 
 	/**
-	 * sampleMethodMap[][0] === name in table sampleMethodMap[][1] === method to
-	 * call on Sample to store data sampleMethodMap[][2] === parameter to the
-	 * store method and return value of HSSFCell method
-	 * 
 	 * TODO: make this a Set of objects.
 	 */
+	// 0) Regex for header
+	// 1) methodname to set in SampleDTO
+	// 2) datatype cell needs to be converted to for use with methodname
+	// 3) id in LocaleEntity for humanreadable representation of this column
 	private static final Object[][] sampleMethodMap = {
+
 			{
-					"present.+location", "setLocationText", String.class
+					"present.+location", "setLocationText", String.class,
+					"Sample_location"
 			},
 			{
-					"sample", "setAlias", String.class
+					"sample", "setAlias", String.class, "Sample_alias"
 			},
 			{
-					"type", "setRockType", String.class
+					"type", "setRockType", String.class, "Sample_rockType"
 			},
 			{
-					"comment", "addComment", String.class
+					"comment", "addComment", String.class, "Sample_comments"
 			},
 			{
-					"latitude", "setLatitude", double.class
+					"latitude", "setLatitude", double.class, "Sample_latitude"
 			},
 			{
-					"longitude", "setLongitude", double.class
+					"longitude", "setLongitude", double.class,
+					"Sample_longitude"
 			},
 			{
-					"region", "addRegion", String.class
+					"region", "addRegion", String.class, "Sample_regions"
 			},
 			{
-					"country", "setCountry", String.class
+					"country", "setCountry", String.class, "Sample_country"
 			},
 			{
-					"collector", "setCollector", String.class
+					"collector", "setCollector", String.class,
+					"Sample_collector"
 			},
 			{
 					"(collected)|(collection.+date)", "setCollectionDate",
-					Timestamp.class
+					Timestamp.class, "Sample_collectionDate"
+			},
+			{
+					"reference", "addReference", String.class,
+					"Sample_references"
+			},
+			{
+					"grade", "addMetamorphicGrade", String.class,
+					"Sample_metamorphicGrades"
 			}, {
-					"reference", "addReference", String.class
-			}, {
-					"grade", "addMetamorphicGrade", String.class
-			}, {
-					"mineral", "addMineral", String.class
+					"mineral", "addMineral", String.class, "Sample_minerals"
 			}
 
 	};
@@ -90,6 +98,7 @@ public class SampleParser {
 	 */
 	private final Map<Integer, Method> colMethods;
 	private final Map<Integer, Object> colObjects;
+	private final Map<Integer, String> colName;
 
 	/**
 	 * 
@@ -100,6 +109,7 @@ public class SampleParser {
 		samples = new LinkedList<SampleDTO>();
 		colMethods = new HashMap<Integer, Method>();
 		colObjects = new HashMap<Integer, Object>();
+		colName = new HashMap<Integer, String>();
 		this.is = is;
 
 	}
@@ -118,7 +128,7 @@ public class SampleParser {
 				for (Object[] row : sampleMethodMap)
 					methodAssociations.add(new MethodAssociation<SampleDTO>(
 							(String) row[0], (String) row[1], (Class) row[2],
-							new SampleDTO()));
+							new SampleDTO(), (String) row[3]));
 
 			final POIFSFileSystem fs = new POIFSFileSystem(is);
 			final HSSFWorkbook wb = new HSSFWorkbook(fs);
@@ -137,7 +147,57 @@ public class SampleParser {
 
 		// First non-empty row is the header, want to associate what
 		// we know how to parse with what is observed
+		parseHeader(k);
+
+		// Loop through the remaining data rows, parsing based upon the column
+		// determinations
+		for (int i = k + 1; i < sheet.getPhysicalNumberOfRows(); ++i) {
+			System.out.println("Parsing Row " + i);
+			parseRow(i);
+		}
+	}
+
+	public Map<Integer, String[]> getHeaders() {
+		int k = 0;
+		Map<Integer, String[]> headers = new HashMap<Integer, String[]>();
+
+		// Skip empty rows at the start
+		while (sheet.getRow(k) == null) {
+			k++;
+		}
+
+		// First non-empty row is the header, want to associate what
+		// we know how to parse with what is observed
+		parseHeader(k);
+
+		// Now that we've assigned columns to methods, create the column text to
+		// data mapping
 		HSSFRow header = sheet.getRow(k);
+		for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
+			final HSSFCell cell = header.getCell((short) i);
+			final String text;
+
+			try {
+				text = cell.toString();
+			} catch (final NullPointerException npe) {
+				continue;
+			}
+
+			String[] this_header = {
+					text, colName.get(new Integer(i))
+			};
+			if (this_header[1] == null) {
+				this_header[1] = "";
+			}
+
+			headers.put(new Integer(i), this_header);
+		}
+
+		return headers;
+	}
+
+	private void parseHeader(final int rowindex) {
+		HSSFRow header = sheet.getRow(rowindex);
 		for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
 			// Convert header title to String
 			final HSSFCell cell = header.getCell((short) i);
@@ -156,6 +216,7 @@ public class SampleParser {
 			for (MethodAssociation<SampleDTO> sma : methodAssociations) {
 				if (sma.matches(text)) {
 					colMethods.put(new Integer(i), sma.getMethod());
+					colName.put(new Integer(i), sma.getName());
 					done = true;
 					break;
 				}
@@ -173,6 +234,7 @@ public class SampleParser {
 								.getMethod("addMineral", MineralDTO.class,
 										Float.class));
 						colObjects.put(new Integer(i), m);
+						colName.put(new Integer(i), "Sample_minerals");
 						done = true;
 						break;
 					}
@@ -181,13 +243,6 @@ public class SampleParser {
 				throw new IllegalStateException(
 						"Programming Error -- Invalid Sample Method");
 			}
-		}
-
-		// Loop through the remaining data rows, parsing based upon the column
-		// determinations
-		for (int i = k + 1; i < sheet.getPhysicalNumberOfRows(); ++i) {
-			System.out.println("Parsing Row " + i);
-			parseRow(i);
 		}
 	}
 
@@ -306,6 +361,7 @@ public class SampleParser {
 			samples.add(s);
 		}
 	}
+
 	public List<SampleDTO> getSamples() {
 		return samples;
 	}
