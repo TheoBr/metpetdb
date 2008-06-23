@@ -23,6 +23,29 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 	public static final long serialVersionUID = 1L;
 	public static String baseFolder;
 
+	public Map<Integer, String[]> getHeaderMapping(final String fileOnServer)
+			throws InvalidFormatException {
+		try {
+			AnalysisParser.setElementsAndOxides(cloneBean(currentSession()
+					.getNamedQuery("Element.all").list()),
+					cloneBean(currentSession().getNamedQuery("Oxide.all")
+							.list()));
+			final AnalysisParser ap = new AnalysisParser(new FileInputStream(
+					baseFolder + "/" + fileOnServer));
+			try {
+				ap.initialize();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+				throw new IllegalStateException(
+						"Programmer Error: No Such Method");
+			}
+
+			return ap.getHeaders();
+		} catch (final IOException ioe) {
+			throw new IllegalStateException(ioe.getMessage());
+		}
+	}
+
 	public Map<Integer, ValidationException> saveAnalysesFromSpreadsheet(
 			final String fileOnServer) throws InvalidFormatException,
 			LoginRequiredException, ValidationException {
