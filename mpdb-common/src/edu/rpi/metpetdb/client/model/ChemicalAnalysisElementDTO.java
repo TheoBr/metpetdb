@@ -35,6 +35,8 @@ public class ChemicalAnalysisElementDTO extends MObjectDTO {
 	}
 
 	public String getPrecisionUnit() {
+		if (precisionUnit == null)
+			return "";
 		return precisionUnit;
 	}
 
