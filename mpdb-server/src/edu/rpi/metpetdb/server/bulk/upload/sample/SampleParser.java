@@ -165,7 +165,7 @@ public class SampleParser {
 
 		// Loop through the remaining data rows, parsing based upon the column
 		// determinations
-		for (int i = k + 1; i < sheet.getLastRowNum(); ++i) {
+		for (int i = k + 1; i <= sheet.getLastRowNum(); ++i) {
 			System.out.println("Parsing Row " + i);
 			parseRow(i);
 		}
