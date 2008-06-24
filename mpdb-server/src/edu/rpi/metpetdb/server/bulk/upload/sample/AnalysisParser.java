@@ -156,7 +156,7 @@ public class AnalysisParser {
 
 		// Loop through the remaining data rows, parsing based upon the column
 		// determination
-		for (int i = k + 1; i < sheet.getPhysicalNumberOfRows(); ++i) {
+		for (int i = k + 1; i < sheet.getLastRowNum(); ++i) {
 			System.out.println("Parsing Row " + i);
 			parseRow(i);
 		}
@@ -178,7 +178,7 @@ public class AnalysisParser {
 		// Now that we've assigned columns to methods, create the column text to
 		// data mapping
 		HSSFRow header = sheet.getRow(k);
-		for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
+		for (int i = 0; i < header.getLastCellNum(); ++i) {
 			final HSSFCell cell = header.getCell((short) i);
 			final String text;
 
@@ -205,7 +205,7 @@ public class AnalysisParser {
 		// First non-empty row is the header, want to associate what
 		// we know how to parse with what is observed
 		HSSFRow header = sheet.getRow(rownum);
-		for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
+		for (int i = 0; i < header.getLastCellNum(); ++i) {
 			// Convert header title to String
 			final HSSFCell cell = header.getCell((short) i);
 			final String text;
@@ -289,7 +289,7 @@ public class AnalysisParser {
 
 		final ChemicalAnalysisDTO ca = new ChemicalAnalysisDTO();
 
-		for (Integer i = 0; i < row.getPhysicalNumberOfCells(); ++i) {
+		for (Integer i = 0; i < row.getLastCellNum(); ++i) {
 			final HSSFCell cell = row.getCell((short) i.intValue());
 			try {
 				// Get the method we'll be using to parse this particular cell

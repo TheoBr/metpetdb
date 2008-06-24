@@ -165,7 +165,7 @@ public class SampleParser {
 
 		// Loop through the remaining data rows, parsing based upon the column
 		// determinations
-		for (int i = k + 1; i < sheet.getPhysicalNumberOfRows(); ++i) {
+		for (int i = k + 1; i < sheet.getLastRowNum(); ++i) {
 			System.out.println("Parsing Row " + i);
 			parseRow(i);
 		}
@@ -187,7 +187,7 @@ public class SampleParser {
 		// Now that we've assigned columns to methods, create the column text to
 		// data mapping
 		HSSFRow header = sheet.getRow(k);
-		for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
+		for (int i = 0; i < header.getLastCellNum(); ++i) {
 			final HSSFCell cell = header.getCell((short) i);
 			final String text;
 
@@ -212,7 +212,7 @@ public class SampleParser {
 
 	private void parseHeader(final int rowindex) {
 		HSSFRow header = sheet.getRow(rowindex);
-		for (int i = 0; i < header.getPhysicalNumberOfCells(); ++i) {
+		for (int i = 0; i < header.getLastCellNum(); ++i) {
 			// Convert header title to String
 			final HSSFCell cell = header.getCell((short) i);
 			final String text;
@@ -277,7 +277,7 @@ public class SampleParser {
 		final SampleDTO s = new SampleDTO();
 		boolean sawDataInRow = false;
 
-		for (Integer i = 0; i <= row.getPhysicalNumberOfCells(); ++i) {
+		for (Integer i = 0; i <= row.getLastCellNum(); ++i) {
 			final HSSFCell cell = row.getCell((short) i.intValue());
 			try {
 				// Get the method we'll be using to parse this particular cell
