@@ -18,7 +18,7 @@ public interface LocaleEntity extends ConstantsWithLookup {
 
 	String Sample_owner();
 
-	String Sample_location();
+	String[] Sample_location();
 
 	String Sample_latitude();
 

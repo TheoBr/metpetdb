@@ -44,7 +44,7 @@ public class SampleParser {
 
 			{
 					"present.+location", "setLocationText", String.class,
-					"Sample_location"
+					"Sample_locationText"
 			},
 			{
 					"sample", "setAlias", String.class, "Sample_alias"
