@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.List;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -24,6 +26,8 @@ public interface ProjectService extends RemoteService {
 	 *             the project does not exist in the database.
 	 */
 	ProjectDTO details(int projectId) throws NoSuchObjectException;
+
+	List<ProjectDTO> all(final long userId) throws NoSuchObjectException;
 
 	/**
 	 * Create or update an existing project.

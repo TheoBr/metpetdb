@@ -31,6 +31,12 @@
     where p.id = :id
   </query>
   
+  <query name="Project.byOwnerId">
+    from Project p
+    inner join fetch p.owner
+    where p.owner.id = :ownerId
+  </query>
+  
   <query name="Project.samples,size">
   	select count(*) from Project p
   	inner join p.samples

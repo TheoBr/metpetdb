@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.util.List;
+
 import org.hibernate.exception.ConstraintViolationException;
 
 import edu.rpi.metpetdb.client.error.DuplicateValueException;
@@ -16,6 +18,11 @@ import edu.rpi.metpetdb.server.model.Project;
 
 public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	private static final long serialVersionUID = 1L;
+
+	public List<ProjectDTO> all(final long userId) throws NoSuchObjectException {
+		return cloneBean(byKey("Project", "ownerId", userId));
+
+	}
 
 	public ProjectDTO details(final int projectId) throws NoSuchObjectException {
 		final ProjectDTO p = cloneBean(byId("Project", projectId));

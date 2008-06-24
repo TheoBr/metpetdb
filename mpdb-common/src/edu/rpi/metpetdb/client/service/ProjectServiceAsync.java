@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.List;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.model.ProjectDTO;
@@ -15,4 +17,6 @@ public interface ProjectServiceAsync {
 
 	void samplesFromProject(PaginationParameters parameters, long id,
 			AsyncCallback<Results<SampleDTO>> ac);
+
+	void all(long userId, AsyncCallback<List<ProjectDTO>> ac);
 }
