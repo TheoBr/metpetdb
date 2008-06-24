@@ -277,7 +277,7 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 }
 
 .gray{
-	color: #333333
+	color: #666666;
 }
 
 .big{
@@ -288,3 +288,6 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 .white{
 	color: white;
 }
+
+
+

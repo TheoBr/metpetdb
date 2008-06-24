@@ -40,8 +40,8 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 					if (images == null || images.size() <= 0) {
 						add(new Label("No Image"));
 					} else {
-						((edu.rpi.metpetdb.client.model.ImageDTO) images.get(0))
-								.getSubsample().setImages(new HashSet(images));
+						((ImageDTO) images.get(0)).getSubsample().setImages(
+								new HashSet(images));
 						buildInterface();
 					}
 				}
@@ -110,12 +110,20 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 					image.setUrl(currentImage.get64x64ServerPath());
 					final Image bigImage = new Image();
 					bigImage.setUrl(currentImage.getServerPath());
+					final int index = (row * 4) + i;
 					final ImageHyperlink imageLink = new ImageHyperlink(image,
 							new ClickListener() {
 								public void onClick(final Widget sender) {
-									new ViewImage(images, bigImage).show();
+									new ViewImage(images, bigImage, index)
+											.show();
 								}
 							});
+					// final MLink imageLink = new MLink("hi",
+					// new ClickListener() {
+					// public void onClick(final Widget sender) {
+					// new ViewImage(images, bigImage).show();
+					// }
+					// });
 					// imageLink.setStyleName("ssimg");
 					cell.setWidget(0, 0, imageLink);
 					cell.getFlexCellFormatter().setRowSpan(0, 0, 2);

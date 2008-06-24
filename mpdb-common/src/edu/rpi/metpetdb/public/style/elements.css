@@ -200,3 +200,29 @@ button.remove {
 	margin:5px 0pt;
 	width:75px;
 }
+
+.prevLink {
+	background:transparent url(../images/prev.bmp) no-repeat scroll center;
+	display:block;
+	float:right;
+	height:33px;
+	margin:5px 0pt;
+	width:75px;
+}
+
+.nextLink {
+	background:transparent url(../images/next.bmp) no-repeat scroll center;
+	display:block;
+	float:right;
+	height:33px;
+	margin:5px 0pt;
+	width:75px;
+}
+
+.image-title{
+	font-weight: bold;
+	color: #666666;
+}
+
+
+

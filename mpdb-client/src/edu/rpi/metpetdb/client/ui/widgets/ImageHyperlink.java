@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.ui.widgets;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Image;
 
@@ -14,6 +15,8 @@ public class ImageHyperlink extends MLink {
 		setText("");
 		addClickListener(whereTo);
 		DOM.appendChild(this.getElement(), image.getElement());
+		image.unsinkEvents(Event.ONCLICK | Event.MOUSEEVENTS);
+
 	}
 
 	public ImageHyperlink(final Image image, final String text,
