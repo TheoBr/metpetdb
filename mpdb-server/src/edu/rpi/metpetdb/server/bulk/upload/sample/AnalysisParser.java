@@ -45,38 +45,52 @@ public class AnalysisParser {
 			},
 			{
 					"sample", "setSubsample", SubsampleDTO.class,
-					"ChemicalAnalysis_subsample"
+					"ChemicalAnalysis_sample"
 			},
 			{
-					"mineral", "setMineral", MineralDTO.class,
+					"(mineral)|(material)", "setMineral", MineralDTO.class,
 					"ChemicalAnalysis_mineral"
+			},
+			// method (analytical method, analysis method, type)
+			{
+					"(where done)|(analytical facility)", "setLocation",
+					String.class, "ChemicalAnalysis_location"
+			},
+			{
+					"(^\\s*reference\\s*$)|(^\\s*ref\\s*$)", "setReference",
+					ReferenceDTO.class, "ChemicalAnalysis_reference"
+			},
+			{
+					"(date)|(when analyzed)", "setAnalysisDate",
+					Timestamp.class, "ChemicalAnalysis_analysisDate"
 			},
 			{
 					"analyst", "setAnalyst", String.class,
 					"ChemicalAnalysis_analyst"
 			},
+			// reference image (image)
 			{
-					"date", "setAnalysisDate", Timestamp.class,
-					"ChemicalAnalysis_analysisDate"
+					"(point)|(spot)|(analysis location)", "setSpotId",
+					String.class, "ChemicalAnalysis_spotId"
 			},
+			// precision (precision,error)
+			// total (total, wt%tot, wt%total)
 			{
-					// "(comment)|(description)", "setDescription", String.class
-					// }, {
-					"location", "setLocation", String.class,
-					"ChemicalAnalysis_location"
-			},
-			{
-					"reference", "setReference", ReferenceDTO.class,
-					"ChemicalAnalysis_reference"
-			},
-			{
-					"(point)|(spot)", "setSpotId", String.class,
-					"ChemicalAnalysis_spotId"
+					"(comment)|(note)|(description)", "setDescription",
+					String.class, "ChemicalAnalysis_comment"
 			},
 			{
 					"rock", "setLargeRock", Boolean.class,
 					"ChemicalAnalysis_largeRock"
-			}
+			},
+			{
+					"(x position)|(x pos)|(x coordinate)|(x coord)|(^\\s*x\\s*$)",
+					"setPointX", int.class, "ChemicalAnalysis_pointX"
+			},
+			{
+					"(y position)|(y pos)|(y coordinate)|(y coord)|(^\\s*y\\s*$)",
+					"setPointY", int.class, "ChemicalAnalysis_pointY"
+			},
 
 	};
 

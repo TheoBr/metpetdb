@@ -41,25 +41,28 @@ public class SampleParser {
 	// 2) datatype cell needs to be converted to for use with methodname
 	// 3) id in LocaleEntity for humanreadable representation of this column
 	private static final Object[][] sampleMethodMap = {
-
 			{
-					"present.+location", "setLocationText", String.class,
-					"Sample_locationText"
+					"(type)|(rock)", "setRockType", String.class,
+					"Sample_rockType"
 			},
 			{
-					"sample", "setAlias", String.class, "Sample_alias"
+					"(sesar)|(isgn)", "setSesarNumber", String.class,
+					"Sample_sesarNumber"
 			},
 			{
-					"type", "setRockType", String.class, "Sample_rockType"
+					"(latitude error)|(lat error)", "setLatitudeError",
+					Float.class, "Sample_latitudeError"
 			},
 			{
-					"comment", "addComment", String.class, "Sample_comments"
+					"(latitude)|(lat\\s*)", "setLatitude", double.class,
+					"Sample_latitude"
 			},
 			{
-					"latitude", "setLatitude", double.class, "Sample_latitude"
+					"(longitude error)|(lon error)", "setLongitudeError",
+					Float.class, "Sample_longitudeError"
 			},
 			{
-					"longitude", "setLongitude", double.class,
+					"(longitude)|(lon\\s*)", "setLongitude", double.class,
 					"Sample_longitude"
 			},
 			{
@@ -69,21 +72,35 @@ public class SampleParser {
 					"country", "setCountry", String.class, "Sample_country"
 			},
 			{
-					"collector", "setCollector", String.class,
+					"(collector)|(collected by)", "setCollector", String.class,
 					"Sample_collector"
 			},
 			{
-					"(collected)|(collection.+date)", "setCollectionDate",
-					Timestamp.class, "Sample_collectionDate"
+					"(date of collection)|(collected)|(collection.+date)",
+					"setCollectionDate", Timestamp.class,
+					"Sample_collectionDate"
 			},
 			{
-					"reference", "addReference", String.class,
+					"(present.+location)|(current.+location)",
+					"setLocationText", String.class, "Sample_locationText"
+			},
+			{
+					"(grade)|(facies)", "addMetamorphicGrade", String.class,
+					"Sample_metamorphicGrades"
+			},
+			{
+					"(comment)|(note)|(description)", "addComment",
+					String.class, "Sample_comments"
+			},
+			{
+					"(reference)|(ref)", "addReference", String.class,
 					"Sample_references"
 			},
 			{
-					"grade", "addMetamorphicGrade", String.class,
-					"Sample_metamorphicGrades"
-			}
+					"(sample)|(number)", "setAlias", String.class,
+					"Sample_alias"
+			},
+
 	};
 
 	private final static List<MethodAssociation<SampleDTO>> methodAssociations = new LinkedList<MethodAssociation<SampleDTO>>();
