@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.List;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
@@ -15,6 +17,8 @@ public interface SubsampleServiceAsync {
 			AsyncCallback<Results<SubsampleDTO>> ac);
 
 	void details(long id, AsyncCallback<SubsampleDTO> ac);
+
+	void all(long sampleId, AsyncCallback<List<SubsampleDTO>> ac);
 
 	void save(final SubsampleDTO s, AsyncCallback<SubsampleDTO> ac);
 

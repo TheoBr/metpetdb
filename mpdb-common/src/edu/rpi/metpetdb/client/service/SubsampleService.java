@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.List;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -20,6 +22,8 @@ public interface SubsampleService extends RemoteService {
 
 	SubsampleDTO save(final SubsampleDTO s) throws ValidationException,
 			LoginRequiredException;
+
+	List<SubsampleDTO> all(final long sampleId) throws NoSuchObjectException;
 
 	void delete(long id) throws NoSuchObjectException, LoginRequiredException;
 }

@@ -21,6 +21,12 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 		SubsampleService {
 	private static final long serialVersionUID = 1L;
 
+	public List<SubsampleDTO> all(final long sampleId)
+			throws NoSuchObjectException {
+		return cloneBean(byKey("Subsample", "sampleId", sampleId));
+
+	}
+
 	public Results<SubsampleDTO> all(final PaginationParameters p,
 			final long sampleId) {
 		final String name = "Subsample.all";

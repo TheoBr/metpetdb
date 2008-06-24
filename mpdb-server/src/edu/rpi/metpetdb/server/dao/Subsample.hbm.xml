@@ -47,7 +47,7 @@
   
   <query name="Subsample.bySampleId">
   	from Subsample s
-  	where s.sample.id = :id
+  	where s.sample.id = :sampleId
   </query>
   
   <query name="Subsample.allWithImages,size">
