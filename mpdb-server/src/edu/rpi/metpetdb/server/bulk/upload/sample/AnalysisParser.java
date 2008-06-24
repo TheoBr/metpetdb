@@ -51,7 +51,11 @@ public class AnalysisParser {
 					"(mineral)|(material)", "setMineral", MineralDTO.class,
 					"ChemicalAnalysis_mineral"
 			},
-			// method (analytical method, analysis method, type)
+			{
+					"(method)|(analytical method)|(analysis method)|(type)",
+					"setAnalysisMethod", String.class,
+					"ChemicalAnalysis_analysisMethod"
+			},
 			{
 					"(where done)|(analytical facility)", "setLocation",
 					String.class, "ChemicalAnalysis_location"
