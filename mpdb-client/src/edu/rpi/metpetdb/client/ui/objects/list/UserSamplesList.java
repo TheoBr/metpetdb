@@ -206,7 +206,7 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 				for (int i = 0; i < list.scrollTable.getDataTable()
 						.getRowCount(); i++)
 					((MCheckBox) list.scrollTable.getDataTable()
-							.getWidget(i, 0)).setChecked(((MCheckBox) sender)
+							.getWidget(i, 0)).setChecked(((CheckBox) sender)
 							.isChecked());
 			}
 		});
