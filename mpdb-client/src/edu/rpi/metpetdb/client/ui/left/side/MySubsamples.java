@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.ui.Label;
 
+import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -29,12 +30,19 @@ public class MySubsamples extends LeftColWidget implements UsesLeftColumn {
 				+ "'s Subsamples");
 		details.setStyleName("lcol-sectionList");
 		pList.setStyleName("lcol-sectionList");
-		subsamplesLabel.setStyleName("lcol-MyProjects");
+		subsamplesLabel.setStyleName("h1");
 
 		this.add(details);
 		this.add(subsamplesLabel);
 		this.add(pList);
 
+	}
+
+	public MySubsamples(final SampleDTO sample) {
+		super(sample.getName());
+		this.setStyleName("lcol-MyProjects");
+		final MLink details = new MLink("Details", TokenSpace.detailsOf(sample));
+		this.add(details);
 	}
 
 	public static MUnorderedList addSubSamples(List<SubsampleDTO> subsamples) {

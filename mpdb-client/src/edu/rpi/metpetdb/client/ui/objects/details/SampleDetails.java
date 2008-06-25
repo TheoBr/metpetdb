@@ -228,8 +228,23 @@ public class SampleDetails extends FlowPanel {
 			}
 			public void onSuccess(Object result) {
 				MetPetDBApplication.clearLeftSide();
-				subsamplesLeft = new MySubsamples((List<SubsampleDTO>) result);
-				MetPetDBApplication.appendToLeft(subsamplesLeft);
+				if (((List<SubsampleDTO>) result).size() > 0) {
+					subsamplesLeft = new MySubsamples(
+							(List<SubsampleDTO>) result);
+					MetPetDBApplication.appendToLeft(subsamplesLeft);
+				} else {
+					new ServerOp() {
+						@Override
+						public void begin() {
+							MpDb.sample_svc.details(sampleId, this);
+						}
+						public void onSuccess(Object result2) {
+							subsamplesLeft = new MySubsamples(
+									(SampleDTO) result2);
+							MetPetDBApplication.appendToLeft(subsamplesLeft);
+						}
+					}.begin();
+				}
 			}
 		}.begin();
 
