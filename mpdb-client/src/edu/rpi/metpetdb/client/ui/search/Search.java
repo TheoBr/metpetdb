@@ -11,12 +11,14 @@ import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.CheckBoxesAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateRangeAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
+import edu.rpi.metpetdb.client.ui.left.side.MySearch;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 
 public class Search extends FlowPanel {
@@ -75,6 +77,8 @@ public class Search extends FlowPanel {
 		};
 		add(p_searchSample);
 		add(sampleList);
+		MetPetDBApplication.clearLeftSide();
+		MetPetDBApplication.appendToLeft(new MySearch());
 	}
 
 	public Search createNew() {

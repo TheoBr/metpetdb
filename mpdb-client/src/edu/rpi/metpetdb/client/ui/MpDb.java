@@ -30,8 +30,7 @@ import edu.rpi.metpetdb.client.service.SubsampleService;
 import edu.rpi.metpetdb.client.service.SubsampleServiceAsync;
 import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.client.service.UserServiceAsync;
-import edu.rpi.metpetdb.client.ui.left.side.MyProjects;
-import edu.rpi.metpetdb.client.ui.left.side.MySamples;
+import edu.rpi.metpetdb.client.ui.left.side.UserInfo;
 
 /**
  * Client side async service proxies and global constants.
@@ -147,6 +146,7 @@ public class MpDb {
 			} else {
 				MetPetDBApplication.resetLeftSide();
 			}
+			MetPetDBApplication.appendToLeft(new UserInfo(n));
 		}
 	}
 
@@ -155,8 +155,6 @@ public class MpDb {
 	public static void createUserHistory(UserDTO n) {
 		MetPetDBApplication.clearLeftSide();
 
-		MetPetDBApplication.appendToLeft(new MySamples());
-		MetPetDBApplication.appendToLeft(new MyProjects(n.getProjects()));
 	}
 
 	private MpDb() {

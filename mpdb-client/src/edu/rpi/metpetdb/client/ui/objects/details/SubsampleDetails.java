@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
+import java.util.List;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -33,6 +35,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AddImageAttribute;
+import edu.rpi.metpetdb.client.ui.left.side.MySubsamples;
 import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
@@ -54,6 +57,7 @@ public class SubsampleDetails extends FlowPanel {
 
 	private final ObjectEditorPanel<SubsampleDTO> p_subsample;
 	private long subsampleId;
+	private long sampleId;
 	private ServerOp continuation;
 	private String sampleAlias;
 	private MLink map;
@@ -92,6 +96,7 @@ public class SubsampleDetails extends FlowPanel {
 					continuation.onSuccess((MObjectDTO) result);
 				} else
 					this.show((MObjectDTO) result);
+				addSubsamplesToLeft();
 			}
 
 			protected void onLoadCompletion(final MObjectDTO result) {
@@ -121,6 +126,7 @@ public class SubsampleDetails extends FlowPanel {
 				Header.setSpacing(5);
 
 				DOM.setInnerText(sampleHeader, s.getName());
+				sampleId = s.getSample().getId();
 
 			}
 		};
@@ -213,6 +219,7 @@ public class SubsampleDetails extends FlowPanel {
 		s.addSubsample(ss);
 		p_subsample.edit(ss);
 		sampleAlias = s.getAlias();
+		sampleId = s.getId();
 		return this;
 	}
 
@@ -239,4 +246,20 @@ public class SubsampleDetails extends FlowPanel {
 		}.begin();
 		return this;
 	}
+
+	public void addSubsamplesToLeft() {
+
+		new ServerOp() {
+			@Override
+			public void begin() {
+				MpDb.subsample_svc.all(sampleId, this);
+			}
+			public void onSuccess(Object result) {
+				MetPetDBApplication.clearLeftSide();
+				MetPetDBApplication.appendToLeft(new MySubsamples(
+						(List<SubsampleDTO>) result));
+			}
+		}.begin();
+
+	};
 }

@@ -1,16 +1,17 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
+import java.util.List;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -37,12 +38,14 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.MetamorphicGradeAttr
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MineralAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.ReferenceAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.RegionAttribute;
+import edu.rpi.metpetdb.client.ui.left.side.MySubsamples;
 import edu.rpi.metpetdb.client.ui.objects.list.SubsampleListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class SampleDetails extends FlowPanel {
 	private FlexTable ft;
 	final Element sampleHeader;
+	private MySubsamples subsamplesLeft;
 
 	private static GenericAttribute[] sampleAtts = {
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
@@ -99,13 +102,17 @@ public class SampleDetails extends FlowPanel {
 
 			protected void onSaveCompletion(final MObjectDTO result) {
 				super.onSaveCompletion(result);
-				// addExtraElements();
 			}
 
 			protected void onLoadCompletion(final MObjectDTO result) {
 				super.onLoadCompletion(result);
 				final SampleDTO s = (SampleDTO) result;
 				DOM.setInnerText(sampleHeader, s.getName());
+			}
+
+			protected boolean onFailure2(final Throwable e) {
+				Window.alert(e.getMessage());
+				return true;
 			}
 
 		};
@@ -133,20 +140,8 @@ public class SampleDetails extends FlowPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		ft.getRowFormatter().setStyleName(0, "mpdb-dataTableLightBlue");
 		add(ft);
-		// add(oep);
 	}
-
 	private void addExtraElements() {
-		// Add subsample list to sample details
-		// final SubsampleList list = new SubsampleList(new DataProvider() {
-		// public void update(final PaginationParameters p,
-		// final AsyncCallback ac) {
-		// MpDb.subsample_svc.all(p, sampleId, ac);
-		// }
-		// }, null);
-		// list.setStyleName("sd-subsamples");
-		// add(list);
-		// Add MLinks that will be used to add subsample
 
 		ft.getWidget(1, 1).addStyleName("mpdb-dataTable");
 
@@ -224,39 +219,19 @@ public class SampleDetails extends FlowPanel {
 		this.add(comments_ft);
 	}
 
-	public void addChemistry() {
-		// final Label adder = new Label("Add:");
-
-		final HorizontalPanel hp = new HorizontalPanel();
-
-		final ListBox species = new ListBox();
-		species.addItem("Species...", "Species...");
-		species.addItem("Element", "Element");
-		species.addItem("Oxide", "Oxide");
-		species.setVisibleItemCount(1);
-
-		final ListBox type = new ListBox();
-		type.addItem("Type...", "Type...");
-		type.addItem("Silicate", "Silicate");
-		type.addItem("Oxide", "Oxide");
-		type.addItem("Carbonate", "Carbonate");
-		type.addItem("Phosphate", "Phosphate");
-		type.addItem("Other", "Other");
-		type.setVisibleItemCount(1);
-
-		if (species.getSelectedIndex() != -1 && !(species.isItemSelected(1))) {
-			if (type.getSelectedIndex() != -1 && !(type.isItemSelected(1))) {
-
-			}
-		}
-
-		// add(adder);
-		hp.add(species);
-		hp.add(type);
-
-		add(hp);
-	}
 	public void addSubsamplesToLeft() {
+
+		new ServerOp() {
+			@Override
+			public void begin() {
+				MpDb.subsample_svc.all(sampleId, this);
+			}
+			public void onSuccess(Object result) {
+				MetPetDBApplication.clearLeftSide();
+				subsamplesLeft = new MySubsamples((List<SubsampleDTO>) result);
+				MetPetDBApplication.appendToLeft(subsamplesLeft);
+			}
+		}.begin();
 
 	};
 
@@ -265,8 +240,7 @@ public class SampleDetails extends FlowPanel {
 		p_sample.load();
 		addExtraElements();
 		addComments();
-		// addSubsamplesToLeft();
-		// addChemistry();
+		addSubsamplesToLeft();
 		return this;
 	}
 

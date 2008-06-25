@@ -256,7 +256,7 @@ public class MetPetDBApplication implements EntryPoint {
 		leftContainer.clear();
 		final Element sidebarElem = DOM.getElementById("sidebar-Default");
 		final HTML sidebar = new HTML();
-		sidebar.setHTML(sidebarElem.toString());
+		// sidebar.setHTML(sidebarElem.toString());
 		leftContainer.add(sidebar);
 	}
 
