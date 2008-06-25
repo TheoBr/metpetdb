@@ -3,7 +3,6 @@ package edu.rpi.metpetdb.client.ui.objects.list;
 import org.postgis.Point;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.CheckBox;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -17,6 +16,7 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
@@ -32,7 +32,7 @@ public abstract class SampleListEx extends ListEx<SampleDTO> {
 			new Column("Check", true, true) {
 				protected Object getWidget(final MObjectDTO data,
 						final int currentRow) {
-					return new CheckBox();
+					return new MCheckBox(data);
 				}
 			},
 			new Column(enttxt.Sample_alias(), SampleProperty.alias, true) {

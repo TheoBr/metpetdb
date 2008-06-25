@@ -1,6 +1,10 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -20,9 +24,13 @@ import edu.rpi.metpetdb.client.model.ProjectDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
+import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
+import edu.rpi.metpetdb.client.ui.left.side.MySamples;
+import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MTabBar;
 
@@ -31,9 +39,15 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 	private FlexTable projects;
 	private ScrollPanel projectScroll;
 	private SampleListEx list;
+	private MySamples mysamples;
+	private Set<ProjectDTO> projectsList;
+	private ListBox lb;
+	private FlexTable Samples_ft;
 
 	public UserSamplesList() {
-
+		mysamples = new MySamples();
+		MetPetDBApplication.clearLeftSide();
+		MetPetDBApplication.appendToLeft(mysamples);
 	}
 
 	private void addTopRows() {
@@ -144,13 +158,23 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 		projects = new FlexTable();
 		projects.setCellSpacing(10);
 		projectScroll.setWidth("550px");
-		Iterator<ProjectDTO> it = MpDb.currentUser().getProjects().iterator();
+		Iterator<ProjectDTO> it = projectsList.iterator();
 		int i = 0;
 		while (it.hasNext()) {
 			final ProjectDTO project = (ProjectDTO) it.next();
 			projects.setWidget(0, i, new MLink("In " + project.getName() + " ",
 					new ClickListener() {
 						public void onClick(Widget sender) {
+							list = new SampleListEx() {
+								public void update(
+										final PaginationParameters p,
+										final AsyncCallback<Results<SampleDTO>> ac) {
+									long id = (long) project.getId();
+									MpDb.project_svc.samplesFromProject(p, id,
+											ac);
+								}
+							};
+							Samples_ft.setWidget(0, 0, list);
 						}
 					}));
 			projects.getFlexCellFormatter().setWordWrap(0, i, false);
@@ -171,7 +195,7 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 				MpDb.sample_svc.allSamplesForUser(p, id, ac);
 			}
 		};
-		final FlexTable Samples_ft = new FlexTable();
+		Samples_ft = new FlexTable();
 		Samples_ft.setWidth("100%");
 		Samples_ft.setWidget(0, 0, list);
 
@@ -181,21 +205,35 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 			public void onClick(Widget sender) {
 				for (int i = 0; i < list.scrollTable.getDataTable()
 						.getRowCount(); i++)
-					((CheckBox) list.scrollTable.getDataTable().getWidget(i, 0))
-							.setChecked(((CheckBox) sender).isChecked());
+					((MCheckBox) list.scrollTable.getDataTable()
+							.getWidget(i, 0)).setChecked(((MCheckBox) sender)
+							.isChecked());
 			}
 		});
-		ListBox lb = new ListBox();
+		lb = new ListBox();
 
-		Iterator<ProjectDTO> it = MpDb.currentUser().getProjects().iterator();
+		Iterator<ProjectDTO> it = projectsList.iterator();
 		while (it.hasNext()) {
 			final ProjectDTO project = (ProjectDTO) it.next();
-			lb.addItem("Add to '" + project.getName() + "'");
+			lb.addItem("Add to '" + project.getName() + "'", String
+					.valueOf(project.getId()));
 		}
 		lb.addItem("Remove");
 		lb.addItem("Make Public");
 
-		Button btn = new Button("Apply to Selected");
+		Button btn = new Button("Apply to Selected", new ClickListener() {
+			public void onClick(Widget sender) {
+				if (lb.getItemText(lb.getSelectedIndex()).equals("Remove")) {
+					deleteSelected();
+				} else if (lb.getItemText(lb.getSelectedIndex()).equals(
+						"Make Public")) {
+					MakePublicSelected();
+				} else {
+					AddToProjectSelected();
+				}
+
+			}
+		});
 		btn.setHeight("30px");
 		FlexTable realFooter = new FlexTable();
 
@@ -222,8 +260,89 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 	}
 
 	public UserSamplesList display() {
-		addTopRows();
-		addSamples();
+		new ServerOp() {
+			@Override
+			public void begin() {
+				MpDb.project_svc.all(MpDb.currentUser().getId(), this);
+			}
+			public void onSuccess(Object result) {
+				projectsList = new HashSet<ProjectDTO>(
+						(List<ProjectDTO>) result);
+				addTopRows();
+				addSamples();
+
+			}
+		}.begin();
 		return this;
+	}
+
+	private List<SampleDTO> getCheckedSamples() {
+		List<SampleDTO> results = new ArrayList<SampleDTO>();
+		for (int i = 0; i < list.scrollTable.getDataTable().getRowCount(); i++) {
+			if (((MCheckBox) list.scrollTable.getDataTable().getWidget(i, 0))
+					.isChecked())
+				results.add((SampleDTO) (((MCheckBox) list.scrollTable
+						.getDataTable().getWidget(i, 0)).getValue()));
+		}
+		return results;
+	}
+
+	private void deleteSelected() {
+		new ServerOp() {
+			@Override
+			public void begin() {
+				List<SampleDTO> CheckedSamples = getCheckedSamples();
+				Iterator<SampleDTO> itr = CheckedSamples.iterator();
+				while (itr.hasNext()) {
+					MpDb.sample_svc.delete(itr.next().getId(), this);
+				}
+			}
+			public void onSuccess(Object result) {
+				list.scrollTable.reloadPage();
+			}
+		}.begin();
+	}
+	private void MakePublicSelected() {
+		new ServerOp() {
+			@Override
+			public void begin() {
+				List<SampleDTO> CheckedSamples = getCheckedSamples();
+				Iterator<SampleDTO> itr = CheckedSamples.iterator();
+				while (itr.hasNext()) {
+					SampleDTO current = itr.next();
+					current.setPublicData(true);
+					MpDb.sample_svc.save(current, this);
+				}
+			}
+			public void onSuccess(Object result) {
+				list.scrollTable.reloadPage();
+			}
+		}.begin();
+	}
+	private void AddToProjectSelected() {
+		new ServerOp() {
+			@Override
+			public void begin() {
+				MpDb.project_svc.details(Integer.parseInt(lb.getValue(lb
+						.getSelectedIndex())), this);
+			}
+			public void onSuccess(final Object result) {
+				new ServerOp() {
+					@Override
+					public void begin() {
+						List<SampleDTO> CheckedSamples = getCheckedSamples();
+						Iterator<SampleDTO> itr = CheckedSamples.iterator();
+						while (itr.hasNext()) {
+							SampleDTO current = itr.next();
+							current.getProjects().add((ProjectDTO) result);
+							MpDb.sample_svc.save(current, this);
+						}
+					}
+					public void onSuccess(Object result2) {
+						list.scrollTable.reloadPage();
+					}
+				}.begin();
+			}
+		}.begin();
 	}
 }
