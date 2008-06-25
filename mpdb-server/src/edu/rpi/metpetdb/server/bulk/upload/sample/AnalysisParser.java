@@ -292,6 +292,7 @@ public class AnalysisParser {
 			return;
 
 		final ChemicalAnalysisDTO ca = new ChemicalAnalysisDTO();
+		boolean sawDataInRow = false;
 
 		for (Integer i = 0; i < row.getLastCellNum(); ++i) {
 			final HSSFCell cell = row.getCell((short) i.intValue());
@@ -398,6 +399,7 @@ public class AnalysisParser {
 							"Don't know how to convert to datatype: "
 									+ dataType.toString());
 				}
+				sawDataInRow = true;
 			} catch (final NullPointerException npe) {
 				// empty cell
 				continue;
@@ -413,7 +415,10 @@ public class AnalysisParser {
 				throw new IllegalStateException(iae.getMessage());
 			}
 		}
-		analyses.add(ca);
+
+		if (sawDataInRow) {
+			analyses.add(ca);
+		}
 	}
 	public List<ChemicalAnalysisDTO> getAnalyses() {
 		return analyses;
