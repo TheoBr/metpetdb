@@ -38,6 +38,7 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 	private final HorizontalPanel hp;
 	private final RadioButton samples;
 	private final RadioButton analyses;
+	private final RadioButton images;
 	private final RadioButton justparse;
 	private final RadioButton upload;
 	private final Grid errorgrid;
@@ -65,10 +66,13 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 		samples = new RadioButton("type", "Samples");
 		samples.setChecked(true);
 		analyses = new RadioButton("type", "Chemical Analyses");
+		analyses.addStyleName("beta");
+		images = new RadioButton("type", "Images");
+		images.addStyleName("beta");
 		hp = new HorizontalPanel();
 		hp.add(samples);
-		analyses.addStyleName("beta");
 		hp.add(analyses);
+		hp.add(images);
 		hp.add(submit_button);
 
 		justparse = new RadioButton("submitType", "Parse");
@@ -127,11 +131,14 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 									MpDb.bulkUpload_svc
 											.saveSamplesFromSpreadsheet(
 													fileOnServer, this);
-								} else {
-									// TODO: chemical analyses
+								} else if (analyses.isChecked()) {
 									MpDb.bulkUploadChemicalAnalyses_svc
 											.saveAnalysesFromSpreadsheet(
 													fileOnServer, this);
+								} else {
+									MpDb.bulkUploadImages_svc
+											.saveImagesFromZip(fileOnServer,
+													this);
 								}
 							}
 
@@ -161,10 +168,13 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 								if (samples.isChecked()) {
 									MpDb.bulkUpload_svc.getHeaderMapping(
 											fileOnServer, this);
-								} else {
+								} else if (analyses.isChecked()) {
 									MpDb.bulkUploadChemicalAnalyses_svc
 											.getHeaderMapping(fileOnServer,
 													this);
+								} else {
+									MpDb.bulkUploadImages_svc.getHeaderMapping(
+											fileOnServer, this);
 								}
 							}
 

@@ -22,6 +22,7 @@ import javax.media.jai.RasterFactory;
 import javax.media.jai.RenderedOp;
 import javax.media.jai.operator.CompositeDescriptor;
 
+import org.hibernate.Query;
 import org.hibernate.exception.ConstraintViolationException;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -34,6 +35,8 @@ import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.model.Image;
 import edu.rpi.metpetdb.server.model.ImageOnGrid;
+import edu.rpi.metpetdb.server.model.Sample;
+import edu.rpi.metpetdb.server.model.Subsample;
 
 public class ImageServiceImpl extends MpDbServlet implements ImageService {
 	private static final long serialVersionUID = 1L;
@@ -55,6 +58,8 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		// if (ImageDTO.getSample().getOwner().getId() != currentUser())
 		// throw new SecurityException("Cannot modify images you don't own.");
 		Image i = mergeBean(image);
+		replaceSample(i);
+
 		try {
 			if (i.mIsNew())
 				insert(i);
@@ -218,5 +223,22 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 
 	public static void setBaseFolder(String baseFolder) {
 		ImageServiceImpl.baseFolder = baseFolder;
+	}
+
+	private void replaceSample(final Image img) throws ValidationException,
+			LoginRequiredException {
+		// TODO: once this is debugged, Null Pointer exceptions should indicate
+		// when samples or subsamples are not in the database, and should be
+		// handled accordingly
+		final Query sample = namedQuery("Sample.byUser.byAlias");
+		final Query subsample = namedQuery("Subsample.bySample.byName");
+
+		sample.setParameter("id", currentUser());
+		sample.setParameter("alias", img.getSubsample().getSample().getAlias());
+
+		subsample.setParameter("id", ((Sample) sample.uniqueResult()).getId());
+		subsample.setParameter("name", img.getSubsample().getName());
+
+		img.setSubsample((Subsample) subsample.uniqueResult());
 	}
 }

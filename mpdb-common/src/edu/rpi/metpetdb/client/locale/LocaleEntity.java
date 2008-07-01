@@ -167,6 +167,10 @@ public interface LocaleEntity extends ConstantsWithLookup {
 
 	String Image_pixelsize();
 
+	String Image_filename();
+
+	String Image_format();
+
 	/* XrayImage */
 	String XrayImage_current();
 

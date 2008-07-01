@@ -31,6 +31,7 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.server.impl.BulkUploadChemicalAnalysesServiceImpl;
+import edu.rpi.metpetdb.server.impl.BulkUploadImagesServiceImpl;
 import edu.rpi.metpetdb.server.impl.BulkUploadServiceImpl;
 import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
 import edu.rpi.metpetdb.server.model.MObject;
@@ -124,8 +125,9 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 				.getProperty("fileUpload.path"));
 		BulkUploadChemicalAnalysesServiceImpl.setBaseFolder(fileProps
 				.getProperty("fileUpload.path"));
+		BulkUploadImagesServiceImpl.setBaseFolder(fileProps
+				.getProperty("fileUpload.path"));
 	}
-
 	private void loadAutomaticLogin() {
 		final String propFile = "autologin.properties";
 		final InputStream i = MpDbServlet.class.getClassLoader()
