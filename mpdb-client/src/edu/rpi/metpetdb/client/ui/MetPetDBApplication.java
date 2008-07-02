@@ -252,6 +252,14 @@ public class MetPetDBApplication implements EntryPoint {
 			leftContainer.remove(w);
 	}
 
+	public static int getFromLeft(final Widget w) {
+		return leftContainer.getWidgetIndex(w);
+	}
+
+	public static Widget getFromLeft(final int index) {
+		return leftContainer.getWidget(index);
+	}
+
 	public static void resetLeftSide() {
 		leftContainer.clear();
 		final Element sidebarElem = DOM.getElementById("sidebar-Default");
@@ -283,6 +291,7 @@ public class MetPetDBApplication implements EntryPoint {
 				TokenSpace.enterSample);
 
 		final MMenuBar projects = new MMenuBar(true);
+		projects.addItem("My Projects", TokenSpace.allProjects);
 		projects.addItem(LocaleHandler.lc_text.projectsMenu_NewProject(),
 				TokenSpace.newProject);
 

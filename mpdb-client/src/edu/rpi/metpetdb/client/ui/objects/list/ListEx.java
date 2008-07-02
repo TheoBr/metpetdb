@@ -44,7 +44,7 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 	 * How we sort by default (true means ascending, false is descending)
 	 */
 	private static final boolean DEFAULT_SORT_ORDER = true;
-	final PagingScrollTable<T> scrollTable;
+	private PagingScrollTable<T> scrollTable;
 
 	public PagingScrollTable<T> getScrollTable() {
 		return scrollTable;
@@ -53,7 +53,11 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 	/**
 	 * The instance of columns that are layed out on the table
 	 */
-	private Column[] columns;
+	private ArrayList<Column> originalColumns;
+	private ArrayList<Column> displayColumns;
+	private TableModel tableModel;
+	private FixedWidthGrid dataTable;
+	private FixedWidthFlexTable headerTable;
 
 	/**
 	 * Response to send back to the callback so that it can draw the table
@@ -131,8 +135,8 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 			final ColumnSortInfo sortInfo = sortList.getPrimaryColumnSortInfo();
 			final PaginationParameters p = new PaginationParameters();
 			if (sortInfo != null) {
-				p.setParameter(columns[sortInfo.getColumn()].getProperty()
-						.name());
+				p.setParameter(displayColumns.get(sortInfo.getColumn())
+						.getProperty().name());
 				p.setAscending(sortInfo.isAscending());
 			} else {
 				p.setAscending(DEFAULT_SORT_ORDER);
@@ -162,7 +166,7 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 												"<Strong>We were unable to find anything that matched your current criteria</Strong>"));
 						ListEx.this.scrollTable.getHeaderTable()
 								.getFlexCellFormatter().setColSpan(1, 0,
-										ListEx.this.columns.length);
+										ListEx.this.displayColumns.size());
 						ListEx.this.scrollTable.getHeaderTable()
 								.getFlexCellFormatter().setAlignment(1, 0,
 										HasHorizontalAlignment.ALIGN_CENTER,
@@ -259,19 +263,24 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 	public Collection<Object> processRow(final MObjectDTO object,
 			final int currentRow) {
 		final Collection<Object> data = new ArrayList<Object>();
-		for (int i = 0; i < columns.length; ++i) {
-			if (columns[i].isCustomFormat()) {
-				data.add(columns[i].getRepresentation(object, currentRow));
-			} else if (columns[i].getProperty() != null) {
-				data.add(columns[i].getProperty().get(object));
+		for (int i = 0; i < displayColumns.size(); ++i) {
+			if (displayColumns.get(i).isCustomFormat()) {
+				data.add(displayColumns.get(i).getRepresentation(object,
+						currentRow));
+			} else if (displayColumns.get(i).getProperty() != null) {
+				data.add(displayColumns.get(i).getProperty().get(object));
 			} else
-				data.add(columns[i].getTitle());
+				data.add(displayColumns.get(i).getTitle());
 		}
 		return data;
 	}
 
-	public Column[] getColumns() {
-		return columns;
+	public ArrayList<Column> getOriginalColumns() {
+		return originalColumns;
+	}
+
+	public ArrayList<Column> getDisplayColumns() {
+		return displayColumns;
 	}
 
 	/**
@@ -280,11 +289,12 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 	 * @param columns
 	 *            the columns that will be used in this table
 	 */
-	public ListEx(final Column[] columns) {
-		this.columns = columns;
-		TableModel tableModel = new TableModel();
-		final FixedWidthGrid dataTable = new FixedWidthGrid();
-		FixedWidthFlexTable headerTable = new FixedWidthFlexTable();
+	public ListEx(final ArrayList<Column> columns) {
+		this.originalColumns = columns;
+		this.displayColumns = columns;
+		tableModel = new TableModel();
+		dataTable = new FixedWidthGrid();
+		headerTable = new FixedWidthFlexTable();
 		scrollTable = new PagingScrollTable<T>(tableModel, dataTable,
 				headerTable);
 		PagingOptions options = new PagingOptions(scrollTable);
@@ -292,8 +302,8 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		scrollTable.setPageSize(10);
 		tableModel.setRowCount(1);
 
-		for (int i = 0; i < columns.length; ++i) {
-			headerTable.setText(0, i, columns[i].getTitle());
+		for (int i = 0; i < displayColumns.size(); ++i) {
+			headerTable.setText(0, i, displayColumns.get(i).getTitle());
 			headerTable.getCellFormatter().addStyleName(0, i, "bold");
 			headerTable.getCellFormatter().addStyleName(0, i, "brown");
 			headerTable.getCellFormatter().setAlignment(0, i,
@@ -302,16 +312,17 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		}
 
 		// Setup sortable/unsortable columns
-		for (int i = 0; i < columns.length; ++i) {
-			scrollTable.setColumnSortable(i, columns[i].isSortable());
+		for (int i = 0; i < displayColumns.size(); ++i) {
+			scrollTable
+					.setColumnSortable(i, displayColumns.get(i).isSortable());
 		}
 
 		dataTable.addTableListener(new TableListener() {
 
 			public void onCellClicked(SourcesTableEvents sender, int row,
 					int cell) {
-				columns[cell].handleClickEvent((MObjectDTO) scrollTable
-						.getRowValue(row), row);
+				displayColumns.get(cell).handleClickEvent(
+						(MObjectDTO) scrollTable.getRowValue(row), row);
 
 			}
 
@@ -329,6 +340,39 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		add(options);
 		this.setWidth("100%");
 		// dataTable.setHeight("400px");
+	}
+
+	public void newView(ArrayList<Column> columns) {
+		this.displayColumns = columns;
+
+		headerTable.removeRow(0);
+		for (int i = 0; i < displayColumns.size(); ++i) {
+			headerTable.setText(0, i, displayColumns.get(i).getTitle());
+			headerTable.getCellFormatter().addStyleName(0, i, "bold");
+			headerTable.getCellFormatter().addStyleName(0, i, "brown");
+			headerTable.getCellFormatter().setAlignment(0, i,
+					HasHorizontalAlignment.ALIGN_LEFT,
+					HasVerticalAlignment.ALIGN_MIDDLE);
+		}
+
+		// Setup sortable/unsortable columns
+		for (int i = 0; i < displayColumns.size(); ++i) {
+			scrollTable
+					.setColumnSortable(i, displayColumns.get(i).isSortable());
+		}
+
+		dataTable.addTableListener(new TableListener() {
+
+			public void onCellClicked(SourcesTableEvents sender, int row,
+					int cell) {
+				displayColumns.get(cell).handleClickEvent(
+						(MObjectDTO) scrollTable.getRowValue(row), row);
+
+			}
+
+		});
+		headerTable.getRowFormatter().addStyleName(0, "mpdb-dataTablePink");
+		scrollTable.reloadPage();
 	}
 
 	/**

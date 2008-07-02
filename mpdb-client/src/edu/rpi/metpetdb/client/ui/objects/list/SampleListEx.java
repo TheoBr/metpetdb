@@ -1,5 +1,8 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.postgis.Point;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -23,7 +26,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MText;
 public abstract class SampleListEx extends ListEx<SampleDTO> {
 
 	public SampleListEx() {
-		super(columns);
+		super(new ArrayList<Column>(Arrays.asList(columns)));
 	}
 
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;

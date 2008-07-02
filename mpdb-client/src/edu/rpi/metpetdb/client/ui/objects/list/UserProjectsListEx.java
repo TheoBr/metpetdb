@@ -16,13 +16,10 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 
 import edu.rpi.metpetdb.client.model.ProjectDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
@@ -30,36 +27,29 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
-import edu.rpi.metpetdb.client.ui.left.side.MySamples;
+import edu.rpi.metpetdb.client.ui.left.side.MyProjects;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
-import edu.rpi.metpetdb.client.ui.widgets.MTabBar;
 
-public class UserSamplesList extends FlowPanel implements ClickListener {
+public class UserProjectsListEx extends FlowPanel implements ClickListener {
 	private FlexTable header1;
-	private FlexTable projects;
-	private ScrollPanel projectScroll;
-	private SampleListEx list;
-	private MySamples mysamples;
-	private Set<ProjectDTO> projectsList;
+	private ProjectListEx list;
+	private Set<ProjectDTO> projectlist;
 	private ListBox lb;
-	private FlexTable Samples_ft;
+	private FlexTable Projects_ft;
 
-	public UserSamplesList() {
+	public UserProjectsListEx() {
 	}
 
 	private void addTopRows() {
 		header1 = new FlexTable();
-		FlexTable tabHolder = new FlexTable();
 
 		header1.setWidth("100%");
 
-		final MLink uploadSample = new MLink("Enter Sample",
-				TokenSpace.enterSample);
+		final MLink createProject = new MLink("Create New Project",
+				TokenSpace.newProject);
 
-		final MLink bulkUpload = new MLink("Bulk Upload", TokenSpace.bulkUpload);
-
-		final MLink recentlyAdded = new MLink("Recently Added",
+		final MLink recentlyAdded = new MLink("Recent Changes",
 				new ClickListener() {
 					public void onClick(Widget sender) {
 					}
@@ -72,38 +62,26 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 
 		final MLink detailed = new MLink("Detailed", new ClickListener() {
 			public void onClick(Widget sender) {
-				list.newView(list.getOriginalColumns());
 			}
 		});
 
 		final MLink createView = new MLink("Create New View", this);
 
-		final Label mySamples_label = new Label("My Samples");
+		final Label myProjectsSamples_label = new Label("My Projects");
 		final Label quickfilters_label = new Label("Quick Filters:");
 		final Label changeView_label = new Label("Change View:");
-		uploadSample.addStyleName("addlink");
-		bulkUpload.addStyleName("addlink");
-		final MTabBar tb = new MTabBar();
-		tb.addTab("All");
-		tb.addTab("Newest");
-		tb.addTab("Favorites");
-		tb.selectTab(0);
+		createProject.addStyleName("addlink");
 
-		tabHolder.addStyleName("beta");
 		recentlyAdded.addStyleName("beta");
 		simple.addStyleName("beta");
+		detailed.addStyleName("beta");
+		createView.addStyleName("beta");
 
-		tabHolder.setWidget(0, 0, tb);
-
-		header1.setWidget(0, 0, mySamples_label);
-		header1.setWidget(0, 1, tabHolder);
-		header1.setWidget(1, 0, uploadSample);
-		header1.setWidget(1, 1, bulkUpload);
+		header1.setWidget(0, 0, myProjectsSamples_label);
+		header1.setWidget(1, 0, createProject);
 
 		header1.setWidget(2, 0, quickfilters_label);
 		header1.setWidget(2, 1, recentlyAdded);
-		populateProjects();
-		header1.setWidget(2, 2, projectScroll);
 		header1.setWidget(2, 3, changeView_label);
 		header1.setWidget(2, 4, simple);
 		header1.setWidget(2, 5, detailed);
@@ -112,7 +90,7 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 		header1.getFlexCellFormatter().setColSpan(0, 0, 3);
 		header1.getFlexCellFormatter().setColSpan(0, 1, 4);
 		header1.getFlexCellFormatter().setColSpan(1, 1, 2);
-		header1.getFlexCellFormatter().setWidth(1, 0, "100px");
+		header1.getFlexCellFormatter().setWidth(1, 0, "130px");
 		header1.getFlexCellFormatter().setAlignment(0, 1,
 				HasHorizontalAlignment.ALIGN_RIGHT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
@@ -140,9 +118,7 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		header1.setCellSpacing(10);
 		header1.addStyleName("mpdb-dataTableUserSamples");
-		mySamples_label.setStyleName("big");
-		uploadSample.setStyleName("addlink");
-		bulkUpload.setStyleName("addlink");
+		myProjectsSamples_label.setStyleName("big");
 		this.add(header1);
 	}
 
@@ -150,55 +126,17 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 		CustomTableView myView = new CustomTableView(list, this);
 	}
 
-	private void populateProjects() {
-		projectScroll = new ScrollPanel();
-		projects = new FlexTable();
-		projects.setCellSpacing(10);
-		projectScroll.setWidth("550px");
-		Iterator<ProjectDTO> it = projectsList.iterator();
-		int i = 0;
-		while (it.hasNext()) {
-			final ProjectDTO project = (ProjectDTO) it.next();
-			projects.setWidget(0, i, new MLink("In " + project.getName() + " ",
-					new ClickListener() {
-						public void onClick(Widget sender) {
-							// make sure we're using the same columns as are currently displayed
-							ArrayList<Column> currentDisplay = list
-									.getDisplayColumns();
-							list = new SampleListEx() {
-								public void update(
-										final PaginationParameters p,
-										final AsyncCallback<Results<SampleDTO>> ac) {
-									long id = (long) project.getId();
-									MpDb.project_svc.samplesFromProject(p, id,
-											ac);
-								}
-							};
-							list.newView(currentDisplay);
-							Samples_ft.setWidget(0, 0, list);
-						}
-					}));
-			projects.getFlexCellFormatter().setWordWrap(0, i, false);
-			projects.getFlexCellFormatter().setAlignment(0, i,
-					HasHorizontalAlignment.ALIGN_CENTER,
-					HasVerticalAlignment.ALIGN_BOTTOM);
-			i++;
-		}
-		projectScroll.add(projects);
-
-	}
-
-	private void addSamples() {
-		list = new SampleListEx() {
+	private void addProjects() {
+		list = new ProjectListEx() {
 			public void update(final PaginationParameters p,
-					final AsyncCallback<Results<SampleDTO>> ac) {
+					final AsyncCallback<Results<ProjectDTO>> ac) {
 				long id = (long) (MpDb.currentUser().getId());
-				MpDb.sample_svc.allSamplesForUser(p, id, ac);
+				MpDb.project_svc.all(p, id, ac);
 			}
 		};
-		Samples_ft = new FlexTable();
-		Samples_ft.setWidth("100%");
-		Samples_ft.setWidget(0, 0, list);
+		Projects_ft = new FlexTable();
+		Projects_ft.setWidth("100%");
+		Projects_ft.setWidget(0, 0, list);
 
 		FixedWidthFlexTable footer = new FixedWidthFlexTable();
 		CheckBox cb = new CheckBox("Select All");
@@ -213,26 +151,17 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 		});
 		lb = new ListBox();
 
-		Iterator<ProjectDTO> it = projectsList.iterator();
-		while (it.hasNext()) {
-			final ProjectDTO project = (ProjectDTO) it.next();
-			lb.addItem("Add to '" + project.getName() + "'", String
-					.valueOf(project.getId()));
-		}
 		lb.addItem("Remove");
-		lb.addItem("Make Public");
+		lb.addItem("Duplicate");
 
 		Button btn = new Button("Apply to Selected", new ClickListener() {
 			public void onClick(Widget sender) {
 				if (lb.getItemText(lb.getSelectedIndex()).equals("Remove")) {
 					deleteSelected();
 				} else if (lb.getItemText(lb.getSelectedIndex()).equals(
-						"Make Public")) {
-					MakePublicSelected();
-				} else {
-					AddToProjectSelected();
+						"Duplicate")) {
+					DuplicateSelected();
 				}
-
 			}
 		});
 		btn.setHeight("30px");
@@ -257,38 +186,32 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 		footer.setWidth("100%");
 		list.getScrollTable().setFooterTable(footer);
 
-		this.add(Samples_ft);
+		this.add(Projects_ft);
 	}
 
-	public UserSamplesList display() {
+	public UserProjectsListEx display() {
 		new ServerOp() {
 			@Override
 			public void begin() {
 				MpDb.project_svc.all(MpDb.currentUser().getId(), this);
 			}
 			public void onSuccess(Object result) {
-				projectsList = new HashSet<ProjectDTO>(
-						(List<ProjectDTO>) result);
+				MetPetDBApplication.clearLeftSide();
+				projectlist = new HashSet<ProjectDTO>((List<ProjectDTO>) result);
+				MetPetDBApplication.appendToLeft(new MyProjects(projectlist));
 				addTopRows();
-				addSamples();
-				addLeftSide();
+				addProjects();
 			}
 		}.begin();
 		return this;
 	}
 
-	private void addLeftSide() {
-		mysamples = new MySamples();
-		MetPetDBApplication.clearLeftSide();
-		MetPetDBApplication.appendToLeft(mysamples);
-	}
-
-	private List<SampleDTO> getCheckedSamples() {
-		List<SampleDTO> results = new ArrayList<SampleDTO>();
+	private List<ProjectDTO> getCheckedProjects() {
+		List<ProjectDTO> results = new ArrayList<ProjectDTO>();
 		for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++) {
 			if (((MCheckBox) list.getScrollTable().getDataTable().getWidget(i,
 					0)).isChecked())
-				results.add((SampleDTO) (((MCheckBox) list.getScrollTable()
+				results.add((ProjectDTO) (((MCheckBox) list.getScrollTable()
 						.getDataTable().getWidget(i, 0)).getValue()));
 		}
 		return results;
@@ -298,10 +221,10 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 		new ServerOp() {
 			@Override
 			public void begin() {
-				List<SampleDTO> CheckedSamples = getCheckedSamples();
-				Iterator<SampleDTO> itr = CheckedSamples.iterator();
+				List<ProjectDTO> CheckedProjects = getCheckedProjects();
+				Iterator<ProjectDTO> itr = CheckedProjects.iterator();
 				while (itr.hasNext()) {
-					MpDb.sample_svc.delete(itr.next().getId(), this);
+					// MpDb.project_svc.delete(itr.next().getId(), this);
 				}
 			}
 			public void onSuccess(Object result) {
@@ -309,47 +232,7 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 			}
 		}.begin();
 	}
-	private void MakePublicSelected() {
-		new ServerOp() {
-			@Override
-			public void begin() {
-				List<SampleDTO> CheckedSamples = getCheckedSamples();
-				Iterator<SampleDTO> itr = CheckedSamples.iterator();
-				while (itr.hasNext()) {
-					SampleDTO current = itr.next();
-					current.setPublicData(true);
-					MpDb.sample_svc.save(current, this);
-				}
-			}
-			public void onSuccess(Object result) {
-				list.getScrollTable().reloadPage();
-			}
-		}.begin();
-	}
-	private void AddToProjectSelected() {
-		new ServerOp() {
-			@Override
-			public void begin() {
-				MpDb.project_svc.details(Integer.parseInt(lb.getValue(lb
-						.getSelectedIndex())), this);
-			}
-			public void onSuccess(final Object result) {
-				new ServerOp() {
-					@Override
-					public void begin() {
-						List<SampleDTO> CheckedSamples = getCheckedSamples();
-						Iterator<SampleDTO> itr = CheckedSamples.iterator();
-						while (itr.hasNext()) {
-							SampleDTO current = itr.next();
-							current.getProjects().add((ProjectDTO) result);
-							MpDb.sample_svc.save(current, this);
-						}
-					}
-					public void onSuccess(Object result2) {
-						list.getScrollTable().reloadPage();
-					}
-				}.begin();
-			}
-		}.begin();
+	private void DuplicateSelected() {
+
 	}
 }

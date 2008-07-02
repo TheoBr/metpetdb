@@ -37,8 +37,8 @@ public class CustomTableView extends MDialogBox implements ClickListener,
 
 		final FlexTable ft = new FlexTable();
 
-		for (int i = 1; i < list.getColumns().length; i++) {
-			Column temp = (Column) list.getColumns()[i];
+		for (int i = 1; i < list.getOriginalColumns().size(); i++) {
+			Column temp = (Column) list.getOriginalColumns().get(i);
 			CheckBox tempCB = new CheckBox();
 			tempCB.setName(temp.getTitle());
 			ft.setWidget(i, 0, tempCB);
@@ -63,26 +63,16 @@ public class CustomTableView extends MDialogBox implements ClickListener,
 		if (cancel == sender)
 			cancel();
 		else if (submit == sender) {
-			double rowsTotal = list.getScrollTable().getHeaderTable()
-					.getColumnCount();
-			double rowsLeft = rowsTotal;
-			for (int i = 1; i <= cb.size(); i++) {
-				if (!cb.get(i - 1).isChecked()) {
-					rowsLeft--;
+			ArrayList<Column> originalColumns = new ArrayList<Column>(list
+					.getOriginalColumns());
+			ArrayList<Column> displayColumns = new ArrayList<Column>();
+			displayColumns.add(originalColumns.get(0));
+			for (int i = 0; i < cb.size(); i++) {
+				if (cb.get(i).isChecked()) {
+					displayColumns.add(originalColumns.get(i + 1));
 				}
-				list.getScrollTable().getHeaderTable().getCellFormatter()
-						.setVisible(0, i, cb.get(i - 1).isChecked());
-				for (int j = 0; j < list.getScrollTable().getDataTable()
-						.getRowCount(); j++)
-					list.getScrollTable().getDataTable().getCellFormatter()
-							.setVisible(j, i, cb.get(i - 1).isChecked());
 			}
-			list.getScrollTable().getHeaderTable().setWidth(
-					String.valueOf((rowsTotal / rowsLeft) * 100) + "%");
-			list.getScrollTable().getDataTable().setWidth(
-					String.valueOf((rowsTotal / rowsLeft) * 100) + "%");
-			// list.getScrollTable().setWidth(
-			// String.valueOf((rowsTotal / rowsLeft) * 100) + "%");
+			list.newView(displayColumns);
 			hide();
 		}
 	}

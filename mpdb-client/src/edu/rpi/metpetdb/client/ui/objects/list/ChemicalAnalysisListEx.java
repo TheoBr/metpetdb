@@ -1,5 +1,8 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
@@ -20,7 +23,7 @@ public abstract class ChemicalAnalysisListEx extends
 		ListEx<ChemicalAnalysisDTO> {
 
 	public ChemicalAnalysisListEx() {
-		super(columns);
+		super(new ArrayList<Column>(Arrays.asList(columns)));
 	}
 
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;

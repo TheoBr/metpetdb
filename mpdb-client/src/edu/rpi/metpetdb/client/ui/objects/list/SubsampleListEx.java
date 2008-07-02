@@ -1,5 +1,8 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -21,7 +24,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MLink;
 public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
 
 	public SubsampleListEx() {
-		super(columns);
+		super(new ArrayList<Column>(Arrays.asList(columns)));
 	}
 
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;

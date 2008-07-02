@@ -30,6 +30,7 @@ import edu.rpi.metpetdb.client.ui.objects.details.ProjectDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SubsampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
+import edu.rpi.metpetdb.client.ui.objects.list.UserProjectsListEx;
 import edu.rpi.metpetdb.client.ui.objects.list.UserSamplesList;
 import edu.rpi.metpetdb.client.ui.search.Search;
 import edu.rpi.metpetdb.client.ui.user.EditUserProfile;
@@ -185,6 +186,16 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 
+	public static final Screen allProjects = new Screen("AllSamples") {
+		public void executeToken(final String args) {
+			new LoggedInServerOp() {
+				public void command() {
+					show(new UserProjectsListEx().display());
+				}
+			}.begin();
+		}
+	};
+
 	private static final TokenHandler projectSamples = new LKey(
 			"ProjectSamples") {
 		public long get(final Object obj) {
@@ -278,6 +289,7 @@ public class TokenSpace implements HistoryListener {
 		register(bulkUpload);
 		register(search);
 		register(ImageListViewer);
+		register(allProjects);
 
 		// DefaultPaginationBehavior
 		register(new TokenHandler.NoOp("previousPage"));
