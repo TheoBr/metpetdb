@@ -34,6 +34,8 @@ public abstract class ObjectEditorPanel<T> extends DetailsPanel implements
 		save.setVisible(false);
 		delete.setVisible(false);
 
+		edit.addStyleName("editlink");
+
 		init(atts, new Button[] {
 				edit, cancel, save, delete
 		}, true, true);
@@ -118,6 +120,10 @@ public abstract class ObjectEditorPanel<T> extends DetailsPanel implements
 			public void onSuccess(final T result) {
 				onSaveCompletion((MObjectDTO) result);
 			}
+			public void onFailure(final Throwable e) {
+				if (!onFailure2(e))
+					super.onFailure(e);
+			}
 		}.begin();
 	}
 
@@ -188,5 +194,8 @@ public abstract class ObjectEditorPanel<T> extends DetailsPanel implements
 	}
 	protected void onDeleteCompletion(final Object result) {
 		Window.alert("deleted");
+	}
+	protected boolean onFailure2(final Throwable e) {
+		return false;
 	}
 }
