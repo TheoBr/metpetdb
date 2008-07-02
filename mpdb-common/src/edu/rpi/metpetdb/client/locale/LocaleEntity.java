@@ -156,6 +156,10 @@ public interface LocaleEntity extends ConstantsWithLookup {
 
 	String ChemicalAnalysis_datePrecision();
 
+	String ChemicalAnalysis_precisionUnit();
+
+	String ChemicalAnalysis_precision();
+
 	/* Image */
 	String Image_imageType();
 

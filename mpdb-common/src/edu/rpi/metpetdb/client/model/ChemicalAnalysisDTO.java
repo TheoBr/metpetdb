@@ -205,6 +205,17 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 		elements.add(c);
 	}
 
+	public void addElement(final ElementDTO e, final Float amount,
+			final Float precision) {
+		if (elements == null)
+			elements = new HashSet<ChemicalAnalysisElementDTO>();
+		ChemicalAnalysisElementDTO c = new ChemicalAnalysisElementDTO();
+		c.setElement(e);
+		c.setAmount(amount);
+		c.setPrecision(precision);
+		elements.add(c);
+	}
+
 	public void setOxides(final Set<ChemicalAnalysisOxideDTO> o) {
 		oxides = o;
 	}
@@ -221,6 +232,17 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 		ChemicalAnalysisOxideDTO c = new ChemicalAnalysisOxideDTO();
 		c.setOxide(e);
 		c.setAmount(amount);
+		oxides.add(c);
+	}
+
+	public void addOxide(final OxideDTO e, final Float amount,
+			final Float precision) {
+		if (oxides == null)
+			oxides = new HashSet<ChemicalAnalysisOxideDTO>();
+		ChemicalAnalysisOxideDTO c = new ChemicalAnalysisOxideDTO();
+		c.setOxide(e);
+		c.setAmount(amount);
+		c.setPrecision(precision);
 		oxides.add(c);
 	}
 

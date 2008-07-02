@@ -21,6 +21,8 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisElementDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxideDTO;
 import edu.rpi.metpetdb.client.model.ElementDTO;
 import edu.rpi.metpetdb.client.model.MineralDTO;
 import edu.rpi.metpetdb.client.model.OxideDTO;
@@ -29,6 +31,13 @@ import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 
 public class AnalysisParser {
+	public static final int METHOD = 1;
+	public static final int CAOXIDE = 2;
+	public static final int CAELEMENT = 3;
+	public static final int CAOXIDE_WITH_PRECISION = 4;
+	public static final int CAELEMENT_WITH_PRECISION = 4;
+	public static final int SAMPLE = 101;
+	public static final int PERCISIONUNIT = 102;
 
 	private final InputStream is;
 	private HSSFSheet sheet;
@@ -42,10 +51,6 @@ public class AnalysisParser {
 			{
 					"subsample", "setSubsample", SubsampleDTO.class,
 					"ChemicalAnalysis_subsample"
-			},
-			{
-					"sample", "setSubsample", SubsampleDTO.class,
-					"ChemicalAnalysis_sample"
 			},
 			{
 					"(mineral)|(material)", "setMineral", MineralDTO.class,
@@ -106,6 +111,7 @@ public class AnalysisParser {
 	/**
 	 * relates columns to entries in map
 	 */
+	private final Map<Integer, Integer> colType;
 	private final Map<Integer, Method> colMethods;
 	private final Map<Integer, Object> colObjects;
 	private final Map<Integer, String> colName;
@@ -117,6 +123,7 @@ public class AnalysisParser {
 	 */
 	public AnalysisParser(final InputStream is) {
 		analyses = new LinkedList<ChemicalAnalysisDTO>();
+		colType = new HashMap<Integer, Integer>();
 		colMethods = new HashMap<Integer, Method>();
 		colObjects = new HashMap<Integer, Object>();
 		colName = new HashMap<Integer, String>();
@@ -224,12 +231,8 @@ public class AnalysisParser {
 
 			// Determine method to be used for data in this column
 			for (MethodAssociation<ChemicalAnalysisDTO> sma : methodAssociations) {
-				// special case for sample
-				if (text.matches("[Ss][Aa][Mm][Pp][Ll][Ee]"))
-					colObjects.put(new Integer(i), new SampleDTO());
-
-				// Generic title => method check
 				if (sma.matches(text)) {
+					colType.put(new Integer(i), METHOD);
 					colMethods.put(new Integer(i), sma.getMethod());
 					colName.put(new Integer(i), sma.getName());
 					done = true;
@@ -240,6 +243,19 @@ public class AnalysisParser {
 			if (done)
 				continue;
 
+			// special cases
+			if (Pattern.compile("sample", Pattern.CASE_INSENSITIVE).matcher(
+					text).find()) {
+				colType.put(new Integer(i), SAMPLE);
+				colName.put(new Integer(i), "ChemicalAnalysis_sample");
+				continue;
+			} else if (Pattern.compile("precision unit",
+					Pattern.CASE_INSENSITIVE).matcher(text).find()) {
+				colType.put(new Integer(i), PERCISIONUNIT);
+				colName.put(new Integer(i), "ChemicalAnalysis_precisionUnit");
+				continue;
+			}
+
 			// The string didn't match anything we explicitly check for, so
 			// maybe it is an element or an oxide
 			try {
@@ -247,15 +263,45 @@ public class AnalysisParser {
 					if (e.getName().equalsIgnoreCase(text)
 							|| (e.getAlternateName() != null && e
 									.getAlternateName().equalsIgnoreCase(text))) {
-						colMethods.put(new Integer(i),
-								ChemicalAnalysisDTO.class.getMethod(
-										"addElement", ElementDTO.class,
-										Float.class));
+						// Get text of the next column
+						boolean precision_next = false;
+						try {
+							String next_header = header
+									.getCell((short) (i + 1)).toString();
+							precision_next = Pattern.compile("precision",
+									Pattern.CASE_INSENSITIVE).matcher(
+									next_header).find();
+
+						} catch (final NullPointerException npe) {
+							// leave precision_next as false
+						}
+
+						if (precision_next) {
+							colType.put(new Integer(i),
+									CAELEMENT_WITH_PRECISION);
+							colMethods.put(new Integer(i),
+									ChemicalAnalysisDTO.class.getMethod(
+											"addElement", ElementDTO.class,
+											Float.class, Float.class));
+
+							colName.put(new Integer(i + 1),
+									"ChemicalAnalysis_precision");
+						} else {
+							colType.put(new Integer(i), CAELEMENT);
+							colMethods.put(new Integer(i),
+									ChemicalAnalysisDTO.class.getMethod(
+											"addElement", ElementDTO.class,
+											Float.class));
+						}
+
 						colObjects.put(new Integer(i), e);
 						colName
 								.put(new Integer(i),
 										"ChemicalAnalysis_elements");
 						done = true;
+
+						if (precision_next)
+							i++;
 						break;
 					}
 				}
@@ -265,11 +311,40 @@ public class AnalysisParser {
 
 				for (OxideDTO o : oxides) {
 					if (o.getSpecies().equalsIgnoreCase(text)) {
-						colMethods.put(new Integer(i),
-								ChemicalAnalysisDTO.class.getMethod("addOxide",
-										OxideDTO.class, Float.class));
+						// Get text of the next column
+						boolean precision_next = false;
+						try {
+							String next_header = header
+									.getCell((short) (i + 1)).toString();
+							precision_next = Pattern.compile("precision",
+									Pattern.CASE_INSENSITIVE).matcher(
+									next_header).find();
+
+						} catch (final NullPointerException npe) {
+							// leave precision_next as false
+						}
+
+						if (precision_next) {
+							colType.put(new Integer(i), CAOXIDE_WITH_PRECISION);
+							colMethods.put(new Integer(i),
+									ChemicalAnalysisDTO.class.getMethod(
+											"addOxide", OxideDTO.class,
+											Float.class, Float.class));
+							colName.put(new Integer(i + 1),
+									"ChemicalAnalysis_precision");
+						} else {
+							colType.put(new Integer(i), CAOXIDE);
+							colMethods.put(new Integer(i),
+									ChemicalAnalysisDTO.class.getMethod(
+											"addOxide", OxideDTO.class,
+											Float.class));
+						}
+
 						colObjects.put(new Integer(i), o);
 						colName.put(new Integer(i), "ChemicalAnalysis_oxides");
+
+						if (precision_next)
+							i++;
 						break;
 					}
 				}
@@ -294,112 +369,119 @@ public class AnalysisParser {
 		final ChemicalAnalysisDTO ca = new ChemicalAnalysisDTO();
 		boolean sawDataInRow = false;
 
+		String precisionUnit = null;
 		for (Integer i = 0; i < row.getLastCellNum(); ++i) {
 			final HSSFCell cell = row.getCell((short) i.intValue());
 			try {
-				// Get the method we'll be using to parse this particular cell
-				final Method storeMethod = colMethods.get(i);
-
-				if (storeMethod == null)
+				Integer type = colType.get(i);
+				if (type == null)
 					continue;
 
 				System.out.println("\t Parsing Column " + i + ": "
-						+ storeMethod.getName());
+						+ colName.get(new Integer(i)));
 
-				// If an object for the column exists then handle accordingly
-				if (colObjects.get(i) != null) {
-
-					// If the object is a sample, we want the chemical analysis
-					// to be related to a subsample of that sample
-					if (colObjects.get(i) instanceof SampleDTO) {
-						final String data = cell.toString();
-						System.out.println("\t\t(Sample)");
-
-						if (ca.getSubsample() == null)
-							ca.setSubsample(new SubsampleDTO());
-						if (ca.getSubsample().getSample() == null)
-							ca.getSubsample().setSample(new SampleDTO());
-						ca.getSubsample().getSample().setAlias(data);
-						continue;
-					}
-
-					// Otherwise it is an Element or Oxide, so just handle
-					// create one
-					final Object o = colObjects.get(i);
-					final Float data = (float) cell.getNumericCellValue();
-					storeMethod.invoke(ca, o, data);
-					continue;
-				}
-
-				// Determine which class the method wants the content of the
-				// cell to be so it can parse it
-				final Class dataType = storeMethod.getParameterTypes()[0];
-
-				if (dataType == String.class) {
-
-					if (!storeMethod.getName().equals("addReference")
-							&& !storeMethod.getName().equals("setDescription")) {
-						final String[] data = cell.toString()
-								.split("\\s*,\\s*");
-						for (String str : data)
-							storeMethod.invoke(ca, str);
-					} else {
-						final String data = cell.toString();
-						storeMethod.invoke(ca, data);
-					}
-
-				} else if (dataType == SubsampleDTO.class) {
-
+				if (type == SAMPLE) {
 					final String data = cell.toString();
+
 					if (ca.getSubsample() == null)
 						ca.setSubsample(new SubsampleDTO());
-					ca.getSubsample().setName(data);
+					if (ca.getSubsample().getSample() == null)
+						ca.getSubsample().setSample(new SampleDTO());
+					ca.getSubsample().getSample().setAlias(data);
+				} else if (type == PERCISIONUNIT) {
+					precisionUnit = cell.toString();
+				} else if (type == CAOXIDE || type == CAELEMENT) {
+					final Method storeMethod = colMethods.get(new Integer(i));
+					final Object o = colObjects.get(i);
+					final Float data = (float) cell.getNumericCellValue();
 
-				} else if (dataType == MineralDTO.class) {
+					storeMethod.invoke(ca, o, data);
+				} else if (type == CAOXIDE_WITH_PRECISION
+						|| type == CAELEMENT_WITH_PRECISION) {
 
-					final String data = cell.toString();
-					if (ca.getMineral() == null)
-						ca.setMineral(new MineralDTO());
-					ca.getMineral().setName(data);
+					final Method storeMethod = colMethods.get(new Integer(i));
+					final Object o = colObjects.get(i);
+					final Float data = (float) cell.getNumericCellValue();
+					final Float precision = (float) row
+							.getCell((short) (i + 1)).getNumericCellValue();
 
-				} else if (dataType == ReferenceDTO.class) {
+					storeMethod.invoke(ca, o, data, precision);
 
-					final String data = cell.toString();
-					if (ca.getReference() == null)
-						ca.setReference(new ReferenceDTO());
-					ca.getReference().setName(data);
+					i++;
+				} else if (type == METHOD) {
+					final Method storeMethod = colMethods.get(new Integer(i));
 
-				} else if (dataType == double.class) {
+					// Determine which class the method wants the content of the
+					// cell to be so it can parse it
+					final Class dataType = storeMethod.getParameterTypes()[0];
 
-					final double data = cell.getNumericCellValue();
-					storeMethod.invoke(ca, data);
+					if (dataType == String.class) {
 
-				} else if (dataType == Timestamp.class) {
+						if (!storeMethod.getName().equals("addReference")
+								&& !storeMethod.getName().equals(
+										"setDescription")) {
+							final String[] data = cell.toString().split(
+									"\\s*,\\s*");
+							for (String str : data)
+								storeMethod.invoke(ca, str);
+						} else {
+							final String data = cell.toString();
+							storeMethod.invoke(ca, data);
+						}
 
-					try {
-						final Date data = cell.getDateCellValue();
-						ca.setAnalysisDate(new Timestamp(data.getTime()));
-						// storeMethod.invoke(s, new Timestamp(data.getTime()));
-					} catch (final NumberFormatException nfe) {
-						System.out.println("parsing date");
+					} else if (dataType == SubsampleDTO.class) {
+
 						final String data = cell.toString();
-						Integer precision = new Integer(0);
-						Timestamp date = parseDate(data, precision);
-						ca.setAnalysisDate(date);
+						if (ca.getSubsample() == null)
+							ca.setSubsample(new SubsampleDTO());
+						ca.getSubsample().setName(data);
+
+					} else if (dataType == MineralDTO.class) {
+
+						final String data = cell.toString();
+						if (ca.getMineral() == null)
+							ca.setMineral(new MineralDTO());
+						ca.getMineral().setName(data);
+
+					} else if (dataType == ReferenceDTO.class) {
+
+						final String data = cell.toString();
+						if (ca.getReference() == null)
+							ca.setReference(new ReferenceDTO());
+						ca.getReference().setName(data);
+
+					} else if (dataType == double.class) {
+
+						final double data = cell.getNumericCellValue();
+						storeMethod.invoke(ca, data);
+
+					} else if (dataType == Timestamp.class) {
+
+						try {
+							final Date data = cell.getDateCellValue();
+							ca.setAnalysisDate(new Timestamp(data.getTime()));
+							// storeMethod.invoke(s, new
+							// Timestamp(data.getTime()));
+						} catch (final NumberFormatException nfe) {
+							System.out.println("parsing date");
+							final String data = cell.toString();
+							Integer precision = new Integer(0);
+							Timestamp date = parseDate(data, precision);
+							ca.setAnalysisDate(date);
+						}
+
+					} else if (dataType == Boolean.class) {
+
+						final String data = cell.toString();
+						ca.setLargeRock(data.matches("yes")
+								|| data.matches("true"));
+					} else {
+						throw new IllegalStateException(
+								"Don't know how to convert to datatype: "
+										+ dataType.toString());
 					}
-
-				} else if (dataType == Boolean.class) {
-
-					final String data = cell.toString();
-					ca
-							.setLargeRock(data.matches("yes")
-									|| data.matches("true"));
-				} else {
-					throw new IllegalStateException(
-							"Don't know how to convert to datatype: "
-									+ dataType.toString());
+					sawDataInRow = true;
 				}
-				sawDataInRow = true;
 			} catch (final NullPointerException npe) {
 				// empty cell
 				continue;
@@ -417,6 +499,14 @@ public class AnalysisParser {
 		}
 
 		if (sawDataInRow) {
+			if (precisionUnit != null) {
+				for (ChemicalAnalysisElementDTO ele : ca.getElements())
+					ele.setPrecisionUnit(precisionUnit);
+
+				for (ChemicalAnalysisOxideDTO ox : ca.getOxides())
+					ox.setPrecisionUnit(precisionUnit);
+			}
+
 			analyses.add(ca);
 		}
 	}
