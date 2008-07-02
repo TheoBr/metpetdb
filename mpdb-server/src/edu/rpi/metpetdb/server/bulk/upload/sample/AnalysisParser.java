@@ -262,7 +262,8 @@ public class AnalysisParser {
 				for (ElementDTO e : elements) {
 					if (e.getName().equalsIgnoreCase(text)
 							|| (e.getAlternateName() != null && e
-									.getAlternateName().equalsIgnoreCase(text))) {
+									.getAlternateName().equalsIgnoreCase(text))
+							|| (e.getSymbol().equalsIgnoreCase(text))) {
 						// Get text of the next column
 						boolean precision_next = false;
 						try {
