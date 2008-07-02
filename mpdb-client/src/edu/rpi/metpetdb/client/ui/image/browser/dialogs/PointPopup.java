@@ -6,13 +6,14 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
+import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGrid;
 import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
+import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
 public class PointPopup extends DialogBox implements ClickListener {
@@ -32,7 +33,8 @@ public class PointPopup extends DialogBox implements ClickListener {
 		this.locked = ma.getIsLocked();
 
 		final FlowPanel panel = new FlowPanel();
-		panel.add(new Label("Spot Id: " + ma.getSpotId()));
+		panel.add(new MLinkandText("Spot Id: ", ma.getSpotId(), "", TokenSpace
+				.detailsOf(ma)));
 		final MUnorderedList ul = new MUnorderedList();
 		ul.setStyleName("options");
 		this.remove = new ImageHyperlink(new Image(GWT.getModuleBaseURL()

@@ -2,12 +2,10 @@ package edu.rpi.metpetdb.client.ui.left.side;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-
-import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class LeftColWidget extends SimplePanel {
 
@@ -21,12 +19,13 @@ public class LeftColWidget extends SimplePanel {
 		this.setWidget(item);
 
 		final Element header = DOM.createElement("h1");
-		DOM.setElementAttribute(header, "class", "header");
-		final MLink headerLink = new MLink(headerText, new ClickListener() {
-			public void onClick(final Widget sender) {
-
-			}
-		});
+		DOM.setElementAttribute(header, "class", "leftsideHeader");
+		final Label headerLink = new Label(headerText);
+		// final MLink headerLink = new MLink(headerText, new ClickListener() {
+		// public void onClick(final Widget sender) {
+		//
+		// }
+		// });
 		DOM.appendChild(header, headerLink.getElement());
 		DOM.appendChild(item.getElement(), header);
 

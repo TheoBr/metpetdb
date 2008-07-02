@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
@@ -17,7 +18,7 @@ public class PopupMenu extends DialogBox implements ClickListener {
 	public PopupMenu() {
 		super(true);
 		ul = new MUnorderedList();
-		close = new MLink("close", this);
+		close = new MLink(LocaleHandler.lc_text.buttonClose(), this);
 		ul.add(close);
 		final FocusPanel fp = new FocusPanel();
 		final PopupMenu me = this;
@@ -29,6 +30,7 @@ public class PopupMenu extends DialogBox implements ClickListener {
 		fp.setWidget(ul);
 		this.setText("Menu");
 		this.setWidget(fp);
+		this.setStyleName("mpdb-menuPopup");
 		DOM.setStyleAttribute(this.getElement(), "zIndex", "1000");
 	}
 

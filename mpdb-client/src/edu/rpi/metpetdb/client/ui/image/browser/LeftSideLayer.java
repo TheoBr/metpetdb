@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
+import edu.rpi.metpetdb.client.ui.left.side.MySubsamples;
 import edu.rpi.metpetdb.client.ui.left.side.UsesLeftColumn;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
@@ -31,9 +32,9 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 
 	public void registerImage(final ImageOnGrid iog) {
 		final SimplePanel container = new SimplePanel();
-		final String checkBoxText = iog.getIog().getImage().getFilename().equals("")
-				? iog.getIog().getImage().getChecksum()
-				: iog.getIog().getImage().getFilename();
+		final String checkBoxText = iog.getIog().getImage().getFilename()
+				.equals("") ? iog.getIog().getImage().getChecksum() : iog
+				.getIog().getImage().getFilename();
 		final CheckBox checkBox = new CheckBox(checkBoxText);
 		checkBox.addClickListener(new ClickListener() {
 			public void onClick(final Widget sender) {
@@ -60,7 +61,8 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 		int newIndex = layerItems.size();
 		while (itr.hasNext()) {
 			final LayerItem layerItem = itr.next();
-			if (layerItem.getImageOnGrid().getIog().getZorder() > iog.getIog().getZorder()) {
+			if (layerItem.getImageOnGrid().getIog().getZorder() > iog.getIog()
+					.getZorder()) {
 				if (layerItem.getIndex() < newIndex) {
 					// newIndex = layerItem.getIndex();
 				}
@@ -104,7 +106,9 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 
 	public void onPageChanged() {
 		MetPetDBApplication.removePageWatcher(this);
-		MetPetDBApplication.removeFromLeft(this);
+		((MySubsamples)MetPetDBApplication.getFromLeft(0)).removeLayers(this);
+		
+		// MetPetDBApplication.removeFromLeft(this);
 	}
 
 	public class LayerItem {

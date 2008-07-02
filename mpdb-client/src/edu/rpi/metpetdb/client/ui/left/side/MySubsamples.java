@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.ui.left.side;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -8,20 +9,24 @@ import com.google.gwt.user.client.ui.Label;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.image.browser.LeftSideLayer;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList.ListItem;
 
 public class MySubsamples extends LeftColWidget implements UsesLeftColumn {
+	private MUnorderedList pList;
 
 	public MySubsamples(final List<SubsampleDTO> subsamples) {
-		super(subsamples.get(0).getSample().getName());
+		super("Sample " + subsamples.get(0).getSample().getName());
 		this.setStyleName("lcol-MyProjects");
 		// MetPetDBApplication.registerPageWatcher(this);
-		final MUnorderedList pList = new MUnorderedList();
+		pList = new MUnorderedList();
+		final MUnorderedList details = new MUnorderedList();
 		final MLink addSubSample = new MLink("Add Subsample",
 				TokenSpace.enterSubsample);
-		final MLink details = new MLink("Details", TokenSpace
-				.detailsOf(subsamples.get(0).getSample()));
+		details.add(new MLink("Details", TokenSpace.detailsOf(subsamples.get(0)
+				.getSample())));
 		// pList.add(addSubSample);
 		if (subsamples != null)
 			pList.add(addSubSamples(subsamples));
@@ -30,12 +35,35 @@ public class MySubsamples extends LeftColWidget implements UsesLeftColumn {
 				+ "'s Subsamples");
 		details.setStyleName("lcol-sectionList");
 		pList.setStyleName("lcol-sectionList");
-		subsamplesLabel.setStyleName("h1");
+		subsamplesLabel.getElement().setClassName("h1");
+		subsamplesLabel.setStyleName("leftsideHeader");
+		pList.getListItemAtIndex(0).getWidget().setStyleName("cur");
 
 		this.add(details);
 		this.add(subsamplesLabel);
 		this.add(pList);
+	}
 
+	public void insertLayers(final LeftSideLayer layers,
+			final SubsampleDTO subsample) {
+
+		HashSet<ListItem> temp = (HashSet<ListItem>) pList.getItems();
+		MUnorderedList tempList = (MUnorderedList) temp.iterator().next()
+				.getWidget();
+		for (int i = 0; i < tempList.getWidgetCount(); i++) {
+			final MLink tempLink = (MLink) tempList.getWidget(i);
+			if (tempLink.getText().equals(subsample.getName())) {
+				tempList.add(layers, i + 1);
+				break;
+			}
+		}
+	}
+
+	public void removeLayers(final LeftSideLayer layers) {
+		HashSet<ListItem> temp = (HashSet<ListItem>) pList.getItems();
+		MUnorderedList tempList = (MUnorderedList) temp.iterator().next()
+				.getWidget();
+		tempList.remove(layers);
 	}
 
 	public MySubsamples(final SampleDTO sample) {
@@ -61,11 +89,6 @@ public class MySubsamples extends LeftColWidget implements UsesLeftColumn {
 	public static MLink showSubsampleDetails(final SubsampleDTO subsample) {
 		final MLink focusProject = new MLink(subsample.getName(), TokenSpace
 				.detailsOf(subsample));
-		// End
-		// of
-		// ClickListener
-
-		// myProjects.add(focusProject);
 		return focusProject;
 	}
 

@@ -8,10 +8,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -38,11 +36,11 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.AddImageAttribute;
 import edu.rpi.metpetdb.client.ui.left.side.MySubsamples;
 import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
+import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
 
 public class SubsampleDetails extends FlowPanel {
 	private FlexTable ft;
-	private HorizontalPanel Header;
-	private Label pageHeader;
+	private MLinkandText Header;
 	final Element sampleHeader;
 
 	private static GenericAttribute[] subsampleAtts = {
@@ -117,46 +115,44 @@ public class SubsampleDetails extends FlowPanel {
 									.getGrid()));
 				}
 
-				Label description = new Label("Subsample of");
-				MLink sample = new MLink(s.getSample().getName(), TokenSpace
-						.detailsOf((SampleDTO) s.getSample()));
+				Header.setPreText("Subsample of ");
+				Header.setLinkText(s.getSample().getName());
+				Header.setTargetHistoryToken(TokenSpace.detailsOf((SampleDTO) s
+						.getSample()));
 
-				Header.add(description);
-				Header.add(sample);
-				Header.setSpacing(5);
-
-				DOM.setInnerText(sampleHeader, s.getName());
+				DOM.setInnerText(sampleHeader, "Subsample " + s.getName());
 				sampleId = s.getSample().getId();
 
 			}
 		};
 
-		sampleHeader = DOM.createElement("h1");
+		sampleHeader = DOM.createElement("h2");
 		DOM.appendChild(this.getElement(), sampleHeader);
-		Header = new HorizontalPanel();
-		pageHeader = new Label("");
-		pageHeader.addStyleName("big");
+		Header = new MLinkandText();
 
 		final OnEnterPanel.ObjectEditor oep = new OnEnterPanel.ObjectEditor(
 				p_subsample);
 		ft = new FlexTable();
 		Label details_label = new Label("Attributes");
 		details_label.addStyleName("bold");
+		map = new MLink();
 		ft.setWidget(0, 0, details_label);
+		ft.setWidget(0, 1, map);
 		ft.setWidget(1, 0, oep);
 		ft.getFlexCellFormatter().setAlignment(0, 0,
 				HasHorizontalAlignment.ALIGN_LEFT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		// ft.getFlexCellFormatter().setWidth(0, 0, "20%");
-		// ft.getFlexCellFormatter().setWidth(1, 0, "40%");
+		ft.getFlexCellFormatter().setAlignment(0, 1,
+				HasHorizontalAlignment.ALIGN_RIGHT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
 		ft.setWidth("40%");
 		ft.getFlexCellFormatter().setHeight(0, 0, "35px");
+		ft.getFlexCellFormatter().setWidth(0, 1, "100px");
 		ft.getFlexCellFormatter().setAlignment(1, 0,
 				HasHorizontalAlignment.ALIGN_LEFT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		ft.getRowFormatter().setStyleName(0, "mpdb-dataTableLightBlue");
 
-		// add(pageHeader);
 		// add(pageDescription);
 		add(Header);
 		add(ft);
@@ -193,7 +189,9 @@ public class SubsampleDetails extends FlowPanel {
 			}
 		});
 		addChemicalAnalysis.addStyleName(Styles.ADDLINK);
-		chemft.setWidget(0, 0, new HTML("<Strong>Mineral Analysis</Strong>"));
+		final Label chemAnalysis = new Label("Chemical Analysis");
+		chemAnalysis.getElement().setClassName("h2");
+		chemft.setWidget(0, 0, chemAnalysis);
 		chemft.setWidget(0, 1, addChemicalAnalysis);
 		chemft.getFlexCellFormatter().setAlignment(0, 1,
 				HasHorizontalAlignment.ALIGN_RIGHT,
@@ -207,8 +205,6 @@ public class SubsampleDetails extends FlowPanel {
 	public SubsampleDetails showById(final long id) {
 		subsampleId = id;
 		p_subsample.load();
-		map = new MLink();
-		add(map);
 		showChemicalAnalysis();
 		return this;
 	}

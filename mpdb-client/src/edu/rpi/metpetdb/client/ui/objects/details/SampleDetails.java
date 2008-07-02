@@ -107,7 +107,7 @@ public class SampleDetails extends FlowPanel {
 			protected void onLoadCompletion(final MObjectDTO result) {
 				super.onLoadCompletion(result);
 				final SampleDTO s = (SampleDTO) result;
-				DOM.setInnerText(sampleHeader, s.getName());
+				DOM.setInnerText(sampleHeader, "Sample " + s.getName());
 			}
 
 			protected boolean onFailure2(final Throwable e) {
@@ -250,12 +250,18 @@ public class SampleDetails extends FlowPanel {
 
 	};
 
+	private void addGoogleMaps() {
+		// GMap2Widget mapWidget = new GMap2Widget("300", "300");
+		// ft.setWidget(1, 2, mapWidget);
+	}
+
 	public SampleDetails showById(final long id) {
 		sampleId = id;
 		p_sample.load();
 		addExtraElements();
 		addComments();
 		addSubsamplesToLeft();
+		addGoogleMaps();
 		return this;
 	}
 

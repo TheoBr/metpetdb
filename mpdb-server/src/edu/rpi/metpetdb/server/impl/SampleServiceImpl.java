@@ -1,8 +1,10 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Query;
@@ -30,24 +32,80 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 
 	public Results<SampleDTO> all(final PaginationParameters p) {
 		final String name = "Sample.all";
-		return toResults(sizeQuery(name), pageQuery(name, p));
+		final Query sizeQuery = sizeQuery(name);
+		final List<Sample> l = pageQuery(name, p).list();
+		final Number sz = (Number) sizeQuery.uniqueResult();
+		if (sz.intValue() > 0) {
+			final Iterator<Sample> itr = l.iterator();
+			while (itr.hasNext()) {
+				final Sample s = (Sample) itr.next();
+				s.setSubsampleCount(((Number) sizeQuery("Subsample.bySampleId",
+						s.getId()).uniqueResult()).intValue());
+			}
+			final List<SampleDTO> samples = cloneBean(l);
+			return new Results<SampleDTO>(sz.intValue(), samples);
+		} else
+			return new Results<SampleDTO>(sz.intValue(),
+					new ArrayList<SampleDTO>());
 	}
 
 	public Results<SampleDTO> allSamplesForUser(final PaginationParameters p,
 			long id) {
 		final String name = "Sample.forUser";
-		return toResults(sizeQuery(name, id), pageQuery(name, p, id));
+		final Query sizeQuery = sizeQuery(name, id);
+		final List<Sample> l = pageQuery(name, p, id).list();
+		final Number sz = (Number) sizeQuery.uniqueResult();
+		if (sz.intValue() > 0) {
+			final Iterator<Sample> itr = l.iterator();
+			while (itr.hasNext()) {
+				final Sample s = (Sample) itr.next();
+				s.setSubsampleCount(((Number) sizeQuery("Subsample.bySampleId",
+						s.getId()).uniqueResult()).intValue());
+			}
+			final List<SampleDTO> samples = cloneBean(l);
+			return new Results<SampleDTO>(sz.intValue(), samples);
+		} else
+			return new Results<SampleDTO>(sz.intValue(),
+					new ArrayList<SampleDTO>());
 	}
 
 	public Results<SampleDTO> allPublicSamples(final PaginationParameters p) {
 		final String name = "Sample.allPublic";
-		return toResults(sizeQuery(name), pageQuery(name, p));
+		final Query sizeQuery = sizeQuery(name);
+		final List<Sample> l = pageQuery(name, p).list();
+		final Number sz = (Number) sizeQuery.uniqueResult();
+		if (sz.intValue() > 0) {
+			final Iterator<Sample> itr = l.iterator();
+			while (itr.hasNext()) {
+				final Sample s = (Sample) itr.next();
+				s.setSubsampleCount(((Number) sizeQuery("Subsample.bySampleId",
+						s.getId()).uniqueResult()).intValue());
+			}
+			final List<SampleDTO> samples = cloneBean(l);
+			return new Results<SampleDTO>(sz.intValue(), samples);
+		} else
+			return new Results<SampleDTO>(sz.intValue(),
+					new ArrayList<SampleDTO>());
 	}
 
 	public Results<SampleDTO> projectSamples(final PaginationParameters p,
 			long id) {
 		final String name = "Sample.forProject";
-		return toResults(sizeQuery(name, id), pageQuery(name, p, id));
+		final Query sizeQuery = sizeQuery(name, id);
+		final List<Sample> l = pageQuery(name, p, id).list();
+		final Number sz = (Number) sizeQuery.uniqueResult();
+		if (sz.intValue() > 0) {
+			final Iterator<Sample> itr = l.iterator();
+			while (itr.hasNext()) {
+				final Sample s = (Sample) itr.next();
+				s.setSubsampleCount(((Number) sizeQuery("Subsample.bySampleId",
+						s.getId()).uniqueResult()).intValue());
+			}
+			final List<SampleDTO> samples = cloneBean(l);
+			return new Results<SampleDTO>(sz.intValue(), samples);
+		} else
+			return new Results<SampleDTO>(sz.intValue(),
+					new ArrayList<SampleDTO>());
 	}
 
 	public SampleDTO details(final long id) throws NoSuchObjectException {

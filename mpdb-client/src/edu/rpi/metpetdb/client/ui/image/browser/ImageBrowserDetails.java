@@ -30,6 +30,7 @@ import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.image.browser.click.listeners.AddPointListener;
 import edu.rpi.metpetdb.client.ui.image.browser.click.listeners.HideMenuListener;
 import edu.rpi.metpetdb.client.ui.image.browser.click.listeners.LockListener;
@@ -41,9 +42,11 @@ import edu.rpi.metpetdb.client.ui.image.browser.dialogs.PointPopup;
 import edu.rpi.metpetdb.client.ui.image.browser.dialogs.PopupMenu;
 import edu.rpi.metpetdb.client.ui.image.browser.widgets.DCFlowPanel;
 import edu.rpi.metpetdb.client.ui.image.browser.widgets.ResizableWidget;
+import edu.rpi.metpetdb.client.ui.left.side.MySubsamples;
 import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
+import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
 //TODO stores the imagesongrid better for transient stuff
@@ -96,7 +99,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		this.info = new Label();
 		this.scaleDisplay = new Label();
 		this.scaleDisplay.setStyleName("mpdb-scale");
-		this.scaleDisplay.setText(String.valueOf(this.scale));
+		this.scaleDisplay.setText(String.valueOf(this.scale) + " mm");
 		this.addExistingImage = new MLink("Add Existing Image", this);
 		this.addExistingImage.setStyleName("addlink");
 		this.bringToFront = new MLink("Bring To Front", this);
@@ -171,13 +174,16 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	}
 
 	private void buildInterface() {
-		final Element header = DOM.createElement("h2");
-		final Element sampleHeader = DOM.createElement("h1");
-		DOM.setInnerText(header, this.g.getSubsample().getName() + "'s Map");
-		DOM.setInnerText(sampleHeader, this.g.getSubsample().getSample()
-				.getAlias());
-		DOM.appendChild(this.getElement(), sampleHeader);
-		DOM.appendChild(this.getElement(), header);
+		final MLinkandText header = new MLinkandText("Subsample ", this.g
+				.getSubsample().getName(), "'s Map", TokenSpace
+				.detailsOf(this.g.getSubsample()));
+		final MLinkandText sampleHeader = new MLinkandText("Sample ", this.g
+				.getSubsample().getSample().getName(), "", TokenSpace
+				.detailsOf(this.g.getSubsample().getSample()));
+		header.addStyleName("h3");
+		sampleHeader.addStyleName("h2");
+		this.add(sampleHeader);
+		this.add(header);
 		DOM.setElementAttribute(this.grid.getElement(), "id", "canvas");
 		final FlowPanel fp = this.createViewControls();
 		this.grid.add(fp);
@@ -195,7 +201,10 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		this.add(this.save);
 		this.add(this.info);
 		this.layers = new LeftSideLayer(this.g.getSubsample().getName());
-		MetPetDBApplication.appendToLeft(this.layers);
+		// MetPetDBApplication.appendToLeft(this.layers);
+
+		((MySubsamples) MetPetDBApplication.getFromLeft(0)).insertLayers(
+				this.layers, this.g.getSubsample());
 		this.mouseListener = new ImageBrowserMouseListener(this.grid,
 				this.imagesOnGrid.values(), this.zOrderManager, this.g
 						.getSubsample(), this, fp);
@@ -588,6 +597,9 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 			}
 
 			public void onSuccess(final Object result) {
+				new ConfirmationDialogBox(LocaleHandler.lc_text
+						.notice_GridSaved(ImageBrowserDetails.this.g
+								.getSubsample().getName()), false);
 			}
 		}.begin();
 

@@ -4,6 +4,8 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -30,27 +32,33 @@ public class OpacityPopup extends DialogBox implements ClickListener {
 		final VerticalPanel vp = new VerticalPanel();
 
 		vp.add(dpb);
-		vp.add(ok);
-		vp.add(cancel);
+
+		final HorizontalPanel hp = new HorizontalPanel();
+		hp.add(ok);
+		hp.add(cancel);
+		vp.add(hp);
+		vp.setCellHorizontalAlignment(hp, HasHorizontalAlignment.ALIGN_CENTER);
 
 		this.setPopupPosition(x, y - this.getOffsetWidth());
 
-		this.setStyleName("gwt-DialogBox");
+		// this.setStyleName("gwt-DialogBox");
 		DOM.setStyleAttribute(this.getElement(), "zIndex", "1000");
 
 		this.setText("Click here to drag this dialog box");
 
+		this.setStyleName("mpdb-pointPopup");
+		this.addStyleName("dialogBox-caption-msg");
 		this.setWidget(vp);
 	}
 
 	public void onClick(final Widget sender) {
 		if (sender == ok) {
 			iog.getIog().setOpacity(dpb.getProgress());
-			((DialogBox) sender.getParent().getParent()).hide();
+			this.hide();
 			if (continuation != null)
 				continuation.onSuccess(String.valueOf(dpb.getProgress()));
 		} else if (sender == cancel) {
-			((DialogBox) sender.getParent().getParent()).hide();
+			this.hide();
 			if (continuation != null)
 				continuation.onSuccess(String
 						.valueOf(iog.getIog().getOpacity()));

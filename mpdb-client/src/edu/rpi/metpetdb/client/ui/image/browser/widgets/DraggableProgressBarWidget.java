@@ -23,6 +23,7 @@ public class DraggableProgressBarWidget extends VerticalPanel implements
 	private final int min;
 	private final int max;
 	private final ServerOp continuation;
+	private boolean clicked;
 
 	public DraggableProgressBarWidget(final int elements, final int minOpacity,
 			final int maxOpacity, final ServerOp r) {
@@ -40,10 +41,12 @@ public class DraggableProgressBarWidget extends VerticalPanel implements
 				dpb.setProgress((int) (x / (float) dpb.getOffsetWidth() * 100));
 				value.setText(String.valueOf(dpb.getProgress()));
 				r.onSuccess(String.valueOf(dpb.getProgress()));
+				clicked = false;
 			}
 
 			public void onMouseDown(final Widget sender, final int x,
 					final int y) {
+				clicked = true;
 			}
 
 			public void onMouseLeave(final Widget sender) {
@@ -51,6 +54,13 @@ public class DraggableProgressBarWidget extends VerticalPanel implements
 
 			public void onMouseMove(final Widget sender, final int x,
 					final int y) {
+				if (clicked) {
+					dpb
+							.setProgress((int) (x
+									/ (float) dpb.getOffsetWidth() * 100));
+					value.setText(String.valueOf(dpb.getProgress()));
+					r.onSuccess(String.valueOf(dpb.getProgress()));
+				}
 			}
 		});
 
@@ -69,8 +79,7 @@ public class DraggableProgressBarWidget extends VerticalPanel implements
 				}
 			}
 		});
-		this.add(new Label(
-				"Click and drag the bar to set the opacity, then click Ok"));
+		this.add(new Label("Click and drag the bar to set the opacity"));
 
 		final HorizontalPanel hp = new HorizontalPanel();
 
@@ -83,7 +92,6 @@ public class DraggableProgressBarWidget extends VerticalPanel implements
 		min = minOpacity;
 		max = maxOpacity;
 	}
-
 	public DraggableProgressBarWidget(final int elements, final int minOpacity,
 			final int maxOpacity, int start, final ServerOp r) {
 		this(elements, minOpacity, maxOpacity, r);
