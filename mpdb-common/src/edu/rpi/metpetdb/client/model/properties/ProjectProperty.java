@@ -19,10 +19,18 @@ public enum ProjectProperty implements Property {
 			return ((ProjectDTO) project).getOwner();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T project,
-				final K owner) {
+		public <T extends MObjectDTO, K> void set(final T project, final K owner) {
 			((ProjectDTO) project).setOwner((UserDTO) owner);
 		}
-	};
+	},
+	memberCount {
+		public <T extends MObjectDTO> Integer get(final T project) {
+			return ((ProjectDTO) project).getMembers().size();
+		}
+
+		public <T extends MObjectDTO, K> void set(final T project,
+				final K subsampleCount) {
+		}
+	},
 
 }

@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.server.impl;
 
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.exception.ConstraintViolationException;
 
 import edu.rpi.metpetdb.client.error.DuplicateValueException;
@@ -18,6 +19,16 @@ import edu.rpi.metpetdb.server.model.Project;
 
 public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	private static final long serialVersionUID = 1L;
+
+	public Results<ProjectDTO> all(final PaginationParameters p,
+			final long ownerId) {
+		final String name = "Project.byOwnerId";
+		final Query sizeQuery = sizeQuery(name);
+		final Query pageQuery = pageQuery(name, p);
+		sizeQuery.setLong("ownerId", ownerId);
+		pageQuery.setLong("ownerId", ownerId);
+		return toResults(sizeQuery, pageQuery);
+	}
 
 	public List<ProjectDTO> all(final long userId) throws NoSuchObjectException {
 		return cloneBean(byKey("Project", "ownerId", userId));

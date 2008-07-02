@@ -19,7 +19,6 @@ body {
 	margin: 0 1.5em 1.5em;
 }
 
-
 /*-------------------------------------
                  header
  --------------------------------------*/
@@ -176,7 +175,7 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 }
 #leftcol h1.header {
 	background: #dadada url(http://mpdb.zakness.com/samana/bg-leftcol-header.gif) repeat-y right top;
-	font: 0.8em Verdana, sans-serif;
+	font: 1em Verdana, sans-serif bold;
 	padding: 0.8em 0.5em 0.5em;
 	color: #324453;
 	border-bottom: 1px solid #c8c8c8;
@@ -196,6 +195,12 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 }
 #leftcol ul.lcol-sectionList li.evenRow {
 	background: #e6eaf1 url(http://mpdb.zakness.com/images/bg-sidebar-li-odd.gif) repeat-y right top;
+}
+
+#leftcol ul.lcol-sectionList cur {
+	background:#FFFFFF url(../images/arrow-blue-right.gif) no-repeat scroll 2px center;
+	color:#163D6C;
+	font-weight:bold;
 }
 #leftcol #notice {
 	padding-left: 0.5em;

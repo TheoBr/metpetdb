@@ -11,6 +11,10 @@ import edu.rpi.metpetdb.client.paging.Results;
 
 /** @see ProjectService */
 public interface ProjectServiceAsync {
+
+	void all(PaginationParameters p, long ownerId,
+			AsyncCallback<Results<ProjectDTO>> ac);
+
 	void details(int projectId, AsyncCallback<ProjectDTO> ac);
 
 	void saveProject(ProjectDTO proj, AsyncCallback<ProjectDTO> ac);

@@ -261,6 +261,12 @@ height:8px;
  z-index:400;
  }
  
+ .mpdb-menuPopup {
+ background:white;
+ border:solid 1px black;
+ z-index:400;
+ }
+ 
 .layer-Drag {
 	cursor: move;
 }

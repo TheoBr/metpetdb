@@ -51,6 +51,7 @@ public interface LocaleText extends Messages {
 	/* Notices */
 	String notice_Welcome();
 	String notice_PasswordChanged(String username);
+	String notice_GridSaved(String subsample);
 
 	/* Title Bars */
 	String title_PleaseLogin();
@@ -75,6 +76,7 @@ public interface LocaleText extends Messages {
 	String buttonUploadImage();
 	String buttonUploadSpreadsheet();
 	String buttonSubmit();
+	String buttonContinue();
 
 	/* Errors */
 	String errorTitle_UnknownError();

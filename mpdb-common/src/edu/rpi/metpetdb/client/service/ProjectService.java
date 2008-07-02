@@ -16,6 +16,8 @@ import edu.rpi.metpetdb.client.paging.Results;
  * Server operations to fetch and manipulate {@link ProjectDTO}s.
  */
 public interface ProjectService extends RemoteService {
+
+	Results<ProjectDTO> all(PaginationParameters p, final long ownerId);
 	/**
 	 * Get the data for a project.
 	 * 

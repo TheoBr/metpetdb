@@ -9,6 +9,14 @@ public interface LocaleEntity extends ConstantsWithLookup {
 
 	String Project_name();
 
+	String Project_Owner();
+
+	String Project_MemberCount();
+
+	String Project_LastSampleAddded();
+
+	String Project_Actions();
+
 	/* Sample */
 	String Sample();
 

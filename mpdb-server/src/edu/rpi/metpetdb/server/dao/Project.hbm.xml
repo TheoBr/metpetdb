@@ -37,6 +37,27 @@
     where p.owner.id = :ownerId
   </query>
   
+  <query name="Project.byOwnerId,size">
+    select count(*) from Project p
+    inner join p.owner
+    where p.owner.id = :ownerId
+  </query>
+  
+  <query name="Project.byOwnerId/name">
+    from Project p
+    inner join fetch p.owner 
+    where p.owner.id = :ownerId
+    order by p.name
+  </query>
+  
+  <query name="Project.byOwnerId/owner">
+    from Project p
+    inner join fetch p.owner 
+    where p.owner.id = :ownerId
+    order by p.owner.username
+  </query>
+  
+  
   <query name="Project.samples,size">
   	select count(*) from Project p
   	inner join p.samples
