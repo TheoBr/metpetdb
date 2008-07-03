@@ -15,6 +15,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -348,6 +349,24 @@ public class MetPetDBApplication implements EntryPoint {
 		// hdrnav.addItem(LocaleHandler.lc_text.faqMenu(), faq);
 		// hdrnav.addItem(LocaleHandler.lc_text.wikiMenu(), wiki);
 		hdrnav.addItem("Bulk Upload", TokenSpace.bulkUpload);
+		hdrnav.addItem("Google Earth", new Command() {
+			public void execute() {
+				final FormPanel fp = new FormPanel();
+				new ServerOp() {
+					public void begin() {
+						fp.setMethod(FormPanel.METHOD_GET);
+						fp.setEncoding(FormPanel.ENCODING_URLENCODED);
+						fp.setAction(GWT.getModuleBaseURL() + "/BasicKML.kml");
+						MetPetDBApplication.appendToLeft(fp);
+						fp.submit();
+					}
+					public void onSuccess(Object result) {
+						MetPetDBApplication.removeFromLeft(fp);
+					}
+				}.begin();
+			}
+		});
+		// hdrnav.addItem("Google Earth", TokenSpace.googleEarth);
 		// hdrnav.addItem("regenerate constraints", new Command() {
 		// public void execute() {
 		// new VoidServerOp() {
