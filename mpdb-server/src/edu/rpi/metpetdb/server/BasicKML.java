@@ -79,6 +79,9 @@ public class BasicKML extends HttpServlet {
 				else
 					lngErr = 0D;
 
+				response.getWriter().write(" <Folder>\n");
+				response.getWriter().write(
+						"<name>" + theSample.getAlias() + "</name>\n");
 				response.getWriter().write(" <Placemark>\n");
 				response.getWriter().write(
 						"<name>" + theSample.getAlias() + "</name>\n");
@@ -128,6 +131,7 @@ public class BasicKML extends HttpServlet {
 				response.getWriter().write(" </coordinates>\n");
 				response.getWriter().write(" </LineString>\n");
 				response.getWriter().write(" </Placemark>\n");
+				response.getWriter().write(" </Folder>\n");
 			}
 			response.getWriter().write("</Document>");
 		} catch (final IOException ioe) {

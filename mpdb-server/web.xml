@@ -167,6 +167,15 @@
 	<servlet-name>images</servlet-name>
 	<url-pattern>/image/*</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+	<servlet-name>BasicKML</servlet-name>
+	<servlet-class>edu.rpi.metpetdb.server.BasicKML</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>BasicKML</servlet-name>
+    <url-pattern>/BasicKML.kml</url-pattern>
+  </servlet-mapping>
 
   <!--
   * Our static data caching and compression servlet.

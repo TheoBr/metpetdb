@@ -352,21 +352,14 @@ public class MetPetDBApplication implements EntryPoint {
 		hdrnav.addItem("Google Earth", new Command() {
 			public void execute() {
 				final FormPanel fp = new FormPanel();
-				new ServerOp() {
-					public void begin() {
-						fp.setMethod(FormPanel.METHOD_GET);
-						fp.setEncoding(FormPanel.ENCODING_URLENCODED);
-						fp.setAction(GWT.getModuleBaseURL() + "/BasicKML.kml");
-						MetPetDBApplication.appendToLeft(fp);
-						fp.submit();
-					}
-					public void onSuccess(Object result) {
-						MetPetDBApplication.removeFromLeft(fp);
-					}
-				}.begin();
+				fp.setMethod(FormPanel.METHOD_GET);
+				fp.setEncoding(FormPanel.ENCODING_URLENCODED);
+				fp.setAction(GWT.getModuleBaseURL() + "BasicKML.kml");
+				contentContainer.add(fp);
+				fp.submit();
 			}
 		});
-		// hdrnav.addItem("Google Earth", TokenSpace.googleEarth);
+
 		// hdrnav.addItem("regenerate constraints", new Command() {
 		// public void execute() {
 		// new VoidServerOp() {
