@@ -2,6 +2,16 @@ package edu.rpi.metpetdb.client.ui.objects.details;
 
 import java.util.List;
 
+import org.postgis.Point;
+
+import com.google.gwt.maps.client.InfoWindowContent;
+import com.google.gwt.maps.client.MapWidget;
+import com.google.gwt.maps.client.control.LargeMapControl;
+import com.google.gwt.maps.client.control.MapTypeControl;
+import com.google.gwt.maps.client.control.ScaleControl;
+import com.google.gwt.maps.client.event.MarkerClickHandler;
+import com.google.gwt.maps.client.geom.LatLng;
+import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
@@ -46,6 +56,9 @@ public class SampleDetails extends FlowPanel {
 	private FlexTable ft;
 	final Element sampleHeader;
 	private MySubsamples subsamplesLeft;
+	private LatLng samplePosition;
+	private double latError;
+	private double lngError;
 
 	private static GenericAttribute[] sampleAtts = {
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
@@ -108,6 +121,11 @@ public class SampleDetails extends FlowPanel {
 				super.onLoadCompletion(result);
 				final SampleDTO s = (SampleDTO) result;
 				DOM.setInnerText(sampleHeader, "Sample " + s.getName());
+				samplePosition = new LatLng(((Point) s.getLocation()).x,
+						((Point) s.getLocation()).y);
+				latError = s.getLatitudeError();
+				lngError = s.getLongitudeError();
+				addGoogleMaps();
 			}
 
 			protected boolean onFailure2(final Throwable e) {
@@ -118,6 +136,7 @@ public class SampleDetails extends FlowPanel {
 		};
 		final OnEnterPanel.ObjectEditor oep = new OnEnterPanel.ObjectEditor(
 				p_sample);
+
 		oep.setStyleName("sd-details");
 		sampleHeader = DOM.createElement("h1");
 		DOM.appendChild(this.getElement(), sampleHeader);
@@ -136,9 +155,10 @@ public class SampleDetails extends FlowPanel {
 		ft.getFlexCellFormatter().setHeight(0, 0, "35px");
 		ft.getFlexCellFormatter().setColSpan(0, 0, 3);
 		ft.getFlexCellFormatter().setAlignment(1, 0,
-				HasHorizontalAlignment.ALIGN_CENTER,
-				HasVerticalAlignment.ALIGN_MIDDLE);
+				HasHorizontalAlignment.ALIGN_LEFT,
+				HasVerticalAlignment.ALIGN_BOTTOM);
 		ft.getRowFormatter().setStyleName(0, "mpdb-dataTableLightBlue");
+		ft.getFlexCellFormatter().setRowSpan(1, 1, 2);
 		add(ft);
 	}
 	private void addExtraElements() {
@@ -251,8 +271,34 @@ public class SampleDetails extends FlowPanel {
 	};
 
 	private void addGoogleMaps() {
-		// GMap2Widget mapWidget = new GMap2Widget("300", "300");
-		// ft.setWidget(1, 2, mapWidget);
+		final MapWidget map = new MapWidget(samplePosition, 4);
+		map.setSize("300px", "300px");
+		final Marker sampleMarker = new Marker(samplePosition);
+		sampleMarker.addMarkerClickHandler(new MarkerClickHandler() {
+			public void onClick(MarkerClickEvent sender) {
+				map.getInfoWindow().open(
+						sampleMarker,
+						new InfoWindowContent("Lat: "
+								+ samplePosition.getLatitude() + " Lng:"
+								+ samplePosition.getLongitude()
+								+ "<br>Lat Error: " + latError + " LngError: "
+								+ lngError));
+			}
+		});
+
+		map.addOverlay(sampleMarker);
+		map.setCenter(samplePosition);
+
+		map.addControl(new LargeMapControl());
+		map.addControl(new MapTypeControl());
+		map.addControl(new ScaleControl());
+
+		ft.setWidget(1, 2, map);
+		ft.getFlexCellFormatter().setRowSpan(1, 2, 2);
+		ft.getFlexCellFormatter().setAlignment(1, 2,
+				HasHorizontalAlignment.ALIGN_CENTER,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+
 	}
 
 	public SampleDetails showById(final long id) {
@@ -261,7 +307,6 @@ public class SampleDetails extends FlowPanel {
 		addExtraElements();
 		addComments();
 		addSubsamplesToLeft();
-		addGoogleMaps();
 		return this;
 	}
 
