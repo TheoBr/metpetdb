@@ -122,6 +122,8 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String Subsample_sampleName();
 
 	/* Mineral Analysis */
+	String ChemicalAnalysis();
+
 	String ChemicalAnalysis_sample();
 
 	String ChemicalAnalysis_subsample();
