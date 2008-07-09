@@ -10,6 +10,7 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.ChemicalAnalysisService;
@@ -69,7 +70,7 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 
 	public ChemicalAnalysis save(ChemicalAnalysis ma)
 			throws ValidationException, LoginRequiredException {
-		replaceSample(ma);
+		replaceSample(ma, true);
 		replaceReferences(ma);
 		replaceMineral(ma);
 
@@ -117,6 +118,12 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 
 	protected void replaceSample(final ChemicalAnalysis ca)
 			throws ValidationException, LoginRequiredException {
+		replaceSample(ca, false);
+	}
+
+	protected void replaceSample(final ChemicalAnalysis ca,
+			boolean createSubsample) throws ValidationException,
+			LoginRequiredException {
 		// TODO: once this is debugged, Null Pointer exceptions should indicate
 		// when samples or subsamples are not in the database, and should be
 		// handled accordingly
@@ -129,7 +136,36 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		subsample.setParameter("id", ((Sample) sample.uniqueResult()).getId());
 		subsample.setParameter("name", ca.getSubsample().getName());
 
-		ca.setSubsample((Subsample) subsample.uniqueResult());
+		if (subsample.uniqueResult() != null) {
+			// We've found a subsample in the db, use that
+			ca.setSubsample((Subsample) subsample.uniqueResult());
+		} else if (createSubsample) {
+			// We didn't find a subsample in the db, create one (if we can)
+			try {
+				SubsampleDTO ss = new SubsampleDTO();
+				SampleServiceImpl sampleservice = new SampleServiceImpl();
+				ss.setSample(sampleservice.details(((Sample) sample
+						.uniqueResult()).getId()));
+				ss.setName(ca.getSubsample().getName());
+				ss.setType(ca.getSubsample().getType());
+
+				// FIXME: This is just a copy from subsampleService.save(), I'd
+				// rather have this in subsampleservice but right now the only
+				// function has a commit() which we don't want here
+				doc.validate(ss);
+				if (ss.getSample() == null || ss.getSample().getOwner() == null
+						|| ss.getSample().getOwner().getId() != currentUser())
+					throw new SecurityException(
+							"Cannot modify subsamples you don't own.");
+				Subsample final_subsample = (Subsample) mergeBean(ss);
+				currentSession().persist(final_subsample);
+				ca.setSubsample(final_subsample);
+			} catch (final ValidationException ve) {
+				System.out.println("==> " + ve.toString());
+			} catch (final Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	// FIXME this is a copy of the method in SampleServiceImpl we should
