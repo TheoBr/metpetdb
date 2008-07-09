@@ -43,8 +43,10 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 	private final RadioButton upload;
 	private final Grid errorgrid;
 	private final Grid headergrid;
+	private final Grid additionsgrid;
 	private final Label errorgrid_label;
 	private final Label headergrid_label;
+	private final Label additionsgrid_label;
 
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
@@ -87,10 +89,14 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 		errorgrid.setBorderWidth(3);
 		headergrid = new Grid();
 		headergrid.setBorderWidth(3);
+		additionsgrid = new Grid();
+		additionsgrid.setBorderWidth(3);
 		errorgrid_label = new Label("Errors Listed Below:");
 		errorgrid_label.setStylePrimaryName("bold");
 		headergrid_label = new Label("Headers Listed Below:");
 		headergrid_label.setStylePrimaryName("bold");
+		additionsgrid_label = new Label("Additions Listed Below:");
+		additionsgrid_label.setStylePrimaryName("bold");
 
 		vp = new VerticalPanel();
 		vp.add(error);
@@ -98,6 +104,8 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 		vp.add(hp);
 		vp.add(errorgrid_label);
 		vp.add(errorgrid);
+		vp.add(additionsgrid_label);
+		vp.add(additionsgrid);
 		vp.add(headergrid_label);
 		vp.add(headergrid);
 
@@ -163,6 +171,7 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 							}
 						}.begin();
 					} else if (justparse.isChecked()) {
+						// Parse Column Headers
 						new ServerOp<Map<Integer, String[]>>() {
 							public void begin() {
 								if (samples.isChecked()) {
@@ -211,6 +220,56 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 								}
 							}
 						}.begin();
+
+						// Find New additions
+						new ServerOp<Map<String, Integer[]>>() {
+							public void begin() {
+								if (samples.isChecked()) {
+									MpDb.bulkUpload_svc.getAdditions(
+											fileOnServer, this);
+								} else if (analyses.isChecked()) {
+									MpDb.bulkUploadChemicalAnalyses_svc
+											.getAdditions(fileOnServer, this);
+								} else {
+									MpDb.bulkUploadImages_svc.getAdditions(
+											fileOnServer, this);
+								}
+							}
+
+							public void onSuccess(
+									final Map<String, Integer[]> additions) {
+								if (additions == null) {
+									error
+											.setText("Spreadsheet Not Parsed Successfully");
+								} else {
+									error
+											.setText("Spreadsheet Parsed Successfully");
+
+									additionsgrid.resize(additions.size() + 1,
+											4);
+									additionsgrid.setText(0, 0, "Type");
+									additionsgrid.setText(0, 1, "Invalid");
+									additionsgrid.setText(0, 2, "New");
+									additionsgrid.setText(0, 3, "Old");
+									ArrayList<String> keys = new ArrayList<String>(
+											additions.keySet());
+
+									int i = 1;
+									for (String k : keys) {
+										additionsgrid.setText(i, 0, enttxt
+												.getString(k));
+										additionsgrid.setText(i, 1, additions
+												.get(k)[0].toString());
+										additionsgrid.setText(i, 2, additions
+												.get(k)[1].toString());
+										additionsgrid.setText(i, 3, additions
+												.get(k)[2].toString());
+										i++;
+									}
+
+								}
+							}
+						}.begin();
 					}
 				}
 			}
@@ -228,6 +287,7 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener {
 				// Clear out grids from any previous runs
 				errorgrid.resize(0, 0);
 				headergrid.resize(0, 0);
+				additionsgrid.resize(0, 0);
 			}
 		});
 
