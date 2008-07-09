@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -46,6 +47,55 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 		}
 	}
 
+	public Map<String, Integer[]> getAdditions(final String fileOnServer)
+			throws InvalidFormatException, LoginRequiredException {
+		final Map<String, Integer[]> newAdditions = new TreeMap<String, Integer[]>();
+
+		try {
+			currentSession()
+					.createSQLQuery(
+							"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
+					.setParameter("user_id", currentUser()).setParameter(
+							"hash", fileOnServer).executeUpdate();
+
+			ZipFile zp = new ZipFile(baseFolder + "/" + fileOnServer);
+
+			final ImageParser ip = new ImageParser(zp.getInputStream(zp
+					.getEntry(spreadsheet_name)));
+			try {
+				ip.initialize();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+				throw new IllegalStateException(
+						"Programmer Error: No Such Method");
+			}
+
+			ip.parse();
+
+			final List<ImageDTO> images = ip.getImages();
+
+			Integer i = 2;
+			// Find Valid, new Samples
+			Integer[] img_breakdown = {
+					0, 0, 0
+			};
+			for (ImageDTO img : images) {
+				// Confirm the filename is in the zip
+				if (zp.getEntry(img.getFilename()) != null) {
+					img_breakdown[1]++;
+				}
+
+				// There's no doc.validate() for images?
+				++i;
+			}
+
+			newAdditions.put("Subsample_images", img_breakdown);
+		} catch (final IOException ioe) {
+			throw new IllegalStateException(ioe.getMessage());
+		}
+
+		return newAdditions;
+	}
 	public Map<Integer, ValidationException> saveImagesFromZip(
 			final String fileOnServer) throws InvalidFormatException,
 			LoginRequiredException {
