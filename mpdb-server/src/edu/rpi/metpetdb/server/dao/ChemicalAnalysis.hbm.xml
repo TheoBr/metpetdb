@@ -63,6 +63,11 @@
     select count(*) from ChemicalAnalysis ma
     where ma.subsample.id = :id
   </query>
+  <query name="ChemicalAnalysis.bySubsampleId.byspotId">
+  	from ChemicalAnalysis ma
+  	where ma.subsample.id = :id
+  	and ma.spotId = :spotId
+  </query>
   <query name="ChemicalAnalysis.bySubsampleId/spotId">
     from ChemicalAnalysis ma
     where ma.subsample.id = :id

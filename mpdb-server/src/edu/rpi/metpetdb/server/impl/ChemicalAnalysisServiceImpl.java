@@ -147,4 +147,18 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 			}
 		}
 	}
+
+	protected boolean isNewCA(final ChemicalAnalysis ca) {
+		if (ca.getSubsample() == null)
+			return true;
+
+		final Query q = namedQuery("ChemicalAnalysis.bySubsampleId.byspotId");
+		q.setLong("id", ca.getSubsample().getId());
+		q.setString("spotId", ca.getSpotId());
+
+		if (q.uniqueResult() != null)
+			return false;
+		else
+			return true;
+	}
 }
