@@ -104,7 +104,7 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		}
 	}
 
-	private void replaceMineral(final ChemicalAnalysis ca) {
+	protected void replaceMineral(final ChemicalAnalysis ca) {
 		if (ca.getMineral() != null) {
 			final Query minerals = namedQuery("Mineral.byName");
 
@@ -115,7 +115,7 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		}
 	}
 
-	private void replaceSample(final ChemicalAnalysis ca)
+	protected void replaceSample(final ChemicalAnalysis ca)
 			throws ValidationException, LoginRequiredException {
 		// TODO: once this is debugged, Null Pointer exceptions should indicate
 		// when samples or subsamples are not in the database, and should be
@@ -134,7 +134,7 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 
 	// FIXME this is a copy of the method in SampleServiceImpl we should
 	// implemement some sort of utility class to take care of this (maybe?)
-	private void replaceReferences(final ChemicalAnalysis ca) {
+	protected void replaceReferences(final ChemicalAnalysis ca) {
 		if (ca.getReference() != null) {
 
 			final Reference r = ca.getReference();
