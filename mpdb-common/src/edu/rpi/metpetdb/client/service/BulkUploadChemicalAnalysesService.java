@@ -11,6 +11,8 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 public interface BulkUploadChemicalAnalysesService extends RemoteService {
 	Map<Integer, String[]> getHeaderMapping(final String fileOnServer)
 			throws InvalidFormatException;
+	Map<String, Integer[]> getAdditions(final String fileOnServer)
+			throws InvalidFormatException, LoginRequiredException;
 	Map<Integer, ValidationException> saveAnalysesFromSpreadsheet(
 			final String fileOnServer) throws InvalidFormatException,
 			LoginRequiredException, ValidationException;

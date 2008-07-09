@@ -9,6 +9,8 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 public interface BulkUploadChemicalAnalysesServiceAsync {
 	void getHeaderMapping(final String fileOnServer,
 			AsyncCallback<Map<Integer, String[]>> ac);
+	void getAdditions(final String fileOnServer,
+			AsyncCallback<Map<String, Integer[]>> ac);
 	void saveAnalysesFromSpreadsheet(final String fileOnServer,
 			AsyncCallback<Map<Integer, ValidationException>> ac);
 }
