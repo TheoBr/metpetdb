@@ -38,6 +38,7 @@ public class AnalysisParser {
 	public static final int CAELEMENT_WITH_PRECISION = 4;
 	public static final int SAMPLE = 101;
 	public static final int PERCISIONUNIT = 102;
+	public static final int SUBSAMPLE_TYPE = 103;
 
 	private final InputStream is;
 	private HSSFSheet sheet;
@@ -49,7 +50,7 @@ public class AnalysisParser {
 	 */
 	private static final Object[][] analysisMethodMap = {
 			{
-					"subsample", "setSubsample", SubsampleDTO.class,
+					"^\\s*subsample\\s*$", "setSubsample", SubsampleDTO.class,
 					"ChemicalAnalysis_subsample"
 			},
 			{
@@ -57,7 +58,7 @@ public class AnalysisParser {
 					"ChemicalAnalysis_mineral"
 			},
 			{
-					"(method)|(analytical method)|(analysis method)|(type)",
+					"(method)|(analytical method)|(analysis method)|(^\\s*type\\s*$)",
 					"setAnalysisMethod", String.class,
 					"ChemicalAnalysis_analysisMethod"
 			},
@@ -244,8 +245,8 @@ public class AnalysisParser {
 				continue;
 
 			// special cases
-			if (Pattern.compile("sample", Pattern.CASE_INSENSITIVE).matcher(
-					text).find()) {
+			if (Pattern.compile("^\\s*sample\\s*$", Pattern.CASE_INSENSITIVE)
+					.matcher(text).find()) {
 				colType.put(new Integer(i), SAMPLE);
 				colName.put(new Integer(i), "ChemicalAnalysis_sample");
 				continue;
@@ -253,6 +254,11 @@ public class AnalysisParser {
 					Pattern.CASE_INSENSITIVE).matcher(text).find()) {
 				colType.put(new Integer(i), PERCISIONUNIT);
 				colName.put(new Integer(i), "ChemicalAnalysis_precisionUnit");
+				continue;
+			} else if (Pattern.compile("subsample type",
+					Pattern.CASE_INSENSITIVE).matcher(text).find()) {
+				colType.put(new Integer(i), SUBSAMPLE_TYPE);
+				colName.put(new Integer(i), "Subsample_type");
 				continue;
 			}
 
@@ -409,6 +415,12 @@ public class AnalysisParser {
 					storeMethod.invoke(ca, o, data, precision);
 
 					i++;
+				} else if (type == SUBSAMPLE_TYPE) {
+					final String data = cell.toString();
+
+					if (ca.getSubsample() == null)
+						ca.setSubsample(new SubsampleDTO());
+					ca.getSubsample().setType(data);
 				} else if (type == METHOD) {
 					final Method storeMethod = colMethods.get(new Integer(i));
 
