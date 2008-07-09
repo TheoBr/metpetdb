@@ -16,6 +16,7 @@ import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.service.BulkUploadService;
 import edu.rpi.metpetdb.server.bulk.upload.sample.SampleParser;
+import edu.rpi.metpetdb.server.model.Sample;
 
 public class BulkUploadServiceImpl extends SampleServiceImpl implements
 		BulkUploadService {
@@ -45,7 +46,58 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 			throw new IllegalStateException(ioe.getMessage());
 		}
 	}
-	
+
+	public Map<String, Integer[]> getAdditions(final String fileOnServer)
+			throws InvalidFormatException, LoginRequiredException {
+		try {
+			final Map<String, Integer[]> newAdditions = new TreeMap<String, Integer[]>();
+			final UserDTO u = (UserDTO) cloneBean(byId("User", currentUser()));
+
+			// Locate and set Valid Potential Minerals for the parser
+			List<MineralDTO> minerals = cloneBean(currentSession()
+					.getNamedQuery("Mineral.all").list());
+			minerals.addAll(cloneBean(currentSession().getNamedQuery(
+					"Mineral.children").list()));
+			SampleParser.setMinerals(minerals);
+
+			final SampleParser sp = new SampleParser(new FileInputStream(
+					baseFolder + "/" + fileOnServer));
+			try {
+				sp.initialize();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			}
+
+			sp.parse();
+
+			final List<SampleDTO> samples = sp.getSamples();
+
+			// Find Valid, new Samples
+			Integer[] sample_breakdown = {
+					0, 0, 0
+			};
+			for (SampleDTO s : samples) {
+				s.setOwner(u);
+				try {
+					doc.validate(s);
+					Sample smpl = mergeBean(s);
+					if (isNewSample(smpl))
+						sample_breakdown[1]++;
+					else
+						sample_breakdown[2]++;
+				} catch (ValidationException e) {
+					sample_breakdown[0]++;
+				}
+			}
+			newAdditions.put("Sample", sample_breakdown);
+
+			return newAdditions;
+		} catch (final NoSuchObjectException nsoe) {
+			throw new LoginRequiredException();
+		} catch (final IOException ioe) {
+			throw new IllegalStateException(ioe.getMessage());
+		}
+	}
 	public Map<Integer, ValidationException> saveSamplesFromSpreadsheet(
 			final String fileOnServer) throws InvalidFormatException,
 			LoginRequiredException, SampleAlreadyExistsException {

@@ -12,6 +12,8 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 public interface BulkUploadService extends RemoteService {
 	Map<Integer, String[]> getHeaderMapping(final String fileOnServer)
 			throws InvalidFormatException;
+	Map<String, Integer[]> getAdditions(final String fileOnServer)
+			throws InvalidFormatException, LoginRequiredException;
 	Map<Integer, ValidationException> saveSamplesFromSpreadsheet(
 			final String fileOnServer) throws InvalidFormatException,
 			LoginRequiredException, SampleAlreadyExistsException,
