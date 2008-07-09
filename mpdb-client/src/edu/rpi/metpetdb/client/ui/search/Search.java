@@ -18,6 +18,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.CheckBoxesAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateRangeAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttribute;
 import edu.rpi.metpetdb.client.ui.left.side.MySearch;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 
@@ -30,6 +31,7 @@ public class Search extends FlowPanel {
 			new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange),
 			// MpDb.doc.Sample_datePrecision),
 			new CheckBoxesAttribute(MpDb.oc.SearchSample_possibleRockTypes),
+			new SearchLocationAttribute(MpDb.oc.SearchSample_location)
 	// new LocationAttribute(MpDb.oc.SearchSample_location),
 	// new MineralAttribute(MpDb.oc.SearchSample_minerals)
 	};
@@ -69,7 +71,6 @@ public class Search extends FlowPanel {
 				if (r != null) {
 					results = r;
 					sampleList.refresh();
-					// sampleList.
 				}
 				p_searchSample.setEnabled(true);
 			}
