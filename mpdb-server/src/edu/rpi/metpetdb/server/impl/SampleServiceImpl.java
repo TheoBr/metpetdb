@@ -241,6 +241,17 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		}
 	}
 
+	protected boolean isNewSample(final Sample s) {
+		final Query q = namedQuery("Sample.byUser.byAlias");
+		q.setLong("id", s.getOwner().getId());
+		q.setString("alias", s.getAlias());
+
+		if (q.uniqueResult() != null)
+			return false;
+		else
+			return true;
+	}
+
 	public void delete(long id) throws NoSuchObjectException,
 			LoginRequiredException {
 		try {
