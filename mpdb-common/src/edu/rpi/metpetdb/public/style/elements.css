@@ -186,12 +186,6 @@ button.remove {
 	background-color: #FFFFFF;
 	border: none;
 }
-
-.beta {
-	/*background-color: #FF0000;*/
-	border: 3px solid #FF0000;
-}
-
 .resizeable{
 	display: table-cell;
 	border: none;
@@ -256,4 +250,15 @@ button.remove {
 	padding-left:15px;
 }
 
+
+/*-------------------------------------
+               extras
+ --------------------------------------*/
+
+.beta {
+	background: transparent url(../images/beta-bg.png) repeat left top !important;
+	border: 1px solid #fda293;
+	border-right-color: #ea8d7e;
+	border-bottom-color: #ea8d7e;
+}
 
