@@ -49,6 +49,9 @@ public interface LocaleText extends Messages {
 
 	/* Search */
 	String search();
+	String search_exportExcel();
+	String search_exportKML();
+	String search_exportResults();
 
 	/* Tools */
 	String tools_EditProfile();
@@ -82,6 +85,8 @@ public interface LocaleText extends Messages {
 	String buttonUploadSpreadsheet();
 	String buttonSubmit();
 	String buttonContinue();
+	String buttonExportExcel();
+	String buttonExportKML();
 
 	/* Errors */
 	String errorTitle_UnknownError();
