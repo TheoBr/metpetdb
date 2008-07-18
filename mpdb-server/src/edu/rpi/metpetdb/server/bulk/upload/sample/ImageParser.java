@@ -51,7 +51,8 @@ public class ImageParser {
 					"sample", "setSample", SampleDTO.class, "Sample"
 			},
 			{
-					"file", "setFilename", String.class, "Image_filename"
+					"(file)|(path)", "setFilename", String.class,
+					"Image_filename"
 			},
 			// {
 			// "format", "", String.class, "Image_format"
