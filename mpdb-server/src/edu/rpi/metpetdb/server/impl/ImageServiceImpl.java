@@ -29,6 +29,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.GridDTO;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 import edu.rpi.metpetdb.client.model.XrayImageDTO;
@@ -36,6 +37,7 @@ import edu.rpi.metpetdb.client.service.ImageService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.model.Element;
+import edu.rpi.metpetdb.server.model.Grid;
 import edu.rpi.metpetdb.server.model.Image;
 import edu.rpi.metpetdb.server.model.ImageOnGrid;
 import edu.rpi.metpetdb.server.model.Sample;
@@ -130,6 +132,53 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 				iog = update(merge(iog));
 			commit();
 			return cloneBean(iog);
+		} catch (ConstraintViolationException cve) {
+			throw cve;
+		}
+	}
+
+	protected ImageOnGridDTO saveIncompleteImageOnGrid(ImageOnGridDTO iogDTO)
+			throws ValidationException, LoginRequiredException {
+		// First save the image
+		Image i = mergeBean(iogDTO.getImage());
+		i = save(i);
+		iogDTO.setImage((ImageDTO) cloneBean(i));
+
+		// Set the grid, either find the appropriate old one, or a new one
+		GridDTO g = iogDTO.getImage().getSubsample().getGrid();
+		if (g == null) {
+			// Create New Grid
+			g = new GridDTO();
+			g.setSubsample(iogDTO.getImage().getSubsample());
+			g = saveGrid(g);
+		}
+		iogDTO.setGrid(g);
+
+		// Save ImageOnGrid
+		ImageOnGrid iog = mergeBean(iogDTO);
+		try {
+			if (iog.mIsNew())
+				insert(iog);
+			else
+				iog = update(merge(iog));
+
+			return cloneBean(iog);
+		} catch (ConstraintViolationException cve) {
+			throw cve;
+		}
+	}
+
+	// Code duplication isn't fun, but seems to be necessary from time to time
+	protected GridDTO saveGrid(GridDTO grid) throws LoginRequiredException {
+		if (grid.getSubsample().getSample().getOwner().getId() != currentUser())
+			throw new SecurityException("Cannot modify grids you don't own.");
+		Grid g = mergeBean(grid);
+		try {
+			if (g.mIsNew())
+				insert(g);
+			else
+				g = (Grid) update(merge(g));
+			return cloneBean(g);
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}
