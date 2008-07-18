@@ -478,9 +478,7 @@ public class AnalysisParser {
 						} catch (final NumberFormatException nfe) {
 							System.out.println("parsing date");
 							final String data = cell.toString();
-							Integer precision = new Integer(0);
-							Timestamp date = parseDate(data, precision);
-							ca.setAnalysisDate(date);
+							parseDate(ca, data);
 						}
 
 					} else if (dataType == Boolean.class) {
@@ -527,35 +525,52 @@ public class AnalysisParser {
 		return analyses;
 	}
 
-	private Timestamp parseDate(final String date, Integer precision) {
-		precision = 0;
-		String day = "01", month = "01", year = "1900";
-		// DD-MM-YYYY
-		final Pattern datepat = Pattern
-				.compile("((\\d{2})([-/]))?((\\d{2})([-/]))?(\\d{4})");
-		final Matcher datematch = datepat.matcher(date);
+	private void parseDate(final ChemicalAnalysisDTO ca, final String date) {
+		Short precision = 365;
+		String day, month, year;
 
-		if (!datematch.find()) {
-			return null;
-		}
+		// Regexes for acceptable date formats
+		final Pattern datepat_mmddyyyy = Pattern
+				.compile("^((\\d{2})([-/]))?((\\d{2})([-/]))?(\\d{4})$");
+		final Pattern datepat_yyyymmdd = Pattern
+				.compile("^(\\d{4})(([-/])(\\d{2}))?(([-/])(\\d{2}))?$");
 
-		// do we have a month?
-		if (datematch.group(2) != null) {
+		// See what regular expression matches our input, and then parse
+		Matcher datematch;
+		if ((datematch = datepat_mmddyyyy.matcher(date)).find()) {
+			// MM-DD-YYYY
 			month = datematch.group(2);
-			precision = 365;
-		}
-		// do we have a day?
-		if (datematch.group(5) != null) {
 			day = datematch.group(5);
-			precision = 31;
+			year = datematch.group(7);
+		} else if ((datematch = datepat_yyyymmdd.matcher(date)).find()) {
+			// YYYY-MM-DD
+			year = datematch.group(1);
+			month = datematch.group(4);
+			day = datematch.group(7);
+		} else {
+			throw new IllegalStateException("Couldn't parse Date: " + date);
 		}
 
-		year = datematch.group(7);
-		System.out.println(year + "-" + month + "-" + day
+		// Set precisions, etc according to what was observed
+		if (month != null) {
+			precision = 31;
+		} else {
+			month = "01";
+		}
+
+		if (day != null) {
+			precision = 1;
+		} else {
+			day = "01";
+		}
+
+		Timestamp time = Timestamp.valueOf(year + "-" + month + "-" + day
 				+ " 00:00:00.000000000");
-		return Timestamp.valueOf(year + "-" + month + "-" + day
-				+ " 00:00:00.000000000");
+
+		ca.setAnalysisDate(time);
+		ca.setDatePrecision(precision);
 	}
+
 	public static boolean areElementsAndOxidesSet() {
 		return elements == null || oxides == null;
 	}
