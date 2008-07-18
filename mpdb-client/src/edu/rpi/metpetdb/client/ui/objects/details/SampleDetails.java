@@ -54,8 +54,6 @@ public class SampleDetails extends MPagePanel {
 	private String sampleHeader;
 	private MySubsamples subsamplesLeft;
 	private LatLng samplePosition;
-	private double latError;
-	private double lngError;
 
 	private static GenericAttribute[] sampleAtts = {
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
@@ -122,8 +120,6 @@ public class SampleDetails extends MPagePanel {
 				setPageHeader(sampleHeader);
 				samplePosition = new LatLng(((Point) s.getLocation()).x,
 						((Point) s.getLocation()).y);
-				latError = s.getLatitudeError();
-				lngError = s.getLongitudeError();
 				addGoogleMaps();
 			}
 
@@ -258,9 +254,7 @@ public class SampleDetails extends MPagePanel {
 						sampleMarker,
 						new InfoWindowContent("Lat: "
 								+ samplePosition.getLatitude() + " Lng:"
-								+ samplePosition.getLongitude()
-								+ "<br>Lat Error: " + latError + " LngError: "
-								+ lngError));
+								+ samplePosition.getLongitude()));
 			}
 		});
 
