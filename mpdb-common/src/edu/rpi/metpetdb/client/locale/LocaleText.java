@@ -108,6 +108,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_InvalidDateString();
 	String errorDesc_InvalidLongitude(String field);
 	String errorDesc_InvalidLatitude(String field);
+	String errorTitle_UnexpectedError(String throwable);
 
 	/* Character Names */
 	String character_space();
@@ -117,6 +118,10 @@ public interface LocaleText extends Messages {
 	String character_doubleQuote();
 	String character_underscore();
 	String character_backtick();
+
+	/* Permission */
+	String Permission_Denied();
+	String Permission_NotYours();
 
 	/* Other Messages */
 	String message_WhyRegister();
