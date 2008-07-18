@@ -209,6 +209,15 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 	color: #762525;
 }
 
+/*-------------------------------------
+                page header
+ --------------------------------------*/
+.page-header {
+	background-color: #FBFBFB;
+	border-bottom: 1px solid #EFEFEF;
+	padding: 1.5em 1.5em 0;
+}
+
 
 /*-------------------------------------
                 footer

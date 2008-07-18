@@ -12,13 +12,10 @@ import com.google.gwt.maps.client.control.ScaleControl;
 import com.google.gwt.maps.client.event.MarkerClickHandler;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
@@ -51,10 +48,10 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.RegionAttribute;
 import edu.rpi.metpetdb.client.ui.left.side.MySubsamples;
 import edu.rpi.metpetdb.client.ui.objects.list.SubsampleListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
+import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 
-public class SampleDetails extends FlowPanel {
-	private FlexTable ft;
-	final Element sampleHeader;
+public class SampleDetails extends MPagePanel {
+	private String sampleHeader;
 	private MySubsamples subsamplesLeft;
 	private LatLng samplePosition;
 	private double latError;
@@ -120,7 +117,9 @@ public class SampleDetails extends FlowPanel {
 			protected void onLoadCompletion(final MObjectDTO result) {
 				super.onLoadCompletion(result);
 				final SampleDTO s = (SampleDTO) result;
-				DOM.setInnerText(sampleHeader, "Sample " + s.getName());
+				sampleHeader = LocaleHandler.lc_text.sample() + " "
+						+ s.getName();
+
 				samplePosition = new LatLng(((Point) s.getLocation()).x,
 						((Point) s.getLocation()).y);
 				latError = s.getLatitudeError();
@@ -137,33 +136,12 @@ public class SampleDetails extends FlowPanel {
 		final OnEnterPanel.ObjectEditor oep = new OnEnterPanel.ObjectEditor(
 				p_sample);
 
-		oep.setStyleName("sd-details");
-		sampleHeader = DOM.createElement("h1");
-		DOM.appendChild(this.getElement(), sampleHeader);
-		ft = new FlexTable();
-		Label details_label = new Label("Details");
-		ft.setWidget(0, 0, details_label);
-		ft.setWidget(1, 1, oep);
-
-		// format to look pretty
-		details_label.addStyleName("bold");
-		ft.getFlexCellFormatter().setAlignment(0, 0,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		ft.getFlexCellFormatter().setWidth(0, 0, "100%");
-		ft.getFlexCellFormatter().setWidth(1, 1, "100%");
-		ft.getFlexCellFormatter().setHeight(0, 0, "35px");
-		ft.getFlexCellFormatter().setColSpan(0, 0, 3);
-		ft.getFlexCellFormatter().setAlignment(1, 0,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_BOTTOM);
-		ft.getRowFormatter().setStyleName(0, "mpdb-dataTableLightBlue");
-		ft.getFlexCellFormatter().setRowSpan(1, 1, 2);
-		add(ft);
+		setPageHeader(sampleHeader);
+		oep.setStylePrimaryName("sd-details");
+		oep.addStyleName("mpdb-dataTable");
+		add(oep);
 	}
 	private void addExtraElements() {
-
-		ft.getWidget(1, 1).addStyleName("mpdb-dataTable");
 
 		final FlexTable subsamples_ft = new FlexTable();
 
@@ -188,7 +166,7 @@ public class SampleDetails extends FlowPanel {
 		addSubsample.addStyleName(Styles.ADDLINK);
 		subsamples_ft.setWidget(0, 1, addSubsample);
 
-		Label Subsamples_label = new Label("Subsamples");;
+		Label Subsamples_label = new Label(LocaleHandler.lc_text.subsamples());;
 		subsamples_ft.setWidget(0, 0, Subsamples_label);
 
 		final SubsampleListEx list = new SubsampleListEx() {
@@ -216,13 +194,14 @@ public class SampleDetails extends FlowPanel {
 				HasHorizontalAlignment.ALIGN_RIGHT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 
+		subsamples_ft.addStyleName("mpdb-dataTable");
 		this.add(subsamples_ft);
 
 	}
 
 	public void addComments() {
 		final FlexTable comments_ft = new FlexTable();
-		Label comments_label = new Label("Comments");
+		Label comments_label = new Label(LocaleHandler.lc_text.comments());
 		comments_ft.setWidget(0, 0, comments_label);
 
 		// format to look pretty
@@ -293,12 +272,7 @@ public class SampleDetails extends FlowPanel {
 		map.addControl(new MapTypeControl());
 		map.addControl(new ScaleControl());
 
-		ft.setWidget(1, 2, map);
-		ft.getFlexCellFormatter().setRowSpan(1, 2, 2);
-		ft.getFlexCellFormatter().setAlignment(1, 2,
-				HasHorizontalAlignment.ALIGN_CENTER,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-
+		this.add(map);
 	}
 
 	public SampleDetails showById(final long id) {
