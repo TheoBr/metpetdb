@@ -155,10 +155,11 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 								false));
 						img.setWidth(ro.getWidth());
 						img.setHeight(ro.getHeight());
-
-						// Save ImageDTO
-						saveImage(img);
 					}
+
+					// Save the Images
+					save(images);
+
 					return null;
 				} catch (final ValidationException e) {
 					throw new IllegalStateException(

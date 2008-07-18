@@ -18,10 +18,12 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.ElementDTO;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.MineralDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.XrayImageDTO;
 
 public class ImageParser {
 	private final InputStream is;
@@ -37,9 +39,11 @@ public class ImageParser {
 			{
 					"subsample", "setSubsample", SubsampleDTO.class,
 					"Subsample"
-			}, {
+			},
+			{
 					"sample", "setSample", SampleDTO.class, "Sample"
-			}, {
+			},
+			{
 					"file", "setFilename", String.class, "Image_filename"
 			},
 			// {
@@ -48,10 +52,25 @@ public class ImageParser {
 			{
 					"image type", "setImageType", String.class,
 					"Image_imageType"
+			},
+			{
+					"dwell time", "setDwelltime", Integer.class,
+					"XrayImage_dwelltime"
+			},
+			{
+					"current", "setCurrent", Integer.class, "XrayImage_current"
+			},
+			{
+					"voltage", "setVoltage", Integer.class, "XrayImage_voltage"
+
+			},
+			{
+					"element", "setElement", ElementDTO.class,
+					"XrayImage_element"
 			}
 	};
 
-	private final static List<MethodAssociation<ImageDTO>> methodAssociations = new LinkedList<MethodAssociation<ImageDTO>>();
+	private final static List<MethodAssociation<XrayImageDTO>> methodAssociations = new LinkedList<MethodAssociation<XrayImageDTO>>();
 
 	private static List<MineralDTO> minerals = null;
 
@@ -88,9 +107,9 @@ public class ImageParser {
 		try {
 			if (methodAssociations.isEmpty())
 				for (Object[] row : imageMethodMap)
-					methodAssociations.add(new MethodAssociation<ImageDTO>(
+					methodAssociations.add(new MethodAssociation<XrayImageDTO>(
 							(String) row[0], (String) row[1], (Class) row[2],
-							new ImageDTO(), (String) row[3]));
+							new XrayImageDTO(), (String) row[3]));
 
 			final POIFSFileSystem fs = new POIFSFileSystem(is);
 			final HSSFWorkbook wb = new HSSFWorkbook(fs);
@@ -174,7 +193,7 @@ public class ImageParser {
 			System.out.println("Parsing header " + i + ": " + text);
 
 			// Determine method to be used for data in this column
-			for (MethodAssociation<ImageDTO> sma : methodAssociations) {
+			for (MethodAssociation<XrayImageDTO> sma : methodAssociations) {
 				// special case for sample
 				if (text.matches("[Ss][Aa][Mm][Pp][Ll][Ee]"))
 					colObjects.put(new Integer(i), new SampleDTO());
@@ -203,7 +222,7 @@ public class ImageParser {
 			return;
 		}
 
-		final ImageDTO img = new ImageDTO();
+		final XrayImageDTO img = new XrayImageDTO();
 		boolean sawDataInRow = false;
 
 		for (Integer i = 0; i <= row.getLastCellNum(); ++i) {
@@ -259,6 +278,18 @@ public class ImageParser {
 						img.setSubsample(new SubsampleDTO());
 					img.getSubsample().setName(data);
 
+				} else if (dataType == ElementDTO.class) {
+
+					final String data = cell.toString();
+					if (img.getElement() == null)
+						img.setElement(new ElementDTO());
+					img.getElement().setName(data);
+
+				} else if (dataType == Integer.class) {
+
+					final Double data = new Double(cell.getNumericCellValue());
+					storeMethod.invoke(img, data.intValue());
+
 				} else {
 					throw new IllegalStateException(
 							"Don't know how to convert to datatype: "
@@ -282,9 +313,13 @@ public class ImageParser {
 		}
 
 		if (sawDataInRow) {
-			images.add(img);
+			if (img.getElement() == null)
+				images.add(img.getImage());
+			else
+				images.add(img);
 		}
 	}
+
 	public List<ImageDTO> getImages() {
 		return images;
 	}
