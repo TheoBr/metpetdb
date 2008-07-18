@@ -30,13 +30,16 @@ import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
+import edu.rpi.metpetdb.client.model.XrayImageDTO;
 import edu.rpi.metpetdb.client.service.ImageService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.model.Element;
 import edu.rpi.metpetdb.server.model.Image;
 import edu.rpi.metpetdb.server.model.ImageOnGrid;
 import edu.rpi.metpetdb.server.model.Sample;
 import edu.rpi.metpetdb.server.model.Subsample;
+import edu.rpi.metpetdb.server.model.XrayImage;
 
 public class ImageServiceImpl extends MpDbServlet implements ImageService {
 	private static final long serialVersionUID = 1L;
@@ -59,6 +62,24 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		// throw new SecurityException("Cannot modify images you don't own.");
 		Image i = mergeBean(image);
 		replaceSample(i);
+
+		try {
+			if (i.mIsNew())
+				insert(i);
+			else
+				i = update(merge(i));
+			commit();
+			return cloneBean(i);
+		} catch (ConstraintViolationException cve) {
+			throw cve;
+		}
+	}
+
+	public XrayImageDTO saveImage(XrayImageDTO xrayimg)
+			throws ValidationException, LoginRequiredException {
+		XrayImage i = mergeBean(xrayimg);
+		replaceSample(i);
+		replaceElement(i);
 
 		try {
 			if (i.mIsNew())
@@ -240,5 +261,14 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		subsample.setParameter("name", img.getSubsample().getName());
 
 		img.setSubsample((Subsample) subsample.uniqueResult());
+	}
+
+	private void replaceElement(final XrayImage img)
+			throws ValidationException, LoginRequiredException {
+		final Query element = namedQuery("Element.byName");
+
+		element.setParameter("name", img.getElement().getName());
+
+		img.setElement((Element) element.uniqueResult());
 	}
 }
