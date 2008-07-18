@@ -22,6 +22,8 @@ public class BasicKML extends HttpServlet {
 	// private static final String baseURL =
 	// "http://localhost:8888/edu.rpi.metpetdb.MetPetDBApplication/MetPetDBApplication.html#SampleDetails-";
 	private static final String baseURL = "http://samana.cs.rpi.edu:8080/metpetwebtst/#SampleDetails-";
+	private static final String samplesParameter = "Samples";
+	private static final String userParameter = "User";
 	private Double lat;
 	private Double lng;
 	private Double latErr;
@@ -44,15 +46,19 @@ public class BasicKML extends HttpServlet {
 		Query q;
 
 		// If there is a GET string, fetch by ids
-		if (request.getQueryString() != null) {
-			String ids[] = request.getQueryString().split(",");
+		if (request.getParameter(samplesParameter) != null
+				&& request.getParameter(userParameter) != null) {
+			String ids[] = request.getParameterValues(samplesParameter);
+			String user[] = request.getParameterValues(userParameter);
+			final long userId = Long.parseLong(user[0]);
 			q = session.getNamedQuery("Sample.byId");
 			for (int i = 0; i < ids.length; i++) {
 				q.setParameter("id", Long.parseLong(ids[i]));
-				samples.add((Sample) q.uniqueResult());
+				if (((Sample) q.uniqueResult()).getOwner().getId() == userId)
+					samples.add((Sample) q.uniqueResult());
 			}
 		}
-		// Otherwise get all samples
+		// Otherwise get all samplesrequest.getQueryString()
 		else {
 			samples = session.createQuery("from Sample").list();
 		}
@@ -91,8 +97,33 @@ public class BasicKML extends HttpServlet {
 						"<![CDATA[\n" + "<a href='" + baseURL
 								+ theSample.getId() + "'>"
 								+ theSample.getAlias() + "</a>  ]]>");
-				response.getWriter().write(
-						": " + theSample.getDescription() + "</description>\n");
+
+				/* Add Sample info that isn't null */
+				if (theSample.getDescription() != null) {
+					response.getWriter().write(
+							"Description: " + theSample.getDescription());
+				}
+				if (theSample.getCollector() != null) {
+					response.getWriter()
+							.write(
+									"&lt;br&gt; Collector: "
+											+ theSample.getCollector());
+				}
+				if (theSample.getCollectionDate() != null) {
+					response.getWriter().write(
+							"&lt;br&gt; Collection Date: "
+									+ theSample.getCollectionDate());
+				}
+				if (theSample.getRockType() != null) {
+					response.getWriter().write(
+							"&lt;br&gt; Rock Type: " + theSample.getRockType());
+				}
+				if (theSample.getSesarNumber() != null) {
+					response.getWriter().write(
+							"&lt;br&gt; IGSN: " + theSample.getSesarNumber());
+				}
+
+				response.getWriter().write("</description>\n");
 				response.getWriter().write(" <Point>\n");
 
 				response.getWriter().write(
@@ -139,4 +170,5 @@ public class BasicKML extends HttpServlet {
 		}
 		return;
 	}
+
 }
