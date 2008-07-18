@@ -197,4 +197,11 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String XrayImage_radiation();
 
 	String XrayImage_element();
+
+	/* ImageOnGrid */
+	String ImageOnGrid();
+
+	String ImageOnGrid_xpos();
+
+	String ImageOnGrid_ypos();
 }
