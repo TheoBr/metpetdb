@@ -28,10 +28,12 @@ public interface LocaleText extends Messages {
 	String wikiMenu();
 
 	/* Samples */
+	String sample();
 	String addSample();
 	String addSampleDescription();
 
 	/* Subsamples */
+	String subsamples();
 	String addSubsample();
 	String addSubsampleDescription(String sampleAlias);
 
@@ -41,6 +43,9 @@ public interface LocaleText extends Messages {
 	/* Projects */
 	String addProject();
 	String addProjectDescription();
+
+	/* Comments */
+	String comments();
 
 	/* Search */
 	String search();
