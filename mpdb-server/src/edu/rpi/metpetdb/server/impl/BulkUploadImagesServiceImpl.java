@@ -1,6 +1,9 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,6 +11,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 import javax.media.jai.RenderedOp;
 
@@ -25,15 +29,20 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 		BulkUploadImagesService {
 	private static final long serialVersionUID = 1L;
 	public static String baseFolder;
-	static final String spreadsheet_name = "main.xls";
 
 	public Map<Integer, String[]> getHeaderMapping(final String fileOnServer)
 			throws InvalidFormatException {
 		try {
-			ZipFile zp = new ZipFile(baseFolder + "/" + fileOnServer);
+			// Find the Excel Spreadsheet
+			FileInputStream is = new FileInputStream(baseFolder + "/"
+					+ fileOnServer);
+			ZipEntry spreadsheet = getSpreadsheetName(is);
+			if (spreadsheet == null)
+				throw new IllegalStateException("No Excel Spreasheet found");
 
-			final ImageParser ip = new ImageParser(zp.getInputStream(zp
-					.getEntry(spreadsheet_name)));
+			ZipFile zp = new ZipFile(baseFolder + "/" + fileOnServer);
+			final ImageParser ip = new ImageParser(zp
+					.getInputStream(spreadsheet));
 
 			try {
 				ip.initialize();
@@ -60,10 +69,23 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 					.setParameter("user_id", currentUser()).setParameter(
 							"hash", fileOnServer).executeUpdate();
 
-			ZipFile zp = new ZipFile(baseFolder + "/" + fileOnServer);
+			// Find the Excel Spreadsheet
+			FileInputStream is = new FileInputStream(baseFolder + "/"
+					+ fileOnServer);
+			ZipEntry spreadsheet = getSpreadsheetName(is);
+			if (spreadsheet == null)
+				throw new IllegalStateException("No Excel Spreasheet found");
 
-			final ImageParser ip = new ImageParser(zp.getInputStream(zp
-					.getEntry(spreadsheet_name)));
+			String spreadsheetPrefix = (new File(spreadsheet.getName()))
+					.getParent();
+			if (spreadsheetPrefix == null)
+				spreadsheetPrefix = "";
+			else
+				spreadsheetPrefix += File.separator;
+
+			ZipFile zp = new ZipFile(baseFolder + "/" + fileOnServer);
+			final ImageParser ip = new ImageParser(zp
+					.getInputStream(spreadsheet));
 			try {
 				ip.initialize();
 			} catch (NoSuchMethodException e) {
@@ -88,9 +110,13 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 				images.add(iog.getImage());
 
 			for (ImageDTO img : images) {
+				String f = spreadsheetPrefix + img.getFilename();
+
 				// Confirm the filename is in the zip
-				if (zp.getEntry(img.getFilename()) != null) {
+				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) != null) {
 					img_breakdown[1]++;
+				} else {
+					img_breakdown[0]++;
 				}
 
 				// There's no doc.validate() for images?
@@ -116,10 +142,22 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 					.setParameter("user_id", currentUser()).setParameter(
 							"hash", fileOnServer).executeUpdate();
 
-			ZipFile zp = new ZipFile(baseFolder + "/" + fileOnServer);
+			// Find the Excel Spreadsheet
+			FileInputStream is = new FileInputStream(baseFolder + "/"
+					+ fileOnServer);
+			ZipEntry spreadsheet = getSpreadsheetName(is);
+			if (spreadsheet == null)
+				throw new IllegalStateException("No Excel Spreasheet found");
+			String spreadsheetPrefix = (new File(spreadsheet.getName()))
+					.getParent();
+			if (spreadsheetPrefix == null)
+				spreadsheetPrefix = "";
+			else
+				spreadsheetPrefix += File.separator;
 
-			final ImageParser ip = new ImageParser(zp.getInputStream(zp
-					.getEntry(spreadsheet_name)));
+			ZipFile zp = new ZipFile(baseFolder + "/" + fileOnServer);
+			final ImageParser ip = new ImageParser(zp
+					.getInputStream(spreadsheet));
 			try {
 				ip.initialize();
 			} catch (NoSuchMethodException e) {
@@ -136,9 +174,9 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 			Integer i = 2;
 			for (ImageDTO img : images) {
 				// Confirm the filename is in the zip
-				if (zp.getEntry(img.getFilename()) == null) {
-					final String err = "Filename (" + img.getFilename()
-							+ ") not found in zip";
+				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
+					final String err = "Filename (" + spreadsheetPrefix
+							+ img.getFilename() + ") not found in zip";
 					errors.put(new Integer(i), new InvalidImageException(err));
 				}
 				// There's no doc.validate() for images?
@@ -152,7 +190,8 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 				try {
 					for (ImageOnGridDTO iog : imagesOnGrid) {
 						// Populate Image, Mark to save with rest of images
-						ImageDTO img = uploadImages(zp, iog.getImage());
+						ImageDTO img = uploadImages(zp, iog.getImage(),
+								spreadsheetPrefix);
 						iog.setImage(img);
 
 						// Set image information for the Grid Copy
@@ -167,7 +206,8 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 					}
 
 					for (ImageDTO img : images) {
-						ImageDTO img_s = uploadImages(zp, img);
+						ImageDTO img_s = uploadImages(zp, img,
+								spreadsheetPrefix);
 						imagesToSave.add(img_s);
 					}
 
@@ -186,10 +226,10 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 
 		return errors;
 	}
-
-	private ImageDTO uploadImages(ZipFile zp, ImageDTO img) throws IOException {
+	private ImageDTO uploadImages(ZipFile zp, ImageDTO img, String prefix)
+			throws IOException {
 		// Get Image Data from Zip
-		ZipEntry ze = zp.getEntry(img.getFilename());
+		ZipEntry ze = zp.getEntry(prefix + img.getFilename());
 		final byte[] imgData = new byte[(int) ze.getSize()];
 		zp.getInputStream(ze).read(imgData);
 
@@ -205,5 +245,23 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 
 	public static void setBaseFolder(String baseFolder) {
 		BulkUploadImagesServiceImpl.baseFolder = baseFolder;
+	}
+
+	private ZipEntry getSpreadsheetName(InputStream is) throws IOException {
+		ZipInputStream zis = new ZipInputStream(is);
+		ZipEntry ent;
+		while ((ent = zis.getNextEntry()) != null) {
+			String entryName = ent.getName();
+
+			// Ignore anything that is in a 'hidden' directory
+			if (entryName.startsWith("__") || entryName.startsWith("."))
+				continue;
+
+			// Implicit assumption that there will only be _one_ xls spreadsheet
+			if (entryName.contains(".xls")) {
+				return ent;
+			}
+		}
+		return null;
 	}
 }
