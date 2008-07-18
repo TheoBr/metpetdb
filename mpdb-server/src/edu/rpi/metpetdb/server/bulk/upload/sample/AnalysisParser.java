@@ -90,10 +90,6 @@ public class AnalysisParser {
 					String.class, "ChemicalAnalysis_comment"
 			},
 			{
-					"rock", "setLargeRock", Boolean.class,
-					"ChemicalAnalysis_largeRock"
-			},
-			{
 					"(x position)|(x pos)|(x coordinate)|(x coord)|(^\\s*x\\s*$)",
 					"setPointX", int.class, "ChemicalAnalysis_pointX"
 			},
@@ -481,11 +477,6 @@ public class AnalysisParser {
 							parseDate(ca, data);
 						}
 
-					} else if (dataType == Boolean.class) {
-
-						final String data = cell.toString();
-						ca.setLargeRock(data.matches("yes")
-								|| data.matches("true"));
 					} else {
 						throw new IllegalStateException(
 								"Don't know how to convert to datatype: "
@@ -517,6 +508,11 @@ public class AnalysisParser {
 				for (ChemicalAnalysisOxideDTO ox : ca.getOxides())
 					ox.setPrecisionUnit(precisionUnit);
 			}
+
+			if (ca.getMineral() == null)
+				ca.setLargeRock(true);
+			else
+				ca.setLargeRock(false);
 
 			analyses.add(ca);
 		}
