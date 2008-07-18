@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -230,8 +231,7 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 			throws IOException {
 		// Get Image Data from Zip
 		ZipEntry ze = zp.getEntry(prefix + img.getFilename());
-		final byte[] imgData = new byte[(int) ze.getSize()];
-		zp.getInputStream(ze).read(imgData);
+		final byte[] imgData = getBytesFromInputStream(zp.getInputStream(ze));
 
 		// Save Image Data, in various forms, to the server
 		RenderedOp ro = ImageUploadServlet.loadImage(imgData);
@@ -263,5 +263,15 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 			}
 		}
 		return null;
+	}
+
+	private byte[] getBytesFromInputStream(InputStream is) throws IOException {
+		// Read Data into byte sequence
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] tmpSpace = new byte[2048];
+		int amount = 0;
+		while ((amount = is.read(tmpSpace, 0, tmpSpace.length)) > -1)
+			baos.write(tmpSpace, 0, amount);
+		return baos.toByteArray();
 	}
 }
