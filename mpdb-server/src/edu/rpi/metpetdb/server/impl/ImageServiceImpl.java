@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -61,36 +62,62 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		// if (ImageDTO.getSample().getOwner().getId() != currentUser())
 		// throw new SecurityException("Cannot modify images you don't own.");
 		Image i = mergeBean(image);
-		replaceSample(i);
-
-		try {
-			if (i.mIsNew())
-				insert(i);
-			else
-				i = update(merge(i));
-			commit();
-			return cloneBean(i);
-		} catch (ConstraintViolationException cve) {
-			throw cve;
-		}
+		i = save(i);
+		commit();
+		return cloneBean(i);
 	}
 
 	public XrayImageDTO saveImage(XrayImageDTO xrayimg)
 			throws ValidationException, LoginRequiredException {
 		XrayImage i = mergeBean(xrayimg);
-		replaceSample(i);
-		replaceElement(i);
+		i = save(i);
+		commit();
+		return cloneBean(i);
+	}
+
+	public XrayImage save(XrayImage img) throws ValidationException,
+			LoginRequiredException {
+		replaceSample(img);
+		replaceElement(img);
 
 		try {
-			if (i.mIsNew())
-				insert(i);
+			if (img.mIsNew())
+				insert(img);
 			else
-				i = update(merge(i));
-			commit();
-			return cloneBean(i);
+				img = update(merge(img));
 		} catch (ConstraintViolationException cve) {
 			throw cve;
 		}
+		return img;
+	}
+
+	public Image save(Image img) throws ValidationException,
+			LoginRequiredException {
+		replaceSample(img);
+
+		try {
+			if (img.mIsNew())
+				insert(img);
+			else
+				img = update(merge(img));
+		} catch (ConstraintViolationException cve) {
+			throw cve;
+		}
+		return img;
+	}
+
+	protected void save(final Collection<ImageDTO> images)
+			throws ValidationException, LoginRequiredException {
+		for (ImageDTO image : images) {
+			if (image instanceof XrayImageDTO) {
+				XrayImage i = mergeBean(image);
+				save(i);
+			} else {
+				Image i = mergeBean(image);
+				save(i);
+			}
+		}
+		commit();
 	}
 
 	public ImageOnGridDTO saveImageOnGrid(ImageOnGridDTO iogDTO)
