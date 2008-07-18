@@ -119,7 +119,7 @@ public class SampleDetails extends MPagePanel {
 				final SampleDTO s = (SampleDTO) result;
 				sampleHeader = LocaleHandler.lc_text.sample() + " "
 						+ s.getName();
-
+				setPageHeader(sampleHeader);
 				samplePosition = new LatLng(((Point) s.getLocation()).x,
 						((Point) s.getLocation()).y);
 				latError = s.getLatitudeError();
@@ -136,7 +136,6 @@ public class SampleDetails extends MPagePanel {
 		final OnEnterPanel.ObjectEditor oep = new OnEnterPanel.ObjectEditor(
 				p_sample);
 
-		setPageHeader(sampleHeader);
 		oep.setStylePrimaryName("sd-details");
 		oep.addStyleName("mpdb-dataTable");
 		add(oep);
