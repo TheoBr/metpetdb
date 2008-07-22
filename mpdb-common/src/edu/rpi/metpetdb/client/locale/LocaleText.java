@@ -111,6 +111,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_Duplicate(String field, String taken);
 	String errorDesc_UnableToSendEmail();
 	String errorDesc_InvalidImageType(String field);
+	String errorDesc_InvalidSubsampleType(String value);
 	String errorDesc_InvalidRockType(String rockType, String rockTypes);
 	String errorDesc_InvalidFormat();
 	String errorDesc_InvalidDateString();
