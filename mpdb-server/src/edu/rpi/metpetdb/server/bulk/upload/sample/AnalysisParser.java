@@ -90,11 +90,11 @@ public class AnalysisParser {
 					String.class, "ChemicalAnalysis_comment"
 			},
 			{
-					"(x position)|(x pos)|(x coordinate)|(x coord)|(^\\s*x\\s*$)",
+					"(x position)|(x pos)|(x coordinate)|(x coord)",
 					"setPointX", int.class, "ChemicalAnalysis_pointX"
 			},
 			{
-					"(y position)|(y pos)|(y coordinate)|(y coord)|(^\\s*y\\s*$)",
+					"(y position)|(y pos)|(y coordinate)|(y coord)",
 					"setPointY", int.class, "ChemicalAnalysis_pointY"
 			},
 
