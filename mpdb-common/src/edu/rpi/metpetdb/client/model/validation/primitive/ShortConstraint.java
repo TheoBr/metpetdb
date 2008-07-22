@@ -1,6 +1,6 @@
 package edu.rpi.metpetdb.client.model.validation.primitive;
 
-import edu.rpi.metpetdb.client.error.InvalidIntegerException;
+import edu.rpi.metpetdb.client.error.InvalidShortException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.MaxLengthConstraint;
@@ -15,8 +15,7 @@ public class ShortConstraint extends PropertyConstraint implements
 		try {
 			Short.parseShort((String) value);
 		} catch (NumberFormatException nfe) {
-			// TODO change
-			throw new InvalidIntegerException();
+			throw new InvalidShortException(this);
 		}
 	}
 
