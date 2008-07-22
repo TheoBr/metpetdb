@@ -114,6 +114,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_InvalidLongitude(String field);
 	String errorDesc_InvalidLatitude(String field);
 	String errorTitle_UnexpectedError(String throwable);
+	String errorDesc_ValueNotInCollection(String value, String collection);
 
 	/* Character Names */
 	String character_space();

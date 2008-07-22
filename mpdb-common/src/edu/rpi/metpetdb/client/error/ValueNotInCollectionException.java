@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.error;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 
 /**
@@ -10,6 +11,7 @@ public class ValueNotInCollectionException extends ValidationException {
 	private static final long serialVersionUID = 1L;
 
 	private String value;
+	private String collectionName;
 
 	public ValueNotInCollectionException() {
 	}
@@ -18,11 +20,16 @@ public class ValueNotInCollectionException extends ValidationException {
 		super(pc);
 	}
 
-	public ValueNotInCollectionException(final String value) {
+	public ValueNotInCollectionException(final String value,
+			final String collectionName) {
 		this.value = value == null ? "" : value.toString();
+		this.collectionName = collectionName == null ? "" : collectionName
+				.toString();
 	}
 
 	public String format() {
-		return value + " is not in the collection";
+		String collection = LocaleHandler.lc_entity.getString(collectionName);
+		return LocaleHandler.lc_text.errorDesc_ValueNotInCollection(value,
+				collection);
 	}
 }

@@ -25,6 +25,7 @@ public class ValueInCollectionConstraint extends PropertyConstraint implements
 		MaxLengthConstraint, HasValues {
 
 	private Collection<? extends MObjectDTO> values;
+	private String collectionName;
 
 	public ValueInCollectionConstraint() {
 
@@ -38,15 +39,24 @@ public class ValueInCollectionConstraint extends PropertyConstraint implements
 		return values;
 	}
 
+	public String getCollectionName() {
+		return collectionName;
+	}
+
+	public void setCollectionName(String collectionName) {
+		this.collectionName = collectionName;
+	}
+
 	public void validateValue(Object value) throws ValidationException {
 		if (value == null && this.required)
 			return;
 		if (values != null && valueInCollection(value, this.getValues()))
 			return;
 		else if (value != null)
-			throw new ValueNotInCollectionException(value.toString());
+			throw new ValueNotInCollectionException(value.toString(),
+					collectionName);
 		else
-			throw new ValueNotInCollectionException("");
+			throw new ValueNotInCollectionException("", collectionName);
 	}
 
 	public boolean valueInCollection(final Object value,

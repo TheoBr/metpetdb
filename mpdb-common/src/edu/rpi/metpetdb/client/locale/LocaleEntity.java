@@ -204,4 +204,11 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String ImageOnGrid_xpos();
 
 	String ImageOnGrid_ypos();
+
+	/* Collection Names */
+	String Collection_Mineral();
+
+	String Collection_Oxide();
+
+	String Collection_Element();
 }

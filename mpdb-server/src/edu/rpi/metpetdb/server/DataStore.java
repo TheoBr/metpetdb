@@ -382,6 +382,12 @@ public class DataStore {
 			} catch (MappingException me) {
 				cc.setValues(new HashSet<MObjectDTO>());
 			}
+
+			// The collection name should be referenced by 'Collection_'
+			// followed by the queryName minus the '.all'
+			cc.setCollectionName("Collection_"
+					+ queryName.substring(0, queryName.lastIndexOf(".")));
+
 			return cc;
 		} else if ("timestamp".equals(tn)) {
 			return TimestampConstraint.class.isAssignableFrom(c) ? (TimestampConstraint) c
