@@ -75,7 +75,18 @@ public class ImageParser {
 			{
 					"element", "setElement", ElementDTO.class,
 					"XrayImage_element"
-			}
+			},
+			{
+					"(lut)|(look up table)", "setLut", Integer.class,
+					"XrayImage_lut"
+			},
+			{
+					"contrast", "setContrast", Integer.class, "Image_contrast"
+			},
+			{
+					"brightness", "setBrightness", Integer.class,
+					"Image_brightness"
+			},
 	};
 
 	private final static List<MethodAssociation<XrayImageDTO>> methodAssociations = new LinkedList<MethodAssociation<XrayImageDTO>>();
