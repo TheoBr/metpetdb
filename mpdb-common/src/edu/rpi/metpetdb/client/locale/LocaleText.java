@@ -110,6 +110,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_NotAfter(String fieldA, String fieldB);
 	String errorDesc_Duplicate(String field, String taken);
 	String errorDesc_UnableToSendEmail();
+	String errorDesc_InvalidImageType(String field);
 	String errorDesc_InvalidRockType(String rockType, String rockTypes);
 	String errorDesc_InvalidFormat();
 	String errorDesc_InvalidDateString();

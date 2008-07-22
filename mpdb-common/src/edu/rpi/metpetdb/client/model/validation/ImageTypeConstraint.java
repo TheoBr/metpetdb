@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.model.validation;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import edu.rpi.metpetdb.client.error.InvalidImageTypeException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 
@@ -11,6 +12,7 @@ public class ImageTypeConstraint extends PropertyConstraint implements
 
 	private ArrayList<String> imageTypes = new ArrayList<String>();
 
+	// TODO: Perhaps these should be in the db rather than in the code?
 	public ImageTypeConstraint() {
 		imageTypes.add("Transmitted Unpolarized");
 		imageTypes.add("Transmitted Plane polarized");
@@ -31,8 +33,7 @@ public class ImageTypeConstraint extends PropertyConstraint implements
 	public void validateValue(final Object value) throws ValidationException {
 		super.validateValue(value);
 		if (value == null || !isValidImageType(value.toString())) {
-			// TODO throw something
-			// throw new InvalidCollectionConstraint(this);
+			throw new InvalidImageTypeException(value.toString());
 		}
 	}
 
