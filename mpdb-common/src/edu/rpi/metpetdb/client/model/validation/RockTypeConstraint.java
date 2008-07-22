@@ -11,6 +11,7 @@ public class RockTypeConstraint extends PropertyConstraint implements HasValues 
 
 	private ArrayList<String> rockTypes = new ArrayList<String>();
 
+	// TODO: Perhaps these should be in the db rather than in the code?
 	public RockTypeConstraint() {
 		rockTypes.add("Amphibolite");
 		rockTypes.add("Blueschist");
