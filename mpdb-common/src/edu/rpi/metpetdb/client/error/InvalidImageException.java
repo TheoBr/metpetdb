@@ -1,11 +1,12 @@
 package edu.rpi.metpetdb.client.error;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 
 public class InvalidImageException extends ValidationException {
 	private static final long serialVersionUID = 1L;
 
-	private String errorMsg;
+	private String imgName;
 
 	public InvalidImageException() {
 	}
@@ -15,14 +16,10 @@ public class InvalidImageException extends ValidationException {
 	}
 
 	public InvalidImageException(final String s) {
-		errorMsg = s;
+		imgName = s;
 	}
 
 	public String format() {
-		// return MpDb.lc_text.errorDesc_InvalidFloat(formatPropertyName());
-		if (errorMsg != null)
-			return errorMsg;
-		else
-			return "NEED ERROR MESSAGE HERE(Image)";
+		return LocaleHandler.lc_text.errorDesc_InvalidImage(imgName);
 	}
 }

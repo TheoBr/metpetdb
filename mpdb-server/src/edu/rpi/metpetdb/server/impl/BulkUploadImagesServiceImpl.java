@@ -176,9 +176,8 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 			for (ImageDTO img : images) {
 				// Confirm the filename is in the zip
 				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
-					final String err = "Filename (" + spreadsheetPrefix
-							+ img.getFilename() + ") not found in zip";
-					errors.put(new Integer(i), new InvalidImageException(err));
+					errors.put(new Integer(i), new InvalidImageException(
+							spreadsheetPrefix + img.getFilename()));
 				}
 				// There's no doc.validate() for images?
 

@@ -106,6 +106,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_InvalidSESARNumber(String field);
 	String errorDesc_InvalidCharacter(String field, String accepted, String bad);
 	String errorDesc_InvalidLogin();
+	String errorDesc_InvalidImage(String val);
 	String errorDesc_NotEqual(String fieldA, String fieldB);
 	String errorDesc_NotAfter(String fieldA, String fieldB);
 	String errorDesc_Duplicate(String field, String taken);
