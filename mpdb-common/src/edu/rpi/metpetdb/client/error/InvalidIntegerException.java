@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.error;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 
 public class InvalidIntegerException extends ValidationException {
@@ -13,7 +14,7 @@ public class InvalidIntegerException extends ValidationException {
 	}
 
 	public String format() {
-		// return MpDb.lc_text.errorDesc_InvalidFloat(formatPropertyName());
-		return "NEED ERROR MESSAGE HERE";
+		return LocaleHandler.lc_text
+				.errorDesc_InvalidInteger(formatPropertyName());
 	}
 }

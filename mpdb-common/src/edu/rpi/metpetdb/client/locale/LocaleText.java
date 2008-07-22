@@ -102,6 +102,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_InvalidBoolean(String field);
 	String errorDesc_InvalidShort(String field);
 	String errorDesc_InvalidFloat(String field);
+	String errorDesc_InvalidInteger(String field);
 	String errorDesc_InvalidGeometry(String field);
 	String errorDesc_InvalidSESARNumber(String field);
 	String errorDesc_InvalidCharacter(String field, String accepted, String bad);
