@@ -99,6 +99,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_TooLong(String field, int max);
 	String errorDesc_IsoDateFormat(String field);
 	String errorDesc_WrongType(String field);
+	String errorDesc_InvalidBoolean(String field);
 	String errorDesc_InvalidFloat(String field);
 	String errorDesc_InvalidGeometry(String field);
 	String errorDesc_InvalidSESARNumber(String field);

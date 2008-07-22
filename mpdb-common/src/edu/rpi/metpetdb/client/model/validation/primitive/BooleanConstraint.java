@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.model.validation.primitive;
 
+import edu.rpi.metpetdb.client.error.InvalidBooleanException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 
@@ -17,8 +18,7 @@ public class BooleanConstraint extends PropertyConstraint {
 		if (value instanceof Boolean)
 			return;
 		else {
-			// TODO throw something
-			// throw new InvalidBooleanException(this);
+			throw new InvalidBooleanException(this);
 		}
 
 	}
