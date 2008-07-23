@@ -327,7 +327,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 				new AddPointListener(this.mouseListener, iog), false));
 		popupMenu.addItem(new ImageHyperlink(new Image(GWT.getModuleBaseURL()
 				+ "/images/icon-remove.gif"), "Remove", new RemoveListener(iog,
-				this.layers), false));
+				this.layers, imagesOnGrid), false));
 		popupMenu.addItem(new ImageHyperlink(new Image(GWT.getModuleBaseURL()
 				+ "/images/icon-rotate.gif"), "Rotate",
 				new RotateListener(iog), false));
@@ -430,7 +430,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		final MLink remove = new ImageHyperlink(new Image(GWT
 				.getModuleBaseURL()
 				+ "/images/icon-remove.gif"), "Remove", new RemoveListener(iog,
-				this.layers), false);
+				this.layers, imagesOnGrid), false);
 		ulBottom.add(details);
 		ulBottom.add(addPoint);
 		ulBottom.add(remove);
