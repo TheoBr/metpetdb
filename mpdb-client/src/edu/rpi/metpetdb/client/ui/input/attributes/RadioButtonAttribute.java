@@ -1,7 +1,9 @@
 package edu.rpi.metpetdb.client.ui.input.attributes;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -10,12 +12,22 @@ import edu.rpi.metpetdb.client.model.validation.primitive.BooleanConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class RadioButtonAttribute extends GenericAttribute {
+	private final Label msg;
+
 	public RadioButtonAttribute(final BooleanConstraint sc) {
 		super(sc);
+		msg = null;
+	}
+
+	public RadioButtonAttribute(final BooleanConstraint sc, final String msg) {
+		super(sc);
+		this.msg = new Label(msg);
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
-		return new Widget[]{new MText((get(obj)) == true ? "Yes" : "No")};
+		return new Widget[] {
+			new MText((get(obj)) == true ? "Yes" : "No")
+		};
 	}
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
@@ -23,6 +35,18 @@ public class RadioButtonAttribute extends GenericAttribute {
 		final RadioButton YesButton = new RadioButton("choice", "Yes");
 		final RadioButton NoButton = new RadioButton("choice", "No");
 
+		YesButton.addClickListener(new ClickListener() {
+			public void onClick(final Widget sender) {
+				if (msg != null)
+					fp.add(msg);
+			}
+		});
+		NoButton.addClickListener(new ClickListener() {
+			public void onClick(final Widget sender) {
+				if (msg != null && msg.getParent() == fp)
+					fp.remove(msg);
+			}
+		});
 		// Set default value
 		boolean radioValue = get(obj);
 		if (radioValue)
@@ -37,7 +61,9 @@ public class RadioButtonAttribute extends GenericAttribute {
 		DOM.setElementAttribute(NoButton.getElement(), "id", id);
 
 		applyStyle(fp, true);
-		return new Widget[]{fp};
+		return new Widget[] {
+			fp
+		};
 	}
 
 	public void commitEdit(final MObjectDTO obj, final Widget editWidget) {
