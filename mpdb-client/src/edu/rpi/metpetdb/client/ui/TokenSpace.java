@@ -32,6 +32,7 @@ import edu.rpi.metpetdb.client.ui.objects.details.SubsampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 import edu.rpi.metpetdb.client.ui.objects.list.UserProjectsListEx;
 import edu.rpi.metpetdb.client.ui.objects.list.UserSamplesList;
+import edu.rpi.metpetdb.client.ui.permission.PermissionDenied;
 import edu.rpi.metpetdb.client.ui.search.Search;
 import edu.rpi.metpetdb.client.ui.user.EditUserProfile;
 import edu.rpi.metpetdb.client.ui.user.UserDetails;
@@ -144,6 +145,12 @@ public class TokenSpace implements HistoryListener {
 	public static final Screen search = new Screen("Search") {
 		public void executeToken(final String args) {
 			show(new Search().createNew());
+		}
+	};
+
+	public static final Screen permissionDenied = new Screen("PermissionDenied") {
+		public void executeToken(final String args) {
+			show(new PermissionDenied());
 		}
 	};
 	public static final Screen editProfile = new Screen("EditProfile") {
@@ -290,6 +297,7 @@ public class TokenSpace implements HistoryListener {
 		register(search);
 		register(ImageListViewer);
 		register(allProjects);
+		register(permissionDenied);
 
 		// DefaultPaginationBehavior
 		register(new TokenHandler.NoOp("previousPage"));

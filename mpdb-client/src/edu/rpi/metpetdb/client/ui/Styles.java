@@ -11,6 +11,7 @@ public class Styles {
 	public static final String NOTICE_ID = "mpdb-notice";
 	public static final String LOADINGMESSAGE_ID = "loadingmessage";
 	public static final String BREADCRUMBS_ID = "breadcrumbs";
+	public static final String FOOTER_ID = "nsf";
 
 	/* ---------------- "standard" CSS classes we reuse ---------------- */
 	public static final String HEADERCELL = "headerCell";
@@ -43,7 +44,7 @@ public class Styles {
 
 	/* ---------------- Image Styles ---------------- */
 	public static final String ADD_IMAGE_DIALOG = "mpdb-addImageDialog";
-	
+
 	/* ---------------- Utility Styles ---------------- */
 	public static final String HIDE = "hide";
 	public static final String SHOW_BLOCK = "block";
@@ -53,5 +54,6 @@ public class Styles {
 	public static final String EVEN = "even";
 	public static final String ODD = "odd";
 
-	private Styles() {}
+	private Styles() {
+	}
 }
