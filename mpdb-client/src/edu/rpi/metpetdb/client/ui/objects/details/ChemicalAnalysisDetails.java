@@ -2,31 +2,28 @@ package edu.rpi.metpetdb.client.ui.objects.details;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.MpDb;
-import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.ChooseImageAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.HyperlinkAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAreaAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AnalysisMaterialAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.ChemistryAttribute;
-import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
 
 public class ChemicalAnalysisDetails extends FlowPanel {
 	private static GenericAttribute[] chemicalAnalysisAtts = {
-			new TextAttribute(MpDb.oc.ChemicalAnalysis_sampleName)
+			new HyperlinkAttribute(MpDb.oc.ChemicalAnalysis_sampleName)
 					.setReadOnly(true),
-			new TextAttribute(MpDb.oc.ChemicalAnalysis_subsampleName)
+			new HyperlinkAttribute(MpDb.oc.ChemicalAnalysis_subsampleName)
 					.setReadOnly(true),
 			new TextAttribute(MpDb.doc.ChemicalAnalysis_spotId),
 			new ChooseImageAttribute(MpDb.doc.ChemicalAnalysis_image,
@@ -48,10 +45,6 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 	private final ObjectEditorPanel<ChemicalAnalysisDTO> p_chemicalAnalysis;
 
 	private long chemicalAnalysisId;
-	private Label spotId;
-	private MLinkandText subsample;
-	private MLinkandText sample;
-	private VerticalPanel vp;
 
 	public ChemicalAnalysisDetails() {
 		p_chemicalAnalysis = new ObjectEditorPanel<ChemicalAnalysisDTO>(
@@ -85,20 +78,8 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 
 			protected void onLoadCompletion(final MObjectDTO result) {
 				super.onLoadCompletion(result);
-				final ChemicalAnalysisDTO ma = (ChemicalAnalysisDTO) result;
-				spotId = new Label("Spot Identifier: " + ma.getSpotId());
-				subsample = new MLinkandText("Subsample ", ma.getSubsample()
-						.getName(), "", TokenSpace.detailsOf(ma.getSubsample()));
-				sample = new MLinkandText("Sample ", ma.getSubsample()
-						.getSample().getName(), "", TokenSpace.detailsOf(ma
-						.getSubsample().getSample()));
-				vp.add(spotId);
-				vp.add(subsample);
-				vp.add(sample);
 			}
 		};
-		vp = new VerticalPanel();
-		add(vp);
 		add(new OnEnterPanel.ObjectEditor(p_chemicalAnalysis));
 	}
 	public ChemicalAnalysisDetails showById(final long id) {

@@ -30,6 +30,7 @@ import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserDetails;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.HyperlinkAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AddImageAttribute;
@@ -44,7 +45,8 @@ public class SubsampleDetails extends FlowPanel {
 	final Element sampleHeader;
 
 	private static GenericAttribute[] subsampleAtts = {
-			new TextAttribute(MpDb.oc.Subsample_sampleName).setReadOnly(true),
+			new HyperlinkAttribute(MpDb.oc.Subsample_sampleName)
+					.setReadOnly(true),
 			new TextAttribute(MpDb.doc.Subsample_name),
 			new ListboxAttribute(MpDb.doc.Subsample_type),
 			new AddImageAttribute(MpDb.doc.Subsample_images),
@@ -115,11 +117,6 @@ public class SubsampleDetails extends FlowPanel {
 									.getGrid()));
 				}
 
-				Header.setPreText("Subsample of ");
-				Header.setLinkText(s.getSample().getName());
-				Header.setTargetHistoryToken(TokenSpace.detailsOf((SampleDTO) s
-						.getSample()));
-
 				DOM.setInnerText(sampleHeader, "Subsample " + s.getName());
 				sampleId = s.getSample().getId();
 
@@ -128,7 +125,6 @@ public class SubsampleDetails extends FlowPanel {
 
 		sampleHeader = DOM.createElement("h2");
 		DOM.appendChild(this.getElement(), sampleHeader);
-		Header = new MLinkandText();
 
 		final OnEnterPanel.ObjectEditor oep = new OnEnterPanel.ObjectEditor(
 				p_subsample);
@@ -153,14 +149,13 @@ public class SubsampleDetails extends FlowPanel {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		ft.getRowFormatter().setStyleName(0, "mpdb-dataTableLightBlue");
 
-		// add(pageDescription);
-		add(Header);
 		add(ft);
 	}
 
 	public void showChemicalAnalysis() {
 		FlexTable chemft = new FlexTable();
-		final ChemicalAnalysisListEx list = new ChemicalAnalysisListEx() {
+		final ChemicalAnalysisListEx list = new ChemicalAnalysisListEx(
+				LocaleHandler.lc_text.noChemicalAnalysesFound()) {
 			public void update(final PaginationParameters p,
 					final AsyncCallback<Results<ChemicalAnalysisDTO>> ac) {
 				MpDb.chemicalAnalysis_svc.all(p, subsampleId, ac);
