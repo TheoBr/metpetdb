@@ -259,6 +259,8 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 			if (s.getOwner().getId() != currentUser())
 				throw new SecurityException(
 						"Cannot modify samples you don't own.");
+			else if (s.isPublicData())
+				throw new SecurityException("Cannot modify public samples");
 			delete(s);
 			s = null;
 			commit();
