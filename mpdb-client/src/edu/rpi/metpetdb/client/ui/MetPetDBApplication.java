@@ -51,6 +51,7 @@ public class MetPetDBApplication implements EntryPoint {
 	private static RootPanel noticeContainer;
 	private static RootPanel leftContainer;
 	private static HashSet<Widget> pageChangeWatchers;
+	private static RootPanel footerContainer;
 
 	// public static Html introduction;
 	// public static Hyperlink logoLink;
@@ -66,6 +67,7 @@ public class MetPetDBApplication implements EntryPoint {
 		contentContainer = RootPanel.get(Styles.CONTENT_ID);
 		noticeContainer = RootPanel.get(Styles.NOTICE_ID);
 		leftContainer = RootPanel.get(Styles.LEFTCOL_ID);
+		footerContainer = RootPanel.get(Styles.FOOTER_ID);
 
 		// make MPDB logo a link to the introduction screen
 		/*
@@ -138,7 +140,7 @@ public class MetPetDBApplication implements EntryPoint {
 			}
 
 			public void onSuccess(final String result) {
-				notice("Build Date: " + (String) result);
+				footer("Last Update: " + (String) result);
 			}
 		}.begin();
 		final String state = History.getToken();
@@ -236,6 +238,15 @@ public class MetPetDBApplication implements EntryPoint {
 	public static void notice(final Widget w) {
 		noticeContainer.clear();
 		noticeContainer.add(w);
+	}
+
+	public static void footer(final String text) {
+		footer(new MLink(text != null ? text : "", ""));
+	}
+
+	public static void footer(final Widget w) {
+		footerContainer.clear();
+		footerContainer.add(w);
 	}
 
 	public static void left(final Widget w) {
