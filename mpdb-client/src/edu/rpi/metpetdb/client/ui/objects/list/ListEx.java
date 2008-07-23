@@ -10,9 +10,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
@@ -55,9 +55,12 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 	 */
 	private ArrayList<Column> originalColumns;
 	private ArrayList<Column> displayColumns;
+
 	private TableModel tableModel;
 	private FixedWidthGrid dataTable;
 	private FixedWidthFlexTable headerTable;
+
+	private Label noResults = new Label();
 
 	/**
 	 * Response to send back to the callback so that it can draw the table
@@ -156,26 +159,35 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 					final PagingResponse response = new PagingResponse(
 							getList(result.getList()), result.getList());
 					if (result.getCount() == 0) {
-						callback.onRowsReady(request, response);
-						ListEx.this.scrollTable
-								.getHeaderTable()
-								.setWidget(
-										1,
-										0,
-										new HTML(
-												"<Strong>We were unable to find anything that matched your current criteria</Strong>"));
+						final int headerRowCount = ListEx.this.scrollTable
+								.getHeaderTable().getRowCount();
+						for (int i = 0; i < headerRowCount; i++) {
+							ListEx.this.scrollTable.getHeaderTable()
+									.getRowFormatter().setVisible(i, false);
+						}
+						ListEx.this.scrollTable.getHeaderTable().setWidget(
+								headerRowCount, 0, noResults);
 						ListEx.this.scrollTable.getHeaderTable()
-								.getFlexCellFormatter().setColSpan(1, 0,
+								.getFlexCellFormatter().setColSpan(
+										headerRowCount, 0,
 										ListEx.this.displayColumns.size());
 						ListEx.this.scrollTable.getHeaderTable()
-								.getFlexCellFormatter().setAlignment(1, 0,
+								.getFlexCellFormatter().setAlignment(
+										headerRowCount, 0,
 										HasHorizontalAlignment.ALIGN_CENTER,
 										HasVerticalAlignment.ALIGN_MIDDLE);
+						callback.onRowsReady(request, response);
 					} else {
-						if (ListEx.this.scrollTable.getHeaderTable()
-								.getRowCount() > 1)
-							ListEx.this.scrollTable.getHeaderTable().removeRow(
-									1);
+						for (int i = 0; i < ListEx.this.scrollTable
+								.getHeaderTable().getRowCount(); i++) {
+							ListEx.this.scrollTable.getHeaderTable()
+									.getRowFormatter().setVisible(i, true);
+							if (ListEx.this.scrollTable.getHeaderTable()
+									.getWidget(i, 0) == noResults) {
+								ListEx.this.scrollTable.getHeaderTable()
+										.removeRow(i);
+							}
+						}
 						callback.onRowsReady(request, response);
 					}
 
@@ -296,7 +308,15 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		dataTable = new FixedWidthGrid();
 		headerTable = new FixedWidthFlexTable();
 		scrollTable = new PagingScrollTable<T>(tableModel, dataTable,
-				headerTable);
+				headerTable) {
+			public void reloadPage() {
+				for (int i = 0; i < scrollTable.getDataTable().getRowCount(); i++) {
+					scrollTable.getDataTable().getRowFormatter()
+							.removeStyleName(i, "highlighted-row");
+				}
+				super.reloadPage();
+			}
+		};
 		PagingOptions options = new PagingOptions(scrollTable);
 
 		scrollTable.setPageSize(10);
@@ -340,6 +360,11 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		add(options);
 		this.setWidth("100%");
 		// dataTable.setHeight("400px");
+	}
+
+	public ListEx(final ArrayList<Column> columns, final String noResultsMessage) {
+		this(columns);
+		noResults.setText(noResultsMessage);
 	}
 
 	public void newView(ArrayList<Column> columns) {

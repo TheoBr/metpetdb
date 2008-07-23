@@ -26,6 +26,10 @@ public abstract class ChemicalAnalysisListEx extends
 		super(new ArrayList<Column>(Arrays.asList(columns)));
 	}
 
+	public ChemicalAnalysisListEx(final String noResultsMessage) {
+		super(new ArrayList<Column>(Arrays.asList(columns)), noResultsMessage);
+	}
+
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
 	public static Column[] columns = {

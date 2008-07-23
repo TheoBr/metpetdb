@@ -29,6 +29,10 @@ public abstract class SampleListEx extends ListEx<SampleDTO> {
 		super(new ArrayList<Column>(Arrays.asList(columns)));
 	}
 
+	public SampleListEx(final String noResultsMessage) {
+		super(new ArrayList<Column>(Arrays.asList(columns)), noResultsMessage);
+	}
+
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
 	private static Column[] columns = {

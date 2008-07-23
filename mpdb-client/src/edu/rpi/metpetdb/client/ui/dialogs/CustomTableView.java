@@ -1,7 +1,9 @@
 package edu.rpi.metpetdb.client.ui.dialogs;
 
 import java.util.ArrayList;
+import java.util.Date;
 
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -22,11 +24,12 @@ public class CustomTableView extends MDialogBox implements ClickListener,
 	private final Button submit;
 	private final Button cancel;
 	private final ListEx list;
-	private final Object obj;
+	private final String table;
+	private final static long millisecondsIn30Days = 2592000000L;
 
-	public CustomTableView(final ListEx mylist, final Object myObj) {
-		list = mylist;
-		obj = myObj;
+	public CustomTableView(final ListEx myList, final String myTable) {
+		list = myList;
+		table = myTable;
 		setText("Please choose your desired fields");
 
 		cb = new ArrayList<CheckBox>();
@@ -37,10 +40,13 @@ public class CustomTableView extends MDialogBox implements ClickListener,
 
 		final FlexTable ft = new FlexTable();
 
+		final ArrayList<Column> displayColumns = list.getDisplayColumns();
 		for (int i = 1; i < list.getOriginalColumns().size(); i++) {
-			Column temp = (Column) list.getOriginalColumns().get(i);
+			Column original = (Column) list.getOriginalColumns().get(i);
 			CheckBox tempCB = new CheckBox();
-			tempCB.setName(temp.getTitle());
+			tempCB.setName(original.getTitle());
+			if (displayColumns.contains(original))
+				tempCB.setChecked(true);
 			ft.setWidget(i, 0, tempCB);
 			ft.setWidget(i, 1, new Label(tempCB.getName()));
 			cb.add(tempCB);
@@ -72,10 +78,28 @@ public class CustomTableView extends MDialogBox implements ClickListener,
 					displayColumns.add(originalColumns.get(i + 1));
 				}
 			}
+			createCookie(table, displayColumns);
 			list.newView(displayColumns);
 			hide();
 		}
 	}
+
+	public void createCookie(final String table,
+			final ArrayList<Column> displayColumns) {
+		String value = "";
+		for (int i = 0; i < displayColumns.size(); i++) {
+			value += displayColumns.get(i).getTitle() + ",";
+		}
+		final Date expires = new Date();
+		expires.setTime(expires.getTime() + millisecondsIn30Days);
+		Cookies.setCookie(table, value, expires);
+	}
+
+	public void getCookie(final String table,
+			final ArrayList<Column> displayColumns) {
+
+	}
+
 	public void onKeyPress(final Widget sender, final char kc, final int mod) {
 		if (kc == KEY_ENTER) {
 		}

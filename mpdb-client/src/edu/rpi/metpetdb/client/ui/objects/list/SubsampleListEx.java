@@ -27,6 +27,10 @@ public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
 		super(new ArrayList<Column>(Arrays.asList(columns)));
 	}
 
+	public SubsampleListEx(final String noResultsMessage) {
+		super(new ArrayList<Column>(Arrays.asList(columns)), noResultsMessage);
+	}
+
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
 	public static Column[] columns = {

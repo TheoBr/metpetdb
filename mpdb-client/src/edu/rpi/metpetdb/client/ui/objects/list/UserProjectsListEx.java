@@ -32,6 +32,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class UserProjectsListEx extends FlowPanel implements ClickListener {
+	private static final String cookieString = "UserProjectsListEx";
 	private FlexTable header1;
 	private ProjectListEx list;
 	private Set<ProjectDTO> projectlist;
@@ -123,7 +124,7 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 	}
 
 	public void onClick(Widget sender) {
-		CustomTableView myView = new CustomTableView(list, this);
+		CustomTableView myView = new CustomTableView(list, cookieString);
 	}
 
 	private void addProjects() {

@@ -52,7 +52,8 @@ public class Search extends FlowPanel implements ClickListener {
 	private Button exportExcelButton;
 	private Button exportGoogleEarthButton;
 	private final ObjectSearchPanel p_searchSample;
-	private final SampleListEx sampleList = new SampleListEx() {
+	private final SampleListEx sampleList = new SampleListEx(
+			LocaleHandler.lc_text.search_noSamplesFound()) {
 
 		@Override
 		public void update(PaginationParameters p,
