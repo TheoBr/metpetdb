@@ -134,6 +134,7 @@ button.submit {
 	margin-right: -15px;
 	padding-top: 6px;
 }
+
 .mpdb-dataTable td {
 	vertical-align: middle;
 	padding: 0.3em 0.5em;
@@ -156,7 +157,7 @@ button.submit {
 	padding: 0.3em 0.5em;
 	border-bottom: 1px solid #E2C798;
 }
-
+	
 .mpdb-dataTableLightBlue {
 	background-color: #ECF5FD;
 }
@@ -260,5 +261,9 @@ button.remove {
 	border: 1px solid #fda293;
 	border-right-color: #ea8d7e;
 	border-bottom-color: #ea8d7e;
+}
+
+.highlighted-row {
+	background-color: #FF3300;	
 }
 

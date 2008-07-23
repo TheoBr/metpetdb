@@ -197,7 +197,7 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 	background: #e6eaf1 url(http://mpdb.zakness.com/images/bg-sidebar-li-odd.gif) repeat-y right top;
 }
 
-#leftcol ul.lcol-sectionList cur {
+#leftcol ul.lcol-sectionList .cur {
 	background:#FFFFFF url(../images/arrow-blue-right.gif) no-repeat scroll 2px center;
 	color:#163D6C;
 	font-weight:bold;

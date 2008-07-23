@@ -31,14 +31,17 @@ public interface LocaleText extends Messages {
 	String sample();
 	String addSample();
 	String addSampleDescription();
+	String publicDataWarning();
 
 	/* Subsamples */
 	String subsamples();
 	String addSubsample();
 	String addSubsampleDescription(String sampleAlias);
+	String noSubsamplesFound();
 
 	/* Mineral Analyses */
 	String addChemicalAnalysis();
+	String noChemicalAnalysesFound();
 
 	/* Projects */
 	String addProject();
@@ -52,6 +55,7 @@ public interface LocaleText extends Messages {
 	String search_exportExcel();
 	String search_exportKML();
 	String search_exportResults();
+	String search_noSamplesFound();
 
 	/* Tools */
 	String tools_EditProfile();
@@ -134,6 +138,9 @@ public interface LocaleText extends Messages {
 	/* Permission */
 	String Permission_Denied();
 	String Permission_NotYours();
+
+	/* User Samples List */
+	String cannotDeletePublicSamples();
 
 	/* Other Messages */
 	String message_WhyRegister();
