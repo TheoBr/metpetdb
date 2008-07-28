@@ -7,7 +7,8 @@
 	<inherits name='net.sf.hibernate4gwt.Hibernate4Gwt'/>
 	<inherits name='com.google.gwt.widgetideas.WidgetIdeas'/>
 	<inherits name="com.google.gwt.maps.GoogleMaps" />
-<!-- <inherits name='com.mapitz.gwt.googleMaps.GoogleMaps' /> -->
+	<inherits name="com.google.gwt.xml.XML"/> 
+	<inherits name ="com.google.gwt.http.HTTP"/>
 	
 	
 	<entry-point class='edu.rpi.metpetdb.client.ui.MetPetDBApplication'/>

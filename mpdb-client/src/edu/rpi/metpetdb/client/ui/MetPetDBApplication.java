@@ -45,7 +45,7 @@ public class MetPetDBApplication implements EntryPoint {
 
 	private static RootPanel loginBar;
 	private static MMenuBar hdrnav;
-	// private static RootPanel breadcrumbsBar;
+	private static RootPanel breadcrumbsBar;
 	// private static MenuBar datePanel;
 	private static RootPanel contentContainer;
 	private static RootPanel noticeContainer;
@@ -61,7 +61,7 @@ public class MetPetDBApplication implements EntryPoint {
 		History.addHistoryListener(TokenSpace.INSTANCE);
 
 		loginBar = RootPanel.get(Styles.LOGBAR_ID);
-		// breadcrumbsBar = RootPanel.get(Styles.BREADCRUMBS_ID);
+		breadcrumbsBar = RootPanel.get(Styles.BREADCRUMBS_ID);
 		hdrnav = new MMenuBar();
 		RootPanel.get(Styles.HDRNAV_ID).add(hdrnav);
 		contentContainer = RootPanel.get(Styles.CONTENT_ID);
@@ -128,8 +128,7 @@ public class MetPetDBApplication implements EntryPoint {
 		final Element lm = RootPanel.get(Styles.LOADINGMESSAGE_ID).getElement();
 		DOM.removeChild(DOM.getParent(lm), lm);
 
-		// final Element bc = RootPanel.get(Styles.BREADCRUMBS_ID).getElement();
-		// DOM.appendChild(DOM.getParent(bc), bc);
+		appendToBreadCrumbs(new Breadcrumbs());
 
 		// If we were given a state to jump to, go there. Otherwise
 		// go to the introduction state, which displays some pretty
@@ -147,6 +146,7 @@ public class MetPetDBApplication implements EntryPoint {
 		if (state.length() > 0) {
 			GWT.log("Resume application at " + state, null);
 			TokenSpace.dispatch(state);
+			((Breadcrumbs) getFromBreadCrumbs()).update(state);
 		} else {
 			// notice(MpDb.lc_text.notice_Welcome());
 			DeferredCommand.addCommand(TokenSpace.introduction);
@@ -281,6 +281,14 @@ public class MetPetDBApplication implements EntryPoint {
 
 	public static void clearLeftSide() {
 		leftContainer.clear();
+	}
+
+	public static void appendToBreadCrumbs(final Widget w) {
+		breadcrumbsBar.add(w);
+	}
+
+	public static Widget getFromBreadCrumbs() {
+		return breadcrumbsBar.getWidget(0);
 	}
 
 	private void createHdrNav() {

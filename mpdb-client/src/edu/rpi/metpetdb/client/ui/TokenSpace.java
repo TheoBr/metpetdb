@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.GridDTO;
 import edu.rpi.metpetdb.client.model.ProjectDTO;
@@ -50,7 +51,8 @@ import edu.rpi.metpetdb.client.ui.user.UserRegistrationPanel;
 public class TokenSpace implements HistoryListener {
 	public static final TokenSpace INSTANCE = new TokenSpace();
 	private static final Map<String, TokenHandler> handlers = new HashMap<String, TokenHandler>();
-	private static final TokenHandler sampleDetails = new LKey("SampleDetails") {
+	private static final TokenHandler sampleDetails = new LKey(
+			LocaleHandler.lc_entity.TokenSpace_Sample_Details()) {
 		public long get(final Object obj) {
 			return ((SampleDTO) obj).getId();
 		}
@@ -59,7 +61,8 @@ public class TokenSpace implements HistoryListener {
 			show(new SampleDetails().showById(id));
 		}
 	};
-	private static final TokenHandler userDetails = new SKey("UserDetails") {
+	private static final TokenHandler userDetails = new SKey(
+			LocaleHandler.lc_entity.TokenSpace_User_Details()) {
 		public String get(final Object obj) {
 			return ((UserDTO) obj).getUsername();
 		}
@@ -68,7 +71,8 @@ public class TokenSpace implements HistoryListener {
 			show(new UserDetails(username));
 		}
 	};
-	private static final TokenHandler projectDetails = new IKey("Project") {
+	private static final TokenHandler projectDetails = new IKey(
+			LocaleHandler.lc_entity.TokenSpace_Project_Details()) {
 		public int get(final Object obj) {
 			return ((ProjectDTO) obj).getId();
 		}
@@ -78,7 +82,7 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 	private static final TokenHandler subsampleDetails = new LKey(
-			"SubsampleDetails") {
+			LocaleHandler.lc_entity.TokenSpace_Subsample_Details()) {
 		public long get(final Object obj) {
 			return ((SubsampleDTO) obj).getId();
 		}
@@ -97,7 +101,7 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 	private static final TokenHandler imageBrowserDetails = new LKey(
-			"ImageBrowserDetails") {
+			LocaleHandler.lc_entity.TokenSpace_ImageBroswer_Details()) {
 		public long get(final Object obj) {
 			return ((GridDTO) obj).getId();
 		}
@@ -107,7 +111,7 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 	private static final TokenHandler chemicalAnalysisDetails = new LKey(
-			"ChemicalAnalysis") {
+			LocaleHandler.lc_entity.TokenSpace_ChemicalAnalysis_Details()) {
 		public long get(final Object obj) {
 			return ((ChemicalAnalysisDTO) obj).getId();
 		}
@@ -117,7 +121,7 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 	private static final TokenHandler ImageListViewer = new LKey(
-			"ImageListViewer") {
+			LocaleHandler.lc_entity.TokenSpace_ImageListViewer()) {
 		public long get(final Object obj) {
 			return ((SubsampleDTO) obj).getId();
 		}
@@ -126,34 +130,40 @@ public class TokenSpace implements HistoryListener {
 			show(new ImageListViewer(id));
 		}
 	};
-	public static final Screen register = new Screen("Register") {
+	public static final Screen register = new Screen(LocaleHandler.lc_entity
+			.TokenSpace_Register()) {
 		public void executeToken(final String args) {
 			show(new UserRegistrationPanel());
 		}
 	};
 
-	public static final Screen introduction = new Screen("Introduction") {
+	public static final Screen introduction = new Screen(
+			LocaleHandler.lc_entity.TokenSpace_Introduction()) {
 		public void executeToken(final String args) {
 			show(new Introduction());
 		}
 	};
-	public static final Screen bulkUpload = new Screen("BulkUpload") {
+	public static final Screen bulkUpload = new Screen(LocaleHandler.lc_entity
+			.TokenSpace_Bulk_Upload()) {
 		public void executeToken(final String args) {
 			show(new BulkUploadPanel());
 		}
 	};
-	public static final Screen search = new Screen("Search") {
+	public static final Screen search = new Screen(LocaleHandler.lc_entity
+			.TokenSpace_Search()) {
 		public void executeToken(final String args) {
 			show(new Search().createNew());
 		}
 	};
 
-	public static final Screen permissionDenied = new Screen("PermissionDenied") {
+	public static final Screen permissionDenied = new Screen(
+			LocaleHandler.lc_entity.TokenSpace_Permission_Denied()) {
 		public void executeToken(final String args) {
 			show(new PermissionDenied());
 		}
 	};
-	public static final Screen editProfile = new Screen("EditProfile") {
+	public static final Screen editProfile = new Screen(LocaleHandler.lc_entity
+			.TokenSpace_Edit_Profile()) {
 		public void executeToken(final String args) {
 			new ServerOp<UserDTO>() {
 				public void begin() {
@@ -167,7 +177,8 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 
-	public static final Screen allSamples = new Screen("AllSamples") {
+	public static final Screen allSamples = new Screen(LocaleHandler.lc_entity
+			.TokenSpace_All_Samples()) {
 		public void executeToken(final String args) {
 			show(new SampleListEx() {
 				@Override
@@ -179,7 +190,8 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 
-	public static final Screen allPublicSamples = new Screen("AllPublicSamples") {
+	public static final Screen allPublicSamples = new Screen(
+			LocaleHandler.lc_entity.TokenSpace_All_Public_Samples()) {
 		public void executeToken(final String args) {
 			show(new SampleListEx() {
 
@@ -193,7 +205,8 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 
-	public static final Screen allProjects = new Screen("AllSamples") {
+	public static final Screen allProjects = new Screen(LocaleHandler.lc_entity
+			.TokenSpace_All_Projects()) {
 		public void executeToken(final String args) {
 			new LoggedInServerOp() {
 				public void command() {
@@ -204,7 +217,7 @@ public class TokenSpace implements HistoryListener {
 	};
 
 	private static final TokenHandler projectSamples = new LKey(
-			"ProjectSamples") {
+			LocaleHandler.lc_entity.TokenSpace_Project_Samples()) {
 		public long get(final Object obj) {
 			return ((ProjectDTO) obj).getId();
 		}
@@ -238,7 +251,8 @@ public class TokenSpace implements HistoryListener {
 	// }
 	// };
 
-	public static final Screen samplesForUser = new Screen("SamplesForUser") {
+	public static final Screen samplesForUser = new Screen(
+			LocaleHandler.lc_entity.TokenSpace_Samples_For_User()) {
 		public void executeToken(final String args) {
 			new LoggedInServerOp() {
 				public void command() {
@@ -249,7 +263,8 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 
-	public static final Screen enterSample = new Screen("EnterSample") {
+	public static final Screen enterSample = new Screen(LocaleHandler.lc_entity
+			.TokenSpace_Enter_Sample()) {
 		public void executeToken(final String args) {
 			new LoggedInServerOp() {
 				public void command() {
@@ -259,7 +274,8 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 
-	public static final Screen newProject = new Screen("NewProject") {
+	public static final Screen newProject = new Screen(LocaleHandler.lc_entity
+			.TokenSpace_New_Project()) {
 		public void executeToken(final String args) {
 			new LoggedInServerOp() {
 				public void command() {
@@ -269,7 +285,8 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 
-	public static final Screen enterSubsample = new Screen("EnterSubsample") {
+	public static final Screen enterSubsample = new Screen(
+			LocaleHandler.lc_entity.TokenSpace_Enter_Subsample()) {
 		public void executeToken(final String args) {
 			// TODO we need some way to get the sample though...thats the only
 			// problem
@@ -397,6 +414,8 @@ public class TokenSpace implements HistoryListener {
 	public void onHistoryChanged(final String historyToken) {
 		dispatch(historyToken);
 		MetPetDBApplication.dispatchCurrentPageChanged();
+		((Breadcrumbs) MetPetDBApplication.getFromBreadCrumbs())
+				.update(historyToken);
 	}
 
 	private TokenSpace() {

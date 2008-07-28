@@ -213,4 +213,50 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String Collection_Oxide();
 
 	String Collection_Element();
+
+	/* Token Space */
+	String TokenSpace_Sample_Details();
+
+	String TokenSpace_User_Details();
+
+	String TokenSpace_Project_Details();
+
+	String TokenSpace_Subsample_Details();
+
+	String TokenSpace_ImageBroswer_Details();
+
+	String TokenSpace_ChemicalAnalysis_Details();
+
+	String TokenSpace_ImageListViewer();
+
+	String TokenSpace_Register();
+
+	String TokenSpace_Introduction();
+
+	String TokenSpace_Bulk_Upload();
+
+	String TokenSpace_Search();
+
+	String TokenSpace_Permission_Denied();
+
+	String TokenSpace_Edit_Profile();
+
+	String TokenSpace_All_Samples();
+
+	String TokenSpace_All_Public_Samples();
+
+	String TokenSpace_All_Projects();
+
+	String TokenSpace_Project_Samples();
+
+	String TokenSpace_Samples_For_User();
+
+	String TokenSpace_Enter_Sample();
+
+	String TokenSpace_New_Project();
+
+	String TokenSpace_Enter_Subsample();
+
+	String TokenSpace_Enter_ChemicalAnalysis();
+
 }

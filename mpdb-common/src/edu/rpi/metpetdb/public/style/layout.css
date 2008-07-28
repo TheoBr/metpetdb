@@ -282,6 +282,26 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 	color: #fff;
 }
 
+
+/*------------------------
+	Breadcrumbs
+--------------------------*/
+
+#breadcrumbs {
+	background:#F7FBFF none repeat scroll 0%;
+	border-bottom:1px solid #E6EEF1;
+	color:#749490;
+	font-family:Verdana,sans-serif;
+	font-size:0.8em;
+	font-size-adjust:none;
+	font-stretch:normal;
+	font-style:normal;
+	font-variant:normal;
+	font-weight:normal;
+	line-height:normal;
+	padding:0.8em 0.5em 0.5em;
+}
+
 .bold{
 	font-weight: bold;
 }
@@ -302,6 +322,7 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 .white{
 	color: white;
 }
+
 
 
 
