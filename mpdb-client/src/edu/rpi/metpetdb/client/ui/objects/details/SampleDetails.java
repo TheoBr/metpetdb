@@ -55,6 +55,7 @@ public class SampleDetails extends MPagePanel {
 	private String sampleHeader;
 	private MySubsamples subsamplesLeft;
 	private LatLng samplePosition;
+	private MapWidget map;
 
 	private static GenericAttribute[] sampleAtts = {
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
@@ -122,7 +123,7 @@ public class SampleDetails extends MPagePanel {
 				setPageHeader(sampleHeader);
 				samplePosition = new LatLng(((Point) s.getLocation()).x,
 						((Point) s.getLocation()).y);
-				addGoogleMaps();
+				updateGoogleMaps();
 			}
 
 			protected boolean onFailure2(final Throwable e) {
@@ -133,7 +134,7 @@ public class SampleDetails extends MPagePanel {
 		};
 		final OnEnterPanel.ObjectEditor oep = new OnEnterPanel.ObjectEditor(
 				p_sample);
-
+		map = new MapWidget();
 		oep.setStylePrimaryName("sd-details");
 		oep.addStyleName("mpdb-dataTable");
 		add(oep);
@@ -252,8 +253,16 @@ public class SampleDetails extends MPagePanel {
 	};
 
 	private void addGoogleMaps() {
-		final MapWidget map = new MapWidget(samplePosition, 4);
 		map.setSize("300px", "300px");
+		map.setZoomLevel(4);
+		map.addControl(new LargeMapControl());
+		map.addControl(new MapTypeControl());
+		map.addControl(new ScaleControl());
+
+		add(map);
+	}
+
+	private void updateGoogleMaps() {
 		final Marker sampleMarker = new Marker(samplePosition);
 		sampleMarker.addMarkerClickHandler(new MarkerClickHandler() {
 			public void onClick(MarkerClickEvent sender) {
@@ -267,20 +276,16 @@ public class SampleDetails extends MPagePanel {
 
 		map.addOverlay(sampleMarker);
 		map.setCenter(samplePosition);
-
-		map.addControl(new LargeMapControl());
-		map.addControl(new MapTypeControl());
-		map.addControl(new ScaleControl());
-
-		this.add(map);
 	}
 
 	public SampleDetails showById(final long id) {
 		sampleId = id;
+		addPageHeader();
 		p_sample.load();
 		addExtraElements();
 		addComments();
 		addSubsamplesToLeft();
+		addGoogleMaps();
 		return this;
 	}
 

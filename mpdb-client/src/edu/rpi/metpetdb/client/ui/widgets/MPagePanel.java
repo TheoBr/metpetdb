@@ -8,12 +8,13 @@ public class MPagePanel extends FlowPanel {
 	private Element headH1 = DOM.createElement("h1");
 	private FlowPanel headContainer = new FlowPanel();
 
-	public void setPageHeader(String text) {
+	public void addPageHeader() {
 		headContainer.setStylePrimaryName("page-header");
-
 		DOM.appendChild(headContainer.getElement(), headH1);
-		DOM.setInnerText(headH1, text);
-
 		insert(headContainer, 0);
+	}
+
+	public void setPageHeader(String text) {
+		DOM.setInnerText(headH1, text);
 	}
 }

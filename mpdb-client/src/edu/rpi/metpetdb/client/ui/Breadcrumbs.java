@@ -14,6 +14,7 @@ import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.XMLParser;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
+import edu.rpi.metpetdb.client.model.GridDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
@@ -268,6 +269,25 @@ public class Breadcrumbs extends HorizontalPanel {
 									.getText().equals(name)) {
 								((MLink) Breadcrumbs.this.getWidget(i))
 										.setText(result.getUsername());
+								Breadcrumbs.this.onFindSuccessRecursive(Node
+										.getParent());
+							}
+						}
+					}
+				}
+			}.begin();
+		} else if (name.equals("Map")) {
+			new ServerOp<GridDTO>() {
+				public void begin() {
+					MpDb.imageBrowser_svc.details(Long.parseLong(Id), this);
+				}
+				public void onSuccess(GridDTO result) {
+					for (int i = 0; i < Breadcrumbs.this.getWidgetCount(); i++) {
+						if (Breadcrumbs.this.getWidget(i) instanceof MLink) {
+							if (((MLink) Breadcrumbs.this.getWidget(i))
+									.getText().equals(name)) {
+								Breadcrumbs.this.id = String.valueOf(result
+										.getSubsample().getId());
 								Breadcrumbs.this.onFindSuccessRecursive(Node
 										.getParent());
 							}
