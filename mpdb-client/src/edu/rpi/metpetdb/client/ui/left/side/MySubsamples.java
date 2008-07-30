@@ -23,11 +23,11 @@ public class MySubsamples extends LeftColWidget implements UsesLeftColumn {
 		// MetPetDBApplication.registerPageWatcher(this);
 		pList = new MUnorderedList();
 		final MUnorderedList details = new MUnorderedList();
-		final MLink addSubSample = new MLink("Add Subsample",
-				TokenSpace.enterSubsample);
+		final MLink addSubSample = new MLink("Add Subsample", TokenSpace
+				.createNewSubsample(subsamples.get(0).getSample()));
 		details.add(new MLink("Details", TokenSpace.detailsOf(subsamples.get(0)
 				.getSample())));
-		// pList.add(addSubSample);
+		pList.add(addSubSample);
 		if (subsamples != null)
 			pList.add(addSubSamples(subsamples));
 		final Label subsamplesLabel = new Label(subsamples.get(0).getSample()
@@ -37,11 +37,27 @@ public class MySubsamples extends LeftColWidget implements UsesLeftColumn {
 		pList.setStyleName("lcol-sectionList");
 		subsamplesLabel.getElement().setClassName("h1");
 		subsamplesLabel.setStyleName("leftsideHeader");
-		pList.getListItemAtIndex(0).getWidget().setStyleName("cur");
 
 		this.add(details);
 		this.add(subsamplesLabel);
 		this.add(pList);
+	}
+
+	public void setCur(final SubsampleDTO cur) {
+		removeCur();
+		Iterator<ListItem> itr = pList.getItems().iterator();
+		while (itr.hasNext()) {
+			MLink item = (MLink) itr.next().getWidget();
+			if (item.getText().equals(cur.getName()))
+				item.addStyleName("cur");
+		}
+	}
+
+	private void removeCur() {
+		Iterator<ListItem> itr = pList.getItems().iterator();
+		while (itr.hasNext()) {
+			itr.next().getWidget().removeStyleName("cur");
+		}
 	}
 
 	public void insertLayers(final LeftSideLayer layers,
