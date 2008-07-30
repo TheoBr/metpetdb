@@ -233,24 +233,6 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 
-	// public static final Screen samplesForUser = new Screen("SamplesForUser")
-	// {
-	// public void executeToken(final String args) {
-	// new LoggedInServerOp() {
-	// public void command() {
-	// show(new SampleListEx() {
-	// public void update(final PaginationParameters p,
-	// final AsyncCallback<Results<SampleDTO>> ac) {
-	// long id = (long) (MpDb.currentUser().getId());
-	// MpDb.sample_svc.allSamplesForUser(p, id, ac);
-	// }
-	// });
-	// }
-	// }.begin();
-	//
-	// }
-	// };
-
 	public static final Screen samplesForUser = new Screen(
 			LocaleHandler.lc_entity.TokenSpace_Samples_For_User()) {
 		public void executeToken(final String args) {
@@ -285,14 +267,43 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 
-	public static final Screen enterSubsample = new Screen(
+	private static final TokenHandler newSubsample = new LKey(
 			LocaleHandler.lc_entity.TokenSpace_Enter_Subsample()) {
-		public void executeToken(final String args) {
-			// TODO we need some way to get the sample though...thats the only
-			// problem
+		public long get(final Object obj) {
+			return ((SampleDTO) obj).getId();
+		}
+
+		public void execute(final long id) {
+			new ServerOp<SampleDTO>() {
+				public void begin() {
+					MpDb.sample_svc.details(id, this);
+				}
+
+				public void onSuccess(final SampleDTO result) {
+					show(new SubsampleDetails().createNew(result, this));
+				}
+			}.begin();
 		}
 	};
 
+	private static final TokenHandler newChemicalAnalysis = new LKey(
+			LocaleHandler.lc_entity.TokenSpace_Enter_ChemicalAnalysis()) {
+		public long get(final Object obj) {
+			return ((SubsampleDTO) obj).getId();
+		}
+
+		public void execute(final long id) {
+			new ServerOp<SubsampleDTO>() {
+				public void begin() {
+					MpDb.subsample_svc.details(id, this);
+				}
+
+				public void onSuccess(final SubsampleDTO result) {
+					show(new ChemicalAnalysisDetails().createNew(result));
+				}
+			}.begin();
+		}
+	};
 	static {
 		register(sampleDetails);
 		register(userDetails);
@@ -315,6 +326,8 @@ public class TokenSpace implements HistoryListener {
 		register(ImageListViewer);
 		register(allProjects);
 		register(permissionDenied);
+		register(newSubsample);
+		register(newChemicalAnalysis);
 
 		// DefaultPaginationBehavior
 		register(new TokenHandler.NoOp("previousPage"));
@@ -369,6 +382,14 @@ public class TokenSpace implements HistoryListener {
 
 	public static String ViewOf(final SubsampleDTO p) {
 		return ImageListViewer.makeToken(p);
+	}
+
+	public static String createNewSubsample(final SampleDTO s) {
+		return newSubsample.makeToken(s);
+	}
+
+	public static String createNewChemicalAnalysis(final SubsampleDTO s) {
+		return newChemicalAnalysis.makeToken(s);
 	}
 
 	public static void dispatch(final String historyToken) {

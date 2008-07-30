@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -119,7 +120,6 @@ public class SubsampleDetails extends FlowPanel {
 
 				DOM.setInnerText(sampleHeader, "Subsample " + s.getName());
 				sampleId = s.getSample().getId();
-
 			}
 		};
 
@@ -170,9 +170,9 @@ public class SubsampleDetails extends FlowPanel {
 				new ServerOp() {
 					public void begin() {
 						if (MpDb.isLoggedIn())
-							MetPetDBApplication
-									.show(new ChemicalAnalysisDetails()
-											.createNew((SubsampleDTO) p_subsample
+							History
+									.newItem(TokenSpace
+											.createNewChemicalAnalysis((SubsampleDTO) p_subsample
 													.getBean()));
 						else
 							onFailure(new LoginRequiredException());
@@ -191,7 +191,6 @@ public class SubsampleDetails extends FlowPanel {
 		chemft.getFlexCellFormatter().setAlignment(0, 1,
 				HasHorizontalAlignment.ALIGN_RIGHT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		chemft.setWidget(0, 2, new MLink("View All", "blah"));
 		chemft.getRowFormatter().setStyleName(0, "mpdb-dataTableLightBlue");
 		chemft.setWidth("100%");
 		add(chemft);

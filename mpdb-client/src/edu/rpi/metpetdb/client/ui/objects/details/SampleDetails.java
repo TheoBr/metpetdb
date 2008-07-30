@@ -12,6 +12,7 @@ import com.google.gwt.maps.client.control.ScaleControl;
 import com.google.gwt.maps.client.event.MarkerClickHandler;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -149,16 +150,16 @@ public class SampleDetails extends MPagePanel {
 				new ServerOp<Object>() {
 					public void begin() {
 						if (MpDb.isLoggedIn())
-							MetPetDBApplication.show(new SubsampleDetails()
-									.createNew((SampleDTO) p_sample.getBean(),
-											this));
+							History.newItem(TokenSpace
+									.createNewSubsample((SampleDTO) p_sample
+											.getBean()));
 						else
 							onFailure(new LoginRequiredException());
 					}
 
 					public void onSuccess(Object result) {
-						TokenSpace
-								.dispatch(TokenSpace
+						History
+								.newItem(TokenSpace
 										.detailsOf(((SubsampleDTO) result)
 												.getSample()));
 					}
