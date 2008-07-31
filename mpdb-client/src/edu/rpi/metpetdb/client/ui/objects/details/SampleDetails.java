@@ -113,7 +113,7 @@ public class SampleDetails extends MPagePanel {
 			}
 
 			protected void onSaveCompletion(final MObjectDTO result) {
-				super.onSaveCompletion(result);
+				History.newItem(TokenSpace.detailsOf((SampleDTO) result));
 			}
 
 			protected void onLoadCompletion(final MObjectDTO result) {

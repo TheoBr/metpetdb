@@ -27,7 +27,6 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserDetails;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
@@ -43,6 +42,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
 public class SubsampleDetails extends FlowPanel {
 	private FlexTable ft;
 	private MLinkandText Header;
+	private MySubsamples mysubsamples;
 	final Element sampleHeader;
 
 	private static GenericAttribute[] subsampleAtts = {
@@ -94,9 +94,11 @@ public class SubsampleDetails extends FlowPanel {
 
 			protected void onSaveCompletion(final MObjectDTO result) {
 				if (continuation != null) {
-					continuation.onSuccess((MObjectDTO) result);
+					continuation.onSuccess(result);
 				} else
-					this.show((MObjectDTO) result);
+					History
+							.newItem(TokenSpace
+									.detailsOf((SubsampleDTO) result));
 				addSubsamplesToLeft();
 			}
 
@@ -105,12 +107,7 @@ public class SubsampleDetails extends FlowPanel {
 				final SubsampleDTO s = (SubsampleDTO) result;
 				if (s.getGrid() == null) {
 					map.setText("Create Map");
-					map.addClickListener(new ClickListener() {
-						public void onClick(final Widget sender) {
-							MetPetDBApplication.show(new ImageBrowserDetails()
-									.createNew(s.getId()));
-						}
-					});
+					map.setTargetHistoryToken(TokenSpace.createNewImageMap(s));
 				} else {
 					map.setText("View Map");
 					map
@@ -246,8 +243,8 @@ public class SubsampleDetails extends FlowPanel {
 			}
 			public void onSuccess(Object result) {
 				MetPetDBApplication.clearLeftSide();
-				MetPetDBApplication.appendToLeft(new MySubsamples(
-						(List<SubsampleDTO>) result));
+				mysubsamples = new MySubsamples((List<SubsampleDTO>) result);
+				MetPetDBApplication.appendToLeft(mysubsamples);
 			}
 		}.begin();
 

@@ -134,7 +134,6 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 										new HashSet<ChemicalAnalysisDTO>(ss));
 						s.setGrid(ImageBrowserDetails.this.g);
 						ImageBrowserDetails.this.buildInterface();
-						ImageBrowserDetails.this.doSave();
 					}
 				}.begin();
 			}

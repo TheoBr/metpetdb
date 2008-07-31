@@ -280,7 +280,7 @@ public class TokenSpace implements HistoryListener {
 				}
 
 				public void onSuccess(final SampleDTO result) {
-					show(new SubsampleDetails().createNew(result, this));
+					show(new SubsampleDetails().createNew(result, null));
 				}
 			}.begin();
 		}
@@ -302,6 +302,16 @@ public class TokenSpace implements HistoryListener {
 					show(new ChemicalAnalysisDetails().createNew(result));
 				}
 			}.begin();
+		}
+	};
+	private static final TokenHandler createImageMap = new LKey(
+			LocaleHandler.lc_entity.TokenSpace_Create_Image_Map()) {
+		public long get(final Object obj) {
+			return ((SubsampleDTO) obj).getId();
+		}
+
+		public void execute(final long id) {
+			show(new ImageBrowserDetails().createNew(id));
 		}
 	};
 	static {
@@ -328,6 +338,7 @@ public class TokenSpace implements HistoryListener {
 		register(permissionDenied);
 		register(newSubsample);
 		register(newChemicalAnalysis);
+		register(createImageMap);
 
 		// DefaultPaginationBehavior
 		register(new TokenHandler.NoOp("previousPage"));
@@ -390,6 +401,10 @@ public class TokenSpace implements HistoryListener {
 
 	public static String createNewChemicalAnalysis(final SubsampleDTO s) {
 		return newChemicalAnalysis.makeToken(s);
+	}
+
+	public static String createNewImageMap(final SubsampleDTO s) {
+		return createImageMap.makeToken(s);
 	}
 
 	public static void dispatch(final String historyToken) {

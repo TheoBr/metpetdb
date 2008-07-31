@@ -5,8 +5,6 @@ import java.util.Arrays;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -16,9 +14,7 @@ import edu.rpi.metpetdb.client.model.properties.SubsampleProperty;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
-import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserDetails;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
@@ -64,13 +60,8 @@ public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
 						final int currentRow) {
 					final SubsampleDTO s = (SubsampleDTO) data;
 					if (s.getGrid() == null) {
-						return new MLink("Create Map", new ClickListener() {
-							public void onClick(final Widget sender) {
-								MetPetDBApplication
-										.show(new ImageBrowserDetails()
-												.createNew(s.getId()));
-							}
-						});
+						return new MLink("Create Map", TokenSpace
+								.createNewImageMap(s));
 					} else {
 						return new MLink("View Map", TokenSpace.detailsOf(s
 								.getGrid()));

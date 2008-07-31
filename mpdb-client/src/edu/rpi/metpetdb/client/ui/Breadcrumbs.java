@@ -130,6 +130,7 @@ public class Breadcrumbs extends HorizontalPanel {
 	private void onFindSuccess(final bcNode currentPage) {
 		add(lbl);
 		bcNode Node = currentPage;
+		// LeftColWidget.updateLeftSide(Node.getLeftSide());
 		onFindSuccessRecursive(Node);
 	}
 	private bcNode onFindSuccessRecursive(final bcNode Node) {
@@ -208,6 +209,27 @@ public class Breadcrumbs extends HorizontalPanel {
 										.setText(result.getAlias());
 								Breadcrumbs.this.onFindSuccessRecursive(Node
 										.getParent());
+								break;
+							}
+						}
+					}
+				}
+			}.begin();
+		} else if (name.equals("Map")) {
+			new ServerOp<GridDTO>() {
+				public void begin() {
+					MpDb.imageBrowser_svc.details(Long.parseLong(Id), this);
+				}
+				public void onSuccess(GridDTO result) {
+					for (int i = 0; i < Breadcrumbs.this.getWidgetCount(); i++) {
+						if (Breadcrumbs.this.getWidget(i) instanceof MLink) {
+							if (((MLink) Breadcrumbs.this.getWidget(i))
+									.getText().equals(name)) {
+								Breadcrumbs.this.id = String.valueOf(result
+										.getSubsample().getId());
+								Breadcrumbs.this.onFindSuccessRecursive(Node
+										.getParent());
+								break;
 							}
 						}
 					}
@@ -230,6 +252,7 @@ public class Breadcrumbs extends HorizontalPanel {
 										.getSample().getId());
 								Breadcrumbs.this.onFindSuccessRecursive(Node
 										.getParent());
+								break;
 							}
 						}
 					}
@@ -252,6 +275,7 @@ public class Breadcrumbs extends HorizontalPanel {
 										.getSubsample().getId());
 								Breadcrumbs.this.onFindSuccessRecursive(Node
 										.getParent());
+								break;
 							}
 						}
 					}
@@ -271,25 +295,7 @@ public class Breadcrumbs extends HorizontalPanel {
 										.setText(result.getUsername());
 								Breadcrumbs.this.onFindSuccessRecursive(Node
 										.getParent());
-							}
-						}
-					}
-				}
-			}.begin();
-		} else if (name.equals("Map")) {
-			new ServerOp<GridDTO>() {
-				public void begin() {
-					MpDb.imageBrowser_svc.details(Long.parseLong(Id), this);
-				}
-				public void onSuccess(GridDTO result) {
-					for (int i = 0; i < Breadcrumbs.this.getWidgetCount(); i++) {
-						if (Breadcrumbs.this.getWidget(i) instanceof MLink) {
-							if (((MLink) Breadcrumbs.this.getWidget(i))
-									.getText().equals(name)) {
-								Breadcrumbs.this.id = String.valueOf(result
-										.getSubsample().getId());
-								Breadcrumbs.this.onFindSuccessRecursive(Node
-										.getParent());
+								break;
 							}
 						}
 					}
@@ -299,7 +305,7 @@ public class Breadcrumbs extends HorizontalPanel {
 	}
 
 	/*
-	 * Called to update where we are in the site Hide the breadcrumbs bar until
+	 * Called to update where we are in the site. Hide the breadcrumbs bar until
 	 * it's finished loading
 	 */
 	public void update(final String historyToken) {

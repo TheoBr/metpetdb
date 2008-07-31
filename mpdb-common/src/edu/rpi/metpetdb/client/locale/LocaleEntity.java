@@ -259,4 +259,6 @@ public interface LocaleEntity extends ConstantsWithLookup {
 
 	String TokenSpace_Enter_ChemicalAnalysis();
 
+	String TokenSpace_Create_Image_Map();
+
 }
