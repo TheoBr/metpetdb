@@ -92,6 +92,8 @@ public class Breadcrumbs extends HorizontalPanel {
 				Root.setToken(tempXML.getFirstChild().getNodeValue());
 			} else if (tempXML.getNodeName().equals("screen")) {
 				Root.setScreen(false);
+			} else if (tempXML.getNodeName().equals("leftside")) {
+				Root.setLeftSide(tempXML.getFirstChild().getNodeValue());
 			} else if (tempXML.getNodeName().equals("page")) {
 				final bcNode temp = new bcNode(Root);
 				Root.addChild(temp);
@@ -133,33 +135,35 @@ public class Breadcrumbs extends HorizontalPanel {
 		// LeftColWidget.updateLeftSide(Node.getLeftSide());
 		onFindSuccessRecursive(Node);
 	}
-	private bcNode onFindSuccessRecursive(final bcNode Node) {
+	private void onFindSuccessRecursive(final bcNode Node) {
 		final MLink bcItem = new MLink();
-		if (Node == null)
-			return null;
-		/*
-		 * Check if it needs a custom name and target history
-		 */
-		if (!Node.isScreen()) {
-			bcItem.setTargetHistoryToken(Node.getToken() + tokenSep + getId());
-			bcItem.setText(Node.getName());
-			getAliasById(id, Node.getName(), Node);
+		if (Node != null) {
+			/*
+			 * Check if it needs a custom name and target history
+			 */
+			if (!Node.isScreen()) {
+				bcItem.setTargetHistoryToken(Node.getToken() + tokenSep
+						+ getId());
+				bcItem.setText(Node.getName());
+				insertBcItem(bcItem, Node);
+				getAliasById(id, Node.getName(), Node);
 
-		} else {
-			bcItem.setTargetHistoryToken(Node.getToken());
-			bcItem.setText(Node.getName());
+			} else {
+				bcItem.setTargetHistoryToken(Node.getToken());
+				bcItem.setText(Node.getName());
+				insertBcItem(bcItem, Node);
+				onFindSuccessRecursive(Node.getParent());
+			}
 		}
-		insert(bcItem, 1);
-		if (Node.getParent() != null) {
+
+	}
+
+	private void insertBcItem(final MLink bc, final bcNode node) {
+		insert(bc, 1);
+		if (node.getParent() != null) {
 			insert(new Label(separator), 1);
-		} else {
+		} else
 			setVisible(true);
-		}
-		if (Node.isScreen())
-			return onFindSuccessRecursive(Node.getParent());
-		else
-			return null;
-
 	}
 
 	/*
@@ -301,6 +305,8 @@ public class Breadcrumbs extends HorizontalPanel {
 					}
 				}
 			}.begin();
+		} else {
+			Breadcrumbs.this.onFindSuccessRecursive(Node.getParent());
 		}
 	}
 
