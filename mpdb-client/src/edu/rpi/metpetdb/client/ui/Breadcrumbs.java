@@ -8,6 +8,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
@@ -18,6 +19,7 @@ import edu.rpi.metpetdb.client.model.GridDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class Breadcrumbs extends HorizontalPanel {
@@ -26,6 +28,7 @@ public class Breadcrumbs extends HorizontalPanel {
 	private static final String tokenSep = "-";
 	private bcNode root;
 	private String id;
+	private static bcNode current;
 
 	public Breadcrumbs() {
 		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET,
@@ -42,7 +45,6 @@ public class Breadcrumbs extends HorizontalPanel {
 			});
 		} catch (RequestException ex) {
 		}
-		this.setSpacing(5);
 	}
 
 	public Breadcrumbs(final String HistoryToken) {
@@ -132,12 +134,13 @@ public class Breadcrumbs extends HorizontalPanel {
 	private void onFindSuccess(final bcNode currentPage) {
 		add(lbl);
 		bcNode Node = currentPage;
-		// LeftColWidget.updateLeftSide(Node.getLeftSide());
+		current = currentPage;
+		LeftColWidget.updateLeftSide(Node.getLeftSide());
 		onFindSuccessRecursive(Node);
 	}
 	private void onFindSuccessRecursive(final bcNode Node) {
-		final MLink bcItem = new MLink();
 		if (Node != null) {
+			final MLink bcItem = new MLink();
 			/*
 			 * Check if it needs a custom name and target history
 			 */
@@ -147,7 +150,6 @@ public class Breadcrumbs extends HorizontalPanel {
 				bcItem.setText(Node.getName());
 				insertBcItem(bcItem, Node);
 				getAliasById(id, Node.getName(), Node);
-
 			} else {
 				bcItem.setTargetHistoryToken(Node.getToken());
 				bcItem.setText(Node.getName());
@@ -205,15 +207,16 @@ public class Breadcrumbs extends HorizontalPanel {
 				}
 
 				public void onSuccess(SampleDTO result) {
-					for (int i = 0; i < Breadcrumbs.this.getWidgetCount(); i++) {
-						if (Breadcrumbs.this.getWidget(i) instanceof MLink) {
-							if (((MLink) Breadcrumbs.this.getWidget(i))
-									.getText().equals(name)) {
-								((MLink) Breadcrumbs.this.getWidget(i))
-										.setText(result.getAlias());
+					for (Widget w : Breadcrumbs.this.getChildren()) {
+						if (w instanceof MLink) {
+							if (((MLink) w).getText().equals(name)) {
+								((MLink) w).setText(result.getAlias());
+								if (MetPetDBApplication.getLeftCount() == 0)
+									LeftColWidget.updateLeftSide(Node
+											.getLeftSide(), result);
 								Breadcrumbs.this.onFindSuccessRecursive(Node
 										.getParent());
-								break;
+								return;
 							}
 						}
 					}
@@ -225,15 +228,19 @@ public class Breadcrumbs extends HorizontalPanel {
 					MpDb.imageBrowser_svc.details(Long.parseLong(Id), this);
 				}
 				public void onSuccess(GridDTO result) {
-					for (int i = 0; i < Breadcrumbs.this.getWidgetCount(); i++) {
-						if (Breadcrumbs.this.getWidget(i) instanceof MLink) {
-							if (((MLink) Breadcrumbs.this.getWidget(i))
-									.getText().equals(name)) {
+					for (Widget w : Breadcrumbs.this.getChildren()) {
+						if (w instanceof MLink) {
+							if (((MLink) w).getText().equals(name)) {
+								if (MetPetDBApplication.getLeftCount() == 0)
+									LeftColWidget.updateLeftSide(Node
+											.getLeftSide(), result
+											.getSubsample().getSample(), result
+											.getSubsample());
 								Breadcrumbs.this.id = String.valueOf(result
 										.getSubsample().getId());
 								Breadcrumbs.this.onFindSuccessRecursive(Node
 										.getParent());
-								break;
+								return;
 							}
 						}
 					}
@@ -246,17 +253,19 @@ public class Breadcrumbs extends HorizontalPanel {
 				}
 
 				public void onSuccess(SubsampleDTO result) {
-					for (int i = 0; i < Breadcrumbs.this.getWidgetCount(); i++) {
-						if (Breadcrumbs.this.getWidget(i) instanceof MLink) {
-							if (((MLink) Breadcrumbs.this.getWidget(i))
-									.getText().equals(name)) {
-								((MLink) Breadcrumbs.this.getWidget(i))
-										.setText(result.getName());
+					for (Widget w : Breadcrumbs.this.getChildren()) {
+						if (w instanceof MLink) {
+							if (((MLink) w).getText().equals(name)) {
+								((MLink) w).setText(result.getName());
+								if (MetPetDBApplication.getLeftCount() == 0)
+									LeftColWidget.updateLeftSide(Node
+											.getLeftSide(), result.getSample(),
+											result);
 								Breadcrumbs.this.id = String.valueOf(result
 										.getSample().getId());
 								Breadcrumbs.this.onFindSuccessRecursive(Node
 										.getParent());
-								break;
+								return;
 							}
 						}
 					}
@@ -269,17 +278,15 @@ public class Breadcrumbs extends HorizontalPanel {
 				}
 
 				public void onSuccess(ChemicalAnalysisDTO result) {
-					for (int i = 0; i < Breadcrumbs.this.getWidgetCount(); i++) {
-						if (Breadcrumbs.this.getWidget(i) instanceof MLink) {
-							if (((MLink) Breadcrumbs.this.getWidget(i))
-									.getText().equals(name)) {
-								((MLink) Breadcrumbs.this.getWidget(i))
-										.setText(result.getSpotId());
+					for (Widget w : Breadcrumbs.this.getChildren()) {
+						if (w instanceof MLink) {
+							if (((MLink) w).getText().equals(name)) {
+								((MLink) w).setText(result.getSpotId());
 								Breadcrumbs.this.id = String.valueOf(result
 										.getSubsample().getId());
 								Breadcrumbs.this.onFindSuccessRecursive(Node
 										.getParent());
-								break;
+								return;
 							}
 						}
 					}
@@ -292,11 +299,10 @@ public class Breadcrumbs extends HorizontalPanel {
 				}
 				public void onSuccess(UserDTO result) {
 					for (int i = 0; i < Breadcrumbs.this.getWidgetCount(); i++) {
-						if (Breadcrumbs.this.getWidget(i) instanceof MLink) {
-							if (((MLink) Breadcrumbs.this.getWidget(i))
-									.getText().equals(name)) {
-								((MLink) Breadcrumbs.this.getWidget(i))
-										.setText(result.getUsername());
+						final Widget w = Breadcrumbs.this.getWidget(i);
+						if (w instanceof MLink) {
+							if (((MLink) w).getText().equals(name)) {
+								((MLink) w).setText(result.getUsername());
 								Breadcrumbs.this.onFindSuccessRecursive(Node
 										.getParent());
 								break;
@@ -305,8 +311,21 @@ public class Breadcrumbs extends HorizontalPanel {
 					}
 				}
 			}.begin();
+		} else if (name.equals("Create Map")) {
+			new ServerOp<SubsampleDTO>() {
+				public void begin() {
+					MpDb.subsample_svc.details(Long.parseLong(Id), this);
+				}
+
+				public void onSuccess(SubsampleDTO result) {
+					LeftColWidget.updateLeftSide(Node.getLeftSide(), result
+							.getSample(), result);
+					Breadcrumbs.this.onFindSuccessRecursive(Node.getParent());
+				}
+			}.begin();
 		} else {
 			Breadcrumbs.this.onFindSuccessRecursive(Node.getParent());
+			return;
 		}
 	}
 
@@ -318,6 +337,10 @@ public class Breadcrumbs extends HorizontalPanel {
 		clear();
 		setVisible(false);
 		findNode(parseToken(historyToken));
+	}
+
+	public static bcNode getCurrentNode() {
+		return current;
 	}
 
 }
