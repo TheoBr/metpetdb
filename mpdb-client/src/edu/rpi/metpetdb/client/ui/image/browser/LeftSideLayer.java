@@ -8,9 +8,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
-import edu.rpi.metpetdb.client.ui.left.side.MySubsamples;
 import edu.rpi.metpetdb.client.ui.left.side.UsesLeftColumn;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
@@ -25,7 +23,7 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 		layerItems = new HashSet<LayerItem>();
 		ul = new MUnorderedList();
 		this.add(ul);
-		MetPetDBApplication.registerPageWatcher(this);
+		// MetPetDBApplication.registerPageWatcher(this);
 		layerDragger = new LayerDragMouseListener(ul, layerItems);
 		ul.addMouseListener(layerDragger);
 	}
@@ -105,9 +103,6 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 	}
 
 	public void onPageChanged() {
-		MetPetDBApplication.removePageWatcher(this);
-		((MySubsamples)MetPetDBApplication.getFromLeft(0)).removeLayers(this);
-		
 		// MetPetDBApplication.removeFromLeft(this);
 	}
 

@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
@@ -32,7 +33,7 @@ import edu.rpi.metpetdb.client.service.SubsampleService;
 import edu.rpi.metpetdb.client.service.SubsampleServiceAsync;
 import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.client.service.UserServiceAsync;
-import edu.rpi.metpetdb.client.ui.left.side.UserInfo;
+import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
 
 /**
  * Client side async service proxies and global constants.
@@ -147,13 +148,13 @@ public class MpDb {
 		currentUser = n;
 		if (o != n && (o == null || n == null || o.getId() != n.getId())) {
 			MetPetDBApplication.onCurrentUserChanged(n);
-
 			if (n != null) {
-				MpDb.createUserHistory(n);
-			} else {
-				MetPetDBApplication.resetLeftSide();
+				if (Breadcrumbs.getCurrentNode().getLeftSide().equals(
+						"UserInfo")) {
+					LeftColWidget.updateLeftSide(LocaleHandler.lc_entity
+							.LeftSide_UserInfo());
+				}
 			}
-			MetPetDBApplication.appendToLeft(new UserInfo(n));
 		}
 	}
 

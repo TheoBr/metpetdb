@@ -4,59 +4,78 @@
 	 then <screen>false<screen> is added and Specific code will need to be added to Breadcrumbs.java. -->
 <!-- <token> is the name the page is given in the TokenSpace class, 
 	 these should all be strings found in LocaleEntity.properties -->
+<!-- <leftside> is the name of the left side bar we want for the page. They need to match the Locale as well -->
 	  
 <?xml version="1.0" encoding="US-ASCII"?>
 <SiteMap>
 <page>
 	<name>Home</name>
 	<token>Introduction</token>
+	<leftside>UserInfo</leftside>
 	<page>
 		<name>All My Samples</name>
 		<token>SamplesForUser</token>
+		<leftside>MySamples</leftside>
 		<page>
 			<name>Enter Sample</name>
 			<token>UploadSample</token>
+			<leftside>MySamples</leftside>
 		</page>
 		<page>
 			<name>Bulk Upload</name>
 			<token>BulkUpload</token>
+			<leftside>MySamples</leftside>
 		</page>
 		<page>
 			<name>Specific Sample</name>
 			<token>SampleDetails</token>
 			<screen>false</screen>
+			<leftside>MySubsamples</leftside>
 			<page>
 				<name>Enter Subsample</name>
 				<token>UploadSubsample</token>
 				<screen>false</screen>
+				<leftside>MySubsamples</leftside>
+			</page>
+			<page>
+				<name>Specific Subsample</name>
+				<token>SubsampleEdit</token>
+				<screen>false</screen>
+				<leftside>MySubsamples</leftside>
 			</page>
 			<page>
 				<name>Specific Subsample</name>
 				<token>SubsampleDetails</token>
 				<screen>false</screen>
+				<leftside>MySubsamples</leftside>
 				<page>
 					<name>Map</name>
 					<token>ImageBrowserDetails</token>
 					<screen>false</screen>
+					<leftside>LeftSideLayer</leftside>
 				</page>
 				<page>
 					<name>Create Map</name>
 					<token>CreateImageMap</token>
 					<screen>false</screen>
+					<leftside>LeftSideLayer</leftside>
 				</page>
 				<page>
 					<name>Images</name>
 					<token>ImageListViewer</token>
+					<leftside>MySubsamples</leftside>
 				</page>
 				<page>
 					<name>Specific Analysis</name>
 					<token>ChemicalAnalysisDetails</token>
 					<screen>false</screen>
+					<leftside>MySubsamples</leftside>
 				</page>
 				<page>
 					<name>Enter Chemical Analysis</name>
 					<token>UploadChemicalAnalysis</token>
 					<screen>false</screen>
+					<leftside>MySubsamples</leftside>
 				</page>
 			</page>
 		</page>
@@ -64,22 +83,27 @@
 	<page>
 		<name>My Projects</name>
 		<token>AllProjects</token>
+		<leftside>MyProjects</leftside>
 		<page>
 			<name>New Project</name>
 			<token>NewProject</token>
+			<leftside>MyProjects</leftside>
 		</page>
 	</page>
 	<page>
 		<name>Search</name>
 		<token>Search</token>
+		<leftside>MySearch</leftside>
 		<page>
 			<name>All Public Samples</name>
 			<token>AllPublicSamples</token>
+			<leftside>MySearch</leftside>
 		</page>
 	</page>
 	<page>
 		<name>Register</name>
 		<token>Register</token>
+		<leftside>UserInfo</leftside>
 	</page>
 	<page>
 		<name>Specific User</name>

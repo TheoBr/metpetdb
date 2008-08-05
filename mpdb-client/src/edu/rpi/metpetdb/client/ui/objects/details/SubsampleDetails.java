@@ -1,7 +1,5 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
-import java.util.List;
-
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
@@ -22,7 +20,6 @@ import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
-import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;
@@ -34,7 +31,6 @@ import edu.rpi.metpetdb.client.ui.input.attributes.HyperlinkAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AddImageAttribute;
-import edu.rpi.metpetdb.client.ui.left.side.MySubsamples;
 import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
@@ -42,7 +38,6 @@ import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
 public class SubsampleDetails extends FlowPanel {
 	private FlexTable ft;
 	private MLinkandText Header;
-	private MySubsamples mysubsamples;
 	final Element sampleHeader;
 
 	private static GenericAttribute[] subsampleAtts = {
@@ -99,7 +94,6 @@ public class SubsampleDetails extends FlowPanel {
 					History
 							.newItem(TokenSpace
 									.detailsOf((SubsampleDTO) result));
-				addSubsamplesToLeft();
 			}
 
 			protected void onLoadCompletion(final MObjectDTO result) {
@@ -233,20 +227,4 @@ public class SubsampleDetails extends FlowPanel {
 		}.begin();
 		return this;
 	}
-
-	public void addSubsamplesToLeft() {
-
-		new ServerOp() {
-			@Override
-			public void begin() {
-				MpDb.subsample_svc.all(sampleId, this);
-			}
-			public void onSuccess(Object result) {
-				MetPetDBApplication.clearLeftSide();
-				mysubsamples = new MySubsamples((List<SubsampleDTO>) result);
-				MetPetDBApplication.appendToLeft(mysubsamples);
-			}
-		}.begin();
-
-	};
 }

@@ -1,10 +1,8 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -22,12 +20,10 @@ import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import edu.rpi.metpetdb.client.model.ProjectDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
-import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
-import edu.rpi.metpetdb.client.ui.left.side.MyProjects;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
@@ -35,7 +31,6 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 	private static final String cookieString = "UserProjectsListEx";
 	private FlexTable header1;
 	private ProjectListEx list;
-	private Set<ProjectDTO> projectlist;
 	private ListBox lb;
 	private FlexTable Projects_ft;
 
@@ -197,9 +192,6 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 				MpDb.project_svc.all(MpDb.currentUser().getId(), this);
 			}
 			public void onSuccess(Object result) {
-				MetPetDBApplication.clearLeftSide();
-				projectlist = new HashSet<ProjectDTO>((List<ProjectDTO>) result);
-				MetPetDBApplication.appendToLeft(new MyProjects(projectlist));
 				addTopRows();
 				addProjects();
 			}

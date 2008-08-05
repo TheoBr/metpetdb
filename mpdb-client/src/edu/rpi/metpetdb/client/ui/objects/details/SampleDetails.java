@@ -1,7 +1,5 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
-import java.util.List;
-
 import org.postgis.Point;
 
 import com.google.gwt.maps.client.InfoWindowContent;
@@ -13,7 +11,6 @@ import com.google.gwt.maps.client.event.MarkerClickHandler;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -29,7 +26,6 @@ import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
-import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;
@@ -47,14 +43,12 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.MetamorphicGradeAttr
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MineralAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.ReferenceAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.RegionAttribute;
-import edu.rpi.metpetdb.client.ui.left.side.MySubsamples;
 import edu.rpi.metpetdb.client.ui.objects.list.SubsampleListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 
 public class SampleDetails extends MPagePanel {
 	private String sampleHeader;
-	private MySubsamples subsamplesLeft;
 	private LatLng samplePosition;
 	private MapWidget map;
 
@@ -126,12 +120,6 @@ public class SampleDetails extends MPagePanel {
 						((Point) s.getLocation()).y);
 				updateGoogleMaps();
 			}
-
-			protected boolean onFailure2(final Throwable e) {
-				Window.alert(e.getMessage());
-				return true;
-			}
-
 		};
 		final OnEnterPanel.ObjectEditor oep = new OnEnterPanel.ObjectEditor(
 				p_sample);
@@ -222,37 +210,6 @@ public class SampleDetails extends MPagePanel {
 		this.add(comments_ft);
 	}
 
-	public void addSubsamplesToLeft() {
-
-		new ServerOp() {
-			@Override
-			public void begin() {
-				MpDb.subsample_svc.all(sampleId, this);
-			}
-			public void onSuccess(Object result) {
-				MetPetDBApplication.clearLeftSide();
-				if (((List<SubsampleDTO>) result).size() > 0) {
-					subsamplesLeft = new MySubsamples(
-							(List<SubsampleDTO>) result);
-					MetPetDBApplication.appendToLeft(subsamplesLeft);
-				} else {
-					new ServerOp() {
-						@Override
-						public void begin() {
-							MpDb.sample_svc.details(sampleId, this);
-						}
-						public void onSuccess(Object result2) {
-							subsamplesLeft = new MySubsamples(
-									(SampleDTO) result2);
-							MetPetDBApplication.appendToLeft(subsamplesLeft);
-						}
-					}.begin();
-				}
-			}
-		}.begin();
-
-	};
-
 	private void addGoogleMaps() {
 		map.setSize("300px", "300px");
 		map.setZoomLevel(4);
@@ -285,7 +242,6 @@ public class SampleDetails extends MPagePanel {
 		p_sample.load();
 		addExtraElements();
 		addComments();
-		addSubsamplesToLeft();
 		addGoogleMaps();
 		return this;
 	}

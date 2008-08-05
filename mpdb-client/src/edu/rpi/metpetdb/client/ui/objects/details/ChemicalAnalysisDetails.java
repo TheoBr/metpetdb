@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 
@@ -8,6 +9,7 @@ import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.ui.MpDb;
+import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.ChooseImageAttribute;
@@ -74,6 +76,11 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 				if (MpDb.isCurrentUser(s.getOwner()))
 					return true;
 				return false;
+			}
+
+			protected void onSaveCompletion(final MObjectDTO result) {
+				History.newItem(TokenSpace
+						.detailsOf((ChemicalAnalysisDTO) result));
 			}
 
 			protected void onLoadCompletion(final MObjectDTO result) {

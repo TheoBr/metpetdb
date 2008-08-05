@@ -42,7 +42,7 @@ import edu.rpi.metpetdb.client.ui.image.browser.dialogs.PointPopup;
 import edu.rpi.metpetdb.client.ui.image.browser.dialogs.PopupMenu;
 import edu.rpi.metpetdb.client.ui.image.browser.widgets.DCFlowPanel;
 import edu.rpi.metpetdb.client.ui.image.browser.widgets.ResizableWidget;
-import edu.rpi.metpetdb.client.ui.left.side.MySubsamples;
+import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
 import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -126,7 +126,6 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 					public void begin() {
 						MpDb.chemicalAnalysis_svc.all(subsampleId, this);
 					}
-
 					public void onSuccess(final Object result) {
 						final List<ChemicalAnalysisDTO> ss = (List<ChemicalAnalysisDTO>) result;
 						ImageBrowserDetails.this.g.getSubsample()
@@ -200,16 +199,12 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		this.add(this.save);
 		this.add(this.info);
 		this.layers = new LeftSideLayer(this.g.getSubsample().getName());
-		// MetPetDBApplication.appendToLeft(this.layers);
-
-		((MySubsamples) MetPetDBApplication.getFromLeft(0)).insertLayers(
-				this.layers, this.g.getSubsample());
+		LeftColWidget.insertLayersLeftSide(this.layers, this.g.getSubsample());
 		this.mouseListener = new ImageBrowserMouseListener(this.grid,
 				this.imagesOnGrid.values(), this.zOrderManager, this.g
 						.getSubsample(), this, fp);
 		this.grid.addMouseListener(this.mouseListener);
 	}
-
 	public void updateScale(final float multiplier) {
 		this.scale *= multiplier;
 
@@ -307,7 +302,6 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		this.setOpacity(iog.getActualImage().getElement(), iog.getIog()
 				.getOpacity());
 		this.setOpacity(imageContainer.getElement(), iog.getIog().getOpacity());
-
 		this.layers.registerImage(iog);
 		this.zOrderManager.register(iog);
 

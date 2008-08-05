@@ -261,4 +261,20 @@ public interface LocaleEntity extends ConstantsWithLookup {
 
 	String TokenSpace_Create_Image_Map();
 
+	String TokenSpace_Edit_Subsample();
+
+	/* Left Side */
+
+	String LeftSide_UserInfo();
+
+	String LeftSide_MySamples();
+
+	String LeftSide_MySubsamples();
+
+	String LeftSide_MyProjects();
+
+	String LeftSide_MySearch();
+
+	String LeftSide_LeftSideLayer();
+
 }

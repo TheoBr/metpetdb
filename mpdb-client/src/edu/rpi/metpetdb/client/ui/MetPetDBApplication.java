@@ -283,6 +283,10 @@ public class MetPetDBApplication implements EntryPoint {
 		leftContainer.clear();
 	}
 
+	public static int getLeftCount() {
+		return leftContainer.getWidgetCount();
+	}
+
 	public static void appendToBreadCrumbs(final Widget w) {
 		breadcrumbsBar.add(w);
 	}

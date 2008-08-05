@@ -230,7 +230,7 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 						(List<ProjectDTO>) result);
 				addTopRows();
 				addSamples();
-				addLeftSide();
+				// addLeftSide();
 			}
 		}.begin();
 		return this;

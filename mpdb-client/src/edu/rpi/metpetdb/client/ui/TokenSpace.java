@@ -49,6 +49,7 @@ import edu.rpi.metpetdb.client.ui.user.UserRegistrationPanel;
  * </p>
  */
 public class TokenSpace implements HistoryListener {
+	private static String currentToken = new String();
 	public static final TokenSpace INSTANCE = new TokenSpace();
 	private static final Map<String, TokenHandler> handlers = new HashMap<String, TokenHandler>();
 	private static final TokenHandler sampleDetails = new LKey(
@@ -91,7 +92,8 @@ public class TokenSpace implements HistoryListener {
 			show(new SubsampleDetails().showById(id));
 		}
 	};
-	private static final TokenHandler subsampleEdit = new LKey("SubsampleEdit") {
+	private static final TokenHandler subsampleEdit = new LKey(
+			LocaleHandler.lc_entity.TokenSpace_Edit_Subsample()) {
 		public long get(final Object obj) {
 			return ((SubsampleDTO) obj).getId();
 		}
@@ -356,6 +358,12 @@ public class TokenSpace implements HistoryListener {
 
 	private static void show(final Widget content) {
 		MetPetDBApplication.show(content);
+		((Breadcrumbs) MetPetDBApplication.getFromBreadCrumbs())
+				.update(currentToken);
+	}
+
+	private static void show(final Widget content, final String token) {
+		MetPetDBApplication.show(content);
 	}
 
 	// private static void showIntroduction() {
@@ -448,10 +456,9 @@ public class TokenSpace implements HistoryListener {
 	}
 
 	public void onHistoryChanged(final String historyToken) {
+		currentToken = historyToken;
 		dispatch(historyToken);
 		MetPetDBApplication.dispatchCurrentPageChanged();
-		((Breadcrumbs) MetPetDBApplication.getFromBreadCrumbs())
-				.update(historyToken);
 	}
 
 	private TokenSpace() {
