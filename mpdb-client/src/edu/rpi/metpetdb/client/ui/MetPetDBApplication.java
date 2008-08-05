@@ -81,6 +81,8 @@ public class MetPetDBApplication implements EntryPoint {
 		// setupIntroduction();
 		pageChangeWatchers = new HashSet<Widget>();
 
+		appendToBreadCrumbs(new Breadcrumbs());
+
 		// Try to restore the user's current session.
 		//
 		MpDb.user_svc.resumeSession(new AsyncCallback<ResumeSessionResponse>() {
@@ -127,8 +129,6 @@ public class MetPetDBApplication implements EntryPoint {
 		// starts up and is able to finish loading its resources.
 		final Element lm = RootPanel.get(Styles.LOADINGMESSAGE_ID).getElement();
 		DOM.removeChild(DOM.getParent(lm), lm);
-
-		appendToBreadCrumbs(new Breadcrumbs());
 
 		// If we were given a state to jump to, go there. Otherwise
 		// go to the introduction state, which displays some pretty

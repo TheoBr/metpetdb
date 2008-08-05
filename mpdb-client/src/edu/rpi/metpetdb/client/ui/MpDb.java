@@ -149,10 +149,12 @@ public class MpDb {
 		if (o != n && (o == null || n == null || o.getId() != n.getId())) {
 			MetPetDBApplication.onCurrentUserChanged(n);
 			if (n != null) {
-				if (Breadcrumbs.getCurrentNode().getLeftSide().equals(
-						"UserInfo")) {
-					LeftColWidget.updateLeftSide(LocaleHandler.lc_entity
-							.LeftSide_UserInfo());
+				if (Breadcrumbs.getCurrentNode() != null) {
+					if (Breadcrumbs.getCurrentNode().getLeftSide().equals(
+							LocaleHandler.lc_entity.LeftSide_UserInfo())) {
+						LeftColWidget.updateLeftSide(LocaleHandler.lc_entity
+								.LeftSide_UserInfo());
+					}
 				}
 			}
 		}
