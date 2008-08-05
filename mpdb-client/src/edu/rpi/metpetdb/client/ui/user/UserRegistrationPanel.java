@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.ui.user;
 
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -93,7 +94,7 @@ public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 			}
 			public void onSuccess(final UserDTO result) {
 				MpDb.setCurrentUser((UserDTO) result);
-				TokenSpace.dispatch(TokenSpace.introduction.makeToken(null));
+				History.newItem(TokenSpace.introduction.makeToken(null));
 			}
 		}.begin();
 	}

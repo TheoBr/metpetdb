@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 
@@ -79,7 +78,7 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 			}
 
 			protected void onSaveCompletion(final MObjectDTO result) {
-				History.newItem(TokenSpace
+				TokenSpace.dispatch(TokenSpace
 						.detailsOf((ChemicalAnalysisDTO) result));
 			}
 

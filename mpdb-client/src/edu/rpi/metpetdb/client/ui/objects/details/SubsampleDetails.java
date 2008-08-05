@@ -91,9 +91,11 @@ public class SubsampleDetails extends FlowPanel {
 				if (continuation != null) {
 					continuation.onSuccess(result);
 				} else
-					History
-							.newItem(TokenSpace
-									.detailsOf((SubsampleDTO) result));
+					TokenSpace.dispatch(TokenSpace
+							.detailsOf((SubsampleDTO) result));
+				// History
+				// .newItem(TokenSpace
+				// .detailsOf((SubsampleDTO) result));
 			}
 
 			protected void onLoadCompletion(final MObjectDTO result) {
