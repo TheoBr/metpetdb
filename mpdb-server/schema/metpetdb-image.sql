@@ -39,6 +39,7 @@ CREATE TABLE images
    contrast INT2,
    brightness INT2,
    lut INT2,
+   collector VARCHAR(50),
    --user_id INT4 NOT NULL,
    checksum_64x64 CHAR(50) NOT NULL,
    checksum_half CHAR(50) NOT NULL,
@@ -54,6 +55,20 @@ CREATE TABLE images
      REFERENCES samples(sample_id) ON DELETE CASCADE,
    CONSTRAINT images_ck_nonzero CHECK (
      width > 0 AND height > 0)
+) WITHOUT OIDS;
+
+
+CREATE TABLE image_reference
+(
+  image_id INT8 NOT NULL,
+  reference_id INT8 NOT NULL,
+  CONSTRAINT image_reference_pk PRIMARY KEY (image_id, reference_id),
+  CONSTRAINT image_reference_fk_reference FOREIGN KEY (reference_id)
+      REFERENCES reference (reference_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT image_reference_fk_image FOREIGN KEY (image_id)
+      REFERENCES images (image_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
 ) WITHOUT OIDS;
 
 CREATE TABLE xray_image

@@ -18,6 +18,7 @@ GRANT select,insert,update,delete        ON metamorphic_grades TO @APPUSER@;
 GRANT select,insert,update,delete        ON elements TO @APPUSER@;
 GRANT select,insert,update,delete        ON reference TO @APPUSER@;
 GRANT select,insert,update,delete ON sample_reference TO @APPUSER@;
+GRANT select,insert,update,delete ON image_reference TO @APPUSER@;
 GRANT select,insert,update,delete		  ON oxides TO @APPUSER@;
 GRANT select,insert,update,delete		  ON image_format to @APPUSER@;
 GRANT select,insert,update,delete		  ON chemical_analysis_elements to @APPUSER@;

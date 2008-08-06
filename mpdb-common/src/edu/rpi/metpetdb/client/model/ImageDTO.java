@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.model;
 
+import java.util.Set;
+
 import com.google.gwt.core.client.GWT;
 
 public class ImageDTO extends MObjectDTO {
@@ -24,6 +26,8 @@ public class ImageDTO extends MObjectDTO {
 	private Integer contrast;
 	private Integer brightness;
 	private Integer lut;
+	private String collector;
+	private Set<ReferenceDTO> references;
 
 	public long getId() {
 		return id;
@@ -187,5 +191,21 @@ public class ImageDTO extends MObjectDTO {
 
 	public boolean mIsNew() {
 		return id == 0;
+	}
+
+	public String getCollector() {
+		return collector;
+	}
+
+	public void setCollector(String collector) {
+		this.collector = collector;
+	}
+
+	public Set<ReferenceDTO> getReferences() {
+		return references;
+	}
+
+	public void setReferences(Set<ReferenceDTO> references) {
+		this.references = references;
 	}
 }
