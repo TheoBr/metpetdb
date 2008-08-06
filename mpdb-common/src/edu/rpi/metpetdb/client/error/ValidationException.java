@@ -11,7 +11,7 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
  * 
  * @see PropertyConstraint
  */
-public abstract class ValidationException extends Exception implements
+public abstract class ValidationException extends MpDbException implements
 		IsSerializable {
 	private static final long serialVersionUID = 1L;
 
@@ -104,19 +104,4 @@ public abstract class ValidationException extends Exception implements
 	public String formatPropertyName() {
 		return formatPropertyName(constraint);
 	}
-
-	/**
-	 * Format this error for display to the end-user.
-	 * <p>
-	 * <b><i>Only available on the client side.</i></b>
-	 * </p>
-	 * <p>
-	 * This method requires the localication support supplied by GWT, and that
-	 * is only available on the client side of the system. Invoking this method
-	 * on the server will throw an internal GWT error.
-	 * </p>
-	 * 
-	 * @return the formatted string describing this error.
-	 */
-	public abstract String format();
 }

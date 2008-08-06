@@ -126,6 +126,25 @@ public interface LocaleText extends Messages {
 	String errorTitle_UnexpectedError(String throwable);
 	String errorDesc_ValueNotInCollection(String value, String collection);
 
+	/* DAO Exceptions */
+	String errorDesc_ChemicalAnalysisNotFound();
+	String errorDesc_ElementNotFound();
+	String errorDesc_FunctionNotImplemented();
+	String errorDesc_GenericDAO(String msg);
+	String errorDesc_GridNotFound();
+	String errorDesc_ImageNotFound();
+	String errorDesc_MetamorphicGradeNotFound();
+	String errorDesc_MineralNotFound();
+	String errorDesc_ProjectAlreadyExists();
+	String errorDesc_ProjectNotFound();
+	String errorDesc_ReferenceNotFound();
+	String errorDesc_RegionNotFound();
+	String errorDesc_SampleAlreadyExists();
+	String errorDesc_SampleNotFound();
+	String errorDesc_SubsampleNotFound();
+	String errorDesc_UserAlreadyExists();
+	String errorDesc_UserNotFound();
+
 	/* Character Names */
 	String character_space();
 	String character_period();
