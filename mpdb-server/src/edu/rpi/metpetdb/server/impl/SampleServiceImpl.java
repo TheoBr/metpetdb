@@ -191,7 +191,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 			final HashSet<Region> regionsToAdd = new HashSet<Region>();
 			while (itr.hasNext()) {
 				final Region r = (Region) itr.next();
-				final Query regions = namedQuery("edu.rpi.metpetdb.server.model.Region.Region.byName");
+				final Query regions = namedQuery("Region.byName");
 				regions.setString("name", r.getName());
 				if (regions.uniqueResult() != null) {
 					itr.remove();
@@ -209,7 +209,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 			final HashSet<MetamorphicGrade> metamorphicToAdd = new HashSet<MetamorphicGrade>();
 			while (itr.hasNext()) {
 				final MetamorphicGrade mg = (MetamorphicGrade) itr.next();
-				final Query grades = namedQuery("edu.rpi.metpetdb.server.model.MetamorphicGrade.MetamorphicGrade.byName");
+				final Query grades = namedQuery("MetamorphicGrade.byName");
 				grades.setString("name", mg.getName());
 				if (grades.uniqueResult() != null) {
 					itr.remove();
@@ -228,7 +228,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 
 			while (itr.hasNext()) {
 				final Reference r = (Reference) itr.next();
-				final Query references = namedQuery("edu.rpi.metpetdb.server.model.Reference.Reference.byName");
+				final Query references = namedQuery("Reference.byName");
 
 				references.setString("name", r.getName());
 

@@ -10,11 +10,12 @@
       </generator>
     </id>
     <property name="name" column="name"/>
-
+	
+  </class>
+  
   <query name="MetamorphicGrade.byName">
     from MetamorphicGrade mg
     where mg.name = :name
   </query>
-	
-  </class>
+  
 </hibernate-mapping>

@@ -10,13 +10,14 @@
       </generator>
     </id>
     <property name="name" column="name"/>
-    
+  </class>
+  
   <query name="Region.byName">
     from Region r
     where r.name = :name
   </query>
-	<query name="Region.all">
+  
+  <query name="Region.all">
     from Region r
   </query>
-  </class>
 </hibernate-mapping>
