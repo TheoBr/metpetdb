@@ -45,6 +45,7 @@ CREATE TABLE images
    checksum_half CHAR(50) NOT NULL,
    filename VARCHAR(256) NOT NULL,
    CONSTRAINT images_sk PRIMARY KEY (image_id),
+   CONSTRAINT images_nk_filename UNIQUE(sample_id, filename),
    CONSTRAINT images_fk_image_format FOREIGN KEY (image_format_id)
      REFERENCES image_format(image_format_id),
    --CONSTRAINT images_fk_user FOREIGN KEY (user_id)

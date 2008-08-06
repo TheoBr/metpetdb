@@ -25,6 +25,7 @@ import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.dao.ChemicalAnalysisAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
+import edu.rpi.metpetdb.client.error.dao.ImageAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.ProjectAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.SampleAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleAlreadyExistsException;
@@ -258,6 +259,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 				throw new SubsampleAlreadyExistsException();
 			else if ("chemical_analyses_nk_spot_id".equals(constraintName))
 				throw new ChemicalAnalysisAlreadyExistsException();
+			else if ("images_nk_filename".equals(constraintName))
+				throw new ImageAlreadyExistsException();
 		}
 
 		// If we have no idea what the exception means, should it be passed to

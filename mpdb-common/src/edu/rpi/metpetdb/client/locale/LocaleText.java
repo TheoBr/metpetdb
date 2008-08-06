@@ -133,6 +133,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_FunctionNotImplemented();
 	String errorDesc_GenericDAO(String msg);
 	String errorDesc_GridNotFound();
+	String errorDesc_ImageAlreadyExists();
 	String errorDesc_ImageNotFound();
 	String errorDesc_MetamorphicGradeNotFound();
 	String errorDesc_MineralNotFound();
