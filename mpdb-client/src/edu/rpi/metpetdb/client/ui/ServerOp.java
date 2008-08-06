@@ -4,9 +4,9 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
-import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.ui.dialogs.LoginDialog;
-import edu.rpi.metpetdb.client.ui.dialogs.ValidationExceptionDialog;
+import edu.rpi.metpetdb.client.ui.dialogs.MpDbExceptionDialog;
 
 /**
  * An AsyncCallback implementation with some error handling and recovery.
@@ -25,8 +25,8 @@ public abstract class ServerOp<T> implements AsyncCallback<T>, Command {
 	public void onFailure(final Throwable e) {
 		if (e instanceof LoginRequiredException)
 			new LoginDialog(this).show();
-		else if (e instanceof ValidationException)
-			new ValidationExceptionDialog((ValidationException) e, this).show();
+		else if (e instanceof MpDbException)
+			new MpDbExceptionDialog((MpDbException) e, this).show();
 		else
 			ErrorHandler.dispatch(e);
 	}

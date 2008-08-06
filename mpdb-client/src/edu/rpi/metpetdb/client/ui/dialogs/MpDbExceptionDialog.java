@@ -6,15 +6,15 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 
-public class ValidationExceptionDialog extends MDialogBox implements ClickListener {
+public class MpDbExceptionDialog extends MDialogBox implements ClickListener {
 	private final Button close;
 	private final ServerOp continuation;
 
-	public ValidationExceptionDialog(final ValidationException err, final ServerOp r) {
+	public MpDbExceptionDialog(final MpDbException err, final ServerOp r) {
 		close = new Button(LocaleHandler.lc_text.buttonClose(), this);
 		continuation = r;
 
