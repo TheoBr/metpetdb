@@ -16,6 +16,7 @@ CREATE TABLE chemical_analyses
    mineral_id int2,
    -- user_id INT4 NOT NULL,
    large_rock CHAR(1) CHECK (large_rock IN ('Y','N')) NOT NULL,
+   total real,
    CONSTRAINT chemical_analyses_sk PRIMARY KEY (chemical_analysis_id),
    CONSTRAINT chemical_analyses_fk_subsamples FOREIGN KEY (subsample_id)
       REFERENCES subsamples(subsample_id),

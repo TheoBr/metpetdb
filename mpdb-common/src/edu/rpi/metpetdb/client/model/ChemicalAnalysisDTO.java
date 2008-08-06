@@ -24,6 +24,7 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 	private String description;
 	private MineralDTO mineral;
 	private Boolean largeRock;
+	private Float total;
 	private Set<ChemicalAnalysisElementDTO> elements;
 	private Set<ChemicalAnalysisOxideDTO> oxides;
 
@@ -257,5 +258,13 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 
 	public boolean mIsNew() {
 		return id == 0;
+	}
+
+	public Float getTotal() {
+		return total;
+	}
+
+	public void setTotal(Float total) {
+		this.total = total;
 	}
 }

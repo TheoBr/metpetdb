@@ -22,6 +22,7 @@ public class ChemicalAnalysis extends MObject {
 	private Reference reference;
 	private Mineral mineral;
 	private Boolean largeRock;
+	private Float total;
 	private Set<ChemicalAnalysisElement> elements;
 	private Set<ChemicalAnalysisOxide> oxides;
 
@@ -178,5 +179,13 @@ public class ChemicalAnalysis extends MObject {
 
 	public void setReference(Reference reference) {
 		this.reference = reference;
+	}
+
+	public Float getTotal() {
+		return total;
+	}
+
+	public void setTotal(Float total) {
+		this.total = total;
 	}
 }

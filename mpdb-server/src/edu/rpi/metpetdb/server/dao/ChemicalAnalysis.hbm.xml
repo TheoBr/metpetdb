@@ -25,6 +25,7 @@
     <many-to-one name="subsample" column="subsample_id" class="Subsample" lazy="false" cascade="none"/>
 
 	<property name="largeRock" column="large_rock" type="yes_no" />
+	<property name="total" column="total" type="java.lang.Float" />
 	<many-to-one name="mineral" column="mineral_id" class="Mineral" lazy="false" cascade="none"/>
 
     <set name="elements" table="chemical_analysis_elements" lazy="false" cascade="save-update">
