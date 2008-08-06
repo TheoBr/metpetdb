@@ -23,6 +23,7 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.InvalidImageException;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
+import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.service.BulkUploadImagesService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
@@ -114,13 +115,17 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 
 			for (ImageDTO img : images) {
 				// Confirm the filename is in the zip
-				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) != null) {
-					img_breakdown[1]++;
-				} else {
+				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
 					img_breakdown[0]++;
+				} else {
+					try {
+						doc.validate(img);
+						img_breakdown[1]++;
+					} catch (ValidationException e) {
+						img_breakdown[0]++;
+					}
 				}
 
-				// There's no doc.validate() for images?
 				++i;
 			}
 
@@ -179,10 +184,33 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 					errors.put(new Integer(i), new InvalidImageException(
 							spreadsheetPrefix + img.getFilename()));
 				}
-				// There's no doc.validate() for images?
+				try {
+					doc.validate(img);
+				} catch (ValidationException e) {
+					errors.put(i, e);
+				}
 
 				++i;
 			}
+
+			for (ImageOnGridDTO iog : imagesOnGrid) {
+				ImageDTO img = iog.getImage();
+				// Confirm the filename is in the zip
+				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
+					errors.put(new Integer(i), new InvalidImageException(
+							spreadsheetPrefix + img.getFilename()));
+				}
+				try {
+					doc.validate(img);
+				} catch (ValidationException e) {
+					errors.put(i, e);
+				}
+
+				++i;
+			}
+
+			UserDTO u = new UserDTO();
+			u.setId(currentUser());
 
 			if (errors.isEmpty()) {
 				final List<ImageDTO> imagesToSave = new LinkedList<ImageDTO>();
@@ -192,6 +220,10 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 						// Populate Image, Mark to save with rest of images
 						ImageDTO img = uploadImages(zp, iog.getImage(),
 								spreadsheetPrefix);
+						img.getSubsample().getSample().setOwner(u);
+						if (img.getSample() == null)
+							img.setSample(new SampleDTO());
+						img.getSample().setOwner(u);
 						iog.setImage(img);
 
 						// Set image information for the Grid Copy
@@ -205,18 +237,18 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 						saveIncompleteImageOnGrid(iog);
 					}
 
-					UserDTO u = new UserDTO();
-					u.setId(currentUser());
-
 					for (ImageDTO img : images) {
 						ImageDTO img_s = uploadImages(zp, img,
 								spreadsheetPrefix);
 						img_s.getSubsample().getSample().setOwner(u);
+						if (img.getSample() == null)
+							img.setSample(new SampleDTO());
+						img_s.getSample().setOwner(u);
 						imagesToSave.add(img_s);
 					}
 
 					// Finally, Save the Images
-					save(imagesToSave);
+					// save(imagesToSave);
 
 					return null;
 				} catch (final ValidationException e) {

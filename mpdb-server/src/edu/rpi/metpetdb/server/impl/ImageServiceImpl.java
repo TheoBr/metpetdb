@@ -62,6 +62,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		// oc.validate(ImageDTO);
 		// if (ImageDTO.getSample().getOwner().getId() != currentUser())
 		// throw new SecurityException("Cannot modify images you don't own.");
+		doc.validate(image);
 		Image i = mergeBean(image);
 
 		i = (new ImageDAO(this.currentSession())).save(i);
@@ -72,6 +73,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 
 	public XrayImageDTO saveImage(XrayImageDTO xrayimg)
 			throws ValidationException, LoginRequiredException, DAOException {
+		doc.validate(xrayimg);
 		XrayImage i = mergeBean(xrayimg);
 		i = (new XrayImageDAO(this.currentSession())).save(i);
 		commit();
@@ -104,6 +106,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 	protected ImageOnGridDTO saveIncompleteImageOnGrid(ImageOnGridDTO iogDTO)
 			throws ValidationException, LoginRequiredException, DAOException {
 		// First save the image
+		doc.validate(iogDTO.getImage());
 		Image i = mergeBean(iogDTO.getImage());
 		i = (new ImageDAO(this.currentSession())).save(i);
 		iogDTO.setImage((ImageDTO) cloneBean(i));
