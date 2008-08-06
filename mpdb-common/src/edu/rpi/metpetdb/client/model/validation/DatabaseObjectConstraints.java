@@ -4,12 +4,14 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
+import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.ProjectDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.StartSessionRequestDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.XrayImageDTO;
 import edu.rpi.metpetdb.client.model.validation.primitive.BooleanConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
@@ -74,6 +76,10 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public BooleanConstraint XrayImage_radiation;
 	public ValueInCollectionConstraint XrayImage_element;
 
+	public void validate(final XrayImageDTO xi) throws ValidationException {
+		validate(xi, XrayImage__all);
+	}
+
 	// ------ Image ------
 	public PropertyConstraint[] Image__all;
 	public ImageTypeConstraint Image_imageType;
@@ -81,6 +87,10 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public IntegerConstraint Image_contrast;
 	public IntegerConstraint Image_brightness;
 	public IntegerConstraint Image_pixelsize;
+
+	public void validate(final ImageDTO i) throws ValidationException {
+		validate(i, Image__all);
+	}
 
 	// ------ Sample ------
 	public PropertyConstraint[] Sample__all;
