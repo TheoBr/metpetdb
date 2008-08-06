@@ -2,8 +2,8 @@ package edu.rpi.metpetdb.server.impl;
 
 import org.hibernate.exception.ConstraintViolationException;
 
+import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
-import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.DuplicateValueException;
@@ -15,6 +15,7 @@ import edu.rpi.metpetdb.client.service.ResumeSessionResponse;
 import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 import edu.rpi.metpetdb.server.model.User;
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
 
@@ -25,22 +26,27 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return PasswordEncrypter.verify(u.getEncryptedPassword(), pw);
 	}
 
-	public UserDTO details(final String username) throws NoSuchObjectException {
-		UserDTO UserDTO = (UserDTO) clone(byKey("User", "username", username));
-		return UserDTO;
+	public UserDTO details(final String username) throws DAOException {
+		User u = new User();
+		u.setUsername(username);
+		u = (new UserDAO(this.currentSession())).fill(u);
+		return cloneBean(u);
 	}
 
 	public UserDTO startSession(final StartSessionRequestDTO ssr)
 			throws LoginFailureException, ValidationException {
 		doc.validate(ssr);
 		try {
-			final User u = (User) byKey("User", "username", ssr.getUsername());
+			User u = new User();
+			u.setUsername(ssr.getUsername());
+			u = (new UserDAO(this.currentSession())).fill(u);
+
 			if (!authenticate(u, ssr.getPassword()))
 				throw new LoginFailureException(
 						doc.StartSessionRequest_password);
 			setCurrentUser(u);
 			return (UserDTO) clone(u);
-		} catch (NoSuchObjectException nsoe) {
+		} catch (DAOException daoe) {
 			setCurrentUser(null);
 			throw new LoginFailureException(doc.StartSessionRequest_password);
 		}
@@ -51,8 +57,12 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		r.databaseObjectConstraints = doc;
 		r.objectConstraints = oc;
 		try {
-			r.user = (UserDTO) clone(byId("User", (long) currentUser()));
-		} catch (NoSuchObjectException err) {
+			User u = new User();
+			u.setId(currentUser());
+			u = (new UserDAO(this.currentSession())).fill(u);
+			r.user = cloneBean(u);
+			// r.user = (UserDTO) clone(byId("User", (long) currentUser()));
+		} catch (DAOException daoe) {
 			r.user = null;
 		} catch (LoginRequiredException err) {
 			r.user = null;
@@ -61,13 +71,17 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return r;
 	}
 
-	public UserDTO beginEditMyProfile() throws NoSuchObjectException,
+	public UserDTO beginEditMyProfile() throws DAOException,
 			LoginRequiredException {
-		return (UserDTO) clone(byId("User", (long) currentUser()));
+		User u = new User();
+		u.setId(currentUser());
+		u = (new UserDAO(this.currentSession())).fill(u);
+		return cloneBean(u);
 	}
 
 	public UserDTO registerNewUser(final UserWithPasswordDTO newbie)
-			throws ValidationException, UnableToSendEmailException {
+			throws ValidationException, DAOException,
+			UnableToSendEmailException {
 		doc.UserWithPassword_user.validateEntity(newbie);
 		doc.UserWithPassword_newPassword.validateEntity(newbie);
 		doc.UserWithPassword_vrfPassword.validateEntity(newbie);
@@ -81,51 +95,58 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		doc.validate(newUser);
 		User u = (User) merge(newUser);
 		try {
-			insert(u);
+			u = (new UserDAO(this.currentSession())).save(u);
 			commit();
 			EmailSupport.sendMessage(this, u.getEmailAddress(),
 					"registerNewUser", new Object[] {
 							u.getUsername(), getModuleBaseURL()
 					});
 			setCurrentUser(u);
-			return (UserDTO) clone(u);
 		} catch (ConstraintViolationException cve) {
 			final String who = newUser.getUsername();
 			if ("users_nk_username".equals(cve.getConstraintName()))
 				throw new DuplicateValueException(doc.User_username, who);
 			else
 				throw new RuntimeException("i dont know what happened");
-
 		}
+
+		return (UserDTO) clone(u);
 	}
+
 	public void changePassword(final UserWithPasswordDTO uwp)
-			throws LoginRequiredException, LoginFailureException,
-			NoSuchObjectException, ValidationException {
+			throws LoginRequiredException, LoginFailureException, DAOException,
+			ValidationException {
 		doc.UserWithPassword_user.validateEntity(uwp);
 		doc.UserWithPassword_oldPassword.validateEntity(uwp);
 		doc.UserWithPassword_newPassword.validateEntity(uwp);
 		doc.UserWithPassword_vrfPassword.validateEntity(uwp);
 
+		final UserDAO uDAO = new UserDAO(this.currentSession());
 		final UserDTO UserDTO = uwp.getUser();
 		if (UserDTO.getId() != currentUser())
 			throw new SecurityException("Administrators are not supported!");
 
-		final User u = (User) byId("User", UserDTO.getId());
+		User u = new User();
+		u.setId(UserDTO.getId());
+		u = uDAO.fill(u);
+
 		if (!authenticate(u, uwp.getOldPassword()))
 			throw new LoginFailureException(doc.UserWithPassword_oldPassword);
 		u.setEncryptedPassword(PasswordEncrypter.crypt(uwp.getNewPassword()));
-		update(u);
+
+		uDAO.save(u);
 		commit();
 	}
 
-	public void emailPassword(final String username)
-			throws NoSuchObjectException, UnableToSendEmailException {
-		final User u = (User) byKey("User", "username", username);
-		if (u == null)
-			throw new NoSuchObjectException();
+	public void emailPassword(final String username) throws DAOException,
+			UnableToSendEmailException {
+		UserDAO uDAO = new UserDAO(this.currentSession());
+		User u = new User();
+		u.setUsername(username);
+		u = uDAO.fill(u);
 		final String newpass = PasswordEncrypter.randomPassword();
 		u.setEncryptedPassword(PasswordEncrypter.crypt(newpass));
-		update(u);
+		u = uDAO.save(u);
 		commit();
 		EmailSupport.sendMessage(this, u.getEmailAddress(), "emailPassword",
 				new Object[] {

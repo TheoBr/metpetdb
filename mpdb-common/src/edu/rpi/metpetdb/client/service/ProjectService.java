@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
+import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
-import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ProjectDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
@@ -24,12 +24,12 @@ public interface ProjectService extends RemoteService {
 	 * @param projectId
 	 *            the project to fetch the data for.
 	 * @return requested project data.
-	 * @throws NoSuchObjectException
+	 * @throws DAOException
 	 *             the project does not exist in the database.
 	 */
-	ProjectDTO details(int projectId) throws NoSuchObjectException;
+	ProjectDTO details(int projectId) throws DAOException;
 
-	List<ProjectDTO> all(final long userId) throws NoSuchObjectException;
+	List<ProjectDTO> all(final long userId);
 
 	/**
 	 * Create or update an existing project.
@@ -41,9 +41,11 @@ public interface ProjectService extends RemoteService {
 	 *             current user is not logged in.
 	 * @throws ValidationException
 	 *             something is wrong with the project specification.
+	 * @throws DAOException
+	 *             Error saving project to the database
 	 */
 	ProjectDTO saveProject(ProjectDTO proj) throws LoginRequiredException,
-			ValidationException;
+			ValidationException, DAOException;
 
 	Results<SampleDTO> samplesFromProject(PaginationParameters parameters,
 			long id);

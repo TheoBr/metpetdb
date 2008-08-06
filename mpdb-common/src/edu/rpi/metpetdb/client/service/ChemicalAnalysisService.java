@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
+import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
-import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
@@ -15,13 +15,12 @@ public interface ChemicalAnalysisService extends RemoteService {
 	Results<ChemicalAnalysisDTO> all(PaginationParameters parameters,
 			final long subsampleId);
 
-	List<ChemicalAnalysisDTO> all(final long subsampleId)
-			throws NoSuchObjectException;
+	List<ChemicalAnalysisDTO> all(final long subsampleId);
 
-	ChemicalAnalysisDTO details(long id) throws NoSuchObjectException;
+	ChemicalAnalysisDTO details(long id) throws DAOException;
 
 	ChemicalAnalysisDTO save(ChemicalAnalysisDTO chemicalAnalysis)
-			throws ValidationException, LoginRequiredException;
+			throws ValidationException, LoginRequiredException, DAOException;
 
-	void delete(long id) throws NoSuchObjectException, LoginRequiredException;
+	void delete(long id) throws DAOException, LoginRequiredException;
 }

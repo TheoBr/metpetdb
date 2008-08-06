@@ -3,54 +3,58 @@ package edu.rpi.metpetdb.server.impl;
 import java.util.Collection;
 import java.util.List;
 
-import org.hibernate.Query;
-import org.hibernate.exception.ConstraintViolationException;
-
+import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
-import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.ChemicalAnalysisService;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.ResultsFromDAO;
+import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
 import edu.rpi.metpetdb.server.model.ChemicalAnalysis;
-import edu.rpi.metpetdb.server.model.Mineral;
-import edu.rpi.metpetdb.server.model.Reference;
-import edu.rpi.metpetdb.server.model.Sample;
-import edu.rpi.metpetdb.server.model.Subsample;
+import edu.rpi.metpetdb.server.model.User;
 
 public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		ChemicalAnalysisService {
 	private static final long serialVersionUID = 1L;
 
-	public ChemicalAnalysisDTO details(long id) throws NoSuchObjectException {
-		final ChemicalAnalysisDTO ma = cloneBean(byId("ChemicalAnalysis", id));
-		return ma;
+	public ChemicalAnalysisDTO details(long id) throws DAOException {
+		ChemicalAnalysis ca = new ChemicalAnalysis();
+		ca.setId(new Long(id).intValue());
+		ca = (new ChemicalAnalysisDAO(this.currentSession())).fill(ca);
+		return cloneBean(ca);
 	}
 
 	public Results<ChemicalAnalysisDTO> all(PaginationParameters parameters,
 			final long subsampleId) {
-		final String name = "ChemicalAnalysis.bySubsampleId";
-		final Query sizeQuery = sizeQuery(name);
-		final Query pageQuery = pageQuery(name, parameters);
-		sizeQuery.setLong("id", subsampleId);
-		pageQuery.setLong("id", subsampleId);
-		return toResults(sizeQuery, pageQuery);
+		ResultsFromDAO<ChemicalAnalysis> l = (new ChemicalAnalysisDAO(this
+				.currentSession())).getAll(parameters, subsampleId);
+		List<ChemicalAnalysisDTO> lDTO = cloneBean(l.getList());
+		return new Results<ChemicalAnalysisDTO>(l.getCount(), lDTO);
 	}
 
-	public List<ChemicalAnalysisDTO> all(long subsampleId)
-			throws NoSuchObjectException {
-		return cloneBean(byKey("ChemicalAnalysis", "subsampleId", subsampleId));
+	public List<ChemicalAnalysisDTO> all(long subsampleId) {
+		List<ChemicalAnalysis> l = (new ChemicalAnalysisDAO(this
+				.currentSession())).getAll(subsampleId);
+		List<ChemicalAnalysisDTO> lDTO = cloneBean(l);
+		return lDTO;
 	}
 
 	protected void save(final Collection<ChemicalAnalysisDTO> analyses)
-			throws ValidationException, LoginRequiredException {
+			throws ValidationException, LoginRequiredException, DAOException {
+		ChemicalAnalysisDAO dao = new ChemicalAnalysisDAO(this.currentSession());
+
+		User user = new User();
+		user.setId(currentUser());
+
 		try {
 			for (ChemicalAnalysisDTO analysis : analyses) {
 				doc.validate(analysis);
-				save((ChemicalAnalysis) mergeBean(analysis));
+				ChemicalAnalysis ca = mergeBean(analysis);
+				ca.getSubsample().getSample().setOwner(user);
+				ca = dao.save(ca);
 			}
 		} catch (ValidationException e) {
 			forgetChanges();
@@ -60,141 +64,32 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 	}
 
 	public ChemicalAnalysisDTO save(ChemicalAnalysisDTO caDTO)
-			throws ValidationException, LoginRequiredException {
+			throws ValidationException, LoginRequiredException, DAOException {
 		doc.validate(caDTO);
+
+		if (caDTO.getSubsample().getSample().getOwner() == null)
+			throw new LoginRequiredException();
+		if (caDTO.getSubsample().getSample().getOwner().getId() != currentUser())
+			throw new SecurityException("Cannot modify samples you don't own.");
+
 		ChemicalAnalysis ca = mergeBean(caDTO);
-		ca = save(ca);
+		ca = (new ChemicalAnalysisDAO(this.currentSession())).save(ca);
 		commit();
 		return cloneBean(ca);
 	}
 
-	public ChemicalAnalysis save(ChemicalAnalysis ma)
-			throws ValidationException, LoginRequiredException {
-		replaceSample(ma, true);
-		replaceReferences(ma);
-		replaceMineral(ma);
+	public void delete(long id) throws DAOException, LoginRequiredException {
+		ChemicalAnalysisDAO dao = new ChemicalAnalysisDAO(this.currentSession());
 
-		if (ma.getSubsample().getSample().getOwner() == null)
-			throw new LoginRequiredException();
-		if (ma.getSubsample().getSample().getOwner().getId() != currentUser())
-			throw new SecurityException("Cannot modify samples you don't own.");
+		ChemicalAnalysis ca = new ChemicalAnalysis();
+		ca.setId((new Long(id)).intValue());
+		ca = dao.fill(ca);
 
-		replaceReferences(ma);
-		try {
-			if (ma.getImage() != null && ma.getImage().mIsNew()) {
-				ma.setImage(update(merge(ma.getImage())));
-			}
-			if (ma.mIsNew()) {
-				insert(ma);
-			} else
-				ma = update(merge(ma));
-			return ma;
-		} catch (ConstraintViolationException cve) {
-			throw cve;
-		}
-	}
+		if (ca.getSubsample().getSample().getOwner().getId() != currentUser())
+			throw new SecurityException(
+					"Cannot modify ChemicalAnlaysis you don't own.");
 
-	public void delete(long id) throws NoSuchObjectException,
-			LoginRequiredException {
-		try {
-			final ChemicalAnalysis ma = byId("ChemicalAnalysis", id);
-			delete(ma);
-			commit();
-		} catch (ConstraintViolationException cve) {
-			throw cve;
-		}
-	}
-
-	protected void replaceMineral(final ChemicalAnalysis ca) {
-		if (ca.getMineral() != null) {
-			final Query minerals = namedQuery("Mineral.byName");
-
-			minerals.setString("name", ca.getMineral().getName());
-
-			if (minerals.uniqueResult() != null)
-				ca.setMineral((Mineral) minerals.uniqueResult());
-		}
-	}
-
-	protected void replaceSample(final ChemicalAnalysis ca)
-			throws ValidationException, LoginRequiredException {
-		replaceSample(ca, false);
-	}
-
-	protected void replaceSample(final ChemicalAnalysis ca,
-			boolean createSubsample) throws ValidationException,
-			LoginRequiredException {
-		// TODO: once this is debugged, Null Pointer exceptions should indicate
-		// when samples or subsamples are not in the database, and should be
-		// handled accordingly
-		final Query sample = namedQuery("Sample.byUser.byAlias");
-		final Query subsample = namedQuery("Subsample.bySample.byName");
-
-		sample.setParameter("id", currentUser());
-		sample.setParameter("alias", ca.getSubsample().getSample().getAlias());
-
-		subsample.setParameter("id", ((Sample) sample.uniqueResult()).getId());
-		subsample.setParameter("name", ca.getSubsample().getName());
-
-		if (subsample.uniqueResult() != null) {
-			// We've found a subsample in the db, use that
-			ca.setSubsample((Subsample) subsample.uniqueResult());
-		} else if (createSubsample) {
-			// We didn't find a subsample in the db, create one (if we can)
-			try {
-				SubsampleDTO ss = new SubsampleDTO();
-				SampleServiceImpl sampleservice = new SampleServiceImpl();
-				ss.setSample(sampleservice.details(((Sample) sample
-						.uniqueResult()).getId()));
-				ss.setName(ca.getSubsample().getName());
-				ss.setType(ca.getSubsample().getType());
-
-				// FIXME: This is just a copy from subsampleService.save(), I'd
-				// rather have this in subsampleservice but right now the only
-				// function has a commit() which we don't want here
-				doc.validate(ss);
-				if (ss.getSample() == null || ss.getSample().getOwner() == null
-						|| ss.getSample().getOwner().getId() != currentUser())
-					throw new SecurityException(
-							"Cannot modify subsamples you don't own.");
-				Subsample final_subsample = (Subsample) mergeBean(ss);
-				currentSession().persist(final_subsample);
-				ca.setSubsample(final_subsample);
-			} catch (final ValidationException ve) {
-				System.out.println("==> " + ve.toString());
-			} catch (final Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	// FIXME this is a copy of the method in SampleServiceImpl we should
-	// implemement some sort of utility class to take care of this (maybe?)
-	protected void replaceReferences(final ChemicalAnalysis ca) {
-		if (ca.getReference() != null) {
-
-			final Reference r = ca.getReference();
-			final Query references = namedQuery("edu.rpi.metpetdb.server.model.Reference.Reference.byName");
-
-			references.setString("name", r.getName());
-
-			if (references.uniqueResult() != null) {
-				ca.setReference((Reference) references.uniqueResult());
-			}
-		}
-	}
-
-	protected boolean isNewCA(final ChemicalAnalysis ca) {
-		if (ca.getSubsample() == null)
-			return true;
-
-		final Query q = namedQuery("ChemicalAnalysis.bySubsampleId.byspotId");
-		q.setLong("id", ca.getSubsample().getId());
-		q.setString("spotId", ca.getSpotId());
-
-		if (q.uniqueResult() != null)
-			return false;
-		else
-			return true;
+		dao.delete(ca);
+		commit();
 	}
 }

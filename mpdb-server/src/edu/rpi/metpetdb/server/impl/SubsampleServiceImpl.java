@@ -1,74 +1,61 @@
 package edu.rpi.metpetdb.server.impl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import org.hibernate.Query;
-import org.hibernate.exception.ConstraintViolationException;
-
+import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
-import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SubsampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.ResultsFromDAO;
+import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
+import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
+import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 import edu.rpi.metpetdb.server.model.Subsample;
 
 public class SubsampleServiceImpl extends MpDbServlet implements
 		SubsampleService {
 	private static final long serialVersionUID = 1L;
 
-	public List<SubsampleDTO> all(final long sampleId)
-			throws NoSuchObjectException {
-		return cloneBean(byKey("Subsample", "sampleId", sampleId));
-
+	public List<SubsampleDTO> all(final long sampleId) {
+		final List<Subsample> l = (new SubsampleDAO(this.currentSession())
+				.getAllBySampleID(sampleId));
+		return cloneBean(l);
 	}
 
 	public Results<SubsampleDTO> all(final PaginationParameters p,
 			final long sampleId) {
-		final String name = "Subsample.all";
-		final Query sizeQuery = sizeQuery(name, sampleId);
-		final List<Subsample> l = pageList(name, p, sampleId);
-		final Number sz = (Number) sizeQuery.uniqueResult();
-		if (sz.intValue() > 0) {
-			final Iterator<Subsample> itr = l.iterator();
-			while (itr.hasNext()) {
-				final Subsample s = (Subsample) itr.next();
-				s.setImageCount(((Number) sizeQuery("Image.bySubsampleId",
-						s.getId()).uniqueResult()).intValue());
-				s.setAnalysisCount(((Number) sizeQuery(
-						"ChemicalAnalysis.bySubsampleId", s.getId())
-						.uniqueResult()).intValue());
-			}
-			final List<SubsampleDTO> subsamples = cloneBean(l);
-			return new Results<SubsampleDTO>(sz.intValue(), subsamples);
-		} else
-			return new Results<SubsampleDTO>(sz.intValue(),
-					new ArrayList<SubsampleDTO>());
+		final ResultsFromDAO<Subsample> l = (new SubsampleDAO(this
+				.currentSession()).getAllBySampleID(p, sampleId));
+		final List<SubsampleDTO> lDTO = cloneBean(l.getList());
+		return new Results<SubsampleDTO>(l.getCount(), lDTO);
 	}
 
 	public Results<SubsampleDTO> allWithImages(final PaginationParameters p,
 			final long sampleId) {
-		final String name = "Subsample.allWithImages";
-		return toResults(sizeQuery(name, sampleId),
-				pageQuery(name, p, sampleId));
+		final ResultsFromDAO<Subsample> l = (new SubsampleDAO(this
+				.currentSession()).getAllWithImagesBySampleID(p, sampleId));
+		final List<SubsampleDTO> lDTO = cloneBean(l.getList());
+		return new Results<SubsampleDTO>(l.getCount(), lDTO);
 	}
 
-	public SubsampleDTO details(final long id) throws NoSuchObjectException {
-		final Subsample s = (Subsample) byId("Subsample", id);
-		s.setImageCount(((Number) sizeQuery("Image.bySubsampleId", s.getId())
-				.uniqueResult()).intValue());
-		s.setAnalysisCount(((Number) sizeQuery(
-				"ChemicalAnalysis.bySubsampleId", s.getId()).uniqueResult())
-				.intValue());
+	public SubsampleDTO details(final long id) throws DAOException {
+		Subsample s = new Subsample();
+		s.setId(id);
+
+		s = (new SubsampleDAO(this.currentSession())).fill(s);
+		s.setImageCount((new ImageDAO(this.currentSession()))
+				.countBySubsampleId(id));
+		s.setAnalysisCount((new ChemicalAnalysisDAO(this.currentSession()))
+				.countBySubsampleId(id));
+
 		return (SubsampleDTO) clone(s);
 	}
-
-	public SubsampleDTO save(SubsampleDTO subsampleDTO)
-			throws ValidationException, LoginRequiredException {
+	public SubsampleDTO save(SubsampleDTO subsampleDTO) throws DAOException,
+			ValidationException, LoginRequiredException {
 		doc.validate(subsampleDTO);
 		if (subsampleDTO.getSample() == null
 				|| subsampleDTO.getSample().getOwner() == null
@@ -76,29 +63,24 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 			throw new SecurityException(
 					"Cannot modify subsamples you don't own.");
 		Subsample subsample = mergeBean(subsampleDTO);
-		try {
-			if (subsampleDTO.mIsNew())
-				insert(subsample);
-			else
-				subsample = update(merge(subsample));
-			commit();
-			return cloneBean(subsample);
-		} catch (ConstraintViolationException cve) {
-			throw cve;
-		}
+
+		subsample = (new SubsampleDAO(this.currentSession())).save(subsample);
+
+		commit();
+		return cloneBean(subsample);
 	}
 
-	public void delete(long id) throws NoSuchObjectException,
-			LoginRequiredException {
-		try {
-			final Subsample s = byId("Subsample", id);
-			if (s.getSample().getOwner().getId() != currentUser())
-				throw new SecurityException(
-						"Cannot modify subsamples you don't own.");
-			delete(s);
-			commit();
-		} catch (ConstraintViolationException cve) {
+	public void delete(long id) throws DAOException, LoginRequiredException {
+		final SubsampleDAO dao = new SubsampleDAO(this.currentSession());
+		Subsample s = new Subsample();
+		s.setId(id);
+		s = dao.fill(s);
 
-		}
+		if (s.getSample().getOwner().getId() != currentUser())
+			throw new SecurityException(
+					"Cannot modify subsamples you don't own.");
+
+		dao.delete(s);
+		commit();
 	}
 }

@@ -6,17 +6,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
-import edu.rpi.metpetdb.client.error.NoSuchObjectException;
-import edu.rpi.metpetdb.client.error.SampleAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.MineralDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.service.BulkUploadService;
 import edu.rpi.metpetdb.server.bulk.upload.sample.SampleParser;
+import edu.rpi.metpetdb.server.dao.impl.MineralDAO;
+import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
+import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 import edu.rpi.metpetdb.server.model.Sample;
+import edu.rpi.metpetdb.server.model.User;
 
 public class BulkUploadServiceImpl extends SampleServiceImpl implements
 		BulkUploadService {
@@ -27,10 +30,8 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 			throws InvalidFormatException {
 		try {
 			// Locate and set Valid Potential Minerals for the parser
-			List<MineralDTO> minerals = cloneBean(currentSession()
-					.getNamedQuery("Mineral.all").list());
-			minerals.addAll(cloneBean(currentSession().getNamedQuery(
-					"Mineral.children").list()));
+			List<MineralDTO> minerals = cloneBean(new MineralDAO(this
+					.currentSession()).getAll());
 			SampleParser.setMinerals(minerals);
 
 			final SampleParser sp = new SampleParser(new FileInputStream(
@@ -46,18 +47,22 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 			throw new IllegalStateException(ioe.getMessage());
 		}
 	}
-
 	public Map<String, Integer[]> getAdditions(final String fileOnServer)
 			throws InvalidFormatException, LoginRequiredException {
 		try {
 			final Map<String, Integer[]> newAdditions = new TreeMap<String, Integer[]>();
-			final UserDTO u = (UserDTO) cloneBean(byId("User", currentUser()));
+			User user = new User();
+			user.setId(currentUser());
+			try {
+				user = (new UserDAO(this.currentSession())).fill(user);
+			} catch (DAOException daoe) {
+				throw new LoginRequiredException();
+			}
+			final UserDTO u = cloneBean(user);
 
 			// Locate and set Valid Potential Minerals for the parser
-			List<MineralDTO> minerals = cloneBean(currentSession()
-					.getNamedQuery("Mineral.all").list());
-			minerals.addAll(cloneBean(currentSession().getNamedQuery(
-					"Mineral.children").list()));
+			List<MineralDTO> minerals = cloneBean(new MineralDAO(this
+					.currentSession()).getAll());
 			SampleParser.setMinerals(minerals);
 
 			final SampleParser sp = new SampleParser(new FileInputStream(
@@ -81,7 +86,7 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 				try {
 					doc.validate(s);
 					Sample smpl = mergeBean(s);
-					if (isNewSample(smpl))
+					if ((new SampleDAO(this.currentSession()).isNew(smpl)))
 						sample_breakdown[1]++;
 					else
 						sample_breakdown[2]++;
@@ -92,15 +97,13 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 			newAdditions.put("Sample", sample_breakdown);
 
 			return newAdditions;
-		} catch (final NoSuchObjectException nsoe) {
-			throw new LoginRequiredException();
 		} catch (final IOException ioe) {
 			throw new IllegalStateException(ioe.getMessage());
 		}
 	}
 	public Map<Integer, ValidationException> saveSamplesFromSpreadsheet(
 			final String fileOnServer) throws InvalidFormatException,
-			LoginRequiredException, SampleAlreadyExistsException {
+			LoginRequiredException, DAOException {
 		final Map<Integer, ValidationException> errors = new TreeMap<Integer, ValidationException>();
 		try {
 			currentSession()
@@ -110,10 +113,8 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 							"hash", fileOnServer).executeUpdate();
 
 			// Locate and set Valid Potential Minerals for the parser
-			List<MineralDTO> minerals = cloneBean(currentSession()
-					.getNamedQuery("Mineral.all").list());
-			minerals.addAll(cloneBean(currentSession().getNamedQuery(
-					"Mineral.children").list()));
+			List<MineralDTO> minerals = cloneBean(new MineralDAO(this
+					.currentSession()).getAll());
 			SampleParser.setMinerals(minerals);
 
 			final SampleParser sp = new SampleParser(new FileInputStream(
@@ -126,7 +127,14 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 
 			sp.parse();
 			errors.putAll(sp.getErrors());
-			final UserDTO u = (UserDTO) cloneBean(byId("User", currentUser()));
+			User user = new User();
+			user.setId(currentUser());
+			try {
+				user = (new UserDAO(this.currentSession())).fill(user);
+			} catch (DAOException daoe) {
+				throw new LoginRequiredException();
+			}
+			final UserDTO u = (UserDTO) cloneBean(user);
 			final List<SampleDTO> samples = sp.getSamples();
 			Integer i = 2;
 			for (SampleDTO s : samples) {
@@ -147,14 +155,13 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 					throw new IllegalStateException(
 							"Objects passed and subsequently failed validation.");
 				}
-		} catch (final NoSuchObjectException nsoe) {
-			throw new LoginRequiredException();
 		} catch (final IOException ioe) {
 			throw new IllegalStateException(ioe.getMessage());
 		}
 
 		return errors;
 	}
+
 	// TODO: implement this. It might need some real Hibernate objects.
 	public Boolean deleteOldFiles() {
 		List oldfiles = currentSession()

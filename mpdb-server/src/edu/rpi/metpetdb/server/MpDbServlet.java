@@ -3,10 +3,8 @@ package edu.rpi.metpetdb.server;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -19,22 +17,25 @@ import net.sf.hibernate4gwt.gwt.HibernateRemoteService;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.exception.ConstraintViolationException;
 
 import com.google.gwt.user.client.rpc.SerializationException;
 
+import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
-import edu.rpi.metpetdb.client.error.NoSuchObjectException;
+import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
+import edu.rpi.metpetdb.client.error.dao.ProjectAlreadyExistsException;
+import edu.rpi.metpetdb.client.error.dao.SampleAlreadyExistsException;
+import edu.rpi.metpetdb.client.error.dao.UserAlreadyExistsException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
-import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.server.impl.BulkUploadChemicalAnalysesServiceImpl;
 import edu.rpi.metpetdb.server.impl.BulkUploadImagesServiceImpl;
 import edu.rpi.metpetdb.server.impl.BulkUploadServiceImpl;
 import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
-import edu.rpi.metpetdb.server.model.MObject;
 import edu.rpi.metpetdb.server.model.User;
 import edu.rpi.metpetdb.server.security.SessionEncrypter;
 
@@ -221,80 +222,6 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	}
 
 	/**
-	 * Force a (possibly lazy) set to be loaded into memory.
-	 * 
-	 * @param s
-	 *            the set in question to be loaded from the database. Must not
-	 *            be null.
-	 * @return either <code>s</code> or a copy of <code>s</code> if
-	 *         <code>s</code> was not a normal java.util.HashSet. This copying
-	 *         process is necessary to support the GWT serializer avoiding the
-	 *         Hibernate specific PersistentSet type.
-	 */
-	@Deprecated
-	protected static <T extends MObject> Set<T> load(final Set<T> s) {
-		if (s == null)
-			return s;
-		return s instanceof HashSet ? s : new HashSet<T>(s);
-	}
-
-	/**
-	 * Insert the new object into the database on the next commit.
-	 * 
-	 * @param u
-	 *            object to be inserted. This object must not already exist in
-	 *            the database.
-	 */
-	protected <T extends MObject> void insert(final T u) {
-		currentSession().persist(u);
-	}
-
-	/**
-	 * Deletes the object from the database on the next commit
-	 * 
-	 * @param u
-	 *            object to be deleted, must already exist in the database
-	 */
-
-	protected <T extends MObject> void delete(final T u) {
-		currentSession().delete(u);
-	}
-
-	/**
-	 * Reload the object from the database and merge client-side changes.
-	 * 
-	 * @param u
-	 *            the object to be reloaded from the database. This instance
-	 *            should contain the primary key information of an existing
-	 *            object, and updated attributes for any values the client
-	 *            modified. Unmodified attribues must match the current database
-	 *            values to be considered unmodified.
-	 * @return instance of the database record(s) that correspond to
-	 *         <code>u</code>, but the returned object instance is actually a
-	 *         member of the Hibernate session cache and therefore can be passed
-	 *         off to {@link #update(Object)} to actually be modified.
-	 */
-	@SuppressWarnings( {
-		"unchecked"
-	})
-	protected <T extends MObject> T merge(final T u) {
-		return (T) currentSession().merge(u);
-	}
-
-	/**
-	 * Update the object in the database on the next commit.
-	 * 
-	 * @param u
-	 *            object to be updated. This object must already exist in the
-	 *            database and must also already exist in the session.
-	 * @return always the reference <code>u</code>.
-	 */
-	protected <T extends MObject> T update(final T u) {
-		currentSession().update(u);
-		return u;
-	}
-
-	/**
 	 * Commit all changes made to this Hibernate session.
 	 * <p>
 	 * Must be invoked by any RPC method implementation prior to the method
@@ -302,8 +229,49 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 * and throw an exception back to the client.
 	 * </p>
 	 */
-	protected void commit() {
-		currentSession().getTransaction().commit();
+	protected void commit() throws DAOException {
+		try {
+			currentSession().getTransaction().commit();
+		} catch (final HibernateException he) {
+			handleHibernateException(he);
+		}
+	}
+
+	protected void handleHibernateException(final HibernateException he)
+			throws DAOException {
+
+		// Sometimes we can map specific sql exceptions to specific dao
+		// exceptions, do that if we can
+		if (he instanceof ConstraintViolationException) {
+			final ConstraintViolationException cve = (ConstraintViolationException) he;
+			final String constraintName = cve.getConstraintName();
+
+			if ("projects_nk_alias".equals(constraintName))
+				throw new ProjectAlreadyExistsException();
+			else if ("samples_nk_alias".equals(constraintName))
+				throw new SampleAlreadyExistsException();
+			else if ("users_nk_username".equals(constraintName))
+				throw new UserAlreadyExistsException();
+		}
+
+		// If we have no idea what the exception means, should it be passed to
+		// the end user? I say so, that way they have something meaningful to
+		// bring to the dev team (instead of just 'it didn't work sometime
+		// yesterday afternoon')
+		throw new GenericDAOException(formatExceptionMessage(he));
+	}
+
+	public static String formatExceptionMessage(final HibernateException he) {
+		String s = "";
+		s = s + he.getLocalizedMessage() + "\n";
+		if (he.getCause() != null) {
+			s = s + "Cause: \n" + he.getCause().getLocalizedMessage() + "\n";
+			if (he.getCause().getCause() != null) {
+				s = s + "Cause: \n"
+						+ he.getCause().getCause().getLocalizedMessage() + "\n";
+			}
+		}
+		return s;
 	}
 
 	/**
@@ -323,168 +291,6 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 */
 	protected void forgetChanges() {
 		currentSession().clear();
-	}
-
-	/**
-	 * Obtain a named query.
-	 * 
-	 * @param name
-	 *            the name of the query to obtain.
-	 * @return the previously defined query of the given name.
-	 */
-	protected Query namedQuery(final String name) {
-		return currentSession().getNamedQuery(name);
-	}
-
-	/**
-	 * @see{pageQuery}
-	 * @param name
-	 * @param p
-	 * @return
-	 */
-	protected Query pageQuery(final String name, final PaginationParameters p) {
-		return pageQuery(name, p, -1);
-	}
-
-	/**
-	 * Obtain a query to produce one page worth of rows.
-	 * 
-	 * @param name
-	 *            name of the query that will produce the rows. The query must
-	 *            be a named HQL query of <code>name/p.getParameter</code>.
-	 *            The query must end in an order by clause.
-	 * @param p
-	 *            pagination parameters from the client. These will be used to
-	 *            configure the query's result window before it gets returned,
-	 *            allowing the database to more efficiently select the proper
-	 *            rows.
-	 * @param id
-	 *            optional id for the query
-	 * @return the single page object query.
-	 */
-	protected Query pageQuery(final String name, final PaginationParameters p,
-			final long id) {
-		Query q;
-		q = currentSession().getNamedQuery(name + "/" + p.getParameter());
-		if (!p.isAscending())
-			q = currentSession().createQuery(q.getQueryString() + " desc");
-		if (id != -1)
-			q.setLong("id", id);
-
-		q.setFirstResult(p.getFirstResult());
-		q.setMaxResults(p.getMaxResults());
-		return q;
-	}
-
-	@SuppressWarnings( {
-		"unchecked"
-	})
-	protected <T extends MObject> List<T> pageList(final String name,
-			final PaginationParameters p, final long id) {
-		final Query q = pageQuery(name, p, id);
-		return (List<T>) q.list();
-	}
-
-	/**
-	 * @see{sizeQuery}
-	 * @param name
-	 * @return
-	 */
-	protected Query sizeQuery(final String name) {
-		return sizeQuery(name, -1);
-	}
-
-	/**
-	 * Obtain a query to compute the total size of a result set.
-	 * 
-	 * @param name
-	 *            name of the list query. The list query must be a named HQL
-	 *            query of <code>name,size</code>.
-	 * @param id
-	 *            optional id for the query
-	 * @return the result set counting query. Never null.
-	 */
-	protected Query sizeQuery(final String name, final long id) {
-		Query q = currentSession().getNamedQuery(name + ",size");
-		if (id != -1)
-			q.setLong("id", id);
-		return q;
-	}
-
-	/**
-	 * Locate an object by its unique identifier.
-	 * 
-	 * @param name
-	 *            simple type name of the object. The object must have defined a
-	 *            named HQL query of <code>name.byId</code>.
-	 * @param id
-	 *            the unique identifier of the object.
-	 * @return the single instance, after loading it from the database. Never
-	 *         null.
-	 * @throws NoSuchObjectException
-	 *             the object specified was not returned. It does not exist in
-	 *             the database. This error probably should be thrown back to
-	 *             the UI layer, so it can display a proper error message.
-	 */
-	@SuppressWarnings( {
-		"unchecked"
-	})
-	protected <T extends MObject> T byId(final String name, final long id)
-			throws NoSuchObjectException {
-		final Query q = currentSession().getNamedQuery(name + ".byId");
-		q.setLong("id", id);
-		final Object r = q.uniqueResult();
-		if (r == null)
-			throw new NoSuchObjectException(name, String.valueOf(id));
-		return (T) r;
-	}
-
-	/**
-	 * Locate an object by its unique identifier.
-	 * 
-	 * @param name
-	 *            simple type name of the object. The object must have defined a
-	 *            named HQL query of <code>name.byAttribute</code>.
-	 * @param attribute
-	 *            name of the attribute to query.
-	 * @param id
-	 *            the unique identifier of the object.
-	 * @return the single instance, after loading it from the database. Never
-	 *         null.
-	 * @throws NoSuchObjectException
-	 *             the object specified was not returned. It does not exist in
-	 *             the database. This error probably should be thrown back to
-	 *             the UI layer, so it can display a proper error message.
-	 */
-	@SuppressWarnings( {
-		"unchecked"
-	})
-	protected <T extends MObject> List<T> byKey(final String name,
-			final String attribute, final long id) throws NoSuchObjectException {
-		final Query q = currentSession().getNamedQuery(
-				name + ".by" + attribute.substring(0, 1).toUpperCase()
-						+ attribute.substring(1));
-		q.setLong(attribute, id);
-		final Object r = q.list();
-		if (r == null)
-			throw new NoSuchObjectException(name, String.valueOf(id));
-		return (ArrayList<T>) r;
-	}
-
-	@SuppressWarnings( {
-		"unchecked"
-	})
-	protected <T extends MObject> T byKey(final String name,
-			final String attribute, final String id)
-			throws NoSuchObjectException {
-		final Query q = currentSession().getNamedQuery(
-				name + ".by" + attribute.substring(0, 1).toUpperCase()
-						+ attribute.substring(1));
-		q.setString(attribute, id);
-		final Object r = q.uniqueResult();
-		if (r == null)
-			throw new NoSuchObjectException(name, String.valueOf(id));
-		return (T) r;
 	}
 
 	/**

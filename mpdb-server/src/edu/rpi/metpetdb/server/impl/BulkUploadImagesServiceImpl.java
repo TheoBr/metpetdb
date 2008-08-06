@@ -16,12 +16,14 @@ import java.util.zip.ZipInputStream;
 
 import javax.media.jai.RenderedOp;
 
+import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.InvalidImageException;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
+import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.service.BulkUploadImagesService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.bulk.upload.sample.ImageParser;
@@ -111,8 +113,6 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 				images.add(iog.getImage());
 
 			for (ImageDTO img : images) {
-				String f = spreadsheetPrefix + img.getFilename();
-
 				// Confirm the filename is in the zip
 				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) != null) {
 					img_breakdown[1]++;
@@ -133,7 +133,7 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 	}
 	public Map<Integer, ValidationException> saveImagesFromZip(
 			final String fileOnServer) throws InvalidFormatException,
-			LoginRequiredException {
+			LoginRequiredException, DAOException {
 		final Map<Integer, ValidationException> errors = new HashMap<Integer, ValidationException>();
 
 		try {
@@ -205,9 +205,13 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 						saveIncompleteImageOnGrid(iog);
 					}
 
+					UserDTO u = new UserDTO();
+					u.setId(currentUser());
+
 					for (ImageDTO img : images) {
 						ImageDTO img_s = uploadImages(zp, img,
 								spreadsheetPrefix);
+						img_s.getSubsample().getSample().setOwner(u);
 						imagesToSave.add(img_s);
 					}
 

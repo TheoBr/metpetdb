@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
+import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
-import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
@@ -18,12 +18,12 @@ public interface SubsampleService extends RemoteService {
 	Results<SubsampleDTO> allWithImages(PaginationParameters parameters,
 			final long sampleId);
 
-	SubsampleDTO details(long id) throws NoSuchObjectException;
+	SubsampleDTO details(long id) throws DAOException;
 
-	SubsampleDTO save(final SubsampleDTO s) throws ValidationException,
-			LoginRequiredException;
+	SubsampleDTO save(final SubsampleDTO s) throws DAOException,
+			ValidationException, LoginRequiredException;
 
-	List<SubsampleDTO> all(final long sampleId) throws NoSuchObjectException;
+	List<SubsampleDTO> all(final long sampleId);
 
-	void delete(long id) throws NoSuchObjectException, LoginRequiredException;
+	void delete(long id) throws DAOException, LoginRequiredException;
 }

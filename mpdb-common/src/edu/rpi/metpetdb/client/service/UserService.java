@@ -2,8 +2,8 @@ package edu.rpi.metpetdb.client.service;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
+import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
-import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.LoginFailureException;
@@ -29,8 +29,8 @@ public interface UserService extends RemoteService {
 	 *             the username or password is invalid in some way. For security
 	 *             reasons the server does not actually respond with why.
 	 */
-	UserDTO startSession(StartSessionRequestDTO ssr) throws LoginFailureException,
-			ValidationException;
+	UserDTO startSession(StartSessionRequestDTO ssr)
+			throws LoginFailureException, ValidationException;
 
 	/**
 	 * Start a new (or restart a possibly existing) browser session.
@@ -44,8 +44,7 @@ public interface UserService extends RemoteService {
 	 */
 	ResumeSessionResponse resumeSession();
 
-	UserDTO beginEditMyProfile() throws NoSuchObjectException,
-			LoginRequiredException;
+	UserDTO beginEditMyProfile() throws DAOException, LoginRequiredException;
 
 	/**
 	 * Register a new user account.
@@ -59,10 +58,13 @@ public interface UserService extends RemoteService {
 	 * @throws ValidationException
 	 *             one or more values within the new registration application
 	 *             are not valid.
+	 * @throws DAOException
+	 *             error saving user to the database
 	 * @throws UnableToSendEmailException
 	 *             the welcome message could not be sent to the user's account.
 	 */
-	UserDTO registerNewUser(UserWithPasswordDTO newbie) throws ValidationException,
+	UserDTO registerNewUser(UserWithPasswordDTO newbie)
+			throws ValidationException, DAOException,
 			UnableToSendEmailException;
 
 	/**
@@ -72,8 +74,9 @@ public interface UserService extends RemoteService {
 	 *            combination of the user to modify, that user's old password,
 	 *            the new password, and the new password again (to confirm it
 	 *            was entered correctly).
-	 * @throws NoSuchObjectException
-	 *             user specified does not exist.
+	 * @throws DAOException
+	 *             user specified does not exist, or some other error retrieving
+	 *             the user from the db or saving the modified version to the db
 	 * @throws LoginFailureException
 	 *             user's old password does not match.
 	 * @throws LoginRequiredException
@@ -85,7 +88,7 @@ public interface UserService extends RemoteService {
 	 *             rules, or the verify password does not match the new
 	 *             password.
 	 */
-	void changePassword(UserWithPasswordDTO uwp) throws NoSuchObjectException,
+	void changePassword(UserWithPasswordDTO uwp) throws DAOException,
 			LoginFailureException, LoginRequiredException, ValidationException;
 
 	/**
@@ -94,12 +97,12 @@ public interface UserService extends RemoteService {
 	 * @param username
 	 *            unique username of the user to show the details of.
 	 * @return the user. Never null.
-	 * @throws NoSuchObjectException
+	 * @throws DAOException
 	 *             the user does not exist in the database. The caller has bad
 	 *             information and should reevaluate whatever source supplied it
 	 *             with this bad key.
 	 */
-	UserDTO details(String username) throws NoSuchObjectException;
+	UserDTO details(String username) throws DAOException;
 
 	/**
 	 * Generates a new password for the user and emails it.
@@ -111,12 +114,12 @@ public interface UserService extends RemoteService {
 	 * 
 	 * @param username
 	 *            username to change the password for.
-	 * @throws NoSuchObjectException
+	 * @throws DAOException
 	 *             user does not exist in the database.
 	 * @throws UnableToSendEmailException
 	 *             email system failed unexpectedly, and the server is unable to
 	 *             send a message to the user.
 	 */
-	void emailPassword(String username) throws NoSuchObjectException,
+	void emailPassword(String username) throws DAOException,
 			UnableToSendEmailException;
 }

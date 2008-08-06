@@ -12,9 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.media.jai.ImageLayout;
 import javax.media.jai.Interpolation;
@@ -23,11 +21,8 @@ import javax.media.jai.RasterFactory;
 import javax.media.jai.RenderedOp;
 import javax.media.jai.operator.CompositeDescriptor;
 
-import org.hibernate.Query;
-import org.hibernate.exception.ConstraintViolationException;
-
+import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
-import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.GridDTO;
 import edu.rpi.metpetdb.client.model.ImageDTO;
@@ -36,152 +31,102 @@ import edu.rpi.metpetdb.client.model.XrayImageDTO;
 import edu.rpi.metpetdb.client.service.ImageService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.MpDbServlet;
-import edu.rpi.metpetdb.server.model.Element;
+import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
+import edu.rpi.metpetdb.server.dao.impl.ImageOnGridDAO;
+import edu.rpi.metpetdb.server.dao.impl.XrayImageDAO;
 import edu.rpi.metpetdb.server.model.Grid;
 import edu.rpi.metpetdb.server.model.Image;
 import edu.rpi.metpetdb.server.model.ImageOnGrid;
-import edu.rpi.metpetdb.server.model.Sample;
-import edu.rpi.metpetdb.server.model.Subsample;
 import edu.rpi.metpetdb.server.model.XrayImage;
 
 public class ImageServiceImpl extends MpDbServlet implements ImageService {
 	private static final long serialVersionUID = 1L;
 	private static String baseFolder = "";
 
-	public ImageDTO details(final long id) throws NoSuchObjectException {
-		final ImageDTO i = cloneBean(byId("Image", id));
-		return i;
+	public ImageDTO details(final long id) throws DAOException {
+		Image i = new Image();
+		i.setId(id);
+		i = (new ImageDAO(this.currentSession())).fill(i);
+
+		return cloneBean(i);
 	}
 
-	public List<ImageDTO> allImages(final long subsampleId)
-			throws NoSuchObjectException {
-		final List<Image> images = byKey("Image", "subsampleId", subsampleId);
+	public List<ImageDTO> allImages(final long subsampleId) {
+		final List<Image> images = (new ImageDAO(this.currentSession()))
+				.getBySubsampleId(subsampleId);
 		return cloneBean(images);
 	}
+
 	public ImageDTO saveImage(ImageDTO image) throws ValidationException,
-			LoginRequiredException {
+			LoginRequiredException, DAOException {
 		// oc.validate(ImageDTO);
 		// if (ImageDTO.getSample().getOwner().getId() != currentUser())
 		// throw new SecurityException("Cannot modify images you don't own.");
 		Image i = mergeBean(image);
-		i = save(i);
+
+		i = (new ImageDAO(this.currentSession())).save(i);
+
 		commit();
 		return cloneBean(i);
 	}
 
 	public XrayImageDTO saveImage(XrayImageDTO xrayimg)
-			throws ValidationException, LoginRequiredException {
+			throws ValidationException, LoginRequiredException, DAOException {
 		XrayImage i = mergeBean(xrayimg);
-		i = save(i);
+		i = (new XrayImageDAO(this.currentSession())).save(i);
 		commit();
 		return cloneBean(i);
 	}
 
-	public XrayImage save(XrayImage img) throws ValidationException,
-			LoginRequiredException {
-		replaceSample(img);
-		replaceElement(img);
-
-		try {
-			if (img.mIsNew())
-				insert(img);
-			else
-				img = update(merge(img));
-		} catch (ConstraintViolationException cve) {
-			throw cve;
-		}
-		return img;
-	}
-
-	public Image save(Image img) throws ValidationException,
-			LoginRequiredException {
-		replaceSample(img);
-
-		try {
-			if (img.mIsNew())
-				insert(img);
-			else
-				img = update(merge(img));
-		} catch (ConstraintViolationException cve) {
-			throw cve;
-		}
-		return img;
-	}
-
 	protected void save(final Collection<ImageDTO> images)
-			throws ValidationException, LoginRequiredException {
+			throws ValidationException, LoginRequiredException, DAOException {
+
 		for (ImageDTO image : images) {
 			if (image instanceof XrayImageDTO) {
 				XrayImage i = mergeBean(image);
-				save(i);
+				(new XrayImageDAO(this.currentSession())).save(i);
 			} else {
 				Image i = mergeBean(image);
-				save(i);
+				(new ImageDAO(this.currentSession())).save(i);
 			}
 		}
 		commit();
 	}
 
 	public ImageOnGridDTO saveImageOnGrid(ImageOnGridDTO iogDTO)
-			throws ValidationException, LoginRequiredException {
+			throws ValidationException, LoginRequiredException, DAOException {
 		ImageOnGrid iog = mergeBean(iogDTO);
-		try {
-			if (iog.mIsNew())
-				insert(iog);
-			else
-				iog = update(merge(iog));
-			commit();
-			return cloneBean(iog);
-		} catch (ConstraintViolationException cve) {
-			throw cve;
-		}
+		iog = (new ImageOnGridDAO(this.currentSession())).save(iog);
+		commit();
+		return cloneBean(iog);
 	}
 
 	protected ImageOnGridDTO saveIncompleteImageOnGrid(ImageOnGridDTO iogDTO)
-			throws ValidationException, LoginRequiredException {
+			throws ValidationException, LoginRequiredException, DAOException {
 		// First save the image
 		Image i = mergeBean(iogDTO.getImage());
-		i = save(i);
+		i = (new ImageDAO(this.currentSession())).save(i);
 		iogDTO.setImage((ImageDTO) cloneBean(i));
 
 		// Set the grid, either find the appropriate old one, or a new one
-		GridDTO g = iogDTO.getImage().getSubsample().getGrid();
-		if (g == null) {
+		GridDTO gDTO = iogDTO.getImage().getSubsample().getGrid();
+		if (gDTO == null) {
 			// Create New Grid
-			g = new GridDTO();
-			g.setSubsample(iogDTO.getImage().getSubsample());
-			g = saveGrid(g);
+			gDTO = new GridDTO();
+			gDTO.setSubsample(iogDTO.getImage().getSubsample());
+
+			if (gDTO.getSubsample().getSample().getOwner().getId() != currentUser())
+				throw new SecurityException(
+						"Cannot modify grids you don't own.");
+			Grid g = mergeBean(gDTO);
+			gDTO = cloneBean(g);
 		}
-		iogDTO.setGrid(g);
+		iogDTO.setGrid(gDTO);
 
 		// Save ImageOnGrid
 		ImageOnGrid iog = mergeBean(iogDTO);
-		try {
-			if (iog.mIsNew())
-				insert(iog);
-			else
-				iog = update(merge(iog));
-
-			return cloneBean(iog);
-		} catch (ConstraintViolationException cve) {
-			throw cve;
-		}
-	}
-
-	// Code duplication isn't fun, but seems to be necessary from time to time
-	protected GridDTO saveGrid(GridDTO grid) throws LoginRequiredException {
-		if (grid.getSubsample().getSample().getOwner().getId() != currentUser())
-			throw new SecurityException("Cannot modify grids you don't own.");
-		Grid g = mergeBean(grid);
-		try {
-			if (g.mIsNew())
-				insert(g);
-			else
-				g = (Grid) update(merge(g));
-			return cloneBean(g);
-		} catch (ConstraintViolationException cve) {
-			throw cve;
-		}
+		iog = (new ImageOnGridDAO(this.currentSession())).save(iog);
+		return cloneBean(iog);
 	}
 
 	public ImageOnGridDTO rotate(ImageOnGridDTO iog, int degrees) {
@@ -218,12 +163,16 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 			iog.setGheight(rotatedImage.getHeight());
 			stream.close();
 			halfStream.close();
+			// TODO: This many exceptions just ignored scares me
+			// perhaps a justifying comment is in order?
 			try {
 				saveImageOnGrid(iog);
 
 			} catch (LoginRequiredException lre) {
 
 			} catch (ValidationException ve) {
+
+			} catch (DAOException daoe) {
 
 			}
 		} catch (FileNotFoundException fnfe) {
@@ -301,50 +250,11 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 				.delete();
 	}
 
-	@Deprecated
-	public static final void resetImage(final ImageDTO i) {
-
-	}
-
-	@Deprecated
-	public static final void resetImage(final Set<ImageDTO> s) {
-		final Iterator<ImageDTO> itr = s.iterator();
-		while (itr.hasNext()) {
-			resetImage(itr.next());
-		}
-	}
-
 	public static String getBaseFolder() {
 		return baseFolder;
 	}
 
 	public static void setBaseFolder(String baseFolder) {
 		ImageServiceImpl.baseFolder = baseFolder;
-	}
-
-	private void replaceSample(final Image img) throws ValidationException,
-			LoginRequiredException {
-		// TODO: once this is debugged, Null Pointer exceptions should indicate
-		// when samples or subsamples are not in the database, and should be
-		// handled accordingly
-		final Query sample = namedQuery("Sample.byUser.byAlias");
-		final Query subsample = namedQuery("Subsample.bySample.byName");
-
-		sample.setParameter("id", currentUser());
-		sample.setParameter("alias", img.getSubsample().getSample().getAlias());
-
-		subsample.setParameter("id", ((Sample) sample.uniqueResult()).getId());
-		subsample.setParameter("name", img.getSubsample().getName());
-
-		img.setSubsample((Subsample) subsample.uniqueResult());
-	}
-
-	private void replaceElement(final XrayImage img)
-			throws ValidationException, LoginRequiredException {
-		final Query element = namedQuery("Element.byName");
-
-		element.setParameter("name", img.getElement().getName());
-
-		img.setElement((Element) element.uniqueResult());
 	}
 }

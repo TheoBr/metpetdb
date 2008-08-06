@@ -6,17 +6,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.hibernate.Query;
-
+import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
+import edu.rpi.metpetdb.client.model.ElementDTO;
+import edu.rpi.metpetdb.client.model.MineralDTO;
+import edu.rpi.metpetdb.client.model.OxideDTO;
 import edu.rpi.metpetdb.client.service.BulkUploadChemicalAnalysesService;
 import edu.rpi.metpetdb.server.bulk.upload.sample.AnalysisParser;
+import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
+import edu.rpi.metpetdb.server.dao.impl.ElementDAO;
+import edu.rpi.metpetdb.server.dao.impl.MineralDAO;
+import edu.rpi.metpetdb.server.dao.impl.OxideDAO;
 import edu.rpi.metpetdb.server.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.server.model.Mineral;
 import edu.rpi.metpetdb.server.model.Subsample;
+import edu.rpi.metpetdb.server.model.User;
 
 public class BulkUploadChemicalAnalysesServiceImpl extends
 		ChemicalAnalysisServiceImpl implements
@@ -28,10 +35,14 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 	public Map<Integer, String[]> getHeaderMapping(final String fileOnServer)
 			throws InvalidFormatException {
 		try {
-			AnalysisParser.setElementsAndOxides(cloneBean(currentSession()
-					.getNamedQuery("Element.all").list()),
-					cloneBean(currentSession().getNamedQuery("Oxide.all")
-							.list()));
+			if (AnalysisParser.areElementsAndOxidesSet()) {
+				List<ElementDTO> elements = cloneBean((new ElementDAO(this
+						.currentSession())).getAll());
+				List<OxideDTO> oxides = cloneBean((new OxideDAO(this
+						.currentSession())).getAll());
+				AnalysisParser.setElementsAndOxides(elements, oxides);
+			}
+
 			final AnalysisParser ap = new AnalysisParser(new FileInputStream(
 					baseFolder + "/" + fileOnServer));
 			try {
@@ -58,11 +69,15 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 							"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
 					.setParameter("user_id", currentUser()).setParameter(
 							"hash", fileOnServer).executeUpdate();
-			// if (!AnalysisParser.areElementsAndOxidesSet())
-			AnalysisParser.setElementsAndOxides(cloneBean(currentSession()
-					.getNamedQuery("Element.all").list()),
-					cloneBean(currentSession().getNamedQuery("Oxide.all")
-							.list()));
+
+			if (AnalysisParser.areElementsAndOxidesSet()) {
+				List<ElementDTO> elements = cloneBean((new ElementDAO(this
+						.currentSession())).getAll());
+				List<OxideDTO> oxides = cloneBean((new OxideDAO(this
+						.currentSession())).getAll());
+				AnalysisParser.setElementsAndOxides(elements, oxides);
+			}
+
 			final AnalysisParser ap = new AnalysisParser(new FileInputStream(
 					baseFolder + "/" + fileOnServer));
 			try {
@@ -87,36 +102,50 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 			for (ChemicalAnalysisDTO s : analyses) {
 
 				// Minerals need id's so equality can be checked
-				final Query minerals = namedQuery("Mineral.byName");
-				minerals.setString("name", s.getMineral().getName());
-				if (minerals.uniqueResult() != null) {
-					Mineral m = (Mineral) minerals.uniqueResult();
-					s.getMineral().setParentId(m.getParentId());
-					s.getMineral().setId(m.getId());
+				Mineral m = cloneBean(s.getMineral());
+				try {
+					if (m != null)
+						s.setMineral((MineralDTO) cloneBean((new MineralDAO(
+								this.currentSession())).fill(m)));
+				} catch (DAOException daoe) {
+					// If something is wrong with getting the mineral from db,
+					// force a validation error
+					s.setMineral(new MineralDTO());
 				}
+
+				User u = new User();
+				u.setId(currentUser());
 
 				try {
 					doc.validate(s);
 					ChemicalAnalysis ca = mergeBean(s);
-					replaceSample(ca);
+					ca.getSubsample().getSample().setOwner(u);
+					ca = (new ChemicalAnalysisDAO(this.currentSession()))
+							.populate(ca);
 
-					if (isNewCA(ca))
+					if ((new ChemicalAnalysisDAO(this.currentSession()))
+							.isNew(ca))
 						ca_breakdown[1]++;
 					else
 						ca_breakdown[2]++;
 				} catch (ValidationException e) {
 					ca_breakdown[0]++;
+				} catch (DAOException daoe) {
+					ca_breakdown[0]++;
 				}
 
 				try {
 					ChemicalAnalysis ca = mergeBean(s);
-					replaceSample(ca);
+					ca.getSubsample().getSample().setOwner(u);
+					ca = (new ChemicalAnalysisDAO(this.currentSession()))
+							.populate(ca);
 					Subsample ss = mergeBean(ca.getSubsample());
 					if (ss == null || ss.mIsNew())
 						ss_breakdown[1]++;
 					else
 						ss_breakdown[2]++;
-				} catch (ValidationException e) {
+				} catch (DAOException daoe) {
+					ss_breakdown[0]++;
 				}
 				++i;
 			}
@@ -131,7 +160,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 	}
 	public Map<Integer, ValidationException> saveAnalysesFromSpreadsheet(
 			final String fileOnServer) throws InvalidFormatException,
-			LoginRequiredException, ValidationException {
+			LoginRequiredException, ValidationException, DAOException {
 		final Map<Integer, ValidationException> errors = new TreeMap<Integer, ValidationException>();
 		try {
 			currentSession()
@@ -139,11 +168,14 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 							"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
 					.setParameter("user_id", currentUser()).setParameter(
 							"hash", fileOnServer).executeUpdate();
-			// if (!AnalysisParser.areElementsAndOxidesSet())
-			AnalysisParser.setElementsAndOxides(cloneBean(currentSession()
-					.getNamedQuery("Element.all").list()),
-					cloneBean(currentSession().getNamedQuery("Oxide.all")
-							.list()));
+			if (AnalysisParser.areElementsAndOxidesSet()) {
+				List<ElementDTO> elements = cloneBean((new ElementDAO(this
+						.currentSession())).getAll());
+				List<OxideDTO> oxides = cloneBean((new OxideDAO(this
+						.currentSession())).getAll());
+				AnalysisParser.setElementsAndOxides(elements, oxides);
+			}
+
 			final AnalysisParser ap = new AnalysisParser(new FileInputStream(
 					baseFolder + "/" + fileOnServer));
 			try {
@@ -161,13 +193,10 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 			for (ChemicalAnalysisDTO s : analyses) {
 
 				// Minerals need id's so equality can be checked
-				final Query minerals = namedQuery("Mineral.byName");
-				minerals.setString("name", s.getMineral().getName());
-				if (minerals.uniqueResult() != null) {
-					Mineral m = (Mineral) minerals.uniqueResult();
-					s.getMineral().setParentId(m.getParentId());
-					s.getMineral().setId(m.getId());
-				}
+				Mineral m = cloneBean(s.getMineral());
+				if (m != null)
+					s.setMineral((MineralDTO) cloneBean((new MineralDAO(this
+							.currentSession())).fill(m)));
 
 				try {
 					doc.validate(s);
@@ -191,7 +220,6 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 
 		return errors;
 	}
-
 	public static void setBaseFolder(String baseFolder) {
 		BulkUploadChemicalAnalysesServiceImpl.baseFolder = baseFolder;
 	}
