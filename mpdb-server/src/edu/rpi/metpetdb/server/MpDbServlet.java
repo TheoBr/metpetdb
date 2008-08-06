@@ -255,7 +255,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 				throw new SampleAlreadyExistsException();
 			else if ("users_nk_username".equals(constraintName))
 				throw new UserAlreadyExistsException();
-			else if ("subsamples_nk_alias".equals(constraintName))
+			else if ("subsamples_nk_name".equals(constraintName))
 				throw new SubsampleAlreadyExistsException();
 			else if ("chemical_analyses_nk_spot_id".equals(constraintName))
 				throw new ChemicalAnalysisAlreadyExistsException();
