@@ -100,6 +100,7 @@ CREATE TABLE subsamples
   "type" VARCHAR(100) NOT NULL,
   --CONSTRAINT subsamples_fk_user FOREIGN KEY (user_id)
   --  REFERENCES users (user_id),
+  CONSTRAINT subsamples_nk_name UNIQUE(sample_id, name),
   CONSTRAINT subsamples_sk PRIMARY KEY (subsample_id),
   CONSTRAINT subsamples_fk_sample FOREIGN KEY (sample_id)
     REFERENCES samples (sample_id) ON DELETE CASCADE

@@ -26,6 +26,7 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.dao.ProjectAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.SampleAlreadyExistsException;
+import edu.rpi.metpetdb.client.error.dao.SubsampleAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.UserAlreadyExistsException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
@@ -252,6 +253,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 				throw new SampleAlreadyExistsException();
 			else if ("users_nk_username".equals(constraintName))
 				throw new UserAlreadyExistsException();
+			else if ("subsamples_nk_alias".equals(constraintName))
+				throw new SubsampleAlreadyExistsException();
 		}
 
 		// If we have no idea what the exception means, should it be passed to
