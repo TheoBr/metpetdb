@@ -1,7 +1,7 @@
 package edu.rpi.metpetdb.client.model.validation;
 
-import edu.rpi.metpetdb.client.error.InvalidCharacterException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.validation.InvalidCharacterException;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 
 public class RestrictedCharacterStringConstraint extends StringConstraint {

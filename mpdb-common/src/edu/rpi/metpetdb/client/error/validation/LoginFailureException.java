@@ -1,7 +1,8 @@
-package edu.rpi.metpetdb.client.error;
+package edu.rpi.metpetdb.client.error.validation;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
+import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 

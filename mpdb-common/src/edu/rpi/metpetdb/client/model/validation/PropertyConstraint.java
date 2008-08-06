@@ -2,8 +2,8 @@ package edu.rpi.metpetdb.client.model.validation;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-import edu.rpi.metpetdb.client.error.PropertyRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.properties.Property;
 

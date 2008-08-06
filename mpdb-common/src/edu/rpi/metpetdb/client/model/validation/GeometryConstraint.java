@@ -3,8 +3,8 @@ package edu.rpi.metpetdb.client.model.validation;
 import org.postgis.Geometry;
 import org.postgis.Point;
 
-import edu.rpi.metpetdb.client.error.InvalidGeometryException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.validation.InvalidGeometryException;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 
 /**

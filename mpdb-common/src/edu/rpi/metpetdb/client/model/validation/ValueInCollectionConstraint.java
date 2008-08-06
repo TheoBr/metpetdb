@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.error.ValueNotInCollectionException;
+import edu.rpi.metpetdb.client.error.validation.ValueNotInCollectionException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.interfaces.HasChildren;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;

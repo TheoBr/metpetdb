@@ -1,7 +1,8 @@
-package edu.rpi.metpetdb.client.error;
+package edu.rpi.metpetdb.client.error.validation;
 
 import java.util.ArrayList;
 
+import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 
 public class InvalidRockTypeException extends ValidationException {

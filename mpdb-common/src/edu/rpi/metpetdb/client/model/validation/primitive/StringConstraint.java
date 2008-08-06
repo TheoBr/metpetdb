@@ -1,8 +1,8 @@
 package edu.rpi.metpetdb.client.model.validation.primitive;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.error.ValueTooLongException;
-import edu.rpi.metpetdb.client.error.ValueTooShortException;
+import edu.rpi.metpetdb.client.error.validation.ValueTooLongException;
+import edu.rpi.metpetdb.client.error.validation.ValueTooShortException;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.MaxLengthConstraint;
 

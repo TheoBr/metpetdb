@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.error.ValueWrongTypeException;
+import edu.rpi.metpetdb.client.error.validation.ValueWrongTypeException;
 
 /**
  * Exact same as a rock type constraint except that it allows many rock types to

@@ -3,8 +3,8 @@ package edu.rpi.metpetdb.client.model.validation;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import edu.rpi.metpetdb.client.error.InvalidRockTypeException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.validation.InvalidRockTypeException;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 
 public class RockTypeConstraint extends PropertyConstraint implements HasValues {

@@ -1,7 +1,7 @@
 package edu.rpi.metpetdb.client.model.validation;
 
-import edu.rpi.metpetdb.client.error.InvalidSESARNumberException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.validation.InvalidSESARNumberException;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 

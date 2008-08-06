@@ -1,7 +1,7 @@
 package edu.rpi.metpetdb.client.model.validation.primitive;
 
-import edu.rpi.metpetdb.client.error.InvalidShortException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.validation.InvalidShortException;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.MaxLengthConstraint;
 

@@ -1,7 +1,7 @@
 package edu.rpi.metpetdb.client.model.validation;
 
-import edu.rpi.metpetdb.client.error.InvalidDateStringException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.validation.InvalidDateStringException;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 
 public class DateStringConstraint extends StringConstraint {

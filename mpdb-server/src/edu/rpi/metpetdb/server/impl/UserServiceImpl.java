@@ -2,12 +2,12 @@ package edu.rpi.metpetdb.server.impl;
 
 import org.hibernate.exception.ConstraintViolationException;
 
-import edu.rpi.metpetdb.client.error.DuplicateValueException;
-import edu.rpi.metpetdb.client.error.LoginFailureException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.validation.DuplicateValueException;
+import edu.rpi.metpetdb.client.error.validation.LoginFailureException;
 import edu.rpi.metpetdb.client.model.StartSessionRequestDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.UserWithPasswordDTO;

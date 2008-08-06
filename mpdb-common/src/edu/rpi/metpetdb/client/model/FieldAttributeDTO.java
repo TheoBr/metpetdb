@@ -1,6 +1,6 @@
 package edu.rpi.metpetdb.client.model;
 
-import edu.rpi.metpetdb.client.error.PropertyRequiredException;
+import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 
 public class FieldAttributeDTO extends AttributeDTO {

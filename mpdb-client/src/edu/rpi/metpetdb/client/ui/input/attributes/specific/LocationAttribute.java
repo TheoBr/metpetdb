@@ -6,11 +6,11 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.error.InvalidGeometryException;
-import edu.rpi.metpetdb.client.error.InvalidLatitudeException;
-import edu.rpi.metpetdb.client.error.InvalidLongitudeException;
-import edu.rpi.metpetdb.client.error.PropertyRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.validation.InvalidGeometryException;
+import edu.rpi.metpetdb.client.error.validation.InvalidLatitudeException;
+import edu.rpi.metpetdb.client.error.validation.InvalidLongitudeException;
+import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.GeometryConstraint;
