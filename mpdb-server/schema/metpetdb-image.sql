@@ -77,8 +77,8 @@ CREATE TABLE xray_image
    element_id INT2 NOT NULL,
    radiation BOOLEAN,
    lines VARCHAR(100),
-   dwelltime INT2 NOT NULL, -- msec
-   current INT2 NOT NULL, -- nano amps
+   dwelltime INT2, -- msec
+   current INT2, -- nano amps
    voltage INT2, --kilo watts
    CONSTRAINT xray_image_sk PRIMARY KEY (image_id),
    CONSTRAINT xray_image_fk_image FOREIGN KEY (image_id)
