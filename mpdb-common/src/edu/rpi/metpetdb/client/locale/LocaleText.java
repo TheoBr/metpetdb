@@ -127,6 +127,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_ValueNotInCollection(String value, String collection);
 
 	/* DAO Exceptions */
+	String errorDesc_ChemicalAnalysisAlreadyExists();
 	String errorDesc_ChemicalAnalysisNotFound();
 	String errorDesc_ElementNotFound();
 	String errorDesc_FunctionNotImplemented();

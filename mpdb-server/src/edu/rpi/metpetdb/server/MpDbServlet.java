@@ -23,6 +23,7 @@ import com.google.gwt.user.client.rpc.SerializationException;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
+import edu.rpi.metpetdb.client.error.dao.ChemicalAnalysisAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.dao.ProjectAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.SampleAlreadyExistsException;
@@ -255,6 +256,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 				throw new UserAlreadyExistsException();
 			else if ("subsamples_nk_alias".equals(constraintName))
 				throw new SubsampleAlreadyExistsException();
+			else if ("chemical_analyses_nk_spot_id".equals(constraintName))
+				throw new ChemicalAnalysisAlreadyExistsException();
 		}
 
 		// If we have no idea what the exception means, should it be passed to
