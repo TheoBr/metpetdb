@@ -84,7 +84,10 @@ public class AnalysisParser {
 					String.class, "ChemicalAnalysis_spotId"
 			},
 			// precision (precision,error)
-			// total (total, wt%tot, wt%total)
+			{
+					"(total)|(wt%tot)|(wt%total)", "setTotal", Float.class,
+					"ChemicalAnalysis_total"
+			},
 			{
 					"(comment)|(note)|(description)", "setDescription",
 					String.class, "ChemicalAnalysis_comment"
@@ -463,6 +466,11 @@ public class AnalysisParser {
 
 						final double data = cell.getNumericCellValue();
 						storeMethod.invoke(ca, data);
+
+					} else if (dataType == Float.class) {
+
+						final double data = cell.getNumericCellValue();
+						storeMethod.invoke(ca, new Float(data));
 
 					} else if (dataType == Timestamp.class) {
 
