@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -22,12 +23,14 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ElementDTO;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
+import edu.rpi.metpetdb.client.model.ReferenceDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.model.XrayImageDTO;
 
 public class ImageParser {
 	public static final int METHOD = 1;
+	public static final int IMAGE_REFERENCE = 2;
 	public static final int SAMPLE = 101;
 	public static final int PARENT_LOC_X = 201;
 	public static final int PARENT_LOC_Y = 202;
@@ -87,6 +90,10 @@ public class ImageParser {
 					"brightness", "setBrightness", Integer.class,
 					"Image_brightness"
 			},
+			{
+					"collector", "setCollector", String.class,
+					"Image_collector"
+			}
 	};
 
 	private final static List<MethodAssociation<XrayImageDTO>> methodAssociations = new LinkedList<MethodAssociation<XrayImageDTO>>();
@@ -242,6 +249,10 @@ public class ImageParser {
 				colType.put(new Integer(i), PARENT_LOC_Y);
 				colName.put(new Integer(i), "ImageOnGrid_ypos");
 				done = true;
+			} else if (Pattern.compile("(^\\s*reference\\s*$)|(^\\s*ref\\s*$)",
+					Pattern.CASE_INSENSITIVE).matcher(text).find()) {
+				colType.put(new Integer(i), IMAGE_REFERENCE);
+				colName.put(new Integer(i), "Image_reference");
 			}
 		}
 	}
@@ -303,6 +314,13 @@ public class ImageParser {
 						parent_loc_x = data.intValue();
 					else if (columnType == PARENT_LOC_Y)
 						parent_loc_y = data.intValue();
+				} else if (columnType == IMAGE_REFERENCE) {
+					final String data = cell.toString();
+					if (img.getReferences() == null)
+						img.setReferences(new HashSet<ReferenceDTO>());
+					ReferenceDTO ref = new ReferenceDTO();
+					ref.setName(data);
+					img.getReferences().add(ref);
 				} else if (columnType == METHOD) {
 					final Method storeMethod = colMethods.get(i);
 
