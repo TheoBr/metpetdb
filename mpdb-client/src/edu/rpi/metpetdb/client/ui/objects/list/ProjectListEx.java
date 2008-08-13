@@ -3,9 +3,9 @@ package edu.rpi.metpetdb.client.ui.objects.list;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -61,22 +61,12 @@ public abstract class ProjectListEx extends ListEx<ProjectDTO> {
 			}, new Column(enttxt.Project_Actions(), true) {
 				protected Object getWidget(final MObjectDTO data,
 						final int currentRow) {
-					final FlexTable ft = new FlexTable();
-					ft.setWidget(0, 0, new MLink("Go to project",
-							new ClickListener() {
-								public void onClick(Widget sender) {
-
-								}
-							}));
-					ft.setWidget(0, 1, new MLink("Leave Project",
-							new ClickListener() {
-								public void onClick(Widget sender) {
-
-								}
-							}));
-					ft.getFlexCellFormatter().setWordWrap(0, 0, false);
-					ft.getFlexCellFormatter().setWordWrap(0, 1, false);
-					return ft;
+					return new MLink("Go to project", new ClickListener() {
+						public void onClick(Widget sender) {
+							History.newItem(TokenSpace
+									.samplesOf((ProjectDTO) data));
+						}
+					});
 				}
 			}
 

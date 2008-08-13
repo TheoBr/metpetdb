@@ -38,11 +38,7 @@ public class MyProjects extends LeftColWidget implements UsesLeftColumn {
 
 	public static MLink showProjectDetails(final ProjectDTO project) {
 		final MLink focusProject = new MLink(project.getName(), TokenSpace
-				.listOf(project)); // End
-		// of
-		// ClickListener
-
-		// myProjects.add(focusProject);
+				.samplesOf(project));
 		return focusProject;
 	}
 

@@ -27,7 +27,6 @@ import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
-import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
@@ -146,7 +145,16 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 		}
 	}
 
-	private void addSamples() {
+	private void projectSamples(final long projectId) {
+		list = new SampleListEx(LocaleHandler.lc_text.noSamplesFound()) {
+			public void update(final PaginationParameters p,
+					final AsyncCallback<Results<SampleDTO>> ac) {
+				MpDb.sample_svc.projectSamples(p, projectId, ac);
+			}
+		};
+	}
+
+	private void userSamples() {
 		list = new SampleListEx(LocaleHandler.lc_text.noSamplesFound()) {
 			public void update(final PaginationParameters p,
 					final AsyncCallback<Results<SampleDTO>> ac) {
@@ -154,6 +162,9 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 				MpDb.sample_svc.allSamplesForUser(p, id, ac);
 			}
 		};
+	}
+
+	private void addSamples() {
 		createViewFromCookie();
 		Samples_ft = new FlexTable();
 		Samples_ft.setWidth("100%");
@@ -229,17 +240,27 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 				projectsList = new HashSet<ProjectDTO>(
 						(List<ProjectDTO>) result);
 				addTopRows();
+				userSamples();
 				addSamples();
-				// addLeftSide();
 			}
 		}.begin();
 		return this;
 	}
-
-	private void addLeftSide() {
-		mysamples = new MySamples();
-		MetPetDBApplication.clearLeftSide();
-		MetPetDBApplication.appendToLeft(mysamples);
+	public UserSamplesList display(final long projectId) {
+		new ServerOp() {
+			@Override
+			public void begin() {
+				MpDb.project_svc.all(MpDb.currentUser().getId(), this);
+			}
+			public void onSuccess(Object result) {
+				projectsList = new HashSet<ProjectDTO>(
+						(List<ProjectDTO>) result);
+				addTopRows();
+				projectSamples(projectId);
+				addSamples();
+			}
+		}.begin();
+		return this;
 	}
 
 	private List<SampleDTO> getCheckedSamples() {

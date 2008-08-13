@@ -89,6 +89,12 @@
 			<token>NewProject</token>
 			<leftside>MyProjects</leftside>
 		</page>
+		<page>
+			<name>Specific Project</name>
+			<token>SamplesForProject</token>
+			<screen>false</screen>
+			<leftside>MyProjects</leftside>
+		</page>
 	</page>
 	<page>
 		<name>Search</name>

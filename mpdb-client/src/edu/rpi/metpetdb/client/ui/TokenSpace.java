@@ -225,13 +225,11 @@ public class TokenSpace implements HistoryListener {
 		}
 
 		public void execute(final long id) {
-			// SampleList list = new SampleList(new DataProvider() {
-			// public void update(final PaginationParameters p,
-			// final AsyncCallback ac) {
-			// MpDb.project_svc.samplesFromProject(p, id, ac);
-			// }
-			// }, "Samples for Project");
-			// show(list);
+			new LoggedInServerOp() {
+				public void command() {
+					show(new UserSamplesList().display(id));
+				}
+			}.begin();
 		}
 	};
 
@@ -413,6 +411,10 @@ public class TokenSpace implements HistoryListener {
 
 	public static String createNewImageMap(final SubsampleDTO s) {
 		return createImageMap.makeToken(s);
+	}
+
+	public static String samplesOf(final ProjectDTO p) {
+		return projectSamples.makeToken(p);
 	}
 
 	public static void dispatch(final String historyToken) {
