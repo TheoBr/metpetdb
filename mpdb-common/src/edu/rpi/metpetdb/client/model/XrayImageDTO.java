@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.client.model;
 
-
 public class XrayImageDTO extends ImageDTO {
 
 	private static final long serialVersionUID = 1L;
@@ -76,6 +75,7 @@ public class XrayImageDTO extends ImageDTO {
 		i.setContrast(this.getContrast());
 		i.setLut(this.getLut());
 		i.setPixelsize(this.getPixelsize());
+		i.setReferences(this.getReferences());
 		return i;
 	}
 }

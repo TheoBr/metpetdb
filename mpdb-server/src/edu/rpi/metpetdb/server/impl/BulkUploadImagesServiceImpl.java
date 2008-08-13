@@ -248,7 +248,7 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 					}
 
 					// Finally, Save the Images
-					// save(imagesToSave);
+					save(imagesToSave);
 
 					return null;
 				} catch (final ValidationException e) {

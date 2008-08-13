@@ -31,6 +31,7 @@ import edu.rpi.metpetdb.client.model.XrayImageDTO;
 import edu.rpi.metpetdb.client.service.ImageService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.GridDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageOnGridDAO;
 import edu.rpi.metpetdb.server.dao.impl.XrayImageDAO;
@@ -122,6 +123,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 				throw new SecurityException(
 						"Cannot modify grids you don't own.");
 			Grid g = mergeBean(gDTO);
+			g = (new GridDAO(this.currentSession())).save(g);
 			gDTO = cloneBean(g);
 		}
 		iogDTO.setGrid(gDTO);

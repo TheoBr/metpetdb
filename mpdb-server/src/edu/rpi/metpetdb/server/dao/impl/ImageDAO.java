@@ -37,6 +37,7 @@ public class ImageDAO extends MpDbDAO<Image> {
 
 	@Override
 	public Image save(Image inst) throws DAOException {
+		inst.setSample((new SampleDAO(sess)).fill(inst.getSample()));
 		inst.setSubsample((new SubsampleDAO(sess)).fill(inst.getSubsample()));
 
 		inst = _save(inst);

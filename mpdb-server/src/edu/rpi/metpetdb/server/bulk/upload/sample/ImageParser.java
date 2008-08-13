@@ -299,6 +299,10 @@ public class ImageParser {
 						final String data = cell.toString();
 						System.out.println("\t\t(Sample)");
 
+						if (img.getSample() == null)
+							img.setSample(new SampleDTO());
+						img.getSample().setAlias(data);
+
 						if (img.getSubsample() == null)
 							img.setSubsample(new SubsampleDTO());
 						if (img.getSubsample().getSample() == null)
