@@ -10,16 +10,20 @@ import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.dao.ChemicalAnalysisNotFoundException;
+import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
 import edu.rpi.metpetdb.client.model.ElementDTO;
 import edu.rpi.metpetdb.client.model.MineralDTO;
 import edu.rpi.metpetdb.client.model.OxideDTO;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.service.BulkUploadChemicalAnalysesService;
 import edu.rpi.metpetdb.server.bulk.upload.sample.AnalysisParser;
 import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
 import edu.rpi.metpetdb.server.dao.impl.ElementDAO;
 import edu.rpi.metpetdb.server.dao.impl.MineralDAO;
 import edu.rpi.metpetdb.server.dao.impl.OxideDAO;
+import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 import edu.rpi.metpetdb.server.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.server.model.Mineral;
 import edu.rpi.metpetdb.server.model.Subsample;
@@ -102,7 +106,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 			for (ChemicalAnalysisDTO s : analyses) {
 
 				// Minerals need id's so equality can be checked
-				Mineral m = cloneBean(s.getMineral());
+				Mineral m = mergeBean(s.getMineral());
 				try {
 					if (m != null)
 						s.setMineral((MineralDTO) cloneBean((new MineralDAO(
@@ -121,13 +125,10 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 					ChemicalAnalysis ca = mergeBean(s);
 					ca.getSubsample().getSample().setOwner(u);
 					ca = (new ChemicalAnalysisDAO(this.currentSession()))
-							.populate(ca);
-
-					if ((new ChemicalAnalysisDAO(this.currentSession()))
-							.isNew(ca))
-						ca_breakdown[1]++;
-					else
-						ca_breakdown[2]++;
+							.fill(ca);
+					ca_breakdown[2]++;
+				} catch (ChemicalAnalysisNotFoundException canfe) {
+					ca_breakdown[1]++;
 				} catch (ValidationException e) {
 					ca_breakdown[0]++;
 				} catch (DAOException daoe) {
@@ -139,16 +140,19 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 					ca.getSubsample().getSample().setOwner(u);
 					ca = (new ChemicalAnalysisDAO(this.currentSession()))
 							.populate(ca);
+
 					Subsample ss = mergeBean(ca.getSubsample());
-					if (ss == null || ss.mIsNew())
-						ss_breakdown[1]++;
-					else
-						ss_breakdown[2]++;
+					(new SubsampleDAO(this.currentSession())).fill(ss);
+					ss_breakdown[2]++;
+				} catch (SubsampleNotFoundException snfe) {
+					// If we couldn't find the subsample, then we'll add it
+					ss_breakdown[1]++;
 				} catch (DAOException daoe) {
 					ss_breakdown[0]++;
 				}
 				++i;
 			}
+			// TODO: These need to be gleaned from the Locale
 			newAdditions.put("ChemicalAnalysis", ca_breakdown);
 			newAdditions.put("Subsample", ss_breakdown);
 
@@ -193,7 +197,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 			for (ChemicalAnalysisDTO s : analyses) {
 
 				// Minerals need id's so equality can be checked
-				Mineral m = cloneBean(s.getMineral());
+				Mineral m = mergeBean(s.getMineral());
 				if (m != null)
 					s.setMineral((MineralDTO) cloneBean((new MineralDAO(this
 							.currentSession())).fill(m)));
@@ -206,14 +210,34 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 				++i;
 			}
 
-			if (errors.isEmpty())
+			User u = new User();
+			u.setId(currentUser());
+
+			if (errors.isEmpty()) {
+				// Insert new Subsamples as required
+				SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
+				for (ChemicalAnalysisDTO caDTO : analyses) {
+					Subsample ss = mergeBean(caDTO.getSubsample());
+					ss.getSample().setOwner(u);
+
+					try {
+						ssDAO.fill(ss);
+					} catch (SubsampleNotFoundException daoe) {
+						SubsampleDTO ssDTO = cloneBean(ss);
+						doc.validate(ssDTO);
+						ssDAO.save(ss);
+					}
+				}
+
+				// Save chemical analyses
 				try {
 					save(analyses);
 					return null;
 				} catch (final ValidationException e) {
-					// throw new IllegalStateException(
-					// "Objects passed and subsequently failed validation.");
+					throw new IllegalStateException(
+							"Objects passed and subsequently failed validation.");
 				}
+			}
 		} catch (final IOException ioe) {
 			throw new IllegalStateException(ioe.getMessage());
 		}
