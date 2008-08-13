@@ -27,14 +27,28 @@ public class ElementDAO extends MpDbDAO<Element> {
 	@Override
 	public Element fill(Element inst) throws DAOException {
 		// Use Name
-		if (inst.getId() > 0) {
+		if (inst.getName() != null) {
 			final Query q = namedQuery("Element.byName");
 			q.setString("name", inst.getName());
 			if (q.uniqueResult() != null)
 				return (Element) q.uniqueResult();
 		}
 
-		// TODO: Sometimes people use the symbol as the name
+		// Use Symbol
+		if (inst.getSymbol() != null) {
+			final Query q = namedQuery("Element.bySymbol");
+			q.setString("symbol", inst.getSymbol());
+			if (q.uniqueResult() != null)
+				return (Element) q.uniqueResult();
+		}
+
+		// Sometimes people use the symbol as the name, check that
+		if (inst.getName() != null && inst.getName().length() < 3) {
+			final Query q = namedQuery("Element.bySymbol");
+			q.setString("symbol", inst.getName());
+			if (q.uniqueResult() != null)
+				return (Element) q.uniqueResult();
+		}
 
 		throw new ElementNotFoundException();
 	}
