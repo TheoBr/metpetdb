@@ -107,7 +107,13 @@ public class SampleDetails extends MPagePanel {
 			}
 
 			protected void onSaveCompletion(final MObjectDTO result) {
-				TokenSpace.dispatch(TokenSpace.detailsOf((SampleDTO) result));
+				if (History.getToken().equals(
+						TokenSpace.detailsOf((SampleDTO) result))) {
+					TokenSpace.dispatch(TokenSpace
+							.detailsOf((SampleDTO) result));
+				} else {
+					History.newItem(TokenSpace.detailsOf((SampleDTO) result));
+				}
 			}
 
 			protected void onLoadCompletion(final MObjectDTO result) {
@@ -120,12 +126,17 @@ public class SampleDetails extends MPagePanel {
 						((Point) s.getLocation()).y);
 				updateGoogleMaps();
 			}
+
+			protected void onDeleteCompletion(final Object result) {
+				History.newItem(TokenSpace.samplesForUser.makeToken(null));
+			}
 		};
 		final OnEnterPanel.ObjectEditor oep = new OnEnterPanel.ObjectEditor(
 				p_sample);
 		map = new MapWidget();
 		oep.setStylePrimaryName("sd-details");
 		oep.addStyleName("mpdb-dataTable");
+		oep.addStyleName("inline");
 		add(oep);
 	}
 	private void addExtraElements() {

@@ -17,6 +17,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ProjectDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -123,7 +124,7 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 	}
 
 	private void addProjects() {
-		list = new ProjectListEx() {
+		list = new ProjectListEx(LocaleHandler.lc_text.noProjectsFound()) {
 			public void update(final PaginationParameters p,
 					final AsyncCallback<Results<ProjectDTO>> ac) {
 				long id = (long) (MpDb.currentUser().getId());

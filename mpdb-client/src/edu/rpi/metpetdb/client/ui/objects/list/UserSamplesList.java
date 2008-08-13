@@ -147,7 +147,7 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 	}
 
 	private void addSamples() {
-		list = new SampleListEx() {
+		list = new SampleListEx(LocaleHandler.lc_text.noSamplesFound()) {
 			public void update(final PaginationParameters p,
 					final AsyncCallback<Results<SampleDTO>> ac) {
 				long id = (long) (MpDb.currentUser().getId());

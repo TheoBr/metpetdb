@@ -121,8 +121,7 @@ public abstract class ObjectEditorPanel<T> extends DetailsPanel implements
 				onSaveCompletion((MObjectDTO) result);
 			}
 			public void onFailure(final Throwable e) {
-				if (!onFailure2(e))
-					super.onFailure(e);
+				super.onFailure(e);
 			}
 		}.begin();
 	}
@@ -194,8 +193,5 @@ public abstract class ObjectEditorPanel<T> extends DetailsPanel implements
 	}
 	protected void onDeleteCompletion(final Object result) {
 		Window.alert("deleted");
-	}
-	protected boolean onFailure2(final Throwable e) {
-		return false;
 	}
 }

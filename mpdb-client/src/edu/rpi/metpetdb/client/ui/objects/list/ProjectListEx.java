@@ -28,6 +28,10 @@ public abstract class ProjectListEx extends ListEx<ProjectDTO> {
 		super(new ArrayList<Column>(Arrays.asList(columns)));
 	}
 
+	public ProjectListEx(final String noResultsMessage) {
+		super(new ArrayList<Column>(Arrays.asList(columns)), noResultsMessage);
+	}
+
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
 	public static Column[] columns = {

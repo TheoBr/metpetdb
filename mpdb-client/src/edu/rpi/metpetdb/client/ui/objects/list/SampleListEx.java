@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.postgis.Point;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Image;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -91,7 +92,16 @@ public abstract class SampleListEx extends ListEx<SampleDTO> {
 				}
 			},
 			new Column(enttxt.Sample_rockType(), SampleProperty.rockType),
-			new Column(enttxt.Sample_publicData(), SampleProperty.publicData),
+			new Column(enttxt.Sample_publicData(), SampleProperty.publicData,
+					true) {
+				protected Object getWidget(final MObjectDTO data,
+						final int currentRow) {
+					if ((Boolean) data.mGet(SampleProperty.publicData)) {
+						return new Image("images/checkmark.jpg");
+					}
+					return new Image("images/xmark.jpg");
+				}
+			},
 			new Column("Location", SampleProperty.location, true) {
 				protected Object getText(final MObjectDTO data,
 						final int currentRow) {

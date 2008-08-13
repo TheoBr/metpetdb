@@ -32,6 +32,7 @@ public interface LocaleText extends Messages {
 	String addSample();
 	String addSampleDescription();
 	String publicDataWarning();
+	String noSamplesFound();
 
 	/* Subsamples */
 	String subsamples();
@@ -46,6 +47,7 @@ public interface LocaleText extends Messages {
 	/* Projects */
 	String addProject();
 	String addProjectDescription();
+	String noProjectsFound();
 
 	/* Comments */
 	String comments();

@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 
@@ -46,6 +47,7 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 	private final ObjectEditorPanel<ChemicalAnalysisDTO> p_chemicalAnalysis;
 
 	private long chemicalAnalysisId;
+	private SubsampleDTO subsampleObj;
 
 	public ChemicalAnalysisDetails() {
 		p_chemicalAnalysis = new ObjectEditorPanel<ChemicalAnalysisDTO>(
@@ -63,6 +65,7 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 			}
 
 			protected void deleteBean(final AsyncCallback ac) {
+				subsampleObj = ((ChemicalAnalysisDTO) getBean()).getSubsample();
 				MpDb.chemicalAnalysis_svc.delete(
 						((ChemicalAnalysisDTO) getBean()).getId(), ac);
 			}
@@ -78,12 +81,22 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 			}
 
 			protected void onSaveCompletion(final MObjectDTO result) {
-				TokenSpace.dispatch(TokenSpace
-						.detailsOf((ChemicalAnalysisDTO) result));
+				if (History.getToken().equals(
+						TokenSpace.detailsOf((ChemicalAnalysisDTO) result))) {
+					TokenSpace.dispatch(TokenSpace
+							.detailsOf((ChemicalAnalysisDTO) result));
+				} else {
+					History.newItem(TokenSpace
+							.detailsOf((ChemicalAnalysisDTO) result));
+				}
 			}
 
 			protected void onLoadCompletion(final MObjectDTO result) {
 				super.onLoadCompletion(result);
+			}
+
+			protected void onDeleteCompletion(final Object result) {
+				History.newItem(TokenSpace.detailsOf((subsampleObj)));
 			}
 		};
 		add(new OnEnterPanel.ObjectEditor(p_chemicalAnalysis));

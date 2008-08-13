@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -24,6 +25,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.Styles;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageListViewer;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
@@ -37,6 +39,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
 
 public class SubsampleDetails extends FlowPanel {
 	private FlexTable ft;
+	private HorizontalPanel hp;
 	private MLinkandText Header;
 	final Element sampleHeader;
 
@@ -54,9 +57,11 @@ public class SubsampleDetails extends FlowPanel {
 	private final ObjectEditorPanel<SubsampleDTO> p_subsample;
 	private long subsampleId;
 	private long sampleId;
+	private SampleDTO sampleObj;
 	private ServerOp continuation;
 	private String sampleAlias;
 	private MLink map;
+	private Widget images;
 
 	public SubsampleDetails() {
 		final SubsampleDetails me = this;
@@ -74,6 +79,7 @@ public class SubsampleDetails extends FlowPanel {
 			}
 
 			protected void deleteBean(final AsyncCallback<Object> ac) {
+				sampleObj = ((SubsampleDTO) getBean()).getSample();
 				MpDb.subsample_svc.delete(((SubsampleDTO) getBean()).getId(),
 						ac);
 			}
@@ -90,12 +96,17 @@ public class SubsampleDetails extends FlowPanel {
 			protected void onSaveCompletion(final MObjectDTO result) {
 				if (continuation != null) {
 					continuation.onSuccess(result);
-				} else
-					TokenSpace.dispatch(TokenSpace
-							.detailsOf((SubsampleDTO) result));
-				// History
-				// .newItem(TokenSpace
-				// .detailsOf((SubsampleDTO) result));
+				} else {
+					if (History.getToken().equals(
+							TokenSpace.detailsOf((SubsampleDTO) result))) {
+						TokenSpace.dispatch(TokenSpace
+								.detailsOf((SubsampleDTO) result));
+					} else {
+						History.newItem(TokenSpace
+								.detailsOf((SubsampleDTO) result));
+					}
+				}
+
 			}
 
 			protected void onLoadCompletion(final MObjectDTO result) {
@@ -113,6 +124,10 @@ public class SubsampleDetails extends FlowPanel {
 
 				DOM.setInnerText(sampleHeader, "Subsample " + s.getName());
 				sampleId = s.getSample().getId();
+				this.getWidget(7).setVisible(false);
+			}
+			protected void onDeleteCompletion(final Object result) {
+				History.newItem(TokenSpace.detailsOf((sampleObj)));
 			}
 		};
 
@@ -121,7 +136,10 @@ public class SubsampleDetails extends FlowPanel {
 
 		final OnEnterPanel.ObjectEditor oep = new OnEnterPanel.ObjectEditor(
 				p_subsample);
+		hp = new HorizontalPanel();
+		hp.setWidth("100%");
 		ft = new FlexTable();
+		ft.setWidth("95%");
 		Label details_label = new Label("Attributes");
 		details_label.addStyleName("bold");
 		map = new MLink();
@@ -134,15 +152,14 @@ public class SubsampleDetails extends FlowPanel {
 		ft.getFlexCellFormatter().setAlignment(0, 1,
 				HasHorizontalAlignment.ALIGN_RIGHT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		ft.setWidth("40%");
 		ft.getFlexCellFormatter().setHeight(0, 0, "35px");
 		ft.getFlexCellFormatter().setWidth(0, 1, "100px");
 		ft.getFlexCellFormatter().setAlignment(1, 0,
 				HasHorizontalAlignment.ALIGN_LEFT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		ft.getRowFormatter().setStyleName(0, "mpdb-dataTableLightBlue");
-
-		add(ft);
+		hp.add(ft);
+		add(hp);
 	}
 
 	public void showChemicalAnalysis() {
@@ -192,6 +209,8 @@ public class SubsampleDetails extends FlowPanel {
 	public SubsampleDetails showById(final long id) {
 		subsampleId = id;
 		p_subsample.load();
+		images = new ImageListViewer(subsampleId, false);
+		hp.add(images);
 		showChemicalAnalysis();
 		return this;
 	}
@@ -214,6 +233,7 @@ public class SubsampleDetails extends FlowPanel {
 					final SubsampleDTO s = (SubsampleDTO) p_subsample.getBean();
 					MpDb.subsample_svc.details(s != null && !s.mIsNew() ? s
 							.getId() : subsampleId, this);
+
 				} else {
 					onFailure(new LoginRequiredException());
 				}
