@@ -168,10 +168,10 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 
 				cb.addClickListener(new ClickListener() {
 					public void onClick(final Widget w) {
+						checkChildren(parentTreeItem, cb.isChecked());
 						if (cb.isChecked()) {
 							selectedWidgets.add(w);
 							selectedItems.add(parent);
-							checkChildren(parentTreeItem);
 							if (maxSelectable != 0
 									&& selectedWidgets.size() > maxSelectable) {
 								((CheckBox) selectedWidgets.get(0))
@@ -214,10 +214,10 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 
 				cb.addClickListener(new ClickListener() {
 					public void onClick(final Widget w) {
+						checkChildren(parentTreeItem, cb.isChecked());
 						if (cb.isChecked()) {
 							selectedWidgets.add(w);
 							selectedItems.add(parent);
-							checkChildren(parentTreeItem);
 							if (maxSelectable != 0
 									&& selectedWidgets.size() > maxSelectable) {
 								((CheckBox) selectedWidgets.get(0))
@@ -236,14 +236,15 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 		return t;
 	}
 
-	private void checkChildren(final ExtendedTreeItem parent) {
+	private void checkChildren(final ExtendedTreeItem parent,
+			final boolean check) {
 		if (maxSelectable > 1 || maxSelectable == 0) {
 			for (int i = 0; i < parent.getChildCount(); ++i) {
 				((CheckBox) ((ExtendedTreeItem) parent.getChild(i)).getWidget())
-						.setChecked(true);
+						.setChecked(check);
 				selectedItems.add(((ExtendedTreeItem) parent.getChild(i))
 						.getObject());
-				checkChildren(((ExtendedTreeItem) parent.getChild(i)));
+				checkChildren(((ExtendedTreeItem) parent.getChild(i)), check);
 			}
 		}
 	}
