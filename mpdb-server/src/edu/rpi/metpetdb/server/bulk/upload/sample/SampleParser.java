@@ -327,6 +327,11 @@ public class SampleParser {
 						storeMethod.invoke(s, data);
 					}
 
+				} else if (dataType == Float.class) {
+
+					final double data = cell.getNumericCellValue();
+					storeMethod.invoke(s, new Float(data));
+
 				} else if (dataType == double.class) {
 
 					final double data = cell.getNumericCellValue();
