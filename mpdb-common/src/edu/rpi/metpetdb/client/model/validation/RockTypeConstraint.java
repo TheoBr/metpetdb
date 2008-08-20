@@ -23,6 +23,7 @@ public class RockTypeConstraint extends PropertyConstraint implements HasValues 
 		rockTypes.add("Hornfels");
 		rockTypes.add("Marble");
 		rockTypes.add("Metabasite");
+		rockTypes.add("Metagranite");
 		rockTypes.add("Metagreywacke");
 		rockTypes.add("Metapelite");
 		rockTypes.add("Meta-arkose");
