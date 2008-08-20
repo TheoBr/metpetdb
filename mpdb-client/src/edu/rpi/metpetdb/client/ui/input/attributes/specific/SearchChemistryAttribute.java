@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.ui.Button;
@@ -12,6 +13,9 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisElementDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxideDTO;
 import edu.rpi.metpetdb.client.model.ElementDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.OxideDTO;
@@ -50,7 +54,7 @@ public class SearchChemistryAttribute extends GenericAttribute {
 		createRowsOxide(oxides);
 
 		return new Widget[] {
-			ft
+				ft, ft
 		};
 	}
 
@@ -134,5 +138,19 @@ public class SearchChemistryAttribute extends GenericAttribute {
 
 	protected void set(final MObjectDTO obj, final Object o) {
 		mSet(obj, o);
+	}
+
+	protected Object get(final Widget editWidget,
+			final PropertyConstraint constraint) throws ValidationException {
+		if (constraint == this.constraints[1]) {
+			final HashSet<ChemicalAnalysisOxideDTO> Oxides = new HashSet();
+			// Add only Oxides
+
+			return Oxides;
+		} else {
+			final HashSet<ChemicalAnalysisElementDTO> Elements = new HashSet();
+			// Add only Elements
+			return Elements;
+		}
 	}
 }

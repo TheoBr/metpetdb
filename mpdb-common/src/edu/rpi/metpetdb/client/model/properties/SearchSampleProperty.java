@@ -4,6 +4,8 @@ import java.util.Set;
 
 import org.postgis.Geometry;
 
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisElementDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxideDTO;
 import edu.rpi.metpetdb.client.model.DateSpan;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.SampleMineralDTO;
@@ -108,6 +110,35 @@ public enum SearchSampleProperty implements SearchProperty {
 
 		public String columnName() {
 			return "rockType";
+		}
+	},
+	elements {
+		public <T extends MObjectDTO> Set<ChemicalAnalysisElementDTO> get(
+				final T sample) {
+			return ((SearchSampleDTO) sample).getElements();
+		}
+
+		public <T extends MObjectDTO, K> void set(final T sample,
+				final K elements) {
+			((SearchSampleDTO) sample)
+					.setElements((Set<ChemicalAnalysisElementDTO>) elements);
+		}
+		public String columnName() {
+			return "elements";
+		}
+	},
+	oxides {
+		public <T extends MObjectDTO> Set<ChemicalAnalysisOxideDTO> get(
+				final T sample) {
+			return ((SearchSampleDTO) sample).getOxides();
+		}
+
+		public <T extends MObjectDTO, K> void set(final T sample, final K oxides) {
+			((SearchSampleDTO) sample)
+					.setOxides((Set<ChemicalAnalysisOxideDTO>) oxides);
+		}
+		public String columnName() {
+			return "oxides";
 		}
 	};
 

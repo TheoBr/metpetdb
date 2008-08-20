@@ -34,6 +34,8 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 	// ------ SearchMineral ------
 	public ObjectConstraint SearchSample_minerals;
+	public ObjectConstraint SearchSample_elements;
+	public ObjectConstraint SearchSample_oxides;
 
 	// ------ SampleMineral ------
 	public PropertyConstraint[] SampleMineral__all;
@@ -228,5 +230,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		StartSessionRequest_password.maxLength = UserWithPassword_oldPassword.maxLength;
 
 		SearchSample_minerals.setConstraints(SampleMineral__all);
+		SearchSample_elements.setConstraints(ChemicalAnalysisElement__all);
+		SearchSample_oxides.setConstraints(ChemicalAnalysisOxide__all);
 	}
 }

@@ -45,8 +45,8 @@ public class Search extends FlowPanel implements ClickListener {
 			new SearchLocationAttribute(MpDb.oc.SearchSample_location),
 			new TreeAttribute(
 					(PropertyConstraint) MpDb.doc.SearchSample_minerals, 4),
-			new SearchChemistryAttribute(MpDb.doc.ChemicalAnalysis_elements,
-					MpDb.doc.ChemicalAnalysis_oxides)
+			new SearchChemistryAttribute(MpDb.doc.SearchSample_elements,
+					MpDb.doc.SearchSample_oxides)
 	};
 
 	private static final String samplesParameter = "Samples";

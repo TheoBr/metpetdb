@@ -53,6 +53,10 @@ public class SearchSampleDTO extends MObjectDTO {
 
 	private Set<SampleCommentDTO> comments;
 
+	private Set<ChemicalAnalysisElementDTO> elements;
+
+	private Set<ChemicalAnalysisOxideDTO> oxides;
+
 	private int subsampleCount;
 
 	public Set<String> getPossibleRockTypes() {
@@ -296,6 +300,66 @@ public class SearchSampleDTO extends MObjectDTO {
 
 	public void setDatePrecision(short datePrecision) {
 		this.datePrecision = datePrecision;
+	}
+
+	public void setElements(final Set<ChemicalAnalysisElementDTO> e) {
+		elements = e;
+	}
+
+	public Set<ChemicalAnalysisElementDTO> getElements() {
+		if (elements == null)
+			elements = new HashSet<ChemicalAnalysisElementDTO>();
+		return elements;
+	}
+
+	public void addElement(final ElementDTO e, final Float amount) {
+		if (elements == null)
+			elements = new HashSet<ChemicalAnalysisElementDTO>();
+		ChemicalAnalysisElementDTO c = new ChemicalAnalysisElementDTO();
+		c.setElement(e);
+		c.setAmount(amount);
+		elements.add(c);
+	}
+
+	public void addElement(final ElementDTO e, final Float amount,
+			final Float precision) {
+		if (elements == null)
+			elements = new HashSet<ChemicalAnalysisElementDTO>();
+		ChemicalAnalysisElementDTO c = new ChemicalAnalysisElementDTO();
+		c.setElement(e);
+		c.setAmount(amount);
+		c.setPrecision(precision);
+		elements.add(c);
+	}
+
+	public void setOxides(final Set<ChemicalAnalysisOxideDTO> o) {
+		oxides = o;
+	}
+
+	public Set<ChemicalAnalysisOxideDTO> getOxides() {
+		if (oxides == null)
+			oxides = new HashSet<ChemicalAnalysisOxideDTO>();
+		return oxides;
+	}
+
+	public void addOxide(final OxideDTO e, final Float amount) {
+		if (oxides == null)
+			oxides = new HashSet<ChemicalAnalysisOxideDTO>();
+		ChemicalAnalysisOxideDTO c = new ChemicalAnalysisOxideDTO();
+		c.setOxide(e);
+		c.setAmount(amount);
+		oxides.add(c);
+	}
+
+	public void addOxide(final OxideDTO e, final Float amount,
+			final Float precision) {
+		if (oxides == null)
+			oxides = new HashSet<ChemicalAnalysisOxideDTO>();
+		ChemicalAnalysisOxideDTO c = new ChemicalAnalysisOxideDTO();
+		c.setOxide(e);
+		c.setAmount(amount);
+		c.setPrecision(precision);
+		oxides.add(c);
 	}
 
 }
