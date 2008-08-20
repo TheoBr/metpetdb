@@ -472,6 +472,11 @@ public class AnalysisParser {
 						final double data = cell.getNumericCellValue();
 						storeMethod.invoke(ca, new Float(data));
 
+					} else if (dataType == int.class) {
+
+						final double data = cell.getNumericCellValue();
+						storeMethod.invoke(ca, (int) data);
+
 					} else if (dataType == Timestamp.class) {
 
 						try {
