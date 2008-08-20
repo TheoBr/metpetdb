@@ -352,6 +352,9 @@ public class ImageParser {
 							img.setSubsample(new SubsampleDTO());
 						img.getSubsample().setName(data);
 
+						if (img.getSubsample().getSample() == null)
+							img.getSubsample().setSample(img.getSample());
+
 					} else if (dataType == ElementDTO.class) {
 
 						final String data = cell.toString();
