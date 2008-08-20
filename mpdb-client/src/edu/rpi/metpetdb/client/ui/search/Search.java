@@ -19,17 +19,18 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
+import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
-import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.CheckBoxesAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateRangeAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.TreeAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchChemistryAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttribute;
-import edu.rpi.metpetdb.client.ui.left.side.MySearch;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 
 public class Search extends FlowPanel implements ClickListener {
@@ -40,15 +41,15 @@ public class Search extends FlowPanel implements ClickListener {
 			new TextAttribute(MpDb.oc.SearchSample_alias),
 			new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange),
 			// MpDb.doc.Sample_datePrecision),
-			new CheckBoxesAttribute(MpDb.oc.SearchSample_possibleRockTypes),
-			new SearchLocationAttribute(MpDb.oc.SearchSample_location)
-	// new LocationAttribute(MpDb.oc.SearchSample_location),
-	// new MineralAttribute(MpDb.oc.SearchSample_minerals)
+			new CheckBoxesAttribute(MpDb.oc.SearchSample_possibleRockTypes, 4),
+			new SearchLocationAttribute(MpDb.oc.SearchSample_location),
+			new TreeAttribute(
+					(PropertyConstraint) MpDb.doc.SearchSample_minerals, 4),
+			new SearchChemistryAttribute(MpDb.doc.ChemicalAnalysis_elements,
+					MpDb.doc.ChemicalAnalysis_oxides)
 	};
 
 	private static final String samplesParameter = "Samples";
-	private static final String userParameter = "User";
-
 	private Button exportExcelButton;
 	private Button exportGoogleEarthButton;
 	private final ObjectSearchPanel p_searchSample;
@@ -93,12 +94,9 @@ public class Search extends FlowPanel implements ClickListener {
 			}
 
 		};
-
 		add(p_searchSample);
 		addResultListHeader();
 		add(sampleList);
-		MetPetDBApplication.clearLeftSide();
-		MetPetDBApplication.appendToLeft(new MySearch());
 	}
 
 	private void addResultListHeader() {
@@ -119,6 +117,7 @@ public class Search extends FlowPanel implements ClickListener {
 
 		exportResultsLabel.setStyleName("bold");
 		exportExcelButton.setStyleName("bold");
+		exportExcelButton.addStyleName("Beta");
 		exportGoogleEarthButton.setStyleName("bold");
 
 		final VerticalPanel vpExcel = new VerticalPanel();
@@ -157,9 +156,6 @@ public class Search extends FlowPanel implements ClickListener {
 			fp.setMethod(FormPanel.METHOD_GET);
 			fp.setEncoding(FormPanel.ENCODING_URLENCODED);
 			final HorizontalPanel hp = new HorizontalPanel();
-			Hidden user = new Hidden(userParameter, String.valueOf(MpDb
-					.currentUser().getId()));
-			hp.add(user);
 			for (int i = 0; i < results.size(); i++) {
 				Hidden sample = new Hidden(samplesParameter, String
 						.valueOf(results.get(i).getId()));

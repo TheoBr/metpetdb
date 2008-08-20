@@ -266,3 +266,16 @@ button.remove {
 .highlighted-row {
 	background-color: #FF3300;	
 }
+
+.titlebar {
+background-color:#DADADA;
+border-bottom:1px solid #C8C8C8;
+color:#324453;
+padding:0.8em 0.5em 0.5em !important;
+width:100%;
+}
+
+.criteria ul li {
+border:1px solid #C8C8C8;
+padding:0.8em 0.5em 0.5em !important;
+}

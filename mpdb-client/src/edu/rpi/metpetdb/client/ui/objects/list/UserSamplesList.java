@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -14,8 +15,11 @@ import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.Hidden;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -37,6 +41,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class UserSamplesList extends FlowPanel implements ClickListener {
 	private static final String cookieString = "UserSamplesList";
+	private static final String samplesParameter = "Samples";
 	private Label errMsg = new Label();
 	private FlexTable header1;
 	private SampleListEx list;
@@ -45,6 +50,8 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 	private ListBox lb;
 	private FlexTable Samples_ft;
 	private MLink createView;
+	private Button exportExcelButton;
+	private Button exportGoogleEarthButton;
 
 	public UserSamplesList() {
 	}
@@ -134,9 +141,57 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 		this.add(header1);
 	}
 
+	private Widget addResultListFooter() {
+
+		final HorizontalPanel hpExport = new HorizontalPanel();
+
+		exportExcelButton = new Button(LocaleHandler.lc_text
+				.buttonExportExcel(), this);
+		exportGoogleEarthButton = new Button(LocaleHandler.lc_text
+				.buttonExportKML(), this);
+
+		exportExcelButton.setStyleName("bold");
+		exportExcelButton.addStyleName("Beta");
+		exportGoogleEarthButton.setStyleName("bold");
+
+		hpExport.add(exportExcelButton);
+		hpExport.add(exportGoogleEarthButton);
+
+		hpExport.setStyleName("mpdb-dataTableBlue");
+		hpExport.setWidth("100%");
+
+		return hpExport;
+
+	}
+
 	public void onClick(Widget sender) {
 		if (sender == createView) {
 			CustomTableView myView = new CustomTableView(list, cookieString);
+		} else if (sender == exportGoogleEarthButton) {
+			final FormPanel fp = new FormPanel();
+			fp.setMethod(FormPanel.METHOD_GET);
+			fp.setEncoding(FormPanel.ENCODING_URLENCODED);
+			final HorizontalPanel hp = new HorizontalPanel();
+			int currentpage = list.getScrollTable().getCurrentPage();
+			for (int page = 0; page < list.getScrollTable().getNumPages(); page++) {
+				list.getScrollTable().gotoPage(page, false);
+				int i = 0;
+				while (list.getScrollTable().getRowValue(i) != null) {
+					Hidden sample = new Hidden(samplesParameter, String
+							.valueOf(list.getScrollTable().getRowValue(i)
+									.getId()));
+					hp.add(sample);
+					i++;
+				}
+			}
+			list.getScrollTable().gotoPage(currentpage, true);
+			fp.add(hp);
+			fp.setAction(GWT.getModuleBaseURL() + "BasicKML.kml?");
+			fp.setVisible(false);
+			add(fp);
+			fp.submit();
+		} else if (sender == exportExcelButton) {
+
 		}
 
 		for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++) {
@@ -211,6 +266,7 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 		realFooter.setWidget(0, 0, cb);
 		realFooter.setWidget(0, 1, lb);
 		realFooter.setWidget(0, 2, btn);
+		realFooter.setWidget(0, 3, addResultListFooter());
 		realFooter.addStyleName("mpdb-dataTableBlue");
 		realFooter.getFlexCellFormatter().setWidth(0, 0, "85px");
 		realFooter.getFlexCellFormatter().setWidth(0, 1, "100px");
@@ -219,6 +275,9 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		realFooter.getFlexCellFormatter().setAlignment(0, 1,
 				HasHorizontalAlignment.ALIGN_LEFT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		realFooter.getFlexCellFormatter().setAlignment(0, 1,
+				HasHorizontalAlignment.ALIGN_RIGHT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 		realFooter.setWidth("100%");
 		realFooter.setCellSpacing(5);

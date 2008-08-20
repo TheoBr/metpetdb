@@ -32,6 +32,9 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		}
 	}
 
+	// ------ SearchMineral ------
+	public ObjectConstraint SearchSample_minerals;
+
 	// ------ SampleMineral ------
 	public PropertyConstraint[] SampleMineral__all;
 	public ValueInCollectionConstraint SampleMineral_Sample_minerals_mineral;
@@ -223,5 +226,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		StartSessionRequest_password.required = true;
 		StartSessionRequest_password.minLength = UserWithPassword_oldPassword.minLength;
 		StartSessionRequest_password.maxLength = UserWithPassword_oldPassword.maxLength;
+
+		SearchSample_minerals.setConstraints(SampleMineral__all);
 	}
 }

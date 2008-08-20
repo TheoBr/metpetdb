@@ -23,7 +23,6 @@ public class BasicKML extends HttpServlet {
 	// "http://localhost:8888/edu.rpi.metpetdb.MetPetDBApplication/MetPetDBApplication.html#SampleDetails-";
 	private static final String baseURL = "http://samana.cs.rpi.edu:8080/metpetwebtst/#SampleDetails-";
 	private static final String samplesParameter = "Samples";
-	private static final String userParameter = "User";
 	private Double lat;
 	private Double lng;
 	private Double latErr;
@@ -46,16 +45,12 @@ public class BasicKML extends HttpServlet {
 		Query q;
 
 		// If there is a GET string, fetch by ids
-		if (request.getParameter(samplesParameter) != null
-				&& request.getParameter(userParameter) != null) {
+		if (request.getParameter(samplesParameter) != null) {
 			String ids[] = request.getParameterValues(samplesParameter);
-			String user[] = request.getParameterValues(userParameter);
-			final long userId = Long.parseLong(user[0]);
 			q = session.getNamedQuery("Sample.byId");
 			for (int i = 0; i < ids.length; i++) {
 				q.setParameter("id", Long.parseLong(ids[i]));
-				if (((Sample) q.uniqueResult()).getOwner().getId() == userId)
-					samples.add((Sample) q.uniqueResult());
+				samples.add((Sample) q.uniqueResult());
 			}
 		}
 		// Otherwise get all samplesrequest.getQueryString()

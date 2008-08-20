@@ -9,9 +9,11 @@ import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
@@ -20,14 +22,23 @@ import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
 /* TODO make generic, i.e. CheckBoxesAttribute<T>, where T is the type of object that the checkbox is representing */
-public class CheckBoxesAttribute extends GenericAttribute {
-	private MUnorderedList editList;
+public class CheckBoxesAttribute extends GenericAttribute implements
+		ClickListener {
+	private int cols;
+	private FixedWidthFlexTable editList;
 	/* To keep track of the physical object that is attached to the checkbox */
 	private Map<CheckBox, Object> items;
 
 	public CheckBoxesAttribute(final PropertyConstraint sc) {
 		super(sc);
 		items = new HashMap<CheckBox, Object>();
+		cols = 1;
+	}
+
+	public CheckBoxesAttribute(final PropertyConstraint sc, final int cols) {
+		super(sc);
+		items = new HashMap<CheckBox, Object>();
+		this.cols = cols;
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
@@ -47,10 +58,10 @@ public class CheckBoxesAttribute extends GenericAttribute {
 	}
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
-		editList = new MUnorderedList();
+		editList = new FixedWidthFlexTable();
+		editList.setWidth("100%");
 
 		items.clear();
-
 		DOM.setElementAttribute(editList.getElement(), "id", id);
 
 		final Set<?> chosenItems = get(obj);
@@ -58,11 +69,20 @@ public class CheckBoxesAttribute extends GenericAttribute {
 				.getValues();
 		if (availableItems != null) {
 			final Iterator<?> iter = availableItems.iterator();
+			final int numRows = availableItems.size() / cols
+					+ availableItems.size() % cols;
+			int row = 0;
+			int column = 0;
 			while (iter.hasNext()) {
+				if (row >= numRows) {
+					row = 0;
+					column++;
+				}
 				final Object object = iter.next();
 				// add all standard check boxes
-				editList.add(this.createCheckBoxes(object.toString(),
-						chosenItems.contains(object), object));
+				editList.setWidget(row, column, this.createCheckBoxes(object
+						.toString(), chosenItems.contains(object), object));
+				row++;
 			}
 		}
 
@@ -71,10 +91,11 @@ public class CheckBoxesAttribute extends GenericAttribute {
 		};
 	}
 
-	public HorizontalPanel createCheckBoxes(final String s,
-			final boolean chosen, final Object value) {
+	public CheckBox createCheckBoxes(final String s, final boolean chosen,
+			final Object value) {
 		final HorizontalPanel hp = new HorizontalPanel();
 		final CheckBox rCheck = new CheckBox();
+		rCheck.addClickListener(this);
 		if (s != null) {
 			rCheck.setText(s);
 		}
@@ -85,7 +106,7 @@ public class CheckBoxesAttribute extends GenericAttribute {
 
 		hp.add(rCheck);
 
-		return hp;
+		return rCheck;
 	}
 
 	protected void set(final MObjectDTO obj, final Object o) {
@@ -110,4 +131,5 @@ public class CheckBoxesAttribute extends GenericAttribute {
 		}
 		return chosenItems;
 	}
+
 }
