@@ -2,8 +2,10 @@ package edu.rpi.metpetdb.server.impl;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import edu.rpi.metpetdb.client.error.DAOException;
@@ -103,6 +105,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 			};
 			Integer i = 2;
 
+			Set<String> subsampleNames = new HashSet<String>();
 			for (ChemicalAnalysisDTO s : analyses) {
 
 				// Minerals need id's so equality can be checked
@@ -143,10 +146,17 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 
 					Subsample ss = mergeBean(ca.getSubsample());
 					(new SubsampleDAO(this.currentSession())).fill(ss);
-					ss_breakdown[2]++;
+					if (!subsampleNames.contains(ss.getName())) {
+						ss_breakdown[2]++;
+						subsampleNames.add(ss.getName());
+					}
 				} catch (SubsampleNotFoundException snfe) {
 					// If we couldn't find the subsample, then we'll add it
-					ss_breakdown[1]++;
+					ChemicalAnalysis ca = mergeBean(s);
+					if (!subsampleNames.contains(ca.getSubsample().getName())) {
+						ss_breakdown[1]++;
+						subsampleNames.add(ca.getSubsample().getName());
+					}
 				} catch (DAOException daoe) {
 					ss_breakdown[0]++;
 				}
