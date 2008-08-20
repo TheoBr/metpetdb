@@ -7,14 +7,19 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import com.google.gwt.widgetideas.table.client.FixedWidthGrid;
 import com.google.gwt.widgetideas.table.client.PagingOptions;
@@ -39,6 +44,7 @@ import edu.rpi.metpetdb.client.ui.ServerOp;
  *            the types of objects that will be paginated in this table
  */
 public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
+	private int pageSize = 10;
 
 	/**
 	 * How we sort by default (true means ascending, false is descending)
@@ -319,7 +325,7 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		};
 		PagingOptions options = new PagingOptions(scrollTable);
 
-		scrollTable.setPageSize(10);
+		scrollTable.setPageSize(pageSize);
 		tableModel.setRowCount(1);
 
 		for (int i = 0; i < displayColumns.size(); ++i) {
@@ -348,6 +354,29 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 
 		});
 
+		final Label pageSizeLabel = new Label("Results Per Page:");
+		final TextBox pageSizeTxt = new TextBox();
+		pageSizeTxt.setWidth("30px");
+		pageSizeTxt.setText(String.valueOf(pageSize));
+		final Button pageSizeBtn = new Button("Set");
+		pageSizeBtn.setStyleName("smallBtn");
+		pageSizeBtn.addClickListener(new ClickListener() {
+			public void onClick(final Widget sender) {
+				try {
+					setPageSize(Integer.parseInt(pageSizeTxt.getText()));
+				} catch (Exception e) {
+
+				} finally {
+
+				}
+			}
+		});
+		final HorizontalPanel hp = new HorizontalPanel();
+		hp.add(pageSizeLabel);
+		hp.add(pageSizeTxt);
+		hp.add(pageSizeBtn);
+		// scrollTable.getFooterTable().add(new );
+
 		// TODO: can you say we need CSS?
 		scrollTable.setWidth("100%");
 		dataTable.setWidth("100%");
@@ -356,10 +385,13 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		headerTable.getRowFormatter().addStyleName(0, "mpdb-dataTablePink");
 		dataTable.addStyleName("mpdb-dataTable");
 
+		hp.addStyleName("inline");
+		options.addStyleName("inline");
+
 		add(scrollTable);
 		add(options);
+		add(hp);
 		this.setWidth("100%");
-		// dataTable.setHeight("400px");
 	}
 
 	public ListEx(final ArrayList<Column> columns, final String noResultsMessage) {
@@ -406,5 +438,11 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 	public void refresh() {
 		scrollTable.gotoFirstPage();
 		scrollTable.reloadPage();
+	}
+
+	public void setPageSize(final int PageSize) {
+		pageSize = PageSize;
+		scrollTable.setPageSize(pageSize);
+		refresh();
 	}
 }
