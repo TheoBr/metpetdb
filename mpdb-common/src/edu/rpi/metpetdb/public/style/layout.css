@@ -1,12 +1,15 @@
 /*-------------------------------------
                 content
  --------------------------------------*/
+html {
+	font: 62.5%/1.5 Verdana,Helvetica,Arial,sans-serif;
+	color: #000;
+}
 body {
 	margin: 0;
 	width: 100%;
 	min-width: 600px;
-	font: 9pt/13pt "Lucida Grande",Verdana,Helvetica,Arial,sans-serif;
-	color: #000;
+	font-size: 1.1em;
 	background: #fff url(../images/bg-sidebar.gif) repeat-y left top;
 }
 .pageWrapper {
@@ -287,20 +290,40 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 	Breadcrumbs
 --------------------------*/
 
-#breadcrumbs {
-	background:#F7FBFF none repeat scroll 0%;
-	border-bottom:1px solid #E6EEF1;
-	color:#749490;
-	font-family:Verdana,sans-serif;
-	font-size:0.8em;
-	font-size-adjust:none;
-	font-stretch:normal;
-	font-style:normal;
-	font-variant:normal;
-	font-weight:normal;
-	line-height:normal;
-	padding:0.8em 0.5em 0.5em;
+.bcrumbs {
+	background-color: #f7fbff;
+	border-bottom: 1px solid #e6eef1;
+	color: #749490;
+	font-size: 0.9em;
+	height: 27px;
 }
+.bcrumbs:after {
+	content: ".";
+	height: 0;
+	visibility: hidden;
+	display: block;
+	clear: both;
+}
+.bcrumbs div {
+	background: transparent url(../images/breadcrumb-separator.gif) no-repeat 0% 50%;
+	float: left;
+	height: 27px;
+	padding-left: 24px;
+}
+.bcrumbs div.first {
+	background-image: none;
+	padding-left: 10px;
+}
+.bcrumbs div a.gwt-Hyperlink {
+	line-height: 1;
+	margin-top: 9px;
+	float: left;
+}
+
+
+/*------------------------
+	FIXME: clean these styles up
+--------------------------*/
 
 .bold{
 	font-weight: bold;

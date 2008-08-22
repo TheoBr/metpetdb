@@ -84,6 +84,30 @@
 	cursor: default;
 }
 
+/*-------------------------------------
+				ProgressBar
+---------------------------------------*/
+
+.gwt-ProgressBar-shell {
+  border: 2px solid #faf9f7;
+  border-right: 2px solid #848280;
+  border-bottom: 2px solid #848280;
+  background-color: #aaa;
+  height: 14pt;
+  width: 170px;
+  cursor: pointer;
+}
+.gwt-ProgressBar-shell .gwt-ProgressBar-bar {
+  background-color: #67A7E3;
+  cursor: pointer;
+}
+.gwt-ProgressBar-shell .gwt-ProgressBar-text {
+  padding: 0px;
+  margin: 0px;
+  color: white;
+}
+
+
 
 /*-------------------------------------
 			calendar popup

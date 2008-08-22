@@ -6,8 +6,8 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
@@ -23,9 +23,7 @@ import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
-public class Breadcrumbs extends HorizontalPanel {
-	private static final Label lbl = new Label("You are here:");
-	private static final String separator = ">";
+public class Breadcrumbs extends FlowPanel {
 	private static final String tokenSep = "-";
 	private bcNode root;
 	private String id;
@@ -46,6 +44,7 @@ public class Breadcrumbs extends HorizontalPanel {
 			});
 		} catch (RequestException ex) {
 		}
+		setStylePrimaryName(Styles.BREADCRUMBS);
 	}
 
 	public Breadcrumbs(final String HistoryToken) {
@@ -133,7 +132,6 @@ public class Breadcrumbs extends HorizontalPanel {
 	 * If we found the page in our tree then start moving up the tree
 	 */
 	private void onFindSuccess(final bcNode currentPage) {
-		add(lbl);
 		bcNode Node = currentPage;
 		current = currentPage;
 		LeftColWidget.updateLeftSide(Node.getLeftSide());
@@ -141,19 +139,21 @@ public class Breadcrumbs extends HorizontalPanel {
 	}
 	private void onFindSuccessRecursive(final bcNode Node) {
 		if (Node != null) {
-			final MLink bcItem = new MLink();
+			final MLink bcItemLink = new MLink();
+			final SimplePanel bcItem = new SimplePanel();
+			bcItem.add(bcItemLink);
 			/*
 			 * Check if it needs a custom name and target history
 			 */
 			if (!Node.isScreen()) {
-				bcItem.setTargetHistoryToken(Node.getToken() + tokenSep
+				bcItemLink.setTargetHistoryToken(Node.getToken() + tokenSep
 						+ getId());
-				bcItem.setText(Node.getName());
+				bcItemLink.setText(Node.getName());
 				insertBcItem(bcItem, Node);
 				getAliasById(id, Node.getName(), Node);
 			} else {
-				bcItem.setTargetHistoryToken(Node.getToken());
-				bcItem.setText(Node.getName());
+				bcItemLink.setTargetHistoryToken(Node.getToken());
+				bcItemLink.setText(Node.getName());
 				insertBcItem(bcItem, Node);
 				onFindSuccessRecursive(Node.getParent());
 			}
@@ -161,12 +161,14 @@ public class Breadcrumbs extends HorizontalPanel {
 
 	}
 
-	private void insertBcItem(final MLink bc, final bcNode node) {
-		insert(bc, 1);
-		if (node.getParent() != null) {
-			insert(new Label(separator), 1);
-		} else
+	private void insertBcItem(final SimplePanel bc, final bcNode node) {
+		insert(bc, 0);
+		if (node.getParent() == null) {
+			bc.addStyleName(Styles.FIRST);
 			setVisible(true);
+		} else {
+			bc.removeStyleName(Styles.FIRST);
+		}
 	}
 
 	/*

@@ -25,8 +25,8 @@ p {margin: 1em 0;}
 .page-leftcol a, .page-leftcol a:link,
 .page-footer a, .page-footer a:link,
 .gwt-Hyperlink {
-	text-decoration: underline;
 	color: #0c5ea3;
+	text-decoration: none;
 }
 .page-container a:visited, #footer a:visited {
 	color: #7f15b0;
@@ -39,6 +39,7 @@ p {margin: 1em 0;}
 .page-footer a:focus, .page-footer a:hover, .page-footer a:active,
 .gwt-Hyperlink:focus, .gwt-Hyperlink:hover {
 	color: #318fdf;
+	text-decoration: underline;
 }
 
 
@@ -63,28 +64,6 @@ ol li span {
 	color: #000;
 }
 
-/*-------------------------------------
-				ProgressBar
----------------------------------------*/
-
-.gwt-ProgressBar-shell {
-  border: 2px solid #faf9f7;
-  border-right: 2px solid #848280;
-  border-bottom: 2px solid #848280;
-  background-color: #AAAAAA;
-  height: 14pt;
-  width: 170px;
-  cursor: pointer;
-}
-.gwt-ProgressBar-shell .gwt-ProgressBar-bar {
-  background-color: #67A7E3;
-  cursor: pointer;
-}
-.gwt-ProgressBar-shell .gwt-ProgressBar-text {
-  padding: 0px;
-  margin: 0px;
-  color: white;
-}
 
 /*-------------------------------------
                  buttons
