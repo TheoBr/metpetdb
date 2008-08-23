@@ -55,6 +55,7 @@ public class Styles {
 	public static final String ODD = "odd";
 
 	public static final String FIRST = "first";
+	public static final String CURRENT = "current";
 	public static final String BREADCRUMBS = "bcrumbs";
 
 	private Styles() {

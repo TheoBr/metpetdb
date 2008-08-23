@@ -136,6 +136,8 @@ public class Breadcrumbs extends FlowPanel {
 		current = currentPage;
 		LeftColWidget.updateLeftSide(Node.getLeftSide());
 		onFindSuccessRecursive(Node);
+		getWidget(0).addStyleName(Styles.FIRST);
+		getWidget((getWidgetCount() - 1)).addStyleName(Styles.CURRENT);
 	}
 	private void onFindSuccessRecursive(final bcNode Node) {
 		if (Node != null) {
@@ -163,12 +165,8 @@ public class Breadcrumbs extends FlowPanel {
 
 	private void insertBcItem(final SimplePanel bc, final bcNode node) {
 		insert(bc, 0);
-		if (node.getParent() == null) {
-			bc.addStyleName(Styles.FIRST);
+		if (node.getParent() == null)
 			setVisible(true);
-		} else {
-			bc.removeStyleName(Styles.FIRST);
-		}
 	}
 
 	/*
