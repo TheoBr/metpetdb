@@ -121,7 +121,7 @@ public class SampleDetails extends MPagePanel {
 				final SampleDTO s = (SampleDTO) result;
 				sampleHeader = LocaleHandler.lc_text.sample() + " "
 						+ s.getName();
-				setPageHeader(sampleHeader);
+				setPageTitle(sampleHeader);
 				samplePosition = new LatLng(((Point) s.getLocation()).x,
 						((Point) s.getLocation()).y);
 				updateGoogleMaps();

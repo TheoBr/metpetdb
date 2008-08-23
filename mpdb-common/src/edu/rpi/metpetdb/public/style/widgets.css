@@ -34,6 +34,7 @@
 	background-image: url(../images/add.gif);
 	background-repeat: no-repeat;
 	background-position: left center;
+	cursor: pointer;
 }
 
 
@@ -162,6 +163,12 @@ table.calendar-panel {
 	cursor:pointer;
 }
 
+/*-------------------------------------
+                table
+ --------------------------------------*/
+.samples-container {
+	margin: 0 10px 10px;
+}
 
 /*-------------------------------------
                  random

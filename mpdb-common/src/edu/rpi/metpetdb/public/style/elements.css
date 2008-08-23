@@ -3,6 +3,8 @@
  --------------------------------------*/
 h1, .h1 {
 	font: 2em Helvetica, Arial, sans-serif;
+}
+.h1 {
 	padding-top: 0.7em;
 	margin-bottom: 0.5em;
 }
@@ -146,6 +148,10 @@ button.submit {
 	padding: 0.3em 0.5em;
 	border-top: 1px solid #DBE2EC;
 	border-bottom: 1px solid #DFECF9;
+}
+
+.mpdb-dataTableUserSamples {
+	margin: 6px 0;
 }
 
 .mpdb-dataTableUserSamples .gwt-Label {

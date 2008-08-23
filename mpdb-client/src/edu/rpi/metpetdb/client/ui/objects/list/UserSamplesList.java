@@ -38,17 +38,18 @@ import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.left.side.MySamples;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
+import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 
-public class UserSamplesList extends FlowPanel implements ClickListener {
+public class UserSamplesList extends MPagePanel implements ClickListener {
 	private static final String cookieString = "UserSamplesList";
 	private static final String samplesParameter = "Samples";
 	private Label errMsg = new Label();
-	private FlexTable header1;
+	private FlexTable filters;
 	private SampleListEx list;
 	private MySamples mysamples;
 	private Set<ProjectDTO> projectsList;
 	private ListBox lb;
-	private FlexTable Samples_ft;
+	private FlowPanel samplesContainer = new FlowPanel();
 	private MLink createView;
 	private Button exportExcelButton;
 	private Button exportGoogleEarthButton;
@@ -56,89 +57,21 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 	public UserSamplesList() {
 	}
 
-	private void addTopRows() {
-		header1 = new FlexTable();
-		header1.setWidth("100%");
+	private void addHeader() {
+
+		addPageHeader();
+		setPageTitle("My Samples");
+		addPageHeaderActionList();
 
 		final MLink uploadSample = new MLink("Enter Sample",
 				TokenSpace.enterSample);
-
 		final MLink bulkUpload = new MLink("Bulk Upload", TokenSpace.bulkUpload);
 
-		final MLink recentlyAdded = new MLink("Recently Added",
-				new ClickListener() {
-					public void onClick(Widget sender) {
-					}
-				});
-
-		final MLink simple = new MLink("Simple", new ClickListener() {
-			public void onClick(Widget sender) {
-			}
-		});
-
-		final MLink detailed = new MLink("Detailed", new ClickListener() {
-			public void onClick(Widget sender) {
-				list.newView(list.getOriginalColumns());
-			}
-		});
-
-		createView = new MLink("Create New View", this);
-
-		final Label mySamples_label = new Label("My Samples");
-		final Label quickfilters_label = new Label("Quick Filters:");
-		final Label changeView_label = new Label("Change View:");
-		uploadSample.addStyleName("addlink");
-		bulkUpload.addStyleName("addlink");
-
-		recentlyAdded.addStyleName("beta");
-		simple.addStyleName("beta");
-
-		header1.setWidget(0, 0, mySamples_label);
-		header1.setWidget(1, 0, uploadSample);
-		header1.setWidget(1, 1, bulkUpload);
-
-		header1.setWidget(2, 0, quickfilters_label);
-		header1.setWidget(2, 1, recentlyAdded);
-		header1.setWidget(2, 3, changeView_label);
-		header1.setWidget(2, 4, simple);
-		header1.setWidget(2, 5, detailed);
-		header1.setWidget(2, 6, createView);
-
-		header1.getFlexCellFormatter().setColSpan(0, 0, 3);
-		header1.getFlexCellFormatter().setColSpan(0, 1, 4);
-		header1.getFlexCellFormatter().setColSpan(1, 1, 2);
-		header1.getFlexCellFormatter().setWidth(1, 0, "100px");
-		header1.getFlexCellFormatter().setAlignment(0, 1,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.getFlexCellFormatter().setWidth(2, 2, "50%");
-		header1.getFlexCellFormatter().setAlignment(2, 0,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.getFlexCellFormatter().setAlignment(2, 1,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.getFlexCellFormatter().setAlignment(2, 2,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.getFlexCellFormatter().setAlignment(2, 3,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.getFlexCellFormatter().setAlignment(2, 4,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.getFlexCellFormatter().setAlignment(2, 5,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.getFlexCellFormatter().setAlignment(2, 6,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.setCellSpacing(10);
-		header1.addStyleName("mpdb-dataTableUserSamples");
-		mySamples_label.setStyleName("big");
 		uploadSample.setStyleName("addlink");
 		bulkUpload.setStyleName("addlink");
-		this.add(header1);
+
+		addActionListItem(uploadSample);
+		addActionListItem(bulkUpload);
 	}
 
 	private Widget addResultListFooter() {
@@ -221,9 +154,6 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 
 	private void addSamples() {
 		createViewFromCookie();
-		Samples_ft = new FlexTable();
-		Samples_ft.setWidth("100%");
-		Samples_ft.setWidget(0, 0, list);
 
 		FixedWidthFlexTable footer = new FixedWidthFlexTable();
 		CheckBox cb = new CheckBox("Select All");
@@ -286,7 +216,72 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 		footer.setWidth("100%");
 		list.getScrollTable().setFooterTable(footer);
 
-		this.add(Samples_ft);
+		samplesContainer.setStylePrimaryName("samples-container");
+		addSampleFilters();
+		samplesContainer.add(list);
+
+		this.add(samplesContainer);
+	}
+
+	private void addSampleFilters() {
+		final MLink recentlyAdded = new MLink("Recently Added",
+				new ClickListener() {
+					public void onClick(Widget sender) {
+					}
+				});
+
+		final MLink simple = new MLink("Simple", new ClickListener() {
+			public void onClick(Widget sender) {
+			}
+		});
+
+		final MLink detailed = new MLink("Detailed", new ClickListener() {
+			public void onClick(Widget sender) {
+				list.newView(list.getOriginalColumns());
+			}
+		});
+
+		createView = new MLink("Create New View", this);
+
+		final Label quickfilters_label = new Label("Quick Filters:");
+		final Label changeView_label = new Label("Change View:");
+
+		recentlyAdded.addStyleName("beta");
+		simple.addStyleName("beta");
+
+		filters = new FlexTable();
+		filters.setWidth("100%");
+
+		filters.setWidget(0, 0, quickfilters_label);
+		filters.setWidget(0, 1, recentlyAdded);
+		filters.setWidget(0, 2, changeView_label);
+		filters.setWidget(0, 3, simple);
+		filters.setWidget(0, 4, detailed);
+		filters.setWidget(0, 5, createView);
+
+		filters.getFlexCellFormatter().setWidth(0, 1, "50%");
+		filters.getFlexCellFormatter().setAlignment(0, 0,
+				HasHorizontalAlignment.ALIGN_LEFT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		filters.getFlexCellFormatter().setAlignment(0, 1,
+				HasHorizontalAlignment.ALIGN_LEFT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		filters.getFlexCellFormatter().setAlignment(0, 2,
+				HasHorizontalAlignment.ALIGN_RIGHT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		filters.getFlexCellFormatter().setAlignment(0, 3,
+				HasHorizontalAlignment.ALIGN_RIGHT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		filters.getFlexCellFormatter().setAlignment(0, 4,
+				HasHorizontalAlignment.ALIGN_RIGHT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		filters.getFlexCellFormatter().setAlignment(0, 5,
+				HasHorizontalAlignment.ALIGN_RIGHT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		filters.setCellSpacing(10);
+		filters.addStyleName("mpdb-dataTableUserSamples");
+
+		samplesContainer.add(filters);
 	}
 
 	public UserSamplesList display() {
@@ -298,7 +293,7 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 			public void onSuccess(Object result) {
 				projectsList = new HashSet<ProjectDTO>(
 						(List<ProjectDTO>) result);
-				addTopRows();
+				addHeader();
 				userSamples();
 				addSamples();
 			}
@@ -314,7 +309,7 @@ public class UserSamplesList extends FlowPanel implements ClickListener {
 			public void onSuccess(Object result) {
 				projectsList = new HashSet<ProjectDTO>(
 						(List<ProjectDTO>) result);
-				addTopRows();
+				addHeader();
 				projectSamples(projectId);
 				addSamples();
 			}

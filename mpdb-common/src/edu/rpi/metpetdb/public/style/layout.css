@@ -18,9 +18,7 @@ body {
 #container {
 	margin-left: 201px;
 }
-#content {
-	margin: 0 1.5em 1.5em;
-}
+
 
 /*-------------------------------------
                  header
@@ -218,7 +216,21 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 .page-header {
 	background-color: #FBFBFB;
 	border-bottom: 1px solid #EFEFEF;
-	padding: 1.5em 1.5em 0;
+	padding: 16px 10px 10px;
+	position: relative;
+}
+.page-action-list {
+	position: absolute;
+	right: 10px;
+	top: 17px;
+	text-align: right;
+}
+.action-list-item {
+	display: inline;
+	margin-left: 1em;
+}
+.action-list-item a {
+	font-size: 1.1em;
 }
 
 
@@ -237,7 +249,7 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 	height: 40px;
 	margin: 2.5em 1em 1em 200px;
 	padding-bottom: 10px;
-	font-size: 0.8em;
+	font-size: 0.9em;
 	text-align: left;
 }
 #nsf img {
