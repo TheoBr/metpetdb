@@ -43,6 +43,25 @@ p {margin: 1em 0;}
 	color: #318fdf;
 	text-decoration: underline;
 }
+.addlink {
+	padding-left: 15px;
+	background-image: url(../images/add.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	cursor: pointer;
+}
+.large-icon-link {
+	padding: 10px 0 10px 24px;
+	background-repeat: no-repeat;
+	background-position: left center;
+	cursor: pointer;
+}
+.upload-link {
+	background-image: url(../images/icon-upload.png);
+}
+.upload-multi-link {
+	background-image: url(../images/icon-upload-multi.png);
+}
 
 
 
@@ -152,16 +171,6 @@ button.submit {
 
 .mpdb-dataTableUserSamples {
 	margin: 6px 0;
-}
-
-.mpdb-dataTableUserSamples .gwt-Label {
-	font-family: Helvetica;
-	font-size:9pt;
-}
-
-.mpdb-dataTableUserSamples .gwt-Hyperlink {
-	font-family: Helvetica;
-	font-size:9pt;	
 }
 
 button.remove {

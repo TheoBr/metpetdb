@@ -25,19 +25,6 @@
 	line-height: 1em;
 }
 
-
-/*-------------------------------------
-          special links
- --------------------------------------*/
-.addlink {
-	padding-left: 15px;
-	background-image: url(../images/add.gif);
-	background-repeat: no-repeat;
-	background-position: left center;
-	cursor: pointer;
-}
-
-
 /*-------------------------------------
 			pagination
  --------------------------------------*/

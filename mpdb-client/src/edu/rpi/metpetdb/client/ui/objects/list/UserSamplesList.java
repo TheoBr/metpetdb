@@ -33,6 +33,7 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
+import edu.rpi.metpetdb.client.ui.Styles;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.left.side.MySamples;
@@ -63,12 +64,14 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		setPageTitle("My Samples");
 		addPageHeaderActionList();
 
-		final MLink uploadSample = new MLink("Enter Sample",
+		final MLink uploadSample = new MLink("Upload Sample",
 				TokenSpace.enterSample);
 		final MLink bulkUpload = new MLink("Bulk Upload", TokenSpace.bulkUpload);
 
-		uploadSample.setStyleName("addlink");
-		bulkUpload.setStyleName("addlink");
+		uploadSample.setStylePrimaryName(Styles.LINK_LARGE_ICON);
+		bulkUpload.setStylePrimaryName(Styles.LINK_LARGE_ICON);
+		uploadSample.addStyleName(Styles.LINK_UPLOAD);
+		bulkUpload.addStyleName(Styles.LINK_UPLOAD_MULTI);
 
 		addActionListItem(uploadSample);
 		addActionListItem(bulkUpload);
@@ -84,7 +87,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 				.buttonExportKML(), this);
 
 		exportExcelButton.setStyleName("bold");
-		exportExcelButton.addStyleName("Beta");
+		exportExcelButton.addStyleName("beta");
 		exportGoogleEarthButton.setStyleName("bold");
 
 		hpExport.add(exportExcelButton);

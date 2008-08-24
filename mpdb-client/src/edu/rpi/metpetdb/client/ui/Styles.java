@@ -13,12 +13,6 @@ public class Styles {
 	public static final String BREADCRUMBS_ID = "breadcrumbs";
 	public static final String FOOTER_ID = "nsf";
 
-	/* ---------------- "standard" CSS classes we reuse ---------------- */
-	public static final String HEADERCELL = "headerCell";
-	public static final String ADDLINK = "addlink";
-	public static final String PRIMARY_BUTTON = "btnPrimary";
-	public static final String SECONDARY_BUTTON = "btnSecondary";
-
 	/* ---------------- bad classes; these should go away ---------------- */
 	public static final String DATATABLE = "mpdb-dataTable";
 	public static final String PAGETABLE = "mpdb-pageTable";
@@ -53,10 +47,20 @@ public class Styles {
 	public static final String VISIBLE = "visible";
 	public static final String EVEN = "even";
 	public static final String ODD = "odd";
-
 	public static final String FIRST = "first";
 	public static final String CURRENT = "current";
+
+	/* ---------------- Widgets ---------------- */
 	public static final String BREADCRUMBS = "bcrumbs";
+	public static final String HEADERCELL = "headerCell";
+	public static final String ADDLINK = "addlink";
+	public static final String PRIMARY_BUTTON = "btnPrimary";
+	public static final String SECONDARY_BUTTON = "btnSecondary";
+
+	/* ---------------- Links ---------------- */
+	public static final String LINK_LARGE_ICON = "large-icon-link";
+	public static final String LINK_UPLOAD = "upload-link";
+	public static final String LINK_UPLOAD_MULTI = "upload-multi-link";
 
 	private Styles() {
 	}
