@@ -48,8 +48,8 @@ whole.</p>
 		can be acquired at: http://www.postgis.org/ The PostGIS installation
 		procedure is fairly well documented in the PostGIS documentation
 		itself . During the installation process, you will be given the chance
-		to create a database, but you don’t have to worry about this stuff.
-		We’ve got that covered, so just hang tight!</li>
+		to create a database, but you don't have to worry about this stuff.
+		We've got that covered, so just hang tight!</li>
 		<li>(Optional) Apache Tomcat To run the MetPetDB server-side
 		components, Java Servlets are used. To make use of these, Apache
 		Tomcat 5.5.x is needed, which can be found below:
@@ -87,7 +87,7 @@ whole.</p>
 		GWT is located in the repository under the directory mpdb-common/gwt)</li>
 		<li>Eclipse (version 3.3x and up) Download eclipse IDE for java
 		development at: http://www.eclipse.org/downloads/ Subclipse is
-		necessary in order to use eclipse’s source control. Found at:
+		necessary in order to use eclipse's source control. Found at:
 		http://subclipse.tigris.org/download.html installation guide:
 		http://subclipse.tigris.org/install.html</li>
 	</ul>
@@ -138,7 +138,14 @@ whole.</p>
 		<li>This will generate the appropriate .classpath file for each
 		of the projects</li>
 		<li>Right click on each of the projects and select Refresh</li>
-		<li>All of the errors for the projects will magically disappear</li>
+		<li>All of the errors for the projects will magically disappear
+			<p>
+				If you still have errors what you could do is expand the project that has errors, then right click
+				on build.xml and choose Run As->And Build... For the target choose eclipse, this should setup
+				the correct .classpath file for only that project.  After that is done try refreshing the project and/or
+				closing it as well
+			</p>
+		</li>
 		<li>Setting up the .property files
 		<p>Under the directory mpdb-server/src there are several .property
 		files that need to be created in order for the application to work,
@@ -164,7 +171,10 @@ whole.</p>
 		<li>Enter the password for the account you created when you
 		installed PostgreSQL</li>
 		<li>Change directory to mpdb-server/build/schema, An example of
-		this is \cd C:/workspace/mpdb-server/build/schema</li>
+		this is \cd C:/workspace/mpdb-server/build/schema
+			<p>You could also change the directory before starting up psql
+			</p>
+		</li>
 		<li>Execute "\i recreate-database.sql"</li>
 	</ul>
 
