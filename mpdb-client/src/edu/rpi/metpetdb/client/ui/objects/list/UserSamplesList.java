@@ -449,6 +449,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 					}
 					public void onSuccess(Object result2) {
 						UserSamplesList.this.remove(errMsg);
+						projectListBox.setSelectedIndex(0);
 						list.getScrollTable().reloadPage();
 					}
 				}.begin();
