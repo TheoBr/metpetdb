@@ -156,6 +156,41 @@ table.calendar-panel {
 .samples-container {
 	margin: 0 10px 10px;
 }
+.datatable-footer {
+	background: transparent url(../images/datatable-footer-caret.png) no-repeat 11px 0;
+	padding-top: 7px;
+	color: #42495e;
+	font-size: 0.9em;
+}
+.datatable-footer-wrapper {
+	background: transparent url(../images/datatable-footer-bg.png) repeat-x 7px 0;
+}
+.datatable-footer td {
+	vertical-align: middle;
+	padding: 4px 7px;
+}
+.datatable-footer-select {
+	margin-right: 5px;
+}
+.datatable-footer-label {
+	font-weight: bold;
+	margin-right: 5px;
+}
+.datatable-footer-actions div {
+	display: inline;
+}
+.datatable-footer-action-item {
+	margin-left: 10px;
+}
+.datatable-footer-actions select,
+.datatable-footer-actions a {
+	margin-left: 5px;
+}
+.datatable-footer-select div,
+.datatable-footer-select a {
+	display: inline;
+	margin-right: 5px;
+}
 
 /*-------------------------------------
                  random

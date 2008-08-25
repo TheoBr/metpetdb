@@ -8,9 +8,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -203,9 +201,6 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 									.getOffsetHeight();
 
 					if (ListEx.this.scrollTable.getFooterTable() != null) {
-						((CheckBox) ((FlexTable) ListEx.this.scrollTable
-								.getFooterTable().getWidget(0, 0)).getWidget(0,
-								0)).setChecked(false);
 						size += ListEx.this.scrollTable.getFooterTable()
 								.getOffsetHeight();
 					}
@@ -267,7 +262,8 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 	 * <li>From the widget/text that is returned from the column
 	 * {@link Column#getRepresentation(MObjectDTO, int)}</li>
 	 * <li>From the data of the object
-	 * {@link MObjectDTO#mGet(edu.rpi.metpetdb.client.model.properties.Property)}</li>
+	 * {@link MObjectDTO#mGet(edu.rpi.metpetdb.client.model.properties.Property)}
+	 * </li>
 	 * </ol>
 	 * If either of those two scenarios are not possible it sets the data to be
 	 * the header of the column

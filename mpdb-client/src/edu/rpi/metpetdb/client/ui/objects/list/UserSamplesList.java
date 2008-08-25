@@ -11,7 +11,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 
@@ -45,95 +46,62 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	private static final String cookieString = "UserSamplesList";
 	private static final String samplesParameter = "Samples";
 	private Label errMsg = new Label();
-	private FlexTable filters;
+	private final FlexTable sampleDisplayFilters = new FlexTable();;
 	private SampleListEx list;
 	private MySamples mysamples;
+	private final SimplePanel footerContainer = new SimplePanel();
+	private final SimplePanel footerWrapper = new SimplePanel();
+	private final FlexTable footer = new FlexTable();
 	private Set<ProjectDTO> projectsList;
-	private ListBox lb;
+	private final ListBox projectListBox = new ListBox();
 	private FlowPanel samplesContainer = new FlowPanel();
 	private MLink createView;
-	private Button exportExcelButton;
-	private Button exportGoogleEarthButton;
+	private MLink exportExcel;
+	private MLink exportGoogleEarth;
 
 	public UserSamplesList() {
 	}
 
-	private void addHeader() {
-
-		addPageHeader();
+	protected void addPageHeader() {
+		super.addPageHeader();
 		setPageTitle("My Samples");
-		addPageHeaderActionList();
 
 		final MLink uploadSample = new MLink("Upload Sample",
 				TokenSpace.enterSample);
 		final MLink bulkUpload = new MLink("Bulk Upload", TokenSpace.bulkUpload);
 
 		uploadSample.setStylePrimaryName(Styles.LINK_LARGE_ICON);
-		bulkUpload.setStylePrimaryName(Styles.LINK_LARGE_ICON);
 		uploadSample.addStyleName(Styles.LINK_UPLOAD);
+
+		bulkUpload.setStylePrimaryName(Styles.LINK_LARGE_ICON);
 		bulkUpload.addStyleName(Styles.LINK_UPLOAD_MULTI);
 
 		addActionListItem(uploadSample);
 		addActionListItem(bulkUpload);
 	}
 
-	private Widget addResultListFooter() {
-
-		final HorizontalPanel hpExport = new HorizontalPanel();
-
-		exportExcelButton = new Button(LocaleHandler.lc_text
-				.buttonExportExcel(), this);
-		exportGoogleEarthButton = new Button(LocaleHandler.lc_text
-				.buttonExportKML(), this);
-
-		exportExcelButton.setStyleName("bold");
-		exportExcelButton.addStyleName("beta");
-		exportGoogleEarthButton.setStyleName("bold");
-
-		hpExport.add(exportExcelButton);
-		hpExport.add(exportGoogleEarthButton);
-
-		hpExport.setStyleName("mpdb-dataTableBlue");
-		hpExport.setWidth("100%");
-
-		return hpExport;
-
-	}
-
-	public void onClick(Widget sender) {
-		if (sender == createView) {
-			CustomTableView myView = new CustomTableView(list, cookieString);
-		} else if (sender == exportGoogleEarthButton) {
-			final FormPanel fp = new FormPanel();
-			fp.setMethod(FormPanel.METHOD_GET);
-			fp.setEncoding(FormPanel.ENCODING_URLENCODED);
-			final HorizontalPanel hp = new HorizontalPanel();
-			int currentpage = list.getScrollTable().getCurrentPage();
-			for (int page = 0; page < list.getScrollTable().getNumPages(); page++) {
-				list.getScrollTable().gotoPage(page, false);
-				int i = 0;
-				while (list.getScrollTable().getRowValue(i) != null) {
-					Hidden sample = new Hidden(samplesParameter, String
-							.valueOf(list.getScrollTable().getRowValue(i)
-									.getId()));
-					hp.add(sample);
-					i++;
-				}
+	private void doExportGoogleEarth() {
+		final FormPanel fp = new FormPanel();
+		fp.setMethod(FormPanel.METHOD_GET);
+		fp.setEncoding(FormPanel.ENCODING_URLENCODED);
+		final HorizontalPanel hp = new HorizontalPanel();
+		int currentpage = list.getScrollTable().getCurrentPage();
+		for (int page = 0; page < list.getScrollTable().getNumPages(); page++) {
+			list.getScrollTable().gotoPage(page, false);
+			int i = 0;
+			while (list.getScrollTable().getRowValue(i) != null) {
+				Hidden sample = new Hidden(samplesParameter, String
+						.valueOf(list.getScrollTable().getRowValue(i).getId()));
+				hp.add(sample);
+				i++;
 			}
-			list.getScrollTable().gotoPage(currentpage, true);
-			fp.add(hp);
-			fp.setAction(GWT.getModuleBaseURL() + "BasicKML.kml?");
-			fp.setVisible(false);
-			add(fp);
-			fp.submit();
-		} else if (sender == exportExcelButton) {
-
 		}
-
-		for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++) {
-			list.getScrollTable().getDataTable().getRowFormatter()
-					.removeStyleName(i, "highlighted-row");
-		}
+		list.getScrollTable().gotoPage(currentpage, true);
+		fp.add(hp);
+		fp.setAction(GWT.getModuleBaseURL() + "BasicKML.kml?");
+		fp.setVisible(false);
+		add(fp);
+		fp.submit();
 	}
 
 	private void projectSamples(final long projectId) {
@@ -157,76 +125,128 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 
 	private void addSamples() {
 		createViewFromCookie();
+		buildSampleFilters();
+		samplesContainer.add(sampleDisplayFilters);
+		buildSampleFooter();
+		samplesContainer.add(list);
+		samplesContainer.setStylePrimaryName(Styles.SAMPLES_CONTAINER);
+		this.add(samplesContainer);
+	}
 
-		FixedWidthFlexTable footer = new FixedWidthFlexTable();
-		CheckBox cb = new CheckBox("Select All");
-		cb.addClickListener(new ClickListener() {
+	private void buildSampleFooter() {
+		final MLink selectAll = new MLink("All", new ClickListener() {
 			public void onClick(Widget sender) {
 				for (int i = 0; i < list.getScrollTable().getDataTable()
 						.getRowCount(); i++)
 					((MCheckBox) list.getScrollTable().getDataTable()
-							.getWidget(i, 0)).setChecked(((CheckBox) sender)
-							.isChecked());
+							.getWidget(i, 0)).setChecked(true);
 			}
 		});
-		lb = new ListBox();
 
+		final MLink selectNone = new MLink("None", new ClickListener() {
+			public void onClick(Widget sender) {
+				for (int i = 0; i < list.getScrollTable().getDataTable()
+						.getRowCount(); i++)
+					((MCheckBox) list.getScrollTable().getDataTable()
+							.getWidget(i, 0)).setChecked(false);
+			}
+		});
+
+		/* TODO: add functionality */
+		final Label selectPrivate = new Label("Private");
+		selectPrivate.addStyleName(Styles.BETA);
+
+		/* TODO: add functionality */
+		final Label selectPublic = new Label("Public");
+		selectPublic.addStyleName(Styles.BETA);
+
+		final Label selectLabel = new Label("Select:");
+		selectLabel.setStylePrimaryName(Styles.DATATABLE_FOOTER_LABEL);
+
+		final FlowPanel selectPanel = new FlowPanel();
+		selectPanel.add(selectLabel);
+		selectPanel.add(selectAll);
+		selectPanel.add(selectNone);
+		selectPanel.add(selectPrivate);
+		selectPanel.add(selectPublic);
+		selectPanel.setStylePrimaryName(Styles.DATATABLE_FOOTER_SELECT);
+
+		final Label withSelected = new Label("With Selected:");
+		withSelected.setStylePrimaryName(Styles.DATATABLE_FOOTER_LABEL);
+
+		final Button btnRemove = new Button("Remove", new ClickListener() {
+			public void onClick(Widget sender) {
+				deleteSelected();
+			}
+		});
+
+		final Button btnPublic = new Button("Make Public", new ClickListener() {
+			public void onClick(Widget sender) {
+				MakePublicSelected();
+			}
+		});
+
+		final Label addToProjectLabel = new Label("Add to");
+		addToProjectLabel
+				.setStylePrimaryName(Styles.DATATABLE_FOOTER_ACTION_ITEM);
+
+		projectListBox.addItem("Choose Project...");
 		Iterator<ProjectDTO> it = projectsList.iterator();
 		while (it.hasNext()) {
 			final ProjectDTO project = (ProjectDTO) it.next();
-			lb.addItem("Add to '" + project.getName() + "'", String
-					.valueOf(project.getId()));
+			projectListBox.addItem(project.getName(), String.valueOf(project
+					.getId()));
 		}
-		lb.addItem("Remove");
-		lb.addItem("Make Public");
-
-		Button btn = new Button("Apply to Selected", new ClickListener() {
-			public void onClick(Widget sender) {
-				if (lb.getItemText(lb.getSelectedIndex()).equals("Remove")) {
-					deleteSelected();
-				} else if (lb.getItemText(lb.getSelectedIndex()).equals(
-						"Make Public")) {
-					MakePublicSelected();
-				} else {
+		projectListBox.addChangeListener(new ChangeListener() {
+			public void onChange(Widget sender) {
+				if (projectListBox.getSelectedIndex() > 0)
 					AddToProjectSelected();
-				}
-
 			}
 		});
-		btn.setHeight("30px");
-		FlexTable realFooter = new FlexTable();
 
-		realFooter.setWidget(0, 0, cb);
-		realFooter.setWidget(0, 1, lb);
-		realFooter.setWidget(0, 2, btn);
-		realFooter.setWidget(0, 3, addResultListFooter());
-		realFooter.addStyleName("mpdb-dataTableBlue");
-		realFooter.getFlexCellFormatter().setWidth(0, 0, "85px");
-		realFooter.getFlexCellFormatter().setWidth(0, 1, "100px");
-		realFooter.getFlexCellFormatter().setAlignment(0, 0,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		realFooter.getFlexCellFormatter().setAlignment(0, 1,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		realFooter.getFlexCellFormatter().setAlignment(0, 1,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		realFooter.setWidth("100%");
-		realFooter.setCellSpacing(5);
-		footer.setWidget(0, 0, realFooter);
-		footer.getFlexCellFormatter().setColSpan(0, 0, 4);
-		footer.setWidth("100%");
-		list.getScrollTable().setFooterTable(footer);
+		final Label exportLabel = new Label("Export:");
+		exportLabel.setStylePrimaryName(Styles.DATATABLE_FOOTER_ACTION_ITEM);
 
-		samplesContainer.setStylePrimaryName("samples-container");
-		addSampleFilters();
-		samplesContainer.add(list);
+		exportExcel = new MLink(LocaleHandler.lc_text.buttonExportExcel(),
+				new ClickListener() {
+					public void onClick(Widget sender) {
+					}
+				});
+		exportExcel.addStyleName(Styles.BETA);
 
-		this.add(samplesContainer);
+		exportGoogleEarth = new MLink(LocaleHandler.lc_text.buttonExportKML(),
+				new ClickListener() {
+					public void onClick(Widget sender) {
+						doExportGoogleEarth();
+					}
+				});
+
+		final FlowPanel withSelectedPanel = new FlowPanel();
+		withSelectedPanel.add(withSelected);
+		withSelectedPanel.add(btnRemove);
+		withSelectedPanel.add(btnPublic);
+		withSelectedPanel.add(addToProjectLabel);
+		withSelectedPanel.add(projectListBox);
+		withSelectedPanel.add(exportLabel);
+		withSelectedPanel.add(exportExcel);
+		withSelectedPanel.add(exportGoogleEarth);
+		withSelectedPanel.setStylePrimaryName(Styles.DATATABLE_FOOTER_ACTIONS);
+
+		footer.setWidget(0, 0, selectPanel);
+		footer.setWidget(0, 1, withSelectedPanel);
+
+		footerContainer.add(footer);
+		footerContainer.setStylePrimaryName(Styles.DATATABLE_FOOTER);
+		footerWrapper.add(footerContainer);
+		footerWrapper.setStylePrimaryName(Styles.DATATABLE_FOOTER_WRAPPER);
+		final FixedWidthFlexTable footerTable = new FixedWidthFlexTable();
+		footerTable.setWidget(0, 0, footerWrapper);
+		footerTable.getFlexCellFormatter().setColSpan(0, 0, 4);
+		footerTable.setWidth("100%");
+		list.getScrollTable().setFooterTable(footerTable);
 	}
 
-	private void addSampleFilters() {
+	private void buildSampleFilters() {
 		final MLink recentlyAdded = new MLink("Recently Added",
 				new ClickListener() {
 					public void onClick(Widget sender) {
@@ -252,39 +272,37 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		recentlyAdded.addStyleName("beta");
 		simple.addStyleName("beta");
 
-		filters = new FlexTable();
-		filters.setWidth("100%");
+		sampleDisplayFilters.setWidth("100%");
 
-		filters.setWidget(0, 0, quickfilters_label);
-		filters.setWidget(0, 1, recentlyAdded);
-		filters.setWidget(0, 2, changeView_label);
-		filters.setWidget(0, 3, simple);
-		filters.setWidget(0, 4, detailed);
-		filters.setWidget(0, 5, createView);
+		sampleDisplayFilters.setWidget(0, 0, quickfilters_label);
+		sampleDisplayFilters.setWidget(0, 1, recentlyAdded);
+		sampleDisplayFilters.setWidget(0, 2, changeView_label);
+		sampleDisplayFilters.setWidget(0, 3, simple);
+		sampleDisplayFilters.setWidget(0, 4, detailed);
+		sampleDisplayFilters.setWidget(0, 5, createView);
 
-		filters.getFlexCellFormatter().setWidth(0, 1, "50%");
-		filters.getFlexCellFormatter().setAlignment(0, 0,
+		sampleDisplayFilters.getFlexCellFormatter().setWidth(0, 1, "50%");
+		sampleDisplayFilters.getFlexCellFormatter().setAlignment(0, 0,
 				HasHorizontalAlignment.ALIGN_LEFT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		filters.getFlexCellFormatter().setAlignment(0, 1,
+		sampleDisplayFilters.getFlexCellFormatter().setAlignment(0, 1,
 				HasHorizontalAlignment.ALIGN_LEFT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		filters.getFlexCellFormatter().setAlignment(0, 2,
+		sampleDisplayFilters.getFlexCellFormatter().setAlignment(0, 2,
 				HasHorizontalAlignment.ALIGN_RIGHT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		filters.getFlexCellFormatter().setAlignment(0, 3,
+		sampleDisplayFilters.getFlexCellFormatter().setAlignment(0, 3,
 				HasHorizontalAlignment.ALIGN_RIGHT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		filters.getFlexCellFormatter().setAlignment(0, 4,
+		sampleDisplayFilters.getFlexCellFormatter().setAlignment(0, 4,
 				HasHorizontalAlignment.ALIGN_RIGHT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		filters.getFlexCellFormatter().setAlignment(0, 5,
+		sampleDisplayFilters.getFlexCellFormatter().setAlignment(0, 5,
 				HasHorizontalAlignment.ALIGN_RIGHT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		filters.setCellSpacing(10);
-		filters.addStyleName("mpdb-dataTableUserSamples");
+		sampleDisplayFilters.setCellSpacing(10);
+		sampleDisplayFilters.addStyleName("mpdb-dataTableUserSamples");
 
-		samplesContainer.add(filters);
 	}
 
 	public UserSamplesList display() {
@@ -296,7 +314,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 			public void onSuccess(Object result) {
 				projectsList = new HashSet<ProjectDTO>(
 						(List<ProjectDTO>) result);
-				addHeader();
+				addPageHeader();
 				userSamples();
 				addSamples();
 			}
@@ -312,7 +330,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 			public void onSuccess(Object result) {
 				projectsList = new HashSet<ProjectDTO>(
 						(List<ProjectDTO>) result);
-				addHeader();
+				addPageHeader();
 				projectSamples(projectId);
 				addSamples();
 			}
@@ -414,8 +432,8 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		new ServerOp() {
 			@Override
 			public void begin() {
-				MpDb.project_svc.details(Integer.parseInt(lb.getValue(lb
-						.getSelectedIndex())), this);
+				MpDb.project_svc.details(Integer.parseInt(projectListBox
+						.getValue(projectListBox.getSelectedIndex())), this);
 			}
 			public void onSuccess(final Object result) {
 				new ServerOp() {
@@ -455,4 +473,16 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 			list.newView(displayColumns);
 		}
 	}
+
+	public void onClick(Widget sender) {
+		if (sender == createView) {
+			CustomTableView myView = new CustomTableView(list, cookieString);
+		}
+
+		for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++) {
+			list.getScrollTable().getDataTable().getRowFormatter()
+					.removeStyleName(i, "highlighted-row");
+		}
+	}
+
 }

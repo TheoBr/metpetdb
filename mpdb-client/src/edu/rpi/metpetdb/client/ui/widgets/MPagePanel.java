@@ -6,11 +6,11 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
 public class MPagePanel extends FlowPanel {
-	private Element headH1 = DOM.createElement("h1");
-	private FlowPanel headContainer = new FlowPanel();
-	private FlowPanel actionList = new FlowPanel();
+	private final Element headH1 = DOM.createElement("h1");
+	private final FlowPanel headContainer = new FlowPanel();
+	private final FlowPanel actionList = new FlowPanel();
 
-	public void addPageHeader() {
+	protected void addPageHeader() {
 		headContainer.setStylePrimaryName("page-header");
 		DOM.appendChild(headContainer.getElement(), headH1);
 		insert(headContainer, 0);
@@ -30,6 +30,10 @@ public class MPagePanel extends FlowPanel {
 	}
 
 	public void insertActionListItem(final MLink lnk, int pos) {
+		if (!DOM.isOrHasChild(headContainer.getElement(), actionList
+				.getElement()))
+			addPageHeaderActionList();
+
 		final SimplePanel li = new SimplePanel();
 		li.setStylePrimaryName("action-list-item");
 		li.add(lnk);

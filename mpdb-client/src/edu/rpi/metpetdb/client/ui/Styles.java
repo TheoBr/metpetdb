@@ -62,6 +62,17 @@ public class Styles {
 	public static final String LINK_UPLOAD = "upload-link";
 	public static final String LINK_UPLOAD_MULTI = "upload-multi-link";
 
+	public static final String BETA = "beta";
+	public static final String SAMPLES_CONTAINER = "samples-container";
+
+	public static final String DATATABLE_FOOTER = "datatable-footer";
+	public static final String DATATABLE_FOOTER_SELECT = "datatable-footer-select";
+	public static final String DATATABLE_FOOTER_SELECT_OPTION = "select-option";
+	public static final String DATATABLE_FOOTER_WRAPPER = "datatable-footer-wrapper";
+	public static final String DATATABLE_FOOTER_LABEL = "datatable-footer-label";
+	public static final String DATATABLE_FOOTER_ACTIONS = "datatable-footer-actions";
+	public static final String DATATABLE_FOOTER_ACTION_ITEM = "datatable-footer-action-item";
+
 	private Styles() {
 	}
 }
