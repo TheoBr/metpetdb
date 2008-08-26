@@ -72,6 +72,15 @@ public class Styles {
 	public static final String DATATABLE_FOOTER_LABEL = "datatable-footer-label";
 	public static final String DATATABLE_FOOTER_ACTIONS = "datatable-footer-actions";
 	public static final String DATATABLE_FOOTER_ACTION_ITEM = "datatable-footer-action-item";
+	public static final String POPUP_CUSTOM_COLS_CONTAINER = "popup-custom-cols-container";
+	public static final String POPUP_CUSTOM_COLS = "popup-custom-cols";
+	public static final String POPUP_CUSTOM_COLS_BOTTOM = "popup-custom-cols-bottom";
+	public static final String PARAGRAPH = "p";
+	public static final String COL_1_OF_2 = "col-1-2";
+	public static final String COL_2_OF_2 = "col-2-2";
+	public static final String CLEARFIX = "clearfix";
+	public static final String DATATABLE_HEADER_FILTERS = "datatable-header-filters";
+	public static final String DIALOG_SETTINGS = "dialog-settings";
 
 	private Styles() {
 	}

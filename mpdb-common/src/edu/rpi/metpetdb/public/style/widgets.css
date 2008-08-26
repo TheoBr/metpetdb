@@ -58,7 +58,7 @@
 .mpdb-pageTable .currentPageCell a:focus, .mpdb-pageTable .currentPageCell a:hover, .mpdb-pageTable .currentPageCell a:active {
 	background-color: #2E6AB1;
 	border-color: #2E6AB1 !important;
-	font-weight:bold;
+	font-weight: bold;
 	color: #fff !important;
 	cursor: default;
 }
@@ -160,7 +160,6 @@ table.calendar-panel {
 	background: transparent url(../images/datatable-footer-caret.png) no-repeat 11px 0;
 	padding-top: 5px;
 	color: #42495e;
-	font-size: 0.9em;
 }
 .datatable-footer-wrapper {
 	background: transparent url(../images/datatable-footer-bg.png) repeat-x 7px 0;
@@ -191,6 +190,53 @@ table.calendar-panel {
 	display: inline;
 	margin-right: 5px;
 }
+.datatable-header-filters {
+	text-align: right;
+	color: #42495e;
+	margin: 10px 0 5px;
+}
+.datatable-header-filters div,
+.datatable-header-filters a {
+	display: inline;
+	margin-left: 10px;
+}
+
+/*-------------------------------------
+             custom columns popup
+ --------------------------------------*/
+.popup-custom-cols-container {
+	padding: 10px;
+	background: #a0a0a1 url(../images/settings-dialog-bg.png) repeat-x 0 0;
+}
+.popup-custom-cols .gwt-Label {
+	text-align: left;
+	margin-bottom: 10px;
+}
+.popup-custom-cols .gwt-CheckBox {
+	display: block;
+	margin-bottom: 3px;
+	display: table-row;
+}
+.popup-custom-cols .gwt-CheckBox input {
+	border: 0 !important;
+	margin: 0 5px 0 0;
+}
+.popup-custom-cols .gwt-CheckBox label,
+.popup-custom-cols .gwt-CheckBox input {
+	display: table-cell;
+	vertical-align: middle;
+	padding-bottom: 4px;
+}
+
+.popup-custom-cols-bottom {
+	text-align: right;
+	margin-top: 6px;
+}
+.popup-custom-cols-bottom button {
+	margin-left: 10px;
+}
+
+
 
 /*-------------------------------------
                  random

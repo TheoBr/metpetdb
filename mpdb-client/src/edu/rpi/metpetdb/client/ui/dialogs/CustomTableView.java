@@ -8,13 +8,15 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.paging.Column;
+import edu.rpi.metpetdb.client.ui.Styles;
 import edu.rpi.metpetdb.client.ui.input.Submit;
 import edu.rpi.metpetdb.client.ui.objects.list.ListEx;
 
@@ -30,38 +32,51 @@ public class CustomTableView extends MDialogBox implements ClickListener,
 	public CustomTableView(final ListEx myList, final String myTable) {
 		list = myList;
 		table = myTable;
-		setText("Please choose your desired fields");
+		setText("Custom View");
+
+		final Label infoPara = new Label(
+				"Choose which columns you want displayed.");
 
 		cb = new ArrayList<CheckBox>();
-
 		submit = new Submit(LocaleHandler.lc_text.buttonSubmit(), this);
-
 		cancel = new Button(LocaleHandler.lc_text.buttonCancel(), this);
 
+		final SimplePanel container = new SimplePanel();
 		final FlexTable ft = new FlexTable();
+		final FlowPanel leftPanel = new FlowPanel();
+		final FlowPanel rightPanel = new FlowPanel();
+		final FlowPanel bottomPanel = new FlowPanel();
 
 		final ArrayList<Column> displayColumns = list.getDisplayColumns();
 		for (int i = 1; i < list.getOriginalColumns().size(); i++) {
 			Column original = (Column) list.getOriginalColumns().get(i);
-			CheckBox tempCB = new CheckBox();
+			CheckBox tempCB = new CheckBox(original.getTitle());
 			tempCB.setName(original.getTitle());
 			if (displayColumns.contains(original))
 				tempCB.setChecked(true);
-			ft.setWidget(i, 0, tempCB);
-			ft.setWidget(i, 1, new Label(tempCB.getName()));
+			if (i > list.getOriginalColumns().size() / 2)
+				rightPanel.add(tempCB);
+			else
+				leftPanel.add(tempCB);
 			cb.add(tempCB);
 		}
-		ft.getColumnFormatter().setWidth(0, "20px");
 
-		final HorizontalPanel hp = new HorizontalPanel();
-		hp.add(submit);
-		hp.add(cancel);
-		hp.setSpacing(5);
-		ft.setWidget(ft.getRowCount(), 0, hp);
-		ft.getFlexCellFormatter().setColSpan(ft.getRowCount() - 1, 0, 3);
-		ft.setCellSpacing(5);
-		this.setWidget(ft);
-		ft.setStyleName("mpdb-dataTable");
+		bottomPanel.add(cancel);
+		bottomPanel.add(submit);
+		bottomPanel.setStyleName(Styles.POPUP_CUSTOM_COLS_BOTTOM);
+
+		ft.setWidget(0, 0, infoPara);
+		ft.setWidget(1, 0, leftPanel);
+		ft.setWidget(1, 1, rightPanel);
+		ft.setWidget(2, 0, bottomPanel);
+		ft.getFlexCellFormatter().setColSpan(0, 0, 2);
+		ft.getFlexCellFormatter().setColSpan(2, 0, 2);
+		ft.setCellPadding(10);
+		ft.setStyleName(Styles.POPUP_CUSTOM_COLS);
+		container.add(ft);
+
+		this.setWidget(container);
+		container.setStyleName(Styles.POPUP_CUSTOM_COLS_CONTAINER);
 		this.show();
 	}
 

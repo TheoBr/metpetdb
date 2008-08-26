@@ -16,8 +16,6 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -55,7 +53,8 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	private Set<ProjectDTO> projectsList;
 	private final ListBox projectListBox = new ListBox();
 	private FlowPanel samplesContainer = new FlowPanel();
-	private MLink createView;
+	private final FlowPanel columnViewPanel = new FlowPanel();
+	private MLink customCols;
 	private MLink exportExcel;
 	private MLink exportGoogleEarth;
 
@@ -126,7 +125,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	private void addSamples() {
 		createViewFromCookie();
 		buildSampleFilters();
-		samplesContainer.add(sampleDisplayFilters);
+		samplesContainer.add(columnViewPanel);
 		buildSampleFooter();
 		samplesContainer.add(list);
 		samplesContainer.setStylePrimaryName(Styles.SAMPLES_CONTAINER);
@@ -247,16 +246,11 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	}
 
 	private void buildSampleFilters() {
-		final MLink recentlyAdded = new MLink("Recently Added",
-				new ClickListener() {
-					public void onClick(Widget sender) {
-					}
-				});
-
 		final MLink simple = new MLink("Simple", new ClickListener() {
 			public void onClick(Widget sender) {
 			}
 		});
+		simple.addStyleName(Styles.BETA);
 
 		final MLink detailed = new MLink("Detailed", new ClickListener() {
 			public void onClick(Widget sender) {
@@ -264,44 +258,20 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 			}
 		});
 
-		createView = new MLink("Create New View", this);
+		customCols = new MLink("Custom", new ClickListener() {
+			public void onClick(Widget sender) {
+				CustomTableView myView = new CustomTableView(list, cookieString);
+			}
+		});
 
-		final Label quickfilters_label = new Label("Quick Filters:");
-		final Label changeView_label = new Label("Change View:");
+		final Label columnsLabel = new Label("Columns:");
 
-		recentlyAdded.addStyleName("beta");
-		simple.addStyleName("beta");
+		columnViewPanel.add(columnsLabel);
+		columnViewPanel.add(simple);
+		columnViewPanel.add(detailed);
+		columnViewPanel.add(customCols);
 
-		sampleDisplayFilters.setWidth("100%");
-
-		sampleDisplayFilters.setWidget(0, 0, quickfilters_label);
-		sampleDisplayFilters.setWidget(0, 1, recentlyAdded);
-		sampleDisplayFilters.setWidget(0, 2, changeView_label);
-		sampleDisplayFilters.setWidget(0, 3, simple);
-		sampleDisplayFilters.setWidget(0, 4, detailed);
-		sampleDisplayFilters.setWidget(0, 5, createView);
-
-		sampleDisplayFilters.getFlexCellFormatter().setWidth(0, 1, "50%");
-		sampleDisplayFilters.getFlexCellFormatter().setAlignment(0, 0,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		sampleDisplayFilters.getFlexCellFormatter().setAlignment(0, 1,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		sampleDisplayFilters.getFlexCellFormatter().setAlignment(0, 2,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		sampleDisplayFilters.getFlexCellFormatter().setAlignment(0, 3,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		sampleDisplayFilters.getFlexCellFormatter().setAlignment(0, 4,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		sampleDisplayFilters.getFlexCellFormatter().setAlignment(0, 5,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		sampleDisplayFilters.setCellSpacing(10);
-		sampleDisplayFilters.addStyleName("mpdb-dataTableUserSamples");
+		columnViewPanel.addStyleName(Styles.DATATABLE_HEADER_FILTERS);
 
 	}
 
@@ -321,6 +291,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		}.begin();
 		return this;
 	}
+
 	public UserSamplesList display(final long projectId) {
 		new ServerOp() {
 			@Override
@@ -410,6 +381,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 			}
 		}.begin();
 	}
+
 	private void MakePublicSelected() {
 		new ServerOp() {
 			@Override
@@ -428,6 +400,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 			}
 		}.begin();
 	}
+
 	private void AddToProjectSelected() {
 		new ServerOp() {
 			@Override
@@ -476,10 +449,6 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	}
 
 	public void onClick(Widget sender) {
-		if (sender == createView) {
-			CustomTableView myView = new CustomTableView(list, cookieString);
-		}
-
 		for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++) {
 			list.getScrollTable().getDataTable().getRowFormatter()
 					.removeStyleName(i, "highlighted-row");
