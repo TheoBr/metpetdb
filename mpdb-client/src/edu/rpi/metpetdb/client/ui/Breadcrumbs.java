@@ -136,7 +136,6 @@ public class Breadcrumbs extends FlowPanel {
 		current = currentPage;
 		LeftColWidget.updateLeftSide(Node.getLeftSide());
 		onFindSuccessRecursive(Node);
-		getWidget(0).addStyleName(Styles.FIRST);
 		getWidget((getWidgetCount() - 1)).addStyleName(Styles.CURRENT);
 	}
 	private void onFindSuccessRecursive(final bcNode Node) {
@@ -165,8 +164,10 @@ public class Breadcrumbs extends FlowPanel {
 
 	private void insertBcItem(final SimplePanel bc, final bcNode node) {
 		insert(bc, 0);
-		if (node.getParent() == null)
+		if (node.getParent() == null) {
 			setVisible(true);
+			getWidget(0).addStyleName(Styles.FIRST);
+		}
 	}
 
 	/*
@@ -209,15 +210,19 @@ public class Breadcrumbs extends FlowPanel {
 
 				public void onSuccess(SampleDTO result) {
 					for (Widget w : Breadcrumbs.this.getChildren()) {
-						if (w instanceof MLink) {
-							if (((MLink) w).getText().equals(name)) {
-								((MLink) w).setText(result.getAlias());
-								if (MetPetDBApplication.getLeftCount() == 0)
-									LeftColWidget.updateLeftSide(Node
-											.getLeftSide(), result);
-								Breadcrumbs.this.onFindSuccessRecursive(Node
-										.getParent());
-								return;
+						if (w instanceof SimplePanel) {
+							if (((SimplePanel) w).getWidget() instanceof MLink) {
+								MLink l = (MLink) ((SimplePanel) w).getWidget();
+								if (l.getText().equals(name)) {
+									l.setText(result.getAlias());
+									if (MetPetDBApplication.getLeftCount() == 0)
+										LeftColWidget.updateLeftSide(Node
+												.getLeftSide(), result);
+									Breadcrumbs.this
+											.onFindSuccessRecursive(Node
+													.getParent());
+									return;
+								}
 							}
 						}
 					}
@@ -230,18 +235,22 @@ public class Breadcrumbs extends FlowPanel {
 				}
 				public void onSuccess(GridDTO result) {
 					for (Widget w : Breadcrumbs.this.getChildren()) {
-						if (w instanceof MLink) {
-							if (((MLink) w).getText().equals(name)) {
-								if (MetPetDBApplication.getLeftCount() == 0)
-									LeftColWidget.updateLeftSide(Node
-											.getLeftSide(), result
-											.getSubsample().getSample(), result
-											.getSubsample());
-								Breadcrumbs.this.id = String.valueOf(result
-										.getSubsample().getId());
-								Breadcrumbs.this.onFindSuccessRecursive(Node
-										.getParent());
-								return;
+						if (w instanceof SimplePanel) {
+							if (((SimplePanel) w).getWidget() instanceof MLink) {
+								MLink l = (MLink) ((SimplePanel) w).getWidget();
+								if (((MLink) l).getText().equals(name)) {
+									if (MetPetDBApplication.getLeftCount() == 0)
+										LeftColWidget.updateLeftSide(Node
+												.getLeftSide(), result
+												.getSubsample().getSample(),
+												result.getSubsample());
+									Breadcrumbs.this.id = String.valueOf(result
+											.getSubsample().getId());
+									Breadcrumbs.this
+											.onFindSuccessRecursive(Node
+													.getParent());
+									return;
+								}
 							}
 						}
 					}
@@ -255,18 +264,22 @@ public class Breadcrumbs extends FlowPanel {
 
 				public void onSuccess(SubsampleDTO result) {
 					for (Widget w : Breadcrumbs.this.getChildren()) {
-						if (w instanceof MLink) {
-							if (((MLink) w).getText().equals(name)) {
-								((MLink) w).setText(result.getName());
-								if (MetPetDBApplication.getLeftCount() == 0)
-									LeftColWidget.updateLeftSide(Node
-											.getLeftSide(), result.getSample(),
-											result);
-								Breadcrumbs.this.id = String.valueOf(result
-										.getSample().getId());
-								Breadcrumbs.this.onFindSuccessRecursive(Node
-										.getParent());
-								return;
+						if (w instanceof SimplePanel) {
+							if (((SimplePanel) w).getWidget() instanceof MLink) {
+								MLink l = (MLink) ((SimplePanel) w).getWidget();
+								if (((MLink) l).getText().equals(name)) {
+									((MLink) l).setText(result.getName());
+									if (MetPetDBApplication.getLeftCount() == 0)
+										LeftColWidget.updateLeftSide(Node
+												.getLeftSide(), result
+												.getSample(), result);
+									Breadcrumbs.this.id = String.valueOf(result
+											.getSample().getId());
+									Breadcrumbs.this
+											.onFindSuccessRecursive(Node
+													.getParent());
+									return;
+								}
 							}
 						}
 					}
@@ -280,14 +293,18 @@ public class Breadcrumbs extends FlowPanel {
 
 				public void onSuccess(ChemicalAnalysisDTO result) {
 					for (Widget w : Breadcrumbs.this.getChildren()) {
-						if (w instanceof MLink) {
-							if (((MLink) w).getText().equals(name)) {
-								((MLink) w).setText(result.getSpotId());
-								Breadcrumbs.this.id = String.valueOf(result
-										.getSubsample().getId());
-								Breadcrumbs.this.onFindSuccessRecursive(Node
-										.getParent());
-								return;
+						if (w instanceof SimplePanel) {
+							if (((SimplePanel) w).getWidget() instanceof MLink) {
+								MLink l = (MLink) ((SimplePanel) w).getWidget();
+								if (((MLink) l).getText().equals(name)) {
+									((MLink) l).setText(result.getSpotId());
+									Breadcrumbs.this.id = String.valueOf(result
+											.getSubsample().getId());
+									Breadcrumbs.this
+											.onFindSuccessRecursive(Node
+													.getParent());
+									return;
+								}
 							}
 						}
 					}
@@ -301,12 +318,16 @@ public class Breadcrumbs extends FlowPanel {
 				public void onSuccess(UserDTO result) {
 					for (int i = 0; i < Breadcrumbs.this.getWidgetCount(); i++) {
 						final Widget w = Breadcrumbs.this.getWidget(i);
-						if (w instanceof MLink) {
-							if (((MLink) w).getText().equals(name)) {
-								((MLink) w).setText(result.getUsername());
-								Breadcrumbs.this.onFindSuccessRecursive(Node
-										.getParent());
-								break;
+						if (w instanceof SimplePanel) {
+							if (((SimplePanel) w).getWidget() instanceof MLink) {
+								MLink l = (MLink) ((SimplePanel) w).getWidget();
+								if (((MLink) l).getText().equals(name)) {
+									((MLink) l).setText(result.getUsername());
+									Breadcrumbs.this
+											.onFindSuccessRecursive(Node
+													.getParent());
+									break;
+								}
 							}
 						}
 					}
@@ -333,12 +354,16 @@ public class Breadcrumbs extends FlowPanel {
 				public void onSuccess(ProjectDTO result) {
 					for (int i = 0; i < Breadcrumbs.this.getWidgetCount(); i++) {
 						final Widget w = Breadcrumbs.this.getWidget(i);
-						if (w instanceof MLink) {
-							if (((MLink) w).getText().equals(name)) {
-								((MLink) w).setText(result.getName());
-								Breadcrumbs.this.onFindSuccessRecursive(Node
-										.getParent());
-								break;
+						if (w instanceof SimplePanel) {
+							if (((SimplePanel) w).getWidget() instanceof MLink) {
+								MLink l = (MLink) ((SimplePanel) w).getWidget();
+								if (((MLink) l).getText().equals(name)) {
+									((MLink) l).setText(result.getName());
+									Breadcrumbs.this
+											.onFindSuccessRecursive(Node
+													.getParent());
+									break;
+								}
 							}
 						}
 					}
