@@ -1,4 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE dataset SYSTEM "test-data/test-database.dtd">
 <dataset>
   <users user_id="1" version="1" username="anthony" password="BCnxlteTnIP40jVqBXdVl+OZYUXFFy54Kw==" email="watera2@cs.rpi.edu"/>
   <samples sample_id="1" version="0" sesar_number="000000000" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)" alias="1"/>

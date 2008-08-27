@@ -1,18 +1,26 @@
 package edu.rpi.metpetdb.server;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import junit.framework.TestCase;
 
+import org.dbunit.Assertion;
+import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
-import org.dbunit.database.ForwardOnlyResultSetTableFactory;
 import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.filter.DefaultTableFilter;
+import org.dbunit.dataset.xml.FlatDtdDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.hibernate.Session;
@@ -23,6 +31,8 @@ public class InitDatabase extends TestCase {
 	private static Session s;
 
 	private static IDatabaseConnection conn;
+	
+	private static Connection hiberateConnection;
 
 	private IDataSet originalData;
 
@@ -37,17 +47,22 @@ public class InitDatabase extends TestCase {
 		DataStore.initFactory();
 
 		s = DataStore.open();
+		
+		
 
 		try {
+			hiberateConnection = ((org.hibernate.engine.SessionFactoryImplementor) DataStore
+					.getFactory()).getConnectionProvider()
+					.getConnection();
 			// conn = new DatabaseConnection(DataStore.getConfiguration()
 			// .buildSettings().getConnectionProvider().getConnection());
 			conn = new DatabaseConnection(
-					((org.hibernate.engine.SessionFactoryImplementor) DataStore
-							.getFactory()).getConnectionProvider()
-							.getConnection());
+					hiberateConnection);
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
 		}
+		
+		
 	}
 
 	public static IDatabaseConnection getConnection() {
@@ -56,6 +71,10 @@ public class InitDatabase extends TestCase {
 
 	public static Session getSession() {
 		return s;
+	}
+	
+	public static Connection getHibernateConnection() {
+		return hiberateConnection;
 	}
 
 	private void backupDatabase() {
@@ -67,8 +86,9 @@ public class InitDatabase extends TestCase {
 					new PostGisDataTypeFactory());
 			// Change the table factory for more performance when backup up the
 			// database
-			config.setProperty(DatabaseConfig.PROPERTY_RESULTSET_TABLE_FACTORY,
-					new ForwardOnlyResultSetTableFactory());
+			//config.setProperty(DatabaseConfig.PROPERTY_RESULTSET_TABLE_FACTORY
+			// ,
+			// new ForwardOnlyResultSetTableFactory());
 
 			// Setup the excluded tables
 			DefaultTableFilter tableFilter = new DefaultTableFilter();
@@ -91,8 +111,40 @@ public class InitDatabase extends TestCase {
 	}
 
 	@Test
+	public void testCreateDTD() throws ClassNotFoundException,
+			DataSetException, FileNotFoundException, IOException, SQLException {
+		// write DTD file
+		FlatDtdDataSet.write(conn.createDataSet(), new FileOutputStream(
+				"test-data/test-database.dtd"));
+	}
+
+	@Test
 	public void testConnection() {
 		assertTrue(conn != null);
+	}
+
+	@Test
+	public void testValidDataSets() throws SQLException, FileNotFoundException,
+			IOException, DatabaseUnitException {
+		try {
+			IDataSet loadedDataSet = new FlatXmlDataSet(new FileInputStream(
+					"test-data/test-sample-data.xml"));
+			// Insert test data
+			DatabaseOperation.INSERT.execute(InitDatabase.getConnection(),
+					loadedDataSet);
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+		
+
+		IDataSet databaseDataSet = getConnection().createDataSet();
+		ITable actualTable = databaseDataSet.getTable("samples");
+
+		IDataSet expectedDataSet = new FlatXmlDataSet(new FileInputStream(
+				"test-data/test-sample-data.xml"));
+		ITable expectedTable = expectedDataSet.getTable("samples");
+
+		Assertion.assertEquals(expectedTable, actualTable);
 	}
 
 	@Override
@@ -111,7 +163,7 @@ public class InitDatabase extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		try {
-			DatabaseOperation.INSERT.execute(conn, originalData);
+			DatabaseOperation.CLEAN_INSERT.execute(conn, originalData);
 		} catch (Exception e) {
 
 			e.printStackTrace();

@@ -25,6 +25,7 @@ public class SampleDaoTest extends DatabaseTestCase {
 	 */
 	@Test
 	public void testSampleById() throws NoSuchObjectException {
+		InitDatabase.getSession().createSQLQuery("select sample_id from samples").list();
 		final Sample s = (Sample) super.byId(typeName, 1);
 		assertEquals(1, s.getId());
 	}

@@ -21,7 +21,7 @@ public abstract class MpDbTestCase extends GWTTestCase {
 	/**
 	 * Sets up the test by logining in a valid user
 	 */
-	public void setUp() {
+	public void gwtSetUp() {
 		owner = new UserDTO();
 		owner.setId(1);
 

@@ -19,8 +19,7 @@ public class SaveChemicalAnalysisTest extends MpDbTestCase {
 	private ChemicalAnalysisDTO chemicalAnalysis;
 
 	@Override
-	public void setUp() {
-		super.setUp();
+	public void gwtSetUp() {
 		chemicalAnalysis = new ChemicalAnalysisDTO();
 		chemicalAnalysis.setSubsample(getSubsample());
 		chemicalAnalysis.setSpotId(SPOT_ID);

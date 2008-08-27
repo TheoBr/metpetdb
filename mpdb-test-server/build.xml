@@ -19,11 +19,9 @@
 	</path>
 
 	<path id="libs">
+		<fileset dir="${ctx_lib_server}" includes="*.jar" />
+		<fileset dir="${ctx_lib_test}" includes="*.jar" />
 		<fileset dir="${ctx_lib}" includes="*.jar" />
-		<fileset dir="${ctx_lib2}" includes="*.jar" />
-		<fileset dir="${ctx_lib3}" includes="*.jar" />
-		<fileset dir="${basedir}/../mpdb-test-server/lib" includes="*.jar" />
-		<fileset dir="${basedir}/../mpdb-server/lib" includes="*.jar" />
 		<pathelement location="${gwt_home}/gwt-user.jar" />
 		<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
 		<pathelement location="../mpdb-test-server/bin" />

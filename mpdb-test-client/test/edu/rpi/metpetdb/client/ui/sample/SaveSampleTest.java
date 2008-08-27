@@ -2,8 +2,8 @@ package edu.rpi.metpetdb.client.ui.sample;
 
 import edu.rpi.metpetdb.client.MpDbTestCase;
 import edu.rpi.metpetdb.client.TestServerOp;
-import edu.rpi.metpetdb.client.error.InvalidSESARNumberException;
-import edu.rpi.metpetdb.client.error.PropertyRequiredException;
+import edu.rpi.metpetdb.client.error.validation.InvalidSESARNumberException;
+import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.ui.MpDb;
 
@@ -28,8 +28,7 @@ public class SaveSampleTest extends MpDbTestCase {
 	private SampleDTO sample;
 
 	@Override
-	public void setUp() {
-		super.setUp();
+	public void gwtSetUp() {
 		sample = new SampleDTO();
 		sample.setSesarNumber(SESAR_NUMBER);
 		sample.setLatitude(LATITUDE);

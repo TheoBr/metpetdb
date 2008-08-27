@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.server;
 
 import java.io.FileInputStream;
+import java.sql.SQLException;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -51,6 +52,13 @@ public class DatabaseTestCase extends TestCase {
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
+		
+		try {
+			InitDatabase.getHibernateConnection().commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -70,9 +78,18 @@ public class DatabaseTestCase extends TestCase {
 				e.printStackTrace();
 			}
 		}
+		
+		try {
+			InitDatabase.getHibernateConnection().commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	@SuppressWarnings( { "unchecked" })
+	@SuppressWarnings( {
+		"unchecked"
+	})
 	protected <T extends MObject> T byId(final String name, final int id)
 			throws NoSuchObjectException {
 		final Query q = InitDatabase.getSession().getNamedQuery(name + ".byId");
@@ -88,8 +105,8 @@ public class DatabaseTestCase extends TestCase {
 	 * 
 	 * @param name
 	 *            name of the query that will produce the rows. The query must
-	 *            be a named HQL query of <code>name/p.getParameter</code>.
-	 *            The query must end in an order by clause.
+	 *            be a named HQL query of <code>name/p.getParameter</code>. The
+	 *            query must end in an order by clause.
 	 * @param p
 	 *            pagination parameters from the client. These will be used to
 	 *            configure the query's result window before it gets returned,
@@ -97,7 +114,9 @@ public class DatabaseTestCase extends TestCase {
 	 *            rows.
 	 * @return the single page object query.
 	 */
-	@SuppressWarnings( { "unchecked" })
+	@SuppressWarnings( {
+		"unchecked"
+	})
 	protected <T extends MObject> List<T> pageQuery(final String name,
 			final String parameter, final boolean assending,
 			final int firstResult, final int maxResults) {
