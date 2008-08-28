@@ -3,6 +3,10 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="edu.rpi.metpetdb.server.model">
+
+	
+  
+
   <class name="Sample" table="samples">
     <id name="id" column="sample_id" unsaved-value="0">
       <generator class="sequence">
@@ -24,6 +28,9 @@
     <property name="locationText" column="location_text" length="50" />
     <property name="latitudeError" column="latitude_error" />
     <property name="longitudeError" column="longitude_error" />
+    
+    
+    
     
     <many-to-one name="owner" column="user_id" lazy="false" />
 
@@ -71,7 +78,13 @@
 	    <many-to-one name="mineral" class="Mineral" column="mineral_id" lazy="false"/>
 	  </composite-element>
     </set>
+    
+    <filter name="boundingBox"
+            condition="ST_Intersects(location, ST_SetSRID(ST_MakeBox2D(ST_MakePoint(:x1,:y1),ST_MakePoint(:x2,:y2)),4326))" 
+            />
   </class>
+  
+  
 
   <query name="Sample.byId">
     from Sample s
@@ -341,5 +354,12 @@
     where s.publicData = 'Y'
     order by s.longitudeError
   </query>
+  
+  <filter-def name="boundingBox">
+    <filter-param name="x1" type="int"/>
+    <filter-param name="y1" type="int"/>
+    <filter-param name="x2" type="int"/>
+    <filter-param name="y2" type="int"/>
+  </filter-def>
 
 </hibernate-mapping>

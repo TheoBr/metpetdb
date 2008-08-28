@@ -13,6 +13,7 @@ import org.apache.lucene.search.RangeQuery;
 import org.apache.lucene.search.TermQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.search.FullTextQuery;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 import org.junit.Test;
@@ -32,16 +33,6 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	public HibernateSearchTest() {
 		super("test-data/test-sample-data.xml");
 	}
-
-	/*
-	 * @Test public void testCreateIndex() { final Session session =
-	 * InitDatabase.getSession(); FullTextSession fullTextSession =
-	 * Search.createFullTextSession(session); Transaction tx =
-	 * fullTextSession.beginTransaction(); List<Sample> samples =
-	 * session.createQuery("from Sample as sample").list(); for (Sample sample :
-	 * samples) { fullTextSession.index(sample); } tx.commit(); //index are
-	 * written at commit time }
-	 */
 
 	@Test
 	public void testCreateIndices() {
@@ -69,8 +60,6 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final FullTextSession fullTextSession = Search
 				.createFullTextSession(session);
 
-		final Transaction tx = fullTextSession.beginTransaction();
-
 		final TermQuery termQuery = new TermQuery(new Term("alias", "1"));
 		final org.hibernate.Query hibQuery = fullTextSession
 				.createFullTextQuery(termQuery, Sample.class);
@@ -80,7 +69,6 @@ public class HibernateSearchTest extends DatabaseTestCase {
 			System.out.println("found sample, rock type is " + s.getRockType());
 
 		assertEquals(1, result.size());
-		tx.commit();
 	}
 
 	@Test
@@ -88,8 +76,6 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
 				.createFullTextSession(session);
-
-		final Transaction tx = fullTextSession.beginTransaction();
 
 		final TermQuery termQuery = new TermQuery(new Term("rockType", "ibm"));
 		final org.hibernate.Query hibQuery = fullTextSession
@@ -99,7 +85,6 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		for (final Sample s : result)
 			System.out.println("found sample, rock type is " + s.getRockType());
 
-		tx.commit();
 	}
 
 	@Test
@@ -284,8 +269,6 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final FullTextSession fullTextSession = Search
 				.createFullTextSession(session);
 
-		final Transaction tx = fullTextSession.beginTransaction();
-
 		final TermQuery termQuery = new TermQuery(new Term(
 				"sampleMineral_mineral_name", "silicates"));
 		// final TermQuery termQuery = new TermQuery(new Term(
@@ -304,6 +287,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		}
 
 		assertEquals(3, result.size());
-		tx.commit();
 	}
+	
+	
 }
