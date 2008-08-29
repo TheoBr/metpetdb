@@ -1,5 +1,8 @@
 package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 
+import org.postgis.LinearRing;
+import org.postgis.Point;
+
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.control.LargeMapControl;
 import com.google.gwt.maps.client.control.MapTypeControl;
@@ -20,8 +23,10 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
 public class SearchLocationAttribute extends GenericAttribute implements
@@ -275,7 +280,47 @@ public class SearchLocationAttribute extends GenericAttribute implements
 		}
 	}
 
-	// protected Object get(Widget editWidget) throws ValidationException {
-	// }
+	protected Object get(Widget editWidget) throws ValidationException {
+		try {
+			final double n = Double.parseDouble(northInput.getText()); // y
+			final double s = Double.parseDouble(southInput.getText()); // y
+			final double e = Double.parseDouble(eastInput.getText()); // x
+			final double w = Double.parseDouble(westInput.getText()); // x
+
+			final Point p1 = new Point();
+			p1.x = w;
+			p1.y = s;
+
+			final Point p2 = new Point();
+			p2.x = w;
+			p2.y = n;
+
+			final Point p3 = new Point();
+			p3.x = e;
+			p3.y = n;
+
+			final Point p4 = new Point();
+			p4.x = e;
+			p4.y = s;
+
+			final LinearRing[] ringArray = new LinearRing[1];
+			final Point[] points = new Point[5];
+			points[0] = p1;
+			points[1] = p2;
+			points[2] = p3;
+			points[3] = p4;
+			points[4] = p1;
+			final LinearRing ring = new LinearRing(points);
+			ringArray[0] = ring;
+			final org.postgis.Polygon boundingBox = new org.postgis.Polygon(
+					ringArray);
+			boundingBox.srid = MpDbConstants.WGS84;
+			boundingBox.dimension = 2;
+			return boundingBox;
+		} catch (Exception e) {
+			// TODO
+		}
+		return null;
+	}
 
 }

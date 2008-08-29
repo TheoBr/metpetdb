@@ -53,9 +53,8 @@ public class SearchDb {
 					}
 				} else {
 					if (columnName.equals("publicData")) {
-					} else if(columnName.equals("collectionDate")) {
-					}
-					else {
+					} else if (columnName.equals("collectionDate")) {
+					} else if (!columnName.equals("location")) {
 						System.out.println("adding a must for variable "
 								+ columnName + " with value "
 								+ methodResult.toString());
@@ -79,15 +78,28 @@ public class SearchDb {
 		flags.toArray(flagsArray);
 		List<Sample> result = null;
 		try {
-			final Query query = MultiFieldQueryParser.parse(searchArray,
-					columnsArray, flagsArray, new StandardAnalyzer());
-			final org.hibernate.Query hibQuery = fullTextSession
-					.createFullTextQuery(query, Sample.class);
+			final org.hibernate.Query hibQuery;
+			if (searchArray.length > 0) {
+				final Query query = MultiFieldQueryParser.parse(searchArray,
+						columnsArray, flagsArray, new StandardAnalyzer());
+				hibQuery = fullTextSession.createFullTextQuery(query,
+						Sample.class);
+			} else {
+				//If they do not specify a search query just get all of the samples
+				//later on we will filter if we must
+				//TODO fix so that we sort by the correct sort parameter
+				hibQuery = session.getNamedQuery("Sample.all/alias");
+			}
+			// Check for any filters
+			if (searchSamp.getBoundingBox() != null) {
+				session.enableFilter("boundingBox").setParameter("polygon",
+						searchSamp.getBoundingBox());
+			}
 			result = hibQuery.list();
 
 			for (final Sample s : result)
 				System.out.println("found sample, sesar number is "
-						+ s.getSesarNumber() + " username is "
+						+ s.getSesarNumber() +  " username is "
 						+ s.getOwner().getUsername());
 		} catch (final ParseException e) {
 		}

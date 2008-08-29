@@ -15,8 +15,10 @@ import org.postgis.binary.BinaryWriter;
 
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 
-public class GeometryType implements UserType  {
-	private static final int[] SQL_TYPES = {Types.BLOB};
+public class GeometryType implements UserType {
+	private static final int[] SQL_TYPES = {
+		Types.BLOB
+	};
 
 	public Object deepCopy(Object value) throws HibernateException {
 		return value;
@@ -44,7 +46,7 @@ public class GeometryType implements UserType  {
 		final String geom = resultSet.getString(names[0]);
 		if (geom != null) {
 			BinaryParser parser = new BinaryParser();
-			return (Point) parser.parse(geom);
+			return parser.parse(geom);
 		}
 		return null;
 	}
@@ -56,8 +58,8 @@ public class GeometryType implements UserType  {
 
 	/*
 	 * // BinaryParser class method: private parsePoint(Valuegetter, boolean,
-	 * boolean) // private Point parsePoint(org.postgis.binary.ValueGetter arg0, //
-	 * boolean arg1, boolean arg2) public Point pointFromGeotype() { Point p;
+	 * boolean) // private Point parsePoint(org.postgis.binary.ValueGetter arg0,
+	 * // boolean arg1, boolean arg2) public Point pointFromGeotype() { Point p;
 	 * 
 	 * BinaryParser parser = new BinaryParser(); parser.parse(arg0); }
 	 */
@@ -68,7 +70,7 @@ public class GeometryType implements UserType  {
 			statement.setBytes(index, null);
 		else {
 			final BinaryWriter bw = new BinaryWriter();
-			final byte[] bytes = bw.writeBinary((Point) value);
+			final byte[] bytes = bw.writeBinary((Geometry) value);
 			statement.setBytes(index, bytes);
 		}
 	}

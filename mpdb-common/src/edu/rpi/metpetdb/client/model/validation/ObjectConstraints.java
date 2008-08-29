@@ -25,7 +25,7 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 	public StringConstraint SearchSample_alias;
 	public Sample_sesarNumber SearchSample_sesarNumber;
 	// public ValuesInCollectionConstraint<MineralDTO> SearchSample_minerals;
-	public GeometryConstraint SearchSample_location;
+	public GeometryConstraint SearchSample_boundingBox;
 	public DateSpanConstraint SearchSample_collectionDateRange;
 	public MultipleRockTypeConstraint SearchSample_possibleRockTypes;
 	public StringConstraint SearchSample_owner;
@@ -50,10 +50,10 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 		// SearchSample_minerals.propertyName = "Minerals";
 		// SearchSample_minerals.required = false;
 
-		SearchSample_location.entityName = "SearchSample";
-		SearchSample_location.property = SearchSampleProperty.location;
-		SearchSample_location.propertyName = "Location";
-		SearchSample_location.required = false;
+		SearchSample_boundingBox.entityName = "SearchSample";
+		SearchSample_boundingBox.property = SearchSampleProperty.boundingBox;
+		SearchSample_boundingBox.propertyName = "Location";
+		SearchSample_boundingBox.required = false;
 
 		SearchSample_collectionDateRange.entityName = "SearchSample";
 		SearchSample_collectionDateRange.property = SearchSampleProperty.collectionDateRange;

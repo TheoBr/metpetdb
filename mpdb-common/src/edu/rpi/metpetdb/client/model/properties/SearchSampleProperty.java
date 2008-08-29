@@ -28,14 +28,14 @@ public enum SearchSampleProperty implements SearchProperty {
 			return "sesarNumber";
 		}
 	},
-	location {
+	boundingBox {
 		public <T extends MObjectDTO> Geometry get(final T sample) {
-			return ((SearchSampleDTO) sample).getLocation();
+			return ((SearchSampleDTO) sample).getBoundingBox();
 		}
 
 		public <T extends MObjectDTO, K> void set(final T sample,
 				final K geometry) {
-			((SearchSampleDTO) sample).setLocation((Geometry) geometry);
+			((SearchSampleDTO) sample).setBoundingBox((Geometry) geometry);
 		}
 
 		public String columnName() {

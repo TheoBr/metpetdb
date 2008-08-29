@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.postgis.Geometry;
 import org.postgis.Point;
+import org.postgis.Polygon;
 
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 
@@ -17,7 +18,7 @@ public class SearchSampleDTO extends MObjectDTO {
 	private int version;
 
 	private String sesarNumber;
-	private Geometry location;
+	private Geometry boundingBox;
 
 	private UserDTO owner;
 
@@ -103,27 +104,12 @@ public class SearchSampleDTO extends MObjectDTO {
 		sesarNumber = s;
 	}
 
-	public Geometry getLocation() {
-		return location;
+	public Geometry getBoundingBox() {
+		return boundingBox;
 	}
 
-	public void setLocation(final Geometry g) {
-		location = g;
-	}
-
-	public void setLatitude(final double d) {
-		if (location == null) {
-			location = new Point();
-			((Point) location).dimension = 2;
-			((Point) location).srid = MpDbConstants.WGS84;
-		}
-		((Point) location).x = d;
-	}
-
-	public void setLongitude(final double d) {
-		if (location == null)
-			location = new Point();
-		((Point) location).y = d;
+	public void setBoundingBox(final Geometry g) {
+		boundingBox = g;
 	}
 
 	public UserDTO getOwner() {

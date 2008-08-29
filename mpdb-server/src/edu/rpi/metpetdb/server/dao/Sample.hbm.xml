@@ -80,7 +80,7 @@
     </set>
     
     <filter name="boundingBox"
-            condition="ST_Intersects(location, ST_SetSRID(ST_MakeBox2D(ST_MakePoint(:x1,:y1),ST_MakePoint(:x2,:y2)),4326))" 
+            condition="ST_Intersects(location, :polygon)" 
             />
   </class>
   
@@ -356,10 +356,7 @@
   </query>
   
   <filter-def name="boundingBox">
-    <filter-param name="x1" type="int"/>
-    <filter-param name="y1" type="int"/>
-    <filter-param name="x2" type="int"/>
-    <filter-param name="y2" type="int"/>
+    <filter-param name="polygon" type="edu.rpi.metpetdb.server.dao.GeometryType"/>
   </filter-def>
 
 </hibernate-mapping>

@@ -40,17 +40,21 @@ public abstract class GenericAttribute {
 		if (pcs.length == 1) {
 			constraints = pcs;
 			try {
-				labels = new String[]{LocaleHandler.lc_entity
-						.getString(pcs[0].entityName + "_"
-								+ pcs[0].propertyName)};
+				labels = new String[] {
+					LocaleHandler.lc_entity.getString(pcs[0].entityName + "_"
+							+ pcs[0].propertyName)
+				};
 			} catch (MissingResourceException mre) {
 				// could be a string array so check that before failing
 				// completey
 				try {
-					labels = LocaleHandler.lc_entity.getStringArray(pcs[0].entityName
-							+ "_" + pcs[0].propertyName);
+					labels = LocaleHandler.lc_entity
+							.getStringArray(pcs[0].entityName + "_"
+									+ pcs[0].propertyName);
 				} catch (MissingResourceException mre2) {
-					labels = new String[]{pcs[0].propertyName};
+					labels = new String[] {
+						pcs[0].propertyName
+					};
 				}
 			}
 		} else if (pcs.length > 1) {
@@ -58,8 +62,8 @@ public abstract class GenericAttribute {
 			for (int i = 0; i < pcs.length; ++i) {
 				constraints = pcs;
 				try {
-					al.add(LocaleHandler.lc_entity.getString(pcs[i].entityName + "_"
-							+ pcs[i].propertyName));
+					al.add(LocaleHandler.lc_entity.getString(pcs[i].entityName
+							+ "_" + pcs[i].propertyName));
 				} catch (MissingResourceException mre) {
 					al.add(pcs[i].propertyName);
 				}
@@ -82,7 +86,9 @@ public abstract class GenericAttribute {
 	 *            for this attribute
 	 */
 	protected GenericAttribute(final PropertyConstraint pc) {
-		this(new PropertyConstraint[]{pc});
+		this(new PropertyConstraint[] {
+			pc
+		});
 	}
 
 	/**
@@ -119,7 +125,8 @@ public abstract class GenericAttribute {
 	 * which an attribute takes up more than one table row there will be more
 	 * than one label.
 	 * 
-	 * @param row Which label you want
+	 * @param row
+	 *            Which label you want
 	 * @return the label
 	 */
 	public String getLabel(final int row) {
@@ -130,8 +137,11 @@ public abstract class GenericAttribute {
 	}
 	/**
 	 * Sets the label for a specified row
-	 * @param s the label 
-	 * @param row the row
+	 * 
+	 * @param s
+	 *            the label
+	 * @param row
+	 *            the row
 	 */
 	public void setLabel(final String s, final int row) {
 		if (labels != null && row < labels.length) {
@@ -141,6 +151,7 @@ public abstract class GenericAttribute {
 
 	/**
 	 * Gets the default constraint for this attribute.
+	 * 
 	 * @return the property constraint
 	 */
 	public PropertyConstraint getConstraint() {
@@ -148,7 +159,9 @@ public abstract class GenericAttribute {
 	}
 	/**
 	 * Gets the whole array of property constraints for this attribute
-	 * @return array of {@link edu.rpi.metpetdb.client.model.validation.PropertyConstraint}
+	 * 
+	 * @return array of
+	 *         {@link edu.rpi.metpetdb.client.model.validation.PropertyConstraint}
 	 */
 	public PropertyConstraint[] getConstraints() {
 		return constraints;
@@ -179,8 +192,7 @@ public abstract class GenericAttribute {
 	protected HashMap mGetAll(final MObjectDTO obj) {
 		final HashMap map = new HashMap();
 		for (int i = 0; i < constraints.length; ++i) {
-			map.put(constraints[i], resolve(obj)
-					.mGet(constraints[i].property));
+			map.put(constraints[i], resolve(obj).mGet(constraints[i].property));
 		}
 		return map;
 	}
@@ -268,10 +280,10 @@ public abstract class GenericAttribute {
 		return get(editWidget);
 	}
 
-	//TODO maybe make this abstract???
+	// TODO maybe make this abstract???
 	protected Object get(final Widget editWidget) throws ValidationException {
 		return null;
-		
+
 	}
 
 	protected void set(final MObjectDTO obj, final Object value,

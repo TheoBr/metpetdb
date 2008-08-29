@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.model.validation;
 
 import org.postgis.Geometry;
 import org.postgis.Point;
+import org.postgis.Polygon;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.InvalidGeometryException;
@@ -26,7 +27,7 @@ public class GeometryConstraint extends PropertyConstraint {
 		if (g.dimension != 2)
 			throw new InvalidGeometryException(this);
 
-		if (g instanceof Point)
+		if (g instanceof Point || g instanceof Polygon)
 			/* ok */;
 		else
 			throw new InvalidGeometryException(this);
