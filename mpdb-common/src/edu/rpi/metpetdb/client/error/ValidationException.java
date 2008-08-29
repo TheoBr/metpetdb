@@ -17,9 +17,14 @@ public abstract class ValidationException extends MpDbException implements
 
 	protected static String formatPropertyName(final PropertyConstraint c) {
 		final String p = c.propertyName;
-		final String r = LocaleHandler.lc_entity.getString(c.entityName + "_"
-				+ p);
-		return r != null ? r : p;
+		try {
+			final String r = LocaleHandler.lc_entity.getString(c.entityName + "_"
+					+ p);
+			return r != null ? r : p;
+		} catch(Exception e){ 
+			//TODO handle the exception
+		}
+		return null;
 	}
 
 	protected PropertyConstraint constraint;

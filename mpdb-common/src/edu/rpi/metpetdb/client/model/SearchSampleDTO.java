@@ -20,45 +20,18 @@ public class SearchSampleDTO extends MObjectDTO {
 	private String sesarNumber;
 	private Geometry boundingBox;
 
-	private UserDTO owner;
+	private String owner;
 
 	private String alias;
 
 	private DateSpan collectionDateRange;
 	private Short datePrecision;
 
-	private Set<SubsampleDTO> subsamples;
-
-	private Set<ProjectDTO> projects;
-
 	private Set<SampleMineralDTO> minerals;
-
-	private Set<ImageDTO> images;
-
-	private String description;
-
-	private String country;
-
-	private String collector;
-
-	private String locationText;
-
-	private Float latitudeError;
-	private Float longitudeError;
-
-	private Set<RegionDTO> regions;
-
-	private Set<MetamorphicGradeDTO> metamorphicGrades;
-
-	private Set<ReferenceDTO> references;
-
-	private Set<SampleCommentDTO> comments;
-
+	
 	private Set<ChemicalAnalysisElementDTO> elements;
 
 	private Set<ChemicalAnalysisOxideDTO> oxides;
-
-	private int subsampleCount;
 
 	public Set<String> getPossibleRockTypes() {
 		return possibleRockTypes;
@@ -88,14 +61,6 @@ public class SearchSampleDTO extends MObjectDTO {
 		version = v;
 	}
 
-	public int getSubsampleCount() {
-		return subsampleCount;
-	}
-
-	public void setSubsampleCount(final int i) {
-		subsampleCount = i;
-	}
-
 	public String getSesarNumber() {
 		return sesarNumber;
 	}
@@ -112,11 +77,11 @@ public class SearchSampleDTO extends MObjectDTO {
 		boundingBox = g;
 	}
 
-	public UserDTO getOwner() {
+	public String getOwner() {
 		return owner;
 	}
 
-	public void setOwner(final UserDTO u) {
+	public void setOwner(final String u) {
 		owner = u;
 	}
 
@@ -136,16 +101,6 @@ public class SearchSampleDTO extends MObjectDTO {
 		collectionDateRange = dateRange;
 	}
 
-	public Set<ProjectDTO> getProjects() {
-		if (projects == null)
-			projects = new HashSet<ProjectDTO>();
-		return projects;
-	}
-
-	public void setProjects(final Set<ProjectDTO> s) {
-		projects = s;
-	}
-
 	public Set<SampleMineralDTO> getMinerals() {
 		return minerals;
 	}
@@ -160,102 +115,6 @@ public class SearchSampleDTO extends MObjectDTO {
 		final SampleMineralDTO m = new SampleMineralDTO();
 		// m.setName(name);
 		minerals.add(m);
-	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String c) {
-		country = c;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(final String d) {
-		description = d;
-	}
-
-	public String getCollector() {
-		return collector;
-	}
-
-	public void setCollector(String c) {
-		collector = c;
-	}
-
-	public String getLocationText() {
-		return locationText;
-	}
-
-	public void setLocationText(String loc) {
-		locationText = loc;
-	}
-
-	public Float getLatitudeError() {
-		return latitudeError;
-	}
-
-	public void setLatitudeError(Float le) {
-		latitudeError = le;
-	}
-
-	public Float getLongitudeError() {
-		return longitudeError;
-	}
-
-	public void setLongitudeError(Float le) {
-		longitudeError = le;
-	}
-
-	public Set<RegionDTO> getRegions() {
-		return regions;
-	}
-
-	public void setRegions(final Set<RegionDTO> r) {
-		regions = r;
-	}
-
-	public void addRegion(final String name) {
-		if (regions == null)
-			regions = new HashSet<RegionDTO>();
-		final RegionDTO r = new RegionDTO();
-		r.setName(name);
-		regions.add(r);
-	}
-
-	public Set<MetamorphicGradeDTO> getMetamorphicGrades() {
-		return metamorphicGrades;
-	}
-
-	public void setMetamorphicGrades(final Set<MetamorphicGradeDTO> m) {
-		metamorphicGrades = m;
-	}
-
-	public void addMetamorphicGrade(final String name) {
-		if (metamorphicGrades == null)
-			metamorphicGrades = new HashSet<MetamorphicGradeDTO>();
-		final MetamorphicGradeDTO m = new MetamorphicGradeDTO();
-		m.setName(name);
-		metamorphicGrades.add(m);
-	}
-
-	public Set<ReferenceDTO> getReferences() {
-		return references;
-	}
-
-	public void setReferences(final Set<ReferenceDTO> r) {
-		references = r;
-	}
-
-	public void addReference(final String name) {
-		if (references == null)
-			references = new HashSet<ReferenceDTO>();
-		final ReferenceDTO m = new ReferenceDTO();
-		m.setName(name);
-		references.add(m);
 	}
 
 	public String getName() {
@@ -288,7 +147,7 @@ public class SearchSampleDTO extends MObjectDTO {
 		this.datePrecision = datePrecision;
 	}
 
-	public void setElements(final Set<ChemicalAnalysisElementDTO> e) {
+public void setElements(final Set<ChemicalAnalysisElementDTO> e) {
 		elements = e;
 	}
 
@@ -347,5 +206,4 @@ public class SearchSampleDTO extends MObjectDTO {
 		c.setPrecision(precision);
 		oxides.add(c);
 	}
-
 }

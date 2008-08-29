@@ -163,7 +163,7 @@ public class InitDatabase extends TestCase {
 	protected void tearDown() throws Exception {
 		super.tearDown();
 		try {
-			DatabaseOperation.CLEAN_INSERT.execute(conn, originalData);
+			DatabaseOperation.INSERT.execute(conn, originalData);
 		} catch (Exception e) {
 
 			e.printStackTrace();

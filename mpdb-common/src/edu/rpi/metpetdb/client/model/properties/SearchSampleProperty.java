@@ -10,7 +10,6 @@ import edu.rpi.metpetdb.client.model.DateSpan;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.SampleMineralDTO;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
-import edu.rpi.metpetdb.client.model.UserDTO;
 
 public enum SearchSampleProperty implements SearchProperty {
 
@@ -43,16 +42,16 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 	},
 	owner {
-		public <T extends MObjectDTO> UserDTO get(final T sample) {
+		public <T extends MObjectDTO> Object get(final T sample) {
 			return ((SearchSampleDTO) sample).getOwner();
 		}
 
 		public <T extends MObjectDTO, K> void set(final T sample, final K owner) {
-			((SearchSampleDTO) sample).setOwner((UserDTO) owner);
+			((SearchSampleDTO) sample).setOwner((String) owner);
 		}
 
 		public String columnName() {
-			return "owner";
+			return "user_username";
 		}
 	},
 	minerals {
@@ -66,7 +65,7 @@ public enum SearchSampleProperty implements SearchProperty {
 					.setMinerals((Set<SampleMineralDTO>) minerals);
 		}
 		public String columnName() {
-			return "sample_minerals_minerals";
+			return "sampleMineral_mineral_name";
 		}
 	},
 	alias {
@@ -112,7 +111,7 @@ public enum SearchSampleProperty implements SearchProperty {
 			return "rockType";
 		}
 	},
-	elements {
+		elements {
 		public <T extends MObjectDTO> Set<ChemicalAnalysisElementDTO> get(
 				final T sample) {
 			return ((SearchSampleDTO) sample).getElements();
@@ -141,5 +140,4 @@ public enum SearchSampleProperty implements SearchProperty {
 			return "oxides";
 		}
 	};
-
 }

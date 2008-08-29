@@ -13,15 +13,19 @@ import edu.rpi.metpetdb.server.model.Sample;
 
 public class index
 {
-	public index()
-	{
+	
+	public static void main(String args[]) {
 		Session session = DataStore.open();
 		FullTextSession fullTextSession = Search.createFullTextSession(session);
 		Transaction tx = fullTextSession.beginTransaction();
 		List<Sample> samples = session.createQuery("from Sample as sample").list();
 		for (Sample sample : samples) {
-		    fullTextSession.index(samples);
+		    fullTextSession.index(sample);
 		}
-		tx.commit(); //index are written at commit time   
+		tx.commit(); //index are written at commit time
+	}
+	public index()
+	{
+		   
 	}
 }
