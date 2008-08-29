@@ -164,6 +164,9 @@ table.calendar-panel {
 .datatable-footer-wrapper {
 	background: transparent url(../images/datatable-footer-bg.png) repeat-x 7px 0;
 }
+.datatable-footer > table {
+	margin: 2px 0;
+}
 .datatable-footer td {
 	vertical-align: middle;
 	padding: 4px 7px;
@@ -213,8 +216,6 @@ table.calendar-panel {
 	margin-bottom: 10px;
 }
 .popup-custom-cols .gwt-CheckBox {
-	display: block;
-	margin-bottom: 3px;
 	display: table-row;
 }
 .popup-custom-cols .gwt-CheckBox input {
@@ -225,7 +226,7 @@ table.calendar-panel {
 .popup-custom-cols .gwt-CheckBox input {
 	display: table-cell;
 	vertical-align: middle;
-	padding-bottom: 4px;
+	padding-bottom: 10px;
 }
 
 .popup-custom-cols-bottom {
