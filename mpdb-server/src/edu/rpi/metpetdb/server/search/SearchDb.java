@@ -10,7 +10,6 @@ import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 
@@ -28,8 +27,6 @@ public class SearchDb {
 
 		final Session session = DataStore.open();
 		FullTextSession fullTextSession = Search.createFullTextSession(session);
-
-		Transaction tx = fullTextSession.beginTransaction();
 
 		final List<String> searchForValue = new LinkedList<String>();
 		final List<String> columnsIn = new LinkedList<String>();
@@ -103,8 +100,6 @@ public class SearchDb {
 						+ s.getOwner().getUsername());
 		} catch (final ParseException e) {
 		}
-
-		tx.commit();
 		return result;
 	}
 }

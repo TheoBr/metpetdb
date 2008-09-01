@@ -189,8 +189,10 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 *             invalid.
 	 */
 	protected int currentUser() throws LoginRequiredException {
-		if (autoLoginId != -1)
+		if (autoLoginId != -1) {
+			System.out.println("using autologin id of " + autoLoginId);
 			return autoLoginId;
+		}
 		final Req r = currentReq();
 		if (r.userId == null) {
 			final Cookie[] cookieJar = getThreadLocalRequest().getCookies();

@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.ui.sample;
 
 import edu.rpi.metpetdb.client.MpDbTestCase;
 import edu.rpi.metpetdb.client.TestServerOp;
+import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.validation.InvalidSESARNumberException;
 import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
 import edu.rpi.metpetdb.client.model.SampleDTO;
@@ -26,15 +27,18 @@ public class SaveSampleTest extends MpDbTestCase {
 	private static final String ALIAS = String.valueOf(System
 			.currentTimeMillis());
 	private SampleDTO sample;
+	private static int ROTATING_SAMPLE_ID = 200;
 
 	@Override
 	public void gwtSetUp() {
+		super.gwtSetUp();
 		sample = new SampleDTO();
 		sample.setSesarNumber(SESAR_NUMBER);
 		sample.setLatitude(LATITUDE);
 		sample.setLongitude(LONGITUDE);
 		sample.setRockType(ROCK_TYPE);
 		sample.setAlias(ALIAS);
+		sample.setId(ROTATING_SAMPLE_ID++);
 		sample.setOwner(this.getUser());
 	}
 
@@ -143,7 +147,7 @@ public class SaveSampleTest extends MpDbTestCase {
 			}
 
 			public void onFailure(final Throwable e) {
-				if (e instanceof PropertyRequiredException) {
+				if (e instanceof LoginRequiredException) {
 					finishTest();
 				} else {
 					e.printStackTrace();

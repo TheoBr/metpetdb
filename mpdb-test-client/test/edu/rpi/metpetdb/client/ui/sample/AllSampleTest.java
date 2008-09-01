@@ -3,7 +3,9 @@ package edu.rpi.metpetdb.client.ui.sample;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class AllSampleTest {
+import com.google.gwt.junit.tools.GWTTestSuite;
+
+public class AllSampleTest extends GWTTestSuite {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(

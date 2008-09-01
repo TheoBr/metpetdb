@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.server;
 
 import java.io.FileInputStream;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.dbunit.database.DatabaseConfig;
@@ -29,6 +30,8 @@ public class TearDownDatabaseForClient {
 	private static IDatabaseConnection conn;
 
 	private static IDataSet originalData;
+	
+	private static Connection hibernateConnection;
 
 	public static void main(String[] args) {
 		DataStore.initFactory();
@@ -37,8 +40,10 @@ public class TearDownDatabaseForClient {
 		Transaction tx = s.beginTransaction();
 
 		try {
-			conn = new DatabaseConnection(DataStore.getConfiguration()
-					.buildSettings().getConnectionProvider().getConnection());
+			hibernateConnection = ((org.hibernate.engine.SessionFactoryImplementor) DataStore
+					.getFactory()).getConnectionProvider()
+					.getConnection();
+			conn = new DatabaseConnection(hibernateConnection);
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
 		}
@@ -49,6 +54,12 @@ public class TearDownDatabaseForClient {
 			tearDown(".");
 
 		try {
+			try {
+				hibernateConnection.commit();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			tx.commit();
 			s.close();
 			conn.close();

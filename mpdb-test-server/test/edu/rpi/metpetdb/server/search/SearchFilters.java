@@ -1,21 +1,16 @@
 package edu.rpi.metpetdb.server.search;
 
-import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
-import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.index.TermDocs;
 import org.apache.lucene.search.TermQuery;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.search.FullTextQuery;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
-import org.hibernate.search.SearchFactory;
-import org.hibernate.search.reader.ReaderProvider;
-import org.hibernate.search.store.DirectoryProvider;
 import org.junit.Test;
+import org.postgis.Polygon;
 
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
@@ -30,32 +25,26 @@ public class SearchFilters extends DatabaseTestCase {
 	/**
 	 * Test finding samples within a bound box of latitude and longitudal
 	 * coordinates
+	 * @throws SQLException 
 	 */
 	@Test
-	public void testLatLongBoundBoxSearch() {
+	public void testLatLongBoundBoxSearch() throws SQLException {
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
 				.createFullTextSession(session);
 
-		final TermQuery termQuery = new TermQuery(new Term("alias", "1"));
+		final TermQuery termQuery = new TermQuery(new Term("user_username", "anthony"));
 		final FullTextQuery hibQuery = fullTextSession.createFullTextQuery(
 				termQuery, Sample.class);
-
-		session.enableFilter("boundingBox").setParameter("x1", 50)
-				.setParameter("y1", 45).setParameter("x2", 55).setParameter(
-						"y2", 55);
-
-		// final Query q = s
-		// .createSQLQuery("select count(*) from samples where sample_id="
-		// + id
-		// + " and ST_Intersects("
-		// + "location, "
-		// +
-		// "ST_SetSRID(ST_MakeBox2D(ST_MakePoint(50,50),ST_MakePoint(55,55)),4326))"
-		// );
+		final Polygon poly = new Polygon(
+				"POLYGON((45 45, 45 55, 55 55, 55 45, 45 45))");
+		poly.setSrid(4326);
+		//TODO update parameter to be the  bounding box
+		session.enableFilter("boundingBox").setParameter("polygon", poly ); 
 
 		final List<Sample> result = hibQuery.list();
-		assertEquals(1, result.size());
+		assertEquals(2, result.size());
 	}
+	///POLYGON((MINX MINY, MINX MAXY, MAXX MAXY, MAXX MINY, MINX MINY))
 
 }

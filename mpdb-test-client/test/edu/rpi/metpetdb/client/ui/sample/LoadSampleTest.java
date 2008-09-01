@@ -2,7 +2,7 @@ package edu.rpi.metpetdb.client.ui.sample;
 
 import edu.rpi.metpetdb.client.MpDbTestCase;
 import edu.rpi.metpetdb.client.TestServerOp;
-import edu.rpi.metpetdb.client.error.NoSuchObjectException;
+import edu.rpi.metpetdb.client.error.dao.SampleNotFoundException;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.ui.MpDb;
 
@@ -25,7 +25,7 @@ public class LoadSampleTest extends MpDbTestCase {
 				finishTest();
 			}
 		}.begin();
-		delayTestFinish(5000);
+		delayTestFinish(50000);
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class LoadSampleTest extends MpDbTestCase {
 			}
 
 			public void onFailure(final Throwable e) {
-				if (e instanceof NoSuchObjectException) {
+				if (e instanceof SampleNotFoundException) {
 					finishTest();
 				} else {
 					e.printStackTrace();

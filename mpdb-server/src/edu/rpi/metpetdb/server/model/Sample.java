@@ -37,7 +37,7 @@ public class Sample extends MObject implements IHasName {
 	private String alias;
 
 	@Field(index = Index.UN_TOKENIZED)
-	@DateBridge(resolution = Resolution.MILLISECOND)
+	@DateBridge(resolution = Resolution.DAY)
 	private Timestamp collectionDate;
 
 	private Short datePrecision;
