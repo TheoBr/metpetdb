@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE dataset SYSTEM "test-data/test-database.dtd">
 <dataset>
-  <users user_id="1" version="1" username="anthony" password="BCnxlteTnIP40jVqBXdVl+OZYUXFFy54Kw==" email="watera2@cs.rpi.edu"/>
-  <samples sample_id="1" version="0" sesar_number="000000000" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(50 50)" alias="1" collection_date="2008-08-28 18:32:17" />
-  <samples sample_id="2" version="0" sesar_number="000000001" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(50 50)" alias="2"/>
-  <samples sample_id="3" version="0" sesar_number="000000002" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)" alias="3"/>
-  <samples sample_id="4" version="0" sesar_number="000000003" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)" alias="4"/>
-  <samples sample_id="5" version="0" sesar_number="000000004" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)" alias="5"/>
-  <samples sample_id="7" version="0" sesar_number="000000006" public_data="N" rock_type="ibm" user_id="1" location="SRID=4326;POINT(1 1)" alias="6"/>
-  <samples sample_id="8" version="0" sesar_number="000000007" public_data="N" rock_type="ibmt43p" user_id="1" location="SRID=4326;POINT(1 1)" alias="7"/>
-  <samples sample_id="9" version="0" sesar_number="000000008" public_data="N" rock_type="thinkpad by ibm" user_id="1" location="SRID=4326;POINT(1 1)" alias="8"/>
+  <users user_id="1" version="1" username="anthony" password="BCnxlteTnIP40jVqBXdVl+OZYUXFFy54Kw==" email="watera2@cs.rpi.edu"/><users user_id="2" version="1" username="matt" password="" email="fyffem@cs.rpi.edu"></users>
+  <samples sample_id="1" version="0" sesar_number="000000000" public_data="Y" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(50 50)" alias="1" collection_date="2008-08-28 18:32:17" />
+  <samples sample_id="2" version="0" sesar_number="000000001" public_data="Y" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(50 50)" alias="2" collection_date="2008-08-28 18:32:17"/>
+  <samples sample_id="3" version="0" sesar_number="000000002" public_data="N" rock_type="rockie rock" user_id="1" location="SRID=4326;POINT(1 1)" alias="3" collection_date="2008-08-28 18:32:18"/>
+  <samples sample_id="4" version="0" sesar_number="000000003" public_data="N" rock_type="rockie rock" user_id="2" location="SRID=4326;POINT(1 1)" alias="4" collection_date="2008-08-28 18:32:17"/>
+  <samples sample_id="5" version="0" sesar_number="000000004" public_data="N" rock_type="rockie rock" user_id="2" location="SRID=4326;POINT(1 1)" alias="5" collection_date="2008-08-28 18:32:17"/>
+  <samples sample_id="7" version="0" sesar_number="000000006" public_data="Y" rock_type="ibm" user_id="2" location="SRID=4326;POINT(1 1)" alias="6" collection_date="2008-08-28 18:32:17"/>
+  <samples sample_id="8" version="0" sesar_number="000000007" public_data="N" rock_type="ibmt43p" user_id="1" location="SRID=4326;POINT(1 1)" alias="7" collection_date="2008-08-28 18:32:17"/>
+  <samples sample_id="9" version="0" sesar_number="000000008" public_data="N" rock_type="thinkpad by ibm" user_id="1" location="SRID=4326;POINT(1 1)" alias="8" collection_date="2008-08-28 18:32:17"/>
   
   <image_format image_format_id="6" name="image/tiff"/>
   <image_format image_format_id="7" name="image/gif"/>
@@ -198,7 +198,7 @@
   <elements element_id="5" name="Arsenic" symbol="As" atomic_number="33" weight="74.9216"/>
   <elements element_id="6" name="Astatine" symbol="At" atomic_number="85" weight="210.0"/>
   <elements element_id="7" name="Barium" symbol="Ba" atomic_number="56" weight="137.327"/>
-  <elements element_id="8" name="Berkelium" symbol="Bk" atomic_number="97" weight="247.0"/>
+  <elements element_id="8" name="Berkelium" symbol="Bk" atomic_number="97" weight="247.0"></elements>
   <elements element_id="9" name="Beryllium" symbol="Be" atomic_number="4" weight="9.012"/>
   <elements element_id="10" name="Bismuth" symbol="Bi" atomic_number="83" weight="208.98"/>
   <elements element_id="11" name="Boron" symbol="B" atomic_number="5" weight="10.81"/>
@@ -236,7 +236,7 @@
   <elements element_id="43" name="Krypton" symbol="Kr" atomic_number="36" weight="83.8"/>
   <elements element_id="44" name="Lanthanum" symbol="La" atomic_number="57" weight="138.905"/>
   <elements element_id="45" name="Lawrencium" symbol="Lr" atomic_number="103" weight="260.0"/>
-  <elements element_id="46" name="Lead" symbol="Pb" atomic_number="82" weight="207.2"/>
+  <elements element_id="46" name="Lead" symbol="Pb" atomic_number="82" weight="207.2"></elements>
   <elements element_id="47" name="Lithium" symbol="Li" atomic_number="3" weight="6.941"/>
   <elements element_id="48" name="Lutetium" symbol="Lu" atomic_number="71" weight="174.967"/>
   <elements element_id="49" name="Magnesium" symbol="Mg" atomic_number="12" weight="24.305"/>
@@ -309,7 +309,7 @@
   <oxides oxide_id="13" element_id="35" oxidation_state="4" species="HfO2" weight="210.49" cations_per_oxide="1" conversion_factor="1.17928175247913"/>
   <oxides oxide_id="14" element_id="38" oxidation_state="1" species="H2O" weight="18.015" cations_per_oxide="2" conversion_factor="8.94488579940417"/>
   <oxides oxide_id="15" element_id="42" oxidation_state="2" species="FeO" weight="71.85" cations_per_oxide="1" conversion_factor="1.28659683051303"/>
-  <oxides oxide_id="16" element_id="42" oxidation_state="3" species="Fe2O3" weight="159.69" cations_per_oxide="2" conversion_factor="1.42976094547408"/>
+  <oxides oxide_id="16" element_id="42" oxidation_state="3" species="Fe2O3" weight="159.69" cations_per_oxide="2" conversion_factor="1.42976094547408"></oxides>
   <oxides oxide_id="17" element_id="44" oxidation_state="3" species="La2O3" weight="325.81" cations_per_oxide="2" conversion_factor="1.17277995752493"/>
   <oxides oxide_id="18" element_id="46" oxidation_state="2" species="PbO" weight="223.2" cations_per_oxide="1" conversion_factor="1.07722007722008"/>
   <oxides oxide_id="19" element_id="47" oxidation_state="1" species="Li2O" weight="29.88" cations_per_oxide="2" conversion_factor="2.15242760409163"/>
@@ -352,4 +352,4 @@
   <sample_regions/>
   <uploaded_files/>
   <xray_image/>
-</dataset>
+  </dataset>

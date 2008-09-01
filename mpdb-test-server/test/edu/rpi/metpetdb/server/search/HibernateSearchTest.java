@@ -1,31 +1,32 @@
 package edu.rpi.metpetdb.server.search;
 
+import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.DateTools;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.RangeQuery;
 import org.apache.lucene.search.TermQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.search.FullTextQuery;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 import org.junit.Test;
 
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
+import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.properties.SearchProperty;
 import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
-import edu.rpi.metpetdb.server.model.Mineral;
 import edu.rpi.metpetdb.server.model.Sample;
-import edu.rpi.metpetdb.server.model.SampleMineral;
 import edu.rpi.metpetdb.server.model.User;
 
 public class HibernateSearchTest extends DatabaseTestCase {
@@ -127,10 +128,6 @@ public class HibernateSearchTest extends DatabaseTestCase {
 				BooleanClause.Occur.MUST, BooleanClause.Occur.MUST
 		};
 
-		/*
-		 * BooleanClause.Occur[] flags = {BooleanClause.Occur.SHOULD,
-		 * BooleanClause.Occur.MUST, BooleanClause.Occur.MUST_NOT};
-		 */
 		try {
 			final Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
 					.parse(searchFor, columnsIn, flags, new StandardAnalyzer());
@@ -166,10 +163,6 @@ public class HibernateSearchTest extends DatabaseTestCase {
 				BooleanClause.Occur.MUST, BooleanClause.Occur.MUST
 		};// , BooleanClause.Occur.MUST};
 
-		/*
-		 * BooleanClause.Occur[] flags = {BooleanClause.Occur.SHOULD,
-		 * BooleanClause.Occur.MUST, BooleanClause.Occur.MUST_NOT};
-		 */
 		try {
 			final Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
 					.parse(searchFor, columnsIn, flags, new StandardAnalyzer());
@@ -190,6 +183,8 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	@Test
 	public void testSearchSampleSearch() {
 		final SearchSampleDTO searchSamp = new SearchSampleDTO();
+		
+		
 		// searchSamp.setSesarNumber("000000000");
 		searchSamp.setAlias("1");
 		searchSamp.addPossibleRockType("logitech");
@@ -234,10 +229,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 				}
 			}
 		}
-		/*
-		 * BooleanClause.Occur[] flags = {BooleanClause.Occur.SHOULD,
-		 * BooleanClause.Occur.MUST, BooleanClause.Occur.MUST_NOT};
-		 */
+
 		final String searchArray[] = new String[searchForValue.size()];
 		searchForValue.toArray(searchArray);
 		final String columnsArray[] = new String[columnsIn.size()];
@@ -263,7 +255,52 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		tx.commit();
 	}
 
+	@Test
+	public void testSampleSearchOnUsers(){
+		final UserDTO testUser = new UserDTO();
+		testUser.setId(2);
+		testUser.setUsername("matt");
+		
+		Timestamp startDate = new Timestamp(0);
+		Timestamp endDate = new Timestamp(108, 8, 1, 11, 44, 35, 50);
+
+		final Session session = InitDatabase.getSession();
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
+		
+		final Transaction tx = fullTextSession.beginTransaction();
+		
+		// Check if it's public data or if the user is this user
+		BooleanQuery privacyQuery = new  BooleanQuery();
+		// Is this public data?
+		final TermQuery termQuery = new TermQuery(new Term("public_data", "Y"));
+		privacyQuery.add(termQuery, BooleanClause.Occur.SHOULD);
+		// Is this the current user?
+		final TermQuery termQuery2 = new TermQuery(new Term("user_username", testUser.getUsername()));
+		privacyQuery.add(termQuery2, BooleanClause.Occur.SHOULD);
+		
+		BooleanQuery fullQuery = new BooleanQuery();
 	
-	
+		// in the full query, make it mandatory that the privacy requirements are met
+		fullQuery.add(privacyQuery, BooleanClause.Occur.MUST);
+		
+		// does a range query based on date on the field startDate.
+		if(startDate!=null && endDate!=null)
+        {         
+           RangeQuery rq = new RangeQuery( new Term("collectionDate",DateTools.dateToString(startDate, DateTools.Resolution.MILLISECOND)),new Term("collectionDate",DateTools.dateToString(endDate, DateTools.Resolution.MILLISECOND)), true );
+           fullQuery.add(rq, BooleanClause.Occur.MUST);
+        }   	
+		
+		final org.hibernate.Query hibQuery = fullTextSession
+			.createFullTextQuery(fullQuery, Sample.class);
+		final List<Sample> results = hibQuery.list();
+
+		for (final Sample s : results)
+			System.out.println("found sample, alias is " + s.getAlias());
+		
+		assertEquals(5, results.size());
+		
+		tx.commit();
+	}
 	
 }

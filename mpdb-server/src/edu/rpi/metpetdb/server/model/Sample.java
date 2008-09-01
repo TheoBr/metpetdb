@@ -4,11 +4,13 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.Resolution;
 import org.hibernate.search.annotations.Store;
 import org.postgis.Geometry;
 import org.postgis.Point;
@@ -34,9 +36,13 @@ public class Sample extends MObject implements IHasName {
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String alias;
 
+	@Field(index = Index.UN_TOKENIZED)
+	@DateBridge(resolution = Resolution.MILLISECOND)
 	private Timestamp collectionDate;
+
 	private Short datePrecision;
 
+	@Field(index = Index.UN_TOKENIZED)
 	private Boolean publicData;
 
 	@Field(index = Index.TOKENIZED, store = Store.NO)
