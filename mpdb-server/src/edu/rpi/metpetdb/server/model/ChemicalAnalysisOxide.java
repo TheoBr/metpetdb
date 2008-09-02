@@ -1,11 +1,22 @@
 package edu.rpi.metpetdb.server.model;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.Store;
+
+import edu.rpi.metpetdb.server.search.bridges.FloatBridge;
+
 public class ChemicalAnalysisOxide extends MObject {
 	private static final long serialVersionUID = 1L;
 
+	@Field(index = Index.UN_TOKENIZED)
+	@FieldBridge( impl = FloatBridge.class )
 	private Float amount;
 	private Float precision;
 	private String precisionUnit;
+	@IndexedEmbedded(prefix = "oxide_")
 	private Oxide oxide;
 
 	public void setAmount(final Float f) {

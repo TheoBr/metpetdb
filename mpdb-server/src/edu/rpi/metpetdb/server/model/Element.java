@@ -2,6 +2,10 @@ package edu.rpi.metpetdb.server.model;
 
 import java.util.Set;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
+
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 
 public class Element extends MObject implements IHasName {
@@ -10,6 +14,7 @@ public class Element extends MObject implements IHasName {
 	private short id;
 	private String name;
 	private String alternateName;
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String symbol;
 	private int atomicNumber;
 	private Float weight;

@@ -2,12 +2,17 @@ package edu.rpi.metpetdb.server.model;
 
 import java.util.Set;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
+
 public class Oxide extends MObject {
 	private static final long serialVersionUID = 1L;
 
 	private Element element;
 	private short oxideId;
 	private short oxidationState;
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String species;
 	private Float weight;
 	private short cationsPerOxide;

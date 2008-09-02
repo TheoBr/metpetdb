@@ -7,6 +7,8 @@ import java.util.Set;
 import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FullTextFilterDef;
+import org.hibernate.search.annotations.FullTextFilterDefs;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
@@ -17,8 +19,13 @@ import org.postgis.Point;
 
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
+import edu.rpi.metpetdb.server.search.lucene.filters.ElementAmountFilter;
 
 @Indexed
+@FullTextFilterDefs( {
+    @FullTextFilterDef(name = "elementAmountFilter", impl = ElementAmountFilter.class, cache=false), //actual Filter implementation
+})
+
 public class Sample extends MObject implements IHasName {
 	private static final long serialVersionUID = 1L;
 
@@ -48,7 +55,7 @@ public class Sample extends MObject implements IHasName {
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String rockType;
 
-	@IndexedEmbedded(depth = 1, prefix = "subsample_")
+	@IndexedEmbedded(prefix = "subsample_")
 	private Set<Subsample> subsamples;
 
 	private Set<Project> projects;

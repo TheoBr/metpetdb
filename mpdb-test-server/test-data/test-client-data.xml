@@ -1,23 +1,26 @@
 <?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE dataset SYSTEM "test-data/test-database.dtd">
 <dataset>
-  <users user_id="1" version="1" username="anthony" password="BCnxlteTnIP40jVqBXdVl+OZYUXFFy54Kw==" email="watera2@cs.rpi.edu"/>
-  <samples sample_id="1" version="0" sesar_number="000000000" public_data="N" rock_type="Amphibolite" user_id="1" location="SRID=4326;POINT(50 50)" alias="1" collection_date="2008-08-28 18:32:17" />
-  <samples sample_id="2" version="0" sesar_number="000000001" public_data="N" rock_type="Amphibolite" user_id="1" location="SRID=4326;POINT(50 50)" alias="2"/>
-  <samples sample_id="3" version="0" sesar_number="000000002" public_data="N" rock_type="Greenschist" user_id="1" location="SRID=4326;POINT(1 1)" alias="3"/>
-  <samples sample_id="4" version="0" sesar_number="000000003" public_data="N" rock_type="Greenschist" user_id="1" location="SRID=4326;POINT(1 1)" alias="4"/>
-  <samples sample_id="5" version="0" sesar_number="000000004" public_data="N" rock_type="Schist" user_id="1" location="SRID=4326;POINT(1 1)" alias="5"/>
-  <samples sample_id="7" version="0" sesar_number="000000006" public_data="N" rock_type="Schist" user_id="1" location="SRID=4326;POINT(1 1)" alias="6"/>
-  <samples sample_id="8" version="0" sesar_number="000000007" public_data="N" rock_type="Slate" user_id="1" location="SRID=4326;POINT(1 1)" alias="7"/>
-  <samples sample_id="9" version="0" sesar_number="000000008" public_data="N" rock_type="Slate" user_id="1" location="SRID=4326;POINT(1 1)" alias="8"/>
-  
+  <users user_id="1" version="1" username="anthony" password="" email="watera2@cs.rpi.edu"/>
+  <samples sample_id="1" version="0" sesar_number="000000000" public_data="N" collection_date="2008-08-28 18:32:17.0" alias="1" rock_type="Amphibolite" user_id="1" location="SRID=4326;POINT(50 50)"/>
+  <samples sample_id="2" version="0" sesar_number="000000001" public_data="N" alias="2" rock_type="Amphibolite" user_id="1" location="SRID=4326;POINT(50 50)"/>
+  <samples sample_id="3" version="0" sesar_number="000000002" public_data="N" alias="3" rock_type="Greenschist" user_id="1" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="4" version="0" sesar_number="000000003" public_data="N" alias="4" rock_type="Greenschist" user_id="1" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="5" version="0" sesar_number="000000004" public_data="N" alias="5" rock_type="Schist" user_id="1" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="7" version="0" sesar_number="000000006" public_data="N" alias="6" rock_type="Schist" user_id="1" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="8" version="0" sesar_number="000000007" public_data="N" alias="7" rock_type="Slate" user_id="1" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="9" version="0" sesar_number="000000008" public_data="N" alias="8" rock_type="Slate" user_id="1" location="SRID=4326;POINT(1 1)"/>
+  <subsamples subsample_id="5" version="0" sample_id="9" name="8-subsample-0" type="Thin section"/>
+  <subsamples subsample_id="6" version="0" sample_id="9" name="8-subsample-1" type="Thin section"/>
+  <subsamples subsample_id="7" version="0" sample_id="8" name="7-subsample-0" type="Thin section"/>
   <image_format image_format_id="6" name="image/tiff"/>
   <image_format image_format_id="7" name="image/gif"/>
   <image_format image_format_id="8" name="image/jpeg"/>
   <image_format image_format_id="9" name="image/bmp"/>
   <image_format image_format_id="10" name="image/png"/>
   <images/>
-  <minerals mineral_id="1" name="MINERALNAME222"/>
-  <minerals mineral_id="2" name="MINERALNAME" parent_mineral_id="1"/>
+  <minerals mineral_id="1" name="Tectosilicates"/>
+  <minerals mineral_id="2" name="Silica" parent_mineral_id="1"/>
   <minerals mineral_id="3" name="Quartz" parent_mineral_id="2"/>
   <minerals mineral_id="4" name="Coesite" parent_mineral_id="2"/>
   <minerals mineral_id="5" name="Tridymite" parent_mineral_id="2"/>
@@ -189,7 +192,8 @@
   <minerals mineral_id="171" name="Graphite" parent_mineral_id="170"/>
   <minerals mineral_id="172" name="Diamond" parent_mineral_id="170"/>
   <reference/>
-  <chemical_analyses/>
+  <chemical_analyses chemical_analysis_id="1" spot_id="0" subsample_id="5" point_x="0" point_y="0" analysis_date="1969-12-31 19:00:00.0" date_precision="365" mineral_id="22" large_rock="Y"/>
+  <chemical_analyses chemical_analysis_id="2" spot_id="0" subsample_id="7" point_x="0" point_y="0" analysis_date="1969-12-31 19:00:00.0" date_precision="365" mineral_id="22" large_rock="N"/>
   <elements element_id="1" name="Aluminium" alternate_name="Aluminum" symbol="Al" atomic_number="13" weight="26.9815"/>
   <elements element_id="2" name="Americium" symbol="Am" atomic_number="95" weight="243.0"/>
   <elements element_id="3" name="Antimony" symbol="Sb" atomic_number="51" weight="121.76"/>
@@ -292,7 +296,10 @@
   <elements element_id="100" name="Yttrium" symbol="Y" atomic_number="39" weight="88.9058"/>
   <elements element_id="101" name="Zinc" symbol="Zn" atomic_number="30" weight="65.38"/>
   <elements element_id="102" name="Zirconium" symbol="Zr" atomic_number="40" weight="91.224"/>
-  <chemical_analysis_elements/>
+  <chemical_analysis_elements chemical_analysis_id="1" element_id="1" amount="5.0" precision="0.0" precision_type="ABS"/>
+  <chemical_analysis_elements chemical_analysis_id="1" element_id="14" amount="5.0" precision="0.0" precision_type="ABS"/>
+  <chemical_analysis_elements chemical_analysis_id="2" element_id="1" amount="10.0" precision="0.0" precision_type="ABS"/>
+  <chemical_analysis_elements chemical_analysis_id="2" element_id="14" amount="10.0" precision="0.0" precision_type="ABS"/>
   <oxides oxide_id="1" element_id="1" oxidation_state="3" species="Al2O3" weight="101.96" cations_per_oxide="2" conversion_factor="1.8894427663399"/>
   <oxides oxide_id="2" element_id="3" oxidation_state="5" species="Sb2O5" weight="323.517" cations_per_oxide="2" conversion_factor="1.32850279237845"/>
   <oxides oxide_id="3" element_id="3" oxidation_state="3" species="Sb2O3" weight="291.518" cations_per_oxide="2" conversion_factor="1.19710167542707"/>
@@ -334,19 +341,136 @@
   <oxides oxide_id="39" element_id="100" oxidation_state="3" species="Y2O3" weight="225.81" cations_per_oxide="2" conversion_factor="1.26993964398273"/>
   <oxides oxide_id="40" element_id="101" oxidation_state="2" species="ZnO" weight="81.38" cations_per_oxide="1" conversion_factor="1.24472315692872"/>
   <oxides oxide_id="41" element_id="102" oxidation_state="4" species="ZrO2" weight="123.22" cations_per_oxide="1" conversion_factor="1.35074103306148"/>
-  <chemical_analysis_oxides/>
+  <chemical_analysis_oxides chemical_analysis_id="1" oxide_id="1" amount="10.0" precision="0.0" precision_type="ABS"/>
+  <chemical_analysis_oxides chemical_analysis_id="1" oxide_id="6" amount="10.0" precision="0.0" precision_type="ABS"/>
+  <chemical_analysis_oxides chemical_analysis_id="2" oxide_id="1" amount="15.0" precision="0.0" precision_type="ABS"/>
+  <chemical_analysis_oxides chemical_analysis_id="2" oxide_id="6" amount="15.0" precision="0.0" precision_type="ABS"/>
+  <mineral_types mineral_type_id="1" name="Silicates"/>
+  <mineral_types mineral_type_id="2" name="Oxides"/>
+  <mineral_types mineral_type_id="3" name="Carbonates"/>
+  <mineral_types mineral_type_id="4" name="Phosphates"/>
+  <mineral_types mineral_type_id="5" name="Other"/>
+  <element_mineral_types element_id="1" mineral_type_id="1"/>
+  <element_mineral_types element_id="1" mineral_type_id="2"/>
+  <element_mineral_types element_id="1" mineral_type_id="5"/>
+  <element_mineral_types element_id="7" mineral_type_id="3"/>
+  <element_mineral_types element_id="14" mineral_type_id="1"/>
+  <element_mineral_types element_id="14" mineral_type_id="3"/>
+  <element_mineral_types element_id="14" mineral_type_id="4"/>
+  <element_mineral_types element_id="14" mineral_type_id="5"/>
+  <element_mineral_types element_id="16" mineral_type_id="3"/>
+  <element_mineral_types element_id="17" mineral_type_id="4"/>
+  <element_mineral_types element_id="19" mineral_type_id="1"/>
+  <element_mineral_types element_id="19" mineral_type_id="5"/>
+  <element_mineral_types element_id="20" mineral_type_id="2"/>
+  <element_mineral_types element_id="24" mineral_type_id="4"/>
+  <element_mineral_types element_id="26" mineral_type_id="4"/>
+  <element_mineral_types element_id="27" mineral_type_id="4"/>
+  <element_mineral_types element_id="29" mineral_type_id="1"/>
+  <element_mineral_types element_id="29" mineral_type_id="5"/>
+  <element_mineral_types element_id="31" mineral_type_id="4"/>
+  <element_mineral_types element_id="37" mineral_type_id="4"/>
+  <element_mineral_types element_id="38" mineral_type_id="1"/>
+  <element_mineral_types element_id="38" mineral_type_id="5"/>
+  <element_mineral_types element_id="42" mineral_type_id="1"/>
+  <element_mineral_types element_id="42" mineral_type_id="2"/>
+  <element_mineral_types element_id="42" mineral_type_id="3"/>
+  <element_mineral_types element_id="42" mineral_type_id="5"/>
+  <element_mineral_types element_id="44" mineral_type_id="4"/>
+  <element_mineral_types element_id="46" mineral_type_id="4"/>
+  <element_mineral_types element_id="48" mineral_type_id="4"/>
+  <element_mineral_types element_id="49" mineral_type_id="1"/>
+  <element_mineral_types element_id="49" mineral_type_id="2"/>
+  <element_mineral_types element_id="49" mineral_type_id="3"/>
+  <element_mineral_types element_id="49" mineral_type_id="5"/>
+  <element_mineral_types element_id="50" mineral_type_id="1"/>
+  <element_mineral_types element_id="50" mineral_type_id="2"/>
+  <element_mineral_types element_id="50" mineral_type_id="3"/>
+  <element_mineral_types element_id="50" mineral_type_id="5"/>
+  <element_mineral_types element_id="54" mineral_type_id="4"/>
+  <element_mineral_types element_id="62" mineral_type_id="1"/>
+  <element_mineral_types element_id="62" mineral_type_id="2"/>
+  <element_mineral_types element_id="62" mineral_type_id="3"/>
+  <element_mineral_types element_id="62" mineral_type_id="4"/>
+  <element_mineral_types element_id="62" mineral_type_id="5"/>
+  <element_mineral_types element_id="64" mineral_type_id="4"/>
+  <element_mineral_types element_id="68" mineral_type_id="1"/>
+  <element_mineral_types element_id="68" mineral_type_id="5"/>
+  <element_mineral_types element_id="69" mineral_type_id="4"/>
+  <element_mineral_types element_id="78" mineral_type_id="4"/>
+  <element_mineral_types element_id="81" mineral_type_id="1"/>
+  <element_mineral_types element_id="81" mineral_type_id="2"/>
+  <element_mineral_types element_id="81" mineral_type_id="4"/>
+  <element_mineral_types element_id="81" mineral_type_id="5"/>
+  <element_mineral_types element_id="83" mineral_type_id="1"/>
+  <element_mineral_types element_id="83" mineral_type_id="5"/>
+  <element_mineral_types element_id="84" mineral_type_id="3"/>
+  <element_mineral_types element_id="89" mineral_type_id="4"/>
+  <element_mineral_types element_id="91" mineral_type_id="4"/>
+  <element_mineral_types element_id="92" mineral_type_id="4"/>
+  <element_mineral_types element_id="94" mineral_type_id="1"/>
+  <element_mineral_types element_id="94" mineral_type_id="2"/>
+  <element_mineral_types element_id="94" mineral_type_id="5"/>
+  <element_mineral_types element_id="96" mineral_type_id="4"/>
+  <element_mineral_types element_id="99" mineral_type_id="4"/>
+  <element_mineral_types element_id="100" mineral_type_id="4"/>
   <grids/>
   <image_on_grid/>
+  <image_reference/>
   <metamorphic_grades/>
+  <oxide_mineral_types oxide_id="1" mineral_type_id="1"/>
+  <oxide_mineral_types oxide_id="1" mineral_type_id="2"/>
+  <oxide_mineral_types oxide_id="1" mineral_type_id="5"/>
+  <oxide_mineral_types oxide_id="4" mineral_type_id="3"/>
+  <oxide_mineral_types oxide_id="6" mineral_type_id="1"/>
+  <oxide_mineral_types oxide_id="6" mineral_type_id="3"/>
+  <oxide_mineral_types oxide_id="6" mineral_type_id="4"/>
+  <oxide_mineral_types oxide_id="6" mineral_type_id="5"/>
+  <oxide_mineral_types oxide_id="7" mineral_type_id="3"/>
+  <oxide_mineral_types oxide_id="8" mineral_type_id="4"/>
+  <oxide_mineral_types oxide_id="10" mineral_type_id="2"/>
+  <oxide_mineral_types oxide_id="14" mineral_type_id="1"/>
+  <oxide_mineral_types oxide_id="14" mineral_type_id="5"/>
+  <oxide_mineral_types oxide_id="15" mineral_type_id="1"/>
+  <oxide_mineral_types oxide_id="15" mineral_type_id="2"/>
+  <oxide_mineral_types oxide_id="15" mineral_type_id="3"/>
+  <oxide_mineral_types oxide_id="15" mineral_type_id="5"/>
+  <oxide_mineral_types oxide_id="16" mineral_type_id="1"/>
+  <oxide_mineral_types oxide_id="16" mineral_type_id="2"/>
+  <oxide_mineral_types oxide_id="16" mineral_type_id="5"/>
+  <oxide_mineral_types oxide_id="17" mineral_type_id="4"/>
+  <oxide_mineral_types oxide_id="18" mineral_type_id="4"/>
+  <oxide_mineral_types oxide_id="20" mineral_type_id="1"/>
+  <oxide_mineral_types oxide_id="20" mineral_type_id="2"/>
+  <oxide_mineral_types oxide_id="20" mineral_type_id="3"/>
+  <oxide_mineral_types oxide_id="20" mineral_type_id="5"/>
+  <oxide_mineral_types oxide_id="21" mineral_type_id="1"/>
+  <oxide_mineral_types oxide_id="21" mineral_type_id="2"/>
+  <oxide_mineral_types oxide_id="21" mineral_type_id="3"/>
+  <oxide_mineral_types oxide_id="21" mineral_type_id="5"/>
+  <oxide_mineral_types oxide_id="26" mineral_type_id="4"/>
+  <oxide_mineral_types oxide_id="27" mineral_type_id="1"/>
+  <oxide_mineral_types oxide_id="27" mineral_type_id="5"/>
+  <oxide_mineral_types oxide_id="30" mineral_type_id="1"/>
+  <oxide_mineral_types oxide_id="30" mineral_type_id="2"/>
+  <oxide_mineral_types oxide_id="30" mineral_type_id="4"/>
+  <oxide_mineral_types oxide_id="30" mineral_type_id="5"/>
+  <oxide_mineral_types oxide_id="31" mineral_type_id="1"/>
+  <oxide_mineral_types oxide_id="31" mineral_type_id="5"/>
+  <oxide_mineral_types oxide_id="32" mineral_type_id="3"/>
+  <oxide_mineral_types oxide_id="34" mineral_type_id="4"/>
+  <oxide_mineral_types oxide_id="36" mineral_type_id="1"/>
+  <oxide_mineral_types oxide_id="36" mineral_type_id="2"/>
+  <oxide_mineral_types oxide_id="36" mineral_type_id="5"/>
+  <oxide_mineral_types oxide_id="37" mineral_type_id="4"/>
+  <oxide_mineral_types oxide_id="39" mineral_type_id="4"/>
   <projects/>
   <project_members/>
   <project_samples/>
   <regions/>
   <sample_comments/>
   <sample_metamorphic_grades/>
-  <sample_minerals mineral_id="25" sample_id="9" amount="0.0"/>
-  <sample_minerals mineral_id="25" sample_id="8" amount="0.0"/>
-  <sample_minerals mineral_id="25" sample_id="7" amount="0.0"/>
+  <sample_minerals/>
   <sample_reference/>
   <sample_regions/>
   <uploaded_files/>

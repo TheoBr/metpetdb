@@ -4,14 +4,22 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.Store;
+
 public class ChemicalAnalysis extends MObject {
 	private static final long serialVersionUID = 1L;
 
 	private int id;
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String spotId;
 	private int pointX;
 	private int pointY;
 	private Image image;
+	@ContainedIn
 	private Subsample subsample;
 	private String analysisMethod;
 	private String location;
@@ -23,7 +31,9 @@ public class ChemicalAnalysis extends MObject {
 	private Mineral mineral;
 	private Boolean largeRock;
 	private Float total;
+	@IndexedEmbedded(prefix = "elements_")
 	private Set<ChemicalAnalysisElement> elements;
+	@IndexedEmbedded(prefix = "oxides_")
 	private Set<ChemicalAnalysisOxide> oxides;
 
 	public int getId() {

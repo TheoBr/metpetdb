@@ -4,17 +4,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
-@Indexed
 public class Subsample extends MObject {
 	private static final long serialVersionUID = 1L;
 
-	@DocumentId
 	private long id;
 
 	@ContainedIn
@@ -32,6 +29,7 @@ public class Subsample extends MObject {
 
 	private Grid grid;
 
+	@IndexedEmbedded(prefix = "chemicalAnalysis_")
 	private Set<ChemicalAnalysis> chemicalAnalysis;
 	private int imageCount;
 	private int analysisCount;
