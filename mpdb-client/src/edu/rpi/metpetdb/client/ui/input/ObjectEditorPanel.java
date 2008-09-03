@@ -194,4 +194,8 @@ public abstract class ObjectEditorPanel<T> extends DetailsPanel implements
 	protected void onDeleteCompletion(final Object result) {
 		Window.alert("deleted");
 	}
+
+	public Button getSaveButton() {
+		return save;
+	}
 }

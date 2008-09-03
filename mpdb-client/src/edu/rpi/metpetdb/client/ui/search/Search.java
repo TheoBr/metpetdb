@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
+import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
@@ -27,24 +28,51 @@ import edu.rpi.metpetdb.client.ui.input.attributes.CheckBoxesAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateRangeAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.MineralAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.TreeAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchChemistryAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchTabAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 
 public class Search extends FlowPanel implements ClickListener {
-	private static GenericAttribute[] searchAtts = {
-			/* Keep it simple for now */
+	// private static GenericAttribute[] searchAtts = {
+	// new CheckBoxesAttribute(MpDb.oc.SearchSample_possibleRockTypes, 4),
+	// new SearchLocationAttribute(MpDb.oc.SearchSample_location),
+	// new TreeAttribute(
+	// (PropertyConstraint) MpDb.doc.SearchSample_minerals, 4),
+	// new SearchChemistryAttribute(MpDb.doc.SearchSample_elements,
+	// MpDb.doc.SearchSample_oxides),
+	// new TextAttribute(MpDb.oc.SearchSample_owner),
+	// new TextAttribute(MpDb.oc.SearchSample_sesarNumber),
+	// new TextAttribute(MpDb.oc.SearchSample_alias),
+	// new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange)
+	// };
+	private static GenericAttribute[] rocktype = {
+		new CheckBoxesAttribute(MpDb.oc.SearchSample_possibleRockTypes, 4),
+	};
+	private static GenericAttribute[] Region = {
+		new SearchLocationAttribute(MpDb.oc.SearchSample_boundingBox),
+	};
+	private static GenericAttribute[] Minerals = {
+		new TreeAttribute((PropertyConstraint) MpDb.doc.SearchSample_minerals,
+				4),
+	};
+	private static GenericAttribute[] Chemistry = {
+		new SearchChemistryAttribute(MpDb.doc.SearchSample_elements,
+				MpDb.doc.SearchSample_oxides),
+	};
+	private static GenericAttribute[] Other = {
 			new TextAttribute(MpDb.oc.SearchSample_owner),
 			new TextAttribute(MpDb.oc.SearchSample_sesarNumber),
 			new TextAttribute(MpDb.oc.SearchSample_alias),
-			new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange),
-			// MpDb.doc.Sample_datePrecision),
-			new CheckBoxesAttribute(MpDb.oc.SearchSample_possibleRockTypes, 4),
-			new SearchLocationAttribute(MpDb.oc.SearchSample_boundingBox),
-			new MineralAttribute(MpDb.doc.SearchSample_minerals),
-			new SearchChemistryAttribute(MpDb.doc.SearchSample_elements,
-					MpDb.doc.SearchSample_oxides)
+			new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange)
+	};
+	private static GenericAttribute[] searchAtts = {
+		new SearchTabAttribute(MpDb.oc.SearchSample_alias,
+				new GenericAttribute[][] {
+						rocktype, Region, Minerals, Chemistry, Other
+				})
+
 	};
 
 	private static final String samplesParameter = "Samples";
@@ -61,16 +89,9 @@ public class Search extends FlowPanel implements ClickListener {
 			 * in reality this would somehow tie into the search rpc call to
 			 * pass in sorting data and pagination data to the server
 			 */
-			// int displayResults;
-			// if (results.size() - p.getFirstResult() >= p.getMaxResults())
-			// displayResults = p.getMaxResults();
-			// else
-			// displayResults = results.size() - p.getFirstResult();
 			final Results<SampleDTO> r = new Results<SampleDTO>();
 			r.setCount(results.size());
 			r.setList(results);
-			// r.setList(results.subList(p.getFirstResult(), p.getFirstResult()
-			// + displayResults));
 			ac.onSuccess(r);
 		}
 
@@ -92,6 +113,7 @@ public class Search extends FlowPanel implements ClickListener {
 			}
 
 		};
+
 		add(p_searchSample);
 		addResultListHeader();
 		add(sampleList);

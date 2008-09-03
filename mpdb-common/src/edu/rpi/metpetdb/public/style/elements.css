@@ -245,6 +245,22 @@ button.remove {
 	padding-left:15px;
 }
 
+/*------------------------------------
+				tabs
+---------------------------------------*/
+
+.subpages td div.current{
+	background:#FFFFFF none repeat scroll 0 0;
+border-bottom-color:#FFFFFF;
+font-weight:bold;
+}
+.subpages td div{
+background:#F5F7F1 none repeat scroll 0 0;
+border:1px solid #AFCF73;
+cursor:pointer;
+margin:0 0.2em;
+padding:0.4em;
+}
 
 /*-------------------------------------
                extras

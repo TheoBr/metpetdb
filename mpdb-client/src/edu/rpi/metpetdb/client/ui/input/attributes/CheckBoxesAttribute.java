@@ -59,7 +59,7 @@ public class CheckBoxesAttribute extends GenericAttribute implements
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
 		editList = new FixedWidthFlexTable();
-		editList.setWidth("100%");
+		// editList.setWidth("100%");
 
 		items.clear();
 		DOM.setElementAttribute(editList.getElement(), "id", id);
@@ -69,8 +69,8 @@ public class CheckBoxesAttribute extends GenericAttribute implements
 				.getValues();
 		if (availableItems != null) {
 			final Iterator<?> iter = availableItems.iterator();
-			final int numRows = availableItems.size() / cols
-					+ availableItems.size() % cols;
+			final int numRows = (availableItems.size() / cols
+					+ availableItems.size() % cols) - 1;
 			int row = 0;
 			int column = 0;
 			while (iter.hasNext()) {

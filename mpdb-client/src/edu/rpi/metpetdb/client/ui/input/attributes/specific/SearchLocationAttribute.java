@@ -45,7 +45,16 @@ public class SearchLocationAttribute extends GenericAttribute implements
 
 	public SearchLocationAttribute(final PropertyConstraint sc) {
 		super(sc);
+		map = new MapWidget(new LatLng(0, 0), 1);
+		map.addControl(new LargeMapControl());
+		map.addControl(new MapTypeControl());
+		map.addControl(new ScaleControl());
+		map.setSize("500px", "300px");
 
+		northInput = new TextBox();
+		southInput = new TextBox();
+		eastInput = new TextBox();
+		westInput = new TextBox();
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
@@ -69,17 +78,6 @@ public class SearchLocationAttribute extends GenericAttribute implements
 		final Label southBound = new Label("South Bound (Lat)");
 		final Label eastBound = new Label("East Bound (Long)");
 		final Label westBound = new Label("West Bound (Long)");
-
-		northInput = new TextBox();
-		southInput = new TextBox();
-		eastInput = new TextBox();
-		westInput = new TextBox();
-
-		map = new MapWidget(new LatLng(0, 0), 1);
-		map.addControl(new LargeMapControl());
-		map.addControl(new MapTypeControl());
-		map.addControl(new ScaleControl());
-		map.setSize("500px", "300px");
 
 		final VerticalPanel vpNorth = new VerticalPanel();
 		final VerticalPanel vpSouth = new VerticalPanel();
@@ -195,6 +193,10 @@ public class SearchLocationAttribute extends GenericAttribute implements
 			}
 
 			if (markerPoint1.getPoint().getLongitude() > markerPoint2
+					.getPoint().getLongitude() + 180) {
+				E = markerPoint2.getPoint().getLongitude();
+				W = markerPoint1.getPoint().getLongitude();
+			} else if (markerPoint1.getPoint().getLongitude() > markerPoint2
 					.getPoint().getLongitude()) {
 				E = markerPoint1.getPoint().getLongitude();
 				W = markerPoint2.getPoint().getLongitude();
