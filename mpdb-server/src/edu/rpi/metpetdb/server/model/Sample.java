@@ -23,7 +23,7 @@ import edu.rpi.metpetdb.server.search.lucene.filters.ElementAmountFilter;
 
 @Indexed
 @FullTextFilterDefs( {
-    @FullTextFilterDef(name = "elementAmountFilter", impl = ElementAmountFilter.class, cache=false), //actual Filter implementation
+    @FullTextFilterDef(name = "elementAmountFilter", impl = ElementAmountFilter.class, cache=false) //actual Filter implementation
 })
 
 public class Sample extends MObject implements IHasName {
