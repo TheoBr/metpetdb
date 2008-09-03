@@ -295,24 +295,19 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	}
 
 	@Test
-	public void testSampleSearchOnUsers() {
+	public void testPublicOrUserSamples() {
 		final UserDTO testUser = new UserDTO();
 		testUser.setId(2);
 		testUser.setUsername("matt");
-
-		Timestamp startDate = new Timestamp(0);
-		Timestamp endDate = new Timestamp(108, 8, 1, 11, 44, 35, 50);
 
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
 				.createFullTextSession(session);
 
-		final Transaction tx = fullTextSession.beginTransaction();
-
 		// Check if it's public data or if the user is this user
 		BooleanQuery privacyQuery = new BooleanQuery();
 		// Is this public data?
-		final TermQuery termQuery = new TermQuery(new Term("public_data", "Y"));
+		final TermQuery termQuery = new TermQuery(new Term("publicData",Boolean.TRUE.toString()));
 		privacyQuery.add(termQuery, BooleanClause.Occur.SHOULD);
 		// Is this the current user?
 		final TermQuery termQuery2 = new TermQuery(new Term("user_username",
@@ -325,16 +320,6 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		// are met
 		fullQuery.add(privacyQuery, BooleanClause.Occur.MUST);
 
-		// does a range query based on date on the field startDate.
-		if (startDate != null && endDate != null) {
-			RangeQuery rq = new RangeQuery(
-					new Term("collectionDate", DateTools.dateToString(
-							startDate, DateTools.Resolution.MILLISECOND)),
-					new Term("collectionDate", DateTools.dateToString(endDate,
-							DateTools.Resolution.MILLISECOND)), true);
-			fullQuery.add(rq, BooleanClause.Occur.MUST);
-		}
-
 		final org.hibernate.Query hibQuery = fullTextSession
 				.createFullTextQuery(fullQuery, Sample.class);
 		final List<Sample> results = hibQuery.list();
@@ -343,8 +328,54 @@ public class HibernateSearchTest extends DatabaseTestCase {
 			System.out.println("found sample, alias is " + s.getAlias());
 
 		assertEquals(5, results.size());
-
-		tx.commit();
 	}
 
+	@Test
+	public void testSampleFilteringByUserWithDates() {
+		final UserDTO testUser = new UserDTO();
+		testUser.setId(2);
+		testUser.setUsername("matt");
+
+		final Session session = InitDatabase.getSession();
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
+
+		// Check if it's public data or if the user is this user
+		BooleanQuery privacyQuery = new BooleanQuery();
+		// Is this public data?
+		final TermQuery termQuery = new TermQuery(new Term("publicData",Boolean.TRUE.toString()));
+		privacyQuery.add(termQuery, BooleanClause.Occur.SHOULD);
+		// Is this the current user?
+		final TermQuery termQuery2 = new TermQuery(new Term("user_username",
+				testUser.getUsername()));
+		privacyQuery.add(termQuery2, BooleanClause.Occur.SHOULD);
+
+		BooleanQuery fullQuery = new BooleanQuery();
+
+		// in the full query, make it mandatory that the privacy requirements
+		// are met
+		fullQuery.add(privacyQuery, BooleanClause.Occur.MUST);
+
+		// Date Search
+		final Calendar rightNow = Calendar.getInstance();
+		rightNow.set(2008, 7, 25);
+		final Date startDate = rightNow.getTime();
+		rightNow.set(2008, 8, 1);
+		final Date endDate = rightNow.getTime();
+
+		RangeQuery rq = new RangeQuery(new Term("collectionDate", DateTools
+				.dateToString(startDate, DateTools.Resolution.DAY)),
+				new Term("collectionDate", DateTools.dateToString(endDate,
+						DateTools.Resolution.DAY)), true);
+		
+		fullQuery.add(rq, BooleanClause.Occur.MUST);
+		final org.hibernate.Query hibQuery = fullTextSession
+				.createFullTextQuery(fullQuery, Sample.class);
+		final List<Sample> results = hibQuery.list();
+
+		for (final Sample s : results)
+			System.out.println("found sample, alias is " + s.getAlias());
+
+		assertEquals(4, results.size());
+	}
 }
