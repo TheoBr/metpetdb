@@ -96,8 +96,7 @@ public class SearchDb {
 
 			for (final Sample s : result)
 				System.out.println("found sample, sesar number is "
-						+ s.getSesarNumber() +  " username is "
-						+ s.getOwner().getUsername());
+						+ s.getSesarNumber());
 		} catch (final ParseException e) {
 		}
 		return result;

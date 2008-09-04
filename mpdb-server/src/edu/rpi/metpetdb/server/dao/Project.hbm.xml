@@ -54,7 +54,7 @@
     from Project p
     inner join fetch p.owner 
     where p.owner.id = :ownerId
-    order by p.owner.username
+    order by p.owner.emailAddress
   </query>
   
   

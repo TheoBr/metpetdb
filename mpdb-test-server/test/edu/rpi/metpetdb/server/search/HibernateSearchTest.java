@@ -175,8 +175,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 
 			for (final Sample s : result)
 				System.out.println("found sample, sesar number is "
-						+ s.getSesarNumber() + " username is "
-						+ s.getOwner().getUsername());
+						+ s.getSesarNumber());
 		} catch (final ParseException e) {
 		}
 
@@ -249,8 +248,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 			assertEquals(1, result.size());
 			for (final Sample s : result)
 				System.out.println("found sample, sesar number is "
-						+ s.getSesarNumber() + " username is "
-						+ s.getOwner().getUsername());
+						+ s.getSesarNumber());
 		} catch (final ParseException e) {
 		}
 
@@ -298,7 +296,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	public void testPublicOrUserSamples() {
 		final UserDTO testUser = new UserDTO();
 		testUser.setId(2);
-		testUser.setUsername("matt");
+		testUser.setEmailAddress("fyffem@cs.rpi.edu");
 
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
@@ -310,8 +308,8 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final TermQuery termQuery = new TermQuery(new Term("publicData",Boolean.TRUE.toString()));
 		privacyQuery.add(termQuery, BooleanClause.Occur.SHOULD);
 		// Is this the current user?
-		final TermQuery termQuery2 = new TermQuery(new Term("user_username",
-				testUser.getUsername()));
+		final TermQuery termQuery2 = new TermQuery(new Term("user_emailAddress",
+				testUser.getEmailAddress()));
 		privacyQuery.add(termQuery2, BooleanClause.Occur.SHOULD);
 
 		BooleanQuery fullQuery = new BooleanQuery();
@@ -334,7 +332,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	public void testSampleFilteringByUserWithDates() {
 		final UserDTO testUser = new UserDTO();
 		testUser.setId(2);
-		testUser.setUsername("matt");
+		testUser.setEmailAddress("fyffem@cs.rpi.edu");
 
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
@@ -346,8 +344,8 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final TermQuery termQuery = new TermQuery(new Term("publicData",Boolean.TRUE.toString()));
 		privacyQuery.add(termQuery, BooleanClause.Occur.SHOULD);
 		// Is this the current user?
-		final TermQuery termQuery2 = new TermQuery(new Term("user_username",
-				testUser.getUsername()));
+		final TermQuery termQuery2 = new TermQuery(new Term("user_emailAddress",
+				testUser.getEmailAddress()));
 		privacyQuery.add(termQuery2, BooleanClause.Occur.SHOULD);
 
 		BooleanQuery fullQuery = new BooleanQuery();

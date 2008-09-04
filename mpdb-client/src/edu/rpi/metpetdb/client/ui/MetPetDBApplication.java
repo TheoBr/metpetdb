@@ -210,7 +210,7 @@ public class MetPetDBApplication implements EntryPoint {
 	}
 
 	private static void createLoginBarLoggedIn() {
-		MText userName = new MText(MpDb.currentUser().getUsername());
+		MText userName = new MText(MpDb.currentUser().getEmailAddress());
 		userName.setStyleName("logbar-username");
 		loginBar.add(userName);
 		loginBar.add(new MLink(LocaleHandler.lc_text.tools_EditProfile(),

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE dataset SYSTEM "test-data/test-database.dtd">
 <dataset>
-  <users user_id="1" version="1" username="anthony" password="" email="watera2@cs.rpi.edu"/>
+  <users user_id="1" version="1" first_name="anthony" last_name="waters" password="" email="watera2@cs.rpi.edu"/>
   <samples sample_id="1" version="0" sesar_number="000000000" public_data="N" collection_date="2008-08-28 18:32:17.0" alias="1" rock_type="Amphibolite" user_id="1" location="SRID=4326;POINT(50 50)"/>
   <samples sample_id="2" version="0" sesar_number="000000001" public_data="N" alias="2" rock_type="Amphibolite" user_id="1" location="SRID=4326;POINT(50 50)"/>
   <samples sample_id="3" version="0" sesar_number="000000002" public_data="N" alias="3" rock_type="Greenschist" user_id="1" location="SRID=4326;POINT(1 1)"/>
@@ -470,7 +470,9 @@
   <regions/>
   <sample_comments/>
   <sample_metamorphic_grades/>
-  <sample_minerals/>
+  <sample_minerals mineral_id="25" sample_id="9" amount="0.0"/>
+  <sample_minerals mineral_id="25" sample_id="8" amount="0.0"/>
+  <sample_minerals mineral_id="25" sample_id="7" amount="0.0"/>
   <sample_reference/>
   <sample_regions/>
   <uploaded_files/>

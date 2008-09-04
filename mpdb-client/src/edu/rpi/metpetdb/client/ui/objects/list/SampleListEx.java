@@ -64,7 +64,7 @@ public abstract class SampleListEx extends ListEx<SampleDTO> {
 						final int currentRow) {
 					return new MLink(
 							((UserDTO) data.mGet(SampleProperty.owner))
-									.getUsername(), TokenSpace
+									.getEmailAddress(), TokenSpace
 									.detailsOf((UserDTO) data
 											.mGet(SampleProperty.owner)));
 				}

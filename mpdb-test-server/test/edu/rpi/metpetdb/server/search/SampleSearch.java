@@ -50,7 +50,7 @@ public class SampleSearch extends DatabaseTestCase {
 		{
 			User u = (User)iter.next();;
 			System.out.println(u.getId());
-			System.out.println(u.getUsername());
+			System.out.println(u.getEmailAddress());
 		
 		}
 		assertEquals(results.size(), 1);		

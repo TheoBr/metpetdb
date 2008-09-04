@@ -172,7 +172,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 	// ------ StartSessionRequest ------
 	public PropertyConstraint[] StartSessionRequest__all;
-	public RestrictedCharacterStringConstraint StartSessionRequest_username;
+	public RestrictedCharacterStringConstraint StartSessionRequest_emailAddress;
 	public StringConstraint StartSessionRequest_password;
 
 	public void validate(StartSessionRequestDTO u) throws ValidationException {
@@ -181,8 +181,16 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 	// ------ User ------
 	public PropertyConstraint[] User__all;
-	public RestrictedCharacterStringConstraint User_username;
-	public StringConstraint User_emailAddress;
+	public RestrictedCharacterStringConstraint User_emailAddress;
+	public StringConstraint User_firstName;
+	public StringConstraint User_lastName;
+	public StringConstraint User_address;
+	public StringConstraint User_city;
+	public StringConstraint User_province;
+	public StringConstraint User_country;
+	public StringConstraint User_postalCode;
+	public StringConstraint User_institution;
+	public StringConstraint User_referenceEmail;
 
 	public void validate(final UserDTO u) throws ValidationException {
 		validate(u, User__all);
@@ -197,7 +205,8 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	 * </p>
 	 */
 	public void finishInitialization(DatabaseObjectConstraints oc) {
-		User_username.pattern = "A-Z0-9a-z_\\.@";
+		//TODO email address pattern
+		User_emailAddress.pattern = "A-Z0-9a-z_\\.@";
 		// Sample_collectionEnded.collectionBegan = Sample_collectionBegan;
 
 		// UserWithPassword is not available in the database like this,
@@ -220,10 +229,10 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 		// StartSessionRequest is not available in the database.
 		//
-		StartSessionRequest_username.required = true;
-		StartSessionRequest_username.minLength = User_username.minLength;
-		StartSessionRequest_username.maxLength = User_username.maxLength;
-		StartSessionRequest_username.pattern = User_username.pattern;
+		StartSessionRequest_emailAddress.required = true;
+		StartSessionRequest_emailAddress.minLength = User_emailAddress.minLength;
+		StartSessionRequest_emailAddress.maxLength = User_emailAddress.maxLength;
+		StartSessionRequest_emailAddress.pattern = User_emailAddress.pattern;
 
 		StartSessionRequest_password.required = true;
 		StartSessionRequest_password.minLength = UserWithPassword_oldPassword.minLength;

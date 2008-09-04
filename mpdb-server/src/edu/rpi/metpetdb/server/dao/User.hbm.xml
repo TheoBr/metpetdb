@@ -10,9 +10,17 @@
       </generator>
     </id>
     <version name="version" />
-    <property name="username" length="50" />
+    <property name="firstName" column="first_name" />
+    <property name="lastName" column="last_name"/>
     <property name="emailAddress" column="email" length="255" />
     <property name="encryptedPassword" column="password" />
+    <property name="address" />
+    <property name="city" />
+    <property name="province"/>
+    <property name="country" />
+    <property name="postalCode" column="postal_code" />
+    <property name="institution" />
+    <property name="referenceEmail" column="reference_email" />
 
     <set name="projects" table="project_members" inverse="true">
       <key column="user_id" />
@@ -25,8 +33,8 @@
     where u.id = :id
   </query>
 
-  <query name="User.byUsername">
+  <query name="User.byEmailAddress">
     from User u
-    where u.username = :username
+    where u.emailAddress = :emailAddress
   </query>
 </hibernate-mapping>

@@ -50,7 +50,7 @@ public class EditUserProfile extends FlowPanel implements UsesCurrentUser {
 					.buttonChangePassword());
 			changePassword.addClickListener(this);
 
-			final String n = uwp.getUser().getUsername();
+			final String n = uwp.getUser().getEmailAddress();
 			p_password = new DetailsPanel<UserWithPasswordDTO>(
 					passwordAttributes, new Button[] {
 						changePassword
@@ -90,7 +90,7 @@ public class EditUserProfile extends FlowPanel implements UsesCurrentUser {
 					MetPetDBApplication
 							.notice(LocaleHandler.lc_text
 									.notice_PasswordChanged(uwp.getUser()
-											.getUsername()));
+											.getEmailAddress()));
 				}
 			}.begin();
 		}

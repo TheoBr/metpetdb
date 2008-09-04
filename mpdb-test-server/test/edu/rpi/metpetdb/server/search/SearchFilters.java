@@ -33,7 +33,7 @@ public class SearchFilters extends DatabaseTestCase {
 		final FullTextSession fullTextSession = Search
 				.createFullTextSession(session);
 
-		final TermQuery termQuery = new TermQuery(new Term("user_username", "anthony"));
+		final TermQuery termQuery = new TermQuery(new Term("user_firstName", "anthony"));
 		final FullTextQuery hibQuery = fullTextSession.createFullTextQuery(
 				termQuery, Sample.class);
 		final Polygon poly = new Polygon(

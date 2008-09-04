@@ -25,15 +25,57 @@ import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 	private static final GenericAttribute[] mainAttributes = {
-			new TextAttribute(MpDb.doc.User_username) {
+			new TextAttribute(MpDb.doc.User_emailAddress) {
 				protected MObjectDTO resolve(final MObjectDTO obj) {
 					return ((UserWithPasswordDTO) obj).getUser();
 				}
-			}, new TextAttribute(MpDb.doc.User_emailAddress) {
+			},
+			new TextAttribute(MpDb.doc.User_firstName) {
 				protected MObjectDTO resolve(final MObjectDTO obj) {
 					return ((UserWithPasswordDTO) obj).getUser();
 				}
-			}, new PasswordAttribute(MpDb.doc.UserWithPassword_newPassword),
+			},
+			new TextAttribute(MpDb.doc.User_lastName) {
+				protected MObjectDTO resolve(final MObjectDTO obj) {
+					return ((UserWithPasswordDTO) obj).getUser();
+				}
+			},
+			new TextAttribute(MpDb.doc.User_address) {
+				protected MObjectDTO resolve(final MObjectDTO obj) {
+					return ((UserWithPasswordDTO) obj).getUser();
+				}
+			},
+			new TextAttribute(MpDb.doc.User_city) {
+				protected MObjectDTO resolve(final MObjectDTO obj) {
+					return ((UserWithPasswordDTO) obj).getUser();
+				}
+			},
+			new TextAttribute(MpDb.doc.User_province) {
+				protected MObjectDTO resolve(final MObjectDTO obj) {
+					return ((UserWithPasswordDTO) obj).getUser();
+				}
+			},
+			new TextAttribute(MpDb.doc.User_country) {
+				protected MObjectDTO resolve(final MObjectDTO obj) {
+					return ((UserWithPasswordDTO) obj).getUser();
+				}
+			},
+			new TextAttribute(MpDb.doc.User_postalCode) {
+				protected MObjectDTO resolve(final MObjectDTO obj) {
+					return ((UserWithPasswordDTO) obj).getUser();
+				}
+			},
+			new TextAttribute(MpDb.doc.User_institution) {
+				protected MObjectDTO resolve(final MObjectDTO obj) {
+					return ((UserWithPasswordDTO) obj).getUser();
+				}
+			},
+			new TextAttribute(MpDb.doc.User_referenceEmail) {
+				protected MObjectDTO resolve(final MObjectDTO obj) {
+					return ((UserWithPasswordDTO) obj).getUser();
+				}
+			},
+			new PasswordAttribute(MpDb.doc.UserWithPassword_newPassword),
 			new PasswordAttribute(MpDb.doc.UserWithPassword_vrfPassword),
 	};
 
@@ -90,7 +132,7 @@ public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 			protected void onSubmit() {
 				MpDb.user_svc.registerNewUser(newbie, this);
 				Window.alert("You've been registered as "
-						+ newbie.getUser().getUsername());
+						+ newbie.getUser().getEmailAddress());
 			}
 			public void onSuccess(final UserDTO result) {
 				MpDb.setCurrentUser((UserDTO) result);

@@ -33,9 +33,9 @@ public class UserDAO extends MpDbDAO<User> {
 		}
 
 		// Use Name
-		if (inst.getUsername() != null) {
-			Query q = namedQuery("User.byUsername");
-			q.setParameter("username", inst.getUsername());
+		if (inst.getEmailAddress() != null) {
+			Query q = namedQuery("User.byEmailAddress");
+			q.setParameter("emailAddress", inst.getEmailAddress());
 			if (q.uniqueResult() != null)
 				return (User) q.uniqueResult();
 		}

@@ -310,14 +310,17 @@
 <!ATTLIST users
     user_id CDATA #REQUIRED
     version CDATA #REQUIRED
-    username CDATA #REQUIRED
+    first_name CDATA #REQUIRED
+    last_name CDATA #REQUIRED
+    email CDATA #REQUIRED
     password CDATA #REQUIRED
     address CDATA #IMPLIED
     city CDATA #IMPLIED
     province CDATA #IMPLIED
     country CDATA #IMPLIED
     postal_code CDATA #IMPLIED
-    email CDATA #REQUIRED
+    institution CDATA #IMPLIED
+    reference_email CDATA #IMPLIED
 >
 
 <!ELEMENT xray_image EMPTY>

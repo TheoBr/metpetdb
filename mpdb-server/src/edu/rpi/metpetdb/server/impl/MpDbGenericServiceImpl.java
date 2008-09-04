@@ -60,7 +60,6 @@ public class MpDbGenericServiceImpl extends MpDbServlet implements
 			final String username = props.getProperty("username");
 			final String emailAddress = props.getProperty("emailaddress");
 			final UserDTO u = new UserDTO();
-			u.setUsername(username);
 			u.setEmailAddress(emailAddress);
 			u.setId(userId);
 			u.setVersion(0);

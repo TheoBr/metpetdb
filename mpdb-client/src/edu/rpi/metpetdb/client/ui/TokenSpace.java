@@ -65,11 +65,11 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler userDetails = new SKey(
 			LocaleHandler.lc_entity.TokenSpace_User_Details()) {
 		public String get(final Object obj) {
-			return ((UserDTO) obj).getUsername();
+			return ((UserDTO) obj).getEmailAddress();
 		}
 
-		public void execute(final String username) {
-			show(new UserDetails(username));
+		public void execute(final String emailAddress) {
+			show(new UserDetails(emailAddress));
 		}
 	};
 	private static final TokenHandler projectDetails = new IKey(

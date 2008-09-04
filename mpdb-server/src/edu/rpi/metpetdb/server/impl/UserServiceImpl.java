@@ -26,9 +26,9 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return PasswordEncrypter.verify(u.getEncryptedPassword(), pw);
 	}
 
-	public UserDTO details(final String username) throws DAOException {
+	public UserDTO details(final String emailAddress) throws DAOException {
 		User u = new User();
-		u.setUsername(username);
+		u.setEmailAddress(emailAddress);
 		u = (new UserDAO(this.currentSession())).fill(u);
 		return cloneBean(u);
 	}
@@ -38,7 +38,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		doc.validate(ssr);
 		try {
 			User u = new User();
-			u.setUsername(ssr.getUsername());
+			u.setEmailAddress(ssr.getEmailAddress());
 			u = (new UserDAO(this.currentSession())).fill(u);
 
 			if (!authenticate(u, ssr.getPassword()))
@@ -99,13 +99,13 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			commit();
 			EmailSupport.sendMessage(this, u.getEmailAddress(),
 					"registerNewUser", new Object[] {
-							u.getUsername(), getModuleBaseURL()
+							u.toString(), getModuleBaseURL()
 					});
 			setCurrentUser(u);
 		} catch (ConstraintViolationException cve) {
-			final String who = newUser.getUsername();
+			final String who = newUser.getEmailAddress();
 			if ("users_nk_username".equals(cve.getConstraintName()))
-				throw new DuplicateValueException(doc.User_username, who);
+				throw new DuplicateValueException(doc.User_emailAddress, who);
 			else
 				throw new RuntimeException("i dont know what happened");
 		}
@@ -138,11 +138,11 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		commit();
 	}
 
-	public void emailPassword(final String username) throws DAOException,
+	public void emailPassword(final String emailAddress) throws DAOException,
 			UnableToSendEmailException {
 		UserDAO uDAO = new UserDAO(this.currentSession());
 		User u = new User();
-		u.setUsername(username);
+		u.setEmailAddress(emailAddress);
 		u = uDAO.fill(u);
 		final String newpass = PasswordEncrypter.randomPassword();
 		u.setEncryptedPassword(PasswordEncrypter.crypt(newpass));
@@ -150,7 +150,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		commit();
 		EmailSupport.sendMessage(this, u.getEmailAddress(), "emailPassword",
 				new Object[] {
-						u.getUsername(), newpass, getModuleBaseURL()
+						u.toString(), newpass, getModuleBaseURL()
 				});
 	}
 }

@@ -11,18 +11,18 @@ package edu.rpi.metpetdb.client.model;
 public class StartSessionRequestDTO extends MObjectDTO {
 
 	private static final long serialVersionUID = 1L;
-	private String username;
+	private String emailAddress;
 	private String password;
 
 	public StartSessionRequestDTO() {
 	}
 
-	public String getUsername() {
-		return username;
+	public String getEmailAddress() {
+		return emailAddress;
 	}
 
-	public void setUsername(final String n) {
-		username = n;
+	public void setEmailAddress(final String n) {
+		emailAddress = n;
 	}
 
 	public String getPassword() {

@@ -30,22 +30,6 @@ CREATE TABLE reference
   CONSTRAINT references_name_key UNIQUE (name)
 ) WITHOUT OIDS;
 
-CREATE TABLE users
-(
-  user_id INT4 NOT NULL,
-  version INT4 NOT NULL,
-  username VARCHAR(50) NOT NULL,
-  password bytea NOT NULL,
-  address VARCHAR(150),
-  city VARCHAR(50),
-  province VARCHAR(100),
-  country VARCHAR(100),
-  postal_code VARCHAR(15),
-  email VARCHAR(255) NOT NULL,
-  CONSTRAINT users_sk PRIMARY KEY (user_id),
-  CONSTRAINT users_nk_username UNIQUE (username)
-) WITHOUT OIDS;
-
 CREATE TABLE samples
 (
   sample_id INT8 NOT NULL,

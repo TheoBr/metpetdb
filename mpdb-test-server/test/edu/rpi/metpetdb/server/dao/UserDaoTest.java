@@ -27,7 +27,7 @@ public class UserDaoTest extends DatabaseTestCase {
 		final Query q = InitDatabase.getSession().getNamedQuery("User.byUsername");
 		q.setString("username", "anthony");
 		final User u = (User) q.uniqueResult();
-		assertEquals("anthony",u.getUsername());
+		assertEquals("anthony",u.getEmailAddress());
 	}
 
 }

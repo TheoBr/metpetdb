@@ -46,7 +46,7 @@ public abstract class ProjectListEx extends ListEx<ProjectDTO> {
 				protected Object getWidget(final MObjectDTO data,
 						final int currentRow) {
 					return new MLink(((UserDTO) data
-							.mGet(ProjectProperty.owner)).getUsername(),
+							.mGet(ProjectProperty.owner)).getEmailAddress(),
 							TokenSpace.detailsOf((UserDTO) data
 									.mGet(ProjectProperty.owner)));
 				}
