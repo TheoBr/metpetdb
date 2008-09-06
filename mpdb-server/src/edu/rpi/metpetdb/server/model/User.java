@@ -13,7 +13,7 @@ public class User extends MObject {
 
 	private int id;
 	private int version;
-
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String emailAddress;
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String firstName;
@@ -54,7 +54,7 @@ public class User extends MObject {
 	}
 
 	public void setEmailAddress(final String n) {
-		emailAddress = n;
+		this.emailAddress = n;
 	}
 
 	public String getFirstName() {

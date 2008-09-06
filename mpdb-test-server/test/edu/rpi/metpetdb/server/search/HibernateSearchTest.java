@@ -1,7 +1,5 @@
 package edu.rpi.metpetdb.server.search;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -23,6 +21,7 @@ import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 import org.junit.Test;
 
+import edu.rpi.metpetdb.client.model.DateSpan;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.properties.SearchProperty;
@@ -246,6 +245,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 					.createFullTextQuery(query, Sample.class);
 			final List<Sample> result = hibQuery.list();
 			assertEquals(1, result.size());
+			System.out.println(query.toString());			
 			for (final Sample s : result)
 				System.out.println("found sample, sesar number is "
 						+ s.getSesarNumber());
@@ -297,6 +297,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final UserDTO testUser = new UserDTO();
 		testUser.setId(2);
 		testUser.setFirstName("matt");
+		testUser.setEmailAddress("fyffem@cs.rpi.edu");
 
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
@@ -308,8 +309,10 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final TermQuery termQuery = new TermQuery(new Term("publicData",Boolean.TRUE.toString()));
 		privacyQuery.add(termQuery, BooleanClause.Occur.SHOULD);
 		// Is this the current user?
-		final TermQuery termQuery2 = new TermQuery(new Term("user_firstName",
-				testUser.getFirstName()));
+		//final TermQuery termQuery2 = new TermQuery(new Term("user_firstName",
+		//		testUser.getFirstName()));
+		final TermQuery termQuery2 = new TermQuery(new Term("user_emailAddress",
+				testUser.getEmailAddress()));
 		privacyQuery.add(termQuery2, BooleanClause.Occur.SHOULD);
 
 		BooleanQuery fullQuery = new BooleanQuery();
@@ -324,7 +327,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 
 		for (final Sample s : results)
 			System.out.println("found sample, alias is " + s.getAlias());
-
+		
 		assertEquals(5, results.size());
 	}
 
@@ -376,4 +379,113 @@ public class HibernateSearchTest extends DatabaseTestCase {
 
 		assertEquals(4, results.size());
 	}
+	
+	@Test
+	public void testSampleSearch() {
+		// In the actual search, we will receive User information as a parameter
+		final UserDTO testUser = new UserDTO();
+		testUser.setId(2);
+		testUser.setFirstName("matt");
+
+		// In the actual search, we will receive search criteria as a SearchSampleDTO
+		final SearchSampleDTO searchSamp = new SearchSampleDTO();
+//		searchSamp.setAlias("1");
+		searchSamp.addPossibleRockType("logitech");
+		searchSamp.addPossibleRockType("rockie rock");
+		
+		final Calendar rightNow = Calendar.getInstance();
+		rightNow.set(2008, 7, 25);
+		final Date firstDate = rightNow.getTime();
+		rightNow.set(2008, 8, 1);
+		final Date secondDate = rightNow.getTime();
+		
+		searchSamp.setCollectionDateRange(new DateSpan(firstDate, secondDate));
+
+		
+		final Session session = InitDatabase.getSession();
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
+
+		// The full scope of the query we want to make
+		BooleanQuery fullQuery = new BooleanQuery();
+		
+		// Check if it's public data or if the user is this user
+		BooleanQuery privacyQuery = new BooleanQuery();
+		// Is this public data?
+		final TermQuery termQuery = new TermQuery(new Term("publicData",Boolean.TRUE.toString()));
+		privacyQuery.add(termQuery, BooleanClause.Occur.SHOULD);
+		// Is this the current user?
+		final TermQuery termQuery2 = new TermQuery(new Term("user_firstName",
+				testUser.getFirstName()));
+		privacyQuery.add(termQuery2, BooleanClause.Occur.SHOULD);
+
+		// in the full query, make it mandatory that the privacy requirements are met
+		fullQuery.add(privacyQuery, BooleanClause.Occur.MUST);
+		// Actual Search
+		
+		String columnName;
+		Object methodResult = null;
+		SearchProperty[] enums = SearchSampleProperty.class.getEnumConstants();
+		for (SearchProperty i : enums) {
+			
+			// column to search on
+			columnName = i.columnName();
+			
+			// return type of the method
+			methodResult = i.get(searchSamp);
+			
+			// if there is no value returned in this field...
+			if (methodResult == null) {
+				// ignore it
+			} else { // otherwise, what type of returned data is it?				
+				if (methodResult instanceof Set) { // if a set of data is returned, it should be an OR query
+					if(((Set)methodResult).size() > 0)
+					{
+						final BooleanQuery setQuery = new BooleanQuery();
+						for (Object o : (Set) methodResult) {
+							// iterate through each item and add it to the query
+							final TermQuery objectQuery = new TermQuery(new Term(columnName, o.toString()));
+							setQuery.add(objectQuery, BooleanClause.Occur.SHOULD);
+						}
+										
+						// require that one of these results be found in the full query
+						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
+					}					
+				} else if(methodResult instanceof DateSpan){ // if the data is a DateSpan
+					// Get the start date of the span
+					final Date startDate = ((DateSpan)methodResult).getStartAsDate();
+					final Date realStartDate = new Date(startDate.getYear(), startDate.getMonth(), startDate.getDate());
+					// Get the end date of the span
+					final Date endDate = ((DateSpan)methodResult).getEndAsDate();
+					final Date realEndDate = new Date(endDate.getYear(),endDate.getMonth(), endDate.getDate());
+
+					// Do a range query on these dates
+					RangeQuery rq = new RangeQuery(new Term("collectionDate", DateTools
+							.dateToString(realStartDate, DateTools.Resolution.DAY)),
+							new Term("collectionDate", DateTools.dateToString(realEndDate,
+									DateTools.Resolution.DAY)), true);					
+					fullQuery.add(rq, BooleanClause.Occur.MUST);
+				}else if(columnName.equals("location")){ // if the column being searched on is location
+					if (searchSamp.getBoundingBox() != null) { // if there is a bounding box for this sample
+						session.enableFilter("boundingBox").setParameter("polygon",
+								searchSamp.getBoundingBox()); // filter results based on the box
+					}
+				}else {  // it's just a standard string, do a term search
+					final TermQuery stringQuery = new TermQuery(new Term(columnName, methodResult.toString()));
+					fullQuery.add(stringQuery, BooleanClause.Occur.MUST);
+				}
+			}
+		}
+				
+		// Run the query and get the actual results		
+		
+		final org.hibernate.Query hibQuery = fullTextSession
+				.createFullTextQuery(fullQuery, Sample.class);
+		final List<Sample> results = hibQuery.list();
+
+		for (final Sample s : results)
+			System.out.println("found sample, alias is " + s.getAlias());
+		assertEquals(3, results.size());
+	}
+	
 }

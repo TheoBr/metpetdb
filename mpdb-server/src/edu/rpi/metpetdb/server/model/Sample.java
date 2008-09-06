@@ -45,7 +45,7 @@ public class Sample extends MObject implements IHasName {
 	@Field(index = Index.UN_TOKENIZED)
 	private Boolean publicData;
 
-	@Field(index = Index.TOKENIZED, store = Store.NO)
+	@Field(index = Index.UN_TOKENIZED, store = Store.NO)
 	private String rockType;
 
 	@IndexedEmbedded(prefix = "subsample_")
