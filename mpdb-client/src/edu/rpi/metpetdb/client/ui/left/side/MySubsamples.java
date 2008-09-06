@@ -64,8 +64,7 @@ public abstract class MySubsamples extends LeftColWidget implements
 
 	private void createSubsamplesWidget(final List<SubsampleDTO> subsamples) {
 		pList = addSubSamples(subsamples);
-		final Label subsamplesLabel = new Label(subsamples.get(0).getSample()
-				.getName()
+		final Label subsamplesLabel = new Label(subsamples.get(0).getSampleName()
 				+ "'s Subsamples");
 		subsamplesLabel.getElement().setClassName("h1");
 		subsamplesLabel.setStyleName("leftsideHeader");

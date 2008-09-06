@@ -10,7 +10,7 @@ public class Image extends MObject {
 	private long id;
 	private int version;
 
-	private String imageType;
+	private ImageType imageType;
 	private int width;
 	private int height;
 	private String checksum;
@@ -28,6 +28,8 @@ public class Image extends MObject {
 	private Integer lut;
 	private String collector;
 	private Set<Reference> references;
+	private Set<ImageComment> comments;
+	private int scale;
 
 	public long getId() {
 		return id;
@@ -45,12 +47,28 @@ public class Image extends MObject {
 		version = v;
 	}
 
-	public String getImageType() {
+	public ImageType getImageType() {
 		return imageType;
 	}
 
-	public void setImageType(final String it) {
+	public void setImageType(final ImageType it) {
 		imageType = it;
+	}
+
+	public Set<ImageComment> getComments() {
+		return comments;
+	}
+
+	public void setComments(Set<ImageComment> comments) {
+		this.comments = comments;
+	}
+
+	public int getScale() {
+		return scale;
+	}
+
+	public void setScale(int scale) {
+		this.scale = scale;
 	}
 
 	public Subsample getSubsample() {

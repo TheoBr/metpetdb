@@ -73,7 +73,7 @@ public class ElementDTO extends MObjectDTO implements IHasName {
 
 	@Override
 	public boolean equals(final Object o) {
-		return o instanceof ElementDTO && ((ElementDTO) o).getId() == id;
+		return o instanceof ElementDTO && ((ElementDTO) o).name.toLowerCase().equals(name.toLowerCase());
 	}
 
 	public int hashCode() {

@@ -17,8 +17,8 @@ import edu.rpi.metpetdb.server.model.Sample;
  * 
  */
 public class RegenerateIndices {
-	
-	@SuppressWarnings( "unchecked" )
+
+	@SuppressWarnings("unchecked")
 	public static void main(String args[]) {
 		Session session = DataStore.open();
 		FullTextSession fullTextSession = Search.createFullTextSession(session);

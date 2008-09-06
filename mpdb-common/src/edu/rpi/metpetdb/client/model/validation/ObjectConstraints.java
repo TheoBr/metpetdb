@@ -1,7 +1,6 @@
 package edu.rpi.metpetdb.client.model.validation;
 
 import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
-import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 
 /**
@@ -10,24 +9,10 @@ import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
  */
 public class ObjectConstraints extends DatabaseObjectConstraints {
 
-	/* Sample */
-	public IntegerConstraint Sample_subsampleCount;
-
-	/* Subsample */
-	public StringConstraint Subsample_sampleName;
-	public IntegerConstraint Subsample_imageCount;
-	public IntegerConstraint Subsample_analysisCount;
-
-	/* Mineral Analysis */
-	public StringConstraint ChemicalAnalysis_sampleName;
-	public StringConstraint ChemicalAnalysis_subsampleName;
-
 	public StringConstraint SearchSample_alias;
 	public Sample_sesarNumber SearchSample_sesarNumber;
-	// public ValuesInCollectionConstraint<MineralDTO> SearchSample_minerals;
 	public GeometryConstraint SearchSample_boundingBox;
 	public DateSpanConstraint SearchSample_collectionDateRange;
-	public MultipleRockTypeConstraint SearchSample_possibleRockTypes;
 	public StringConstraint SearchSample_owner;
 
 	public void finishInitialization(DatabaseObjectConstraints doc) {
@@ -45,11 +30,6 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 		SearchSample_sesarNumber.minLength = doc.Sample_sesarNumber.minLength;
 		SearchSample_sesarNumber.required = false;
 
-		// SearchSample_minerals.entityName = "SearchSample";
-		// SearchSample_minerals.property = SearchSampleProperty.minerals;
-		// SearchSample_minerals.propertyName = "Minerals";
-		// SearchSample_minerals.required = false;
-
 		SearchSample_boundingBox.entityName = "SearchSample";
 		SearchSample_boundingBox.property = SearchSampleProperty.boundingBox;
 		SearchSample_boundingBox.propertyName = "Location";
@@ -59,11 +39,6 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 		SearchSample_collectionDateRange.property = SearchSampleProperty.collectionDateRange;
 		SearchSample_collectionDateRange.propertyName = "Collection Date Range";
 		SearchSample_collectionDateRange.required = false;
-
-		SearchSample_possibleRockTypes.entityName = "SearchSample";
-		SearchSample_possibleRockTypes.property = SearchSampleProperty.possibleRockTypes;
-		SearchSample_possibleRockTypes.propertyName = "Rock Type";
-		SearchSample_possibleRockTypes.required = false;
 
 		// Should be a user constraint, but needs a max length... what should
 		// max length be?

@@ -42,7 +42,7 @@ public class SampleParser {
 	// 3) id in LocaleEntity for humanreadable representation of this column
 	private static final Object[][] sampleMethodMap = {
 			{
-					"(type)|(rock)", "setRockType", String.class,
+					"(type)|(rock)", "addRockType", String.class,
 					"Sample_rockType"
 			},
 			{
@@ -99,6 +99,8 @@ public class SampleParser {
 			{
 					"(sample)|(number)", "setAlias", String.class,
 					"Sample_alias"
+			}, {
+					"minerals", "addMineral", String.class, "Sample_minerals"
 			},
 
 	};

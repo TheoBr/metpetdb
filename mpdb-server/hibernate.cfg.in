@@ -33,6 +33,10 @@
 	<mapping resource="edu/rpi/metpetdb/server/dao/Oxide.hbm.xml" />
 	<mapping resource="edu/rpi/metpetdb/server/dao/SampleComment.hbm.xml" />
 	<mapping resource="edu/rpi/metpetdb/server/dao/MineralType.hbm.xml" />
+	<mapping resource="edu/rpi/metpetdb/server/dao/RockType.hbm.xml" />
+	<mapping resource="edu/rpi/metpetdb/server/dao/SubsampleType.hbm.xml" />
+	<mapping resource="edu/rpi/metpetdb/server/dao/ImageType.hbm.xml" />
+	<mapping resource="edu/rpi/metpetdb/server/dao/ImageComment.hbm.xml" />
     <event type="post-update">
         <listener class="org.hibernate.search.event.FullTextIndexEventListener"/>
     </event>

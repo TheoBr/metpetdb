@@ -5,6 +5,7 @@ import java.util.Set;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.SubsampleTypeDTO;
 
 public enum SubsampleProperty implements Property {
 	name {
@@ -17,14 +18,14 @@ public enum SubsampleProperty implements Property {
 			((SubsampleDTO) subsample).setName((String) name);
 		}
 	},
-	type {
-		public <T extends MObjectDTO> String get(final T subsample) {
-			return ((SubsampleDTO) subsample).getType();
+	subsampleType {
+		public <T extends MObjectDTO> Object get(final T subsample) {
+			return ((SubsampleDTO) subsample).getSubsampleType();
 		}
 
 		public <T extends MObjectDTO, K> void set(final T subsample,
 				final K type) {
-			((SubsampleDTO) subsample).setType((String) type);
+			((SubsampleDTO) subsample).setSubsampleType((SubsampleTypeDTO) type);
 		}
 	},
 	images {
@@ -60,12 +61,11 @@ public enum SubsampleProperty implements Property {
 	},
 	sampleName {
 		public <T extends MObjectDTO> String get(final T subsample) {
-			return ((SubsampleDTO) subsample).getSample().getAlias();
+			return ((SubsampleDTO) subsample).getSampleName();
 		}
 
 		public <T extends MObjectDTO, K> void set(final T subsample,
 				final K sample) {
-
 			// FIXME this should thrown an exception
 		}
 	},

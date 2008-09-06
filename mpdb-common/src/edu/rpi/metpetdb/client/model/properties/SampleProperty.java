@@ -10,6 +10,7 @@ import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.MetamorphicGradeDTO;
 import edu.rpi.metpetdb.client.model.ReferenceDTO;
 import edu.rpi.metpetdb.client.model.RegionDTO;
+import edu.rpi.metpetdb.client.model.RockTypeDTO;
 import edu.rpi.metpetdb.client.model.SampleCommentDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SampleMineralDTO;
@@ -76,13 +77,13 @@ public enum SampleProperty implements Property {
 		}
 	},
 	rockType {
-		public <T extends MObjectDTO> String get(final T sample) {
+		public <T extends MObjectDTO> Object get(final T sample) {
 			return ((SampleDTO) sample).getRockType();
 		}
 
 		public <T extends MObjectDTO, K> void set(final T sample,
 				final K rockType) {
-			((SampleDTO) sample).setRockType((String) rockType);
+			((SampleDTO) sample).setRockType((RockTypeDTO) rockType);
 		}
 	},
 	images {

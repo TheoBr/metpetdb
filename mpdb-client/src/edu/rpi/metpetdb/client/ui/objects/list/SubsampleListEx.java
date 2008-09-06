@@ -44,7 +44,7 @@ public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
 							TokenSpace.detailsOf((SubsampleDTO) data));
 				}
 			},
-			new Column(enttxt.Subsample_type(), SubsampleProperty.type),
+			new Column(enttxt.Subsample_type(), SubsampleProperty.subsampleType),
 			new Column(enttxt.Subsample_imageCount(),
 					SubsampleProperty.imageCount),
 			new Column(enttxt.Subsample_images(), SubsampleProperty.images,

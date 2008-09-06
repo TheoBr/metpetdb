@@ -14,6 +14,8 @@ import net.sf.hibernate4gwt.pojo.gwt.LazyGwtPojo;
  */
 public abstract class MObject extends LazyGwtPojo {
 
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Is this a new object instance?
 	 * 

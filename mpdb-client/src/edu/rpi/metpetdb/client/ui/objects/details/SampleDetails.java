@@ -73,7 +73,7 @@ public class SampleDetails extends MPagePanel {
 			new MetamorphicGradeAttribute(MpDb.doc.Sample_metamorphicGrades),
 			new ReferenceAttribute(MpDb.doc.Sample_references),
 			new CommentAttribute(MpDb.doc.Sample_comments),
-			new TextAttribute(MpDb.oc.Sample_subsampleCount).setReadOnly(true),
+			new TextAttribute(MpDb.doc.Sample_subsampleCount).setReadOnly(true),
 	};
 
 	private final ObjectEditorPanel<SampleDTO> p_sample;

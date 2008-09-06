@@ -14,7 +14,7 @@
   
   <query name="Region.byName">
     from Region r
-    where r.name = :name
+    where lower(r.name) = lower(:name)
   </query>
   
   <query name="Region.all">

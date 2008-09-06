@@ -11,8 +11,6 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SubsampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.ResultsFromDAO;
-import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
-import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 import edu.rpi.metpetdb.server.model.Subsample;
 
@@ -47,11 +45,6 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 		s.setId(id);
 
 		s = (new SubsampleDAO(this.currentSession())).fill(s);
-		s.setImageCount((new ImageDAO(this.currentSession()))
-				.countBySubsampleId(id));
-		s.setAnalysisCount((new ChemicalAnalysisDAO(this.currentSession()))
-				.countBySubsampleId(id));
-
 		return (SubsampleDTO) clone(s);
 	}
 	public SubsampleDTO save(SubsampleDTO subsampleDTO) throws DAOException,

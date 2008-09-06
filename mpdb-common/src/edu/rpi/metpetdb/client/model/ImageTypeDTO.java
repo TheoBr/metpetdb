@@ -1,11 +1,12 @@
 package edu.rpi.metpetdb.client.model;
 
 
-public class ImageTypeDTO extends MObjectDTO {
 
+public class ImageTypeDTO extends MObjectDTO {
 	private static final long serialVersionUID = 1L;
+
 	private short id;
-	private String name;
+	private String imageType;
 
 	public short getId() {
 		return id;
@@ -15,25 +16,25 @@ public class ImageTypeDTO extends MObjectDTO {
 		id = i;
 	}
 
-	public String getName() {
-		return name;
+	public String getImageType() {
+		return imageType;
 	}
 
-	public void setName(final String s) {
-		name = s;
+	public void setImageType(final String s) {
+		imageType = s;
 	}
 
 	public boolean equals(final Object o) {
-		return name != null && o instanceof ImageTypeDTO
-				&& name.equals(((ImageTypeDTO) o).name);
+		return imageType != null && o instanceof ImageTypeDTO
+				&& imageType.toLowerCase().equals(((ImageTypeDTO) o).imageType.toLowerCase());
 	}
 
 	public int hashCode() {
-		return name != null ? name.hashCode() : 0;
+		return imageType != null ? imageType.hashCode() : 0;
 	}
 
 	public String toString() {
-		return name;
+		return imageType;
 	}
 
 	public boolean mIsNew() {

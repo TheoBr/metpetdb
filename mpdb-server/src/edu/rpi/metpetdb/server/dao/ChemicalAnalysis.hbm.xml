@@ -19,10 +19,16 @@
     <property name="analyst" column="analyst" type="java.lang.String"/>
     <property name="analysisDate" column="analysis_date" />
     <property name="description" column="description" type="java.lang.String"/>
+    
+    <property name="sampleName" formula="(select sample.alias from samples sample
+    																		where sample.sample_id= ( select ss.sample_id from subsamples ss
+    																		where ss.subsample_id=subsample_id))" />
+    <property name="subsampleName" formula="(select s.name from subsamples s
+    																		where s.subsample_id=subsample_id)" />
 
 	<many-to-one name="reference" column="reference_id" class="Reference" lazy="false" cascade="all"/>
 	<many-to-one name="image" column="image_id" class="Image" lazy="false" cascade="none"/>
-    <many-to-one name="subsample" column="subsample_id" class="Subsample" lazy="false" cascade="none"/>
+    <many-to-one name="subsample" column="subsample_id" class="Subsample"  cascade="none"/>
 
 	<property name="largeRock" column="large_rock" type="yes_no" />
 	<property name="total" column="total" type="java.lang.Float" />

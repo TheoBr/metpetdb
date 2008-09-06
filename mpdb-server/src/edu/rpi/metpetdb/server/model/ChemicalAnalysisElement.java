@@ -11,7 +11,7 @@ public class ChemicalAnalysisElement extends MObject {
 	private static final long serialVersionUID = 1L;
 
 	@Field(index = Index.UN_TOKENIZED)
-	@FieldBridge( impl = FloatBridge.class )
+	@FieldBridge(impl = FloatBridge.class)
 	private Float amount;
 	private Float precision;
 	private String precisionUnit;

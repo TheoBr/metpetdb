@@ -22,6 +22,7 @@ import org.hibernate.search.Search;
 import org.junit.Test;
 
 import edu.rpi.metpetdb.client.model.DateSpan;
+import edu.rpi.metpetdb.client.model.RockTypeDTO;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.properties.SearchProperty;
@@ -187,8 +188,12 @@ public class HibernateSearchTest extends DatabaseTestCase {
 
 		// searchSamp.setSesarNumber("000000000");
 		searchSamp.setAlias("1");
-		searchSamp.addPossibleRockType("logitech");
-		searchSamp.addPossibleRockType("rockie rock");
+		final RockTypeDTO rockType1 = new RockTypeDTO();
+		rockType1.setRockType("logitech");
+		final RockTypeDTO rockType2 = new RockTypeDTO();
+		rockType2.setRockType("rockie rock");
+		searchSamp.addPossibleRockType(rockType1);
+		searchSamp.addPossibleRockType(rockType2);
 
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
@@ -390,8 +395,12 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		// In the actual search, we will receive search criteria as a SearchSampleDTO
 		final SearchSampleDTO searchSamp = new SearchSampleDTO();
 //		searchSamp.setAlias("1");
-		searchSamp.addPossibleRockType("logitech");
-		searchSamp.addPossibleRockType("rockie rock");
+		final RockTypeDTO rockType1 = new RockTypeDTO();
+		rockType1.setRockType("logitech");
+		final RockTypeDTO rockType2 = new RockTypeDTO();
+		rockType2.setRockType("rockie rock");
+		searchSamp.addPossibleRockType(rockType1);
+		searchSamp.addPossibleRockType(rockType2);
 		
 		final Calendar rightNow = Calendar.getInstance();
 		rightNow.set(2008, 7, 25);

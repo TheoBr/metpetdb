@@ -1,3 +1,5 @@
+CREATE SEQUENCE user_seq;
+
 CREATE TABLE users
 (
   user_id INT4 NOT NULL,

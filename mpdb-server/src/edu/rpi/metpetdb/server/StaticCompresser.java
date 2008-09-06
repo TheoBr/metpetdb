@@ -26,12 +26,12 @@ import javax.servlet.http.HttpServletResponse;
  * </p>
  * <p>
  * This servlet also sets very aggressive caching rules for the large generated
- * HTML pages. These end in <code>.cache.html</code> and are accessed by an
- * MD-5 checksum of their content, so the browser really can safely cache the
- * file for extremely long periods of time and never even consult the server
- * about the validity of that object. For the <code>.nocache.html</code> files
- * that provides the table of current MD-5 checksum names we do the exact
- * opposite and act like the content is always expired; this way the browser is
+ * HTML pages. These end in <code>.cache.html</code> and are accessed by an MD-5
+ * checksum of their content, so the browser really can safely cache the file
+ * for extremely long periods of time and never even consult the server about
+ * the validity of that object. For the <code>.nocache.html</code> files that
+ * provides the table of current MD-5 checksum names we do the exact opposite
+ * and act like the content is always expired; this way the browser is
  * encouraged to redownload and recheck that table on every application startup.
  * </p>
  */
@@ -59,6 +59,7 @@ public class StaticCompresser extends HttpServlet {
 	private static String maxage(final long v) {
 		return "max-age=" + (v / 1000);
 	}
+
 	static {
 		S_SHORT_AGE = "public, must-revalidate, " + maxage(I_SHORT_AGE);
 		S_LONG_AGE = "public, " + maxage(I_LONG_AGE);
@@ -99,21 +100,21 @@ public class StaticCompresser extends HttpServlet {
 		rsp.setDateHeader(DATE, now);
 		rsp.setHeader(ETAG, file.etag);
 		switch (file.cacheMode) {
-			case FileData.NEVER :
-				rsp.setDateHeader(EXPIRES, 0);
-				rsp.setHeader(CACHE_CONTROL, NO_CACHE_NO_STORE);
-				rsp.setHeader(PRAGMA, NO_CACHE);
-				break;
-			case FileData.SHORT_TERM :
-				rsp.setDateHeader(EXPIRES, now + I_SHORT_AGE);
-				rsp.setHeader(CACHE_CONTROL, S_SHORT_AGE);
-				rsp.setHeader(VARY, ACCEPT_ENCODING);
-				break;
-			case FileData.LONG_TERM :
-				rsp.setDateHeader(EXPIRES, now + I_LONG_AGE);
-				rsp.setHeader(CACHE_CONTROL, S_LONG_AGE);
-				rsp.setHeader(VARY, ACCEPT_ENCODING);
-				break;
+		case FileData.NEVER:
+			rsp.setDateHeader(EXPIRES, 0);
+			rsp.setHeader(CACHE_CONTROL, NO_CACHE_NO_STORE);
+			rsp.setHeader(PRAGMA, NO_CACHE);
+			break;
+		case FileData.SHORT_TERM:
+			rsp.setDateHeader(EXPIRES, now + I_SHORT_AGE);
+			rsp.setHeader(CACHE_CONTROL, S_SHORT_AGE);
+			rsp.setHeader(VARY, ACCEPT_ENCODING);
+			break;
+		case FileData.LONG_TERM:
+			rsp.setDateHeader(EXPIRES, now + I_LONG_AGE);
+			rsp.setHeader(CACHE_CONTROL, S_LONG_AGE);
+			rsp.setHeader(VARY, ACCEPT_ENCODING);
+			break;
 		}
 
 		if (file.notModified(req)) {

@@ -10,7 +10,6 @@ import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.MineralDTO;
 import edu.rpi.metpetdb.client.model.ReferenceDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
 
 public enum ChemicalAnalysisProperty implements Property {
 
@@ -133,20 +132,17 @@ public enum ChemicalAnalysisProperty implements Property {
 	},
 	subsampleName {
 		public <T extends MObjectDTO> String get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getSubsample()
-					.getName();
+			return ((ChemicalAnalysisDTO) chemicalAnalysis).getSubsampleName();
 		}
 
 		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
 				final K subsample) {
-			((ChemicalAnalysisDTO) chemicalAnalysis)
-					.setSubsample((SubsampleDTO) subsample);
+
 		}
 	},
 	sampleName {
 		public <T extends MObjectDTO> String get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getSubsample()
-					.getSample().getAlias();
+			return ((ChemicalAnalysisDTO) chemicalAnalysis).getSampleName();
 		}
 
 		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,

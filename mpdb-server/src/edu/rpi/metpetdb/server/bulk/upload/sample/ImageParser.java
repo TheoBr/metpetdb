@@ -32,6 +32,7 @@ public class ImageParser {
 	public static final int METHOD = 1;
 	public static final int IMAGE_REFERENCE = 2;
 	public static final int SAMPLE = 101;
+	public static final int SUBSAMPLE_TYPE = 102;
 	public static final int PARENT_LOC_X = 201;
 	public static final int PARENT_LOC_Y = 202;
 
@@ -40,7 +41,6 @@ public class ImageParser {
 	private final List<ImageDTO> images;
 	private final List<ImageOnGridDTO> imagesOnGrid;
 	private final Map<Integer, ValidationException> errors = new TreeMap<Integer, ValidationException>();
-
 	// 0) Regex for header
 	// 1) methodname to set in SampleDTO
 	// 2) datatype cell needs to be converted to for use with methodname
@@ -61,7 +61,7 @@ public class ImageParser {
 			// "format", "", String.class, "Image_format"
 			// },
 			{
-					"image type", "setImageType", String.class,
+					"image type", "addImageType", String.class,
 					"Image_imageType"
 			},
 			{
@@ -93,7 +93,14 @@ public class ImageParser {
 			{
 					"collector", "setCollector", String.class,
 					"Image_collector"
-			}
+			},
+			{
+					"scale", "setScale", Integer.class, "Image_scale"
+			},
+			{
+					"(comment)|(note)|(description)", "addComment",
+					String.class, "Image_comments"
+			},
 	};
 
 	private final static List<MethodAssociation<XrayImageDTO>> methodAssociations = new LinkedList<MethodAssociation<XrayImageDTO>>();
@@ -224,6 +231,11 @@ public class ImageParser {
 				if (text.matches("[Ss][Aa][Mm][Pp][Ll][Ee]")) {
 					colType.put(new Integer(i), SAMPLE);
 					colObjects.put(new Integer(i), new SampleDTO());
+				} else if (Pattern.compile("subsample type",
+						Pattern.CASE_INSENSITIVE).matcher(text).find()) {
+					colType.put(new Integer(i), SUBSAMPLE_TYPE);
+					colName.put(new Integer(i), "Subsample_type");
+					continue;
 				}
 
 				if (sma.matches(text)) {
@@ -293,7 +305,7 @@ public class ImageParser {
 				final int columnType = colType.get(new Integer(i));
 				if (columnType == SAMPLE) {
 
-					// If the object is a sample, we want the chemical analysis
+					// If the object is a sample, we want the image
 					// to be related to a subsample of that sample
 					if (colObjects.get(i) instanceof SampleDTO) {
 						final String data = cell.toString();
@@ -306,10 +318,16 @@ public class ImageParser {
 						if (img.getSubsample() == null)
 							img.setSubsample(new SubsampleDTO());
 						if (img.getSubsample().getSample() == null)
-							img.getSubsample().setSample(new SampleDTO());
-						img.getSubsample().getSample().setAlias(data);
+							img.getSubsample().setSample(img.getSample());
 						continue;
 					}
+				} else if (columnType == SUBSAMPLE_TYPE) {
+					if (img.getSubsample() == null)
+						img.setSubsample(new SubsampleDTO());
+					if (img.getSubsample().getSample() == null)
+						img.getSubsample().setSample(img.getSample());
+					final String data = cell.toString();
+					img.getSubsample().addSubsampleType(data);
 				} else if (columnType == PARENT_LOC_X
 						|| columnType == PARENT_LOC_Y) {
 					final Double data = new Double(cell.getNumericCellValue());

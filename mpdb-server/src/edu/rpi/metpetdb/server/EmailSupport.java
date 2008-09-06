@@ -76,8 +76,9 @@ public class EmailSupport {
 			final String subjFmt = allProperties.getProperty(mid + ".subject");
 			final String bodyFmt = allProperties.getProperty(mid + ".body");
 			msg.setFrom(fromAddress);
-			msg.setRecipients(TO,
-					new InternetAddress[]{new InternetAddress(to)});
+			msg.setRecipients(TO, new InternetAddress[] {
+				new InternetAddress(to)
+			});
 			msg.setSubject(MessageFormat.format(subjFmt, args));
 			msg.setSentDate(new Date());
 			msg.setText(MessageFormat.format(bodyFmt, args));

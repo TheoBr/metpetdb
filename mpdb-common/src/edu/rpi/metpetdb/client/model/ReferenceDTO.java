@@ -27,8 +27,7 @@ public class ReferenceDTO extends MObjectDTO {
 
 	public boolean equals(final Object o) {
 		return name != null && o instanceof ReferenceDTO
-				&& name.equals(((ReferenceDTO) o).name)
-				&& ((ReferenceDTO) o).getId() == id;
+				&& name.toLowerCase().equals(((ReferenceDTO) o).name.toLowerCase());
 	}
 
 	public int hashCode() {

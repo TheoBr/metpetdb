@@ -5,6 +5,7 @@ import edu.rpi.metpetdb.client.TestServerOp;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.validation.InvalidSESARNumberException;
 import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
+import edu.rpi.metpetdb.client.model.RockTypeDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.ui.MpDb;
 
@@ -23,7 +24,7 @@ public class SaveSampleTest extends MpDbTestCase {
 	private static final String SESAR_NUMBER = "000000000";
 	private static final double LATITUDE = 1;
 	private static final double LONGITUDE = 1;
-	private static final String ROCK_TYPE = "Amphibolite";
+	private static RockTypeDTO ROCK_TYPE;
 	private static final String ALIAS = String.valueOf(System
 			.currentTimeMillis());
 	private SampleDTO sample;
@@ -32,6 +33,9 @@ public class SaveSampleTest extends MpDbTestCase {
 	@Override
 	public void gwtSetUp() {
 		super.gwtSetUp();
+		ROCK_TYPE = new RockTypeDTO();
+		ROCK_TYPE.setRockType("gentoo");
+
 		sample = new SampleDTO();
 		sample.setSesarNumber(SESAR_NUMBER);
 		sample.setLatitude(LATITUDE);

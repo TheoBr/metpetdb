@@ -36,6 +36,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public ObjectConstraint SearchSample_minerals;
 	public ObjectConstraint SearchSample_elements;
 	public ObjectConstraint SearchSample_oxides;
+	public ObjectConstraint SearchSample_possibleRockTypes;
 
 	// ------ SampleMineral ------
 	public PropertyConstraint[] SampleMineral__all;
@@ -53,10 +54,26 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ Reference ------
 	public PropertyConstraint[] Reference__all;
 	public StringConstraint Reference_name;
+	
+	// ------ Image Type ------
+	public PropertyConstraint[] ImageType__all;
+	public StringConstraint ImageType_imageType;
+	
+	// ------ Subsample Type ------
+	public PropertyConstraint[] SubsampleType__all;
+	public StringConstraint SubsampleType_subsampleType;
+	
+	// ------ Rock Type ------
+	public PropertyConstraint[] RockType__all;
+	public StringConstraint RockType_rockType;
 
 	// ------ SampleComment ------
 	public PropertyConstraint[] SampleComment__all;
 	public StringConstraint SampleComment_text;
+	
+	// ------ ImageComment ------
+	public PropertyConstraint[] ImageComment__all;
+	public StringConstraint ImageComment_text;
 
 	// ------ ChemicalAnalysisOxide ------
 	public PropertyConstraint[] ChemicalAnalysisOxide__all;
@@ -87,11 +104,14 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 	// ------ Image ------
 	public PropertyConstraint[] Image__all;
-	public ImageTypeConstraint Image_imageType;
+	public ValueInCollectionConstraint Image_imageType;
 	public IntegerConstraint Image_lut;
 	public IntegerConstraint Image_contrast;
 	public IntegerConstraint Image_brightness;
 	public IntegerConstraint Image_pixelsize;
+	public IntegerConstraint Image_scale;
+	public ObjectConstraint Image_comments;
+	
 
 	public void validate(final ImageDTO i) throws ValidationException {
 		validate(i, Image__all);
@@ -105,7 +125,8 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint Sample_description;
 	public StringConstraint Sample_collector;
 	public StringConstraint Sample_locationText;
-	public RockTypeConstraint Sample_rockType;
+	public ValueInCollectionConstraint Sample_rockType;
+	public IntegerConstraint Sample_subsampleCount;
 	public GeometryConstraint Sample_location;
 	public FloatConstraint Sample_latitudeError;
 	public FloatConstraint Sample_longitudeError;
@@ -126,8 +147,11 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ Subsample ------
 	public PropertyConstraint[] Subsample__all;
 	public StringConstraint Subsample_name;
-	public SubsampleTypeConstraint Subsample_type;
+	public ValueInCollectionConstraint Subsample_subsampleType;
 	public ObjectConstraint Subsample_images;
+	public StringConstraint Subsample_sampleName;
+	public IntegerConstraint Subsample_imageCount;
+	public IntegerConstraint Subsample_analysisCount;
 
 	public void validate(SubsampleDTO u) throws ValidationException {
 		validate(u, Subsample__all);
@@ -159,6 +183,8 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public ValueInCollectionConstraint ChemicalAnalysis_mineral;
 	public ObjectConstraint ChemicalAnalysis_elements;
 	public ObjectConstraint ChemicalAnalysis_oxides;
+	public StringConstraint ChemicalAnalysis_sampleName;
+	public StringConstraint ChemicalAnalysis_subsampleName;
 
 	public void validate(ChemicalAnalysisDTO u) throws ValidationException {
 		validate(u, ChemicalAnalysis__all);
@@ -238,8 +264,10 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		StartSessionRequest_password.minLength = UserWithPassword_oldPassword.minLength;
 		StartSessionRequest_password.maxLength = UserWithPassword_oldPassword.maxLength;
 
+		//Fill in fake constraints for searching
 		SearchSample_minerals.setConstraints(SampleMineral__all);
 		SearchSample_elements.setConstraints(ChemicalAnalysisElement__all);
 		SearchSample_oxides.setConstraints(ChemicalAnalysisOxide__all);
+		SearchSample_possibleRockTypes.setConstraints(new PropertyConstraint[] { Sample_rockType });
 	}
 }

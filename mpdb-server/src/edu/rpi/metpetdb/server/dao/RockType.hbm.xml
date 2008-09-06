@@ -1,0 +1,25 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.server.model">
+  <class name="RockType" table="rock_type">
+    <id name="id" column="rock_type_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">rock_type_seq</param>
+      </generator>
+    </id>
+    
+    <property name="rockType" column="rock_type" />
+
+  </class>
+  
+  <query name="RockType.all">
+    from RockType rt
+    order by rt.rockType
+  </query>
+  <query name="RockType.byRockType">
+    from RockType rt
+    where lower(rt.rockType)=lower(:rockType)
+  </query>
+</hibernate-mapping>

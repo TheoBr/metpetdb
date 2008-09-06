@@ -20,14 +20,19 @@ import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
 import edu.rpi.metpetdb.client.error.validation.InvalidImageException;
 import edu.rpi.metpetdb.client.model.ImageDTO;
 import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
 import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.service.BulkUploadImagesService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.bulk.upload.sample.ImageParser;
+import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
+import edu.rpi.metpetdb.server.model.Subsample;
+import edu.rpi.metpetdb.server.model.User;
 
 public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 		BulkUploadImagesService {
@@ -237,9 +242,21 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 						saveIncompleteImageOnGrid(iog);
 					}
 
+					SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
 					for (ImageDTO img : images) {
 						ImageDTO img_s = uploadImages(zp, img,
 								spreadsheetPrefix);
+						Subsample ss = mergeBean(img_s.getSubsample());
+						ss.getSample().setOwner((User) merge(u));
+
+						try {
+							ssDAO.fill(ss);
+						} catch (SubsampleNotFoundException daoe) {
+							SubsampleDTO ssDTO = cloneBean(ss);
+							doc.validate(ssDTO);
+							ss = ssDAO.save(ss);
+						}
+						img_s.setSubsample((SubsampleDTO) cloneBean(ss));
 						img_s.getSubsample().getSample().setOwner(u);
 						if (img.getSample() == null)
 							img.setSample(new SampleDTO());

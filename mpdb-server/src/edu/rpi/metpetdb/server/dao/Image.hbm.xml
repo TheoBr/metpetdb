@@ -17,20 +17,26 @@
     <property name="checksum64x64" column="checksum_64x64" />
     <property name="checksumHalf" column="checksum_half" />
     <property name="filename" column="filename" />
-    <property name="imageType" column="image_type" />
     <property name="brightness" column="brightness" />
     <property name="lut" column="lut"/>
     <property name="contrast" column="contrast"/>
     <property name="pixelsize" column="pixel_size"/>
     <property name="collector" column="collector" length="100" />
+    <property name="scale" />
 
     <set name="references" table="image_reference" cascade="persist,merge" lazy="false">
       <key column="image_id" />
       <many-to-many class="Reference" column="reference_id" />
     </set>
+    
+    <set name="comments" cascade="all,delete-orphan" lazy="false" >
+      <key column="image_id" not-null="true"/>
+      <one-to-many class="ImageComment" />
+    </set>
 
    <many-to-one name="subsample" column="subsample_id" class="Subsample" lazy="false"/>
    <many-to-one name="sample" column="sample_id" class="Sample" lazy="false" cascade="none"/>
+   <many-to-one name="imageType" column="image_type_id" class="ImageType" lazy="false" cascade="none"/>
    
    <joined-subclass name="XrayImage" table="xray_image">
 	   	<key column="image_id"/>

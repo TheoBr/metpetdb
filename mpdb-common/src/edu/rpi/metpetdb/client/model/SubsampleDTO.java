@@ -12,12 +12,14 @@ public class SubsampleDTO extends MObjectDTO implements IHasImages {
 	private SampleDTO sample;
 	private int version;
 	private String name;
-	private String type;
+	private SubsampleTypeDTO subsampleType;
 	private Set<ImageDTO> images;
 	private GridDTO grid;
 	private Set<ChemicalAnalysisDTO> chemicalAnalyses;
 	private int imageCount;
 	private int analysisCount;
+	
+	private String sampleName;
 
 	public long getId() {
 		return this.id;
@@ -51,12 +53,18 @@ public class SubsampleDTO extends MObjectDTO implements IHasImages {
 		this.name = s;
 	}
 
-	public String getType() {
-		return this.type;
+	public SubsampleTypeDTO getSubsampleType() {
+		return this.subsampleType;
 	}
 
-	public void setType(final String t) {
-		this.type = t;
+	public void setSubsampleType(final SubsampleTypeDTO t) {
+		this.subsampleType = t;
+	}
+	
+	public void addSubsampleType(final String subsampleTypeName) {
+		final SubsampleTypeDTO subsampleType = new SubsampleTypeDTO();
+		subsampleType.setSubsampleType(subsampleTypeName);
+		setSubsampleType(subsampleType);
 	}
 
 	public void setImages(final Set<ImageDTO> s) {
@@ -73,6 +81,16 @@ public class SubsampleDTO extends MObjectDTO implements IHasImages {
 		if (this.images == null)
 			this.images = new HashSet<ImageDTO>();
 		this.images.add(i);
+	}
+	
+	
+
+	public String getSampleName() {
+		return sampleName;
+	}
+
+	public void setSampleName(final String sampleName) {
+		this.sampleName = sampleName;
 	}
 
 	public Set<ChemicalAnalysisDTO> getChemicalAnalyses() {

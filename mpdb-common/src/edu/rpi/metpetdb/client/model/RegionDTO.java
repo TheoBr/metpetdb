@@ -29,8 +29,7 @@ public class RegionDTO extends MObjectDTO {
 
 	public boolean equals(final Object o) {
 		return name != null && o instanceof RegionDTO
-				&& name.equals(((RegionDTO) o).name)
-				&& ((RegionDTO) o).getId() == id;
+				&& name.toLowerCase().equals(((RegionDTO) o).name.toLowerCase());
 	}
 
 	public int hashCode() {

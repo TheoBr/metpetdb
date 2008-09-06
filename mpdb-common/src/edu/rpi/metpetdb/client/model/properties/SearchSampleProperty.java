@@ -8,6 +8,7 @@ import edu.rpi.metpetdb.client.model.ChemicalAnalysisElementDTO;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxideDTO;
 import edu.rpi.metpetdb.client.model.DateSpan;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.RockTypeDTO;
 import edu.rpi.metpetdb.client.model.SampleMineralDTO;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
 
@@ -97,18 +98,18 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 	},
 	possibleRockTypes {
-		public <T extends MObjectDTO> Set<String> get(final T sample) {
+		public <T extends MObjectDTO> Object get(final T sample) {
 			return ((SearchSampleDTO) sample).getPossibleRockTypes();
 		}
 
 		public <T extends MObjectDTO, K> void set(final T sample,
 				final K rockType) {
 			((SearchSampleDTO) sample)
-					.setPossibleRockTypes((Set<String>) rockType);
+					.setPossibleRockTypes((Set<RockTypeDTO>) rockType);
 		}
 
 		public String columnName() {
-			return "rockType";
+			return "rockType_rockType";
 		}
 	},
 		elements {

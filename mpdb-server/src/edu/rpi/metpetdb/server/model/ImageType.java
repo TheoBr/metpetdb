@@ -4,7 +4,7 @@ public class ImageType extends MObject {
 	private static final long serialVersionUID = 1L;
 
 	private short id;
-	private String name;
+	private String imageType;
 
 	public short getId() {
 		return id;
@@ -14,25 +14,25 @@ public class ImageType extends MObject {
 		id = i;
 	}
 
-	public String getName() {
-		return name;
+	public String getImageType() {
+		return imageType;
 	}
 
-	public void setName(final String s) {
-		name = s;
+	public void setImageType(final String s) {
+		imageType = s;
 	}
 
 	public boolean equals(final Object o) {
-		return name != null && o instanceof ImageType
-				&& name.equals(((ImageType) o).name);
+		return imageType != null && o instanceof ImageType
+				&& imageType.equals(((ImageType) o).imageType);
 	}
 
 	public int hashCode() {
-		return name != null ? name.hashCode() : 0;
+		return imageType != null ? imageType.hashCode() : 0;
 	}
 
 	public String toString() {
-		return name;
+		return imageType;
 	}
 
 	public boolean mIsNew() {

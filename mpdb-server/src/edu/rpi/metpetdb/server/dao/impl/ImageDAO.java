@@ -39,14 +39,9 @@ public class ImageDAO extends MpDbDAO<Image> {
 	public Image save(Image inst) throws DAOException {
 		inst.setSample((new SampleDAO(sess)).fill(inst.getSample()));
 		inst.setSubsample((new SubsampleDAO(sess)).fill(inst.getSubsample()));
-
+		inst.setImageType(new ImageTypeDAO(sess).fill(inst.getImageType()));
 		inst = _save(inst);
 		return inst;
-	}
-
-	public int countBySubsampleId(long subsampleId) {
-		Query q = sizeQuery("Image.bySubsampleId", subsampleId);
-		return ((Number) q.uniqueResult()).intValue();
 	}
 
 	public List<Image> getBySubsampleId(long subsampleId) {

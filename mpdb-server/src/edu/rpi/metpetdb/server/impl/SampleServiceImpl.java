@@ -13,7 +13,6 @@ import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.ResultsFromDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
-import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 import edu.rpi.metpetdb.server.model.Sample;
 
 public class SampleServiceImpl extends MpDbServlet implements SampleService {
@@ -54,8 +53,6 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		s.setId(id);
 
 		s = (new SampleDAO(this.currentSession())).fill(s);
-		s.setSubsampleCount((new SubsampleDAO(this.currentSession()))
-				.countBySampleId(id));
 		return (SampleDTO) clone(s);
 	}
 

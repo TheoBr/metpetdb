@@ -44,13 +44,13 @@ public class SubsampleDetails extends FlowPanel {
 	final Element sampleHeader;
 
 	private static GenericAttribute[] subsampleAtts = {
-			new HyperlinkAttribute(MpDb.oc.Subsample_sampleName)
+			new HyperlinkAttribute(MpDb.doc.Subsample_sampleName)
 					.setReadOnly(true),
 			new TextAttribute(MpDb.doc.Subsample_name),
-			new ListboxAttribute(MpDb.doc.Subsample_type),
+			new ListboxAttribute(MpDb.doc.Subsample_subsampleType),
 			new AddImageAttribute(MpDb.doc.Subsample_images),
-			new TextAttribute(MpDb.oc.Subsample_imageCount).setReadOnly(true),
-			new TextAttribute(MpDb.oc.Subsample_analysisCount)
+			new TextAttribute(MpDb.doc.Subsample_imageCount).setReadOnly(true),
+			new TextAttribute(MpDb.doc.Subsample_analysisCount)
 					.setReadOnly(true),
 	};
 

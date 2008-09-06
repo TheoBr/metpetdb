@@ -22,8 +22,7 @@ public class Subsample extends MObject {
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String name;
 
-	@Field(index = Index.TOKENIZED, store = Store.NO)
-	private String type;
+	private SubsampleType type;
 
 	private Set<Image> images;
 
@@ -33,6 +32,8 @@ public class Subsample extends MObject {
 	private Set<ChemicalAnalysis> chemicalAnalysis;
 	private int imageCount;
 	private int analysisCount;
+
+	private String sampleName;
 
 	public long getId() {
 		return id;
@@ -48,6 +49,14 @@ public class Subsample extends MObject {
 
 	public void setSample(final Sample s) {
 		sample = s;
+	}
+
+	public String getSampleName() {
+		return sampleName;
+	}
+
+	public void setSampleName(final String sampleName) {
+		this.sampleName = sampleName;
 	}
 
 	public int getVersion() {
@@ -66,11 +75,11 @@ public class Subsample extends MObject {
 		name = s;
 	}
 
-	public String getType() {
+	public SubsampleType getSubsampleType() {
 		return type;
 	}
 
-	public void setType(String t) {
+	public void setSubsampleType(SubsampleType t) {
 		type = t;
 	}
 

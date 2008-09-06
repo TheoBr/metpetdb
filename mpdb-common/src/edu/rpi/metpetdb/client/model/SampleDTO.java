@@ -28,7 +28,7 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 
 	private Boolean publicData;
 
-	private String rockType;
+	private RockTypeDTO rockType;
 
 	private Set<SubsampleDTO> subsamples;
 
@@ -138,12 +138,18 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 		collectionDate = date;
 	}
 
-	public String getRockType() {
+	public RockTypeDTO getRockType() {
 		return rockType;
 	}
 
-	public void setRockType(final String rt) {
+	public void setRockType(final RockTypeDTO rt) {
 		rockType = rt;
+	}
+	
+	public void addRockType(final String rockTypeName) {
+		final RockTypeDTO rockType = new RockTypeDTO();
+		rockType.setRockType(rockTypeName);
+		setRockType(rockType);
 	}
 
 	public boolean isPublicData() {
@@ -211,6 +217,16 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 
 	public void addMineral(final MineralDTO min) {
 		this.addMineral(min, new Float(0));
+	}
+	
+	/**
+	 * 
+	 * @param minerals comma separated list of minerals
+	 */
+	public void addMineral(final String mineralName) {
+		final MineralDTO mineral = new MineralDTO();
+		mineral.setName(mineralName);
+		addMineral(mineral);
 	}
 
 	public void addMineral(final MineralDTO min, final Float amount) {

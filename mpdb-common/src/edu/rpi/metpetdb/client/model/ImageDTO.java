@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
@@ -10,7 +11,7 @@ public class ImageDTO extends MObjectDTO {
 	private long id;
 	private int version;
 
-	private String imageType;
+	private ImageTypeDTO imageType;
 	private int width;
 	private int height;
 	private String checksum;
@@ -28,6 +29,8 @@ public class ImageDTO extends MObjectDTO {
 	private Integer lut;
 	private String collector;
 	private Set<ReferenceDTO> references;
+	private Set<ImageCommentDTO> comments;
+	private Integer scale;
 
 	public long getId() {
 		return id;
@@ -45,12 +48,45 @@ public class ImageDTO extends MObjectDTO {
 		version = v;
 	}
 
-	public String getImageType() {
+	public ImageTypeDTO getImageType() {
 		return imageType;
 	}
 
-	public void setImageType(final String it) {
+	public void setImageType(final ImageTypeDTO it) {
 		imageType = it;
+	}
+	
+	public void addImageType(final String imageTypeName) {
+		final ImageTypeDTO imageType = new ImageTypeDTO();
+		imageType.setImageType(imageTypeName);
+		setImageType(imageType);
+	}
+	
+	
+
+	public Set<ImageCommentDTO> getComments() {
+		return comments;
+	}
+
+	public void setComments(Set<ImageCommentDTO> comments) {
+		this.comments = comments;
+	}
+	
+	public void addComment(final String comment) {
+		if (comments == null)
+			comments = new HashSet<ImageCommentDTO>();
+		ImageCommentDTO sc = new ImageCommentDTO();
+		sc.setImage(this);
+		sc.setText(comment);
+		this.comments.add(sc);
+	}
+
+	public Integer getScale() {
+		return scale;
+	}
+
+	public void setScale(Integer scale) {
+		this.scale = scale;
 	}
 
 	public SubsampleDTO getSubsample() {

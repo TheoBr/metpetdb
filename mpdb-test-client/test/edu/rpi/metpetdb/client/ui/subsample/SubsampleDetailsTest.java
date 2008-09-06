@@ -8,6 +8,7 @@ import edu.rpi.metpetdb.client.TestServerOp;
 import edu.rpi.metpetdb.client.VoidTestServerOp;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.SubsampleTypeDTO;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
@@ -16,7 +17,15 @@ public class SubsampleDetailsTest extends MpDbTestCase {
 
 	private static final long SUBSAMPLE_ID = 2;
 	private static final String NAME = "loller skater";
-	private static final String TYPE = "terminater";
+	private static SubsampleTypeDTO TYPE;
+
+	@Override
+	public void gwtSetUp() {
+		super.gwtSetUp();
+		TYPE = new SubsampleTypeDTO();
+		TYPE.setSubsampleType("linux");
+
+	}
 
 	/**
 	 * Test saving a sample to the database, which in turns test that
@@ -26,7 +35,7 @@ public class SubsampleDetailsTest extends MpDbTestCase {
 		final SubsampleDTO s = new SubsampleDTO();
 		s.setSample(getSample());
 		s.setName(NAME);
-		s.setType(TYPE);
+		s.setSubsampleType(TYPE);
 		new TestServerOp<SubsampleDTO>(this) {
 			public void begin() {
 				MpDb.subsample_svc.save(s, this);
@@ -34,7 +43,7 @@ public class SubsampleDetailsTest extends MpDbTestCase {
 
 			public void onSuccess(final SubsampleDTO subsample) {
 				assertEquals(subsample.getName(), NAME);
-				assertEquals(subsample.getType(), TYPE);
+				assertEquals(subsample.getSubsampleType(), TYPE);
 				finishTest();
 			}
 		}.begin();
@@ -47,7 +56,7 @@ public class SubsampleDetailsTest extends MpDbTestCase {
 	public void testSaveSubsampleFailName() {
 		final SubsampleDTO s = new SubsampleDTO();
 		s.setSample(getSample());
-		s.setType(TYPE);
+		s.setSubsampleType(TYPE);
 		new TestServerOp<SubsampleDTO>(this) {
 			public void begin() {
 				MpDb.subsample_svc.save(s, this);
@@ -116,7 +125,9 @@ public class SubsampleDetailsTest extends MpDbTestCase {
 
 			public void onSuccess(final Results<SubsampleDTO> results) {
 				final List<SubsampleDTO> l = results.getList();
-				final String[] names = { "1", "3", "4", "5" };
+				final String[] names = {
+						"1", "3", "4", "5"
+				};
 				// verify the size
 				assertEquals(5, results.getCount());
 				// Verify the order, also verifies we got the right ones

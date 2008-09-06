@@ -1,0 +1,25 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.server.model">
+  <class name="SubsampleType" table="subsample_type">
+    <id name="id" column="subsample_type_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">susample_type_seq</param>
+      </generator>
+    </id>
+    
+    <property name="subsampleType" column="subsample_type" />
+
+  </class>
+  
+  <query name="SubsampleType.all">
+    from SubsampleType st
+    order by st.subsampleType
+  </query>
+    <query name="SubsampleType.bySubsampleType">
+    from SubsampleType st
+    where lower(st.subsampleType)=lower(:subsampleType)
+  </query>
+</hibernate-mapping>

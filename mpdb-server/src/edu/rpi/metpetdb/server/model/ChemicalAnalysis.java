@@ -36,6 +36,9 @@ public class ChemicalAnalysis extends MObject {
 	@IndexedEmbedded(prefix = "oxides_")
 	private Set<ChemicalAnalysisOxide> oxides;
 
+	private String subsampleName;
+	private String sampleName;
+
 	public int getId() {
 		return id;
 	}
@@ -58,6 +61,22 @@ public class ChemicalAnalysis extends MObject {
 
 	public void setSubsample(final Subsample s) {
 		subsample = s;
+	}
+
+	public String getSubsampleName() {
+		return subsampleName;
+	}
+
+	public void setSubsampleName(final String subsampleName) {
+		this.subsampleName = subsampleName;
+	}
+
+	public String getSampleName() {
+		return sampleName;
+	}
+
+	public void setSampleName(final String sampleName) {
+		this.sampleName = sampleName;
 	}
 
 	public int getPointX() {

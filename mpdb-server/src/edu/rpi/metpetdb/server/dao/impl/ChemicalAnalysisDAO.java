@@ -60,11 +60,6 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 		return ca;
 	}
 
-	public int countBySubsampleId(long subsampleId) {
-		Query q = sizeQuery("ChemicalAnalysis.bySubsampleId", subsampleId);
-		return ((Number) q.uniqueResult()).intValue();
-	}
-
 	public List<ChemicalAnalysis> getAll(final long subsampleId) {
 		final Query q = namedQuery("ChemicalAnalysis.bySubsampleId");
 		q.setParameter("subsampleId", subsampleId);

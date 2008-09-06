@@ -4,15 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.postgis.Geometry;
-import org.postgis.Point;
-import org.postgis.Polygon;
-
-import edu.rpi.metpetdb.client.service.MpDbConstants;
 
 public class SearchSampleDTO extends MObjectDTO {
 
 	private static final long serialVersionUID = 1L;
-	private Set<String> possibleRockTypes = new HashSet<String>();
+	private Set<RockTypeDTO> possibleRockTypes = new HashSet<RockTypeDTO>();
 
 	private long id;
 	private int version;
@@ -33,15 +29,15 @@ public class SearchSampleDTO extends MObjectDTO {
 
 	private Set<ChemicalAnalysisOxideDTO> oxides;
 
-	public Set<String> getPossibleRockTypes() {
+	public Set<RockTypeDTO> getPossibleRockTypes() {
 		return possibleRockTypes;
 	}
 
-	public void addPossibleRockType(final String rt) {
+	public void addPossibleRockType(final RockTypeDTO rt) {
 		possibleRockTypes.add(rt);
 	}
 
-	public void setPossibleRockTypes(final Set<String> rt) {
+	public void setPossibleRockTypes(final Set<RockTypeDTO> rt) {
 		possibleRockTypes = rt;
 	}
 

@@ -68,7 +68,8 @@ public class ListboxAttribute extends GenericAttribute {
 			++index;
 		}
 
-		lb.setItemSelected(lb.getSelectedIndex(), true);
+		if (lb.getItemCount() > 0)
+			lb.setItemSelected(lb.getSelectedIndex(), true);
 
 		lb.addChangeListener(new ChangeListener() {
 			public void onChange(final Widget w) {
@@ -89,8 +90,8 @@ public class ListboxAttribute extends GenericAttribute {
 	}
 
 	protected String get(final MObjectDTO obj) {
-		final String v = (String) mGet(obj);
-		return v != null ? v : "";
+		final Object v = mGet(obj);
+		return v != null ? v.toString() : "";
 	}
 
 	protected void set(final MObjectDTO obj, final Object v) {

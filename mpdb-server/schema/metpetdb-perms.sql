@@ -28,6 +28,10 @@ GRANT select,insert,update,delete ON sample_comments to @APPUSER@;
 GRANT select,insert,update,delete ON mineral_types to @APPUSER@;
 GRANT select,insert,update,delete ON oxide_mineral_types to @APPUSER@;
 GRANT select,insert,update,delete ON element_mineral_types to @APPUSER@;
+GRANT select,insert,update,delete ON rock_type to @APPUSER@;
+GRANT select,insert,update,delete ON subsample_type to @APPUSER@;
+GRANT select,insert,update,delete ON image_type to @APPUSER@;
+GRANT select,insert,update,delete ON image_comments to @APPUSER@;
 
 GRANT update ON mineral_seq   TO @APPUSER@;
 GRANT update ON project_seq   TO @APPUSER@;
@@ -45,3 +49,6 @@ GRANT update ON reference_seq TO @APPUSER@;
 GRANT update ON uploaded_files_seq TO @APPUSER@;
 GRANT update ON sample_comments_seq TO @APPUSER@;
 GRANT update ON mineral_types_seq TO @APPUSER@;
+GRANT update ON image_type_seq TO @APPUSER@;
+GRANT update ON rock_type_seq TO @APPUSER@;
+GRANT update ON subsample_type_seq TO @APPUSER@;

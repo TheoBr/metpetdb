@@ -170,7 +170,7 @@ public abstract class MpDbDAO<T extends MObject> {
 	}
 
 	/**
-	 * @see{pageQuery}
+	 * @see{pageQuery
 	 * @param name
 	 * @param p
 	 * @return
@@ -184,8 +184,8 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * 
 	 * @param name
 	 *            name of the query that will produce the rows. The query must
-	 *            be a named HQL query of <code>name/p.getParameter</code>.
-	 *            The query must end in an order by clause.
+	 *            be a named HQL query of <code>name/p.getParameter</code>. The
+	 *            query must end in an order by clause.
 	 * @param p
 	 *            pagination parameters from the client. These will be used to
 	 *            configure the query's result window before it gets returned,
@@ -210,7 +210,7 @@ public abstract class MpDbDAO<T extends MObject> {
 	}
 
 	/**
-	 * @see{sizeQuery}
+	 * @see{sizeQuery
 	 * @param name
 	 * @return
 	 */

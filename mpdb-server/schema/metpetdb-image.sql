@@ -10,7 +10,7 @@ CREATE TABLE grids
    height INT2 NOT NULL,
    CONSTRAINT grids_sk PRIMARY KEY (grid_id),
    CONSTRAINT grids_fk FOREIGN KEY (subsample_id) 
-      REFERENCES subsamples(subsample_id) ON DELETE CASCADE
+      REFERENCES subsamples(subsample_id)
 ) WITHOUT OIDS;
 
 -- TIFF, GIF, JPEG, BMP, PNG,
@@ -19,6 +19,17 @@ CREATE TABLE image_format
    image_format_id INT2 NOT NULL,
    name VARCHAR(100) NOT NULL UNIQUE, -- mime type image/x
    CONSTRAINT image_format_sk PRIMARY KEY (image_format_id)
+) WITHOUT OIDS;
+
+CREATE TABLE image_type
+(
+	image_type_id int2 NOT NULL,
+	image_type VARCHAR(100) NOT NULL,
+    abbreviation VARCHAR(10),
+    comments VARCHAR(250), 
+	CONSTRAINT image_types_sk PRIMARY KEY (image_type_id),
+    CONSTRAINT image_types_image_type_key UNIQUE (image_type),
+    CONSTRAINT image_types_abbreviation_key UNIQUE (abbreviation)
 ) WITHOUT OIDS;
 
 -- can a subsample have multiple images? yes
@@ -32,7 +43,7 @@ CREATE TABLE images
    sample_id INT8,
    subsample_id INT8,
    image_format_id INT2,
-   image_type VARCHAR(100),
+   image_type_id INT2,
    width INT2 NOT NULL,
    height INT2 NOT NULL,
    pixel_size INT2,
@@ -40,6 +51,7 @@ CREATE TABLE images
    brightness INT2,
    lut INT2,
    collector VARCHAR(50),
+   scale int2,
    --user_id INT4 NOT NULL,
    checksum_64x64 CHAR(50) NOT NULL,
    checksum_half CHAR(50) NOT NULL,
@@ -48,6 +60,8 @@ CREATE TABLE images
    CONSTRAINT images_nk_filename UNIQUE(sample_id, filename),
    CONSTRAINT images_fk_image_format FOREIGN KEY (image_format_id)
      REFERENCES image_format(image_format_id),
+CONSTRAINT images_fk_image_type FOREIGN KEY (image_type_id)
+     REFERENCES image_type(image_type_id),
    --CONSTRAINT images_fk_user FOREIGN KEY (user_id)
    --  REFERENCES users (user_id),
    CONSTRAINT images_fk_subsample FOREIGN KEY (subsample_id)
@@ -56,6 +70,17 @@ CREATE TABLE images
      REFERENCES samples(sample_id) ON DELETE CASCADE,
    CONSTRAINT images_ck_nonzero CHECK (
      width > 0 AND height > 0)
+) WITHOUT OIDS;
+
+CREATE TABLE image_comments
+(
+	comment_id INT8 NOT NULL,
+	image_id INT8 NOT NULL,
+	comment_text TEXT NOT NULL,
+	version INT4 NOT NULL,
+	CONSTRAINT image_comments_sk PRIMARY KEY (comment_id),
+	CONSTRAINT image_comments_fk_image FOREIGN KEY (image_id)
+    REFERENCES images (image_id)
 ) WITHOUT OIDS;
 
 
@@ -121,6 +146,6 @@ CREATE SEQUENCE grid_seq;
 CREATE SEQUENCE image_type_seq;
 CREATE SEQUENCE image_on_grid_seq;
 CREATE SEQUENCE image_format_seq;
-
+CREATE SEQUENCE image_comment_seq;
 -- ask about what image types there will be
 -- add image format

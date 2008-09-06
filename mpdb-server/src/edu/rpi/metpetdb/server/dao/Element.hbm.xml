@@ -29,8 +29,8 @@
   </query>
   <query name="Element.byName">
     from Element e
-    where e.name = :name
-    or e.alternateName = :name
+    where lower(e.name) = lower(:name)
+    or lower(e.alternateName) = lower(:name)
   </query>
   <query name="Element.bySymbol">
     from Element e

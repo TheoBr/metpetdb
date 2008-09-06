@@ -20,7 +20,8 @@ public class BasicKML extends HttpServlet {
 	// private static final Double metersInLatDegree = 110874.40;
 
 	// private static final String baseURL =
-	// "http://localhost:8888/edu.rpi.metpetdb.MetPetDBApplication/MetPetDBApplication.html#SampleDetails-";
+	// "http://localhost:8888/edu.rpi.metpetdb.MetPetDBApplication/MetPetDBApplication.html#SampleDetails-"
+	// ;
 	private static final String baseURL = "http://samana.cs.rpi.edu:8080/metpetwebtst/#SampleDetails-";
 	private static final String samplesParameter = "Samples";
 	private Double lat;

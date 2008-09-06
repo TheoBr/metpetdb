@@ -30,6 +30,24 @@ CREATE TABLE reference
   CONSTRAINT references_name_key UNIQUE (name)
 ) WITHOUT OIDS;
 
+CREATE TABLE rock_type
+(
+	rock_type_id int2 NOT NULL,
+	rock_type VARCHAR(100) NOT NULL,
+	CONSTRAINT rock_types_sk PRIMARY KEY (rock_type_id),
+    CONSTRAINT rock_types_rock_type_key UNIQUE (rock_type)
+) WITHOUT OIDS;
+
+CREATE TABLE subsample_type
+(
+	subsample_type_id int2 NOT NULL,
+	subsample_type VARCHAR(100) NOT NULL,
+	CONSTRAINT subsample_types_sk PRIMARY KEY (subsample_type_id),
+    CONSTRAINT subsample_types_subsample_type_key UNIQUE (subsample_type)
+) WITHOUT OIDS;
+
+
+
 CREATE TABLE samples
 (
   sample_id INT8 NOT NULL,
@@ -39,7 +57,7 @@ CREATE TABLE samples
   collection_date TIMESTAMP,
   date_precision INT2,
   alias VARCHAR(20) NOT NULL,
-  rock_type VARCHAR(100) NOT NULL,
+  rock_type_id int2 NOT NULL,
   user_id INT4 NOT NULL,
   longitude_error FLOAT4,
   latitude_error FLOAT4,
@@ -54,7 +72,9 @@ CREATE TABLE samples
   CONSTRAINT samples_fk_user FOREIGN KEY (user_id)
     REFERENCES users (user_id),
   CONSTRAINT samples_fk_collector FOREIGN KEY (collector_id)
-    REFERENCES users (user_id)
+    REFERENCES users (user_id),
+  CONSTRAINT samples_fk_rock_type FOREIGN KEY (rock_type_id)
+    REFERENCES rock_type(rock_type_id)
 ) WITHOUT OIDS;
 -- Use WGS 84 (srid = 4326)
 SELECT AddGeometryColumn('samples', 'location', 4326, 'POINT', 2);
@@ -81,13 +101,15 @@ CREATE TABLE subsamples
   --user_id INT4 NOT NULL,
   grid_id INT8,
   name VARCHAR(100) NOT NULL,
-  "type" VARCHAR(100) NOT NULL,
+  subsample_type_id int2 NOT NULL,
   --CONSTRAINT subsamples_fk_user FOREIGN KEY (user_id)
   --  REFERENCES users (user_id),
   CONSTRAINT subsamples_nk_name UNIQUE(sample_id, name),
   CONSTRAINT subsamples_sk PRIMARY KEY (subsample_id),
   CONSTRAINT subsamples_fk_sample FOREIGN KEY (sample_id)
-    REFERENCES samples (sample_id) ON DELETE CASCADE
+    REFERENCES samples (sample_id),
+  CONSTRAINT subsamples_fk_subsample_type FOREIGN KEY (subsample_type_id)
+    REFERENCES subsample_type (subsample_type_id)
 ) WITHOUT OIDS;
 
 CREATE TABLE projects
@@ -201,9 +223,8 @@ CREATE SEQUENCE region_seq;
 CREATE SEQUENCE rock_type_seq;
 CREATE SEQUENCE sample_seq;
 CREATE SEQUENCE subsample_seq;
-CREATE SEQUENCE user_seq;
 CREATE SEQUENCE metamorphic_grade_seq;
 CREATE SEQUENCE reference_seq;
 CREATE SEQUENCE uploaded_files_seq;
 CREATE SEQUENCE sample_comments_seq;
-CREATE SEQUENCE uploaded_files_seq;
+CREATE SEQUENCE subsample_type_seq;

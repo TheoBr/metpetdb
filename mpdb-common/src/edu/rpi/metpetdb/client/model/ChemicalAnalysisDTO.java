@@ -27,6 +27,9 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 	private Float total;
 	private Set<ChemicalAnalysisElementDTO> elements;
 	private Set<ChemicalAnalysisOxideDTO> oxides;
+	
+	private String subsampleName;
+	private String sampleName;
 
 	private transient Widget actualImage;
 	private transient float percentX;
@@ -79,6 +82,24 @@ public class ChemicalAnalysisDTO extends MObjectDTO {
 
 	public void setImage(final ImageDTO i) {
 		image = i;
+	}
+	
+	
+
+	public String getSubsampleName() {
+		return subsampleName;
+	}
+
+	public void setSubsampleName(final String subsampleName) {
+		this.subsampleName = subsampleName;
+	}
+
+	public String getSampleName() {
+		return sampleName;
+	}
+
+	public void setSampleName(final String sampleName) {
+		this.sampleName = sampleName;
 	}
 
 	public Widget getActualImage() {

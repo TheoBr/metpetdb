@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -50,30 +49,15 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 
 	@Override
 	public Subsample save(Subsample inst) throws DAOException {
+		inst.setSubsampleType(new SubsampleTypeDAO(sess).fill(inst
+				.getSubsampleType()));
 		return _save(inst);
-	}
-
-	public int countBySampleId(long sampleId) {
-		Query q = sizeQuery("Subsample.bySampleId", sampleId);
-		return ((Number) q.uniqueResult()).intValue();
 	}
 
 	public List<Subsample> getAllBySampleID(final long sampleId) {
 		final Query q = namedQuery("Subsample.bySampleId");
 		q.setParameter("sampleId", sampleId);
 		final List<Subsample> l = q.list();
-
-		if (l != null && l.size() > 0) {
-			final Iterator<Subsample> itr = l.iterator();
-			while (itr.hasNext()) {
-				final Subsample s = itr.next();
-
-				s.setImageCount((new ImageDAO(sess).countBySubsampleId(s
-						.getId())));
-				s.setAnalysisCount((new ChemicalAnalysisDAO(sess)
-						.countBySubsampleId(s.getId())));
-			}
-		}
 		return l;
 	}
 
@@ -95,18 +79,6 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 			Query pageQuery) {
 		final List<Subsample> l = pageQuery.list();
 		final int size = ((Number) sizeQuery.uniqueResult()).intValue();
-
-		if (size > 0) {
-			final Iterator<Subsample> itr = l.iterator();
-			while (itr.hasNext()) {
-				final Subsample s = itr.next();
-
-				s.setImageCount((new ImageDAO(sess).countBySubsampleId(s
-						.getId())));
-				s.setAnalysisCount((new ChemicalAnalysisDAO(sess)
-						.countBySubsampleId(s.getId())));
-			}
-		}
 		return new ResultsFromDAO<Subsample>(size, l);
 	}
 }

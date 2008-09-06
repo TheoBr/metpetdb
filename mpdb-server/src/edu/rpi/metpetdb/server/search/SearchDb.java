@@ -82,9 +82,10 @@ public class SearchDb {
 				hibQuery = fullTextSession.createFullTextQuery(query,
 						Sample.class);
 			} else {
-				//If they do not specify a search query just get all of the samples
-				//later on we will filter if we must
-				//TODO fix so that we sort by the correct sort parameter
+				// If they do not specify a search query just get all of the
+				// samples
+				// later on we will filter if we must
+				// TODO fix so that we sort by the correct sort parameter
 				hibQuery = session.getNamedQuery("Sample.all/alias");
 			}
 			// Check for any filters

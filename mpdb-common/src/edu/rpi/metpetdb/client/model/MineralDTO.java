@@ -52,8 +52,7 @@ public class MineralDTO extends MObjectDTO implements IHasName,
 	public boolean equals(final Object o) {
 		if (o instanceof MineralDTO)
 			return name != null && o instanceof MineralDTO
-					&& name.equals(((MineralDTO) o).name)
-					&& ((MineralDTO) o).getId() == id;
+					&& name.toLowerCase().equals(((MineralDTO) o).name.toLowerCase());
 		else if (o instanceof SampleMineralDTO) {
 			return name != null
 					&& name.equals(((SampleMineralDTO) o).getName())

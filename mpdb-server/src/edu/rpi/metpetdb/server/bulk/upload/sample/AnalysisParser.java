@@ -419,7 +419,7 @@ public class AnalysisParser {
 
 					if (ca.getSubsample() == null)
 						ca.setSubsample(new SubsampleDTO());
-					ca.getSubsample().setType(data);
+					ca.getSubsample().addSubsampleType(data);
 				} else if (type == METHOD) {
 					final Method storeMethod = colMethods.get(new Integer(i));
 

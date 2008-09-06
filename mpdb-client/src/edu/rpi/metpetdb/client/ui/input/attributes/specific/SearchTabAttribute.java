@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.RockTypeDTO;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
@@ -241,10 +242,10 @@ public class SearchTabAttribute extends GenericAttribute {
 			// }
 		}
 		if (ss.getPossibleRockTypes() != null) {
-			Iterator<String> itr = ss.getPossibleRockTypes().iterator();
+			Iterator<RockTypeDTO> itr = ss.getPossibleRockTypes().iterator();
 			while (itr.hasNext()) {
 				final FlowPanel rockContainer = new FlowPanel();
-				final String rockType = itr.next();
+				final String rockType = itr.next().getRockType();
 				final Label rockLbl = new Label("Rock Type:");
 				rockLbl.addStyleName("inline");
 				final Label rockConstraint = new Label(rockType);

@@ -79,7 +79,7 @@ public class OxideDTO extends MObjectDTO {
 	}
 
 	public boolean equals(final Object o) {
-		return o instanceof OxideDTO && ((OxideDTO) o).getOxideId() == oxideId;
+		return o instanceof OxideDTO && ((OxideDTO) o).species.toLowerCase().equals(species.toLowerCase());
 	}
 
 	public int hashCode() {

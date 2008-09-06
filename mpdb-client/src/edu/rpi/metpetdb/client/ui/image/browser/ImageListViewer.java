@@ -102,10 +102,12 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 			header2.addStyleName("subsample-header");
 			addImage.addStyleName("addlink");
 			add(header2);
+			/* FIXME image type is not taken from the database
 			if (type == null)
 				createListBox(MpDb.doc.Image_imageType.getValues(), null);
 			else
 				createListBox(MpDb.doc.Image_imageType.getValues(), type);
+				*/
 		}
 
 		final FlexTable header = new FlexTable();
@@ -203,7 +205,7 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 			cell.getFlexCellFormatter().setRowSpan(0, 0, 2);
 			final Label imageTitle = new Label(parseFilename(currentImage
 					.getFilename()));
-			final Label imageType = new Label(currentImage.getImageType());
+			final Label imageType = new Label(currentImage.getImageType().getImageType());
 			imageTitle.addStyleName("bold");
 			imageTitle.addStyleName("white");
 			imageType.addStyleName("white");

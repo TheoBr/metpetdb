@@ -72,7 +72,8 @@ public class MetPetDBApplication implements EntryPoint {
 		// make MPDB logo a link to the introduction screen
 		/*
 		 * logoLink = MpDb.factory.getLogoLink();
-		 * logoLink.setTargetHistoryToken(TokenSpace.introduction.makeToken(null));
+		 * logoLink.setTargetHistoryToken(
+		 * TokenSpace.introduction.makeToken(null));
 		 * logoLink.addMouseEventListener(new MouseEventAdapter() { public void
 		 * onClick(MouseClickEvent event) { TokenSpace.introduction.execute(); }
 		 * });
@@ -308,7 +309,7 @@ public class MetPetDBApplication implements EntryPoint {
 		// mySamples.addItem(
 		// LocaleHandler.lc_text.mySamplesMenu_FavoriteSamples(),
 		// new MMenuBar(false));
-		// mySamples.addItem(LocaleHandler.lc_text.mySamplesMenu_NewestSamples(),
+		//mySamples.addItem(LocaleHandler.lc_text.mySamplesMenu_NewestSamples(),
 		// new MMenuBar(false));
 		mySamples.addItem(LocaleHandler.lc_text.mySamplesMenu_EnterSample(),
 				TokenSpace.enterSample);
@@ -372,15 +373,20 @@ public class MetPetDBApplication implements EntryPoint {
 		// hdrnav.addItem(LocaleHandler.lc_text.wikiMenu(), wiki);
 		hdrnav.addItem("Bulk Upload", TokenSpace.bulkUpload);
 
-		// hdrnav.addItem("regenerate constraints", new Command() {
-		// public void execute() {
-		// new VoidServerOp() {
-		// public void begin() {
-		// MpDb.mpdbGeneric_svc.regenerateConstraints(this);
-		// }
-		// }.begin();
-		// }
-		// });
+		hdrnav.addItem("regenerate constraints", new Command() {
+			public void execute() {
+				new ServerOp<ResumeSessionResponse>() {
+					public void begin() {
+						MpDb.mpdbGeneric_svc.regenerateConstraints(this);
+					}
+
+					public void onSuccess(ResumeSessionResponse result) {
+						MpDb.oc = result.objectConstraints;
+						MpDb.doc = result.databaseObjectConstraints;
+					}
+				}.begin();
+			}
+		});
 
 	}
 

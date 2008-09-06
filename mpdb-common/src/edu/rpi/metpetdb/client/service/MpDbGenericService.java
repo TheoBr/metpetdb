@@ -10,6 +10,6 @@ public interface MpDbGenericService extends RemoteService {
 
 	UserDTO getAutomaticLoginUser();
 
-	void regenerateConstraints();
+	ResumeSessionResponse regenerateConstraints();
 
 }

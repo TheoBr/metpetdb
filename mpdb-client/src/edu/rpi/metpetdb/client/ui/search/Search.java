@@ -48,7 +48,7 @@ public class Search extends FlowPanel implements ClickListener {
 	// new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange)
 	// };
 	private static GenericAttribute[] rocktype = {
-		new CheckBoxesAttribute(MpDb.oc.SearchSample_possibleRockTypes, 4),
+		new CheckBoxesAttribute(MpDb.doc.SearchSample_possibleRockTypes, 4),
 	};
 	private static GenericAttribute[] Region = {
 		new SearchLocationAttribute(MpDb.oc.SearchSample_boundingBox),

@@ -1,12 +1,14 @@
 package edu.rpi.metpetdb.client.model.validation;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 
-public class ObjectConstraint extends PropertyConstraint {
+public class ObjectConstraint extends PropertyConstraint implements HasValues {
 
 	private PropertyConstraint[] constraints;
 
@@ -48,6 +50,13 @@ public class ObjectConstraint extends PropertyConstraint {
 				DatabaseObjectConstraints.validate((MObjectDTO) value,
 						constraints);
 		}
+	}
+
+	public Collection<?> getValues() {
+		if (getValueInCollectionConstraint() != null)
+			return getValueInCollectionConstraint().getValues();
+		else
+			return new HashSet<Object>();
 	}
 
 }

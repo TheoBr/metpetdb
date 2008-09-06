@@ -22,6 +22,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.mapping.Column;
 import org.hibernate.mapping.Component;
 import org.hibernate.mapping.ForeignKey;
+import org.hibernate.mapping.Formula;
 import org.hibernate.mapping.OneToMany;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
@@ -32,13 +33,10 @@ import org.postgis.Geometry;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.GeometryConstraint;
-import edu.rpi.metpetdb.client.model.validation.ImageTypeConstraint;
 import edu.rpi.metpetdb.client.model.validation.MObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.model.validation.RockTypeConstraint;
-import edu.rpi.metpetdb.client.model.validation.SubsampleTypeConstraint;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
 import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.BooleanConstraint;
@@ -107,6 +105,11 @@ public class DataStore {
 		}
 	}
 
+	public synchronized void resetConstraints() {
+		objectConstraints = null;
+		databaseObjectConstraints = null;
+	}
+
 	public synchronized ObjectConstraints getObjectConstraints() {
 		if (objectConstraints == null) {
 			final ObjectConstraints oc = new ObjectConstraints();
@@ -117,11 +120,11 @@ public class DataStore {
 	}
 
 	public synchronized DatabaseObjectConstraints getDatabaseObjectConstraints() {
-		// if (databaseObjectConstraints == null) {
-		final DatabaseObjectConstraints oc = new DatabaseObjectConstraints();
-		databaseObjectConstraints = oc;
-		setConstraints(oc);
-		// }
+		if (databaseObjectConstraints == null) {
+			final DatabaseObjectConstraints oc = new DatabaseObjectConstraints();
+			databaseObjectConstraints = oc;
+			setConstraints(oc);
+		}
 		return databaseObjectConstraints;
 	}
 
@@ -231,10 +234,17 @@ public class DataStore {
 					}
 				}
 			} else {
-				final Iterator<Column> i = prop.getColumnIterator();
+				final Iterator i = prop.getColumnIterator();
 				if (!i.hasNext())
 					throw new RuntimeException("No cols: " + f.getName());
-				col = i.next();
+				final Object next = i.next();
+				if (next instanceof Column)
+					col = (Column) next;
+				else if (next instanceof Formula)
+					col = null;
+				else
+					throw new RuntimeException("Unrecgonized column format:"
+							+ f.getName());
 				if (i.hasNext())
 					throw new RuntimeException("Too many cols: " + f.getName());
 			}
@@ -324,19 +334,7 @@ public class DataStore {
 		final String className = rc.getName().substring(
 				rc.getName().lastIndexOf(".") + 1);
 
-		if ("rockType".equals(name)) {
-			return RockTypeConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
-					.newInstance()
-					: new RockTypeConstraint();
-		} else if ("type".equals(name)) {
-			return SubsampleTypeConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
-					.newInstance()
-					: new SubsampleTypeConstraint();
-		} else if ("imageType".equals(name)) {
-			return ImageTypeConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
-					.newInstance()
-					: new ImageTypeConstraint();
-		} else if (rc == String.class)
+		if (rc == String.class)
 			return StringConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
 					.newInstance()
 					: new StringConstraint();

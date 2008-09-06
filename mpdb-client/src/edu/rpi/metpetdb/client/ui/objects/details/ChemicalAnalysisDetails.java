@@ -23,9 +23,9 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.ChemistryAttribute;
 
 public class ChemicalAnalysisDetails extends FlowPanel {
 	private static GenericAttribute[] chemicalAnalysisAtts = {
-			new HyperlinkAttribute(MpDb.oc.ChemicalAnalysis_sampleName)
+			new HyperlinkAttribute(MpDb.doc.ChemicalAnalysis_sampleName)
 					.setReadOnly(true),
-			new HyperlinkAttribute(MpDb.oc.ChemicalAnalysis_subsampleName)
+			new HyperlinkAttribute(MpDb.doc.ChemicalAnalysis_subsampleName)
 					.setReadOnly(true),
 			new TextAttribute(MpDb.doc.ChemicalAnalysis_spotId),
 			new ChooseImageAttribute(MpDb.doc.ChemicalAnalysis_image,

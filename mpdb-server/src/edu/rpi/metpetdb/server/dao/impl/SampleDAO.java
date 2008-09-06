@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -56,6 +55,7 @@ public class SampleDAO extends MpDbDAO<Sample> {
 				.getMetamorphicGrades()));
 		s.setReferences((new ReferenceDAO(sess)).fill(s.getReferences()));
 		s.setMinerals(((new SampleMineralDAO(sess))).fill(s.getMinerals()));
+		s.setRockType(new RockTypeDAO(sess).fill(s.getRockType()));
 
 		s = _save(s);
 		return s;
@@ -91,15 +91,6 @@ public class SampleDAO extends MpDbDAO<Sample> {
 	private ResultsFromDAO<Sample> getSamples(Query sizeQuery, Query pageQuery) {
 		final List<Sample> l = pageQuery.list();
 		final int size = ((Number) sizeQuery.uniqueResult()).intValue();
-
-		if (size > 0) {
-			final Iterator<Sample> itr = l.iterator();
-			while (itr.hasNext()) {
-				final Sample s = itr.next();
-				s.setSubsampleCount((new SubsampleDAO(sess)).countBySampleId(s
-						.getId()));
-			}
-		}
 		return new ResultsFromDAO<Sample>(size, l);
 	}
 }

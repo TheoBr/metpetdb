@@ -9,5 +9,5 @@ public interface MpDbGenericServiceAsync {
 
 	void getAutomaticLoginUser(AsyncCallback<UserDTO> ac);
 
-	void regenerateConstraints(AsyncCallback<Object> ac);
+	void regenerateConstraints(AsyncCallback<ResumeSessionResponse> ac);
 }

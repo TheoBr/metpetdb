@@ -45,8 +45,8 @@ public class Sample extends MObject implements IHasName {
 	@Field(index = Index.UN_TOKENIZED)
 	private Boolean publicData;
 
-	@Field(index = Index.UN_TOKENIZED, store = Store.NO)
-	private String rockType;
+	@IndexedEmbedded(prefix = "rockType_")
+	private RockType rockType;
 
 	@IndexedEmbedded(prefix = "subsample_")
 	private Set<Subsample> subsamples;
@@ -163,11 +163,11 @@ public class Sample extends MObject implements IHasName {
 		collectionDate = date;
 	}
 
-	public String getRockType() {
+	public RockType getRockType() {
 		return rockType;
 	}
 
-	public void setRockType(final String rt) {
+	public void setRockType(final RockType rt) {
 		rockType = rt;
 	}
 

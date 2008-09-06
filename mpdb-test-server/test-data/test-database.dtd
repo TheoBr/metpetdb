@@ -9,6 +9,7 @@
     image_format*,
     image_on_grid*,
     image_reference*,
+    image_type*,
     images*,
     metamorphic_grades*,
     mineral_types*,
@@ -20,6 +21,7 @@
     projects*,
     reference*,
     regions*,
+    rock_type*,
     sample_comments*,
     sample_metamorphic_grades*,
     sample_minerals*,
@@ -27,6 +29,7 @@
     sample_regions*,
     samples*,
     spatial_ref_sys*,
+    subsample_type*,
     subsamples*,
     uploaded_files*,
     users*,
@@ -135,6 +138,14 @@
     reference_id CDATA #REQUIRED
 >
 
+<!ELEMENT image_type EMPTY>
+<!ATTLIST image_type
+    image_type_id CDATA #REQUIRED
+    image_type CDATA #REQUIRED
+    abbreviation CDATA #IMPLIED
+    comments CDATA #IMPLIED
+>
+
 <!ELEMENT images EMPTY>
 <!ATTLIST images
     image_id CDATA #REQUIRED
@@ -143,7 +154,7 @@
     sample_id CDATA #IMPLIED
     subsample_id CDATA #IMPLIED
     image_format_id CDATA #IMPLIED
-    image_type CDATA #IMPLIED
+    image_type_id CDATA #IMPLIED
     width CDATA #REQUIRED
     height CDATA #REQUIRED
     pixel_size CDATA #IMPLIED
@@ -224,6 +235,12 @@
     name CDATA #REQUIRED
 >
 
+<!ELEMENT rock_type EMPTY>
+<!ATTLIST rock_type
+    rock_type_id CDATA #REQUIRED
+    rock_type CDATA #REQUIRED
+>
+
 <!ELEMENT sample_comments EMPTY>
 <!ATTLIST sample_comments
     comment_id CDATA #REQUIRED
@@ -266,7 +283,7 @@
     collection_date CDATA #IMPLIED
     date_precision CDATA #IMPLIED
     alias CDATA #REQUIRED
-    rock_type CDATA #REQUIRED
+    rock_type_id CDATA #REQUIRED
     user_id CDATA #REQUIRED
     longitude_error CDATA #IMPLIED
     latitude_error CDATA #IMPLIED
@@ -287,6 +304,12 @@
     proj4text CDATA #IMPLIED
 >
 
+<!ELEMENT subsample_type EMPTY>
+<!ATTLIST subsample_type
+    subsample_type_id CDATA #REQUIRED
+    subsample_type CDATA #REQUIRED
+>
+
 <!ELEMENT subsamples EMPTY>
 <!ATTLIST subsamples
     subsample_id CDATA #REQUIRED
@@ -294,7 +317,7 @@
     sample_id CDATA #REQUIRED
     grid_id CDATA #IMPLIED
     name CDATA #REQUIRED
-    type CDATA #REQUIRED
+    subsample_type_id CDATA #REQUIRED
 >
 
 <!ELEMENT uploaded_files EMPTY>

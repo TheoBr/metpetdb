@@ -15,6 +15,10 @@ import edu.rpi.metpetdb.client.model.properties.Property;
  */
 public abstract class MObjectDTO extends LazyGwtPojo {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
 	 * Marker to tell {@link #mSetGet(int, Object)} not to set.
 	 * <p>
 	 * This exact reference is sometimes passed as the <code>newValue</code>

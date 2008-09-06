@@ -3,19 +3,23 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="edu.rpi.metpetdb.server.model">
-  <class name="ImageType" table="image_types">
+  <class name="ImageType" table="image_type">
     <id name="id" column="image_type_id" unsaved-value="0">
       <generator class="sequence">
         <param name="sequence">image_type_seq</param>
       </generator>
     </id>
     
-    <property name="name" column="name" />
+    <property name="imageType" column="image_type" />
 
   </class>
 
-  <query name="ImageType.byId">
+  <query name="ImageType.all">
     from ImageType it
-    where it.id = :id
+    order by it.imageType
+  </query>
+  <query name="ImageType.byImageType">
+    from ImageType it
+    where lower(it.imageType)=lower(:imageType)
   </query>
 </hibernate-mapping>

@@ -30,6 +30,6 @@
   
   <query name="Oxide.bySpecies">
     from Oxide o
-    where o.species = :species
+    where lower(o.species) = lower(:species)
   </query>
 </hibernate-mapping>

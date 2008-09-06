@@ -6,8 +6,9 @@ import java.security.MessageDigest;
 public class SessionEncrypter {
 	private static final byte SALT_SZ = 16;
 	private static final byte DIGEST_SZ = Util.DIGEST_SZ;
-	private static final byte[] key = {(byte) 0xa4, (byte) 0xae, 0x66, 0x6b,
-			0x0f, 0x47, (byte) 0x88, 0x1c};
+	private static final byte[] key = {
+			(byte) 0xa4, (byte) 0xae, 0x66, 0x6b, 0x0f, 0x47, (byte) 0x88, 0x1c
+	};
 
 	private static void xor(final byte enc[]) {
 		enc[0] ^= enc[4 + 0];
