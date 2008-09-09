@@ -16,9 +16,7 @@ public class User extends MObject {
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String emailAddress;
 	@Field(index = Index.TOKENIZED, store = Store.NO)
-	private String firstName;
-	@Field(index = Index.TOKENIZED, store = Store.NO)
-	private String lastName;
+	private String name;
 	private String address;
 	private String city;
 	private String province;
@@ -57,20 +55,12 @@ public class User extends MObject {
 		this.emailAddress = n;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public String getName() {
+		return name;
 	}
 
-	public void setFirstName(final String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(final String lastName) {
-		this.lastName = lastName;
+	public void setName(final String name) {
+		this.name = name;
 	}
 
 	public String getAddress() {
@@ -166,7 +156,7 @@ public class User extends MObject {
 	}
 
 	public String toString() {
-		return firstName + " " + lastName;
+		return name;
 	}
 
 	public boolean mIsNew() {

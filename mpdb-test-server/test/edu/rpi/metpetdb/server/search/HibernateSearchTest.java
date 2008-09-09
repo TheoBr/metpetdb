@@ -301,7 +301,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	public void testPublicOrUserSamples() {
 		final UserDTO testUser = new UserDTO();
 		testUser.setId(2);
-		testUser.setFirstName("matt");
+		testUser.setName("matt");
 		testUser.setEmailAddress("fyffem@cs.rpi.edu");
 
 		final Session session = InitDatabase.getSession();
@@ -340,7 +340,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	public void testSampleFilteringByUserWithDates() {
 		final UserDTO testUser = new UserDTO();
 		testUser.setId(2);
-		testUser.setFirstName("matt");
+		testUser.setName("matt");
 
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
@@ -353,7 +353,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		privacyQuery.add(termQuery, BooleanClause.Occur.SHOULD);
 		// Is this the current user?
 		final TermQuery termQuery2 = new TermQuery(new Term("user_firstName",
-				testUser.getFirstName()));
+				testUser.getName()));
 		privacyQuery.add(termQuery2, BooleanClause.Occur.SHOULD);
 
 		BooleanQuery fullQuery = new BooleanQuery();
@@ -390,7 +390,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		// In the actual search, we will receive User information as a parameter
 		final UserDTO testUser = new UserDTO();
 		testUser.setId(2);
-		testUser.setFirstName("matt");
+		testUser.setName("matt");
 
 		// In the actual search, we will receive search criteria as a SearchSampleDTO
 		final SearchSampleDTO searchSamp = new SearchSampleDTO();
@@ -425,7 +425,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		privacyQuery.add(termQuery, BooleanClause.Occur.SHOULD);
 		// Is this the current user?
 		final TermQuery termQuery2 = new TermQuery(new Term("user_firstName",
-				testUser.getFirstName()));
+				testUser.getName()));
 		privacyQuery.add(termQuery2, BooleanClause.Occur.SHOULD);
 
 		// in the full query, make it mandatory that the privacy requirements are met

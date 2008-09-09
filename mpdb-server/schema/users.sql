@@ -4,8 +4,7 @@ CREATE TABLE users
 (
   user_id INT4 NOT NULL,
   version INT4 NOT NULL,
-  first_name VARCHAR(50) NOT NULL,
-  last_name VARCHAR(50) NOT NULL,
+  name VARCHAR(100) NOT NULL,
   email VARCHAR(255) NOT NULL, --email is login id
   password bytea NOT NULL,
   address VARCHAR(200),
@@ -19,8 +18,8 @@ CREATE TABLE users
   CONSTRAINT users_nk_username UNIQUE (email)
 ) WITHOUT OIDS;
 
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Anthony', 'Waters', 'watera2@cs.rpi.edu','','','','','','','');
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Sibel', 'Adali', 'sibel@cs.rpi.edu','','','','','','','');
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Boleslaw', 'Szymanski', 'szymansk@cs.rpi.edu','','','','','','','');
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Frank', 'Spear', 'spearf@rpi.edu','','','','','','','');
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Benjamin', 'Hallett', 'halleb3@rpi.edu','','','','','','','');
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Anthony Waters', 'watera2@cs.rpi.edu','','','','','','','');
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Sibel Adali', 'sibel@cs.rpi.edu','','','','','','','');
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Boleslaw Szymanski', 'szymansk@cs.rpi.edu','','','','','','','');
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Frank Spear', 'spearf@rpi.edu','','','','','','','');
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Benjamin Hallett', 'halleb3@rpi.edu','','','','','','','');

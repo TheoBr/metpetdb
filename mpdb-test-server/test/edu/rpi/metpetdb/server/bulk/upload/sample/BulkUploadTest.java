@@ -14,6 +14,7 @@ import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
+import edu.rpi.metpetdb.server.bulk.upload.SampleParser;
 import edu.rpi.metpetdb.server.model.User;
 
 public class BulkUploadTest extends DatabaseTestCase {

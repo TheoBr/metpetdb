@@ -30,12 +30,7 @@ public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 					return ((UserWithPasswordDTO) obj).getUser();
 				}
 			},
-			new TextAttribute(MpDb.doc.User_firstName) {
-				protected MObjectDTO resolve(final MObjectDTO obj) {
-					return ((UserWithPasswordDTO) obj).getUser();
-				}
-			},
-			new TextAttribute(MpDb.doc.User_lastName) {
+			new TextAttribute(MpDb.doc.User_name) {
 				protected MObjectDTO resolve(final MObjectDTO obj) {
 					return ((UserWithPasswordDTO) obj).getUser();
 				}

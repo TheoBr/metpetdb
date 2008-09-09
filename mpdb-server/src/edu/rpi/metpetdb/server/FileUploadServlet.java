@@ -4,6 +4,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.ProgressListener;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.hibernate.Session;
@@ -24,6 +26,7 @@ public class FileUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static String baseFolder;
 
+	@Override
 	protected void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException {
 		response.setContentType("text/plain");
@@ -33,13 +36,7 @@ public class FileUploadServlet extends HttpServlet {
 				response.getWriter().write("NO-SCRIPT-DATA");
 				return;
 			}
-			// if (uploadItem.getContentType() != "application/ms-excel") {
-			// response
-			// .getWriter()
-			// .write(
-			// "Uploaded spreadsheets must be in Microsoft Excel .xls format.");
-			// return;
-			// }
+			request.getSession().setAttribute("edu.rpi.metpetdb.file.upload.status",UUID.randomUUID().toString());
 			final String hash = writeFile(uploadItem);
 
 			Session s = DataStore.open();
@@ -58,13 +55,29 @@ public class FileUploadServlet extends HttpServlet {
 		}
 
 	}
+	
+	
+	@Override
+	protected void doGet(final HttpServletRequest request,
+			final HttpServletResponse response) throws ServletException {
+		try {
+			response.getWriter().write((String) request.getSession().getAttribute("percentComplete"));
+		} catch (IOException e) {
+			//Ignore any errors this is only for retrieving the upload progress
+		}
+	}
 
-	@SuppressWarnings( {
-		"unchecked"
-	})
 	private FileItem getFileItem(final HttpServletRequest request) {
 		final FileItemFactory factory = new DiskFileItemFactory();
 		final ServletFileUpload upload = new ServletFileUpload(factory);
+		
+		//Create a progress listener
+		ProgressListener progressListener = new ProgressListener(){
+		   public void update(long pBytesRead, long pContentLength, int pItems) {
+		       request.getSession().setAttribute("percentComplete", String.valueOf(pBytesRead / (float) pContentLength));
+		   }
+		};
+		upload.setProgressListener(progressListener);
 
 		try {
 			final List<FileItem> items = upload.parseRequest(request);

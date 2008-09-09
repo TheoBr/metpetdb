@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server.bulk.upload.sample;
+package edu.rpi.metpetdb.server.bulk.upload;
 
 import java.io.IOException;
 import java.io.InputStream;

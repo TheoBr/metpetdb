@@ -105,13 +105,13 @@ public class SampleDTO extends MObjectDTO implements IHasName {
 			((Point) location).dimension = 2;
 			((Point) location).srid = MpDbConstants.WGS84;
 		}
-		((Point) location).x = d;
+		((Point) location).y = d;
 	}
 
 	public void setLongitude(final double d) {
 		if (location == null)
 			location = new Point();
-		((Point) location).y = d;
+		((Point) location).x = d;
 	}
 
 	public UserDTO getOwner() {

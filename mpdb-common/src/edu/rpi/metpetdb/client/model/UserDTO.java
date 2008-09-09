@@ -11,8 +11,7 @@ public class UserDTO extends MObjectDTO {
 	private int version;
 
 	private String emailAddress;
-	private String firstName;
-	private String lastName;
+	private String name;
 	private String address;
 	private String city;
 	private String province;
@@ -50,22 +49,14 @@ public class UserDTO extends MObjectDTO {
 		emailAddress = n;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public String getName() {
+		return name;
 	}
 
-	public void setFirstName(final String firstName) {
-		this.firstName = firstName;
+	public void setName(final String name) {
+		this.name = name;
 	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(final String lastName) {
-		this.lastName = lastName;
-	}
-
+	
 	public String getAddress() {
 		return address;
 	}
@@ -159,7 +150,7 @@ public class UserDTO extends MObjectDTO {
 	}
 
 	public String toString() {
-		return firstName + " " + lastName;
+		return name;
 	}
 
 	public boolean mIsNew() {

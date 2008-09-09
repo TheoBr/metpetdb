@@ -10,8 +10,7 @@
       </generator>
     </id>
     <version name="version" />
-    <property name="firstName" column="first_name" />
-    <property name="lastName" column="last_name"/>
+    <property name="name" column="name" />
     <property name="emailAddress" column="email" length="255" />
     <property name="encryptedPassword" column="password" />
     <property name="address" />

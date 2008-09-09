@@ -110,7 +110,7 @@ public abstract class MpDbDAO<T extends MObject> {
 	 *            object to be inserted. This object must not already exist in
 	 *            the database.
 	 */
-	protected <T extends MObject> void insert(final T u) {
+	protected  void insert(final T u) {
 		sess.persist(u);
 	}
 
@@ -120,7 +120,7 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * @param u
 	 *            object to be deleted, must already exist in the database
 	 */
-	protected <T extends MObject> void _delete(final T u) {
+	protected  void _delete(final T u) {
 		sess.delete(u);
 	}
 
@@ -141,7 +141,7 @@ public abstract class MpDbDAO<T extends MObject> {
 	@SuppressWarnings( {
 		"unchecked"
 	})
-	protected <T extends MObject> T merge(final T u) {
+	protected  T merge(final T u) {
 		return (T) sess.merge(u);
 	}
 
@@ -153,7 +153,7 @@ public abstract class MpDbDAO<T extends MObject> {
 	 *            database and must also already exist in the session.
 	 * @return always the reference <code>u</code>.
 	 */
-	protected <T extends MObject> T update(final T u) {
+	protected  T update(final T u) {
 		sess.update(u);
 		return u;
 	}

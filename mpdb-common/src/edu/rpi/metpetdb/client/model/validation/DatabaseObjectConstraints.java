@@ -208,8 +208,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ User ------
 	public PropertyConstraint[] User__all;
 	public RestrictedCharacterStringConstraint User_emailAddress;
-	public StringConstraint User_firstName;
-	public StringConstraint User_lastName;
+	public StringConstraint User_name;
 	public StringConstraint User_address;
 	public StringConstraint User_city;
 	public StringConstraint User_province;

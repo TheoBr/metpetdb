@@ -49,7 +49,7 @@ public class UserInfo extends LeftColWidget implements UsesLeftColumn {
 			ft.setWidget(1, 0, pleaseLogIn);
 			ft.setWidget(2, 0, features);
 		} else {
-			Label username = new Label("Welcome, " + user.getFirstName());
+			Label username = new Label("Welcome, " + user.getName());
 			ft.setWidget(0, 0, username);
 		}
 

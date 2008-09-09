@@ -20,7 +20,7 @@ import edu.rpi.metpetdb.client.model.MineralDTO;
 import edu.rpi.metpetdb.client.model.OxideDTO;
 import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.service.BulkUploadChemicalAnalysesService;
-import edu.rpi.metpetdb.server.bulk.upload.sample.AnalysisParser;
+import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
 import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
 import edu.rpi.metpetdb.server.dao.impl.ElementDAO;
 import edu.rpi.metpetdb.server.dao.impl.MineralDAO;

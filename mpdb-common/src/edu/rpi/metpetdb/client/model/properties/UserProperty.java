@@ -13,22 +13,13 @@ public enum UserProperty implements Property {
 			((UserDTO) user).setEmailAddress((String) value);
 		}
 	},
-	firstName {
+	name {
 		public <T extends MObjectDTO> String get(final T user) {
-			return ((UserDTO) user).getFirstName();
+			return ((UserDTO) user).getName();
 		}
 
 		public <T extends MObjectDTO, K> void set(final T user, final K value) {
-			((UserDTO) user).setFirstName((String) value);
-		}
-	},
-	lastName {
-		public <T extends MObjectDTO> String get(final T user) {
-			return ((UserDTO) user).getLastName();
-		}
-
-		public <T extends MObjectDTO, K> void set(final T user, final K value) {
-			((UserDTO) user).setLastName((String) value);
+			((UserDTO) user).setName((String) value);
 		}
 	},
 	address {

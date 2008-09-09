@@ -29,7 +29,7 @@ import edu.rpi.metpetdb.client.model.SubsampleDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.service.BulkUploadImagesService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
-import edu.rpi.metpetdb.server.bulk.upload.sample.ImageParser;
+import edu.rpi.metpetdb.server.bulk.upload.ImageParser;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 import edu.rpi.metpetdb.server.model.Subsample;
 import edu.rpi.metpetdb.server.model.User;
