@@ -6,6 +6,7 @@
     elements*,
     geometry_columns*,
     grids*,
+    image_comments*,
     image_format*,
     image_on_grid*,
     image_reference*,
@@ -109,6 +110,14 @@
     height CDATA #REQUIRED
 >
 
+<!ELEMENT image_comments EMPTY>
+<!ATTLIST image_comments
+    comment_id CDATA #REQUIRED
+    image_id CDATA #REQUIRED
+    comment_text CDATA #REQUIRED
+    version CDATA #REQUIRED
+>
+
 <!ELEMENT image_format EMPTY>
 <!ATTLIST image_format
     image_format_id CDATA #REQUIRED
@@ -162,6 +171,7 @@
     brightness CDATA #IMPLIED
     lut CDATA #IMPLIED
     collector CDATA #IMPLIED
+    scale CDATA #IMPLIED
     checksum_64x64 CDATA #REQUIRED
     checksum_half CDATA #REQUIRED
     filename CDATA #REQUIRED
@@ -333,8 +343,7 @@
 <!ATTLIST users
     user_id CDATA #REQUIRED
     version CDATA #REQUIRED
-    first_name CDATA #REQUIRED
-    last_name CDATA #REQUIRED
+    name CDATA #REQUIRED
     email CDATA #REQUIRED
     password CDATA #REQUIRED
     address CDATA #IMPLIED

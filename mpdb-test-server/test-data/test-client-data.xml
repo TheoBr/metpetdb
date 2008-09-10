@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE dataset SYSTEM "test-data/test-database.dtd">
 <dataset>
-  <users user_id="1" version="1"  first_name="anthony" last_name="waters"  password="" email="watera2@cs.rpi.edu"/>
-  <users user_id="2" version="1"   first_name="matt" last_name="fyffe"  password="" email="fyffem@cs.rpi.edu"></users>
+  <users user_id="1" version="1"  name="anthony"  password="" email="watera2@cs.rpi.edu"/>
+  <users user_id="2" version="1"  name="matt"  password="" email="fyffem@cs.rpi.edu"></users>
   <rock_type rock_type_id="1" rock_type="gentoo" />
   <subsample_type subsample_type_id="1" subsample_type="linux" />
   <samples sample_id="1" version="0" sesar_number="000000000" public_data="Y" rock_type_id="1" user_id="1" location="SRID=4326;POINT(50 50)" alias="1" collection_date="2008-10-10 18:32:17" />
