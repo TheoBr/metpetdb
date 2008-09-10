@@ -49,6 +49,7 @@ public class Styles {
 	public static final String ODD = "odd";
 	public static final String FIRST = "first";
 	public static final String CURRENT = "current";
+	public static final String CLEARFIX = "clearfix";
 
 	/* ---------------- Widgets ---------------- */
 	public static final String BREADCRUMBS = "bcrumbs";
@@ -56,6 +57,12 @@ public class Styles {
 	public static final String ADDLINK = "addlink";
 	public static final String PRIMARY_BUTTON = "btnPrimary";
 	public static final String SECONDARY_BUTTON = "btnSecondary";
+	public static final String TWO_COLUMN_PANEL = "two-cols";
+	public static final String LEFT_COL = "left-col";
+	public static final String RIGHT_COL = "right-col";
+	public static final String PARAGRAPH = "p";
+	public static final String COL_1_OF_2 = "col-1-2";
+	public static final String COL_2_OF_2 = "col-2-2";
 
 	/* ---------------- Links ---------------- */
 	public static final String LINK_LARGE_ICON = "large-icon-link";
@@ -64,7 +71,9 @@ public class Styles {
 
 	public static final String BETA = "beta";
 	public static final String SAMPLES_CONTAINER = "samples-container";
-
+	
+	/* ---------------- DataTable ---------------- */
+	public static final String DATATABLE_HEADER_FILTERS = "datatable-header-filters";
 	public static final String DATATABLE_FOOTER = "datatable-footer";
 	public static final String DATATABLE_FOOTER_SELECT = "datatable-footer-select";
 	public static final String DATATABLE_FOOTER_SELECT_OPTION = "select-option";
@@ -74,13 +83,12 @@ public class Styles {
 	public static final String DATATABLE_FOOTER_ACTION_ITEM = "datatable-footer-action-item";
 	public static final String POPUP_CUSTOM_COLS_CONTAINER = "popup-custom-cols-container";
 	public static final String POPUP_CUSTOM_COLS = "popup-custom-cols";
-	public static final String POPUP_CUSTOM_COLS_BOTTOM = "popup-custom-cols-bottom";
-	public static final String PARAGRAPH = "p";
-	public static final String COL_1_OF_2 = "col-1-2";
-	public static final String COL_2_OF_2 = "col-2-2";
-	public static final String CLEARFIX = "clearfix";
-	public static final String DATATABLE_HEADER_FILTERS = "datatable-header-filters";
+	public static final String POPUP_CUSTOM_COLS_BOTTOM = "popup-custom-cols-bottom";	
+	
 	public static final String DIALOG_SETTINGS = "dialog-settings";
+	
+	/* ---------------- Page: Sample Details ---------------- */
+	public static final String SD_GOOGLE_MAP = "sd-gmap";	
 
 	private Styles() {
 	}

@@ -46,11 +46,13 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.RegionAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.SubsampleListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
+import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
 public class SampleDetails extends MPagePanel {
 	private String sampleHeader;
 	private LatLng samplePosition;
 	private MapWidget map;
+	private MTwoColPanel panel = new MTwoColPanel();
 
 	private static GenericAttribute[] sampleAtts = {
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
@@ -137,7 +139,8 @@ public class SampleDetails extends MPagePanel {
 		oep.setStylePrimaryName("sd-details");
 		oep.addStyleName("mpdb-dataTable");
 		oep.addStyleName("inline");
-		add(oep);
+		panel.getLeftCol().add(oep);
+		add(panel);
 	}
 	private void addExtraElements() {
 
@@ -222,13 +225,12 @@ public class SampleDetails extends MPagePanel {
 	}
 
 	private void addGoogleMaps() {
-		map.setSize("300px", "300px");
 		map.setZoomLevel(4);
 		map.addControl(new LargeMapControl());
 		map.addControl(new MapTypeControl());
 		map.addControl(new ScaleControl());
-
-		add(map);
+		map.setStyleName(Styles.SD_GOOGLE_MAP);
+		panel.getRightCol().add(map);
 	}
 
 	private void updateGoogleMaps() {

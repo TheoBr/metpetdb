@@ -44,7 +44,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	private static final String cookieString = "UserSamplesList";
 	private static final String samplesParameter = "Samples";
 	private Label errMsg = new Label();
-	private final FlexTable sampleDisplayFilters = new FlexTable();;
+	private final FlexTable sampleDisplayFilters = new FlexTable();
 	private SampleListEx list;
 	private MySamples mysamples;
 	private final SimplePanel footerContainer = new SimplePanel();
