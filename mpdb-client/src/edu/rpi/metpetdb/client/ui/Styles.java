@@ -50,6 +50,7 @@ public class Styles {
 	public static final String FIRST = "first";
 	public static final String CURRENT = "current";
 	public static final String CLEARFIX = "clearfix";
+	public static final String BETA = "beta";
 
 	/* ---------------- Widgets ---------------- */
 	public static final String BREADCRUMBS = "bcrumbs";
@@ -63,13 +64,14 @@ public class Styles {
 	public static final String PARAGRAPH = "p";
 	public static final String COL_1_OF_2 = "col-1-2";
 	public static final String COL_2_OF_2 = "col-2-2";
+	public static final String CONTENT = "content";	
 
 	/* ---------------- Links ---------------- */
 	public static final String LINK_LARGE_ICON = "large-icon-link";
 	public static final String LINK_UPLOAD = "upload-link";
 	public static final String LINK_UPLOAD_MULTI = "upload-multi-link";
 
-	public static final String BETA = "beta";
+	
 	public static final String SAMPLES_CONTAINER = "samples-container";
 	
 	/* ---------------- DataTable ---------------- */
@@ -88,7 +90,9 @@ public class Styles {
 	public static final String DIALOG_SETTINGS = "dialog-settings";
 	
 	/* ---------------- Page: Sample Details ---------------- */
-	public static final String SD_GOOGLE_MAP = "sd-gmap";	
+	public static final String SD_GOOGLE_MAP = "sd-gmap";
+	public static final String PAGE_SAMPLE_DETAILS = "p-sample-details";
+	
 
 	private Styles() {
 	}

@@ -2,9 +2,12 @@
              sample details
  --------------------------------------*/
  
+.p-sample-details .two-cols .content {
+	margin: 10px;
+}
+ 
 .sd-gmap {
 	float: right;
-	margin: 10px;
 	width: 450px;
 	height: 300px;
 }

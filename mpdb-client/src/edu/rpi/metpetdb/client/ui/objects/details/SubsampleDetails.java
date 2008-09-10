@@ -36,12 +36,10 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.AddImageAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
+import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
+import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
-public class SubsampleDetails extends FlowPanel {
-	private FlexTable ft;
-	private HorizontalPanel hp;
-	private MLinkandText Header;
-	final Element sampleHeader;
+public class SubsampleDetails extends MPagePanel {
 
 	private static GenericAttribute[] subsampleAtts = {
 			new HyperlinkAttribute(MpDb.doc.Subsample_sampleName)
@@ -60,10 +58,12 @@ public class SubsampleDetails extends FlowPanel {
 	private SampleDTO sampleObj;
 	private ServerOp continuation;
 	private String sampleAlias;
-	private MLink map;
+	private final MLink map = new MLink();
 	private Widget images;
+	private final MTwoColPanel panel = new MTwoColPanel();
 
 	public SubsampleDetails() {
+		addPageHeader();
 		final SubsampleDetails me = this;
 		p_subsample = new ObjectEditorPanel<SubsampleDTO>(subsampleAtts,
 				LocaleHandler.lc_text.addSubsample(), LocaleHandler.lc_text
@@ -122,44 +122,20 @@ public class SubsampleDetails extends FlowPanel {
 									.getGrid()));
 				}
 
-				DOM.setInnerText(sampleHeader, "Subsample " + s.getName());
+				setPageTitle("Subsample " + s.getName());
+				addActionListItem(map);
 				sampleId = s.getSample().getId();
-				this.getWidget(7).setVisible(false);
+				
 			}
 			protected void onDeleteCompletion(final Object result) {
 				History.newItem(TokenSpace.detailsOf((sampleObj)));
 			}
 		};
 
-		sampleHeader = DOM.createElement("h2");
-		DOM.appendChild(this.getElement(), sampleHeader);
-
 		final OnEnterPanel.ObjectEditor oep = new OnEnterPanel.ObjectEditor(
 				p_subsample);
-		hp = new HorizontalPanel();
-		hp.setWidth("100%");
-		ft = new FlexTable();
-		ft.setWidth("95%");
-		Label details_label = new Label("Attributes");
-		details_label.addStyleName("bold");
-		map = new MLink();
-		ft.setWidget(0, 0, details_label);
-		ft.setWidget(0, 1, map);
-		ft.setWidget(1, 0, oep);
-		ft.getFlexCellFormatter().setAlignment(0, 0,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		ft.getFlexCellFormatter().setAlignment(0, 1,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		ft.getFlexCellFormatter().setHeight(0, 0, "35px");
-		ft.getFlexCellFormatter().setWidth(0, 1, "100px");
-		ft.getFlexCellFormatter().setAlignment(1, 0,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		ft.getRowFormatter().setStyleName(0, "mpdb-dataTableLightBlue");
-		hp.add(ft);
-		add(hp);
+		panel.getLeftCol().add(oep);
+		add(panel);
 	}
 
 	public void showChemicalAnalysis() {
@@ -193,9 +169,9 @@ public class SubsampleDetails extends FlowPanel {
 				}.begin();
 			}
 		});
-		addChemicalAnalysis.addStyleName(Styles.ADDLINK);
+		addChemicalAnalysis.setStyleName(Styles.ADDLINK);
 		final Label chemAnalysis = new Label("Chemical Analysis");
-		chemAnalysis.getElement().setClassName("h2");
+		chemAnalysis.setStyleName("h2");
 		chemft.setWidget(0, 0, chemAnalysis);
 		chemft.setWidget(0, 1, addChemicalAnalysis);
 		chemft.getFlexCellFormatter().setAlignment(0, 1,
@@ -210,7 +186,7 @@ public class SubsampleDetails extends FlowPanel {
 		subsampleId = id;
 		p_subsample.load();
 		images = new ImageListViewer(subsampleId, false);
-		hp.add(images);
+		panel.getRightCol().add(images);
 		showChemicalAnalysis();
 		return this;
 	}

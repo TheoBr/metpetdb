@@ -141,6 +141,7 @@ public class SampleDetails extends MPagePanel {
 		oep.addStyleName("inline");
 		panel.getLeftCol().add(oep);
 		add(panel);
+		setStyleName(Styles.PAGE_SAMPLE_DETAILS);
 	}
 	private void addExtraElements() {
 
