@@ -37,5 +37,13 @@ public class MTwoColPanel extends FlowPanel {
 	public FlowPanel getRightCol() {
 		return rightContent;
 	}
+	
+	public void setLeftColWidth(String w) {
+		left.setWidth(w);
+	}
+	
+	public void setRightColWidth(String w) {
+		right.setWidth(w);
+	}
 
 }
