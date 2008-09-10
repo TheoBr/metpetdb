@@ -242,8 +242,13 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 			for (int i = 0; i < parent.getChildCount(); ++i) {
 				((CheckBox) ((ExtendedTreeItem) parent.getChild(i)).getWidget())
 						.setChecked(check);
-				selectedItems.add(((ExtendedTreeItem) parent.getChild(i))
-						.getObject());
+				if (check){
+					selectedItems.add(((ExtendedTreeItem) parent.getChild(i))
+							.getObject());
+				}
+				else {
+					selectedItems.remove(((ExtendedTreeItem)parent.getChild(i)).getObject());
+				}
 				checkChildren(((ExtendedTreeItem) parent.getChild(i)), check);
 			}
 		}

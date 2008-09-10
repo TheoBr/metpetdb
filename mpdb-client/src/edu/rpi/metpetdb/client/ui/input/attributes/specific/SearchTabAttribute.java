@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.postgis.LinearRing;
 import org.postgis.Point;
@@ -17,18 +18,24 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisElementDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxideDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.RockTypeDTO;
+import edu.rpi.metpetdb.client.model.SampleMineralDTO;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
+import edu.rpi.metpetdb.client.model.properties.Property;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
+import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.MTabPanel;
+import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
 public class SearchTabAttribute extends GenericAttribute {
 	private GenericAttribute[][] atts;
@@ -46,7 +53,8 @@ public class SearchTabAttribute extends GenericAttribute {
 	}
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
-		final TabPanel tabs = new TabPanel();
+		final MTwoColPanel panel = new MTwoColPanel();
+		final MTabPanel tabs = new MTabPanel();
 		for (int i = 0; i < atts.length; i++) {
 			final ObjectEditorPanel<SearchSampleDTO> p_searchSample = new ObjectEditorPanel<SearchSampleDTO>(
 					atts[i], LocaleHandler.lc_text.addSample(),
@@ -79,17 +87,14 @@ public class SearchTabAttribute extends GenericAttribute {
 			searchSamples.add(p_searchSample);
 		}
 		tabs.selectTab(0);
-		tabs.getTabBar().addStyleName("subpages");
-		final HorizontalPanel hp = new HorizontalPanel();
 		final Widget display = SearchConstraintDisplay();
 
-		hp.add(display);
-		hp.add(tabs);
-		hp.setCellVerticalAlignment(display, HasVerticalAlignment.ALIGN_TOP);
-		hp.setCellVerticalAlignment(tabs, HasVerticalAlignment.ALIGN_TOP);
-		hp.setCellHorizontalAlignment(tabs, HasHorizontalAlignment.ALIGN_RIGHT);
+		panel.getLeftCol().add(display);
+		panel.getRightCol().add(tabs);
+		panel.setLeftColWidth("30%");
+		panel.setRightColWidth("70%");
 		return new Widget[] {
-			hp
+			panel
 		};
 	}
 
@@ -149,6 +154,7 @@ public class SearchTabAttribute extends GenericAttribute {
 		remove.setPixelSize(14, 15);
 		remove.addClickListener(new ClickListener() {
 			public void onClick(final Widget sender) {
+				removeFromBean(((CritContainer)constraint).getConstraint(),((CritContainer)constraint).getProperty());
 				row.removeFromParent();
 			}
 		});
@@ -163,98 +169,76 @@ public class SearchTabAttribute extends GenericAttribute {
 
 	public void addConstraints(SearchSampleDTO ss) {
 		if (ss.getOwner() != null) {
-			final FlowPanel ownerContainer = new FlowPanel();
-			final Label ownerLbl = new Label("Owner:");
-			ownerLbl.addStyleName("inline");
-			final Label ownerConstraint = new Label(ss.getOwner());
-			ownerConstraint.addStyleName("inline");
-			ownerContainer.add(ownerLbl);
-			ownerContainer.add(ownerConstraint);
-			addConstraint(ownerContainer);
+			addConstraint(createCritRow("Owner:", ss.getOwner(), ss.getOwner(),(Property) MpDb.oc.SearchSample_owner.property));
 		}
 		if (ss.getSesarNumber() != null) {
-			final FlowPanel sesarContainer = new FlowPanel();
-			final Label sesarLbl = new Label("Sesar Number:");
-			sesarLbl.addStyleName("inline");
-			final Label sesarConstraint = new Label(ss.getSesarNumber());
-			sesarConstraint.addStyleName("inline");
-			sesarContainer.add(sesarLbl);
-			sesarContainer.add(sesarConstraint);
-			addConstraint(sesarContainer);
+			addConstraint(createCritRow("Sesar Number:", ss.getSesarNumber(), ss.getSesarNumber(),(Property) MpDb.oc.SearchSample_sesarNumber.property));
 		}
 		if (ss.getAlias() != null) {
-			final FlowPanel aliasContainer = new FlowPanel();
-			final Label aliasLbl = new Label("Alias:");
-			aliasLbl.addStyleName("inline");
-			final Label aliasConstraint = new Label(ss.getAlias());
-			aliasConstraint.addStyleName("inline");
-			aliasContainer.add(aliasLbl);
-			aliasContainer.add(aliasConstraint);
-			addConstraint(aliasContainer);
+			addConstraint(createCritRow("Alias:", ss.getAlias(),ss.getAlias(),(Property) MpDb.oc.SearchSample_alias.property));
 		}
 		if (ss.getCollectionDateRange() != null) {
-
+			final int StartMonth = ss.getCollectionDateRange().getStartAsDate().getMonth();
+			final int StartDay = ss.getCollectionDateRange().getStartAsDate().getDay();
+			final int StartYear = ss.getCollectionDateRange().getStartAsDate().getYear();
+			final String StartDate = String.valueOf(StartMonth) + "/" + String.valueOf(StartDay) + "/" + String.valueOf(StartYear);
+			final int EndMonth = ss.getCollectionDateRange().getEndAsDate().getMonth();
+			final int EndDay = ss.getCollectionDateRange().getEndAsDate().getDay();
+			final int EndYear = ss.getCollectionDateRange().getEndAsDate().getYear();
+			final String EndDate = String.valueOf(EndMonth) + "/" + String.valueOf(EndDay) + "/" + String.valueOf(EndYear);
+			String range = StartDate + " - " + EndDate;
+			addConstraint(createCritRow("Date Range:", range, ss.getCollectionDateRange(),(Property) MpDb.oc.SearchSample_collectionDateRange.property));
 		}
 
 		if (ss.getBoundingBox() != null) {
 			final Polygon box = (Polygon) ss.getBoundingBox();
 			final LinearRing lr = (LinearRing) box.getRing(0);
-
 			final Point SW = lr.getPoint(0);
 			final Point NE = lr.getPoint(2);
-			final FlowPanel Container = new FlowPanel();
-			final Label LocLbl = new Label("Location:");
-			LocLbl.addStyleName("inline");
-			final Label SConstraint = new Label(" S: " + String.valueOf(SW.x));
-			final Label WConstraint = new Label(" W: " + String.valueOf(SW.y));
-			final Label NConstraint = new Label(" N: " + String.valueOf(NE.x));
-			final Label EConstraint = new Label(" E: " + String.valueOf(NE.y));
-			SConstraint.addStyleName("inline");
-			WConstraint.addStyleName("inline");
-			NConstraint.addStyleName("inline");
-			EConstraint.addStyleName("inline");
-			Container.add(LocLbl);
-			Container.add(SConstraint);
-			Container.add(WConstraint);
-			Container.add(NConstraint);
-			Container.add(EConstraint);
-			addConstraint(Container);
+			addConstraint(createCritRow("Location:", "S: " + String.valueOf(SW.x) + " W: " + String.valueOf(SW.y) + " N: " + String.valueOf(NE.x) + " E: " + String.valueOf(NE.y),ss.getBoundingBox(),MpDb.oc.SearchSample_boundingBox.property));
 		}
 
 		if (ss.getElements() != null) {
-
+			Iterator<ChemicalAnalysisElementDTO> itr = ss.getElements().iterator();
+			while (itr.hasNext()) {
+				final ChemicalAnalysisElementDTO caElement = itr.next();
+				addConstraint(createCritRow("Element:", caElement.getName(), caElement,MpDb.doc.SearchSample_elements.property));
+			 }
 		}
 		if (ss.getOxides() != null) {
-
+			Iterator<ChemicalAnalysisOxideDTO> itr = ss.getOxides().iterator();
+			while (itr.hasNext()) {
+				final ChemicalAnalysisOxideDTO caOxide = itr.next();
+				addConstraint(createCritRow("Oxide:", caOxide.getName(), caOxide,MpDb.doc.SearchSample_oxides.property));
+			 }
 		}
 		if (ss.getMinerals() != null) {
-			// Iterator<SampleMineralDTO> itr = ss.getMinerals().iterator();
-			// while (itr.hasNext()) {
-			// final FlowPanel mineralContainer = new FlowPanel();
-			// final SampleMineralDTO mineral = itr.next();
-			// final Label mineralLbl = new Label("Mineral:");
-			// mineralLbl.addStyleName("inline");
-			// final Label rockConstraint = new Label(mineral.getName());
-			// rockConstraint.addStyleName("inline");
-			// mineralContainer.add(mineralLbl);
-			// mineralContainer.add(rockConstraint);
-			// addConstraint(mineralContainer);
-			// }
+			Iterator<SampleMineralDTO> itr = ss.getMinerals().iterator();
+			while (itr.hasNext()) {
+				final SampleMineralDTO sm = itr.next();
+				addConstraint(createCritRow("Mineral:", sm.getName(), sm,MpDb.doc.SearchSample_minerals.property));
+			 }
 		}
 		if (ss.getPossibleRockTypes() != null) {
 			Iterator<RockTypeDTO> itr = ss.getPossibleRockTypes().iterator();
 			while (itr.hasNext()) {
-				final FlowPanel rockContainer = new FlowPanel();
-				final String rockType = itr.next().getRockType();
-				final Label rockLbl = new Label("Rock Type:");
-				rockLbl.addStyleName("inline");
-				final Label rockConstraint = new Label(rockType);
-				rockConstraint.addStyleName("inline");
-				rockContainer.add(rockLbl);
-				rockContainer.add(rockConstraint);
-				addConstraint(rockContainer);
+				final RockTypeDTO rt = itr.next();
+				addConstraint(createCritRow("Rock Type:", rt.getRockType(), rt, MpDb.doc.SearchSample_possibleRockTypes.property));
 			}
 		}
+	}
+	
+	public Widget createCritRow(final String label, final String value, final Object obj, final Property p){
+		final CritContainer container = new CritContainer(obj,p);
+		final Label critLabel = new Label(label);
+		critLabel.addStyleName("critlabel");
+		critLabel.addStyleName("inline");
+		final Label critConstraint = new Label(value);
+		critConstraint.addStyleName("inline");
+		container.add(critLabel);
+		container.add(critConstraint);
+		return container;
+		
 	}
 
 	public void clearConstraints() {
@@ -262,4 +246,31 @@ public class SearchTabAttribute extends GenericAttribute {
 			vp.remove(vp.getWidgetCount() - 1);
 		vp.add(noConstraints);
 	}
+	
+	private void removeFromBean(final Object constraint, final Property p){
+		SearchSampleDTO ss = (SearchSampleDTO) searchSamples.get(0).getBean();
+		Object value = ss.mGet(p);
+		if (value instanceof Set){
+			((Set) value).remove(constraint);
+		} else value = null;
+		ss.mSet(p, value);
+		for (int i = 0 ; i < searchSamples.size(); i++){
+			searchSamples.get(i).edit(searchSamples.get(i).getBean());
+		}
+	}
+	
+	private class CritContainer extends FlowPanel{
+		final Object constraint;
+		final Property p;
+		public CritContainer(final Object constraint, final Property p){
+			this.constraint = constraint;
+			this.p = p;
+		}
+		public Object getConstraint(){
+			return constraint;
+		}
+		public Property getProperty(){
+			return p;
+		}
+	};
 }

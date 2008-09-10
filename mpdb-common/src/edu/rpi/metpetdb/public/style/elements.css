@@ -289,3 +289,8 @@ width:100%;
 border:1px solid #C8C8C8;
 padding:0.8em 0.5em 0.5em !important;
 }
+
+.critlabel {
+color:#3399F0;
+font-size:0.9em;
+}

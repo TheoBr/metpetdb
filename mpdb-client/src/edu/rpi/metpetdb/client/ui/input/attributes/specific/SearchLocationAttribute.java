@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 
+import java.math.BigDecimal;
+
 import org.postgis.LinearRing;
 import org.postgis.Point;
 
@@ -45,16 +47,6 @@ public class SearchLocationAttribute extends GenericAttribute implements
 
 	public SearchLocationAttribute(final PropertyConstraint sc) {
 		super(sc);
-		map = new MapWidget(new LatLng(0, 0), 1);
-		map.addControl(new LargeMapControl());
-		map.addControl(new MapTypeControl());
-		map.addControl(new ScaleControl());
-		map.setSize("500px", "300px");
-
-		northInput = new TextBox();
-		southInput = new TextBox();
-		eastInput = new TextBox();
-		westInput = new TextBox();
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
@@ -67,6 +59,17 @@ public class SearchLocationAttribute extends GenericAttribute implements
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
 		ft = new FlexTable();
+		
+		map = new MapWidget(new LatLng(0, 0), 1);
+		map.addControl(new LargeMapControl());
+		map.addControl(new MapTypeControl());
+		map.addControl(new ScaleControl());
+		map.setSize("500px", "300px");
+
+		northInput = new TextBox();
+		southInput = new TextBox();
+		eastInput = new TextBox();
+		westInput = new TextBox();
 
 		viewBounds = new Button("View Bounds", this);
 		clearMarkers = new Button("Remove Markers", this);
