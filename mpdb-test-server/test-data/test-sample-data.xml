@@ -1,21 +1,25 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE dataset SYSTEM "test-data/test-database.dtd">
 <dataset>
-  <users user_id="1" version="1"  name="anthony"  password="" email="watera2@cs.rpi.edu"/>
-  <users user_id="2" version="1"  name="matt"  password="" email="fyffem@cs.rpi.edu"></users>
-  <rock_type rock_type_id="1" rock_type="gentoo" />
-  <subsample_type subsample_type_id="1" subsample_type="linux" />
+  <users user_id="1" version="1"  password="" email="watera2@cs.rpi.edu" name="anthony"/>
+  <users user_id="2" version="1"   password="" email="fyffem@cs.rpi.edu" name="matt"></users>
+  <rock_type rock_type_id="1" rock_type="gentoo" /><rock_type rock_type_id="2" rock_type="type 2"></rock_type>
+	<rock_type rock_type_id="3" rock_type="type 3"></rock_type>
+	<subsample_type subsample_type_id="1" subsample_type="linux" />
   <samples sample_id="1" version="0" sesar_number="000000000" public_data="Y" rock_type_id="1" user_id="1" location="SRID=4326;POINT(50 50)" alias="1" collection_date="2008-10-10 18:32:17" />
-  <samples sample_id="2" version="0" sesar_number="000000001" public_data="Y" rock_type_id="1" user_id="1" location="SRID=4326;POINT(50 50)" alias="2" collection_date="2008-08-28 18:32:17"/>
+  <samples sample_id="2" version="0" sesar_number="000000001" public_data="Y" rock_type_id="3" user_id="1" location="SRID=4326;POINT(50 50)" alias="2" collection_date="2008-08-28 18:32:17"/>
   <samples sample_id="3" version="0" sesar_number="000000002" public_data="N" rock_type_id="1" user_id="1" location="SRID=4326;POINT(1 1)" alias="3" collection_date="2008-10-10 18:32:17"/>
   <samples sample_id="4" version="0" sesar_number="000000003" public_data="N" rock_type_id="1" user_id="2" location="SRID=4326;POINT(1 1)" alias="4" collection_date="2008-08-28 18:32:17"/>
-  <samples sample_id="5" version="0" sesar_number="000000004" public_data="N" rock_type_id="1" user_id="2" location="SRID=4326;POINT(1 1)" alias="5" collection_date="2008-08-28 18:32:17"/>
-  <samples sample_id="7" version="0" sesar_number="000000006" public_data="Y" rock_type_id="1" user_id="2" location="SRID=4326;POINT(1 1)" alias="6" collection_date="2008-08-28 18:32:17"/>
-  <samples sample_id="8" version="0" sesar_number="000000007" public_data="N" rock_type_id="1" user_id="1" location="SRID=4326;POINT(1 1)" alias="7" collection_date="2008-08-28 18:32:17"/>
+  <samples sample_id="5" version="0" sesar_number="000000004" public_data="N" rock_type_id="2" user_id="2" location="SRID=4326;POINT(1 1)" alias="5" collection_date="2008-08-28 18:32:17"/>
+  <samples sample_id="7" version="0" sesar_number="000000006" public_data="Y" rock_type_id="3" user_id="2" location="SRID=4326;POINT(1 1)" alias="6" collection_date="2008-08-28 18:32:17"/>
+  <samples sample_id="8" version="0" sesar_number="000000007" public_data="N" rock_type_id="2" user_id="1" location="SRID=4326;POINT(1 1)" alias="7" collection_date="2008-08-28 18:32:17"/>
   <samples sample_id="9" version="0" sesar_number="000000008" public_data="N" rock_type_id="1" user_id="1" location="SRID=4326;POINT(1 1)" alias="8" collection_date="2008-10-10 18:32:17"/>
-    <subsamples subsample_id="5" version="0" sample_id="1" name="8-subsample-0" subsample_type_id="1"/>
+  <subsamples subsample_id="11" version="0" sample_id="5" name="11" subsample_type_id="1"></subsamples>
+  <subsamples subsample_id="10" version="0" sample_id="2" name="10-subsample" subsample_type_id="1"></subsamples>
+  <subsamples subsample_id="9" version="0" sample_id="2" name="9" subsample_type_id="1"></subsamples>
+  <subsamples subsample_id="5" version="0" sample_id="1" name="8-subsample-0" subsample_type_id="1"/>
   <subsamples subsample_id="6" version="0" sample_id="1" name="8-subsample-1" subsample_type_id="1"/>
-  <subsamples subsample_id="7" version="0" sample_id="1" name="7-subsample-0" subsample_type_id="1"/>
+  <subsamples subsample_id="7" version="0" sample_id="3" name="7-subsample-0" subsample_type_id="1"/>
   <image_format image_format_id="6" name="image/tiff"/>
   <image_format image_format_id="7" name="image/gif"/>
   <image_format image_format_id="8" name="image/jpeg"/>
@@ -195,8 +199,12 @@
   <minerals mineral_id="171" name="Graphite" parent_mineral_id="170"/>
   <minerals mineral_id="172" name="Diamond" parent_mineral_id="170"/>
   <reference/>
+  
   <chemical_analyses chemical_analysis_id="1" spot_id="0" subsample_id="5" point_x="0" point_y="0" analysis_date="1969-12-31 19:00:00.0" date_precision="365" mineral_id="22" large_rock="Y"/>
   <chemical_analyses chemical_analysis_id="2" spot_id="0" subsample_id="7" point_x="0" point_y="0" analysis_date="1969-12-31 19:00:00.0" date_precision="365" mineral_id="22" large_rock="N"/>
+  <chemical_analyses chemical_analysis_id="3" spot_id="0" subsample_id="11" point_x="0" point_y="0" analysis_date="1969-12-31 19:00:00.0" date_precision="365" mineral_id="22" large_rock="N"></chemical_analyses>
+  <chemical_analyses chemical_analysis_id="5" subsample_id="10" mineral_id="22" spot_id="0" large_rock="N"></chemical_analyses>
+  <chemical_analyses chemical_analysis_id="6" subsample_id="9" mineral_id="22" spot_id="0" large_rock="N"></chemical_analyses>
   <elements element_id="1" name="Aluminium" alternate_name="Aluminum" symbol="Al" atomic_number="13" weight="26.9815"/>
   <elements element_id="2" name="Americium" symbol="Am" atomic_number="95" weight="243.0"/>
   <elements element_id="3" name="Antimony" symbol="Sb" atomic_number="51" weight="121.76"/>
@@ -302,8 +310,9 @@
   <chemical_analysis_elements chemical_analysis_id="1" element_id="1" amount="5.0" precision="0.0" precision_type="ABS"/>
   <chemical_analysis_elements chemical_analysis_id="1" element_id="14" amount="5.0" precision="0.0" precision_type="ABS"/>
   <chemical_analysis_elements chemical_analysis_id="2" element_id="1" amount="10.0" precision="0.0" precision_type="ABS"/>
-  <chemical_analysis_elements chemical_analysis_id="2" element_id="14" amount="10.0" precision="0.0" precision_type="ABS"/>
-  <oxides oxide_id="1" element_id="1" oxidation_state="3" species="Al2O3" weight="101.96" cations_per_oxide="2" conversion_factor="1.8894427663399"/>
+  <chemical_analysis_elements chemical_analysis_id="2" element_id="14" amount="10.0" precision="0.0" precision_type="ABS"/><chemical_analysis_elements chemical_analysis_id="3" element_id="1" amount="6.0"></chemical_analysis_elements>
+	<chemical_analysis_elements chemical_analysis_id="3" element_id="14" amount="8"></chemical_analysis_elements>
+	<oxides oxide_id="1" element_id="1" oxidation_state="3" species="Al2O3" weight="101.96" cations_per_oxide="2" conversion_factor="1.8894427663399"/>
   <oxides oxide_id="2" element_id="3" oxidation_state="5" species="Sb2O5" weight="323.517" cations_per_oxide="2" conversion_factor="1.32850279237845"/>
   <oxides oxide_id="3" element_id="3" oxidation_state="3" species="Sb2O3" weight="291.518" cations_per_oxide="2" conversion_factor="1.19710167542707"/>
   <oxides oxide_id="4" element_id="7" oxidation_state="2" species="BaO" weight="153.33" cations_per_oxide="1" conversion_factor="1.11653207308104"/>
@@ -347,8 +356,9 @@
   <chemical_analysis_oxides chemical_analysis_id="1" oxide_id="1" amount="10.0" precision="0.0" precision_type="ABS"/>
   <chemical_analysis_oxides chemical_analysis_id="1" oxide_id="6" amount="10.0" precision="0.0" precision_type="ABS"/>
   <chemical_analysis_oxides chemical_analysis_id="2" oxide_id="1" amount="15.0" precision="0.0" precision_type="ABS"/>
-  <chemical_analysis_oxides chemical_analysis_id="2" oxide_id="6" amount="15.0" precision="0.0" precision_type="ABS"/>
-  <mineral_types mineral_type_id="1" name="Silicates"/>
+  <chemical_analysis_oxides chemical_analysis_id="2" oxide_id="6" amount="15.0" precision="0.0" precision_type="ABS"/><chemical_analysis_oxides chemical_analysis_id="5" oxide_id="1" amount="13.0"></chemical_analysis_oxides>
+	<chemical_analysis_oxides chemical_analysis_id="6" oxide_id="6" amount="9"></chemical_analysis_oxides>
+	<mineral_types mineral_type_id="1" name="Silicates"></mineral_types>
   <mineral_types mineral_type_id="2" name="Oxides"/>
   <mineral_types mineral_type_id="3" name="Carbonates"/>
   <mineral_types mineral_type_id="4" name="Phosphates"/>

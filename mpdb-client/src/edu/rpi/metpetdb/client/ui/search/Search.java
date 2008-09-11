@@ -88,8 +88,9 @@ public class Search extends FlowPanel implements ClickListener {
 	public Search() {
 		p_searchSample = new ObjectSearchPanel(searchAtts,
 				LocaleHandler.lc_text.search(), LocaleHandler.lc_text.search()) {
+			// TODO: Make that null into the current user from session. I don't know how to do this right now however
 			protected void searchBean(final AsyncCallback<List<SampleDTO>> ac) {
-				MpDb.search_svc.search((SearchSampleDTO) getBean(), ac);
+				MpDb.search_svc.search((SearchSampleDTO) getBean(), null, ac);
 			}
 			protected void onSearchCompletion(final List<SampleDTO> r) {
 				if (r != null) {

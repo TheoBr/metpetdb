@@ -25,9 +25,11 @@ public class SearchSampleDTO extends MObjectDTO {
 
 	private Set<SampleMineralDTO> minerals;
 	
-	private Set<ChemicalAnalysisElementDTO> elements;
+	private Set<SearchElementDTO> elements;
 
-	private Set<ChemicalAnalysisOxideDTO> oxides;
+	private Set<SearchOxideDTO> oxides;
+	
+	private Set<RegionDTO> regions;
 
 	public Set<RockTypeDTO> getPossibleRockTypes() {
 		return possibleRockTypes;
@@ -143,63 +145,53 @@ public class SearchSampleDTO extends MObjectDTO {
 		this.datePrecision = datePrecision;
 	}
 
-public void setElements(final Set<ChemicalAnalysisElementDTO> e) {
+public void setElements(final Set<SearchElementDTO> e) {
 		elements = e;
 	}
 
-	public Set<ChemicalAnalysisElementDTO> getElements() {
+	public Set<SearchElementDTO> getElements() {
 		if (elements == null)
-			elements = new HashSet<ChemicalAnalysisElementDTO>();
+			elements = new HashSet<SearchElementDTO>();
 		return elements;
 	}
 
-	public void addElement(final ElementDTO e, final Float amount) {
+	public void addElement(final ElementDTO e, final Float lowerBound,
+			final Float upperBound) {
 		if (elements == null)
-			elements = new HashSet<ChemicalAnalysisElementDTO>();
-		ChemicalAnalysisElementDTO c = new ChemicalAnalysisElementDTO();
-		c.setElement(e);
-		c.setAmount(amount);
+			elements = new HashSet<SearchElementDTO>();
+		SearchElementDTO c = new SearchElementDTO();
+		c.setElementSymbol(e.getSymbol());
+		c.setLowerBound(lowerBound);
+		c.setUpperBound(upperBound);
 		elements.add(c);
 	}
 
-	public void addElement(final ElementDTO e, final Float amount,
-			final Float precision) {
-		if (elements == null)
-			elements = new HashSet<ChemicalAnalysisElementDTO>();
-		ChemicalAnalysisElementDTO c = new ChemicalAnalysisElementDTO();
-		c.setElement(e);
-		c.setAmount(amount);
-		c.setPrecision(precision);
-		elements.add(c);
-	}
-
-	public void setOxides(final Set<ChemicalAnalysisOxideDTO> o) {
+	public void setOxides(final Set<SearchOxideDTO> o) {
 		oxides = o;
 	}
 
-	public Set<ChemicalAnalysisOxideDTO> getOxides() {
+	public Set<SearchOxideDTO> getOxides() {
 		if (oxides == null)
-			oxides = new HashSet<ChemicalAnalysisOxideDTO>();
+			oxides = new HashSet<SearchOxideDTO>();
 		return oxides;
 	}
-
-	public void addOxide(final OxideDTO e, final Float amount) {
-		if (oxides == null)
-			oxides = new HashSet<ChemicalAnalysisOxideDTO>();
-		ChemicalAnalysisOxideDTO c = new ChemicalAnalysisOxideDTO();
-		c.setOxide(e);
-		c.setAmount(amount);
-		oxides.add(c);
+	
+	public Set<RegionDTO> getRegions() {
+		return regions;
 	}
 
-	public void addOxide(final OxideDTO e, final Float amount,
-			final Float precision) {
+	public void setRegions(final Set<RegionDTO> r) {
+		regions = r;
+	}
+
+	public void addOxide(final OxideDTO e, final Float lowerBound,
+			final Float upperBound) {
 		if (oxides == null)
-			oxides = new HashSet<ChemicalAnalysisOxideDTO>();
-		ChemicalAnalysisOxideDTO c = new ChemicalAnalysisOxideDTO();
-		c.setOxide(e);
-		c.setAmount(amount);
-		c.setPrecision(precision);
+			oxides = new HashSet<SearchOxideDTO>();
+		SearchOxideDTO c = new SearchOxideDTO();
+		c.setSpecies(e.getSpecies());
+		c.setLowerBound(lowerBound);
+		c.setUpperBound(upperBound);
 		oxides.add(c);
 	}
 }

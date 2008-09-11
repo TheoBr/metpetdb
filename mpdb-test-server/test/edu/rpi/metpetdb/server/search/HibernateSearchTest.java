@@ -12,9 +12,12 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.FilteredQuery;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.RangeFilter;
 import org.apache.lucene.search.RangeQuery;
 import org.apache.lucene.search.TermQuery;
+import org.apache.solr.util.NumberUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.search.FullTextSession;
@@ -22,7 +25,11 @@ import org.hibernate.search.Search;
 import org.junit.Test;
 
 import edu.rpi.metpetdb.client.model.DateSpan;
+import edu.rpi.metpetdb.client.model.ElementDTO;
+import edu.rpi.metpetdb.client.model.OxideDTO;
 import edu.rpi.metpetdb.client.model.RockTypeDTO;
+import edu.rpi.metpetdb.client.model.SearchElementDTO;
+import edu.rpi.metpetdb.client.model.SearchOxideDTO;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
 import edu.rpi.metpetdb.client.model.UserDTO;
 import edu.rpi.metpetdb.client.model.properties.SearchProperty;
@@ -250,7 +257,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 					.createFullTextQuery(query, Sample.class);
 			final List<Sample> result = hibQuery.list();
 			assertEquals(1, result.size());
-			System.out.println(query.toString());			
+			System.out.println(query.toString());
 			for (final Sample s : result)
 				System.out.println("found sample, sesar number is "
 						+ s.getSesarNumber());
@@ -279,8 +286,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
 				.createFullTextSession(session);
-		
-		
+
 		final Calendar rightNow = Calendar.getInstance();
 		rightNow.set(2008, 7, 25);
 		final Date startDate = rightNow.getTime();
@@ -288,8 +294,8 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final Date endDate = rightNow.getTime();
 
 		RangeQuery rq = new RangeQuery(new Term("collectionDate", DateTools
-				.dateToString(startDate, DateTools.Resolution.DAY)),
-				new Term("collectionDate", DateTools.dateToString(endDate,
+				.dateToString(startDate, DateTools.Resolution.DAY)), new Term(
+				"collectionDate", DateTools.dateToString(endDate,
 						DateTools.Resolution.DAY)), true);
 		final org.hibernate.Query hibQuery = fullTextSession
 				.createFullTextQuery(rq, Sample.class);
@@ -311,13 +317,14 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		// Check if it's public data or if the user is this user
 		BooleanQuery privacyQuery = new BooleanQuery();
 		// Is this public data?
-		final TermQuery termQuery = new TermQuery(new Term("publicData",Boolean.TRUE.toString()));
+		final TermQuery termQuery = new TermQuery(new Term("publicData",
+				Boolean.TRUE.toString()));
 		privacyQuery.add(termQuery, BooleanClause.Occur.SHOULD);
 		// Is this the current user?
-		//final TermQuery termQuery2 = new TermQuery(new Term("user_firstName",
-		//		testUser.getFirstName()));
-		final TermQuery termQuery2 = new TermQuery(new Term("user_emailAddress",
-				testUser.getEmailAddress()));
+		// final TermQuery termQuery2 = new TermQuery(new Term("user_Name",
+		// testUser.getName()));
+		final TermQuery termQuery2 = new TermQuery(new Term(
+				"user_emailAddress", testUser.getEmailAddress()));
 		privacyQuery.add(termQuery2, BooleanClause.Occur.SHOULD);
 
 		BooleanQuery fullQuery = new BooleanQuery();
@@ -332,7 +339,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 
 		for (final Sample s : results)
 			System.out.println("found sample, alias is " + s.getAlias());
-		
+
 		assertEquals(5, results.size());
 	}
 
@@ -349,10 +356,11 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		// Check if it's public data or if the user is this user
 		BooleanQuery privacyQuery = new BooleanQuery();
 		// Is this public data?
-		final TermQuery termQuery = new TermQuery(new Term("publicData",Boolean.TRUE.toString()));
+		final TermQuery termQuery = new TermQuery(new Term("publicData",
+				Boolean.TRUE.toString()));
 		privacyQuery.add(termQuery, BooleanClause.Occur.SHOULD);
 		// Is this the current user?
-		final TermQuery termQuery2 = new TermQuery(new Term("user_firstName",
+		final TermQuery termQuery2 = new TermQuery(new Term("user_Name",
 				testUser.getName()));
 		privacyQuery.add(termQuery2, BooleanClause.Occur.SHOULD);
 
@@ -370,10 +378,10 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final Date endDate = rightNow.getTime();
 
 		RangeQuery rq = new RangeQuery(new Term("collectionDate", DateTools
-				.dateToString(startDate, DateTools.Resolution.DAY)),
-				new Term("collectionDate", DateTools.dateToString(endDate,
+				.dateToString(startDate, DateTools.Resolution.DAY)), new Term(
+				"collectionDate", DateTools.dateToString(endDate,
 						DateTools.Resolution.DAY)), true);
-		
+
 		fullQuery.add(rq, BooleanClause.Occur.MUST);
 		final org.hibernate.Query hibQuery = fullTextSession
 				.createFullTextQuery(fullQuery, Sample.class);
@@ -386,115 +394,310 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	}
 	
 	@Test
+	public void testOxideSearch(){
+		final SearchSampleDTO searchSamp = new SearchSampleDTO();
+		OxideDTO tempOxide = new OxideDTO();
+		tempOxide.setSpecies("al2o3");
+		searchSamp.addOxide(tempOxide, 10f, 16f);
+		final Session session = InitDatabase.getSession();
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
+		
+		String columnName;
+		Object methodResult = null;
+		BooleanQuery fullQuery = new BooleanQuery();
+		SearchProperty[] enums = SearchSampleProperty.class.getEnumConstants();
+		for (SearchProperty i : enums) {
+
+			// column to search on
+			columnName = i.columnName();
+
+			// return type of the method
+			methodResult = i.get(searchSamp);
+
+			// if there is no value returned in this field...
+			if (methodResult == null) {
+				// ignore it
+			} else { // otherwise, what type of returned data is it?
+				if (columnName
+						.equals("subsample_chemicalAnalysis_oxides")) {
+					if (((Set) methodResult).size() > 0) {
+						final BooleanQuery setQuery = new BooleanQuery();
+						for (SearchOxideDTO o : (Set<SearchOxideDTO>) methodResult) {
+							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_oxides_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
+							final TermQuery oxideQuery = new TermQuery(new Term("subsample_chemicalAnalysis_oxides_oxide_species", o.getSpecies()));
+							final FilteredQuery filter = new FilteredQuery(oxideQuery, rangeFilter);
+							setQuery.add(filter, BooleanClause.Occur.SHOULD);
+						}
+						// require that one of these results be found in the
+						// full query
+						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
+					}
+				} else if( columnName.equals("subsample_chemicalAnalysis_elements")){
+					if (((Set) methodResult).size() > 0) {
+						final BooleanQuery setQuery = new BooleanQuery();
+						for (SearchElementDTO o : (Set<SearchElementDTO>) methodResult) {
+							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_elements_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
+							final TermQuery elementQuery = new TermQuery(new Term("subsample_chemicalAnalysis_elements_element_symbol", o.getElementSymbol()));
+							final FilteredQuery filter = new FilteredQuery(elementQuery, rangeFilter);
+							setQuery.add(filter, BooleanClause.Occur.SHOULD);
+						}
+						// require that one of these results be found in the
+						// full query
+						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
+					}
+				}
+			}
+		}
+
+		// Run the query and get the actual results
+
+		final org.hibernate.Query hibQuery = fullTextSession
+				.createFullTextQuery(fullQuery, Sample.class);
+		final List<Sample> results = hibQuery.list();
+		for (final Sample s : results)
+			System.out.println("found sample, id is " + s.getId());
+		assertEquals(1, results.size());
+		
+	}
+	
+	@Test
+	public void testElementSearch(){
+		final SearchSampleDTO searchSamp = new SearchSampleDTO();
+		ElementDTO tempElement = new ElementDTO();
+		tempElement.setSymbol("al");
+		searchSamp.addElement(tempElement, 4.9f, 12.0f);
+		final Session session = InitDatabase.getSession();
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
+		
+		String columnName;
+		Object methodResult = null;
+		BooleanQuery fullQuery = new BooleanQuery();
+		SearchProperty[] enums = SearchSampleProperty.class.getEnumConstants();
+		for (SearchProperty i : enums) {
+
+			// column to search on
+			columnName = i.columnName();
+
+			// return type of the method
+			methodResult = i.get(searchSamp);
+
+			// if there is no value returned in this field...
+			if (methodResult == null) {
+				// ignore it
+			} else { // otherwise, what type of returned data is it?
+				if (columnName
+						.equals("subsample_chemicalAnalysis_oxides")) {
+					if (((Set) methodResult).size() > 0) {
+						final BooleanQuery setQuery = new BooleanQuery();
+						for (SearchOxideDTO o : (Set<SearchOxideDTO>) methodResult) {
+							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_oxides_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
+							final TermQuery oxideQuery = new TermQuery(new Term("subsample_chemicalAnalysis_oxides_oxide_species", o.getSpecies()));
+							final FilteredQuery filter = new FilteredQuery(oxideQuery, rangeFilter);
+							setQuery.add(filter, BooleanClause.Occur.SHOULD);
+						}
+						// require that one of these results be found in the
+						// full query
+						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
+					}
+				} else if( columnName.equals("subsample_chemicalAnalysis_elements")){
+					if (((Set) methodResult).size() > 0) {
+						final BooleanQuery setQuery = new BooleanQuery();
+						for (SearchElementDTO o : (Set<SearchElementDTO>) methodResult) {
+							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_elements_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
+							final TermQuery elementQuery = new TermQuery(new Term("subsample_chemicalAnalysis_elements_element_symbol", o.getElementSymbol()));
+							final FilteredQuery filter = new FilteredQuery(elementQuery, rangeFilter);
+							setQuery.add(filter, BooleanClause.Occur.SHOULD);
+						}
+						// require that one of these results be found in the
+						// full query
+						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
+					}
+				}
+			}
+		}
+
+		// Run the query and get the actual results
+
+		final org.hibernate.Query hibQuery = fullTextSession
+				.createFullTextQuery(fullQuery, Sample.class);
+		final List<Sample> results = hibQuery.list();
+		for (final Sample s : results)
+			System.out.println("found sample, id is " + s.getId());
+		assertEquals(1, results.size());
+		
+	}
+
+	@Test
 	public void testSampleSearch() {
 		// In the actual search, we will receive User information as a parameter
 		final UserDTO testUser = new UserDTO();
 		testUser.setId(2);
 		testUser.setName("matt");
+		testUser.setEmailAddress("fyffem@cs.rpi.edu");
 
-		// In the actual search, we will receive search criteria as a SearchSampleDTO
+		// In the actual search, we will receive search criteria as a
+		// SearchSampleDTO
 		final SearchSampleDTO searchSamp = new SearchSampleDTO();
-//		searchSamp.setAlias("1");
-		final RockTypeDTO rockType1 = new RockTypeDTO();
-		rockType1.setRockType("logitech");
+		// searchSamp.setAlias("1");
+/*		final RockTypeDTO rockType1 = new RockTypeDTO();
+		rockType1.setRockType("type 2");
 		final RockTypeDTO rockType2 = new RockTypeDTO();
-		rockType2.setRockType("rockie rock");
+		rockType2.setRockType("type 3");
 		searchSamp.addPossibleRockType(rockType1);
 		searchSamp.addPossibleRockType(rockType2);
-		
-		final Calendar rightNow = Calendar.getInstance();
+*/		OxideDTO tempOxide = new OxideDTO();
+		tempOxide.setSpecies("al2o3");
+		searchSamp.addOxide(tempOxide, 9f, 17f);
+
+/*		final Calendar rightNow = Calendar.getInstance();
 		rightNow.set(2008, 7, 25);
 		final Date firstDate = rightNow.getTime();
 		rightNow.set(2008, 8, 1);
 		final Date secondDate = rightNow.getTime();
-		
-		searchSamp.setCollectionDateRange(new DateSpan(firstDate, secondDate));
 
-		
+		searchSamp.setCollectionDateRange(new DateSpan(firstDate, secondDate));
+*/
+		// Actual Search Functionality
+
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
 				.createFullTextSession(session);
 
 		// The full scope of the query we want to make
 		BooleanQuery fullQuery = new BooleanQuery();
-		
-		// Check if it's public data or if the user is this user
+
+	/*	// Check if it's public data or if the user is this user
 		BooleanQuery privacyQuery = new BooleanQuery();
 		// Is this public data?
-		final TermQuery termQuery = new TermQuery(new Term("publicData",Boolean.TRUE.toString()));
+		final TermQuery termQuery = new TermQuery(new Term("publicData",
+				Boolean.TRUE.toString()));
 		privacyQuery.add(termQuery, BooleanClause.Occur.SHOULD);
 		// Is this the current user?
-		final TermQuery termQuery2 = new TermQuery(new Term("user_firstName",
-				testUser.getName()));
+		final TermQuery termQuery2 = new TermQuery(new Term(
+				"user_emailAddress", testUser.getEmailAddress()));
 		privacyQuery.add(termQuery2, BooleanClause.Occur.SHOULD);
 
-		// in the full query, make it mandatory that the privacy requirements are met
+		// in the full query, make it mandatory that the privacy requirements
+		// are met
 		fullQuery.add(privacyQuery, BooleanClause.Occur.MUST);
+*/
 		// Actual Search
-		
+
 		String columnName;
 		Object methodResult = null;
 		SearchProperty[] enums = SearchSampleProperty.class.getEnumConstants();
 		for (SearchProperty i : enums) {
-			
+
 			// column to search on
 			columnName = i.columnName();
-			
+
 			// return type of the method
 			methodResult = i.get(searchSamp);
-			
+
 			// if there is no value returned in this field...
 			if (methodResult == null) {
 				// ignore it
-			} else { // otherwise, what type of returned data is it?				
-				if (methodResult instanceof Set) { // if a set of data is returned, it should be an OR query
-					if(((Set)methodResult).size() > 0)
-					{
+			} else { // otherwise, what type of returned data is it?
+				if (columnName
+						.equals("subsample_chemicalAnalysis_oxides")) {
+					if (((Set) methodResult).size() > 0) {
+						final BooleanQuery setQuery = new BooleanQuery();
+						for (SearchOxideDTO o : (Set<SearchOxideDTO>) methodResult) {
+							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_oxides_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
+							final TermQuery oxideQuery = new TermQuery(new Term("subsample_chemicalAnalysis_oxides_oxide_species", o.getSpecies()));
+							final FilteredQuery filter = new FilteredQuery(oxideQuery, rangeFilter);
+							setQuery.add(oxideQuery, BooleanClause.Occur.SHOULD);
+						}
+						// require that one of these results be found in the
+						// full query
+						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
+					}
+				} else if( columnName.equals("subsample_chemicalAnalysis_elements")){
+					if (((Set) methodResult).size() > 0) {
+						final BooleanQuery setQuery = new BooleanQuery();
+						for (SearchElementDTO o : (Set<SearchElementDTO>) methodResult) {
+							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_elements_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
+							final TermQuery elementQuery = new TermQuery(new Term("subsample_chemicalAnalysis_elements_element_symbol", o.getElementSymbol()));
+							final FilteredQuery filter = new FilteredQuery(elementQuery, rangeFilter);
+							setQuery.add(filter, BooleanClause.Occur.SHOULD);
+						}
+						// require that one of these results be found in the
+						// full query
+						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
+					}
+				}else if (methodResult instanceof Set) { // if a set of data is
+															// returned, it
+															// should be an OR
+															// query
+					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
 						for (Object o : (Set) methodResult) {
 							// iterate through each item and add it to the query
-							final TermQuery objectQuery = new TermQuery(new Term(columnName, o.toString()));
-							setQuery.add(objectQuery, BooleanClause.Occur.SHOULD);
+							final TermQuery objectQuery = new TermQuery(
+									new Term(columnName, o.toString()));
+							setQuery.add(objectQuery,
+									BooleanClause.Occur.SHOULD);
 						}
-										
-						// require that one of these results be found in the full query
+						// require that one of these results be found in the
+						// full query
 						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
-					}					
-				} else if(methodResult instanceof DateSpan){ // if the data is a DateSpan
+						
+					}
+				} else if (methodResult instanceof DateSpan) { // if the data is
+																// a DateSpan
 					// Get the start date of the span
-					final Date startDate = ((DateSpan)methodResult).getStartAsDate();
-					final Date realStartDate = new Date(startDate.getYear(), startDate.getMonth(), startDate.getDate());
+					final Date startDate = ((DateSpan) methodResult)
+							.getStartAsDate();
+					final Date realStartDate = new Date(startDate.getYear(),
+							startDate.getMonth(), startDate.getDate());
 					// Get the end date of the span
-					final Date endDate = ((DateSpan)methodResult).getEndAsDate();
-					final Date realEndDate = new Date(endDate.getYear(),endDate.getMonth(), endDate.getDate());
+					final Date endDate = ((DateSpan) methodResult)
+							.getEndAsDate();
+					final Date realEndDate = new Date(endDate.getYear(),
+							endDate.getMonth(), endDate.getDate());
 
 					// Do a range query on these dates
-					RangeQuery rq = new RangeQuery(new Term("collectionDate", DateTools
-							.dateToString(realStartDate, DateTools.Resolution.DAY)),
-							new Term("collectionDate", DateTools.dateToString(realEndDate,
-									DateTools.Resolution.DAY)), true);					
+					RangeQuery rq = new RangeQuery(new Term("collectionDate",
+							DateTools.dateToString(realStartDate,
+									DateTools.Resolution.DAY)), new Term(
+							"collectionDate", DateTools.dateToString(
+									realEndDate, DateTools.Resolution.DAY)),
+							true);
 					fullQuery.add(rq, BooleanClause.Occur.MUST);
-				}else if(columnName.equals("location")){ // if the column being searched on is location
-					if (searchSamp.getBoundingBox() != null) { // if there is a bounding box for this sample
-						session.enableFilter("boundingBox").setParameter("polygon",
-								searchSamp.getBoundingBox()); // filter results based on the box
+				} else if (columnName.equals("location")) { // if the column
+															// being searched on
+															// is location
+					if (searchSamp.getBoundingBox() != null) { // if there is a
+																// bounding box
+																// for this
+																// sample
+						session.enableFilter("boundingBox").setParameter(
+								"polygon", searchSamp.getBoundingBox()); // filter
+																			// results
+																			// based
+																			// on
+																			// the
+																			// box
 					}
-				}else {  // it's just a standard string, do a term search
-					final TermQuery stringQuery = new TermQuery(new Term(columnName, methodResult.toString()));
+				} else { // it's just a standard string, do a term search
+					final TermQuery stringQuery = new TermQuery(new Term(
+							columnName, methodResult.toString()));
 					fullQuery.add(stringQuery, BooleanClause.Occur.MUST);
 				}
 			}
 		}
-				
-		// Run the query and get the actual results		
-		
+
+		// Run the query and get the actual results
+
 		final org.hibernate.Query hibQuery = fullTextSession
 				.createFullTextQuery(fullQuery, Sample.class);
 		final List<Sample> results = hibQuery.list();
-
 		for (final Sample s : results)
-			System.out.println("found sample, alias is " + s.getAlias());
-		assertEquals(3, results.size());
+			System.out.println("found sample, id iss " + s.getId());
+		System.out.println(fullQuery.toString());
+		assertEquals(1, results.size());
 	}
-	
+
 }

@@ -28,6 +28,8 @@ import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxideDTO;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.RockTypeDTO;
 import edu.rpi.metpetdb.client.model.SampleMineralDTO;
+import edu.rpi.metpetdb.client.model.SearchElementDTO;
+import edu.rpi.metpetdb.client.model.SearchOxideDTO;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
 import edu.rpi.metpetdb.client.model.properties.Property;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
@@ -199,17 +201,17 @@ public class SearchTabAttribute extends GenericAttribute {
 		}
 
 		if (ss.getElements() != null) {
-			Iterator<ChemicalAnalysisElementDTO> itr = ss.getElements().iterator();
+			Iterator<SearchElementDTO> itr = ss.getElements().iterator();
 			while (itr.hasNext()) {
-				final ChemicalAnalysisElementDTO caElement = itr.next();
-				addConstraint(createCritRow("Element:", caElement.getName(), caElement,MpDb.doc.SearchSample_elements.property));
+				final SearchElementDTO sElement = itr.next();
+				addConstraint(createCritRow("Element:", sElement.getName(), sElement,MpDb.doc.SearchSample_elements.property));
 			 }
 		}
 		if (ss.getOxides() != null) {
-			Iterator<ChemicalAnalysisOxideDTO> itr = ss.getOxides().iterator();
+			Iterator<SearchOxideDTO> itr = ss.getOxides().iterator();
 			while (itr.hasNext()) {
-				final ChemicalAnalysisOxideDTO caOxide = itr.next();
-				addConstraint(createCritRow("Oxide:", caOxide.getName(), caOxide,MpDb.doc.SearchSample_oxides.property));
+				final SearchOxideDTO sOxide = itr.next();
+				addConstraint(createCritRow("Oxide:", sOxide.getName(), sOxide,MpDb.doc.SearchSample_oxides.property));
 			 }
 		}
 		if (ss.getMinerals() != null) {

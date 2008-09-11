@@ -1,5 +1,8 @@
 package edu.rpi.metpetdb.server.model;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+
 //import java.util.Set;
 
 public class Region extends MObject {
@@ -7,6 +10,7 @@ public class Region extends MObject {
 
 	private short id;
 
+	@Field(index = Index.UN_TOKENIZED)
 	private String name;
 
 	public short getId() {

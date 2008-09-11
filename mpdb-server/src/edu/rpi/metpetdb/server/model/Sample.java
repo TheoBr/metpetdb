@@ -73,6 +73,7 @@ public class Sample extends MObject implements IHasName {
 	private Float latitudeError;
 	private Float longitudeError;
 
+	@IndexedEmbedded(prefix ="region_")
 	private Set<Region> regions;
 
 	@IndexedEmbedded(depth = 1, prefix = "metamorphicGrade_")

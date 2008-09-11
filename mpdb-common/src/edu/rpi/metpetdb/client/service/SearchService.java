@@ -6,7 +6,8 @@ import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.rpi.metpetdb.client.model.SampleDTO;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
+import edu.rpi.metpetdb.client.model.UserDTO;
 
 public interface SearchService extends RemoteService {
-	List<SampleDTO> search(final SearchSampleDTO searchSamp);
+	List<SampleDTO> search(final SearchSampleDTO searchSamp, UserDTO userSearching);
 }

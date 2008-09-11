@@ -4,12 +4,13 @@ import java.util.Set;
 
 import org.postgis.Geometry;
 
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisElementDTO;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxideDTO;
 import edu.rpi.metpetdb.client.model.DateSpan;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.RegionDTO;
 import edu.rpi.metpetdb.client.model.RockTypeDTO;
 import edu.rpi.metpetdb.client.model.SampleMineralDTO;
+import edu.rpi.metpetdb.client.model.SearchElementDTO;
+import edu.rpi.metpetdb.client.model.SearchOxideDTO;
 import edu.rpi.metpetdb.client.model.SearchSampleDTO;
 
 public enum SearchSampleProperty implements SearchProperty {
@@ -40,6 +41,20 @@ public enum SearchSampleProperty implements SearchProperty {
 
 		public String columnName() {
 			return "location";
+		}
+	},
+	region {
+		public <T extends MObjectDTO> Set<RegionDTO> get(final T sample) {
+			return ((SearchSampleDTO) sample).getRegions();
+		}
+
+		public <T extends MObjectDTO, K> void set(final T sample,
+				final K regions) {
+			((SearchSampleDTO) sample)
+					.setRegions((Set<RegionDTO>) regions);
+		}
+		public String columnName() {
+			return "region_name";
 		}
 	},
 	owner {
@@ -112,8 +127,8 @@ public enum SearchSampleProperty implements SearchProperty {
 			return "rockType_rockType";
 		}
 	},
-		elements {
-		public <T extends MObjectDTO> Set<ChemicalAnalysisElementDTO> get(
+	elements {
+		public <T extends MObjectDTO> Set<SearchElementDTO> get(
 				final T sample) {
 			return ((SearchSampleDTO) sample).getElements();
 		}
@@ -121,24 +136,24 @@ public enum SearchSampleProperty implements SearchProperty {
 		public <T extends MObjectDTO, K> void set(final T sample,
 				final K elements) {
 			((SearchSampleDTO) sample)
-					.setElements((Set<ChemicalAnalysisElementDTO>) elements);
+					.setElements((Set<SearchElementDTO>) elements);
 		}
 		public String columnName() {
-			return "elements";
+			return "subsample_chemicalAnalysis_elements";
 		}
 	},
 	oxides {
-		public <T extends MObjectDTO> Set<ChemicalAnalysisOxideDTO> get(
+		public <T extends MObjectDTO> Set<SearchOxideDTO> get(
 				final T sample) {
 			return ((SearchSampleDTO) sample).getOxides();
 		}
 
 		public <T extends MObjectDTO, K> void set(final T sample, final K oxides) {
 			((SearchSampleDTO) sample)
-					.setOxides((Set<ChemicalAnalysisOxideDTO>) oxides);
+					.setOxides((Set<SearchOxideDTO>) oxides);
 		}
 		public String columnName() {
-			return "oxides";
+			return "subsample_chemicalAnalysis_oxides";
 		}
 	};
 }
