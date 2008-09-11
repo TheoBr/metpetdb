@@ -9,17 +9,24 @@
 /*-------------------------------------
              widgets
  --------------------------------------*/
-@import "widgets.css";
-@import "dialogs.css";
 @import "detailsPanel.css";
+@import "dialogs.css";
 @import "tabPanel.css";
+@import "widgets.css";
 
 /*-------------------------------------
              pages
  --------------------------------------*/
+@import "page-imagemap.css";
 @import "page-intro.css";
 @import "page-myprojects.css";
+@import "page-mysamples.css";
 @import "page-projectdetails.css";
-@import "page-samplemap.css";
 @import "page-sampledetails.css";
+@import "page-search.css";
 
+/*-------------------------------------
+             :(
+ --------------------------------------*/
+@import "deprecated.css";
+@import "outdated.css";

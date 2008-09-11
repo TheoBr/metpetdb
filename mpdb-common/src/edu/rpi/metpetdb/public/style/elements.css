@@ -43,13 +43,6 @@ p {margin: 1em 0;}
 	color: #318fdf;
 	text-decoration: underline;
 }
-.addlink {
-	padding-left: 15px;
-	background-image: url(../images/add.gif);
-	background-repeat: no-repeat;
-	background-position: left center;
-	cursor: pointer;
-}
 .large-icon-link {
 	padding: 10px 0 10px 24px;
 	background-repeat: no-repeat;
@@ -62,29 +55,9 @@ p {margin: 1em 0;}
 .upload-multi-link {
 	background-image: url(../images/icon-upload-multi.png);
 }
-
-
-
-/*-------------------------------------
-                 lists
- --------------------------------------*/
-ul.bullet, ol {
-	margin-left: 2em;
+.add-link {
+	background-image: url(../images/icon-add.png);
 }
-ul.bullet li {
-	list-style-image: url(http://mpdb.zakness.com/images/li-bluearrow.gif);
-	text-indent: -5px;
-}
-ol li {
-	list-style-type: decimal;
-	line-height: 1em;
-	margin: 0.6em 0;
-	color: #39c;
-}
-ol li span {
-	color: #000;
-}
-
 
 /*-------------------------------------
                  buttons
@@ -102,77 +75,6 @@ button.btnPrimary,
 button.submit {
 	font-weight: bold;
 }
-
-/*-------------------------------------
-                tables
-		 
-		 * need classname when .headerCell is the current sorting cell (instead of adding img)
- --------------------------------------*/
-.mpdb-dataTable {
-	width: 100%;
-}
-.mpdb-dataTable .headerCell {
-	background-color: #faf4df;
-	font-weight: bold;
-	color: #64230f;
-	text-align: left;
-	vertical-align: middle;
-	padding: 0.3em 0.5em;
-	border-bottom: 1px solid #e2c798;
-} 
-.mpdb-dataTable .headerCell .gwt-Hyperlink {			/* need to fix */
-	border-bottom: none;
-}
-.mpdb-dataTable .headerCell .gwt-Hyperlink a {			/* need to fix */
-	color: #64230f;
-	border-bottom: none !important;
-	padding-right: 15px;
-	background: transparent url(http://mpdb.zakness.com/samana/headerCell-sort.gif) no-repeat right center;
-}
-.mpdb-dataTable .headerCell .gwt-Hyperlink a img {			/* need to fix */
-	background-color: #faf4df;
-	margin-right: -15px;
-	padding-top: 6px;
-}
-
-.mpdb-dataTable td {
-	vertical-align: middle;
-	padding: 0.3em 0.5em;
-	border-bottom: 1px dotted #ddd;
-	color: #333;
-}
-.mpdb-dataTable tr.oddRow {
-	background: #f9f9f9;
-}
-
-.mpdb-dataTableBlue {
-	background-color: #E6EAF6;
-	}
-.mpdb-dataTablePink {
-	background-color: #FAF4DF;
-}
-
-.mpdb-dataTablePink td {
-	vertical-align: middle;
-	padding: 0.3em 0.5em;
-	border-bottom: 1px solid #E2C798;
-}
-	
-.mpdb-dataTableLightBlue {
-	background-color: #ECF5FD;
-}
-
-.mpdb-dataTableLightBlue td {
-	vertical-align: middle;
-	padding: 0.3em 0.5em;
-	border-top: 1px solid #DBE2EC;
-	border-bottom: 1px solid #DFECF9;
-}
-
-.mpdb-dataTableUserSamples {
-	margin: 6px 0;
-}
-
 button.remove {
  	background-image: url(../images/icon-remove.gif);
  	padding-left: 15px;
@@ -180,86 +82,6 @@ button.remove {
 	background-position: left center;
 	background-color: #FFFFFF;
 	border: none;
-}
-.resizeable{
-	display: table-cell;
-	border: none;
-	padding: 0;
-	margin: 0;
-}
-
-.resizeable2{
-	display: table;
-}
-
-.subsample-imagetypes {
-	/*background:#696969 url(../images/loading-bg.gif) repeat-x scroll left top;*/
-	background:#696969
-}
-
-.subsample-header{
-	background: #F9F9F9;
-	width: 100%;
-	spacing-top: 15px;
-	margin-bottom: 15px;
-	margin-top: 15px;	
-	border-bottom: 1px solid #EFEFEF;
-}
-
-.lbCloseLink {
-	background:transparent url(../images/closelabel.gif) no-repeat scroll center;
-	display:block;
-	float:right;
-	height:22px;
-	margin:5px 0pt;
-	width:75px;
-}
-
-.prevLink {
-	background:transparent url(../images/prev.bmp) no-repeat scroll center;
-	display:block;
-	float:right;
-	height:33px;
-	margin:5px 0pt;
-	width:75px;
-}
-
-.nextLink {
-	background:transparent url(../images/next.bmp) no-repeat scroll center;
-	display:block;
-	float:right;
-	height:33px;
-	margin:5px 0pt;
-	width:75px;
-}
-
-.image-title{
-	font-weight: bold;
-	color: #666666;
-}
-
-.editlink {
-	background-image:url(../images/icon-edit.gif);
-	background-position:left center;
-	background-repeat:no-repeat;
-	padding-left:15px;
-}
-
-/*------------------------------------
-				tabs
----------------------------------------*/
-
-.subpages td div.current{
-	background:#FFFFFF none repeat scroll 0 0;
-border-bottom-color:#FFFFFF;
-font-weight:bold;
-}
-.subpages td div{
-background:#F5F7F1 none repeat scroll 0 0;
-border:1px solid #AFCF73;
-cursor:pointer;
-margin:0 0.2em;
-padding:0.4em;
 }
 
 /*-------------------------------------
@@ -273,24 +95,5 @@ padding:0.4em;
 	border-bottom-color: #ea8d7e;
 }
 
-.highlighted-row {
-	background-color: #FF3300;	
-}
 
-.titlebar {
-background-color:#DADADA;
-border-bottom:1px solid #C8C8C8;
-color:#324453;
-padding:0.8em 0.5em 0.5em !important;
-width:100%;
-}
 
-.criteria ul li {
-border:1px solid #C8C8C8;
-padding:0.8em 0.5em 0.5em !important;
-}
-
-.critlabel {
-color:#3399F0;
-font-size:0.9em;
-}

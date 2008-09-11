@@ -70,19 +70,15 @@ public class Styles {
 	public static final String LINK_LARGE_ICON = "large-icon-link";
 	public static final String LINK_UPLOAD = "upload-link";
 	public static final String LINK_UPLOAD_MULTI = "upload-multi-link";
-
-	
-	public static final String SAMPLES_CONTAINER = "samples-container";
+	public static final String LINK_ADD = "add-link";
 	
 	/* ---------------- DataTable ---------------- */
 	public static final String DATATABLE_HEADER_FILTERS = "datatable-header-filters";
 	public static final String DATATABLE_FOOTER = "datatable-footer";
-	public static final String DATATABLE_FOOTER_SELECT = "datatable-footer-select";
-	public static final String DATATABLE_FOOTER_SELECT_OPTION = "select-option";
 	public static final String DATATABLE_FOOTER_WRAPPER = "datatable-footer-wrapper";
 	public static final String DATATABLE_FOOTER_LABEL = "datatable-footer-label";
-	public static final String DATATABLE_FOOTER_ACTIONS = "datatable-footer-actions";
-	public static final String DATATABLE_FOOTER_ACTION_ITEM = "datatable-footer-action-item";
+	public static final String DATATABLE_FOOTER_ITEM = "datatable-footer-item";
+	public static final String DATATABLE_FOOTER_SUBITEM = "datatable-footer-subitem";
 	public static final String POPUP_CUSTOM_COLS_CONTAINER = "popup-custom-cols-container";
 	public static final String POPUP_CUSTOM_COLS = "popup-custom-cols";
 	public static final String POPUP_CUSTOM_COLS_BOTTOM = "popup-custom-cols-bottom";	
@@ -92,6 +88,10 @@ public class Styles {
 	/* ---------------- Page: Sample Details ---------------- */
 	public static final String SD_GOOGLE_MAP = "sd-gmap";
 	public static final String PAGE_SAMPLE_DETAILS = "p-sample-details";
+	
+	/* ---------------- Page: My Samples ---------------- */
+	public static final String SAMPLES_CONTAINER = "samples-container";
+	
 	
 
 	private Styles() {

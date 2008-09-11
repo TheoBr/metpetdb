@@ -123,7 +123,7 @@ public class SubsampleDetails extends MPagePanel {
 				}
 
 				setPageTitle("Subsample " + s.getName());
-				addActionListItem(map);
+				addPageHeaderListItem(map);
 				sampleId = s.getSample().getId();
 				
 			}

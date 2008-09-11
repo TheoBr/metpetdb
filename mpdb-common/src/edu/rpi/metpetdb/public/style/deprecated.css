@@ -1,0 +1,105 @@
+/*-------------------------------------
+               deprecated
+ --------------------------------------*/
+
+
+/*-------------------------------------
+               hyperlinks
+ --------------------------------------*/
+.addlink {
+	padding-left: 15px;
+	background-image: url(../images/add.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	cursor: pointer;
+}
+.editlink {
+	background-image:url(../images/icon-edit.gif);
+	background-position:left center;
+	background-repeat:no-repeat;
+	padding-left:15px;
+}
+.lbCloseLink {
+	background:transparent url(../images/closelabel.gif) no-repeat scroll center;
+	display:block;
+	float:right;
+	height:22px;
+	margin:5px 0pt;
+	width:75px;
+}
+.prevLink {
+	background:transparent url(../images/prev.bmp) no-repeat scroll center;
+	display:block;
+	float:right;
+	height:33px;
+	margin:5px 0pt;
+	width:75px;
+}
+
+.nextLink {
+	background:transparent url(../images/next.bmp) no-repeat scroll center;
+	display:block;
+	float:right;
+	height:33px;
+	margin:5px 0pt;
+	width:75px;
+}
+
+
+/*-------------------------------------
+                 lists
+ --------------------------------------*/
+ul.bullet, ol {
+	margin-left: 2em;
+}
+ul.bullet li {
+	list-style-image: url(http://mpdb.zakness.com/images/li-bluearrow.gif);
+	text-indent: -5px;
+}
+ol li {
+	list-style-type: decimal;
+	line-height: 1em;
+	margin: 0.6em 0;
+	color: #39c;
+}
+ol li span {
+	color: #000;
+}
+
+/*-------------------------------------
+             options list
+ --------------------------------------*/
+#content ul.options {
+	margin: 0.7em 0;
+}
+#content ul.options li {
+	display: inline;
+	margin-right: 1.5em;
+	line-height: 1em;
+}
+
+/*------------------------
+	FIXME: clean these styles up
+--------------------------*/
+
+.bold {
+	font-weight: bold;
+}
+	
+.brown {
+	color: #622008;
+}
+
+.gray {
+	color: #666666;
+}
+
+.big {
+	font-family:Helvetica,sans-serif;
+	font-size:2em;	
+}
+
+.white {
+	color: white;
+}
+

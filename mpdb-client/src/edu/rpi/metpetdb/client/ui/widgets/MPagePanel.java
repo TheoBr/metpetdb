@@ -25,7 +25,7 @@ public class MPagePanel extends FlowPanel {
 		headContainer.add(actionList);
 	}
 
-	public void addActionListItem(final MLink lnk) {
+	public void addPageHeaderListItem(final MLink lnk) {
 		insertActionListItem(lnk, actionList.getWidgetCount());
 	}
 

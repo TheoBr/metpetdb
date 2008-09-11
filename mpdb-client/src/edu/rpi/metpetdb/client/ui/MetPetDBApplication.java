@@ -298,43 +298,13 @@ public class MetPetDBApplication implements EntryPoint {
 
 	private void createHdrNav() {
 		hdrnav.setAutoOpen(true);
-
-		// final MenuItem home = new MenuItem(MpDb.lc_text.homeMenu(),
-		// TokenSpace.introduction);
-
-		final MMenuBar mySamples = new MMenuBar(true);
-		mySamples.addItem(LocaleHandler.lc_text.mySamplesMenu_AllMySamples(),
-				TokenSpace.samplesForUser);
-
-		// mySamples.addItem(
-		// LocaleHandler.lc_text.mySamplesMenu_FavoriteSamples(),
-		// new MMenuBar(false));
-		//mySamples.addItem(LocaleHandler.lc_text.mySamplesMenu_NewestSamples(),
-		// new MMenuBar(false));
-		mySamples.addItem(LocaleHandler.lc_text.mySamplesMenu_EnterSample(),
-				TokenSpace.enterSample);
-
+		
 		final MMenuBar projects = new MMenuBar(true);
 		projects.addItem("My Projects", TokenSpace.allProjects);
 		projects.addItem(LocaleHandler.lc_text.projectsMenu_NewProject(),
 				TokenSpace.newProject);
 
-		final MMenuBar search = new MMenuBar(true);
-		search.addItem(LocaleHandler.lc_text.searchMenu_AllPublicSamples(),
-				TokenSpace.allPublicSamples);
-		search.addItem(LocaleHandler.lc_text.searchMenu_TestSearch(),
-				TokenSpace.search);
-
-		// final MMenuBar news = new MMenuBar(false);
-
-		final MMenuBar about = new MMenuBar(true);
-		about.addItem(LocaleHandler.lc_text.aboutMenu_Introduction(),
-				TokenSpace.introduction);
-		about.addItem(LocaleHandler.lc_text.aboutMenu_Wiki(), new Command() {
-			public void execute() {
-				Window.open(WIKI_URL, "mpdb_wiki", "");
-			}
-		});
+		final MMenuBar dev = new MMenuBar(true);
 		// about.addItem(LocaleHandler.lc_text.aboutMenu_VersionControl(),
 		// new Command() {
 		// public void execute() {
@@ -346,34 +316,7 @@ public class MetPetDBApplication implements EntryPoint {
 		// Window.open(SVN_URL, "mpdb_svn", "");
 		// }
 		// });
-		about.addItem("JavaDocs", new Command() {
-			public void execute() {
-				Window.open(JAVADOC_URL, "mpdb_javadoc", "");
-			}
-		});
-		about.addItem("JUnit Results", new Command() {
-			public void execute() {
-				Window.open(JUNIT_URL, "mpdb_junit", "");
-			}
-		});
-
-		// final MMenuBar people = new MMenuBar(false);
-		// final MMenuBar faq = new MMenuBar(false);
-		// final MMenuBar wiki = new MMenuBar(false);
-
-		hdrnav.addItem(LocaleHandler.lc_text.homeMenu(),
-				TokenSpace.introduction);
-		hdrnav.addItem(LocaleHandler.lc_text.mySamplesMenu(), mySamples);
-		hdrnav.addItem(LocaleHandler.lc_text.projectMenu(), projects);
-		hdrnav.addItem(LocaleHandler.lc_text.searchMenu(), search);
-		// hdrnav.addItem(LocaleHandler.lc_text.newsMenu(), news);
-		hdrnav.addItem(LocaleHandler.lc_text.aboutMenu(), about);
-		// hdrnav.addItem(LocaleHandler.lc_text.peopleMenu(), people);
-		// hdrnav.addItem(LocaleHandler.lc_text.faqMenu(), faq);
-		// hdrnav.addItem(LocaleHandler.lc_text.wikiMenu(), wiki);
-		hdrnav.addItem("Bulk Upload", TokenSpace.bulkUpload);
-
-		hdrnav.addItem("regenerate constraints", new Command() {
+		dev.addItem("Regenerate Constraints", new Command() {
 			public void execute() {
 				new ServerOp<ResumeSessionResponse>() {
 					public void begin() {
@@ -387,6 +330,28 @@ public class MetPetDBApplication implements EntryPoint {
 				}.begin();
 			}
 		});
+		dev.addItem("JavaDocs", new Command() {
+			public void execute() {
+				Window.open(JAVADOC_URL, "mpdb_javadoc", "");
+			}
+		});
+		dev.addItem("JUnit Results", new Command() {
+			public void execute() {
+				Window.open(JUNIT_URL, "mpdb_junit", "");
+			}
+		});
+
+//		hdrnav.addItem(LocaleHandler.lc_text.homeMenu(),
+//				TokenSpace.introduction);
+		hdrnav.addItem("My Samples", TokenSpace.samplesForUser);
+		hdrnav.addItem(LocaleHandler.lc_text.projectMenu(), projects);
+		hdrnav.addItem("Search", TokenSpace.search);
+		hdrnav.addItem("Wiki", new Command() {
+			public void execute() {
+				Window.open(WIKI_URL, "mpdb_wiki", "");
+			}
+		});
+		hdrnav.addItem("Developers", dev);
 
 	}
 

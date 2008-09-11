@@ -339,31 +339,5 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 }
 
 
-/*------------------------
-	FIXME: clean these styles up
---------------------------*/
-
-.bold{
-	font-weight: bold;
-}
-	
-.brown{
-	color: #622008;
-}
-
-.gray{
-	color: #666666;
-}
-
-.big{
-	font-family:Helvetica,sans-serif;
-	font-size:2em;	
-}
-
-.white{
-	color: white;
-}
-
-
 
 
