@@ -22,7 +22,7 @@ public class MPagePanel extends FlowPanel {
 
 	public void addPageHeaderActionList() {
 		actionList.setStylePrimaryName("page-action-list");
-		DOM.appendChild(headContainer.getElement(), actionList.getElement());
+		headContainer.add(actionList);
 	}
 
 	public void addActionListItem(final MLink lnk) {
