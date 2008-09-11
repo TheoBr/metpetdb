@@ -1,6 +1,6 @@
 package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 
-import java.math.BigDecimal;
+//import java.math.BigDecimal;
 
 import org.postgis.LinearRing;
 import org.postgis.Point;
