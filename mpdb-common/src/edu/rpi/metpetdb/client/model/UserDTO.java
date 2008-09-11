@@ -19,6 +19,8 @@ public class UserDTO extends MObjectDTO {
 	private String postalCode;
 	private String institution;
 	private String referenceEmail;
+	private Boolean enabled;
+	
 	
 	private Set<ProjectDTO> projects;
 	private Set<SampleDTO> samples;
@@ -139,6 +141,14 @@ public class UserDTO extends MObjectDTO {
 
 	public void setSamples(final Set<SampleDTO> s) {
 		samples = s;
+	}
+
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	public int hashCode() {

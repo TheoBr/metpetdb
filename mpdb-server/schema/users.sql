@@ -1,4 +1,5 @@
 CREATE SEQUENCE user_seq;
+CREATE SEQUENCE admin_user_seq;
 
 CREATE TABLE users
 (
@@ -14,8 +15,19 @@ CREATE TABLE users
   postal_code VARCHAR(15),
   institution VARCHAR(300),
   reference_email VARCHAR(255),
+  confirmation_code CHAR(32),
+  enabled CHAR(1) NOT NULL,
   CONSTRAINT users_sk PRIMARY KEY (user_id),
   CONSTRAINT users_nk_username UNIQUE (email)
+) WITHOUT OIDS;
+
+CREATE TABLE admin_users
+(
+  admin_id INT4 NOT NULL,
+  user_id INT4 NOT NULL,
+  CONSTRAINT users_sk PRIMARY KEY (admin_id),
+  CONSTRAINT admin_users_fk_user FOREIGN KEY (user_id)
+    REFERENCES users(user_id)
 ) WITHOUT OIDS;
 
 INSERT INTO users VALUES (nextval('user_seq'), 1, 'Anthony Waters', 'watera2@cs.rpi.edu','','','','','','','');

@@ -20,6 +20,8 @@
     <property name="postalCode" column="postal_code" />
     <property name="institution" />
     <property name="referenceEmail" column="reference_email" />
+	<property name="enabled" type="yes_no" />
+	<property name="confirmationCode" column="confirmation_code" />    
 
     <set name="projects" table="project_members" inverse="true">
       <key column="user_id" />

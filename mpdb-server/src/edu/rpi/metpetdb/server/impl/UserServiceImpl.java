@@ -1,11 +1,14 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.util.UUID;
+
 import org.hibernate.exception.ConstraintViolationException;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.validation.DuplicateValueException;
 import edu.rpi.metpetdb.client.error.validation.LoginFailureException;
 import edu.rpi.metpetdb.client.model.StartSessionRequestDTO;
@@ -94,12 +97,17 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		newUser.setEncryptedPassword(PasswordEncrypter.crypt(pass));
 		doc.validate(newUser);
 		User u = (User) merge(newUser);
+		u.setEnabled(false);
+		u.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-", ""));
 		try {
 			u = (new UserDAO(this.currentSession())).save(u);
 			commit();
 			EmailSupport.sendMessage(this, u.getEmailAddress(),
 					"registerNewUser", new Object[] {
-							u.toString(), getModuleBaseURL()
+							u.toString(),
+							getModuleBaseURL(),
+							getModuleBaseURL() + "#ConfirmationCode-"
+									+ u.getConfirmationCode()
 					});
 			setCurrentUser(u);
 		} catch (ConstraintViolationException cve) {
@@ -152,5 +160,21 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 				new Object[] {
 						u.toString(), newpass, getModuleBaseURL()
 				});
+	}
+
+	public UserDTO confirmUser(String confirmationCode) throws DAOException, LoginRequiredException {
+		User u = new User();
+		u.setId(currentUser());
+		final UserDAO ud =new UserDAO(this.currentSession()); 
+		u = (ud).fill(u);
+		if (u.getConfirmationCode().equals(confirmationCode)) {
+			u.setEnabled(true);
+			u.setConfirmationCode("");
+			ud.save(u);
+			commit();
+			return (UserDTO) clone(u);
+		} else {
+			throw new GenericDAOException();
+		}
 	}
 }

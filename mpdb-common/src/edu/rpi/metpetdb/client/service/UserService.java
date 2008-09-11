@@ -122,4 +122,6 @@ public interface UserService extends RemoteService {
 	 */
 	void emailPassword(String username) throws DAOException,
 			UnableToSendEmailException;
+	
+	UserDTO confirmUser(String confirmationCode) throws DAOException, LoginRequiredException;
 }

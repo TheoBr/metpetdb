@@ -24,6 +24,8 @@ public class User extends MObject {
 	private String postalCode;
 	private String institution;
 	private String referenceEmail;
+	private Boolean enabled;
+	private transient String confirmationCode;
 	
 	private Set<Project> projects;
 	@ContainedIn
@@ -145,6 +147,22 @@ public class User extends MObject {
 
 	public void setSamples(final Set<Sample> s) {
 		samples = s;
+	}
+
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public String getConfirmationCode() {
+		return confirmationCode;
+	}
+
+	public void setConfirmationCode(String confirmationCode) {
+		this.confirmationCode = confirmationCode;
 	}
 
 	public int hashCode() {

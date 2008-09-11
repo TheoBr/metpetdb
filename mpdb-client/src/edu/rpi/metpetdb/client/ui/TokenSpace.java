@@ -35,6 +35,7 @@ import edu.rpi.metpetdb.client.ui.objects.list.UserProjectsListEx;
 import edu.rpi.metpetdb.client.ui.objects.list.UserSamplesList;
 import edu.rpi.metpetdb.client.ui.permission.PermissionDenied;
 import edu.rpi.metpetdb.client.ui.search.Search;
+import edu.rpi.metpetdb.client.ui.user.Confirmation;
 import edu.rpi.metpetdb.client.ui.user.EditUserProfile;
 import edu.rpi.metpetdb.client.ui.user.UserDetails;
 import edu.rpi.metpetdb.client.ui.user.UserRegistrationPanel;
@@ -314,6 +315,11 @@ public class TokenSpace implements HistoryListener {
 			show(new ImageBrowserDetails().createNew(id));
 		}
 	};
+	public static final Screen confirmation = new Screen("ConfirmationCode") {
+		public void executeToken(final String args) {
+				show(new Confirmation().fill(args));
+		}
+	};
 	static {
 		register(sampleDetails);
 		register(userDetails);
@@ -339,6 +345,7 @@ public class TokenSpace implements HistoryListener {
 		register(newSubsample);
 		register(newChemicalAnalysis);
 		register(createImageMap);
+		register(confirmation);
 
 		// DefaultPaginationBehavior
 		register(new TokenHandler.NoOp("previousPage"));
