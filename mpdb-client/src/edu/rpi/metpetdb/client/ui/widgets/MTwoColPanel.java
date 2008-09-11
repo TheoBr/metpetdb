@@ -5,7 +5,7 @@ import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 
-import edu.rpi.metpetdb.client.ui.Styles;
+import edu.rpi.metpetdb.client.ui.CSS;
 
 public class MTwoColPanel extends FlowPanel {
 	
@@ -17,12 +17,12 @@ public class MTwoColPanel extends FlowPanel {
 	
 	public MTwoColPanel() {
 		super();
-		setStylePrimaryName(Styles.TWO_COLUMN_PANEL);
-		left.setStyleName(Styles.LEFT_COL);
-		right.setStyleName(Styles.RIGHT_COL);
-		leftContent.setStyleName(Styles.CONTENT);
-		rightContent.setStyleName(Styles.CONTENT);
-		clr.setAttribute("class", Styles.CLEARFIX);
+		setStylePrimaryName(CSS.TWO_COLUMN_PANEL);
+		left.setStyleName(CSS.LEFT_COL);
+		right.setStyleName(CSS.RIGHT_COL);
+		leftContent.setStyleName(CSS.CONTENT);
+		rightContent.setStyleName(CSS.CONTENT);
+		clr.setAttribute("class", CSS.CLEARFIX);
 		left.add(leftContent);
 		right.add(rightContent);
 		add(left);

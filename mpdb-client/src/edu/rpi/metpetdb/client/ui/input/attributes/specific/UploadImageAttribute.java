@@ -17,7 +17,7 @@ import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.Styles;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.CurrentError;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
@@ -44,7 +44,7 @@ public class UploadImageAttribute extends GenericAttribute {
 		fu = new FileUpload();
 		fu.setName("imageUpload");
 		fu.setWidth("300");
-		fu.setStyleName(Styles.REQUIRED_FIELD);
+		fu.setStyleName(CSS.REQUIRED_FIELD);
 
 		error = new Label("Upload an image");
 
@@ -104,7 +104,7 @@ public class UploadImageAttribute extends GenericAttribute {
 
 				}
 				if (fu.getFilename().length() == 0) {
-					fu.setStyleName(Styles.INVALID_REQUIRED_FIELD);
+					fu.setStyleName(CSS.INVALID_REQUIRED_FIELD);
 					event.setCancelled(true);
 					if (continuation != null) {
 						continuation.onFailure(new InvalidImageException());

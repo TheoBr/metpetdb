@@ -15,7 +15,7 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.Styles;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
 public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
@@ -105,9 +105,9 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 	private void showBlockOrHide(Element elem, String s) {
 		DOM.setInnerHTML(elem, s);
 		if (s == null || s.equals(""))
-			DOM.setElementAttribute(elem, "class", Styles.HIDE);
+			DOM.setElementAttribute(elem, "class", CSS.HIDE);
 		else
-			DOM.setElementAttribute(elem, "class", Styles.SHOW_BLOCK);
+			DOM.setElementAttribute(elem, "class", CSS.SHOW_BLOCK);
 	}
 
 	protected void init(final GenericAttribute[] atts, final Widget[] actions) {
@@ -233,10 +233,10 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 		DOM.setInnerHTML(legend, t);
 		if (t == null || t.equals("")) {
 			removeStyleName(STYLENAME_DEFAULT + "-hasLegend");
-			DOM.setElementAttribute(legend, "class", Styles.HIDE);
+			DOM.setElementAttribute(legend, "class", CSS.HIDE);
 		} else {
 			addStyleName(STYLENAME_DEFAULT + "-hasLegend");
-			DOM.setElementAttribute(legend, "class", Styles.SHOW_INLINE);
+			DOM.setElementAttribute(legend, "class", CSS.SHOW_INLINE);
 		}
 	}
 
@@ -249,8 +249,8 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 	}
 
 	public void show(final T toShow) {
-		addStyleName(STYLENAME_DEFAULT + "-" + Styles.SHOWMODE);
-		removeStyleName(STYLENAME_DEFAULT + "-" + Styles.EDITMODE);
+		addStyleName(STYLENAME_DEFAULT + "-" + CSS.SHOWMODE);
+		removeStyleName(STYLENAME_DEFAULT + "-" + CSS.EDITMODE);
 		bean = toShow;
 		clearNonActions();
 		for (int row = 0; row < attributes.size(); row++) {
@@ -321,8 +321,8 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 	}
 
 	public void edit(final T toEdit) {
-		addStyleName(STYLENAME_DEFAULT + "-" + Styles.EDITMODE);
-		removeStyleName(STYLENAME_DEFAULT + "-" + Styles.SHOWMODE);
+		addStyleName(STYLENAME_DEFAULT + "-" + CSS.EDITMODE);
+		removeStyleName(STYLENAME_DEFAULT + "-" + CSS.SHOWMODE);
 		bean = toEdit;
 		clearNonActions();
 		for (int row = 0; row < attributes.size(); row++) {

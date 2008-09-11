@@ -31,7 +31,7 @@ import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.Styles;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 
 public class BulkUploadPanel extends MDialogBox implements ClickListener,
@@ -63,7 +63,7 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener,
 	public BulkUploadPanel() {
 		submitButton = new Button(LocaleHandler.lc_text
 				.buttonUploadSpreadsheet(), this);
-		submitButton.setStyleName(Styles.PRIMARY_BUTTON);
+		submitButton.setStyleName(CSS.PRIMARY_BUTTON);
 
 		fp = new FormPanel();
 		fp.setMethod(FormPanel.METHOD_POST);
@@ -73,7 +73,7 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener,
 		fu = new FileUpload();
 		fu.setName("bulkUpload");
 		fu.setWidth("300");
-		fu.setStyleName(Styles.REQUIRED_FIELD);
+		fu.setStyleName(CSS.REQUIRED_FIELD);
 
 		samples = new RadioButton("type", "Samples");
 		samples.setChecked(true);
@@ -315,7 +315,7 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener,
 		// this opportunity to perform validation.
 		if (fu.getFilename().length() == 0) {
 			status.setText("Please select a file");
-			fu.setStyleName(Styles.INVALID_REQUIRED_FIELD);
+			fu.setStyleName(CSS.INVALID_REQUIRED_FIELD);
 			event.setCancelled(true);
 		}
 

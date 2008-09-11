@@ -1,7 +1,7 @@
 package edu.rpi.metpetdb.client.ui;
 
 /** CSS and HTML constants */
-public class Styles {
+public class CSS {
 	/* ---------------- ids declared by our host page ---------------- */
 	public static final String LOGBAR_ID = "logbar";
 	public static final String HDRNAV_ID = "hdrnav";
@@ -94,6 +94,6 @@ public class Styles {
 	
 	
 
-	private Styles() {
+	private CSS() {
 	}
 }

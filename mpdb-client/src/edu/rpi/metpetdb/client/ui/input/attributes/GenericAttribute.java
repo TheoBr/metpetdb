@@ -14,7 +14,7 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.Styles;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.CurrentError;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 
@@ -234,14 +234,14 @@ public abstract class GenericAttribute {
 	protected void applyStyle(final Widget editWidget, final boolean valid) {
 		if (valid) {
 			if (constraints[0].required)
-				editWidget.setStyleName(Styles.REQUIRED_FIELD);
+				editWidget.setStyleName(CSS.REQUIRED_FIELD);
 			else
 				editWidget.setStyleName("");
 		} else {
 			if (constraints[0].required)
-				editWidget.setStyleName(Styles.INVALID_REQUIRED_FIELD);
+				editWidget.setStyleName(CSS.INVALID_REQUIRED_FIELD);
 			else
-				editWidget.setStyleName(Styles.INVALID_FIELD);
+				editWidget.setStyleName(CSS.INVALID_FIELD);
 		}
 	}
 

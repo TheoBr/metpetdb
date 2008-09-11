@@ -9,7 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.Styles;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
 public class MultipleObjectDetailsPanel<T extends MObjectDTO> extends
@@ -29,8 +29,8 @@ public class MultipleObjectDetailsPanel<T extends MObjectDTO> extends
 	}
 
 	public void show(final ArrayList<T> beans) {
-		addStyleName(STYLENAME_DEFAULT + "-" + Styles.SHOWMODE);
-		removeStyleName(STYLENAME_DEFAULT + "-" + Styles.EDITMODE);
+		addStyleName(STYLENAME_DEFAULT + "-" + CSS.SHOWMODE);
+		removeStyleName(STYLENAME_DEFAULT + "-" + CSS.EDITMODE);
 		clearNonActions();
 		if (dpBeans == null)
 			dpBeans = new HashMap<T, HashMap<GenericAttribute, DetailsPanelEntry>>();
@@ -104,8 +104,8 @@ public class MultipleObjectDetailsPanel<T extends MObjectDTO> extends
 	}
 
 	public void edit(final ArrayList<T> beans) {
-		addStyleName(STYLENAME_DEFAULT + "-" + Styles.EDITMODE);
-		removeStyleName(STYLENAME_DEFAULT + "-" + Styles.SHOWMODE);
+		addStyleName(STYLENAME_DEFAULT + "-" + CSS.EDITMODE);
+		removeStyleName(STYLENAME_DEFAULT + "-" + CSS.SHOWMODE);
 		clearNonActions();
 		if (dpBeans == null)
 			dpBeans = new HashMap<T, HashMap<GenericAttribute, DetailsPanelEntry>>();

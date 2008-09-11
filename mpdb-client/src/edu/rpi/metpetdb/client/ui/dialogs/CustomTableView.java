@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.paging.Column;
-import edu.rpi.metpetdb.client.ui.Styles;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.Submit;
 import edu.rpi.metpetdb.client.ui.objects.list.ListEx;
 
@@ -63,7 +63,7 @@ public class CustomTableView extends MDialogBox implements ClickListener,
 
 		bottomPanel.add(cancel);
 		bottomPanel.add(submit);
-		bottomPanel.setStyleName(Styles.POPUP_CUSTOM_COLS_BOTTOM);
+		bottomPanel.setStyleName(CSS.POPUP_CUSTOM_COLS_BOTTOM);
 
 		ft.setWidget(0, 0, infoPara);
 		ft.setWidget(1, 0, leftPanel);
@@ -72,11 +72,11 @@ public class CustomTableView extends MDialogBox implements ClickListener,
 		ft.getFlexCellFormatter().setColSpan(0, 0, 2);
 		ft.getFlexCellFormatter().setColSpan(2, 0, 2);
 		ft.setCellPadding(10);
-		ft.setStyleName(Styles.POPUP_CUSTOM_COLS);
+		ft.setStyleName(CSS.POPUP_CUSTOM_COLS);
 		container.add(ft);
 
 		this.setWidget(container);
-		container.setStyleName(Styles.POPUP_CUSTOM_COLS_CONTAINER);
+		container.setStyleName(CSS.POPUP_CUSTOM_COLS_CONTAINER);
 		this.show();
 	}
 

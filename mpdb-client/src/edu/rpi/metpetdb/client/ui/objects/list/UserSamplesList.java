@@ -32,7 +32,7 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.Styles;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.left.side.MySamples;
@@ -69,11 +69,11 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 				TokenSpace.enterSample);
 		final MLink bulkUpload = new MLink("Upload Samples", TokenSpace.bulkUpload);
 
-		addSample.setStylePrimaryName(Styles.LINK_LARGE_ICON);
-		addSample.addStyleName(Styles.LINK_ADD);
+		addSample.setStylePrimaryName(CSS.LINK_LARGE_ICON);
+		addSample.addStyleName(CSS.LINK_ADD);
 
-		bulkUpload.setStylePrimaryName(Styles.LINK_LARGE_ICON);
-		bulkUpload.addStyleName(Styles.LINK_UPLOAD_MULTI);
+		bulkUpload.setStylePrimaryName(CSS.LINK_LARGE_ICON);
+		bulkUpload.addStyleName(CSS.LINK_UPLOAD_MULTI);
 
 		addPageHeaderListItem(addSample);
 		addPageHeaderListItem(bulkUpload);
@@ -128,15 +128,15 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		samplesContainer.add(columnViewPanel);
 		buildSampleFooter();
 		samplesContainer.add(list);
-		samplesContainer.setStylePrimaryName(Styles.SAMPLES_CONTAINER);
+		samplesContainer.setStylePrimaryName(CSS.SAMPLES_CONTAINER);
 		this.add(samplesContainer);
 	}
 
 	private void buildSampleFooter() {
 
 		final Label selectLabel = new Label("Select:");
-		selectLabel.setStylePrimaryName(Styles.DATATABLE_FOOTER_LABEL);
-		selectLabel.addStyleName(Styles.DATATABLE_FOOTER_ITEM);
+		selectLabel.setStylePrimaryName(CSS.DATATABLE_FOOTER_LABEL);
+		selectLabel.addStyleName(CSS.DATATABLE_FOOTER_ITEM);
 
 		selectListBox.addItem("---");
 		selectListBox.addItem("None");
@@ -165,8 +165,8 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		
 		final Label addToProjectLabel = new Label("Add to:");
 		addToProjectLabel
-				.setStylePrimaryName(Styles.DATATABLE_FOOTER_ITEM);
-		addToProjectLabel.addStyleName(Styles.DATATABLE_FOOTER_LABEL);
+				.setStylePrimaryName(CSS.DATATABLE_FOOTER_ITEM);
+		addToProjectLabel.addStyleName(CSS.DATATABLE_FOOTER_LABEL);
 
 		projectListBox.addItem("Choose Project...");
 		Iterator<ProjectDTO> it = projectsList.iterator();
@@ -183,16 +183,16 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		});
 
 		final Label exportLabel = new Label("Export:");
-		exportLabel.setStylePrimaryName(Styles.DATATABLE_FOOTER_ITEM);
-		exportLabel.addStyleName(Styles.DATATABLE_FOOTER_LABEL);
+		exportLabel.setStylePrimaryName(CSS.DATATABLE_FOOTER_ITEM);
+		exportLabel.addStyleName(CSS.DATATABLE_FOOTER_LABEL);
 
 		exportExcel = new MLink(LocaleHandler.lc_text.buttonExportExcel(),
 				new ClickListener() {
 					public void onClick(Widget sender) {
 					}
 				});
-		exportExcel.addStyleName(Styles.BETA);
-		exportExcel.addStyleName(Styles.DATATABLE_FOOTER_SUBITEM);
+		exportExcel.addStyleName(CSS.BETA);
+		exportExcel.addStyleName(CSS.DATATABLE_FOOTER_SUBITEM);
 
 		exportGoogleEarth = new MLink(LocaleHandler.lc_text.buttonExportKML(),
 				new ClickListener() {
@@ -200,21 +200,21 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 						doExportGoogleEarth();
 					}
 				});
-		exportGoogleEarth.addStyleName(Styles.DATATABLE_FOOTER_SUBITEM);
+		exportGoogleEarth.addStyleName(CSS.DATATABLE_FOOTER_SUBITEM);
 		
 		final MLink makePublic = new MLink("Make Public", new ClickListener() {
 			public void onClick(Widget sender) {
 				MakePublicSelected();
 			}
 		});
-		makePublic.addStyleName(Styles.DATATABLE_FOOTER_ITEM);
+		makePublic.addStyleName(CSS.DATATABLE_FOOTER_ITEM);
 		
 		final MLink remove = new MLink("Remove", new ClickListener() {
 			public void onClick(Widget sender) {
 				deleteSelected();
 			}
 		});
-		remove.addStyleName(Styles.DATATABLE_FOOTER_ITEM);
+		remove.addStyleName(CSS.DATATABLE_FOOTER_ITEM);
 
 		footerContainer.add(selectLabel);
 		footerContainer.add(selectListBox);
@@ -227,9 +227,9 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		footerContainer.add(exportGoogleEarth);
 		footerContainer.add(makePublic);
 		footerContainer.add(remove);
-		footerContainer.setStylePrimaryName(Styles.DATATABLE_FOOTER);
+		footerContainer.setStylePrimaryName(CSS.DATATABLE_FOOTER);
 		footerWrapper.add(footerContainer);
-		footerWrapper.setStylePrimaryName(Styles.DATATABLE_FOOTER_WRAPPER);
+		footerWrapper.setStylePrimaryName(CSS.DATATABLE_FOOTER_WRAPPER);
 		
 		final FixedWidthFlexTable footerTable = new FixedWidthFlexTable();
 		footerTable.setWidget(0, 0, footerWrapper);
@@ -243,7 +243,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 			public void onClick(Widget sender) {
 			}
 		});
-		simple.addStyleName(Styles.BETA);
+		simple.addStyleName(CSS.BETA);
 
 		final MLink detailed = new MLink("Detailed", new ClickListener() {
 			public void onClick(Widget sender) {
@@ -264,7 +264,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		columnViewPanel.add(detailed);
 		columnViewPanel.add(customCols);
 
-		columnViewPanel.addStyleName(Styles.DATATABLE_HEADER_FILTERS);
+		columnViewPanel.addStyleName(CSS.DATATABLE_HEADER_FILTERS);
 
 	}
 

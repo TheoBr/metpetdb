@@ -18,7 +18,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.Styles;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 
 public class AddImageDialog extends MDialogBox implements ClickListener,
@@ -45,10 +45,10 @@ public class AddImageDialog extends MDialogBox implements ClickListener,
 	public AddImageDialog(final ServerOp r) {
 		continuation = r;
 		submit = new Button(LocaleHandler.lc_text.buttonUploadImage(), this);
-		submit.setStyleName(Styles.PRIMARY_BUTTON);
+		submit.setStyleName(CSS.PRIMARY_BUTTON);
 
 		cancel = new Button(LocaleHandler.lc_text.buttonCancel(), this);
-		cancel.setStyleName(Styles.SECONDARY_BUTTON);
+		cancel.setStyleName(CSS.SECONDARY_BUTTON);
 
 		fp = new FormPanel();
 		fp.setMethod(FormPanel.METHOD_POST);
@@ -58,7 +58,7 @@ public class AddImageDialog extends MDialogBox implements ClickListener,
 		fu = new FileUpload();
 		fu.setName("imageUpload");
 		fu.setWidth("300");
-		fu.setStyleName(Styles.REQUIRED_FIELD);
+		fu.setStyleName(CSS.REQUIRED_FIELD);
 
 		error = new Label("Upload an image");
 
@@ -101,7 +101,7 @@ public class AddImageDialog extends MDialogBox implements ClickListener,
 				// this opportunity to perform validation.
 				if (fu.getFilename().length() == 0) {
 					error.setText("Please select a file");
-					fu.setStyleName(Styles.INVALID_REQUIRED_FIELD);
+					fu.setStyleName(CSS.INVALID_REQUIRED_FIELD);
 					event.setCancelled(true);
 				}
 			}
@@ -112,7 +112,7 @@ public class AddImageDialog extends MDialogBox implements ClickListener,
 		f.setWidget(fp);
 
 		setWidget(f);
-		this.setStyleName(Styles.ADD_IMAGE_DIALOG);
+		this.setStyleName(CSS.ADD_IMAGE_DIALOG);
 	}
 
 	protected void onLoad() {

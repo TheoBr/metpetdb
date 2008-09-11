@@ -28,7 +28,7 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.Styles;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
@@ -141,7 +141,7 @@ public class SampleDetails extends MPagePanel {
 		oep.addStyleName("inline");
 		panel.getLeftCol().add(oep);
 		add(panel);
-		setStyleName(Styles.PAGE_SAMPLE_DETAILS);
+		setStyleName(CSS.PAGE_SAMPLE_DETAILS);
 	}
 	private void addExtraElements() {
 
@@ -169,7 +169,7 @@ public class SampleDetails extends MPagePanel {
 				}.begin();
 			}
 		});
-		addSubsample.addStyleName(Styles.ADDLINK);
+		addSubsample.addStyleName(CSS.ADDLINK);
 		subsamples_ft.setWidget(0, 1, addSubsample);
 
 		Label Subsamples_label = new Label(LocaleHandler.lc_text.subsamples());;
@@ -230,7 +230,7 @@ public class SampleDetails extends MPagePanel {
 		map.addControl(new LargeMapControl());
 		map.addControl(new MapTypeControl());
 		map.addControl(new ScaleControl());
-		map.setStyleName(Styles.SD_GOOGLE_MAP);
+		map.setStyleName(CSS.SD_GOOGLE_MAP);
 		panel.getRightCol().add(map);
 	}
 

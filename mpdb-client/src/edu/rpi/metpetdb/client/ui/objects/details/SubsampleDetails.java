@@ -23,7 +23,7 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.Styles;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageListViewer;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
@@ -169,7 +169,7 @@ public class SubsampleDetails extends MPagePanel {
 				}.begin();
 			}
 		});
-		addChemicalAnalysis.setStyleName(Styles.ADDLINK);
+		addChemicalAnalysis.setStyleName(CSS.ADDLINK);
 		final Label chemAnalysis = new Label("Chemical Analysis");
 		chemAnalysis.setStyleName("h2");
 		chemft.setWidget(0, 0, chemAnalysis);

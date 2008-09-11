@@ -44,7 +44,7 @@ public class Breadcrumbs extends FlowPanel {
 			});
 		} catch (RequestException ex) {
 		}
-		setStylePrimaryName(Styles.BREADCRUMBS);
+		setStylePrimaryName(CSS.BREADCRUMBS);
 	}
 
 	public Breadcrumbs(final String HistoryToken) {
@@ -136,7 +136,7 @@ public class Breadcrumbs extends FlowPanel {
 		current = currentPage;
 		LeftColWidget.updateLeftSide(Node.getLeftSide());
 		onFindSuccessRecursive(Node);
-		getWidget((getWidgetCount() - 1)).addStyleName(Styles.CURRENT);
+		getWidget((getWidgetCount() - 1)).addStyleName(CSS.CURRENT);
 	}
 	private void onFindSuccessRecursive(final bcNode Node) {
 		if (Node != null) {
@@ -166,7 +166,7 @@ public class Breadcrumbs extends FlowPanel {
 		insert(bc, 0);
 		if (node.getParent() == null) {
 			setVisible(true);
-			getWidget(0).addStyleName(Styles.FIRST);
+			getWidget(0).addStyleName(CSS.FIRST);
 		}
 	}
 

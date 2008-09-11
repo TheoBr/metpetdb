@@ -60,14 +60,14 @@ public class MetPetDBApplication implements EntryPoint {
 		GWT.setUncaughtExceptionHandler(ErrorHandler.INSTANCE);
 		History.addHistoryListener(TokenSpace.INSTANCE);
 
-		loginBar = RootPanel.get(Styles.LOGBAR_ID);
-		breadcrumbsBar = RootPanel.get(Styles.BREADCRUMBS_ID);
+		loginBar = RootPanel.get(CSS.LOGBAR_ID);
+		breadcrumbsBar = RootPanel.get(CSS.BREADCRUMBS_ID);
 		hdrnav = new MMenuBar();
-		RootPanel.get(Styles.HDRNAV_ID).add(hdrnav);
-		contentContainer = RootPanel.get(Styles.CONTENT_ID);
-		noticeContainer = RootPanel.get(Styles.NOTICE_ID);
-		leftContainer = RootPanel.get(Styles.LEFTCOL_ID);
-		footerContainer = RootPanel.get(Styles.FOOTER_ID);
+		RootPanel.get(CSS.HDRNAV_ID).add(hdrnav);
+		contentContainer = RootPanel.get(CSS.CONTENT_ID);
+		noticeContainer = RootPanel.get(CSS.NOTICE_ID);
+		leftContainer = RootPanel.get(CSS.LEFTCOL_ID);
+		footerContainer = RootPanel.get(CSS.FOOTER_ID);
 
 		// make MPDB logo a link to the introduction screen
 		/*
@@ -128,7 +128,7 @@ public class MetPetDBApplication implements EntryPoint {
 
 		// Throw away the loading message that users see while GWT
 		// starts up and is able to finish loading its resources.
-		final Element lm = RootPanel.get(Styles.LOADINGMESSAGE_ID).getElement();
+		final Element lm = RootPanel.get(CSS.LOADINGMESSAGE_ID).getElement();
 		DOM.removeChild(DOM.getParent(lm), lm);
 
 		// If we were given a state to jump to, go there. Otherwise

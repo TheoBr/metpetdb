@@ -6,21 +6,21 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Image;
 
-import edu.rpi.metpetdb.client.ui.Styles;
+import edu.rpi.metpetdb.client.ui.CSS;
 
 public class CurrentError extends FlowPanel implements HasText {
 	static {
-		Image.prefetch(Styles.ICON_WARNING);
+		Image.prefetch(CSS.ICON_WARNING);
 	}
 
 	private final Element text;
 
 	CurrentError() {
-		setStyleName(Styles.INVALID_FIELD_ERR);
+		setStyleName(CSS.INVALID_FIELD_ERR);
 		setVisible(false);
 
 		final Element icon = DOM.createImg();
-		DOM.setElementAttribute(icon, "src", Styles.ICON_WARNING);
+		DOM.setElementAttribute(icon, "src", CSS.ICON_WARNING);
 		DOM.appendChild(getElement(), icon);
 
 		text = DOM.createSpan();
