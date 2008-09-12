@@ -25,7 +25,7 @@ CREATE TABLE admin_users
 (
   admin_id INT4 NOT NULL,
   user_id INT4 NOT NULL,
-  CONSTRAINT users_sk PRIMARY KEY (admin_id),
+  CONSTRAINT admin_users_sk PRIMARY KEY (admin_id),
   CONSTRAINT admin_users_fk_user FOREIGN KEY (user_id)
     REFERENCES users(user_id)
 ) WITHOUT OIDS;
