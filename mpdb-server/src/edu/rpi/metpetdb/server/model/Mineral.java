@@ -14,6 +14,7 @@ public class Mineral extends MObject implements IHasName {
 	private static final long serialVersionUID = 1L;
 	private short id;
 	private Short parentId;
+	private Short realMineralId;
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String name;
 
@@ -49,6 +50,14 @@ public class Mineral extends MObject implements IHasName {
 
 	public Set<Mineral> getChildren() {
 		return children;
+	}
+
+	public Short getRealMineralId() {
+		return realMineralId;
+	}
+
+	public void setRealMineralId(Short realMineralId) {
+		this.realMineralId = realMineralId;
 	}
 
 	public boolean equals(final Object o) {

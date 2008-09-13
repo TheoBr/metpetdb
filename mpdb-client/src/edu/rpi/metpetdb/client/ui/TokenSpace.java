@@ -317,7 +317,12 @@ public class TokenSpace implements HistoryListener {
 	};
 	public static final Screen confirmation = new Screen("ConfirmationCode") {
 		public void executeToken(final String args) {
-				show(new Confirmation().fill(args));
+			new LoggedInServerOp() {
+				@Override
+				public void command() {
+					show(new Confirmation().fill(args));
+				}
+			}.execute();
 		}
 	};
 	static {

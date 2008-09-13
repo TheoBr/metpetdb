@@ -38,5 +38,12 @@ public class MineralDaoTest extends TestCase {
 			printMineralTree(m.getChildren(), spaces + "-");
 		}
 	}
+	
+	@Test
+	public void testLoadAlternativeMineral() {
+		final Query q = s.getNamedQuery("Mineral.byName").setParameter("name", "K-feldspar");
+		final Mineral m = (Mineral) q.uniqueResult();
+		assertEquals("Alkali feldspar", m.getName());
+	}
 
 }

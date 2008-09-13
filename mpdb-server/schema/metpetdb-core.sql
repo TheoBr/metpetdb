@@ -1,9 +1,12 @@
 CREATE TABLE minerals
 (
   mineral_id INT2 NOT NULL,
+  real_mineral_id INT2 NOT NULL, --for alternative minerals this is the default id, else it is mineral_id
   name VARCHAR(100) NOT NULL,
   parent_mineral_id INT2,
   CONSTRAINT minerals_sk PRIMARY KEY (mineral_id),
+  CONSTRAINT minerals_fk_real_mineral_id FOREIGN KEY (real_mineral_id)
+    REFERENCES minerals (mineral_id),
   CONSTRAINT minerals_nk UNIQUE (name)
 ) WITHOUT OIDS;
 

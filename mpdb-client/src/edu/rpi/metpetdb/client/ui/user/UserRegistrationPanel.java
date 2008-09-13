@@ -126,8 +126,6 @@ public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 		new FormOp<UserDTO>(p_main) {
 			protected void onSubmit() {
 				MpDb.user_svc.registerNewUser(newbie, this);
-				Window.alert("You've been registered as "
-						+ newbie.getUser().getEmailAddress());
 			}
 			public void onSuccess(final UserDTO result) {
 				MpDb.setCurrentUser((UserDTO) result);

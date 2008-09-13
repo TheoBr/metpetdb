@@ -167,14 +167,14 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		u.setId(currentUser());
 		final UserDAO ud =new UserDAO(this.currentSession()); 
 		u = (ud).fill(u);
-		if (u.getConfirmationCode().equals(confirmationCode)) {
+		if (u.getConfirmationCode().equals(confirmationCode) && !u.getEnabled()) {
 			u.setEnabled(true);
 			u.setConfirmationCode("");
 			ud.save(u);
 			commit();
 			return (UserDTO) clone(u);
 		} else {
-			throw new GenericDAOException();
+			throw new GenericDAOException("Confirmation code does not equal");
 		}
 	}
 }

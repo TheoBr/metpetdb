@@ -30,8 +30,8 @@ CREATE TABLE admin_users
     REFERENCES users(user_id)
 ) WITHOUT OIDS;
 
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Anthony Waters', 'watera2@cs.rpi.edu','','','','','','','');
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Sibel Adali', 'sibel@cs.rpi.edu','','','','','','','');
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Boleslaw Szymanski', 'szymansk@cs.rpi.edu','','','','','','','');
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Frank Spear', 'spearf@rpi.edu','','','','','','','');
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Benjamin Hallett', 'halleb3@rpi.edu','','','','','','','');
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Anthony Waters', 'watera2@cs.rpi.edu','','','','','','','','','','Y');
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Sibel Adali', 'sibel@cs.rpi.edu','','','','','','','','','','Y');
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Boleslaw Szymanski', 'szymansk@cs.rpi.edu','','','','','','','','','','Y');
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Frank Spear', 'spearf@rpi.edu','','','','','','','','','','Y');
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Benjamin Hallett', 'halleb3@rpi.edu','','','','','','','','','','Y');

@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -11,6 +12,7 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 import edu.rpi.metpetdb.server.dao.ResultsFromDAO;
 import edu.rpi.metpetdb.server.model.Sample;
+import edu.rpi.metpetdb.server.model.SampleMineral;
 
 public class SampleDAO extends MpDbDAO<Sample> {
 
@@ -46,9 +48,13 @@ public class SampleDAO extends MpDbDAO<Sample> {
 
 		throw new SampleNotFoundException();
 	}
-
-	@Override
-	public Sample save(Sample s) throws DAOException {
+	
+	public Set<SampleMineral> replaceMinerals(final Set<SampleMineral> s) {
+		final Set<SampleMineral> m = (new SampleMineralDAO(sess)).fill(s);
+		return m;
+	}
+	
+	public void replaceTransientObjects(Sample s) throws DAOException {
 		// Fill subcomponents
 		s.setRegions((new RegionDAO(sess)).fill(s.getRegions()));
 		s.setMetamorphicGrades((new MetamorphicGradeDAO(sess)).fill(s
@@ -56,6 +62,11 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		s.setReferences((new ReferenceDAO(sess)).fill(s.getReferences()));
 		s.setMinerals(((new SampleMineralDAO(sess))).fill(s.getMinerals()));
 		s.setRockType(new RockTypeDAO(sess).fill(s.getRockType()));
+	}
+
+	@Override
+	public Sample save(Sample s) throws DAOException {
+		replaceTransientObjects(s);
 
 		s = _save(s);
 		return s;

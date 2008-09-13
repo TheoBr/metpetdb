@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.server.impl;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -76,17 +77,32 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 			sp.parse();
 
 			final List<SampleDTO> samples = sp.getSamples();
+			final SampleDAO dao = new SampleDAO(this.currentSession());
+			final List<SampleDTO> replaceSamples = new ArrayList<SampleDTO>();
+			for(SampleDTO s : samples) {
+				final Sample s2 = mergeBean(s);
+				try {
+					dao.replaceTransientObjects(s2);
+					final SampleDTO s3 = cloneBean(s2);
+					replaceSamples.add(s3);
+				} catch (DAOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
 
 			// Find Valid, new Samples
 			Integer[] sample_breakdown = {
 					0, 0, 0
 			};
-			for (SampleDTO s : samples) {
+			
+			for (SampleDTO s : replaceSamples) {
 				s.setOwner(u);
 				try {
 					doc.validate(s);
 					Sample smpl = mergeBean(s);
-					if ((new SampleDAO(this.currentSession()).isNew(smpl)))
+					if (dao.isNew(smpl))
 						sample_breakdown[1]++;
 					else
 						sample_breakdown[2]++;
@@ -101,6 +117,7 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 			throw new IllegalStateException(ioe.getMessage());
 		}
 	}
+
 	public Map<Integer, ValidationException> saveSamplesFromSpreadsheet(
 			final String fileOnServer) throws InvalidFormatException,
 			LoginRequiredException, DAOException {
@@ -136,8 +153,22 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 			}
 			final UserDTO u = (UserDTO) cloneBean(user);
 			final List<SampleDTO> samples = sp.getSamples();
+			final SampleDAO dao = new SampleDAO(this.currentSession());
+			final List<SampleDTO> replaceSamples = new ArrayList<SampleDTO>();
+			for(SampleDTO s : samples) {
+				final Sample s2 = mergeBean(s);
+				try {
+					dao.replaceTransientObjects(s2);
+					final SampleDTO s3 = cloneBean(s2);
+					replaceSamples.add(s3);
+				} catch (DAOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
 			Integer i = 2;
-			for (SampleDTO s : samples) {
+			for (SampleDTO s : replaceSamples) {
 				s.setOwner(u);
 				try {
 					doc.validate(s);
@@ -149,7 +180,7 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 
 			if (errors.isEmpty())
 				try {
-					save(samples);
+					save(replaceSamples);
 					return null;
 				} catch (final ValidationException e) {
 					throw new IllegalStateException(

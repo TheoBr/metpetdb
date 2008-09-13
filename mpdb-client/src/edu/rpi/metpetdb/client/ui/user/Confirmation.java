@@ -21,10 +21,13 @@ public class Confirmation extends FlowPanel implements ClickListener {
 		instructions = new Label("Enter your confirmation code and click Confirm");
 		confirmationCode = new TextBox();
 		confirm = new Button("Confirm", this);
-		
 		add(instructions);
-		add(confirmationCode);
-		add(confirm);
+		if (!MpDb.currentUser().getEnabled()) {
+			add(confirmationCode);
+			add(confirm);
+		} else {
+			instructions.setText("Your account is already enabled - you cannot confirm it.");
+		}
 	}
 	
 	public Confirmation fill(final String uuid) {
@@ -45,7 +48,6 @@ public class Confirmation extends FlowPanel implements ClickListener {
 					MpDb.setCurrentUser(result);
 					instructions.setText("Your account is now enabled");
 				}
-				
 			}.begin();
 		}
 	}

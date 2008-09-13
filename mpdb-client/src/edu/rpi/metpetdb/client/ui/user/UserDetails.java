@@ -12,6 +12,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 public class UserDetails extends FlowPanel {
 	private static final GenericAttribute[] mainAttributes = {
 			new TextAttribute(MpDb.doc.User_emailAddress),
+			new TextAttribute(MpDb.doc.User_name),
 	};
 
 	private final DetailsPanel<UserDTO> p_user;

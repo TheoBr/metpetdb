@@ -11,7 +11,8 @@
     </id>
     <property name="name" column="name"/>
     <property name="parentId" column="parent_mineral_id"/>
-
+    <property name="realMineralId" column="real_mineral_id"/>
+    
     <set name="children" lazy="false" inverse="true" cascade="none">
       <key column="parent_mineral_id" />
       <one-to-many class="Mineral"/>
@@ -26,11 +27,13 @@
  
   <query name="Mineral.byName">
     from Mineral m
-    where m.name = :name
+    where m.id = (
+    	select m2.realMineralId from Mineral m2 where m2.name=:name
+    )
   </query>
   
   <query name="Mineral.all,size">
-    select count(*) from Mineral m
+    select count(distinct realMineralId) from Mineral m
   </query>
   <query name="Mineral.all">
     from Mineral m
