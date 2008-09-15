@@ -13,12 +13,15 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.ui.CSS;
+
 public class MUnorderedList extends Panel implements IndexedPanel,
 		SourcesMouseEvents {
 
 	private final Element ul;
 	private final HashSet<ListItem> items;
 	private MouseListenerCollection mouseListeners;
+	private boolean hasRibbonStyle = false;
 
 	public MUnorderedList() {
 		super();
@@ -31,19 +34,36 @@ public class MUnorderedList extends Panel implements IndexedPanel,
 	public HashSet<ListItem> getItems() {
 		return items;
 	}
+	
+	public void setRibbonStyle(boolean on) {
+		this.hasRibbonStyle = on;
+		if (on) {
+			for (int i=0; i<items.size(); i++) {
+				if (i%2==0) setLiStyle(CSS.EVEN, getWidget(i));
+				else setLiStyle(CSS.ODD, getWidget(i));
+			}
+		} else {
+			for (int i=0; i<items.size(); i++)
+				setLiStyle("", getWidget(i));
+		}
+	}
 
 	public void add(final Widget w) {
-		String className = "oddRow";
-		if (items.size() % 2 == 0) {
-			className = "evenRow";
+		if (hasRibbonStyle) {	
+			String className = CSS.ODD;
+			if (items.size() % 2 == 0)
+				className = CSS.EVEN;
+			add(w, className);
+		} else {
+			add(w, "");
 		}
-		add(w, className);
 	}
 
 	public void add(final Widget w, final String liStyle) {
 		final Element li = DOM.createElement("li");
 		w.removeFromParent();
-		DOM.setElementAttribute(li, "class", liStyle);
+		if (liStyle != "")
+			DOM.setElementAttribute(li, "class", liStyle);
 		DOM.appendChild(li, w.getElement());
 		DOM.appendChild(ul, li);
 		final ListItem item = new ListItem(w, li, items.size());
