@@ -13,11 +13,11 @@
 	<token>Introduction</token>
 	<leftside>UserInfo</leftside>
 	<page>
-		<name>All My Samples</name>
+		<name>My Samples</name>
 		<token>SamplesForUser</token>
 		<leftside>MySamples</leftside>
 		<page>
-			<name>Enter Sample</name>
+			<name>Add Sample</name>
 			<token>UploadSample</token>
 			<leftside>MySamples</leftside>
 		</page>
@@ -32,7 +32,7 @@
 			<screen>false</screen>
 			<leftside>MySubsamples</leftside>
 			<page>
-				<name>Enter Subsample</name>
+				<name>Add Subsample</name>
 				<token>UploadSubsample</token>
 				<screen>false</screen>
 				<leftside>MySubsamples</leftside>
@@ -49,7 +49,7 @@
 				<screen>false</screen>
 				<leftside>MySubsamples</leftside>
 				<page>
-					<name>Map</name>
+					<name>Image Map</name>
 					<token>ImageBrowserDetails</token>
 					<screen>false</screen>
 					<leftside>LeftSideLayer</leftside>
@@ -72,7 +72,7 @@
 					<leftside>MySubsamples</leftside>
 				</page>
 				<page>
-					<name>Enter Chemical Analysis</name>
+					<name>Add Chemical Analysis</name>
 					<token>UploadChemicalAnalysis</token>
 					<screen>false</screen>
 					<leftside>MySubsamples</leftside>
