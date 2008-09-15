@@ -33,22 +33,22 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
+import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
+import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
-public class BulkUploadPanel extends MDialogBox implements ClickListener,
+public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		FormHandler {
 
 	private final FormPanel fp;
 	private final FileUpload fu;
-	private final Button submitButton;
-	private final VerticalPanel vp;
 	private final Label status;
 	private final ProgressBar uploadProgress;
-	private final HorizontalPanel hp;
+	private final MUnorderedList uploadTypeList = new MUnorderedList();
 	private final RadioButton samples;
 	private final RadioButton analyses;
 	private final RadioButton images;
-	private final RadioButton justparse;
-	private final RadioButton upload;
+	private final Button parseButton;
+	private final Button uploadButton;
 	private final Grid errorgrid;
 	private final Grid headergrid;
 	private final Grid additionsgrid;
@@ -59,11 +59,17 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener,
 	private final Timer progressTimer;
 
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
+	private static final String UPLOAD = "upload";
+	private static final String PARSE = "parse";
+	private static String mode;
 
 	public BulkUploadPanel() {
-		submitButton = new Button(LocaleHandler.lc_text
-				.buttonUploadSpreadsheet(), this);
-		submitButton.setStyleName(CSS.PRIMARY_BUTTON);
+		addPageHeader();
+		setPageTitle("Bulk Upload");
+		parseButton = new Button("Parse Spreadsheet", this);
+		parseButton.setStyleName(CSS.PRIMARY_BUTTON);
+		
+		uploadButton = new Button("Commit Spreadsheet", this);
 
 		fp = new FormPanel();
 		fp.setMethod(FormPanel.METHOD_POST);
@@ -78,20 +84,14 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener,
 		samples = new RadioButton("type", "Samples");
 		samples.setChecked(true);
 		analyses = new RadioButton("type", "Chemical Analyses");
-		analyses.addStyleName("beta");
+		analyses.addStyleName(CSS.BETA);
 		images = new RadioButton("type", "Images");
-		images.addStyleName("beta");
-		hp = new HorizontalPanel();
-		hp.add(samples);
-		hp.add(analyses);
-		hp.add(images);
-		hp.add(submitButton);
+		images.addStyleName(CSS.BETA);
+		uploadTypeList.add(samples);
+		uploadTypeList.add(analyses);
+		uploadTypeList.add(images);
 
-		justparse = new RadioButton("submitType", "Parse");
-		justparse.setChecked(true);
-		upload = new RadioButton("submitType", "Commit");
-		hp.add(justparse);
-		hp.add(upload);
+		
 
 		status = new Label("...");
 
@@ -131,28 +131,31 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener,
 			}
 		};
 		
-		vp = new VerticalPanel();
-		vp.add(status);
-		vp.add(fp);
-		vp.add(uploadProgress);
-		vp.add(hp);
-		vp.add(errorGridLabel);
-		vp.add(errorgrid);
-		vp.add(additionsGridLabel);
-		vp.add(additionsgrid);
-		vp.add(headerGridLabel);
-		vp.add(headergrid);
+		add(status);
+		add(fp);
+		add(uploadProgress);
+		add(uploadTypeList);
+		add(parseButton);
+		add(uploadButton);
+		add(errorGridLabel);
+		add(errorgrid);
+		add(additionsGridLabel);
+		add(additionsgrid);
+		add(headerGridLabel);
+		add(headergrid);
 
 		fp.setWidget(fu);
-
 		fp.addFormHandler(this);
-
-		setWidget(vp);
 	}
 
 	public void onClick(final Widget sender) {
-		if (submitButton == sender)
+		if (uploadButton == sender) {
+			this.mode = UPLOAD;
 			doUpload();
+		} else if (parseButton == sender) {
+			this.mode = PARSE;
+			doUpload();
+		}
 	}
 
 	public void doUpload() {
@@ -180,7 +183,7 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener,
 			// What are we being asked to do? Choices are:
 			// *upload => Actually perform the upload
 			// *justparse => provide some feedback
-			if (upload.isChecked()) {
+			if (this.mode == UPLOAD) {
 				new ServerOp<Map<Integer, ValidationException>>() {
 					public void begin() {
 						if (samples.isChecked()) {
@@ -214,7 +217,7 @@ public class BulkUploadPanel extends MDialogBox implements ClickListener,
 						}
 					}
 				}.begin();
-			} else if (justparse.isChecked()) {
+			} else if (this.mode == PARSE) {
 				// Parse Column Headers
 				new ServerOp<Map<Integer, String[]>>() {
 					public void begin() {
