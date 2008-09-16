@@ -22,6 +22,7 @@ DROP SEQUENCE sample_comments_seq;
 DROP SEQUENCE mineral_types_seq;
 DROP SEQUENCE rock_type_seq;
 DROP SEQUENCE subsample_type_seq;
+DROP SEQUENCE admin_user_seq;
 
 
 DROP TABLE chemical_analysis_elements CASCADE;
@@ -56,3 +57,9 @@ DROP TABLE element_mineral_types CASCADE;
 DROP TABLE rock_types CASCADE;
 DROP TABLE image_types CASCADE;
 DROP TABLE subsample_types CASCADE;
+DROP TABLE admin_users CASCADE;
+DROP TABLE image_comments CASCADE;
+DROP TABLE image_reference CASCADE;
+DROP TABLE image_type CASCADE;
+DROP TABLE rock_type CASCADE;
+DROP TABLE subsample_type CASCADE;

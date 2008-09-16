@@ -38,7 +38,8 @@ alter table xray_image owner to metpetdb_dev;
 
 grant all PRIVILEGES on admin_user_seq to metpetdb_dev; 
 grant all PRIVILEGES on chemical_analysis_elements_seq to metpetdb_dev; 
-grant all PRIVILEGES on chemical_analysis_oxides_seq to metpetdb_dev; 
+grant all PRIVILEGES on chemical_analysis_oxides_seq to metpetdb_dev;
+grant all PRIVILEGES on chemical_analyses_seq to metpetdb_dev;
 grant all PRIVILEGES on element_seq to metpetdb_dev; 
 grant all PRIVILEGES on grid_seq to metpetdb_dev; 
 grant all PRIVILEGES on image_comment_seq to metpetdb_dev; 
@@ -57,7 +58,8 @@ grant all PRIVILEGES on region_seq to metpetdb_dev;
 grant all PRIVILEGES on rock_type_seq to metpetdb_dev; 
 grant all PRIVILEGES on sample_comments_seq to metpetdb_dev; 
 grant all PRIVILEGES on sample_seq to metpetdb_dev; 
-grant all PRIVILEGES on subsample_seq to metpetdb_dev; 
+grant all PRIVILEGES on subsample_seq to metpetdb_dev;
+grant all PRIVILEGES on subsample_type_seq to metpetdb_dev; 
 grant all PRIVILEGES on uploaded_files_seq to metpetdb_dev; 
 grant all PRIVILEGES on user_seq to metpetdb_dev; 
 
