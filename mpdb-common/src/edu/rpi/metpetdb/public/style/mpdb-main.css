@@ -17,6 +17,7 @@
 /*-------------------------------------
              pages
  --------------------------------------*/
+@import "page-bulk-upload.css";
 @import "page-imagemap.css";
 @import "page-intro.css";
 @import "page-myprojects.css";

@@ -1,0 +1,73 @@
+/*-------------------------------------
+				Status
+---------------------------------------*/
+
+.bulk-results-grid {
+	border: 1px solid #eee;
+	margin: 10px;
+}
+.notice-panel {
+	border-bottom: 1px solid #EFEFEF;
+	background-color: #EFEFEF;
+	color: #000;
+}
+.notice-panel .notice-message {
+	padding: 6px 9px;
+}
+.notice-panel .notice-hide {
+	float: right;
+	padding: 6px 7px 6px 2px;
+}
+.notice-panel-success {
+	border-bottom-color: #cbee95;
+	background-color: #f4ffe4;
+	color: #5a7d24;
+}
+.notice-panel-error {
+	border-bottom-color: #ffb3a1;
+	background-color: #ffe9e4;
+	color: #c41616;
+}
+.notice-panel-working {
+	border-bottom-color: #cde3f3;
+	background-color: #e7f5fe;
+	color: #617684;
+}
+.notice-panel-warning {
+	border-bottom-color: #f1f975;
+	background-color: #fdffdd;
+	color: #f1a707;
+}
+
+
+.bulk-upload-form {
+	margin: 10px 10px 0;
+}
+.bulk-upload-form .gwt-FileUpload {
+	width: 500px;
+}
+
+/*-------------------------------------
+				ProgressBar
+---------------------------------------*/
+.progressbar-container {
+	border: 1px solid #bebebe;
+	background-color: #fff;
+	padding: 1px;
+	width: 200px;
+	margin: 10px;
+}
+.gwt-ProgressBar-shell {
+	background-color: #f2f2f2;
+	height: 17px;
+}
+.gwt-ProgressBar-shell .gwt-ProgressBar-bar {
+	background-color: #97b814;
+}
+.gwt-ProgressBar-shell .gwt-ProgressBar-text {
+	color: #aaa;
+	padding: 2px 0;
+}
+.gwt-ProgressBar-shell .gwt-ProgressBar-text-secondHalf {
+	color: #688200;
+}

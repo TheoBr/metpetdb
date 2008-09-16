@@ -19,20 +19,18 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.ProgressBar;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.CSS;
-import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
+import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
 
@@ -41,8 +39,10 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 	private final FormPanel fp;
 	private final FileUpload fu;
-	private final Label status;
-	private final ProgressBar uploadProgress;
+	private final MNoticePanel status = new MNoticePanel();
+	private final SimplePanel statusContainer = new SimplePanel();
+	private final ProgressBar uploadProgress = new ProgressBar();
+	private final SimplePanel progressContainer = new SimplePanel();
 	private final MUnorderedList uploadTypeList = new MUnorderedList();
 	private final RadioButton samples;
 	private final RadioButton analyses;
@@ -52,9 +52,6 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 	private final Grid errorgrid;
 	private final Grid headergrid;
 	private final Grid additionsgrid;
-	private final Label errorGridLabel;
-	private final Label headerGridLabel;
-	private final Label additionsGridLabel;
 
 	private final Timer progressTimer;
 
@@ -78,8 +75,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 		fu = new FileUpload();
 		fu.setName("bulkUpload");
-		fu.setWidth("300");
-		fu.setStyleName(CSS.REQUIRED_FIELD);
+		fu.setWidth("400");
 
 		samples = new RadioButton("type", "Samples");
 		samples.setChecked(true);
@@ -91,24 +87,15 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		uploadTypeList.add(analyses);
 		uploadTypeList.add(images);
 
-		
-
-		status = new Label("...");
-
 		errorgrid = new Grid();
-		errorgrid.setBorderWidth(3);
+		errorgrid.setStyleName(CSS.BULK_RESULTS_GRID);
 		headergrid = new Grid();
-		headergrid.setBorderWidth(3);
+		headergrid.setStyleName(CSS.BULK_RESULTS_GRID);
 		additionsgrid = new Grid();
-		additionsgrid.setBorderWidth(3);
-		errorGridLabel = new Label("Errors Listed Below:");
-		errorGridLabel.setStylePrimaryName("bold");
-		headerGridLabel = new Label("Headers Listed Below:");
-		headerGridLabel.setStylePrimaryName("bold");
-		additionsGridLabel = new Label("Additions Listed Below:");
-		additionsGridLabel.setStylePrimaryName("bold");
-
-		uploadProgress = new ProgressBar();
+		additionsgrid.setStyleName(CSS.BULK_RESULTS_GRID);
+		
+		progressContainer.add(uploadProgress);
+		progressContainer.setStyleName(CSS.PROGRESSBAR_CONTAINER);
 		uploadProgress.setMinProgress(0);
 		uploadProgress.setMaxProgress(1);
 		progressTimer = new Timer() {
@@ -131,29 +118,30 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 			}
 		};
 		
-		add(status);
+		add(statusContainer);
+		statusContainer.addStyleName(CSS.HIDE);
 		add(fp);
-		add(uploadProgress);
+		add(progressContainer);
 		add(uploadTypeList);
 		add(parseButton);
 		add(uploadButton);
-		add(errorGridLabel);
 		add(errorgrid);
-		add(additionsGridLabel);
 		add(additionsgrid);
-		add(headerGridLabel);
 		add(headergrid);
 
 		fp.setWidget(fu);
 		fp.addFormHandler(this);
+		fp.setStyleName(CSS.BULK_UPLOAD_FORM);
+		
+		clearResults();
 	}
 
 	public void onClick(final Widget sender) {
 		if (uploadButton == sender) {
-			this.mode = UPLOAD;
+			mode = UPLOAD;
 			doUpload();
 		} else if (parseButton == sender) {
-			this.mode = PARSE;
+			mode = PARSE;
 			doUpload();
 		}
 	}
@@ -173,8 +161,11 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		progressTimer.cancel();
 		uploadProgress.setProgress(1.0d);
 		if (results != "NO-SCRIPT-DATA" && results != "") {
-			status.setText("File uploaded successfully, please"
+			status.setMessage("File uploaded successfully, please"
 					+ " wait while it is saved to the database...");
+			status.setStyleName(CSS.WORKING);
+			status.attachTo(statusContainer);
+			
 			// TODO: This is bad! It's to strip the <pre> and </pre>
 			// tags that get stuck on the string for some reason
 			final String fileOnServer = results.substring(5,
@@ -183,7 +174,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 			// What are we being asked to do? Choices are:
 			// *upload => Actually perform the upload
 			// *justparse => provide some feedback
-			if (this.mode == UPLOAD) {
+			if (mode == UPLOAD) {
 				new ServerOp<Map<Integer, ValidationException>>() {
 					public void begin() {
 						if (samples.isChecked()) {
@@ -201,23 +192,27 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 					public void onSuccess(
 							final Map<Integer, ValidationException> result) {
-						if (result == null)
-							status.setText("Items Saved Successfully");
-						else {
+						if (result == null) {
+							status.setMessage("Spreadsheet uploaded successfully.");
+							status.setStyleName(CSS.SUCCESS);
+							status.attachTo(statusContainer);
+						} else {
+							status.setMessage("There were some errors in the spreadsheet:");
+							status.setStyleName(CSS.ERROR);
+							status.attachTo(statusContainer);
 							errorgrid.resize(result.size() + 1, 2);
 							int i = 1;
-							errorgrid.setText(0, 0, "Spreadsheet Line:");
-							errorgrid.setText(0, 1, "Error:");
+							errorgrid.setText(0, 0, "Row");
+							errorgrid.setText(0, 1, "Error");
 							for (Map.Entry<Integer, ValidationException> e : result
 									.entrySet()) {
 								errorgrid.setText(i, 0, e.getKey().toString());
-								errorgrid
-										.setText(i++, 1, e.getValue().format());
+								errorgrid.setText(i++, 1, e.getValue().format());
 							}
 						}
 					}
 				}.begin();
-			} else if (this.mode == PARSE) {
+			} else if (mode == PARSE) {
 				// Parse Column Headers
 				new ServerOp<Map<Integer, String[]>>() {
 					public void begin() {
@@ -235,14 +230,17 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 					public void onSuccess(final Map<Integer, String[]> headers) {
 						if (headers == null) {
-							status
-									.setText("Spreadsheet Not Parsed Successfully");
+							status.setMessage("Could not parse the spreadsheet.");
+							status.setStyleName(CSS.ERROR);
+							status.attachTo(statusContainer);
 						} else {
-							status.setText("Spreadsheet Parsed Successfully");
+							status.setMessage("Spreadsheet parsed successfully.");
+							status.setStyleName(CSS.SUCCESS);
+							status.attachTo(statusContainer);
 							headergrid.resize(headers.size() + 1, 3);
-							headergrid.setText(0, 0, "Location");
-							headergrid.setText(0, 1, "Header Text");
-							headergrid.setText(0, 2, "My Understanding");
+							headergrid.setText(0, 0, "Column");
+							headergrid.setText(0, 1, "Spreadsheet Header");
+							headergrid.setText(0, 2, "MetPetDB Match");
 							int i = 1;
 							ArrayList<Integer> keys = new ArrayList<Integer>(
 									headers.keySet());
@@ -279,11 +277,13 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 					public void onSuccess(final Map<String, Integer[]> additions) {
 						if (additions == null) {
-							status
-									.setText("Spreadsheet Not Parsed Successfully");
+							status.setMessage("Could not parse the spreadsheet.");
+							status.setStyleName(CSS.ERROR);
+							status.attachTo(statusContainer);
 						} else {
-							status.setText("Spreadsheet Parsed Successfully");
-
+							status.setMessage("Spreadsheet parsed successfully.");
+							status.setStyleName(CSS.SUCCESS);
+							status.attachTo(statusContainer);
 							additionsgrid.resize(additions.size() + 1, 4);
 							additionsgrid.setText(0, 0, "Type");
 							additionsgrid.setText(0, 1, "Invalid");
@@ -317,11 +317,18 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		// take
 		// this opportunity to perform validation.
 		if (fu.getFilename().length() == 0) {
-			status.setText("Please select a file");
-			fu.setStyleName(CSS.INVALID_REQUIRED_FIELD);
+			status.setMessage("Please select a file");
+			status.setStyleName(CSS.WARNING);
+			status.attachTo(statusContainer);
+			fu.setStyleName(CSS.INVALID_FIELD);
 			event.setCancelled(true);
 		}
-
+		clearResults();
+	}
+	
+	public void clearResults() {
+		status.setStyleName(CSS.HIDE);
+		
 		// Clear out grids from any previous runs
 		errorgrid.resize(0, 0);
 		headergrid.resize(0, 0);

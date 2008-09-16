@@ -39,7 +39,7 @@ public class CSS {
 	/* ---------------- Image Styles ---------------- */
 	public static final String ADD_IMAGE_DIALOG = "mpdb-addImageDialog";
 
-	/* ---------------- Utility Styles ---------------- */
+	/* ---------------- utility ---------------- */
 	public static final String HIDE = "hide";
 	public static final String SHOW_BLOCK = "block";
 	public static final String SHOW_INLINE = "inline";
@@ -51,6 +51,12 @@ public class CSS {
 	public static final String CURRENT = "current";
 	public static final String CLEARFIX = "clearfix";
 	public static final String BETA = "beta";
+	
+	/* ---------------- statuses ---------------- */
+	public static final String SUCCESS = "success";
+	public static final String ERROR = "error";
+	public static final String WORKING = "working";
+	public static final String WARNING = "warning";
 
 	/* ---------------- Widgets ---------------- */
 	public static final String BREADCRUMBS = "bcrumbs";
@@ -91,6 +97,17 @@ public class CSS {
 	
 	/* ---------------- Page: My Samples ---------------- */
 	public static final String SAMPLES_CONTAINER = "samples-container";
+	
+	
+	public static final String NOTICE_PANEL = "notice-panel";
+	public static final String NOTICE_MESSAGE = "notice-message";
+	public static final String NOTICE_HIDE = "notice-hide";
+	
+	
+	public static final String BULK_RESULTS_GRID = "bulk-results-grid";
+	public static final String PROGRESSBAR_CONTAINER = "progressbar-container";
+	public static final String BULK_UPLOAD_FORM = "bulk-upload-form";
+	
 	
 	
 
