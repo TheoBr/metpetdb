@@ -58,7 +58,7 @@ grant all PRIVILEGES on rock_type_seq to metpetdb_dev;
 grant all PRIVILEGES on sample_comments_seq to metpetdb_dev; 
 grant all PRIVILEGES on sample_seq to metpetdb_dev; 
 grant all PRIVILEGES on subsample_seq to metpetdb_dev; 
-grant all PRIVILEGES on upload_files_seq to metpetdb_dev; 
+grant all PRIVILEGES on uploaded_files_seq to metpetdb_dev; 
 grant all PRIVILEGES on user_seq to metpetdb_dev; 
 
 grant create on database mpdb_test to metpetdb_dev;
