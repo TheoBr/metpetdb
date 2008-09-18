@@ -52,5 +52,9 @@ insert into image_type values(nextval('image_type_seq'), 'Back-Scattered Electro
 insert into image_type values(nextval('image_type_seq'), 'Cathodoluminescence Image', 'CL');
 insert into image_type values(nextval('image_type_seq'), 'X-ray Map', 'XRM');
 --Subsample Types
-insert into subsample_type values(nextval('subsample_type_seq'), 'linux');
+insert into subsample_type values(nextval('subsample_type_seq'), 'Thin Section');
+insert into subsample_type values(nextval('subsample_type_seq'), 'Polished Thin Section');
+insert into subsample_type values(nextval('subsample_type_seq'), 'Rock Chip');
+insert into subsample_type values(nextval('subsample_type_seq'), 'Bash');
+insert into subsample_type values(nextval('subsample_type_seq'), 'Mineral Separate');
 --insert into elements values(1,1,1,1,1,1,'Silicates');
