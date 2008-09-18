@@ -39,7 +39,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
-import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel.NoticeType;
 
 public class BulkUploadPanel extends MPagePanel implements ClickListener,
@@ -51,10 +51,10 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 	private final Button browseButton = new Button("Browse");
 	private final MNoticePanel status = new MNoticePanel();
 	private final MTwoColPanel main = new MTwoColPanel();
-	private final MUnorderedList helpList = new MUnorderedList();
+	private final MHtmlList helpList = new MHtmlList();
 	private final ProgressBar uploadProgress = new ProgressBar();
 	private final SimplePanel progressContainer = new SimplePanel();
-	private final MUnorderedList uploadTypeList = new MUnorderedList();
+	private final MHtmlList uploadTypeList = new MHtmlList();
 	private final RadioButton samples = new RadioButton("type", "Samples");
 	private final RadioButton analyses = new RadioButton("type", "Chemical Analyses");
 	private final RadioButton images = new RadioButton("type", "Images");
@@ -62,7 +62,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 	private final Button uploadButton = new Button("Upload Samples", this);
 	private final Grid errorgrid = new Grid();
 	private final Grid headergrid = new Grid();
-	private final MUnorderedList summary = new MUnorderedList();
+	private final MHtmlList summary = new MHtmlList();
 	private String contentType;
 
 	private final Timer progressTimer;

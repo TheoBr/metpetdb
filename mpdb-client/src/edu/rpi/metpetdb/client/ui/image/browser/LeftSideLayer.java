@@ -10,18 +10,18 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
 import edu.rpi.metpetdb.client.ui.left.side.UsesLeftColumn;
-import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 
-	private final MUnorderedList ul;
+	private final MHtmlList ul;
 	private final LayerDragMouseListener layerDragger;
 	private final HashSet<LayerItem> layerItems;
 
 	public LeftSideLayer(final String subsampleName) {
 		super(subsampleName + "'s Layers");
 		layerItems = new HashSet<LayerItem>();
-		ul = new MUnorderedList();
+		ul = new MHtmlList();
 		this.add(ul);
 		// MetPetDBApplication.registerPageWatcher(this);
 		layerDragger = new LayerDragMouseListener(ul, layerItems);

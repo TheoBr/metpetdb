@@ -17,19 +17,23 @@ import com.google.gwt.user.client.ui.WidgetCollection;
 
 import edu.rpi.metpetdb.client.ui.CSS;
 
-public class MUnorderedList extends Panel implements IndexedPanel,
+public class MHtmlList extends Panel implements IndexedPanel,
 		SourcesMouseEvents {
 
-	private final Element ul;
+	private final Element elem;
 	private final WidgetCollection widgets;
 	private final ArrayList<ListItem> items;
 	private MouseListenerCollection mouseListeners;
 	private boolean hasRibbonStyle = false;
 
-	public MUnorderedList() {
+	public MHtmlList() {
+		this(false);
+	}
+	
+	public MHtmlList(boolean ordered) {
 		super();
-		ul = DOM.createElement("ul");
-		this.setElement(ul);
+		elem = (ordered) ? DOM.createElement("ol") : DOM.createElement("ul");
+		this.setElement(elem);
 		widgets = new WidgetCollection(this);
 		items = new ArrayList<ListItem>();
 		sinkEvents(Event.MOUSEEVENTS);
@@ -69,7 +73,7 @@ public class MUnorderedList extends Panel implements IndexedPanel,
 		if (liStyle != "")
 			DOM.setElementAttribute(li, "class", liStyle);
 		DOM.appendChild(li, w.getElement());
-		DOM.appendChild(ul, li);
+		DOM.appendChild(elem, li);
 		final ListItem item = new ListItem(w, li, items.size());
 		items.add(item);
 		widgets.add(w);
@@ -80,7 +84,7 @@ public class MUnorderedList extends Panel implements IndexedPanel,
 		final Element li = DOM.createElement("li");
 		w.removeFromParent();
 		DOM.appendChild(li, w.getElement());
-		DOM.insertChild(ul, li, index);
+		DOM.insertChild(elem, li, index);
 		final ListItem item = new ListItem(w, li, index);
 		final Iterator<ListItem> itr = items.iterator();
 		while (itr.hasNext()) {
@@ -106,7 +110,7 @@ public class MUnorderedList extends Panel implements IndexedPanel,
 		if (item == null) {
 			return false;
 		} else {
-			DOM.removeChild(ul, item.getLi());
+			DOM.removeChild(elem, item.getLi());
 			items.remove(item);
 			widgets.remove(w);
 			final Iterator<ListItem> itr = items.iterator();
@@ -156,8 +160,8 @@ public class MUnorderedList extends Panel implements IndexedPanel,
 
 	public void moveItem(final ListItem item, final int index) {
 		final int newIndex = index;
-		DOM.removeChild(ul, item.getLi());
-		DOM.insertChild(ul, item.getLi(), newIndex);
+		DOM.removeChild(elem, item.getLi());
+		DOM.insertChild(elem, item.getLi(), newIndex);
 		final Iterator<ListItem> itr = items.iterator();
 		final boolean movedDown = item.getIndex() < index ? true : false;
 		while (itr.hasNext()) {

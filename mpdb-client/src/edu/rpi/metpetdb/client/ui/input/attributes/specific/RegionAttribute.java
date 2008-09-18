@@ -19,12 +19,12 @@ import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.RegionDTO;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 //TODO extend MultipleTextAttribute
 public class RegionAttribute extends GenericAttribute implements ClickListener {
 
-	private MUnorderedList editList;
+	private MHtmlList editList;
 	private final ArrayList realEditWidgets;
 
 	public RegionAttribute(final ObjectConstraint sc) {
@@ -33,7 +33,7 @@ public class RegionAttribute extends GenericAttribute implements ClickListener {
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
-		final MUnorderedList list = new MUnorderedList();
+		final MHtmlList list = new MHtmlList();
 
 		final Set s = get(obj);
 		if (s != null) {
@@ -50,7 +50,7 @@ public class RegionAttribute extends GenericAttribute implements ClickListener {
 	}
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
-		editList = new MUnorderedList();
+		editList = new MHtmlList();
 
 		realEditWidgets.clear();
 

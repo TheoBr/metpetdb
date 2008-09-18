@@ -14,7 +14,7 @@ import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGrid;
 import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
-import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 public class PointPopup extends DialogBox implements ClickListener {
 
@@ -35,7 +35,7 @@ public class PointPopup extends DialogBox implements ClickListener {
 		final FlowPanel panel = new FlowPanel();
 		panel.add(new MLinkandText("Spot Id: ", ma.getSpotId(), "", TokenSpace
 				.detailsOf(ma)));
-		final MUnorderedList ul = new MUnorderedList();
+		final MHtmlList ul = new MHtmlList();
 		ul.setStyleName("options");
 		this.remove = new ImageHyperlink(new Image(GWT.getModuleBaseURL()
 				+ "/images/icon-remove.gif"), "Remove", this, false);

@@ -15,12 +15,12 @@ import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.image.browser.LeftSideLayer;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
-import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 public abstract class MySubsamples extends LeftColWidget implements
 		UsesLeftColumn {
-	private MUnorderedList pList;
-	private MUnorderedList details;
+	private MHtmlList pList;
+	private MHtmlList details;
 	private SubsampleDTO current;
 	private MLink detailsLink;
 	private MLink addSubsampleLink;
@@ -29,7 +29,7 @@ public abstract class MySubsamples extends LeftColWidget implements
 		super("Sample " + sample.getName());
 		this.setStyleName("lcol-MyProjects");
 		MetPetDBApplication.registerPageWatcher(this);
-		details = new MUnorderedList();
+		details = new MHtmlList();
 		detailsLink = new MLink("Details", TokenSpace.detailsOf(sample));
 		addSubsampleLink = new MLink("Add Subsample", TokenSpace
 				.createNewSubsample(sample));
@@ -109,8 +109,8 @@ public abstract class MySubsamples extends LeftColWidget implements
 		pList.remove(layers);
 	}
 
-	public static MUnorderedList addSubSamples(List<SubsampleDTO> subsamples) {
-		final MUnorderedList list = new MUnorderedList();
+	public static MHtmlList addSubSamples(List<SubsampleDTO> subsamples) {
+		final MHtmlList list = new MHtmlList();
 
 		Iterator it = subsamples.iterator();
 		while (it.hasNext()) {

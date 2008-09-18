@@ -5,7 +5,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
-import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 public class MySamples extends LeftColWidget implements UsesLeftColumn {
 
@@ -14,7 +14,7 @@ public class MySamples extends LeftColWidget implements UsesLeftColumn {
 
 		this.setStyleName("lcol-MySamples");
 
-		final MUnorderedList list = new MUnorderedList();
+		final MHtmlList list = new MHtmlList();
 		final MLink addSamples = new MLink("Add Sample", TokenSpace.enterSample);
 		final MLink allOfMySamples = new MLink("All", TokenSpace.samplesForUser);
 		final MLink recentSamples = new MLink("Recent Samples",

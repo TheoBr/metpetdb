@@ -11,13 +11,13 @@ import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 public class LayerDragMouseListener implements MouseListener {
 
-	private final MUnorderedList ul;
+	private final MHtmlList ul;
 	private final HashSet layerItems;
-	private MUnorderedList.ListItem currentItem;
+	private MHtmlList.ListItem currentItem;
 	private boolean currentCheck;
 
 	private EventPreview eventPreview = new EventPreview() {
@@ -42,17 +42,17 @@ public class LayerDragMouseListener implements MouseListener {
 		}
 	};
 
-	public LayerDragMouseListener(final MUnorderedList mol, final HashSet hs) {
+	public LayerDragMouseListener(final MHtmlList mol, final HashSet hs) {
 		ul = mol;
 		layerItems = hs;
 	}
 
-	private MUnorderedList.ListItem findListItem(final int x, final int y) {
+	private MHtmlList.ListItem findListItem(final int x, final int y) {
 		final Iterator itr = ul.getItems().iterator();
 		final int absoluteX = ul.getAbsoluteLeft() + x;
 		final int absoluteY = ul.getAbsoluteTop() + y;
 		while (itr.hasNext()) {
-			final MUnorderedList.ListItem item = (MUnorderedList.ListItem) itr
+			final MHtmlList.ListItem item = (MHtmlList.ListItem) itr
 					.next();
 			final int itemX = DOM.getAbsoluteLeft(item.getLi());
 			final int itemY = DOM.getAbsoluteTop(item.getLi());
@@ -91,7 +91,7 @@ public class LayerDragMouseListener implements MouseListener {
 
 	public void onMouseMove(final Widget sender, final int x, final int y) {
 		if (currentItem != null) {
-			final MUnorderedList.ListItem target = findListItem(x, y);
+			final MHtmlList.ListItem target = findListItem(x, y);
 			if (target != null && target != currentItem) {
 				moveLayer(currentItem.getIndex(), target.getIndex());
 				ul.moveItem(currentItem, target.getIndex());

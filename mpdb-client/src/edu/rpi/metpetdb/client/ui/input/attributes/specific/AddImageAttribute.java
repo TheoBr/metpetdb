@@ -17,14 +17,14 @@ import edu.rpi.metpetdb.client.model.XrayImageDTO;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 public class AddImageAttribute extends GenericAttribute implements
 		ClickListener {
 
 	private final Button addImage;
 	private Set<ImageDTO> images;
-	private MUnorderedList list;
+	private MHtmlList list;
 	private final VerticalPanel vp;
 
 	public AddImageAttribute(final ObjectConstraint ic) {
@@ -38,7 +38,7 @@ public class AddImageAttribute extends GenericAttribute implements
 			final GenericAttribute ga) {
 		if (list != null)
 			vp.remove(list);
-		list = new MUnorderedList();
+		list = new MHtmlList();
 		addImage.setEnabled(true);
 		final Widget[] widgets = createDisplayWidget(obj, true);
 		for (int i = 0; i < widgets.length; ++i)

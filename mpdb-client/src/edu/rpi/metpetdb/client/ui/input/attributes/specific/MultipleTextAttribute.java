@@ -16,12 +16,12 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 public abstract class MultipleTextAttribute<T> extends GenericAttribute
 		implements ClickListener {
 
-	private MUnorderedList editList;
+	private MHtmlList editList;
 	protected final ArrayList<Widget> realEditWidgets;
 
 	public MultipleTextAttribute(final ObjectConstraint sc) {
@@ -30,7 +30,7 @@ public abstract class MultipleTextAttribute<T> extends GenericAttribute
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
-		final MUnorderedList list = new MUnorderedList();
+		final MHtmlList list = new MHtmlList();
 
 		final Set<T> s = get(obj);
 		if (s != null) {
@@ -46,7 +46,7 @@ public abstract class MultipleTextAttribute<T> extends GenericAttribute
 	}
 
 	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
-		editList = new MUnorderedList();
+		editList = new MHtmlList();
 
 		realEditWidgets.clear();
 

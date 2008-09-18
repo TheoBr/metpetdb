@@ -36,7 +36,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
-import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 public class ChemistryAttribute extends GenericAttribute implements
 		ClickListener, ChangeListener {
@@ -66,7 +66,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
-		final MUnorderedList list = new MUnorderedList();
+		final MHtmlList list = new MHtmlList();
 		final HashMap s = this.mGetAll(obj);
 		if (s != null) {
 			final Collection<?> elementsOxides = s.values();

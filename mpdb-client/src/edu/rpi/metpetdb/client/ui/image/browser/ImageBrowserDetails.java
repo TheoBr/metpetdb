@@ -47,7 +47,7 @@ import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
-import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 //TODO stores the imagesongrid better for transient stuff
 public class ImageBrowserDetails extends FlowPanel implements ClickListener {
@@ -185,7 +185,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		DOM.setElementAttribute(this.grid.getElement(), "id", "canvas");
 		final FlowPanel fp = this.createViewControls();
 		this.grid.add(fp);
-		final MUnorderedList ul = new MUnorderedList();
+		final MHtmlList ul = new MHtmlList();
 		this.addNewImageToSubsample = new MLink("Add New Image to Subsample",
 				TokenSpace.edit(this.g.getSubsample()));
 		this.addNewImageToSubsample.setStyleName("addlink");
@@ -410,8 +410,8 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 				* multiplier * iog.getIog().getResizeRatio())));
 	}
 
-	private MUnorderedList makeBottomMenu(final ImageOnGrid iog) {
-		final MUnorderedList ulBottom = new MUnorderedList();
+	private MHtmlList makeBottomMenu(final ImageOnGrid iog) {
+		final MHtmlList ulBottom = new MHtmlList();
 		final MLink details = new ImageHyperlink(new Image(GWT
 				.getModuleBaseURL()
 				+ "/images/icon-details.gif"), "Details", TokenSpace
@@ -432,9 +432,9 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		return ulBottom;
 	}
 
-	private MUnorderedList makeTopMenu(final ImageOnGrid iog) {
+	private MHtmlList makeTopMenu(final ImageOnGrid iog) {
 		// Top Menu
-		final MUnorderedList ulTop = new MUnorderedList();
+		final MHtmlList ulTop = new MHtmlList();
 		final MLink rotate = new ImageHyperlink(new Image(GWT
 				.getModuleBaseURL()
 				+ "/images/icon-rotate.gif"), "Rotate",

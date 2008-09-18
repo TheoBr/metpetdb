@@ -6,7 +6,7 @@ import java.util.Set;
 import edu.rpi.metpetdb.client.model.ProjectDTO;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
-import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 public class MyProjects extends LeftColWidget implements UsesLeftColumn {
 
@@ -14,7 +14,7 @@ public class MyProjects extends LeftColWidget implements UsesLeftColumn {
 		super("My Projects");
 		this.setStyleName("lcol-MyProjects");
 
-		final MUnorderedList pList = new MUnorderedList();
+		final MHtmlList pList = new MHtmlList();
 		final MLink addProject = new MLink("Add Project", TokenSpace.newProject);
 		pList.add(addProject);
 		pList.add(addProjects(projects));
@@ -24,8 +24,8 @@ public class MyProjects extends LeftColWidget implements UsesLeftColumn {
 
 	}
 
-	public static MUnorderedList addProjects(Set projects) {
-		final MUnorderedList list = new MUnorderedList();
+	public static MHtmlList addProjects(Set projects) {
+		final MHtmlList list = new MHtmlList();
 
 		Iterator it = projects.iterator();
 		while (it.hasNext()) {

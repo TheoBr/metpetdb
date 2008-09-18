@@ -21,7 +21,7 @@ import edu.rpi.metpetdb.client.model.interfaces.HasChildren;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
-import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 /**
  * 
@@ -94,7 +94,7 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj,
 			final Collection<?> c) {
-		final MUnorderedList list = new MUnorderedList();
+		final MHtmlList list = new MHtmlList();
 		if (c != null) {
 			final Iterator<?> itr = c.iterator();
 			while (itr.hasNext()) {

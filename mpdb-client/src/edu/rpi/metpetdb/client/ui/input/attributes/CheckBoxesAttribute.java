@@ -19,7 +19,7 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.MObjectDTO;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
-import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 /* TODO make generic, i.e. CheckBoxesAttribute<T>, where T is the type of object that the checkbox is representing */
 public class CheckBoxesAttribute extends GenericAttribute implements
@@ -42,7 +42,7 @@ public class CheckBoxesAttribute extends GenericAttribute implements
 	}
 
 	public Widget[] createDisplayWidget(final MObjectDTO obj) {
-		final MUnorderedList list = new MUnorderedList();
+		final MHtmlList list = new MHtmlList();
 
 		final Set<?> s = get(obj);
 		if (s != null) {

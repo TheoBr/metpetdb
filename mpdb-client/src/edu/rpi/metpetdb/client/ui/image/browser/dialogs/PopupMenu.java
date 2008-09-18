@@ -8,16 +8,16 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
-import edu.rpi.metpetdb.client.ui.widgets.MUnorderedList;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 public class PopupMenu extends DialogBox implements ClickListener {
 
-	private final MUnorderedList ul;
+	private final MHtmlList ul;
 	private final MLink close;
 
 	public PopupMenu() {
 		super(true);
-		ul = new MUnorderedList();
+		ul = new MHtmlList();
 		close = new MLink(LocaleHandler.lc_text.buttonClose(), this);
 		ul.add(close);
 		final FocusPanel fp = new FocusPanel();
