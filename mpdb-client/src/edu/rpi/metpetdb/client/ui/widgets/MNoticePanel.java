@@ -1,10 +1,6 @@
 package edu.rpi.metpetdb.client.ui.widgets;
 
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.CSS;
 
@@ -14,58 +10,43 @@ import edu.rpi.metpetdb.client.ui.CSS;
  * @author zak
  *
  */
-public class MNoticePanel extends FlowPanel implements ClickListener {
+public class MNoticePanel extends SimplePanel {
 	
-	private Widget parent;
-	
-	private final MLink hide = new MLink("Hide", this);
-	private final SimplePanel msgContainer = new SimplePanel();
-	
-	/**
-	 * All notices have a message and a way to remove the messsage from view.
-	 * 
-	 * @param msg
-	 */
-	public MNoticePanel(String msg) {
-		setStylePrimaryName(CSS.NOTICE_PANEL);
-		add(hide);
-		hide.addClickListener(this);
-		hide.addStyleName(CSS.NOTICE_HIDE);
-		msgContainer.setStyleName(CSS.NOTICE_MESSAGE);
-		add(msgContainer);
-		setMessage(msg);
+	public enum NoticeType {
+		GENERIC,
+		WORKING,
+		SUCCESS,
+		ERROR, 
+		WARNING
 	}
+	
+	private MNotice notice;
 	
 	public MNoticePanel() {
-		this("");
-	}
-	
-	public void setMessage(String s) {
-		setMessage(new HTML(s));
-	}
-	
-	public void setMessage(Widget w) {
-		msgContainer.setWidget(w);
-	}
-	
-	public void setStyleName(String s) {
-		this.getElement().setAttribute("class",CSS.NOTICE_PANEL);
-		addStyleDependentName(s);
+		super();
+		setStyleName(CSS.NOTICE_PANEL);
+		addStyleName(CSS.HIDE);
 	}
 
-	public void attachTo(SimplePanel container) {
-		this.parent = container;
-		container.clear();
-		container.setWidget(this);
-		container.removeStyleName(CSS.HIDE);
+	public void sendNotice(NoticeType type, String msg) {
+		notice = new MNotice(type);
+		notice.setMessage(msg);
+		notice.setParent(this);
+		setWidget(notice);
+		show();
 	}
 	
-	public void onClick(Widget sender) {
-		if (sender == hide) {
-			if (isAttached() && getParent() == parent)
-				parent.addStyleName(CSS.HIDE);
-			removeFromParent();
-		}
+	public void sendNotice(String msg) {
+		sendNotice(NoticeType.GENERIC, msg);
 	}
-
+	
+	public void hide() {
+		addStyleName(CSS.HIDE);
+	}
+	
+	public void show() {
+		removeStyleName(CSS.HIDE);
+		setStyleName(CSS.NOTICE_PANEL);
+	}
+	
 }

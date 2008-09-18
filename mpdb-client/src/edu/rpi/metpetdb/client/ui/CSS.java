@@ -107,6 +107,8 @@ public class CSS {
 	public static final String BULK_RESULTS_GRID = "bulk-results-grid";
 	public static final String PROGRESSBAR_CONTAINER = "progressbar-container";
 	public static final String BULK_UPLOAD_FORM = "bulk-upload-form";
+	public static final String BULK_UPLOAD = "bulk-upload";
+	public static final String NOTICE = "notice";
 	
 	
 	

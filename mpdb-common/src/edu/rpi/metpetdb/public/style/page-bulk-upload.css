@@ -18,22 +18,22 @@
 	float: right;
 	padding: 6px 7px 6px 2px;
 }
-.notice-panel-success {
+.notice-success {
 	border-bottom-color: #cbee95;
 	background-color: #f4ffe4;
 	color: #5a7d24;
 }
-.notice-panel-error {
+.notice-error {
 	border-bottom-color: #ffb3a1;
 	background-color: #ffe9e4;
 	color: #c41616;
 }
-.notice-panel-working {
+.notice-working {
 	border-bottom-color: #cde3f3;
 	background-color: #e7f5fe;
 	color: #617684;
 }
-.notice-panel-warning {
+.notice-warning {
 	border-bottom-color: #f1f975;
 	background-color: #fdffdd;
 	color: #f1a707;
