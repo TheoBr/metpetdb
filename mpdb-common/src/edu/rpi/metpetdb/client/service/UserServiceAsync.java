@@ -20,7 +20,7 @@ public interface UserServiceAsync {
 
 	void details(String username, AsyncCallback<UserDTO> ac);
 
-	void emailPassword(String username, AsyncCallback<Object> ac);
+	void emailPassword(String username, AsyncCallback<Void> ac);
 	
 	void confirmUser(String confirmationCode, AsyncCallback<UserDTO> ac);
 }

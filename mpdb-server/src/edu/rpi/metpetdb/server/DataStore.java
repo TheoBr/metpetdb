@@ -371,20 +371,15 @@ public class DataStore {
 				else if (name.equals("oxides"))
 					queryName = "Oxide.all";
 			}
+			final Session session = open();
 			try {
-				final Session session = open();
 				cc.setValues((Collection<? extends MObjectDTO>) hbm
 						.clone(session.getNamedQuery(queryName).list()));
-				session.clear();
-				session.close();
 			} catch (MappingException me) {
 				cc.setValues(new HashSet<MObjectDTO>());
+			} finally {
+				session.close();
 			}
-
-			// The collection name should be referenced by 'Collection_'
-			// followed by the queryName minus the '.all'
-			cc.setCollectionName("Collection_"
-					+ queryName.substring(0, queryName.lastIndexOf(".")));
 
 			return cc;
 		} else if ("timestamp".equals(tn)) {

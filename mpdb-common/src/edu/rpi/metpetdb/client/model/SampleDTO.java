@@ -4,12 +4,14 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.search.annotations.Indexed;
 import org.postgis.Geometry;
 import org.postgis.Point;
 
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 
+@Indexed
 public class SampleDTO extends MObjectDTO implements IHasName {
 
 	private static final long serialVersionUID = 1L;

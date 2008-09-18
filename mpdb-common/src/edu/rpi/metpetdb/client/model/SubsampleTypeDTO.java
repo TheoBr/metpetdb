@@ -1,11 +1,16 @@
 package edu.rpi.metpetdb.client.model;
 
 
+
 public class SubsampleTypeDTO extends MObjectDTO {
 	private static final long serialVersionUID = 1L;
 
 	private short id;
 	private String subsampleType;
+	
+	public SubsampleTypeDTO() {
+		
+	}
 
 	public short getId() {
 		return id;

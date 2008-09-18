@@ -7,6 +7,10 @@ public class ImageTypeDTO extends MObjectDTO {
 
 	private short id;
 	private String imageType;
+	
+	public ImageTypeDTO() {
+		
+	}
 
 	public short getId() {
 		return id;

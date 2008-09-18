@@ -1,6 +1,9 @@
 package edu.rpi.metpetdb.client.model;
 
 import net.sf.hibernate4gwt.pojo.gwt.LazyGwtPojo;
+
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import edu.rpi.metpetdb.client.model.properties.Property;
 
 /**
@@ -13,7 +16,7 @@ import edu.rpi.metpetdb.client.model.properties.Property;
  * bother with writing our own GWT class generator implementations.
  * </p>
  */
-public abstract class MObjectDTO extends LazyGwtPojo {
+public abstract class MObjectDTO extends LazyGwtPojo implements IsSerializable {
 	/**
 	 * 
 	 */

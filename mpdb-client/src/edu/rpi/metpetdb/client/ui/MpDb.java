@@ -76,7 +76,7 @@ public class MpDb {
 
 	public static ObjectConstraints oc;
 
-	private static UserDTO currentUser;
+	protected static UserDTO currentUser;
 
 	// public static final HtmlFactory factory;
 
@@ -124,7 +124,7 @@ public class MpDb {
 		// factory = (HtmlFactory) GWT.create(HtmlFactory.class);
 	}
 
-	private static Object bindService(final Object svc, final String name) {
+	protected static Object bindService(final Object svc, final String name) {
 		final ServiceDefTarget e = (ServiceDefTarget) svc;
 		e.setServiceEntryPoint(GWT.getModuleBaseURL() + name + ".svc");
 		return svc;
@@ -142,7 +142,7 @@ public class MpDb {
 	public static UserDTO currentUser() {
 		return currentUser;
 	}
-
+	
 	public static void setCurrentUser(final UserDTO n) {
 		final UserDTO o = currentUser;
 		currentUser = n;
@@ -167,6 +167,6 @@ public class MpDb {
 
 	}
 
-	private MpDb() {
+	protected MpDb() {
 	}
 }

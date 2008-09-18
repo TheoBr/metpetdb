@@ -37,19 +37,19 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 		new TextAttribute(MpDb.doc.StartSessionRequest_emailAddress),
 	};
 
-	private final ServerOp continuation;
-	private final StartSessionRequestDTO ssr;
-	private final MTabPanel tabs;
-	private final DetailsPanel p_main;
-	private final DetailsPanel p_email;
+	protected final ServerOp<?> continuation;
+	protected final StartSessionRequestDTO ssr;
+	protected final MTabPanel tabs;
+	protected final DetailsPanel<StartSessionRequestDTO> p_main;
+	private final DetailsPanel<StartSessionRequestDTO> p_email;
 	private final int p_mainIdx;
-	private final int p_emailIdx;
+	protected final int p_emailIdx;
 	private final Button loginC;
 	private final Button login;
 	private final Button emailC;
 	private final Button email;
 
-	public LoginDialog(final ServerOp r) {
+	public LoginDialog(final ServerOp<?> r) {
 		continuation = r;
 		ssr = new StartSessionRequestDTO();
 		setText("Please Login");
@@ -60,12 +60,12 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 		emailC = new Button(LocaleHandler.lc_text.buttonCancel(), this);
 		email = new Submit(LocaleHandler.lc_text.buttonEmailPassword(), this);
 
-		p_main = new DetailsPanel(mainAttributes, new Button[] {
+		p_main = new DetailsPanel<StartSessionRequestDTO>(mainAttributes, new Button[] {
 				login, loginC
 		});
 		p_main.edit(ssr);
 
-		p_email = new DetailsPanel(emailAttributes, new Button[] {
+		p_email = new DetailsPanel<StartSessionRequestDTO>(emailAttributes, new Button[] {
 				email, emailC
 		});
 
@@ -146,7 +146,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 	}
 
 	private void doEmailPassword() {
-		new FormOp(p_email) {
+		new FormOp<Void>(p_email) {
 			protected void onSubmit() {
 				MpDb.user_svc.emailPassword(ssr.getEmailAddress(), this);
 			}
@@ -163,7 +163,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 					super.onFailure(e);
 				}
 			}
-			public void onSuccess(final Object result) {
+			public void onSuccess(final Void result) {
 				enable(true);
 				final Widget old = getWidget();
 				final Button close = new Button(LocaleHandler.lc_text
@@ -183,8 +183,8 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 		}.begin();
 	}
 
-	private void doLogin() {
-		new FormOp(p_main) {
+	protected void doLogin() {
+		new FormOp<UserDTO>(p_main) {
 			protected void onSubmit() {
 				MpDb.user_svc.startSession(ssr, this);
 			}
@@ -193,7 +193,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 				p_main.edit(ssr);
 				super.onFailure(e);
 			}
-			public void onSuccess(final Object result) {
+			public void onSuccess(final UserDTO result) {
 				MpDb.setCurrentUser((UserDTO) result);
 				hide();
 				if (continuation != null)

@@ -54,9 +54,9 @@ public class ValueInCollectionConstraint extends PropertyConstraint implements
 			return;
 		else if (value != null)
 			throw new ValueNotInCollectionException(value.toString(),
-					collectionName);
+					values);
 		else
-			throw new ValueNotInCollectionException("", collectionName);
+			throw new ValueNotInCollectionException("", values);
 	}
 
 	public boolean valueInCollection(final Object value,

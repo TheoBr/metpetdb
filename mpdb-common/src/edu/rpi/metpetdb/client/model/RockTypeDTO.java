@@ -10,6 +10,10 @@ public class RockTypeDTO extends MObjectDTO {
 	private short id;
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String rockType;
+	
+	public RockTypeDTO() {
+		
+	}
 
 	public short getId() {
 		return id;

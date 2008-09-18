@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.bulk.upload;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
+import java.util.MissingResourceException;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
@@ -250,8 +251,13 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 								headergrid.setText(i, 0, k.toString());
 								headergrid.setText(i, 1, headers.get(k)[0]);
 								if (headers.get(k)[1].length() > 0) {
+									try {
 									headergrid.setText(i, 2, enttxt
 											.getString(headers.get(k)[1]));
+									} catch (MissingResourceException mre) {
+										//TODO throw an error to developers
+										headergrid.setText(i, 2,headers.get(k).toString());
+									}
 								}
 								i++;
 							}
