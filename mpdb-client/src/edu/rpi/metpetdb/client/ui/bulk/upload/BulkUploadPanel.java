@@ -168,9 +168,9 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		main.getRightCol().add(helpList);
 		helpList.addStyleName(CSS.BETA);
 		helpList.add(new MLink("What is bulk upload?", this));
-		helpList.add(new MLink("How do i prepare my samples for bulk upload?", this));
-		helpList.add(new MLink("How do i prepare my chemical analyses for bulk upload?", this));
-		helpList.add(new MLink("How do i prepare my images for bulk upload?", this));
+		helpList.add(new MLink("How do I prepare my samples for bulk upload?", this));
+		helpList.add(new MLink("How do I prepare my chemical analyses for bulk upload?", this));
+		helpList.add(new MLink("How do I prepare my images for bulk upload?", this));
 		helpList.add(new MLink("Why do I have to verify first?", this));
 		
 		clearResults();
