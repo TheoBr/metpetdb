@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.ui.widgets;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.DOM;
@@ -12,6 +13,7 @@ import com.google.gwt.user.client.ui.MouseListenerCollection;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.WidgetCollection;
 
 import edu.rpi.metpetdb.client.ui.CSS;
 
@@ -19,7 +21,8 @@ public class MUnorderedList extends Panel implements IndexedPanel,
 		SourcesMouseEvents {
 
 	private final Element ul;
-	private final HashSet<ListItem> items;
+	private final WidgetCollection widgets;
+	private final ArrayList<ListItem> items;
 	private MouseListenerCollection mouseListeners;
 	private boolean hasRibbonStyle = false;
 
@@ -27,11 +30,12 @@ public class MUnorderedList extends Panel implements IndexedPanel,
 		super();
 		ul = DOM.createElement("ul");
 		this.setElement(ul);
-		items = new HashSet<ListItem>();
+		widgets = new WidgetCollection(this);
+		items = new ArrayList<ListItem>();
 		sinkEvents(Event.MOUSEEVENTS);
 	}
-
-	public HashSet<ListItem> getItems() {
+	
+	public Collection<ListItem> getItems() {
 		return items;
 	}
 	
@@ -68,6 +72,7 @@ public class MUnorderedList extends Panel implements IndexedPanel,
 		DOM.appendChild(ul, li);
 		final ListItem item = new ListItem(w, li, items.size());
 		items.add(item);
+		widgets.add(w);
 		this.adopt(w);
 	}
 
@@ -85,6 +90,7 @@ public class MUnorderedList extends Panel implements IndexedPanel,
 			}
 		}
 		items.add(item);
+		widgets.add(w);
 		this.adopt(w);
 	}
 
@@ -102,6 +108,7 @@ public class MUnorderedList extends Panel implements IndexedPanel,
 		} else {
 			DOM.removeChild(ul, item.getLi());
 			items.remove(item);
+			widgets.remove(w);
 			final Iterator<ListItem> itr = items.iterator();
 			while (itr.hasNext()) {
 				final ListItem listItem = (ListItem) itr.next();
@@ -129,7 +136,7 @@ public class MUnorderedList extends Panel implements IndexedPanel,
 	}
 
 	public int getWidgetCount() {
-		return items.size();
+		return widgets.size();
 	}
 
 	public int getWidgetIndex(final Widget w) {
@@ -144,42 +151,7 @@ public class MUnorderedList extends Panel implements IndexedPanel,
 	}
 
 	public Iterator<Widget> iterator() {
-		return new Iterator<Widget>() {
-			Widget returned = null;
-			int currentIndex = 0;
-
-			public boolean hasNext() {
-				if (items.size() > 0) {
-					if (currentIndex < items.size()) {
-						return true;
-					} else {
-						return false;
-					}
-				} else {
-					return false;
-				}
-			}
-
-			public Widget next() {
-				if (hasNext()) {
-					final ListItem item = ((ListItem) getListItemAtIndex(currentIndex));
-					if (item != null) {
-						returned = item.getWidget();
-						currentIndex++;
-						return returned;
-					} else
-						return null;
-				} else {
-					return null;
-				}
-			}
-
-			public void remove() {
-				if (returned != null) {
-					MUnorderedList.this.remove(returned);
-				}
-			}
-		};
+		return widgets.iterator();
 	}
 
 	public void moveItem(final ListItem item, final int index) {
