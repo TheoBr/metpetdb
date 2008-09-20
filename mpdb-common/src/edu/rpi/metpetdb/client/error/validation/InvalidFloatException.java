@@ -15,6 +15,7 @@ public class InvalidFloatException extends ValidationException {
 	}
 
 	public String format() {
-		return LocaleHandler.lc_text.errorDesc_InvalidFloat(formatPropertyName());
+		return LocaleHandler.lc_text
+				.errorDesc_InvalidFloat(formatPropertyName());
 	}
 }

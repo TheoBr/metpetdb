@@ -1,34 +1,34 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.ProjectDTO;
-import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.User;
 
 public enum ProjectProperty implements Property {
 	name {
-		public <T extends MObjectDTO> String get(final T project) {
-			return ((ProjectDTO) project).getName();
+		public <T extends MObject> String get(final T project) {
+			return ((Project) project).getName();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T project, final K name) {
-			((ProjectDTO) project).setName((String) name);
+		public <T extends MObject, K> void set(final T project, final K name) {
+			((Project) project).setName((String) name);
 		}
 	},
 	owner {
-		public <T extends MObjectDTO> UserDTO get(final T project) {
-			return ((ProjectDTO) project).getOwner();
+		public <T extends MObject> User get(final T project) {
+			return ((Project) project).getOwner();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T project, final K owner) {
-			((ProjectDTO) project).setOwner((UserDTO) owner);
+		public <T extends MObject, K> void set(final T project, final K owner) {
+			((Project) project).setOwner((User) owner);
 		}
 	},
 	memberCount {
-		public <T extends MObjectDTO> Integer get(final T project) {
-			return ((ProjectDTO) project).getMembers().size();
+		public <T extends MObject> Integer get(final T project) {
+			return ((Project) project).getMembers().size();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T project,
+		public <T extends MObject, K> void set(final T project,
 				final K subsampleCount) {
 		}
 	},

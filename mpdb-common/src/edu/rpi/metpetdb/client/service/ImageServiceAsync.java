@@ -4,22 +4,22 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import edu.rpi.metpetdb.client.model.ImageDTO;
-import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
-import edu.rpi.metpetdb.client.model.XrayImageDTO;
+import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.XrayImage;
 
 public interface ImageServiceAsync {
-	void allImages(long subsampleId, AsyncCallback<List<ImageDTO>> ac);
+	void allImages(long subsampleId, AsyncCallback<List<Image>> ac);
 
-	void details(long id, AsyncCallback<ImageDTO> ac);
+	void details(long id, AsyncCallback<Image> ac);
 
-	void saveImage(ImageDTO image, AsyncCallback<ImageDTO> ac);
+	void saveImage(Image image, AsyncCallback<Image> ac);
 
-	void saveImageOnGrid(ImageOnGridDTO iog, AsyncCallback<ImageOnGridDTO> ac);
+	void saveImageOnGrid(ImageOnGrid iog, AsyncCallback<ImageOnGrid> ac);
 
-	void saveImage(XrayImageDTO img, AsyncCallback<XrayImageDTO> ac);
+	void saveImage(XrayImage img, AsyncCallback<XrayImage> ac);
 
-	void delete(ImageDTO i, AsyncCallback<Object> ac);
+	void delete(Image i, AsyncCallback<Object> ac);
 
-	void rotate(ImageOnGridDTO iog, int degrees, AsyncCallback<Object> ac);
+	void rotate(ImageOnGrid iog, int degrees, AsyncCallback<Object> ac);
 }

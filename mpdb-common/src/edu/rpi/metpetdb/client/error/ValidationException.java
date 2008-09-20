@@ -18,11 +18,11 @@ public abstract class ValidationException extends MpDbException implements
 	protected static String formatPropertyName(final PropertyConstraint c) {
 		final String p = c.propertyName;
 		try {
-			final String r = LocaleHandler.lc_entity.getString(c.entityName + "_"
-					+ p);
+			final String r = LocaleHandler.lc_entity.getString(c.entityName
+					+ "_" + p);
 			return r != null ? r : p;
-		} catch(Exception e){ 
-			//TODO handle the exception
+		} catch (Exception e) {
+			// TODO handle the exception
 		}
 		return null;
 	}
@@ -54,7 +54,7 @@ public abstract class ValidationException extends MpDbException implements
 	 * Name of the database entity (type of object) that had the error.
 	 * 
 	 * @return internal name of the database entity with the error. This is the
-	 *         class name, without the package, that is the model bean.
+	 * 	class name, without the package, that is the model bean.
 	 */
 	public String getEntityName() {
 		return constraint.entityName;
@@ -64,9 +64,9 @@ public abstract class ValidationException extends MpDbException implements
 	 * Name of the property that had the error.
 	 * 
 	 * @return internal name of the property of the bean that had the invalid
-	 *         value within it. This is the property name as known by the data
-	 *         storage code, and matches the getter/setter method names in the
-	 *         entity bean class.
+	 * 	value within it. This is the property name as known by the data storage
+	 * 	code, and matches the getter/setter method names in the entity bean
+	 * 	class.
 	 */
 	public String getPropertyName() {
 		return constraint.propertyName;
@@ -84,7 +84,7 @@ public abstract class ValidationException extends MpDbException implements
 	 * </p>
 	 * 
 	 * @return a translated version of {@link #getEntityName()} that is more
-	 *         suitable for presentation to an end-user.
+	 * 	suitable for presentation to an end-user.
 	 */
 	public String formatEntityName() {
 		final String e = getEntityName();
@@ -104,7 +104,7 @@ public abstract class ValidationException extends MpDbException implements
 	 * </p>
 	 * 
 	 * @return a translated version of {@link #getPropertyName()} that is more
-	 *         suitable for presentation to an end-user.
+	 * 	suitable for presentation to an end-user.
 	 */
 	public String formatPropertyName() {
 		return formatPropertyName(constraint);

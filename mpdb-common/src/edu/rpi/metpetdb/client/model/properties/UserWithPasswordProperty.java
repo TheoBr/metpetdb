@@ -1,52 +1,51 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.UserDTO;
-import edu.rpi.metpetdb.client.model.UserWithPasswordDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.UserWithPassword;
 
 public enum UserWithPasswordProperty implements Property {
 	oldPassword {
-		public <T extends MObjectDTO> String get(final T userWithPassword) {
-			return ((UserWithPasswordDTO) userWithPassword).getOldPassword();
+		public <T extends MObject> String get(final T userWithPassword) {
+			return ((UserWithPassword) userWithPassword).getOldPassword();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T userWithPassword,
+		public <T extends MObject, K> void set(final T userWithPassword,
 				final K oldPassword) {
-			((UserWithPasswordDTO) userWithPassword)
+			((UserWithPassword) userWithPassword)
 					.setOldPassword((String) oldPassword);
 		}
 	},
 	newPassword {
-		public <T extends MObjectDTO> String get(final T userWithPassword) {
-			return ((UserWithPasswordDTO) userWithPassword).getNewPassword();
+		public <T extends MObject> String get(final T userWithPassword) {
+			return ((UserWithPassword) userWithPassword).getNewPassword();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T userWithPassword,
+		public <T extends MObject, K> void set(final T userWithPassword,
 				final K newPassword) {
-			((UserWithPasswordDTO) userWithPassword)
+			((UserWithPassword) userWithPassword)
 					.setNewPassword((String) newPassword);
 		}
 	},
 	vrfPassword {
-		public <T extends MObjectDTO> String get(final T userWithPassword) {
-			return ((UserWithPasswordDTO) userWithPassword).getVrfPassword();
+		public <T extends MObject> String get(final T userWithPassword) {
+			return ((UserWithPassword) userWithPassword).getVrfPassword();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T userWithPassword,
+		public <T extends MObject, K> void set(final T userWithPassword,
 				final K vrfPassword) {
-			((UserWithPasswordDTO) userWithPassword)
+			((UserWithPassword) userWithPassword)
 					.setVrfPassword((String) vrfPassword);
 		}
 	},
 	user {
-		public <T extends MObjectDTO> UserDTO get(final T userWithPassword) {
-			return ((UserWithPasswordDTO) userWithPassword).getUser();
+		public <T extends MObject> User get(final T userWithPassword) {
+			return ((UserWithPassword) userWithPassword).getUser();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T userWithPassword,
+		public <T extends MObject, K> void set(final T userWithPassword,
 				final K user) {
-			((UserWithPasswordDTO) userWithPassword)
-					.setUser((UserDTO) user);
+			((UserWithPassword) userWithPassword).setUser((User) user);
 		}
 	},
 }

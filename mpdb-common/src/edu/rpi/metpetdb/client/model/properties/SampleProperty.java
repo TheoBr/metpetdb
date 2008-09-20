@@ -5,229 +5,221 @@ import java.util.Set;
 
 import org.postgis.Geometry;
 
-import edu.rpi.metpetdb.client.model.ImageDTO;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.MetamorphicGradeDTO;
-import edu.rpi.metpetdb.client.model.ReferenceDTO;
-import edu.rpi.metpetdb.client.model.RegionDTO;
-import edu.rpi.metpetdb.client.model.RockTypeDTO;
-import edu.rpi.metpetdb.client.model.SampleCommentDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.model.SampleMineralDTO;
-import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.MetamorphicGrade;
+import edu.rpi.metpetdb.client.model.Reference;
+import edu.rpi.metpetdb.client.model.Region;
+import edu.rpi.metpetdb.client.model.RockType;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SampleComment;
+import edu.rpi.metpetdb.client.model.SampleMineral;
+import edu.rpi.metpetdb.client.model.User;
 
 public enum SampleProperty implements Property {
 
 	sesarNumber {
-		public <T extends MObjectDTO> String get(final T sample) {
-			return ((SampleDTO) sample).getSesarNumber();
+		public <T extends MObject> String get(final T sample) {
+			return ((Sample) sample).getSesarNumber();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
+		public <T extends MObject, K> void set(final T sample,
 				final K sesarNumber) {
-			((SampleDTO) sample).setSesarNumber((String) sesarNumber);
+			((Sample) sample).setSesarNumber((String) sesarNumber);
 		}
 	},
 	location {
-		public <T extends MObjectDTO> Geometry get(final T sample) {
-			return ((SampleDTO) sample).getLocation();
+		public <T extends MObject> Geometry get(final T sample) {
+			return ((Sample) sample).getLocation();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
-				final K geometry) {
-			((SampleDTO) sample).setLocation((Geometry) geometry);
+		public <T extends MObject, K> void set(final T sample, final K geometry) {
+			((Sample) sample).setLocation((Geometry) geometry);
 		}
 	},
 	owner {
-		public <T extends MObjectDTO> UserDTO get(final T sample) {
-			return ((SampleDTO) sample).getOwner();
+		public <T extends MObject> User get(final T sample) {
+			return ((Sample) sample).getOwner();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample, final K owner) {
-			((SampleDTO) sample).setOwner((UserDTO) owner);
+		public <T extends MObject, K> void set(final T sample, final K owner) {
+			((Sample) sample).setOwner((User) owner);
 		}
 	},
 	alias {
-		public <T extends MObjectDTO> String get(final T sample) {
-			return ((SampleDTO) sample).getAlias();
+		public <T extends MObject> String get(final T sample) {
+			return ((Sample) sample).getAlias();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample, final K alias) {
-			((SampleDTO) sample).setAlias((String) alias);
+		public <T extends MObject, K> void set(final T sample, final K alias) {
+			((Sample) sample).setAlias((String) alias);
 		}
 	},
 	collectionDate {
-		public <T extends MObjectDTO> Timestamp get(final T sample) {
-			return ((SampleDTO) sample).getCollectionDate();
+		public <T extends MObject> Timestamp get(final T sample) {
+			return ((Sample) sample).getCollectionDate();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
+		public <T extends MObject, K> void set(final T sample,
 				final K collectionDate) {
-			((SampleDTO) sample).setCollectionDate((Timestamp) collectionDate);
+			((Sample) sample).setCollectionDate((Timestamp) collectionDate);
 		}
 	},
 	publicData {
-		public <T extends MObjectDTO> Boolean get(final T sample) {
-			return ((SampleDTO) sample).isPublicData();
+		public <T extends MObject> Boolean get(final T sample) {
+			return ((Sample) sample).isPublicData();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
+		public <T extends MObject, K> void set(final T sample,
 				final K publicData) {
-			((SampleDTO) sample).setPublicData((Boolean) publicData);
+			((Sample) sample).setPublicData((Boolean) publicData);
 		}
 	},
 	rockType {
-		public <T extends MObjectDTO> Object get(final T sample) {
-			return ((SampleDTO) sample).getRockType();
+		public <T extends MObject> Object get(final T sample) {
+			return ((Sample) sample).getRockType();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
-				final K rockType) {
-			((SampleDTO) sample).setRockType((RockTypeDTO) rockType);
+		public <T extends MObject, K> void set(final T sample, final K rockType) {
+			((Sample) sample).setRockType((RockType) rockType);
 		}
 	},
 	images {
-		public <T extends MObjectDTO> Set<ImageDTO> get(final T sample) {
-			return ((SampleDTO) sample).getImages();
+		public <T extends MObject> Set<Image> get(final T sample) {
+			return ((Sample) sample).getImages();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample, final K images) {
-			((SampleDTO) sample).setImages((Set<ImageDTO>) images);
+		public <T extends MObject, K> void set(final T sample, final K images) {
+			((Sample) sample).setImages((Set<Image>) images);
 		}
 	},
 	minerals {
-		public <T extends MObjectDTO> Set<SampleMineralDTO> get(final T sample) {
-			return ((SampleDTO) sample).getMinerals();
+		public <T extends MObject> Set<SampleMineral> get(final T sample) {
+			return ((Sample) sample).getMinerals();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
-				final K minerals) {
-			((SampleDTO) sample).setMinerals((Set<SampleMineralDTO>) minerals);
+		public <T extends MObject, K> void set(final T sample, final K minerals) {
+			((Sample) sample).setMinerals((Set<SampleMineral>) minerals);
 		}
 	},
 	country {
-		public <T extends MObjectDTO> String get(final T sample) {
-			return ((SampleDTO) sample).getCountry();
+		public <T extends MObject> String get(final T sample) {
+			return ((Sample) sample).getCountry();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
-				final K country) {
-			((SampleDTO) sample).setCountry((String) country);
+		public <T extends MObject, K> void set(final T sample, final K country) {
+			((Sample) sample).setCountry((String) country);
 		}
 	},
 	description {
-		public <T extends MObjectDTO> String get(final T sample) {
-			return ((SampleDTO) sample).getDescription();
+		public <T extends MObject> String get(final T sample) {
+			return ((Sample) sample).getDescription();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
+		public <T extends MObject, K> void set(final T sample,
 				final K description) {
-			((SampleDTO) sample).setDescription((String) description);
+			((Sample) sample).setDescription((String) description);
 		}
 	},
 	collector {
-		public <T extends MObjectDTO> String get(final T sample) {
-			return ((SampleDTO) sample).getCollector();
+		public <T extends MObject> String get(final T sample) {
+			return ((Sample) sample).getCollector();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
-				final K collector) {
-			((SampleDTO) sample).setCollector((String) collector);
+		public <T extends MObject, K> void set(final T sample, final K collector) {
+			((Sample) sample).setCollector((String) collector);
 		}
 	},
 	locationText {
-		public <T extends MObjectDTO> String get(final T sample) {
-			return ((SampleDTO) sample).getLocationText();
+		public <T extends MObject> String get(final T sample) {
+			return ((Sample) sample).getLocationText();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
+		public <T extends MObject, K> void set(final T sample,
 				final K locationText) {
-			((SampleDTO) sample).setLocationText((String) locationText);
+			((Sample) sample).setLocationText((String) locationText);
 		}
 	},
 	latitudeError {
-		public <T extends MObjectDTO> Float get(final T sample) {
-			return ((SampleDTO) sample).getLatitudeError();
+		public <T extends MObject> Float get(final T sample) {
+			return ((Sample) sample).getLatitudeError();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
+		public <T extends MObject, K> void set(final T sample,
 				final K latitudeError) {
-			((SampleDTO) sample).setLatitudeError(PropertyUtils
+			((Sample) sample).setLatitudeError(PropertyUtils
 					.convertToFloat(latitudeError));
 		}
 	},
 	longitudeError {
-		public <T extends MObjectDTO> Float get(final T sample) {
-			return ((SampleDTO) sample).getLongitudeError();
+		public <T extends MObject> Float get(final T sample) {
+			return ((Sample) sample).getLongitudeError();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
+		public <T extends MObject, K> void set(final T sample,
 				final K longitudeError) {
-			((SampleDTO) sample).setLongitudeError(PropertyUtils
+			((Sample) sample).setLongitudeError(PropertyUtils
 					.convertToFloat(longitudeError));
 		}
 	},
 	regions {
-		public <T extends MObjectDTO> Set<RegionDTO> get(final T sample) {
-			return ((SampleDTO) sample).getRegions();
+		public <T extends MObject> Set<Region> get(final T sample) {
+			return ((Sample) sample).getRegions();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
-				final K regions) {
-			((SampleDTO) sample).setRegions((Set<RegionDTO>) regions);
+		public <T extends MObject, K> void set(final T sample, final K regions) {
+			((Sample) sample).setRegions((Set<Region>) regions);
 		}
 	},
 	metamorphicGrades {
-		public <T extends MObjectDTO> Set<MetamorphicGradeDTO> get(
-				final T sample) {
-			return ((SampleDTO) sample).getMetamorphicGrades();
+		public <T extends MObject> Set<MetamorphicGrade> get(final T sample) {
+			return ((Sample) sample).getMetamorphicGrades();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
+		public <T extends MObject, K> void set(final T sample,
 				final K metamorphicGrades) {
-			((SampleDTO) sample)
-					.setMetamorphicGrades((Set<MetamorphicGradeDTO>) metamorphicGrades);
+			((Sample) sample)
+					.setMetamorphicGrades((Set<MetamorphicGrade>) metamorphicGrades);
 		}
 	},
 	references {
-		public <T extends MObjectDTO> Set<ReferenceDTO> get(final T sample) {
-			return ((SampleDTO) sample).getReferences();
+		public <T extends MObject> Set<Reference> get(final T sample) {
+			return ((Sample) sample).getReferences();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
+		public <T extends MObject, K> void set(final T sample,
 				final K references) {
-			((SampleDTO) sample).setReferences((Set<ReferenceDTO>) references);
+			((Sample) sample).setReferences((Set<Reference>) references);
 		}
 	},
 	comments {
-		public <T extends MObjectDTO> Object get(final T sample) {
-			return ((SampleDTO) sample).getComments();
+		public <T extends MObject> Object get(final T sample) {
+			return ((Sample) sample).getComments();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
-				final K comments) {
-			((SampleDTO) sample).setComments((Set<SampleCommentDTO>) comments);
+		public <T extends MObject, K> void set(final T sample, final K comments) {
+			((Sample) sample).setComments((Set<SampleComment>) comments);
 		}
 	},
 	subsampleCount {
-		public <T extends MObjectDTO> Integer get(final T sample) {
-			return ((SampleDTO) sample).getSubsampleCount();
+		public <T extends MObject> Integer get(final T sample) {
+			return ((Sample) sample).getSubsampleCount();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
+		public <T extends MObject, K> void set(final T sample,
 				final K subsampleCount) {
-			((SampleDTO) sample).setSubsampleCount((Integer) subsampleCount);
+			((Sample) sample).setSubsampleCount((Integer) subsampleCount);
 		}
 	},
 	datePrecision {
-		public <T extends MObjectDTO> Object get(final T sample) {
-			return ((SampleDTO) sample).getDatePrecision();
+		public <T extends MObject> Object get(final T sample) {
+			return ((Sample) sample).getDatePrecision();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
+		public <T extends MObject, K> void set(final T sample,
 				final K datePrecision) {
-			((SampleDTO) sample).setDatePrecision(Short
-					.parseShort(datePrecision.toString()));
+			((Sample) sample).setDatePrecision(Short.parseShort(datePrecision
+					.toString()));
 		}
 	};
 

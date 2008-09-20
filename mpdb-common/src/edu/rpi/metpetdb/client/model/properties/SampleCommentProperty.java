@@ -1,17 +1,17 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.SampleCommentDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.SampleComment;
 
 public enum SampleCommentProperty implements Property {
 	text {
-		public <T extends MObjectDTO> String get(final T sampleComment) {
-			return ((SampleCommentDTO) sampleComment).getText();
+		public <T extends MObject> String get(final T sampleComment) {
+			return ((SampleComment) sampleComment).getText();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sampleComment,
+		public <T extends MObject, K> void set(final T sampleComment,
 				final K text) {
-			((SampleCommentDTO) sampleComment).setText((String) text);
+			((SampleComment) sampleComment).setText((String) text);
 		}
 	},
 }

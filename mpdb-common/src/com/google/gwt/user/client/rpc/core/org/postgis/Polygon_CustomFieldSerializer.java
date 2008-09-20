@@ -15,11 +15,12 @@ public class Polygon_CustomFieldSerializer {
 			final SerializationStreamReader streamReader, final Polygon instance) {
 	}
 
-	public static Polygon instantiate(final SerializationStreamReader streamReader)
+	public static Polygon instantiate(
+			final SerializationStreamReader streamReader)
 			throws SerializationException {
 		final int numberOfPoints = streamReader.readInt();
 		final Point[] points = new Point[numberOfPoints];
-		for(int i = 0;i<numberOfPoints;++i) {
+		for (int i = 0; i < numberOfPoints; ++i) {
 			final Point point = new Point();
 			point.x = streamReader.readDouble();
 			point.y = streamReader.readDouble();
@@ -39,7 +40,7 @@ public class Polygon_CustomFieldSerializer {
 		if (p.dimension == 2 && p.srid == MpDbConstants.WGS84) {
 			final LinearRing ring = p.getRing(0);
 			streamWriter.writeInt(ring.numPoints());
-			for(int i = 0;i<ring.numPoints(); ++i) {
+			for (int i = 0; i < ring.numPoints(); ++i) {
 				final Point point = ring.getPoint(i);
 				streamWriter.writeDouble(point.x);
 				streamWriter.writeDouble(point.y);

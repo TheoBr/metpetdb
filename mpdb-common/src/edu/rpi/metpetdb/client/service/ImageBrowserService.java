@@ -6,13 +6,13 @@ import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
-import edu.rpi.metpetdb.client.model.GridDTO;
-import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
+import edu.rpi.metpetdb.client.model.Grid;
+import edu.rpi.metpetdb.client.model.ImageOnGrid;
 
 public interface ImageBrowserService extends RemoteService {
-	GridDTO details(long id) throws DAOException;
+	Grid details(long id) throws DAOException;
 
-	List<ImageOnGridDTO> imagesOnGrid(long id);
+	List<ImageOnGrid> imagesOnGrid(long id);
 
-	GridDTO saveGrid(GridDTO g) throws LoginRequiredException, DAOException;
+	Grid saveGrid(Grid g) throws LoginRequiredException, DAOException;
 }

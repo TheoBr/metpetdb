@@ -7,46 +7,45 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.ProjectDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 
 /**
- * Server operations to fetch and manipulate {@link ProjectDTO}s.
+ * Server operations to fetch and manipulate {@link Project}s.
  */
 public interface ProjectService extends RemoteService {
 
-	Results<ProjectDTO> all(PaginationParameters p, final long ownerId);
+	Results<Project> all(PaginationParameters p, final long ownerId);
 	/**
 	 * Get the data for a project.
 	 * 
 	 * @param projectId
-	 *            the project to fetch the data for.
+	 * 		the project to fetch the data for.
 	 * @return requested project data.
 	 * @throws DAOException
-	 *             the project does not exist in the database.
+	 * 		the project does not exist in the database.
 	 */
-	ProjectDTO details(int projectId) throws DAOException;
+	Project details(int projectId) throws DAOException;
 
-	List<ProjectDTO> all(final long userId);
+	List<Project> all(final long userId);
 
 	/**
 	 * Create or update an existing project.
 	 * 
 	 * @param proj
-	 *            the project to create, or the project to be updated.
+	 * 		the project to create, or the project to be updated.
 	 * @return the same project, after any database edits have been applied.
 	 * @throws LoginRequiredException
-	 *             current user is not logged in.
+	 * 		current user is not logged in.
 	 * @throws ValidationException
-	 *             something is wrong with the project specification.
+	 * 		something is wrong with the project specification.
 	 * @throws DAOException
-	 *             Error saving project to the database
+	 * 		Error saving project to the database
 	 */
-	ProjectDTO saveProject(ProjectDTO proj) throws LoginRequiredException,
+	Project saveProject(Project proj) throws LoginRequiredException,
 			ValidationException, DAOException;
 
-	Results<SampleDTO> samplesFromProject(PaginationParameters parameters,
-			long id);
+	Results<Sample> samplesFromProject(PaginationParameters parameters, long id);
 }

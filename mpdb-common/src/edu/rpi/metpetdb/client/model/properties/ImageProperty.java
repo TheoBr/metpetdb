@@ -2,103 +2,95 @@ package edu.rpi.metpetdb.client.model.properties;
 
 import java.util.Set;
 
-import edu.rpi.metpetdb.client.model.ImageCommentDTO;
-import edu.rpi.metpetdb.client.model.ImageDTO;
-import edu.rpi.metpetdb.client.model.ImageTypeDTO;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.ImageComment;
+import edu.rpi.metpetdb.client.model.ImageType;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Subsample;
 
 public enum ImageProperty implements Property {
 	imageType {
-		public <T extends MObjectDTO> Object get(final T image) {
-			return ((ImageDTO) image).getImageType();
+		public <T extends MObject> Object get(final T image) {
+			return ((Image) image).getImageType();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T image,
-				final K imageType) {
-			((ImageDTO) image).setImageType((ImageTypeDTO) imageType);
+		public <T extends MObject, K> void set(final T image, final K imageType) {
+			((Image) image).setImageType((ImageType) imageType);
 		}
 	},
 	subsample {
-		public <T extends MObjectDTO> SubsampleDTO get(final T image) {
-			return ((ImageDTO) image).getSubsample();
+		public <T extends MObject> Subsample get(final T image) {
+			return ((Image) image).getSubsample();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T image,
-				final K subsample) {
-			((ImageDTO) image).setSubsample((SubsampleDTO) subsample);
+		public <T extends MObject, K> void set(final T image, final K subsample) {
+			((Image) image).setSubsample((Subsample) subsample);
 		}
 	},
 	pixelsize {
-		public <T extends MObjectDTO> Integer get(final T image) {
-			return ((ImageDTO) image).getPixelsize();
+		public <T extends MObject> Integer get(final T image) {
+			return ((Image) image).getPixelsize();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T image,
-				final K pixelsize) {
-			((ImageDTO) image).setPixelsize(PropertyUtils
+		public <T extends MObject, K> void set(final T image, final K pixelsize) {
+			((Image) image).setPixelsize(PropertyUtils
 					.convertToInteger(pixelsize));
 		}
 	},
 	contrast {
-		public <T extends MObjectDTO> Integer get(final T image) {
-			return ((ImageDTO) image).getContrast();
+		public <T extends MObject> Integer get(final T image) {
+			return ((Image) image).getContrast();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T image,
-				final K contrast) {
-			((ImageDTO) image).setContrast(PropertyUtils
+		public <T extends MObject, K> void set(final T image, final K contrast) {
+			((Image) image).setContrast(PropertyUtils
 					.convertToInteger(contrast));
 		}
 	},
 	brightness {
-		public <T extends MObjectDTO> Integer get(final T image) {
-			return ((ImageDTO) image).getBrightness();
+		public <T extends MObject> Integer get(final T image) {
+			return ((Image) image).getBrightness();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T image,
-				final K brightness) {
-			((ImageDTO) image).setBrightness(PropertyUtils
+		public <T extends MObject, K> void set(final T image, final K brightness) {
+			((Image) image).setBrightness(PropertyUtils
 					.convertToInteger(brightness));
 		}
 	},
 	lut {
-		public <T extends MObjectDTO> Integer get(final T image) {
-			return ((ImageDTO) image).getLut();
+		public <T extends MObject> Integer get(final T image) {
+			return ((Image) image).getLut();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T image, final K lut) {
-			((ImageDTO) image).setLut(PropertyUtils.convertToInteger(lut));
+		public <T extends MObject, K> void set(final T image, final K lut) {
+			((Image) image).setLut(PropertyUtils.convertToInteger(lut));
 		}
 	},
 	checksum {
-		public <T extends MObjectDTO> String get(final T image) {
-			return ((ImageDTO) image).getChecksum();
+		public <T extends MObject> String get(final T image) {
+			return ((Image) image).getChecksum();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T image,
-				final K checksum) {
-			((ImageDTO) image).setChecksum((String) checksum);
+		public <T extends MObject, K> void set(final T image, final K checksum) {
+			((Image) image).setChecksum((String) checksum);
 		}
 	},
 	scale {
-		public <T extends MObjectDTO> Integer get(final T image) {
-			return ((ImageDTO) image).getScale();
+		public <T extends MObject> Integer get(final T image) {
+			return ((Image) image).getScale();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T image,
-				final K scale) {
-			((ImageDTO) image).setScale(PropertyUtils.convertToInteger(scale));
+		public <T extends MObject, K> void set(final T image, final K scale) {
+			((Image) image).setScale(PropertyUtils.convertToInteger(scale));
 		}
 	},
 	comments {
-		public <T extends MObjectDTO> Object get(final T sample) {
-			return ((ImageDTO) sample).getComments();
+		public <T extends MObject> Object get(final T sample) {
+			return ((Image) sample).getComments();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
-				final K comments) {
-			((ImageDTO) sample).setComments((Set<ImageCommentDTO>) comments);
+		public <T extends MObject, K> void set(final T sample, final K comments) {
+			((Image) sample).setComments((Set<ImageComment>) comments);
 		}
 	},
 }

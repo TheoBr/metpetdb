@@ -5,24 +5,25 @@ import java.util.Set;
 import org.postgis.Geometry;
 
 import edu.rpi.metpetdb.client.model.DateSpan;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.RegionDTO;
-import edu.rpi.metpetdb.client.model.RockTypeDTO;
-import edu.rpi.metpetdb.client.model.SampleMineralDTO;
-import edu.rpi.metpetdb.client.model.SearchElementDTO;
-import edu.rpi.metpetdb.client.model.SearchOxideDTO;
-import edu.rpi.metpetdb.client.model.SearchSampleDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Region;
+import edu.rpi.metpetdb.client.model.RockType;
+import edu.rpi.metpetdb.client.model.SampleMineral;
+import edu.rpi.metpetdb.client.model.SearchElement;
+import edu.rpi.metpetdb.client.model.SearchOxide;
+import edu.rpi.metpetdb.client.model.SearchSample;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 
 public enum SearchSampleProperty implements SearchProperty {
 
 	sesarNumber {
-		public <T extends MObjectDTO> String get(final T sample) {
-			return ((SearchSampleDTO) sample).getSesarNumber();
+		public <T extends MObject> String get(final T sample) {
+			return ((SearchSample) sample).getSesarNumber();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
+		public <T extends MObject, K> void set(final T sample,
 				final K sesarNumber) {
-			((SearchSampleDTO) sample).setSesarNumber((String) sesarNumber);
+			((SearchSample) sample).setSesarNumber((String) sesarNumber);
 		}
 
 		public String columnName() {
@@ -30,13 +31,12 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 	},
 	boundingBox {
-		public <T extends MObjectDTO> Geometry get(final T sample) {
-			return ((SearchSampleDTO) sample).getBoundingBox();
+		public <T extends MObject> Geometry get(final T sample) {
+			return ((SearchSample) sample).getBoundingBox();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
-				final K geometry) {
-			((SearchSampleDTO) sample).setBoundingBox((Geometry) geometry);
+		public <T extends MObject, K> void set(final T sample, final K geometry) {
+			((SearchSample) sample).setBoundingBox((Geometry) geometry);
 		}
 
 		public String columnName() {
@@ -44,26 +44,24 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 	},
 	region {
-		public <T extends MObjectDTO> Set<RegionDTO> get(final T sample) {
-			return ((SearchSampleDTO) sample).getRegions();
+		public <T extends MObject> Set<Region> get(final T sample) {
+			return ((SearchSample) sample).getRegions();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
-				final K regions) {
-			((SearchSampleDTO) sample)
-					.setRegions((Set<RegionDTO>) regions);
+		public <T extends MObject, K> void set(final T sample, final K regions) {
+			((SearchSample) sample).setRegions((Set<Region>) regions);
 		}
 		public String columnName() {
 			return "region_name";
 		}
 	},
 	owner {
-		public <T extends MObjectDTO> Object get(final T sample) {
-			return ((SearchSampleDTO) sample).getOwner();
+		public <T extends MObject> Object get(final T sample) {
+			return ((SearchSample) sample).getOwner();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample, final K owner) {
-			((SearchSampleDTO) sample).setOwner((String) owner);
+		public <T extends MObject, K> void set(final T sample, final K owner) {
+			((SearchSample) sample).setOwner((String) owner);
 		}
 
 		public String columnName() {
@@ -71,26 +69,24 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 	},
 	minerals {
-		public <T extends MObjectDTO> Set<SampleMineralDTO> get(final T sample) {
-			return ((SearchSampleDTO) sample).getMinerals();
+		public <T extends MObject> Set<SampleMineral> get(final T sample) {
+			return ((SearchSample) sample).getMinerals();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
-				final K minerals) {
-			((SearchSampleDTO) sample)
-					.setMinerals((Set<SampleMineralDTO>) minerals);
+		public <T extends MObject, K> void set(final T sample, final K minerals) {
+			((SearchSample) sample).setMinerals((Set<SampleMineral>) minerals);
 		}
 		public String columnName() {
 			return "sampleMineral_mineral_name";
 		}
 	},
 	alias {
-		public <T extends MObjectDTO> String get(final T sample) {
-			return ((SearchSampleDTO) sample).getAlias();
+		public <T extends MObject> String get(final T sample) {
+			return ((SearchSample) sample).getAlias();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample, final K alias) {
-			((SearchSampleDTO) sample).setAlias((String) alias);
+		public <T extends MObject, K> void set(final T sample, final K alias) {
+			((SearchSample) sample).setAlias((String) alias);
 		}
 
 		public String columnName() {
@@ -98,13 +94,13 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 	},
 	collectionDateRange {
-		public <T extends MObjectDTO> DateSpan get(final T sample) {
-			return ((SearchSampleDTO) sample).getCollectionDateRange();
+		public <T extends MObject> DateSpan get(final T sample) {
+			return ((SearchSample) sample).getCollectionDateRange();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
+		public <T extends MObject, K> void set(final T sample,
 				final K collectionDateRange) {
-			((SearchSampleDTO) sample)
+			((SearchSample) sample)
 					.setCollectionDateRange((DateSpan) collectionDateRange);
 		}
 
@@ -113,14 +109,13 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 	},
 	possibleRockTypes {
-		public <T extends MObjectDTO> Object get(final T sample) {
-			return ((SearchSampleDTO) sample).getPossibleRockTypes();
+		public <T extends MObject> Object get(final T sample) {
+			return ((SearchSample) sample).getPossibleRockTypes();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
-				final K rockType) {
-			((SearchSampleDTO) sample)
-					.setPossibleRockTypes((Set<RockTypeDTO>) rockType);
+		public <T extends MObject, K> void set(final T sample, final K rockType) {
+			((SearchSample) sample)
+					.setPossibleRockTypes((Set<RockType>) rockType);
 		}
 
 		public String columnName() {
@@ -128,29 +123,24 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 	},
 	elements {
-		public <T extends MObjectDTO> Set<SearchElementDTO> get(
-				final T sample) {
-			return ((SearchSampleDTO) sample).getElements();
+		public <T extends MObject> Set<SearchElement> get(final T sample) {
+			return ((SearchSample) sample).getElements();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
-				final K elements) {
-			((SearchSampleDTO) sample)
-					.setElements((Set<SearchElementDTO>) elements);
+		public <T extends MObject, K> void set(final T sample, final K elements) {
+			((SearchSample) sample).setElements((Set<SearchElement>) elements);
 		}
 		public String columnName() {
 			return "subsample_chemicalAnalysis_elements";
 		}
 	},
 	oxides {
-		public <T extends MObjectDTO> Set<SearchOxideDTO> get(
-				final T sample) {
-			return ((SearchSampleDTO) sample).getOxides();
+		public <T extends MObject> Set<SearchOxide> get(final T sample) {
+			return ((SearchSample) sample).getOxides();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample, final K oxides) {
-			((SearchSampleDTO) sample)
-					.setOxides((Set<SearchOxideDTO>) oxides);
+		public <T extends MObject, K> void set(final T sample, final K oxides) {
+			((SearchSample) sample).setOxides((Set<SearchOxide>) oxides);
 		}
 		public String columnName() {
 			return "subsample_chemicalAnalysis_oxides";

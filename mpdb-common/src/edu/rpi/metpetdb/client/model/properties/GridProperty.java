@@ -1,26 +1,26 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-import edu.rpi.metpetdb.client.model.GridDTO;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.Grid;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 
 public enum GridProperty implements Property {
 
 	width {
-		public <T extends MObjectDTO> Integer get(final T grid) {
-			return ((GridDTO) grid).getWidth();
+		public <T extends MObject> Integer get(final T grid) {
+			return ((Grid) grid).getWidth();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T grid, final K width) {
-			((GridDTO) grid).setWidth((Integer) width);
+		public <T extends MObject, K> void set(final T grid, final K width) {
+			((Grid) grid).setWidth((Integer) width);
 		}
 	},
 	height {
-		public <T extends MObjectDTO> Integer get(final T grid) {
-			return ((GridDTO) grid).getHeight();
+		public <T extends MObject> Integer get(final T grid) {
+			return ((Grid) grid).getHeight();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T grid, final K height) {
-			((GridDTO) grid).setHeight((Integer) height);
+		public <T extends MObject, K> void set(final T grid, final K height) {
+			((Grid) grid).setHeight((Integer) height);
 		}
 	};
 

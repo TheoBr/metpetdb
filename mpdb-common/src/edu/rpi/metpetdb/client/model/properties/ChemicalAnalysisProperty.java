@@ -3,217 +3,215 @@ package edu.rpi.metpetdb.client.model.properties;
 import java.sql.Timestamp;
 import java.util.Set;
 
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisElementDTO;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxideDTO;
-import edu.rpi.metpetdb.client.model.ImageDTO;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.MineralDTO;
-import edu.rpi.metpetdb.client.model.ReferenceDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisElement;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxide;
+import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Mineral;
+import edu.rpi.metpetdb.client.model.Reference;
 
 public enum ChemicalAnalysisProperty implements Property {
 
 	spotId {
-		public <T extends MObjectDTO> String get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getSpotId();
+		public <T extends MObject> String get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getSpotId();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K spotId) {
-			((ChemicalAnalysisDTO) chemicalAnalysis).setSpotId((String) spotId);
+			((ChemicalAnalysis) chemicalAnalysis).setSpotId((String) spotId);
 		}
 	},
 	pointX {
-		public <T extends MObjectDTO> Integer get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getPointX();
+		public <T extends MObject> Integer get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getPointX();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K pointX) {
-			((ChemicalAnalysisDTO) chemicalAnalysis).setPointX(Integer
+			((ChemicalAnalysis) chemicalAnalysis).setPointX(Integer
 					.valueOf(pointX.toString()));
 		}
 	},
 	pointY {
-		public <T extends MObjectDTO> Integer get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getPointY();
+		public <T extends MObject> Integer get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getPointY();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K pointY) {
-			((ChemicalAnalysisDTO) chemicalAnalysis).setPointY(Integer
+			((ChemicalAnalysis) chemicalAnalysis).setPointY(Integer
 					.valueOf(pointY.toString()));
 		}
 	},
 	analysisMethod {
-		public <T extends MObjectDTO> String get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getAnalysisMethod();
+		public <T extends MObject> String get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getAnalysisMethod();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K analysisMethod) {
-			((ChemicalAnalysisDTO) chemicalAnalysis)
+			((ChemicalAnalysis) chemicalAnalysis)
 					.setAnalysisMethod((String) analysisMethod);
 		}
 	},
 	location {
-		public <T extends MObjectDTO> String get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getLocation();
+		public <T extends MObject> String get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getLocation();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K location) {
-			((ChemicalAnalysisDTO) chemicalAnalysis)
+			((ChemicalAnalysis) chemicalAnalysis)
 					.setLocation((String) location);
 		}
 	},
 	analyst {
-		public <T extends MObjectDTO> String get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getAnalyst();
+		public <T extends MObject> String get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getAnalyst();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K analyst) {
-			((ChemicalAnalysisDTO) chemicalAnalysis)
-					.setAnalyst((String) analyst);
+			((ChemicalAnalysis) chemicalAnalysis).setAnalyst((String) analyst);
 		}
 	},
 	analysisDate {
-		public <T extends MObjectDTO> Timestamp get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getAnalysisDate();
+		public <T extends MObject> Timestamp get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getAnalysisDate();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K analysisDate) {
-			((ChemicalAnalysisDTO) chemicalAnalysis)
+			((ChemicalAnalysis) chemicalAnalysis)
 					.setAnalysisDate((Timestamp) analysisDate);
 		}
 	},
 	reference {
-		public <T extends MObjectDTO> ReferenceDTO get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getReference();
+		public <T extends MObject> Reference get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getReference();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K ref) {
-			final ReferenceDTO reference;
+			final Reference reference;
 			if (ref instanceof String) {
-				reference = new ReferenceDTO();
+				reference = new Reference();
 				reference.setName(ref.toString());
-			} else if (ref instanceof ReferenceDTO) {
-				reference = (ReferenceDTO) ref;
+			} else if (ref instanceof Reference) {
+				reference = (Reference) ref;
 			} else {
 				reference = null;
 			}
-			((ChemicalAnalysisDTO) chemicalAnalysis).setReference(reference);
+			((ChemicalAnalysis) chemicalAnalysis).setReference(reference);
 		}
 	},
 	description {
-		public <T extends MObjectDTO> String get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getDescription();
+		public <T extends MObject> String get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getDescription();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K description) {
-			((ChemicalAnalysisDTO) chemicalAnalysis)
+			((ChemicalAnalysis) chemicalAnalysis)
 					.setDescription((String) description);
 		}
 	},
 	mineral {
-		public <T extends MObjectDTO> MineralDTO get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getMineral();
+		public <T extends MObject> Mineral get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getMineral();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K mineral) {
-			((ChemicalAnalysisDTO) chemicalAnalysis)
-					.setMineral((MineralDTO) mineral);
+			((ChemicalAnalysis) chemicalAnalysis).setMineral((Mineral) mineral);
 		}
 	},
 	subsampleName {
-		public <T extends MObjectDTO> String get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getSubsampleName();
+		public <T extends MObject> String get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getSubsampleName();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K subsample) {
 
 		}
 	},
 	sampleName {
-		public <T extends MObjectDTO> String get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getSampleName();
+		public <T extends MObject> String get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getSampleName();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K subsample) {
 			// FIXME this should throw an exception
 		}
 	},
 	image {
-		public <T extends MObjectDTO> ImageDTO get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getImage();
+		public <T extends MObject> Image get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getImage();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K image) {
-			((ChemicalAnalysisDTO) chemicalAnalysis).setImage((ImageDTO) image);
+			((ChemicalAnalysis) chemicalAnalysis).setImage((Image) image);
 		}
 	},
 	largeRock {
-		public <T extends MObjectDTO> Boolean get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getLargeRock();
+		public <T extends MObject> Boolean get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getLargeRock();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K largeRock) {
-			((ChemicalAnalysisDTO) chemicalAnalysis)
+			((ChemicalAnalysis) chemicalAnalysis)
 					.setLargeRock((Boolean) largeRock);
 		}
 	},
 	elements {
-		public <T extends MObjectDTO> Set<ChemicalAnalysisElementDTO> get(
+		public <T extends MObject> Set<ChemicalAnalysisElement> get(
 				final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getElements();
+			return ((ChemicalAnalysis) chemicalAnalysis).getElements();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K elements) {
-			((ChemicalAnalysisDTO) chemicalAnalysis)
-					.setElements((Set<ChemicalAnalysisElementDTO>) elements);
+			((ChemicalAnalysis) chemicalAnalysis)
+					.setElements((Set<ChemicalAnalysisElement>) elements);
 		}
 	},
 	oxides {
-		public <T extends MObjectDTO> Set<ChemicalAnalysisOxideDTO> get(
+		public <T extends MObject> Set<ChemicalAnalysisOxide> get(
 				final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getOxides();
+			return ((ChemicalAnalysis) chemicalAnalysis).getOxides();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K oxides) {
-			((ChemicalAnalysisDTO) chemicalAnalysis)
-					.setOxides((Set<ChemicalAnalysisOxideDTO>) oxides);
+			((ChemicalAnalysis) chemicalAnalysis)
+					.setOxides((Set<ChemicalAnalysisOxide>) oxides);
 		}
 	},
 	total {
-		public <T extends MObjectDTO> Float get(final T chemicalAnalysis) {
-			return ((ChemicalAnalysisDTO) chemicalAnalysis).getTotal();
+		public <T extends MObject> Float get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getTotal();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T chemicalAnalysis,
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
 				final K total) {
-			((ChemicalAnalysisDTO) chemicalAnalysis).setTotal(Float
-					.valueOf(total.toString()));
+			((ChemicalAnalysis) chemicalAnalysis).setTotal(Float.valueOf(total
+					.toString()));
 		}
 	},
 	datePrecision {
-		public <T extends MObjectDTO> Object get(final T sample) {
-			return ((ChemicalAnalysisDTO) sample).getDatePrecision();
+		public <T extends MObject> Object get(final T sample) {
+			return ((ChemicalAnalysis) sample).getDatePrecision();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sample,
+		public <T extends MObject, K> void set(final T sample,
 				final K datePrecision) {
-			((ChemicalAnalysisDTO) sample).setDatePrecision(Short
+			((ChemicalAnalysis) sample).setDatePrecision(Short
 					.parseShort(datePrecision.toString()));
 		}
 	};

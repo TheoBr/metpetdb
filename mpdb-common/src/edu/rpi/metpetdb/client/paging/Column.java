@@ -1,6 +1,6 @@
 package edu.rpi.metpetdb.client.paging;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.properties.Property;
 
 /**
@@ -60,13 +60,13 @@ public class Column {
 	 * Creates a column for use in a paginated table
 	 * 
 	 * @param title
-	 *            the header
+	 * 		the header
 	 * @param property
-	 *            the property
+	 * 		the property
 	 * @param sortable
-	 *            whether it can be sorted
+	 * 		whether it can be sorted
 	 * @param customFormat
-	 *            if it has a custom format
+	 * 		if it has a custom format
 	 */
 	public Column(final String title, final Property property,
 			final boolean sortable, final boolean customFormat) {
@@ -108,11 +108,11 @@ public class Column {
 	 * When this column is clicked this method is called
 	 * 
 	 * @param data
-	 *            the bean that is represented from the row
+	 * 		the bean that is represented from the row
 	 * @param row
-	 *            the row number that was clicked
+	 * 		the row number that was clicked
 	 */
-	public void handleClickEvent(final MObjectDTO data, final int row) {
+	public void handleClickEvent(final MObject data, final int row) {
 
 	}
 
@@ -120,12 +120,12 @@ public class Column {
 	 * Returns the custom widget/text that this column takes advantage of
 	 * 
 	 * @param data
-	 *            the bean that is being worked on
+	 * 		the bean that is being worked on
 	 * @param row
-	 *            the row that is being worked on
+	 * 		the row that is being worked on
 	 * @return either a string or a widget
 	 */
-	public Object getRepresentation(final MObjectDTO data, final int row) {
+	public Object getRepresentation(final MObject data, final int row) {
 		if (getWidget(data, row) == null)
 			return getText(data, row);
 		else
@@ -137,12 +137,12 @@ public class Column {
 	 * link.
 	 * 
 	 * @param data
-	 *            the bean that is being worked on
+	 * 		the bean that is being worked on
 	 * @param row
-	 *            the row that is being worked on
+	 * 		the row that is being worked on
 	 * @return the widget
 	 */
-	protected Object getWidget(final MObjectDTO data, final int row) {
+	protected Object getWidget(final MObject data, final int row) {
 		return null;
 	}
 
@@ -151,18 +151,18 @@ public class Column {
 	 * PostGIS location to be displayed as coordinates.
 	 * 
 	 * @param data
-	 *            the bean that is being worked on
+	 * 		the bean that is being worked on
 	 * @param row
-	 *            the row that is being worked on
+	 * 		the row that is being worked on
 	 * @return the text
 	 */
-	protected Object getText(final MObjectDTO data, final int row) {
+	protected Object getText(final MObject data, final int row) {
 		return "";
 	}
 
 	/**
-	 * Whether this column defines a custom format, i.e. if it overrides
-	 * {@link #getText(MObjectDTO, int)} or {@link #getWidget(MObjectDTO, int)}
+	 * Whether this column defines a custom format, i.e. if it overrides {@link
+	 * #getText(MObject, int)} or {@link #getWidget(MObject, int)}
 	 * 
 	 * @return true if it overrides, false otherwise
 	 */
@@ -174,7 +174,7 @@ public class Column {
 	 * Sets whether this column defines a custom format
 	 * 
 	 * @param customFormat
-	 *            true if it defines a custom format, else otherwise
+	 * 		true if it defines a custom format, else otherwise
 	 * @return
 	 */
 	public Column setCustomFormat(boolean customFormat) {

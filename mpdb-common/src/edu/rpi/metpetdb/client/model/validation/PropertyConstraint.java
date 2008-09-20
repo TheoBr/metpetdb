@@ -4,7 +4,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.properties.Property;
 
 /**
@@ -29,7 +29,7 @@ public class PropertyConstraint implements IsSerializable {
 	/** Is this property required to contain a non-null value? */
 	public boolean required;
 
-	public void validateEntity(final MObjectDTO obj) throws ValidationException {
+	public void validateEntity(final MObject obj) throws ValidationException {
 		validateValue(obj.mGet(property));
 	}
 

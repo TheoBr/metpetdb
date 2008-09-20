@@ -23,46 +23,46 @@ public class InvalidCharacterException extends ValidationException {
 		final StringBuffer r = new StringBuffer();
 		for (int k = 0; k < pattern.length(); k++) {
 			switch (pattern.charAt(k)) {
-				case '\\' :
-					if (r.length() > 0)
-						r.append(", ");
-					r.append(formatCharacter(pattern.charAt(++k)));
-					break;
-				case '-' :
-					r.append('-');
-					r.append(formatCharacter(pattern.charAt(++k)));
-					break;
-				default :
-					if (r.length() > 0)
-						r.append(", ");
-					r.append(formatCharacter(pattern.charAt(k)));
-					break;
+			case '\\':
+				if (r.length() > 0)
+					r.append(", ");
+				r.append(formatCharacter(pattern.charAt(++k)));
+				break;
+			case '-':
+				r.append('-');
+				r.append(formatCharacter(pattern.charAt(++k)));
+				break;
+			default:
+				if (r.length() > 0)
+					r.append(", ");
+				r.append(formatCharacter(pattern.charAt(k)));
+				break;
 			}
 		}
 		return r.toString();
 	}
 	protected static String formatCharacter(final char in) {
 		switch (in) {
-			case ' ' :
-				return LocaleHandler.lc_text.character_space();
-			case ',' :
-				return LocaleHandler.lc_text.character_comma();
-			case '.' :
-				return LocaleHandler.lc_text.character_period();
-			case '\'' :
-				return LocaleHandler.lc_text.character_singleQuote();
-			case '"' :
-				return LocaleHandler.lc_text.character_doubleQuote();
-			case '_' :
-				return LocaleHandler.lc_text.character_underscore();
-			case '`' :
-				return LocaleHandler.lc_text.character_backtick();
+		case ' ':
+			return LocaleHandler.lc_text.character_space();
+		case ',':
+			return LocaleHandler.lc_text.character_comma();
+		case '.':
+			return LocaleHandler.lc_text.character_period();
+		case '\'':
+			return LocaleHandler.lc_text.character_singleQuote();
+		case '"':
+			return LocaleHandler.lc_text.character_doubleQuote();
+		case '_':
+			return LocaleHandler.lc_text.character_underscore();
+		case '`':
+			return LocaleHandler.lc_text.character_backtick();
 		}
 		return String.valueOf(in);
 	}
 
 	public String format() {
-		return LocaleHandler.lc_text.errorDesc_InvalidCharacter(formatPropertyName(),
-				formatPattern(), formatCharacter(bad));
+		return LocaleHandler.lc_text.errorDesc_InvalidCharacter(
+				formatPropertyName(), formatPattern(), formatCharacter(bad));
 	}
 }

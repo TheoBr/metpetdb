@@ -2,70 +2,65 @@ package edu.rpi.metpetdb.client.model.properties;
 
 import java.util.Set;
 
-import edu.rpi.metpetdb.client.model.ImageDTO;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
-import edu.rpi.metpetdb.client.model.SubsampleTypeDTO;
+import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.SubsampleType;
 
 public enum SubsampleProperty implements Property {
 	name {
-		public <T extends MObjectDTO> String get(final T subsample) {
-			return ((SubsampleDTO) subsample).getName();
+		public <T extends MObject> String get(final T subsample) {
+			return ((Subsample) subsample).getName();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T subsample,
-				final K name) {
-			((SubsampleDTO) subsample).setName((String) name);
+		public <T extends MObject, K> void set(final T subsample, final K name) {
+			((Subsample) subsample).setName((String) name);
 		}
 	},
 	subsampleType {
-		public <T extends MObjectDTO> Object get(final T subsample) {
-			return ((SubsampleDTO) subsample).getSubsampleType();
+		public <T extends MObject> Object get(final T subsample) {
+			return ((Subsample) subsample).getSubsampleType();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T subsample,
-				final K type) {
-			((SubsampleDTO) subsample).setSubsampleType((SubsampleTypeDTO) type);
+		public <T extends MObject, K> void set(final T subsample, final K type) {
+			((Subsample) subsample).setSubsampleType((SubsampleType) type);
 		}
 	},
 	images {
-		public <T extends MObjectDTO> Set<ImageDTO> get(final T subsample) {
-			return ((SubsampleDTO) subsample).getImages();
+		public <T extends MObject> Set<Image> get(final T subsample) {
+			return ((Subsample) subsample).getImages();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T subsample,
-				final K images) {
-			((SubsampleDTO) subsample).setImages((Set<ImageDTO>) images);
+		public <T extends MObject, K> void set(final T subsample, final K images) {
+			((Subsample) subsample).setImages((Set<Image>) images);
 		}
 	},
 	imageCount {
-		public <T extends MObjectDTO> Integer get(final T subsample) {
-			return ((SubsampleDTO) subsample).getImageCount();
+		public <T extends MObject> Integer get(final T subsample) {
+			return ((Subsample) subsample).getImageCount();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T subsample,
+		public <T extends MObject, K> void set(final T subsample,
 				final K imageCount) {
-			((SubsampleDTO) subsample).setImageCount((Integer) imageCount);
+			((Subsample) subsample).setImageCount((Integer) imageCount);
 		}
 	},
 	analysisCount {
-		public <T extends MObjectDTO> Integer get(final T subsample) {
-			return ((SubsampleDTO) subsample).getAnalysisCount();
+		public <T extends MObject> Integer get(final T subsample) {
+			return ((Subsample) subsample).getAnalysisCount();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T subsample,
+		public <T extends MObject, K> void set(final T subsample,
 				final K analysisCount) {
-			((SubsampleDTO) subsample)
-					.setAnalysisCount((Integer) analysisCount);
+			((Subsample) subsample).setAnalysisCount((Integer) analysisCount);
 		}
 	},
 	sampleName {
-		public <T extends MObjectDTO> String get(final T subsample) {
-			return ((SubsampleDTO) subsample).getSampleName();
+		public <T extends MObject> String get(final T subsample) {
+			return ((Subsample) subsample).getSampleName();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T subsample,
-				final K sample) {
+		public <T extends MObject, K> void set(final T subsample, final K sample) {
 			// FIXME this should thrown an exception
 		}
 	},

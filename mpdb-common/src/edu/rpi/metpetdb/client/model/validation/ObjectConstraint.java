@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 
 public class ObjectConstraint extends PropertyConstraint implements HasValues {
@@ -37,18 +37,18 @@ public class ObjectConstraint extends PropertyConstraint implements HasValues {
 	}
 
 	@Override
-	public void validateEntity(final MObjectDTO obj) throws ValidationException {
+	public void validateEntity(final MObject obj) throws ValidationException {
 		final Object value = obj.mGet(this.property);
 		if (value != null) {
 			if (value instanceof Collection) {
 				final Iterator<?> itr = ((Collection<?>) value).iterator();
 				while (itr.hasNext()) {
-					DatabaseObjectConstraints.validate((MObjectDTO) itr.next(),
+					DatabaseObjectConstraints.validate((MObject) itr.next(),
 							constraints);
 				}
 			} else
-				DatabaseObjectConstraints.validate((MObjectDTO) value,
-						constraints);
+				DatabaseObjectConstraints
+						.validate((MObject) value, constraints);
 		}
 	}
 

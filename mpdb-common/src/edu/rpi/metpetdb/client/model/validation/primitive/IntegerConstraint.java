@@ -5,9 +5,8 @@ import edu.rpi.metpetdb.client.error.validation.InvalidIntegerException;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.MaxLengthConstraint;
 
-public class IntegerConstraint extends PropertyConstraint
-		implements
-			MaxLengthConstraint {
+public class IntegerConstraint extends PropertyConstraint implements
+		MaxLengthConstraint {
 
 	public void validateValue(final Object value) throws ValidationException {
 		super.validateValue(value);

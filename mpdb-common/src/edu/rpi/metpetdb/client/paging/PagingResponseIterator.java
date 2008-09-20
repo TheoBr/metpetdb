@@ -25,7 +25,7 @@ public class PagingResponseIterator implements Iterator<Iterator<Object>> {
 	 * Constructor.
 	 * 
 	 * @param rows
-	 *            the row data
+	 * 		the row data
 	 */
 	public PagingResponseIterator(Collection<Collection<Object>> rows) {
 		if (rows != null) {
@@ -59,8 +59,8 @@ public class PagingResponseIterator implements Iterator<Iterator<Object>> {
 	/**
 	 * Converts an iterator of some type into an iterator of objects.
 	 * 
-	 * @param <E>
-	 *            the type of iterator to wraps
+	 * @param <
+	 * 		E> the type of iterator to wraps
 	 */
 	private static class ObjectIterator<E> implements Iterator<Object> {
 		private Iterator<E> iterator;

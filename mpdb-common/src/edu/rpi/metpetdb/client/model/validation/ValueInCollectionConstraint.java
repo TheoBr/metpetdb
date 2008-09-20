@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.ValueNotInCollectionException;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.interfaces.HasChildren;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
@@ -19,19 +19,20 @@ import edu.rpi.metpetdb.client.model.validation.interfaces.MaxLengthConstraint;
  * 
  * @author anthony
  * 
- * @param <T>
+ * @param <
+ * 		T>
  */
 public class ValueInCollectionConstraint extends PropertyConstraint implements
 		MaxLengthConstraint, HasValues {
 
-	private Collection<? extends MObjectDTO> values;
+	private Collection<? extends MObject> values;
 	private String collectionName;
 
 	public ValueInCollectionConstraint() {
 
 	}
 
-	public void setValues(final Collection<? extends MObjectDTO> c) {
+	public void setValues(final Collection<? extends MObject> c) {
 		values = c;
 	}
 
@@ -53,8 +54,7 @@ public class ValueInCollectionConstraint extends PropertyConstraint implements
 		if (values != null && valueInCollection(value, this.getValues()))
 			return;
 		else if (value != null)
-			throw new ValueNotInCollectionException(value.toString(),
-					values);
+			throw new ValueNotInCollectionException(value.toString(), values);
 		else
 			throw new ValueNotInCollectionException("", values);
 	}

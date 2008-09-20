@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import edu.rpi.metpetdb.client.model.ProjectDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 
@@ -13,14 +13,14 @@ import edu.rpi.metpetdb.client.paging.Results;
 public interface ProjectServiceAsync {
 
 	void all(PaginationParameters p, long ownerId,
-			AsyncCallback<Results<ProjectDTO>> ac);
+			AsyncCallback<Results<Project>> ac);
 
-	void details(int projectId, AsyncCallback<ProjectDTO> ac);
+	void details(int projectId, AsyncCallback<Project> ac);
 
-	void saveProject(ProjectDTO proj, AsyncCallback<ProjectDTO> ac);
+	void saveProject(Project proj, AsyncCallback<Project> ac);
 
 	void samplesFromProject(PaginationParameters parameters, long id,
-			AsyncCallback<Results<SampleDTO>> ac);
+			AsyncCallback<Results<Sample>> ac);
 
-	void all(long userId, AsyncCallback<List<ProjectDTO>> ac);
+	void all(long userId, AsyncCallback<List<Project>> ac);
 }

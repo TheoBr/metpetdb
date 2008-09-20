@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 
 /**
  * Useful container for holding a list of objects and the total number of
@@ -12,10 +12,10 @@ import edu.rpi.metpetdb.client.model.MObjectDTO;
  * 
  * @author anthony
  * 
- * @param <T>
- *            the subtype of the list representing the results
+ * @param <
+ * 		T> the subtype of the list representing the results
  */
-public class Results<T extends MObjectDTO> implements IsSerializable {
+public class Results<T extends MObject> implements IsSerializable {
 
 	private List<T> list;
 	private int count;
@@ -28,9 +28,9 @@ public class Results<T extends MObjectDTO> implements IsSerializable {
 	 * Creates a new results container
 	 * 
 	 * @param count
-	 *            the total number of objects in the database
+	 * 		the total number of objects in the database
 	 * @param list
-	 *            a subset of those objects
+	 * 		a subset of those objects
 	 */
 	public Results(final int count, final List<T> list) {
 		this.list = list;
@@ -50,7 +50,7 @@ public class Results<T extends MObjectDTO> implements IsSerializable {
 	 * Sets the list of object
 	 * 
 	 * @param data
-	 *            the data
+	 * 		the data
 	 */
 	public void setList(List<T> data) {
 		this.list = data;
@@ -69,7 +69,7 @@ public class Results<T extends MObjectDTO> implements IsSerializable {
 	 * Sets the total number of objects in the database
 	 * 
 	 * @param count
-	 *            the count
+	 * 		the count
 	 */
 	public void setCount(int count) {
 		this.count = count;

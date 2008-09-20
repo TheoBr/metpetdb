@@ -190,9 +190,9 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String Image_reference();
 
 	String Image_collector();
-	
+
 	String Image_scale();
-	
+
 	String Image_comments();
 
 	/* XrayImage */

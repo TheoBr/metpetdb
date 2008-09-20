@@ -4,7 +4,7 @@
 	<!--  <inherits name="rocket.User" />-->
 	<inherits name="com.google.gwt.i18n.I18N"/>
 	<inherits name="edu.rpi.metpetdb.java_emu.Emulation"/>
-	<inherits name='net.sf.hibernate4gwt.Hibernate4Gwt'/>
+	<inherits name='net.sf.hibernate4gwt.Hibernate4Gwt15'/>
 	<inherits name='com.google.gwt.widgetideas.WidgetIdeas'/>
 	<inherits name="com.google.gwt.maps.GoogleMaps" />
 	<inherits name="com.google.gwt.xml.XML"/> 

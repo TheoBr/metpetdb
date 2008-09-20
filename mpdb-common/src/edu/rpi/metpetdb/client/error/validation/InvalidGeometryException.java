@@ -11,7 +11,7 @@ public class InvalidGeometryException extends ValidationException {
 	private String propertyName;
 
 	public InvalidGeometryException() {
-		
+
 	}
 	public InvalidGeometryException(final PropertyConstraint pc) {
 		super(pc);
@@ -23,8 +23,8 @@ public class InvalidGeometryException extends ValidationException {
 	}
 
 	public String format() {
-		return LocaleHandler.lc_text.errorDesc_InvalidGeometry(propertyName != null
-				? propertyName
-				: formatPropertyName());
+		return LocaleHandler.lc_text
+				.errorDesc_InvalidGeometry(propertyName != null ? propertyName
+						: formatPropertyName());
 	}
 }

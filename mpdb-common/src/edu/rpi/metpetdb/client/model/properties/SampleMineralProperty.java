@@ -1,29 +1,29 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.MineralDTO;
-import edu.rpi.metpetdb.client.model.SampleMineralDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Mineral;
+import edu.rpi.metpetdb.client.model.SampleMineral;
 
 public enum SampleMineralProperty implements Property {
 	amount {
-		public <T extends MObjectDTO> Float get(final T sampleMineral) {
-			return ((SampleMineralDTO) sampleMineral).getAmount();
+		public <T extends MObject> Float get(final T sampleMineral) {
+			return ((SampleMineral) sampleMineral).getAmount();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sampleMineral,
+		public <T extends MObject, K> void set(final T sampleMineral,
 				final K amount) {
-			((SampleMineralDTO) sampleMineral).setAmount(Float
+			((SampleMineral) sampleMineral).setAmount(Float
 					.valueOf((String) amount));
 		}
 	},
 	mineral {
-		public <T extends MObjectDTO> Object get(final T sampleMineral) {
-			return ((SampleMineralDTO) sampleMineral).getMineral();
+		public <T extends MObject> Object get(final T sampleMineral) {
+			return ((SampleMineral) sampleMineral).getMineral();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T sampleMineral,
+		public <T extends MObject, K> void set(final T sampleMineral,
 				final K mineral) {
-			((SampleMineralDTO) sampleMineral).setMineral((MineralDTO) mineral);
+			((SampleMineral) sampleMineral).setMineral((Mineral) mineral);
 		}
 	};
 }

@@ -1,28 +1,29 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.StartSessionRequestDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.StartSessionRequest;
 
 public enum StartSessionRequestProperty implements Property {
 	emailAddress {
-		public <T extends MObjectDTO> String get(final T startSessionRequest) {
-			return ((StartSessionRequestDTO) startSessionRequest).getEmailAddress();
+		public <T extends MObject> String get(final T startSessionRequest) {
+			return ((StartSessionRequest) startSessionRequest)
+					.getEmailAddress();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T startSessionRequest,
+		public <T extends MObject, K> void set(final T startSessionRequest,
 				final K username) {
-			((StartSessionRequestDTO) startSessionRequest)
+			((StartSessionRequest) startSessionRequest)
 					.setEmailAddress((String) username);
 		}
 	},
 	password {
-		public <T extends MObjectDTO> String get(final T startSessionRequest) {
-			return ((StartSessionRequestDTO) startSessionRequest).getPassword();
+		public <T extends MObject> String get(final T startSessionRequest) {
+			return ((StartSessionRequest) startSessionRequest).getPassword();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T startSessionRequest,
+		public <T extends MObject, K> void set(final T startSessionRequest,
 				final K password) {
-			((StartSessionRequestDTO) startSessionRequest)
+			((StartSessionRequest) startSessionRequest)
 					.setPassword((String) password);
 		}
 	},

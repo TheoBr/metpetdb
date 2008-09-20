@@ -27,13 +27,13 @@ public class PaginationParameters implements IsSerializable {
 	 * Creates a new pagination parameter
 	 * 
 	 * @param firstRow
-	 *            the number of the first row
+	 * 		the number of the first row
 	 * @param numRows
-	 *            the number of rows
+	 * 		the number of rows
 	 * @param orderBy
-	 *            column to order by
+	 * 		column to order by
 	 * @param isAscending
-	 *            whether to sort ascending or not
+	 * 		whether to sort ascending or not
 	 */
 	public PaginationParameters(final int firstRow, final int numRows,
 			final String orderBy, final boolean isAscending) {

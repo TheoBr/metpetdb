@@ -1,17 +1,16 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.RockTypeDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.RockType;
 
 public enum RockTypeProperty implements Property {
 	rockType {
-		public <T extends MObjectDTO> String get(final T rockType) {
-			return ((RockTypeDTO) rockType).getRockType();
+		public <T extends MObject> String get(final T rockType) {
+			return ((RockType) rockType).getRockType();
 		}
 
-		public <T extends MObjectDTO, K> void set(final T rockType,
-				final K name) {
-			((RockTypeDTO) rockType).setRockType((String) name);
+		public <T extends MObject, K> void set(final T rockType, final K name) {
+			((RockType) rockType).setRockType((String) name);
 		}
 	}
 }

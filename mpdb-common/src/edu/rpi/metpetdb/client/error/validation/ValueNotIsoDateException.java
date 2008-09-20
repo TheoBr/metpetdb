@@ -15,6 +15,7 @@ public class ValueNotIsoDateException extends ValidationException {
 	}
 
 	public String format() {
-		return LocaleHandler.lc_text.errorDesc_IsoDateFormat(formatPropertyName());
+		return LocaleHandler.lc_text
+				.errorDesc_IsoDateFormat(formatPropertyName());
 	}
 }

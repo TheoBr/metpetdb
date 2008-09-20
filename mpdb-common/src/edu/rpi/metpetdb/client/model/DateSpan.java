@@ -2,7 +2,9 @@ package edu.rpi.metpetdb.client.model;
 
 import java.util.Date;
 
-public class DateSpan extends MObjectDTO {
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+public class DateSpan implements IsSerializable {
 	private long _start;
 	private long _end;
 
@@ -13,11 +15,11 @@ public class DateSpan extends MObjectDTO {
 	 * Creates a <code>DateSpan</code> between the two end points.
 	 * 
 	 * @param start
-	 *            Beginning date
+	 * 		Beginning date
 	 * @param end
-	 *            Ending date
+	 * 		Ending date
 	 * @throws IllegalArgumentException
-	 *             if <code>start</code> is after <code>end</code>
+	 * 		if <code>start</code> is after <code>end</code>
 	 */
 	public DateSpan(long start, long end) {
 		_start = start;
@@ -34,9 +36,9 @@ public class DateSpan extends MObjectDTO {
 	 * <code>new Date(start.getTime(), end.getTime());</code>.
 	 * 
 	 * @param start
-	 *            Beginning date
+	 * 		Beginning date
 	 * @param end
-	 *            Ending date
+	 * 		Ending date
 	 */
 	public DateSpan(Date start, Date end) {
 		this(start.getTime(), end.getTime());
@@ -82,7 +84,7 @@ public class DateSpan extends MObjectDTO {
 	 * <code>DateSpan</code>.
 	 * 
 	 * @param span
-	 *            Date to check
+	 * 		Date to check
 	 * @return true if this DateSpan contains <code>span</code>.
 	 */
 	public boolean contains(DateSpan span) {
@@ -90,11 +92,11 @@ public class DateSpan extends MObjectDTO {
 	}
 
 	/**
-	 * Returns whether or not this <code>DateSpan</code> contains the
-	 * specified time.
+	 * Returns whether or not this <code>DateSpan</code> contains the specified
+	 * time.
 	 * 
 	 * @param time
-	 *            time check
+	 * 		time check
 	 * @return true if this DateSpan contains <code>time</code>.
 	 */
 	public boolean contains(long time) {
@@ -102,15 +104,15 @@ public class DateSpan extends MObjectDTO {
 	}
 
 	/**
-	 * Returns whether or not this <code>DateSpan</code> contains the
-	 * specified date span.
+	 * Returns whether or not this <code>DateSpan</code> contains the specified
+	 * date span.
 	 * 
 	 * @param start
-	 *            Start of time span
+	 * 		Start of time span
 	 * @param end
-	 *            End of time
+	 * 		End of time
 	 * @return true if this <code>DateSpan</code> contains the specified date
-	 *         span.
+	 * 	span.
 	 */
 	public boolean contains(long start, long end) {
 		return (start >= getStart() && end <= getEnd());
@@ -121,11 +123,11 @@ public class DateSpan extends MObjectDTO {
 	 * specified time.
 	 * 
 	 * @param start
-	 *            Start time
+	 * 		Start time
 	 * @param end
-	 *            End time
-	 * @return true if this <code>DateSpan</code> intersects with the
-	 *         specified time.
+	 * 		End time
+	 * @return true if this <code>DateSpan</code> intersects with the specified
+	 * 	time.
 	 */
 	public boolean intersects(long start, long end) {
 		return (start <= getEnd() && end >= getStart());
@@ -136,9 +138,9 @@ public class DateSpan extends MObjectDTO {
 	 * specified <code>DateSpan</code>.
 	 * 
 	 * @param span
-	 *            DateSpan to compare to
-	 * @return true if this <code>DateSpan</code> intersects with the
-	 *         specified time.
+	 * 		DateSpan to compare to
+	 * @return true if this <code>DateSpan</code> intersects with the specified
+	 * 	time.
 	 */
 	public boolean intersects(DateSpan span) {
 		return intersects(span.getStart(), span.getEnd());
@@ -149,7 +151,7 @@ public class DateSpan extends MObjectDTO {
 	 * <code>DateSpan</code> and <code>span</code>.
 	 * 
 	 * @param span
-	 *            DateSpan to add
+	 * 		DateSpan to add
 	 * @return union of this DateSpan and <code>span</code>
 	 */
 	public DateSpan add(DateSpan span) {
@@ -161,11 +163,10 @@ public class DateSpan extends MObjectDTO {
 	 * <code>DateSpan</code> and the passed in span.
 	 * 
 	 * @param start
-	 *            Start of region to add
+	 * 		Start of region to add
 	 * @param end
-	 *            End of region to end
-	 * @return union of this DateSpan and <code>start</code>,
-	 *         <code>end</code>
+	 * 		End of region to end
+	 * @return union of this DateSpan and <code>start</code>, <code>end</code>
 	 */
 	public DateSpan add(long start, long end) {
 		return new DateSpan(Math.min(start, getStart()), Math

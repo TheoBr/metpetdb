@@ -3,15 +3,15 @@ package edu.rpi.metpetdb.client.model.validation;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
-import edu.rpi.metpetdb.client.model.ImageDTO;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.ProjectDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.model.StartSessionRequestDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
-import edu.rpi.metpetdb.client.model.UserDTO;
-import edu.rpi.metpetdb.client.model.XrayImageDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.StartSessionRequest;
+import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.XrayImage;
 import edu.rpi.metpetdb.client.model.validation.primitive.BooleanConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
@@ -23,8 +23,8 @@ import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
  * 
  */
 public class DatabaseObjectConstraints implements IsSerializable {
-	public static void validate(final MObjectDTO o,
-			final PropertyConstraint[] pc) throws ValidationException {
+	public static void validate(final MObject o, final PropertyConstraint[] pc)
+			throws ValidationException {
 		if (pc == null || o == null)
 			return;
 		for (int k = 0; k < pc.length; k++) {
@@ -54,15 +54,15 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ Reference ------
 	public PropertyConstraint[] Reference__all;
 	public StringConstraint Reference_name;
-	
+
 	// ------ Image Type ------
 	public PropertyConstraint[] ImageType__all;
 	public StringConstraint ImageType_imageType;
-	
+
 	// ------ Subsample Type ------
 	public PropertyConstraint[] SubsampleType__all;
 	public StringConstraint SubsampleType_subsampleType;
-	
+
 	// ------ Rock Type ------
 	public PropertyConstraint[] RockType__all;
 	public StringConstraint RockType_rockType;
@@ -70,7 +70,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ SampleComment ------
 	public PropertyConstraint[] SampleComment__all;
 	public StringConstraint SampleComment_text;
-	
+
 	// ------ ImageComment ------
 	public PropertyConstraint[] ImageComment__all;
 	public StringConstraint ImageComment_text;
@@ -98,7 +98,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public BooleanConstraint XrayImage_radiation;
 	public ValueInCollectionConstraint XrayImage_element;
 
-	public void validate(final XrayImageDTO xi) throws ValidationException {
+	public void validate(final XrayImage xi) throws ValidationException {
 		validate(xi, XrayImage__all);
 	}
 
@@ -111,9 +111,8 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public IntegerConstraint Image_pixelsize;
 	public IntegerConstraint Image_scale;
 	public ObjectConstraint Image_comments;
-	
 
-	public void validate(final ImageDTO i) throws ValidationException {
+	public void validate(final Image i) throws ValidationException {
 		validate(i, Image__all);
 	}
 
@@ -140,7 +139,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public ObjectConstraint Sample_metamorphicGrades;
 	public ObjectConstraint Sample_references;
 
-	public void validate(final SampleDTO s) throws ValidationException {
+	public void validate(final Sample s) throws ValidationException {
 		validate(s, Sample__all);
 	}
 
@@ -153,7 +152,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public IntegerConstraint Subsample_imageCount;
 	public IntegerConstraint Subsample_analysisCount;
 
-	public void validate(SubsampleDTO u) throws ValidationException {
+	public void validate(Subsample u) throws ValidationException {
 		validate(u, Subsample__all);
 	}
 
@@ -161,7 +160,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public PropertyConstraint[] Project__all;
 	public StringConstraint Project_name;
 
-	public void validate(ProjectDTO u) throws ValidationException {
+	public void validate(Project u) throws ValidationException {
 		validate(u, Project__all);
 	}
 
@@ -186,7 +185,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint ChemicalAnalysis_sampleName;
 	public StringConstraint ChemicalAnalysis_subsampleName;
 
-	public void validate(ChemicalAnalysisDTO u) throws ValidationException {
+	public void validate(ChemicalAnalysis u) throws ValidationException {
 		validate(u, ChemicalAnalysis__all);
 	}
 
@@ -201,7 +200,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public RestrictedCharacterStringConstraint StartSessionRequest_emailAddress;
 	public StringConstraint StartSessionRequest_password;
 
-	public void validate(StartSessionRequestDTO u) throws ValidationException {
+	public void validate(StartSessionRequest u) throws ValidationException {
 		validate(u, StartSessionRequest__all);
 	}
 
@@ -217,7 +216,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint User_institution;
 	public StringConstraint User_referenceEmail;
 
-	public void validate(final UserDTO u) throws ValidationException {
+	public void validate(final User u) throws ValidationException {
 		validate(u, User__all);
 	}
 	/**
@@ -230,7 +229,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	 * </p>
 	 */
 	public void finishInitialization(DatabaseObjectConstraints oc) {
-		//TODO email address pattern
+		// TODO email address pattern
 		User_emailAddress.pattern = "A-Z0-9a-z_\\.@";
 		// Sample_collectionEnded.collectionBegan = Sample_collectionBegan;
 
@@ -263,10 +262,12 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		StartSessionRequest_password.minLength = UserWithPassword_oldPassword.minLength;
 		StartSessionRequest_password.maxLength = UserWithPassword_oldPassword.maxLength;
 
-		//Fill in fake constraints for searching
+		// Fill in fake constraints for searching
 		SearchSample_minerals.setConstraints(SampleMineral__all);
 		SearchSample_elements.setConstraints(ChemicalAnalysisElement__all);
 		SearchSample_oxides.setConstraints(ChemicalAnalysisOxide__all);
-		SearchSample_possibleRockTypes.setConstraints(new PropertyConstraint[] { Sample_rockType });
+		SearchSample_possibleRockTypes.setConstraints(new PropertyConstraint[] {
+			Sample_rockType
+		});
 	}
 }

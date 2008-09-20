@@ -7,23 +7,22 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 
 public interface SubsampleService extends RemoteService {
-	Results<SubsampleDTO> all(PaginationParameters parameters,
+	Results<Subsample> all(PaginationParameters parameters, final long sampleId);
+
+	Results<Subsample> allWithImages(PaginationParameters parameters,
 			final long sampleId);
 
-	Results<SubsampleDTO> allWithImages(PaginationParameters parameters,
-			final long sampleId);
+	Subsample details(long id) throws DAOException;
 
-	SubsampleDTO details(long id) throws DAOException;
+	Subsample save(final Subsample s) throws DAOException, ValidationException,
+			LoginRequiredException;
 
-	SubsampleDTO save(final SubsampleDTO s) throws DAOException,
-			ValidationException, LoginRequiredException;
-
-	List<SubsampleDTO> all(final long sampleId);
+	List<Subsample> all(final long sampleId);
 
 	void delete(long id) throws DAOException, LoginRequiredException;
 }

@@ -18,6 +18,7 @@ public class DuplicateValueException extends ValidationException {
 	}
 
 	public String format() {
-		return LocaleHandler.lc_text.errorDesc_Duplicate(formatPropertyName(), taken);
+		return LocaleHandler.lc_text.errorDesc_Duplicate(formatPropertyName(),
+				taken);
 	}
 }

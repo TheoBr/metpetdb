@@ -15,6 +15,7 @@ public class InvalidSESARNumberException extends ValidationException {
 	}
 
 	public String format() {
-		return LocaleHandler.lc_text.errorDesc_InvalidSESARNumber(formatPropertyName());
+		return LocaleHandler.lc_text
+				.errorDesc_InvalidSESARNumber(formatPropertyName());
 	}
 }
