@@ -12,9 +12,9 @@ import org.hibernate.search.Search;
 import org.junit.Test;
 import org.postgis.Polygon;
 
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
-import edu.rpi.metpetdb.server.model.Sample;
 
 public class SearchFilters extends DatabaseTestCase {
 

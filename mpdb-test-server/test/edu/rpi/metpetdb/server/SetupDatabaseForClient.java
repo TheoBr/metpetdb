@@ -15,7 +15,6 @@ import org.dbunit.dataset.filter.DefaultTableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 /**
  * Sets up the database for mpdb-test-client

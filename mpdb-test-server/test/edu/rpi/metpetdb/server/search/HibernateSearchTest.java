@@ -25,19 +25,18 @@ import org.hibernate.search.Search;
 import org.junit.Test;
 
 import edu.rpi.metpetdb.client.model.DateSpan;
-import edu.rpi.metpetdb.client.model.ElementDTO;
-import edu.rpi.metpetdb.client.model.OxideDTO;
-import edu.rpi.metpetdb.client.model.RockTypeDTO;
-import edu.rpi.metpetdb.client.model.SearchElementDTO;
-import edu.rpi.metpetdb.client.model.SearchOxideDTO;
-import edu.rpi.metpetdb.client.model.SearchSampleDTO;
-import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.Element;
+import edu.rpi.metpetdb.client.model.Oxide;
+import edu.rpi.metpetdb.client.model.RockType;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SearchElement;
+import edu.rpi.metpetdb.client.model.SearchOxide;
+import edu.rpi.metpetdb.client.model.SearchSample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.properties.SearchProperty;
 import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
-import edu.rpi.metpetdb.server.model.Sample;
-import edu.rpi.metpetdb.server.model.User;
 
 public class HibernateSearchTest extends DatabaseTestCase {
 
@@ -191,13 +190,13 @@ public class HibernateSearchTest extends DatabaseTestCase {
 
 	@Test
 	public void testSearchSampleSearch() {
-		final SearchSampleDTO searchSamp = new SearchSampleDTO();
+		final SearchSample searchSamp = new SearchSample();
 
 		// searchSamp.setSesarNumber("000000000");
 		searchSamp.setAlias("1");
-		final RockTypeDTO rockType1 = new RockTypeDTO();
+		final RockType rockType1 = new RockType();
 		rockType1.setRockType("logitech");
-		final RockTypeDTO rockType2 = new RockTypeDTO();
+		final RockType rockType2 = new RockType();
 		rockType2.setRockType("rockie rock");
 		searchSamp.addPossibleRockType(rockType1);
 		searchSamp.addPossibleRockType(rockType2);
@@ -305,7 +304,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 
 	@Test
 	public void testPublicOrUserSamples() {
-		final UserDTO testUser = new UserDTO();
+		final User testUser = new User();
 		testUser.setId(2);
 		testUser.setName("matt");
 		testUser.setEmailAddress("fyffem@cs.rpi.edu");
@@ -345,7 +344,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 
 	@Test
 	public void testSampleFilteringByUserWithDates() {
-		final UserDTO testUser = new UserDTO();
+		final User testUser = new User();
 		testUser.setId(2);
 		testUser.setName("matt");
 
@@ -395,8 +394,8 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	
 	@Test
 	public void testOxideSearch(){
-		final SearchSampleDTO searchSamp = new SearchSampleDTO();
-		OxideDTO tempOxide = new OxideDTO();
+		final SearchSample searchSamp = new SearchSample();
+		Oxide tempOxide = new Oxide();
 		tempOxide.setSpecies("al2o3");
 		searchSamp.addOxide(tempOxide, 10f, 16f);
 		final Session session = InitDatabase.getSession();
@@ -423,7 +422,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 						.equals("subsample_chemicalAnalysis_oxides")) {
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
-						for (SearchOxideDTO o : (Set<SearchOxideDTO>) methodResult) {
+						for (SearchOxide o : (Set<SearchOxide>) methodResult) {
 							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_oxides_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
 							final TermQuery oxideQuery = new TermQuery(new Term("subsample_chemicalAnalysis_oxides_oxide_species", o.getSpecies()));
 							final FilteredQuery filter = new FilteredQuery(oxideQuery, rangeFilter);
@@ -436,7 +435,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 				} else if( columnName.equals("subsample_chemicalAnalysis_elements")){
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
-						for (SearchElementDTO o : (Set<SearchElementDTO>) methodResult) {
+						for (SearchElement o : (Set<SearchElement>) methodResult) {
 							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_elements_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
 							final TermQuery elementQuery = new TermQuery(new Term("subsample_chemicalAnalysis_elements_element_symbol", o.getElementSymbol()));
 							final FilteredQuery filter = new FilteredQuery(elementQuery, rangeFilter);
@@ -463,8 +462,8 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	
 	@Test
 	public void testElementSearch(){
-		final SearchSampleDTO searchSamp = new SearchSampleDTO();
-		ElementDTO tempElement = new ElementDTO();
+		final SearchSample searchSamp = new SearchSample();
+		Element tempElement = new Element();
 		tempElement.setSymbol("al");
 		searchSamp.addElement(tempElement, 4.9f, 12.0f);
 		final Session session = InitDatabase.getSession();
@@ -491,7 +490,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 						.equals("subsample_chemicalAnalysis_oxides")) {
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
-						for (SearchOxideDTO o : (Set<SearchOxideDTO>) methodResult) {
+						for (SearchOxide o : (Set<SearchOxide>) methodResult) {
 							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_oxides_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
 							final TermQuery oxideQuery = new TermQuery(new Term("subsample_chemicalAnalysis_oxides_oxide_species", o.getSpecies()));
 							final FilteredQuery filter = new FilteredQuery(oxideQuery, rangeFilter);
@@ -504,7 +503,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 				} else if( columnName.equals("subsample_chemicalAnalysis_elements")){
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
-						for (SearchElementDTO o : (Set<SearchElementDTO>) methodResult) {
+						for (SearchElement o : (Set<SearchElement>) methodResult) {
 							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_elements_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
 							final TermQuery elementQuery = new TermQuery(new Term("subsample_chemicalAnalysis_elements_element_symbol", o.getElementSymbol()));
 							final FilteredQuery filter = new FilteredQuery(elementQuery, rangeFilter);
@@ -532,22 +531,22 @@ public class HibernateSearchTest extends DatabaseTestCase {
 	@Test
 	public void testSampleSearch() {
 		// In the actual search, we will receive User information as a parameter
-		final UserDTO testUser = new UserDTO();
+		final User testUser = new User();
 		testUser.setId(2);
 		testUser.setName("matt");
 		testUser.setEmailAddress("fyffem@cs.rpi.edu");
 
 		// In the actual search, we will receive search criteria as a
-		// SearchSampleDTO
-		final SearchSampleDTO searchSamp = new SearchSampleDTO();
+		// SearchSample
+		final SearchSample searchSamp = new SearchSample();
 		// searchSamp.setAlias("1");
-/*		final RockTypeDTO rockType1 = new RockTypeDTO();
+/*		final RockType rockType1 = new RockType();
 		rockType1.setRockType("type 2");
-		final RockTypeDTO rockType2 = new RockTypeDTO();
+		final RockType rockType2 = new RockType();
 		rockType2.setRockType("type 3");
 		searchSamp.addPossibleRockType(rockType1);
 		searchSamp.addPossibleRockType(rockType2);
-*/		OxideDTO tempOxide = new OxideDTO();
+*/		Oxide tempOxide = new Oxide();
 		tempOxide.setSpecies("al2o3");
 		searchSamp.addOxide(tempOxide, 9f, 17f);
 
@@ -604,7 +603,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 						.equals("subsample_chemicalAnalysis_oxides")) {
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
-						for (SearchOxideDTO o : (Set<SearchOxideDTO>) methodResult) {
+						for (SearchOxide o : (Set<SearchOxide>) methodResult) {
 							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_oxides_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
 							final TermQuery oxideQuery = new TermQuery(new Term("subsample_chemicalAnalysis_oxides_oxide_species", o.getSpecies()));
 							final FilteredQuery filter = new FilteredQuery(oxideQuery, rangeFilter);
@@ -617,7 +616,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 				} else if( columnName.equals("subsample_chemicalAnalysis_elements")){
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
-						for (SearchElementDTO o : (Set<SearchElementDTO>) methodResult) {
+						for (SearchElement o : (Set<SearchElement>) methodResult) {
 							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_elements_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
 							final TermQuery elementQuery = new TermQuery(new Term("subsample_chemicalAnalysis_elements_element_symbol", o.getElementSymbol()));
 							final FilteredQuery filter = new FilteredQuery(elementQuery, rangeFilter);

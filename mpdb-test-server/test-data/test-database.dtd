@@ -353,6 +353,7 @@
     postal_code CDATA #IMPLIED
     institution CDATA #IMPLIED
     reference_email CDATA #IMPLIED
+    enabled CDATA #REQUIRED
 >
 
 <!ELEMENT xray_image EMPTY>

@@ -3,7 +3,7 @@ package edu.rpi.metpetdb.client.ui.sample;
 import edu.rpi.metpetdb.client.MpDbTestCase;
 import edu.rpi.metpetdb.client.TestServerOp;
 import edu.rpi.metpetdb.client.error.dao.SampleNotFoundException;
-import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.ui.MpDb;
 
 public class LoadSampleTest extends MpDbTestCase {
@@ -15,12 +15,12 @@ public class LoadSampleTest extends MpDbTestCase {
 	 * Test loading a sample by verifying the id's are the same
 	 */
 	public void testLoadSample() {
-		new TestServerOp<SampleDTO>(this) {
+		new TestServerOp<Sample>(this) {
 			public void begin() {
 				MpDb.sample_svc.details(SAMPLE_ID, this);
 			}
 
-			public void onSuccess(final SampleDTO sample) {
+			public void onSuccess(final Sample sample) {
 				assertEquals(SAMPLE_ID, sample.getId());
 				finishTest();
 			}
@@ -32,12 +32,12 @@ public class LoadSampleTest extends MpDbTestCase {
 	 * Test how the server responds when we give it a wrong id
 	 */
 	public void testLoadSampleFail() {
-		new TestServerOp<SampleDTO>(this) {
+		new TestServerOp<Sample>(this) {
 			public void begin() {
 				MpDb.sample_svc.details(SAMPLE_FAIL_ID, this);
 			}
 
-			public void onSuccess(final SampleDTO s) {
+			public void onSuccess(final Sample s) {
 				fail("testLoadSampleFail failed, expected an exception");
 			}
 

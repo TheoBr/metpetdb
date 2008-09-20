@@ -10,12 +10,12 @@ import org.hibernate.Transaction;
 import org.junit.Test;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
-import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
 import edu.rpi.metpetdb.server.bulk.upload.SampleParser;
-import edu.rpi.metpetdb.server.model.User;
 
 public class BulkUploadTest extends DatabaseTestCase {
 
@@ -71,7 +71,7 @@ public class BulkUploadTest extends DatabaseTestCase {
 			}
 			sp.parse();
 
-			final List<SampleDTO> samples = sp.getSamples();
+			final List<Sample> samples = sp.getSamples();
 
 		} catch (final IOException ioe) {
 			fail("IO Exception");

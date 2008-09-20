@@ -3,9 +3,9 @@ package edu.rpi.metpetdb.server.dao;
 import org.hibernate.Query;
 import org.junit.Test;
 
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
-import edu.rpi.metpetdb.server.model.User;
 
 
 public class UserDaoTest extends DatabaseTestCase {

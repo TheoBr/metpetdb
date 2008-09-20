@@ -6,7 +6,7 @@ import net.sf.hibernate4gwt.core.beanlib.mapper.DirectoryClassMapper;
 import org.junit.Test;
 
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
-import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
 
@@ -34,8 +34,8 @@ public class SampleCloneTest extends DatabaseTestCase {
 		cloneMapper.setCloneSuffix("DTO");
 		hbm.setClassMapper(cloneMapper);
 
-		final SampleDTO sampleDTO = (SampleDTO) hbm.clone(sample);
-		assertEquals(sample.getLocation(), sampleDTO.getLocation());
+		final Sample sample2 = (Sample) hbm.clone(sample);
+		assertEquals(sample2.getLocation(), sample.getLocation());
 	}
 
 }

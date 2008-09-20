@@ -10,11 +10,11 @@ import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 import org.junit.Test;
 
+import edu.rpi.metpetdb.client.model.Mineral;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
-import edu.rpi.metpetdb.server.model.Mineral;
-import edu.rpi.metpetdb.server.model.Sample;
-import edu.rpi.metpetdb.server.model.SampleMineral;
 
 public class SearchMinerals extends DatabaseTestCase {
 

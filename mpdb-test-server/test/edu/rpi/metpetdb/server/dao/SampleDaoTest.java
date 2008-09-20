@@ -6,9 +6,9 @@ import org.hibernate.Query;
 import org.junit.Test;
 
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
-import edu.rpi.metpetdb.server.model.Sample;
 
 public class SampleDaoTest extends DatabaseTestCase {
 

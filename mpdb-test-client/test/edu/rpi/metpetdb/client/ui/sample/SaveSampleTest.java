@@ -5,8 +5,8 @@ import edu.rpi.metpetdb.client.TestServerOp;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.validation.InvalidSESARNumberException;
 import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
-import edu.rpi.metpetdb.client.model.RockTypeDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.RockType;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.ui.MpDb;
 
 /**
@@ -24,19 +24,19 @@ public class SaveSampleTest extends MpDbTestCase {
 	private static final String SESAR_NUMBER = "000000000";
 	private static final double LATITUDE = 1;
 	private static final double LONGITUDE = 1;
-	private static RockTypeDTO ROCK_TYPE;
+	private static RockType ROCK_TYPE;
 	private static final String ALIAS = String.valueOf(System
 			.currentTimeMillis());
-	private SampleDTO sample;
+	private Sample sample;
 	private static int ROTATING_SAMPLE_ID = 200;
 
 	@Override
 	public void gwtSetUp() {
 		super.gwtSetUp();
-		ROCK_TYPE = new RockTypeDTO();
+		ROCK_TYPE = new RockType();
 		ROCK_TYPE.setRockType("gentoo");
 
-		sample = new SampleDTO();
+		sample = new Sample();
 		sample.setSesarNumber(SESAR_NUMBER);
 		sample.setLatitude(LATITUDE);
 		sample.setLongitude(LONGITUDE);
@@ -50,12 +50,12 @@ public class SaveSampleTest extends MpDbTestCase {
 	 * Test saving a sample that satisfies all of the constraints
 	 */
 	public void testSaveSample() {
-		new TestServerOp<SampleDTO>(this) {
+		new TestServerOp<Sample>(this) {
 			public void begin() {
 				MpDb.sample_svc.save(sample, this);
 			}
 
-			public void onSuccess(final SampleDTO s) {
+			public void onSuccess(final Sample s) {
 				assertEquals(s, sample);
 				finishTest();
 			}
@@ -65,12 +65,12 @@ public class SaveSampleTest extends MpDbTestCase {
 
 	public void testSaveSampleFailSesarNumber() {
 		sample.setSesarNumber("error1234");
-		new TestServerOp<SampleDTO>(this) {
+		new TestServerOp<Sample>(this) {
 			public void begin() {
 				MpDb.sample_svc.save(sample, this);
 			}
 
-			public void onSuccess(final SampleDTO s) {
+			public void onSuccess(final Sample s) {
 				fail("testSaveSampleFailSesarNumber failed, expected an exception");
 			}
 
@@ -92,12 +92,12 @@ public class SaveSampleTest extends MpDbTestCase {
 	 */
 	public void testSaveSampleFailLocation() {
 		sample.setLocation(null);
-		new TestServerOp<SampleDTO>(this) {
+		new TestServerOp<Sample>(this) {
 			public void begin() {
 				MpDb.sample_svc.save(sample, this);
 			}
 
-			public void onSuccess(final SampleDTO s) {
+			public void onSuccess(final Sample s) {
 				fail("testSaveSampleFailLatitude failed, expected an exception");
 			}
 
@@ -117,12 +117,12 @@ public class SaveSampleTest extends MpDbTestCase {
 
 	public void testSaveSampleFailAlias() {
 		sample.setAlias(null);
-		new TestServerOp<SampleDTO>(this) {
+		new TestServerOp<Sample>(this) {
 			public void begin() {
 				MpDb.sample_svc.save(sample, this);
 			}
 
-			public void onSuccess(final SampleDTO s) {
+			public void onSuccess(final Sample s) {
 				fail("testSaveSampleFailAlias failed, expected an exception");
 			}
 
@@ -141,12 +141,12 @@ public class SaveSampleTest extends MpDbTestCase {
 
 	public void testSaveSampleFailOwner() {
 		sample.setOwner(null);
-		new TestServerOp<SampleDTO>(this) {
+		new TestServerOp<Sample>(this) {
 			public void begin() {
 				MpDb.sample_svc.save(sample, this);
 			}
 
-			public void onSuccess(final SampleDTO s) {
+			public void onSuccess(final Sample s) {
 				fail("testSaveSampleFailOwner failed, expected an exception");
 			}
 

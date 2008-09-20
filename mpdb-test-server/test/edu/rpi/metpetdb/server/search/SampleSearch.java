@@ -1,18 +1,15 @@
 package edu.rpi.metpetdb.server.search;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.junit.Test;
 
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
-import edu.rpi.metpetdb.client.model.AttributeDTO;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
-import edu.rpi.metpetdb.server.model.User;
 
 //TODO make some generic methods in databasetestcase
 public class SampleSearch extends DatabaseTestCase {

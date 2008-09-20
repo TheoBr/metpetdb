@@ -12,7 +12,7 @@ import org.dbunit.operation.DatabaseOperation;
 import org.hibernate.Query;
 
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
-import edu.rpi.metpetdb.server.model.MObject;
+import edu.rpi.metpetdb.client.model.MObject;
 
 public class DatabaseTestCase extends TestCase {
 

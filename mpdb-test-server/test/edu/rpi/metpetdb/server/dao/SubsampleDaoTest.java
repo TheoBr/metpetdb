@@ -3,8 +3,8 @@ package edu.rpi.metpetdb.server.dao;
 import org.junit.Test;
 
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
-import edu.rpi.metpetdb.server.model.Subsample;
 
 public class SubsampleDaoTest extends DatabaseTestCase {
 

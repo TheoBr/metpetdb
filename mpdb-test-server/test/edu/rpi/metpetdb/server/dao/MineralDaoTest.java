@@ -9,8 +9,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.junit.Test;
 
+import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.server.DataStore;
-import edu.rpi.metpetdb.server.model.Mineral;
 
 public class MineralDaoTest extends TestCase {
 	
