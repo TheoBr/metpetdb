@@ -197,7 +197,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 	// ------ StartSessionRequest ------
 	public PropertyConstraint[] StartSessionRequest__all;
-	public RestrictedCharacterStringConstraint StartSessionRequest_emailAddress;
+	public RestrictedCharacterStringConstraint StartSessionRequest_username;
 	public StringConstraint StartSessionRequest_password;
 
 	public void validate(StartSessionRequest u) throws ValidationException {
@@ -253,10 +253,10 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 		// StartSessionRequest is not available in the database.
 		//
-		StartSessionRequest_emailAddress.required = true;
-		StartSessionRequest_emailAddress.minLength = User_emailAddress.minLength;
-		StartSessionRequest_emailAddress.maxLength = User_emailAddress.maxLength;
-		StartSessionRequest_emailAddress.pattern = User_emailAddress.pattern;
+		StartSessionRequest_username.required = true;
+		StartSessionRequest_username.minLength = User_emailAddress.minLength;
+		StartSessionRequest_username.maxLength = User_emailAddress.maxLength;
+		StartSessionRequest_username.pattern = User_emailAddress.pattern;
 
 		StartSessionRequest_password.required = true;
 		StartSessionRequest_password.minLength = UserWithPassword_oldPassword.minLength;

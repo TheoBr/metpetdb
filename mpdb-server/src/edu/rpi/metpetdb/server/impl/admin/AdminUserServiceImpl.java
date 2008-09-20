@@ -17,7 +17,7 @@ public class AdminUserServiceImpl extends MpDbServlet implements
 			throws LoginFailureException, ValidationException {
 		doc.validate(ssr);
 		AdminUser u = new AdminUser();
-		u.getUser().setEmailAddress(ssr.getEmailAddress());
+		u.getUser().setEmailAddress(ssr.getUsername());
 		// u = (new AdminUserDAO(this.currentSession())).fill(u);
 		//
 		// if (!authenticate(u, ssr.getPassword()))

@@ -1,5 +1,9 @@
 package edu.rpi.metpetdb.client.model;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+import edu.rpi.metpetdb.client.model.properties.Property;
+
 /**
  * Sent by the browser to log a user into the application.
  * <p>
@@ -7,7 +11,7 @@ package edu.rpi.metpetdb.client.model;
  * together the username nad password values and transport them to the server.
  * </p>
  */
-public class StartSessionRequest extends MObject {
+public class StartSessionRequest implements edu.rpi.metpetdb.client.model.interfaces.MObject, IsSerializable {
 	private static final long serialVersionUID = 1L;
 
 	private String username;
@@ -36,13 +40,11 @@ public class StartSessionRequest extends MObject {
 		return true;
 	}
 
-	public void setEmailAddress(String username2) {
-		// TODO Auto-generated method stub
-
+	public Object mGet(Property property) {
+		return property.get(this);
 	}
 
-	public String getEmailAddress() {
-		// TODO Auto-generated method stub
-		return null;
+	public void mSet(Property property, Object newVal) {
+		property.set(this, newVal);
 	}
 }

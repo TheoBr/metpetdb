@@ -4,16 +4,16 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
 
 public enum StartSessionRequestProperty implements Property {
-	emailAddress {
+	username {
 		public <T extends MObject> String get(final T startSessionRequest) {
 			return ((StartSessionRequest) startSessionRequest)
-					.getEmailAddress();
+					.getUsername();
 		}
 
 		public <T extends MObject, K> void set(final T startSessionRequest,
 				final K username) {
 			((StartSessionRequest) startSessionRequest)
-					.setEmailAddress((String) username);
+					.setUsername((String) username);
 		}
 	},
 	password {

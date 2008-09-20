@@ -40,7 +40,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		doc.validate(ssr);
 		try {
 			User u = new User();
-			u.setEmailAddress(ssr.getEmailAddress());
+			u.setEmailAddress(ssr.getUsername());
 			u = (new UserDAO(this.currentSession())).fill(u);
 
 			if (!authenticate(u, ssr.getPassword()))
