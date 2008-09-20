@@ -11,16 +11,14 @@ import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.MineralDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.Mineral;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.service.BulkUploadService;
 import edu.rpi.metpetdb.server.bulk.upload.SampleParser;
 import edu.rpi.metpetdb.server.dao.impl.MineralDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
-import edu.rpi.metpetdb.server.model.Sample;
-import edu.rpi.metpetdb.server.model.User;
 
 public class BulkUploadServiceImpl extends SampleServiceImpl implements
 		BulkUploadService {
@@ -31,8 +29,8 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 			throws InvalidFormatException {
 		try {
 			// Locate and set Valid Potential Minerals for the parser
-			List<MineralDTO> minerals = cloneBean(new MineralDAO(this
-					.currentSession()).getAll());
+			List<Mineral> minerals = (new MineralDAO(this.currentSession())
+					.getAll());
 			SampleParser.setMinerals(minerals);
 
 			final SampleParser sp = new SampleParser(new FileInputStream(
@@ -59,11 +57,11 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 			} catch (DAOException daoe) {
 				throw new LoginRequiredException();
 			}
-			final UserDTO u = cloneBean(user);
+			final User u = (user);
 
 			// Locate and set Valid Potential Minerals for the parser
-			List<MineralDTO> minerals = cloneBean(new MineralDAO(this
-					.currentSession()).getAll());
+			List<Mineral> minerals = (new MineralDAO(this.currentSession())
+					.getAll());
 			SampleParser.setMinerals(minerals);
 
 			final SampleParser sp = new SampleParser(new FileInputStream(
@@ -76,32 +74,32 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 
 			sp.parse();
 
-			final List<SampleDTO> samples = sp.getSamples();
+			final List<Sample> samples = sp.getSamples();
 			final SampleDAO dao = new SampleDAO(this.currentSession());
-			final List<SampleDTO> replaceSamples = new ArrayList<SampleDTO>();
-			for(SampleDTO s : samples) {
-				final Sample s2 = mergeBean(s);
+			final List<Sample> replaceSamples = new ArrayList<Sample>();
+			for (Sample s : samples) {
+				final Sample s2 = (s);
 				try {
 					dao.replaceTransientObjects(s2);
-					final SampleDTO s3 = cloneBean(s2);
+					final Sample s3 = (s2);
 					replaceSamples.add(s3);
 				} catch (DAOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
 
 			// Find Valid, new Samples
 			Integer[] sample_breakdown = {
 					0, 0, 0
 			};
-			
-			for (SampleDTO s : replaceSamples) {
+
+			for (Sample s : replaceSamples) {
 				s.setOwner(u);
 				try {
 					doc.validate(s);
-					Sample smpl = mergeBean(s);
+					Sample smpl = (s);
 					if (dao.isNew(smpl))
 						sample_breakdown[1]++;
 					else
@@ -130,8 +128,8 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 							"hash", fileOnServer).executeUpdate();
 
 			// Locate and set Valid Potential Minerals for the parser
-			List<MineralDTO> minerals = cloneBean(new MineralDAO(this
-					.currentSession()).getAll());
+			List<Mineral> minerals = (new MineralDAO(this.currentSession())
+					.getAll());
 			SampleParser.setMinerals(minerals);
 
 			final SampleParser sp = new SampleParser(new FileInputStream(
@@ -151,24 +149,24 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 			} catch (DAOException daoe) {
 				throw new LoginRequiredException();
 			}
-			final UserDTO u = (UserDTO) cloneBean(user);
-			final List<SampleDTO> samples = sp.getSamples();
+			final User u = (User) (user);
+			final List<Sample> samples = sp.getSamples();
 			final SampleDAO dao = new SampleDAO(this.currentSession());
-			final List<SampleDTO> replaceSamples = new ArrayList<SampleDTO>();
-			for(SampleDTO s : samples) {
-				final Sample s2 = mergeBean(s);
+			final List<Sample> replaceSamples = new ArrayList<Sample>();
+			for (Sample s : samples) {
+				final Sample s2 = (s);
 				try {
 					dao.replaceTransientObjects(s2);
-					final SampleDTO s3 = cloneBean(s2);
+					final Sample s3 = (s2);
 					replaceSamples.add(s3);
 				} catch (DAOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
 			Integer i = 2;
-			for (SampleDTO s : replaceSamples) {
+			for (Sample s : replaceSamples) {
 				s.setOwner(u);
 				try {
 					doc.validate(s);

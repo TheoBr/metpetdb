@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.service.MpDbGenericService;
-import edu.rpi.metpetdb.client.service.ResumeSessionResponse;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
@@ -40,7 +40,7 @@ public class MpDbGenericServiceImpl extends MpDbServlet implements
 		return buildDateString;
 	}
 
-	public UserDTO getAutomaticLoginUser() {
+	public User getAutomaticLoginUser() {
 		final String propFile = "autologin.properties";
 		final InputStream i = EmailSupport.class.getClassLoader()
 				.getResourceAsStream(propFile);
@@ -60,7 +60,7 @@ public class MpDbGenericServiceImpl extends MpDbServlet implements
 
 			final String username = props.getProperty("username");
 			final String emailAddress = props.getProperty("emailaddress");
-			final UserDTO u = new UserDTO();
+			final User u = new User();
 			u.setEmailAddress(emailAddress);
 			u.setId(userId);
 			u.setVersion(0);

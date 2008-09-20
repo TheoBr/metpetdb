@@ -5,8 +5,8 @@ import org.hibernate.Session;
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.MetamorphicGradeNotFoundException;
+import edu.rpi.metpetdb.client.model.MetamorphicGrade;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
-import edu.rpi.metpetdb.server.model.MetamorphicGrade;
 
 public class MetamorphicGradeDAO extends MpDbDAO<MetamorphicGrade> {
 

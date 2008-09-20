@@ -9,8 +9,8 @@ import org.hibernate.Session;
 import org.hibernate.TransientObjectException;
 
 import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
-import edu.rpi.metpetdb.server.model.MObject;
 
 public abstract class MpDbDAO<T extends MObject> {
 	final protected Session sess;
@@ -24,10 +24,10 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * db, and returns the object will all data filled in
 	 * 
 	 * @param inst
-	 *            Partially completed object
+	 * 		Partially completed object
 	 * @return Filled object from database
 	 * @throws DAOException
-	 *             Generally corresponds to 'no corresponding object was found'
+	 * 		Generally corresponds to 'no corresponding object was found'
 	 */
 	abstract public T fill(T inst) throws DAOException;
 
@@ -36,7 +36,7 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * merging/updating if the object is not
 	 * 
 	 * @param inst
-	 *            Object to save
+	 * 		Object to save
 	 * @return Object that was saved and is now in the db (merge may update)
 	 * @throws DAOException
 	 */
@@ -46,7 +46,7 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * Remove the specified object from the db.
 	 * 
 	 * @param inst
-	 *            Object to remove
+	 * 		Object to remove
 	 * @return
 	 * @throws DAOException
 	 */
@@ -59,15 +59,16 @@ public abstract class MpDbDAO<T extends MObject> {
 		final Iterator<T> itr = s.iterator();
 		final HashSet<T> filled = new HashSet<T>();
 		while (itr.hasNext()) {
+			final T obj = itr.next();
 			try {
-				final T fill = fill(itr.next());
+				final T fill = fill(obj);
 				itr.remove();
 				filled.add(fill);
 			} catch (final DAOException daoe) {
+				filled.add(obj);
 			}
 		}
-		s.addAll(filled);
-		return s;
+		return filled;
 	}
 
 	public boolean isNew(T inst) {
@@ -107,10 +108,10 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * Insert the new object into the database on the next commit.
 	 * 
 	 * @param u
-	 *            object to be inserted. This object must not already exist in
-	 *            the database.
+	 * 		object to be inserted. This object must not already exist in the
+	 * 		database.
 	 */
-	protected  void insert(final T u) {
+	protected void insert(final T u) {
 		sess.persist(u);
 	}
 
@@ -118,9 +119,9 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * Deletes the object from the database on the next commit
 	 * 
 	 * @param u
-	 *            object to be deleted, must already exist in the database
+	 * 		object to be deleted, must already exist in the database
 	 */
-	protected  void _delete(final T u) {
+	protected void _delete(final T u) {
 		sess.delete(u);
 	}
 
@@ -128,20 +129,20 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * Reload the object from the database and merge client-side changes.
 	 * 
 	 * @param u
-	 *            the object to be reloaded from the database. This instance
-	 *            should contain the primary key information of an existing
-	 *            object, and updated attributes for any values the client
-	 *            modified. Unmodified attribues must match the current database
-	 *            values to be considered unmodified.
+	 * 		the object to be reloaded from the database. This instance should
+	 * 		contain the primary key information of an existing object, and
+	 * 		updated attributes for any values the client modified. Unmodified
+	 * 		attribues must match the current database values to be considered
+	 * 		unmodified.
 	 * @return instance of the database record(s) that correspond to
-	 *         <code>u</code>, but the returned object instance is actually a
-	 *         member of the Hibernate session cache and therefore can be passed
-	 *         off to {@link #update(Object)} to actually be modified.
+	 * 	<code>u</code>, but the returned object instance is actually a member of
+	 * 	the Hibernate session cache and therefore can be passed off to {@link
+	 * 	#update(Object)} to actually be modified.
 	 */
 	@SuppressWarnings( {
 		"unchecked"
 	})
-	protected  T merge(final T u) {
+	protected T merge(final T u) {
 		return (T) sess.merge(u);
 	}
 
@@ -149,11 +150,11 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * Update the object in the database on the next commit.
 	 * 
 	 * @param u
-	 *            object to be updated. This object must already exist in the
-	 *            database and must also already exist in the session.
+	 * 		object to be updated. This object must already exist in the database
+	 * 		and must also already exist in the session.
 	 * @return always the reference <code>u</code>.
 	 */
-	protected  T update(final T u) {
+	protected T update(final T u) {
 		sess.update(u);
 		return u;
 	}
@@ -162,7 +163,7 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * Obtain a named query.
 	 * 
 	 * @param name
-	 *            the name of the query to obtain.
+	 * 		the name of the query to obtain.
 	 * @return the previously defined query of the given name.
 	 */
 	protected Query namedQuery(final String name) {
@@ -183,16 +184,15 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * Obtain a query to produce one page worth of rows.
 	 * 
 	 * @param name
-	 *            name of the query that will produce the rows. The query must
-	 *            be a named HQL query of <code>name/p.getParameter</code>. The
-	 *            query must end in an order by clause.
+	 * 		name of the query that will produce the rows. The query must be a
+	 * 		named HQL query of <code>name/p.getParameter</code>. The query must
+	 * 		end in an order by clause.
 	 * @param p
-	 *            pagination parameters from the client. These will be used to
-	 *            configure the query's result window before it gets returned,
-	 *            allowing the database to more efficiently select the proper
-	 *            rows.
+	 * 		pagination parameters from the client. These will be used to
+	 * 		configure the query's result window before it gets returned,
+	 * 		allowing the database to more efficiently select the proper rows.
 	 * @param id
-	 *            optional id for the query
+	 * 		optional id for the query
 	 * @return the single page object query.
 	 */
 	protected Query pageQuery(final String name, final PaginationParameters p,
@@ -222,10 +222,10 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * Obtain a query to compute the total size of a result set.
 	 * 
 	 * @param name
-	 *            name of the list query. The list query must be a named HQL
-	 *            query of <code>name,size</code>.
+	 * 		name of the list query. The list query must be a named HQL query of
+	 * 		<code>name,size</code>.
 	 * @param id
-	 *            optional id for the query
+	 * 		optional id for the query
 	 * @return the result set counting query. Never null.
 	 */
 	protected Query sizeQuery(final String name, final long id) {

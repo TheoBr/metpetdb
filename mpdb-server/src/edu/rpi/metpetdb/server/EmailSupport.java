@@ -57,16 +57,16 @@ public class EmailSupport {
 	 * Send a single message to one address.
 	 * 
 	 * @param to
-	 *            email address to send the message to.
+	 * 		email address to send the message to.
 	 * @param mid
-	 *            identity of the message configuration properties within
-	 *            <code>email.properties</code>.
+	 * 		identity of the message configuration properties within
+	 * 		<code>email.properties</code>.
 	 * @param args
-	 *            arguments for MessageFormat to insert into the message subject
-	 *            and body templates.
+	 * 		arguments for MessageFormat to insert into the message subject and
+	 * 		body templates.
 	 * @throws UnableToSendEmailException
-	 *             the message could not be sent, likely due to a server
-	 *             misconfiguration.
+	 * 		the message could not be sent, likely due to a server
+	 * 		misconfiguration.
 	 */
 	public static void sendMessage(final GenericServlet srv, final String to,
 			final String mid, final Object[] args)

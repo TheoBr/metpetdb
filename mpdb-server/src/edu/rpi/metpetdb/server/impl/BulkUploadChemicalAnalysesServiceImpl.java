@@ -14,11 +14,12 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.dao.ChemicalAnalysisNotFoundException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
-import edu.rpi.metpetdb.client.model.ElementDTO;
-import edu.rpi.metpetdb.client.model.MineralDTO;
-import edu.rpi.metpetdb.client.model.OxideDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.Element;
+import edu.rpi.metpetdb.client.model.Mineral;
+import edu.rpi.metpetdb.client.model.Oxide;
+import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.service.BulkUploadChemicalAnalysesService;
 import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
 import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
@@ -26,10 +27,6 @@ import edu.rpi.metpetdb.server.dao.impl.ElementDAO;
 import edu.rpi.metpetdb.server.dao.impl.MineralDAO;
 import edu.rpi.metpetdb.server.dao.impl.OxideDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
-import edu.rpi.metpetdb.server.model.ChemicalAnalysis;
-import edu.rpi.metpetdb.server.model.Mineral;
-import edu.rpi.metpetdb.server.model.Subsample;
-import edu.rpi.metpetdb.server.model.User;
 
 public class BulkUploadChemicalAnalysesServiceImpl extends
 		ChemicalAnalysisServiceImpl implements
@@ -42,10 +39,10 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 			throws InvalidFormatException {
 		try {
 			if (AnalysisParser.areElementsAndOxidesSet()) {
-				List<ElementDTO> elements = cloneBean((new ElementDAO(this
-						.currentSession())).getAll());
-				List<OxideDTO> oxides = cloneBean((new OxideDAO(this
-						.currentSession())).getAll());
+				List<Element> elements = ((new ElementDAO(this.currentSession()))
+						.getAll());
+				List<Oxide> oxides = ((new OxideDAO(this.currentSession()))
+						.getAll());
 				AnalysisParser.setElementsAndOxides(elements, oxides);
 			}
 
@@ -77,10 +74,10 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 							"hash", fileOnServer).executeUpdate();
 
 			if (AnalysisParser.areElementsAndOxidesSet()) {
-				List<ElementDTO> elements = cloneBean((new ElementDAO(this
-						.currentSession())).getAll());
-				List<OxideDTO> oxides = cloneBean((new OxideDAO(this
-						.currentSession())).getAll());
+				List<Element> elements = ((new ElementDAO(this.currentSession()))
+						.getAll());
+				List<Oxide> oxides = ((new OxideDAO(this.currentSession()))
+						.getAll());
 				AnalysisParser.setElementsAndOxides(elements, oxides);
 			}
 
@@ -95,7 +92,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 			}
 
 			ap.parse();
-			final List<ChemicalAnalysisDTO> analyses = ap.getAnalyses();
+			final List<ChemicalAnalysis> analyses = ap.getAnalyses();
 
 			Integer[] ca_breakdown = {
 					0, 0, 0
@@ -106,18 +103,18 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 			Integer i = 2;
 
 			Set<String> subsampleNames = new HashSet<String>();
-			for (ChemicalAnalysisDTO s : analyses) {
+			for (ChemicalAnalysis s : analyses) {
 
 				// Minerals need id's so equality can be checked
-				Mineral m = mergeBean(s.getMineral());
+				Mineral m = (s.getMineral());
 				try {
 					if (m != null)
-						s.setMineral((MineralDTO) cloneBean((new MineralDAO(
-								this.currentSession())).fill(m)));
+						s.setMineral((Mineral) ((new MineralDAO(this
+								.currentSession())).fill(m)));
 				} catch (DAOException daoe) {
 					// If something is wrong with getting the mineral from db,
 					// force a validation error
-					s.setMineral(new MineralDTO());
+					s.setMineral(new Mineral());
 				}
 
 				User u = new User();
@@ -125,7 +122,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 
 				try {
 					doc.validate(s);
-					ChemicalAnalysis ca = mergeBean(s);
+					ChemicalAnalysis ca = (s);
 					ca.getSubsample().getSample().setOwner(u);
 					ca = (new ChemicalAnalysisDAO(this.currentSession()))
 							.fill(ca);
@@ -139,12 +136,12 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 				}
 
 				try {
-					ChemicalAnalysis ca = mergeBean(s);
+					ChemicalAnalysis ca = (s);
 					ca.getSubsample().getSample().setOwner(u);
 					ca = (new ChemicalAnalysisDAO(this.currentSession()))
 							.populate(ca);
 
-					Subsample ss = mergeBean(ca.getSubsample());
+					Subsample ss = (ca.getSubsample());
 					(new SubsampleDAO(this.currentSession())).fill(ss);
 					if (!subsampleNames.contains(ss.getName())) {
 						ss_breakdown[2]++;
@@ -152,7 +149,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 					}
 				} catch (SubsampleNotFoundException snfe) {
 					// If we couldn't find the subsample, then we'll add it
-					ChemicalAnalysis ca = mergeBean(s);
+					ChemicalAnalysis ca = (s);
 					if (!subsampleNames.contains(ca.getSubsample().getName())) {
 						ss_breakdown[1]++;
 						subsampleNames.add(ca.getSubsample().getName());
@@ -183,10 +180,10 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 					.setParameter("user_id", currentUser()).setParameter(
 							"hash", fileOnServer).executeUpdate();
 			if (AnalysisParser.areElementsAndOxidesSet()) {
-				List<ElementDTO> elements = cloneBean((new ElementDAO(this
-						.currentSession())).getAll());
-				List<OxideDTO> oxides = cloneBean((new OxideDAO(this
-						.currentSession())).getAll());
+				List<Element> elements = ((new ElementDAO(this.currentSession()))
+						.getAll());
+				List<Oxide> oxides = ((new OxideDAO(this.currentSession()))
+						.getAll());
 				AnalysisParser.setElementsAndOxides(elements, oxides);
 			}
 
@@ -201,15 +198,15 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 			}
 
 			ap.parse();
-			final List<ChemicalAnalysisDTO> analyses = ap.getAnalyses();
+			final List<ChemicalAnalysis> analyses = ap.getAnalyses();
 			Integer i = 2; // if the spreadsheet had blank lines at the top,
 			// the line numbers will be wrong accordingly.
-			for (ChemicalAnalysisDTO s : analyses) {
+			for (ChemicalAnalysis s : analyses) {
 
 				// Minerals need id's so equality can be checked
-				Mineral m = mergeBean(s.getMineral());
+				Mineral m = (s.getMineral());
 				if (m != null)
-					s.setMineral((MineralDTO) cloneBean((new MineralDAO(this
+					s.setMineral((Mineral) ((new MineralDAO(this
 							.currentSession())).fill(m)));
 
 				try {
@@ -226,15 +223,14 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 			if (errors.isEmpty()) {
 				// Insert new Subsamples as required
 				SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
-				for (ChemicalAnalysisDTO caDTO : analyses) {
-					Subsample ss = mergeBean(caDTO.getSubsample());
+				for (ChemicalAnalysis ca : analyses) {
+					Subsample ss = (ca.getSubsample());
 					ss.getSample().setOwner(u);
 
 					try {
 						ssDAO.fill(ss);
 					} catch (SubsampleNotFoundException daoe) {
-						SubsampleDTO ssDTO = cloneBean(ss);
-						doc.validate(ssDTO);
+						doc.validate(ss);
 						ssDAO.save(ss);
 					}
 				}

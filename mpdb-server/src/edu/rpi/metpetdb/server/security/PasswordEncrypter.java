@@ -21,7 +21,7 @@ public class PasswordEncrypter {
 	 * Generate a new random password.
 	 * 
 	 * @return the new password string, in plaintext format, so the caller can
-	 *         make it available to the user through some means.
+	 * 	make it available to the user through some means.
 	 */
 	public static String randomPassword() {
 		final int len = 8;
@@ -36,10 +36,10 @@ public class PasswordEncrypter {
 	 * Encode a plaintext password using a secure digest.
 	 * 
 	 * @param plaintext
-	 *            the password. Must not be null, but may be of any length.
+	 * 		the password. Must not be null, but may be of any length.
 	 * @return a fixed length byte array containing the secure digest unique to
-	 *         this password. It is impossible to recover <code>plaintext</code>
-	 *         from the returned value.
+	 * 	this password. It is impossible to recover <code>plaintext</code> from
+	 * 	the returned value.
 	 */
 	public static byte[] crypt(final String plaintext) {
 		try {
@@ -62,12 +62,12 @@ public class PasswordEncrypter {
 	 * Test a given plaintext password against an existing encoded version.
 	 * 
 	 * @param encoded
-	 *            a prior return value from {@link #crypt(String)}.
+	 * 		a prior return value from {@link #crypt(String)}.
 	 * @param plaintext
-	 *            the plaintext password to test. Must be the same as the prior
-	 *            argument given to {@link #crypt(String)}.
+	 * 		the plaintext password to test. Must be the same as the prior
+	 * 		argument given to {@link #crypt(String)}.
 	 * @return true if plaintext matches the previously supplied plaintext;
-	 *         false otherwise.
+	 * 	false otherwise.
 	 */
 	public static boolean verify(final byte[] encoded, final String plaintext) {
 		if (encoded == null || plaintext == null)

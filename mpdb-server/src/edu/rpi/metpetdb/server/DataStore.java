@@ -30,7 +30,7 @@ import org.hibernate.mapping.Set;
 import org.hibernate.mapping.Value;
 import org.postgis.Geometry;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.GeometryConstraint;
 import edu.rpi.metpetdb.client.model.validation.MObjectConstraint;
@@ -44,7 +44,6 @@ import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.ShortConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
-import edu.rpi.metpetdb.server.model.MObject;
 
 /** Global service support. */
 public class DataStore {
@@ -66,6 +65,10 @@ public class DataStore {
 		return instance;
 	}
 
+	public static void setBeanManager(HibernateBeanManager hbm) {
+		DataStore.hbm = hbm;
+	}
+
 	protected static synchronized Configuration getConfiguration() {
 		if (config == null) {
 
@@ -83,10 +86,6 @@ public class DataStore {
 		if (factory == null)
 			factory = getConfiguration().buildSessionFactory();
 		return factory;
-	}
-
-	public static void setHibernateBeanManager(final HibernateBeanManager hbm) {
-		DataStore.hbm = hbm;
 	}
 
 	public static synchronized void initFactory() {
@@ -167,7 +166,7 @@ public class DataStore {
 		// if (v.length != 2)
 		// throw new RuntimeException("Cannot populate field " + f.getName());
 
-		final String pkg = "edu.rpi.metpetdb.server.model";
+		final String pkg = "edu.rpi.metpetdb.client.model";
 		final String entityName;
 		if (v.length == 2)
 			entityName = v[0];
@@ -308,7 +307,7 @@ public class DataStore {
 		if (cm != null)
 			return cm.getMappedClass();
 		try {
-			final String pkg = "edu.rpi.metpetdb.server.model";
+			final String pkg = "edu.rpi.metpetdb.client.model";
 			return Class.forName(pkg + "." + entityName);
 		} catch (ClassNotFoundException cnfe) {
 			throw new RuntimeException("No " + entityName + " in Hibernate?");
@@ -373,10 +372,10 @@ public class DataStore {
 			}
 			final Session session = open();
 			try {
-				cc.setValues((Collection<? extends MObjectDTO>) hbm
-						.clone(session.getNamedQuery(queryName).list()));
+				cc.setValues((Collection<? extends MObject>) (hbm.clone(session
+						.getNamedQuery(queryName).list())));
 			} catch (MappingException me) {
-				cc.setValues(new HashSet<MObjectDTO>());
+				cc.setValues(new HashSet<MObject>());
 			} finally {
 				session.close();
 			}
@@ -472,7 +471,7 @@ public class DataStore {
 	 * Obtain a new Hibernate session.
 	 * 
 	 * @return a new hibernate session. This will always be a new session, even
-	 *         if the caller already has one.
+	 * 	if the caller already has one.
 	 */
 	public static Session open() {
 		return getFactory().openSession();

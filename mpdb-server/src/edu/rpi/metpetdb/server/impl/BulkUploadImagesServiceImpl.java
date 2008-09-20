@@ -22,17 +22,15 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
 import edu.rpi.metpetdb.client.error.validation.InvalidImageException;
-import edu.rpi.metpetdb.client.model.ImageDTO;
-import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
-import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.service.BulkUploadImagesService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.bulk.upload.ImageParser;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
-import edu.rpi.metpetdb.server.model.Subsample;
-import edu.rpi.metpetdb.server.model.User;
 
 public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 		BulkUploadImagesService {
@@ -105,8 +103,8 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 
 			ip.parse();
 
-			final List<ImageDTO> images = ip.getImages();
-			final List<ImageOnGridDTO> imagesOnGrid = ip.getImagesOnGrid();
+			final List<Image> images = ip.getImages();
+			final List<ImageOnGrid> imagesOnGrid = ip.getImagesOnGrid();
 
 			Integer i = 2;
 			// Find Valid, new Images
@@ -115,10 +113,10 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 			};
 
 			// Include images that are for the grid
-			for (ImageOnGridDTO iog : imagesOnGrid)
+			for (ImageOnGrid iog : imagesOnGrid)
 				images.add(iog.getImage());
 
-			for (ImageDTO img : images) {
+			for (Image img : images) {
 				// Confirm the filename is in the zip
 				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
 					img_breakdown[0]++;
@@ -179,11 +177,11 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 
 			ip.parse();
 
-			final List<ImageDTO> images = ip.getImages();
-			final List<ImageOnGridDTO> imagesOnGrid = ip.getImagesOnGrid();
+			final List<Image> images = ip.getImages();
+			final List<ImageOnGrid> imagesOnGrid = ip.getImagesOnGrid();
 
 			Integer i = 2;
-			for (ImageDTO img : images) {
+			for (Image img : images) {
 				// Confirm the filename is in the zip
 				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
 					errors.put(new Integer(i), new InvalidImageException(
@@ -198,8 +196,8 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 				++i;
 			}
 
-			for (ImageOnGridDTO iog : imagesOnGrid) {
-				ImageDTO img = iog.getImage();
+			for (ImageOnGrid iog : imagesOnGrid) {
+				Image img = iog.getImage();
 				// Confirm the filename is in the zip
 				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
 					errors.put(new Integer(i), new InvalidImageException(
@@ -214,20 +212,20 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 				++i;
 			}
 
-			UserDTO u = new UserDTO();
+			User u = new User();
 			u.setId(currentUser());
 
 			if (errors.isEmpty()) {
-				final List<ImageDTO> imagesToSave = new LinkedList<ImageDTO>();
+				final List<Image> imagesToSave = new LinkedList<Image>();
 
 				try {
-					for (ImageOnGridDTO iog : imagesOnGrid) {
+					for (ImageOnGrid iog : imagesOnGrid) {
 						// Populate Image, Mark to save with rest of images
-						ImageDTO img = uploadImages(zp, iog.getImage(),
+						Image img = uploadImages(zp, iog.getImage(),
 								spreadsheetPrefix);
 						img.getSubsample().getSample().setOwner(u);
 						if (img.getSample() == null)
-							img.setSample(new SampleDTO());
+							img.setSample(new Sample());
 						img.getSample().setOwner(u);
 						iog.setImage(img);
 
@@ -243,23 +241,21 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 					}
 
 					SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
-					for (ImageDTO img : images) {
-						ImageDTO img_s = uploadImages(zp, img,
-								spreadsheetPrefix);
-						Subsample ss = mergeBean(img_s.getSubsample());
-						ss.getSample().setOwner((User) merge(u));
+					for (Image img : images) {
+						Image img_s = uploadImages(zp, img, spreadsheetPrefix);
+						Subsample ss = (img_s.getSubsample());
+						ss.getSample().setOwner(u);
 
 						try {
 							ssDAO.fill(ss);
 						} catch (SubsampleNotFoundException daoe) {
-							SubsampleDTO ssDTO = cloneBean(ss);
-							doc.validate(ssDTO);
+							doc.validate(ss);
 							ss = ssDAO.save(ss);
 						}
-						img_s.setSubsample((SubsampleDTO) cloneBean(ss));
+						img_s.setSubsample((Subsample) (ss));
 						img_s.getSubsample().getSample().setOwner(u);
 						if (img.getSample() == null)
-							img.setSample(new SampleDTO());
+							img.setSample(new Sample());
 						img_s.getSample().setOwner(u);
 						imagesToSave.add(img_s);
 					}
@@ -270,7 +266,7 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 					return null;
 				} catch (final ValidationException e) {
 					throw new IllegalStateException(
-							"Objects passed and subsequently failed validation (ImageDTO).");
+							"Objects passed and subsequently failed validation (Image).");
 				}
 			}
 		} catch (final IOException ioe) {
@@ -279,7 +275,7 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 
 		return errors;
 	}
-	private ImageDTO uploadImages(ZipFile zp, ImageDTO img, String prefix)
+	private Image uploadImages(ZipFile zp, Image img, String prefix)
 			throws IOException {
 		// Get Image Data from Zip
 		ZipEntry ze = zp.getEntry(prefix + img.getFilename());
@@ -305,7 +301,7 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 		while ((ent = zis.getNextEntry()) != null) {
 			String entryName = ent.getName();
 
-			// Ignore anything that is in a 'hidden' directory
+			// Ignore anything that is in a' hidden' directory
 			if (entryName.startsWith("__") || entryName.startsWith("."))
 				continue;
 

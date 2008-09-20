@@ -28,7 +28,7 @@ public class ElementParser {
 
 	// macros
 	private final short ELEMENT = 5; // columns with info about element
-	private final short NUM_COLUMNS = 11; // " " " 1st oxide species
+	private final short NUM_COLUMNS = 11; // " "" 1st oxide species
 	private final short NUM_COLUMNS2 = 16; // 2nd species
 	private final short NUM_COLUMNS3 = 20; // 3rd species
 
@@ -47,9 +47,9 @@ public class ElementParser {
 	 * function almost entirely a copy from SampleParser.java
 	 * 
 	 * @param inFile
-	 *            path to the input file
+	 * 		path to the input file
 	 * @param outFile
-	 *            path to the output file
+	 * 		path to the output file
 	 */
 	public void parse() {
 		try { // attempt to access the spreadsheet
@@ -72,9 +72,9 @@ public class ElementParser {
 	 * Convert a row from the spreadsheet into SQL table insertions.
 	 * 
 	 * @param row
-	 *            the row from the spreadsheet being parsed
+	 * 		the row from the spreadsheet being parsed
 	 * @param ostr
-	 *            file stream to the output file
+	 * 		file stream to the output file
 	 */
 	private void parseRow(final HSSFRow row, FileWriter ostr) {
 

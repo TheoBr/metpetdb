@@ -7,10 +7,10 @@ import org.hibernate.Session;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.dao.ChemicalAnalysisNotFoundException;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
-import edu.rpi.metpetdb.server.dao.ResultsFromDAO;
-import edu.rpi.metpetdb.server.model.ChemicalAnalysis;
 
 public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 
@@ -68,8 +68,8 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 		return l;
 	}
 
-	public ResultsFromDAO<ChemicalAnalysis> getAll(
-			final PaginationParameters p, final long subsampleId) {
+	public Results<ChemicalAnalysis> getAll(final PaginationParameters p,
+			final long subsampleId) {
 
 		final Query sizeQ = sizeQuery("ChemicalAnalysis.bySubsampleId",
 				subsampleId);
@@ -78,11 +78,11 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 		return getChemicalAnalyses(sizeQ, pageQ);
 	}
 
-	private ResultsFromDAO<ChemicalAnalysis> getChemicalAnalyses(
-			Query sizeQuery, Query pageQuery) {
+	private Results<ChemicalAnalysis> getChemicalAnalyses(Query sizeQuery,
+			Query pageQuery) {
 		final List<ChemicalAnalysis> l = pageQuery.list();
 		final int size = ((Number) sizeQuery.uniqueResult()).intValue();
 
-		return new ResultsFromDAO<ChemicalAnalysis>(size, l);
+		return new Results<ChemicalAnalysis>(size, l);
 	}
 }

@@ -5,62 +5,54 @@ import java.util.List;
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SubsampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
-import edu.rpi.metpetdb.server.dao.ResultsFromDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
-import edu.rpi.metpetdb.server.model.Subsample;
 
 public class SubsampleServiceImpl extends MpDbServlet implements
 		SubsampleService {
 	private static final long serialVersionUID = 1L;
 
-	public List<SubsampleDTO> all(final long sampleId) {
+	public List<Subsample> all(final long sampleId) {
 		final List<Subsample> l = (new SubsampleDAO(this.currentSession())
 				.getAllBySampleID(sampleId));
-		return cloneBean(l);
+		return (l);
 	}
 
-	public Results<SubsampleDTO> all(final PaginationParameters p,
+	public Results<Subsample> all(final PaginationParameters p,
 			final long sampleId) {
-		final ResultsFromDAO<Subsample> l = (new SubsampleDAO(this
-				.currentSession()).getAllBySampleID(p, sampleId));
-		final List<SubsampleDTO> lDTO = cloneBean(l.getList());
-		return new Results<SubsampleDTO>(l.getCount(), lDTO);
+		return (new SubsampleDAO(this.currentSession()).getAllBySampleID(p,
+				sampleId));
 	}
 
-	public Results<SubsampleDTO> allWithImages(final PaginationParameters p,
+	public Results<Subsample> allWithImages(final PaginationParameters p,
 			final long sampleId) {
-		final ResultsFromDAO<Subsample> l = (new SubsampleDAO(this
-				.currentSession()).getAllWithImagesBySampleID(p, sampleId));
-		final List<SubsampleDTO> lDTO = cloneBean(l.getList());
-		return new Results<SubsampleDTO>(l.getCount(), lDTO);
+		return (new SubsampleDAO(this.currentSession())
+				.getAllWithImagesBySampleID(p, sampleId));
 	}
 
-	public SubsampleDTO details(final long id) throws DAOException {
+	public Subsample details(final long id) throws DAOException {
 		Subsample s = new Subsample();
 		s.setId(id);
 
 		s = (new SubsampleDAO(this.currentSession())).fill(s);
-		return (SubsampleDTO) clone(s);
+		return s;
 	}
-	public SubsampleDTO save(SubsampleDTO subsampleDTO) throws DAOException,
+	public Subsample save(Subsample subsample) throws DAOException,
 			ValidationException, LoginRequiredException {
-		doc.validate(subsampleDTO);
-		if (subsampleDTO.getSample() == null
-				|| subsampleDTO.getSample().getOwner() == null
-				|| subsampleDTO.getSample().getOwner().getId() != currentUser())
+		doc.validate(subsample);
+		if (subsample.getSample() == null
+				|| subsample.getSample().getOwner() == null
+				|| subsample.getSample().getOwner().getId() != currentUser())
 			throw new SecurityException(
 					"Cannot modify subsamples you don't own.");
-		Subsample subsample = mergeBean(subsampleDTO);
-
 		subsample = (new SubsampleDAO(this.currentSession())).save(subsample);
 
 		commit();
-		return cloneBean(subsample);
+		return (subsample);
 	}
 
 	public void delete(long id) throws DAOException, LoginRequiredException {

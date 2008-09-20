@@ -24,10 +24,10 @@ import javax.media.jai.operator.CompositeDescriptor;
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.GridDTO;
-import edu.rpi.metpetdb.client.model.ImageDTO;
-import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
-import edu.rpi.metpetdb.client.model.XrayImageDTO;
+import edu.rpi.metpetdb.client.model.Grid;
+import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.XrayImage;
 import edu.rpi.metpetdb.client.service.ImageService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.MpDbServlet;
@@ -35,109 +35,100 @@ import edu.rpi.metpetdb.server.dao.impl.GridDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageOnGridDAO;
 import edu.rpi.metpetdb.server.dao.impl.XrayImageDAO;
-import edu.rpi.metpetdb.server.model.Grid;
-import edu.rpi.metpetdb.server.model.Image;
-import edu.rpi.metpetdb.server.model.ImageOnGrid;
-import edu.rpi.metpetdb.server.model.XrayImage;
 
 public class ImageServiceImpl extends MpDbServlet implements ImageService {
 	private static final long serialVersionUID = 1L;
 	private static String baseFolder = "";
 
-	public ImageDTO details(final long id) throws DAOException {
+	public Image details(final long id) throws DAOException {
 		Image i = new Image();
 		i.setId(id);
 		i = (new ImageDAO(this.currentSession())).fill(i);
 
-		return cloneBean(i);
+		return (i);
 	}
 
-	public List<ImageDTO> allImages(final long subsampleId) {
+	public List<Image> allImages(final long subsampleId) {
 		final List<Image> images = (new ImageDAO(this.currentSession()))
 				.getBySubsampleId(subsampleId);
-		return cloneBean(images);
+		return (images);
 	}
 
-	public ImageDTO saveImage(ImageDTO image) throws ValidationException,
+	public Image saveImage(Image image) throws ValidationException,
 			LoginRequiredException, DAOException {
-		// oc.validate(ImageDTO);
-		// if (ImageDTO.getSample().getOwner().getId() != currentUser())
+		// oc.validate(Image);
+		// if (Image.getSample().getOwner().getId() != currentUser())
 		// throw new SecurityException("Cannot modify images you don't own.");
 		doc.validate(image);
-		Image i = mergeBean(image);
+		Image i = (image);
 
 		i = (new ImageDAO(this.currentSession())).save(i);
 
 		commit();
-		return cloneBean(i);
+		return (i);
 	}
 
-	public XrayImageDTO saveImage(XrayImageDTO xrayimg)
-			throws ValidationException, LoginRequiredException, DAOException {
+	public XrayImage saveImage(XrayImage xrayimg) throws ValidationException,
+			LoginRequiredException, DAOException {
 		doc.validate(xrayimg);
-		XrayImage i = mergeBean(xrayimg);
+		XrayImage i = (xrayimg);
 		i = (new XrayImageDAO(this.currentSession())).save(i);
 		commit();
-		return cloneBean(i);
+		return (i);
 	}
 
-	protected void save(final Collection<ImageDTO> images)
+	protected void save(final Collection<Image> images)
 			throws ValidationException, LoginRequiredException, DAOException {
 
-		for (ImageDTO image : images) {
-			if (image instanceof XrayImageDTO) {
-				XrayImage i = mergeBean(image);
-				(new XrayImageDAO(this.currentSession())).save(i);
+		for (Image image : images) {
+			if (image instanceof XrayImage) {
+				(new XrayImageDAO(this.currentSession()))
+						.save((XrayImage) image);
 			} else {
-				Image i = mergeBean(image);
-				(new ImageDAO(this.currentSession())).save(i);
+				(new ImageDAO(this.currentSession())).save(image);
 			}
 		}
 		commit();
 	}
 
-	public ImageOnGridDTO saveImageOnGrid(ImageOnGridDTO iogDTO)
+	public ImageOnGrid saveImageOnGrid(ImageOnGrid iog)
 			throws ValidationException, LoginRequiredException, DAOException {
-		ImageOnGrid iog = mergeBean(iogDTO);
 		iog = (new ImageOnGridDAO(this.currentSession())).save(iog);
 		commit();
-		return cloneBean(iog);
+		return (iog);
 	}
 
-	protected ImageOnGridDTO saveIncompleteImageOnGrid(ImageOnGridDTO iogDTO)
+	protected ImageOnGrid saveIncompleteImageOnGrid(ImageOnGrid iog)
 			throws ValidationException, LoginRequiredException, DAOException {
 		// First save the image
-		doc.validate(iogDTO.getImage());
-		Image i = mergeBean(iogDTO.getImage());
+		doc.validate(iog.getImage());
+		Image i = (iog.getImage());
 		i = (new ImageDAO(this.currentSession())).save(i);
-		iogDTO.setImage((ImageDTO) cloneBean(i));
+		iog.setImage((Image) (i));
 
 		// Set the grid, either find the appropriate old one, or a new one
-		GridDTO gDTO = iogDTO.getImage().getSubsample().getGrid();
-		if (gDTO == null) {
+		Grid g = iog.getImage().getSubsample().getGrid();
+		if (g == null) {
 			// Create New Grid
-			gDTO = new GridDTO();
-			gDTO.setSubsample(iogDTO.getImage().getSubsample());
+			g = new Grid();
+			g.setSubsample(iog.getImage().getSubsample());
 
-			if (gDTO.getSubsample().getSample().getOwner().getId() != currentUser())
+			if (g.getSubsample().getSample().getOwner().getId() != currentUser())
 				throw new SecurityException(
 						"Cannot modify grids you don't own.");
-			Grid g = mergeBean(gDTO);
 			g = (new GridDAO(this.currentSession())).save(g);
-			gDTO = cloneBean(g);
 		}
-		iogDTO.setGrid(gDTO);
+		iog.setGrid(g);
 
 		// Save ImageOnGrid
-		ImageOnGrid iog = mergeBean(iogDTO);
 		iog = (new ImageOnGridDAO(this.currentSession())).save(iog);
-		return cloneBean(iog);
+		return (iog);
 	}
 
-	public ImageOnGridDTO rotate(ImageOnGridDTO iog, int degrees) {
+	public ImageOnGrid rotate(ImageOnGrid iog, int degrees) {
 		try {
 			final File file = new File(baseFolder
-					+ ImageDTO.getServerPath(iog.getImage().getChecksum()));
+					+ Image.getServerPath(iog.getImage().getChecksum()));
 			final FileInputStream stream = new FileInputStream(file);
 			final byte[] bytes = new byte[(int) file.length()];
 			stream.read(bytes);
@@ -148,7 +139,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 							.getHeight());
 
 			final File halfFile = new File(baseFolder
-					+ ImageDTO.getServerPath(iog.getImage().getChecksumHalf()));
+					+ Image.getServerPath(iog.getImage().getChecksumHalf()));
 			final FileInputStream halfStream = new FileInputStream(halfFile);
 			final byte[] halfBytes = new byte[(int) halfFile.length()];
 			halfStream.read(halfBytes);
@@ -188,10 +179,10 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		return iog;
 	}
 
-	public RenderedOp rotate(RenderedOp ImageDTO, double ang, float width,
+	public RenderedOp rotate(RenderedOp Image, double ang, float width,
 			float height) {
 		//
-		// Create a constant 1-band byte ImageDTO to represent the alpha
+		// Create a constant 1-band byte Image to represent the alpha
 		// channel. It has the source dimensions and is filled with
 		// 255 to indicate that the entire source is opaque.
 		ParameterBlock pb = new ParameterBlock();
@@ -201,18 +192,18 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		});
 		RenderedOp alpha = JAI.create("constant", pb);
 
-		// Combine the source and alpha images such that the source ImageDTO
-		// occupies the first band(s) and the alpha ImageDTO the last band.
+		// Combine the source and alpha images such that the source Image
+		// occupies the first band(s) and the alpha Image the last band.
 		// RenderingHints are used to specify the destination SampleModel and
 		// ColorModel.
 		pb = new ParameterBlock();
-		int numBands = ImageDTO.getSampleModel().getNumBands();
-		pb.addSource(ImageDTO).addSource(ImageDTO);
+		int numBands = Image.getSampleModel().getNumBands();
+		pb.addSource(Image).addSource(Image);
 		pb.add(alpha).add(alpha).add(Boolean.FALSE);
 		pb.add(CompositeDescriptor.DESTINATION_ALPHA_LAST);
-		SampleModel sm = RasterFactory.createComponentSampleModel(ImageDTO
-				.getSampleModel(), DataBuffer.TYPE_BYTE, ImageDTO
-				.getTileWidth(), ImageDTO.getTileHeight(), numBands + 1);
+		SampleModel sm = RasterFactory.createComponentSampleModel(Image
+				.getSampleModel(), DataBuffer.TYPE_BYTE, Image.getTileWidth(),
+				Image.getTileHeight(), numBands + 1);
 		ColorSpace cs = ColorSpace
 				.getInstance(numBands == 1 ? ColorSpace.CS_GRAY
 						: ColorSpace.CS_sRGB);
@@ -223,7 +214,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		RenderingHints rh = new RenderingHints(JAI.KEY_IMAGE_LAYOUT, il);
 		RenderedOp srca = JAI.create("composite", pb, rh);
 		//
-		// Rotate the source+alpha ImageDTO.
+		// Rotate the source+alpha Image.
 
 		pb = new ParameterBlock();
 		pb.addSource(srca);
@@ -234,24 +225,24 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		return JAI.create("rotate", pb);
 	}
 
-	public void deleteRotatedImages(final ImageOnGridDTO iog) {
+	public void deleteRotatedImages(final ImageOnGrid iog) {
 
 		if (!iog.getGchecksum().equals(iog.getImage().getChecksum())) {
-			new File(baseFolder + ImageDTO.getServerPath(iog.getGchecksum()))
+			new File(baseFolder + Image.getServerPath(iog.getGchecksum()))
 					.delete();
-			new File(baseFolder
-					+ ImageDTO.getServerPath(iog.getGchecksum64x64())).delete();
-			new File(baseFolder
-					+ ImageDTO.getServerPath(iog.getGchecksumHalf())).delete();
+			new File(baseFolder + Image.getServerPath(iog.getGchecksum64x64()))
+					.delete();
+			new File(baseFolder + Image.getServerPath(iog.getGchecksumHalf()))
+					.delete();
 		}
 	}
 
-	public void delete(ImageDTO i) {
+	public void delete(Image i) {
 
-		new File(baseFolder + ImageDTO.getServerPath(i.getChecksum())).delete();
-		new File(baseFolder + ImageDTO.getServerPath(i.getChecksum64x64()))
+		new File(baseFolder + Image.getServerPath(i.getChecksum())).delete();
+		new File(baseFolder + Image.getServerPath(i.getChecksum64x64()))
 				.delete();
-		new File(baseFolder + ImageDTO.getServerPath(i.getChecksumHalf()))
+		new File(baseFolder + Image.getServerPath(i.getChecksumHalf()))
 				.delete();
 	}
 

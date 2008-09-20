@@ -15,19 +15,19 @@ import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 
 import edu.rpi.metpetdb.client.model.DateSpan;
-import edu.rpi.metpetdb.client.model.SearchSampleDTO;
-import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SearchSample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.properties.SearchProperty;
 import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
 import edu.rpi.metpetdb.server.DataStore;
-import edu.rpi.metpetdb.server.model.Sample;
 
 public class SearchDb {
 	public SearchDb() {
 	}
 
-	public static List<Sample> sampleSearch(SearchSampleDTO searchSamp,
-			UserDTO userSearching) {
+	public static List<Sample> sampleSearch(SearchSample searchSamp,
+			User userSearching) {
 
 		final Session session = DataStore.open();
 		FullTextSession fullTextSession = Search.createFullTextSession(session);
@@ -69,8 +69,8 @@ public class SearchDb {
 				// ignore it
 			} else { // otherwise, what type of returned data is it?
 				if (methodResult instanceof Set) { // if a set of data is
-													// returned, it should be an
-													// OR query
+					// returned, it should be an
+					// OR query
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
 						for (Object o : (Set) methodResult) {
@@ -86,7 +86,7 @@ public class SearchDb {
 						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
 					}
 				} else if (methodResult instanceof DateSpan) { // if the data is
-																// a DateSpan
+					// a DateSpan
 					// Get the start date of the span
 					final Date startDate = ((DateSpan) methodResult)
 							.getStartAsDate();
@@ -107,19 +107,19 @@ public class SearchDb {
 							true);
 					fullQuery.add(rq, BooleanClause.Occur.MUST);
 				} else if (columnName.equals("location")) { // if the column
-															// being searched on
-															// is location
+					// being searched on
+					// is location
 					if (searchSamp.getBoundingBox() != null) { // if there is a
-																// bounding box
-																// for this
-																// sample
+						// bounding box
+						// for this
+						// sample
 						session.enableFilter("boundingBox").setParameter(
 								"polygon", searchSamp.getBoundingBox()); // filter
-																			// results
-																			// based
-																			// on
-																			// the
-																			// box
+						// results
+						// based
+						// on
+						// the
+						// box
 					}
 				} else { // it's just a standard string, do a term search
 					final TermQuery stringQuery = new TermQuery(new Term(

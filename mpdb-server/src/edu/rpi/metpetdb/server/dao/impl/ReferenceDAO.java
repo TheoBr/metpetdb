@@ -5,8 +5,8 @@ import org.hibernate.Session;
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.ReferenceNotFoundException;
+import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
-import edu.rpi.metpetdb.server.model.Reference;
 
 public class ReferenceDAO extends MpDbDAO<Reference> {
 

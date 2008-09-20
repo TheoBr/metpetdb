@@ -6,8 +6,8 @@ import org.hibernate.Session;
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.GridNotFoundException;
+import edu.rpi.metpetdb.client.model.Grid;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
-import edu.rpi.metpetdb.server.model.Grid;
 
 public class GridDAO extends MpDbDAO<Grid> {
 

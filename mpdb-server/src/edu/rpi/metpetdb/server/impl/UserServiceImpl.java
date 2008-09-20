@@ -11,15 +11,14 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.validation.DuplicateValueException;
 import edu.rpi.metpetdb.client.error.validation.LoginFailureException;
-import edu.rpi.metpetdb.client.model.StartSessionRequestDTO;
-import edu.rpi.metpetdb.client.model.UserDTO;
-import edu.rpi.metpetdb.client.model.UserWithPasswordDTO;
-import edu.rpi.metpetdb.client.service.ResumeSessionResponse;
+import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
+import edu.rpi.metpetdb.client.model.StartSessionRequest;
+import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.UserWithPassword;
 import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
-import edu.rpi.metpetdb.server.model.User;
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
 
 public class UserServiceImpl extends MpDbServlet implements UserService {
@@ -29,14 +28,14 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return PasswordEncrypter.verify(u.getEncryptedPassword(), pw);
 	}
 
-	public UserDTO details(final String emailAddress) throws DAOException {
+	public User details(final String emailAddress) throws DAOException {
 		User u = new User();
 		u.setEmailAddress(emailAddress);
 		u = (new UserDAO(this.currentSession())).fill(u);
-		return cloneBean(u);
+		return (u);
 	}
 
-	public UserDTO startSession(final StartSessionRequestDTO ssr)
+	public User startSession(final StartSessionRequest ssr)
 			throws LoginFailureException, ValidationException {
 		doc.validate(ssr);
 		try {
@@ -48,7 +47,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 				throw new LoginFailureException(
 						doc.StartSessionRequest_password);
 			setCurrentUser(u);
-			return (UserDTO) clone(u);
+			return u;
 		} catch (DAOException daoe) {
 			setCurrentUser(null);
 			throw new LoginFailureException(doc.StartSessionRequest_password);
@@ -63,40 +62,38 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			User u = new User();
 			u.setId(currentUser());
 			u = (new UserDAO(this.currentSession())).fill(u);
-			r.user = cloneBean(u);
-			// r.user = (UserDTO) clone(byId("User", (long) currentUser()));
+			r.user = (User) clone(u);
 		} catch (DAOException daoe) {
 			r.user = null;
 		} catch (LoginRequiredException err) {
 			r.user = null;
 		}
-		forgetChanges();
 		return r;
 	}
 
-	public UserDTO beginEditMyProfile() throws DAOException,
+	public User beginEditMyProfile() throws DAOException,
 			LoginRequiredException {
 		User u = new User();
 		u.setId(currentUser());
 		u = (new UserDAO(this.currentSession())).fill(u);
-		return cloneBean(u);
+		return (u);
 	}
 
-	public UserDTO registerNewUser(final UserWithPasswordDTO newbie)
+	public User registerNewUser(final UserWithPassword newbie)
 			throws ValidationException, DAOException,
 			UnableToSendEmailException {
 		doc.UserWithPassword_user.validateEntity(newbie);
 		doc.UserWithPassword_newPassword.validateEntity(newbie);
 		doc.UserWithPassword_vrfPassword.validateEntity(newbie);
 
-		final UserDTO newUser = newbie.getUser();
+		final User newUser = newbie.getUser();
 		if (!newUser.mIsNew())
 			throw new SecurityException("Cannot register non-new user.");
 
 		final String pass = newbie.getNewPassword();
 		newUser.setEncryptedPassword(PasswordEncrypter.crypt(pass));
 		doc.validate(newUser);
-		User u = (User) merge(newUser);
+		User u = newUser;
 		u.setEnabled(false);
 		u.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-", ""));
 		try {
@@ -118,10 +115,10 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 				throw new RuntimeException("i dont know what happened");
 		}
 
-		return (UserDTO) clone(u);
+		return u;
 	}
 
-	public void changePassword(final UserWithPasswordDTO uwp)
+	public void changePassword(final UserWithPassword uwp)
 			throws LoginRequiredException, LoginFailureException, DAOException,
 			ValidationException {
 		doc.UserWithPassword_user.validateEntity(uwp);
@@ -130,12 +127,12 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		doc.UserWithPassword_vrfPassword.validateEntity(uwp);
 
 		final UserDAO uDAO = new UserDAO(this.currentSession());
-		final UserDTO UserDTO = uwp.getUser();
-		if (UserDTO.getId() != currentUser())
+		final User User = uwp.getUser();
+		if (User.getId() != currentUser())
 			throw new SecurityException("Administrators are not supported!");
 
 		User u = new User();
-		u.setId(UserDTO.getId());
+		u.setId(User.getId());
 		u = uDAO.fill(u);
 
 		if (!authenticate(u, uwp.getOldPassword()))
@@ -162,17 +159,18 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 				});
 	}
 
-	public UserDTO confirmUser(String confirmationCode) throws DAOException, LoginRequiredException {
+	public User confirmUser(String confirmationCode) throws DAOException,
+			LoginRequiredException {
 		User u = new User();
 		u.setId(currentUser());
-		final UserDAO ud =new UserDAO(this.currentSession()); 
+		final UserDAO ud = new UserDAO(this.currentSession());
 		u = (ud).fill(u);
 		if (u.getConfirmationCode().equals(confirmationCode) && !u.getEnabled()) {
 			u.setEnabled(true);
 			u.setConfirmationCode("");
 			ud.save(u);
 			commit();
-			return (UserDTO) clone(u);
+			return u;
 		} else {
 			throw new GenericDAOException("Confirmation code does not equal");
 		}

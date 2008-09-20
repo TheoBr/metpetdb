@@ -36,7 +36,9 @@ public class FileUploadServlet extends HttpServlet {
 				response.getWriter().write("NO-SCRIPT-DATA");
 				return;
 			}
-			request.getSession().setAttribute("edu.rpi.metpetdb.file.upload.status",UUID.randomUUID().toString());
+			request.getSession().setAttribute(
+					"edu.rpi.metpetdb.file.upload.status",
+					UUID.randomUUID().toString());
 			final String hash = writeFile(uploadItem);
 
 			Session s = DataStore.open();
@@ -55,27 +57,29 @@ public class FileUploadServlet extends HttpServlet {
 		}
 
 	}
-	
-	
+
 	@Override
 	protected void doGet(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException {
 		try {
-			response.getWriter().write((String) request.getSession().getAttribute("percentComplete"));
+			response.getWriter().write(
+					(String) request.getSession().getAttribute(
+							"percentComplete"));
 		} catch (IOException e) {
-			//Ignore any errors this is only for retrieving the upload progress
+			// Ignore any errors this is only for retrieving the upload progress
 		}
 	}
 
 	private FileItem getFileItem(final HttpServletRequest request) {
 		final FileItemFactory factory = new DiskFileItemFactory();
 		final ServletFileUpload upload = new ServletFileUpload(factory);
-		
-		//Create a progress listener
-		ProgressListener progressListener = new ProgressListener(){
-		   public void update(long pBytesRead, long pContentLength, int pItems) {
-		       request.getSession().setAttribute("percentComplete", String.valueOf(pBytesRead / (float) pContentLength));
-		   }
+
+		// Create a progress listener
+		ProgressListener progressListener = new ProgressListener() {
+			public void update(long pBytesRead, long pContentLength, int pItems) {
+				request.getSession().setAttribute("percentComplete",
+						String.valueOf(pBytesRead / (float) pContentLength));
+			}
 		};
 		upload.setProgressListener(progressListener);
 

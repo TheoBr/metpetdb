@@ -5,8 +5,8 @@ import org.hibernate.Session;
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.RegionNotFoundException;
+import edu.rpi.metpetdb.client.model.Region;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
-import edu.rpi.metpetdb.server.model.Region;
 
 public class RegionDAO extends MpDbDAO<Region> {
 

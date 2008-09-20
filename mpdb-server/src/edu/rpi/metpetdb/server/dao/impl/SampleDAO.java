@@ -8,11 +8,11 @@ import org.hibernate.Session;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.dao.SampleNotFoundException;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
-import edu.rpi.metpetdb.server.dao.ResultsFromDAO;
-import edu.rpi.metpetdb.server.model.Sample;
-import edu.rpi.metpetdb.server.model.SampleMineral;
 
 public class SampleDAO extends MpDbDAO<Sample> {
 
@@ -48,12 +48,12 @@ public class SampleDAO extends MpDbDAO<Sample> {
 
 		throw new SampleNotFoundException();
 	}
-	
+
 	public Set<SampleMineral> replaceMinerals(final Set<SampleMineral> s) {
 		final Set<SampleMineral> m = (new SampleMineralDAO(sess)).fill(s);
 		return m;
 	}
-	
+
 	public void replaceTransientObjects(Sample s) throws DAOException {
 		// Fill subcomponents
 		s.setRegions((new RegionDAO(sess)).fill(s.getRegions()));
@@ -72,36 +72,34 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		return s;
 	}
 
-	public ResultsFromDAO<Sample> getProjectSamples(
-			final PaginationParameters p, long id) {
+	public Results<Sample> getProjectSamples(final PaginationParameters p,
+			long id) {
 		final Query sizeQ = sizeQuery("Sample.forProject", id);
 		final Query pageQ = pageQuery("Sample.forProject", p, id);
 		return getSamples(sizeQ, pageQ);
 	}
 
-	public ResultsFromDAO<Sample> getAllPublicSamples(
-			final PaginationParameters p) {
+	public Results<Sample> getAllPublicSamples(final PaginationParameters p) {
 		final Query sizeQ = sizeQuery("Sample.allPublic");
 		final Query pageQ = pageQuery("Sample.allPublic", p);
 		return getSamples(sizeQ, pageQ);
 	}
 
-	public ResultsFromDAO<Sample> getForUser(final PaginationParameters p,
-			long id) {
+	public Results<Sample> getForUser(final PaginationParameters p, long id) {
 		final Query sizeQ = sizeQuery("Sample.forUser", id);
 		final Query pageQ = pageQuery("Sample.forUser", p, id);
 		return getSamples(sizeQ, pageQ);
 	}
 
-	public ResultsFromDAO<Sample> getAll(final PaginationParameters p) {
+	public Results<Sample> getAll(final PaginationParameters p) {
 		final Query sizeQ = sizeQuery("Sample.all");
 		final Query pageQ = pageQuery("Sample.all", p);
 		return getSamples(sizeQ, pageQ);
 	}
 
-	private ResultsFromDAO<Sample> getSamples(Query sizeQuery, Query pageQuery) {
+	private Results<Sample> getSamples(Query sizeQuery, Query pageQuery) {
 		final List<Sample> l = pageQuery.list();
 		final int size = ((Number) sizeQuery.uniqueResult()).intValue();
-		return new ResultsFromDAO<Sample>(size, l);
+		return new Results<Sample>(size, l);
 	}
 }

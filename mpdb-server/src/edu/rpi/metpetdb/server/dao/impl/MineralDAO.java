@@ -9,8 +9,8 @@ import org.hibernate.Session;
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.MineralNotFoundException;
+import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
-import edu.rpi.metpetdb.server.model.Mineral;
 
 public class MineralDAO extends MpDbDAO<Mineral> {
 
@@ -25,7 +25,7 @@ public class MineralDAO extends MpDbDAO<Mineral> {
 	}
 
 	@Override
-	public Mineral fill(Mineral m) throws DAOException {
+	public Mineral fill(final Mineral m) throws DAOException {
 		// Use Mineral Name
 		final Query minerals = namedQuery("Mineral.byName");
 		minerals.setString("name", m.getName());

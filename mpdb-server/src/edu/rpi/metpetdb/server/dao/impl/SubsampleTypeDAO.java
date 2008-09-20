@@ -5,9 +5,9 @@ import org.hibernate.Session;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
-import edu.rpi.metpetdb.client.error.dao.MineralNotFoundException;
+import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
+import edu.rpi.metpetdb.client.model.SubsampleType;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
-import edu.rpi.metpetdb.server.model.SubsampleType;
 
 public class SubsampleTypeDAO extends MpDbDAO<SubsampleType> {
 
@@ -29,8 +29,7 @@ public class SubsampleTypeDAO extends MpDbDAO<SubsampleType> {
 		if (subsampleTypes.uniqueResult() != null)
 			return (SubsampleType) subsampleTypes.uniqueResult();
 
-		// FIXME
-		throw new MineralNotFoundException();
+		throw new SubsampleNotFoundException();
 	}
 
 	@Override

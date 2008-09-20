@@ -13,7 +13,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.postgis.Point;
 
-import edu.rpi.metpetdb.server.model.Sample;
+import edu.rpi.metpetdb.client.model.Sample;
 
 public class BasicKML extends HttpServlet {
 	private static final long serialVersionUID = 1L;

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -22,22 +23,22 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.MineralDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.Mineral;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.validation.DateStringConstraint;
 
 public class SampleParser {
 
 	private final InputStream is;
 	private HSSFSheet sheet;
-	private final List<SampleDTO> samples;
+	private final List<Sample> samples;
 	private final Map<Integer, ValidationException> errors = new TreeMap<Integer, ValidationException>();
 
 	/**
 	 * TODO: make this a Set of objects.
 	 */
 	// 0) Regex for header
-	// 1) methodname to set in SampleDTO
+	// 1) methodname to set in Sample
 	// 2) datatype cell needs to be converted to for use with methodname
 	// 3) id in LocaleEntity for humanreadable representation of this column
 	private static final Object[][] sampleMethodMap = {
@@ -105,9 +106,9 @@ public class SampleParser {
 
 	};
 
-	private final static List<MethodAssociation<SampleDTO>> methodAssociations = new LinkedList<MethodAssociation<SampleDTO>>();
+	private final static List<MethodAssociation<Sample>> methodAssociations = new ArrayList<MethodAssociation<Sample>>();
 
-	private static List<MineralDTO> minerals = null;
+	private static List<Mineral> minerals = null;
 
 	/**
 	 * relates columns to entries in map
@@ -119,10 +120,10 @@ public class SampleParser {
 	/**
 	 * 
 	 * @param is
-	 *            the input stream that points to a spreadsheet
+	 * 		the input stream that points to a spreadsheet
 	 */
 	public SampleParser(final InputStream is) {
-		samples = new LinkedList<SampleDTO>();
+		samples = new LinkedList<Sample>();
 		colMethods = new HashMap<Integer, Method>();
 		colObjects = new HashMap<Integer, Object>();
 		colName = new HashMap<Integer, String>();
@@ -134,7 +135,7 @@ public class SampleParser {
 	 * 
 	 * 
 	 * @throws IOException
-	 *             if the file could not be read.
+	 * 		if the file could not be read.
 	 */
 	public void initialize() throws InvalidFormatException,
 			NoSuchMethodException {
@@ -142,9 +143,9 @@ public class SampleParser {
 		try {
 			if (methodAssociations.isEmpty())
 				for (Object[] row : sampleMethodMap)
-					methodAssociations.add(new MethodAssociation<SampleDTO>(
+					methodAssociations.add(new MethodAssociation<Sample>(
 							(String) row[0], (String) row[1], (Class) row[2],
-							new SampleDTO(), (String) row[3]));
+							new Sample(), (String) row[3]));
 
 			final POIFSFileSystem fs = new POIFSFileSystem(is);
 			final HSSFWorkbook wb = new HSSFWorkbook(fs);
@@ -229,7 +230,7 @@ public class SampleParser {
 			System.out.println("Parsing header " + i + ": " + text);
 
 			// Determine method to be used for data in this column
-			for (MethodAssociation<SampleDTO> sma : methodAssociations) {
+			for (MethodAssociation<Sample> sma : methodAssociations) {
 				if (sma.matches(text)) {
 					colMethods.put(new Integer(i), sma.getMethod());
 					colName.put(new Integer(i), sma.getName());
@@ -244,11 +245,10 @@ public class SampleParser {
 			// If we don't have an explicit match for the header, it could be a
 			// mineral, check for that
 			try {
-				for (MineralDTO m : minerals) {
+				for (Mineral m : minerals) {
 					if (m.getName().equalsIgnoreCase(text)) {
-						colMethods.put(new Integer(i), SampleDTO.class
-								.getMethod("addMineral", MineralDTO.class,
-										Float.class));
+						colMethods.put(new Integer(i), Sample.class.getMethod(
+								"addMineral", Mineral.class, Float.class));
 						colObjects.put(new Integer(i), m);
 						colName.put(new Integer(i), "Sample_minerals");
 						done = true;
@@ -265,9 +265,9 @@ public class SampleParser {
 	/**
 	 * 
 	 * @param row
-	 *            the row to parse
+	 * 		the row to parse
 	 * @throws InvalidFormatException
-	 *             if the row isn't of the format designated by the headers
+	 * 		if the row isn't of the format designated by the headers
 	 */
 	private void parseRow(final int rowindex) {
 		final HSSFRow row = sheet.getRow(rowindex);
@@ -276,7 +276,7 @@ public class SampleParser {
 			return;
 		}
 
-		final SampleDTO s = new SampleDTO();
+		final Sample s = new Sample();
 		boolean sawDataInRow = false;
 
 		for (Integer i = 0; i <= row.getLastCellNum(); ++i) {
@@ -383,11 +383,11 @@ public class SampleParser {
 		}
 	}
 
-	public List<SampleDTO> getSamples() {
+	public List<Sample> getSamples() {
 		return samples;
 	}
 
-	private void parseDate(final SampleDTO s, final String date) {
+	private void parseDate(final Sample s, final String date) {
 		Short precision = 365;
 		String day, month, year;
 
@@ -441,7 +441,7 @@ public class SampleParser {
 		return !(minerals == null);
 	}
 
-	public static void setMinerals(final List<MineralDTO> minerals) {
+	public static void setMinerals(final List<Mineral> minerals) {
 		SampleParser.minerals = minerals;
 	}
 }

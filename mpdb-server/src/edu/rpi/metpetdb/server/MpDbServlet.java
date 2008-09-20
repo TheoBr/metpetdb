@@ -2,8 +2,6 @@ package edu.rpi.metpetdb.server;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.ServletConfig;
@@ -11,11 +9,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 
 import net.sf.hibernate4gwt.core.HibernateBeanManager;
-import net.sf.hibernate4gwt.core.beanlib.mapper.DirectoryClassMapper;
+import net.sf.hibernate4gwt.core.hibernate.HibernateUtil;
 import net.sf.hibernate4gwt.gwt.HibernateRemoteService;
 
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
 
@@ -30,7 +27,7 @@ import edu.rpi.metpetdb.client.error.dao.ProjectAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.SampleAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.UserAlreadyExistsException;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -39,7 +36,6 @@ import edu.rpi.metpetdb.server.impl.BulkUploadChemicalAnalysesServiceImpl;
 import edu.rpi.metpetdb.server.impl.BulkUploadImagesServiceImpl;
 import edu.rpi.metpetdb.server.impl.BulkUploadServiceImpl;
 import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
-import edu.rpi.metpetdb.server.model.User;
 import edu.rpi.metpetdb.server.security.SessionEncrypter;
 
 /**
@@ -69,46 +65,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 
 	private static int autoLoginId = -1;
 
-	/**
-	 * This is called when the servlet is initially loaded. It first sets up
-	 * hibernate4gwt to be used with this project, then it initializes the
-	 * DataStore (which handles the database specific things). Lastly it fetches
-	 * the object constraints for the client.
-	 */
-	public void init(final ServletConfig sc) throws ServletException {
-		super.init(sc);
-		// Setup hibernate4gwt
-		HibernateBeanManager.getInstance().setSessionFactory(
-				DataStore.getFactory());
-		// Setup copying of java beans
-		DirectoryClassMapper cloneMapper = new DirectoryClassMapper();
-		cloneMapper.setRootDomainPackage("edu.rpi.metpetdb.server.model");
-		cloneMapper.setRootClonePackage("edu.rpi.metpetdb.client.model");
-		cloneMapper.setCloneSuffix("DTO");
-
-		HibernateBeanManager.getInstance().setClassMapper(cloneMapper);
-
-		DataStore.setHibernateBeanManager(HibernateBeanManager.getInstance());
-		DataStore.initFactory();
-		doc = DataStore.getInstance().getDatabaseObjectConstraints();
-		oc = DataStore.getInstance().getObjectConstraints();
-
-		loadPropertyFiles();
-		loadAutomaticLogin();
-	}
-
-	public void destroy() {
-		doc = null;
-		oc = null;
-		DataStore.destoryFactory();
-		super.destroy();
-	}
-
-	private Req currentReq() {
-		return perThreadReq.get();
-	}
-
-	private void loadPropertyFiles() {
+	static {
 		final String propFile = "files.properties";
 		final InputStream i = ImageUploadServlet.class.getClassLoader()
 				.getResourceAsStream(propFile);
@@ -132,6 +89,56 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		BulkUploadImagesServiceImpl.setBaseFolder(fileProps
 				.getProperty("fileUpload.path"));
 	}
+
+	/**
+	 * This is called when the servlet is initially loaded. It first sets up
+	 * hibernate4gwt to be used with this project, then it initializes the
+	 * DataStore (which handles the database specific things). Lastly it fetches
+	 * the object constraints for the client.
+	 */
+	public void init(final ServletConfig sc) throws ServletException {
+		super.init(sc);
+		// Setup hibernate4gwt
+
+		// Setup copying of java beans
+		// DirectoryClassMapper cloneMapper = new DirectoryClassMapper();
+		// cloneMapper.setRootDomainPackage("edu.rpi.metpetdb.client.model");
+		// cloneMapper.setRootClonePackage("edu.rpi.metpetdb.client.model");
+		// cloneMapper.setCloneSuffix("");
+		// //
+		// HibernateBeanManager.getInstance().setClassMapper(cloneMapper);
+		HibernateBeanManager.getInstance().setPersistenceUtil(
+				new HibernateUtil() {
+					@Override
+					public boolean isPersistentClass(Class<?> clazz) {
+						if (clazz.equals(Results.class)) {
+							return true;
+						} else {
+							return super.isPersistentClass(clazz);
+						}
+					}
+				});
+		HibernateBeanManager.getInstance().setSessionFactory(
+				DataStore.getFactory());
+		DataStore.setBeanManager(HibernateBeanManager.getInstance());
+		DataStore.initFactory();
+		doc = DataStore.getInstance().getDatabaseObjectConstraints();
+		oc = DataStore.getInstance().getObjectConstraints();
+
+		loadAutomaticLogin();
+	}
+
+	public void destroy() {
+		doc = null;
+		oc = null;
+		DataStore.destoryFactory();
+		super.destroy();
+	}
+
+	private Req currentReq() {
+		return perThreadReq.get();
+	}
+
 	private void loadAutomaticLogin() {
 		final String propFile = "autologin.properties";
 		final InputStream i = MpDbServlet.class.getClassLoader()
@@ -154,8 +161,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	/**
 	 * Get the URL of this application.
 	 * 
-	 * @return the location of this application. This is the same as
-	 *         {@link com.google.gwt.core.client.GWT#getModuleBaseURL()}.
+	 * @return the location of this application. This is the same as {@link
+	 * 	com.google.gwt.core.client.GWT#getModuleBaseURL()}.
 	 */
 	protected String getModuleBaseURL() {
 		final StringBuffer u = getThreadLocalRequest().getRequestURL();
@@ -167,8 +174,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 * Configure (or forget) the current user.
 	 * 
 	 * @param u
-	 *            the user to configure as the current application user. Null
-	 *            will clear the current application user, if it had been known.
+	 * 		the user to configure as the current application user. Null will
+	 * 		clear the current application user, if it had been known.
 	 */
 	protected void setCurrentUser(final User u) {
 		final String v = u != null ? SessionEncrypter.crypt(u.getId()) : null;
@@ -182,11 +189,10 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 * Obtain the unique user id for the current application user.
 	 * 
 	 * @return the primary key identifying the current application user. Never
-	 *         an invalid value.
+	 * 	an invalid value.
 	 * @throws LoginRequiredException
-	 *             current application user cannot be determined as the user is
-	 *             not actually logged in, or their authentication token is
-	 *             invalid.
+	 * 		current application user cannot be determined as the user is not
+	 * 		actually logged in, or their authentication token is invalid.
 	 */
 	protected int currentUser() throws LoginRequiredException {
 		if (autoLoginId != -1) {
@@ -220,7 +226,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 * </p>
 	 * 
 	 * @return the active session for this thread. Always the same session
-	 *         object within a single service request.
+	 * 	object within a single service request.
 	 */
 	protected Session currentSession() {
 		return currentReq().currentSession();
@@ -267,7 +273,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 
 		// If we have no idea what the exception means, should it be passed to
 		// the end user? I say so, that way they have something meaningful to
-		// bring to the dev team (instead of just 'it didn't work sometime
+		// bring to the dev team (instead of just' it didn't work sometime
 		// yesterday afternoon')
 		throw new GenericDAOException(formatExceptionMessage(he));
 	}
@@ -302,35 +308,6 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 */
 	protected void forgetChanges() {
 		currentSession().clear();
-	}
-
-	/**
-	 * Create a results wrapper for pagination.
-	 * 
-	 * @param szQuery
-	 *            the query that will compute the total number of rows.
-	 * @param objQuery
-	 *            the query that will generate the current page's row data.
-	 * @return the results object to return back to the UI layer.
-	 */
-	protected <T extends MObjectDTO> Results<T> toResults(final Query szQuery,
-			final Query objQuery) {
-		final Number sz = (Number) szQuery.uniqueResult();
-		return new Results(sz.intValue(),
-				sz.intValue() > 0 ? cloneBean(objQuery.list())
-						: new ArrayList<Object>());
-	}
-
-	public <T, K> T cloneBean(K obj) {
-		return (T) super.clone(obj);
-	}
-
-	public <T, K> List<T> cloneBean(List<K> obj) {
-		return (List<T>) super.clone(obj);
-	}
-
-	public <T, K> T mergeBean(K obj) {
-		return (T) super.merge(obj);
 	}
 
 	public String processCall(final String payload)

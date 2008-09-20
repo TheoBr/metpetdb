@@ -20,15 +20,15 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisElementDTO;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxideDTO;
-import edu.rpi.metpetdb.client.model.ElementDTO;
-import edu.rpi.metpetdb.client.model.MineralDTO;
-import edu.rpi.metpetdb.client.model.OxideDTO;
-import edu.rpi.metpetdb.client.model.ReferenceDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisElement;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxide;
+import edu.rpi.metpetdb.client.model.Element;
+import edu.rpi.metpetdb.client.model.Mineral;
+import edu.rpi.metpetdb.client.model.Oxide;
+import edu.rpi.metpetdb.client.model.Reference;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
 
 public class AnalysisParser {
 	public static final int METHOD = 1;
@@ -42,7 +42,7 @@ public class AnalysisParser {
 
 	private final InputStream is;
 	private HSSFSheet sheet;
-	private final List<ChemicalAnalysisDTO> analyses;
+	private final List<ChemicalAnalysis> analyses;
 	/**
 	 * sampleMethodMap[][0] === name in table sampleMethodMap[][1] === method to
 	 * call on Sample to store data sampleMethodMap[][2] === parameter to the
@@ -50,11 +50,11 @@ public class AnalysisParser {
 	 */
 	private static final Object[][] analysisMethodMap = {
 			{
-					"^\\s*subsample\\s*$", "setSubsample", SubsampleDTO.class,
+					"^\\s*subsample\\s*$", "setSubsample", Subsample.class,
 					"ChemicalAnalysis_subsample"
 			},
 			{
-					"(mineral)|(material)", "setMineral", MineralDTO.class,
+					"(mineral)|(material)", "setMineral", Mineral.class,
 					"ChemicalAnalysis_mineral"
 			},
 			{
@@ -68,7 +68,7 @@ public class AnalysisParser {
 			},
 			{
 					"(^\\s*reference\\s*$)|(^\\s*ref\\s*$)", "setReference",
-					ReferenceDTO.class, "ChemicalAnalysis_reference"
+					Reference.class, "ChemicalAnalysis_reference"
 			},
 			{
 					"(date)|(when analyzed)", "setAnalysisDate",
@@ -103,10 +103,10 @@ public class AnalysisParser {
 
 	};
 
-	private final static List<MethodAssociation<ChemicalAnalysisDTO>> methodAssociations = new LinkedList<MethodAssociation<ChemicalAnalysisDTO>>();
+	private final static List<MethodAssociation<ChemicalAnalysis>> methodAssociations = new LinkedList<MethodAssociation<ChemicalAnalysis>>();
 
-	private static List<ElementDTO> elements = null;
-	private static List<OxideDTO> oxides = null;
+	private static List<Element> elements = null;
+	private static List<Oxide> oxides = null;
 
 	/**
 	 * relates columns to entries in map
@@ -119,10 +119,10 @@ public class AnalysisParser {
 	/**
 	 * 
 	 * @param is
-	 *            the input stream that points to a spreadsheet
+	 * 		the input stream that points to a spreadsheet
 	 */
 	public AnalysisParser(final InputStream is) {
-		analyses = new LinkedList<ChemicalAnalysisDTO>();
+		analyses = new LinkedList<ChemicalAnalysis>();
 		colType = new HashMap<Integer, Integer>();
 		colMethods = new HashMap<Integer, Method>();
 		colObjects = new HashMap<Integer, Object>();
@@ -134,7 +134,7 @@ public class AnalysisParser {
 	 * 
 	 * 
 	 * @throws IOException
-	 *             if the file could not be read.
+	 * 		if the file could not be read.
 	 */
 	public void initialize() throws InvalidFormatException,
 			NoSuchMethodException {
@@ -143,9 +143,9 @@ public class AnalysisParser {
 			if (methodAssociations.isEmpty())
 				for (Object[] row : analysisMethodMap)
 					methodAssociations
-							.add(new MethodAssociation<ChemicalAnalysisDTO>(
+							.add(new MethodAssociation<ChemicalAnalysis>(
 									(String) row[0], (String) row[1],
-									(Class) row[2], new ChemicalAnalysisDTO(),
+									(Class) row[2], new ChemicalAnalysis(),
 									(String) row[3]));
 
 			final POIFSFileSystem fs = new POIFSFileSystem(is);
@@ -230,7 +230,7 @@ public class AnalysisParser {
 			System.out.println("Parsing header " + i + ": " + text);
 
 			// Determine method to be used for data in this column
-			for (MethodAssociation<ChemicalAnalysisDTO> sma : methodAssociations) {
+			for (MethodAssociation<ChemicalAnalysis> sma : methodAssociations) {
 				if (sma.matches(text)) {
 					colType.put(new Integer(i), METHOD);
 					colMethods.put(new Integer(i), sma.getMethod());
@@ -264,7 +264,7 @@ public class AnalysisParser {
 			// The string didn't match anything we explicitly check for, so
 			// maybe it is an element or an oxide
 			try {
-				for (ElementDTO e : elements) {
+				for (Element e : elements) {
 					if (e.getName().equalsIgnoreCase(text)
 							|| (e.getAlternateName() != null && e
 									.getAlternateName().equalsIgnoreCase(text))
@@ -286,8 +286,8 @@ public class AnalysisParser {
 							colType.put(new Integer(i),
 									CAELEMENT_WITH_PRECISION);
 							colMethods.put(new Integer(i),
-									ChemicalAnalysisDTO.class.getMethod(
-											"addElement", ElementDTO.class,
+									ChemicalAnalysis.class.getMethod(
+											"addElement", Element.class,
 											Float.class, Float.class));
 
 							colName.put(new Integer(i + 1),
@@ -295,8 +295,8 @@ public class AnalysisParser {
 						} else {
 							colType.put(new Integer(i), CAELEMENT);
 							colMethods.put(new Integer(i),
-									ChemicalAnalysisDTO.class.getMethod(
-											"addElement", ElementDTO.class,
+									ChemicalAnalysis.class.getMethod(
+											"addElement", Element.class,
 											Float.class));
 						}
 
@@ -315,7 +315,7 @@ public class AnalysisParser {
 				if (done)
 					continue;
 
-				for (OxideDTO o : oxides) {
+				for (Oxide o : oxides) {
 					if (o.getSpecies().equalsIgnoreCase(text)) {
 						// Get text of the next column
 						boolean precision_next = false;
@@ -333,16 +333,16 @@ public class AnalysisParser {
 						if (precision_next) {
 							colType.put(new Integer(i), CAOXIDE_WITH_PRECISION);
 							colMethods.put(new Integer(i),
-									ChemicalAnalysisDTO.class.getMethod(
-											"addOxide", OxideDTO.class,
+									ChemicalAnalysis.class.getMethod(
+											"addOxide", Oxide.class,
 											Float.class, Float.class));
 							colName.put(new Integer(i + 1),
 									"ChemicalAnalysis_precision");
 						} else {
 							colType.put(new Integer(i), CAOXIDE);
 							colMethods.put(new Integer(i),
-									ChemicalAnalysisDTO.class.getMethod(
-											"addOxide", OxideDTO.class,
+									ChemicalAnalysis.class.getMethod(
+											"addOxide", Oxide.class,
 											Float.class));
 						}
 
@@ -363,16 +363,16 @@ public class AnalysisParser {
 	/**
 	 * 
 	 * @param rownum
-	 *            the row number to parse
+	 * 		the row number to parse
 	 * @throws InvalidFormatException
-	 *             if the row isn't of the format designated by the headers
+	 * 		if the row isn't of the format designated by the headers
 	 */
 	private void parseRow(final int rownum) {
 		HSSFRow row = sheet.getRow(rownum);
 		if (row == null)
 			return;
 
-		final ChemicalAnalysisDTO ca = new ChemicalAnalysisDTO();
+		final ChemicalAnalysis ca = new ChemicalAnalysis();
 		boolean sawDataInRow = false;
 
 		String precisionUnit = null;
@@ -390,9 +390,9 @@ public class AnalysisParser {
 					final String data = cell.toString();
 
 					if (ca.getSubsample() == null)
-						ca.setSubsample(new SubsampleDTO());
+						ca.setSubsample(new Subsample());
 					if (ca.getSubsample().getSample() == null)
-						ca.getSubsample().setSample(new SampleDTO());
+						ca.getSubsample().setSample(new Sample());
 					ca.getSubsample().getSample().setAlias(data);
 				} else if (type == PERCISIONUNIT) {
 					precisionUnit = cell.toString();
@@ -418,7 +418,7 @@ public class AnalysisParser {
 					final String data = cell.toString();
 
 					if (ca.getSubsample() == null)
-						ca.setSubsample(new SubsampleDTO());
+						ca.setSubsample(new Subsample());
 					ca.getSubsample().addSubsampleType(data);
 				} else if (type == METHOD) {
 					final Method storeMethod = colMethods.get(new Integer(i));
@@ -441,25 +441,25 @@ public class AnalysisParser {
 							storeMethod.invoke(ca, data);
 						}
 
-					} else if (dataType == SubsampleDTO.class) {
+					} else if (dataType == Subsample.class) {
 
 						final String data = cell.toString();
 						if (ca.getSubsample() == null)
-							ca.setSubsample(new SubsampleDTO());
+							ca.setSubsample(new Subsample());
 						ca.getSubsample().setName(data);
 
-					} else if (dataType == MineralDTO.class) {
+					} else if (dataType == Mineral.class) {
 
 						final String data = cell.toString();
 						if (ca.getMineral() == null)
-							ca.setMineral(new MineralDTO());
+							ca.setMineral(new Mineral());
 						ca.getMineral().setName(data);
 
-					} else if (dataType == ReferenceDTO.class) {
+					} else if (dataType == Reference.class) {
 
 						final String data = cell.toString();
 						if (ca.getReference() == null)
-							ca.setReference(new ReferenceDTO());
+							ca.setReference(new Reference());
 						ca.getReference().setName(data);
 
 					} else if (dataType == double.class) {
@@ -515,10 +515,10 @@ public class AnalysisParser {
 
 		if (sawDataInRow) {
 			if (precisionUnit != null) {
-				for (ChemicalAnalysisElementDTO ele : ca.getElements())
+				for (ChemicalAnalysisElement ele : ca.getElements())
 					ele.setPrecisionUnit(precisionUnit);
 
-				for (ChemicalAnalysisOxideDTO ox : ca.getOxides())
+				for (ChemicalAnalysisOxide ox : ca.getOxides())
 					ox.setPrecisionUnit(precisionUnit);
 			}
 
@@ -530,11 +530,11 @@ public class AnalysisParser {
 			analyses.add(ca);
 		}
 	}
-	public List<ChemicalAnalysisDTO> getAnalyses() {
+	public List<ChemicalAnalysis> getAnalyses() {
 		return analyses;
 	}
 
-	private void parseDate(final ChemicalAnalysisDTO ca, final String date) {
+	private void parseDate(final ChemicalAnalysis ca, final String date) {
 		Short precision = 365;
 		String day, month, year;
 
@@ -584,8 +584,8 @@ public class AnalysisParser {
 		return elements == null || oxides == null;
 	}
 
-	public static void setElementsAndOxides(final List<ElementDTO> elements,
-			final List<OxideDTO> oxides) {
+	public static void setElementsAndOxides(final List<Element> elements,
+			final List<Oxide> oxides) {
 		AnalysisParser.elements = elements;
 		AnalysisParser.oxides = oxides;
 	}

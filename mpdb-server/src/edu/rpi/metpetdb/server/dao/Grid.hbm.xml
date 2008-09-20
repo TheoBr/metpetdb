@@ -2,7 +2,7 @@
     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping package="edu.rpi.metpetdb.server.model">
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
   <class name="Grid" table="grids">
     <id name="id" column="grid_id" unsaved-value="0">
       <generator class="sequence">

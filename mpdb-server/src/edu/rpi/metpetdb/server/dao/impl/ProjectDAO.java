@@ -8,10 +8,10 @@ import org.hibernate.Session;
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.ProjectNotFoundException;
+import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
-import edu.rpi.metpetdb.server.dao.ResultsFromDAO;
-import edu.rpi.metpetdb.server.model.Project;
 
 public class ProjectDAO extends MpDbDAO<Project> {
 
@@ -51,7 +51,7 @@ public class ProjectDAO extends MpDbDAO<Project> {
 		return (List<Project>) q.list();
 	}
 
-	public ResultsFromDAO<Project> getForOwner(final PaginationParameters p,
+	public Results<Project> getForOwner(final PaginationParameters p,
 			final long ownerId) {
 		final Query sizeQ = sizeQuery("Project.byOwnerId");
 		final Query pageQ = pageQuery("Project.byOwnerId", p);
@@ -60,10 +60,10 @@ public class ProjectDAO extends MpDbDAO<Project> {
 		return getProjects(sizeQ, pageQ);
 	}
 
-	private ResultsFromDAO<Project> getProjects(Query sizeQuery, Query pageQuery) {
+	private Results<Project> getProjects(Query sizeQuery, Query pageQuery) {
 		final List<Project> l = pageQuery.list();
 		final int size = ((Number) sizeQuery.uniqueResult()).intValue();
 
-		return new ResultsFromDAO<Project>(size, l);
+		return new Results<Project>(size, l);
 	}
 }

@@ -12,15 +12,15 @@ public class MethodAssociation<T> {
 	 * creates a MethodAssociation
 	 * 
 	 * @param regex
-	 *            the regular expression to match
+	 * 		the regular expression to match
 	 * @param method
-	 *            the method name to execute
+	 * 		the method name to execute
 	 * @param param
-	 *            the class of the parameter to the method
+	 * 		the class of the parameter to the method
 	 * @param t
-	 *            an example of the class, upon which to reflect
+	 * 		an example of the class, upon which to reflect
 	 * @param name
-	 *            human readable name of what this represents
+	 * 		human readable name of what this represents
 	 */
 	public MethodAssociation(final String regex, final String method,
 			final Class param, final T t, final String name)

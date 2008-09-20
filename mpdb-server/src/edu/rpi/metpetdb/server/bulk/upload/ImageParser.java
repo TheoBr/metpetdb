@@ -20,13 +20,13 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.ElementDTO;
-import edu.rpi.metpetdb.client.model.ImageDTO;
-import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
-import edu.rpi.metpetdb.client.model.ReferenceDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
-import edu.rpi.metpetdb.client.model.XrayImageDTO;
+import edu.rpi.metpetdb.client.model.Element;
+import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.Reference;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.XrayImage;
 
 public class ImageParser {
 	public static final int METHOD = 1;
@@ -38,20 +38,19 @@ public class ImageParser {
 
 	private final InputStream is;
 	private HSSFSheet sheet;
-	private final List<ImageDTO> images;
-	private final List<ImageOnGridDTO> imagesOnGrid;
+	private final List<Image> images;
+	private final List<ImageOnGrid> imagesOnGrid;
 	private final Map<Integer, ValidationException> errors = new TreeMap<Integer, ValidationException>();
 	// 0) Regex for header
-	// 1) methodname to set in SampleDTO
+	// 1) methodname to set in Sample
 	// 2) datatype cell needs to be converted to for use with methodname
 	// 3) id in LocaleEntity for humanreadable representation of this column
 	private static final Object[][] imageMethodMap = {
 			{
-					"subsample", "setSubsample", SubsampleDTO.class,
-					"Subsample"
+					"subsample", "setSubsample", Subsample.class, "Subsample"
 			},
 			{
-					"sample", "setSample", SampleDTO.class, "Sample"
+					"sample", "setSample", Sample.class, "Sample"
 			},
 			{
 					"(file)|(path)", "setFilename", String.class,
@@ -76,8 +75,7 @@ public class ImageParser {
 
 			},
 			{
-					"element", "setElement", ElementDTO.class,
-					"XrayImage_element"
+					"element", "setElement", Element.class, "XrayImage_element"
 			},
 			{
 					"(lut)|(look up table)", "setLut", Integer.class,
@@ -103,7 +101,7 @@ public class ImageParser {
 			},
 	};
 
-	private final static List<MethodAssociation<XrayImageDTO>> methodAssociations = new LinkedList<MethodAssociation<XrayImageDTO>>();
+	private final static List<MethodAssociation<XrayImage>> methodAssociations = new LinkedList<MethodAssociation<XrayImage>>();
 
 	/**
 	 * relates columns to entries in map
@@ -116,11 +114,11 @@ public class ImageParser {
 	/**
 	 * 
 	 * @param is
-	 *            the input stream that points to a spreadsheet
+	 * 		the input stream that points to a spreadsheet
 	 */
 	public ImageParser(final InputStream is) {
-		images = new LinkedList<ImageDTO>();
-		imagesOnGrid = new LinkedList<ImageOnGridDTO>();
+		images = new LinkedList<Image>();
+		imagesOnGrid = new LinkedList<ImageOnGrid>();
 		colType = new HashMap<Integer, Integer>();
 		colMethods = new HashMap<Integer, Method>();
 		colObjects = new HashMap<Integer, Object>();
@@ -132,7 +130,7 @@ public class ImageParser {
 	 * 
 	 * 
 	 * @throws IOException
-	 *             if the file could not be read.
+	 * 		if the file could not be read.
 	 */
 	public void initialize() throws InvalidFormatException,
 			NoSuchMethodException {
@@ -140,9 +138,9 @@ public class ImageParser {
 		try {
 			if (methodAssociations.isEmpty())
 				for (Object[] row : imageMethodMap)
-					methodAssociations.add(new MethodAssociation<XrayImageDTO>(
+					methodAssociations.add(new MethodAssociation<XrayImage>(
 							(String) row[0], (String) row[1], (Class) row[2],
-							new XrayImageDTO(), (String) row[3]));
+							new XrayImage(), (String) row[3]));
 
 			final POIFSFileSystem fs = new POIFSFileSystem(is);
 			final HSSFWorkbook wb = new HSSFWorkbook(fs);
@@ -226,11 +224,11 @@ public class ImageParser {
 			System.out.println("Parsing header " + i + ": " + text);
 
 			// Determine method to be used for data in this column
-			for (MethodAssociation<XrayImageDTO> sma : methodAssociations) {
+			for (MethodAssociation<XrayImage> sma : methodAssociations) {
 				// special case for sample
 				if (text.matches("[Ss][Aa][Mm][Pp][Ll][Ee]")) {
 					colType.put(new Integer(i), SAMPLE);
-					colObjects.put(new Integer(i), new SampleDTO());
+					colObjects.put(new Integer(i), new Sample());
 				} else if (Pattern.compile("subsample type",
 						Pattern.CASE_INSENSITIVE).matcher(text).find()) {
 					colType.put(new Integer(i), SUBSAMPLE_TYPE);
@@ -272,9 +270,9 @@ public class ImageParser {
 	/**
 	 * 
 	 * @param row
-	 *            the row to parse
+	 * 		the row to parse
 	 * @throws InvalidFormatException
-	 *             if the row isn't of the format designated by the headers
+	 * 		if the row isn't of the format designated by the headers
 	 */
 	private void parseRow(final int rowindex) {
 		final HSSFRow row = sheet.getRow(rowindex);
@@ -283,7 +281,7 @@ public class ImageParser {
 			return;
 		}
 
-		final XrayImageDTO img = new XrayImageDTO();
+		final XrayImage img = new XrayImage();
 		boolean sawDataInRow = false;
 
 		boolean partOfGrid = false;
@@ -307,23 +305,23 @@ public class ImageParser {
 
 					// If the object is a sample, we want the image
 					// to be related to a subsample of that sample
-					if (colObjects.get(i) instanceof SampleDTO) {
+					if (colObjects.get(i) instanceof Sample) {
 						final String data = cell.toString();
 						System.out.println("\t\t(Sample)");
 
 						if (img.getSample() == null)
-							img.setSample(new SampleDTO());
+							img.setSample(new Sample());
 						img.getSample().setAlias(data);
 
 						if (img.getSubsample() == null)
-							img.setSubsample(new SubsampleDTO());
+							img.setSubsample(new Subsample());
 						if (img.getSubsample().getSample() == null)
 							img.getSubsample().setSample(img.getSample());
 						continue;
 					}
 				} else if (columnType == SUBSAMPLE_TYPE) {
 					if (img.getSubsample() == null)
-						img.setSubsample(new SubsampleDTO());
+						img.setSubsample(new Subsample());
 					if (img.getSubsample().getSample() == null)
 						img.getSubsample().setSample(img.getSample());
 					final String data = cell.toString();
@@ -339,8 +337,8 @@ public class ImageParser {
 				} else if (columnType == IMAGE_REFERENCE) {
 					final String data = cell.toString();
 					if (img.getReferences() == null)
-						img.setReferences(new HashSet<ReferenceDTO>());
-					ReferenceDTO ref = new ReferenceDTO();
+						img.setReferences(new HashSet<Reference>());
+					Reference ref = new Reference();
 					ref.setName(data);
 					img.getReferences().add(ref);
 				} else if (columnType == METHOD) {
@@ -356,28 +354,28 @@ public class ImageParser {
 						final String data = cell.toString();
 						storeMethod.invoke(img, data);
 
-					} else if (dataType == SampleDTO.class) {
+					} else if (dataType == Sample.class) {
 
 						final String data = cell.toString();
 						if (img.getSample() == null)
-							img.setSample(new SampleDTO());
+							img.setSample(new Sample());
 						img.getSample().setAlias(data);
 
-					} else if (dataType == SubsampleDTO.class) {
+					} else if (dataType == Subsample.class) {
 
 						final String data = cell.toString();
 						if (img.getSubsample() == null)
-							img.setSubsample(new SubsampleDTO());
+							img.setSubsample(new Subsample());
 						img.getSubsample().setName(data);
 
 						if (img.getSubsample().getSample() == null)
 							img.getSubsample().setSample(img.getSample());
 
-					} else if (dataType == ElementDTO.class) {
+					} else if (dataType == Element.class) {
 
 						final String data = cell.toString();
 						if (img.getElement() == null)
-							img.setElement(new ElementDTO());
+							img.setElement(new Element());
 						img.getElement().setName(data);
 
 					} else if (dataType == Integer.class) {
@@ -412,7 +410,7 @@ public class ImageParser {
 		if (sawDataInRow) {
 			if (partOfGrid) {
 				// Parent specified, so part of a grid
-				ImageOnGridDTO iog = new ImageOnGridDTO();
+				ImageOnGrid iog = new ImageOnGrid();
 				iog.setTopLeftX(parent_loc_x);
 				iog.setTopLeftY(parent_loc_y);
 
@@ -434,11 +432,11 @@ public class ImageParser {
 		}
 	}
 
-	public List<ImageDTO> getImages() {
+	public List<Image> getImages() {
 		return images;
 	}
 
-	public List<ImageOnGridDTO> getImagesOnGrid() {
+	public List<ImageOnGrid> getImagesOnGrid() {
 		return imagesOnGrid;
 	}
 }

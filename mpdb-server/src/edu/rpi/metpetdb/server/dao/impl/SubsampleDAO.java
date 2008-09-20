@@ -7,10 +7,10 @@ import org.hibernate.Session;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
-import edu.rpi.metpetdb.server.dao.ResultsFromDAO;
-import edu.rpi.metpetdb.server.model.Subsample;
 
 public class SubsampleDAO extends MpDbDAO<Subsample> {
 
@@ -61,24 +61,23 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 		return l;
 	}
 
-	public ResultsFromDAO<Subsample> getAllWithImagesBySampleID(
+	public Results<Subsample> getAllWithImagesBySampleID(
 			final PaginationParameters p, final long sampleId) {
 		final Query sizeQ = sizeQuery("Subsample.allWithImages", sampleId);
 		final Query pageQ = pageQuery("Subsample.allWithImages", p, sampleId);
 		return getSubsamples(sizeQ, pageQ);
 	}
 
-	public ResultsFromDAO<Subsample> getAllBySampleID(
-			final PaginationParameters p, final long sampleId) {
+	public Results<Subsample> getAllBySampleID(final PaginationParameters p,
+			final long sampleId) {
 		final Query sizeQ = sizeQuery("Subsample.all", sampleId);
 		final Query pageQ = pageQuery("Subsample.all", p, sampleId);
 		return getSubsamples(sizeQ, pageQ);
 	}
 
-	private ResultsFromDAO<Subsample> getSubsamples(Query sizeQuery,
-			Query pageQuery) {
+	private Results<Subsample> getSubsamples(Query sizeQuery, Query pageQuery) {
 		final List<Subsample> l = pageQuery.list();
 		final int size = ((Number) sizeQuery.uniqueResult()).intValue();
-		return new ResultsFromDAO<Subsample>(size, l);
+		return new Results<Subsample>(size, l);
 	}
 }
