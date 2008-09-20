@@ -413,8 +413,8 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		uploadProgress.setProgress(0.0d);
 	}
 
-	public static native void jsSimulateClick(Element e) /*
-														 * -{ e.click(); }-
-														 */;
+	public static native void jsSimulateClick(Element e) /*-{ 
+		e.click(); 
+	}-*/;
 
 }
