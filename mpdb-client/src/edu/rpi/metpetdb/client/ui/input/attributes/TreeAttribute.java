@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.interfaces.HasChildren;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
@@ -27,8 +27,8 @@ import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
  * 
  * @author anthony
  * 
- * @param <T>
- *            the type of the items in the tree
+ * @param <
+ * 		T> the type of the items in the tree
  */
 public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 		implements ClickListener {
@@ -87,13 +87,12 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 		selectedItems = al;
 	}
 
-	public Widget[] createDisplayWidget(final MObjectDTO obj) {
+	public Widget[] createDisplayWidget(final MObject obj) {
 		final Collection<T> c = get(obj);
 		return createDisplayWidget(obj, c);
 	}
 
-	public Widget[] createDisplayWidget(final MObjectDTO obj,
-			final Collection<?> c) {
+	public Widget[] createDisplayWidget(final MObject obj, final Collection<?> c) {
 		final MHtmlList list = new MHtmlList();
 		if (c != null) {
 			final Iterator<?> itr = c.iterator();
@@ -109,7 +108,7 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 		};
 	}
 
-	public Widget[] createEditWidget(final MObjectDTO obj, final String id,
+	public Widget[] createEditWidget(final MObject obj, final String id,
 			final GenericAttribute ga) {
 		final FlowPanel fp = new FlowPanel();
 		final HorizontalPanel hp = new HorizontalPanel();
@@ -144,7 +143,7 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 	}
 
 	private TreeItem makeChildren(final Collection<T> parents,
-			final TreeItem root, final MObjectDTO obj) {
+			final TreeItem root, final MObject obj) {
 		if (parents != null) {
 			Iterator<T> itr = parents.iterator();
 			while (itr.hasNext()) {
@@ -189,7 +188,7 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 		}
 		return root;
 	}
-	private Tree makeTree(final Collection<T> parents, final MObjectDTO obj) {
+	private Tree makeTree(final Collection<T> parents, final MObject obj) {
 		final Tree t = new Tree();
 		if (parents != null) {
 			Iterator<T> itr = parents.iterator();
@@ -242,12 +241,13 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 			for (int i = 0; i < parent.getChildCount(); ++i) {
 				((CheckBox) ((ExtendedTreeItem) parent.getChild(i)).getWidget())
 						.setChecked(check);
-				if (check){
+				if (check) {
 					selectedItems.add(((ExtendedTreeItem) parent.getChild(i))
 							.getObject());
-				}
-				else {
-					selectedItems.remove(((ExtendedTreeItem)parent.getChild(i)).getObject());
+				} else {
+					selectedItems
+							.remove(((ExtendedTreeItem) parent.getChild(i))
+									.getObject());
 				}
 				checkChildren(((ExtendedTreeItem) parent.getChild(i)), check);
 			}
@@ -295,7 +295,7 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 			return (Collection<T>) voc.getValues();
 		}
 	}
-	public Collection<T> get(final MObjectDTO obj) {
+	public Collection<T> get(final MObject obj) {
 		final Object o = mGet(obj);
 		if (o instanceof Collection)
 			return (Collection<T>) mGet(obj);
@@ -307,7 +307,7 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 			return null;
 		}
 	}
-	public void set(final MObjectDTO obj, final Object v) {
+	public void set(final MObject obj, final Object v) {
 		if (v instanceof Collection) {
 			final Collection c = (Collection) (v != null
 					&& ((Collection) v).size() > 0 ? v : null);

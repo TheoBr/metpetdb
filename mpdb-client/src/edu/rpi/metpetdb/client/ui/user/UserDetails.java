@@ -2,7 +2,7 @@ package edu.rpi.metpetdb.client.ui.user;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 
-import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
@@ -15,17 +15,17 @@ public class UserDetails extends FlowPanel {
 			new TextAttribute(MpDb.doc.User_name),
 	};
 
-	private final DetailsPanel<UserDTO> p_user;
+	private final DetailsPanel<User> p_user;
 
 	public UserDetails(final String username) {
-		p_user = new DetailsPanel<UserDTO>(mainAttributes);
+		p_user = new DetailsPanel<User>(mainAttributes);
 		add(p_user);
-		new ServerOp<UserDTO>() {
+		new ServerOp<User>() {
 			public void begin() {
 				MpDb.user_svc.details(username, this);
 			}
-			public void onSuccess(final UserDTO result) {
-				p_user.show((UserDTO) result);
+			public void onSuccess(final User result) {
+				p_user.show((User) result);
 			}
 		}.begin();
 	}

@@ -7,12 +7,12 @@ import java.util.Iterator;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.ui.ServerOp;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
-public class MultipleObjectDetailsPanel<T extends MObjectDTO> extends
+public class MultipleObjectDetailsPanel<T extends MObject> extends
 		DetailsPanel<T> {
 	// HashMap<MObject, HashMap<GenericAttribute, DetailsPanelEntry >
 	protected HashMap<T, HashMap<GenericAttribute, DetailsPanelEntry>> dpBeans;
@@ -60,7 +60,7 @@ public class MultipleObjectDetailsPanel<T extends MObjectDTO> extends
 	}
 
 	private DetailsPanelEntry copyDpEntry(final DetailsPanelEntry original,
-			final MObjectDTO bean) {
+			final MObject bean) {
 		final DetailsPanelEntry copy = new DetailsPanelEntry();
 		copy.setAttr(original.getAttr());
 		final ArrayList<DetailsPanelRow> rows = new ArrayList<DetailsPanelRow>();
@@ -83,7 +83,7 @@ public class MultipleObjectDetailsPanel<T extends MObjectDTO> extends
 	}
 
 	private void showEditWidget(final DetailsPanelEntry dpEntry,
-			final GenericAttribute attr, final MObjectDTO bean) {
+			final GenericAttribute attr, final MObject bean) {
 		if (attr.getReadOnly() || (attr.getImmutable() && !bean.mIsNew())) {
 			// If it is immutable and we are not creating it show the
 			// display widget or if it is readonly
@@ -180,14 +180,14 @@ public class MultipleObjectDetailsPanel<T extends MObjectDTO> extends
 		return failed == 0;
 	}
 	private Widget[] getEditWidgets(final GenericAttribute attr,
-			final MObjectDTO bean) {
+			final MObject bean) {
 		if (!isEditMode())
 			throw new IllegalStateException();
 		final DetailsPanelEntry dpEntry = dpBeans.get(bean).get(attr);
 		return dpEntry.getCurrentEditWidgets();
 	}
 	private CurrentError getCurrentError(final GenericAttribute attr,
-			final MObjectDTO bean) {
+			final MObject bean) {
 		if (!isEditMode())
 			throw new IllegalStateException();;
 		return dpBeans.get(bean).get(attr).getCurrentError();

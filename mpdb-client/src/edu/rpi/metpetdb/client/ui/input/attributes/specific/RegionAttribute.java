@@ -15,8 +15,8 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.RegionDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Region;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
@@ -32,7 +32,7 @@ public class RegionAttribute extends GenericAttribute implements ClickListener {
 		realEditWidgets = new ArrayList();
 	}
 
-	public Widget[] createDisplayWidget(final MObjectDTO obj) {
+	public Widget[] createDisplayWidget(final MObject obj) {
 		final MHtmlList list = new MHtmlList();
 
 		final Set s = get(obj);
@@ -49,7 +49,7 @@ public class RegionAttribute extends GenericAttribute implements ClickListener {
 		};
 	}
 
-	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
+	public Widget[] createEditWidget(final MObject obj, final String id) {
 		editList = new MHtmlList();
 
 		realEditWidgets.clear();
@@ -111,7 +111,7 @@ public class RegionAttribute extends GenericAttribute implements ClickListener {
 			final Object obj = itr.next();
 			final String name = ((HasText) obj).getText();
 			if (!name.equals("")) {
-				final RegionDTO r = new RegionDTO();
+				final Region r = new Region();
 				r.setName(name);
 				regions.add(r);
 			}
@@ -119,11 +119,11 @@ public class RegionAttribute extends GenericAttribute implements ClickListener {
 		return regions;
 	}
 
-	public Set get(final MObjectDTO obj) {
+	public Set get(final MObject obj) {
 		return (Set) mGet(obj);
 	}
 
-	protected void set(final MObjectDTO obj, final Object o) {
+	protected void set(final MObject obj, final Object o) {
 		mSet(obj, o);
 	}
 

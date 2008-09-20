@@ -11,7 +11,6 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
@@ -35,11 +34,11 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
-import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel.NoticeType;
 
 public class BulkUploadPanel extends MPagePanel implements ClickListener,
@@ -47,7 +46,8 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 	private final FormPanel form = new FormPanel();
 	private final FileUpload file = new FileUpload();
-	private final Label fileString = new Label("Please select a file to upload.");
+	private final Label fileString = new Label(
+			"Please select a file to upload.");
 	private final Button browseButton = new Button("Browse");
 	private final MNoticePanel status = new MNoticePanel();
 	private final MTwoColPanel main = new MTwoColPanel();
@@ -56,7 +56,8 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 	private final SimplePanel progressContainer = new SimplePanel();
 	private final MHtmlList uploadTypeList = new MHtmlList();
 	private final RadioButton samples = new RadioButton("type", "Samples");
-	private final RadioButton analyses = new RadioButton("type", "Chemical Analyses");
+	private final RadioButton analyses = new RadioButton("type",
+			"Chemical Analyses");
 	private final RadioButton images = new RadioButton("type", "Images");
 	private final Button verifyButton = new Button("Verify Samples", this);
 	private final Button uploadButton = new Button("Upload Samples", this);
@@ -75,12 +76,12 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 	public BulkUploadPanel() {
 		addPageHeader();
 		setPageTitle("Bulk Upload");
-		
+
 		add(status);
-		
+
 		add(main);
 		main.setStyleName(CSS.BULK_UPLOAD);
-		
+
 		main.getLeftCol().add(form);
 		form.setMethod(FormPanel.METHOD_POST);
 		form.setEncoding(FormPanel.ENCODING_MULTIPART);
@@ -89,43 +90,39 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		form.setStyleName(CSS.BULK_UPLOAD_FORM);
 		form.setWidget(file);
 		file.setName("bulkUpload");
-		
-		/* T__T Why doesn't this work?
-		// in order to style the file upload widget, we need to hide it
-		// and insert other widgets that spoof it
-		form.addStyleName(CSS.HIDE);
-		main.getLeftCol().add(fileString);
-		main.getLeftCol().add(browseButton);
-		browseButton.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
-				
-				// this probably wont work
-				jsSimulateClick(file.getElement());
-				
-				// this definitely wont work... need to use JSNI 
-				// to add a change event listener to FileUpload <input>
-				setFilenameLabel(file.getFilename());
-			}
-		});
-		*/
-		
+
+		/*
+		 * T__T Why doesn't this work? // in order to style the file upload
+		 * widget, we need to hide it // and insert other widgets that spoof it
+		 * form.addStyleName(CSS.HIDE); main.getLeftCol().add(fileString);
+		 * main.getLeftCol().add(browseButton);
+		 * browseButton.addClickListener(new ClickListener() { public void
+		 * onClick(Widget sender) {
+		 * 
+		 * // this probably wont work jsSimulateClick(file.getElement());
+		 * 
+		 * // this definitely wont work... need to use JSNI // to add a change
+		 * event listener to FileUpload <input>
+		 * setFilenameLabel(file.getFilename()); } });
+		 */
+
 		main.getLeftCol().add(uploadTypeList);
-		
+
 		uploadTypeList.add(samples);
 		samples.setChecked(true);
 		samples.addClickListener(this);
-		
+
 		uploadTypeList.add(analyses);
 		analyses.addStyleName(CSS.BETA);
 		analyses.addClickListener(this);
-		
+
 		uploadTypeList.add(images);
 		images.addStyleName(CSS.BETA);
 		images.addClickListener(this);
-		
+
 		main.getLeftCol().add(verifyButton);
 		verifyButton.setStyleName(CSS.PRIMARY_BUTTON);
-		
+
 		main.getLeftCol().add(progressContainer);
 		progressContainer.add(uploadProgress);
 		progressContainer.setStyleName(CSS.PROGRESSBAR_CONTAINER);
@@ -151,28 +148,33 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 				}
 			}
 		};
-		
+
 		main.getLeftCol().add(errorgrid);
 		errorgrid.setStyleName(CSS.BULK_RESULTS_GRID);
-		
+
 		main.getLeftCol().add(headergrid);
 		headergrid.setStyleName(CSS.BULK_RESULTS_GRID);
-		
+
 		main.getLeftCol().add(summary);
 		summary.setStyleName(CSS.BULK_RESULTS_GRID);
 		summary.addStyleName(CSS.HIDE);
-		
+
 		main.getLeftCol().add(uploadButton);
 		uploadButton.addStyleName(CSS.HIDE);
-		
+
 		main.getRightCol().add(helpList);
 		helpList.addStyleName(CSS.BETA);
 		helpList.add(new MLink("What is bulk upload?", this));
-		helpList.add(new MLink("How do I prepare my samples for bulk upload?", this));
-		helpList.add(new MLink("How do I prepare my chemical analyses for bulk upload?", this));
-		helpList.add(new MLink("How do I prepare my images for bulk upload?", this));
+		helpList.add(new MLink("How do I prepare my samples for bulk upload?",
+				this));
+		helpList
+				.add(new MLink(
+						"How do I prepare my chemical analyses for bulk upload?",
+						this));
+		helpList.add(new MLink("How do I prepare my images for bulk upload?",
+				this));
 		helpList.add(new MLink("Why do I have to verify first?", this));
-		
+
 		clearResults();
 		updateContentType(samples.getText());
 	}
@@ -192,7 +194,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 			updateContentType(images.getText());
 		}
 	}
-	
+
 	public void updateContentType(String type) {
 		contentType = type;
 		verifyButton.setText("Verify " + type);
@@ -215,8 +217,9 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		progressTimer.cancel();
 		uploadProgress.setProgress(1.0d);
 		if (results != "NO-SCRIPT-DATA" && results != "") {
-			status.sendNotice(NoticeType.WORKING, "Analyzing "+contentType+", please wait...");
-			
+			status.sendNotice(NoticeType.WORKING, "Analyzing " + contentType
+					+ ", please wait...");
+
 			// TODO: This is bad! It's to strip the <pre> and </pre>
 			// tags that get stuck on the string for some reason
 			final String fileOnServer = results.substring(5,
@@ -244,10 +247,13 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 					public void onSuccess(
 							final Map<Integer, ValidationException> result) {
 						if (result == null) {
-							status.sendNotice(NoticeType.SUCCESS, contentType + " uploaded successfully.");
+							status.sendNotice(NoticeType.SUCCESS, contentType
+									+ " uploaded successfully.");
 							progressContainer.addStyleName(CSS.HIDE);
 						} else {
-							status.sendNotice(NoticeType.ERROR, "There were some errors in the spreadsheet:");
+							status
+									.sendNotice(NoticeType.ERROR,
+											"There were some errors in the spreadsheet:");
 							progressContainer.addStyleName(CSS.HIDE);
 							errorgrid.resize(result.size() + 1, 2);
 							int i = 1;
@@ -256,7 +262,8 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 							for (Map.Entry<Integer, ValidationException> e : result
 									.entrySet()) {
 								errorgrid.setText(i, 0, e.getKey().toString());
-								errorgrid.setText(i++, 1, e.getValue().format());
+								errorgrid
+										.setText(i++, 1, e.getValue().format());
 							}
 						}
 					}
@@ -279,10 +286,16 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 					public void onSuccess(final Map<Integer, String[]> headers) {
 						if (headers == null) {
-							status.sendNotice(NoticeType.ERROR, "Could not verify "+contentType+". Please see the errors below.");
+							status.sendNotice(NoticeType.ERROR,
+									"Could not verify " + contentType
+											+ ". Please see the errors below.");
 							progressContainer.addStyleName(CSS.HIDE);
 						} else {
-							status.sendNotice(NoticeType.SUCCESS, contentType+" verified. Please view the results below.");
+							status
+									.sendNotice(
+											NoticeType.SUCCESS,
+											contentType
+													+ " verified. Please view the results below.");
 							progressContainer.addStyleName(CSS.HIDE);
 							headergrid.resize(headers.size() + 1, 3);
 							headergrid.setText(0, 0, "Column");
@@ -298,11 +311,12 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 								headergrid.setText(i, 1, headers.get(k)[0]);
 								if (headers.get(k)[1].length() > 0) {
 									try {
-									headergrid.setText(i, 2, enttxt
-											.getString(headers.get(k)[1]));
+										headergrid.setText(i, 2, enttxt
+												.getString(headers.get(k)[1]));
 									} catch (MissingResourceException mre) {
-										//TODO throw an error to developers
-										headergrid.setText(i, 2,headers.get(k).toString());
+										// TODO throw an error to developers
+										headergrid.setText(i, 2, headers.get(k)
+												.toString());
 									}
 								}
 								i++;
@@ -329,10 +343,16 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 					public void onSuccess(final Map<String, Integer[]> additions) {
 						if (additions == null) {
-							status.sendNotice(NoticeType.ERROR, "Could not verify "+contentType+". Please see the errors below.");
+							status.sendNotice(NoticeType.ERROR,
+									"Could not verify " + contentType
+											+ ". Please see the errors below.");
 							progressContainer.addStyleName(CSS.HIDE);
 						} else {
-							status.sendNotice(NoticeType.SUCCESS, contentType+" verified. Please view the results below.");
+							status
+									.sendNotice(
+											NoticeType.SUCCESS,
+											contentType
+													+ " verified. Please view the results below.");
 							progressContainer.addStyleName(CSS.HIDE);
 							summary.add(new HTML("Summary"));
 							summary.removeStyleName(CSS.HIDE);
@@ -340,9 +360,22 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 									additions.keySet());
 							int i = 1;
 							for (String k : keys) {
-								summary.add(new HTML("<span>" + additions.get(k)[0].toString() + "</span> Invalid " + enttxt.getString(k)));
-								summary.add(new HTML("<span>" + additions.get(k)[1].toString() + "</span> New " + enttxt.getString(k)));
-								summary.add(new HTML("<span>" + additions.get(k)[2].toString() + "</span> Old " + enttxt.getString(k)));
+								summary.add(new HTML("<span>"
+										+ additions.get(k)[0].toString()
+										+ "</span> Invalid "
+										+ enttxt.getString(k)));
+								summary
+										.add(new HTML("<span>"
+												+ additions.get(k)[1]
+														.toString()
+												+ "</span> New "
+												+ enttxt.getString(k)));
+								summary
+										.add(new HTML("<span>"
+												+ additions.get(k)[2]
+														.toString()
+												+ "</span> Old "
+												+ enttxt.getString(k)));
 								i++;
 							}
 
@@ -363,12 +396,14 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		}
 		clearResults();
 	}
-	
+
 	public void setFilenameLabel(String s) {
-		if (s == "") fileString.setText("Please select a file to upload.");
-		else fileString.setText(s);
+		if (s == "")
+			fileString.setText("Please select a file to upload.");
+		else
+			fileString.setText(s);
 	}
-	
+
 	public void clearResults() {
 		status.hide();
 		errorgrid.resize(0, 0);
@@ -377,9 +412,9 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		summary.addStyleName(CSS.HIDE);
 		uploadProgress.setProgress(0.0d);
 	}
-	
-	public static native void jsSimulateClick(Element e) /*-{ 
-		e.click(); 
-	}-*/; 
+
+	public static native void jsSimulateClick(Element e) /*
+														 * -{ e.click(); }-
+														 */;
 
 }

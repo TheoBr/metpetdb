@@ -14,12 +14,12 @@ import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.XMLParser;
 
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
-import edu.rpi.metpetdb.client.model.GridDTO;
-import edu.rpi.metpetdb.client.model.ProjectDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
-import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.Grid;
+import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
@@ -203,12 +203,12 @@ public class Breadcrumbs extends FlowPanel {
 	private void getAliasById(final String Id, final String name,
 			final bcNode Node) {
 		if (name.equals("Specific Sample")) {
-			new ServerOp<SampleDTO>() {
+			new ServerOp<Sample>() {
 				public void begin() {
 					MpDb.sample_svc.details(Long.parseLong(Id), this);
 				}
 
-				public void onSuccess(SampleDTO result) {
+				public void onSuccess(Sample result) {
 					for (Widget w : Breadcrumbs.this.getChildren()) {
 						if (w instanceof SimplePanel) {
 							if (((SimplePanel) w).getWidget() instanceof MLink) {
@@ -229,11 +229,11 @@ public class Breadcrumbs extends FlowPanel {
 				}
 			}.begin();
 		} else if (name.equals("Map")) {
-			new ServerOp<GridDTO>() {
+			new ServerOp<Grid>() {
 				public void begin() {
 					MpDb.imageBrowser_svc.details(Long.parseLong(Id), this);
 				}
-				public void onSuccess(GridDTO result) {
+				public void onSuccess(Grid result) {
 					for (Widget w : Breadcrumbs.this.getChildren()) {
 						if (w instanceof SimplePanel) {
 							if (((SimplePanel) w).getWidget() instanceof MLink) {
@@ -257,12 +257,12 @@ public class Breadcrumbs extends FlowPanel {
 				}
 			}.begin();
 		} else if (name.equals("Specific Subsample")) {
-			new ServerOp<SubsampleDTO>() {
+			new ServerOp<Subsample>() {
 				public void begin() {
 					MpDb.subsample_svc.details(Long.parseLong(Id), this);
 				}
 
-				public void onSuccess(SubsampleDTO result) {
+				public void onSuccess(Subsample result) {
 					for (Widget w : Breadcrumbs.this.getChildren()) {
 						if (w instanceof SimplePanel) {
 							if (((SimplePanel) w).getWidget() instanceof MLink) {
@@ -286,12 +286,12 @@ public class Breadcrumbs extends FlowPanel {
 				}
 			}.begin();
 		} else if (name.equals("Specific Analysis")) {
-			new ServerOp<ChemicalAnalysisDTO>() {
+			new ServerOp<ChemicalAnalysis>() {
 				public void begin() {
 					MpDb.chemicalAnalysis_svc.details(Long.parseLong(Id), this);
 				}
 
-				public void onSuccess(ChemicalAnalysisDTO result) {
+				public void onSuccess(ChemicalAnalysis result) {
 					for (Widget w : Breadcrumbs.this.getChildren()) {
 						if (w instanceof SimplePanel) {
 							if (((SimplePanel) w).getWidget() instanceof MLink) {
@@ -311,18 +311,19 @@ public class Breadcrumbs extends FlowPanel {
 				}
 			}.begin();
 		} else if (name.equals("Specific User")) {
-			new ServerOp<UserDTO>() {
+			new ServerOp<User>() {
 				public void begin() {
 					MpDb.user_svc.details(Id, this);
 				}
-				public void onSuccess(UserDTO result) {
+				public void onSuccess(User result) {
 					for (int i = 0; i < Breadcrumbs.this.getWidgetCount(); i++) {
 						final Widget w = Breadcrumbs.this.getWidget(i);
 						if (w instanceof SimplePanel) {
 							if (((SimplePanel) w).getWidget() instanceof MLink) {
 								MLink l = (MLink) ((SimplePanel) w).getWidget();
 								if (((MLink) l).getText().equals(name)) {
-									((MLink) l).setText(result.getEmailAddress());
+									((MLink) l).setText(result
+											.getEmailAddress());
 									Breadcrumbs.this
 											.onFindSuccessRecursive(Node
 													.getParent());
@@ -334,24 +335,24 @@ public class Breadcrumbs extends FlowPanel {
 				}
 			}.begin();
 		} else if (name.equals("Create Map")) {
-			new ServerOp<SubsampleDTO>() {
+			new ServerOp<Subsample>() {
 				public void begin() {
 					MpDb.subsample_svc.details(Long.parseLong(Id), this);
 				}
 
-				public void onSuccess(SubsampleDTO result) {
+				public void onSuccess(Subsample result) {
 					LeftColWidget.updateLeftSide(Node.getLeftSide(), result
 							.getSample(), result);
 					Breadcrumbs.this.onFindSuccessRecursive(Node.getParent());
 				}
 			}.begin();
 		} else if (name.equals("Specific Project")) {
-			new ServerOp<ProjectDTO>() {
+			new ServerOp<Project>() {
 				public void begin() {
 					MpDb.project_svc.details(Integer.parseInt(Id), this);
 				}
 
-				public void onSuccess(ProjectDTO result) {
+				public void onSuccess(Project result) {
 					for (int i = 0; i < Breadcrumbs.this.getWidgetCount(); i++) {
 						final Widget w = Breadcrumbs.this.getWidget(i);
 						if (w instanceof SimplePanel) {

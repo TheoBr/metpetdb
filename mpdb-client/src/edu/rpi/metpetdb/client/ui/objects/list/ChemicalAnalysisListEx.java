@@ -7,8 +7,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.properties.ChemicalAnalysisProperty;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
@@ -19,8 +19,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
-public abstract class ChemicalAnalysisListEx extends
-		ListEx<ChemicalAnalysisDTO> {
+public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 
 	public ChemicalAnalysisListEx() {
 		super(new ArrayList<Column>(Arrays.asList(columns)));
@@ -35,11 +34,11 @@ public abstract class ChemicalAnalysisListEx extends
 	public static Column[] columns = {
 			new Column(enttxt.ChemicalAnalysis_spotId(),
 					ChemicalAnalysisProperty.spotId, true) {
-				protected Object getWidget(final MObjectDTO data,
+				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new MLink((String) data
 							.mGet(ChemicalAnalysisProperty.spotId), TokenSpace
-							.detailsOf((ChemicalAnalysisDTO) data));
+							.detailsOf((ChemicalAnalysis) data));
 				}
 			},
 
@@ -56,7 +55,7 @@ public abstract class ChemicalAnalysisListEx extends
 					ChemicalAnalysisProperty.pointY),
 			new Column(enttxt.ChemicalAnalysis_method(),
 					ChemicalAnalysisProperty.analysisMethod, true) {
-				protected Object getWidget(final MObjectDTO data,
+				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					String text = ((String) data
 							.mGet(ChemicalAnalysisProperty.analysisMethod));
@@ -67,7 +66,7 @@ public abstract class ChemicalAnalysisListEx extends
 			},
 			new Column(enttxt.ChemicalAnalysis_location(),
 					ChemicalAnalysisProperty.location, true) {
-				protected Object getWidget(final MObjectDTO data,
+				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					String text = ((String) data
 							.mGet(ChemicalAnalysisProperty.location));
@@ -78,7 +77,7 @@ public abstract class ChemicalAnalysisListEx extends
 			},
 			new Column(enttxt.ChemicalAnalysis_analyst(),
 					ChemicalAnalysisProperty.analyst, true) {
-				protected Object getWidget(final MObjectDTO data,
+				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					String text = ((String) data
 							.mGet(ChemicalAnalysisProperty.analyst));
@@ -89,7 +88,7 @@ public abstract class ChemicalAnalysisListEx extends
 			},
 			new Column(enttxt.ChemicalAnalysis_analysisDate(),
 					ChemicalAnalysisProperty.analysisDate, true) {
-				protected Object getWidget(final MObjectDTO data,
+				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					DateAttribute temp = new DateAttribute(
 							MpDb.doc.ChemicalAnalysis_analysisDate,
@@ -108,6 +107,6 @@ public abstract class ChemicalAnalysisListEx extends
 
 	@Override
 	public abstract void update(PaginationParameters p,
-			AsyncCallback<Results<ChemicalAnalysisDTO>> ac);
+			AsyncCallback<Results<ChemicalAnalysis>> ac);
 
 }

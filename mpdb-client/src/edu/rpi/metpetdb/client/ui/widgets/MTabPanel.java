@@ -39,19 +39,16 @@ import com.google.gwt.user.client.ui.Widget;
  * </p>
  * 
  * <p>
- * Note that this widget is not a panel per se, but rather a
- * {@link com.google.gwt.user.client.ui.Composite} that aggregates a
- * {@link com.google.gwt.user.client.ui.TabBar} and a
- * {@link com.google.gwt.user.client.ui.DeckPanel}. It does, however, implement
- * {@link com.google.gwt.user.client.ui.HasWidgets}.
+ * Note that this widget is not a panel per se, but rather a {@link
+ * com.google.gwt.user.client.ui.Composite} that aggregates a {@link
+ * com.google.gwt.user.client.ui.TabBar} and a {@link
+ * com.google.gwt.user.client.ui.DeckPanel}. It does, however, implement {@link
+ * com.google.gwt.user.client.ui.HasWidgets}.
  * </p>
  * 
- * <h3>CSS Style Rules</h3>
- * <ul class='css'>
- * <li>.gwt-TabPanel { the tab panel itself }</li>
- * <li>.gwt-TabPanelBottom { the bottom section of the tab panel (the deck
- * containing the widget) }</li>
- * </ul>
+ * <h3>CSS Style Rules</h3> <ul class='css'> <li>.gwt-TabPanel { the tab panel
+ * itself }</li> <li>.gwt-TabPanelBottom { the bottom section of the tab panel
+ * (the deck containing the widget) }</li> </ul>
  * 
  * <p>
  * <h3>Example</h3>
@@ -185,9 +182,9 @@ public class MTabPanel extends Composite implements TabListener,
 	 * TabPanel, it will be moved to the right-most index.
 	 * 
 	 * @param w
-	 *            the widget to be added
+	 * 		the widget to be added
 	 * @param tabText
-	 *            the text to be shown on its tab
+	 * 		the text to be shown on its tab
 	 */
 	public void add(Widget w, String tabText) {
 		insert(w, new Label(tabText), getWidgetCount());
@@ -198,9 +195,9 @@ public class MTabPanel extends Composite implements TabListener,
 	 * TabPanel, it will be moved to the right-most index.
 	 * 
 	 * @param w
-	 *            the widget to be added
+	 * 		the widget to be added
 	 * @param tabWidget
-	 *            the widget to be shown in the tab
+	 * 		the widget to be shown in the tab
 	 */
 	public void add(Widget w, Widget tabWidget) {
 		insert(w, tabWidget, getWidgetCount());
@@ -258,11 +255,11 @@ public class MTabPanel extends Composite implements TabListener,
 	 * the TabPanel, it will be moved to the requested index.
 	 * 
 	 * @param widget
-	 *            the widget to be inserted.
+	 * 		the widget to be inserted.
 	 * @param tabWidget
-	 *            the widget to be shown on its tab.
+	 * 		the widget to be shown on its tab.
 	 * @param beforeIndex
-	 *            the index before which it will be inserted.
+	 * 		the index before which it will be inserted.
 	 */
 	public void insert(Widget widget, Widget tabWidget, int beforeIndex) {
 		// Delegate updates to the TabBar to our DeckPanel implementation
@@ -298,7 +295,7 @@ public class MTabPanel extends Composite implements TabListener,
 	 * Removes the given widget, and its associated tab.
 	 * 
 	 * @param widget
-	 *            the widget to be removed
+	 * 		the widget to be removed
 	 */
 	public boolean remove(Widget widget) {
 		// Delegate updates to the TabBar to our DeckPanel implementation
@@ -315,7 +312,7 @@ public class MTabPanel extends Composite implements TabListener,
 	 * Programmatically selects the specified tab.
 	 * 
 	 * @param index
-	 *            the index of the tab to be selected
+	 * 		the index of the tab to be selected
 	 */
 	public void selectTab(int index) {
 		tabBar.selectTab(index);

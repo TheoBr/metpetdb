@@ -29,7 +29,7 @@ public class MHtmlList extends Panel implements IndexedPanel,
 	public MHtmlList() {
 		this(false);
 	}
-	
+
 	public MHtmlList(boolean ordered) {
 		super();
 		elem = (ordered) ? DOM.createElement("ol") : DOM.createElement("ul");
@@ -38,26 +38,28 @@ public class MHtmlList extends Panel implements IndexedPanel,
 		items = new ArrayList<ListItem>();
 		sinkEvents(Event.MOUSEEVENTS);
 	}
-	
+
 	public Collection<ListItem> getItems() {
 		return items;
 	}
-	
+
 	public void setRibbonStyle(boolean on) {
 		this.hasRibbonStyle = on;
 		if (on) {
-			for (int i=0; i<items.size(); i++) {
-				if (i%2==0) setLiStyle(CSS.EVEN, getWidget(i));
-				else setLiStyle(CSS.ODD, getWidget(i));
+			for (int i = 0; i < items.size(); i++) {
+				if (i % 2 == 0)
+					setLiStyle(CSS.EVEN, getWidget(i));
+				else
+					setLiStyle(CSS.ODD, getWidget(i));
 			}
 		} else {
-			for (int i=0; i<items.size(); i++)
+			for (int i = 0; i < items.size(); i++)
 				setLiStyle("", getWidget(i));
 		}
 	}
 
 	public void add(final Widget w) {
-		if (hasRibbonStyle) {	
+		if (hasRibbonStyle) {
 			String className = CSS.ODD;
 			if (items.size() % 2 == 0)
 				className = CSS.EVEN;

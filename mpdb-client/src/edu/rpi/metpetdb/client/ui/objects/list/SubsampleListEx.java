@@ -8,8 +8,8 @@ import com.google.gwt.user.client.ui.CheckBox;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.properties.SubsampleProperty;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
@@ -17,7 +17,7 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
-public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
+public abstract class SubsampleListEx extends ListEx<Subsample> {
 
 	public SubsampleListEx() {
 		super(new ArrayList<Column>(Arrays.asList(columns)));
@@ -31,17 +31,17 @@ public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
 
 	public static Column[] columns = {
 			new Column("Check", true, true) {
-				protected Object getWidget(final MObjectDTO data,
+				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new CheckBox();
 				}
 			},
 			new Column(enttxt.Subsample_name(), SubsampleProperty.name, true) {
-				protected Object getWidget(final MObjectDTO data,
+				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new MLink(
 							(String) data.mGet(SubsampleProperty.name),
-							TokenSpace.detailsOf((SubsampleDTO) data));
+							TokenSpace.detailsOf((Subsample) data));
 				}
 			},
 			new Column(enttxt.Subsample_type(), SubsampleProperty.subsampleType),
@@ -49,16 +49,16 @@ public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
 					SubsampleProperty.imageCount),
 			new Column(enttxt.Subsample_images(), SubsampleProperty.images,
 					true) {
-				protected Object getWidget(final MObjectDTO data,
+				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new MLink("Images", TokenSpace
-							.ViewOf((SubsampleDTO) data));
+							.ViewOf((Subsample) data));
 				}
 			}, // TODO image thumbnail browser
 			new Column("Image Map", true) {
-				protected Object getWidget(final MObjectDTO data,
+				protected Object getWidget(final MObject data,
 						final int currentRow) {
-					final SubsampleDTO s = (SubsampleDTO) data;
+					final Subsample s = (Subsample) data;
 					if (s.getGrid() == null) {
 						return new MLink("Create Map", TokenSpace
 								.createNewImageMap(s));
@@ -78,5 +78,5 @@ public abstract class SubsampleListEx extends ListEx<SubsampleDTO> {
 	}
 
 	public abstract void update(final PaginationParameters p,
-			final AsyncCallback<Results<SubsampleDTO>> ac);
+			final AsyncCallback<Results<Subsample>> ac);
 }

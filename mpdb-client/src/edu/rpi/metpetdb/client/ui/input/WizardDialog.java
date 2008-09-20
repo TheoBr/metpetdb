@@ -33,7 +33,6 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 	private final Button back;
 	private HashSet tabChangeListeners;
 	private HashSet dialogFinishListeners;
-	
 
 	public WizardDialog() {
 		panels = new ArrayList();
@@ -84,13 +83,13 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 
 	public void addStep(final DetailsPanel stepPanel, final int stepNumber,
 			final String stepText) {
-//		TODO update next/back/finish
+		// TODO update next/back/finish
 		panels.add(stepNumber, stepPanel);
 		tabPanel.add(stepPanel, stepText);
 	}
-	
+
 	public void removeStep(final int stepNumber) {
-		//TODO update next/back/finish
+		// TODO update next/back/finish
 		if (stepNumber < panels.size()) {
 			panels.remove(stepNumber);
 			tabPanel.remove(stepNumber);
@@ -119,6 +118,7 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 			final Iterator itr = panels.iterator();
 			new ServerOp() {
 				int success = 0;
+
 				public void begin() {
 					while (itr.hasNext()) {
 						final DetailsPanel dp = (DetailsPanel) itr.next();
@@ -126,23 +126,23 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 					}
 				}
 				public void onSuccess(final Object result) {
-					success ++;
+					success++;
 					if (success == panels.size()) {
 						final Iterator dfItr = dialogFinishListeners.iterator();
 						while (dfItr.hasNext()) {
 							((ServerOp) dfItr.next()).begin();
 						}
 						WizardDialog.this.hide();
-						
+
 					}
 					setActionsEnabled(true);
 				}
 				public void onFailure(final Throwable e) {
 					setActionsEnabled(true);
-					//super.onFailure(e);
+					// super.onFailure(e);
 				}
 			}.begin();
-			
+
 		}
 	}
 
@@ -163,12 +163,12 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 			dialogFinishListeners = new HashSet();
 		dialogFinishListeners.add(s);
 	}
-	
+
 	public void clearDialogFinishListeners() {
 		if (dialogFinishListeners != null)
 			dialogFinishListeners.clear();
 	}
-	
+
 	private void setActionsEnabled(final boolean enabled) {
 		cancel.setEnabled(enabled);
 		back.setEnabled(enabled);

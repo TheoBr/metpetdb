@@ -7,25 +7,25 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.image.browser.LeftSideLayer;
-import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
+import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public abstract class MySubsamples extends LeftColWidget implements
 		UsesLeftColumn {
 	private MHtmlList pList;
 	private MHtmlList details;
-	private SubsampleDTO current;
+	private Subsample current;
 	private MLink detailsLink;
 	private MLink addSubsampleLink;
 
-	public MySubsamples(final SampleDTO sample, final String token) {
+	public MySubsamples(final Sample sample, final String token) {
 		super("Sample " + sample.getName());
 		this.setStyleName("lcol-MyProjects");
 		MetPetDBApplication.registerPageWatcher(this);
@@ -49,22 +49,23 @@ public abstract class MySubsamples extends LeftColWidget implements
 				else if (token.equals(LocaleHandler.lc_entity
 						.TokenSpace_Enter_Subsample()))
 					addSubsampleLink.addStyleName("cur");
-				if (((List<SubsampleDTO>) result).size() > 0) {
-					createSubsamplesWidget((List<SubsampleDTO>) result);
+				if (((List<Subsample>) result).size() > 0) {
+					createSubsamplesWidget((List<Subsample>) result);
 				}
 				onLoadCompletion();
 			}
 		}.begin();
 	}
 
-	public MySubsamples(final SampleDTO sample, final SubsampleDTO subsample) {
+	public MySubsamples(final Sample sample, final Subsample subsample) {
 		this(sample, "");
 		current = subsample;
 	}
 
-	private void createSubsamplesWidget(final List<SubsampleDTO> subsamples) {
+	private void createSubsamplesWidget(final List<Subsample> subsamples) {
 		pList = addSubSamples(subsamples);
-		final Label subsamplesLabel = new Label(subsamples.get(0).getSampleName()
+		final Label subsamplesLabel = new Label(subsamples.get(0)
+				.getSampleName()
 				+ "'s Subsamples");
 		subsamplesLabel.getElement().setClassName("h1");
 		subsamplesLabel.setStyleName("leftsideHeader");
@@ -75,7 +76,7 @@ public abstract class MySubsamples extends LeftColWidget implements
 			setCur(current);
 	}
 
-	public void setCur(final SubsampleDTO cur) {
+	public void setCur(final Subsample cur) {
 		removeCur();
 		for (int i = 0; i < pList.getWidgetCount(); i++) {
 			Widget w = pList.getWidget(i);
@@ -93,7 +94,7 @@ public abstract class MySubsamples extends LeftColWidget implements
 	}
 
 	public void insertLayers(final LeftSideLayer layers,
-			final SubsampleDTO subsample) {
+			final Subsample subsample) {
 		for (int i = 0; i < pList.getWidgetCount(); i++) {
 			Widget w = pList.getWidget(i);
 			if (w instanceof MLink) {
@@ -109,18 +110,18 @@ public abstract class MySubsamples extends LeftColWidget implements
 		pList.remove(layers);
 	}
 
-	public static MHtmlList addSubSamples(List<SubsampleDTO> subsamples) {
+	public static MHtmlList addSubSamples(List<Subsample> subsamples) {
 		final MHtmlList list = new MHtmlList();
 
 		Iterator it = subsamples.iterator();
 		while (it.hasNext()) {
-			final SubsampleDTO subsample = (SubsampleDTO) it.next();
+			final Subsample subsample = (Subsample) it.next();
 			list.add(showSubsampleDetails(subsample));
 		}
 		return list;
 	}
 
-	public static MLink showSubsampleDetails(final SubsampleDTO subsample) {
+	public static MLink showSubsampleDetails(final Subsample subsample) {
 		final MLink focusProject = new MLink(subsample.getName(), TokenSpace
 				.detailsOf(subsample));
 		return focusProject;

@@ -7,7 +7,6 @@ import com.google.gwt.user.client.ui.KeyboardListenerCollection;
 import com.google.gwt.user.client.ui.SimplePanel;
 
 public class MSimplePanel extends SimplePanel {
-	
 
 	private KeyboardListenerCollection keyboardListeners;
 

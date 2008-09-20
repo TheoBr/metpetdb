@@ -8,29 +8,29 @@ import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGrid;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
 import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
-import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 public class PointPopup extends DialogBox implements ClickListener {
 
-	private final ImageOnGrid imageOnGrid;
-	private final ChemicalAnalysisDTO chemicalAnalysis;
+	private final ImageOnGridContainer imageOnGrid;
+	private final ChemicalAnalysis chemicalAnalysis;
 	private final FocusPanel fp;
 	private final MLink remove;
 	private final MLink lock;
 	private boolean locked;
 
-	public PointPopup(final ChemicalAnalysisDTO ma, final ImageOnGrid iog,
-			final int x, final int y) {
+	public PointPopup(final ChemicalAnalysis ma,
+			final ImageOnGridContainer iog, final int x, final int y) {
 		this.imageOnGrid = iog;
 		this.chemicalAnalysis = ma;
 
-		this.locked = ma.getIsLocked();
+		this.locked = ma.isLocked();
 
 		final FlowPanel panel = new FlowPanel();
 		panel.add(new MLinkandText("Spot Id: ", ma.getSpotId(), "", TokenSpace
@@ -67,7 +67,7 @@ public class PointPopup extends DialogBox implements ClickListener {
 		} else if (sender == this.lock) {
 			this.lock.setText(this.locked ? "Lock" : "Unlock");
 			this.locked = !this.locked;
-			this.chemicalAnalysis.setIsLocked(this.locked);
+			this.chemicalAnalysis.setLocked(this.locked);
 		}
 	}
 

@@ -23,14 +23,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisElementDTO;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxideDTO;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.RockTypeDTO;
-import edu.rpi.metpetdb.client.model.SampleMineralDTO;
-import edu.rpi.metpetdb.client.model.SearchElementDTO;
-import edu.rpi.metpetdb.client.model.SearchOxideDTO;
-import edu.rpi.metpetdb.client.model.SearchSampleDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.RockType;
+import edu.rpi.metpetdb.client.model.SampleMineral;
+import edu.rpi.metpetdb.client.model.SearchElement;
+import edu.rpi.metpetdb.client.model.SearchOxide;
+import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.properties.Property;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.MpDb;
@@ -41,7 +39,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
 public class SearchTabAttribute extends GenericAttribute {
 	private GenericAttribute[][] atts;
-	private ArrayList<ObjectEditorPanel<SearchSampleDTO>> searchSamples = new ArrayList();
+	private ArrayList<ObjectEditorPanel<SearchSample>> searchSamples = new ArrayList();
 
 	public SearchTabAttribute(final StringConstraint sc,
 			final GenericAttribute[][] atts) {
@@ -49,29 +47,29 @@ public class SearchTabAttribute extends GenericAttribute {
 		this.atts = atts;
 	}
 
-	public Widget[] createDisplayWidget(final MObjectDTO obj) {
+	public Widget[] createDisplayWidget(final MObject obj) {
 
 		return new Widget[] {};
 	}
 
-	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
+	public Widget[] createEditWidget(final MObject obj, final String id) {
 		final MTwoColPanel panel = new MTwoColPanel();
 		final MTabPanel tabs = new MTabPanel();
 		for (int i = 0; i < atts.length; i++) {
-			final ObjectEditorPanel<SearchSampleDTO> p_searchSample = new ObjectEditorPanel<SearchSampleDTO>(
+			final ObjectEditorPanel<SearchSample> p_searchSample = new ObjectEditorPanel<SearchSample>(
 					atts[i], LocaleHandler.lc_text.addSample(),
 					LocaleHandler.lc_text.addSampleDescription()) {
-				protected void loadBean(final AsyncCallback<SearchSampleDTO> ac) {
+				protected void loadBean(final AsyncCallback<SearchSample> ac) {
 				}
-				protected void saveBean(final AsyncCallback<SearchSampleDTO> ac) {
-					ac.onSuccess((SearchSampleDTO) this.getBean());
+				protected void saveBean(final AsyncCallback<SearchSample> ac) {
+					ac.onSuccess((SearchSample) this.getBean());
 				}
 				protected void deleteBean(final AsyncCallback<Object> ac) {
 				}
-				protected void onSaveCompletion(final MObjectDTO result) {
+				protected void onSaveCompletion(final MObject result) {
 					this.edit(result);
 					clearConstraints();
-					addConstraints((SearchSampleDTO) result);
+					addConstraints((SearchSample) result);
 				}
 			};
 			p_searchSample.getSaveButton().setText("Set");
@@ -100,7 +98,7 @@ public class SearchTabAttribute extends GenericAttribute {
 		};
 	}
 
-	protected void set(final MObjectDTO obj, final Object o) {
+	protected void set(final MObject obj, final Object o) {
 		mSet(obj, o);
 	}
 
@@ -156,7 +154,8 @@ public class SearchTabAttribute extends GenericAttribute {
 		remove.setPixelSize(14, 15);
 		remove.addClickListener(new ClickListener() {
 			public void onClick(final Widget sender) {
-				removeFromBean(((CritContainer)constraint).getConstraint(),((CritContainer)constraint).getProperty());
+				removeFromBean(((CritContainer) constraint).getConstraint(),
+						((CritContainer) constraint).getProperty());
 				row.removeFromParent();
 			}
 		});
@@ -169,27 +168,44 @@ public class SearchTabAttribute extends GenericAttribute {
 		vp.add(row);
 	}
 
-	public void addConstraints(SearchSampleDTO ss) {
+	public void addConstraints(SearchSample ss) {
 		if (ss.getOwner() != null) {
-			addConstraint(createCritRow("Owner:", ss.getOwner(), ss.getOwner(),(Property) MpDb.oc.SearchSample_owner.property));
+			addConstraint(createCritRow("Owner:", ss.getOwner(), ss.getOwner(),
+					(Property) MpDb.oc.SearchSample_owner.property));
 		}
 		if (ss.getSesarNumber() != null) {
-			addConstraint(createCritRow("Sesar Number:", ss.getSesarNumber(), ss.getSesarNumber(),(Property) MpDb.oc.SearchSample_sesarNumber.property));
+			addConstraint(createCritRow("Sesar Number:", ss.getSesarNumber(),
+					ss.getSesarNumber(),
+					(Property) MpDb.oc.SearchSample_sesarNumber.property));
 		}
 		if (ss.getAlias() != null) {
-			addConstraint(createCritRow("Alias:", ss.getAlias(),ss.getAlias(),(Property) MpDb.oc.SearchSample_alias.property));
+			addConstraint(createCritRow("Alias:", ss.getAlias(), ss.getAlias(),
+					(Property) MpDb.oc.SearchSample_alias.property));
 		}
 		if (ss.getCollectionDateRange() != null) {
-			final int StartMonth = ss.getCollectionDateRange().getStartAsDate().getMonth();
-			final int StartDay = ss.getCollectionDateRange().getStartAsDate().getDay();
-			final int StartYear = ss.getCollectionDateRange().getStartAsDate().getYear();
-			final String StartDate = String.valueOf(StartMonth) + "/" + String.valueOf(StartDay) + "/" + String.valueOf(StartYear);
-			final int EndMonth = ss.getCollectionDateRange().getEndAsDate().getMonth();
-			final int EndDay = ss.getCollectionDateRange().getEndAsDate().getDay();
-			final int EndYear = ss.getCollectionDateRange().getEndAsDate().getYear();
-			final String EndDate = String.valueOf(EndMonth) + "/" + String.valueOf(EndDay) + "/" + String.valueOf(EndYear);
+			final int StartMonth = ss.getCollectionDateRange().getStartAsDate()
+					.getMonth();
+			final int StartDay = ss.getCollectionDateRange().getStartAsDate()
+					.getDay();
+			final int StartYear = ss.getCollectionDateRange().getStartAsDate()
+					.getYear();
+			final String StartDate = String.valueOf(StartMonth) + "/"
+					+ String.valueOf(StartDay) + "/"
+					+ String.valueOf(StartYear);
+			final int EndMonth = ss.getCollectionDateRange().getEndAsDate()
+					.getMonth();
+			final int EndDay = ss.getCollectionDateRange().getEndAsDate()
+					.getDay();
+			final int EndYear = ss.getCollectionDateRange().getEndAsDate()
+					.getYear();
+			final String EndDate = String.valueOf(EndMonth) + "/"
+					+ String.valueOf(EndDay) + "/" + String.valueOf(EndYear);
 			String range = StartDate + " - " + EndDate;
-			addConstraint(createCritRow("Date Range:", range, ss.getCollectionDateRange(),(Property) MpDb.oc.SearchSample_collectionDateRange.property));
+			addConstraint(createCritRow(
+					"Date Range:",
+					range,
+					ss.getCollectionDateRange(),
+					(Property) MpDb.oc.SearchSample_collectionDateRange.property));
 		}
 
 		if (ss.getBoundingBox() != null) {
@@ -197,41 +213,50 @@ public class SearchTabAttribute extends GenericAttribute {
 			final LinearRing lr = (LinearRing) box.getRing(0);
 			final Point SW = lr.getPoint(0);
 			final Point NE = lr.getPoint(2);
-			addConstraint(createCritRow("Location:", "S: " + String.valueOf(SW.x) + " W: " + String.valueOf(SW.y) + " N: " + String.valueOf(NE.x) + " E: " + String.valueOf(NE.y),ss.getBoundingBox(),MpDb.oc.SearchSample_boundingBox.property));
+			addConstraint(createCritRow("Location:", "S: "
+					+ String.valueOf(SW.x) + " W: " + String.valueOf(SW.y)
+					+ " N: " + String.valueOf(NE.x) + " E: "
+					+ String.valueOf(NE.y), ss.getBoundingBox(),
+					MpDb.oc.SearchSample_boundingBox.property));
 		}
 
 		if (ss.getElements() != null) {
-			Iterator<SearchElementDTO> itr = ss.getElements().iterator();
+			Iterator<SearchElement> itr = ss.getElements().iterator();
 			while (itr.hasNext()) {
-				final SearchElementDTO sElement = itr.next();
-				addConstraint(createCritRow("Element:", sElement.getName(), sElement,MpDb.doc.SearchSample_elements.property));
-			 }
+				final SearchElement sElement = itr.next();
+				addConstraint(createCritRow("Element:", sElement.getName(),
+						sElement, MpDb.doc.SearchSample_elements.property));
+			}
 		}
 		if (ss.getOxides() != null) {
-			Iterator<SearchOxideDTO> itr = ss.getOxides().iterator();
+			Iterator<SearchOxide> itr = ss.getOxides().iterator();
 			while (itr.hasNext()) {
-				final SearchOxideDTO sOxide = itr.next();
-				addConstraint(createCritRow("Oxide:", sOxide.getName(), sOxide,MpDb.doc.SearchSample_oxides.property));
-			 }
+				final SearchOxide sOxide = itr.next();
+				addConstraint(createCritRow("Oxide:", sOxide.getName(), sOxide,
+						MpDb.doc.SearchSample_oxides.property));
+			}
 		}
 		if (ss.getMinerals() != null) {
-			Iterator<SampleMineralDTO> itr = ss.getMinerals().iterator();
+			Iterator<SampleMineral> itr = ss.getMinerals().iterator();
 			while (itr.hasNext()) {
-				final SampleMineralDTO sm = itr.next();
-				addConstraint(createCritRow("Mineral:", sm.getName(), sm,MpDb.doc.SearchSample_minerals.property));
-			 }
+				final SampleMineral sm = itr.next();
+				addConstraint(createCritRow("Mineral:", sm.getName(), sm,
+						MpDb.doc.SearchSample_minerals.property));
+			}
 		}
 		if (ss.getPossibleRockTypes() != null) {
-			Iterator<RockTypeDTO> itr = ss.getPossibleRockTypes().iterator();
+			Iterator<RockType> itr = ss.getPossibleRockTypes().iterator();
 			while (itr.hasNext()) {
-				final RockTypeDTO rt = itr.next();
-				addConstraint(createCritRow("Rock Type:", rt.getRockType(), rt, MpDb.doc.SearchSample_possibleRockTypes.property));
+				final RockType rt = itr.next();
+				addConstraint(createCritRow("Rock Type:", rt.getRockType(), rt,
+						MpDb.doc.SearchSample_possibleRockTypes.property));
 			}
 		}
 	}
-	
-	public Widget createCritRow(final String label, final String value, final Object obj, final Property p){
-		final CritContainer container = new CritContainer(obj,p);
+
+	public Widget createCritRow(final String label, final String value,
+			final Object obj, final Property p) {
+		final CritContainer container = new CritContainer(obj, p);
 		final Label critLabel = new Label(label);
 		critLabel.addStyleName("critlabel");
 		critLabel.addStyleName("inline");
@@ -240,7 +265,7 @@ public class SearchTabAttribute extends GenericAttribute {
 		container.add(critLabel);
 		container.add(critConstraint);
 		return container;
-		
+
 	}
 
 	public void clearConstraints() {
@@ -248,30 +273,32 @@ public class SearchTabAttribute extends GenericAttribute {
 			vp.remove(vp.getWidgetCount() - 1);
 		vp.add(noConstraints);
 	}
-	
-	private void removeFromBean(final Object constraint, final Property p){
-		SearchSampleDTO ss = (SearchSampleDTO) searchSamples.get(0).getBean();
+
+	private void removeFromBean(final Object constraint, final Property p) {
+		SearchSample ss = (SearchSample) searchSamples.get(0).getBean();
 		Object value = ss.mGet(p);
-		if (value instanceof Set){
+		if (value instanceof Set) {
 			((Set) value).remove(constraint);
-		} else value = null;
+		} else
+			value = null;
 		ss.mSet(p, value);
-		for (int i = 0 ; i < searchSamples.size(); i++){
+		for (int i = 0; i < searchSamples.size(); i++) {
 			searchSamples.get(i).edit(searchSamples.get(i).getBean());
 		}
 	}
-	
-	private class CritContainer extends FlowPanel{
+
+	private class CritContainer extends FlowPanel {
 		final Object constraint;
 		final Property p;
-		public CritContainer(final Object constraint, final Property p){
+
+		public CritContainer(final Object constraint, final Property p) {
 			this.constraint = constraint;
 			this.p = p;
 		}
-		public Object getConstraint(){
+		public Object getConstraint() {
 			return constraint;
 		}
-		public Property getProperty(){
+		public Property getProperty() {
 			return p;
 		}
 	};

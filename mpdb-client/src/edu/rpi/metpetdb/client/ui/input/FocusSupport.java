@@ -15,9 +15,9 @@ public class FocusSupport {
 	 * Validate all {@link DetailsPanel}s contained within a widget.
 	 * 
 	 * @param w
-	 *            the widget to start at; may itself be a DetailsPanel.
+	 * 		the widget to start at; may itself be a DetailsPanel.
 	 * @return true if all DetailsPanels (if any exist) are valid right now;
-	 *         false otherwise. True is returned if no DetailsPanels were found.
+	 * 	false otherwise. True is returned if no DetailsPanels were found.
 	 */
 	public static boolean validateEdit(final Widget w) {
 		if (w instanceof DetailsPanel) {
@@ -40,10 +40,9 @@ public class FocusSupport {
 	 * Change the enabled status of all contained FocusWidgets.
 	 * 
 	 * @param w
-	 *            root widget to start searching through.
+	 * 		root widget to start searching through.
 	 * @param enabled
-	 *            true to enable the discovered FocusWidgets; false to disable
-	 *            them.
+	 * 		true to enable the discovered FocusWidgets; false to disable them.
 	 */
 	public static void setEnabled(final Widget w, final boolean enabled) {
 		if (w instanceof DetailsPanel)
@@ -62,16 +61,16 @@ public class FocusSupport {
 	 * <p>
 	 * This method searches through the tree rooted at <code>w</code> to
 	 * determine if a contained widget is able to show the error described by
-	 * <code>e</code>. Often this happens in a {@link DetailsPanel}, where
-	 * the exception is meant to be shown next to a particular field.
+	 * <code>e</code>. Often this happens in a {@link DetailsPanel}, where the
+	 * exception is meant to be shown next to a particular field.
 	 * </p>
 	 * 
 	 * @param w
-	 *            root of the tree to search.
+	 * 		root of the tree to search.
 	 * @param e
-	 *            the exception in question.
-	 * @return true if the tree rooted at <code>w</code> can show
-	 *         <code>e</code>; false otherwise.
+	 * 		the exception in question.
+	 * @return true if the tree rooted at <code>w</code> can show <code>e</code>
+	 * 	; false otherwise.
 	 * @see #showValidationException(Widget, ValidationException)
 	 */
 	public static boolean handlesValidationException(final Widget w,
@@ -91,13 +90,11 @@ public class FocusSupport {
 	 * Display a validation exception.
 	 * 
 	 * @param w
-	 *            root of the tree to start searching for a widget to show the
-	 *            error.
+	 * 		root of the tree to start searching for a widget to show the error.
 	 * @param e
-	 *            the error to be shown.
+	 * 		the error to be shown.
 	 * @return true if either <code>w</code> or one of its children accepted
-	 *         responsibility for the error and has displayed it; false
-	 *         otherwise.
+	 * 	responsibility for the error and has displayed it; false otherwise.
 	 */
 	public static boolean showValidationException(final Widget w,
 			final ValidationException e) {
@@ -116,9 +113,9 @@ public class FocusSupport {
 	 * Request the first available child widget to take focus.
 	 * 
 	 * @param w
-	 *            root to search from. May also implement HasFocus itself.
+	 * 		root to search from. May also implement HasFocus itself.
 	 * @return true if a widget was identified that implements HasFocus and we
-	 *         asked it to take the focus; false otherwise.
+	 * 	asked it to take the focus; false otherwise.
 	 */
 	public static boolean requestFocus(final Widget w) {
 		// Refuse to take focus on a disabled widget.

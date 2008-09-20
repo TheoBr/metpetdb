@@ -11,17 +11,17 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ImageDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageList;
-import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGrid;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
 
 public class AddExistingImagePopup extends PopupPanel {
 
 	public AddExistingImagePopup(final Widget sender, final ServerOp r,
-			final SubsampleDTO subsample,
-			final Map<ImageDTO, ImageOnGrid> imagesOnGrid) {
+			final Subsample subsample,
+			final Map<Image, ImageOnGridContainer> imagesOnGrid) {
 		super(false);
 		final VerticalPanel vp = new VerticalPanel();
 		this.setPopupPosition(sender.getAbsoluteLeft(),

@@ -12,13 +12,13 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
-public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
+public class DetailsPanel<T extends MObject> extends ComplexPanel {
 	private String panelId;
 	private Element fieldset;
 	private Element legend;
@@ -119,10 +119,10 @@ public class DetailsPanel<T extends MObjectDTO> extends ComplexPanel {
 	 * @param atts
 	 * @param actions
 	 * @param showHeaders
-	 *            whether we show the view/edit headers
+	 * 		whether we show the view/edit headers
 	 * @param showInitial
-	 *            whether we initially show the attributes (for
-	 *            MultipleObjectDetailsPanel)
+	 * 		whether we initially show the attributes (for
+	 * 		MultipleObjectDetailsPanel)
 	 */
 	protected void init(final GenericAttribute[] atts, final Widget[] actions,
 			final boolean showHeaders, final boolean showInitial) {

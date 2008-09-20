@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
@@ -41,7 +41,7 @@ public class CheckBoxesAttribute extends GenericAttribute implements
 		this.cols = cols;
 	}
 
-	public Widget[] createDisplayWidget(final MObjectDTO obj) {
+	public Widget[] createDisplayWidget(final MObject obj) {
 		final MHtmlList list = new MHtmlList();
 
 		final Set<?> s = get(obj);
@@ -57,7 +57,7 @@ public class CheckBoxesAttribute extends GenericAttribute implements
 		};
 	}
 
-	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
+	public Widget[] createEditWidget(final MObject obj, final String id) {
 		editList = new FixedWidthFlexTable();
 		// editList.setWidth("100%");
 
@@ -69,8 +69,9 @@ public class CheckBoxesAttribute extends GenericAttribute implements
 				.getValues();
 		if (availableItems != null) {
 			final Iterator<?> iter = availableItems.iterator();
-			final int numRows = (availableItems.size() / cols
-					+ availableItems.size() % cols) - 1;
+			final int numRows = (availableItems.size() / cols + availableItems
+					.size()
+					% cols) - 1;
 			int row = 0;
 			int column = 0;
 			while (iter.hasNext()) {
@@ -109,7 +110,7 @@ public class CheckBoxesAttribute extends GenericAttribute implements
 		return rCheck;
 	}
 
-	protected void set(final MObjectDTO obj, final Object o) {
+	protected void set(final MObject obj, final Object o) {
 		mSet(obj, o);
 	}
 
@@ -117,7 +118,7 @@ public class CheckBoxesAttribute extends GenericAttribute implements
 
 	}
 
-	public Set<?> get(final MObjectDTO obj) {
+	public Set<?> get(final MObject obj) {
 		return (Set<?>) obj.mGet(this.getConstraint().property);
 	}
 

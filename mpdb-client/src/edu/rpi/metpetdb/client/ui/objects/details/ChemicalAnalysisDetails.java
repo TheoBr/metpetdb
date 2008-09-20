@@ -4,10 +4,10 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
@@ -44,35 +44,35 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 					MpDb.doc.ChemicalAnalysis_oxides),
 	};
 
-	private final ObjectEditorPanel<ChemicalAnalysisDTO> p_chemicalAnalysis;
+	private final ObjectEditorPanel<ChemicalAnalysis> p_chemicalAnalysis;
 
 	private long chemicalAnalysisId;
-	private SubsampleDTO subsampleObj;
+	private Subsample subsampleObj;
 
 	public ChemicalAnalysisDetails() {
-		p_chemicalAnalysis = new ObjectEditorPanel<ChemicalAnalysisDTO>(
+		p_chemicalAnalysis = new ObjectEditorPanel<ChemicalAnalysis>(
 				chemicalAnalysisAtts) {
 			protected void loadBean(final AsyncCallback ac) {
-				final ChemicalAnalysisDTO ma = (ChemicalAnalysisDTO) getBean();
+				final ChemicalAnalysis ma = (ChemicalAnalysis) getBean();
 				MpDb.chemicalAnalysis_svc.details(
 						ma != null && !ma.mIsNew() ? ma.getId()
 								: chemicalAnalysisId, ac);
 			}
 
 			protected void saveBean(final AsyncCallback ac) {
-				MpDb.chemicalAnalysis_svc.save((ChemicalAnalysisDTO) getBean(),
-						ac);
+				MpDb.chemicalAnalysis_svc
+						.save((ChemicalAnalysis) getBean(), ac);
 			}
 
 			protected void deleteBean(final AsyncCallback ac) {
-				subsampleObj = ((ChemicalAnalysisDTO) getBean()).getSubsample();
-				MpDb.chemicalAnalysis_svc.delete(
-						((ChemicalAnalysisDTO) getBean()).getId(), ac);
+				subsampleObj = ((ChemicalAnalysis) getBean()).getSubsample();
+				MpDb.chemicalAnalysis_svc.delete(((ChemicalAnalysis) getBean())
+						.getId(), ac);
 			}
 
 			protected boolean canEdit() {
-				final SampleDTO s = ((ChemicalAnalysisDTO) getBean())
-						.getSubsample().getSample();
+				final Sample s = ((ChemicalAnalysis) getBean()).getSubsample()
+						.getSample();
 				if (s.isPublicData())
 					return false;
 				if (MpDb.isCurrentUser(s.getOwner()))
@@ -80,18 +80,18 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 				return false;
 			}
 
-			protected void onSaveCompletion(final MObjectDTO result) {
+			protected void onSaveCompletion(final MObject result) {
 				if (History.getToken().equals(
-						TokenSpace.detailsOf((ChemicalAnalysisDTO) result))) {
+						TokenSpace.detailsOf((ChemicalAnalysis) result))) {
 					TokenSpace.dispatch(TokenSpace
-							.detailsOf((ChemicalAnalysisDTO) result));
+							.detailsOf((ChemicalAnalysis) result));
 				} else {
 					History.newItem(TokenSpace
-							.detailsOf((ChemicalAnalysisDTO) result));
+							.detailsOf((ChemicalAnalysis) result));
 				}
 			}
 
-			protected void onLoadCompletion(final MObjectDTO result) {
+			protected void onLoadCompletion(final MObject result) {
 				super.onLoadCompletion(result);
 			}
 
@@ -107,8 +107,8 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 		return this;
 	}
 
-	public ChemicalAnalysisDetails createNew(final SubsampleDTO ss) {
-		final ChemicalAnalysisDTO ma = new ChemicalAnalysisDTO();
+	public ChemicalAnalysisDetails createNew(final Subsample ss) {
+		final ChemicalAnalysis ma = new ChemicalAnalysis();
 		ss.addChemicalAnalysis(ma);
 		p_chemicalAnalysis.edit(ma);
 		return this;

@@ -10,12 +10,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
-import edu.rpi.metpetdb.client.model.GridDTO;
-import edu.rpi.metpetdb.client.model.ProjectDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
-import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.Grid;
+import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.TokenHandler.IKey;
@@ -56,7 +56,7 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler sampleDetails = new LKey(
 			LocaleHandler.lc_entity.TokenSpace_Sample_Details()) {
 		public long get(final Object obj) {
-			return ((SampleDTO) obj).getId();
+			return ((Sample) obj).getId();
 		}
 
 		public void execute(final long id) {
@@ -66,7 +66,7 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler userDetails = new SKey(
 			LocaleHandler.lc_entity.TokenSpace_User_Details()) {
 		public String get(final Object obj) {
-			return ((UserDTO) obj).getEmailAddress();
+			return ((User) obj).getEmailAddress();
 		}
 
 		public void execute(final String emailAddress) {
@@ -76,7 +76,7 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler projectDetails = new IKey(
 			LocaleHandler.lc_entity.TokenSpace_Project_Details()) {
 		public int get(final Object obj) {
-			return ((ProjectDTO) obj).getId();
+			return ((Project) obj).getId();
 		}
 
 		public void execute(final int id) {
@@ -86,7 +86,7 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler subsampleDetails = new LKey(
 			LocaleHandler.lc_entity.TokenSpace_Subsample_Details()) {
 		public long get(final Object obj) {
-			return ((SubsampleDTO) obj).getId();
+			return ((Subsample) obj).getId();
 		}
 
 		public void execute(final long id) {
@@ -96,7 +96,7 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler subsampleEdit = new LKey(
 			LocaleHandler.lc_entity.TokenSpace_Edit_Subsample()) {
 		public long get(final Object obj) {
-			return ((SubsampleDTO) obj).getId();
+			return ((Subsample) obj).getId();
 		}
 
 		public void execute(final long id) {
@@ -106,7 +106,7 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler imageBrowserDetails = new LKey(
 			LocaleHandler.lc_entity.TokenSpace_ImageBroswer_Details()) {
 		public long get(final Object obj) {
-			return ((GridDTO) obj).getId();
+			return ((Grid) obj).getId();
 		}
 
 		public void execute(final long id) {
@@ -116,7 +116,7 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler chemicalAnalysisDetails = new LKey(
 			LocaleHandler.lc_entity.TokenSpace_ChemicalAnalysis_Details()) {
 		public long get(final Object obj) {
-			return ((ChemicalAnalysisDTO) obj).getId();
+			return ((ChemicalAnalysis) obj).getId();
 		}
 
 		public void execute(final long id) {
@@ -126,7 +126,7 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler ImageListViewer = new LKey(
 			LocaleHandler.lc_entity.TokenSpace_ImageListViewer()) {
 		public long get(final Object obj) {
-			return ((SubsampleDTO) obj).getId();
+			return ((Subsample) obj).getId();
 		}
 
 		public void execute(final long id) {
@@ -168,13 +168,13 @@ public class TokenSpace implements HistoryListener {
 	public static final Screen editProfile = new Screen(LocaleHandler.lc_entity
 			.TokenSpace_Edit_Profile()) {
 		public void executeToken(final String args) {
-			new ServerOp<UserDTO>() {
+			new ServerOp<User>() {
 				public void begin() {
 					MpDb.user_svc.beginEditMyProfile(this);
 				}
 
-				public void onSuccess(final UserDTO result) {
-					show(new EditUserProfile(((UserDTO) result)));
+				public void onSuccess(final User result) {
+					show(new EditUserProfile(((User) result)));
 				}
 			}.begin();
 		}
@@ -186,7 +186,7 @@ public class TokenSpace implements HistoryListener {
 			show(new SampleListEx() {
 				@Override
 				public void update(PaginationParameters p,
-						AsyncCallback<Results<SampleDTO>> ac) {
+						AsyncCallback<Results<Sample>> ac) {
 					MpDb.sample_svc.all(p, ac);
 				}
 			});
@@ -200,7 +200,7 @@ public class TokenSpace implements HistoryListener {
 
 				@Override
 				public void update(PaginationParameters p,
-						AsyncCallback<Results<SampleDTO>> ac) {
+						AsyncCallback<Results<Sample>> ac) {
 					MpDb.sample_svc.allPublicSamples(p, ac);
 				}
 
@@ -222,7 +222,7 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler projectSamples = new LKey(
 			LocaleHandler.lc_entity.TokenSpace_Project_Samples()) {
 		public long get(final Object obj) {
-			return ((ProjectDTO) obj).getId();
+			return ((Project) obj).getId();
 		}
 
 		public void execute(final long id) {
@@ -271,16 +271,16 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler newSubsample = new LKey(
 			LocaleHandler.lc_entity.TokenSpace_Enter_Subsample()) {
 		public long get(final Object obj) {
-			return ((SampleDTO) obj).getId();
+			return ((Sample) obj).getId();
 		}
 
 		public void execute(final long id) {
-			new ServerOp<SampleDTO>() {
+			new ServerOp<Sample>() {
 				public void begin() {
 					MpDb.sample_svc.details(id, this);
 				}
 
-				public void onSuccess(final SampleDTO result) {
+				public void onSuccess(final Sample result) {
 					show(new SubsampleDetails().createNew(result, null));
 				}
 			}.begin();
@@ -290,16 +290,16 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler newChemicalAnalysis = new LKey(
 			LocaleHandler.lc_entity.TokenSpace_Enter_ChemicalAnalysis()) {
 		public long get(final Object obj) {
-			return ((SubsampleDTO) obj).getId();
+			return ((Subsample) obj).getId();
 		}
 
 		public void execute(final long id) {
-			new ServerOp<SubsampleDTO>() {
+			new ServerOp<Subsample>() {
 				public void begin() {
 					MpDb.subsample_svc.details(id, this);
 				}
 
-				public void onSuccess(final SubsampleDTO result) {
+				public void onSuccess(final Subsample result) {
 					show(new ChemicalAnalysisDetails().createNew(result));
 				}
 			}.begin();
@@ -308,7 +308,7 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler createImageMap = new LKey(
 			LocaleHandler.lc_entity.TokenSpace_Create_Image_Map()) {
 		public long get(final Object obj) {
-			return ((SubsampleDTO) obj).getId();
+			return ((Subsample) obj).getId();
 		}
 
 		public void execute(final long id) {
@@ -381,51 +381,51 @@ public class TokenSpace implements HistoryListener {
 	// show(RootPanel.get("screen-Introduction"));
 	// }
 
-	public static String detailsOf(final SampleDTO s) {
+	public static String detailsOf(final Sample s) {
 		return sampleDetails.makeToken(s);
 	}
 
-	public static String detailsOf(final UserDTO u) {
+	public static String detailsOf(final User u) {
 		return userDetails.makeToken(u);
 	}
 
-	public static String detailsOf(final SubsampleDTO s) {
+	public static String detailsOf(final Subsample s) {
 		return subsampleDetails.makeToken(s);
 	}
 
-	public static String detailsOf(final GridDTO g) {
+	public static String detailsOf(final Grid g) {
 		return imageBrowserDetails.makeToken(g);
 	}
 
-	public static String detailsOf(final ChemicalAnalysisDTO ma) {
+	public static String detailsOf(final ChemicalAnalysis ma) {
 		return chemicalAnalysisDetails.makeToken(ma);
 	}
 
-	public static String edit(final SubsampleDTO s) {
+	public static String edit(final Subsample s) {
 		return subsampleEdit.makeToken(s);
 	}
 
-	public static String listOf(final ProjectDTO p) {
+	public static String listOf(final Project p) {
 		return projectSamples.makeToken(p);
 	}
 
-	public static String ViewOf(final SubsampleDTO p) {
+	public static String ViewOf(final Subsample p) {
 		return ImageListViewer.makeToken(p);
 	}
 
-	public static String createNewSubsample(final SampleDTO s) {
+	public static String createNewSubsample(final Sample s) {
 		return newSubsample.makeToken(s);
 	}
 
-	public static String createNewChemicalAnalysis(final SubsampleDTO s) {
+	public static String createNewChemicalAnalysis(final Subsample s) {
 		return newChemicalAnalysis.makeToken(s);
 	}
 
-	public static String createNewImageMap(final SubsampleDTO s) {
+	public static String createNewImageMap(final Subsample s) {
 		return createImageMap.makeToken(s);
 	}
 
-	public static String samplesOf(final ProjectDTO p) {
+	public static String samplesOf(final Project p) {
 		return projectSamples.makeToken(p);
 	}
 

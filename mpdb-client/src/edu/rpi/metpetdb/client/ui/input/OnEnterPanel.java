@@ -5,9 +5,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.widgets.MSimplePanel;
 
-public abstract class OnEnterPanel extends MSimplePanel
-		implements
-			KeyboardListener {
+public abstract class OnEnterPanel extends MSimplePanel implements
+		KeyboardListener {
 	public OnEnterPanel(final Widget child) {
 		addKeyboardListener(this);
 		setWidget(child);

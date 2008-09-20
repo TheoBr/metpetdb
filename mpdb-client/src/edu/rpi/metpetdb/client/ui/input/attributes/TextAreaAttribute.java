@@ -5,7 +5,7 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
@@ -23,21 +23,25 @@ public class TextAreaAttribute extends GenericAttribute {
 		visibleLength = 30;
 	}
 
-	public Widget[] createDisplayWidget(final MObjectDTO obj) {
-		return new Widget[]{new MText(get(obj))};
+	public Widget[] createDisplayWidget(final MObject obj) {
+		return new Widget[] {
+			new MText(get(obj))
+		};
 	}
 
-	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
+	public Widget[] createEditWidget(final MObject obj, final String id) {
 		final TextArea b = new TextArea();
 		DOM.setElementAttribute(b.getElement(), "id", id);
 		b.setText(get(obj));
 		b.setCharacterWidth(25);
 		b.setVisibleLines(3);
 		applyStyle(b, true);
-		return new Widget[]{b};
+		return new Widget[] {
+			b
+		};
 	}
 
-	public void commitEdit(final MObjectDTO obj, final Widget editWidget) {
+	public void commitEdit(final MObject obj, final Widget editWidget) {
 		set(obj, get(editWidget));
 	}
 
@@ -45,11 +49,11 @@ public class TextAreaAttribute extends GenericAttribute {
 		final String v = ((HasText) editWidget).getText();
 		return v != null && v.length() > 0 ? v : null;
 	}
-	protected String get(final MObjectDTO obj) {
+	protected String get(final MObject obj) {
 		final String v = (String) mGet(obj);
 		return v != null ? v : "";
 	}
-	protected void set(final MObjectDTO obj, final Object v) {
+	protected void set(final MObject obj, final Object v) {
 		mSet(obj, v != null && ((String) v).length() > 0 ? v : null);
 	}
 }

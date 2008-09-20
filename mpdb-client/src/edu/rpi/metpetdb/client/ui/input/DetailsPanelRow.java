@@ -3,7 +3,7 @@ package edu.rpi.metpetdb.client.ui.input;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 
 /**
  * Holds a row in the DetailsPanel
@@ -14,20 +14,20 @@ public class DetailsPanelRow {
 	private Element tdLabel;
 	private Element tdValue;
 	private Element label;
-	private MObjectDTO bean;
+	private MObject bean;
 	private final String STYLENAME_DEFAULT = "pairedRow";
 
 	/**
 	 * Creates a new row with the table elements from it
 	 * 
 	 * @param row
-	 *            <tr>
+	 * 		<tr>
 	 * @param tdLabel
-	 *            <td>
+	 * 		<td>
 	 * @param tdValue
-	 *            <td>
+	 * 		<td>
 	 * @param label
-	 *            <label>
+	 * 		<label>
 	 */
 	public DetailsPanelRow(final Element row, final Element tdLabel,
 			final Element tdValue, final Element label) {
@@ -39,13 +39,13 @@ public class DetailsPanelRow {
 		DOM.setElementAttribute(tdValue, "class", STYLENAME_DEFAULT + "-value");
 		this.label = label;
 	}
-	
+
 	public DetailsPanelRow(final Element row, final Element tdLabel,
-			final Element tdValue, final Element label, final MObjectDTO bean) {
-		this(row,tdLabel,tdValue,label);
+			final Element tdValue, final Element label, final MObject bean) {
+		this(row, tdLabel, tdValue, label);
 		this.bean = bean;
 	}
-	
+
 	/**
 	 * Removes this row from the details panel;
 	 */
@@ -78,10 +78,10 @@ public class DetailsPanelRow {
 	public void setTdValue(Element tdValue) {
 		this.tdValue = tdValue;
 	}
-	public MObjectDTO getBean() {
+	public MObject getBean() {
 		return bean;
 	}
-	public void setBean(MObjectDTO bean) {
+	public void setBean(MObject bean) {
 		this.bean = bean;
 	}
 }

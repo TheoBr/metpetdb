@@ -23,20 +23,20 @@ public class LayerDragMouseListener implements MouseListener {
 	private EventPreview eventPreview = new EventPreview() {
 		public boolean onEventPreview(Event event) {
 			switch (DOM.eventGetType(event)) {
-				case Event.ONMOUSEDOWN :
-					// before we prevent default make sure the action is within
-					// our widget
-					final int eventX = DOM.eventGetClientX(event);
-					final int eventY = DOM.eventGetClientY(event);
-					final int x = ul.getAbsoluteLeft();
-					final int y = ul.getAbsoluteTop();
-					final int width = ul.getOffsetWidth();
-					final int height = ul.getOffsetHeight();
-					if (eventX > x && eventX < x + width) {
-						if (eventY > y && eventY < y + height) {
-							DOM.eventPreventDefault(event);
-						}
+			case Event.ONMOUSEDOWN:
+				// before we prevent default make sure the action is within
+				// our widget
+				final int eventX = DOM.eventGetClientX(event);
+				final int eventY = DOM.eventGetClientY(event);
+				final int x = ul.getAbsoluteLeft();
+				final int y = ul.getAbsoluteTop();
+				final int width = ul.getOffsetWidth();
+				final int height = ul.getOffsetHeight();
+				if (eventX > x && eventX < x + width) {
+					if (eventY > y && eventY < y + height) {
+						DOM.eventPreventDefault(event);
 					}
+				}
 			}
 			return true;
 		}
@@ -52,8 +52,7 @@ public class LayerDragMouseListener implements MouseListener {
 		final int absoluteX = ul.getAbsoluteLeft() + x;
 		final int absoluteY = ul.getAbsoluteTop() + y;
 		while (itr.hasNext()) {
-			final MHtmlList.ListItem item = (MHtmlList.ListItem) itr
-					.next();
+			final MHtmlList.ListItem item = (MHtmlList.ListItem) itr.next();
 			final int itemX = DOM.getAbsoluteLeft(item.getLi());
 			final int itemY = DOM.getAbsoluteTop(item.getLi());
 			final int itemWidth = DOM.getElementPropertyInt(item.getLi(),
@@ -113,12 +112,16 @@ public class LayerDragMouseListener implements MouseListener {
 				if (layerItem.getIndex() <= target
 						&& layerItem.getIndex() >= source) {
 					if (layerItem.getIndex() != source) {
-						layerItem.getImageOnGrid().getIog().setZorder(
-								layerItem.getImageOnGrid().getIog().getZorder() + 1);
+						layerItem.getImageOnGrid().getIog()
+								.setZorder(
+										layerItem.getImageOnGrid().getIog()
+												.getZorder() + 1);
 						layerItem.decrementIndex();
 					} else {
-						layerItem.getImageOnGrid().getIog().setZorder(
-								layerItem.getImageOnGrid().getIog().getZorder() - 1);
+						layerItem.getImageOnGrid().getIog()
+								.setZorder(
+										layerItem.getImageOnGrid().getIog()
+												.getZorder() - 1);
 						layerItem.incrementIndex();
 					}
 
@@ -128,12 +131,16 @@ public class LayerDragMouseListener implements MouseListener {
 						&& layerItem.getIndex() <= source) {
 					if (layerItem.getIndex() != source) {
 						layerItem.incrementIndex();
-						layerItem.getImageOnGrid().getIog().setZorder(
-								layerItem.getImageOnGrid().getIog().getZorder() - 1);
+						layerItem.getImageOnGrid().getIog()
+								.setZorder(
+										layerItem.getImageOnGrid().getIog()
+												.getZorder() - 1);
 					} else {
 						layerItem.decrementIndex();
-						layerItem.getImageOnGrid().getIog().setZorder(
-								layerItem.getImageOnGrid().getIog().getZorder() + 1);
+						layerItem.getImageOnGrid().getIog()
+								.setZorder(
+										layerItem.getImageOnGrid().getIog()
+												.getZorder() + 1);
 					}
 
 				}

@@ -17,8 +17,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.model.SearchSampleDTO;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
@@ -41,8 +41,7 @@ public class Search extends FlowPanel implements ClickListener {
 		new SearchLocationAttribute(MpDb.oc.SearchSample_boundingBox),
 	};
 	private static GenericAttribute[] Minerals = {
-		new SearchMineralsAttribute(MpDb.doc.SearchSample_minerals,
-				4),
+		new SearchMineralsAttribute(MpDb.doc.SearchSample_minerals, 4),
 	};
 	private static GenericAttribute[] Chemistry = {
 		new SearchChemistryAttribute(MpDb.doc.SearchSample_elements,
@@ -71,28 +70,30 @@ public class Search extends FlowPanel implements ClickListener {
 
 		@Override
 		public void update(PaginationParameters p,
-				AsyncCallback<Results<SampleDTO>> ac) {
+				AsyncCallback<Results<Sample>> ac) {
 			/*
 			 * in reality this would somehow tie into the search rpc call to
 			 * pass in sorting data and pagination data to the server
 			 */
-			final Results<SampleDTO> r = new Results<SampleDTO>();
+			final Results<Sample> r = new Results<Sample>();
 			r.setCount(results.size());
 			r.setList(results);
 			ac.onSuccess(r);
 		}
 
 	};
-	private List<SampleDTO> results = new ArrayList<SampleDTO>();
+	private List<Sample> results = new ArrayList<Sample>();
 
 	public Search() {
 		p_searchSample = new ObjectSearchPanel(searchAtts,
 				LocaleHandler.lc_text.search(), LocaleHandler.lc_text.search()) {
-			// TODO: Make that null into the current user from session. I don't know how to do this right now however
-			protected void searchBean(final AsyncCallback<List<SampleDTO>> ac) {
-				MpDb.search_svc.search((SearchSampleDTO) getBean(), MpDb.currentUser(), ac);
+			// TODO: Make that null into the current user from session. I don't
+			// know how to do this right now however
+			protected void searchBean(final AsyncCallback<List<Sample>> ac) {
+				MpDb.search_svc.search((SearchSample) getBean(), MpDb
+						.currentUser(), ac);
 			}
-			protected void onSearchCompletion(final List<SampleDTO> r) {
+			protected void onSearchCompletion(final List<Sample> r) {
 				if (r != null) {
 					results = r;
 					sampleList.refresh();
@@ -151,7 +152,7 @@ public class Search extends FlowPanel implements ClickListener {
 	}
 
 	public Search createNew() {
-		SearchSampleDTO s = new SearchSampleDTO();
+		SearchSample s = new SearchSample();
 		p_searchSample.edit(s);
 		return this;
 	}

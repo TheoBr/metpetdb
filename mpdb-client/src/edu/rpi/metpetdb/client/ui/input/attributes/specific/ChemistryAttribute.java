@@ -23,20 +23,20 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisElementDTO;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxideDTO;
-import edu.rpi.metpetdb.client.model.ElementDTO;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.MineralTypeDTO;
-import edu.rpi.metpetdb.client.model.OxideDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisElement;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxide;
+import edu.rpi.metpetdb.client.model.Element;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.MineralType;
+import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
-import edu.rpi.metpetdb.client.ui.widgets.MText;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
+import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class ChemistryAttribute extends GenericAttribute implements
 		ClickListener, ChangeListener {
@@ -65,7 +65,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 		realEditWidgets = new ArrayList<Widget>();
 	}
 
-	public Widget[] createDisplayWidget(final MObjectDTO obj) {
+	public Widget[] createDisplayWidget(final MObject obj) {
 		final MHtmlList list = new MHtmlList();
 		final HashMap s = this.mGetAll(obj);
 		if (s != null) {
@@ -83,8 +83,8 @@ public class ChemistryAttribute extends GenericAttribute implements
 			list
 		};
 	}
-	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
-		ChemicalAnalysisDTO ca = (ChemicalAnalysisDTO) obj;
+	public Widget[] createEditWidget(final MObject obj, final String id) {
+		ChemicalAnalysis ca = (ChemicalAnalysis) obj;
 
 		species_type = new ArrayList<String>();
 		element_or_oxide_id = new ArrayList<String>();
@@ -137,10 +137,10 @@ public class ChemistryAttribute extends GenericAttribute implements
 		format_top_two_rows();
 		no_chemistry_row();
 
-		final Iterator<ChemicalAnalysisElementDTO> itr = ca.getElements()
+		final Iterator<ChemicalAnalysisElement> itr = ca.getElements()
 				.iterator();
 		while (itr.hasNext()) {
-			final ChemicalAnalysisElementDTO element = (ChemicalAnalysisElementDTO) itr
+			final ChemicalAnalysisElement element = (ChemicalAnalysisElement) itr
 					.next();
 			add_row("Element", String.valueOf(element.getElement().getId()));
 			((TextBox) ft.getWidget(rows - 1, 1)).setText(String
@@ -155,10 +155,9 @@ public class ChemistryAttribute extends GenericAttribute implements
 				((ListBox) ft.getWidget(rows - 1, 4)).setSelectedIndex(1);
 		}
 
-		final Iterator<ChemicalAnalysisOxideDTO> itr2 = ca.getOxides()
-				.iterator();
+		final Iterator<ChemicalAnalysisOxide> itr2 = ca.getOxides().iterator();
 		while (itr2.hasNext()) {
-			final ChemicalAnalysisOxideDTO oxide = (ChemicalAnalysisOxideDTO) itr2
+			final ChemicalAnalysisOxide oxide = (ChemicalAnalysisOxide) itr2
 					.next();
 			add_row("Oxide", String.valueOf(oxide.getOxide().getOxideId()));
 			((TextBox) ft.getWidget(rows - 1, 1)).setText(String.valueOf(oxide
@@ -193,29 +192,29 @@ public class ChemistryAttribute extends GenericAttribute implements
 		}
 	}
 
-	private Collection<OxideDTO> getOxidesOfMineralType(final String mineralType) {
-		final Collection<OxideDTO> oxidesOfMineralType = new ArrayList<OxideDTO>();
+	private Collection<Oxide> getOxidesOfMineralType(final String mineralType) {
+		final Collection<Oxide> oxidesOfMineralType = new ArrayList<Oxide>();
 		final ObjectConstraint oxideConstraint = (ObjectConstraint) this.constraints[1];
 		final Collection<?> oxides = oxideConstraint
 				.getValueInCollectionConstraint().getValues();
 		final Iterator<?> itr = oxides.iterator();
 		while (itr.hasNext()) {
-			final OxideDTO oxide = (OxideDTO) itr.next();
+			final Oxide oxide = (Oxide) itr.next();
 			if (contains(oxide.getMineralTypes(), mineralType))
 				oxidesOfMineralType.add(oxide);
 		}
 		return oxidesOfMineralType;
 	}
 
-	private Collection<ElementDTO> getElementsOfMineralType(
+	private Collection<Element> getElementsOfMineralType(
 			final String mineralType) {
-		final Collection<ElementDTO> elementsOfMineralType = new ArrayList<ElementDTO>();
+		final Collection<Element> elementsOfMineralType = new ArrayList<Element>();
 		final ObjectConstraint elementConstraint = (ObjectConstraint) this.constraints[0];
 		final Collection<?> elements = elementConstraint
 				.getValueInCollectionConstraint().getValues();
 		final Iterator<?> itr = elements.iterator();
 		while (itr.hasNext()) {
-			final ElementDTO element = (ElementDTO) itr.next();
+			final Element element = (Element) itr.next();
 			if (contains(element.getMineralTypes(), mineralType))
 				elementsOfMineralType.add(element);
 		}
@@ -223,19 +222,19 @@ public class ChemistryAttribute extends GenericAttribute implements
 	}
 
 	/**
-	 * Given an Element's ID, get the corresponding OxideDTO
+	 * Given an Element's ID, get the corresponding Oxide
 	 * 
 	 * @param id
 	 * @return
 	 */
-	private ElementDTO getElementwithID(final String id) {
-		ElementDTO elementwithID = new ElementDTO();
+	private Element getElementwithID(final String id) {
+		Element elementwithID = new Element();
 		final ObjectConstraint elementConstraint = (ObjectConstraint) this.constraints[0];
 		Collection<?> elements = elementConstraint
 				.getValueInCollectionConstraint().getValues();
 		final Iterator<?> itr = elements.iterator();
 		while (itr.hasNext()) {
-			final ElementDTO element = (ElementDTO) itr.next();
+			final Element element = (Element) itr.next();
 			if (String.valueOf(element.getId()).equals(id))
 				elementwithID = element;
 		}
@@ -243,30 +242,30 @@ public class ChemistryAttribute extends GenericAttribute implements
 	}
 
 	/**
-	 * Given an Oxide's ID, get the corresponding OxideDTO
+	 * Given an Oxide's ID, get the corresponding Oxide
 	 * 
 	 * @param id
 	 * @return
 	 */
-	private OxideDTO getOxidewithID(final String id) {
-		OxideDTO oxidewithID = new OxideDTO();
+	private Oxide getOxidewithID(final String id) {
+		Oxide oxidewithID = new Oxide();
 		final ObjectConstraint oxideConstraint = (ObjectConstraint) this.constraints[1];
 		Collection<?> oxides = oxideConstraint.getValueInCollectionConstraint()
 				.getValues();
 		final Iterator<?> itr = oxides.iterator();
 		while (itr.hasNext()) {
-			final OxideDTO oxide = (OxideDTO) itr.next();
+			final Oxide oxide = (Oxide) itr.next();
 			if (String.valueOf(oxide.getOxideId()).equals(id))
 				oxidewithID = oxide;
 		}
 		return oxidewithID;
 	}
 
-	private boolean contains(final Set<MineralTypeDTO> mineralTypes,
+	private boolean contains(final Set<MineralType> mineralTypes,
 			final String mineralType) {
-		final Iterator<MineralTypeDTO> itr = mineralTypes.iterator();
+		final Iterator<MineralType> itr = mineralTypes.iterator();
 		while (itr.hasNext()) {
-			final MineralTypeDTO mt = itr.next();
+			final MineralType mt = itr.next();
 			if (mt.getName().equals(mineralType))
 				return true;
 		}
@@ -276,11 +275,11 @@ public class ChemistryAttribute extends GenericAttribute implements
 	protected Object get(final Widget editWidget,
 			final PropertyConstraint constraint) throws ValidationException {
 		if (constraint == this.constraints[1]) {
-			final HashSet<ChemicalAnalysisOxideDTO> Oxides = new HashSet();
+			final HashSet<ChemicalAnalysisOxide> Oxides = new HashSet();
 			// Add only Oxides
 			for (int i = 2; i < element_or_oxide_id.size() + 2; i++) {
 				if (species_type.get(i - 2).equals("Oxide")) {
-					final ChemicalAnalysisOxideDTO r = new ChemicalAnalysisOxideDTO();
+					final ChemicalAnalysisOxide r = new ChemicalAnalysisOxide();
 					r.setAmount(Float.valueOf(
 							((TextBox) ft.getWidget(i, 1)).getText())
 							.floatValue());
@@ -297,11 +296,11 @@ public class ChemistryAttribute extends GenericAttribute implements
 			}
 			return Oxides;
 		} else {
-			final HashSet<ChemicalAnalysisElementDTO> Elements = new HashSet();
+			final HashSet<ChemicalAnalysisElement> Elements = new HashSet();
 			// Add only Elements
 			for (int i = 2; i < element_or_oxide_id.size() + 2; i++) {
 				if (species_type.get(i - 2).equals("Element")) {
-					final ChemicalAnalysisElementDTO r = new ChemicalAnalysisElementDTO();
+					final ChemicalAnalysisElement r = new ChemicalAnalysisElement();
 					r.setAmount(Float.valueOf(
 							((TextBox) ft.getWidget(i, 1)).getText())
 							.floatValue());
@@ -321,16 +320,16 @@ public class ChemistryAttribute extends GenericAttribute implements
 		}
 	}
 
-	public Set get(final MObjectDTO obj) {
+	public Set get(final MObject obj) {
 		return (Set) mGet(obj);
 	}
 
-	protected void set(final MObjectDTO obj, final Object v,
+	protected void set(final MObject obj, final Object v,
 			final PropertyConstraint pc) {
 		mSet(obj, v, pc);
 	}
 
-	protected void set(final MObjectDTO obj, final Object v) {
+	protected void set(final MObject obj, final Object v) {
 
 	}
 
@@ -366,7 +365,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 		listbox_precison.addItem("Abs");
 		listbox_precison.addItem("Rel");
 
-		ChemicalAnalysisElementDTO tryme = new ChemicalAnalysisElementDTO();
+		ChemicalAnalysisElement tryme = new ChemicalAnalysisElement();
 
 		TextAttribute amount_input_text = new TextAttribute(
 				MpDb.doc.ChemicalAnalysisElement_ChemicalAnalysis_elements_amount);
@@ -463,11 +462,11 @@ public class ChemistryAttribute extends GenericAttribute implements
 			final Iterator<?> itr = itemsToAdd.iterator();
 			while (itr.hasNext()) {
 				if ("Element".equals(selectedSpecies)) {
-					ElementDTO temp = (ElementDTO) itr.next();
+					Element temp = (Element) itr.next();
 					choice.addItem(temp.getSymbol(), String.valueOf(temp
 							.getId()));
 				} else if ("Oxide".equals(selectedSpecies)) {
-					OxideDTO temp = (OxideDTO) itr.next();
+					Oxide temp = (Oxide) itr.next();
 					choice.addItem(temp.getSpecies(), String.valueOf(temp
 							.getOxideId()));
 				}

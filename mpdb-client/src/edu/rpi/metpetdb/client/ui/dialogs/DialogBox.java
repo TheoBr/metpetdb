@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2007 Google Inc.
  * modified by Zak Linder 2007
@@ -34,11 +33,8 @@ import com.google.gwt.user.client.ui.Widget;
  * <p>
  * <img class='gallery' src='DialogBox.png'/>
  * </p>
- * <h3>CSS Style Rules</h3>
- * <ul class='css'>
- * <li>.gwt-DialogBox { the outside of the dialog }</li>
- * <li>.gwt-DialogBox .Caption { the caption }</li>
- * </ul>
+ * <h3>CSS Style Rules</h3> <ul class='css'> <li>.gwt-DialogBox { the outside of
+ * the dialog }</li> <li>.gwt-DialogBox .Caption { the caption }</li> </ul>
  * <p>
  * <h3>Example</h3>
  * {@example com.google.gwt.examples.DialogBoxExample}
@@ -56,34 +52,37 @@ public class DialogBox extends PopupPanel implements HasHTML, MouseListener {
 	private final String STYLENAME_DEFAULT = "dialogBox";
 
 	/**
-	 * Creates an empty dialog box. It should not be shown until its child widget
-	 * has been added using {@link #add(Widget)}.
+	 * Creates an empty dialog box. It should not be shown until its child
+	 * widget has been added using {@link #add(Widget)}.
 	 */
 	public DialogBox() {
 		this(false);
 	}
 
 	/**
-	 * Creates an empty dialog box specifying its "auto-hide" property. It should
-	 * not be shown until its child widget has been added using
-	 * {@link #add(Widget)}.
+	 * Creates an empty dialog box specifying its "auto-hide" property. It
+	 * should not be shown until its child widget has been added using {@link
+	 * #add(Widget)}.
 	 * 
-	 * @param autoHide <code>true</code> if the dialog should be automatically
-	 *          hidden when the user clicks outside of it
+	 * @param autoHide
+	 * 		<code>true</code> if the dialog should be automatically hidden when the
+	 * 		user clicks outside of it
 	 */
 	public DialogBox(boolean autoHide) {
 		this(autoHide, true);
 	}
 
 	/**
-	 * Creates an empty dialog box specifying its "auto-hide" property. It should
-	 * not be shown until its child widget has been added using
-	 * {@link #add(Widget)}.
-	 *
-	 * @param autoHide <code>true</code> if the dialog should be automatically
-	 *          hidden when the user clicks outside of it
-	 * @param modal <code>true</code> if keyboard and mouse events for widgets
-	 *          not contained by the dialog should be ignored
+	 * Creates an empty dialog box specifying its "auto-hide" property. It
+	 * should not be shown until its child widget has been added using {@link
+	 * #add(Widget)}.
+	 * 
+	 * @param autoHide
+	 * 		<code>true</code> if the dialog should be automatically hidden when the
+	 * 		user clicks outside of it
+	 * @param modal
+	 * 		<code>true</code> if keyboard and mouse events for widgets not contained
+	 * 		by the dialog should be ignored
 	 */
 	public DialogBox(boolean autoHide, boolean modal) {
 		super(autoHide, modal);
@@ -91,9 +90,11 @@ public class DialogBox extends PopupPanel implements HasHTML, MouseListener {
 		panel.setStyleName(STYLENAME_DEFAULT);
 		panel.setCellPadding(0);
 		panel.setCellSpacing(0);
-		panel.getCellFormatter().setStyleName(1, 0, STYLENAME_DEFAULT + "-content");
+		panel.getCellFormatter().setStyleName(1, 0,
+				STYLENAME_DEFAULT + "-content");
 		panel.getCellFormatter().setAlignment(1, 0,
-				HasHorizontalAlignment.ALIGN_CENTER, HasVerticalAlignment.ALIGN_MIDDLE);
+				HasHorizontalAlignment.ALIGN_CENTER,
+				HasVerticalAlignment.ALIGN_MIDDLE);
 		super.setWidget(panel);
 
 		setStyleName(STYLENAME_DEFAULT + "-container");
@@ -114,7 +115,8 @@ public class DialogBox extends PopupPanel implements HasHTML, MouseListener {
 		// DialogBox content) to keep text from being selected when it
 		// is dragged.
 		if (DOM.eventGetType(event) == Event.ONMOUSEDOWN) {
-			if (DOM.isOrHasChild(caption.getElement(), DOM.eventGetTarget(event))) {
+			if (DOM.isOrHasChild(caption.getElement(), DOM
+					.eventGetTarget(event))) {
 				DOM.eventPreventDefault(event);
 			}
 		}
@@ -128,9 +130,11 @@ public class DialogBox extends PopupPanel implements HasHTML, MouseListener {
 		dragStartY = y;
 	}
 
-	public void onMouseEnter(Widget sender) {}
+	public void onMouseEnter(Widget sender) {
+	}
 
-	public void onMouseLeave(Widget sender) {}
+	public void onMouseLeave(Widget sender) {
+	}
 
 	public void onMouseMove(Widget sender, int x, int y) {
 		if (dragging) {
@@ -155,20 +159,16 @@ public class DialogBox extends PopupPanel implements HasHTML, MouseListener {
 
 	public void setHTML(String html) {
 		captionHTML = html;
-		caption.setHTML(
-				"<div class=\"" + STYLENAME_DEFAULT + "-caption-end\">" +
-				"<div class=\"" + STYLENAME_DEFAULT + "-caption-msg\">" +
-				html +
-				"</div></div>");
+		caption.setHTML("<div class=\"" + STYLENAME_DEFAULT + "-caption-end\">"
+				+ "<div class=\"" + STYLENAME_DEFAULT + "-caption-msg\">"
+				+ html + "</div></div>");
 	}
 
 	public void setText(String text) {
 		captionText = text;
-		caption.setHTML(
-				"<div class=\"" + STYLENAME_DEFAULT + "-caption-end\">" +
-				"<div class=\"" + STYLENAME_DEFAULT + "-caption-msg\">" +
-				text +
-				"</div></div>");
+		caption.setHTML("<div class=\"" + STYLENAME_DEFAULT + "-caption-end\">"
+				+ "<div class=\"" + STYLENAME_DEFAULT + "-caption-msg\">"
+				+ text + "</div></div>");
 	}
 
 	public void setWidget(Widget w) {
@@ -183,7 +183,7 @@ public class DialogBox extends PopupPanel implements HasHTML, MouseListener {
 		w.setStyleName(STYLENAME_DEFAULT + "-wrapper");
 		child = w;
 	}
-	
+
 	/**
 	 * Override, so that interior panel reflows to match parent's new width.
 	 * 
@@ -193,11 +193,11 @@ public class DialogBox extends PopupPanel implements HasHTML, MouseListener {
 		super.setWidth(width);
 
 		// note that you CANNOT call panel.setWidth("100%") until parent's width
-		// has been explicitly set, b/c until then parent's width is unconstrained
+		// has been explicitly set, b/c until then parent's width is
+		// unconstrained
 		// and setting panel's width to 100% will flow parent to 100% of browser
 		// (i.e. can't do this in constructor)
 		panel.setWidth("100%");
 	}
 
 }
-

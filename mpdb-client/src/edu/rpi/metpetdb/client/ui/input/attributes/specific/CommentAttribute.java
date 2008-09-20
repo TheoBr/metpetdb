@@ -8,19 +8,19 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.SampleCommentDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 
-public class CommentAttribute extends MultipleTextAttribute<SampleCommentDTO> {
+public class CommentAttribute extends MultipleTextAttribute<SampleComment> {
 
 	public CommentAttribute(final ObjectConstraint sc) {
 		super(sc);
 	}
 
 	@Override
-	public Set<SampleCommentDTO> get(MObjectDTO obj) {
-		return (Set<SampleCommentDTO>) obj.mGet(this.getConstraint().property);
+	public Set<SampleComment> get(MObject obj) {
+		return (Set<SampleComment>) obj.mGet(this.getConstraint().property);
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class CommentAttribute extends MultipleTextAttribute<SampleCommentDTO> {
 		final Iterator itr = realEditWidgets.iterator();
 		while (itr.hasNext()) {
 			final Object obj = itr.next();
-			final SampleCommentDTO m = new SampleCommentDTO();
+			final SampleComment m = new SampleComment();
 			String name = ((HasText) obj).getText();
 			if (!name.equals("")) {
 				m.setText(name);

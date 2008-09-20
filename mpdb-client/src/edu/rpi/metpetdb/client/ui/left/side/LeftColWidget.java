@@ -12,9 +12,9 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.ProjectDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
@@ -26,7 +26,7 @@ public class LeftColWidget extends SimplePanel {
 
 	private static LeftSideLayer l;
 	private static MySubsamples ms;
-	private static SubsampleDTO s;
+	private static Subsample s;
 
 	public LeftColWidget(final String headerText) {
 		// super();
@@ -50,11 +50,11 @@ public class LeftColWidget extends SimplePanel {
 	public static void updateLeftSide(final String left) {
 		MetPetDBApplication.clearLeftSide();
 		if (left.equals(LocaleHandler.lc_entity.LeftSide_UserInfo())) {
-			MetPetDBApplication.appendToLeft(new UserInfo(MpDb.currentUser()));
+			MetPetDBApplication.appenLeft(new UserInfo(MpDb.currentUser()));
 		} else if (left.equals(LocaleHandler.lc_entity.LeftSide_MySamples())) {
-			MetPetDBApplication.appendToLeft(new MySamples());
+			MetPetDBApplication.appenLeft(new MySamples());
 		} else if (left.equals(LocaleHandler.lc_entity.LeftSide_MySearch())) {
-			MetPetDBApplication.appendToLeft(new MySearch());
+			MetPetDBApplication.appenLeft(new MySearch());
 		} else if (left.equals(LocaleHandler.lc_entity.LeftSide_MyProjects())) {
 			new ServerOp() {
 				@Override
@@ -62,19 +62,17 @@ public class LeftColWidget extends SimplePanel {
 					MpDb.project_svc.all(MpDb.currentUser().getId(), this);
 				}
 				public void onSuccess(Object result) {
-					MetPetDBApplication
-							.appendToLeft(new MyProjects(
-									new HashSet<ProjectDTO>(
-											(List<ProjectDTO>) result)));
+					MetPetDBApplication.appenLeft(new MyProjects(
+							new HashSet<Project>((List<Project>) result)));
 				}
 			}.begin();
 		}
 	}
 
-	public static void updateLeftSide(final String left, final SampleDTO sample) {
+	public static void updateLeftSide(final String left, final Sample sample) {
 		MetPetDBApplication.clearLeftSide();
 		if (left.equals(LocaleHandler.lc_entity.LeftSide_MySubsamples())) {
-			MetPetDBApplication.appendToLeft(new MySubsamples(sample, History
+			MetPetDBApplication.appenLeft(new MySubsamples(sample, History
 					.getToken().split("-")[0]) {
 				public void onLoadCompletion() {
 				};
@@ -82,15 +80,14 @@ public class LeftColWidget extends SimplePanel {
 		}
 	}
 
-	public static void updateLeftSide(final String left,
-			final SampleDTO sample, final SubsampleDTO subsample) {
+	public static void updateLeftSide(final String left, final Sample sample,
+			final Subsample subsample) {
 		MetPetDBApplication.clearLeftSide();
 		if (left.equals(LocaleHandler.lc_entity.LeftSide_MySubsamples())) {
-			MetPetDBApplication
-					.appendToLeft(new MySubsamples(sample, subsample) {
-						public void onLoadCompletion() {
-						};
-					});
+			MetPetDBApplication.appenLeft(new MySubsamples(sample, subsample) {
+				public void onLoadCompletion() {
+				};
+			});
 		} else if (left
 				.equals(LocaleHandler.lc_entity.LeftSide_LeftSideLayer())) {
 			final MySubsamples ms = new MySubsamples(sample, subsample) {
@@ -98,12 +95,12 @@ public class LeftColWidget extends SimplePanel {
 					LeftColWidget.insertMySubsamplesLeftSide(this);
 				}
 			};
-			MetPetDBApplication.appendToLeft(ms);
+			MetPetDBApplication.appenLeft(ms);
 		}
 	}
 
 	public static void insertLayersLeftSide(final LeftSideLayer layer,
-			final SubsampleDTO sub) {
+			final Subsample sub) {
 		l = layer;
 		s = sub;
 		if (ms != null) {

@@ -28,7 +28,7 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 		ul.addMouseListener(layerDragger);
 	}
 
-	public void registerImage(final ImageOnGrid iog) {
+	public void registerImage(final ImageOnGridContainer iog) {
 		final SimplePanel container = new SimplePanel();
 		final String checkBoxText = iog.getIog().getImage().getFilename()
 				.equals("") ? iog.getIog().getImage().getChecksum() : iog
@@ -54,7 +54,7 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 		ul.add(container, insertLayer(iog));
 	}
 
-	public int insertLayer(final ImageOnGrid iog) {
+	public int insertLayer(final ImageOnGridContainer iog) {
 		final Iterator<LayerItem> itr = layerItems.iterator();
 		int newIndex = layerItems.size();
 		while (itr.hasNext()) {
@@ -75,7 +75,7 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 		return newIndex;
 	}
 
-	public void removeImage(final ImageOnGrid iog) {
+	public void removeImage(final ImageOnGridContainer iog) {
 		final LayerItem removeItem = findItemWithIog(iog);
 		if (removeItem != null) {
 			final Iterator<LayerItem> itr = layerItems.iterator();
@@ -91,7 +91,7 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 		}
 	}
 
-	private LayerItem findItemWithIog(final ImageOnGrid iog) {
+	private LayerItem findItemWithIog(final ImageOnGridContainer iog) {
 		final Iterator<LayerItem> itr = layerItems.iterator();
 		while (itr.hasNext()) {
 			final LayerItem layerItem = (LayerItem) itr.next();
@@ -107,18 +107,18 @@ public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
 	}
 
 	public class LayerItem {
-		private ImageOnGrid iog;
+		private ImageOnGridContainer iog;
 		private int index;
 
-		public LayerItem(final ImageOnGrid imageOnGrid, final int i) {
+		public LayerItem(final ImageOnGridContainer imageOnGrid, final int i) {
 			iog = imageOnGrid;
 			index = i;
 		}
 
-		public ImageOnGrid getImageOnGrid() {
+		public ImageOnGridContainer getImageOnGrid() {
 			return iog;
 		}
-		public void setImageOnGrid(final ImageOnGrid imageOnGrid) {
+		public void setImageOnGrid(final ImageOnGridContainer imageOnGrid) {
 			iog = imageOnGrid;
 		}
 

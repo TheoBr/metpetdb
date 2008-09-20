@@ -18,7 +18,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.ProjectDTO;
+import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
@@ -38,7 +38,7 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 	public UserProjectsListEx() {
 	}
 
-	private void addTopRows() {
+	private void adpRows() {
 		header1 = new FlexTable();
 
 		header1.setWidth("100%");
@@ -126,7 +126,7 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 	private void addProjects() {
 		list = new ProjectListEx(LocaleHandler.lc_text.noProjectsFound()) {
 			public void update(final PaginationParameters p,
-					final AsyncCallback<Results<ProjectDTO>> ac) {
+					final AsyncCallback<Results<Project>> ac) {
 				long id = (long) (MpDb.currentUser().getId());
 				MpDb.project_svc.all(p, id, ac);
 			}
@@ -193,19 +193,19 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 				MpDb.project_svc.all(MpDb.currentUser().getId(), this);
 			}
 			public void onSuccess(Object result) {
-				addTopRows();
+				adpRows();
 				addProjects();
 			}
 		}.begin();
 		return this;
 	}
 
-	private List<ProjectDTO> getCheckedProjects() {
-		List<ProjectDTO> results = new ArrayList<ProjectDTO>();
+	private List<Project> getCheckedProjects() {
+		List<Project> results = new ArrayList<Project>();
 		for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++) {
 			if (((MCheckBox) list.getScrollTable().getDataTable().getWidget(i,
 					0)).isChecked())
-				results.add((ProjectDTO) (((MCheckBox) list.getScrollTable()
+				results.add((Project) (((MCheckBox) list.getScrollTable()
 						.getDataTable().getWidget(i, 0)).getValue()));
 		}
 		return results;
@@ -215,8 +215,8 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 		new ServerOp() {
 			@Override
 			public void begin() {
-				List<ProjectDTO> CheckedProjects = getCheckedProjects();
-				Iterator<ProjectDTO> itr = CheckedProjects.iterator();
+				List<Project> CheckedProjects = getCheckedProjects();
+				Iterator<Project> itr = CheckedProjects.iterator();
 				while (itr.hasNext()) {
 					// MpDb.project_svc.delete(itr.next().getId(), this);
 				}

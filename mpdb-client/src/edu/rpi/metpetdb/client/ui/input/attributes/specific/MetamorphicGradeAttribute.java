@@ -8,21 +8,20 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.MetamorphicGradeDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.MetamorphicGrade;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 
 public class MetamorphicGradeAttribute extends
-		MultipleTextAttribute<MetamorphicGradeDTO> {
+		MultipleTextAttribute<MetamorphicGrade> {
 
 	public MetamorphicGradeAttribute(ObjectConstraint sc) {
 		super(sc);
 	}
 
 	@Override
-	public Set<MetamorphicGradeDTO> get(MObjectDTO obj) {
-		return (Set<MetamorphicGradeDTO>) obj
-				.mGet(this.getConstraint().property);
+	public Set<MetamorphicGrade> get(MObject obj) {
+		return (Set<MetamorphicGrade>) obj.mGet(this.getConstraint().property);
 	}
 
 	@Override
@@ -31,7 +30,7 @@ public class MetamorphicGradeAttribute extends
 		final Iterator itr = realEditWidgets.iterator();
 		while (itr.hasNext()) {
 			final Object obj = itr.next();
-			final MetamorphicGradeDTO m = new MetamorphicGradeDTO();
+			final MetamorphicGrade m = new MetamorphicGrade();
 			String name = ((HasText) obj).getText();
 			if (!name.equals("")) {
 				m.setName(name);

@@ -47,8 +47,8 @@ public abstract class ServerOp<T> implements AsyncCallback<T>, Command {
 	/**
 	 * Invoke the proper async service method with the necessary arguments.
 	 * <p>
-	 * Subclasses must implement this method to allow callers (such as
-	 * {@link LoginDialog} to restart a previously failed server operation.
+	 * Subclasses must implement this method to allow callers (such as {@link
+	 * LoginDialog} to restart a previously failed server operation.
 	 * </p>
 	 */
 	public abstract void begin();

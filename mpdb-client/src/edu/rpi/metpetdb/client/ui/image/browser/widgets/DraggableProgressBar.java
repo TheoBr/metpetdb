@@ -63,8 +63,7 @@ public class DraggableProgressBar extends ProgressBar implements
 			case Event.ONCLICK:
 				clickListeners.fireClick(this);
 				break;
-			}
-			;
+			};
 			// DOM.eventPreventDefault(event);
 		}
 	}

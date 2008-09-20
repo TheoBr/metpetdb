@@ -12,8 +12,8 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
@@ -40,7 +40,7 @@ public abstract class ObjectSearchPanel extends DetailsPanel implements
 		this(atts, "", "");
 	}
 
-	public void edit(final MObjectDTO obj) {
+	public void edit(final MObject obj) {
 		super.edit(obj);
 	}
 
@@ -65,25 +65,25 @@ public abstract class ObjectSearchPanel extends DetailsPanel implements
 	}
 
 	void doSearch() {
-		new FormOp<List<SampleDTO>>(this) {
+		new FormOp<List<Sample>>(this) {
 			protected void onSubmit() {
 				searchBean(this);
 			}
-			public void onSuccess(final List<SampleDTO> result) {
+			public void onSuccess(final List<Sample> result) {
 				onSearchCompletion(result);
 			}
 		}.begin();
 	}
-	public void show(final List<SampleDTO> obj) {
+	public void show(final List<Sample> obj) {
 
 		search.setVisible(true);
 		search.setEnabled(true);
 		setActiveButton(search);
 	}
-	protected void searchBean(final AsyncCallback<List<SampleDTO>> ac) {
+	protected void searchBean(final AsyncCallback<List<Sample>> ac) {
 		throw new UnsupportedOperationException();
 	}
-	protected void onSearchCompletion(final List<SampleDTO> result) {
+	protected void onSearchCompletion(final List<Sample> result) {
 		ObjectSearchPanel.this.show(result);
 	}
 }

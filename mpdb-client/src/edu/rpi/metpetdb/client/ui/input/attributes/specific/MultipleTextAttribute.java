@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
@@ -29,7 +29,7 @@ public abstract class MultipleTextAttribute<T> extends GenericAttribute
 		realEditWidgets = new ArrayList<Widget>();
 	}
 
-	public Widget[] createDisplayWidget(final MObjectDTO obj) {
+	public Widget[] createDisplayWidget(final MObject obj) {
 		final MHtmlList list = new MHtmlList();
 
 		final Set<T> s = get(obj);
@@ -45,7 +45,7 @@ public abstract class MultipleTextAttribute<T> extends GenericAttribute
 		};
 	}
 
-	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
+	public Widget[] createEditWidget(final MObject obj, final String id) {
 		editList = new MHtmlList();
 
 		realEditWidgets.clear();
@@ -101,12 +101,12 @@ public abstract class MultipleTextAttribute<T> extends GenericAttribute
 		return hp;
 	}
 
-	public abstract Set<T> get(final MObjectDTO obj);
+	public abstract Set<T> get(final MObject obj);
 
 	protected abstract Object get(final Widget editWidget)
 			throws ValidationException;
 
-	protected void set(final MObjectDTO obj, final Object o) {
+	protected void set(final MObject obj, final Object o) {
 		mSet(obj, o);
 	}
 

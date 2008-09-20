@@ -13,9 +13,8 @@ import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel.NoticeType;
  * Panel for inline notice messages, i.e. "File uploaded successfully"
  * 
  * @author zak
- *
+ * 
  */
-
 
 public class MNotice extends FlowPanel {
 
@@ -28,8 +27,7 @@ public class MNotice extends FlowPanel {
 			removeFromParent();
 		}
 	});
-	
-	
+
 	/**
 	 * All notices have a message and a way to remove the messsage from view.
 	 * 
@@ -38,35 +36,36 @@ public class MNotice extends FlowPanel {
 	public MNotice(NoticeType type) {
 		setStylePrimaryName(CSS.NOTICE);
 		setType(type);
-		
+
 		add(hide);
 		hide.addStyleName(CSS.NOTICE_HIDE);
-		
+
 		add(msgContainer);
 		msgContainer.setStyleName(CSS.NOTICE_MESSAGE);
 	}
-	
+
 	public MNotice() {
 		this(NoticeType.GENERIC);
 	}
-	
+
 	public void setMessage(String s) {
 		setMessage(new HTML(s));
 	}
-	
+
 	public void setMessage(Widget w) {
 		msgContainer.setWidget(w);
 	}
-	
+
 	public void setStyleName(String s) {
-		this.getElement().setAttribute("class",CSS.NOTICE);
-		if (s != "") addStyleDependentName(s);
+		this.getElement().setAttribute("class", CSS.NOTICE);
+		if (s != "")
+			addStyleDependentName(s);
 	}
 
 	public void setParent(MNoticePanel parent) {
 		this.parent = parent;
 	}
-	
+
 	private void setType(NoticeType type) {
 		switch (type) {
 		case GENERIC:
@@ -87,5 +86,5 @@ public class MNotice extends FlowPanel {
 		default:
 		}
 	}
-	
+
 }

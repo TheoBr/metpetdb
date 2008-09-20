@@ -6,7 +6,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.dialogs.LoginDialog;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -14,7 +14,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MLink;
 public class UserInfo extends LeftColWidget implements UsesLeftColumn {
 	private FlexTable ft;
 
-	public UserInfo(final UserDTO user) {
+	public UserInfo(final User user) {
 		super("User Information");
 		this.setStyleName("lcol-MyProjects");
 		// MetPetDBApplication.registerPageWatcher(this);

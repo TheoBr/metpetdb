@@ -13,13 +13,12 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ImageDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
@@ -60,7 +59,7 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 						add(new Label(
 								"There are no images associated with this subsample"));
 					} else {
-						((ImageDTO) images.get(0)).getSubsample().setImages(
+						((Image) images.get(0)).getSubsample().setImages(
 								new HashSet(images));
 						buildInterface(isScreen, type);
 					}
@@ -73,17 +72,17 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 	private void buildInterface(final boolean isScreen, final String type) {
 		if (isScreen) {
 			final FlexTable header2 = new FlexTable();
-			final Label title = new Label(((ImageDTO) images.get(0))
+			final Label title = new Label(((Image) images.get(0))
 					.getSubsample().getName()
 					+ " Images");
 			final Label title2 = new Label("Images attached to");
-			final MLink subsampleLink = new MLink(((ImageDTO) images.get(0))
+			final MLink subsampleLink = new MLink(((Image) images.get(0))
 					.getSubsample().getName(), TokenSpace
-					.detailsOf(((ImageDTO) images.get(0)).getSubsample()));
+					.detailsOf(((Image) images.get(0)).getSubsample()));
 			final Button addImage = new Button("Add Image",
 					new ClickListener() {
 						public void onClick(Widget sender) {
-							History.newItem(TokenSpace.edit(((ImageDTO) images
+							History.newItem(TokenSpace.edit(((Image) images
 									.get(0)).getSubsample()));
 						}
 					});
@@ -102,12 +101,11 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 			header2.addStyleName("subsample-header");
 			addImage.addStyleName("addlink");
 			add(header2);
-			/* FIXME image type is not taken from the database
-			if (type == null)
-				createListBox(MpDb.doc.Image_imageType.getValues(), null);
-			else
-				createListBox(MpDb.doc.Image_imageType.getValues(), type);
-				*/
+			/*
+			 * FIXME image type is now taken from the database if (type == null)
+			 * createListBox(MpDb.doc.Image_imageType.getValues(), null); else
+			 * createListBox(MpDb.doc.Image_imageType.getValues(), type);
+			 */
 		}
 
 		final FlexTable header = new FlexTable();
@@ -161,7 +159,7 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 		if (type != null && !type.equals("All")) {
 			imagesLabel.setText(type);
 			for (int i = 0; i < images.size(); i++) {
-				if (((ImageDTO) images.get(i)).getImageType().equals(type)) {
+				if (((Image) images.get(i)).getImageType().equals(type)) {
 					imagesToDisplay.add(images.get(i));
 				}
 			}
@@ -174,10 +172,10 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 		while (itr.hasNext()) {
 			final FlexTable cell = new FlexTable();
 			cell.setStyleName("inline");
-			final ImageDTO currentImage = (ImageDTO) itr.next();
-			final Image image = new Image();
+			final Image currentImage = (Image) itr.next();
+			final com.google.gwt.user.client.ui.Image image = new com.google.gwt.user.client.ui.Image();
 			image.setUrl(currentImage.get64x64ServerPath());
-			final Image bigImage = new Image();
+			final com.google.gwt.user.client.ui.Image bigImage = new com.google.gwt.user.client.ui.Image();
 			bigImage.setUrl(currentImage.getServerPath());
 			final int index = i;
 			final ImageHyperlink imageLink;
@@ -190,11 +188,11 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 			} else {
 				imageLink = new ImageHyperlink(image, new ClickListener() {
 					public void onClick(final Widget sender) {
-						new ServerOp<SubsampleDTO>() {
+						new ServerOp<Subsample>() {
 							public void begin() {
 								MpDb.subsample_svc.details(id, this);
 							}
-							public void onSuccess(final SubsampleDTO s) {
+							public void onSuccess(final Subsample s) {
 								History.newItem(TokenSpace.ViewOf(s));
 							}
 						}.begin();
@@ -205,7 +203,8 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 			cell.getFlexCellFormatter().setRowSpan(0, 0, 2);
 			final Label imageTitle = new Label(parseFilename(currentImage
 					.getFilename()));
-			final Label imageType = new Label(currentImage.getImageType().getImageType());
+			final Label imageType = new Label(currentImage.getImageType()
+					.getImageType());
 			imageTitle.addStyleName("bold");
 			imageTitle.addStyleName("white");
 			imageType.addStyleName("white");

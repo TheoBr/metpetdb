@@ -8,13 +8,13 @@ import com.google.gwt.user.client.DOM;
 
 public class ZOrderManager {
 
-	private Set<ImageOnGrid> imagesOnGrid = new HashSet<ImageOnGrid>();
+	private Set<ImageOnGridContainer> imagesOnGrid = new HashSet<ImageOnGridContainer>();
 
 	public ZOrderManager() {
 
 	}
 
-	public void register(final ImageOnGrid iog) {
+	public void register(final ImageOnGridContainer iog) {
 		// iog.setZorder(this.getHighestZOrder()+1);
 		imagesOnGrid.add(iog);
 		DOM.setStyleAttribute(iog.getImageContainer().getElement(), "zIndex",
@@ -25,23 +25,23 @@ public class ZOrderManager {
 		imagesOnGrid.clear();
 	}
 
-	public void bringToFront(final ImageOnGrid iog) {
+	public void bringToFront(final ImageOnGridContainer iog) {
 		modifyAllZOrders(-1);
 		iog.getIog().setZorder(getHighestZOrder() + 1);
 		DOM.setStyleAttribute(iog.getImageContainer().getElement(), "zIndex",
 				String.valueOf(iog.getIog().getZorder()));
 	}
 
-	public void sendToBack(final ImageOnGrid iog) {
+	public void senBack(final ImageOnGridContainer iog) {
 		modifyAllZOrders(1);
 		iog.getIog().setZorder((getLowestZOrder() - 1));
 		DOM.setStyleAttribute(iog.getImageContainer().getElement(), "zIndex",
 				String.valueOf(iog.getIog().getZorder()));
 	}
 	public void modifyAllZOrders(final int offset) {
-		final Iterator<ImageOnGrid> itr = imagesOnGrid.iterator();
+		final Iterator<ImageOnGridContainer> itr = imagesOnGrid.iterator();
 		while (itr.hasNext()) {
-			final ImageOnGrid iog = itr.next();
+			final ImageOnGridContainer iog = itr.next();
 			iog.getIog().setZorder(iog.getIog().getZorder() + offset);
 			DOM.setStyleAttribute(iog.getImageContainer().getElement(),
 					"zIndex", String.valueOf(iog.getIog().getZorder()));
@@ -49,10 +49,10 @@ public class ZOrderManager {
 	}
 
 	public int getHighestZOrder() {
-		final Iterator<ImageOnGrid> itr = imagesOnGrid.iterator();
+		final Iterator<ImageOnGridContainer> itr = imagesOnGrid.iterator();
 		int highestZOrder = 0;
 		while (itr.hasNext()) {
-			final ImageOnGrid iog = itr.next();
+			final ImageOnGridContainer iog = itr.next();
 			if (iog.getIog().getZorder() > highestZOrder) {
 				highestZOrder = iog.getIog().getZorder();
 			}
@@ -61,10 +61,10 @@ public class ZOrderManager {
 	}
 
 	public int getLowestZOrder() {
-		final Iterator<ImageOnGrid> itr = imagesOnGrid.iterator();
+		final Iterator<ImageOnGridContainer> itr = imagesOnGrid.iterator();
 		int lowestZOrder = 9999;
 		while (itr.hasNext()) {
-			final ImageOnGrid iog =  itr.next();
+			final ImageOnGridContainer iog = itr.next();
 			if (iog.getIog().getZorder() < lowestZOrder) {
 				lowestZOrder = iog.getIog().getZorder();
 			}

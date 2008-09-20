@@ -26,7 +26,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
@@ -49,7 +49,7 @@ public class SearchLocationAttribute extends GenericAttribute implements
 		super(sc);
 	}
 
-	public Widget[] createDisplayWidget(final MObjectDTO obj) {
+	public Widget[] createDisplayWidget(final MObject obj) {
 		ft = new FlexTable();
 
 		return new Widget[] {
@@ -57,9 +57,9 @@ public class SearchLocationAttribute extends GenericAttribute implements
 		};
 	}
 
-	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
+	public Widget[] createEditWidget(final MObject obj, final String id) {
 		ft = new FlexTable();
-		
+
 		map = new MapWidget(new LatLng(0, 0), 1);
 		map.addControl(new LargeMapControl());
 		map.addControl(new MapTypeControl());
@@ -259,7 +259,7 @@ public class SearchLocationAttribute extends GenericAttribute implements
 		markerPoint2 = null;
 	}
 
-	protected void set(final MObjectDTO obj, final Object o) {
+	protected void set(final MObject obj, final Object o) {
 		mSet(obj, o);
 	}
 

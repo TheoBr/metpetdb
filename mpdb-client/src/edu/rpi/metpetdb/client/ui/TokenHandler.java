@@ -6,6 +6,7 @@ import com.google.gwt.user.client.History;
 public abstract class TokenHandler {
 	static final char sep = '-';
 	protected final String name;
+
 	protected TokenHandler(final String n) {
 		name = n;
 	}

@@ -9,8 +9,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ZoomInListener extends ZoomHandler implements ClickListener {
 
-	public ZoomInListener(final Collection<ImageOnGrid> imagesOnGrid, final Element e,
-			final ImageBrowserDetails ibm) {
+	public ZoomInListener(final Collection<ImageOnGridContainer> imagesOnGrid,
+			final Element e, final ImageBrowserDetails ibm) {
 		super(imagesOnGrid, e, ibm);
 	}
 

@@ -6,16 +6,16 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGrid;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
 import edu.rpi.metpetdb.client.ui.image.browser.dialogs.OpacityPopup;
 import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel;
 
 public class OpacityListener implements ClickListener {
 
-	private final ImageOnGrid iog;
+	private final ImageOnGridContainer iog;
 	private final MAbsolutePanel grid;
 
-	public OpacityListener(final ImageOnGrid imageOnGrid,
+	public OpacityListener(final ImageOnGridContainer imageOnGrid,
 			final MAbsolutePanel map) {
 		iog = imageOnGrid;
 		grid = map;

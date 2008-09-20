@@ -18,7 +18,7 @@ import com.google.gwt.widgetideas.datepicker.client.CalendarModel;
 import com.google.gwt.widgetideas.datepicker.client.DatePicker;
 
 import edu.rpi.metpetdb.client.model.DateSpan;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.DateSpanConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
@@ -46,13 +46,13 @@ public class DateRangeAttribute extends GenericAttribute implements
 			dsc
 		});
 	}
-	public Widget[] createDisplayWidget(final MObjectDTO obj) {
+	public Widget[] createDisplayWidget(final MObject obj) {
 		return new Widget[] {
 			new MText(dateToString(get(obj)))
 		};
 	}
 
-	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
+	public Widget[] createEditWidget(final MObject obj, final String id) {
 		final Timestamp currentDate = get(obj);
 
 		if (currentDate != null) {
@@ -193,16 +193,16 @@ public class DateRangeAttribute extends GenericAttribute implements
 		}
 		return null;
 	}
-	protected Timestamp get(final MObjectDTO obj) {
+	protected Timestamp get(final MObject obj) {
 		return (Timestamp) mGet(obj);
 	}
 
-	protected void set(final MObjectDTO obj, final Object v,
+	protected void set(final MObject obj, final Object v,
 			final PropertyConstraint pc) {
 		mSet(obj, v, pc);
 	}
 
-	protected void set(final MObjectDTO obj, final Object v) {
+	protected void set(final MObject obj, final Object v) {
 
 	}
 

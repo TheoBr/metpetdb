@@ -14,8 +14,8 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.StartSessionRequestDTO;
-import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.StartSessionRequest;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
@@ -38,10 +38,10 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 	};
 
 	protected final ServerOp<?> continuation;
-	protected final StartSessionRequestDTO ssr;
+	protected final StartSessionRequest ssr;
 	protected final MTabPanel tabs;
-	protected final DetailsPanel<StartSessionRequestDTO> p_main;
-	private final DetailsPanel<StartSessionRequestDTO> p_email;
+	protected final DetailsPanel<StartSessionRequest> p_main;
+	private final DetailsPanel<StartSessionRequest> p_email;
 	private final int p_mainIdx;
 	protected final int p_emailIdx;
 	private final Button loginC;
@@ -51,7 +51,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 
 	public LoginDialog(final ServerOp<?> r) {
 		continuation = r;
-		ssr = new StartSessionRequestDTO();
+		ssr = new StartSessionRequest();
 		setText("Please Login");
 
 		loginC = new Button(LocaleHandler.lc_text.buttonCancel(), this);
@@ -60,14 +60,16 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 		emailC = new Button(LocaleHandler.lc_text.buttonCancel(), this);
 		email = new Submit(LocaleHandler.lc_text.buttonEmailPassword(), this);
 
-		p_main = new DetailsPanel<StartSessionRequestDTO>(mainAttributes, new Button[] {
-				login, loginC
-		});
+		p_main = new DetailsPanel<StartSessionRequest>(mainAttributes,
+				new Button[] {
+						login, loginC
+				});
 		p_main.edit(ssr);
 
-		p_email = new DetailsPanel<StartSessionRequestDTO>(emailAttributes, new Button[] {
-				email, emailC
-		});
+		p_email = new DetailsPanel<StartSessionRequest>(emailAttributes,
+				new Button[] {
+						email, emailC
+				});
 
 		tabs = new MTabPanel();
 		{
@@ -184,7 +186,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 	}
 
 	protected void doLogin() {
-		new FormOp<UserDTO>(p_main) {
+		new FormOp<User>(p_main) {
 			protected void onSubmit() {
 				MpDb.user_svc.startSession(ssr, this);
 			}
@@ -193,8 +195,8 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 				p_main.edit(ssr);
 				super.onFailure(e);
 			}
-			public void onSuccess(final UserDTO result) {
-				MpDb.setCurrentUser((UserDTO) result);
+			public void onSuccess(final User result) {
+				MpDb.setCurrentUser((User) result);
 				hide();
 				if (continuation != null)
 					continuation.begin();

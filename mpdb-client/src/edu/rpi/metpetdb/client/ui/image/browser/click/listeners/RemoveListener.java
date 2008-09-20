@@ -7,19 +7,19 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ImageDTO;
-import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
 import edu.rpi.metpetdb.client.ui.image.browser.LeftSideLayer;
 
 public class RemoveListener implements ClickListener {
 
-	private final ImageOnGrid iog;
+	private final ImageOnGridContainer iog;
 	private final LeftSideLayer leftSideLayer;
-	private final Map<ImageDTO, ImageOnGrid> imagesOnGrid;
+	private final Map<Image, ImageOnGridContainer> imagesOnGrid;
 
-	public RemoveListener(final ImageOnGrid imageOnGrid,
+	public RemoveListener(final ImageOnGridContainer imageOnGrid,
 			final LeftSideLayer lsl,
-			final Map<ImageDTO, ImageOnGrid> imagesOnGrid) {
+			final Map<Image, ImageOnGridContainer> imagesOnGrid) {
 		iog = imageOnGrid;
 		leftSideLayer = lsl;
 		this.imagesOnGrid = imagesOnGrid;

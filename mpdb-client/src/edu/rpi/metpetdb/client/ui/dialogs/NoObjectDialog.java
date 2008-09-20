@@ -16,15 +16,15 @@ public class NoObjectDialog extends MDialogBox implements ClickListener {
 		close = new Button(LocaleHandler.lc_text.buttonClose(), this);
 		final FlowPanel p = new FlowPanel();
 		p.add(new Label(LocaleHandler.lc_text.errorTitle_NoObject()));
-		p.add(new Label(LocaleHandler.lc_text.errorDesc_NoObject(nsoe.getType(), nsoe
-				.getId())));
+		p.add(new Label(LocaleHandler.lc_text.errorDesc_NoObject(
+				nsoe.getType(), nsoe.getId())));
 		p.add(close);
 		setWidget(p);
 	}
 
 	public void show() {
 		super.show();
-		//History.newItem(TokenSpace.introduction.makeToken(null));
+		// History.newItem(TokenSpace.introduction.makeToken(null));
 	}
 
 	public void onClick(final Widget sender) {

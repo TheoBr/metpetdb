@@ -1,16 +1,15 @@
 package edu.rpi.metpetdb.client.ui.user;
 
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.UserDTO;
-import edu.rpi.metpetdb.client.model.UserWithPasswordDTO;
+import edu.rpi.metpetdb.client.model.MObject;
+import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.UserWithPassword;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
@@ -26,67 +25,58 @@ import edu.rpi.metpetdb.client.ui.widgets.MText;
 public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 	private static final GenericAttribute[] mainAttributes = {
 			new TextAttribute(MpDb.doc.User_emailAddress) {
-				protected MObjectDTO resolve(final MObjectDTO obj) {
-					return ((UserWithPasswordDTO) obj).getUser();
+				protected MObject resolve(final MObject obj) {
+					return ((UserWithPassword) obj).getUser();
 				}
-			},
-			new TextAttribute(MpDb.doc.User_name) {
-				protected MObjectDTO resolve(final MObjectDTO obj) {
-					return ((UserWithPasswordDTO) obj).getUser();
+			}, new TextAttribute(MpDb.doc.User_name) {
+				protected MObject resolve(final MObject obj) {
+					return ((UserWithPassword) obj).getUser();
 				}
-			},
-			new TextAttribute(MpDb.doc.User_address) {
-				protected MObjectDTO resolve(final MObjectDTO obj) {
-					return ((UserWithPasswordDTO) obj).getUser();
+			}, new TextAttribute(MpDb.doc.User_address) {
+				protected MObject resolve(final MObject obj) {
+					return ((UserWithPassword) obj).getUser();
 				}
-			},
-			new TextAttribute(MpDb.doc.User_city) {
-				protected MObjectDTO resolve(final MObjectDTO obj) {
-					return ((UserWithPasswordDTO) obj).getUser();
+			}, new TextAttribute(MpDb.doc.User_city) {
+				protected MObject resolve(final MObject obj) {
+					return ((UserWithPassword) obj).getUser();
 				}
-			},
-			new TextAttribute(MpDb.doc.User_province) {
-				protected MObjectDTO resolve(final MObjectDTO obj) {
-					return ((UserWithPasswordDTO) obj).getUser();
+			}, new TextAttribute(MpDb.doc.User_province) {
+				protected MObject resolve(final MObject obj) {
+					return ((UserWithPassword) obj).getUser();
 				}
-			},
-			new TextAttribute(MpDb.doc.User_country) {
-				protected MObjectDTO resolve(final MObjectDTO obj) {
-					return ((UserWithPasswordDTO) obj).getUser();
+			}, new TextAttribute(MpDb.doc.User_country) {
+				protected MObject resolve(final MObject obj) {
+					return ((UserWithPassword) obj).getUser();
 				}
-			},
-			new TextAttribute(MpDb.doc.User_postalCode) {
-				protected MObjectDTO resolve(final MObjectDTO obj) {
-					return ((UserWithPasswordDTO) obj).getUser();
+			}, new TextAttribute(MpDb.doc.User_postalCode) {
+				protected MObject resolve(final MObject obj) {
+					return ((UserWithPassword) obj).getUser();
 				}
-			},
-			new TextAttribute(MpDb.doc.User_institution) {
-				protected MObjectDTO resolve(final MObjectDTO obj) {
-					return ((UserWithPasswordDTO) obj).getUser();
+			}, new TextAttribute(MpDb.doc.User_institution) {
+				protected MObject resolve(final MObject obj) {
+					return ((UserWithPassword) obj).getUser();
 				}
-			},
-			new TextAttribute(MpDb.doc.User_referenceEmail) {
-				protected MObjectDTO resolve(final MObjectDTO obj) {
-					return ((UserWithPasswordDTO) obj).getUser();
+			}, new TextAttribute(MpDb.doc.User_referenceEmail) {
+				protected MObject resolve(final MObject obj) {
+					return ((UserWithPassword) obj).getUser();
 				}
-			},
-			new PasswordAttribute(MpDb.doc.UserWithPassword_newPassword),
+			}, new PasswordAttribute(MpDb.doc.UserWithPassword_newPassword),
 			new PasswordAttribute(MpDb.doc.UserWithPassword_vrfPassword),
 	};
 
-	private final UserWithPasswordDTO newbie;
+	private final UserWithPassword newbie;
 	private final Button register;
 	private final Button toggle;
-	private final DetailsPanel<UserWithPasswordDTO> p_main;
+	private final DetailsPanel<UserWithPassword> p_main;
 
 	public UserRegistrationPanel() {
-		newbie = new UserWithPasswordDTO(new UserDTO());
+		newbie = new UserWithPassword(new User());
 		register = new Submit(LocaleHandler.lc_text.buttonRegister(), this);
 
 		toggle = new Button("Show");
 		toggle.addClickListener(this);
 
-		p_main = new DetailsPanel<UserWithPasswordDTO>(mainAttributes,
+		p_main = new DetailsPanel<UserWithPassword>(mainAttributes,
 				new Button[] {
 						toggle, register
 				});
@@ -123,12 +113,12 @@ public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 	}
 
 	protected void doRegister() {
-		new FormOp<UserDTO>(p_main) {
+		new FormOp<User>(p_main) {
 			protected void onSubmit() {
 				MpDb.user_svc.registerNewUser(newbie, this);
 			}
-			public void onSuccess(final UserDTO result) {
-				MpDb.setCurrentUser((UserDTO) result);
+			public void onSuccess(final User result) {
+				MpDb.setCurrentUser((User) result);
 				History.newItem(TokenSpace.introduction.makeToken(null));
 			}
 		}.begin();

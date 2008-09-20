@@ -10,7 +10,6 @@ import java.util.Set;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -25,14 +24,14 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.ProjectDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
+import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.left.side.MySamples;
@@ -49,7 +48,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	private MySamples mysamples;
 	private final FlowPanel footerContainer = new FlowPanel();
 	private final SimplePanel footerWrapper = new SimplePanel();
-	private Set<ProjectDTO> projectsList;
+	private Set<Project> projectsList;
 	private final ListBox projectListBox = new ListBox();
 	private final ListBox selectListBox = new ListBox();
 	private FlowPanel samplesContainer = new FlowPanel();
@@ -65,9 +64,9 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		super.addPageHeader();
 		setPageTitle("My Samples");
 
-		final MLink addSample = new MLink("Add Sample",
-				TokenSpace.enterSample);
-		final MLink bulkUpload = new MLink("Upload Samples", TokenSpace.bulkUpload);
+		final MLink addSample = new MLink("Add Sample", TokenSpace.enterSample);
+		final MLink bulkUpload = new MLink("Upload Samples",
+				TokenSpace.bulkUpload);
 
 		addSample.setStylePrimaryName(CSS.LINK_LARGE_ICON);
 		addSample.addStyleName(CSS.LINK_ADD);
@@ -106,7 +105,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	private void projectSamples(final long projectId) {
 		list = new SampleListEx(LocaleHandler.lc_text.noSamplesFound()) {
 			public void update(final PaginationParameters p,
-					final AsyncCallback<Results<SampleDTO>> ac) {
+					final AsyncCallback<Results<Sample>> ac) {
 				MpDb.sample_svc.projectSamples(p, projectId, ac);
 			}
 		};
@@ -115,7 +114,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	private void userSamples() {
 		list = new SampleListEx(LocaleHandler.lc_text.noSamplesFound()) {
 			public void update(final PaginationParameters p,
-					final AsyncCallback<Results<SampleDTO>> ac) {
+					final AsyncCallback<Results<Sample>> ac) {
 				long id = (long) (MpDb.currentUser().getId());
 				MpDb.sample_svc.allSamplesForUser(p, id, ac);
 			}
@@ -147,38 +146,37 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 			public void onChange(Widget sender) {
 				if (selectListBox.getSelectedIndex() == 1) {
 					for (int i = 0; i < list.getScrollTable().getDataTable()
-					.getRowCount(); i++)
-				((MCheckBox) list.getScrollTable().getDataTable()
-						.getWidget(i, 0)).setChecked(false);
+							.getRowCount(); i++)
+						((MCheckBox) list.getScrollTable().getDataTable()
+								.getWidget(i, 0)).setChecked(false);
 				} else if (selectListBox.getSelectedIndex() == 2) {
 					// TODO select only private samples
 				} else if (selectListBox.getSelectedIndex() == 3) {
 					// TODO select only public samples
 				} else if (selectListBox.getSelectedIndex() == 4) {
 					for (int i = 0; i < list.getScrollTable().getDataTable()
-					.getRowCount(); i++)
-				((MCheckBox) list.getScrollTable().getDataTable()
-						.getWidget(i, 0)).setChecked(true);
-				} 
+							.getRowCount(); i++)
+						((MCheckBox) list.getScrollTable().getDataTable()
+								.getWidget(i, 0)).setChecked(true);
+				}
 			}
 		});
-		
-		final Label addToProjectLabel = new Label("Add to:");
-		addToProjectLabel
-				.setStylePrimaryName(CSS.DATATABLE_FOOTER_ITEM);
-		addToProjectLabel.addStyleName(CSS.DATATABLE_FOOTER_LABEL);
+
+		final Label adProjectLabel = new Label("Add to:");
+		adProjectLabel.setStylePrimaryName(CSS.DATATABLE_FOOTER_ITEM);
+		adProjectLabel.addStyleName(CSS.DATATABLE_FOOTER_LABEL);
 
 		projectListBox.addItem("Choose Project...");
-		Iterator<ProjectDTO> it = projectsList.iterator();
+		Iterator<Project> it = projectsList.iterator();
 		while (it.hasNext()) {
-			final ProjectDTO project = (ProjectDTO) it.next();
+			final Project project = (Project) it.next();
 			projectListBox.addItem(project.getName(), String.valueOf(project
 					.getId()));
 		}
 		projectListBox.addChangeListener(new ChangeListener() {
 			public void onChange(Widget sender) {
 				if (projectListBox.getSelectedIndex() > 0)
-					AddToProjectSelected();
+					AdProjectSelected();
 			}
 		});
 
@@ -201,14 +199,14 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 					}
 				});
 		exportGoogleEarth.addStyleName(CSS.DATATABLE_FOOTER_SUBITEM);
-		
+
 		final MLink makePublic = new MLink("Make Public", new ClickListener() {
 			public void onClick(Widget sender) {
 				MakePublicSelected();
 			}
 		});
 		makePublic.addStyleName(CSS.DATATABLE_FOOTER_ITEM);
-		
+
 		final MLink remove = new MLink("Remove", new ClickListener() {
 			public void onClick(Widget sender) {
 				deleteSelected();
@@ -219,7 +217,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		footerContainer.add(selectLabel);
 		footerContainer.add(selectListBox);
 		if (!projectsList.isEmpty()) {
-			footerContainer.add(addToProjectLabel);
+			footerContainer.add(adProjectLabel);
 			footerContainer.add(projectListBox);
 		}
 		footerContainer.add(exportLabel);
@@ -230,7 +228,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		footerContainer.setStylePrimaryName(CSS.DATATABLE_FOOTER);
 		footerWrapper.add(footerContainer);
 		footerWrapper.setStylePrimaryName(CSS.DATATABLE_FOOTER_WRAPPER);
-		
+
 		final FixedWidthFlexTable footerTable = new FixedWidthFlexTable();
 		footerTable.setWidget(0, 0, footerWrapper);
 		footerTable.getFlexCellFormatter().setColSpan(0, 0, 4);
@@ -275,8 +273,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 				MpDb.project_svc.all(MpDb.currentUser().getId(), this);
 			}
 			public void onSuccess(Object result) {
-				projectsList = new HashSet<ProjectDTO>(
-						(List<ProjectDTO>) result);
+				projectsList = new HashSet<Project>((List<Project>) result);
 				addPageHeader();
 				userSamples();
 				addSamples();
@@ -292,8 +289,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 				MpDb.project_svc.all(MpDb.currentUser().getId(), this);
 			}
 			public void onSuccess(Object result) {
-				projectsList = new HashSet<ProjectDTO>(
-						(List<ProjectDTO>) result);
+				projectsList = new HashSet<Project>((List<Project>) result);
 				addPageHeader();
 				projectSamples(projectId);
 				addSamples();
@@ -302,12 +298,12 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		return this;
 	}
 
-	private List<SampleDTO> getCheckedSamples() {
-		List<SampleDTO> results = new ArrayList<SampleDTO>();
+	private List<Sample> getCheckedSamples() {
+		List<Sample> results = new ArrayList<Sample>();
 		for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++) {
 			if (((MCheckBox) list.getScrollTable().getDataTable().getWidget(i,
 					0)).isChecked())
-				results.add((SampleDTO) (((MCheckBox) list.getScrollTable()
+				results.add((Sample) (((MCheckBox) list.getScrollTable()
 						.getDataTable().getWidget(i, 0)).getValue()));
 		}
 		return results;
@@ -317,12 +313,12 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		new ServerOp() {
 			@Override
 			public void begin() {
-				ArrayList<SampleDTO> publicSamples = new ArrayList<SampleDTO>();
-				List<SampleDTO> CheckedSamples = getCheckedSamples();
-				Iterator<SampleDTO> itr = CheckedSamples.iterator();
+				ArrayList<Sample> publicSamples = new ArrayList<Sample>();
+				List<Sample> CheckedSamples = getCheckedSamples();
+				Iterator<Sample> itr = CheckedSamples.iterator();
 				/* Check if we are trying to delete any public samples */
 				while (itr.hasNext()) {
-					final SampleDTO s = itr.next();
+					final Sample s = itr.next();
 					if (s.isPublicData()) {
 						publicSamples.add(s);
 					}
@@ -344,7 +340,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 				else if (publicSamples.size() > 0) {
 					for (int i = 0; i < list.getScrollTable().getDataTable()
 							.getRowCount(); i++) {
-						final SampleDTO s = (SampleDTO) ((MCheckBox) list
+						final Sample s = (Sample) ((MCheckBox) list
 								.getScrollTable().getDataTable()
 								.getWidget(i, 0)).getValue();
 						for (int j = 0; j < publicSamples.size(); j++) {
@@ -361,7 +357,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 				}
 				/* If they're all private, delete them */
 				else if (publicSamples.size() == 0) {
-					Iterator<SampleDTO> itr2 = CheckedSamples.iterator();
+					Iterator<Sample> itr2 = CheckedSamples.iterator();
 					while (itr2.hasNext()) {
 						MpDb.sample_svc.delete(itr2.next().getId(), this);
 					}
@@ -379,10 +375,10 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		new ServerOp() {
 			@Override
 			public void begin() {
-				List<SampleDTO> CheckedSamples = getCheckedSamples();
-				Iterator<SampleDTO> itr = CheckedSamples.iterator();
+				List<Sample> CheckedSamples = getCheckedSamples();
+				Iterator<Sample> itr = CheckedSamples.iterator();
 				while (itr.hasNext()) {
-					SampleDTO current = itr.next();
+					Sample current = itr.next();
 					current.setPublicData(true);
 					MpDb.sample_svc.save(current, this);
 				}
@@ -394,7 +390,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		}.begin();
 	}
 
-	private void AddToProjectSelected() {
+	private void AdProjectSelected() {
 		new ServerOp() {
 			@Override
 			public void begin() {
@@ -405,11 +401,11 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 				new ServerOp() {
 					@Override
 					public void begin() {
-						List<SampleDTO> CheckedSamples = getCheckedSamples();
-						Iterator<SampleDTO> itr = CheckedSamples.iterator();
+						List<Sample> CheckedSamples = getCheckedSamples();
+						Iterator<Sample> itr = CheckedSamples.iterator();
 						while (itr.hasNext()) {
-							SampleDTO current = itr.next();
-							current.getProjects().add((ProjectDTO) result);
+							Sample current = itr.next();
+							current.getProjects().add((Project) result);
 							MpDb.sample_svc.save(current, this);
 						}
 					}

@@ -25,7 +25,7 @@ import com.google.gwt.widgetideas.table.client.PagingScrollTable;
 import com.google.gwt.widgetideas.table.client.ReadOnlyTableModel;
 import com.google.gwt.widgetideas.table.client.TableModel.Response;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.PagingResponseIterator;
@@ -38,10 +38,10 @@ import edu.rpi.metpetdb.client.ui.ServerOp;
  * 
  * @author anthony
  * 
- * @param <T>
- *            the types of objects that will be paginated in this table
+ * @param <
+ * 		T> the types of objects that will be paginated in this table
  */
-public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
+public abstract class ListEx<T extends MObject> extends FlowPanel {
 	private int pageSize = 10;
 
 	/**
@@ -90,7 +90,7 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		 * Constructor.
 		 * 
 		 * @param rows
-		 *            the row data
+		 * 		the row data
 		 */
 		public PagingResponse(Collection<Collection<Object>> rows) {
 			this(rows, null);
@@ -100,9 +100,9 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		 * Constructor.
 		 * 
 		 * @param rows
-		 *            the row data
+		 * 		the row data
 		 * @param rowValues
-		 *            the values to associate with each row
+		 * 		the values to associate with each row
 		 */
 		public PagingResponse(Collection<Collection<Object>> rows,
 				List<T> rowValues) {
@@ -228,10 +228,10 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 	 * data from the server.
 	 * 
 	 * @param p
-	 *            the pagination parameters that are used to specify the special
-	 *            properties of the requisted data
+	 * 		the pagination parameters that are used to specify the special
+	 * 		properties of the requisted data
 	 * @param ac
-	 *            the callback to signal when we are done fetching data
+	 * 		the callback to signal when we are done fetching data
 	 */
 	public abstract void update(final PaginationParameters p,
 			final AsyncCallback<Results<T>> ac);
@@ -241,9 +241,9 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 	 * the table
 	 * 
 	 * @param data
-	 *            the list of data
+	 * 		the list of data
 	 * @return a collection of collections of data to be shown in the table
-	 *         (basically what is going to be in each cell)
+	 * 	(basically what is going to be in each cell)
 	 */
 	public Collection<Collection<Object>> getList(final List<T> data) {
 		final Collection<Collection<Object>> rows = new HashSet<Collection<Object>>();
@@ -259,22 +259,22 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 	 * Gets the data for only one row in the table from an object. Data is
 	 * generated in one of two ways <br/>
 	 * <ol>
-	 * <li>From the widget/text that is returned from the column
-	 * {@link Column#getRepresentation(MObjectDTO, int)}</li>
-	 * <li>From the data of the object
-	 * {@link MObjectDTO#mGet(edu.rpi.metpetdb.client.model.properties.Property)}
+	 * <li>From the widget/text that is returned from the column {@link
+	 * Column#getRepresentation(MObject, int)}</li>
+	 * <li>From the data of the object {@link
+	 * MObject#mGet(edu.rpi.metpetdb.client.model.properties.Property)}
 	 * </li>
 	 * </ol>
 	 * If either of those two scenarios are not possible it sets the data to be
 	 * the header of the column
 	 * 
 	 * @param object
-	 *            the current object
+	 * 		the current object
 	 * @param currentRow
-	 *            the current row
+	 * 		the current row
 	 * @return the list of data
 	 */
-	public Collection<Object> processRow(final MObjectDTO object,
+	public Collection<Object> processRow(final MObject object,
 			final int currentRow) {
 		final Collection<Object> data = new ArrayList<Object>();
 		for (int i = 0; i < displayColumns.size(); ++i) {
@@ -301,7 +301,7 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 	 * Creates a new paginated table from an array of columns
 	 * 
 	 * @param columns
-	 *            the columns that will be used in this table
+	 * 		the columns that will be used in this table
 	 */
 	public ListEx(final ArrayList<Column> columns) {
 		this.originalColumns = columns;
@@ -344,7 +344,7 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 			public void onCellClicked(SourcesTableEvents sender, int row,
 					int cell) {
 				displayColumns.get(cell).handleClickEvent(
-						(MObjectDTO) scrollTable.getRowValue(row), row);
+						(MObject) scrollTable.getRowValue(row), row);
 
 			}
 
@@ -373,7 +373,8 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 		hp.add(pageSizeBtn);
 		// scrollTable.getFooterTable().add(new );
 
-		// TODO: can you say we need CSS?
+		// TODO: can you say we need CSS
+		// "We need CSS" -anthony
 		scrollTable.setWidth("100%");
 		dataTable.setWidth("100%");
 		headerTable.setWidth("100%");
@@ -419,7 +420,7 @@ public abstract class ListEx<T extends MObjectDTO> extends FlowPanel {
 			public void onCellClicked(SourcesTableEvents sender, int row,
 					int cell) {
 				displayColumns.get(cell).handleClickEvent(
-						(MObjectDTO) scrollTable.getRowValue(row), row);
+						(MObject) scrollTable.getRowValue(row), row);
 
 			}
 

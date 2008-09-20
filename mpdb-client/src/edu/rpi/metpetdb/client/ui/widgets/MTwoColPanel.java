@@ -8,13 +8,13 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import edu.rpi.metpetdb.client.ui.CSS;
 
 public class MTwoColPanel extends FlowPanel {
-	
+
 	private final SimplePanel left = new SimplePanel();
 	private final SimplePanel right = new SimplePanel();
 	private final FlowPanel leftContent = new FlowPanel();
 	private final FlowPanel rightContent = new FlowPanel();
 	private final Element clr = DOM.createDiv();
-	
+
 	public MTwoColPanel() {
 		super();
 		setStylePrimaryName(CSS.TWO_COLUMN_PANEL);
@@ -29,19 +29,19 @@ public class MTwoColPanel extends FlowPanel {
 		add(right);
 		DOM.appendChild(this.getElement(), clr);
 	}
-	
+
 	public FlowPanel getLeftCol() {
 		return leftContent;
 	}
-	
+
 	public FlowPanel getRightCol() {
 		return rightContent;
 	}
-	
+
 	public void setLeftColWidth(String w) {
 		left.setWidth(w);
 	}
-	
+
 	public void setRightColWidth(String w) {
 		right.setWidth(w);
 	}

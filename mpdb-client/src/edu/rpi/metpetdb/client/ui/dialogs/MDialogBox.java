@@ -45,10 +45,11 @@ public class MDialogBox extends DialogBox implements PopupListener,
 		setPopupPosition(left, top);
 	}
 
-	private native void hideSelects() /*-{
-	 var selects = $doc.getElementsByTagName("select");
-	 for (i = 0; i != selects.length; i++) {
-	 selects[i].style.visibility = "hidden";
-	 }
-	 }-*/;
+	private native void hideSelects() /*
+									 * -{ var selects =
+									 * $doc.getElementsByTagName("select"); for
+									 * (i = 0; i != selects.length; i++) {
+									 * selects[i].style.visibility = "hidden"; }
+									 * }-
+									 */;
 }

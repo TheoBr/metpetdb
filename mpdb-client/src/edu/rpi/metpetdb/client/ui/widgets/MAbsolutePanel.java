@@ -11,10 +11,8 @@ import com.google.gwt.user.client.ui.SourcesClickEvents;
 import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
 
-public class MAbsolutePanel extends AbsolutePanel
-		implements
-			SourcesMouseEvents,
-			SourcesClickEvents {
+public class MAbsolutePanel extends AbsolutePanel implements
+		SourcesMouseEvents, SourcesClickEvents {
 
 	private MouseListenerCollection mouseListeners;
 	private ClickListenerCollection clickListeners;
@@ -81,32 +79,32 @@ public class MAbsolutePanel extends AbsolutePanel
 
 	public void onBrowserEvent(Event event) {
 		switch (DOM.eventGetType(event)) {
-			case Event.ONMOUSEDOWN :
-			case Event.ONMOUSEUP :
-				// before we prevent default make sure the action is within our
-				// widget
-				final int eventX = DOM.eventGetClientX(event);
-				final int eventY = DOM.eventGetClientY(event);
-				final int x = this.getAbsoluteLeft();
-				final int y = this.getAbsoluteTop();
-				final int width = this.getOffsetWidth();
-				final int height = this.getOffsetHeight();
-				if (eventX > x && eventX < x + width) {
-					if (eventY > y && eventY < y + height) {
-						DOM.eventPreventDefault(event);
-					}
+		case Event.ONMOUSEDOWN:
+		case Event.ONMOUSEUP:
+			// before we prevent default make sure the action is within our
+			// widget
+			final int eventX = DOM.eventGetClientX(event);
+			final int eventY = DOM.eventGetClientY(event);
+			final int x = this.getAbsoluteLeft();
+			final int y = this.getAbsoluteTop();
+			final int width = this.getOffsetWidth();
+			final int height = this.getOffsetHeight();
+			if (eventX > x && eventX < x + width) {
+				if (eventY > y && eventY < y + height) {
+					DOM.eventPreventDefault(event);
 				}
-			case Event.ONMOUSEMOVE :
-			case Event.ONMOUSEOUT :
-			case Event.ONMOUSEOVER :
-				if (mouseListeners != null)
-					mouseListeners.fireMouseEvent(this, event);
-				// DOM.eventPreventDefault(event);
-				break;
-			case Event.ONCLICK :
-				if (clickListeners != null)
-					clickListeners.fireClick(this);
-				break;
+			}
+		case Event.ONMOUSEMOVE:
+		case Event.ONMOUSEOUT:
+		case Event.ONMOUSEOVER:
+			if (mouseListeners != null)
+				mouseListeners.fireMouseEvent(this, event);
+			// DOM.eventPreventDefault(event);
+			break;
+		case Event.ONCLICK:
+			if (clickListeners != null)
+				clickListeners.fireClick(this);
+			break;
 		};
 
 	}

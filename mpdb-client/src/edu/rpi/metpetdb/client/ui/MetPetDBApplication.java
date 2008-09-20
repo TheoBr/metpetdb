@@ -23,9 +23,9 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.UserDTO;
+import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
-import edu.rpi.metpetdb.client.service.ResumeSessionResponse;
 import edu.rpi.metpetdb.client.ui.dialogs.LoginDialog;
 import edu.rpi.metpetdb.client.ui.dialogs.UnknownErrorDialog;
 import edu.rpi.metpetdb.client.ui.left.side.UsesLeftColumn;
@@ -82,7 +82,7 @@ public class MetPetDBApplication implements EntryPoint {
 		// setupIntroduction();
 		pageChangeWatchers = new HashSet<Widget>();
 
-		appendToBreadCrumbs(new Breadcrumbs());
+		appenBreadCrumbs(new Breadcrumbs());
 
 		// Try to restore the user's current session.
 		//
@@ -101,14 +101,14 @@ public class MetPetDBApplication implements EntryPoint {
 				MpDb.setCurrentUser(r.user);
 				finishOnModuleLoad();
 				if (r.user == null) {
-					new ServerOp<UserDTO>() {
+					new ServerOp<User>() {
 						public void begin() {
 							MpDb.mpdbGeneric_svc.getAutomaticLoginUser(this);
 						}
 
-						public void onSuccess(final UserDTO result) {
+						public void onSuccess(final User result) {
 							if (result != null) {
-								MpDb.setCurrentUser((UserDTO) result);
+								MpDb.setCurrentUser((User) result);
 							}
 						}
 					}.begin();
@@ -154,7 +154,7 @@ public class MetPetDBApplication implements EntryPoint {
 		}
 	}
 
-	static void onCurrentUserChanged(final UserDTO n) {
+	static void onCurrentUserChanged(final User n) {
 		loginBar.clear();
 		if (n != null)
 			createLoginBarLoggedIn();
@@ -163,8 +163,7 @@ public class MetPetDBApplication implements EntryPoint {
 		dispatchCurrentUserChanged(contentContainer, n);
 	}
 
-	private static void dispatchCurrentUserChanged(final Widget w,
-			final UserDTO u) {
+	private static void dispatchCurrentUserChanged(final Widget w, final User u) {
 		if (w instanceof UsesCurrentUser) {
 			try {
 				((UsesCurrentUser) w).onCurrentUserChanged(u);
@@ -255,7 +254,7 @@ public class MetPetDBApplication implements EntryPoint {
 		leftContainer.add(w);
 	}
 
-	public static void appendToLeft(final Widget w) {
+	public static void appenLeft(final Widget w) {
 		leftContainer.add(w);
 	}
 
@@ -288,7 +287,7 @@ public class MetPetDBApplication implements EntryPoint {
 		return leftContainer.getWidgetCount();
 	}
 
-	public static void appendToBreadCrumbs(final Widget w) {
+	public static void appenBreadCrumbs(final Widget w) {
 		breadcrumbsBar.add(w);
 	}
 
@@ -298,7 +297,7 @@ public class MetPetDBApplication implements EntryPoint {
 
 	private void createHdrNav() {
 		hdrnav.setAutoOpen(true);
-		
+
 		final MMenuBar projects = new MMenuBar(true);
 		projects.addItem("My Projects", TokenSpace.allProjects);
 		projects.addItem(LocaleHandler.lc_text.projectsMenu_NewProject(),
@@ -341,8 +340,8 @@ public class MetPetDBApplication implements EntryPoint {
 			}
 		});
 
-//		hdrnav.addItem(LocaleHandler.lc_text.homeMenu(),
-//				TokenSpace.introduction);
+		// hdrnav.addItem(LocaleHandler.lc_text.homeMenu(),
+		// TokenSpace.introduction);
 		hdrnav.addItem("My Samples", TokenSpace.samplesForUser);
 		hdrnav.addItem(LocaleHandler.lc_text.projectMenu(), projects);
 		hdrnav.addItem("Search", TokenSpace.search);

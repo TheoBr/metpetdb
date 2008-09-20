@@ -19,23 +19,23 @@ public class DCFlowPanel extends FlowPanel {
 	public void onBrowserEvent(final Event event) {
 		super.onBrowserEvent(event);
 		switch (DOM.eventGetType(event)) {
-			case Event.ONDBLCLICK :
-				// Window.alert("dblclick");
+		case Event.ONDBLCLICK:
+			// Window.alert("dblclick");
+			if (popupMenu != null) {
+				popupMenu.show();
+				popupMenu.setPopupPosition(DOM.eventGetClientX(event), DOM
+						.eventGetClientY(event));
+			}
+			break;
+		case Event.ONCLICK:
+			if (DOM.eventGetCtrlKey(event)) {
 				if (popupMenu != null) {
 					popupMenu.show();
 					popupMenu.setPopupPosition(DOM.eventGetClientX(event), DOM
 							.eventGetClientY(event));
 				}
-				break;
-			case Event.ONCLICK :
-				if (DOM.eventGetCtrlKey(event)) {
-					if (popupMenu != null) {
-						popupMenu.show();
-						popupMenu.setPopupPosition(DOM.eventGetClientX(event),
-								DOM.eventGetClientY(event));
-					}
-				}
-				break;
+			}
+			break;
 		}
 	}
 

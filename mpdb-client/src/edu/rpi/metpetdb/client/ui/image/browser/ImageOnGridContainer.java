@@ -6,12 +6,12 @@ import java.util.Set;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
-import edu.rpi.metpetdb.client.model.ImageOnGridDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.ImageOnGrid;
 
-public class ImageOnGrid {
+public class ImageOnGridContainer {
 
-	private ImageOnGridDTO iog;
+	private ImageOnGrid iog;
 	private FlowPanel imageContainer;
 	private com.google.gwt.user.client.ui.Image actualImage;
 	private AbsolutePanel imagePanel;
@@ -22,7 +22,7 @@ public class ImageOnGrid {
 	private int temporaryTopLeftX;
 	private int temporaryTopLeftY;
 	private boolean isShown;
-	private Set<ChemicalAnalysisDTO> chemicalAnalyses;
+	private Set<ChemicalAnalysis> chemicalAnalyses;
 	private boolean isLocked;
 	private boolean isMenuHidden;
 	private int zoomLevelsSkipped;
@@ -80,14 +80,14 @@ public class ImageOnGrid {
 			this.setTemporaryTopLeftY(this.getTemporaryTopLeftY() - dheight);
 		}
 
-		final Iterator<ChemicalAnalysisDTO> itr = this.getChemicalAnalyses()
+		final Iterator<ChemicalAnalysis> itr = this.getChemicalAnalyses()
 				.iterator();
 		while (itr.hasNext()) {
-			final ChemicalAnalysisDTO ma = (ChemicalAnalysisDTO) itr.next();
-			ma.setPointX((int) (width * ma.getPercentX()));
-			ma.setPointY((int) (height * ma.getPercentY()));
-			this.getImagePanel().setWidgetPosition(ma.getActualImage(),
-					ma.getPointX(), ma.getPointY());
+			final ChemicalAnalysis ma = (ChemicalAnalysis) itr.next();
+			// ma.setPointX((int) (width * ma.getPercentX()));
+			// ma.setPointY((int) (height * ma.getPercentY()));
+			// this.getImagePanel().setWidgetPosition(ma.getActualImage(),
+			// ma.getPointX(), ma.getPointY());
 		}
 
 		this.setWidth(width);
@@ -102,23 +102,25 @@ public class ImageOnGrid {
 	}
 
 	public String getGoodLookingPicture(final boolean original) {
-		if (this.width <= 100) {
-			return iog.get64x64ServerPath(original);
-		}
-		if (this.width >= 100 && this.width <= iog.getImage().getWidth() * .5) {
-			return iog.getHalfServerPath(original);
-		}
-		if (this.width >= iog.getImage().getWidth() * .5 + 100) {
-			return iog.getServerPath(original);
-		}
-		return iog.getServerPath(original);
+		// if (this.width <= 100) {
+		// return iog.get64x64ServerPath(original);
+		// }
+		// if (this.width >= 100 && this.width <= iog.getImage().getWidth() * .5
+		// ) {
+		// return iog.getHalfServerPath(original);
+		// }
+		// if (this.width >= iog.getImage().getWidth() * .5 + 100) {
+		// return iog.getServerPath(original);
+		// }
+		// return iog.getServerPath(original);
+		return "";
 	}
 
-	public ImageOnGridDTO getIog() {
+	public ImageOnGrid getIog() {
 		return iog;
 	}
 
-	public void setIog(ImageOnGridDTO iog) {
+	public void setIog(ImageOnGrid iog) {
 		this.iog = iog;
 	}
 
@@ -202,11 +204,11 @@ public class ImageOnGrid {
 		this.isShown = isShown;
 	}
 
-	public Set<ChemicalAnalysisDTO> getChemicalAnalyses() {
+	public Set<ChemicalAnalysis> getChemicalAnalyses() {
 		return chemicalAnalyses;
 	}
 
-	public void setChemicalAnalyses(Set<ChemicalAnalysisDTO> chemicalAnalyses) {
+	public void setChemicalAnalyses(Set<ChemicalAnalysis> chemicalAnalyses) {
 		this.chemicalAnalyses = chemicalAnalyses;
 	}
 

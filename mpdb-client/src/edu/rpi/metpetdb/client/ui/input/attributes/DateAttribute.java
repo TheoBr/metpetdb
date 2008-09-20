@@ -17,7 +17,7 @@ import com.google.gwt.widgetideas.client.event.ChangeHandler;
 import com.google.gwt.widgetideas.datepicker.client.CalendarModel;
 import com.google.gwt.widgetideas.datepicker.client.DatePicker;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.ShortConstraint;
@@ -40,13 +40,13 @@ public class DateAttribute extends GenericAttribute implements ChangeListener {
 				sc, ic
 		});
 	}
-	public Widget[] createDisplayWidget(final MObjectDTO obj) {
+	public Widget[] createDisplayWidget(final MObject obj) {
 		return new Widget[] {
 			new MText(dateToString(get(obj), getPrecision(obj)))
 		};
 	}
 
-	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
+	public Widget[] createEditWidget(final MObject obj, final String id) {
 		final Timestamp currentDate = get(obj);
 
 		if (currentDate != null) {
@@ -136,20 +136,20 @@ public class DateAttribute extends GenericAttribute implements ChangeListener {
 		}
 		return null;
 	}
-	protected Timestamp get(final MObjectDTO obj) {
+	protected Timestamp get(final MObject obj) {
 		return (Timestamp) mGet(obj);
 	}
 
-	protected Short getPrecision(final MObjectDTO obj) {
+	protected Short getPrecision(final MObject obj) {
 		return (Short) obj.mGet(this.getConstraints()[1].property);
 	}
 
-	protected void set(final MObjectDTO obj, final Object v,
+	protected void set(final MObject obj, final Object v,
 			final PropertyConstraint pc) {
 		mSet(obj, v, pc);
 	}
 
-	protected void set(final MObjectDTO obj, final Object v) {
+	protected void set(final MObject obj, final Object v) {
 
 	}
 

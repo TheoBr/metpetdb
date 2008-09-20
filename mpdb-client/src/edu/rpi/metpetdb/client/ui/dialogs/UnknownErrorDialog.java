@@ -45,7 +45,7 @@ public class UnknownErrorDialog extends MDialogBox implements ClickListener {
 	public void onClick(final Widget sender) {
 		if (close == sender) {
 			hide();
-			//History.newItem(TokenSpace.introduction.makeToken(null));
+			// History.newItem(TokenSpace.introduction.makeToken(null));
 		}
 	}
 }

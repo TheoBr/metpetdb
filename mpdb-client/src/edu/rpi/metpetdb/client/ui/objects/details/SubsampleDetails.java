@@ -1,29 +1,25 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageListViewer;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
@@ -35,7 +31,6 @@ import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AddImageAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
-import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
@@ -52,10 +47,10 @@ public class SubsampleDetails extends MPagePanel {
 					.setReadOnly(true),
 	};
 
-	private final ObjectEditorPanel<SubsampleDTO> p_subsample;
+	private final ObjectEditorPanel<Subsample> p_subsample;
 	private long subsampleId;
 	private long sampleId;
-	private SampleDTO sampleObj;
+	private Sample sampleObj;
 	private ServerOp continuation;
 	private String sampleAlias;
 	private final MLink map = new MLink();
@@ -65,27 +60,26 @@ public class SubsampleDetails extends MPagePanel {
 	public SubsampleDetails() {
 		addPageHeader();
 		final SubsampleDetails me = this;
-		p_subsample = new ObjectEditorPanel<SubsampleDTO>(subsampleAtts,
+		p_subsample = new ObjectEditorPanel<Subsample>(subsampleAtts,
 				LocaleHandler.lc_text.addSubsample(), LocaleHandler.lc_text
 						.addSubsampleDescription(sampleAlias)) {
-			protected void loadBean(final AsyncCallback<SubsampleDTO> ac) {
-				final SubsampleDTO s = (SubsampleDTO) getBean();
+			protected void loadBean(final AsyncCallback<Subsample> ac) {
+				final Subsample s = (Subsample) getBean();
 				MpDb.subsample_svc.details(s != null && !s.mIsNew() ? s.getId()
 						: subsampleId, ac);
 			}
 
-			protected void saveBean(final AsyncCallback<SubsampleDTO> ac) {
-				MpDb.subsample_svc.save((SubsampleDTO) getBean(), ac);
+			protected void saveBean(final AsyncCallback<Subsample> ac) {
+				MpDb.subsample_svc.save((Subsample) getBean(), ac);
 			}
 
 			protected void deleteBean(final AsyncCallback<Object> ac) {
-				sampleObj = ((SubsampleDTO) getBean()).getSample();
-				MpDb.subsample_svc.delete(((SubsampleDTO) getBean()).getId(),
-						ac);
+				sampleObj = ((Subsample) getBean()).getSample();
+				MpDb.subsample_svc.delete(((Subsample) getBean()).getId(), ac);
 			}
 
 			protected boolean canEdit() {
-				final SampleDTO s = ((SubsampleDTO) getBean()).getSample();
+				final Sample s = ((Subsample) getBean()).getSample();
 				if (s.isPublicData())
 					return false;
 				if (MpDb.isCurrentUser(s.getOwner()))
@@ -93,25 +87,25 @@ public class SubsampleDetails extends MPagePanel {
 				return false;
 			}
 
-			protected void onSaveCompletion(final MObjectDTO result) {
+			protected void onSaveCompletion(final MObject result) {
 				if (continuation != null) {
 					continuation.onSuccess(result);
 				} else {
 					if (History.getToken().equals(
-							TokenSpace.detailsOf((SubsampleDTO) result))) {
+							TokenSpace.detailsOf((Subsample) result))) {
 						TokenSpace.dispatch(TokenSpace
-								.detailsOf((SubsampleDTO) result));
+								.detailsOf((Subsample) result));
 					} else {
 						History.newItem(TokenSpace
-								.detailsOf((SubsampleDTO) result));
+								.detailsOf((Subsample) result));
 					}
 				}
 
 			}
 
-			protected void onLoadCompletion(final MObjectDTO result) {
+			protected void onLoadCompletion(final MObject result) {
 				super.onLoadCompletion(result);
-				final SubsampleDTO s = (SubsampleDTO) result;
+				final Subsample s = (Subsample) result;
 				if (s.getGrid() == null) {
 					map.setText("Create Map");
 					map.setTargetHistoryToken(TokenSpace.createNewImageMap(s));
@@ -125,7 +119,7 @@ public class SubsampleDetails extends MPagePanel {
 				setPageTitle("Subsample " + s.getName());
 				addPageHeaderListItem(map);
 				sampleId = s.getSample().getId();
-				
+
 			}
 			protected void onDeleteCompletion(final Object result) {
 				History.newItem(TokenSpace.detailsOf((sampleObj)));
@@ -143,7 +137,7 @@ public class SubsampleDetails extends MPagePanel {
 		final ChemicalAnalysisListEx list = new ChemicalAnalysisListEx(
 				LocaleHandler.lc_text.noChemicalAnalysesFound()) {
 			public void update(final PaginationParameters p,
-					final AsyncCallback<Results<ChemicalAnalysisDTO>> ac) {
+					final AsyncCallback<Results<ChemicalAnalysis>> ac) {
 				MpDb.chemicalAnalysis_svc.all(p, subsampleId, ac);
 			}
 		};
@@ -158,7 +152,7 @@ public class SubsampleDetails extends MPagePanel {
 						if (MpDb.isLoggedIn())
 							History
 									.newItem(TokenSpace
-											.createNewChemicalAnalysis((SubsampleDTO) p_subsample
+											.createNewChemicalAnalysis((Subsample) p_subsample
 													.getBean()));
 						else
 							onFailure(new LoginRequiredException());
@@ -191,9 +185,9 @@ public class SubsampleDetails extends MPagePanel {
 		return this;
 	}
 
-	public SubsampleDetails createNew(final SampleDTO s, final ServerOp r) {
+	public SubsampleDetails createNew(final Sample s, final ServerOp r) {
 		continuation = r;
-		SubsampleDTO ss = new SubsampleDTO();
+		Subsample ss = new Subsample();
 		s.addSubsample(ss);
 		p_subsample.edit(ss);
 		sampleAlias = s.getAlias();
@@ -206,7 +200,7 @@ public class SubsampleDetails extends MPagePanel {
 		new ServerOp() {
 			public void begin() {
 				if (MpDb.isLoggedIn()) {
-					final SubsampleDTO s = (SubsampleDTO) p_subsample.getBean();
+					final Subsample s = (Subsample) p_subsample.getBean();
 					MpDb.subsample_svc.details(s != null && !s.mIsNew() ? s
 							.getId() : subsampleId, this);
 
@@ -216,7 +210,7 @@ public class SubsampleDetails extends MPagePanel {
 			}
 
 			public void onSuccess(final Object result) {
-				p_subsample.edit((SubsampleDTO) result);
+				p_subsample.edit((Subsample) result);
 			}
 
 			public void cancel() {

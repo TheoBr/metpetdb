@@ -10,14 +10,13 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ImageDTO;
+import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
@@ -29,12 +28,13 @@ public class ViewImage extends MDialogBox implements ClickListener,
 	private int index;
 	private Label imageTitle;
 	private Label page;
-	private Image displayImage;
+	private com.google.gwt.user.client.ui.Image displayImage;
 	private ArrayList images;
 	private PopupPanel left;
 	private PopupPanel right;
 
-	public ViewImage(final ArrayList images, final Image image, int indexStart) {
+	public ViewImage(final ArrayList images,
+			final com.google.gwt.user.client.ui.Image image, int indexStart) {
 		close = new MLink("", this);
 		this.images = images;
 		// close.setStyleName(Styles.PRIMARY_BUTTON);
@@ -43,7 +43,7 @@ public class ViewImage extends MDialogBox implements ClickListener,
 		Iterator<?> itr = images.iterator();
 		displayImage = image;
 		index = indexStart;
-		ImageDTO currentImage = (ImageDTO) images.get(index);
+		Image currentImage = (Image) images.get(index);
 		imageTitle = new Label(parseFilename(currentImage.getFilename()));
 		page = new Label("Image " + (index + 1) + " of " + images.size());
 		image.addMouseListener(new MouseListener() {
@@ -108,8 +108,8 @@ public class ViewImage extends MDialogBox implements ClickListener,
 				index = images.size() - 1;
 		}
 
-		ImageDTO temp = (ImageDTO) images.get(index);
-		Image tempImage = new Image();
+		Image temp = (Image) images.get(index);
+		com.google.gwt.user.client.ui.Image tempImage = new com.google.gwt.user.client.ui.Image();
 		tempImage.setUrl(temp.getServerPath());
 		ViewImage.this.imageTitle = new Label(parseFilename(temp.getFilename()));
 		ViewImage.this.page = new Label("Image " + (index + 1) + " of "

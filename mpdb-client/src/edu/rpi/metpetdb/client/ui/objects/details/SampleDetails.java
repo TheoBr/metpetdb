@@ -21,14 +21,14 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.SampleDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
@@ -78,29 +78,29 @@ public class SampleDetails extends MPagePanel {
 			new TextAttribute(MpDb.doc.Sample_subsampleCount).setReadOnly(true),
 	};
 
-	private final ObjectEditorPanel<SampleDTO> p_sample;
+	private final ObjectEditorPanel<Sample> p_sample;
 	private long sampleId;
 
 	public SampleDetails() {
-		p_sample = new ObjectEditorPanel<SampleDTO>(sampleAtts,
+		p_sample = new ObjectEditorPanel<Sample>(sampleAtts,
 				LocaleHandler.lc_text.addSample(), LocaleHandler.lc_text
 						.addSampleDescription()) {
-			protected void loadBean(final AsyncCallback<SampleDTO> ac) {
-				final SampleDTO s = (SampleDTO) getBean();
+			protected void loadBean(final AsyncCallback<Sample> ac) {
+				final Sample s = (Sample) getBean();
 				MpDb.sample_svc.details(s != null && !s.mIsNew() ? s.getId()
 						: sampleId, ac);
 			}
 
-			protected void saveBean(final AsyncCallback<SampleDTO> ac) {
-				MpDb.sample_svc.save((SampleDTO) getBean(), ac);
+			protected void saveBean(final AsyncCallback<Sample> ac) {
+				MpDb.sample_svc.save((Sample) getBean(), ac);
 			}
 
 			protected void deleteBean(final AsyncCallback<Object> ac) {
-				MpDb.sample_svc.delete(((SampleDTO) getBean()).getId(), ac);
+				MpDb.sample_svc.delete(((Sample) getBean()).getId(), ac);
 			}
 
 			protected boolean canEdit() {
-				final SampleDTO s = (SampleDTO) getBean();
+				final Sample s = (Sample) getBean();
 				if (s.isPublicData())
 					return false;
 				if (MpDb.isCurrentUser(s.getOwner()))
@@ -108,19 +108,18 @@ public class SampleDetails extends MPagePanel {
 				return false;
 			}
 
-			protected void onSaveCompletion(final MObjectDTO result) {
+			protected void onSaveCompletion(final MObject result) {
 				if (History.getToken().equals(
-						TokenSpace.detailsOf((SampleDTO) result))) {
-					TokenSpace.dispatch(TokenSpace
-							.detailsOf((SampleDTO) result));
+						TokenSpace.detailsOf((Sample) result))) {
+					TokenSpace.dispatch(TokenSpace.detailsOf((Sample) result));
 				} else {
-					History.newItem(TokenSpace.detailsOf((SampleDTO) result));
+					History.newItem(TokenSpace.detailsOf((Sample) result));
 				}
 			}
 
-			protected void onLoadCompletion(final MObjectDTO result) {
+			protected void onLoadCompletion(final MObject result) {
 				super.onLoadCompletion(result);
-				final SampleDTO s = (SampleDTO) result;
+				final Sample s = (Sample) result;
 				sampleHeader = LocaleHandler.lc_text.sample() + " "
 						+ s.getName();
 				setPageTitle(sampleHeader);
@@ -154,17 +153,15 @@ public class SampleDetails extends MPagePanel {
 					public void begin() {
 						if (MpDb.isLoggedIn())
 							History.newItem(TokenSpace
-									.createNewSubsample((SampleDTO) p_sample
+									.createNewSubsample((Sample) p_sample
 											.getBean()));
 						else
 							onFailure(new LoginRequiredException());
 					}
 
 					public void onSuccess(Object result) {
-						History
-								.newItem(TokenSpace
-										.detailsOf(((SubsampleDTO) result)
-												.getSample()));
+						History.newItem(TokenSpace
+								.detailsOf(((Subsample) result).getSample()));
 					}
 				}.begin();
 			}
@@ -178,7 +175,7 @@ public class SampleDetails extends MPagePanel {
 		final SubsampleListEx list = new SubsampleListEx(LocaleHandler.lc_text
 				.noSubsamplesFound()) {
 			public void update(final PaginationParameters p,
-					final AsyncCallback<Results<SubsampleDTO>> ac) {
+					final AsyncCallback<Results<Subsample>> ac) {
 				MpDb.subsample_svc.all(p, sampleId, ac);
 			}
 		};
@@ -261,7 +258,7 @@ public class SampleDetails extends MPagePanel {
 	}
 
 	public SampleDetails createNew() {
-		final SampleDTO s = new SampleDTO();
+		final Sample s = new Sample();
 		s.setOwner(MpDb.currentUser());
 		p_sample.edit(s);
 		return this;

@@ -15,10 +15,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGrid;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
 
 public class AddPointDialog extends DialogBox implements ClickListener,
 		KeyboardListener {
@@ -31,7 +31,7 @@ public class AddPointDialog extends DialogBox implements ClickListener,
 	private final Set chemicalAnalyses;
 	private final ServerOp continuation;
 
-	public AddPointDialog(final SubsampleDTO s, final ImageOnGrid iog,
+	public AddPointDialog(final Subsample s, final ImageOnGridContainer iog,
 			final ServerOp r, final int x, final int y) {
 		this.continuation = r;
 		this.submit = new Button(LocaleHandler.lc_text.buttonSubmit(), this);
@@ -44,7 +44,7 @@ public class AddPointDialog extends DialogBox implements ClickListener,
 		this.chemicalAnalyses = s.getChemicalAnalyses();
 		final Iterator itr = this.chemicalAnalyses.iterator();
 		while (itr.hasNext()) {
-			final ChemicalAnalysisDTO ma = (ChemicalAnalysisDTO) itr.next();
+			final ChemicalAnalysis ma = (ChemicalAnalysis) itr.next();
 			if (ma.getImage() == null)
 				this.lb.addItem(ma.getSpotId());
 		}
@@ -88,8 +88,7 @@ public class AddPointDialog extends DialogBox implements ClickListener,
 			if (this.lb.getItemCount() > 0) {
 				final Iterator itr = this.chemicalAnalyses.iterator();
 				while (itr.hasNext()) {
-					final ChemicalAnalysisDTO ma = (ChemicalAnalysisDTO) itr
-							.next();
+					final ChemicalAnalysis ma = (ChemicalAnalysis) itr.next();
 					if (ma.getSpotId().equals(
 							this.lb.getItemText(this.lb.getSelectedIndex()))) {
 						this.continuation.onSuccess(ma);

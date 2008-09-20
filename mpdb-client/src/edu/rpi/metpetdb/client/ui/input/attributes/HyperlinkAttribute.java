@@ -2,9 +2,9 @@ package edu.rpi.metpetdb.client.ui.input.attributes;
 
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisDTO;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.SubsampleDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
@@ -20,19 +20,19 @@ public class HyperlinkAttribute extends TextAttribute {
 		super(pc);
 	}
 
-	public Widget[] createDisplayWidget(final MObjectDTO obj) {
+	public Widget[] createDisplayWidget(final MObject obj) {
 		final MLink link = new MLink();
 		link.setText(get(obj));
-		if (obj instanceof SubsampleDTO) {
-			link.setTargetHistoryToken(TokenSpace
-					.detailsOf(((SubsampleDTO) obj).getSample()));
-		} else if (obj instanceof ChemicalAnalysisDTO) {
+		if (obj instanceof Subsample) {
+			link.setTargetHistoryToken(TokenSpace.detailsOf(((Subsample) obj)
+					.getSample()));
+		} else if (obj instanceof ChemicalAnalysis) {
 			if (this.constraints[0].propertyName.equals("subSampleName")) {
 				link.setTargetHistoryToken(TokenSpace
-						.detailsOf(((ChemicalAnalysisDTO) obj).getSubsample()));
+						.detailsOf(((ChemicalAnalysis) obj).getSubsample()));
 			} else if (this.constraints[0].propertyName.equals("sampleName")) {
 				link.setTargetHistoryToken(TokenSpace
-						.detailsOf(((ChemicalAnalysisDTO) obj).getSubsample()
+						.detailsOf(((ChemicalAnalysis) obj).getSubsample()
 								.getSample()));
 			}
 		}

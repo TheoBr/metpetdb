@@ -14,11 +14,11 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisElementDTO;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxideDTO;
-import edu.rpi.metpetdb.client.model.ElementDTO;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
-import edu.rpi.metpetdb.client.model.OxideDTO;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisElement;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxide;
+import edu.rpi.metpetdb.client.model.Element;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
@@ -32,12 +32,12 @@ public class SearchChemistryAttribute extends GenericAttribute {
 				elements, oxides
 		});
 	}
-	public Widget[] createDisplayWidget(final MObjectDTO obj) {
+	public Widget[] createDisplayWidget(final MObject obj) {
 		return new Widget[] {
 			new Widget()
 		};
 	}
-	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
+	public Widget[] createEditWidget(final MObject obj, final String id) {
 		ft = new FlexTable();
 		ft.setStyleName("mpdb-dataTable");
 		// create header
@@ -81,7 +81,7 @@ public class SearchChemistryAttribute extends GenericAttribute {
 		int row = 0;
 		while (itr.hasNext()) {
 			++row;
-			final ElementDTO element = (ElementDTO) itr.next();
+			final Element element = (Element) itr.next();
 			final TextBox lessThan = new TextBox();
 			lessThan.setWidth("30px");
 			final TextBox greaterThan = new TextBox();
@@ -111,7 +111,7 @@ public class SearchChemistryAttribute extends GenericAttribute {
 		int row = 0;
 		while (itr.hasNext()) {
 			++row;
-			final OxideDTO oxide = (OxideDTO) itr.next();
+			final Oxide oxide = (Oxide) itr.next();
 			final TextBox lessThan = new TextBox();
 			lessThan.setWidth("30px");
 			final TextBox greaterThan = new TextBox();
@@ -136,19 +136,19 @@ public class SearchChemistryAttribute extends GenericAttribute {
 		}
 	}
 
-	protected void set(final MObjectDTO obj, final Object o) {
+	protected void set(final MObject obj, final Object o) {
 		mSet(obj, o);
 	}
 
 	protected Object get(final Widget editWidget,
 			final PropertyConstraint constraint) throws ValidationException {
 		if (constraint == this.constraints[1]) {
-			final HashSet<ChemicalAnalysisOxideDTO> Oxides = new HashSet();
+			final HashSet<ChemicalAnalysisOxide> Oxides = new HashSet();
 			// Add only Oxides
 
 			return Oxides;
 		} else {
-			final HashSet<ChemicalAnalysisElementDTO> Elements = new HashSet();
+			final HashSet<ChemicalAnalysisElement> Elements = new HashSet();
 			// Add only Elements
 			return Elements;
 		}

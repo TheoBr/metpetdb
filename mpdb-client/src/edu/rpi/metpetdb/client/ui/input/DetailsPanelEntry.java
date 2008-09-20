@@ -25,9 +25,9 @@ public class DetailsPanelEntry {
 	 * or they are worthless
 	 * 
 	 * @param ga
-	 *            The GenericAttribute for this set of rows
+	 * 		The GenericAttribute for this set of rows
 	 * @param row
-	 *            The first row in the table for this GenericAttribute
+	 * 		The first row in the table for this GenericAttribute
 	 */
 	public DetailsPanelEntry(final GenericAttribute ga,
 			final DetailsPanelRow row) {

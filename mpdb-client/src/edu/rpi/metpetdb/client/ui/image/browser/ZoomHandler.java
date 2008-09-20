@@ -8,7 +8,7 @@ import com.google.gwt.user.client.Element;
 
 public class ZoomHandler {
 
-	private Collection<ImageOnGrid> imagesOnGrid;
+	private Collection<ImageOnGridContainer> imagesOnGrid;
 	public final Element zSlide;
 	public final ImageBrowserDetails imageBrowser;
 	private final static int zoomMultiplier = 2;
@@ -17,8 +17,8 @@ public class ZoomHandler {
 	private int referenceX = 0;
 	private int referenceY = 0;
 
-	public ZoomHandler(final Collection<ImageOnGrid> imagesOnGrid, final Element e,
-			final ImageBrowserDetails ibm) {
+	public ZoomHandler(final Collection<ImageOnGridContainer> imagesOnGrid,
+			final Element e, final ImageBrowserDetails ibm) {
 		this.imagesOnGrid = imagesOnGrid;
 		zSlide = e;
 		imageBrowser = ibm;
@@ -30,8 +30,7 @@ public class ZoomHandler {
 	}
 
 	public int getCurrentScale() {
-		return 6 - (getCurrentZoomLevel() / 10) <= 0
-				? 5 - (getCurrentZoomLevel() / 10)
+		return 6 - (getCurrentZoomLevel() / 10) <= 0 ? 5 - (getCurrentZoomLevel() / 10)
 				: 6 - (getCurrentZoomLevel() / 10);
 	}
 
@@ -48,21 +47,20 @@ public class ZoomHandler {
 	}
 
 	public void zoom(final int level) {
-		final Iterator<ImageOnGrid> itr = imagesOnGrid.iterator();
+		final Iterator<ImageOnGridContainer> itr = imagesOnGrid.iterator();
 		/* by default put refence in the center */
 		referenceY = imageBrowser.getGrid().getOffsetHeight() / 2;
 		referenceX = imageBrowser.getGrid().getOffsetWidth() / 2;
-		imageBrowser.updateScale(level == 1
-				? zoomMultiplier
+		imageBrowser.updateScale(level == 1 ? zoomMultiplier
 				: (1 / (float) zoomMultiplier));
 		while (itr.hasNext()) {
-			final ImageOnGrid iog = itr.next();
-			final int newWidth = Math.round((iog.getWidth() * (level == 1
-					? zoomMultiplier
-					: 1 / (float) zoomMultiplier)));
-			final int newHeight = Math.round((iog.getHeight() * (level == 1
-					? zoomMultiplier
-					: 1 / (float) zoomMultiplier)));
+			final ImageOnGridContainer iog = itr.next();
+			final int newWidth = Math
+					.round((iog.getWidth() * (level == 1 ? zoomMultiplier
+							: 1 / (float) zoomMultiplier)));
+			final int newHeight = Math
+					.round((iog.getHeight() * (level == 1 ? zoomMultiplier
+							: 1 / (float) zoomMultiplier)));
 			if (!iog.skipZoom(newWidth, newHeight)) {
 				iog.resizeImage(newWidth, newHeight, false);
 				changePosition(iog, level);
@@ -74,7 +72,7 @@ public class ZoomHandler {
 		}
 	}
 
-	private void changePosition(final ImageOnGrid iog, final int level) {
+	private void changePosition(final ImageOnGridContainer iog, final int level) {
 		int centerX = getCenterX(iog);
 		int centerY = getCenterY(iog);
 
@@ -99,23 +97,23 @@ public class ZoomHandler {
 				- Math.round((getCurrentHeight(iog) / (float) 2)));
 	}
 
-	private int getCenterX(final ImageOnGrid iog) {
+	private int getCenterX(final ImageOnGridContainer iog) {
 		return Math.round(iog.getTemporaryTopLeftX()
 				+ (getCurrentWidth(iog) / (float) 2));
 	}
 
-	private int getCenterY(final ImageOnGrid iog) {
+	private int getCenterY(final ImageOnGridContainer iog) {
 		return Math.round(iog.getTemporaryTopLeftY()
 				+ (getCurrentHeight(iog) / (float) 2));
 	}
 
-	private int getCurrentWidth(final ImageOnGrid iog) {
+	private int getCurrentWidth(final ImageOnGridContainer iog) {
 		// return Math.round((iog.getImage().getWidth() *
 		// (iog.getResizeRatio())));
 		return iog.getWidth();
 	}
 
-	private int getCurrentHeight(final ImageOnGrid iog) {
+	private int getCurrentHeight(final ImageOnGridContainer iog) {
 		// return Math.round( (iog.getImage().getHeight() *
 		// (iog.getResizeRatio())));
 		return iog.getHeight();

@@ -31,7 +31,7 @@ public class SubsampleList extends VerticalPanel {
 	//
 	// public void populateRow(final PaginationBehavior pagination,
 	// final int row, final Object object) {
-	// final SubsampleDTO s = (SubsampleDTO) object;
+	// final Subsample s = (Subsample) object;
 	// final ImageList imageList = new ImageList(s.getId(), subsamples,
 	// false);
 	// setCell(row, 0, imageList);
@@ -48,8 +48,8 @@ public class SubsampleList extends VerticalPanel {
 	// setCell(row, 3, new MLink("View Map", TokenSpace.detailsOf(s
 	// .getGrid())));
 	// }
-	//			
-	//			
+	//
+	//
 	// setCell(row, 4, new Label((new Integer(s.getImageCount()))
 	// .toString()));
 	// setCell(row, 5, new Label((new Integer(s.getAnalysisCount()))

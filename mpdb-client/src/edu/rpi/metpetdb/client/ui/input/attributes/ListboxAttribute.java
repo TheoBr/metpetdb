@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 import edu.rpi.metpetdb.client.ui.ServerOp;
@@ -31,13 +31,13 @@ public class ListboxAttribute extends GenericAttribute {
 		notifier = r;
 	}
 
-	public Widget[] createDisplayWidget(final MObjectDTO obj) {
+	public Widget[] createDisplayWidget(final MObject obj) {
 		return new Widget[] {
 			new MText(get(obj))
 		};
 	}
 
-	public Widget[] createEditWidget(final MObjectDTO obj, final String id,
+	public Widget[] createEditWidget(final MObject obj, final String id,
 			final GenericAttribute attr) {
 		if (attr.getConstraint() instanceof HasValues) {
 			String selectedValue = get(obj);
@@ -89,12 +89,12 @@ public class ListboxAttribute extends GenericAttribute {
 		return o;
 	}
 
-	protected String get(final MObjectDTO obj) {
+	protected String get(final MObject obj) {
 		final Object v = mGet(obj);
 		return v != null ? v.toString() : "";
 	}
 
-	protected void set(final MObjectDTO obj, final Object v) {
+	protected void set(final MObject obj, final Object v) {
 		mSet(obj, v);
 	}
 }

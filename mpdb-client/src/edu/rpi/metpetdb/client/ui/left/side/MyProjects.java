@@ -3,10 +3,10 @@ package edu.rpi.metpetdb.client.ui.left.side;
 import java.util.Iterator;
 import java.util.Set;
 
-import edu.rpi.metpetdb.client.model.ProjectDTO;
+import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
+import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class MyProjects extends LeftColWidget implements UsesLeftColumn {
 
@@ -29,14 +29,14 @@ public class MyProjects extends LeftColWidget implements UsesLeftColumn {
 
 		Iterator it = projects.iterator();
 		while (it.hasNext()) {
-			final ProjectDTO project = (ProjectDTO) it.next();
+			final Project project = (Project) it.next();
 			list.add(showProjectDetails(project));
 		}
 
 		return list;
 	}
 
-	public static MLink showProjectDetails(final ProjectDTO project) {
+	public static MLink showProjectDetails(final Project project) {
 		final MLink focusProject = new MLink(project.getName(), TokenSpace
 				.samplesOf(project));
 		return focusProject;

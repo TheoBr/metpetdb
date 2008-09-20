@@ -12,12 +12,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.InvalidImageException;
-import edu.rpi.metpetdb.client.model.ImageDTO;
-import edu.rpi.metpetdb.client.model.MObjectDTO;
+import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
-import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.CurrentError;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
@@ -26,7 +26,7 @@ public class UploadImageAttribute extends GenericAttribute {
 	private final FormPanel fp;
 	private final FileUpload fu;
 	private final Label error;
-	private MObjectDTO obj;
+	private MObject obj;
 	private ServerOp continuation;
 	private boolean hasBeenUploaded = false;
 	private boolean hasBeenErrored = false;
@@ -59,7 +59,7 @@ public class UploadImageAttribute extends GenericAttribute {
 				if (results.indexOf("{OK}") != -1) {
 					results = results.substring(results.indexOf("[") + 1,
 							results.indexOf("]"));
-					final edu.rpi.metpetdb.client.model.ImageDTO image = (ImageDTO) obj;
+					final edu.rpi.metpetdb.client.model.Image image = (Image) obj;
 
 					image.setChecksum(results.split(",")[0].trim());
 					image.setChecksum64x64(results.split(",")[1].trim());
@@ -90,7 +90,7 @@ public class UploadImageAttribute extends GenericAttribute {
 					// User uploaded a different image, so delete the old one
 					new ServerOp() {
 						public void begin() {
-							MpDb.image_svc.delete((ImageDTO) obj, this);
+							MpDb.image_svc.delete((Image) obj, this);
 						}
 						public void onSuccess(final Object result) {
 
@@ -119,11 +119,11 @@ public class UploadImageAttribute extends GenericAttribute {
 		fp.submit();
 	}
 
-	public Widget[] createDisplayWidget(final MObjectDTO obj) {
+	public Widget[] createDisplayWidget(final MObject obj) {
 		final Object image = get(obj);
 		if (image != null) {
 			return new Widget[] {
-				new com.google.gwt.user.client.ui.Image(((ImageDTO) image)
+				new com.google.gwt.user.client.ui.Image(((Image) image)
 						.get64x64ServerPath())
 			};
 		} else
@@ -132,14 +132,14 @@ public class UploadImageAttribute extends GenericAttribute {
 			};
 	}
 
-	public Widget[] createEditWidget(final MObjectDTO obj, final String id) {
+	public Widget[] createEditWidget(final MObject obj, final String id) {
 		this.obj = obj;
 		return new Widget[] {
 			fp
 		};
 	}
 
-	public void commitEdit(final MObjectDTO obj, final Widget[] editWidget,
+	public void commitEdit(final MObject obj, final Widget[] editWidget,
 			final CurrentError err, final ServerOp r) {
 		new ServerOp() {
 			public void begin() {
@@ -169,10 +169,10 @@ public class UploadImageAttribute extends GenericAttribute {
 	protected Object get(final Widget editWidget) {
 		return get(obj);
 	}
-	protected String get(final MObjectDTO obj) {
+	protected String get(final MObject obj) {
 		return null;
 	}
-	protected void set(final MObjectDTO obj, final Object images) {
+	protected void set(final MObject obj, final Object images) {
 
 	}
 }
