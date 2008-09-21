@@ -423,9 +423,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 					matched = headers.get(k).toString();
 				}
 			}
-			HTML mpdbCol = new HTML();
-			mpdbCol.setHTML(matched);
-			parsed.setWidget(i, 2, mpdbCol);
+			parsed.setWidget(i, 2, new HTML(matched));
 			parsed.getFlexCellFormatter().setStyleName(i, 2, CSS.BULK_RESULTS_MPDBCOL);
 			i++;
 		}
