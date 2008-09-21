@@ -51,6 +51,7 @@ public class CSS {
 	public static final String CURRENT = "current";
 	public static final String CLEARFIX = "clearfix";
 	public static final String BETA = "beta";
+	public static final String EMPTY = "empty";
 
 	/* ---------------- statuses ---------------- */
 	public static final String SUCCESS = "success";
@@ -98,15 +99,36 @@ public class CSS {
 	/* ---------------- Page: My Samples ---------------- */
 	public static final String SAMPLES_CONTAINER = "samples-container";
 
+	
+	public static final String NOTICE = "notice";
 	public static final String NOTICE_PANEL = "notice-panel";
 	public static final String NOTICE_MESSAGE = "notice-message";
 	public static final String NOTICE_HIDE = "notice-hide";
 
-	public static final String BULK_RESULTS_GRID = "bulk-results-grid";
+	public static final String BULK_UPLOAD = "bulk-upload";
 	public static final String PROGRESSBAR_CONTAINER = "progressbar-container";
 	public static final String BULK_UPLOAD_FORM = "bulk-upload-form";
-	public static final String BULK_UPLOAD = "bulk-upload";
-	public static final String NOTICE = "notice";
+	
+	public static final String BULK_RESULTS = "bulk-results";
+
+	public static final String BULK_RESULTS_PARSED = "parsed";
+	public static final String BULK_RESULTS_SSCOLNUM = "parsed-num";
+	public static final String BULK_RESULTS_SSCOL = "parsed-sscol";
+	public static final String BULK_RESULTS_MPDBCOL = "parsed-mpdbcol";
+	
+	public static final String BULK_RESULTS_SUMMARY = "summary";
+	public static final String BULK_RESULTS_NEW = "summary-new";
+	public static final String BULK_RESULTS_OLD = "summary-old";
+	public static final String BULK_RESULTS_INVALID = "summary-invalid";
+	public static final String BULK_RESULTS_TOTAL = "summary-total";
+	
+	public static final String TYPE_SMALL_CAPS = "type-small-caps";
+	public static final String TYPE_LARGE_NUMBER = "type-large-number";
+	public static final String HELP = "help";
+	public static final String MAIN = "main";
+	public static final String BULK_TYPES = "bulk-upload-types";
+	public static final String ELEMENT_MARGIN = "element-margin";
+	
 
 	private CSS() {
 	}

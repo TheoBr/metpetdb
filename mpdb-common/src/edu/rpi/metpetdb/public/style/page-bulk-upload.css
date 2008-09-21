@@ -1,11 +1,111 @@
+.bulk-upload {
+	margin-bottom: 5em;
+}
+.bulk-upload .main .left-col {
+	width: 60%;
+}
+.bulk-upload .main .right-col {
+	width: 40%;
+}
+.bulk-upload-types li {
+	display: inline;
+}
+.bulk-upload-form {
+	margin: 10px 10px 0;
+}
+.bulk-upload-form .gwt-FileUpload {
+	width: 500px;
+}
+.bulk-upload .notice-panel {
+	margin: 10px;
+}
+.bulk-results .left-col {
+	width: 15em;
+}
+.bulk-results .right-col {
+	width: auto;
+}
+.bulk-results .parsed,
+.bulk-results .summary,
+.bulk-upload-types {
+	margin: 10px;
+}
+.bulk-upload .main button {
+	margin: 0 10px;
+}
+.bulk-results .summary table {
+	margin: 10px 0;
+}
+.bulk-results .parsed td {
+	vertical-align: middle;
+}
+.bulk-results .parsed-num {
+	color: #999;
+	text-align: right;
+	padding: 2px 5px 2px 0;
+}
+.bulk-results .parsed-sscol {
+	background: transparent url(../images/rarr-long-light.png) no-repeat 100% 50%;
+	padding: 2px 30px 2px 0;
+}
+.bulk-results .parsed-sscol div {
+	display: inline;
+	background-color: #fff;
+	padding-right: 5px;
+}
+.bulk-results .parsed-mpdbcol {
+	font-weight: bold;
+}
+
+.bulk-results .summary td {
+	padding: 0 10px;
+	border-right: 1px solid #ddd;
+	text-align: center;
+}
+.bulk-results .summary td:first-child {
+	padding-left: 0;
+}
+.bulk-results .summary td:last-child {
+	border-right: none;
+	padding-right: 0;
+}
+
+.type-small-caps {
+	font: 0.9em "Gill Sans",Verdana,sans-serif;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	color: #999;
+}
+.bulk-results .summary .type-small-caps {
+	margin-bottom: 3px;
+}
+
+.type-large-number {
+	font: 1.8em "Lucida Grande",Verdana,sans-serif;
+	color: #000;
+}
+
+.element-margin {
+	margin: 10px;
+}
+
+.bulk-results .summary-new .type-large-number {
+	color: #4a841b;
+}
+.bulk-results .summary-old .type-large-number {
+	color: #82a9cd;
+}
+.bulk-results .summary-invalid .type-large-number {
+	color: #992c1a;
+}
+.bulk-results .summary .empty div {
+	color: #aaa !important;
+}
+
 /*-------------------------------------
 				Status
 ---------------------------------------*/
 
-.bulk-results-grid {
-	border: 1px solid #eee;
-	margin: 10px;
-}
 .notice-panel {
 	border-bottom: 1px solid #EFEFEF;
 	background-color: #EFEFEF;
@@ -21,7 +121,7 @@
 .notice-success {
 	border-bottom-color: #cbee95;
 	background-color: #f4ffe4;
-	color: #5a7d24;
+	color: #3B5C20;
 }
 .notice-error {
 	border-bottom-color: #ffb3a1;
@@ -39,14 +139,6 @@
 	color: #f1a707;
 }
 
-
-.bulk-upload-form {
-	margin: 10px 10px 0;
-}
-.bulk-upload-form .gwt-FileUpload {
-	width: 500px;
-}
-
 /*-------------------------------------
 				ProgressBar
 ---------------------------------------*/
@@ -54,7 +146,6 @@
 	border: 1px solid #bebebe;
 	background-color: #fff;
 	padding: 1px;
-	width: 200px;
 	margin: 10px;
 }
 .gwt-ProgressBar-shell {
@@ -66,8 +157,7 @@
 }
 .gwt-ProgressBar-shell .gwt-ProgressBar-text {
 	color: #aaa;
-	padding: 2px 0;
 }
 .gwt-ProgressBar-shell .gwt-ProgressBar-text-secondHalf {
-	color: #688200;
+	color: #fff;
 }
