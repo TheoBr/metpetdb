@@ -8,14 +8,19 @@ import org.apache.lucene.document.DateTools;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.FilteredQuery;
+import org.apache.lucene.search.RangeFilter;
 import org.apache.lucene.search.RangeQuery;
 import org.apache.lucene.search.TermQuery;
+import org.apache.solr.util.NumberUtils;
 import org.hibernate.Session;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 
 import edu.rpi.metpetdb.client.model.DateSpan;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SearchElement;
+import edu.rpi.metpetdb.client.model.SearchOxide;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.properties.SearchProperty;
@@ -68,7 +73,47 @@ public class SearchDb {
 			if (methodResult == null) {
 				// ignore it
 			} else { // otherwise, what type of returned data is it?
-				if (methodResult instanceof Set) { // if a set of data is
+				if (columnName.equals("subsample_chemicalAnalysis_oxides")) {
+					if (((Set) methodResult).size() > 0) {
+						final BooleanQuery setQuery = new BooleanQuery();
+						for (SearchOxide o : (Set<SearchOxide>) methodResult) {
+							final RangeFilter rangeFilterOnMin = new RangeFilter("subsample_chemicalAnalysis_oxides_minAmount", NumberUtils.float2sortableStr(-99999), NumberUtils.float2sortableStr(o
+									.getUpperBound()),true, true);
+							final RangeFilter rangeFilterOnMax = new RangeFilter("subsample_chemicalAnalysis_oxides_minAmount", NumberUtils.float2sortableStr(o
+									.getLowerBound()), NumberUtils.float2sortableStr(99999),true, true);
+							final TermQuery oxideQuery = new TermQuery(new Term("subsample_chemicalAnalysis_oxides_oxide_species",							o.getSpecies()));
+							final FilteredQuery filterOnMinQuery = new FilteredQuery(oxideQuery, rangeFilterOnMin);
+							final FilteredQuery filterOnBothQuery = new FilteredQuery(filterOnMinQuery, rangeFilterOnMax);
+							setQuery.add(filterOnBothQuery, BooleanClause.Occur.SHOULD);
+						}
+						// require that one of these results be found in the
+						// full query
+						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
+					}
+				}
+				else if (columnName
+						.equals("subsample_chemicalAnalysis_elements")) {
+					if (((Set) methodResult).size() > 0) {
+						final BooleanQuery setQuery = new BooleanQuery();
+						for (SearchElement o : (Set<SearchElement>) methodResult) {
+							final RangeFilter rangeFilterOnMin = new RangeFilter("subsample_chemicalAnalysis_elements_minAmount", NumberUtils.float2sortableStr(-99999), NumberUtils.float2sortableStr(o
+									.getUpperBound()),true, true);
+							final RangeFilter rangeFilterOnMax = new RangeFilter("subsample_chemicalAnalysis_elements_minAmount", NumberUtils.float2sortableStr(o
+									.getLowerBound()), NumberUtils.float2sortableStr(99999),true, true);
+							final TermQuery elementQuery = new TermQuery(
+									new Term(
+											"subsample_chemicalAnalysis_elements_element_symbol",
+											o.getElementSymbol()));
+							final FilteredQuery filterOnMinQuery = new FilteredQuery(elementQuery, rangeFilterOnMin);
+							final FilteredQuery filterOnBothQuery = new FilteredQuery(filterOnMinQuery, rangeFilterOnMax);
+							setQuery.add(filterOnBothQuery, BooleanClause.Occur.SHOULD);
+						}
+						// require that one of these results be found in the
+						// full query
+						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
+					}
+				}
+				else if (methodResult instanceof Set) { // if a set of data is
 					// returned, it should be an
 					// OR query
 					if (((Set) methodResult).size() > 0) {

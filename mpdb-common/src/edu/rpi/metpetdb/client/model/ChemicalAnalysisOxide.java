@@ -4,6 +4,7 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FieldBridge;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.Store;
 
 import edu.rpi.metpetdb.server.search.bridges.FloatBridge;
 
@@ -15,8 +16,13 @@ public class ChemicalAnalysisOxide extends MObject {
 	private Float amount;
 	private Float precision;
 	private String precisionUnit;
+	@Field(index = Index.UN_TOKENIZED)
+	@FieldBridge(impl = FloatBridge.class)
 	private Float minAmount;
+	@Field(index = Index.UN_TOKENIZED)
+	@FieldBridge(impl = FloatBridge.class)
 	private Float maxAmount;
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String measurementUnit;
 
 	@IndexedEmbedded(prefix = "oxide_")

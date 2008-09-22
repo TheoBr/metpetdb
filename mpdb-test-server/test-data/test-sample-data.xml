@@ -307,11 +307,11 @@
   <elements element_id="100" name="Yttrium" symbol="Y" atomic_number="39" weight="88.9058"/>
   <elements element_id="101" name="Zinc" symbol="Zn" atomic_number="30" weight="65.38"/>
   <elements element_id="102" name="Zirconium" symbol="Zr" atomic_number="40" weight="91.224"/>
-  <chemical_analysis_elements chemical_analysis_id="1" element_id="1" amount="5.0" precision="0.0" precision_type="ABS"/>
-  <chemical_analysis_elements chemical_analysis_id="1" element_id="14" amount="5.0" precision="0.0" precision_type="ABS"/>
-  <chemical_analysis_elements chemical_analysis_id="2" element_id="1" amount="10.0" precision="0.0" precision_type="ABS"/>
-  <chemical_analysis_elements chemical_analysis_id="2" element_id="14" amount="10.0" precision="0.0" precision_type="ABS"/><chemical_analysis_elements chemical_analysis_id="3" element_id="1" amount="6.0"></chemical_analysis_elements>
-	<chemical_analysis_elements chemical_analysis_id="3" element_id="14" amount="8"></chemical_analysis_elements>
+  <chemical_analysis_elements chemical_analysis_id="1" element_id="1" amount="5.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="3" max_amount="7"/>
+  <chemical_analysis_elements chemical_analysis_id="1" element_id="14" amount="5.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="3" max_amount="7"/>
+  <chemical_analysis_elements chemical_analysis_id="2" element_id="1" amount="10.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="7" max_amount="13"/>
+  <chemical_analysis_elements chemical_analysis_id="2" element_id="14" amount="10.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="7" max_amount="13"/><chemical_analysis_elements chemical_analysis_id="3" element_id="1" amount="6.0" measurement_unit="ppm" min_amount="4" max_amount="8"></chemical_analysis_elements>
+	<chemical_analysis_elements chemical_analysis_id="3" element_id="14" amount="8" measurement_unit="ppm" min_amount="6" max_amount="10"></chemical_analysis_elements>
 	<oxides oxide_id="1" element_id="1" oxidation_state="3" species="Al2O3" weight="101.96" cations_per_oxide="2" conversion_factor="1.8894427663399"/>
   <oxides oxide_id="2" element_id="3" oxidation_state="5" species="Sb2O5" weight="323.517" cations_per_oxide="2" conversion_factor="1.32850279237845"/>
   <oxides oxide_id="3" element_id="3" oxidation_state="3" species="Sb2O3" weight="291.518" cations_per_oxide="2" conversion_factor="1.19710167542707"/>
@@ -353,11 +353,11 @@
   <oxides oxide_id="39" element_id="100" oxidation_state="3" species="Y2O3" weight="225.81" cations_per_oxide="2" conversion_factor="1.26993964398273"/>
   <oxides oxide_id="40" element_id="101" oxidation_state="2" species="ZnO" weight="81.38" cations_per_oxide="1" conversion_factor="1.24472315692872"/>
   <oxides oxide_id="41" element_id="102" oxidation_state="4" species="ZrO2" weight="123.22" cations_per_oxide="1" conversion_factor="1.35074103306148"/>
-  <chemical_analysis_oxides chemical_analysis_id="1" oxide_id="1" amount="10.0" precision="0.0" precision_type="ABS"/>
-  <chemical_analysis_oxides chemical_analysis_id="1" oxide_id="6" amount="10.0" precision="0.0" precision_type="ABS"/>
-  <chemical_analysis_oxides chemical_analysis_id="2" oxide_id="1" amount="15.0" precision="0.0" precision_type="ABS"/>
-  <chemical_analysis_oxides chemical_analysis_id="2" oxide_id="6" amount="15.0" precision="0.0" precision_type="ABS"/><chemical_analysis_oxides chemical_analysis_id="5" oxide_id="1" amount="13.0"></chemical_analysis_oxides>
-	<chemical_analysis_oxides chemical_analysis_id="6" oxide_id="6" amount="9"></chemical_analysis_oxides>
+  <chemical_analysis_oxides chemical_analysis_id="1" oxide_id="1" amount="10.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="7" max_amount="12"/>
+  <chemical_analysis_oxides chemical_analysis_id="1" oxide_id="6" amount="10.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="7" max_amount="13"/>
+  <chemical_analysis_oxides chemical_analysis_id="2" oxide_id="1" amount="15.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="12" max_amount="18"/>
+  <chemical_analysis_oxides chemical_analysis_id="2" oxide_id="6" amount="15.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="12" max_amount="18"/><chemical_analysis_oxides chemical_analysis_id="5" oxide_id="1" amount="13.0" measurement_unit="ppm" min_amount="11" max_amount="15"></chemical_analysis_oxides>
+	<chemical_analysis_oxides chemical_analysis_id="6" oxide_id="6" amount="9" measurement_unit="ppm" min_amount="7" max_amount="11"></chemical_analysis_oxides>
 	<mineral_types mineral_type_id="1" name="Silicates"></mineral_types>
   <mineral_types mineral_type_id="2" name="Oxides"/>
   <mineral_types mineral_type_id="3" name="Carbonates"/>

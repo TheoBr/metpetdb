@@ -63,7 +63,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 			fullTextSession.index(user);
 		tx.commit(); // index are written at commit time
 	}
-
+/*
 	@Test
 	public void testTermSearch() {
 		final Session session = InitDatabase.getSession();
@@ -448,7 +448,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 				}
 			}
 		}
-	}
+	}*/
 	@Test
 	public void testOxideRangeSearch() {
 		final SearchSample searchSamp = new SearchSample();
@@ -479,62 +479,14 @@ public class HibernateSearchTest extends DatabaseTestCase {
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
 						for (SearchOxide o : (Set<SearchOxide>) methodResult) {
-							final RangeQuery surroundMin = new RangeQuery(
-									new Term(
-											"subsample_chemicalAnalysis_oxides_minAmount",
-											NumberUtils.float2sortableStr(o
-													.getLowerBound())),
-									new Term(
-											"subsample_chemicalAnalysis_oxides_minAmount",
-											NumberUtils.float2sortableStr(o
-													.getUpperBound())), true);
-							final RangeQuery surroundMax = new RangeQuery(
-									new Term(
-											"subsample_chemicalAnalysis_oxides_maxAmount",
-											NumberUtils.float2sortableStr(o
-													.getLowerBound())),
-									new Term(
-											"subsample_chemicalAnalysis_oxides_maxAmount",
-											NumberUtils.float2sortableStr(o
-													.getUpperBound())), true);
-							final RangeQuery minBelowLow = new RangeQuery(
-									new Term(
-											"subsample_chemicalAnalysis_oxides_minAmount",
-											NumberUtils.float2sortableStr(0)),
-									new Term(
-											"subsample_chemicalAnalysis_oxides_minAmount",
-											NumberUtils.float2sortableStr(o
-													.getLowerBound())), true);
-							final RangeQuery maxAboveHigh = new RangeQuery(
-									new Term(
-											"subsample_chemicalAnalysis_oxides_maxAmount",
-											NumberUtils.float2sortableStr(o
-													.getUpperBound())),
-									new Term(
-											"subsample_chemicalAnalysis_oxides_minAmount",
-											NumberUtils.float2sortableStr(9999)),
-									true);
-							final BooleanQuery minMaxSurroundingLowHigh = new BooleanQuery();
-							minMaxSurroundingLowHigh.add(minBelowLow,
-									BooleanClause.Occur.MUST);
-							minMaxSurroundingLowHigh.add(maxAboveHigh,
-									BooleanClause.Occur.MUST);
-							final BooleanQuery rangeSearches = new BooleanQuery();
-							rangeSearches.add(surroundMin,
-									BooleanClause.Occur.SHOULD);
-							rangeSearches.add(surroundMax,
-									BooleanClause.Occur.SHOULD);
-							rangeSearches.add(minMaxSurroundingLowHigh,
-									BooleanClause.Occur.SHOULD);
-							
-							final TermQuery oxideQuery = new TermQuery(
-									new Term(
-											"subsample_chemicalAnalysis_oxides_oxide_species",
-											o.getSpecies()));
-							final BooleanQuery oxideSetQuery = new BooleanQuery();
-							oxideSetQuery.add(rangeSearches, BooleanClause.Occur.MUST);
-							oxideSetQuery.add(oxideQuery, BooleanClause.Occur.MUST);
-							setQuery.add(oxideSetQuery, BooleanClause.Occur.SHOULD);
+							final RangeFilter rangeFilterOnMin = new RangeFilter("subsample_chemicalAnalysis_oxides_minAmount", NumberUtils.float2sortableStr(-99999), NumberUtils.float2sortableStr(o
+									.getUpperBound()),true, true);
+							final RangeFilter rangeFilterOnMax = new RangeFilter("subsample_chemicalAnalysis_oxides_minAmount", NumberUtils.float2sortableStr(o
+									.getLowerBound()), NumberUtils.float2sortableStr(99999),true, true);
+							final TermQuery oxideQuery = new TermQuery(new Term("subsample_chemicalAnalysis_oxides_oxide_species",							o.getSpecies()));
+							final FilteredQuery filterOnMinQuery = new FilteredQuery(oxideQuery, rangeFilterOnMin);
+							final FilteredQuery filterOnBothQuery = new FilteredQuery(filterOnMinQuery, rangeFilterOnMax);
+							setQuery.add(filterOnBothQuery, BooleanClause.Occur.SHOULD);
 						}
 						// require that one of these results be found in the
 						// full query
@@ -674,62 +626,17 @@ public class HibernateSearchTest extends DatabaseTestCase {
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
 						for (SearchElement o : (Set<SearchElement>) methodResult) {
-							final RangeQuery surroundMin = new RangeQuery(
-									new Term(
-											"subsample_chemicalAnalysis_elements_minAmount",
-											NumberUtils.float2sortableStr(o
-													.getLowerBound())),
-									new Term(
-											"subsample_chemicalAnalysis_elements_minAmount",
-											NumberUtils.float2sortableStr(o
-													.getUpperBound())), true);
-							final RangeQuery surroundMax = new RangeQuery(
-									new Term(
-											"subsample_chemicalAnalysis_elements_maxAmount",
-											NumberUtils.float2sortableStr(o
-													.getLowerBound())),
-									new Term(
-											"subsample_chemicalAnalysis_elements_maxAmount",
-											NumberUtils.float2sortableStr(o
-													.getUpperBound())), true);
-							final RangeQuery minBelowLow = new RangeQuery(
-									new Term(
-											"subsample_chemicalAnalysis_elements_minAmount",
-											NumberUtils.float2sortableStr(0)),
-									new Term(
-											"subsample_chemicalAnalysis_elements_minAmount",
-											NumberUtils.float2sortableStr(o
-													.getLowerBound())), true);
-							final RangeQuery maxAboveHigh = new RangeQuery(
-									new Term(
-											"subsample_chemicalAnalysis_elements_maxAmount",
-											NumberUtils.float2sortableStr(o
-													.getUpperBound())),
-									new Term(
-											"subsample_chemicalAnalysis_elements_minAmount",
-											NumberUtils.float2sortableStr(9999)),
-									true);
-							final BooleanQuery minMaxSurroundingLowHigh = new BooleanQuery();
-							minMaxSurroundingLowHigh.add(minBelowLow,
-									BooleanClause.Occur.MUST);
-							minMaxSurroundingLowHigh.add(maxAboveHigh,
-									BooleanClause.Occur.MUST);
-							final BooleanQuery rangeSearches = new BooleanQuery();
-							rangeSearches.add(surroundMin,
-									BooleanClause.Occur.SHOULD);
-							rangeSearches.add(surroundMax,
-									BooleanClause.Occur.SHOULD);
-							rangeSearches.add(minMaxSurroundingLowHigh,
-									BooleanClause.Occur.SHOULD);
-							
+							final RangeFilter rangeFilterOnMin = new RangeFilter("subsample_chemicalAnalysis_elements_minAmount", NumberUtils.float2sortableStr(-99999), NumberUtils.float2sortableStr(o
+									.getUpperBound()),true, true);
+							final RangeFilter rangeFilterOnMax = new RangeFilter("subsample_chemicalAnalysis_elements_minAmount", NumberUtils.float2sortableStr(o
+									.getLowerBound()), NumberUtils.float2sortableStr(99999),true, true);
 							final TermQuery elementQuery = new TermQuery(
 									new Term(
 											"subsample_chemicalAnalysis_elements_element_symbol",
 											o.getElementSymbol()));
-							final BooleanQuery elementSetQuery = new BooleanQuery();
-							elementSetQuery.add(rangeSearches, BooleanClause.Occur.MUST);
-							elementSetQuery.add(elementQuery, BooleanClause.Occur.MUST);
-							setQuery.add(elementSetQuery, BooleanClause.Occur.SHOULD);
+							final FilteredQuery filterOnMinQuery = new FilteredQuery(elementQuery, rangeFilterOnMin);
+							final FilteredQuery filterOnBothQuery = new FilteredQuery(filterOnMinQuery, rangeFilterOnMax);
+							setQuery.add(filterOnBothQuery, BooleanClause.Occur.SHOULD);
 						}
 						// require that one of these results be found in the
 						// full query
@@ -749,7 +656,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		assertEquals(1, results.size());
 
 	}
-
+/*
 	@Test
 	public void testSampleSearch() {
 		// In the actual search, we will receive User information as a parameter
@@ -762,24 +669,24 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		// SearchSample
 		final SearchSample searchSamp = new SearchSample();
 		// searchSamp.setAlias("1");
-/*		final RockType rockType1 = new RockType();
+		final RockType rockType1 = new RockType();
 		rockType1.setRockType("type 2");
 		final RockType rockType2 = new RockType();
 		rockType2.setRockType("type 3");
 		searchSamp.addPossibleRockType(rockType1);
 		searchSamp.addPossibleRockType(rockType2);
-*/		Oxide tempOxide = new Oxide();
+		Oxide tempOxide = new Oxide();
 		tempOxide.setSpecies("al2o3");
 		searchSamp.addOxide(tempOxide, 9f, 17f);
 
-		/*
-		 * final Calendar rightNow = Calendar.getInstance(); rightNow.set(2008,
-		 * 7, 25); final Date firstDate = rightNow.getTime(); rightNow.set(2008,
-		 * 8, 1); final Date secondDate = rightNow.getTime();
-		 * 
-		 * searchSamp.setCollectionDateRange(new DateSpan(firstDate,
-		 * secondDate));
-		 */
+		
+		  final Calendar rightNow = Calendar.getInstance(); rightNow.set(2008,
+		  7, 25); final Date firstDate = rightNow.getTime(); rightNow.set(2008,
+		  8, 1); final Date secondDate = rightNow.getTime();
+		  
+		  searchSamp.setCollectionDateRange(new DateSpan(firstDate,
+		  secondDate));
+		 
 		// Actual Search Functionality
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
@@ -788,19 +695,19 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		// The full scope of the query we want to make
 		BooleanQuery fullQuery = new BooleanQuery();
 
-		/*
-		 * // Check if it's public data or if the user is this user BooleanQuery
-		 * privacyQuery = new BooleanQuery(); // Is this public data? final
-		 * TermQuery termQuery = new TermQuery(new Term("publicData",
-		 * Boolean.TRUE.toString())); privacyQuery.add(termQuery,
-		 * BooleanClause.Occur.SHOULD); // Is this the current user? final
-		 * TermQuery termQuery2 = new TermQuery(new Term( "user_emailAddress",
-		 * testUser.getEmailAddress())); privacyQuery.add(termQuery2,
-		 * BooleanClause.Occur.SHOULD);
-		 * 
-		 * // in the full query, make it mandatory that the privacy requirements
-		 * // are met fullQuery.add(privacyQuery, BooleanClause.Occur.MUST);
-		 */
+		
+		  // Check if it's public data or if the user is this user BooleanQuery
+		  privacyQuery = new BooleanQuery(); // Is this public data? final
+		  TermQuery termQuery = new TermQuery(new Term("publicData",
+		  Boolean.TRUE.toString())); privacyQuery.add(termQuery,
+		  BooleanClause.Occur.SHOULD); // Is this the current user? final
+		  TermQuery termQuery2 = new TermQuery(new Term( "user_emailAddress",
+		  testUser.getEmailAddress())); privacyQuery.add(termQuery2,
+		  BooleanClause.Occur.SHOULD);
+		  
+		  // in the full query, make it mandatory that the privacy requirements
+		  // are met fullQuery.add(privacyQuery, BooleanClause.Occur.MUST);
+		 
 		// Actual Search
 		String columnName;
 		Object methodResult = null;
@@ -937,5 +844,5 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		System.out.println(fullQuery.toString());
 		assertEquals(1, results.size());
 	}
-
+*/
 }
