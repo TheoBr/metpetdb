@@ -15,6 +15,10 @@ public class ChemicalAnalysisOxide extends MObject {
 	private Float amount;
 	private Float precision;
 	private String precisionUnit;
+	private Float minAmount;
+	private Float maxAmount;
+	private String measurementUnit;
+
 	@IndexedEmbedded(prefix = "oxide_")
 	private Oxide oxide;
 
@@ -54,6 +58,36 @@ public class ChemicalAnalysisOxide extends MObject {
 
 	public Oxide getOxide() {
 		return oxide;
+	}
+	
+	public void setMeasurementUnit(final String s) {
+		measurementUnit = s;
+	}
+
+	public String getMeasurementUnit() {
+		return measurementUnit;
+	}
+	
+	public void setMinAmount(final Float ma) {
+		minAmount = ma;
+	}
+
+	public Float getMinAmount() {
+		if (minAmount == null)
+			return new Float(0);
+		else
+			return minAmount;
+	}
+	
+	public void setMaxAmount(final Float ma) {
+		maxAmount = ma;
+	}
+
+	public Float getMaxAmount() {
+		if (maxAmount == null)
+			return new Float(0);
+		else
+			return maxAmount;
 	}
 
 	public String getName() {

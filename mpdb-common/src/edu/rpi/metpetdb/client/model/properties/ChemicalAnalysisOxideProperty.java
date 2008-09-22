@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.model.properties;
 
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisElement;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxide;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.Oxide;
@@ -38,6 +39,42 @@ public enum ChemicalAnalysisOxideProperty implements Property {
 				final K precisionUnit) {
 			((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.setPrecisionUnit((String) precisionUnit);
+		}
+	},
+	minAmount {
+		public <T extends MObject> Float get(final T chemicalAnalysisOxide) {
+			return ((ChemicalAnalysisOxide) chemicalAnalysisOxide)
+					.getMinAmount();
+		}
+
+		public <T extends MObject, K> void set(final T chemicalAnalysisOxide,
+				final K minAmount) {
+			((ChemicalAnalysisOxide) chemicalAnalysisOxide)
+					.setMinAmount((Float) minAmount);
+		}
+	},
+	maxAmount {
+		public <T extends MObject> Float get(final T chemicalAnalysisOxide) {
+			return ((ChemicalAnalysisOxide) chemicalAnalysisOxide)
+					.getMaxAmount();
+		}
+
+		public <T extends MObject, K> void set(final T chemicalAnalysisOxide,
+				final K maxAmount) {
+			((ChemicalAnalysisOxide) chemicalAnalysisOxide)
+					.setMaxAmount((Float) maxAmount);
+		}
+	},
+	measurementUnit {
+		public <T extends MObject> String get(final T chemicalAnalysisOxide) {
+			return ((ChemicalAnalysisOxide) chemicalAnalysisOxide)
+					.getMeasurementUnit();
+		}
+
+		public <T extends MObject, K> void set(final T chemicalAnalysisOxide,
+				final K measurementUnit) {
+			((ChemicalAnalysisOxide) chemicalAnalysisOxide)
+					.setMeasurementUnit((String) measurementUnit);
 		}
 	},
 	oxide {

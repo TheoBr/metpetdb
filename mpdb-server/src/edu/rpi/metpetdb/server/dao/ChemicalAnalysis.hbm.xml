@@ -41,6 +41,9 @@
       	<property name="amount" column="amount" type="float" not-null="true" lazy="false"/>
       	<property name="precision" column="precision" type="float" />
       	<property name="precisionUnit" column="precision_type" />
+      	<property name="measurementUnit" column="measurement_unit"/>
+      	<property name="minAmount" column="min_amount" type="float" />
+      	<property name="maxAmount" column="max_amount" type="float" />
         <many-to-one name="element" class="Element" column="element_id" lazy="false"/>
 	  </composite-element>
     </set>
@@ -52,6 +55,9 @@
       	<property name="amount" column="amount" type="float" not-null="true" lazy="false"/>
       	<property name="precision" column="precision" type="float" />
       	<property name="precisionUnit" column="precision_type" />
+      	<property name="measurementUnit" column="measurement_unit"/>
+      	<property name="minAmount" column="min_amount" type="float" />
+      	<property name="maxAmount" column="max_amount" type="float" />
         <many-to-one name="oxide" class="Oxide" column="oxide_id" lazy="false"/>
 	  </composite-element>
     </set>

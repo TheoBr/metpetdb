@@ -391,7 +391,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 
 		assertEquals(4, results.size());
 	}
-	
+
 	@Test
 	public void testOxideSearch(){
 		final SearchSample searchSamp = new SearchSample();
@@ -448,28 +448,17 @@ public class HibernateSearchTest extends DatabaseTestCase {
 				}
 			}
 		}
-
-		// Run the query and get the actual results
-
-		final org.hibernate.Query hibQuery = fullTextSession
-				.createFullTextQuery(fullQuery, Sample.class);
-		final List<Sample> results = hibQuery.list();
-		for (final Sample s : results)
-			System.out.println("found sample, id is " + s.getId());
-		assertEquals(1, results.size());
-		
 	}
-	
 	@Test
-	public void testElementSearch(){
+	public void testOxideRangeSearch() {
 		final SearchSample searchSamp = new SearchSample();
-		Element tempElement = new Element();
-		tempElement.setSymbol("al");
-		searchSamp.addElement(tempElement, 4.9f, 12.0f);
+		Oxide tempOxide = new Oxide();
+		tempOxide.setSpecies("al2o3");
+		searchSamp.addOxide(tempOxide, 10f, 16f);
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
 				.createFullTextSession(session);
-		
+
 		String columnName;
 		Object methodResult = null;
 		BooleanQuery fullQuery = new BooleanQuery();
@@ -486,27 +475,153 @@ public class HibernateSearchTest extends DatabaseTestCase {
 			if (methodResult == null) {
 				// ignore it
 			} else { // otherwise, what type of returned data is it?
-				if (columnName
-						.equals("subsample_chemicalAnalysis_oxides")) {
+				if (columnName.equals("subsample_chemicalAnalysis_oxides")) {
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
 						for (SearchOxide o : (Set<SearchOxide>) methodResult) {
-							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_oxides_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
-							final TermQuery oxideQuery = new TermQuery(new Term("subsample_chemicalAnalysis_oxides_oxide_species", o.getSpecies()));
-							final FilteredQuery filter = new FilteredQuery(oxideQuery, rangeFilter);
+							final RangeQuery surroundMin = new RangeQuery(
+									new Term(
+											"subsample_chemicalAnalysis_oxides_minAmount",
+											NumberUtils.float2sortableStr(o
+													.getLowerBound())),
+									new Term(
+											"subsample_chemicalAnalysis_oxides_minAmount",
+											NumberUtils.float2sortableStr(o
+													.getUpperBound())), true);
+							final RangeQuery surroundMax = new RangeQuery(
+									new Term(
+											"subsample_chemicalAnalysis_oxides_maxAmount",
+											NumberUtils.float2sortableStr(o
+													.getLowerBound())),
+									new Term(
+											"subsample_chemicalAnalysis_oxides_maxAmount",
+											NumberUtils.float2sortableStr(o
+													.getUpperBound())), true);
+							final RangeQuery minBelowLow = new RangeQuery(
+									new Term(
+											"subsample_chemicalAnalysis_oxides_minAmount",
+											NumberUtils.float2sortableStr(0)),
+									new Term(
+											"subsample_chemicalAnalysis_oxides_minAmount",
+											NumberUtils.float2sortableStr(o
+													.getLowerBound())), true);
+							final RangeQuery maxAboveHigh = new RangeQuery(
+									new Term(
+											"subsample_chemicalAnalysis_oxides_maxAmount",
+											NumberUtils.float2sortableStr(o
+													.getUpperBound())),
+									new Term(
+											"subsample_chemicalAnalysis_oxides_minAmount",
+											NumberUtils.float2sortableStr(9999)),
+									true);
+							final BooleanQuery minMaxSurroundingLowHigh = new BooleanQuery();
+							minMaxSurroundingLowHigh.add(minBelowLow,
+									BooleanClause.Occur.MUST);
+							minMaxSurroundingLowHigh.add(maxAboveHigh,
+									BooleanClause.Occur.MUST);
+							final BooleanQuery rangeSearches = new BooleanQuery();
+							rangeSearches.add(surroundMin,
+									BooleanClause.Occur.SHOULD);
+							rangeSearches.add(surroundMax,
+									BooleanClause.Occur.SHOULD);
+							rangeSearches.add(minMaxSurroundingLowHigh,
+									BooleanClause.Occur.SHOULD);
+							
+							final TermQuery oxideQuery = new TermQuery(
+									new Term(
+											"subsample_chemicalAnalysis_oxides_oxide_species",
+											o.getSpecies()));
+							final BooleanQuery oxideSetQuery = new BooleanQuery();
+							oxideSetQuery.add(rangeSearches, BooleanClause.Occur.MUST);
+							oxideSetQuery.add(oxideQuery, BooleanClause.Occur.MUST);
+							setQuery.add(oxideSetQuery, BooleanClause.Occur.SHOULD);
+						}
+						// require that one of these results be found in the
+						// full query
+						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
+					}
+				}
+			}
+		}
+
+		// Run the query and get the actual results
+
+		final org.hibernate.Query hibQuery = fullTextSession
+				.createFullTextQuery(fullQuery, Sample.class);
+		final List<Sample> results = hibQuery.list();
+		for (final Sample s : results)
+			System.out.println("found sample, id is " + s.getId());
+		assertEquals(1, results.size());
+
+	}
+
+	@Test
+	public void testElementSearch() {
+		final SearchSample searchSamp = new SearchSample();
+		Element tempElement = new Element();
+		tempElement.setSymbol("al");
+		searchSamp.addElement(tempElement, 4.9f, 12.0f);
+		final Session session = InitDatabase.getSession();
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
+
+		String columnName;
+		Object methodResult = null;
+		BooleanQuery fullQuery = new BooleanQuery();
+		SearchProperty[] enums = SearchSampleProperty.class.getEnumConstants();
+		for (SearchProperty i : enums) {
+
+			// column to search on
+			columnName = i.columnName();
+
+			// return type of the method
+			methodResult = i.get(searchSamp);
+
+			// if there is no value returned in this field...
+			if (methodResult == null) {
+				// ignore it
+			} else { // otherwise, what type of returned data is it?
+				if (columnName.equals("subsample_chemicalAnalysis_oxides")) {
+					if (((Set) methodResult).size() > 0) {
+						final BooleanQuery setQuery = new BooleanQuery();
+						for (SearchOxide o : (Set<SearchOxide>) methodResult) {
+							final RangeFilter rangeFilter = new RangeFilter(
+									"subsample_chemicalAnalysis_oxides_amount",
+									NumberUtils.float2sortableStr(o
+											.getLowerBound()), NumberUtils
+											.float2sortableStr(o
+													.getUpperBound()), true,
+									true);
+							final TermQuery oxideQuery = new TermQuery(
+									new Term(
+											"subsample_chemicalAnalysis_oxides_oxide_species",
+											o.getSpecies()));
+							final FilteredQuery filter = new FilteredQuery(
+									oxideQuery, rangeFilter);
 							setQuery.add(filter, BooleanClause.Occur.SHOULD);
 						}
 						// require that one of these results be found in the
 						// full query
 						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
 					}
-				} else if( columnName.equals("subsample_chemicalAnalysis_elements")){
+				} else if (columnName
+						.equals("subsample_chemicalAnalysis_elements")) {
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
 						for (SearchElement o : (Set<SearchElement>) methodResult) {
-							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_elements_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
-							final TermQuery elementQuery = new TermQuery(new Term("subsample_chemicalAnalysis_elements_element_symbol", o.getElementSymbol()));
-							final FilteredQuery filter = new FilteredQuery(elementQuery, rangeFilter);
+							final RangeFilter rangeFilter = new RangeFilter(
+									"subsample_chemicalAnalysis_elements_amount",
+									NumberUtils.float2sortableStr(o
+											.getLowerBound()), NumberUtils
+											.float2sortableStr(o
+													.getUpperBound()), true,
+									true);
+							final TermQuery elementQuery = new TermQuery(
+									new Term(
+											"subsample_chemicalAnalysis_elements_element_symbol",
+											o.getElementSymbol()));
+							final FilteredQuery filter = new FilteredQuery(
+									elementQuery, rangeFilter);
 							setQuery.add(filter, BooleanClause.Occur.SHOULD);
 						}
 						// require that one of these results be found in the
@@ -525,7 +640,114 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		for (final Sample s : results)
 			System.out.println("found sample, id is " + s.getId());
 		assertEquals(1, results.size());
-		
+
+	}
+	
+	@Test
+	public void testElementRangeSearch() {
+		final SearchSample searchSamp = new SearchSample();
+		Element tempElement = new Element();
+		tempElement.setSymbol("al");
+		searchSamp.addElement(tempElement, 4.9f, 12.0f);
+		final Session session = InitDatabase.getSession();
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
+
+		String columnName;
+		Object methodResult = null;
+		BooleanQuery fullQuery = new BooleanQuery();
+		SearchProperty[] enums = SearchSampleProperty.class.getEnumConstants();
+		for (SearchProperty i : enums) {
+
+			// column to search on
+			columnName = i.columnName();
+
+			// return type of the method
+			methodResult = i.get(searchSamp);
+
+			// if there is no value returned in this field...
+			if (methodResult == null) {
+				// ignore it
+			} else { // otherwise, what type of returned data is it?
+				if (columnName
+						.equals("subsample_chemicalAnalysis_elements")) {
+					if (((Set) methodResult).size() > 0) {
+						final BooleanQuery setQuery = new BooleanQuery();
+						for (SearchElement o : (Set<SearchElement>) methodResult) {
+							final RangeQuery surroundMin = new RangeQuery(
+									new Term(
+											"subsample_chemicalAnalysis_elements_minAmount",
+											NumberUtils.float2sortableStr(o
+													.getLowerBound())),
+									new Term(
+											"subsample_chemicalAnalysis_elements_minAmount",
+											NumberUtils.float2sortableStr(o
+													.getUpperBound())), true);
+							final RangeQuery surroundMax = new RangeQuery(
+									new Term(
+											"subsample_chemicalAnalysis_elements_maxAmount",
+											NumberUtils.float2sortableStr(o
+													.getLowerBound())),
+									new Term(
+											"subsample_chemicalAnalysis_elements_maxAmount",
+											NumberUtils.float2sortableStr(o
+													.getUpperBound())), true);
+							final RangeQuery minBelowLow = new RangeQuery(
+									new Term(
+											"subsample_chemicalAnalysis_elements_minAmount",
+											NumberUtils.float2sortableStr(0)),
+									new Term(
+											"subsample_chemicalAnalysis_elements_minAmount",
+											NumberUtils.float2sortableStr(o
+													.getLowerBound())), true);
+							final RangeQuery maxAboveHigh = new RangeQuery(
+									new Term(
+											"subsample_chemicalAnalysis_elements_maxAmount",
+											NumberUtils.float2sortableStr(o
+													.getUpperBound())),
+									new Term(
+											"subsample_chemicalAnalysis_elements_minAmount",
+											NumberUtils.float2sortableStr(9999)),
+									true);
+							final BooleanQuery minMaxSurroundingLowHigh = new BooleanQuery();
+							minMaxSurroundingLowHigh.add(minBelowLow,
+									BooleanClause.Occur.MUST);
+							minMaxSurroundingLowHigh.add(maxAboveHigh,
+									BooleanClause.Occur.MUST);
+							final BooleanQuery rangeSearches = new BooleanQuery();
+							rangeSearches.add(surroundMin,
+									BooleanClause.Occur.SHOULD);
+							rangeSearches.add(surroundMax,
+									BooleanClause.Occur.SHOULD);
+							rangeSearches.add(minMaxSurroundingLowHigh,
+									BooleanClause.Occur.SHOULD);
+							
+							final TermQuery elementQuery = new TermQuery(
+									new Term(
+											"subsample_chemicalAnalysis_elements_element_symbol",
+											o.getElementSymbol()));
+							final BooleanQuery elementSetQuery = new BooleanQuery();
+							elementSetQuery.add(rangeSearches, BooleanClause.Occur.MUST);
+							elementSetQuery.add(elementQuery, BooleanClause.Occur.MUST);
+							setQuery.add(elementSetQuery, BooleanClause.Occur.SHOULD);
+						}
+						// require that one of these results be found in the
+						// full query
+						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
+					}
+				}
+			}
+		}
+
+		// Run the query and get the actual results
+
+		final org.hibernate.Query hibQuery = fullTextSession
+				.createFullTextQuery(fullQuery, Sample.class);
+		final List<Sample> results = hibQuery.list();
+		for (final Sample s : results)
+			System.out.println("found sample, id is " + s.getId());
+		assertEquals(1, results.size());
+
 	}
 
 	@Test
@@ -550,16 +772,15 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		tempOxide.setSpecies("al2o3");
 		searchSamp.addOxide(tempOxide, 9f, 17f);
 
-/*		final Calendar rightNow = Calendar.getInstance();
-		rightNow.set(2008, 7, 25);
-		final Date firstDate = rightNow.getTime();
-		rightNow.set(2008, 8, 1);
-		final Date secondDate = rightNow.getTime();
-
-		searchSamp.setCollectionDateRange(new DateSpan(firstDate, secondDate));
-*/
+		/*
+		 * final Calendar rightNow = Calendar.getInstance(); rightNow.set(2008,
+		 * 7, 25); final Date firstDate = rightNow.getTime(); rightNow.set(2008,
+		 * 8, 1); final Date secondDate = rightNow.getTime();
+		 * 
+		 * searchSamp.setCollectionDateRange(new DateSpan(firstDate,
+		 * secondDate));
+		 */
 		// Actual Search Functionality
-
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
 				.createFullTextSession(session);
@@ -567,23 +788,20 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		// The full scope of the query we want to make
 		BooleanQuery fullQuery = new BooleanQuery();
 
-	/*	// Check if it's public data or if the user is this user
-		BooleanQuery privacyQuery = new BooleanQuery();
-		// Is this public data?
-		final TermQuery termQuery = new TermQuery(new Term("publicData",
-				Boolean.TRUE.toString()));
-		privacyQuery.add(termQuery, BooleanClause.Occur.SHOULD);
-		// Is this the current user?
-		final TermQuery termQuery2 = new TermQuery(new Term(
-				"user_emailAddress", testUser.getEmailAddress()));
-		privacyQuery.add(termQuery2, BooleanClause.Occur.SHOULD);
-
-		// in the full query, make it mandatory that the privacy requirements
-		// are met
-		fullQuery.add(privacyQuery, BooleanClause.Occur.MUST);
-*/
+		/*
+		 * // Check if it's public data or if the user is this user BooleanQuery
+		 * privacyQuery = new BooleanQuery(); // Is this public data? final
+		 * TermQuery termQuery = new TermQuery(new Term("publicData",
+		 * Boolean.TRUE.toString())); privacyQuery.add(termQuery,
+		 * BooleanClause.Occur.SHOULD); // Is this the current user? final
+		 * TermQuery termQuery2 = new TermQuery(new Term( "user_emailAddress",
+		 * testUser.getEmailAddress())); privacyQuery.add(termQuery2,
+		 * BooleanClause.Occur.SHOULD);
+		 * 
+		 * // in the full query, make it mandatory that the privacy requirements
+		 * // are met fullQuery.add(privacyQuery, BooleanClause.Occur.MUST);
+		 */
 		// Actual Search
-
 		String columnName;
 		Object methodResult = null;
 		SearchProperty[] enums = SearchSampleProperty.class.getEnumConstants();
@@ -599,37 +817,58 @@ public class HibernateSearchTest extends DatabaseTestCase {
 			if (methodResult == null) {
 				// ignore it
 			} else { // otherwise, what type of returned data is it?
-				if (columnName
-						.equals("subsample_chemicalAnalysis_oxides")) {
+				if (columnName.equals("subsample_chemicalAnalysis_oxides")) {
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
 						for (SearchOxide o : (Set<SearchOxide>) methodResult) {
-							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_oxides_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
-							final TermQuery oxideQuery = new TermQuery(new Term("subsample_chemicalAnalysis_oxides_oxide_species", o.getSpecies()));
-							final FilteredQuery filter = new FilteredQuery(oxideQuery, rangeFilter);
-							setQuery.add(oxideQuery, BooleanClause.Occur.SHOULD);
+							final RangeFilter rangeFilter = new RangeFilter(
+									"subsample_chemicalAnalysis_oxides_amount",
+									NumberUtils.float2sortableStr(o
+											.getLowerBound()), NumberUtils
+											.float2sortableStr(o
+													.getUpperBound()), true,
+									true);
+							final TermQuery oxideQuery = new TermQuery(
+									new Term(
+											"subsample_chemicalAnalysis_oxides_oxide_species",
+											o.getSpecies()));
+							final FilteredQuery filter = new FilteredQuery(
+									oxideQuery, rangeFilter);
+							setQuery
+									.add(oxideQuery, BooleanClause.Occur.SHOULD);
 						}
 						// require that one of these results be found in the
 						// full query
 						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
 					}
-				} else if( columnName.equals("subsample_chemicalAnalysis_elements")){
+				} else if (columnName
+						.equals("subsample_chemicalAnalysis_elements")) {
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
 						for (SearchElement o : (Set<SearchElement>) methodResult) {
-							final RangeFilter rangeFilter = new RangeFilter("subsample_chemicalAnalysis_elements_amount", NumberUtils.float2sortableStr(o.getLowerBound()), NumberUtils.float2sortableStr(o.getUpperBound()),true, true);
-							final TermQuery elementQuery = new TermQuery(new Term("subsample_chemicalAnalysis_elements_element_symbol", o.getElementSymbol()));
-							final FilteredQuery filter = new FilteredQuery(elementQuery, rangeFilter);
+							final RangeFilter rangeFilter = new RangeFilter(
+									"subsample_chemicalAnalysis_elements_amount",
+									NumberUtils.float2sortableStr(o
+											.getLowerBound()), NumberUtils
+											.float2sortableStr(o
+													.getUpperBound()), true,
+									true);
+							final TermQuery elementQuery = new TermQuery(
+									new Term(
+											"subsample_chemicalAnalysis_elements_element_symbol",
+											o.getElementSymbol()));
+							final FilteredQuery filter = new FilteredQuery(
+									elementQuery, rangeFilter);
 							setQuery.add(filter, BooleanClause.Occur.SHOULD);
 						}
 						// require that one of these results be found in the
 						// full query
 						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
 					}
-				}else if (methodResult instanceof Set) { // if a set of data is
-															// returned, it
-															// should be an OR
-															// query
+				} else if (methodResult instanceof Set) { // if a set of data is
+					// returned, it
+					// should be an OR
+					// query
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
 						for (Object o : (Set) methodResult) {
@@ -642,10 +881,10 @@ public class HibernateSearchTest extends DatabaseTestCase {
 						// require that one of these results be found in the
 						// full query
 						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
-						
+
 					}
 				} else if (methodResult instanceof DateSpan) { // if the data is
-																// a DateSpan
+					// a DateSpan
 					// Get the start date of the span
 					final Date startDate = ((DateSpan) methodResult)
 							.getStartAsDate();
@@ -666,19 +905,19 @@ public class HibernateSearchTest extends DatabaseTestCase {
 							true);
 					fullQuery.add(rq, BooleanClause.Occur.MUST);
 				} else if (columnName.equals("location")) { // if the column
-															// being searched on
-															// is location
+					// being searched on
+					// is location
 					if (searchSamp.getBoundingBox() != null) { // if there is a
-																// bounding box
-																// for this
-																// sample
+						// bounding box
+						// for this
+						// sample
 						session.enableFilter("boundingBox").setParameter(
 								"polygon", searchSamp.getBoundingBox()); // filter
-																			// results
-																			// based
-																			// on
-																			// the
-																			// box
+						// results
+						// based
+						// on
+						// the
+						// box
 					}
 				} else { // it's just a standard string, do a term search
 					final TermQuery stringQuery = new TermQuery(new Term(
