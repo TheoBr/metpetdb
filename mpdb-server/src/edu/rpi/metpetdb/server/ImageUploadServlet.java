@@ -67,7 +67,7 @@ public class ImageUploadServlet extends HttpServlet {
 		final String folder = checksum.substring(0, 2);
 		final String subfolder = checksum.substring(2, 4);
 		final String filename = checksum.substring(4, checksum.length());
-		final String imagePath = baseFolder + folder + "/" + subfolder;
+		final String imagePath = baseFolder + "/" + folder + "/" + subfolder;
 		final File path = new File(imagePath);
 		String temp = "";
 		path.mkdirs();

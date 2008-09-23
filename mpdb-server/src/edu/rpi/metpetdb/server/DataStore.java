@@ -191,6 +191,7 @@ public class DataStore {
 		final Property prop;
 		final Column col;
 		final Property tempProp;
+		boolean isFormula = false;
 
 		if (oc instanceof ObjectConstraints)
 			cm = null;
@@ -218,7 +219,6 @@ public class DataStore {
 						.getValue()).getCollectionTable()
 						.getForeignKeyIterator();
 				while (fkItr.hasNext()) {
-					// TODO make it get the constraints of referenced columns
 					final ForeignKey fk = (ForeignKey) fkItr.next();
 					// fk.getReferencedColumns().get(0);
 					// The from of the foreign key
@@ -232,18 +232,23 @@ public class DataStore {
 
 					}
 				}
+				isFormula = false;
 			} else {
 				final Iterator i = prop.getColumnIterator();
 				if (!i.hasNext())
 					throw new RuntimeException("No cols: " + f.getName());
 				final Object next = i.next();
-				if (next instanceof Column)
-					col = (Column) next;
-				else if (next instanceof Formula)
+				if (next instanceof Column) {
+					col = (Column) next;;
+				}
+				else if (next instanceof Formula) {
 					col = null;
-				else
+					isFormula = true;
+				}
+				else {
 					throw new RuntimeException("Unrecgonized column format:"
 							+ f.getName());
+				}
 				if (i.hasNext())
 					throw new RuntimeException("Too many cols: " + f.getName());
 			}
@@ -254,6 +259,7 @@ public class DataStore {
 		PropertyConstraint pc = (PropertyConstraint) f.get(oc);
 		if (pc == null) {
 			pc = createPropertyConstraint(prop, f, toClass);
+			pc.formula = isFormula;
 			f.set(oc, pc);
 		}
 

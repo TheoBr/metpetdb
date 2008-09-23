@@ -28,7 +28,7 @@
 
 	<many-to-one name="reference" column="reference_id" class="Reference" lazy="false" cascade="all"/>
 	<many-to-one name="image" column="image_id" class="Image" lazy="false" cascade="none"/>
-    <many-to-one name="subsample" column="subsample_id" class="Subsample"  cascade="none"/>
+    <many-to-one name="subsample" column="subsample_id" lazy="false" class="Subsample"  cascade="none"/>
 
 	<property name="largeRock" column="large_rock" type="yes_no" />
 	<property name="total" column="total" type="java.lang.Float" />

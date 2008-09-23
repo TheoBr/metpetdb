@@ -189,6 +189,7 @@ public class SubsampleDetails extends MPagePanel {
 		continuation = r;
 		Subsample ss = new Subsample();
 		s.addSubsample(ss);
+		ss.setSampleName(s.getAlias());
 		p_subsample.edit(ss);
 		sampleAlias = s.getAlias();
 		sampleId = s.getId();

@@ -22,7 +22,7 @@ public class ChemicalAnalysis extends MObject {
 	private int pointY;
 	private Image image;
 	@ContainedIn
-	private Subsample Subsample;
+	private Subsample subsample;
 	private String analysisMethod;
 	private String location;
 	private String analyst;
@@ -63,11 +63,11 @@ public class ChemicalAnalysis extends MObject {
 	}
 
 	public Subsample getSubsample() {
-		return Subsample;
+		return subsample;
 	}
 
 	public void setSubsample(final Subsample s) {
-		Subsample = s;
+		subsample = s;
 	}
 
 	public String getSubsampleName() {

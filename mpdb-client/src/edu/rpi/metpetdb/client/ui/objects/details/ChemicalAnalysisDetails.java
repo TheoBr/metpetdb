@@ -110,6 +110,8 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 	public ChemicalAnalysisDetails createNew(final Subsample ss) {
 		final ChemicalAnalysis ma = new ChemicalAnalysis();
 		ss.addChemicalAnalysis(ma);
+		ma.setSubsampleName(ss.getName());
+		ma.setSampleName(ss.getSampleName());
 		p_chemicalAnalysis.edit(ma);
 		return this;
 	}

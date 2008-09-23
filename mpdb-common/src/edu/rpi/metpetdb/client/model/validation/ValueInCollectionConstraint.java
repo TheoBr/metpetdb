@@ -49,14 +49,16 @@ public class ValueInCollectionConstraint extends PropertyConstraint implements
 	}
 
 	public void validateValue(Object value) throws ValidationException {
-		if (value == null && this.required)
-			return;
-		if (values != null && valueInCollection(value, this.getValues()))
-			return;
-		else if (value != null)
-			throw new ValueNotInCollectionException(value.toString(), values);
-		else
-			throw new ValueNotInCollectionException("", values);
+		super.validateValue(value);
+		if (value != null && !value.toString().isEmpty() && required) {
+			if (values != null && valueInCollection(value, this.getValues()))
+				return;
+			else if (value != null)
+				throw new ValueNotInCollectionException(value.toString(),
+						values);
+			else
+				throw new ValueNotInCollectionException("", values);
+		}
 	}
 
 	public boolean valueInCollection(final Object value,

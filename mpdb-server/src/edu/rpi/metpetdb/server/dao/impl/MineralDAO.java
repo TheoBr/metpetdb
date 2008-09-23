@@ -26,13 +26,17 @@ public class MineralDAO extends MpDbDAO<Mineral> {
 
 	@Override
 	public Mineral fill(final Mineral m) throws DAOException {
-		// Use Mineral Name
-		final Query minerals = namedQuery("Mineral.byName");
-		minerals.setString("name", m.getName());
-		if (minerals.uniqueResult() != null)
-			return (Mineral) minerals.uniqueResult();
-
-		throw new MineralNotFoundException();
+		if (m != null) {
+			// Use Mineral Name
+			final Query minerals = namedQuery("Mineral.byName");
+			minerals.setString("name", m.getName());
+			if (minerals.uniqueResult() != null)
+				return (Mineral) minerals.uniqueResult();
+	
+			throw new MineralNotFoundException();
+		} else {
+			return null;
+		}
 	}
 
 	@Override

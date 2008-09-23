@@ -28,9 +28,13 @@ public class PropertyConstraint implements IsSerializable {
 
 	/** Is this property required to contain a non-null value? */
 	public boolean required;
+	
+	/** Is this propery a hibernate formula? */
+	public boolean formula;
 
 	public void validateEntity(final MObject obj) throws ValidationException {
-		validateValue(obj.mGet(property));
+		if (!formula)
+			validateValue(obj.mGet(property));
 	}
 
 	public void validateValue(Object value) throws ValidationException {
