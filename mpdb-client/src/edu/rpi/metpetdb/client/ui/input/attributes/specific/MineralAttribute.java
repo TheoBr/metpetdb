@@ -32,7 +32,7 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 	private MObject obj;
 	private GenericAttribute ga;
 	private final SimplePanel container;
-	private TreeAttribute tree;
+	private TreeAttribute<Mineral> tree;
 	private WizardDialog dialog;
 
 	private DetailsPanel p_mineral;
@@ -107,8 +107,13 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 				final Iterator itr = tree.getSelectedItems().iterator();
 				final ArrayList newSelectedItems = new ArrayList();
 				while (itr.hasNext()) {
-					final Mineral mineral = (Mineral) itr.next();
-					final Object object = containsObject(
+					final Object next = itr.next();
+					final Mineral mineral;
+					if (next instanceof SampleMineral)
+						mineral = ((SampleMineral)next).getMineral();
+					else
+						mineral = (Mineral) next;
+						final Object object = containsObject(
 							((Sample) MineralAttribute.this.obj).getMinerals(),
 							mineral);
 					if (object != null) {

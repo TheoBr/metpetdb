@@ -80,7 +80,7 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 				return false;
 			}
 
-			protected void onSaveCompletion(final MObject result) {
+			protected void onSaveCompletion(final ChemicalAnalysis result) {
 				if (History.getToken().equals(
 						TokenSpace.detailsOf((ChemicalAnalysis) result))) {
 					TokenSpace.dispatch(TokenSpace
@@ -91,7 +91,7 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 				}
 			}
 
-			protected void onLoadCompletion(final MObject result) {
+			protected void onLoadCompletion(final ChemicalAnalysis result) {
 				super.onLoadCompletion(result);
 			}
 

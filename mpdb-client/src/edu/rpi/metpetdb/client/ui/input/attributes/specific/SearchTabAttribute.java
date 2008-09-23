@@ -52,7 +52,7 @@ public class SearchTabAttribute extends GenericAttribute {
 		return new Widget[] {};
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id) {
+	public Widget[] createEditWidget(final SearchSample obj, final String id) {
 		final MTwoColPanel panel = new MTwoColPanel();
 		final MTabPanel tabs = new MTabPanel();
 		for (int i = 0; i < atts.length; i++) {
@@ -66,7 +66,7 @@ public class SearchTabAttribute extends GenericAttribute {
 				}
 				protected void deleteBean(final AsyncCallback<Object> ac) {
 				}
-				protected void onSaveCompletion(final MObject result) {
+				protected void onSaveCompletion(final SearchSample result) {
 					this.edit(result);
 					clearConstraints();
 					addConstraints((SearchSample) result);

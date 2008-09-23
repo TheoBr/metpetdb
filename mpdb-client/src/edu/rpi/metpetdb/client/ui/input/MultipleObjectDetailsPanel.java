@@ -157,7 +157,7 @@ public class MultipleObjectDetailsPanel<T extends MObject> extends
 		setPanelDescription(editDescription);
 		isEditMode = true;
 	}
-	public boolean validateEdit(final ServerOp r) {
+	public boolean validateEdit(final ServerOp<?> r) {
 		if (!isEditMode())
 			return true;
 		int failed = 0;

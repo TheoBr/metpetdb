@@ -341,8 +341,8 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 		isEditMode = true;
 	}
 
-	public void startValidation(final ServerOp r) {
-		new ServerOp() {
+	public void startValidation(final ServerOp<?> r) {
+		new ServerOp<Object>() {
 			int succeeded;
 
 			public void begin() {
@@ -367,7 +367,7 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 		return validateEdit(null);
 	}
 
-	public boolean validateEdit(final ServerOp r) {
+	public boolean validateEdit(final ServerOp<?> r) {
 		if (!isEditMode())
 			return true;
 		int failed = 0;

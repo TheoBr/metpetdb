@@ -78,9 +78,9 @@ public class FocusSupport {
 	public static boolean handlesValidationException(final Widget w,
 			final ValidationException e) {
 		if (w instanceof DetailsPanel)
-			return ((DetailsPanel) w).handlesValidationException(e);
+			return ((DetailsPanel<?>) w).handlesValidationException(e);
 		else if (w instanceof Panel) {
-			final Iterator i = ((Panel) w).iterator();
+			final Iterator<Widget> i = ((Panel) w).iterator();
 			while (i.hasNext())
 				if (handlesValidationException((Widget) i.next(), e))
 					return true;
@@ -101,9 +101,9 @@ public class FocusSupport {
 	public static boolean showValidationException(final Widget w,
 			final ValidationException e) {
 		if (w instanceof DetailsPanel)
-			return ((DetailsPanel) w).showValidationException(e);
+			return ((DetailsPanel<?>) w).showValidationException(e);
 		else if (w instanceof Panel) {
-			final Iterator i = ((Panel) w).iterator();
+			final Iterator<Widget> i = ((Panel) w).iterator();
 			while (i.hasNext())
 				if (showValidationException((Widget) i.next(), e))
 					return true;

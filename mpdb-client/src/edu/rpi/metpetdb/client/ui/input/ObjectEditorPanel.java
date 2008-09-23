@@ -8,14 +8,14 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
 
-public abstract class ObjectEditorPanel<T> extends DetailsPanel implements
+public abstract class ObjectEditorPanel<T extends MObject> extends DetailsPanel<T> implements
 		ClickListener, UsesCurrentUser {
 	private final Button edit;
 	private final Button delete;
@@ -118,7 +118,7 @@ public abstract class ObjectEditorPanel<T> extends DetailsPanel implements
 				saveBean(this);
 			}
 			public void onSuccess(final T result) {
-				onSaveCompletion((MObject) result);
+				onSaveCompletion(result);
 			}
 			public void onFailure(final Throwable e) {
 				super.onFailure(e);
@@ -132,7 +132,7 @@ public abstract class ObjectEditorPanel<T> extends DetailsPanel implements
 				deleteBean(this);
 			}
 			public void onSuccess(final Object result) {
-				onDeleteCompletion((MObject) result);
+				onDeleteCompletion(result);
 			}
 		}.begin();
 	}
@@ -143,12 +143,12 @@ public abstract class ObjectEditorPanel<T> extends DetailsPanel implements
 				loadBean(this);
 			}
 			public void onSuccess(final T result) {
-				onLoadCompletion((MObject) result);
+				onLoadCompletion(result);
 			}
 		}.begin();
 	}
 
-	public void show(final MObject obj) {
+	public void show(final T obj) {
 		super.show(obj);
 		final boolean ed = canEdit();
 		final boolean del = canDelete();
@@ -161,7 +161,7 @@ public abstract class ObjectEditorPanel<T> extends DetailsPanel implements
 		setActiveButton(edit);
 	}
 
-	public void edit(final MObject obj) {
+	public void edit(final T obj) {
 		final boolean nn = !obj.mIsNew();
 		super.edit(obj);
 		edit.setVisible(false);
@@ -185,10 +185,10 @@ public abstract class ObjectEditorPanel<T> extends DetailsPanel implements
 	protected void saveBean(final AsyncCallback<T> ac) {
 		throw new UnsupportedOperationException();
 	}
-	protected void onSaveCompletion(final MObject result) {
+	protected void onSaveCompletion(final T result) {
 		ObjectEditorPanel.this.show(result);
 	}
-	protected void onLoadCompletion(final MObject result) {
+	protected void onLoadCompletion(final T result) {
 		ObjectEditorPanel.this.show(result);
 	}
 	protected void onDeleteCompletion(final Object result) {

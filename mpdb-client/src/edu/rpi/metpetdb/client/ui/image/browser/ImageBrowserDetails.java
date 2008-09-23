@@ -585,18 +585,20 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	}
 
 	private void doSave() {
-		new ServerOp() {
+		new ServerOp<Grid>() {
 			@Override
 			public void begin() {
 				MpDb.imageBrowser_svc
 						.saveGrid(ImageBrowserDetails.this.g, this);
 				ImageBrowserDetails.this.info.setText("");
+				save.setEnabled(false);
 			}
 
-			public void onSuccess(final Object result) {
+			public void onSuccess(final Grid result) {
 				new ConfirmationDialogBox(LocaleHandler.lc_text
 						.notice_GridSaved(ImageBrowserDetails.this.g
 								.getSubsample().getName()), false);
+				save.setEnabled(true);
 			}
 		}.begin();
 

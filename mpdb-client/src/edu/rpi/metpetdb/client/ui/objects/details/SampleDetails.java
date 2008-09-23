@@ -108,7 +108,7 @@ public class SampleDetails extends MPagePanel {
 				return false;
 			}
 
-			protected void onSaveCompletion(final MObject result) {
+			protected void onSaveCompletion(final Sample result) {
 				if (History.getToken().equals(
 						TokenSpace.detailsOf((Sample) result))) {
 					TokenSpace.dispatch(TokenSpace.detailsOf((Sample) result));
@@ -117,7 +117,7 @@ public class SampleDetails extends MPagePanel {
 				}
 			}
 
-			protected void onLoadCompletion(final MObject result) {
+			protected void onLoadCompletion(final Sample result) {
 				super.onLoadCompletion(result);
 				final Sample s = (Sample) result;
 				sampleHeader = LocaleHandler.lc_text.sample() + " "

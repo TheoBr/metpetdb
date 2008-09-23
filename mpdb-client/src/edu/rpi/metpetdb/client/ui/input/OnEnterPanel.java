@@ -29,16 +29,16 @@ public abstract class OnEnterPanel extends MSimplePanel implements
 	}
 
 	public static class ObjectEditor extends OnEnterPanel {
-		public ObjectEditor(final ObjectEditorPanel p) {
+		public ObjectEditor(final ObjectEditorPanel<?> p) {
 			super(p);
 		}
 		public void onEnter() {
-			final ObjectEditorPanel p = ((ObjectEditorPanel) getWidget());
+			final ObjectEditorPanel<?> p = ((ObjectEditorPanel<?>) getWidget());
 			if (p.save.isVisible() && p.save.isEnabled())
 				p.doSave();
 		}
 		public void onEscape() {
-			final ObjectEditorPanel p = ((ObjectEditorPanel) getWidget());
+			final ObjectEditorPanel<?> p = ((ObjectEditorPanel<?>) getWidget());
 			if (p.cancel.isVisible() && p.cancel.isEnabled())
 				p.doCancel();
 		}

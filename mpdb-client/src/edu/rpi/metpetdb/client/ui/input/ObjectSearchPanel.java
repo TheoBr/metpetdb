@@ -12,12 +12,12 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
-public abstract class ObjectSearchPanel extends DetailsPanel implements
+public abstract class ObjectSearchPanel extends DetailsPanel<SearchSample> implements
 		ClickListener {
 	final Button search;
 	final Element resultsTd;
@@ -40,7 +40,7 @@ public abstract class ObjectSearchPanel extends DetailsPanel implements
 		this(atts, "", "");
 	}
 
-	public void edit(final MObject obj) {
+	public void edit(final SearchSample obj) {
 		super.edit(obj);
 	}
 

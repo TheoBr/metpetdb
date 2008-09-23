@@ -87,7 +87,7 @@ public class SubsampleDetails extends MPagePanel {
 				return false;
 			}
 
-			protected void onSaveCompletion(final MObject result) {
+			protected void onSaveCompletion(final Subsample result) {
 				if (continuation != null) {
 					continuation.onSuccess(result);
 				} else {
@@ -103,7 +103,7 @@ public class SubsampleDetails extends MPagePanel {
 
 			}
 
-			protected void onLoadCompletion(final MObject result) {
+			protected void onLoadCompletion(final Subsample result) {
 				super.onLoadCompletion(result);
 				final Subsample s = (Subsample) result;
 				if (s.getGrid() == null) {

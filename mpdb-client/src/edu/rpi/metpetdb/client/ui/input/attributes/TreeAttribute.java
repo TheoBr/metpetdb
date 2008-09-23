@@ -57,7 +57,7 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 		}
 	}
 
-	private ArrayList selectedItems = new ArrayList();
+	private ArrayList<T> selectedItems = new ArrayList<T>();
 	private ArrayList<Widget> selectedWidgets = new ArrayList<Widget>();
 	private final int numberOfColumns;
 	private final Button collapse;
@@ -83,7 +83,7 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 	public ArrayList<?> getSelectedItems() {
 		return selectedItems;
 	}
-	public void setSelectedItems(final ArrayList<?> al) {
+	public void setSelectedItems(final ArrayList<T> al) {
 		selectedItems = al;
 	}
 
