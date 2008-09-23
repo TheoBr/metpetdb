@@ -2,6 +2,8 @@ package edu.rpi.metpetdb.client.ui.input;
 
 import java.util.Iterator;
 
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasFocus;
@@ -21,12 +23,12 @@ public class FocusSupport {
 	 */
 	public static boolean validateEdit(final Widget w) {
 		if (w instanceof DetailsPanel) {
-			return ((DetailsPanel) w).validateEdit();
+			return ((DetailsPanel<?>) w).validateEdit();
 		}
 
 		if (w instanceof Panel) {
 			boolean valid = true;
-			final Iterator i = ((Panel) w).iterator();
+			final Iterator<Widget> i = ((Panel) w).iterator();
 			while (i.hasNext())
 				if (!validateEdit((Widget) i.next()))
 					valid = false;
@@ -46,11 +48,11 @@ public class FocusSupport {
 	 */
 	public static void setEnabled(final Widget w, final boolean enabled) {
 		if (w instanceof DetailsPanel)
-			((DetailsPanel) w).setEnabled(enabled);
+			((DetailsPanel<?>) w).setEnabled(enabled);
 		else if (w instanceof FocusWidget)
 			((FocusWidget) w).setEnabled(enabled);
 		else if (w instanceof Panel) {
-			final Iterator i = ((Panel) w).iterator();
+			final Iterator<Widget> i = ((Panel) w).iterator();
 			while (i.hasNext())
 				setEnabled((Widget) i.next(), enabled);
 		}
@@ -129,7 +131,12 @@ public class FocusSupport {
 		// Object claims to support it, give it a try.
 		//
 		if (w instanceof HasFocus) {
-			((HasFocus) w).setFocus(true);
+			DeferredCommand.addCommand(new Command() {
+				public void execute() {
+					((HasFocus) w).setFocus(true);
+				}
+			});
+
 			return true;
 		}
 
@@ -139,7 +146,7 @@ public class FocusSupport {
 		// over them.
 		//
 		if (w instanceof DetailsPanel) {
-			final Iterator i = ((Panel) w).iterator();
+			final Iterator<Widget> i = ((Panel) w).iterator();
 			while (i.hasNext()) {
 				final Widget c = (Widget) i.next();
 				if (!(c instanceof Button) && requestFocus(c))
@@ -148,7 +155,7 @@ public class FocusSupport {
 		}
 
 		if (w instanceof Panel) {
-			final Iterator i = ((Panel) w).iterator();
+			final Iterator<Widget> i = ((Panel) w).iterator();
 			while (i.hasNext())
 				if (requestFocus((Widget) i.next()))
 					return true;

@@ -48,6 +48,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 	private final Button login;
 	private final Button emailC;
 	private final Button email;
+	private final Label emailResult;
 
 	public LoginDialog(final ServerOp<?> r) {
 		continuation = r;
@@ -80,6 +81,8 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 		}
 		{
 			final FlowPanel p = new FlowPanel();
+			emailResult = new Label();
+			p.add(emailResult);
 			p.add(p_email);
 			tabs.add(p, LocaleHandler.lc_text.tab_ForgotPassword());
 			p_emailIdx = tabs.getDeckPanel().getWidgetIndex(p);
@@ -116,6 +119,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 	}
 
 	public void onClick(final Widget sender) {
+		emailResult.setText("");
 		if (login == sender)
 			doLogin();
 		else if (email == sender)
@@ -167,20 +171,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 			}
 			public void onSuccess(final Void result) {
 				enable(true);
-				final Widget old = getWidget();
-				final Button close = new Button(LocaleHandler.lc_text
-						.buttonClose(), new ClickListener() {
-					public void onClick(final Widget sender) {
-						setWidget(old);
-						tabs.selectTab(p_mainIdx);
-					}
-				});
-				final VerticalPanel p = new VerticalPanel();
-				p.add(new Label(LocaleHandler.lc_text.message_NewPasswordSet(),
-						true));
-				p.add(close);
-				p.setCellHorizontalAlignment(close, VerticalPanel.ALIGN_CENTER);
-				setWidget(p);
+				emailResult.setText(LocaleHandler.lc_text.message_NewPasswordSet());
 			}
 		}.begin();
 	}
