@@ -1,6 +1,9 @@
 package edu.rpi.metpetdb.server.impl;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -11,6 +14,7 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
+import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 
 public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	private static final long serialVersionUID = 1L;
@@ -29,6 +33,26 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 
 	public Results<Sample> projectSamples(final PaginationParameters p, long id) {
 		return (new SampleDAO(this.currentSession()).getProjectSamples(p, id));
+	}
+	
+	public Set<String> allCollectors() {
+		final Object[] l =  (new SampleDAO(this.currentSession())).allCollectors();
+		final Set<String> options = new HashSet();
+		for (int i = 0; i < l.length; i++){
+			if (l[i] != null)
+				options.add(l[i].toString());
+		}
+		return options;
+	}
+	
+	public Set<String> allCountries() {
+		final Object[] l =  (new SampleDAO(this.currentSession())).allCountries();
+		final Set<String> options = new HashSet();
+		for (int i = 0; i < l.length; i++){
+			if (l[i] != null)
+				options.add(l[i].toString());
+		}
+		return options;
 	}
 
 	public Sample details(final long id) throws DAOException {

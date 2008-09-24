@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -34,6 +36,17 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		u = (new UserDAO(this.currentSession())).fill(u);
 		return (u);
 	}
+	
+	public Set<String> allNames() {
+		final Object[] l =  (new UserDAO(this.currentSession())).allNames();
+		final Set<String> options = new HashSet();
+		for (int i = 0; i < l.length; i++){
+			if (l[i] != null)
+				options.add(l[i].toString());
+		}
+		return options;
+	}
+
 
 	public User startSession(final StartSessionRequest ssr)
 			throws LoginFailureException, ValidationException {

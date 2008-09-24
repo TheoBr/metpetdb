@@ -8,14 +8,19 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.MetamorphicGrade;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
+import edu.rpi.metpetdb.client.ui.MpDb;
+import edu.rpi.metpetdb.client.ui.ServerOp;
 
-public class MetamorphicGradeAttribute extends
-		MultipleTextAttribute<MetamorphicGrade> {
+public class MetamorphicGradeAttribute extends MultipleSuggestTextAttribute {
 
-	public MetamorphicGradeAttribute(ObjectConstraint sc) {
+	public MetamorphicGradeAttribute(final ObjectConstraint sc) {
+		super(sc);
+	}
+	public MetamorphicGradeAttribute(final StringConstraint sc) {
 		super(sc);
 	}
 
@@ -30,14 +35,25 @@ public class MetamorphicGradeAttribute extends
 		final Iterator itr = realEditWidgets.iterator();
 		while (itr.hasNext()) {
 			final Object obj = itr.next();
-			final MetamorphicGrade m = new MetamorphicGrade();
+			final MetamorphicGrade mg = new MetamorphicGrade();
 			String name = ((HasText) obj).getText();
 			if (!name.equals("")) {
-				m.setName(name);
-				metamorphicGrades.add(m);
+				mg.setName(name);
+				metamorphicGrades.add(mg);
 			}
 		}
 		return metamorphicGrades;
+	}
+	public void setSuggest(){
+		new ServerOp() {
+			@Override
+			public void begin() {
+				MpDb.metamorphicGrade_svc.allMetamorphicGrades(this);
+			}
+			public void onSuccess(final Object result) {
+				createSuggest((Set<String>) result);
+			}
+		}.begin();
 	}
 
 }

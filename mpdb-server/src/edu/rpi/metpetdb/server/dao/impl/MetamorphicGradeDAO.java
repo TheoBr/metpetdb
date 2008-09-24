@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 
 import edu.rpi.metpetdb.client.error.DAOException;
@@ -35,6 +36,11 @@ public class MetamorphicGradeDAO extends MpDbDAO<MetamorphicGrade> {
 	public MetamorphicGrade save(MetamorphicGrade inst) throws DAOException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
+	}
+	
+	public Object[] allMetamorphicGrades() {
+		final Query q = namedQuery("MetamorphicGrade.all/name");
+		return	q.list().toArray();
 	}
 
 }

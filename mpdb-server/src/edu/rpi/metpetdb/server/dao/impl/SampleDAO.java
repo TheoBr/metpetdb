@@ -102,4 +102,14 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		final int size = ((Number) sizeQuery.uniqueResult()).intValue();
 		return new Results<Sample>(size, l);
 	}
+	
+	public Object[] allCollectors() {
+		final Query q = namedQuery("Sample.Collectors/Collector");
+			return	q.list().toArray();
+	}
+	
+	public Object[] allCountries() {
+		final Query q = namedQuery("Sample.Countries/Countries");
+		return	q.list().toArray();
+	}
 }

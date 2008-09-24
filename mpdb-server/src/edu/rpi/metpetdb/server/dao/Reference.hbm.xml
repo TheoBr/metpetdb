@@ -16,4 +16,10 @@
     from Reference r
     where lower(r.name) = lower(:name)
   </query>
+  
+   <query name="Reference.all/name">
+  	select distinct name
+  	from Reference r
+    order by r.name
+   </query>
 </hibernate-mapping>

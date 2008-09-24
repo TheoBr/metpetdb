@@ -286,5 +286,29 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String LeftSide_MySearch();
 
 	String LeftSide_LeftSideLayer();
+	
+	/* Search */
+	
+	String Search_Tab_RockType();
+	
+	String Search_Tab_Region();
+	
+	String Search_Tab_Minerals();
+	
+	String Search_Tab_Chemistry();
+	
+	String Search_Tab_Other();
+	
+	String SearchSample_tabs();
+	
+	String SearchSample_possibleRockTypes();
+	
+	String SearchSample_Location();
+	
+	String SearchSample_elements();
+		
+	String SearchSample_oxides();
+	
+	String SearchSample_minerals();
 
 }

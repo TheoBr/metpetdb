@@ -20,4 +20,10 @@
   <query name="Region.all">
     from Region r
   </query>
+  
+  <query name="Region.all/name">
+  	select distinct name
+  	from Region r
+    order by r.name
+   </query>
 </hibernate-mapping>

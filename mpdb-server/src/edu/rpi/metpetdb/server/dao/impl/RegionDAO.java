@@ -1,11 +1,16 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
+import java.util.List;
+
+import org.hibernate.Query;
 import org.hibernate.Session;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.RegionNotFoundException;
 import edu.rpi.metpetdb.client.model.Region;
+import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 
 public class RegionDAO extends MpDbDAO<Region> {
@@ -35,6 +40,11 @@ public class RegionDAO extends MpDbDAO<Region> {
 	public Region save(Region inst) throws DAOException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
+	}
+	
+	public Object[] allNames() {
+		final Query q = namedQuery("Region.all/name");
+		return	q.list().toArray();
 	}
 
 }

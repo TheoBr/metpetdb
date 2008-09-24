@@ -8,11 +8,13 @@ import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.Reference;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
+import edu.rpi.metpetdb.client.ui.MpDb;
+import edu.rpi.metpetdb.client.ui.ServerOp;
 
-public class ReferenceAttribute extends MultipleTextAttribute<Reference> {
+public class ReferenceAttribute extends MultipleSuggestTextAttribute {
 
 	public ReferenceAttribute(final ObjectConstraint sc) {
 		super(sc);
@@ -37,6 +39,17 @@ public class ReferenceAttribute extends MultipleTextAttribute<Reference> {
 			}
 		}
 		return references;
+	}
+	public void setSuggest(){
+		new ServerOp() {
+			@Override
+			public void begin() {
+				MpDb.reference_svc.allReferences(this);
+			}
+			public void onSuccess(final Object result) {
+				createSuggest((Set<String>) result);
+			}
+		}.begin();
 	}
 
 }

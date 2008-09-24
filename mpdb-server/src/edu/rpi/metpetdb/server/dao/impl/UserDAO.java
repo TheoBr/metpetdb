@@ -1,5 +1,8 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -43,6 +46,10 @@ public class UserDAO extends MpDbDAO<User> {
 		throw new UserNotFoundException();
 	}
 
+	public Object[] allNames() {
+		final Query q = namedQuery("User.all/name");
+		return	q.list().toArray();
+	}
 	@Override
 	public User save(User inst) throws DAOException {
 		inst = _save(inst);

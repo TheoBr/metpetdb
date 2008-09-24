@@ -22,4 +22,9 @@
     from ImageType it
     where lower(it.imageType)=lower(:imageType)
   </query>
+  <query name="ImageType.allTypes/ImageType">
+	Select distinct it.imageType
+	from ImageType it
+	order by it.imageType
+  </query>
 </hibernate-mapping>

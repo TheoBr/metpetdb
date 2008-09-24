@@ -27,10 +27,15 @@ import edu.rpi.metpetdb.client.ui.input.attributes.CheckBoxesAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateRangeAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.MetamorphicGradeAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.RegionAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchChemistryAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchMineralsAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchOwnersAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchTabAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchCollectorsAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchCountriesAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 
 public class Search extends FlowPanel implements ClickListener {
@@ -39,6 +44,8 @@ public class Search extends FlowPanel implements ClickListener {
 	};
 	private static GenericAttribute[] Region = {
 		new SearchLocationAttribute(MpDb.oc.SearchSample_boundingBox),
+		new SearchCountriesAttribute(MpDb.oc.SearchSample_country),
+		new RegionAttribute(MpDb.oc.SearchSample_region)
 	};
 	private static GenericAttribute[] Minerals = {
 		new SearchMineralsAttribute(MpDb.doc.SearchSample_minerals, 4),
@@ -48,16 +55,23 @@ public class Search extends FlowPanel implements ClickListener {
 				MpDb.doc.SearchSample_oxides),
 	};
 	private static GenericAttribute[] Other = {
-			new TextAttribute(MpDb.oc.SearchSample_owner),
+			new SearchOwnersAttribute(MpDb.oc.SearchSample_owner),
+			new SearchCollectorsAttribute(MpDb.oc.SearchSample_collector),
+			new TextAttribute(MpDb.oc.SearchSample_alias),	
 			new TextAttribute(MpDb.oc.SearchSample_sesarNumber),
-			new TextAttribute(MpDb.oc.SearchSample_alias),
+			new MetamorphicGradeAttribute(MpDb.oc.SearchSample_metamorphicGrades),
 			new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange)
 	};
 	private static GenericAttribute[] searchAtts = {
-		new SearchTabAttribute(MpDb.oc.SearchSample_alias,
+		new SearchTabAttribute(MpDb.doc.SearchSample_tabs,
 				new GenericAttribute[][] {
 						rocktype, Region, Minerals, Chemistry, Other
-				})
+				}, new String[] { LocaleHandler.lc_entity.Search_Tab_RockType(),
+				LocaleHandler.lc_entity.Search_Tab_Region(),
+				LocaleHandler.lc_entity.Search_Tab_Minerals(),
+				LocaleHandler.lc_entity.Search_Tab_Chemistry(),
+				LocaleHandler.lc_entity.Search_Tab_Other()
+		})
 
 	};
 

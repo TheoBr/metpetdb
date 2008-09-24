@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.Set;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.rpi.metpetdb.client.error.DAOException;
@@ -121,7 +123,9 @@ public interface UserService extends RemoteService {
 	 */
 	void emailPassword(String username) throws DAOException,
 			UnableToSendEmailException;
-
+	
+	Set<String> allNames();
+	
 	User confirmUser(String confirmationCode) throws DAOException,
 			LoginRequiredException;
 }

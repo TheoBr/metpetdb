@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.Set;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
@@ -24,4 +26,6 @@ public interface UserServiceAsync {
 	void emailPassword(String username, AsyncCallback<Void> ac);
 
 	void confirmUser(String confirmationCode, AsyncCallback<User> ac);
+	
+	void allNames(AsyncCallback<Set<String>> ac);
 }

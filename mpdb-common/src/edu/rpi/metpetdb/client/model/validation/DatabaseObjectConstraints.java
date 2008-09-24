@@ -12,6 +12,7 @@ import edu.rpi.metpetdb.client.model.StartSessionRequest;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.XrayImage;
+import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
 import edu.rpi.metpetdb.client.model.validation.primitive.BooleanConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
@@ -37,6 +38,9 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public ObjectConstraint SearchSample_elements;
 	public ObjectConstraint SearchSample_oxides;
 	public ObjectConstraint SearchSample_possibleRockTypes;
+
+
+	public StringConstraint SearchSample_tabs;
 
 	// ------ SampleMineral ------
 	public PropertyConstraint[] SampleMineral__all;
@@ -264,10 +268,45 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 		// Fill in fake constraints for searching
 		SearchSample_minerals.setConstraints(SampleMineral__all);
+		SearchSample_minerals.property = SearchSampleProperty.minerals;
+		SearchSample_minerals.propertyName = "Minerals";
+		SearchSample_minerals.required = false;
+		SearchSample_minerals.entityName = "SearchSample";
+		
 		SearchSample_elements.setConstraints(ChemicalAnalysisElement__all);
+		SearchSample_elements.property = SearchSampleProperty.elements;
+		SearchSample_elements.propertyName = "Elements";
+		SearchSample_elements.required = false;
+		SearchSample_elements.entityName = "SearchSample";
+		
 		SearchSample_oxides.setConstraints(ChemicalAnalysisOxide__all);
-		SearchSample_possibleRockTypes.setConstraints(new PropertyConstraint[] {
-			Sample_rockType
-		});
+		SearchSample_oxides.property = SearchSampleProperty.oxides;
+		SearchSample_oxides.propertyName = "Oxides";
+		SearchSample_oxides.required = false;
+		SearchSample_oxides.entityName = "SearchSample";
+		
+		SearchSample_possibleRockTypes.setConstraints(new PropertyConstraint[] { Sample_rockType });
+		SearchSample_possibleRockTypes.property = SearchSampleProperty.possibleRockTypes;
+		SearchSample_possibleRockTypes.propertyName = "possibleRockTypes";
+		SearchSample_possibleRockTypes.required = false;
+		SearchSample_possibleRockTypes.entityName = "SearchSample";
+//		
+//		SearchSample_region.setConstraints(Sample_regions.getConstraints());
+//		SearchSample_region.entityName = "SearchSample";
+//		SearchSample_region.property = SearchSampleProperty.region;
+//		SearchSample_region.propertyName = "Region";
+//		SearchSample_region.required = false;
+//		
+//		SearchSample_references.setConstraints(Sample_references.getConstraints());
+//		SearchSample_references.entityName = "SearchSample";
+//		SearchSample_references.property = SearchSampleProperty.references;
+//		SearchSample_references.propertyName = "Reference";
+//		SearchSample_references.required = false;
+//		
+//		SearchSample_metamorphicGrades.setConstraints(Sample_metamorphicGrades.getConstraints());
+//		SearchSample_references.entityName = "SearchSample";
+//		SearchSample_references.property = SearchSampleProperty.metamorphicGrades;
+//		SearchSample_references.propertyName = "MetamorphicGrades";
+//		SearchSample_references.required = false;
 	}
 }

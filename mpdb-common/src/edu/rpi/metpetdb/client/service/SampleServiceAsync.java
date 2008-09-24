@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.Set;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.model.Sample;
@@ -24,4 +26,8 @@ public interface SampleServiceAsync {
 	void save(Sample sample, AsyncCallback<Sample> ac);
 
 	void delete(long id, AsyncCallback<Object> ac);
+	
+	void allCollectors(AsyncCallback<Set<String>> ac);
+	
+	void allCountries(AsyncCallback<Set<String>> ac);
 }

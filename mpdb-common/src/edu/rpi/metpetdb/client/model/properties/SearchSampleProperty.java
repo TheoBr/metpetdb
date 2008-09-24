@@ -5,7 +5,8 @@ import java.util.Set;
 import org.postgis.Geometry;
 
 import edu.rpi.metpetdb.client.model.DateSpan;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.MetamorphicGrade;
+import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.Region;
 import edu.rpi.metpetdb.client.model.RockType;
 import edu.rpi.metpetdb.client.model.SampleMineral;
@@ -13,6 +14,7 @@ import edu.rpi.metpetdb.client.model.SearchElement;
 import edu.rpi.metpetdb.client.model.SearchOxide;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
+
 
 public enum SearchSampleProperty implements SearchProperty {
 
@@ -56,12 +58,12 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 	},
 	owner {
-		public <T extends MObject> Object get(final T sample) {
-			return ((SearchSample) sample).getOwner();
+		public <T extends MObject> Set<String> get(final T sample) {
+			return ((SearchSample) sample).getOwners();
 		}
 
 		public <T extends MObject, K> void set(final T sample, final K owner) {
-			((SearchSample) sample).setOwner((String) owner);
+			((SearchSample) sample).setOwners((Set<String>) owner);
 		}
 
 		public String columnName() {
@@ -144,6 +146,71 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 		public String columnName() {
 			return "subsample_chemicalAnalysis_oxides";
+		}
+	},
+	collector {
+		public <T extends MObject> Set<String> get(final T sample) {
+			return ((SearchSample) sample).getCollectors();
+		}
+
+		public <T extends MObject, K> void set(final T sample, final K collector) {
+			((SearchSample) sample).setCollectors((Set<String>) collector);
+		}
+
+		public String columnName() {
+			return "collector";
+		}
+	},
+	country {
+		public <T extends MObject> Set<String> get(final T sample) {
+			return ((SearchSample) sample).getCountries();
+		}
+
+		public <T extends MObject, K> void set(final T sample, final K country) {
+			((SearchSample) sample).setCountries((Set<String>) country);
+		}
+
+		public String columnName() {
+			return "country";
+		}
+	},
+	references {
+		public <T extends MObject> Set<Reference> get(final T sample) {
+			return ((SearchSample) sample).getReferences();
+		}
+
+		public <T extends MObject, K> void set(final T sample,
+				final K references) {
+			((SearchSample) sample)
+					.setReferences((Set<Reference>) references);
+		}
+		public String columnName() {
+			return "reference_name";
+		}
+	},
+	metamorphicGrades {
+		public <T extends MObject> Set<MetamorphicGrade> get(final T sample) {
+			return ((SearchSample) sample).getMetamorphicGrades();
+		}
+
+		public <T extends MObject, K> void set(final T sample,
+				final K metamorphicGrades) {
+			((SearchSample) sample).setMetamorphicGrades((Set<MetamorphicGrade>) metamorphicGrades);
+		}
+		public String columnName() {
+			return "metamorphicGrade_name";
+		}
+	},
+	tabs{
+		public <T extends MObject> String get(final T sample) {
+			return "";
+		}
+
+		public <T extends MObject, K> void set(final T sample, final K tabs) {
+			
+		}
+		public String columnName(){
+			return "";
 		}
 	};
 }

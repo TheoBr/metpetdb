@@ -21,10 +21,18 @@ import edu.rpi.metpetdb.client.service.ImageBrowserService;
 import edu.rpi.metpetdb.client.service.ImageBrowserServiceAsync;
 import edu.rpi.metpetdb.client.service.ImageService;
 import edu.rpi.metpetdb.client.service.ImageServiceAsync;
+import edu.rpi.metpetdb.client.service.ImageTypeService;
+import edu.rpi.metpetdb.client.service.ImageTypeServiceAsync;
+import edu.rpi.metpetdb.client.service.MetamorphicGradeService;
+import edu.rpi.metpetdb.client.service.MetamorphicGradeServiceAsync;
 import edu.rpi.metpetdb.client.service.MpDbGenericService;
 import edu.rpi.metpetdb.client.service.MpDbGenericServiceAsync;
 import edu.rpi.metpetdb.client.service.ProjectService;
 import edu.rpi.metpetdb.client.service.ProjectServiceAsync;
+import edu.rpi.metpetdb.client.service.ReferenceService;
+import edu.rpi.metpetdb.client.service.ReferenceServiceAsync;
+import edu.rpi.metpetdb.client.service.RegionService;
+import edu.rpi.metpetdb.client.service.RegionServiceAsync;
 import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.client.service.SampleServiceAsync;
 import edu.rpi.metpetdb.client.service.SearchService;
@@ -71,6 +79,14 @@ public class MpDb {
 	public static final BulkUploadImagesServiceAsync bulkUploadImages_svc;
 
 	public static final SearchServiceAsync search_svc;
+	
+	public static final RegionServiceAsync region_svc;
+	
+	public static final ImageTypeServiceAsync imageType_svc;
+	
+	public static final ReferenceServiceAsync reference_svc;
+	
+	public static final MetamorphicGradeServiceAsync metamorphicGrade_svc;
 
 	public static DatabaseObjectConstraints doc;
 
@@ -120,6 +136,18 @@ public class MpDb {
 
 		search_svc = (SearchServiceAsync) bindService(GWT
 				.create(SearchService.class), "search");
+		
+		region_svc = (RegionServiceAsync) bindService(GWT
+				.create(RegionService.class), "region");
+		
+		imageType_svc = (ImageTypeServiceAsync) bindService(GWT
+				.create(ImageTypeService.class), "imageType");
+		
+		reference_svc = (ReferenceServiceAsync) bindService(GWT
+				.create(ReferenceService.class), "reference");
+		
+		metamorphicGrade_svc = (MetamorphicGradeServiceAsync) bindService(GWT
+				.create(MetamorphicGradeService.class), "metamorphicGrade");
 
 		// factory = (HtmlFactory) GWT.create(HtmlFactory.class);
 	}

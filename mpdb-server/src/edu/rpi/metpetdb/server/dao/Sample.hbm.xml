@@ -351,6 +351,17 @@
     where s.publicData = 'Y'
     order by s.longitudeError
   </query>
+  <query name="Sample.Collectors/Collector">
+    Select Distinct collector
+    from Sample s
+    where s.publicData = 'Y'
+    order by s.collector
+  </query>
+  <query name="Sample.Countries/Countries">
+    Select Distinct country
+    from Sample s
+    order by s.country
+  </query>
   
   <filter-def name="boundingBox">
     <filter-param name="polygon" type="edu.rpi.metpetdb.server.dao.GeometryType"/>

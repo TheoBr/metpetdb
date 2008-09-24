@@ -22,6 +22,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
+import com.google.gwt.user.client.History;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Project;
@@ -63,6 +64,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	protected void addPageHeader() {
 		super.addPageHeader();
 		setPageTitle("My Samples");
+
 
 		final MLink addSample = new MLink("Add Sample", TokenSpace.enterSample);
 		final MLink bulkUpload = new MLink("Upload Samples",

@@ -38,4 +38,9 @@
     from User u
     where u.emailAddress = :emailAddress
   </query>
+  <query name="User.all/name">
+  	select name
+  	from User u
+    order by u.name
+   </query>
 </hibernate-mapping>

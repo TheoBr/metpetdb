@@ -17,12 +17,11 @@ import com.google.gwt.maps.client.overlay.Polygon;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -73,64 +72,31 @@ public class SearchLocationAttribute extends GenericAttribute implements
 
 		viewBounds = new Button("View Bounds", this);
 		clearMarkers = new Button("Remove Markers", this);
-
-		final HorizontalPanel hpOptions = new HorizontalPanel();
-		hpOptions.add(clearMarkers);
+		viewBounds.addStyleName("block");
+		
 
 		final Label northBound = new Label("North Bound (Lat)");
 		final Label southBound = new Label("South Bound (Lat)");
 		final Label eastBound = new Label("East Bound (Long)");
 		final Label westBound = new Label("West Bound (Long)");
 
-		final VerticalPanel vpNorth = new VerticalPanel();
-		final VerticalPanel vpSouth = new VerticalPanel();
-		final VerticalPanel vpEast = new VerticalPanel();
-		final VerticalPanel vpWest = new VerticalPanel();
+		final FlowPanel TextBoxContainer = new FlowPanel();
+		
+		TextBoxContainer.add(clearMarkers);
+		TextBoxContainer.add(northBound);
+		TextBoxContainer.add(northInput);
+		TextBoxContainer.add(southBound);
+		TextBoxContainer.add(southInput);
+		TextBoxContainer.add(eastBound);
+		TextBoxContainer.add(eastInput);
+		TextBoxContainer.add(westBound);
+		TextBoxContainer.add(westInput);
+		TextBoxContainer.add(viewBounds);
 
-		vpNorth.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		vpSouth.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		vpEast.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		vpWest.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-
-		vpNorth.add(northBound);
-		vpNorth.add(northInput);
-
-		vpSouth.add(southBound);
-		vpSouth.add(southInput);
-		vpSouth.add(viewBounds);
-
-		vpEast.add(eastBound);
-		vpEast.add(eastInput);
-
-		vpWest.add(westBound);
-		vpWest.add(westInput);
-
-		ft.setWidget(0, 0, hpOptions);
-		ft.setWidget(0, 1, vpNorth);
-		ft.setWidget(1, 0, vpWest);
-		ft.setWidget(1, 1, map);
-		ft.setWidget(1, 2, vpEast);
-		ft.setWidget(2, 1, vpSouth);
-
-		ft.getFlexCellFormatter().setWidth(0, 0, "40%");
-		ft.getFlexCellFormatter().setWidth(0, 1, "20%");
-		ft.getFlexCellFormatter().setWidth(0, 2, "40%");
-
-		ft.getFlexCellFormatter().setAlignment(0, 1,
-				HasHorizontalAlignment.ALIGN_CENTER,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		ft.getFlexCellFormatter().setAlignment(1, 0,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		ft.getFlexCellFormatter().setAlignment(1, 2,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		ft.getFlexCellFormatter().setAlignment(2, 1,
-				HasHorizontalAlignment.ALIGN_CENTER,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		ft.getFlexCellFormatter().setAlignment(1, 1,
-				HasHorizontalAlignment.ALIGN_CENTER,
-				HasVerticalAlignment.ALIGN_MIDDLE);
+		ft.setWidget(0, 0, TextBoxContainer);
+		ft.setWidget(0, 1, map);
+		
+		ft.getFlexCellFormatter().setAlignment(0, 0, HasHorizontalAlignment.ALIGN_RIGHT, HasVerticalAlignment.ALIGN_MIDDLE);
 
 		ft.setCellSpacing(3);
 

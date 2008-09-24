@@ -18,6 +18,8 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -40,19 +42,20 @@ import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 public class SearchTabAttribute extends GenericAttribute {
 	private GenericAttribute[][] atts;
 	private ArrayList<ObjectEditorPanel<SearchSample>> searchSamples = new ArrayList();
+	private String[] tabTitles;
 
 	public SearchTabAttribute(final StringConstraint sc,
-			final GenericAttribute[][] atts) {
+			final GenericAttribute[][] atts, final String[] tabTitles) {
 		super(sc);
 		this.atts = atts;
+		this.tabTitles = tabTitles;
 	}
 
 	public Widget[] createDisplayWidget(final MObject obj) {
-
 		return new Widget[] {};
 	}
 
-	public Widget[] createEditWidget(final SearchSample obj, final String id) {
+	public Widget[] createEditWidget(final MObject obj, final String id) {
 		final MTwoColPanel panel = new MTwoColPanel();
 		final MTabPanel tabs = new MTabPanel();
 		for (int i = 0; i < atts.length; i++) {
@@ -73,17 +76,8 @@ public class SearchTabAttribute extends GenericAttribute {
 				}
 			};
 			p_searchSample.getSaveButton().setText("Set");
-			if (i == 0)
-				tabs.add(p_searchSample, "Rock Type");
-			if (i == 1)
-				tabs.add(p_searchSample, "Region");
-			if (i == 2)
-				tabs.add(p_searchSample, "Minerals");
-			if (i == 3)
-				tabs.add(p_searchSample, "Chemistry");
-			if (i == 4)
-				tabs.add(p_searchSample, "Other");
-			p_searchSample.edit(obj);
+			tabs.add(p_searchSample, tabTitles[i]);
+			p_searchSample.edit((SearchSample)obj);
 			searchSamples.add(p_searchSample);
 		}
 		tabs.selectTab(0);
@@ -169,18 +163,18 @@ public class SearchTabAttribute extends GenericAttribute {
 	}
 
 	public void addConstraints(SearchSample ss) {
-		if (ss.getOwner() != null) {
-			addConstraint(createCritRow("Owner:", ss.getOwner(), ss.getOwner(),
-					(Property) MpDb.oc.SearchSample_owner.property));
+		if (ss.getOwners() != null) {
+			Iterator<String> itr = ss.getOwners().iterator();
+			while (itr.hasNext()) {
+				final String owner = itr.next();
+				addConstraint(createCritRow("Owner:", owner, owner, MpDb.oc.SearchSample_owner.property));
+			}
 		}
 		if (ss.getSesarNumber() != null) {
-			addConstraint(createCritRow("Sesar Number:", ss.getSesarNumber(),
-					ss.getSesarNumber(),
-					(Property) MpDb.oc.SearchSample_sesarNumber.property));
+			addConstraint(createCritRow("Sesar Number:", ss.getSesarNumber(), ss.getSesarNumber(), MpDb.oc.SearchSample_sesarNumber.property));
 		}
 		if (ss.getAlias() != null) {
-			addConstraint(createCritRow("Alias:", ss.getAlias(), ss.getAlias(),
-					(Property) MpDb.oc.SearchSample_alias.property));
+			addConstraint(createCritRow("Alias:", ss.getAlias(),ss.getAlias(), MpDb.oc.SearchSample_alias.property));
 		}
 		if (ss.getCollectionDateRange() != null) {
 			final int StartMonth = ss.getCollectionDateRange().getStartAsDate()
@@ -201,11 +195,7 @@ public class SearchTabAttribute extends GenericAttribute {
 			final String EndDate = String.valueOf(EndMonth) + "/"
 					+ String.valueOf(EndDay) + "/" + String.valueOf(EndYear);
 			String range = StartDate + " - " + EndDate;
-			addConstraint(createCritRow(
-					"Date Range:",
-					range,
-					ss.getCollectionDateRange(),
-					(Property) MpDb.oc.SearchSample_collectionDateRange.property));
+			addConstraint(createCritRow("Date Range:", range, ss.getCollectionDateRange(),MpDb.oc.SearchSample_collectionDateRange.property));
 		}
 
 		if (ss.getBoundingBox() != null) {
@@ -264,8 +254,7 @@ public class SearchTabAttribute extends GenericAttribute {
 		critConstraint.addStyleName("inline");
 		container.add(critLabel);
 		container.add(critConstraint);
-		return container;
-
+		return container;	
 	}
 
 	public void clearConstraints() {
@@ -282,7 +271,7 @@ public class SearchTabAttribute extends GenericAttribute {
 		} else
 			value = null;
 		ss.mSet(p, value);
-		for (int i = 0; i < searchSamples.size(); i++) {
+		for (int i = 0; i < searchSamples.size(); i++){
 			searchSamples.get(i).edit(searchSamples.get(i).getBean());
 		}
 	}

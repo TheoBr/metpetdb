@@ -20,8 +20,12 @@ public class SearchSample implements IsSerializable, MObject {
 
 	private String sesarNumber;
 	private Geometry boundingBox;
+	
+	private Set<String> collectors;
+	
+	private Set<String> countries;
 
-	private String owner;
+	private Set<String> owners;
 
 	private String alias;
 
@@ -35,6 +39,10 @@ public class SearchSample implements IsSerializable, MObject {
 	private Set<SearchOxide> oxides;
 
 	private Set<Region> regions;
+	
+	private Set<Reference> references;
+	
+	private Set<MetamorphicGrade> metamorphicGrades;
 	
 	public SearchSample() {
 		
@@ -84,13 +92,48 @@ public class SearchSample implements IsSerializable, MObject {
 		boundingBox = g;
 	}
 
-	public String getOwner() {
-		return owner;
+	public Set<String> getOwners() {
+		return owners;
 	}
 
-	public void setOwner(final String u) {
-		owner = u;
+	public void setOwners(final Set<String> o) {
+		owners = o;
 	}
+
+	public void addOwner(final String name) {
+		if (owners == null)
+			owners = new HashSet<String>();
+		owners.add(name);
+	}
+	
+	public Set<String> getCollectors() {
+		return collectors;
+	}
+
+	public void setCollectors(final Set<String> c) {
+		collectors = c;
+	}
+
+	public void addCollector(final String name) {
+		if (collectors == null)
+			collectors = new HashSet<String>();
+		collectors.add(name);
+	}
+	
+	public Set<String> getCountries() {
+		return countries;
+	}
+
+	public void setCountries(final Set<String> c) {
+		countries = c;
+	}
+
+	public void addCountry(final String name) {
+		if (countries == null)
+			countries = new HashSet<String>();
+		countries.add(name);
+	}
+
 
 	public String getAlias() {
 		return alias;
@@ -202,6 +245,36 @@ public class SearchSample implements IsSerializable, MObject {
 		c.setLowerBound(lowerBound);
 		c.setUpperBound(upperBound);
 		oxides.add(c);
+	}
+	
+	public Set<Reference> getReferences() {
+		return references;
+	}
+
+	public void setReferences(final Set<Reference> r) {
+		references = r;
+	}
+
+	public void addReferences(final String name) {
+		if (references == null)
+			references = new HashSet<Reference>();
+		final Reference r = new Reference();
+		references.add(r);
+	}
+	
+	public Set<MetamorphicGrade> getMetamorphicGrades() {
+		return metamorphicGrades;
+	}
+
+	public void setMetamorphicGrades(final Set<MetamorphicGrade> mg) {
+		metamorphicGrades = mg;
+	}
+
+	public void addMetamorphicGrade(final String name) {
+		if (metamorphicGrades == null)
+			metamorphicGrades = new HashSet<MetamorphicGrade>();
+		final MetamorphicGrade mg = new MetamorphicGrade();
+		metamorphicGrades.add(mg);
 	}
 
 	public Object mGet(Property property) {
