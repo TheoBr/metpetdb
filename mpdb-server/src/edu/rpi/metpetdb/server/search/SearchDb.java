@@ -180,6 +180,7 @@ public class SearchDb {
 				.createFullTextQuery(fullQuery, Sample.class);
 		final List<Sample> results = hibQuery.list();
 
+		session.close();
 		return results;
 	}
 }

@@ -29,5 +29,6 @@ public class RegenerateIndices {
 			fullTextSession.index(sample);
 		}
 		tx.commit(); // index are written at commit time
+		session.close();
 	}
 }

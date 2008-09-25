@@ -49,6 +49,7 @@ public class FileUploadServlet extends HttpServlet {
 					.setParameter("hash", hash).setParameter("filename",
 							uploadItem.getName()).executeUpdate();
 			t.commit();
+			s.close();
 			response.getWriter().write(hash);
 
 		} catch (final IOException ioe) {

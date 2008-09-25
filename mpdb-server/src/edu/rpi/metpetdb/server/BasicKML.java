@@ -58,6 +58,8 @@ public class BasicKML extends HttpServlet {
 		else {
 			samples = session.createQuery("from Sample").list();
 		}
+		
+		session.close();
 
 		try {
 			response.getWriter().write("<Document id='doc0'>\n");
