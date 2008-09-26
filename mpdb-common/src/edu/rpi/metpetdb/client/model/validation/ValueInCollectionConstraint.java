@@ -50,7 +50,7 @@ public class ValueInCollectionConstraint extends PropertyConstraint implements
 
 	public void validateValue(Object value) throws ValidationException {
 		super.validateValue(value);
-		if (value != null && !value.toString().isEmpty() && required) {
+		if (value != null && !value.toString().isEmpty()) {
 			if (values != null && valueInCollection(value, this.getValues()))
 				return;
 			else if (value != null)
