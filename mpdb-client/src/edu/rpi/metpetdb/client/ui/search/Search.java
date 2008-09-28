@@ -21,11 +21,13 @@ import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.CheckBoxesAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateRangeAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.SRockTypesAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MetamorphicGradeAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.RegionAttribute;
@@ -37,10 +39,11 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchTabAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchCollectorsAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchCountriesAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
+import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 
-public class Search extends FlowPanel implements ClickListener {
+public class Search extends MPagePanel implements ClickListener {
 	private static GenericAttribute[] rocktype = {
-		new CheckBoxesAttribute(MpDb.doc.SearchSample_possibleRockTypes, 4),
+		new SRockTypesAttribute(MpDb.doc.SearchSample_possibleRockTypes, 4),
 	};
 	private static GenericAttribute[] Region = {
 		new SearchLocationAttribute(MpDb.oc.SearchSample_boundingBox),
@@ -99,6 +102,9 @@ public class Search extends FlowPanel implements ClickListener {
 	private List<Sample> results = new ArrayList<Sample>();
 
 	public Search() {
+		setStyleName(CSS.SEARCH);
+		addPageHeader();
+		setPageTitle("Search");
 		p_searchSample = new ObjectSearchPanel(searchAtts,
 				LocaleHandler.lc_text.search(), LocaleHandler.lc_text.search()) {
 			// TODO: Make that null into the current user from session. I don't

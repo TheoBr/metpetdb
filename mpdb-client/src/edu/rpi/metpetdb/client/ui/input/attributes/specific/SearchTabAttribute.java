@@ -33,6 +33,7 @@ import edu.rpi.metpetdb.client.model.SearchOxide;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.properties.Property;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
@@ -75,7 +76,7 @@ public class SearchTabAttribute extends GenericAttribute {
 					addConstraints((SearchSample) result);
 				}
 			};
-			p_searchSample.getSaveButton().setText("Set");
+			p_searchSample.getSaveButton().setText("Set " + tabTitles[i]);
 			tabs.add(p_searchSample, tabTitles[i]);
 			p_searchSample.edit((SearchSample)obj);
 			searchSamples.add(p_searchSample);
@@ -83,10 +84,10 @@ public class SearchTabAttribute extends GenericAttribute {
 		tabs.selectTab(0);
 		final Widget display = SearchConstraintDisplay();
 
-		panel.getLeftCol().add(display);
-		panel.getRightCol().add(tabs);
-		panel.setLeftColWidth("30%");
-		panel.setRightColWidth("70%");
+		panel.getLeftCol().add(tabs);
+		panel.setLeftColWidth("70%");
+		panel.getRightCol().add(display);
+		panel.setRightColWidth("30%");
 		return new Widget[] {
 			panel
 		};
@@ -106,7 +107,7 @@ public class SearchTabAttribute extends GenericAttribute {
 
 	private VerticalPanel vp;
 	private final static Label noConstraints = new Label(
-			"Set your search criteria by selecting from the categories on the right.");
+			"Set your search criteria by selecting from the categories on the left.");
 
 	public Widget SearchConstraintDisplay() {
 		vp = new VerticalPanel();
@@ -115,7 +116,7 @@ public class SearchTabAttribute extends GenericAttribute {
 		final Label header = new Label("Search Criteria");
 		final Hyperlink save = new Hyperlink();
 		save.setText("save");
-		save.addStyleName("beta");
+		save.addStyleName(CSS.BETA);
 		final Hyperlink clear = new Hyperlink();
 		clear.setText("clear");
 		clear.addClickListener(new ClickListener() {

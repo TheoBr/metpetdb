@@ -243,6 +243,11 @@ public abstract class GenericAttribute {
 			else
 				editWidget.setStyleName(CSS.INVALID_FIELD);
 		}
+//		new hotness. too hot at the moment, though.
+//		if (constraints[0].required) editWidget.addStyleName(CSS.REQUIRED);
+//		else editWidget.removeStyleName(CSS.REQUIRED);
+//		if (valid) editWidget.removeStyleName(CSS.INVALID);
+//		else editWidget.addStyleName(CSS.INVALID);
 	}
 
 	public void commitEdit(final MObject obj, final Widget[] editWidget,

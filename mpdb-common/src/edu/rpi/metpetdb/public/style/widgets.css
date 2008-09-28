@@ -124,15 +124,15 @@ table.calendar-panel {
 	text-align: left;
 	margin-bottom: 10px;
 }
-.popup-custom-cols .gwt-CheckBox {
+.popup-custom-cols .checkbox {
 	display: table-row;
 }
-.popup-custom-cols .gwt-CheckBox input {
+.popup-custom-cols .checkbox input {
 	border: 0 !important;
 	margin: 0 5px 0 0;
 }
-.popup-custom-cols .gwt-CheckBox label,
-.popup-custom-cols .gwt-CheckBox input {
+.popup-custom-cols .checkbox label,
+.popup-custom-cols .checkbox input {
 	display: table-cell;
 	vertical-align: middle;
 	padding-bottom: 10px;
