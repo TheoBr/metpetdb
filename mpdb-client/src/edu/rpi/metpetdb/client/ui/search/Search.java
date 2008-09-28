@@ -27,7 +27,6 @@ import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.CheckBoxesAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateRangeAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.SRockTypesAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MetamorphicGradeAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.RegionAttribute;
@@ -36,6 +35,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttrib
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchMineralsAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchOwnersAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchTabAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SRockTypesAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchCollectorsAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchCountriesAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;

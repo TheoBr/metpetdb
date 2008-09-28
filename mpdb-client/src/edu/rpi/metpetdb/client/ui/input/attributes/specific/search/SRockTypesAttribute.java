@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.input.attributes;
+package edu.rpi.metpetdb.client.ui.input.attributes.specific.search;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,6 +20,7 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
+import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
