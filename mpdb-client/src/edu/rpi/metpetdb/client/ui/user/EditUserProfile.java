@@ -17,11 +17,15 @@ import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.Submit;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.PasswordAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
+import edu.rpi.metpetdb.client.ui.widgets.MText;
 
-public class EditUserProfile extends FlowPanel implements UsesCurrentUser {
+public class EditUserProfile extends MPagePanel implements UsesCurrentUser {
 	private final User user;
 
 	public EditUserProfile(final User whoToEdit) {
+		addPageHeader();
+		setPageTitle("Edit Profile");
 		user = whoToEdit;
 		if (MpDb.isCurrentUser(user))
 			add(new PasswordChanger(user));
@@ -41,6 +45,8 @@ public class EditUserProfile extends FlowPanel implements UsesCurrentUser {
 		};
 		private final UserWithPassword uwp;
 		private final DetailsPanel<UserWithPassword> p_password;
+		private final FlowPanel passwordContainer = new FlowPanel();
+		private final MText passwordHeader = new MText("Change your password", "h2");
 		private final Button changePassword;
 
 		PasswordChanger(final User whoToEdit) {
@@ -55,12 +61,14 @@ public class EditUserProfile extends FlowPanel implements UsesCurrentUser {
 					new Button[] {
 						changePassword
 					});
-			p_password.setLegend(LocaleHandler.lc_text
-					.title_ChangeAccountPassword(n));
 			p_password.edit(uwp);
+			
+			passwordContainer.add(passwordHeader);
+			passwordContainer.add(p_password);
 
-			add(new OnEnterPanel(p_password) {
+			add(new OnEnterPanel(passwordContainer) {
 				public void onEnter() {
+					
 					doChangePassword();
 				}
 			});

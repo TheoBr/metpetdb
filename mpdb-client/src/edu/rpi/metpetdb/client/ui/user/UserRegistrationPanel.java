@@ -20,9 +20,10 @@ import edu.rpi.metpetdb.client.ui.input.Submit;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.PasswordAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
-public class UserRegistrationPanel extends FlowPanel implements ClickListener {
+public class UserRegistrationPanel extends MPagePanel implements ClickListener {
 	private static final GenericAttribute[] mainAttributes = {
 			new TextAttribute(MpDb.doc.User_emailAddress) {
 				protected MObject resolve(final MObject obj) {
@@ -70,6 +71,8 @@ public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 	private final DetailsPanel<UserWithPassword> p_main;
 
 	public UserRegistrationPanel() {
+		addPageHeader();
+		setPageTitle("Register");
 		newbie = new UserWithPassword(new User());
 		register = new Submit(LocaleHandler.lc_text.buttonRegister(), this);
 
@@ -80,10 +83,8 @@ public class UserRegistrationPanel extends FlowPanel implements ClickListener {
 				new Button[] {
 						toggle, register
 				});
-		p_main.setLegend(LocaleHandler.lc_text.title_RegisterAccountInfo());
 		p_main.edit(newbie);
 
-		add(new MText(LocaleHandler.lc_text.buttonRegister(), "h1"));
 		add(new MText(LocaleHandler.lc_text.message_WhyRegister(), "p"));
 		add(new OnEnterPanel(p_main) {
 			public void onEnter() {

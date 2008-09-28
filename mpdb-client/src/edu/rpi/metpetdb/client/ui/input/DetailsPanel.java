@@ -2,7 +2,6 @@ package edu.rpi.metpetdb.client.ui.input;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.MissingResourceException;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -11,7 +10,6 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.CSS;
@@ -21,19 +19,12 @@ import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 public class DetailsPanel<T extends MObject> extends ComplexPanel {
 	private String panelId;
 	private Element fieldset;
-	private Element legend;
 	// ArrayList<GenericAttribute>
 	protected ArrayList<GenericAttribute> attributes;
 	// HashMap<GenericAttribute, DetailsPanelEntry >
 	protected HashMap<GenericAttribute, DetailsPanelEntry> dpEntries;
 	private T bean;
 	protected int actionCount;
-	protected String editHeader;
-	protected String viewHeader;
-	protected String editDescription;
-	protected String viewDescription;
-	protected Element panelHeader;
-	protected Element panelDescription;
 	protected Element tbody;
 	protected boolean isEditMode = false;
 	protected final String STYLENAME_DEFAULT = "detailsPanel";
@@ -52,62 +43,6 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 	}
 
 	protected DetailsPanel() {
-	}
-
-	public void setViewHeader(final String s) {
-		viewHeader = s;
-	}
-
-	public void setViewDescription(final String s) {
-		viewDescription = s;
-	}
-
-	public void setEditHeader(final String s) {
-		editHeader = s;
-	}
-
-	public void setEditDescription(final String s) {
-		editDescription = s;
-	}
-
-	public String getViewHeader() {
-		return viewHeader;
-	}
-
-	public String getViewDescription() {
-		return viewDescription;
-	}
-
-	public String getEditHeader() {
-		return editHeader;
-	}
-
-	public String getEditDescription() {
-		return editDescription;
-	}
-
-	public void setPanelHeader() {
-		showBlockOrHide(panelHeader, "");
-	}
-
-	public void setPanelHeader(final String s) {
-		showBlockOrHide(panelHeader, s);
-	}
-
-	public void setPanelDescription() {
-		showBlockOrHide(panelDescription, "");
-	}
-
-	public void setPanelDescription(final String s) {
-		showBlockOrHide(panelDescription, s);
-	}
-
-	private void showBlockOrHide(Element elem, String s) {
-		DOM.setInnerHTML(elem, s);
-		if (s == null || s.equals(""))
-			DOM.setElementAttribute(elem, "class", CSS.HIDE);
-		else
-			DOM.setElementAttribute(elem, "class", CSS.SHOW_BLOCK);
 	}
 
 	protected void init(final GenericAttribute[] atts, final Widget[] actions) {
@@ -130,36 +65,6 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 		fieldset = DOM.createFieldSet();
 		setElement(fieldset);
 		setStyleName(STYLENAME_DEFAULT);
-
-		legend = DOM.createLegend();
-		DOM.appendChild(fieldset, legend);
-
-		// Get the edit/view description/header
-		if (atts != null && atts.length > 0 && showHeaders) {
-			final String entityName = atts[0].getConstraint().entityName;
-			try {
-				editHeader = LocaleHandler.lc_entity.getString(entityName + "_"
-						+ "editHeader");
-				viewHeader = LocaleHandler.lc_entity.getString(entityName + "_"
-						+ "viewHeader");
-				editDescription = LocaleHandler.lc_entity.getString(entityName
-						+ "_" + "editDescription");
-				viewDescription = LocaleHandler.lc_entity.getString(entityName
-						+ "_" + "viewDescription");
-			} catch (MissingResourceException mre) {
-				// Failed to get header/descriptions
-				editHeader = "";
-				viewHeader = "";
-				editDescription = "";
-				viewDescription = "";
-			}
-		}
-
-		panelHeader = DOM.createElement("h3");
-		DOM.appendChild(fieldset, panelHeader);
-
-		panelDescription = DOM.createElement("p");
-		DOM.appendChild(fieldset, panelDescription);
 
 		final Element table = DOM.createTable();
 		tbody = DOM.createTBody();
@@ -227,17 +132,6 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 
 		attr.setMyPanel(this);
 		return new DetailsPanelRow(tr, labelTD, valueTD, label);
-	}
-
-	public void setLegend(final String t) {
-		DOM.setInnerHTML(legend, t);
-		if (t == null || t.equals("")) {
-			removeStyleName(STYLENAME_DEFAULT + "-hasLegend");
-			DOM.setElementAttribute(legend, "class", CSS.HIDE);
-		} else {
-			addStyleName(STYLENAME_DEFAULT + "-hasLegend");
-			DOM.setElementAttribute(legend, "class", CSS.SHOW_INLINE);
-		}
 	}
 
 	public T getBean() {

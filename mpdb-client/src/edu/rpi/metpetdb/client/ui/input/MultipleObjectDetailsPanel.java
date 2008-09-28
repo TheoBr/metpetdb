@@ -54,8 +54,6 @@ public class MultipleObjectDetailsPanel<T extends MObject> extends
 			dpBeans.put(bean, dpEntries);
 		}
 		// Set the header/description text
-		setPanelHeader(viewHeader);
-		setPanelDescription(viewDescription);
 		isEditMode = false;
 	}
 
@@ -152,9 +150,6 @@ public class MultipleObjectDetailsPanel<T extends MObject> extends
 				add(err, dpEntry.getLastRow().getTdValue());
 			}
 		}
-		// Set the header/description text
-		setPanelHeader(editHeader);
-		setPanelDescription(editDescription);
 		isEditMode = true;
 	}
 	public boolean validateEdit(final ServerOp<?> r) {
