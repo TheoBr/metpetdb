@@ -1,57 +1,51 @@
 /*-------------------------------------
                Tab Panel
  --------------------------------------*/
-.tabPanel {
-	margin-top: 1em;
-}
+
 .tabBar {
-	background: transparent url(../images/tabbar-bg.gif) repeat-x 0% 100%;
+	background-color: #E4E4E4;
+	border-bottom: 1px solid #CBCBCB;
+	padding: 6px;
 }
-.tabBarFirst {
-	width: 14px;
-	background: transparent url(../images/tabbar-left.gif) no-repeat 0% 100%;
-}
-.tabBar-end {
-	background: transparent url(../images/tabbar-right.gif) no-repeat 100% 100%;
-	padding-right: 14px;
+.tabBar-table {
+	margin: 0 auto;
 }
 .tabBarItem {
-	margin: 0 2px;
-	cursor: pointer;
-	background: #f3f5f2 url(../images/tabbar-tab-left.gif) no-repeat 0% 0%;
-	border-bottom: 1px solid #507c46;
-	padding-left: 2px;
+	background: transparent url(../images/tabitem-bg.png) no-repeat 50% 50%;
+	cursor: default;
 }
-.tabBarItem-end {
-	padding-right: 2px;
-	background: #f3f5f2 url(../images/tabbar-tab-right.gif) no-repeat 100% 0%;
+.tabBarItem-wrap {
+	background: transparent url(../images/tabitem-divider.png) no-repeat 100% 50%;
+	padding-right: 9px;
 }
 .tabBarItem-content {
-	padding: 3px 5px 0;
-	height: 20px;
-	background: #e9ece8 url(../images/tabbar-tab-bg.gif) repeat-x 0% 50%;
-	border-top: 1px solid #7a9f71;
-	color: #333;
+	color: #000;
+	height: 21px;
+	padding: 3px 0 0 8px;
 }
-.tabBarItem:focus .tabBarItem-content,
-.tabBarItem:hover .tabBarItem-content {
-	background-color: #f5f6f4;
-	background-image: url(../images/tabbar-tab-bg-hover.gif);
+.tabBarItem-selected,
+.tabBarItem:active {
+	background-image: url(../images/tabitem-selected-bg.png);
 }
-.tabBarItem-selected {
-	border-bottom-color: #fff;
-	background-color: #fff;
-	background-image: url(../images/tabbar-tabsel-left.gif);
-}
-.tabBarItem-selected .tabBarItem-end {
-	background-color: #fff;
-	background-image: url(../images/tabbar-tabsel-right.gif);
+.tabBarItem-selected .tabBarItem-wrap,
+.tabBarItem:active .tabBarItem-wrap {
+	background-image: url(../images/tabitem-selected-right.png);
 }
 .tabBarItem-selected .tabBarItem-content,
-.tabBarItem-selected:focus .tabBarItem-content,
-.tabBarItem-selected:hover .tabBarItem-content {
-	color: #000;
-	background-color: #fff;
-	background-image: url(../images/tabbar-tabsel-bg.gif);
-	border-top-color: #87a97f;
+.tabBarItem:active .tabBarItem-content {
+	color: #fff;
+	text-shadow: 1px 1px 0 #000;
+	background: transparent url(../images/tabitem-selected-left.png) no-repeat 0% 50%;
 }
+.tabBar-table td:first-child .tabBarItem {
+	background-position: 0% 50%;
+}
+.tabBar-table td:last-child .tabBarItem {
+	background-position: 100% 50%;
+}
+.tabBar-table td:first-child .tabBarItem-selected .tabBarItem-content,
+.tabBar-table td:first-child .tabBarItem:active .tabBarItem-content,
+.tabBar-table td:last-child .tabBarItem-wrap {
+	background-image: none;
+}
+

@@ -37,7 +37,6 @@ public class MTabBar extends Composite implements SourcesTabEvents,
 		ClickListener {
 
 	private SimplePanel panelContainer = new SimplePanel();
-	private SimplePanel panelWrapper = new SimplePanel();
 	private HorizontalPanel panel = new HorizontalPanel();
 	private Widget selectedTab;
 	private TabListenerCollection tabListeners;
@@ -78,8 +77,8 @@ public class MTabBar extends Composite implements SourcesTabEvents,
 		}
 
 		TabBarItem(Widget w) {
-			w.addStyleName(STYLENAME_DEFAULT + "Item-content");
-			setStyleName(STYLENAME_DEFAULT + "Item-end");
+			w.setStyleName(STYLENAME_DEFAULT + "Item-content");
+			setStyleName(STYLENAME_DEFAULT + "Item-wrap");
 			add(w);
 		}
 
@@ -88,22 +87,16 @@ public class MTabBar extends Composite implements SourcesTabEvents,
 	/**
 	 * Creates an empty tab bar.
 	 * 
-	 * @modified by zak: removed 'tabBarRest', added a few containing
-	 * 	SimplePanels
+	 * @modified by zak: removed 'tabBarRest', added a containing
+	 * 	SimplePanel
 	 */
 	public MTabBar() {
 		initWidget(panelContainer);
 		sinkEvents(Event.ONCLICK);
 		setStyleName(STYLENAME_DEFAULT);
-		panelWrapper.setStyleName(STYLENAME_DEFAULT + "-end");
-
-		panel.setVerticalAlignment(HasVerticalAlignment.ALIGN_BOTTOM);
-
-		HTML first = new HTML("&nbsp;", true);
-		first.setStyleName(STYLENAME_DEFAULT + "First");
-		panel.add(first);
-		panelWrapper.add(panel);
-		panelContainer.add(panelWrapper);
+		panel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
+		panel.setStyleName(STYLENAME_DEFAULT + "-table");
+		panelContainer.add(panel);
 	}
 
 	/**
@@ -142,7 +135,7 @@ public class MTabBar extends Composite implements SourcesTabEvents,
 		if (selectedTab == null) {
 			return -1;
 		}
-		return panel.getWidgetIndex(selectedTab) - 1;
+		return panel.getWidgetIndex(selectedTab);
 	}
 
 	/**
@@ -151,7 +144,7 @@ public class MTabBar extends Composite implements SourcesTabEvents,
 	 * @return the tab count
 	 */
 	public int getTabCount() {
-		return panel.getWidgetCount() - 1;
+		return panel.getWidgetCount();
 	}
 
 	/**
@@ -165,7 +158,7 @@ public class MTabBar extends Composite implements SourcesTabEvents,
 		if (index >= getTabCount()) {
 			return null;
 		}
-		Widget widget = panel.getWidget(index + 1);
+		Widget widget = panel.getWidget(index);
 		if (widget instanceof HTML) {
 			return ((HTML) widget).getHTML();
 		} else if (widget instanceof Label) {
@@ -190,13 +183,13 @@ public class MTabBar extends Composite implements SourcesTabEvents,
 		ClickDecoratorPanel decWidget = new ClickDecoratorPanel(new TabBarItem(
 				widget), this);
 		decWidget.addStyleName(STYLENAME_DEFAULT + "Item");
-		panel.insert(decWidget, beforeIndex + 1);
+		panel.insert(decWidget, beforeIndex);
 	}
 
 	public void onClick(Widget sender) {
-		for (int i = 1; i < panel.getWidgetCount(); ++i) {
+		for (int i = 0; i < panel.getWidgetCount(); ++i) {
 			if (panel.getWidget(i) == sender) {
-				selectTab(i - 1);
+				selectTab(i);
 				return;
 			}
 		}
@@ -211,8 +204,7 @@ public class MTabBar extends Composite implements SourcesTabEvents,
 	public void removeTab(int index) {
 		checkTabIndex(index);
 
-		// (index + 1) to account for' first' placeholder widget.
-		Widget toRemove = panel.getWidget(index + 1);
+		Widget toRemove = panel.getWidget(index);
 		if (toRemove == selectedTab) {
 			selectedTab = null;
 		}
@@ -250,7 +242,7 @@ public class MTabBar extends Composite implements SourcesTabEvents,
 			return true;
 		}
 
-		selectedTab = panel.getWidget(index + 1);
+		selectedTab = panel.getWidget(index);
 		setSelectionStyle(selectedTab, true);
 
 		if (tabListeners != null) {
@@ -266,7 +258,7 @@ public class MTabBar extends Composite implements SourcesTabEvents,
 	}
 
 	private void checkTabIndex(int index) {
-		if ((index < -1) || (index >= getTabCount())) {
+		if ((index < 0) || (index >= getTabCount())) {
 			throw new IndexOutOfBoundsException();
 		}
 	}

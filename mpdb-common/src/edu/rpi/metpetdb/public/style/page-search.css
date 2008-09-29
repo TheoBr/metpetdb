@@ -21,11 +21,6 @@
 	background-color: #e6eaf6;
 }
 
-/* todo: this will not be necessary eventually */
-.search .pairedRow-label {
-	width: auto;
-}
-
 .titlebar {
 	background-color:#DADADA;
 	border-bottom:1px solid #C8C8C8;
@@ -43,3 +38,12 @@
 	color:#3399F0;
 	font-size:0.9em;
 }
+
+/* todo: these will not be necessary when we stop using detailsPanel */
+.search .detailsPanel { margin: 0; padding: 0; }
+.search .pairedRow-label { display: none; }
+.search .two-col .pairedRow-label { display: inherit; }
+.search .pairedRow-label label { padding-right: 0; }
+.search .two-col .pairedRow-label label { padding-right: 0.5em; }
+.search .pairedRow-label, .search .pairedRow-value { padding-top: 0; }
+.search .two-col .pairedRow-label, .search .two-col .pairedRow-value { padding-top: 0.02em; }
