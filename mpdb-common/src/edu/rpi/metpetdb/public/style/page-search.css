@@ -2,6 +2,9 @@
               search
  --------------------------------------*/
 
+.search .tabPanel {
+	width: 100%;
+}
 
 /* todo: remove "rt-" once search can be styled properly */
 .search .rt-checkbox {
@@ -21,12 +24,17 @@
 	background-color: #e6eaf6;
 }
 
-.titlebar {
+.criteria {
+	width: 100%;
+}
+.criteria .titlebar {
 	background-color:#DADADA;
 	border-bottom:1px solid #C8C8C8;
 	color:#324453;
-	padding:0.8em 0.5em 0.5em !important;
 	width:100%;
+}
+.criteria .titlebar td {
+	height: 36px;
 }
 
 .criteria ul li {
@@ -42,8 +50,8 @@
 /* todo: these will not be necessary when we stop using detailsPanel */
 .search .detailsPanel { margin: 0; padding: 0; }
 .search .pairedRow-label { display: none; }
-.search .two-col .pairedRow-label { display: inherit; }
+.search .two-cols .pairedRow-label { display: inherit; }
 .search .pairedRow-label label { padding-right: 0; }
-.search .two-col .pairedRow-label label { padding-right: 0.5em; }
+.search .two-cols .pairedRow-label label { padding-right: 0.5em; }
 .search .pairedRow-label, .search .pairedRow-value { padding-top: 0; }
-.search .two-col .pairedRow-label, .search .two-col .pairedRow-value { padding-top: 0.02em; }
+.search .two-cols .pairedRow-label, .search .two-cols .pairedRow-value { padding-top: 0.02em; }
