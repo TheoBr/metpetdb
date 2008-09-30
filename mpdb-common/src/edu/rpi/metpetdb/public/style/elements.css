@@ -28,7 +28,6 @@ p {margin: 1em 0;}
 .page-footer a, .page-footer a:link,
 .gwt-Hyperlink {
 	color: #0c5ea3;
-	text-decoration: none;
 }
 .page-container a:visited, #footer a:visited {
 	color: #7f15b0;
@@ -41,7 +40,6 @@ p {margin: 1em 0;}
 .page-footer a:focus, .page-footer a:hover, .page-footer a:active,
 .gwt-Hyperlink:focus, .gwt-Hyperlink:hover {
 	color: #318fdf;
-	text-decoration: underline;
 }
 .large-icon-link {
 	padding: 10px 0 10px 24px;
