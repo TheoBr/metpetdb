@@ -9,6 +9,7 @@
 /* todo: remove "rt-" once search can be styled properly */
 .search .rt-checkbox {
 	display: table-row;
+	color: #444;
 }
 .search .rt-checkbox input {
 	border: 0 !important;
@@ -18,10 +19,10 @@
 .search .rt-checkbox input {
 	display: table-cell;
 	vertical-align: middle;
-	padding-bottom: 10px;
+	padding-bottom: 6px;
 }
 .search .rt-checkbox-checked {
-	background-color: #e6eaf6;
+	color: #000;
 }
 
 .criteria {
