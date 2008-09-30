@@ -9,19 +9,16 @@ public class MCheckBox extends CheckBox {
 
 	public MCheckBox() {
 		super();
-		setStyleName(CSS.CHECKBOX);
 		setStylePrimaryName(CSS.CHECKBOX);
 	}
 	
 	public MCheckBox(String label) {
 		super(label);
-		setStyleName(CSS.CHECKBOX);
 		setStylePrimaryName(CSS.CHECKBOX);
 	}
 	
 	public MCheckBox(String label, boolean asHTML) {
 		super(label, asHTML);
-		setStyleName(CSS.CHECKBOX);
 		setStylePrimaryName(CSS.CHECKBOX);
 	}
 	

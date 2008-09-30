@@ -19,10 +19,11 @@ import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.Submit;
 import edu.rpi.metpetdb.client.ui.objects.list.ListEx;
+import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 
 public class CustomTableView extends MDialogBox implements ClickListener,
 		KeyboardListener {
-	private ArrayList<CheckBox> cb;
+	private ArrayList<MCheckBox> cb;
 	private final Button submit;
 	private final Button cancel;
 	private final ListEx list;
@@ -37,7 +38,7 @@ public class CustomTableView extends MDialogBox implements ClickListener,
 		final Label infoPara = new Label(
 				"Choose which columns you want displayed.");
 
-		cb = new ArrayList<CheckBox>();
+		cb = new ArrayList<MCheckBox>();
 		submit = new Submit(LocaleHandler.lc_text.buttonSubmit(), this);
 		cancel = new Button(LocaleHandler.lc_text.buttonCancel(), this);
 
@@ -50,7 +51,7 @@ public class CustomTableView extends MDialogBox implements ClickListener,
 		final ArrayList<Column> displayColumns = list.getDisplayColumns();
 		for (int i = 1; i < list.getOriginalColumns().size(); i++) {
 			Column original = (Column) list.getOriginalColumns().get(i);
-			CheckBox tempCB = new CheckBox(original.getTitle());
+			MCheckBox tempCB = new MCheckBox(original.getTitle());
 			tempCB.setName(original.getTitle());
 			if (displayColumns.contains(original))
 				tempCB.setChecked(true);

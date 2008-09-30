@@ -28,6 +28,7 @@ p {margin: 1em 0;}
 .page-footer a, .page-footer a:link,
 .gwt-Hyperlink {
 	color: #0c5ea3;
+	text-decoration: underline;
 }
 .page-container a:visited, #footer a:visited {
 	color: #7f15b0;
