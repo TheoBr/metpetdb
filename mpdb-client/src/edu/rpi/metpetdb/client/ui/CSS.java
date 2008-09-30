@@ -131,6 +131,9 @@ public class CSS {
 	
 	/* ---------------- Page: Search ---------------- */
 	public static final String SEARCH = "search";
+	public static final String SEARCH_BUTTON = "search-button";
+	public static final String SEARCH_ROCKTYPES = "search-rt";
+	public static final String SEARCH_ROCKTYPES_TABLE = "search-rt-table";
 	
 	
 	

@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchSample;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
@@ -25,6 +26,7 @@ public abstract class ObjectSearchPanel extends DetailsPanel<SearchSample> imple
 	protected ObjectSearchPanel(final GenericAttribute[] atts,
 			final String header, final String description) {
 		search = new Button(LocaleHandler.lc_text.search(), this);
+		search.setStyleName(CSS.SEARCH_BUTTON);
 
 		search.setVisible(true);
 

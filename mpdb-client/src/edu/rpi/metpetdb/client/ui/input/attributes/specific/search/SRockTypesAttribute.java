@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 
@@ -20,6 +21,7 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
@@ -27,6 +29,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 public class SRockTypesAttribute extends GenericAttribute implements ClickListener {
 	private int cols;
 	private FlexTable editList;
+	private SimplePanel editListContainer = new SimplePanel();
 	/* To keep track of the physical object that is attached to the checkbox */
 	private Map<CheckBox, Object> items;
 
@@ -60,7 +63,8 @@ public class SRockTypesAttribute extends GenericAttribute implements ClickListen
 
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		editList = new FlexTable();
-		// editList.setWidth("100%");
+		editList.setStyleName(CSS.SEARCH_ROCKTYPES_TABLE);
+		
 
 		items.clear();
 		DOM.setElementAttribute(editList.getElement(), "id", id);
@@ -87,9 +91,12 @@ public class SRockTypesAttribute extends GenericAttribute implements ClickListen
 				row++;
 			}
 		}
-
+		
+		editListContainer.setWidget(editList);
+		editListContainer.setStyleName(CSS.SEARCH_ROCKTYPES);
+		
 		return new Widget[] {
-			editList
+			editListContainer
 		};
 	}
 

@@ -47,10 +47,27 @@
 	font-size:0.9em;
 }
 
+.search-button {
+	margin-left: 300px;
+	background-color: #000;
+	color: #fff;
+	font-weight: bold; 	
+}
+
+/* rock types */
+.search-rt {
+	margin: 10px;
+}
+.search-rt-table {
+	width: 100%;
+}
+
+
 /* todo: these will not be necessary when we stop using detailsPanel */
 .search .detailsPanel { margin: 0; padding: 0; }
-.search .pairedRow-label { display: none; }
-.search .two-cols .pairedRow-label { display: inherit; }
+.search .detailsPanel > table { width: 100%; }
+.search .pairedRow-label { width: 0; }
+.search .two-cols .pairedRow-label { width: auto; }
 .search .pairedRow-label label { padding-right: 0; }
 .search .two-cols .pairedRow-label label { padding-right: 0.5em; }
 .search .pairedRow-label, .search .pairedRow-value { padding-top: 0; }
