@@ -82,4 +82,8 @@ public abstract class TokenHandler {
 		public abstract int get(Object obj);
 		public abstract void execute(int value);
 	}
+	
+	public static char getTokenSeparator() {
+		return sep;
+	}
 }
