@@ -176,6 +176,55 @@
     <servlet-name>BasicKML</servlet-name>
     <url-pattern>/BasicKML.kml</url-pattern>
   </servlet-mapping>
+  
+   <servlet>
+	<servlet-name>excel</servlet-name>
+	<servlet-class>edu.rpi.metpetdb.server.ExcelServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>excel</servlet-name>
+    <url-pattern>/excel.svc</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>region</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.impl.RegionServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>region</servlet-name>
+    <url-pattern>/region.svc</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>metamorphicGrade</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.impl.MetamorphicGradeServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>metamorphicGrade</servlet-name>
+    <url-pattern>/metamorphicGrade.svc</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>imagetype</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.impl.ImageTypeServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>imagetype</servlet-name>
+    <url-pattern>/imagetype.svc</url-pattern>
+  </servlet-mapping>
+  
+   <servlet>
+    <servlet-name>reference</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.impl.ReferenceServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>reference</servlet-name>
+    <url-pattern>/reference.svc</url-pattern>
+  </servlet-mapping>
 
   <!--
   * Our static data caching and compression servlet.

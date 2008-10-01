@@ -126,7 +126,7 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 					// If there are more than one entry spaces...
 					if (realEditWidgets.size() > 1) {
 						// remove one
-						editList.remove(st);
+						editList.remove(fp);
 						realEditWidgets.remove(st);
 					}
 				}
