@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -14,6 +13,7 @@ import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
+import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 
 public class RegionAttribute extends MultipleSuggestTextAttribute {
 
@@ -35,7 +35,7 @@ public class RegionAttribute extends MultipleSuggestTextAttribute {
 		while (itr.hasNext()) {
 			final Object obj = itr.next();
 			final Region r = new Region();
-			String name = ((SuggestBox) obj).getText();
+			String name = ((MSuggestText) obj).getText();
 			if (!name.equals("")) {
 				r.setName(name);
 				regions.add(r);

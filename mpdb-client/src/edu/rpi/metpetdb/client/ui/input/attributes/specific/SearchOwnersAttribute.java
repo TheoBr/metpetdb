@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -13,6 +12,7 @@ import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
+import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 
 public class SearchOwnersAttribute extends MultipleSuggestTextAttribute {
 
@@ -34,7 +34,7 @@ public class SearchOwnersAttribute extends MultipleSuggestTextAttribute {
 		final Iterator itr = realEditWidgets.iterator();
 		while (itr.hasNext()) {
 			final Object obj = itr.next();
-			String name = ((SuggestBox) obj).getText();
+			String name = ((MSuggestText) obj).getText();
 			if (!name.equals("")) {
 				owners.add(name);
 			}

@@ -113,11 +113,7 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 		ArrayList<Widget> realEditList = new ArrayList();
 		for (int i = 0; i < realEditWidgets.size(); i++){
 			final FlowPanel fp = new FlowPanel();
-			final MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();	
-			final FlowPanel container = new FlowPanel();
-			oracle.addAll(suggestions);
-			final SuggestBox sb = new SuggestBox(oracle);
-			container.add(sb);
+			final MSuggestText st = new MSuggestText(options,false);
 			final Button addButton = new Button("Add", new ClickListener() {
 				public void onClick(final Widget sender) {
 					editList.add(MultipleSuggestTextAttribute.this
@@ -130,20 +126,15 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 					// If there are more than one entry spaces...
 					if (realEditWidgets.size() > 1) {
 						// remove one
-						editList.remove(fp);
-						realEditWidgets.remove(sb);
+						editList.remove(st);
+						realEditWidgets.remove(st);
 					}
 				}
 			});
-			sb.setText(((SuggestBox)((FlowPanel)((FlowPanel) editList.getWidget(i)).getWidget(0)).getWidget(0)).getText());
-			container.add(sb);
-			if (addShow){
-				final Button showAll = new Button("+");
-				container.add(showAll);
-			}
-			realEditWidgets.set(i, sb);
-			container.addStyleName("inline");
-			fp.add(container);
+			st.setText(((MSuggestText)((FlowPanel) editList.getWidget(i)).getWidget(0)).getText());
+			realEditWidgets.set(i, st);
+			st.addStyleName("inline");
+			fp.add(st);
 			fp.add(addButton);
 			fp.add(removeButton);
 			realEditList.add(fp);
