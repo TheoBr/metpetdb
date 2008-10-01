@@ -165,6 +165,7 @@ public class AnalysisParser {
 		// we know how to parse with what is observed
 		parseHeader(k);
 
+		++k;
 		// Loop through the remaining data rows, parsing based upon the column
 		// determination
 		for (int i = k + 1; i <= sheet.getLastRowNum(); ++i) {
