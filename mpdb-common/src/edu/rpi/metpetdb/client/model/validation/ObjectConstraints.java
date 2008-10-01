@@ -13,27 +13,23 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 	public Sample_sesarNumber SearchSample_sesarNumber;
 	public GeometryConstraint SearchSample_boundingBox;
 	public DateSpanConstraint SearchSample_collectionDateRange;
-	public StringConstraint SearchSample_owner;
-	public StringConstraint SearchSample_collector;
-	public StringConstraint SearchSample_country;
-	public StringConstraint SearchSample_region;
-	public StringConstraint SearchSample_references;
-	public StringConstraint SearchSample_metamorphicGrades;
+	public ObjectConstraint SearchSample_owner;
+	public ObjectConstraint SearchSample_collector;
+	public ObjectConstraint SearchSample_country;
+	public ObjectConstraint SearchSample_region;
+	public ObjectConstraint SearchSample_references;
+	public ObjectConstraint SearchSample_metamorphicGrades;
 	
 	public void finishInitialization(DatabaseObjectConstraints doc) {
 		
 		SearchSample_collector.entityName = "SearchSample";
 		SearchSample_collector.property = SearchSampleProperty.collector;
 		SearchSample_collector.propertyName = "Collector";
-		SearchSample_collector.maxLength = doc.Sample_collector.maxLength;
-		SearchSample_collector.minLength = doc.Sample_collector.minLength;
 		SearchSample_collector.required = false;
 		
 		SearchSample_country.entityName = "SearchSample";
 		SearchSample_country.property = SearchSampleProperty.country;
 		SearchSample_country.propertyName = "Country";
-		SearchSample_country.maxLength = doc.Sample_country.maxLength;
-		SearchSample_country.minLength = doc.Sample_country.minLength;
 		SearchSample_country.required = false;
 		
 		SearchSample_alias.entityName = "SearchSample";
@@ -79,8 +75,6 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 		// max length be?
 		SearchSample_owner.entityName = "SearchSample";
 		SearchSample_owner.property = SearchSampleProperty.owner;
-		SearchSample_owner.minLength = 0;
-		SearchSample_owner.maxLength = 50;
 		SearchSample_owner.propertyName = "Owner";
 		SearchSample_owner.required = false;
 		

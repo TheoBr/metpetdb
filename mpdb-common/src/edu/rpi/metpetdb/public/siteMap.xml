@@ -10,42 +10,42 @@
 <SiteMap>
 <page>
 	<name>Home</name>
-	<token>Introduction</token>
+	<token>home</token>
 	<leftside>UserInfo</leftside>
 	<page>
 		<name>My Samples</name>
-		<token>SamplesForUser</token>
+		<token>my-samples</token>
 		<leftside>MySamples</leftside>
 		<page>
 			<name>Add Sample</name>
-			<token>UploadSample</token>
+			<token>sample-add</token>
 			<leftside>MySamples</leftside>
 		</page>
 		<page>
 			<name>Bulk Upload</name>
-			<token>BulkUpload</token>
+			<token>bulk-upload</token>
 			<leftside>MySamples</leftside>
 		</page>
 		<page>
 			<name>Specific Sample</name>
-			<token>SampleDetails</token>
+			<token>sample</token>
 			<screen>false</screen>
 			<leftside>MySubsamples</leftside>
 			<page>
 				<name>Add Subsample</name>
-				<token>UploadSubsample</token>
+				<token>subsample-add</token>
 				<screen>false</screen>
 				<leftside>MySubsamples</leftside>
 			</page>
 			<page>
 				<name>Specific Subsample</name>
-				<token>SubsampleEdit</token>
+				<token>subsample-edit</token>
 				<screen>false</screen>
 				<leftside>MySubsamples</leftside>
 			</page>
 			<page>
 				<name>Specific Subsample</name>
-				<token>SubsampleDetails</token>
+				<token>subsample</token>
 				<screen>false</screen>
 				<leftside>MySubsamples</leftside>
 				<page>
@@ -73,7 +73,7 @@
 				</page>
 				<page>
 					<name>Add Chemical Analysis</name>
-					<token>UploadChemicalAnalysis</token>
+					<token>chem-analysis-add</token>
 					<screen>false</screen>
 					<leftside>MySubsamples</leftside>
 				</page>
@@ -82,11 +82,11 @@
 	</page>
 	<page>
 		<name>My Projects</name>
-		<token>AllProjects</token>
+		<token>my-projects</token>
 		<leftside>MyProjects</leftside>
 		<page>
 			<name>New Project</name>
-			<token>NewProject</token>
+			<token>project-new</token>
 			<leftside>MyProjects</leftside>
 		</page>
 		<page>
@@ -98,7 +98,7 @@
 	</page>
 	<page>
 		<name>Search</name>
-		<token>Search</token>
+		<token>search</token>
 		<leftside>MySearch</leftside>
 		<page>
 			<name>All Public Samples</name>
@@ -108,12 +108,12 @@
 	</page>
 	<page>
 		<name>Register</name>
-		<token>Register</token>
+		<token>register</token>
 		<leftside>UserInfo</leftside>
 	</page>
 	<page>
 		<name>Specific User</name>
-		<token>UserDetails</token>
+		<token>user</token>
 		<screen>false</screen>
 		<leftside>UserInfo</leftside>
 	</page>

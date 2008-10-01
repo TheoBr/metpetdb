@@ -8,22 +8,22 @@ import java.util.Set;
 
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.SampleMineral;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 import edu.rpi.metpetdb.client.ui.input.WizardDialog;
+import edu.rpi.metpetdb.client.ui.input.attributes.FlyOutAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.TreeAttribute;
 
 public class SearchMineralsAttribute extends GenericAttribute {
 
 	private MObject obj;
 	private GenericAttribute ga;
-	private TreeAttribute tree;
+	private FlyOutAttribute tree;
 	private WizardDialog dialog;
 
 	private DetailsPanel p_mineral;
@@ -37,7 +37,7 @@ public class SearchMineralsAttribute extends GenericAttribute {
 	}
 	public SearchMineralsAttribute(final PropertyConstraint mc, int maxMinerals) {
 		super(mc);
-		tree = new TreeAttribute(mc, 4, maxMinerals);
+		tree = new FlyOutAttribute(mc, 4, maxMinerals);
 	}
 
 	public Widget[] createDisplayWidget(final MObject obj) {

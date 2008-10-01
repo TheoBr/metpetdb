@@ -7,7 +7,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Hidden;
@@ -24,11 +23,11 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
-import edu.rpi.metpetdb.client.ui.input.attributes.CheckBoxesAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateRangeAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MetamorphicGradeAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.ReferenceAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.RegionAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchChemistryAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttribute;
@@ -63,6 +62,7 @@ public class Search extends MPagePanel implements ClickListener {
 			new TextAttribute(MpDb.oc.SearchSample_alias),	
 			new TextAttribute(MpDb.oc.SearchSample_sesarNumber),
 			new MetamorphicGradeAttribute(MpDb.oc.SearchSample_metamorphicGrades),
+			new ReferenceAttribute(MpDb.oc.SearchSample_references),
 			new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange)
 	};
 	private static GenericAttribute[] searchAtts = {
@@ -146,7 +146,6 @@ public class Search extends MPagePanel implements ClickListener {
 
 		exportResultsLabel.setStyleName("bold");
 		exportExcelButton.setStyleName("bold");
-		exportExcelButton.addStyleName("Beta");
 		exportGoogleEarthButton.setStyleName("bold");
 
 		final VerticalPanel vpExcel = new VerticalPanel();
@@ -179,7 +178,34 @@ public class Search extends MPagePanel implements ClickListener {
 
 	public void onClick(Widget sender) {
 		if (sender == exportExcelButton) {
-
+		    final FormPanel fp = new FormPanel();
+			fp.setMethod(FormPanel.METHOD_GET);
+			fp.setEncoding(FormPanel.ENCODING_URLENCODED);
+			String values = "";
+			for (int i = 0; i < sampleList.getScrollTable().getHeaderTable().getColumnCount(); i++){
+				values+=sampleList.getScrollTable().getHeaderTable().getText(0, i) +"\t";
+			}
+			values+="\n";
+			int currentpage = sampleList.getScrollTable().getCurrentPage();
+			for (int page = 0; page < sampleList.getScrollTable().getNumPages(); page++) {
+				sampleList.getScrollTable().gotoPage(page, false);
+				int i = 0;
+				while (sampleList.getScrollTable().getRowValue(i) != null) {
+					for (int j = 0; j < sampleList.getScrollTable().getDataTable().getColumnCount(); j++){
+						values+=sampleList.getScrollTable().getDataTable().getText(0, j) +"\t";
+					}
+					values+="\n";
+					i++;
+				}
+			}
+			sampleList.getScrollTable().gotoPage(currentpage, true);
+			Hidden data = new Hidden("excel",values);
+			fp.add(data);
+			fp.setAction(GWT.getModuleBaseURL() + "excel.svc");
+			fp.setVisible(false);
+			add(fp);
+			fp.submit();
+			
 		} else if (sender == exportGoogleEarthButton) {
 			final FormPanel fp = new FormPanel();
 			fp.setMethod(FormPanel.METHOD_GET);

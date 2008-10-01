@@ -103,6 +103,36 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		add(fp);
 		fp.submit();
 	}
+	
+	private void doExportExcel(){
+		final FormPanel fp = new FormPanel();
+		fp.setMethod(FormPanel.METHOD_GET);
+		fp.setEncoding(FormPanel.ENCODING_URLENCODED);
+		String values = "";
+		for (int i = 1; i < list.getScrollTable().getHeaderTable().getColumnCount(); i++){
+			values+=list.getScrollTable().getHeaderTable().getText(0, i) +"\t";
+		}
+		values+="\n";
+		int currentpage = list.getScrollTable().getCurrentPage();
+		for (int page = 0; page < list.getScrollTable().getNumPages(); page++) {
+			list.getScrollTable().gotoPage(page, false);
+			int i = 0;
+			while (list.getScrollTable().getRowValue(i) != null) {
+				for (int j = 1; j < list.getScrollTable().getDataTable().getColumnCount(); j++){
+					values+=list.getScrollTable().getDataTable().getText(i, j) +"\t";
+				}
+				values+="\n";
+				i++;
+			}
+		}
+		list.getScrollTable().gotoPage(currentpage, true);
+		Hidden data = new Hidden("excel",values);
+		fp.add(data);
+		fp.setAction(GWT.getModuleBaseURL() + "excel.svc");
+		fp.setVisible(false);
+		add(fp);
+		fp.submit();
+	}
 
 	private void projectSamples(final long projectId) {
 		list = new SampleListEx(LocaleHandler.lc_text.noSamplesFound()) {
@@ -189,9 +219,9 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		exportExcel = new MLink(LocaleHandler.lc_text.buttonExportExcel(),
 				new ClickListener() {
 					public void onClick(Widget sender) {
+						doExportExcel();
 					}
 				});
-		exportExcel.addStyleName(CSS.BETA);
 		exportExcel.addStyleName(CSS.DATATABLE_FOOTER_SUBITEM);
 
 		exportGoogleEarth = new MLink(LocaleHandler.lc_text.buttonExportKML(),

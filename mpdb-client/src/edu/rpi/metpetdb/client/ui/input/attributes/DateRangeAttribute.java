@@ -6,12 +6,11 @@ import java.util.Date;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.ui.PopupPanel.PositionCallback;
 import com.google.gwt.widgetideas.client.event.ChangeEvent;
 import com.google.gwt.widgetideas.client.event.ChangeHandler;
 import com.google.gwt.widgetideas.datepicker.client.CalendarModel;
@@ -24,7 +23,9 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class DateRangeAttribute extends GenericAttribute implements
-		ChangeListener {
+		ChangeListener, KeyboardListener, ClickListener {
+	private static final String ints= "0123456789";
+	private static final int[] daysInEachMonth = {31,29,31,30,31,30,31,31,30,31,30,31};
 	private static final String[] months = {
 			"January", "February", "March", "April", "May", "June", "July",
 			"August", "September", "October", "November", "December",
@@ -32,14 +33,10 @@ public class DateRangeAttribute extends GenericAttribute implements
 	private Timestamp fromDate;
 	private Timestamp toDate;
 	private DateSpan dateRange;
-	private final TextBox fromMonth = new TextBox();
-	private final TextBox fromDay = new TextBox();
-	private final TextBox fromYear = new TextBox();
-	private final TextBox toMonth = new TextBox();
-	private final TextBox toDay = new TextBox();
-	private final TextBox toYear = new TextBox();
-	private int daysInMonth = 30;
-	private int daysInYear = 365;
+	private TextBox to;
+	private TextBox from;
+	private Button dpTo;
+	private Button dpFrom;
 
 	public DateRangeAttribute(final DateSpanConstraint dsc) {
 		super(new PropertyConstraint[] {
@@ -48,142 +45,35 @@ public class DateRangeAttribute extends GenericAttribute implements
 	}
 	public Widget[] createDisplayWidget(final MObject obj) {
 		return new Widget[] {
-			new MText(dateToString(get(obj)))
+//			new MText(dateToString(get(obj)))
 		};
+	}
+	
+	public boolean validateDay(final String month_day)
+	{
+		int numDay = Integer.parseInt(month_day.split("/")[1]);
+		int numMonth = Integer.parseInt(month_day.split("/")[0])-1;
+		if (daysInEachMonth[numMonth] < numDay)
+			return false;
+		return true;
 	}
 
 	public Widget[] createEditWidget(final MObject obj, final String id) {
-		final Timestamp currentDate = get(obj);
-
-		if (currentDate != null) {
-			fromMonth.setText(currentDate.getMonth() + 1 + "");
-			fromDay.setText(currentDate.getDate() + "");
-			fromYear.setText(currentDate.getYear() + 1900 + "");
-		}
-
-		/* Setup textboxes for user input */
-		final HorizontalPanel dateInput = new HorizontalPanel();
-		dateInput.add(new Label("FromMonth:"));
-		dateInput.add(fromMonth);
-		dateInput.add(new Label("FromDay:"));
-		dateInput.add(fromDay);
-		dateInput.add(new Label("FromYear:"));
-		dateInput.add(fromYear);
-		dateInput.add(new Label("ToMonth:"));
-		dateInput.add(toMonth);
-		dateInput.add(new Label("ToDay:"));
-		dateInput.add(toDay);
-		dateInput.add(new Label("ToYear:"));
-		dateInput.add(toYear);
-
-		fromMonth.setMaxLength(2);
-		fromMonth.setVisibleLength(2);
-		fromMonth.addChangeListener(this);
-		fromDay.setMaxLength(2);
-		fromDay.setVisibleLength(2);
-		fromDay.addChangeListener(this);
-		fromYear.setMaxLength(4);
-		fromYear.setVisibleLength(4);
-		fromYear.addChangeListener(this);
-		toMonth.setMaxLength(2);
-		toMonth.setVisibleLength(2);
-		toMonth.addChangeListener(this);
-		toDay.setMaxLength(2);
-		toDay.setVisibleLength(2);
-		toDay.addChangeListener(this);
-		toYear.setMaxLength(4);
-		toYear.setVisibleLength(4);
-		toYear.addChangeListener(this);
-		final Button chooseFromDate = new Button("Choose From Date",
-				new ClickListener() {
-					public void onClick(final Widget sender) {
-						final PopupPanel p = new PopupPanel(true);
-						final CalendarModel cm = new CalendarModel();
-						final DatePicker to = new DatePicker();
-						if (currentDate != null) {
-							to.showDate(currentDate);
-							to.setSelectedDate(currentDate);
-						} else if (fromDate != null) {
-							to.showDate(fromDate);
-							to.setSelectedDate(fromDate);
-						}
-						to.addChangeHandler(new ChangeHandler<Date>() {
-							public void onChange(ChangeEvent<Date> change) {
-								fromMonth.setText(change.getNewValue()
-										.getMonth()
-										+ 1 + "");
-								fromDay.setText(change.getNewValue().getDate()
-										+ "");
-								fromYear.setText(change.getNewValue().getYear()
-										+ 1900 + "");
-								fromDate = new Timestamp(change.getNewValue()
-										.getTime());
-								cm.setCurrentMonthAndYear(fromDate);
-								daysInMonth = cm
-										.getCurrentNumberOfDaysInMonth();
-								p.hide();
-							}
-						});
-						p.setWidget(to);
-						p.show();
-						p.setPopupPositionAndShow(new PositionCallback() {
-
-							public void setPosition(int offsetWidth,
-									int offsetHeight) {
-								p.setPopupPosition(sender.getAbsoluteLeft(),
-										sender.getAbsoluteTop());
-
-							}
-
-						});
-					}
-				});
-		final Button chooseToDate = new Button("Choose To Date",
-				new ClickListener() {
-					public void onClick(final Widget sender) {
-						final PopupPanel p = new PopupPanel(true);
-						final CalendarModel cm = new CalendarModel();
-						final DatePicker to = new DatePicker();
-						if (currentDate != null) {
-							to.showDate(currentDate);
-							to.setSelectedDate(currentDate);
-						} else if (toDate != null) {
-							to.showDate(toDate);
-							to.setSelectedDate(toDate);
-						}
-						to.addChangeHandler(new ChangeHandler<Date>() {
-							public void onChange(ChangeEvent<Date> change) {
-								toMonth.setText(change.getNewValue().getMonth()
-										+ 1 + "");
-								toDay.setText(change.getNewValue().getDate()
-										+ "");
-								toYear.setText(change.getNewValue().getYear()
-										+ 1900 + "");
-								toDate = new Timestamp(change.getNewValue()
-										.getTime());
-								cm.setCurrentMonthAndYear(toDate);
-								daysInMonth = cm
-										.getCurrentNumberOfDaysInMonth();
-								p.hide();
-							}
-						});
-						p.setWidget(to);
-						p.show();
-						p.setPopupPositionAndShow(new PositionCallback() {
-
-							public void setPosition(int offsetWidth,
-									int offsetHeight) {
-								p.setPopupPosition(sender.getAbsoluteLeft(),
-										sender.getAbsoluteTop());
-
-							}
-
-						});
-					}
-				});
-		return new Widget[] {
-				chooseFromDate, chooseToDate, dateInput
+		from = new TextBox();
+		from.addKeyboardListener(this);
+		to = new TextBox();
+		to.addKeyboardListener(this);
+		dpTo = new Button("+",this);
+		dpFrom = new Button("+",this);
+		final FlowPanel container = new FlowPanel();
+		container.add(from);
+		container.add(dpFrom);
+		container.add(to);
+		container.add(dpTo);
+		return new Widget[]{
+				container
 		};
+
 	}
 	protected Object get(final Widget editWidget,
 			final PropertyConstraint constraint) {
@@ -193,8 +83,8 @@ public class DateRangeAttribute extends GenericAttribute implements
 		}
 		return null;
 	}
-	protected Timestamp get(final MObject obj) {
-		return (Timestamp) mGet(obj);
+	protected Object get(final MObject obj) {
+		return  mGet(obj);
 	}
 
 	protected void set(final MObject obj, final Object v,
@@ -226,19 +116,18 @@ public class DateRangeAttribute extends GenericAttribute implements
 		if (toDate == null)
 			toDate = new Timestamp(0);
 		try {
-			if (fromMonth.getText().length() != 0)
-				fromDate.setMonth(Integer.parseInt(fromMonth.getText()) - 1);
-			if (fromDay.getText().length() != 0)
-				fromDate.setDate(Integer.parseInt(fromDay.getText()));
-			if (fromYear.getText().length() != 0)
-				fromDate.setYear(Integer.parseInt(fromYear.getText()) - 1900);
-			if (toMonth.getText().length() != 0)
-				toDate.setMonth(Integer.parseInt(fromMonth.getText()) - 1);
-			if (toDay.getText().length() != 0)
-				toDate.setDate(Integer.parseInt(fromDay.getText()));
-			if (fromYear.getText().length() != 0)
-				toDate.setYear(Integer.parseInt(fromYear.getText()) - 1900);
-			dateRange = new DateSpan(fromDate, toDate);
+			String[] fromSplit = from.getText().split("/");
+			String[] toSplit = to.getText().split("/");
+			if (fromSplit.length == 3 && toSplit.length == 3)
+			{
+				fromDate.setMonth(Integer.parseInt(fromSplit[0]) - 1);
+				fromDate.setDate(Integer.parseInt(fromSplit[1]));
+				fromDate.setYear(Integer.parseInt(fromSplit[2]) - 1900);
+				toDate.setMonth(Integer.parseInt(toSplit[0]) - 1);
+				toDate.setDate(Integer.parseInt(toSplit[1]));
+				toDate.setYear(Integer.parseInt(toSplit[2]) - 1900);
+				dateRange = new DateSpan(fromDate, toDate);
+			}
 		} catch (NumberFormatException nfe) {
 			// TODO display validation exception
 		}
@@ -246,5 +135,185 @@ public class DateRangeAttribute extends GenericAttribute implements
 
 	public void onChange(Widget sender) {
 		createDateInfoFromInput();
+	}
+	
+	private int getMatchCount(final String s, final String m){
+		String temp = s;
+		int count = 0;
+		while (temp.indexOf(m) >= 0){
+			temp = temp.substring(temp.indexOf(m)+m.length());
+			count++;
+		}
+		return count;
+	}
+	private boolean validateMonth(final String s){
+		if (Integer.parseInt(s) < 13 && Integer.parseInt(s) > 0 )
+			return true;
+		return false;
+	}
+	
+	public void onKeyPress(final Widget sender, final char ch, final int m){
+		try{
+			TextBox tb = (TextBox) sender;
+			// save position and original text
+			int pos = tb.getCursorPos();
+			String orig = tb.getText();
+			// remove selected text
+			if (!tb.getSelectedText().equals("")){
+				String minusSelected = tb.getText().substring(0,tb.getCursorPos());
+				minusSelected+=tb.getText().substring(tb.getCursorPos()+tb.getSelectionLength());
+				tb.setText(minusSelected);
+				tb.setSelectionRange(0, 0);
+				tb.setCursorPos(pos);
+			}
+			String c = "" + ch;
+			String t = tb.getText();
+			// get text left of the cursor
+			String left = t.substring(0, pos);
+			String right = t.substring(pos);
+			// get text right of cursor up to the first '/'
+			String partright = t.substring(pos).split("/")[0];
+			String[] allleft = left.split("/");
+			String partleft = allleft[allleft.length-1];
+			
+			// User entering the month
+			if (getMatchCount(left,"/")==0){
+				if (validateMonth(left+c+partright)){
+					if ((left+c+partright).equals("1")){
+						tb.setText(left+c+right);
+						tb.cancelKey();
+					} else {
+						if ((right.length() > 0 && right.charAt(0) != '/') || right.length() == 0){
+							tb.setText(left+c+"/"+right);
+							tb.cancelKey();
+						} else{
+							tb.setText(left+c+right);
+							tb.cancelKey();
+						}
+					}
+				} else {
+					tb.cancelKey();
+				}
+			}
+			// User entering the day
+			if (getMatchCount(left,"/")==1){
+				if (c.equals("/")){
+					if (left.charAt(left.length()-1) == '/'){
+						tb.cancelKey();
+					}
+					else if (validateDay(left) && right.charAt(0) !='/'){
+						tb.setText(left+c+right);
+						tb.cancelKey();
+					} else {
+						tb.cancelKey();
+					}
+				}
+				if (validateDay(left+c+partright)){
+						if (right.length() > 0 && partleft.length() == 1){
+							if(right.charAt(0) != '/'){
+								tb.setText(left+c+"/"+right);
+								tb.cancelKey();
+							} else {
+								tb.setText(left+c+right);
+								tb.cancelKey();
+							}
+						} else if (allleft.length == 1){
+							tb.setText(left+c+right);
+							tb.cancelKey();
+						} else {
+							tb.setText(left+c+"/"+right);
+							tb.cancelKey();
+						}
+				} else {
+					tb.cancelKey();
+				}
+			}
+			// User entering year
+			if (getMatchCount(left,"/")==2){
+				if (c.equals("/") || (partleft+c+partright).length() > 4){
+					tb.cancelKey();
+				} else {
+					tb.setText(left+c+right);
+					tb.cancelKey();
+				}
+			}
+			else{
+				tb.cancelKey();
+			}
+		}
+		catch (Exception e){
+			
+		}
+	}
+	public void onKeyUp(final Widget sender, final char c, final int m){
+		
+	}
+	public void onKeyDown(final Widget sender, final char c, final int m){
+		
+	}
+	
+	private Timestamp getTimeInput(final String date){
+		String[] parsedDate = date.split("/");
+		final Timestamp t = new Timestamp(0);
+		if (parsedDate.length == 3){
+			try
+			{
+				t.setMonth(Integer.parseInt(parsedDate[0])- 1);
+				t.setDate(Integer.parseInt(parsedDate[1]));
+				t.setYear(Integer.parseInt(parsedDate[2]) - 1900);
+				return t;
+			}
+			catch(Exception e){
+				
+			}
+		}
+		return null;
+	}
+	
+	public void onClick(final Widget sender){
+			final PopupPanel p = new PopupPanel(true);
+			final CalendarModel cm = new CalendarModel();
+			final DatePicker dp = new DatePicker();
+			if (sender == dpFrom){
+				if (!from.getText().equals("")) {
+					final Timestamp t = getTimeInput(from.getText());
+					if (t != null){
+						dp.showDate(t);
+						dp.setSelectedDate(t);
+					}
+				}
+				dp.addChangeHandler(new ChangeHandler<Date>() {
+					public void onChange(ChangeEvent<Date> change) {
+						fromDate = new Timestamp(change.getNewValue().getTime());
+						cm.setCurrentMonthAndYear(fromDate);
+						from.setText(String.valueOf(cm.getCurrentMonth()+1) + "/");
+						from.setText(from.getText() + String.valueOf(change.getNewValue().getDate() + "/"));
+						from.setText(from.getText() + String.valueOf(cm.getCurrentYear() + 1900));
+						p.hide();
+					}
+				});
+			}
+			else if (sender == dpTo){
+				if (!to.getText().equals("")) {
+					final Timestamp t = getTimeInput(to.getText());
+					if (t != null){
+						dp.showDate(t);
+						dp.setSelectedDate(t);
+					}
+				}
+				dp.addChangeHandler(new ChangeHandler<Date>() {
+					public void onChange(ChangeEvent<Date> change) {
+						toDate = new Timestamp(change.getNewValue().getTime());
+						cm.setCurrentMonthAndYear(toDate);
+						to.setText(String.valueOf(cm.getCurrentMonth()+1) + "/");
+						to.setText(to.getText() + String.valueOf(change.getNewValue().getDate() + "/"));
+						to.setText(to.getText() + String.valueOf(cm.getCurrentYear() + 1900));
+						p.hide();
+					}
+				});
+			}
+			p.setWidget(dp);
+			p.setPopupPosition(sender.getAbsoluteLeft(), sender.getAbsoluteTop());
+			p.show();
 	}
 }

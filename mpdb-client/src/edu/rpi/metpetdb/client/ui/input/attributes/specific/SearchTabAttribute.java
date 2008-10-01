@@ -18,19 +18,22 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
-import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.SourcesTabEvents;
+import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.MetamorphicGrade;
+import edu.rpi.metpetdb.client.model.Reference;
+import edu.rpi.metpetdb.client.model.Region;
 import edu.rpi.metpetdb.client.model.RockType;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.SearchElement;
 import edu.rpi.metpetdb.client.model.SearchOxide;
 import edu.rpi.metpetdb.client.model.SearchSample;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.properties.Property;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.CSS;
@@ -88,6 +91,14 @@ public class SearchTabAttribute extends GenericAttribute {
 		panel.setLeftColWidth("70%");
 		panel.getRightCol().add(display);
 		panel.setRightColWidth("30%");
+//		tabs.addTabListener(new TabListener(){
+//			public void onTabSelected(final SourcesTabEvents e, final int tab){
+//				tabs.s
+//			}
+//			public void onBeforeTabSelected(final SourcesTabEvents e, final int tab){
+//				
+//			}
+//		});
 		return new Widget[] {
 			panel
 		};
@@ -171,28 +182,49 @@ public class SearchTabAttribute extends GenericAttribute {
 				addConstraint(createCritRow("Owner:", owner, owner, MpDb.oc.SearchSample_owner.property));
 			}
 		}
+		if (ss.getCollectors() != null) {
+			Iterator<String> itr = ss.getCollectors().iterator();
+			while (itr.hasNext()) {
+				final String collector = itr.next();
+				addConstraint(createCritRow("Collector:", collector, collector, MpDb.oc.SearchSample_collector.property));
+			}
+		}
 		if (ss.getSesarNumber() != null) {
 			addConstraint(createCritRow("Sesar Number:", ss.getSesarNumber(), ss.getSesarNumber(), MpDb.oc.SearchSample_sesarNumber.property));
 		}
 		if (ss.getAlias() != null) {
 			addConstraint(createCritRow("Alias:", ss.getAlias(),ss.getAlias(), MpDb.oc.SearchSample_alias.property));
 		}
+		if (ss.getMetamorphicGrades() != null) {
+			Iterator<MetamorphicGrade> itr = ss.getMetamorphicGrades().iterator();
+			while (itr.hasNext()) {
+				final String metamorphicgrade = itr.next().getName();
+				addConstraint(createCritRow("Metamorphic Grade:", metamorphicgrade, metamorphicgrade, MpDb.oc.SearchSample_metamorphicGrades.property));
+			}
+		}
+		if (ss.getReferences() != null) {
+			Iterator<Reference> itr = ss.getReferences().iterator();
+			while (itr.hasNext()) {
+				final String reference = itr.next().getName();
+				addConstraint(createCritRow("Reference:", reference, reference, MpDb.oc.SearchSample_references.property));
+			}
+		}
 		if (ss.getCollectionDateRange() != null) {
 			final int StartMonth = ss.getCollectionDateRange().getStartAsDate()
-					.getMonth();
+					.getMonth()+1;
 			final int StartDay = ss.getCollectionDateRange().getStartAsDate()
 					.getDay();
 			final int StartYear = ss.getCollectionDateRange().getStartAsDate()
-					.getYear();
+					.getYear()+1900;
 			final String StartDate = String.valueOf(StartMonth) + "/"
 					+ String.valueOf(StartDay) + "/"
 					+ String.valueOf(StartYear);
 			final int EndMonth = ss.getCollectionDateRange().getEndAsDate()
-					.getMonth();
+					.getMonth()+1;
 			final int EndDay = ss.getCollectionDateRange().getEndAsDate()
 					.getDay();
 			final int EndYear = ss.getCollectionDateRange().getEndAsDate()
-					.getYear();
+					.getYear()+1900;
 			final String EndDate = String.valueOf(EndMonth) + "/"
 					+ String.valueOf(EndDay) + "/" + String.valueOf(EndYear);
 			String range = StartDate + " - " + EndDate;
@@ -210,7 +242,20 @@ public class SearchTabAttribute extends GenericAttribute {
 					+ String.valueOf(NE.y), ss.getBoundingBox(),
 					MpDb.oc.SearchSample_boundingBox.property));
 		}
-
+		if (ss.getCountries() != null) {
+			Iterator<String> itr = ss.getCountries().iterator();
+			while (itr.hasNext()) {
+				final String country = itr.next();
+				addConstraint(createCritRow("Country:", country, country, MpDb.oc.SearchSample_country.property));
+			}
+		}
+		if (ss.getRegions() != null) {
+			Iterator<Region> itr = ss.getRegions().iterator();
+			while (itr.hasNext()) {
+				final String region = itr.next().getName();
+				addConstraint(createCritRow("Region:", region, region, MpDb.oc.SearchSample_region.property));
+			}
+		}
 		if (ss.getElements() != null) {
 			Iterator<SearchElement> itr = ss.getElements().iterator();
 			while (itr.hasNext()) {

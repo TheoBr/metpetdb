@@ -24,7 +24,7 @@ import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class Breadcrumbs extends FlowPanel {
-	private static final String tokenSep = "-";
+	private static final String tokenSep = "/";
 	private bcNode root;
 	private String id;
 	private static bcNode current;

@@ -24,4 +24,12 @@ public class MSuggestText extends FlowPanel{
 			add(showAll);
 		}
 	}
+	
+	public String getText(){
+		return suggestBox.getText();
+	}
+	
+	public void setText(final String s){
+		suggestBox.setText(s);
+	}
 }
