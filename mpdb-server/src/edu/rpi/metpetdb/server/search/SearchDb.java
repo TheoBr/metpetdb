@@ -167,9 +167,12 @@ public class SearchDb {
 						// box
 					}
 				} else { // it's just a standard string, do a term search
-					final TermQuery stringQuery = new TermQuery(new Term(
-							columnName, methodResult.toString()));
-					fullQuery.add(stringQuery, BooleanClause.Occur.MUST);
+					if(columnName.length() > 0)
+					{
+						final TermQuery stringQuery = new TermQuery(new Term(
+								columnName, methodResult.toString()));
+						fullQuery.add(stringQuery, BooleanClause.Occur.MUST);
+					}
 				}
 			}
 		}
