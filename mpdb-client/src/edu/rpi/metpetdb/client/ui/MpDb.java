@@ -17,8 +17,6 @@ import edu.rpi.metpetdb.client.service.ChemicalAnalysisService;
 import edu.rpi.metpetdb.client.service.ChemicalAnalysisServiceAsync;
 import edu.rpi.metpetdb.client.service.ConstantsService;
 import edu.rpi.metpetdb.client.service.ConstantsServiceAsync;
-import edu.rpi.metpetdb.client.service.ExcelService;
-import edu.rpi.metpetdb.client.service.ExcelServiceAsync;
 import edu.rpi.metpetdb.client.service.ImageBrowserService;
 import edu.rpi.metpetdb.client.service.ImageBrowserServiceAsync;
 import edu.rpi.metpetdb.client.service.ImageService;

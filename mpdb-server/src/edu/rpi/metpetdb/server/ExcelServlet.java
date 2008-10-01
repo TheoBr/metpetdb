@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
-import edu.rpi.metpetdb.client.service.ExcelService;
 public class ExcelServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 
