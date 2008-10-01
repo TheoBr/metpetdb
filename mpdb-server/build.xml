@@ -111,6 +111,11 @@
 			<lib dir="${ctx_lib}" includes="*" />
 			<lib dir="${gwt_home}" includes="gwt-servlet.jar" />
 		</war>
+		<chmod perm="g+w" type="both">
+		  <fileset dir="${build}">
+		  </fileset>
+		</chmod>
+		
 	</target>
 
 	<target name="clean" description="Cleans the build by deleting bin and .gwt-cache dirs">
