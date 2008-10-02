@@ -4,7 +4,7 @@ insert into image_format values(nextval('image_format_seq'),'image/jpeg');
 insert into image_format values(nextval('image_format_seq'),'image/bmp');
 insert into image_format values(nextval('image_format_seq'),'image/png');
 --Rock Types
-insert into rock_type values(nextval('rock_type_seq'), 'Gentoo');
+--insert into rock_type values(nextval('rock_type_seq'), 'Gentoo');
 insert into rock_type values(nextval('rock_type_seq'), 'Slate');
 insert into rock_type values(nextval('rock_type_seq'), 'Phyllite');
 insert into rock_type values(nextval('rock_type_seq'), 'Schist');
@@ -37,7 +37,7 @@ insert into rock_type values(nextval('rock_type_seq'), 'Metacarbonate');
 insert into rock_type values(nextval('rock_type_seq'), 'Metagranite');
 insert into rock_type values(nextval('rock_type_seq'), 'Cordierite-Anthophyllite');
 --Image Types
-insert into image_type values(nextval('image_type_seq'), 'Xfce');
+--insert into image_type values(nextval('image_type_seq'), 'Xfce');
 insert into image_type values(nextval('image_type_seq'), 'Map', 'MAP');
 insert into image_type values(nextval('image_type_seq'), 'Cross Section', 'XC');
 insert into image_type values(nextval('image_type_seq'), 'Field Photo', 'FP');
@@ -55,6 +55,6 @@ insert into image_type values(nextval('image_type_seq'), 'X-ray Map', 'XRM');
 insert into subsample_type values(nextval('subsample_type_seq'), 'Thin Section');
 insert into subsample_type values(nextval('subsample_type_seq'), 'Polished Thin Section');
 insert into subsample_type values(nextval('subsample_type_seq'), 'Rock Chip');
-insert into subsample_type values(nextval('subsample_type_seq'), 'Bash');
+--insert into subsample_type values(nextval('subsample_type_seq'), 'Bash');
 insert into subsample_type values(nextval('subsample_type_seq'), 'Mineral Separate');
 --insert into elements values(1,1,1,1,1,1,'Silicates');

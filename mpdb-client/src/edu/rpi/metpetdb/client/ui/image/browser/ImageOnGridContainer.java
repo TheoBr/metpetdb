@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.image.browser;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 
@@ -96,24 +97,52 @@ public class ImageOnGridContainer {
 		if (!this.actualImage.getUrl().equals(this.getGoodLookingPicture()))
 			this.actualImage.setUrl(this.getGoodLookingPicture());
 	}
+	
+	public String get64x64ServerPath(final boolean original) {
+		final String checksum;
+		if (original)
+			checksum = this.iog.getImage().getChecksum64x64();
+		else
+			checksum = this.iog.getGchecksum64x64();
+		return GWT.getModuleBaseURL() + "/image/?checksum="
+				+ checksum;
+	}
+
+	public String getHalfServerPath(final boolean original) {
+		final String checksum;
+		if (original)
+			checksum = this.iog.getImage().getChecksumHalf();
+		else
+			checksum = this.iog.getGchecksumHalf();
+		return GWT.getModuleBaseURL() + "/image/?checksum="
+				+ checksum;
+	}
+
+	public String getServerPath(final boolean original) {
+		final String checksum;
+		if (original)
+			checksum = this.iog.getImage().getChecksum();
+		else
+			checksum = this.iog.getGchecksum();
+		return GWT.getModuleBaseURL() + "/image/?checksum="
+				+ checksum;
+	}
 
 	public String getGoodLookingPicture() {
 		return this.getGoodLookingPicture(false);
 	}
 
 	public String getGoodLookingPicture(final boolean original) {
-		// if (this.width <= 100) {
-		// return iog.get64x64ServerPath(original);
-		// }
-		// if (this.width >= 100 && this.width <= iog.getImage().getWidth() * .5
-		// ) {
-		// return iog.getHalfServerPath(original);
-		// }
-		// if (this.width >= iog.getImage().getWidth() * .5 + 100) {
-		// return iog.getServerPath(original);
-		// }
-		// return iog.getServerPath(original);
-		return "";
+		if (this.width <= 100) {
+			return get64x64ServerPath(original);	
+		}
+		if (this.width >= 100 && this.width <= iog.getImage().getWidth() * .5) {
+			return getHalfServerPath(original);
+		}
+		if (this.width >= iog.getImage().getWidth() * .5 + 100) {
+			return getServerPath(original);
+		}
+		return getServerPath(original);
 	}
 
 	public ImageOnGrid getIog() {

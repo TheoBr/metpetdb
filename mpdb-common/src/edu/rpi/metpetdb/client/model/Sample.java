@@ -131,7 +131,7 @@ public class Sample extends MObject implements IHasName {
 			((Point) location).dimension = 2;
 			((Point) location).srid = MpDbConstants.WGS84;
 		}
-		((Point) location).y = d;
+		((Point) location).x = d;
 	}
 
 	public void setLongitude(final double d) {
@@ -140,7 +140,7 @@ public class Sample extends MObject implements IHasName {
 			((Point) location).dimension = 2;
 			((Point) location).srid = MpDbConstants.WGS84;
 		}
-		((Point) location).x = d;
+		((Point) location).y = d;
 	}
 
 	public User getOwner() {

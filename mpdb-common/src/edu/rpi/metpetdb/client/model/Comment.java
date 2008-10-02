@@ -30,6 +30,11 @@ public abstract class Comment extends MObject {
 	public void setText(String text) {
 		this.text = text;
 	}
+	
+	@Override
+	public String toString() {
+		return text;
+	}
 
 	@Override
 	public boolean mIsNew() {

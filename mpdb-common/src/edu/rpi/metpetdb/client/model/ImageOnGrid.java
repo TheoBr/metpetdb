@@ -135,11 +135,6 @@ public class ImageOnGrid extends MObject {
 		return id == 0;
 	}
 
-	public String getGoodLookingPicture(boolean b) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public void delete() {
 		this.getGrid().getImagesOnGrid().remove(this);
 		this.setGrid(null);

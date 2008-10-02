@@ -181,6 +181,9 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 			final List<ImageOnGrid> imagesOnGrid = ip.getImagesOnGrid();
 
 			Integer i = 2;
+			User u = new User();
+			u.setId(currentUser());
+			SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
 			for (Image img : images) {
 				// Confirm the filename is in the zip
 				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
@@ -188,7 +191,22 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 							spreadsheetPrefix + img.getFilename()));
 				}
 				try {
-					doc.validate(img);
+					Image img_s = uploadImages(zp, img, spreadsheetPrefix);
+					Subsample ss = (img_s.getSubsample());
+					ss.getSample().setOwner(u);
+
+					try {
+						ssDAO.fill(ss);
+					} catch (SubsampleNotFoundException daoe) {
+						doc.validate(ss);
+						ss = ssDAO.save(ss);
+					}
+					img_s.setSubsample((Subsample) (ss));
+					img_s.getSubsample().getSample().setOwner(u);
+					if (img.getSample() == null)
+						img.setSample(new Sample());
+					img_s.getSample().setOwner(u);
+					doc.validate(img_s);
 				} catch (ValidationException e) {
 					errors.put(i, e);
 				}
@@ -211,9 +229,6 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 
 				++i;
 			}
-
-			User u = new User();
-			u.setId(currentUser());
 
 			if (errors.isEmpty()) {
 				final List<Image> imagesToSave = new LinkedList<Image>();
@@ -240,7 +255,7 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 						saveIncompleteImageOnGrid(iog);
 					}
 
-					SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
+				
 					for (Image img : images) {
 						Image img_s = uploadImages(zp, img, spreadsheetPrefix);
 						Subsample ss = (img_s.getSubsample());
