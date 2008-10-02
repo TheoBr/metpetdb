@@ -67,7 +67,7 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 
 		public String columnName() {
-			return "user_username";
+			return "user_name";
 		}
 	},
 	minerals {
