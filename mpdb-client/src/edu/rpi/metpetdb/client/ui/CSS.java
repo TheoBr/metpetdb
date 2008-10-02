@@ -55,6 +55,7 @@ public class CSS {
 	public static final String LINK_UPLOAD = "upload-link";
 	public static final String LINK_UPLOAD_MULTI = "upload-multi-link";
 	public static final String LINK_ADD = "add-link";
+	public static final String LINK_HELP = "help-link";
 	public static final String ADDLINK = "addlink"; // kill
 	public static final String PRIMARY_BUTTON = "btnPrimary";
 	public static final String SECONDARY_BUTTON = "btnSecondary";
@@ -134,6 +135,7 @@ public class CSS {
 	public static final String SEARCH_BUTTON = "search-button";
 	public static final String SEARCH_ROCKTYPES = "search-rt";
 	public static final String SEARCH_ROCKTYPES_TABLE = "search-rt-table";
+	
 	
 	
 	

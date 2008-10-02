@@ -232,7 +232,14 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 .action-list-item a {
 	font-size: 1.1em;
 }
-
+.page-header .action-list-item a:visited {
+	color: #0c5ea3;
+}
+.page-header .action-list-item a:focus,
+.page-header .action-list-item a:hover,
+.page-header .action-list-item a:active {
+	color: #318fdf;
+}
 
 /*-------------------------------------
                 footer
@@ -326,12 +333,12 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 	background-image: none;
 	padding-left: 10px;
 }
-.bcrumbs div a.gwt-Hyperlink {
+.bcrumbs div a {
 	line-height: 1;
 	margin-top: 10px;
 	float: left;
 }
-.bcrumbs div.current a.gwt-Hyperlink, .bcrumbs div.current a:link,
+.bcrumbs div.current a, .bcrumbs div.current a:link,
 .bcrumbs div.current a:visited, .bcrumbs div.current a:focus,
 .bcrumbs div.current a:hover, .bcrumbs div.current a:active {
 	color: #7d8a8f;

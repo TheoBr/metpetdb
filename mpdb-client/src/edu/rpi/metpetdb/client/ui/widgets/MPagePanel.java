@@ -4,6 +4,9 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
+
+import edu.rpi.metpetdb.client.ui.CSS;
 
 public class MPagePanel extends FlowPanel {
 	private final Element headH1 = DOM.createElement("h1");
@@ -38,6 +41,14 @@ public class MPagePanel extends FlowPanel {
 		li.setStylePrimaryName("action-list-item");
 		li.add(lnk);
 		actionList.insert(li, pos);
+	}
+	
+	public void hide(Widget w) {
+		w.addStyleName(CSS.HIDE);
+	}
+	
+	public void show(Widget w) {
+		w.removeStyleName(CSS.HIDE);
 	}
 
 }

@@ -1,11 +1,9 @@
 .bulk-upload {
 	margin-bottom: 5em;
 }
-.bulk-upload .main .left-col {
-	width: 60%;
-}
-.bulk-upload .main .right-col {
-	width: 40%;
+.bulk-upload .main {
+	margin: 0 auto;
+	width: 500px;
 }
 .bulk-upload-types li {
 	display: inline;

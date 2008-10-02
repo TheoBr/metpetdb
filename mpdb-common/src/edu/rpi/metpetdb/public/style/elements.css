@@ -20,17 +20,17 @@ p {margin: 1em 0;}
 /*-------------------------------------
                hyperlinks
  --------------------------------------*/
-.gwt-Hyperlink {
+a {
 	cursor:pointer;
 }
 .page-container a, .page-container a:link,
 .page-leftcol a, .page-leftcol a:link,
 .page-footer a, .page-footer a:link,
-.gwt-Hyperlink {
+.page-container .bcrumbs a:visited {
 	color: #0c5ea3;
 	text-decoration: underline;
 }
-.page-container a:visited, #footer a:visited {
+.page-container a:visited, .page-footer a:visited {
 	color: #7f15b0;
 }
 .page-leftcol a:visited { 
@@ -39,7 +39,7 @@ p {margin: 1em 0;}
 .page-container a:focus, .page-container a:hover, .page-container a:active,
 .page-leftcol a:focus, .page-leftcol a:hover, .page-leftcol a:active,
 .page-footer a:focus, .page-footer a:hover, .page-footer a:active,
-.gwt-Hyperlink:focus, .gwt-Hyperlink:hover {
+.bcrumbs a:focus, .bcrumbs a:hover, .bcrumbs a:active {
 	color: #318fdf;
 }
 .large-icon-link {
