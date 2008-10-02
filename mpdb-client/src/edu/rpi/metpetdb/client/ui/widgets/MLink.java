@@ -48,7 +48,7 @@ public class MLink extends Widget implements HasText, SourcesClickEvents {
 	}
 	public void setText(final String text) {
 		DOM.setInnerText(getElement(), text);
-		if (getTitle() == null) setTitle(text);
+		if (getTitle() == null || getTitle() == "") setTitle(text);
 	}
 
 	public String getTargetHistoryToken() {
