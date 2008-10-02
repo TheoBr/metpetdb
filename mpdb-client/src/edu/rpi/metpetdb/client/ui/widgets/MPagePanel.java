@@ -1,7 +1,6 @@
 package edu.rpi.metpetdb.client.ui.widgets;
 
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -9,20 +8,31 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.ui.CSS;
 
 public class MPagePanel extends FlowPanel {
-	private final Element headH1 = DOM.createElement("h1");
+	private final MText header = new MText("","h1");
+	private final MText category = new MText("","h4");
 	private final FlowPanel headContainer = new FlowPanel();
 	private final FlowPanel actionList = new FlowPanel();
 
 	protected void addPageHeader() {
 		headContainer.setStylePrimaryName("page-header");
-		DOM.appendChild(headContainer.getElement(), headH1);
+		headContainer.add(category);
+		hide(category);
+		headContainer.add(header);
 		insert(headContainer, 0);
 	}
-
+	
 	public void setPageTitle(String text) {
-		DOM.setInnerText(headH1, text);
+		setPageTitle(text, "");
 	}
 
+	public void setPageTitle(String title, String cat) {
+		if (!DOM.isOrHasChild(getElement(), headContainer.getElement()))
+			addPageHeader();
+		header.setText(title);
+		category.setText(cat);
+		if (cat != "" && cat != null) show(category);
+	}
+	
 	public void addPageHeaderActionList() {
 		actionList.setStylePrimaryName("page-action-list");
 		headContainer.add(actionList);

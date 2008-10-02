@@ -216,8 +216,14 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 .page-header {
 	background-color: #FBFBFB;
 	border-bottom: 1px solid #e4e4e4;
-	padding: 16px 10px 10px;
+	padding: 10px;
 	position: relative;
+}
+.page-header h4 {
+	color:#4E5159;
+	font: normal 1.1em "Gill Sans",Helvetica,Verdana,sans-serif;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
 }
 .page-action-list {
 	position: absolute;

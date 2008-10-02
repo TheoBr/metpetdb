@@ -49,7 +49,6 @@ import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
 public class SampleDetails extends MPagePanel {
-	private String sampleHeader;
 	private LatLng samplePosition;
 	private MapWidget map;
 	private MTwoColPanel panel = new MTwoColPanel();
@@ -119,12 +118,9 @@ public class SampleDetails extends MPagePanel {
 
 			protected void onLoadCompletion(final Sample result) {
 				super.onLoadCompletion(result);
-				final Sample s = (Sample) result;
-				sampleHeader = LocaleHandler.lc_text.sample() + " "
-						+ s.getName();
-				setPageTitle(sampleHeader);
-				samplePosition = new LatLng(((Point) s.getLocation()).x,
-						((Point) s.getLocation()).y);
+				setPageTitle(result.getName(), LocaleHandler.lc_text.sample());
+				samplePosition = new LatLng(((Point) result.getLocation()).x,
+						((Point) result.getLocation()).y);
 				updateGoogleMaps();
 			}
 

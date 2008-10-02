@@ -20,8 +20,9 @@ import edu.rpi.metpetdb.client.ui.input.attributes.TextAreaAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AnalysisMaterialAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.ChemistryAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 
-public class ChemicalAnalysisDetails extends FlowPanel {
+public class ChemicalAnalysisDetails extends MPagePanel {
 	private static GenericAttribute[] chemicalAnalysisAtts = {
 			new HyperlinkAttribute(MpDb.doc.ChemicalAnalysis_sampleName)
 					.setReadOnly(true),
@@ -93,6 +94,7 @@ public class ChemicalAnalysisDetails extends FlowPanel {
 
 			protected void onLoadCompletion(final ChemicalAnalysis result) {
 				super.onLoadCompletion(result);
+				setPageTitle(result.getSubsampleName(), "Chemical Analysis Spot");
 			}
 
 			protected void onDeleteCompletion(final Object result) {

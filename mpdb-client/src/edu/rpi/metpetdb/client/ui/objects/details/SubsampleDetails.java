@@ -58,7 +58,6 @@ public class SubsampleDetails extends MPagePanel {
 	private final MTwoColPanel panel = new MTwoColPanel();
 
 	public SubsampleDetails() {
-		addPageHeader();
 		final SubsampleDetails me = this;
 		p_subsample = new ObjectEditorPanel<Subsample>(subsampleAtts,
 				LocaleHandler.lc_text.addSubsample(), LocaleHandler.lc_text
@@ -111,12 +110,9 @@ public class SubsampleDetails extends MPagePanel {
 					map.setTargetHistoryToken(TokenSpace.createNewImageMap(s));
 				} else {
 					map.setText("View Map");
-					map
-							.setTargetHistoryToken(TokenSpace.detailsOf(s
-									.getGrid()));
+					map.setTargetHistoryToken(TokenSpace.detailsOf(s.getGrid()));
 				}
-
-				setPageTitle("Subsample " + s.getName());
+				setPageTitle(s.getName(), "Subsample");
 				addPageHeaderListItem(map);
 				sampleId = s.getSample().getId();
 
