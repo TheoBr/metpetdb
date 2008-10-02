@@ -159,6 +159,16 @@
 		<exec executable="/opt/apache-tomcat-5.5.26/bin/startup.sh" taskname="tomcat">
 					</exec>
 		</target>
+	
+	<target name="tomcat-zak" depends="war">
+		<exec failonerror="false" executable="${tomcat_home}/bin/shutdown.sh"/>
+		
+		<delete failonerror="true" dir="${tomcat_home}/webapps/MetPetDB"/>
+		<delete failonerror="true" file="${tomcat_home}/webapps/MetPetDB.war"/>
+		<copy failonerror="true" file="${war}" todir="${tomcat_home}/webapps"/>
+		
+		<exec failonerror="true" executable="${tomcat_home}/bin/startup.sh"/>	
+	</target>
 
 	<target name="eclipse" depends="setup" description="Sets up eclipse by generating the .classpath file and the launch configuration">
 		<property name="name.e" value="MetPetDB" />
