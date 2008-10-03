@@ -22,7 +22,6 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
-import com.google.gwt.user.client.History;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Project;
@@ -34,6 +33,7 @@ import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.left.side.MySamples;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
@@ -342,7 +342,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	}
 
 	private void deleteSelected() {
-		new ServerOp() {
+		new VoidServerOp() {
 			@Override
 			public void begin() {
 				ArrayList<Sample> publicSamples = new ArrayList<Sample>();
@@ -390,13 +390,15 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 				/* If they're all private, delete them */
 				else if (publicSamples.size() == 0) {
 					Iterator<Sample> itr2 = CheckedSamples.iterator();
+					final ArrayList<Long> ids = new ArrayList<Long>();
 					while (itr2.hasNext()) {
-						MpDb.sample_svc.delete(itr2.next().getId(), this);
+						ids.add(itr2.next().getId());
 					}
+					MpDb.sample_svc.deleteAll(ids, this);
 				}
 
 			}
-			public void onSuccess(Object result) {
+			public void onSuccess() {
 				UserSamplesList.this.remove(errMsg);
 				list.getScrollTable().reloadPage();
 			}

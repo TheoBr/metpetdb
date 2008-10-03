@@ -22,12 +22,13 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
 import edu.rpi.metpetdb.client.error.validation.InvalidImageException;
+import edu.rpi.metpetdb.client.model.BulkUploadResult;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
-import edu.rpi.metpetdb.client.service.BulkUploadImagesService;
+import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadImagesService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.bulk.upload.ImageParser;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
@@ -36,110 +37,7 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 		BulkUploadImagesService {
 	private static final long serialVersionUID = 1L;
 	public static String baseFolder;
-
-	public Map<Integer, String[]> getHeaderMapping(final String fileOnServer)
-			throws InvalidFormatException {
-		try {
-			// Find the Excel Spreadsheet
-			FileInputStream is = new FileInputStream(baseFolder + "/"
-					+ fileOnServer);
-			ZipEntry spreadsheet = getSpreadsheetName(is);
-			if (spreadsheet == null)
-				throw new IllegalStateException("No Excel Spreasheet found");
-
-			ZipFile zp = new ZipFile(baseFolder + "/" + fileOnServer);
-			final ImageParser ip = new ImageParser(zp
-					.getInputStream(spreadsheet));
-
-			try {
-				ip.initialize();
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-				throw new IllegalStateException(
-						"Programmer Error: No Such Method");
-			}
-
-			return ip.getHeaders();
-		} catch (final IOException ioe) {
-			throw new IllegalStateException(ioe.getMessage());
-		}
-	}
-
-	public Map<String, Integer[]> getAdditions(final String fileOnServer)
-			throws InvalidFormatException, LoginRequiredException {
-		final Map<String, Integer[]> newAdditions = new TreeMap<String, Integer[]>();
-
-		try {
-			currentSession()
-					.createSQLQuery(
-							"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
-					.setParameter("user_id", currentUser()).setParameter(
-							"hash", fileOnServer).executeUpdate();
-
-			// Find the Excel Spreadsheet
-			FileInputStream is = new FileInputStream(baseFolder + "/"
-					+ fileOnServer);
-			ZipEntry spreadsheet = getSpreadsheetName(is);
-			if (spreadsheet == null)
-				throw new IllegalStateException("No Excel Spreasheet found");
-
-			String spreadsheetPrefix = (new File(spreadsheet.getName()))
-					.getParent();
-			if (spreadsheetPrefix == null)
-				spreadsheetPrefix = "";
-			else
-				spreadsheetPrefix += File.separator;
-
-			ZipFile zp = new ZipFile(baseFolder + "/" + fileOnServer);
-			final ImageParser ip = new ImageParser(zp
-					.getInputStream(spreadsheet));
-			try {
-				ip.initialize();
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-				throw new IllegalStateException(
-						"Programmer Error: No Such Method");
-			}
-
-			ip.parse();
-
-			final List<Image> images = ip.getImages();
-			final List<ImageOnGrid> imagesOnGrid = ip.getImagesOnGrid();
-
-			Integer i = 2;
-			// Find Valid, new Images
-			Integer[] img_breakdown = {
-					0, 0, 0
-			};
-
-			// Include images that are for the grid
-			for (ImageOnGrid iog : imagesOnGrid)
-				images.add(iog.getImage());
-
-			for (Image img : images) {
-				// Confirm the filename is in the zip
-				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
-					img_breakdown[0]++;
-				} else {
-					try {
-						doc.validate(img);
-						img_breakdown[1]++;
-					} catch (ValidationException e) {
-						img_breakdown[0]++;
-					}
-				}
-
-				++i;
-			}
-
-			newAdditions.put("Subsample_images", img_breakdown);
-		} catch (final IOException ioe) {
-			throw new IllegalStateException(ioe.getMessage());
-		}
-
-		return newAdditions;
-	}
-	public Map<Integer, ValidationException> saveImagesFromZip(
+	public void commit(
 			final String fileOnServer) throws InvalidFormatException,
 			LoginRequiredException, DAOException {
 		final Map<Integer, ValidationException> errors = new HashMap<Integer, ValidationException>();
@@ -277,8 +175,6 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 
 					// Finally, Save the Images
 					save(imagesToSave);
-
-					return null;
 				} catch (final ValidationException e) {
 					throw new IllegalStateException(
 							"Objects passed and subsequently failed validation (Image).");
@@ -287,8 +183,6 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 		} catch (final IOException ioe) {
 			throw new IllegalStateException(ioe.getMessage());
 		}
-
-		return errors;
 	}
 	private Image uploadImages(ZipFile zp, Image img, String prefix)
 			throws IOException {
@@ -336,5 +230,116 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 		while ((amount = is.read(tmpSpace, 0, tmpSpace.length)) > -1)
 			baos.write(tmpSpace, 0, amount);
 		return baos.toByteArray();
+	}
+
+	public BulkUploadResult parser(String fileOnServer)
+			throws InvalidFormatException, LoginRequiredException {
+		final BulkUploadResult results = new BulkUploadResult();
+		final Map<String, Integer[]> newAdditions = new HashMap<String, Integer[]>();
+		final Map<Integer, ValidationException> errors = new HashMap<Integer, ValidationException>();
+		try {
+			currentSession()
+					.createSQLQuery(
+							"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
+					.setParameter("user_id", currentUser()).setParameter(
+							"hash", fileOnServer).executeUpdate();
+
+			// Find the Excel Spreadsheet
+			FileInputStream is = new FileInputStream(baseFolder + "/"
+					+ fileOnServer);
+			ZipEntry spreadsheet = getSpreadsheetName(is);
+			if (spreadsheet == null)
+				throw new IllegalStateException("No Excel Spreasheet found");
+
+			String spreadsheetPrefix = (new File(spreadsheet.getName()))
+					.getParent();
+			if (spreadsheetPrefix == null)
+				spreadsheetPrefix = "";
+			else
+				spreadsheetPrefix += File.separator;
+
+			ZipFile zp = new ZipFile(baseFolder + "/" + fileOnServer);
+			final ImageParser ip = new ImageParser(zp
+					.getInputStream(spreadsheet));
+			try {
+				ip.initialize();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+				throw new IllegalStateException(
+						"Programmer Error: No Such Method");
+			}
+
+			ip.parse();
+
+			final List<Image> images = ip.getImages();
+			final List<ImageOnGrid> imagesOnGrid = ip.getImagesOnGrid();
+
+			Integer i = 2;
+			// Find Valid, new Images
+			Integer[] img_breakdown = {
+					0, 0, 0
+			};
+			
+			User u = new User();
+			u.setId(currentUser());
+			SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
+			for (Image img : images) {
+				// Confirm the filename is in the zip
+				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
+					errors.put(new Integer(i), new InvalidImageException(
+							spreadsheetPrefix + img.getFilename()));
+				}
+				try {
+					Image img_s = uploadImages(zp, img, spreadsheetPrefix);
+					Subsample ss = (img_s.getSubsample());
+					ss.getSample().setOwner(u);
+
+					try {
+						ssDAO.fill(ss);
+					} catch (SubsampleNotFoundException daoe) {
+						doc.validate(ss);
+						ss = ssDAO.save(ss);
+					}
+					img_s.setSubsample((Subsample) (ss));
+					img_s.getSubsample().getSample().setOwner(u);
+					if (img.getSample() == null)
+						img.setSample(new Sample());
+					img_s.getSample().setOwner(u);
+					doc.validate(img_s);
+					img_breakdown[1]++;
+				} catch (ValidationException e) {
+					errors.put(i, e);
+					img_breakdown[0]++;
+				} catch (DAOException e) {
+					img_breakdown[0]++;
+				}
+
+				++i;
+			}
+
+			for (ImageOnGrid iog : imagesOnGrid) {
+				Image img = iog.getImage();
+				// Confirm the filename is in the zip
+				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
+					errors.put(new Integer(i), new InvalidImageException(
+							spreadsheetPrefix + img.getFilename()));
+				}
+				try {
+					doc.validate(img);
+				} catch (ValidationException e) {
+					errors.put(i, e);
+				}
+
+				++i;
+			}
+
+			newAdditions.put("Subsample_images", img_breakdown);
+			results.setAdditions(newAdditions);
+			results.setHeaders(ip.getHeaders());
+			results.setErrors(errors);
+		} catch (final IOException ioe) {
+			throw new IllegalStateException(ioe.getMessage());
+		}
+		return results;
 	}
 }

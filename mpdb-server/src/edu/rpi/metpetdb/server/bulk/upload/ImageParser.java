@@ -28,7 +28,7 @@ import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.XrayImage;
 
-public class ImageParser {
+public class ImageParser extends Parser{
 	public static final int METHOD = 1;
 	public static final int IMAGE_REFERENCE = 2;
 	public static final int SAMPLE = 101;
@@ -37,7 +37,6 @@ public class ImageParser {
 	public static final int PARENT_LOC_Y = 202;
 
 	private final InputStream is;
-	private HSSFSheet sheet;
 	private final List<Image> images;
 	private final List<ImageOnGrid> imagesOnGrid;
 	private final Map<Integer, ValidationException> errors = new TreeMap<Integer, ValidationException>();
@@ -104,25 +103,14 @@ public class ImageParser {
 	private final static List<MethodAssociation<XrayImage>> methodAssociations = new LinkedList<MethodAssociation<XrayImage>>();
 
 	/**
-	 * relates columns to entries in map
-	 */
-	private final Map<Integer, Integer> colType;
-	private final Map<Integer, Method> colMethods;
-	private final Map<Integer, Object> colObjects;
-	private final Map<Integer, String> colName;
-
-	/**
 	 * 
 	 * @param is
 	 * 		the input stream that points to a spreadsheet
 	 */
 	public ImageParser(final InputStream is) {
+		super();
 		images = new LinkedList<Image>();
 		imagesOnGrid = new LinkedList<ImageOnGrid>();
-		colType = new HashMap<Integer, Integer>();
-		colMethods = new HashMap<Integer, Method>();
-		colObjects = new HashMap<Integer, Object>();
-		colName = new HashMap<Integer, String>();
 		this.is = is;
 
 	}
@@ -168,46 +156,7 @@ public class ImageParser {
 		}
 	}
 
-	public Map<Integer, String[]> getHeaders() {
-		int k = 0;
-		Map<Integer, String[]> headers = new HashMap<Integer, String[]>();
-
-		// Skip empty rows at the start
-		while (sheet.getRow(k) == null) {
-			k++;
-		}
-
-		// First non-empty row is the header, want to associate what
-		// we know how to parse with what is observed
-		parseHeader(k);
-
-		// Now that we've assigned columns to methods, create the column text to
-		// data mapping
-		HSSFRow header = sheet.getRow(k);
-		for (int i = 0; i < header.getLastCellNum(); ++i) {
-			final HSSFCell cell = header.getCell((short) i);
-			final String text;
-
-			try {
-				text = cell.toString();
-			} catch (final NullPointerException npe) {
-				continue;
-			}
-
-			String[] this_header = {
-					text, colName.get(new Integer(i))
-			};
-			if (this_header[1] == null) {
-				this_header[1] = "";
-			}
-
-			headers.put(new Integer(i), this_header);
-		}
-
-		return headers;
-	}
-
-	private void parseHeader(final int rowindex) {
+	protected void parseHeader(final int rowindex) {
 		HSSFRow header = sheet.getRow(rowindex);
 		for (int i = 0; i < header.getLastCellNum(); ++i) {
 			// Convert header title to String

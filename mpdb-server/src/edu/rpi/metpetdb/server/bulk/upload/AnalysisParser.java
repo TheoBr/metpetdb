@@ -6,16 +6,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
@@ -30,7 +27,7 @@ import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 
-public class AnalysisParser {
+public class AnalysisParser extends Parser {
 	public static final int METHOD = 1;
 	public static final int CAOXIDE = 2;
 	public static final int CAELEMENT = 3;
@@ -41,7 +38,6 @@ public class AnalysisParser {
 	public static final int SUBSAMPLE_TYPE = 103;
 
 	private final InputStream is;
-	private HSSFSheet sheet;
 	private final List<ChemicalAnalysis> analyses;
 	/**
 	 * sampleMethodMap[][0] === name in table sampleMethodMap[][1] === method to
@@ -107,26 +103,14 @@ public class AnalysisParser {
 
 	private static List<Element> elements = null;
 	private static List<Oxide> oxides = null;
-
-	/**
-	 * relates columns to entries in map
-	 */
-	private final Map<Integer, Integer> colType;
-	private final Map<Integer, Method> colMethods;
-	private final Map<Integer, Object> colObjects;
-	private final Map<Integer, String> colName;
-
 	/**
 	 * 
 	 * @param is
 	 * 		the input stream that points to a spreadsheet
 	 */
 	public AnalysisParser(final InputStream is) {
+		super();
 		analyses = new LinkedList<ChemicalAnalysis>();
-		colType = new HashMap<Integer, Integer>();
-		colMethods = new HashMap<Integer, Method>();
-		colObjects = new HashMap<Integer, Object>();
-		colName = new HashMap<Integer, String>();
 		this.is = is;
 	}
 
@@ -174,46 +158,9 @@ public class AnalysisParser {
 		}
 	}
 
-	public Map<Integer, String[]> getHeaders() {
-		int k = 0;
-		Map<Integer, String[]> headers = new HashMap<Integer, String[]>();
+	
 
-		// Skip empty rows at the start
-		while (sheet.getRow(k) == null) {
-			k++;
-		}
-
-		// First non-empty row is the header, want to associate what
-		// we know how to parse with what is observed
-		parseHeader(k);
-
-		// Now that we've assigned columns to methods, create the column text to
-		// data mapping
-		HSSFRow header = sheet.getRow(k);
-		for (int i = 0; i < header.getLastCellNum(); ++i) {
-			final HSSFCell cell = header.getCell((short) i);
-			final String text;
-
-			try {
-				text = cell.toString();
-			} catch (final NullPointerException npe) {
-				continue;
-			}
-
-			String[] this_header = {
-					text, colName.get(new Integer(i))
-			};
-			if (this_header[1] == null) {
-				this_header[1] = "";
-			}
-
-			headers.put(new Integer(i), this_header);
-		}
-
-		return headers;
-	}
-
-	private void parseHeader(final int rownum) {
+	protected void parseHeader(final int rownum) {
 		// First non-empty row is the header, want to associate what
 		// we know how to parse with what is observed
 		HSSFRow header = sheet.getRow(rownum);

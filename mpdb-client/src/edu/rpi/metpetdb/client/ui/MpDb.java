@@ -7,12 +7,6 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
-import edu.rpi.metpetdb.client.service.BulkUploadChemicalAnalysesService;
-import edu.rpi.metpetdb.client.service.BulkUploadChemicalAnalysesServiceAsync;
-import edu.rpi.metpetdb.client.service.BulkUploadImagesService;
-import edu.rpi.metpetdb.client.service.BulkUploadImagesServiceAsync;
-import edu.rpi.metpetdb.client.service.BulkUploadService;
-import edu.rpi.metpetdb.client.service.BulkUploadServiceAsync;
 import edu.rpi.metpetdb.client.service.ChemicalAnalysisService;
 import edu.rpi.metpetdb.client.service.ChemicalAnalysisServiceAsync;
 import edu.rpi.metpetdb.client.service.ConstantsService;
@@ -41,6 +35,12 @@ import edu.rpi.metpetdb.client.service.SubsampleService;
 import edu.rpi.metpetdb.client.service.SubsampleServiceAsync;
 import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.client.service.UserServiceAsync;
+import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadChemicalAnalysesService;
+import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadChemicalAnalysesServiceAsync;
+import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadImagesService;
+import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadImagesServiceAsync;
+import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadSampleService;
+import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadSampleServiceAsync;
 import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
 
 /**
@@ -72,7 +72,7 @@ public class MpDb {
 
 	public static final MpDbGenericServiceAsync mpdbGeneric_svc;
 
-	public static final BulkUploadServiceAsync bulkUpload_svc;
+	public static final BulkUploadSampleServiceAsync bulkUploadSamples_svc;
 
 	public static final BulkUploadChemicalAnalysesServiceAsync bulkUploadChemicalAnalyses_svc;
 
@@ -124,8 +124,8 @@ public class MpDb {
 		mpdbGeneric_svc = (MpDbGenericServiceAsync) bindService(GWT
 				.create(MpDbGenericService.class), "mpdbGeneric");
 
-		bulkUpload_svc = (BulkUploadServiceAsync) bindService(GWT
-				.create(BulkUploadService.class), "bulkUpload");
+		bulkUploadSamples_svc = (BulkUploadSampleServiceAsync) bindService(GWT
+				.create(BulkUploadSampleService.class), "bulkUpload");
 
 		bulkUploadChemicalAnalyses_svc = (BulkUploadChemicalAnalysesServiceAsync) bindService(
 				GWT.create(BulkUploadChemicalAnalysesService.class),

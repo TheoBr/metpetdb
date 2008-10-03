@@ -27,10 +27,9 @@ import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.validation.DateStringConstraint;
 
-public class SampleParser {
+public class SampleParser extends Parser {
 
 	private final InputStream is;
-	private HSSFSheet sheet;
 	private final List<Sample> samples;
 	private final Map<Integer, ValidationException> errors = new TreeMap<Integer, ValidationException>();
 
@@ -110,12 +109,6 @@ public class SampleParser {
 
 	private static List<Mineral> minerals = null;
 
-	/**
-	 * relates columns to entries in map
-	 */
-	private final Map<Integer, Method> colMethods;
-	private final Map<Integer, Object> colObjects;
-	private final Map<Integer, String> colName;
 
 	/**
 	 * 
@@ -123,10 +116,8 @@ public class SampleParser {
 	 * 		the input stream that points to a spreadsheet
 	 */
 	public SampleParser(final InputStream is) {
+		super();
 		samples = new LinkedList<Sample>();
-		colMethods = new HashMap<Integer, Method>();
-		colObjects = new HashMap<Integer, Object>();
-		colName = new HashMap<Integer, String>();
 		this.is = is;
 
 	}
@@ -174,46 +165,7 @@ public class SampleParser {
 		}
 	}
 
-	public Map<Integer, String[]> getHeaders() {
-		int k = 0;
-		Map<Integer, String[]> headers = new HashMap<Integer, String[]>();
-
-		// Skip empty rows at the start
-		while (sheet.getRow(k) == null) {
-			k++;
-		}
-
-		// First non-empty row is the header, want to associate what
-		// we know how to parse with what is observed
-		parseHeader(k);
-
-		// Now that we've assigned columns to methods, create the column text to
-		// data mapping
-		HSSFRow header = sheet.getRow(k);
-		for (int i = 0; i < header.getLastCellNum(); ++i) {
-			final HSSFCell cell = header.getCell((short) i);
-			final String text;
-
-			try {
-				text = cell.toString();
-			} catch (final NullPointerException npe) {
-				continue;
-			}
-
-			String[] this_header = {
-					text, colName.get(new Integer(i))
-			};
-			if (this_header[1] == null) {
-				this_header[1] = "";
-			}
-
-			headers.put(new Integer(i), this_header);
-		}
-
-		return headers;
-	}
-
-	private void parseHeader(final int rowindex) {
+	protected void parseHeader(final int rowindex) {
 		HSSFRow header = sheet.getRow(rowindex);
 		for (int i = 0; i < header.getLastCellNum(); ++i) {
 			// Convert header title to String

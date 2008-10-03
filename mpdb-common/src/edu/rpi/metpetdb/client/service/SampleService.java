@@ -1,7 +1,9 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.Collection;
 import java.util.Set;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.rpi.metpetdb.client.error.DAOException;
@@ -30,4 +32,6 @@ public interface SampleService extends RemoteService {
 	Set<String> allCountries();
 
 	void delete(long id) throws DAOException, LoginRequiredException;
+	
+	void deleteAll(Collection<Long> ids) throws DAOException, LoginRequiredException;
 }

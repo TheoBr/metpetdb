@@ -1,6 +1,4 @@
-package edu.rpi.metpetdb.client.service;
-
-import java.util.Map;
+package edu.rpi.metpetdb.client.service.bulk.upload;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
@@ -8,14 +6,13 @@ import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.BulkUploadResult;
 
+/** Generic interface for bulk upload services */
 public interface BulkUploadService extends RemoteService {
-	Map<Integer, String[]> getHeaderMapping(final String fileOnServer)
-			throws InvalidFormatException;
-	Map<String, Integer[]> getAdditions(final String fileOnServer)
+	BulkUploadResult parser(final String fileOnServer)
 			throws InvalidFormatException, LoginRequiredException;
-	Map<Integer, ValidationException> saveSamplesFromSpreadsheet(
+	void commit(
 			final String fileOnServer) throws InvalidFormatException,
 			LoginRequiredException, ValidationException, DAOException;
-	Boolean deleteOldFiles();
 }
