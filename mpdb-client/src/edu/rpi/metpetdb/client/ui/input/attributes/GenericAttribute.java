@@ -234,14 +234,11 @@ public abstract class GenericAttribute {
 	protected void applyStyle(final Widget editWidget, final boolean valid) {
 		if (valid) {
 			if (constraints[0].required)
-				editWidget.setStyleName(CSS.REQUIRED_FIELD);
+				editWidget.setStyleName(CSS.REQUIRED);
 			else
 				editWidget.setStyleName("");
 		} else {
-			if (constraints[0].required)
-				editWidget.setStyleName(CSS.INVALID_REQUIRED_FIELD);
-			else
-				editWidget.setStyleName(CSS.INVALID_FIELD);
+			editWidget.setStyleName(CSS.INVALID);
 		}
 //		new hotness. too hot at the moment, though.
 //		if (constraints[0].required) editWidget.addStyleName(CSS.REQUIRED);

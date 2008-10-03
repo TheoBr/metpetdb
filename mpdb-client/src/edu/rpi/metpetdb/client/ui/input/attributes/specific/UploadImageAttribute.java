@@ -44,7 +44,7 @@ public class UploadImageAttribute extends GenericAttribute {
 		fu = new FileUpload();
 		fu.setName("imageUpload");
 		fu.setWidth("300");
-		fu.setStyleName(CSS.REQUIRED_FIELD);
+		fu.setStyleName(CSS.REQUIRED);
 
 		error = new Label("Upload an image");
 
@@ -104,7 +104,7 @@ public class UploadImageAttribute extends GenericAttribute {
 
 				}
 				if (fu.getFilename().length() == 0) {
-					fu.setStyleName(CSS.INVALID_REQUIRED_FIELD);
+					fu.setStyleName(CSS.INVALID);
 					event.setCancelled(true);
 					if (continuation != null) {
 						continuation.onFailure(new InvalidImageException());

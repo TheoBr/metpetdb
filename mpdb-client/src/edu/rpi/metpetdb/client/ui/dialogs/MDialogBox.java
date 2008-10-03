@@ -16,9 +16,7 @@ public class MDialogBox extends DialogBox implements PopupListener,
 		addPopupListener(this);
 		super.setHTML("&nbsp;");
 
-		DOM
-				.setStyleAttribute(this.getElement(), "zIndex", String
-						.valueOf(1000));
+		DOM.setStyleAttribute(this.getElement(), "zIndex", String.valueOf(1000));
 		glassPanel = new GlassPanel(false);
 	}
 

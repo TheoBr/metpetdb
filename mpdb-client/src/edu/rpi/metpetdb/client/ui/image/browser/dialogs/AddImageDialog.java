@@ -58,7 +58,7 @@ public class AddImageDialog extends MDialogBox implements ClickListener,
 		fu = new FileUpload();
 		fu.setName("imageUpload");
 		fu.setWidth("300");
-		fu.setStyleName(CSS.REQUIRED_FIELD);
+		fu.setStyleName(CSS.REQUIRED);
 
 		error = new Label("Upload an image");
 
@@ -101,7 +101,7 @@ public class AddImageDialog extends MDialogBox implements ClickListener,
 				// this opportunity to perform validation.
 				if (fu.getFilename().length() == 0) {
 					error.setText("Please select a file");
-					fu.setStyleName(CSS.INVALID_REQUIRED_FIELD);
+					fu.setStyleName(CSS.INVALID);
 					event.setCancelled(true);
 				}
 			}

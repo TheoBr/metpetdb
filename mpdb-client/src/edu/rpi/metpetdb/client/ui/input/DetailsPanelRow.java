@@ -4,6 +4,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.ui.CSS;
 
 /**
  * Holds a row in the DetailsPanel
@@ -30,19 +31,20 @@ public class DetailsPanelRow {
 	 * 		<label>
 	 */
 	public DetailsPanelRow(final Element row, final Element tdLabel,
-			final Element tdValue, final Element label) {
+			final Element tdValue, final Element label, boolean required) {
 		this.row = row;
-		DOM.setElementAttribute(row, "class", STYLENAME_DEFAULT);
+		CSS.setStyleName(row, STYLENAME_DEFAULT);
+		if (required) CSS.addStyleName(row, CSS.REQUIRED);
 		this.tdLabel = tdLabel;
-		DOM.setElementAttribute(tdLabel, "class", STYLENAME_DEFAULT + "-label");
+		CSS.setStyleName(tdLabel, STYLENAME_DEFAULT + "-label");
 		this.tdValue = tdValue;
-		DOM.setElementAttribute(tdValue, "class", STYLENAME_DEFAULT + "-value");
+		CSS.setStyleName(tdValue, STYLENAME_DEFAULT + "-value");
 		this.label = label;
 	}
 
 	public DetailsPanelRow(final Element row, final Element tdLabel,
-			final Element tdValue, final Element label, final MObject bean) {
-		this(row, tdLabel, tdValue, label);
+			final Element tdValue, final Element label, final MObject bean, boolean required) {
+		this(row, tdLabel, tdValue, label, required);
 		this.bean = bean;
 	}
 

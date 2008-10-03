@@ -21,7 +21,7 @@ public class MNoticePanel extends SimplePanel {
 	public MNoticePanel() {
 		super();
 		setStyleName(CSS.NOTICE_PANEL);
-		addStyleName(CSS.HIDE);
+		hide();
 	}
 
 	public void sendNotice(NoticeType type, String msg) {

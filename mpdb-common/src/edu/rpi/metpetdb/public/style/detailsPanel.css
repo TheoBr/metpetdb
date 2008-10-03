@@ -4,69 +4,60 @@
  --------------------------------------*/
  
 .detailsPanel {
-	margin-top: 1em;
-	padding: 1em;
+	margin-top: 10px;
 }
-.detailsPanel-hasLegend {
-	border: 1px solid #b4d27c;
-	border-top: 2px solid #97b956;
+.detailsPanel td {
+	vertical-align: baseline;
+	padding: 5px 10px;
 }
-.detailsPanel legend {
-	color: #4e681c;
-	font-weight: bold;
-	padding: 0.4em;
+.detailsPanel td:first-child {
+	padding-top: 10px;
 }
-
-.pairedRow-label,
-.pairedRow-value {
-	padding-top: 0.2em;
-	padding-bottom: 0.2em;
-	vertical-align: middle;
+.detailsPanel td.pairedRow-label {
+	padding-right: 5px;
 }
-.pairedRow-label {
-	text-align: right;
-	width: 12em;
+.detailsPanel td.pairedRow-value {
+	padding-left: 5px;
 }
-.pairedRow-label label {
-	color: #64230f;
-	padding-right: 0.5em;
+.detailsPanel tr.required .pairedRow-label label {
+	padding-right: 15px;
+	background: transparent url(../images/icon-required-star.png) no-repeat 100% 50%; 
 }
-.pairedRow-label em {
-	color: #ff4545;
-	font-weight: bold;
-	font-style: normal;
-}
-.detailsPanel-showMode .pairedRow-label em {
+.detailsPanel .pairedRow-label em {
 	display: none;
 }
 
-/* TODO these need to be abstracted */
-.detailsPanel .invalid-msg {
-	color: #ff4545 !important;
-	padding: 0.3em 0;
-	font-size: 0.95em;
+.detailsPanel .invalid-message {
+	margin-top: 7px;
+	font-size: 0.9em;
 }
+.detailsPanel .invalid-message span {
+	color: #A20110;
+	background-color: #eee;
+	padding: 4px 6px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+}
+.detailsPanel .invalid-message span.icon-warning {
+	background-image: url(../images/icon-warning.png);
+	background-repeat: no-repeat;
+	background-position: 5px 50%;
+	padding-left: 22px;
+}
+
 .detailsPanel-editMode input {
 	border: 1px solid #ccc;
-	padding: 0.1em 0.3em;
+	padding: 4px;
 }
 .detailsPanel-editMode input:focus, 
 .detailsPanel-editMode input:hover {
-	border: 1px solid #999;
+	border-color: #999;
 }
-.detailsPanel-showMode td span {						/* need to fix */
-	padding: 0.1em 0.3em;
-	border: 1px solid transparent;
-	font-size: 1.1em;
-}
-.detailsPanel-editMode input.req {
-	background: #f6ffdd;
-}
+
 .detailsPanel-editMode input.invalid {
-	background: #eeeef7;
-}
-.detailsPanel-editMode input.invalidreq {
-	background: #eae1fa;
+	border-bottom: 2px solid #e31428;
+	background-color: #f9f9f9;
 }
 span.gwt-RadioButton label {
     color: #000;

@@ -1,5 +1,8 @@
 package edu.rpi.metpetdb.client.ui;
 
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.DOM;
+
 /** CSS and HTML constants */
 public class CSS {
 	/* ---------------- ids declared by our host page ---------------- */
@@ -28,12 +31,12 @@ public class CSS {
 	public static final String TYPE_LARGE_NUMBER = "type-large-number";
 	
 	/* ---------------- icons ---------------- */
-	public static final String ICON_WARNING = "images/iconWarning.gif";
+	public static final String ICON_WARNING = "icon-warning";
 
 	/* ---------------- states/modes ---------------- */	
+	public static final String CHECKED = "checked";
 	public static final String REQUIRED = "required";
 	public static final String INVALID = "invalid";
-	public static final String CHECKED = "checked";
 	public static final String EVEN = "even";
 	public static final String ODD = "odd";
 	public static final String FIRST = "first";
@@ -44,10 +47,7 @@ public class CSS {
 	public static final String SUBMIT = "submit";
 	public static final String SHOWMODE = "showMode";
 	public static final String EDITMODE = "editMode";
-	public static final String REQUIRED_FIELD = "req";
-	public static final String INVALID_FIELD = "invalid";
-	public static final String INVALID_REQUIRED_FIELD = "invalidreq";
-	public static final String INVALID_FIELD_ERR = "invalid-msg";
+	public static final String INVALID_MESSAGE = "invalid-message";
 	public static final String CHECKBOX = "checkbox";
 
 	/* ---------------- links and buttons ---------------- */
@@ -137,9 +137,67 @@ public class CSS {
 	public static final String SEARCH_ROCKTYPES_TABLE = "search-rt-table";
 	
 	
+	public static final String LAST_ROW = "last-row";
+	public static final String ACTIONS = "actions";
+	public static final String LOGIN_DIALOG = "login-dialog";
+	public static final String LOGIN = "login";
+	public static final String FORGOT_PASS = "forgot-pass";
 	
+	public static final String REGISTER = "register";
 	
 
-	private CSS() {
+	private CSS() {}
+	
+	// Methods for getting, setting, and adding styleNames to Elements. 
+	// Ripped from com.google.gwt.user.client.ui.UIObject
+	
+	public static void setStyleName(Element elem, String styleName) {
+		DOM.setElementProperty(elem.<com.google.gwt.user.client.Element> cast(), "className", styleName);
+	}
+	
+	public static void addStyleName(Element elem, String style) {
+		setStyleName(elem, style, true);
+	}
+	
+	protected static void setStyleName(Element elem, String style, boolean add) {
+	    if (elem == null) return;
+
+	    style = style.trim();
+	    if (style.length() == 0) return;
+
+	    String oldStyle = getStyleName(elem);
+	    int idx = oldStyle.indexOf(style);
+
+	    while (idx != -1) {
+	    	if (idx == 0 || oldStyle.charAt(idx - 1) == ' ') {
+	    		int last = idx + style.length();
+	    		int lastPos = oldStyle.length();
+	    		if ((last == lastPos) || ((last < lastPos) && (oldStyle.charAt(last) == ' '))) break;
+	    	}
+	    	idx = oldStyle.indexOf(style, idx + 1);
+	    }
+
+	    if (add) {
+	    	if (idx == -1) {
+	    		if (oldStyle.length() > 0) oldStyle += " ";
+	    		DOM.setElementProperty(elem.<com.google.gwt.user.client.Element> cast(), "className", oldStyle + style);
+	    	}
+	    } else {
+	    	if (idx != -1) {
+	    		String begin = oldStyle.substring(0, idx).trim();
+	    		String end = oldStyle.substring(idx + style.length()).trim();
+
+	    		String newClassName;
+	    		if (begin.length() == 0) newClassName = end;
+	    		else if (end.length() == 0) newClassName = begin;
+	    		else newClassName = begin + " " + end;
+
+	    		DOM.setElementProperty(elem.<com.google.gwt.user.client.Element> cast(), "className", newClassName);
+	    	}
+	    }
+	}
+	
+	public static String getStyleName(Element elem) {
+		return DOM.getElementProperty(elem.<com.google.gwt.user.client.Element> cast(), "className");
 	}
 }

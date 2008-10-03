@@ -16,6 +16,7 @@ import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
 import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
@@ -25,7 +26,11 @@ import edu.rpi.metpetdb.client.ui.input.Submit;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.PasswordAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.MLink;
+import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MTabPanel;
+import edu.rpi.metpetdb.client.ui.widgets.MText;
+import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel.NoticeType;
 
 public class LoginDialog extends MDialogBox implements ClickListener,
 		KeyboardListener, TabListener {
@@ -34,7 +39,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 			new PasswordAttribute(MpDb.doc.StartSessionRequest_password),
 	};
 	private static final GenericAttribute[] emailAttributes = {
-		new TextAttribute(MpDb.doc.StartSessionRequest_username),
+		new TextAttribute(MpDb.doc.StartSessionRequest_username)
 	};
 
 	protected final ServerOp<?> continuation;
@@ -44,45 +49,41 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 	private final DetailsPanel<StartSessionRequest> p_email;
 	private final int p_mainIdx;
 	protected final int p_emailIdx;
-	private final Button loginC;
+	private final MLink cancel = new MLink(LocaleHandler.lc_text.buttonCancel(), this);
+	private final MLink cancel2 = new MLink(LocaleHandler.lc_text.buttonCancel(), this);
 	private final Button login;
-	private final Button emailC;
 	private final Button email;
-	private final Label emailResult;
+	private final MNoticePanel emailNotice = new MNoticePanel();
+	private final MNoticePanel loginNotice = new MNoticePanel();
+	private final MText forgotInfo = new MText("Forgot your password? We'll send you a link to reset it.", "p");
 
 	public LoginDialog(final ServerOp<?> r) {
 		continuation = r;
 		ssr = new StartSessionRequest();
 		setText("Please Login");
-
-		loginC = new Button(LocaleHandler.lc_text.buttonCancel(), this);
+		
 		login = new Submit(LocaleHandler.lc_text.buttonLogin(), this);
-
-		emailC = new Button(LocaleHandler.lc_text.buttonCancel(), this);
 		email = new Submit(LocaleHandler.lc_text.buttonEmailPassword(), this);
 
-		p_main = new DetailsPanel<StartSessionRequest>(mainAttributes,
-				new Button[] {
-						login, loginC
-				});
+		p_main = new DetailsPanel<StartSessionRequest>(mainAttributes,new Widget[] {login, cancel});
 		p_main.edit(ssr);
 
-		p_email = new DetailsPanel<StartSessionRequest>(emailAttributes,
-				new Button[] {
-						email, emailC
-				});
+		p_email = new DetailsPanel<StartSessionRequest>(emailAttributes,new Widget[] {email, cancel2});
 
 		tabs = new MTabPanel();
 		{
 			final FlowPanel p = new FlowPanel();
+			p.setStyleName(CSS.LOGIN);
+			p.add(loginNotice);
 			p.add(p_main);
 			tabs.add(p, LocaleHandler.lc_text.tab_Login());
 			p_mainIdx = tabs.getDeckPanel().getWidgetIndex(p);
 		}
 		{
 			final FlowPanel p = new FlowPanel();
-			emailResult = new Label();
-			p.add(emailResult);
+			p.setStyleName(CSS.FORGOT_PASS);
+			p.add(emailNotice);
+			p.add(forgotInfo);
 			p.add(p_email);
 			tabs.add(p, LocaleHandler.lc_text.tab_ForgotPassword());
 			p_emailIdx = tabs.getDeckPanel().getWidgetIndex(p);
@@ -95,7 +96,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 		f.setWidget(tabs);
 
 		setWidget(f);
-		this.addStyleName("mpdb-login");
+		this.addStyleName(CSS.LOGIN_DIALOG);
 	}
 
 	protected void onLoad() {
@@ -104,7 +105,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 	}
 
 	public boolean onBeforeTabSelected(final SourcesTabEvents s, final int idx) {
-		return loginC.isEnabled() && emailC.isEnabled();
+		return true;
 	}
 
 	public void onTabSelected(final SourcesTabEvents s, final int idx) {
@@ -119,12 +120,12 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 	}
 
 	public void onClick(final Widget sender) {
-		emailResult.setText("");
+		emailNotice.hide();
 		if (login == sender)
 			doLogin();
 		else if (email == sender)
 			doEmailPassword();
-		else if (loginC == sender || emailC == sender)
+		else if (cancel == sender || cancel2 == sender)
 			cancel();
 	}
 
@@ -135,7 +136,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 				doLogin();
 			else if (email.isEnabled() && activeIdx == p_emailIdx)
 				doEmailPassword();
-		} else if (kc == KEY_ESCAPE && loginC.isEnabled() && emailC.isEnabled())
+		} else if (kc == KEY_ESCAPE)
 			cancel();
 	}
 
@@ -159,7 +160,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 			public void onFailure(final Throwable e) {
 				if (e instanceof UnableToSendEmailException) {
 					enable(true);
-					super.onFailure(e);
+					emailNotice.sendNotice(NoticeType.ERROR, "Unable to send the email. Please contact the developers.");
 				} else if (e instanceof NoSuchObjectException) {
 					enable(true);
 					// p_email.showValidationException(new
@@ -171,7 +172,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 			}
 			public void onSuccess(final Void result) {
 				enable(true);
-				emailResult.setText(LocaleHandler.lc_text.message_NewPasswordSet());
+				emailNotice.sendNotice(NoticeType.SUCCESS, LocaleHandler.lc_text.message_NewPasswordSet());
 			}
 		}.begin();
 	}

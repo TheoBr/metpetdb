@@ -10,6 +10,7 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
@@ -71,8 +72,8 @@ public class UserRegistrationPanel extends MPagePanel implements ClickListener {
 	private final DetailsPanel<UserWithPassword> p_main;
 
 	public UserRegistrationPanel() {
-		addPageHeader();
 		setPageTitle("Register");
+		setStyleName(CSS.REGISTER);
 		newbie = new UserWithPassword(new User());
 		register = new Submit(LocaleHandler.lc_text.buttonRegister(), this);
 

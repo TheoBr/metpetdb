@@ -363,7 +363,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener, FormHa
 		// take this opportunity to perform validation.
 		if (file.getFilename().length() == 0) {
 			status.sendNotice(NoticeType.WARNING, "Please select a file");
-			file.setStyleName(CSS.INVALID_FIELD);
+			file.setStyleName(CSS.INVALID);
 			event.setCancelled(true);
 		}
 		clearResults();

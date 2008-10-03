@@ -26,11 +26,20 @@
 }
 
 /*-------------------------------------
-               login box
+               login
  --------------------------------------*/
-.mpdb-login .detailsPanel {		
-	margin-top: 0;
+
+.login-dialog .detailsPanel td.actions {
+	vertical-align: middle;
+	padding: 5px 10px 10px 5px;
 }
-.mpdb-login em {
-	display: none;
+.login-dialog .detailsPanel td.actions button {
+	margin-right: 10px;
+}
+.login-dialog .detailsPanel tr.required .pairedRow-label label {
+	padding-right: 0;
+	background-image: none;
+}
+.login-dialog p {
+	margin: 10px;
 }

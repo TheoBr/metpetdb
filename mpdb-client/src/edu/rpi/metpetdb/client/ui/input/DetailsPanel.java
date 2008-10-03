@@ -18,7 +18,6 @@ import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
 public class DetailsPanel<T extends MObject> extends ComplexPanel {
 	private String panelId;
-	private Element fieldset;
 	// ArrayList<GenericAttribute>
 	protected ArrayList<GenericAttribute> attributes;
 	// HashMap<GenericAttribute, DetailsPanelEntry >
@@ -62,13 +61,13 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 	protected void init(final GenericAttribute[] atts, final Widget[] actions,
 			final boolean showHeaders, final boolean showInitial) {
 		panelId = HTMLPanel.createUniqueId();
-		fieldset = DOM.createFieldSet();
-		setElement(fieldset);
-		setStyleName(STYLENAME_DEFAULT);
+		setElement(DOM.createDiv());
+		setStylePrimaryName(STYLENAME_DEFAULT);
 
 		final Element table = DOM.createTable();
+		CSS.setStyleName(table, STYLENAME_DEFAULT + "-table");
 		tbody = DOM.createTBody();
-		DOM.appendChild(fieldset, table);
+		DOM.appendChild(getElement(), table);
 		DOM.appendChild(table, tbody);
 
 		attributes = new ArrayList<GenericAttribute>();
@@ -89,9 +88,11 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 
 		if (actions != null && actions.length > 0) {
 			final Element tr = DOM.createTR();
+			CSS.setStyleName(tr, CSS.LAST_ROW);
 			DOM.appendChild(tbody, tr);
 			DOM.appendChild(tr, DOM.createTD());
 			final Element td = DOM.createTD();
+			CSS.setStyleName(td, CSS.ACTIONS);
 			DOM.appendChild(tr, td);
 			for (int k = 0; k < actions.length; k++)
 				add(actions[k], td);
@@ -114,24 +115,19 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 		DOM.appendChild(tr, labelTD);
 		final Element label = DOM.createLabel();
 		DOM.appendChild(labelTD, label);
-		// DOM.setElementAttribute(label, "for", idForRow(row));
 		DOM.setInnerText(label, labelText);
 
 		if (attr.getConstraint().required) {
 			final Element em = DOM.createElement("em");
-			DOM.setInnerText(em, " *");
+			DOM.setInnerText(em, "(required)");
 			DOM.appendChild(labelTD, em);
 		}
-
-		final Element padding = DOM.createElement("padding");
-		DOM.setInnerText(padding, " ");
-		DOM.appendChild(labelTD, padding);
 
 		final Element valueTD = DOM.createTD();
 		DOM.appendChild(tr, valueTD);
 
 		attr.setMyPanel(this);
-		return new DetailsPanelRow(tr, labelTD, valueTD, label);
+		return new DetailsPanelRow(tr, labelTD, valueTD, label, attr.getConstraint().required);
 	}
 
 	public T getBean() {
@@ -143,8 +139,8 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 	}
 
 	public void show(final T toShow) {
-		addStyleName(STYLENAME_DEFAULT + "-" + CSS.SHOWMODE);
-		removeStyleName(STYLENAME_DEFAULT + "-" + CSS.EDITMODE);
+		removeStyleDependentName(CSS.EDITMODE);
+		addStyleDependentName(CSS.SHOWMODE);
 		bean = toShow;
 		clearNonActions();
 		for (int row = 0; row < attributes.size(); row++) {
@@ -215,8 +211,8 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 	}
 
 	public void edit(final T toEdit) {
-		addStyleName(STYLENAME_DEFAULT + "-" + CSS.EDITMODE);
-		removeStyleName(STYLENAME_DEFAULT + "-" + CSS.SHOWMODE);
+		removeStyleDependentName(CSS.SHOWMODE);
+		addStyleDependentName(CSS.EDITMODE);
 		bean = toEdit;
 		clearNonActions();
 		for (int row = 0; row < attributes.size(); row++) {
