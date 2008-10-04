@@ -14,13 +14,14 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
 import edu.rpi.metpetdb.client.model.BulkUploadResult;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.BulkUploadResultCount;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadChemicalAnalysesService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
+import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
 public class BulkUploadChemicalAnalysesServiceImpl extends
@@ -82,11 +83,14 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 			Set<String> subsampleNames = new HashSet<String>();
 			final BulkUploadResultCount caResultCount = new BulkUploadResultCount();
 			final BulkUploadResultCount ssResultCount = new BulkUploadResultCount();
+			final ChemicalAnalysisDAO dao = new ChemicalAnalysisDAO(this.currentSession());
 			for (ChemicalAnalysis ca : analyses) {
 				try {
 					doc.validate(ca);
-					// TODO check for old
-					caResultCount.incrementFresh();
+					if (dao.isNew(ca))
+						caResultCount.incrementFresh();
+					else
+						caResultCount.incrementOld();
 				} catch (ValidationException e) {
 					caResultCount.incrementInvalid();
 					errors.put(row, e);

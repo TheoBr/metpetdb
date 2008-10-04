@@ -6,8 +6,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -30,6 +32,7 @@ import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadImagesService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.ImageParser;
+import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
 public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
@@ -174,10 +177,13 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 			final List<Image> images = ip.getImages();
 			final List<ImageOnGrid> imagesOnGrid = ip.getImagesOnGrid();
 			int row = 2;
-			final BulkUploadResultCount resultCount = new BulkUploadResultCount();
+			final BulkUploadResultCount ssResultCount = new BulkUploadResultCount();
+			final BulkUploadResultCount imgResultCount = new BulkUploadResultCount();
 			User u = new User();
 			u.setId(currentUser());
+			Set<String> subsampleNames = new HashSet<String>();
 			SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
+			final ImageDAO dao = new ImageDAO(this.currentSession());
 			for (Image img : images) {
 				// Confirm the filename is in the zip
 				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
@@ -186,20 +192,25 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 				}
 				try {
 					setRealImage(zp, img, spreadsheetPrefix);
-					Subsample ss = (img.getSubsample());
 					try {
-						ssDAO.fill(ss);
-					} catch (SubsampleNotFoundException daoe) {
-						doc.validate(ss);
+						Subsample ss = (img.getSubsample());
+						if (!subsampleNames.contains(ss.getName())) {
+							ssDAO.fill(ss);
+							ssResultCount.incrementOld();
+							subsampleNames.add(ss.getName());
+						}
 					} catch (DAOException e) {
-						// TODO implement exception handler
+						ssResultCount.incrementFresh();
+						subsampleNames.add(img.getSubsample().getName());
 					}
 					doc.validate(img);
-					//TODO check for old
-					resultCount.incrementFresh();
+					if (dao.isNew(img))
+						imgResultCount.incrementFresh();
+					else
+						imgResultCount.incrementOld();
 				} catch (ValidationException e) {
 					errors.put(row, e);
-					resultCount.incrementInvalid();
+					imgResultCount.incrementInvalid();
 				}
 				++row;
 			}
@@ -218,7 +229,8 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 				}
 				++row;
 			}
-			results.addResultCount("Images", resultCount);
+			results.addResultCount("Subsamples", ssResultCount);
+			results.addResultCount("Images", imgResultCount);
 			results.setHeaders(ip.getHeaders());
 			results.setErrors(errors);
 		} catch (final IOException ioe) {
