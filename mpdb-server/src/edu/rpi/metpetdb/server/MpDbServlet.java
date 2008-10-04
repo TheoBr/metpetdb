@@ -2,6 +2,8 @@ package edu.rpi.metpetdb.server;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.ServletConfig;
@@ -27,14 +29,19 @@ import edu.rpi.metpetdb.client.error.dao.ProjectAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.SampleAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.UserAlreadyExistsException;
+import edu.rpi.metpetdb.client.model.Element;
+import edu.rpi.metpetdb.client.model.Mineral;
+import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
-import edu.rpi.metpetdb.server.impl.BulkUploadChemicalAnalysesServiceImpl;
-import edu.rpi.metpetdb.server.impl.BulkUploadImagesServiceImpl;
-import edu.rpi.metpetdb.server.impl.BulkUploadServiceImpl;
+import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
+import edu.rpi.metpetdb.server.bulk.upload.SampleParser;
+import edu.rpi.metpetdb.server.dao.impl.ElementDAO;
+import edu.rpi.metpetdb.server.dao.impl.MineralDAO;
+import edu.rpi.metpetdb.server.dao.impl.OxideDAO;
 import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
 import edu.rpi.metpetdb.server.security.SessionEncrypter;
 
@@ -64,6 +71,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	protected static final Properties fileProps = new Properties();
 
 	private static int autoLoginId = -1;
+	private static final String fileUploadPath;
 
 	static {
 		final String propFile = "files.properties";
@@ -80,14 +88,11 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		}
 		ImageUploadServlet.setBaseFolder(fileProps.getProperty("images.path"));
 		ImageServiceImpl.setBaseFolder(fileProps.getProperty("images.path"));
-		FileUploadServlet.setBaseFolder(fileProps
-				.getProperty("fileUpload.path"));
-		BulkUploadServiceImpl.setBaseFolder(fileProps
-				.getProperty("fileUpload.path"));
-		BulkUploadChemicalAnalysesServiceImpl.setBaseFolder(fileProps
-				.getProperty("fileUpload.path"));
-		BulkUploadImagesServiceImpl.setBaseFolder(fileProps
-				.getProperty("fileUpload.path"));
+		fileUploadPath = fileProps.getProperty("fileUpload.path") + "/";
+	}
+
+	public static String getFileUploadPath() {
+		return fileUploadPath;
 	}
 
 	/**
@@ -126,6 +131,21 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		oc = DataStore.getInstance().getObjectConstraints();
 
 		loadAutomaticLogin();
+		initBulkUpload();
+	}
+
+	/** Initializes the static properties of the bulk upload process */
+	public void initBulkUpload() {
+		// Locate and set Valid Potential Minerals for the parser
+		final Session s = DataStore.open();
+		final Collection<Mineral> minerals = (new MineralDAO(s).getAll());
+		SampleParser.setMinerals(minerals);
+		List<Element> elements = ((new ElementDAO(s))
+				.getAll());
+		List<Oxide> oxides = ((new OxideDAO(s))
+				.getAll());
+		AnalysisParser.setElementsAndOxides(elements, oxides);
+		s.close();
 	}
 
 	public void destroy() {

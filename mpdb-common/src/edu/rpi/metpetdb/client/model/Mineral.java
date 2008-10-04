@@ -68,8 +68,7 @@ public class Mineral extends MObject implements IHasName, HasChildren<Mineral> {
 					&& name.toLowerCase().equals(
 							((Mineral) o).name.toLowerCase());
 		else if (o instanceof SampleMineral) {
-			return name != null && name.equals(((SampleMineral) o).getName())
-					&& ((SampleMineral) o).getMineral().getId() == id;
+			return name != null && name.equals(((SampleMineral) o).getName());
 		} else
 			return false;
 	}

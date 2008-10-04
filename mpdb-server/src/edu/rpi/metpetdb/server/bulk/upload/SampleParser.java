@@ -6,8 +6,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
@@ -29,7 +28,6 @@ import edu.rpi.metpetdb.client.model.validation.DateStringConstraint;
 
 public class SampleParser extends Parser {
 
-	private final InputStream is;
 	private final List<Sample> samples;
 	private final Map<Integer, ValidationException> errors = new TreeMap<Integer, ValidationException>();
 
@@ -107,37 +105,18 @@ public class SampleParser extends Parser {
 
 	private final static List<MethodAssociation<Sample>> methodAssociations = new ArrayList<MethodAssociation<Sample>>();
 
-	private static List<Mineral> minerals = null;
-
+	private static Collection<Mineral> minerals;
 
 	/**
 	 * 
 	 * @param is
 	 * 		the input stream that points to a spreadsheet
+	 * @throws InvalidFormatException
 	 */
-	public SampleParser(final InputStream is) {
+	public SampleParser(final InputStream is) throws InvalidFormatException {
 		super();
 		samples = new LinkedList<Sample>();
-		this.is = is;
-
-	}
-
-	/**
-	 * 
-	 * 
-	 * @throws IOException
-	 * 		if the file could not be read.
-	 */
-	public void initialize() throws InvalidFormatException,
-			NoSuchMethodException {
-
 		try {
-			if (methodAssociations.isEmpty())
-				for (Object[] row : sampleMethodMap)
-					methodAssociations.add(new MethodAssociation<Sample>(
-							(String) row[0], (String) row[1], (Class) row[2],
-							new Sample(), (String) row[3]));
-
 			final POIFSFileSystem fs = new POIFSFileSystem(is);
 			final HSSFWorkbook wb = new HSSFWorkbook(fs);
 			sheet = wb.getSheetAt(0);
@@ -145,6 +124,19 @@ public class SampleParser extends Parser {
 			throw new InvalidFormatException();
 		}
 	}
+
+	static {
+		try {
+			if (methodAssociations.isEmpty())
+				for (Object[] row : sampleMethodMap)
+					methodAssociations.add(new MethodAssociation<Sample>(
+							(String) row[0], (String) row[1], (Class<?>) row[2],
+							new Sample(), (String) row[3]));
+		} catch (NoSuchMethodException e) {
+
+		}
+	}
+
 	public void parse() {
 		int k = 0;
 
@@ -201,7 +193,7 @@ public class SampleParser extends Parser {
 					if (m.getName().equalsIgnoreCase(text)) {
 						colMethods.put(new Integer(i), Sample.class.getMethod(
 								"addMineral", Mineral.class, Float.class));
-						colObjects.put(new Integer(i), m);
+						colObjects.put(new Integer(i), getRealMineral(m));
 						colName.put(new Integer(i), "Sample_minerals");
 						done = true;
 						break;
@@ -212,6 +204,22 @@ public class SampleParser extends Parser {
 						"Programming Error -- Invalid Sample Method");
 			}
 		}
+	}
+	
+	/**
+	 * Replaces the alternate minerals with their correct counterparts
+	 * @param alternate
+	 * @return
+	 */
+	private Mineral getRealMineral(final Mineral alternate) {
+		if (alternate.getId() == alternate.getRealMineralId())
+			return alternate;
+		final int realMineralId = alternate.getRealMineralId();
+		for(Mineral m : minerals) {
+			if (m.getId() == realMineralId)
+				return m;
+		}
+		return alternate;
 	}
 
 	/**
@@ -389,11 +397,7 @@ public class SampleParser extends Parser {
 		return errors;
 	}
 
-	public static boolean areMineralsSet() {
-		return !(minerals == null);
-	}
-
-	public static void setMinerals(final List<Mineral> minerals) {
+	public static void setMinerals(final Collection<Mineral> minerals) {
 		SampleParser.minerals = minerals;
 	}
 }

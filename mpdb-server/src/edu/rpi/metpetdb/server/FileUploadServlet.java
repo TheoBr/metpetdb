@@ -24,7 +24,6 @@ import edu.rpi.metpetdb.server.security.PasswordEncrypter;
 
 public class FileUploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static String baseFolder;
 
 	@Override
 	protected void doPost(final HttpServletRequest request,
@@ -112,22 +111,14 @@ public class FileUploadServlet extends HttpServlet {
 		// throw new IllegalStateException(ioe.getMessage());
 		// }
 		try {
-			final FileOutputStream writer = new FileOutputStream(baseFolder
+			final FileOutputStream writer = new FileOutputStream(MpDbServlet.getFileUploadPath()
 					+ "/" + filename);
 			writer.write(file);
 			writer.close();
 			return filename;
 		} catch (final IOException ioe) {
 			throw new IllegalStateException("Error writing file filePath="
-					+ baseFolder + " IO error: " + ioe.getMessage());
+					+ MpDbServlet.getFileUploadPath()+ " IO error: " + ioe.getMessage());
 		}
-	}
-
-	public static String getBaseFolder() {
-		return baseFolder;
-	}
-
-	public static void setBaseFolder(String baseFolder) {
-		FileUploadServlet.baseFolder = baseFolder;
 	}
 }

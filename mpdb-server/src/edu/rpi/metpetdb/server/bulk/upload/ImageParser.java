@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
@@ -36,7 +34,6 @@ public class ImageParser extends Parser{
 	public static final int PARENT_LOC_X = 201;
 	public static final int PARENT_LOC_Y = 202;
 
-	private final InputStream is;
 	private final List<Image> images;
 	private final List<ImageOnGrid> imagesOnGrid;
 	private final Map<Integer, ValidationException> errors = new TreeMap<Integer, ValidationException>();
@@ -106,35 +103,28 @@ public class ImageParser extends Parser{
 	 * 
 	 * @param is
 	 * 		the input stream that points to a spreadsheet
+	 * @throws IOException 
 	 */
-	public ImageParser(final InputStream is) {
+	public ImageParser(final InputStream is) throws IOException {
 		super();
 		images = new LinkedList<Image>();
 		imagesOnGrid = new LinkedList<ImageOnGrid>();
-		this.is = is;
-
+		final POIFSFileSystem fs = new POIFSFileSystem(is);
+		final HSSFWorkbook wb = new HSSFWorkbook(fs);
+		sheet = wb.getSheetAt(0);
 	}
-	/**
-	 * 
-	 * 
-	 * @throws IOException
-	 * 		if the file could not be read.
-	 */
-	public void initialize() throws InvalidFormatException,
-			NoSuchMethodException {
-
+	
+	
+	static {
 		try {
 			if (methodAssociations.isEmpty())
 				for (Object[] row : imageMethodMap)
 					methodAssociations.add(new MethodAssociation<XrayImage>(
-							(String) row[0], (String) row[1], (Class) row[2],
+							(String) row[0], (String) row[1], (Class<?>) row[2],
 							new XrayImage(), (String) row[3]));
-
-			final POIFSFileSystem fs = new POIFSFileSystem(is);
-			final HSSFWorkbook wb = new HSSFWorkbook(fs);
-			sheet = wb.getSheetAt(0);
-		} catch (IOException e) {
-			throw new InvalidFormatException();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

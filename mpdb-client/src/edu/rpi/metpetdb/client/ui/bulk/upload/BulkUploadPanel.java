@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.ui.bulk.upload;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.MissingResourceException;
 
@@ -31,6 +32,7 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.BulkUploadResult;
+import edu.rpi.metpetdb.client.model.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadServiceAsync;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
@@ -289,7 +291,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 				hide(progressContainer);
 				status.hide();
 				populateParsedTable(results.getHeaders());
-				populateSummaryTable(results.getAdditions());
+				populateSummaryTable(results.getResultCounts());
 				show(resultsPanel);
 				show(uploadButton);
 				final Map<Integer, ValidationException> errors = results
@@ -312,17 +314,8 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 					show(restartLink);
 					uploadButton.setEnabled(false);
 				} else {
-					ArrayList<String> keys = new ArrayList<String>(results.getAdditions().keySet());
-					int invalidCount = 0, newCount = 0, oldCount = 0, total = 0;
-					for (String k : keys) {
-						invalidCount = (Integer) results.getAdditions().get(k)[0];
-						newCount = (Integer) results.getAdditions().get(k)[1];
-						oldCount = (Integer) results.getAdditions().get(k)[2];
-					}
-					if (invalidCount != 0 || oldCount != 0) 
-						uploadButton.setEnabled(true);
-					else
-						uploadButton.setEnabled(false);
+					//TODO need to disbale this button if there are old ones
+					uploadButton.setEnabled(true);
 				}
 			}
 			public void onFailure(final Throwable e) {
@@ -401,20 +394,23 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		}
 	}
 
-	protected void populateSummaryTable(final Map<String, Integer[]> additions) {
-		ArrayList<String> keys = new ArrayList<String>(additions.keySet());
-		int invalidCount = 0, newCount = 0, oldCount = 0, total = 0;
-		for (String k : keys) {
-			invalidCount = (Integer) additions.get(k)[0];
-			newCount = (Integer) additions.get(k)[1];
-			oldCount = (Integer) additions.get(k)[2];
+	protected void populateSummaryTable(final Map<String, BulkUploadResultCount> additions) {
+		/*
+		 * TODO: for Zak, the key for the map is the name of the object, i.e. Sample, the
+		 * ResultCount is just a container of the counts of the object
+		 */
+		final Iterator<String> objItr = additions.keySet().iterator();
+		while(objItr.hasNext()) {
+			final String objType = objItr.next();
+			final int fresh = additions.get(objType).getFresh();
+			final int old = additions.get(objType).getOld();
+			final int invalid = additions.get(objType).getInvalid();
+			final int total = fresh + old + invalid;
+			addSummaryItem(0, fresh, "fresh", CSS.BULK_RESULTS_NEW);
+			addSummaryItem(1, old, "old", CSS.BULK_RESULTS_OLD);
+			addSummaryItem(2, invalid, "invalid", CSS.BULK_RESULTS_INVALID);
+			addSummaryItem(3, total, "total", CSS.BULK_RESULTS_TOTAL);
 		}
-		total = newCount + oldCount + invalidCount;
-
-		addSummaryItem(0, newCount, "new", CSS.BULK_RESULTS_NEW);
-		addSummaryItem(1, oldCount, "old", CSS.BULK_RESULTS_OLD);
-		addSummaryItem(2, invalidCount, "invalid", CSS.BULK_RESULTS_INVALID);
-		addSummaryItem(3, total, "total", CSS.BULK_RESULTS_TOTAL);
 	}
 
 	protected void addSummaryItem(int index, int count, String title,

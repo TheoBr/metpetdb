@@ -37,7 +37,6 @@ public class AnalysisParser extends Parser {
 	public static final int PERCISIONUNIT = 102;
 	public static final int SUBSAMPLE_TYPE = 103;
 
-	private final InputStream is;
 	private final List<ChemicalAnalysis> analyses;
 	/**
 	 * sampleMethodMap[][0] === name in table sampleMethodMap[][1] === method to
@@ -107,38 +106,31 @@ public class AnalysisParser extends Parser {
 	 * 
 	 * @param is
 	 * 		the input stream that points to a spreadsheet
+	 * @throws IOException 
 	 */
-	public AnalysisParser(final InputStream is) {
+	public AnalysisParser(final InputStream is) throws IOException {
 		super();
 		analyses = new LinkedList<ChemicalAnalysis>();
-		this.is = is;
+		final POIFSFileSystem fs = new POIFSFileSystem(is);
+		final HSSFWorkbook wb = new HSSFWorkbook(fs);
+		sheet = wb.getSheetAt(0);
 	}
-
-	/**
-	 * 
-	 * 
-	 * @throws IOException
-	 * 		if the file could not be read.
-	 */
-	public void initialize() throws InvalidFormatException,
-			NoSuchMethodException {
-
+	
+	static {
 		try {
 			if (methodAssociations.isEmpty())
 				for (Object[] row : analysisMethodMap)
 					methodAssociations
 							.add(new MethodAssociation<ChemicalAnalysis>(
 									(String) row[0], (String) row[1],
-									(Class) row[2], new ChemicalAnalysis(),
+									(Class<?>) row[2], new ChemicalAnalysis(),
 									(String) row[3]));
-
-			final POIFSFileSystem fs = new POIFSFileSystem(is);
-			final HSSFWorkbook wb = new HSSFWorkbook(fs);
-			sheet = wb.getSheetAt(0);
-		} catch (IOException e) {
-			throw new InvalidFormatException();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
+
 	public void parse() {
 		int k = 0;
 		while (sheet.getRow(k) == null) {
@@ -526,10 +518,6 @@ public class AnalysisParser extends Parser {
 
 		ca.setAnalysisDate(time);
 		ca.setDatePrecision(precision);
-	}
-
-	public static boolean areElementsAndOxidesSet() {
-		return elements == null || oxides == null;
 	}
 
 	public static void setElementsAndOxides(final List<Element> elements,

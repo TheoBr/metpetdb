@@ -12,7 +12,7 @@ CREATE TABLE chemical_analyses
    analysis_date TIMESTAMP,
    date_precision INT2,
    reference_id INT8,
-   description VARCHAR(50),
+   description VARCHAR(1024),
    mineral_id int2,
    -- user_id INT4 NOT NULL,
    large_rock CHAR(1) CHECK (large_rock IN ('Y','N')) NOT NULL,
