@@ -2,20 +2,37 @@
                   type
  --------------------------------------*/
 h1, .h1 {
-	font: 2em Helvetica, Arial, sans-serif;
-}
-.h1 {
-	padding-top: 0.7em;
-	margin-bottom: 0.5em;
+	font-size: 2em;
+	font-weight: normal;
+	font-family: Helvetica, Arial, sans-serif;
 }
 h2, .h2 {
-	font: 1.5em Helvetica, Arial, sans-serif;
+	font-size: 1.5em;
+	font-weight: normal;
+	font-family: Helvetica, Arial, sans-serif;
 }
 h3, .h3 {
-	font: 1.3em Helvetica, Arial, sans-serif;
+	font-size: 1.3em;
+	font-weight: normal;
+	font-family: Helvetica, Arial, sans-serif;
 }
-p {margin: 1em 0;}
+p {
+	margin: 1em 0;
+}
 
+.type-large-number {
+	font: 1.8em "Lucida Grande",Verdana,sans-serif;
+	color: #000;
+}
+.type-small-caps {
+	font: 0.9em "Gill Sans",Verdana,sans-serif;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	color: #999;
+}
+.element-margin {
+	margin: 10px;
+}
 
 /*-------------------------------------
                hyperlinks

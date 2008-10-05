@@ -7,10 +7,10 @@ import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.left.side.UserInfo;
 
-public class Introduction extends FlowPanel {
+public class Homepage extends FlowPanel {
 	private long UserID;
 
-	public Introduction() {
+	public Homepage() {
 		MetPetDBApplication.clearLeftSide();
 		MetPetDBApplication.appenLeft(new UserInfo(MpDb.currentUser()));
 		this

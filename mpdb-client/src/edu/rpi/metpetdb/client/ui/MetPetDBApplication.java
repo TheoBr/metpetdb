@@ -150,7 +150,7 @@ public class MetPetDBApplication implements EntryPoint {
 			((Breadcrumbs) getFromBreadCrumbs()).update(state);
 		} else {
 			// notice(MpDb.lc_text.notice_Welcome());
-			DeferredCommand.addCommand(TokenSpace.introduction);
+			DeferredCommand.addCommand(TokenSpace.home);
 		}
 	}
 
@@ -168,7 +168,7 @@ public class MetPetDBApplication implements EntryPoint {
 			try {
 				((UsesCurrentUser) w).onCurrentUserChanged(u);
 			} catch (LoginRequiredException lre) {
-				TokenSpace.introduction.execute();
+				TokenSpace.home.execute();
 				return;
 			}
 		}
@@ -219,8 +219,8 @@ public class MetPetDBApplication implements EntryPoint {
 				new ClickListener() {
 					public void onClick(Widget sender) {
 						MpDb.setCurrentUser(null);
-						TokenSpace.introduction.execute();
-						History.newItem(TokenSpace.introduction.getName());
+						TokenSpace.home.execute();
+						History.newItem(TokenSpace.home.getName());
 					}
 				}));
 	}

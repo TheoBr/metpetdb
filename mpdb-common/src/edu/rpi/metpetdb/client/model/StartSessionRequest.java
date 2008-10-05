@@ -14,18 +14,18 @@ import edu.rpi.metpetdb.client.model.properties.Property;
 public class StartSessionRequest implements edu.rpi.metpetdb.client.model.interfaces.MObject, IsSerializable {
 	private static final long serialVersionUID = 1L;
 
-	private String username;
+	private String emailAddress;
 	private String password;
 
 	public StartSessionRequest() {
 	}
 
-	public String getUsername() {
-		return username;
+	public String getEmailAddress() {
+		return emailAddress;
 	}
 
-	public void setUsername(final String n) {
-		username = n;
+	public void setEmailAddress(final String n) {
+		emailAddress = n;
 	}
 
 	public String getPassword() {

@@ -23,7 +23,7 @@ import edu.rpi.metpetdb.client.ui.TokenHandler.LKey;
 import edu.rpi.metpetdb.client.ui.TokenHandler.SKey;
 import edu.rpi.metpetdb.client.ui.TokenHandler.Screen;
 import edu.rpi.metpetdb.client.ui.bulk.upload.BulkUploadPanel;
-import edu.rpi.metpetdb.client.ui.html.Introduction;
+import edu.rpi.metpetdb.client.ui.html.Homepage;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserDetails;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageListViewer;
 import edu.rpi.metpetdb.client.ui.objects.details.ChemicalAnalysisDetails;
@@ -140,10 +140,10 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 
-	public static final Screen introduction = new Screen(
-			LocaleHandler.lc_entity.TokenSpace_Introduction()) {
+	public static final Screen home = new Screen(
+			LocaleHandler.lc_entity.TokenSpace_Home()) {
 		public void executeToken(final String args) {
-			show(new Introduction());
+			show(new Homepage());
 		}
 	};
 	public static final Screen bulkUpload = new Screen(LocaleHandler.lc_entity
@@ -332,7 +332,7 @@ public class TokenSpace implements HistoryListener {
 		register(subsampleDetails);
 		register(subsampleEdit);
 		register(register);
-		register(introduction);
+		register(home);
 		register(allSamples);
 		register(allPublicSamples);
 		register(samplesForUser);

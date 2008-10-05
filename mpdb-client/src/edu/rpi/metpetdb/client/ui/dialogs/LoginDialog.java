@@ -35,11 +35,11 @@ import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel.NoticeType;
 public class LoginDialog extends MDialogBox implements ClickListener,
 		KeyboardListener, TabListener {
 	private static final GenericAttribute[] mainAttributes = {
-			new TextAttribute(MpDb.doc.StartSessionRequest_username),
+			new TextAttribute(MpDb.doc.StartSessionRequest_emailAddress),
 			new PasswordAttribute(MpDb.doc.StartSessionRequest_password),
 	};
 	private static final GenericAttribute[] emailAttributes = {
-		new TextAttribute(MpDb.doc.StartSessionRequest_username)
+		new TextAttribute(MpDb.doc.StartSessionRequest_emailAddress)
 	};
 
 	protected final ServerOp<?> continuation;
@@ -155,7 +155,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 	private void doEmailPassword() {
 		new FormOp<Void>(p_email) {
 			protected void onSubmit() {
-				MpDb.user_svc.emailPassword(ssr.getUsername(), this);
+				MpDb.user_svc.emailPassword(ssr.getEmailAddress(), this);
 			}
 			public void onFailure(final Throwable e) {
 				if (e instanceof UnableToSendEmailException) {

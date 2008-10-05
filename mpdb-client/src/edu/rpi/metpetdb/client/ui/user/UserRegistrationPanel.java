@@ -26,15 +26,17 @@ import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class UserRegistrationPanel extends MPagePanel implements ClickListener {
 	private static final GenericAttribute[] mainAttributes = {
-			new TextAttribute(MpDb.doc.User_emailAddress) {
+			new TextAttribute(MpDb.doc.User_name) {
 				protected MObject resolve(final MObject obj) {
 					return ((UserWithPassword) obj).getUser();
 				}
-			}, new TextAttribute(MpDb.doc.User_name) {
+			}, new TextAttribute(MpDb.doc.User_emailAddress) {
 				protected MObject resolve(final MObject obj) {
 					return ((UserWithPassword) obj).getUser();
 				}
-			}, new TextAttribute(MpDb.doc.User_address) {
+			}, new PasswordAttribute(MpDb.doc.UserWithPassword_newPassword),
+			new PasswordAttribute(MpDb.doc.UserWithPassword_vrfPassword),
+			new TextAttribute(MpDb.doc.User_address) {
 				protected MObject resolve(final MObject obj) {
 					return ((UserWithPassword) obj).getUser();
 				}
@@ -62,13 +64,11 @@ public class UserRegistrationPanel extends MPagePanel implements ClickListener {
 				protected MObject resolve(final MObject obj) {
 					return ((UserWithPassword) obj).getUser();
 				}
-			}, new PasswordAttribute(MpDb.doc.UserWithPassword_newPassword),
-			new PasswordAttribute(MpDb.doc.UserWithPassword_vrfPassword),
+			}
 	};
 
 	private final UserWithPassword newbie;
 	private final Button register;
-	private final Button toggle;
 	private final DetailsPanel<UserWithPassword> p_main;
 
 	public UserRegistrationPanel() {
@@ -77,12 +77,9 @@ public class UserRegistrationPanel extends MPagePanel implements ClickListener {
 		newbie = new UserWithPassword(new User());
 		register = new Submit(LocaleHandler.lc_text.buttonRegister(), this);
 
-		toggle = new Button("Show");
-		toggle.addClickListener(this);
-
 		p_main = new DetailsPanel<UserWithPassword>(mainAttributes,
 				new Button[] {
-						toggle, register
+						register
 				});
 		p_main.edit(newbie);
 
@@ -102,16 +99,6 @@ public class UserRegistrationPanel extends MPagePanel implements ClickListener {
 	public void onClick(final Widget sender) {
 		if (sender == register)
 			doRegister();
-		else if (sender == toggle && "show".equals(toggle.getText())) {
-			p_main.validateEdit();
-			p_main.show(newbie);
-			toggle.setText("edit");
-			register.setVisible(false);
-		} else if (sender == toggle && "edit".equals(toggle.getText())) {
-			p_main.edit(newbie);
-			toggle.setText("show");
-			register.setVisible(true);
-		}
 	}
 
 	protected void doRegister() {
@@ -121,7 +108,7 @@ public class UserRegistrationPanel extends MPagePanel implements ClickListener {
 			}
 			public void onSuccess(final User result) {
 				MpDb.setCurrentUser((User) result);
-				History.newItem(TokenSpace.introduction.makeToken(null));
+				History.newItem(TokenSpace.home.makeToken(null));
 			}
 		}.begin();
 	}

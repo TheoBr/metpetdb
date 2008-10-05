@@ -2,6 +2,8 @@ package edu.rpi.metpetdb.client.locale;
 
 import com.google.gwt.i18n.client.ConstantsWithLookup;
 
+import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
+
 /** Entity property description message text constants, to support i18n. */
 public interface LocaleEntity extends ConstantsWithLookup {
 	/* Project */
@@ -76,12 +78,15 @@ public interface LocaleEntity extends ConstantsWithLookup {
 
 	/* User */
 	String User();
-
-	String User_username();
-
-	String User_password();
-
+	String User_name();
 	String User_emailAddress();
+	String User_address();
+	String User_city();
+	String User_province();
+	String User_country();
+	String User_postalCode();
+	String User_institution();
+	String User_referenceEmail();
 
 	/* UserWithPassword */
 	String UserWithPassword();
@@ -95,7 +100,7 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	/* StartSessionRequest */
 	String StartSessionRequest();
 
-	String StartSessionRequest_username();
+	String StartSessionRequest_emailAddress();
 
 	String StartSessionRequest_password();
 
@@ -111,7 +116,7 @@ public interface LocaleEntity extends ConstantsWithLookup {
 
 	String Subsample_name();
 
-	String Subsample_type();
+	String Subsample_subsampleType();
 
 	String Subsample_images();
 
@@ -241,7 +246,7 @@ public interface LocaleEntity extends ConstantsWithLookup {
 
 	String TokenSpace_Register();
 
-	String TokenSpace_Introduction();
+	String TokenSpace_Home();
 
 	String TokenSpace_Bulk_Upload();
 
