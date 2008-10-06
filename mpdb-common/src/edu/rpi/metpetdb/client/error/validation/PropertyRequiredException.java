@@ -12,6 +12,9 @@ public class PropertyRequiredException extends ValidationException {
 
 	public PropertyRequiredException() {
 	}
+	public PropertyRequiredException(final String propertyName) {
+		this.propertyName = propertyName;
+	}
 	public PropertyRequiredException(final PropertyConstraint pc) {
 		super(pc);
 		this.propertyName = pc.propertyName;

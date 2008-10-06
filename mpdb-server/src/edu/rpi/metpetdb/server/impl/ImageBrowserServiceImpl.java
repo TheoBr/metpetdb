@@ -33,7 +33,7 @@ public class ImageBrowserServiceImpl extends MpDbServlet implements
 	public Grid saveGrid(Grid grid) throws LoginRequiredException, DAOException {
 		if (grid.getSubsample().getSample().getOwner().getId() != currentUser())
 			throw new SecurityException("Cannot modify grids you don't own.");
-		Grid g = (grid);
+		Grid g = grid;
 
 		g = (new GridDAO(this.currentSession())).save(g);
 		commit();

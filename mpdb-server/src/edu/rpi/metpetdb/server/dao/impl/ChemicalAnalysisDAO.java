@@ -53,9 +53,6 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 			ca.setReference((new ReferenceDAO(sess)).fill(ca.getReference()));
 		ca.setMineral((new MineralDAO(sess)).fill(ca.getMineral()));
 		ca.setSubsample((new SubsampleDAO(sess)).fill(ca.getSubsample()));
-		// TODO: This is where we can catch the exception is the subsample
-		// doesn't exit, and then create one
-
 		ca = _save(ca);
 		return ca;
 	}

@@ -13,6 +13,7 @@ import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
+import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
 import edu.rpi.metpetdb.client.model.BulkUploadResult;
 import edu.rpi.metpetdb.client.model.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
@@ -97,10 +98,15 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 				}
 				try {
 					Subsample ss = (ca.getSubsample());
-					if (ss != null && !subsampleNames.contains(ss.getName())) {
-						(new SubsampleDAO(this.currentSession())).fill(ss);
-						ssResultCount.incrementOld();
-						subsampleNames.add(ss.getName());
+					if (ss != null) {
+						if (!subsampleNames.contains(ss.getName())) {
+							(new SubsampleDAO(this.currentSession())).fill(ss);
+							ssResultCount.incrementOld();
+							subsampleNames.add(ss.getName());
+						}
+					} else {
+						//Every Chemical analysis needs a subsample so add an error
+						errors.put(row, new PropertyRequiredException("Subsample"));
 					}
 				} catch (DAOException e) {
 					ssResultCount.incrementFresh();

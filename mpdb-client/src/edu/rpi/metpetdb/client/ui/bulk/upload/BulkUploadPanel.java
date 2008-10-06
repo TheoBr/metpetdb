@@ -384,7 +384,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 				try {
 					matched = enttxt.getString(headers.get(k)[1]);
 				} catch (MissingResourceException mre) {
-					matched = headers.get(k).toString();
+					matched = headers.get(k)[1].toString();
 				}
 			}
 			parsed.setWidget(i, 2, new HTML(matched));
