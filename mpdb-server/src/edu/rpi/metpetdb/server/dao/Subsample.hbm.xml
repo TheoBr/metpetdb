@@ -22,7 +22,7 @@
     <many-to-one name="sample" column="sample_id" class="Sample" lazy="false"/>
     <many-to-one name="subsampleType" column="subsample_type_id" class="SubsampleType" lazy="false" />
     
-    <one-to-one name="grid" property-ref="subsample" />
+    <one-to-one name="grid" property-ref="subsample" cascade="delete"/>
    
    <set name="images" table="images" cascade="all-delete-orphan" lazy="false"> 
       <key column="subsample_id" />
