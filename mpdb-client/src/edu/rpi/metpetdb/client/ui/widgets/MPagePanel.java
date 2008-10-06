@@ -43,7 +43,7 @@ public class MPagePanel extends FlowPanel {
 		title.setText(text);
 		header.addAndReplaceElement(category, CATEGORY_ID);
 		category.setText(cat);
-		if (cat == "" || cat != null) header.addStyleDependentName(NO_CATEGORY);
+		if (cat == "" || cat == null) header.addStyleDependentName(NO_CATEGORY);
 		else removeStyleDependentName(NO_CATEGORY);
 		show(header);
 	}
