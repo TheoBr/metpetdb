@@ -140,8 +140,9 @@ public class DateAttribute extends GenericAttribute implements ChangeListener {
 		return (Timestamp) mGet(obj);
 	}
 
-	protected Short getPrecision(final MObject obj) {
-		return (Short) obj.mGet(this.getConstraints()[1].property);
+	protected short getPrecision(final MObject obj) {
+		return obj.mGet(this.getConstraints()[1].property) == null ? 0
+				: (Short) obj.mGet(this.getConstraints()[1].property);
 	}
 
 	protected void set(final MObject obj, final Object v,

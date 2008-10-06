@@ -395,27 +395,26 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 	}
 
 	protected void populateSummaryTable(final Map<String, BulkUploadResultCount> additions) {
-		/*
-		 * TODO: for Zak, the key for the map is the name of the object, i.e. Sample, the
-		 * ResultCount is just a container of the counts of the object
-		 */
 		final Iterator<String> objItr = additions.keySet().iterator();
+		int row = 0;
 		while(objItr.hasNext()) {
 			final String objType = objItr.next();
 			final int fresh = additions.get(objType).getFresh();
 			final int old = additions.get(objType).getOld();
 			final int invalid = additions.get(objType).getInvalid();
 			final int total = fresh + old + invalid;
-			addSummaryItem(0, fresh, "fresh", CSS.BULK_RESULTS_NEW);
-			addSummaryItem(1, old, "old", CSS.BULK_RESULTS_OLD);
-			addSummaryItem(2, invalid, "invalid", CSS.BULK_RESULTS_INVALID);
-			addSummaryItem(3, total, "total", CSS.BULK_RESULTS_TOTAL);
+			summary.setText(row, 0, objType);
+			addSummaryItem(row, 1, fresh, "fresh", CSS.BULK_RESULTS_NEW);
+			addSummaryItem(row, 2, old, "old", CSS.BULK_RESULTS_OLD);
+			addSummaryItem(row, 3, invalid, "invalid", CSS.BULK_RESULTS_INVALID);
+			addSummaryItem(row, 4, total, "total", CSS.BULK_RESULTS_TOTAL);
+			++row;
 		}
 	}
 
-	protected void addSummaryItem(int index, int count, String title,
+	protected void addSummaryItem(int row, int index, int count, String title,
 			String styleName) {
-		summary.setWidget(0, index, new HTML("<div class=\""
+		summary.setWidget(row, index, new HTML("<div class=\""
 				+ CSS.TYPE_SMALL_CAPS + "\">" + title + "</div>"
 				+ "<div class=\"" + CSS.TYPE_LARGE_NUMBER + "\">" + count
 				+ "</div>"));
