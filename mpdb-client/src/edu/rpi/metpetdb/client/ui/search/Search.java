@@ -103,7 +103,6 @@ public class Search extends MPagePanel implements ClickListener {
 
 	public Search() {
 		setStyleName(CSS.SEARCH);
-		addPageHeader();
 		setPageTitle("Search");
 		p_searchSample = new ObjectSearchPanel(searchAtts,
 				LocaleHandler.lc_text.search(), LocaleHandler.lc_text.search()) {

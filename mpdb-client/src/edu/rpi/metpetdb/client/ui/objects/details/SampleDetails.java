@@ -245,7 +245,6 @@ public class SampleDetails extends MPagePanel {
 
 	public SampleDetails showById(final long id) {
 		sampleId = id;
-		addPageHeader();
 		p_sample.load();
 		addExtraElements();
 		addComments();

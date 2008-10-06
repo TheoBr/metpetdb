@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.ui;
 
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Widget;
 
 /** CSS and HTML constants */
 public class CSS {
@@ -148,7 +149,23 @@ public class CSS {
 
 	private CSS() {}
 	
-	// Methods for getting, setting, and adding styleNames to Elements. 
+	public void hide(Element e) {
+		addStyleName(e, HIDE);
+	}
+	
+	public void show(Element e) {
+		removeStyleName(e, HIDE);
+	}
+	
+	public static void hide(Widget w) {
+		w.addStyleName(HIDE);
+	}
+	
+	public static void show(Widget w) {
+		w.removeStyleName(HIDE);
+	}
+	
+	// Methods for getting, setting, adding, and removing styleNames to Elements. 
 	// Ripped from com.google.gwt.user.client.ui.UIObject
 	
 	public static void setStyleName(Element elem, String styleName) {
@@ -157,6 +174,10 @@ public class CSS {
 	
 	public static void addStyleName(Element elem, String style) {
 		setStyleName(elem, style, true);
+	}
+	
+	public void removeStyleName(Element elem, String style) {
+		setStyleName(elem, style, false);
 	}
 	
 	protected static void setStyleName(Element elem, String style, boolean add) {

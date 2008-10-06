@@ -4,6 +4,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -24,7 +25,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
-public class UserRegistrationPanel extends MPagePanel implements ClickListener {
+public class UserRegistrationPanel extends MPagePanel implements ClickListener, KeyboardListener {
 	private static final GenericAttribute[] mainAttributes = {
 			new TextAttribute(MpDb.doc.User_name) {
 				protected MObject resolve(final MObject obj) {
@@ -72,8 +73,9 @@ public class UserRegistrationPanel extends MPagePanel implements ClickListener {
 	private final DetailsPanel<UserWithPassword> p_main;
 
 	public UserRegistrationPanel() {
-		setPageTitle("Register");
 		setStyleName(CSS.REGISTER);
+		setPageTitle("Register");
+		setPageDescription(LocaleHandler.lc_text.message_WhyRegister());
 		newbie = new UserWithPassword(new User());
 		register = new Submit(LocaleHandler.lc_text.buttonRegister(), this);
 
@@ -82,8 +84,7 @@ public class UserRegistrationPanel extends MPagePanel implements ClickListener {
 						register
 				});
 		p_main.edit(newbie);
-
-		add(new MText(LocaleHandler.lc_text.message_WhyRegister(), "p"));
+		
 		add(new OnEnterPanel(p_main) {
 			public void onEnter() {
 				doRegister();
@@ -112,4 +113,13 @@ public class UserRegistrationPanel extends MPagePanel implements ClickListener {
 			}
 		}.begin();
 	}
+
+	public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+		if (keyCode == KEY_ENTER) {
+			doRegister();
+		}
+	}
+	
+	public void onKeyDown(Widget sender, char keyCode, int modifiers) {}
+	public void onKeyUp(Widget sender, char keyCode, int modifiers) {}
 }

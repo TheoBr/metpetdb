@@ -113,7 +113,7 @@ public class SubsampleDetails extends MPagePanel {
 					map.setTargetHistoryToken(TokenSpace.detailsOf(s.getGrid()));
 				}
 				setPageTitle(s.getName(), "Subsample");
-				addPageHeaderListItem(map);
+				addPageActionItem(map);
 				sampleId = s.getSample().getId();
 
 			}

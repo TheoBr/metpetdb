@@ -24,7 +24,6 @@ public class EditUserProfile extends MPagePanel implements UsesCurrentUser {
 	private final User user;
 
 	public EditUserProfile(final User whoToEdit) {
-		addPageHeader();
 		setPageTitle("Edit Profile");
 		user = whoToEdit;
 		if (MpDb.isCurrentUser(user))

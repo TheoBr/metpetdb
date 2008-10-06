@@ -62,9 +62,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	}
 
 	protected void addPageHeader() {
-		super.addPageHeader();
 		setPageTitle("My Samples");
-
 
 		final MLink addSample = new MLink("Add Sample", TokenSpace.enterSample);
 		final MLink bulkUpload = new MLink("Upload Samples",
@@ -76,8 +74,8 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		bulkUpload.setStylePrimaryName(CSS.LINK_LARGE_ICON);
 		bulkUpload.addStyleName(CSS.LINK_UPLOAD_MULTI);
 
-		addPageHeaderListItem(addSample);
-		addPageHeaderListItem(bulkUpload);
+		addPageActionItem(addSample);
+		addPageActionItem(bulkUpload);
 	}
 
 	private void doExportGoogleEarth() {

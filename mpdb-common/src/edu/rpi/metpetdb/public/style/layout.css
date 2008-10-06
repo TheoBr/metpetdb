@@ -2,7 +2,7 @@
                 content
  --------------------------------------*/
 html {
-	font: 62.5%/1.5 Verdana,Helvetica,Arial,sans-serif;
+	font: 62.5% Verdana,Helvetica,Arial,sans-serif;
 	color: #000;
 }
 body {
@@ -219,31 +219,40 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 	padding: 10px;
 	position: relative;
 }
+.page-header-nocat {
+	padding-top: 16px 
+}
 .page-header h4 {
 	color:#4E5159;
 	font: normal 1.1em "Gill Sans",Helvetica,Verdana,sans-serif;
 	letter-spacing: 0.05em;
 	text-transform: uppercase;
 }
-.page-action-list {
+.page-header-nocat h4 {
+	display: none;
+} 
+.page-actions {
 	position: absolute;
 	right: 10px;
-	top: 17px;
+	top: 26px;
 	text-align: right;
 }
-.action-list-item {
+.page-header-nocat .page-actions {
+	top: 20px;
+}
+.page-actions .action-item {
 	display: inline;
 	margin-left: 1em;
 }
-.action-list-item a {
+.page-actions .action-item a {
 	font-size: 1.1em;
 }
-.page-header .action-list-item a:visited {
+.page-actions .action-item a:visited {
 	color: #0c5ea3;
 }
-.page-header .action-list-item a:focus,
-.page-header .action-list-item a:hover,
-.page-header .action-list-item a:active {
+.page-actions .action-item a:focus,
+.page-actions .action-item a:hover,
+.page-actions .action-item a:active {
 	color: #318fdf;
 }
 

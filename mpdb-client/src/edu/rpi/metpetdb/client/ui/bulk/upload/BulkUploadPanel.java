@@ -104,10 +104,9 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 	public BulkUploadPanel() {
 		setStylePrimaryName(CSS.BULK_UPLOAD);
-		addPageHeader();
 		setPageTitle("Bulk Upload");
 
-		addPageHeaderListItem(help);
+		addPageActionItem(help);
 		help.setStyleName(CSS.LINK_LARGE_ICON);
 		help.addStyleName(CSS.LINK_HELP);
 		help.setTitle("Instructional PDF on how to use Bulk Upload.");
