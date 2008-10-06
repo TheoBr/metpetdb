@@ -145,6 +145,7 @@ public class CSS {
 	public static final String FORGOT_PASS = "forgot-pass";
 	
 	public static final String REGISTER = "register";
+	public static final String IGSN = "igsn";
 	
 
 	private CSS() {}

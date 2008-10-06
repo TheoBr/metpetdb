@@ -34,6 +34,13 @@ p {
 .element-margin {
 	margin: 10px;
 }
+.igsn {
+	color: #fff;
+	background-color: #d3d3d3;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+}
 
 /*-------------------------------------
                hyperlinks

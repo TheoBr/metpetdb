@@ -118,7 +118,12 @@ public class SampleDetails extends MPagePanel {
 
 			protected void onLoadCompletion(final Sample result) {
 				super.onLoadCompletion(result);
-				setPageTitle(result.getName(), LocaleHandler.lc_text.sample());
+				final String title;
+				if (result.getAlias() != null || !result.getAlias().equals(""))
+					title = result.getAlias();
+				else
+					title = "<span class=\""+CSS.IGSN+"\">IGSN</span> " + result.getSesarNumber();
+				setPageTitle(title, LocaleHandler.lc_text.sample());
 				samplePosition = new LatLng(((Point) result.getLocation()).x,
 						((Point) result.getLocation()).y);
 				updateGoogleMaps();

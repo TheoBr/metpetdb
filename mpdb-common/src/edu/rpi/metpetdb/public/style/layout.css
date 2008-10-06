@@ -2,11 +2,10 @@
                 content
  --------------------------------------*/
 html {
-	font: 62.5% Verdana,Helvetica,Arial,sans-serif;
+	font: 62.5%/1.5 Verdana,Helvetica,Arial,sans-serif;
 	color: #000;
 }
 body {
-	margin: 0;
 	width: 100%;
 	min-width: 600px;
 	font-size: 1.1em;
@@ -216,11 +215,12 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 .page-header {
 	background-color: #FBFBFB;
 	border-bottom: 1px solid #e4e4e4;
-	padding: 10px;
+	padding: 0.8em 10px 0.5em;
 	position: relative;
+	line-height: 1;
 }
 .page-header-nocat {
-	padding-top: 16px 
+	padding-top: 1em; 
 }
 .page-header h4 {
 	color:#4E5159;
@@ -234,11 +234,8 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 .page-actions {
 	position: absolute;
 	right: 10px;
-	top: 26px;
+	bottom: 0.5em;
 	text-align: right;
-}
-.page-header-nocat .page-actions {
-	top: 20px;
 }
 .page-actions .action-item {
 	display: inline;
@@ -254,6 +251,10 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 .page-actions .action-item a:hover,
 .page-actions .action-item a:active {
 	color: #318fdf;
+}
+.page-header h1 .igsn {
+	font-size: 0.8em;
+	padding: 0.2em 0.2em 0;
 }
 
 /*-------------------------------------

@@ -40,9 +40,9 @@ public class MPagePanel extends FlowPanel {
 
 	public void setPageTitle(String text, String cat) {
 		header.addAndReplaceElement(title, TITLE_ID);
-		title.setText(text);
+		title.getElement().setInnerHTML(text);
 		header.addAndReplaceElement(category, CATEGORY_ID);
-		category.setText(cat);
+		category.getElement().setInnerHTML(cat);
 		if (cat == "" || cat == null) header.addStyleDependentName(NO_CATEGORY);
 		else removeStyleDependentName(NO_CATEGORY);
 		show(header);
