@@ -5,6 +5,7 @@ public class ImageType extends MObject {
 
 	private short id;
 	private String imageType;
+	private String abbreviation;
 
 	public short getId() {
 		return id;
@@ -22,13 +23,22 @@ public class ImageType extends MObject {
 		imageType = s;
 	}
 
+	public String getAbbreviation() {
+		return abbreviation;
+	}
+
+	public void setAbbreviation(String abbreviation) {
+		this.abbreviation = abbreviation;
+	}
+
 	public boolean equals(final Object o) {
 		return imageType != null
 				&& o instanceof ImageType
-				&& imageType.toLowerCase().equals(
-						((ImageType) o).imageType.toLowerCase());
+				&& (imageType.toLowerCase().equals(
+						((ImageType) o).imageType.toLowerCase()) || (abbreviation
+						.toLowerCase().equals(((ImageType) o).imageType
+						.toLowerCase())));
 	}
-
 	public int hashCode() {
 		return imageType != null ? imageType.hashCode() : 0;
 	}
