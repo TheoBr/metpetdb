@@ -97,7 +97,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends
 				}
 				try {
 					Subsample ss = (ca.getSubsample());
-					if (!subsampleNames.contains(ss.getName())) {
+					if (ss != null && !subsampleNames.contains(ss.getName())) {
 						(new SubsampleDAO(this.currentSession())).fill(ss);
 						ssResultCount.incrementOld();
 						subsampleNames.add(ss.getName());

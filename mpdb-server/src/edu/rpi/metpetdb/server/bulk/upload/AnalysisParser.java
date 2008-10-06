@@ -197,7 +197,7 @@ public class AnalysisParser extends Parser {
 			} else if (Pattern.compile("subsample type",
 					Pattern.CASE_INSENSITIVE).matcher(text).find()) {
 				colType.put(new Integer(i), SUBSAMPLE_TYPE);
-				colName.put(new Integer(i), "Subsample_type");
+				colName.put(new Integer(i), "Subsample_subsampleType");
 				continue;
 			}
 
