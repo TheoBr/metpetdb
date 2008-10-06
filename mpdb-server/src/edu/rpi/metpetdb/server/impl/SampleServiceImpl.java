@@ -89,6 +89,20 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	}
 
 	public void delete(long id) throws DAOException, LoginRequiredException {
+		deleteImpl(id);
+		commit();
+	}
+
+	public void deleteAll(Collection<Long> ids) throws DAOException,
+			LoginRequiredException {
+		final Iterator<Long> itr = ids.iterator();
+		while(itr.hasNext()) {
+			deleteImpl(itr.next());
+		}
+		commit();
+	}
+	
+	private void deleteImpl(long id) throws DAOException, LoginRequiredException {
 		SampleDAO dao = new SampleDAO(this.currentSession());
 		Sample s = new Sample();
 		s.setId(id);
@@ -99,14 +113,5 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		else if (s.isPublicData())
 			throw new SecurityException("Cannot modify public samples");
 		dao.delete(s);
-		commit();
-	}
-
-	public void deleteAll(Collection<Long> ids) throws DAOException,
-			LoginRequiredException {
-		final Iterator<Long> itr = ids.iterator();
-		while(itr.hasNext()) {
-			delete(itr.next());
-		}
 	}
 }
