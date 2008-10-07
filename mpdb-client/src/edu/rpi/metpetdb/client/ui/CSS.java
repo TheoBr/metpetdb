@@ -30,6 +30,8 @@ public class CSS {
 	/* ---------------- typography ---------------- */
 	public static final String TYPE_SMALL_CAPS = "type-small-caps";
 	public static final String TYPE_LARGE_NUMBER = "type-large-number";
+	public static final String IGSN_LABEL = "igsn";
+	public static final String PDF_LABEL = "pdf";
 	
 	/* ---------------- icons ---------------- */
 	public static final String ICON_WARNING = "icon-warning";
@@ -57,6 +59,7 @@ public class CSS {
 	public static final String LINK_UPLOAD_MULTI = "upload-multi-link";
 	public static final String LINK_ADD = "add-link";
 	public static final String LINK_HELP = "help-link";
+	public static final String LINK_INFO = "info-link";
 	public static final String ADDLINK = "addlink"; // kill
 	public static final String PRIMARY_BUTTON = "btnPrimary";
 	public static final String SECONDARY_BUTTON = "btnSecondary";
@@ -145,7 +148,8 @@ public class CSS {
 	public static final String FORGOT_PASS = "forgot-pass";
 	
 	public static final String REGISTER = "register";
-	public static final String IGSN = "igsn";
+	
+	
 	
 
 	private CSS() {}

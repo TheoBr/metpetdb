@@ -234,8 +234,11 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 .page-actions {
 	position: absolute;
 	right: 10px;
-	bottom: 0.5em;
+	top: 2.45em;
 	text-align: right;
+}
+.page-header-nocat .page-actions {
+	top: 1.4em;
 }
 .page-actions .action-item {
 	display: inline;

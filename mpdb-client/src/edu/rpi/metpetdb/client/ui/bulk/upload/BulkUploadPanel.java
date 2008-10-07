@@ -49,8 +49,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel.NoticeType;
 public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		FormHandler {
 
-	private final MText intro = new MText(
-			"Upload a large amount of data at once using the form below.", "p");
+	private final MText desc = new MText("Upload a large amount of data at once using the form below.", "p");
 	private final MLink help = new MLink("Bulk Upload Instructions",
 			"docs/mpdb-bulkupload-help.pdf", true);
 
@@ -105,17 +104,15 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 	public BulkUploadPanel() {
 		setStylePrimaryName(CSS.BULK_UPLOAD);
 		setPageTitle("Bulk Upload");
+		setPageDescription(desc);
 
 		addPageActionItem(help);
 		help.setStyleName(CSS.LINK_LARGE_ICON);
-		help.addStyleName(CSS.LINK_HELP);
+		help.addStyleName(CSS.LINK_INFO);
 		help.setTitle("Instructional PDF on how to use Bulk Upload.");
 
 		add(main);
 		main.setStyleName(CSS.MAIN);
-
-		main.add(intro);
-		intro.addStyleName(CSS.ELEMENT_MARGIN);
 
 		main.add(form);
 		form.setMethod(FormPanel.METHOD_POST);
