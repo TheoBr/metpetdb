@@ -4,8 +4,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.DateTools;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FilteredQuery;
@@ -179,11 +181,26 @@ public class SearchDb {
 
 		// Run the query and get the actual results
 
-		final org.hibernate.Query hibQuery = fullTextSession
-				.createFullTextQuery(fullQuery, Sample.class);
-		final List<Sample> results = hibQuery.list();
-
-		session.close();
-		return results;
+		QueryParser parser = new QueryParser("title", new StandardAnalyzer() );
+		try{
+			org.apache.lucene.search.Query luceneQuery = parser.parse(fullQuery.toString());
+			final org.hibernate.Query hibQuery = fullTextSession
+			.createFullTextQuery(luceneQuery, Sample.class);
+			final List<Sample> results = hibQuery.list();
+			return results;
+			
+		}
+		catch(Exception e)
+		{
+			final org.hibernate.Query hibQuery = fullTextSession
+			.createFullTextQuery(fullQuery, Sample.class);
+			final List<Sample> results = hibQuery.list();
+			return results;
+		}
+		finally
+		{
+			session.close();
+		}
+		
 	}
 }
