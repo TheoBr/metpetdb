@@ -26,7 +26,7 @@
     <property name="subsampleName" formula="(select s.name from subsamples s
     																		where s.subsample_id=subsample_id)" />
 
-	<many-to-one name="reference" column="reference_id" class="Reference" lazy="false" cascade="all"/>
+	<many-to-one name="reference" column="reference_id" class="Reference" lazy="false" cascade="save-update"/>
 	<many-to-one name="image" column="image_id" class="Image" lazy="false" cascade="none"/>
     <many-to-one name="subsample" column="subsample_id" lazy="false" class="Subsample"  cascade="none"/>
 
