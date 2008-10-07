@@ -15,11 +15,12 @@ import org.hibernate.search.annotations.Store;
 import org.postgis.Geometry;
 import org.postgis.Point;
 
+import edu.rpi.metpetdb.client.model.interfaces.HasDate;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 
 @Indexed
-public class Sample extends MObject implements IHasName {
+public class Sample extends MObject implements IHasName, HasDate {
 	private static final long serialVersionUID = 1L;
 
 	@DocumentId
@@ -407,5 +408,13 @@ public class Sample extends MObject implements IHasName {
 
 	public void setDatePrecision(Short datePrecision) {
 		this.datePrecision = datePrecision;
+	}
+
+	public Timestamp getDate() {
+		return getCollectionDate();
+	}
+
+	public void setDate(Timestamp date) {
+		setCollectionDate(date);
 	}
 }

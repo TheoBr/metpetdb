@@ -36,7 +36,6 @@ public class ImageParser extends Parser{
 
 	private final List<Image> images;
 	private final List<ImageOnGrid> imagesOnGrid;
-	private final Map<Integer, ValidationException> errors = new TreeMap<Integer, ValidationException>();
 	// 0) Regex for header
 	// 1) methodname to set in Sample
 	// 2) datatype cell needs to be converted to for use with methodname
@@ -128,24 +127,6 @@ public class ImageParser extends Parser{
 		}
 	}
 
-	public void parse() {
-		int k = 0;
-		while (sheet.getRow(k) == null) {
-			k++;
-		}
-
-		// First non-empty row is the header, want to associate what
-		// we know how to parse with what is observed
-		parseHeader(k);
-
-		// Loop through the remaining data rows, parsing based upon the column
-		// determination
-		for (int i = k + 1; i <= sheet.getLastRowNum(); ++i) {
-			System.out.println("Parsing Row " + i);
-			parseRow(i);
-		}
-	}
-
 	protected void parseHeader(final int rowindex) {
 		HSSFRow header = sheet.getRow(rowindex);
 		for (int i = 0; i < header.getLastCellNum(); ++i) {
@@ -213,7 +194,7 @@ public class ImageParser extends Parser{
 	 * @throws InvalidFormatException
 	 * 		if the row isn't of the format designated by the headers
 	 */
-	private void parseRow(final int rowindex) {
+	protected void parseRow(final int rowindex) {
 		final HSSFRow row = sheet.getRow(rowindex);
 
 		if (row == null) {

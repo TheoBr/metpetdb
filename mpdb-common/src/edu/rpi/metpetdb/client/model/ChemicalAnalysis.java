@@ -12,7 +12,9 @@ import org.hibernate.search.annotations.Store;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public class ChemicalAnalysis extends MObject {
+import edu.rpi.metpetdb.client.model.interfaces.HasDate;
+
+public class ChemicalAnalysis extends MObject implements HasDate {
 	private static final long serialVersionUID = 1L;
 
 	private int id;
@@ -295,5 +297,13 @@ public class ChemicalAnalysis extends MObject {
 
 	public void setTotal(Float total) {
 		this.total = total;
+	}
+
+	public Timestamp getDate() {
+		return getAnalysisDate();
+	}
+
+	public void setDate(Timestamp date) {
+		setAnalysisDate(date);
 	}
 }

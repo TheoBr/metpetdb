@@ -8,12 +8,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -29,7 +27,7 @@ import edu.rpi.metpetdb.client.model.validation.DateStringConstraint;
 public class SampleParser extends Parser {
 
 	private final List<Sample> samples;
-	private final Map<Integer, ValidationException> errors = new TreeMap<Integer, ValidationException>();
+	private final Map<Integer, ValidationException> errors = new HashMap<Integer, ValidationException>();
 
 	/**
 	 * TODO: make this a Set of objects.
@@ -137,25 +135,7 @@ public class SampleParser extends Parser {
 		}
 	}
 
-	public void parse() {
-		int k = 0;
-
-		// Skip empty rows at the start
-		while (sheet.getRow(k) == null) {
-			k++;
-		}
-
-		// First non-empty row is the header, want to associate what
-		// we know how to parse with what is observed
-		parseHeader(k);
-
-		// Loop through the remaining data rows, parsing based upon the column
-		// determinations
-		for (int i = k + 1; i <= sheet.getLastRowNum(); ++i) {
-			System.out.println("Parsing Row " + i);
-			parseRow(i);
-		}
-	}
+	
 
 	protected void parseHeader(final int rowindex) {
 		HSSFRow header = sheet.getRow(rowindex);
@@ -229,7 +209,7 @@ public class SampleParser extends Parser {
 	 * @throws InvalidFormatException
 	 * 		if the row isn't of the format designated by the headers
 	 */
-	private void parseRow(final int rowindex) {
+	protected void parseRow(final int rowindex) {
 		final HSSFRow row = sheet.getRow(rowindex);
 
 		if (row == null) {
@@ -281,7 +261,7 @@ public class SampleParser extends Parser {
 					if (!storeMethod.getName().equals("addReference")
 							&& !storeMethod.getName().equals("addComment")) {
 						final String[] data = cell.toString()
-								.split("\\s*,\\s*");
+								.split("\\s*" + DATA_SEPARATOR +"\\s*");
 						for (String str : data)
 							storeMethod.invoke(s, str);
 					} else {
@@ -345,52 +325,6 @@ public class SampleParser extends Parser {
 
 	public List<Sample> getSamples() {
 		return samples;
-	}
-
-	private void parseDate(final Sample s, final String date) {
-		Short precision = 365;
-		String day, month, year;
-
-		// Regexes for acceptable date formats
-		final Pattern datepat_mmddyyyy = Pattern
-				.compile("^((\\d{2})([-/]))?((\\d{2})([-/]))?(\\d{4})$");
-		final Pattern datepat_yyyymmdd = Pattern
-				.compile("^(\\d{4})(([-/])(\\d{2}))?(([-/])(\\d{2}))?$");
-
-		// See what regular expression matches our input, and then parse
-		Matcher datematch;
-		if ((datematch = datepat_mmddyyyy.matcher(date)).find()) {
-			// MM-DD-YYYY
-			month = datematch.group(2);
-			day = datematch.group(5);
-			year = datematch.group(7);
-		} else if ((datematch = datepat_yyyymmdd.matcher(date)).find()) {
-			// YYYY-MM-DD
-			year = datematch.group(1);
-			month = datematch.group(4);
-			day = datematch.group(7);
-		} else {
-			throw new IllegalStateException("Couldn't parse Date: " + date);
-		}
-
-		// Set precisions, etc according to what was observed
-		if (month != null) {
-			precision = 31;
-		} else {
-			month = "01";
-		}
-
-		if (day != null) {
-			precision = 1;
-		} else {
-			day = "01";
-		}
-
-		Timestamp time = Timestamp.valueOf(year + "-" + month + "-" + day
-				+ " 00:00:00.000000000");
-
-		s.setCollectionDate(time);
-		s.setDatePrecision(precision);
 	}
 
 	public Map<Integer, ValidationException> getErrors() {

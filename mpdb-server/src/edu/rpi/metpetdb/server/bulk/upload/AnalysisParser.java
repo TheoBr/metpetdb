@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -132,22 +131,7 @@ public class AnalysisParser extends Parser {
 	}
 
 	public void parse() {
-		int k = 0;
-		while (sheet.getRow(k) == null) {
-			k++;
-		}
-
-		// First non-empty row is the header, want to associate what
-		// we know how to parse with what is observed
-		parseHeader(k);
-
-		++k;
-		// Loop through the remaining data rows, parsing based upon the column
-		// determination
-		for (int i = k + 1; i <= sheet.getLastRowNum(); ++i) {
-			System.out.println("Parsing Row " + i);
-			parseRow(i);
-		}
+		parse(1);
 	}
 
 	
@@ -307,7 +291,7 @@ public class AnalysisParser extends Parser {
 	 * @throws InvalidFormatException
 	 * 		if the row isn't of the format designated by the headers
 	 */
-	private void parseRow(final int rownum) {
+	protected void parseRow(final int rownum) {
 		HSSFRow row = sheet.getRow(rownum);
 		if (row == null)
 			return;
@@ -373,7 +357,7 @@ public class AnalysisParser extends Parser {
 								&& !storeMethod.getName().equals(
 										"setDescription")) {
 							final String[] data = cell.toString().split(
-									"\\s*,\\s*");
+									"\\s*" + DATA_SEPARATOR + "\\s*");
 							for (String str : data)
 								storeMethod.invoke(ca, str);
 						} else {
@@ -472,52 +456,6 @@ public class AnalysisParser extends Parser {
 	}
 	public List<ChemicalAnalysis> getAnalyses() {
 		return analyses;
-	}
-
-	private void parseDate(final ChemicalAnalysis ca, final String date) {
-		Short precision = 365;
-		String day, month, year;
-
-		// Regexes for acceptable date formats
-		final Pattern datepat_mmddyyyy = Pattern
-				.compile("^((\\d{2})([-/]))?((\\d{2})([-/]))?(\\d{4})$");
-		final Pattern datepat_yyyymmdd = Pattern
-				.compile("^(\\d{4})(([-/])(\\d{2}))?(([-/])(\\d{2}))?$");
-
-		// See what regular expression matches our input, and then parse
-		Matcher datematch;
-		if ((datematch = datepat_mmddyyyy.matcher(date)).find()) {
-			// MM-DD-YYYY
-			month = datematch.group(2);
-			day = datematch.group(5);
-			year = datematch.group(7);
-		} else if ((datematch = datepat_yyyymmdd.matcher(date)).find()) {
-			// YYYY-MM-DD
-			year = datematch.group(1);
-			month = datematch.group(4);
-			day = datematch.group(7);
-		} else {
-			throw new IllegalStateException("Couldn't parse Date: " + date);
-		}
-
-		// Set precisions, etc according to what was observed
-		if (month != null) {
-			precision = 31;
-		} else {
-			month = "01";
-		}
-
-		if (day != null) {
-			precision = 1;
-		} else {
-			day = "01";
-		}
-
-		Timestamp time = Timestamp.valueOf(year + "-" + month + "-" + day
-				+ " 00:00:00.000000000");
-
-		ca.setAnalysisDate(time);
-		ca.setDatePrecision(precision);
 	}
 
 	public static void setElementsAndOxides(final List<Element> elements,
