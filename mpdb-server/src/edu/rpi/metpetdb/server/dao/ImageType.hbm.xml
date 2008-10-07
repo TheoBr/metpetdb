@@ -11,6 +11,7 @@
     </id>
     
     <property name="imageType" column="image_type" />
+    <property name="abbreviation" />
 
   </class>
 
@@ -20,7 +21,7 @@
   </query>
   <query name="ImageType.byImageType">
     from ImageType it
-    where lower(it.imageType)=lower(:imageType)
+    where lower(it.imageType)=lower(:imageType) or lower(it.abbreviation)=lower(:imageType)
   </query>
   <query name="ImageType.allTypes/ImageType">
 	Select distinct it.imageType
