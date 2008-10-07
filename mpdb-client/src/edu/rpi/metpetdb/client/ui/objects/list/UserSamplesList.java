@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -189,6 +190,11 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 						((MCheckBox) list.getScrollTable().getDataTable()
 								.getWidget(i, 0)).setChecked(true);
 				}
+				new Timer() {
+					public void run() {
+						selectListBox.setSelectedIndex(0);						
+					}
+				}.schedule(500);
 			}
 		});
 
