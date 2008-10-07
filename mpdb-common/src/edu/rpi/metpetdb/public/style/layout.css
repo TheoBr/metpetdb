@@ -259,6 +259,9 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 	font-size: 0.8em;
 	padding: 0.2em 0.2em 0;
 }
+.page-header p {
+	margin: 0;
+}
 
 /*-------------------------------------
                 footer
