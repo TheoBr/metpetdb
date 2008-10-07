@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,9 +24,9 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
 import edu.rpi.metpetdb.client.error.validation.InvalidImageException;
 import edu.rpi.metpetdb.client.model.BulkUploadResult;
+import edu.rpi.metpetdb.client.model.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
-import edu.rpi.metpetdb.client.model.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadImagesService;
@@ -120,6 +121,7 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 	private ZipEntry getSpreadsheetName(InputStream is) throws IOException {
 		ZipInputStream zis = new ZipInputStream(is);
 		ZipEntry ent;
+		final ArrayList<ZipEntry> discoveredSpreadsheets = new ArrayList<ZipEntry>();
 		while ((ent = zis.getNextEntry()) != null) {
 			String entryName = ent.getName();
 
@@ -128,8 +130,19 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 				continue;
 
 			// Implicit assumption that there will only be _one_ xls spreadsheet
-			if (entryName.contains(".xls")) {
-				return ent;
+			if (entryName.toLowerCase().contains(".xls")) {
+				discoveredSpreadsheets.add(ent);
+			}
+		}
+		//if there is only one spreadsheet then use that one
+		if (discoveredSpreadsheets.size() == 1) 
+			return discoveredSpreadsheets.get(0);
+		else {
+			//otherwise find the one that matches the name 'image_upload.xls'
+			for(ZipEntry ze : discoveredSpreadsheets) {
+				if (ze.getName().toLowerCase().contains("image_upload.xls")) {
+					return ze;
+				}
 			}
 		}
 		return null;
