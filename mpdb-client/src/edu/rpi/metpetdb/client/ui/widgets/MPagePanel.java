@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.ui.widgets;
 
+import java.util.NoSuchElementException;
+
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -39,10 +41,16 @@ public class MPagePanel extends FlowPanel {
 	}
 
 	public void setPageTitle(String text, String cat) {
-		header.addAndReplaceElement(title, TITLE_ID);
+		try {
+			header.addAndReplaceElement(title, TITLE_ID);
+		} catch (NoSuchElementException e) {}
 		title.getElement().setInnerHTML(text);
-		header.addAndReplaceElement(category, CATEGORY_ID);
+		
+		try {
+			header.addAndReplaceElement(category, CATEGORY_ID);
+		} catch (NoSuchElementException e) {}
 		category.getElement().setInnerHTML(cat);
+		
 		if (cat == "" || cat == null) header.addStyleDependentName(NO_CATEGORY);
 		else removeStyleDependentName(NO_CATEGORY);
 		show(header);
@@ -54,12 +62,16 @@ public class MPagePanel extends FlowPanel {
 
 	public void setPageDescription(Widget w) {
 		w.setStyleName(DESCRIPTION_ID);
-		header.addAndReplaceElement(w, DESCRIPTION_ID);
+		try {
+			header.addAndReplaceElement(w, DESCRIPTION_ID);
+		} catch (NoSuchElementException e) {}
 	}
 	
 	public void setPageActionList() {
 		actionList.setStylePrimaryName(ACTIONS_ID);
-		header.addAndReplaceElement(actionList, ACTIONS_ID);
+		try {
+			header.addAndReplaceElement(actionList, ACTIONS_ID);
+		} catch (NoSuchElementException e) {}
 	}
 
 	public void addPageActionItem(final MLink lnk) {
