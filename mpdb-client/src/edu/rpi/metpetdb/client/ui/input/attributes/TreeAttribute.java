@@ -86,6 +86,10 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 	public void setSelectedItems(final ArrayList<T> al) {
 		selectedItems = al;
 	}
+	
+	public ArrayList<Widget> getSelectedWidgets(){
+		return selectedWidgets;
+	}
 
 	public Widget[] createDisplayWidget(final MObject obj) {
 		final Collection<T> c = get(obj);
@@ -239,15 +243,23 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 			final boolean check) {
 		if (maxSelectable > 1 || maxSelectable == 0) {
 			for (int i = 0; i < parent.getChildCount(); ++i) {
-				((CheckBox) ((ExtendedTreeItem) parent.getChild(i)).getWidget())
-						.setChecked(check);
+				CheckBox cb = (CheckBox) ((ExtendedTreeItem) parent.getChild(i)).getWidget();
+				cb.setChecked(check);
 				if (check) {
-					selectedItems.add(((ExtendedTreeItem) parent.getChild(i))
-							.getObject());
+					if (!selectedItems.contains(((ExtendedTreeItem) parent.getChild(i))
+							.getObject())){
+						selectedItems.add(((ExtendedTreeItem) parent.getChild(i))
+								.getObject());
+						selectedWidgets.add(cb);
+					}
 				} else {
-					selectedItems
-							.remove(((ExtendedTreeItem) parent.getChild(i))
-									.getObject());
+					if (selectedItems.contains(((ExtendedTreeItem) parent.getChild(i))
+						.getObject())){
+						selectedItems
+								.remove(((ExtendedTreeItem) parent.getChild(i))
+										.getObject());
+						selectedWidgets.remove(cb);
+					}
 				}
 				checkChildren(((ExtendedTreeItem) parent.getChild(i)), check);
 			}
@@ -348,4 +360,5 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 			}
 		}
 	}
+	
 }

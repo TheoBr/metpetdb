@@ -23,59 +23,55 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
-import edu.rpi.metpetdb.client.ui.input.attributes.DateRangeAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.MetamorphicGradeAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.ReferenceAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.RegionAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchChemistryAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchMineralsAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchOwnersAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchTabAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SRockTypesAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchCollectorsAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchCountriesAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchInterface;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabChemicalAnalysis;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabLocation;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabMinerals;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabOther;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabRockTypes;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 
 public class Search extends MPagePanel implements ClickListener {
-	private static GenericAttribute[] rocktype = {
-		new SRockTypesAttribute(MpDb.doc.SearchSample_possibleRockTypes, 4),
-	};
-	private static GenericAttribute[] Region = {
-		new SearchLocationAttribute(MpDb.oc.SearchSample_boundingBox),
-		new SearchCountriesAttribute(MpDb.oc.SearchSample_country),
-		new RegionAttribute(MpDb.oc.SearchSample_region)
-	};
-	private static GenericAttribute[] Minerals = {
-		new SearchMineralsAttribute(MpDb.doc.SearchSample_minerals, 4),
-	};
-	private static GenericAttribute[] Chemistry = {
-		new SearchChemistryAttribute(MpDb.doc.SearchSample_elements,
-				MpDb.doc.SearchSample_oxides),
-	};
-	private static GenericAttribute[] Other = {
-			new SearchOwnersAttribute(MpDb.oc.SearchSample_owner),
-			new SearchCollectorsAttribute(MpDb.oc.SearchSample_collector),
-			new TextAttribute(MpDb.oc.SearchSample_alias),	
-			new TextAttribute(MpDb.oc.SearchSample_sesarNumber),
-			new MetamorphicGradeAttribute(MpDb.oc.SearchSample_metamorphicGrades),
-			new ReferenceAttribute(MpDb.oc.SearchSample_references),
-			new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange)
-	};
-	private static GenericAttribute[] searchAtts = {
-		new SearchTabAttribute(MpDb.doc.SearchSample_tabs,
-				new GenericAttribute[][] {
-						rocktype, Region, Minerals, Chemistry, Other
-				}, new String[] { LocaleHandler.lc_entity.Search_Tab_RockType(),
-				LocaleHandler.lc_entity.Search_Tab_Region(),
-				LocaleHandler.lc_entity.Search_Tab_Minerals(),
-				LocaleHandler.lc_entity.Search_Tab_Chemistry(),
-				LocaleHandler.lc_entity.Search_Tab_Other()
-		})
-
+//	private static GenericAttribute[] rocktype = {
+//		new SRockTypesAttribute(MpDb.doc.SearchSample_possibleRockTypes, 4),
+//	};
+//	private static GenericAttribute[] Region = {
+//		new SearchLocationAttribute(MpDb.oc.SearchSample_boundingBox),
+//		new SearchCountriesAttribute(MpDb.oc.SearchSample_country),
+//		new RegionAttribute(MpDb.oc.SearchSample_region)
+//	};
+//	private static GenericAttribute[] Minerals = {
+//		new SearchMineralsAttribute(MpDb.doc.SearchSample_minerals, 4),
+//	};
+//	private static GenericAttribute[] Chemistry = {
+//		new SearchChemistryAttribute(MpDb.doc.SearchSample_elements,
+//				MpDb.doc.SearchSample_oxides),
+//	};
+//	private static GenericAttribute[] Other = {
+//			new SearchOwnersAttribute(MpDb.oc.SearchSample_owner),
+//			new SearchCollectorsAttribute(MpDb.oc.SearchSample_collector),
+//			new TextAttribute(MpDb.oc.SearchSample_alias),	
+//			new TextAttribute(MpDb.oc.SearchSample_sesarNumber),
+//			new MetamorphicGradeAttribute(MpDb.oc.SearchSample_metamorphicGrades),
+//			new ReferenceAttribute(MpDb.oc.SearchSample_references),
+//			new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange)
+//	};
+//	private static GenericAttribute[] searchAtts = {
+//		new SearchTabAttribute(MpDb.doc.SearchSample_tabs,
+//				new GenericAttribute[][] {
+//						rocktype, Region, Minerals, Chemistry, Other
+//				}, new String[] { LocaleHandler.lc_entity.Search_Tab_RockType(),
+//				LocaleHandler.lc_entity.Search_Tab_Region(),
+//				LocaleHandler.lc_entity.Search_Tab_Minerals(),
+//				LocaleHandler.lc_entity.Search_Tab_Chemistry(),
+//				LocaleHandler.lc_entity.Search_Tab_Other()
+//		})
+//
+//	};
+	private static  SearchTabAttribute[] searchTabs = {
+		new SearchTabRockTypes(), new SearchTabLocation(), new SearchTabMinerals(), new SearchTabChemicalAnalysis(), new SearchTabOther()
 	};
 
 	private static final String samplesParameter = "Samples";
@@ -104,7 +100,7 @@ public class Search extends MPagePanel implements ClickListener {
 	public Search() {
 		setStyleName(CSS.SEARCH);
 		setPageTitle("Search");
-		p_searchSample = new ObjectSearchPanel(searchAtts,
+		p_searchSample = new ObjectSearchPanel<SearchSample>(new SearchInterface(searchTabs),
 				LocaleHandler.lc_text.search(), LocaleHandler.lc_text.search()) {
 			// TODO: Make that null into the current user from session. I don't
 			// know how to do this right now however
@@ -117,7 +113,6 @@ public class Search extends MPagePanel implements ClickListener {
 					results = r;
 					sampleList.refresh();
 				}
-				p_searchSample.setEnabled(true);
 			}
 
 		};
@@ -181,20 +176,18 @@ public class Search extends MPagePanel implements ClickListener {
 			fp.setMethod(FormPanel.METHOD_GET);
 			fp.setEncoding(FormPanel.ENCODING_URLENCODED);
 			String values = "";
-			for (int i = 0; i < sampleList.getScrollTable().getHeaderTable().getColumnCount(); i++){
+			for (int i = 1; i < sampleList.getScrollTable().getHeaderTable().getColumnCount(); i++){
 				values+=sampleList.getScrollTable().getHeaderTable().getText(0, i) +"\t";
 			}
 			values+="\n";
 			int currentpage = sampleList.getScrollTable().getCurrentPage();
 			for (int page = 0; page < sampleList.getScrollTable().getNumPages(); page++) {
 				sampleList.getScrollTable().gotoPage(page, false);
-				int i = 0;
-				while (sampleList.getScrollTable().getRowValue(i) != null) {
-					for (int j = 0; j < sampleList.getScrollTable().getDataTable().getColumnCount(); j++){
-						values+=sampleList.getScrollTable().getDataTable().getText(0, j) +"\t";
+				for(int i = 0; i <sampleList.getScrollTable().getDataTable().getRowCount(); i++) {
+					for (int j = 1; j < sampleList.getScrollTable().getDataTable().getColumnCount(); j++){
+						values+=sampleList.getScrollTable().getDataTable().getText(i, j) +"\t";
 					}
 					values+="\n";
-					i++;
 				}
 			}
 			sampleList.getScrollTable().gotoPage(currentpage, true);

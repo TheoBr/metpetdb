@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.ui.input.attributes.specific.search;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,22 +13,19 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 import edu.rpi.metpetdb.client.ui.CSS;
-import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
-public class SRockTypesAttribute extends GenericAttribute implements ClickListener {
+public class SRockTypesAttribute extends SearchGenericAttribute implements ClickListener {
 	private int cols;
 	private FlexTable editList;
 	private SimplePanel editListContainer = new SimplePanel();
@@ -119,7 +118,7 @@ public class SRockTypesAttribute extends GenericAttribute implements ClickListen
 	}
 
 	public void onClick(final Widget sender) {
-
+		setObjects(new ArrayList<Object>(Arrays.asList((items.keySet().toArray()))));
 	}
 
 	public Set<?> get(final MObject obj) {
@@ -136,5 +135,22 @@ public class SRockTypesAttribute extends GenericAttribute implements ClickListen
 		}
 		return chosenItems;
 	}
+	
+	public void onRemoveCriteria(final Object obj){
+		if (items.get(obj) != null)
+			((MCheckBox) obj).setChecked(false);
+	}
+	
+	public ArrayList<Pair> getCriteria(){
+		final ArrayList<Pair> criteria = new ArrayList<Pair>();
+		final Iterator<CheckBox> itr = items.keySet().iterator();
+		while (itr.hasNext()) {
+			final CheckBox cb = itr.next();
+			if (cb.isChecked())
+				criteria.add(new Pair(createCritRow("Rock Type:", items.get(cb).toString()), cb));
+		}
+		return criteria;
+	}
+	
 
 }

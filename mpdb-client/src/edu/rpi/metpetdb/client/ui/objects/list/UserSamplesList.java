@@ -115,13 +115,11 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		int currentpage = list.getScrollTable().getCurrentPage();
 		for (int page = 0; page < list.getScrollTable().getNumPages(); page++) {
 			list.getScrollTable().gotoPage(page, false);
-			int i = 0;
-			while (list.getScrollTable().getRowValue(i) != null) {
+			for(int i = 0; i <list.getScrollTable().getDataTable().getRowCount(); i++) {
 				for (int j = 1; j < list.getScrollTable().getDataTable().getColumnCount(); j++){
 					values+=list.getScrollTable().getDataTable().getText(i, j) +"\t";
 				}
 				values+="\n";
-				i++;
 			}
 		}
 		list.getScrollTable().gotoPage(currentpage, true);

@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.ui.input.attributes;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.google.gwt.user.client.ui.Button;
@@ -20,9 +21,9 @@ import edu.rpi.metpetdb.client.model.DateSpan;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.DateSpanConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.ui.widgets.MText;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 
-public class DateRangeAttribute extends GenericAttribute implements
+public class DateRangeAttribute extends SearchGenericAttribute implements
 		ChangeListener, KeyboardListener, ClickListener {
 	private static final String ints= "0123456789";
 	private static final int[] daysInEachMonth = {31,29,31,30,31,30,31,31,30,31,30,31};
@@ -315,5 +316,18 @@ public class DateRangeAttribute extends GenericAttribute implements
 			p.setWidget(dp);
 			p.setPopupPosition(sender.getAbsoluteLeft(), sender.getAbsoluteTop());
 			p.show();
+	}
+	public void onRemoveCriteria(final Object obj){
+		if (to == obj) {
+			to.setText("");		
+			from.setText("");
+		}
+	}
+	
+	public ArrayList<Pair> getCriteria(){
+		final ArrayList<Pair> criteria = new ArrayList<Pair>();
+		if (!to.getText().equals("") && !from.getText().equals(""))
+			criteria.add(new Pair(createCritRow("Date Range:", from.getText() + " to " + to.getText()), to));
+		return criteria;
 	}
 }

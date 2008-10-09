@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -17,13 +18,13 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisElement;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxide;
 import edu.rpi.metpetdb.client.model.Element;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.Oxide;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 
-public class SearchChemistryAttribute extends GenericAttribute {
+public class SearchChemistryAttribute extends SearchGenericAttribute {
 	private FlexTable ft;
 
 	public SearchChemistryAttribute(final ObjectConstraint elements,
@@ -153,4 +154,21 @@ public class SearchChemistryAttribute extends GenericAttribute {
 			return Elements;
 		}
 	}
+
+	public void onRemoveCriteria(final Object obj){
+//		if (items.get(obj) != null)
+//			((MCheckBox) obj).setChecked(false);
+	}
+	
+	public ArrayList<Pair> getCriteria(){
+		final ArrayList<Pair> criteria = new ArrayList<Pair>();
+//		final Iterator<CheckBox> itr = items.keySet().iterator();
+//		while (itr.hasNext()) {
+//			final CheckBox cb = itr.next();
+//			if (cb.isChecked())
+//				criteria.add(new Pair(createCritRow("Rock Type:", items.get(cb).toString()), cb));
+//		}
+		return criteria;
+	}
+	
 }

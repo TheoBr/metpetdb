@@ -26,6 +26,13 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 	private MHtmlList editList;
 	protected final ArrayList<Widget> realEditWidgets;
 	
+	public ArrayList<Widget> getRealEditWidgets(){
+		return realEditWidgets;
+	}
+	public MHtmlList getEditList(){
+		return editList;
+	}
+	
 	public MultipleSuggestTextAttribute(final PropertyConstraint sc) {
 		this(sc,false);
 	}

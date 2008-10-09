@@ -26,7 +26,7 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 		implements ClickListener {
 	private HorizontalPanel container;
 	
-	private class FlyOutItem extends FocusPanel implements ClickListener{
+	public class FlyOutItem extends FocusPanel implements ClickListener{
 		public T obj;
 		public Set<FlyOutItem> children;
 		public FlyOutItem parent;
@@ -103,7 +103,9 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 		trees = new ArrayList<Widget>();
 		this.maxSelectable = maxSelectable;
 	}
-
+	public ArrayList<?> getSelectedWidgets() {
+		return selectedWidgets;
+	}
 	public ArrayList<?> getSelectedItems() {
 		return selectedItems;
 	}

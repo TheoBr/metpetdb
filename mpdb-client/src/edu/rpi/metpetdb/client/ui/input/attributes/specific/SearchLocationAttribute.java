@@ -2,6 +2,9 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 
 //import java.math.BigDecimal;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.postgis.LinearRing;
 import org.postgis.Point;
 
@@ -15,6 +18,7 @@ import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.Overlay;
 import com.google.gwt.maps.client.overlay.Polygon;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -28,9 +32,9 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
-import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 
-public class SearchLocationAttribute extends GenericAttribute implements
+public class SearchLocationAttribute extends SearchGenericAttribute implements
 		ClickListener {
 	private FlexTable ft;
 	private Button viewBounds;
@@ -43,6 +47,7 @@ public class SearchLocationAttribute extends GenericAttribute implements
 	private TextBox southInput;
 	private TextBox eastInput;
 	private TextBox westInput;
+	private org.postgis.Polygon boundingBox;
 
 	public SearchLocationAttribute(final PropertyConstraint sc) {
 		super(sc);
@@ -58,13 +63,14 @@ public class SearchLocationAttribute extends GenericAttribute implements
 
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		ft = new FlexTable();
+		markerPoint1 = null;
+		markerPoint2 = null;
 
-		map = new MapWidget(new LatLng(0, 0), 1);
+		map = new MapWidget(LatLng.newInstance(0, 0),1);
 		map.addControl(new LargeMapControl());
 		map.addControl(new MapTypeControl());
 		map.addControl(new ScaleControl());
-		map.setSize("500px", "300px");
-
+		map.setSize("600px", "400px");
 		northInput = new TextBox();
 		southInput = new TextBox();
 		eastInput = new TextBox();
@@ -174,10 +180,10 @@ public class SearchLocationAttribute extends GenericAttribute implements
 				W = markerPoint1.getPoint().getLongitude();
 			}
 
-			final LatLng NW = new LatLng(N, W);
-			final LatLng NE = new LatLng(N, E);
-			final LatLng SE = new LatLng(S, E);
-			final LatLng SW = new LatLng(S, W);
+			final LatLng NW = LatLng.newInstance(N, W);
+			final LatLng NE = LatLng.newInstance(N, E);
+			final LatLng SE = LatLng.newInstance(S, E);
+			final LatLng SW = LatLng.newInstance(S, W);
 
 			final LatLng[] points = {
 					NW, NE, SE, SW, NW
@@ -223,6 +229,7 @@ public class SearchLocationAttribute extends GenericAttribute implements
 		map.clearOverlays();
 		markerPoint1 = null;
 		markerPoint2 = null;
+		boundingBox = null;
 	}
 
 	protected void set(final MObject obj, final Object o) {
@@ -237,8 +244,8 @@ public class SearchLocationAttribute extends GenericAttribute implements
 				final double E = Double.parseDouble(eastInput.getText());
 				final double W = Double.parseDouble(westInput.getText());
 				clearMap();
-				markerPoint1 = new Marker(new LatLng(N, W));
-				markerPoint2 = new Marker(new LatLng(S, E));
+				markerPoint1 = new Marker(LatLng.newInstance(N, W));
+				markerPoint2 = new Marker(LatLng.newInstance(S, E));
 				map.addOverlay(markerPoint1);
 				map.addOverlay(markerPoint2);
 				createBox();
@@ -283,7 +290,7 @@ public class SearchLocationAttribute extends GenericAttribute implements
 			points[4] = p1;
 			final LinearRing ring = new LinearRing(points);
 			ringArray[0] = ring;
-			final org.postgis.Polygon boundingBox = new org.postgis.Polygon(
+			boundingBox = new org.postgis.Polygon(
 					ringArray);
 			boundingBox.srid = MpDbConstants.WGS84;
 			boundingBox.dimension = 2;
@@ -292,6 +299,27 @@ public class SearchLocationAttribute extends GenericAttribute implements
 			// TODO
 		}
 		return null;
+	}
+	
+	public void onRemoveCriteria(final Object obj){
+		if (obj == boundingBox){
+			clearMap();
+			clearBounds();
+		}
+	}
+	
+	public ArrayList<Pair> getCriteria(){
+		final ArrayList<Pair> criteria = new ArrayList<Pair>();
+		try{
+	//		if (boundingBox != null)
+				criteria.add(new Pair(createCritRow("Location:", " N: " + String.valueOf(northInput.getText()) + " S: "
+						+ String.valueOf(southInput.getText()) +  " E: " + String.valueOf(eastInput.getText())  
+						+ " W: " + String.valueOf(westInput.getText())), get(null)));
+		}
+		catch (Exception e){
+			// TODO
+		}
+		return criteria;
 	}
 
 }

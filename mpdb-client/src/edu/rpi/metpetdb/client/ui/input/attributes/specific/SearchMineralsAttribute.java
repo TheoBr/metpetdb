@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.Mineral;
@@ -16,14 +17,15 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 import edu.rpi.metpetdb.client.ui.input.WizardDialog;
-import edu.rpi.metpetdb.client.ui.input.attributes.FlyOutAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.TreeAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 
-public class SearchMineralsAttribute extends GenericAttribute {
+public class SearchMineralsAttribute extends SearchGenericAttribute {
 
 	private MObject obj;
 	private GenericAttribute ga;
-	private FlyOutAttribute tree;
+	private TreeAttribute tree;
 	private WizardDialog dialog;
 
 	private DetailsPanel p_mineral;
@@ -37,7 +39,7 @@ public class SearchMineralsAttribute extends GenericAttribute {
 	}
 	public SearchMineralsAttribute(final PropertyConstraint mc, int maxMinerals) {
 		super(mc);
-		tree = new FlyOutAttribute(mc, 4, maxMinerals);
+		tree = new TreeAttribute(mc, 4, maxMinerals);
 	}
 
 	public Widget[] createDisplayWidget(final MObject obj) {
@@ -81,5 +83,24 @@ public class SearchMineralsAttribute extends GenericAttribute {
 			newSelectedItems.add(sampleMineral);
 		}
 		return newSelectedItems;
+	}
+	
+	public void onRemoveCriteria(final Object obj){
+		if (tree.getSelectedItems().contains(obj)){
+			int index = tree.getSelectedItems().indexOf(obj);
+			tree.getSelectedItems().remove(index);
+			((CheckBox) tree.getSelectedWidgets().get(index)).setChecked(false);
+			tree.getSelectedWidgets().remove(index);
+		}
+	}
+	
+	public ArrayList<Pair> getCriteria(){
+		final ArrayList<Pair> criteria = new ArrayList<Pair>();
+//		final ArrayList<Object> widgets = tree.getSelectedWidgets();
+		final ArrayList<Object> values = tree.getSelectedItems();
+		for (int i = 0; i < values.size(); i++){
+			criteria.add(new Pair(createCritRow("Mineral:", values.get(i).toString()), values.get(i)));
+		}
+		return criteria;
 	}
 }
