@@ -215,7 +215,7 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 .page-header {
 	background-color: #FBFBFB;
 	border-bottom: 1px solid #e4e4e4;
-	padding: 0.8em 10px 0.5em;
+	padding: 0.8em 10px;
 	position: relative;
 	line-height: 1;
 }
