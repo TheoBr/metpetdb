@@ -4,11 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -17,7 +16,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
-import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Element;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
@@ -106,8 +104,8 @@ public class ImageParser extends Parser{
 	 */
 	public ImageParser(final InputStream is) throws IOException {
 		super();
-		images = new LinkedList<Image>();
-		imagesOnGrid = new LinkedList<ImageOnGrid>();
+		images = new ArrayList<Image>();
+		imagesOnGrid = new ArrayList<ImageOnGrid>();
 		final POIFSFileSystem fs = new POIFSFileSystem(is);
 		final HSSFWorkbook wb = new HSSFWorkbook(fs);
 		sheet = wb.getSheetAt(0);
@@ -273,6 +271,8 @@ public class ImageParser extends Parser{
 
 						final String data = cell.toString();
 						storeMethod.invoke(img, data);
+						if ("".equals(data))
+							throw new NullPointerException();
 
 					} else if (dataType == Sample.class) {
 

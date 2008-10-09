@@ -23,10 +23,12 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
 import edu.rpi.metpetdb.client.error.validation.InvalidImageException;
+import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
 import edu.rpi.metpetdb.client.model.BulkUploadResult;
 import edu.rpi.metpetdb.client.model.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadImagesService;
@@ -34,6 +36,7 @@ import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.ImageParser;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
+import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
 public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
@@ -195,7 +198,8 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 			User u = new User();
 			u.setId(currentUser());
 			Set<String> subsampleNames = new HashSet<String>();
-			SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
+			final SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
+			final SampleDAO sDAO = new SampleDAO(this.currentSession());
 			final ImageDAO dao = new ImageDAO(this.currentSession());
 			for (Image img : images) {
 				// Confirm the filename is in the zip
@@ -205,16 +209,33 @@ public class BulkUploadImagesServiceImpl extends ImageServiceImpl implements
 				}
 				try {
 					setRealImage(zp, img, spreadsheetPrefix);
+					//see if our subsample exists
 					try {
 						Subsample ss = (img.getSubsample());
-						if (!subsampleNames.contains(ss.getName())) {
-							ssDAO.fill(ss);
-							ssResultCount.incrementOld();
-							subsampleNames.add(ss.getName());
+						if (ss != null) {
+							if (!subsampleNames.contains(ss.getName())) {
+								ssDAO.fill(ss);
+								ssResultCount.incrementOld();
+								subsampleNames.add(ss.getName());
+							}
+						} else {
+							//Every Image needs a subsample so add an error
+							errors.put(row, new PropertyRequiredException("Subsample"));
 						}
 					} catch (DAOException e) {
 						ssResultCount.incrementFresh();
 						subsampleNames.add(img.getSubsample().getName());
+					}
+					//see if our sample exists
+					try {
+						Sample s = img.getSample();
+						s.setOwner(u);
+						sDAO.fill(s);
+					}
+					catch(DAOException e) {
+						//There is no sample we have to add an error
+						//Every Image needs a sample so add an error
+						errors.put(row, new PropertyRequiredException("Sample"));
 					}
 					doc.validate(img);
 					if (dao.isNew(img))
