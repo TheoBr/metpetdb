@@ -22,19 +22,17 @@ public class OpacityListener implements ClickListener {
 	}
 
 	public void onClick(final Widget sender) {
-		new ServerOp() {
+		new ServerOp<String>() {
 			public void begin() {
 				new OpacityPopup(iog, this, iog.getTemporaryTopLeftX()
 						+ grid.getAbsoluteLeft(), iog.getTemporaryTopLeftY()
 						+ grid.getAbsoluteTop()).show();
 			}
-			public void onSuccess(final Object result) {
-				if (result instanceof String) {
-					setOpacity(iog.getActualImage().getElement(), (int) Double
-							.parseDouble((String) result));
-					setOpacity(iog.getImageContainer().getElement(),
-							(int) Double.parseDouble((String) result));
-				}
+			public void onSuccess(final String result) {
+				setOpacity(iog.getActualImage().getElement(), (int) Double
+						.parseDouble((String) result));
+				setOpacity(iog.getImageContainer().getElement(), (int) Double
+						.parseDouble((String) result));
 			}
 		}.begin();
 	}

@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Grid;
@@ -20,11 +19,11 @@ import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class ImageList extends HorizontalPanel implements ClickListener {
-	private ArrayList images;
+	private List<edu.rpi.metpetdb.client.model.Image> images;
 	private int currentIndex = 0;
 	private Image currentImage;
 	// Set<Image>
-	private final Set selectedImages;
+	private final Collection<edu.rpi.metpetdb.client.model.Image> selectedImages;
 	private Widget lastImage;
 	boolean selected = false;
 	private boolean onlySelectOne;
@@ -83,11 +82,11 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 		selectedImages = new HashSet();
 	}
 
-	public Set getSelectedImages() {
+	public Collection<edu.rpi.metpetdb.client.model.Image> getSelectedImages() {
 		return selectedImages;
 	}
 
-	public ArrayList getImages() {
+	public Collection<edu.rpi.metpetdb.client.model.Image> getImages() {
 		return images;
 	}
 
@@ -178,7 +177,7 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 							selectedImages.clear();
 							lastImage.setStyleName("ssimg");
 						}
-						selectedImages.add(((ImageHyperlink) sender)
+						selectedImages.add((edu.rpi.metpetdb.client.model.Image)((ImageHyperlink) sender)
 								.getObject());
 
 					}

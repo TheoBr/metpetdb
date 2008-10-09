@@ -3,28 +3,10 @@ package edu.rpi.metpetdb.client.model;
 public class XrayImage extends Image {
 	private static final long serialVersionUID = 1L;
 
-	private Boolean radiation;
-	private String lines;
 	private Integer dwelltime;
 	private Integer current;
 	private Integer voltage;
 	private Element element;
-
-	public Boolean getRadiation() {
-		return radiation;
-	}
-
-	public void setRadiation(final Boolean b) {
-		radiation = b;
-	}
-
-	public String getLines() {
-		return lines;
-	}
-
-	public void setLines(final String s) {
-		lines = s;
-	}
 
 	public Integer getDwelltime() {
 		return dwelltime;
@@ -71,10 +53,6 @@ public class XrayImage extends Image {
 		i.setChecksumHalf(this.getChecksumHalf());
 		i.setFilename(this.getFilename());
 		i.setSample(this.getSample());
-		i.setBrightness(this.getBrightness());
-		i.setContrast(this.getContrast());
-		i.setLut(this.getLut());
-		i.setPixelsize(this.getPixelsize());
 		return i;
 	}
 }

@@ -1,7 +1,6 @@
 package edu.rpi.metpetdb.client.ui.image.browser.dialogs;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
@@ -29,18 +28,17 @@ public class ViewImage extends MDialogBox implements ClickListener,
 	private Label imageTitle;
 	private Label page;
 	private com.google.gwt.user.client.ui.Image displayImage;
-	private ArrayList images;
+	private ArrayList<Image> images;
 	private PopupPanel left;
 	private PopupPanel right;
 
-	public ViewImage(final ArrayList images,
+	public ViewImage(final ArrayList<Image> images,
 			final com.google.gwt.user.client.ui.Image image, int indexStart) {
 		close = new MLink("", this);
 		this.images = images;
 		// close.setStyleName(Styles.PRIMARY_BUTTON);
 		close.addStyleName("lbCloseLink");
 		ft = new FlexTable();
-		Iterator<?> itr = images.iterator();
 		displayImage = image;
 		index = indexStart;
 		Image currentImage = (Image) images.get(index);

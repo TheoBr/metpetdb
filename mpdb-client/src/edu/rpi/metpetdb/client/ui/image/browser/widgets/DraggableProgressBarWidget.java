@@ -22,11 +22,11 @@ public class DraggableProgressBarWidget extends VerticalPanel implements
 	private final DraggableProgressBar dpb;
 	private final int min;
 	private final int max;
-	private final ServerOp continuation;
+	private final ServerOp<String> continuation;
 	private boolean clicked;
 
 	public DraggableProgressBarWidget(final int elements, final int minOpacity,
-			final int maxOpacity, final ServerOp r) {
+			final int maxOpacity, final ServerOp<String> r) {
 		continuation = r;
 		increase = new Button("+", this);
 		decrease = new Button("-", this);
@@ -93,7 +93,7 @@ public class DraggableProgressBarWidget extends VerticalPanel implements
 		max = maxOpacity;
 	}
 	public DraggableProgressBarWidget(final int elements, final int minOpacity,
-			final int maxOpacity, int start, final ServerOp r) {
+			final int maxOpacity, int start, final ServerOp<String> r) {
 		this(elements, minOpacity, maxOpacity, r);
 		if (start > maxOpacity)
 			start = maxOpacity;

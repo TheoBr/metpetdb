@@ -18,7 +18,7 @@ public class RotateListener implements ClickListener {
 	}
 
 	public void onClick(final Widget sender) {
-		new ServerOp() {
+		new ServerOp<ImageOnGridContainer>() {
 			public void begin() {
 				if (MpDb.isLoggedIn()) {
 					new RotateDialog(iog, this).show();
@@ -26,7 +26,7 @@ public class RotateListener implements ClickListener {
 					onFailure(new LoginRequiredException());
 				}
 			}
-			public void onSuccess(final Object result) {
+			public void onSuccess(final ImageOnGridContainer result) {
 				// final float widthRatio = iog.getWidth()
 				// / (float) iog.getImage().getWidth();
 				final float heightRatio = iog.getHeight()

@@ -72,6 +72,16 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		commit();
 		return (ca);
 	}
+	
+	public void saveAll(Collection<ChemicalAnalysis> chemicalAnalyses)
+	throws ValidationException, LoginRequiredException, DAOException {
+			final ChemicalAnalysisDAO dao = new ChemicalAnalysisDAO(this.currentSession());
+			for(ChemicalAnalysis ca : chemicalAnalyses) {
+				doc.validate(ca);
+				dao.save(ca);
+			}
+			commit();
+	}
 
 	public void delete(long id) throws DAOException, LoginRequiredException {
 		ChemicalAnalysisDAO dao = new ChemicalAnalysisDAO(this.currentSession());

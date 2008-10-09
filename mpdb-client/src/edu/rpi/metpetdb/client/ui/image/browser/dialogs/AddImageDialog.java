@@ -21,6 +21,7 @@ import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 
+@Deprecated
 public class AddImageDialog extends MDialogBox implements ClickListener,
 		KeyboardListener {
 

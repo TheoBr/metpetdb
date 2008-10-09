@@ -172,29 +172,30 @@ public class ImageBrowserMouseListener implements MouseListener {
 		}
 	}
 
-	private void addChemicalAnalysis(final ChemicalAnalysis ma, final int x,
+	private void addChemicalAnalysis(final ChemicalAnalysis ca, final int x,
 			final int y) {
-		ma.setImage(currentImage.getIog().getImage());
+		ca.setImage(currentImage.getIog().getImage());
 		int pointX = x;
 		int pointY = y;
 		pointX -= currentImage.getImagePanel().getAbsoluteLeft()
 				- grid.getAbsoluteLeft() + 4;
 		pointY -= currentImage.getImagePanel().getAbsoluteTop()
 				- grid.getAbsoluteTop() + 13;
-		ma.setPointX(pointX);
-		ma.setPointY(pointY);
-		ma.setActualImage(pointer);
-		ma.setLocked(true);
+		ca.setPointX(pointX);
+		ca.setPointY(pointY);
+		ca.setActualImage(pointer);
+		ca.setLocked(true);
 		((Image) pointer).addClickListener(new ClickListener() {
 			public void onClick(final Widget sender) {
-				new PointPopup(ma, currentImage, ((Image) pointer)
+				new PointPopup(ca, currentImage, ((Image) pointer)
 						.getAbsoluteLeft(), ((Image) pointer).getAbsoluteTop())
 						.show();
 			}
 		});
-		ma.setPercentX(pointX / (float) currentImage.getWidth());
-		ma.setPercentY(pointY / (float) currentImage.getHeight());
-		currentImage.getChemicalAnalyses().add(ma);
+		ca.setPercentX(pointX / (float) currentImage.getWidth());
+		ca.setPercentY(pointY / (float) currentImage.getHeight());
+		currentImage.getChemicalAnalyses().add(ca);
+		imageBrowser.getChemicalAnalysesToSave().add(ca);
 	}
 
 	private boolean validateAddChemicalAnalysis(final int x, final int y) {
@@ -338,6 +339,8 @@ public class ImageBrowserMouseListener implements MouseListener {
 			case 0:
 				grid.setWidgetPosition(currentImage.getImageContainer(), newX,
 						newY);
+				currentImage.getIog().setTopLeftX(newX);
+				currentImage.getIog().setTopLeftY(newY);
 				currentImage.setTemporaryTopLeftX(newX);
 				currentImage.setTemporaryTopLeftY(newY);
 				break;

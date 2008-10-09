@@ -24,14 +24,14 @@ public class RotateDialog extends MDialogBox implements ClickListener {
 	private final Button rotate180;
 	private final Button ok;
 	private final Button cancel;
-	private final ServerOp continuation;
+	private final ServerOp<ImageOnGridContainer> continuation;
 	private final ImageOnGridContainer imageOnGrid;
 	private final Image image;
 	private final Label loading;
 	private final TextBox angle;
 	private final Button update;
 
-	public RotateDialog(final ImageOnGridContainer iog, final ServerOp r) {
+	public RotateDialog(final ImageOnGridContainer iog, final ServerOp<ImageOnGridContainer> r) {
 		final VerticalPanel vp = new VerticalPanel();
 		final FocusPanel fp = new FocusPanel();
 		image = new Image(iog.getGoodLookingPicture(true));
@@ -91,12 +91,12 @@ public class RotateDialog extends MDialogBox implements ClickListener {
 	}
 
 	public void rotate(final int degrees) {
-		new ServerOp() {
+		new ServerOp<ImageOnGrid>() {
 			public void begin() {
 				MpDb.image_svc.rotate(imageOnGrid.getIog(), degrees, this);
 				loading.setText("Please Wait");
 			}
-			public void onSuccess(final Object result) {
+			public void onSuccess(final ImageOnGrid result) {
 				final ImageOnGrid iog = (ImageOnGrid) result;
 				imageOnGrid.getIog().setGchecksum(iog.getGchecksum());
 				imageOnGrid.getIog().setGchecksum64x64(iog.getGchecksum64x64());

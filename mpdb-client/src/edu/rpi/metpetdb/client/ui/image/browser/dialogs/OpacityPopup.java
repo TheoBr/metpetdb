@@ -15,13 +15,13 @@ import edu.rpi.metpetdb.client.ui.image.browser.widgets.DraggableProgressBarWidg
 
 public class OpacityPopup extends DialogBox implements ClickListener {
 
-	final ServerOp continuation;
+	final ServerOp<String> continuation;
 	final Button cancel;
 	final Button ok;
 	final ImageOnGridContainer iog;
 	final DraggableProgressBarWidget dpb;
 
-	public OpacityPopup(final ImageOnGridContainer iog, final ServerOp r,
+	public OpacityPopup(final ImageOnGridContainer iog, final ServerOp<String> r,
 			final int x, final int y) {
 		this.iog = iog;
 		continuation = r;

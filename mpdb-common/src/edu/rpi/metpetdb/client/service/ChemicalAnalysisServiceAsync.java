@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -18,6 +19,8 @@ public interface ChemicalAnalysisServiceAsync {
 
 	void save(ChemicalAnalysis chemicalAnalysis,
 			AsyncCallback<ChemicalAnalysis> ac);
+	
+	void saveAll(Collection<ChemicalAnalysis> chemicalAnalyses, AsyncCallback<Void> ac);
 
 	void delete(long id, AsyncCallback<Object> ac);
 }

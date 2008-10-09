@@ -23,10 +23,6 @@ public class Image extends MObject {
 	private Sample sample;
 	private String filename;
 	private XrayImage xrayImage;
-	private Integer pixelsize;
-	private Integer contrast;
-	private Integer brightness;
-	private Integer lut;
 	private String collector;
 	private Set<Reference> references;
 	private Set<ImageComment> comments;
@@ -157,38 +153,6 @@ public class Image extends MObject {
 
 	public void setXrayImage(final XrayImage xray) {
 		xrayImage = xray;
-	}
-
-	public Integer getBrightness() {
-		return brightness;
-	}
-
-	public void setBrightness(Integer brightness) {
-		this.brightness = brightness;
-	}
-
-	public Integer getContrast() {
-		return contrast;
-	}
-
-	public void setContrast(Integer contrast) {
-		this.contrast = contrast;
-	}
-
-	public Integer getLut() {
-		return lut;
-	}
-
-	public void setLut(Integer lut) {
-		this.lut = lut;
-	}
-
-	public Integer getPixelsize() {
-		return pixelsize;
-	}
-
-	public void setPixelsize(Integer pixelsize) {
-		this.pixelsize = pixelsize;
 	}
 
 	public String get64x64ServerPath() {

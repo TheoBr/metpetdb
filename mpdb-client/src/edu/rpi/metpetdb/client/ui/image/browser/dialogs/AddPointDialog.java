@@ -1,7 +1,7 @@
 package edu.rpi.metpetdb.client.ui.image.browser.dialogs;
 
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
@@ -28,11 +28,11 @@ public class AddPointDialog extends DialogBox implements ClickListener,
 	private final VerticalPanel vp;
 	private final HorizontalPanel hp;
 	private final ListBox lb;
-	private final Set chemicalAnalyses;
-	private final ServerOp continuation;
+	private final Collection<ChemicalAnalysis> chemicalAnalyses;
+	private final ServerOp<ChemicalAnalysis> continuation;
 
 	public AddPointDialog(final Subsample s, final ImageOnGridContainer iog,
-			final ServerOp r, final int x, final int y) {
+			final ServerOp<ChemicalAnalysis> r, final int x, final int y) {
 		this.continuation = r;
 		this.submit = new Button(LocaleHandler.lc_text.buttonSubmit(), this);
 
@@ -42,11 +42,11 @@ public class AddPointDialog extends DialogBox implements ClickListener,
 		this.lb.setVisibleItemCount(1);
 
 		this.chemicalAnalyses = s.getChemicalAnalyses();
-		final Iterator itr = this.chemicalAnalyses.iterator();
+		final Iterator<ChemicalAnalysis> itr = this.chemicalAnalyses.iterator();
 		while (itr.hasNext()) {
-			final ChemicalAnalysis ma = (ChemicalAnalysis) itr.next();
-			if (ma.getImage() == null)
-				this.lb.addItem(ma.getSpotId());
+			final ChemicalAnalysis ca = itr.next();
+			if (ca.getImage() == null)
+				this.lb.addItem(ca.getSpotId());
 		}
 
 		this.hp = new HorizontalPanel();
@@ -86,7 +86,7 @@ public class AddPointDialog extends DialogBox implements ClickListener,
 		this.hide();
 		if (this.continuation != null)
 			if (this.lb.getItemCount() > 0) {
-				final Iterator itr = this.chemicalAnalyses.iterator();
+				final Iterator<ChemicalAnalysis> itr = this.chemicalAnalyses.iterator();
 				while (itr.hasNext()) {
 					final ChemicalAnalysis ma = (ChemicalAnalysis) itr.next();
 					if (ma.getSpotId().equals(

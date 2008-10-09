@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -20,6 +21,9 @@ public interface ChemicalAnalysisService extends RemoteService {
 	ChemicalAnalysis details(long id) throws DAOException;
 
 	ChemicalAnalysis save(ChemicalAnalysis chemicalAnalysis)
+			throws ValidationException, LoginRequiredException, DAOException;
+
+	void saveAll(Collection<ChemicalAnalysis> chemicalAnalyses)
 			throws ValidationException, LoginRequiredException, DAOException;
 
 	void delete(long id) throws DAOException, LoginRequiredException;

@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.ui.image.browser;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +30,7 @@ import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
+import edu.rpi.metpetdb.client.ui.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.image.browser.click.listeners.AddPointListener;
 import edu.rpi.metpetdb.client.ui.image.browser.click.listeners.HideMenuListener;
 import edu.rpi.metpetdb.client.ui.image.browser.click.listeners.LockListener;
@@ -48,7 +49,6 @@ import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
 
-//TODO stores the imagesongrid better for transient stuff
 public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 
 	// Links
@@ -91,6 +91,9 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 			"um", /* micrometer 10x10^-6 */
 			"nm", /* nanometer 10x10^-9 */
 	};
+	
+	/** which chemical analyses that need to be saved */
+	private final Collection<ChemicalAnalysis> chemicalAnalyses;
 
 	private final Map<Image, ImageOnGridContainer> imagesOnGrid;
 
@@ -107,26 +110,25 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		this.grid = new MAbsolutePanel();
 		this.grid.add(this.scaleDisplay);
 		this.imagesOnGrid = new HashMap<Image, ImageOnGridContainer>();
+		chemicalAnalyses = new ArrayList<ChemicalAnalysis>();
 	}
 
 	public ImageBrowserDetails createNew(final long subsampleId) {
-		new ServerOp() {
+		new ServerOp<Subsample>() {
 			@Override
 			public void begin() {
 				MpDb.subsample_svc.details(subsampleId, this);
 			}
 
-			public void onSuccess(final Object result) {
-				final Subsample s = (Subsample) result;
+			public void onSuccess(final Subsample s) {
 				ImageBrowserDetails.this.g = new Grid();
 				ImageBrowserDetails.this.g.setSubsample(s);
-				new ServerOp() {
+				new ServerOp<List<ChemicalAnalysis>>() {
 					@Override
 					public void begin() {
 						MpDb.chemicalAnalysis_svc.all(subsampleId, this);
 					}
-					public void onSuccess(final Object result) {
-						final List<ChemicalAnalysis> ss = (List<ChemicalAnalysis>) result;
+					public void onSuccess(final List<ChemicalAnalysis> ss) {
 						ImageBrowserDetails.this.g.getSubsample()
 								.setChemicalAnalyses(
 										new HashSet<ChemicalAnalysis>(ss));
@@ -141,23 +143,22 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	}
 
 	public ImageBrowserDetails showById(final long id) {
-		new ServerOp() {
+		new ServerOp<Grid>() {
 			@Override
 			public void begin() {
 				MpDb.imageBrowser_svc.details(id, this);
 			}
 
-			public void onSuccess(final Object result) {
-				ImageBrowserDetails.this.g = (Grid) result;
-				new ServerOp() {
+			public void onSuccess(final Grid result) {
+				ImageBrowserDetails.this.g = result;
+				new ServerOp<List<ChemicalAnalysis>>() {
 					@Override
 					public void begin() {
-						MpDb.chemicalAnalysis_svc.all(((Grid) result)
+						MpDb.chemicalAnalysis_svc.all((result)
 								.getSubsample().getId(), this);
 					}
 
-					public void onSuccess(final Object result2) {
-						final List<ChemicalAnalysis> s = (List<ChemicalAnalysis>) result2;
+					public void onSuccess(final List<ChemicalAnalysis> s) {
 						ImageBrowserDetails.this.g.getSubsample()
 								.setChemicalAnalyses(
 										new HashSet<ChemicalAnalysis>(s));
@@ -169,7 +170,10 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		}.begin();
 		return this;
 	}
-
+	
+	public Collection<ChemicalAnalysis> getChemicalAnalysesToSave() {
+		return chemicalAnalyses;
+	}
 	private void buildInterface() {
 		final MLinkandText header = new MLinkandText("Subsample ", this.g
 				.getSubsample().getName(), "'s Map", TokenSpace
@@ -452,8 +456,8 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		this.hideMenuListener.addNotifier(hideMenu);
 		final MLink lock = new MLink("Lock", this.lockListener);
 		this.lockListener.addNotifier(lock);
-		// ulTop.add(rotate);
-		// ulTop.add(opacity);
+		ulTop.add(rotate);
+		ulTop.add(opacity);
 		ulTop.add(hideMenu);
 		ulTop.add(lock);
 		ulTop.setLiStyle("last", lock);
@@ -519,11 +523,6 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 
 	public void onClick(final Widget sender) {
 		if (sender == this.save) {
-			Iterator<ChemicalAnalysis> itr = ImageBrowserDetails.this.g
-					.getSubsample().getChemicalAnalyses().iterator();
-			while (itr.hasNext()) {
-				this.doSaveChemicalAnalysis(itr.next());
-			}
 			this.doSave();
 		} else if (sender == this.panUp)
 			this.doPanUp();
@@ -559,7 +558,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 
 	private void doAddExistingImage() {
 		final ImageBrowserDetails imageBrowser = this;
-		new ServerOp() {
+		new ServerOp<Collection<Image>>() {
 			@Override
 			public void begin() {
 				new AddExistingImagePopup(
@@ -568,8 +567,8 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 						ImageBrowserDetails.this.imagesOnGrid).show();
 			}
 
-			public void onSuccess(final Object result) {
-				final Iterator itr = ((Collection) result).iterator();
+			public void onSuccess(final Collection<Image> result) {
+				final Iterator<Image> itr = result.iterator();
 				final int[] cascade = {
 					100
 				};
@@ -585,6 +584,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	}
 
 	private void doSave() {
+		//Save the grid
 		new ServerOp<Grid>() {
 			@Override
 			public void begin() {
@@ -595,22 +595,17 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 			}
 
 			public void onSuccess(final Grid result) {
-				new ConfirmationDialogBox(LocaleHandler.lc_text
-						.notice_GridSaved(ImageBrowserDetails.this.g
-								.getSubsample().getName()), false);
 				save.setEnabled(true);
 			}
 		}.begin();
-
-	}
-
-	private void doSaveChemicalAnalysis(final ChemicalAnalysis ma) {
-		new ServerOp() {
+		//Save any chemical analyses that have been modified
+		new VoidServerOp() {
+			@Override
 			public void begin() {
-				MpDb.chemicalAnalysis_svc.save(ma, this);
+				MpDb.chemicalAnalysis_svc.saveAll(chemicalAnalyses, this);
 			}
-			public void onSuccess(final Object result) {
-
+			public void onSuccess() {
+				chemicalAnalyses.clear();
 			}
 		}.begin();
 	}

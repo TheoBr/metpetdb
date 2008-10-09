@@ -21,5 +21,5 @@ public interface ImageServiceAsync {
 
 	void delete(Image i, AsyncCallback<Object> ac);
 
-	void rotate(ImageOnGrid iog, int degrees, AsyncCallback<Object> ac);
+	void rotate(ImageOnGrid iog, int degrees, AsyncCallback<ImageOnGrid> ac);
 }
