@@ -98,8 +98,6 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public IntegerConstraint XrayImage_current;
 	public IntegerConstraint XrayImage_voltage;
 	public IntegerConstraint XrayImage_dwelltime;
-	public StringConstraint XrayImage_lines;
-	public BooleanConstraint XrayImage_radiation;
 	public ValueInCollectionConstraint XrayImage_element;
 
 	public void validate(final XrayImage xi) throws ValidationException {
@@ -109,10 +107,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ Image ------
 	public PropertyConstraint[] Image__all;
 	public ValueInCollectionConstraint Image_imageType;
-	public IntegerConstraint Image_lut;
-	public IntegerConstraint Image_contrast;
-	public IntegerConstraint Image_brightness;
-	public IntegerConstraint Image_pixelsize;
+	public StringConstraint Image_collector;
 	public IntegerConstraint Image_scale;
 	public ObjectConstraint Image_comments;
 

@@ -17,10 +17,6 @@
     <property name="checksum64x64" column="checksum_64x64" />
     <property name="checksumHalf" column="checksum_half" />
     <property name="filename" column="filename" />
-    <property name="brightness" column="brightness" />
-    <property name="lut" column="lut"/>
-    <property name="contrast" column="contrast"/>
-    <property name="pixelsize" column="pixel_size"/>
     <property name="collector" column="collector" length="100" />
     <property name="scale" />
 
@@ -40,8 +36,6 @@
    
    <joined-subclass name="XrayImage" table="xray_image">
 	   	<key column="image_id"/>
-	   	<property name="radiation" column="radiation"/>
-	    <property name="lines" column="lines"/>
 	    <property name="dwelltime" column="dwelltime"/>
 	    <property name="current" column="current"/>
 	    <property name="voltage" column="voltage"/>

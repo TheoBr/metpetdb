@@ -5,25 +5,6 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.XrayImage;
 
 public enum XrayImageProperty implements Property {
-	radiation {
-		public <T extends MObject> Boolean get(final T xrayImage) {
-			return ((XrayImage) xrayImage).getRadiation();
-		}
-
-		public <T extends MObject, K> void set(final T xrayImage,
-				final K radiation) {
-			((XrayImage) xrayImage).setRadiation((Boolean) radiation);
-		}
-	},
-	lines {
-		public <T extends MObject> String get(final T xrayImage) {
-			return ((XrayImage) xrayImage).getLines();
-		}
-
-		public <T extends MObject, K> void set(final T xrayImage, final K lines) {
-			((XrayImage) xrayImage).setLines((String) lines);
-		}
-	},
 	dwelltime {
 		public <T extends MObject> Integer get(final T xrayImage) {
 			return ((XrayImage) xrayImage).getDwelltime();

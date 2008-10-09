@@ -43,13 +43,13 @@ CREATE TABLE images
    sample_id INT8,
    subsample_id INT8,
    image_format_id INT2,
-   image_type_id INT2,
+   image_type_id INT2 NOT NULL,
    width INT2 NOT NULL,
    height INT2 NOT NULL,
-   pixel_size INT2,
-   contrast INT2,
-   brightness INT2,
-   lut INT2,
+   --pixel_size INT2,
+   --contrast INT2,
+   --brightness INT2,
+   --lut INT2,
    collector VARCHAR(50),
    scale int2,
    --user_id INT4 NOT NULL,
@@ -101,8 +101,8 @@ CREATE TABLE xray_image
 (
    image_id INT8 NOT NULL,
    element_id INT2 NOT NULL,
-   radiation BOOLEAN,
-   lines VARCHAR(100),
+   --radiation BOOLEAN,
+   --lines VARCHAR(100),
    dwelltime INT2, -- msec
    current INT2, -- nano amps
    voltage INT2, --kilo watts

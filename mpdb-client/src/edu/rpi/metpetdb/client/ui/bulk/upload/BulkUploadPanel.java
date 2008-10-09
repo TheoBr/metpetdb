@@ -271,7 +271,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		form.submit();
 		clearResults();
 		show(progressContainer);
-		progressTimer.scheduleRepeating(1000);
+		progressTimer.scheduleRepeating(3000);
 	}
 
 	private void parse() {

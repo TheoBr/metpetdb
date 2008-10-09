@@ -5,8 +5,8 @@ import java.util.Set;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageComment;
 import edu.rpi.metpetdb.client.model.ImageType;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 
 public enum ImageProperty implements Property {
 	imageType {
@@ -25,45 +25,6 @@ public enum ImageProperty implements Property {
 
 		public <T extends MObject, K> void set(final T image, final K subsample) {
 			((Image) image).setSubsample((Subsample) subsample);
-		}
-	},
-	pixelsize {
-		public <T extends MObject> Integer get(final T image) {
-			return ((Image) image).getPixelsize();
-		}
-
-		public <T extends MObject, K> void set(final T image, final K pixelsize) {
-			((Image) image).setPixelsize(PropertyUtils
-					.convertToInteger(pixelsize));
-		}
-	},
-	contrast {
-		public <T extends MObject> Integer get(final T image) {
-			return ((Image) image).getContrast();
-		}
-
-		public <T extends MObject, K> void set(final T image, final K contrast) {
-			((Image) image).setContrast(PropertyUtils
-					.convertToInteger(contrast));
-		}
-	},
-	brightness {
-		public <T extends MObject> Integer get(final T image) {
-			return ((Image) image).getBrightness();
-		}
-
-		public <T extends MObject, K> void set(final T image, final K brightness) {
-			((Image) image).setBrightness(PropertyUtils
-					.convertToInteger(brightness));
-		}
-	},
-	lut {
-		public <T extends MObject> Integer get(final T image) {
-			return ((Image) image).getLut();
-		}
-
-		public <T extends MObject, K> void set(final T image, final K lut) {
-			((Image) image).setLut(PropertyUtils.convertToInteger(lut));
 		}
 	},
 	checksum {
@@ -93,4 +54,13 @@ public enum ImageProperty implements Property {
 			((Image) sample).setComments((Set<ImageComment>) comments);
 		}
 	},
+	collector {
+		public <T extends MObject> Object get(final T sample) {
+			return ((Image) sample).getCollector();
+		}
+
+		public <T extends MObject, K> void set(final T sample, final K collector) {
+			((Image) sample).setCollector((String) collector);
+		}
+	}
 }

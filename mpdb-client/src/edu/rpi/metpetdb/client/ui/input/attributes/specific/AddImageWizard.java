@@ -23,8 +23,6 @@ public class AddImageWizard extends WizardDialog {
 				new TextAttribute(MpDb.doc.XrayImage_current),
 				new TextAttribute(MpDb.doc.XrayImage_voltage),
 				new TextAttribute(MpDb.doc.XrayImage_dwelltime),
-				new TextAttribute(MpDb.doc.XrayImage_lines),
-				new RadioButtonAttribute(MpDb.doc.XrayImage_radiation),
 				new ListboxAttribute(MpDb.doc.XrayImage_element),
 		};
 
@@ -35,7 +33,7 @@ public class AddImageWizard extends WizardDialog {
 			}
 			public void onSuccess(final Object result) {
 				if (result instanceof String) {
-					if (result.equals("X-ray")) {
+					if (result.toString().contains("X-ray")) {
 						p_xray.edit(xray);
 						AddImageWizard.this.addStep(p_xray, 1,
 								"X-ray Attributes");
@@ -48,10 +46,7 @@ public class AddImageWizard extends WizardDialog {
 		final ListboxAttribute imageType = new ListboxAttribute(
 				MpDb.doc.Image_imageType, notifier);
 		final GenericAttribute image[] = {
-				uploadImage, imageType, new TextAttribute(MpDb.doc.Image_lut),
-				new TextAttribute(MpDb.doc.Image_contrast),
-				new TextAttribute(MpDb.doc.Image_brightness),
-				new TextAttribute(MpDb.doc.Image_pixelsize),
+				uploadImage, imageType, new TextAttribute(MpDb.doc.Image_collector),
 		};
 		final DetailsPanel p_image = new DetailsPanel(image, new Button[] {});
 		p_image.edit(xray);
@@ -61,7 +56,7 @@ public class AddImageWizard extends WizardDialog {
 				uploadImage.getStatus(this);
 			}
 			public void onSuccess(final Object result) {
-				if (((Image) result).getImageType().equals("X-ray")) {
+				if (((Image) result).getImageType().getImageType().contains("X-ray ")) {
 					r.onSuccess(result);
 				} else {
 					r.onSuccess(((XrayImage) result).getImage());

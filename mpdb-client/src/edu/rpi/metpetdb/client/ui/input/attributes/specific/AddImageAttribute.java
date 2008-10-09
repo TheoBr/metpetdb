@@ -81,17 +81,6 @@ public class AddImageAttribute extends GenericAttribute implements
 		imageContainer.add(new com.google.gwt.user.client.ui.Image(image
 				.get64x64ServerPath()));
 		imageContainer.add(new Label("Image Type: " + image.getImageType()));
-		imageContainer.add(new Label("Contrast: "
-				+ (image.getContrast() != null ? image.getContrast().toString()
-						: "")));
-		imageContainer.add(new Label("Lut: "
-				+ (image.getLut() != null ? image.getLut().toString() : "")));
-		imageContainer.add(new Label("Brightness: "
-				+ (image.getBrightness() != null ? image.getBrightness()
-						.toString() : "")));
-		imageContainer.add(new Label("Pixel Size: "
-				+ (image.getPixelsize() != null ? image.getPixelsize()
-						.toString() : "")));
 		if (image.getImageType().equals("X-ray")) {
 			final XrayImage xray = (XrayImage) image;
 			imageContainer.add(new Label("Current: "
@@ -102,12 +91,6 @@ public class AddImageAttribute extends GenericAttribute implements
 							: "")));
 			imageContainer.add(new Label("Dwelltime: "
 					+ (xray.getDwelltime() != null ? xray.getDwelltime()
-							.toString() : "")));
-			imageContainer.add(new Label("Lines: "
-					+ (xray.getLines() != null ? xray.getLines().toString()
-							: "")));
-			imageContainer.add(new Label("Radiation: "
-					+ (xray.getRadiation() != null ? xray.getRadiation()
 							.toString() : "")));
 			imageContainer.add(new Label("Element: "
 					+ (xray.getElement() != null ? xray.getElement().toString()
