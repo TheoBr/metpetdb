@@ -246,7 +246,7 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 	 * 	(basically what is going to be in each cell)
 	 */
 	public Collection<Collection<Object>> getList(final List<T> data) {
-		final Collection<Collection<Object>> rows = new HashSet<Collection<Object>>();
+		final Collection<Collection<Object>> rows = new ArrayList<Collection<Object>>();
 		final Iterator<T> itr = data.iterator();
 		int currentRow = 0;
 		while (itr.hasNext()) {

@@ -79,6 +79,12 @@
     <filter name="boundingBox"
             condition="ST_Intersects(location, :polygon)" 
             />
+            
+     <filter name="user"
+     		condition="user_id=:id" />
+     		
+     <filter name="public"
+     		condition="public_data='Y'" />
   </class>
   
   
@@ -99,12 +105,12 @@
   <query name="Sample.all/alias">
     from Sample s
     inner join fetch s.owner
-    order by s.alias
+    order by lower(s.alias)
   </query>
   <query name="Sample.all/owner">
     from Sample s
     inner join fetch s.owner
-    order by s.owner.emailAddress
+    order by lower(s.owner.name)
   </query>
   <query name="Sample.all/rockType">
     from Sample s
@@ -134,22 +140,17 @@
   <query name="Sample.all/country">
     from Sample s
     inner join fetch s.owner
-    order by s.country
-  </query>
-  <query name="Sample.all/description">
-    from Sample s
-    inner join fetch s.owner
-    order by s.description
+    order by lower(s.country)
   </query>
   <query name="Sample.all/collector">
     from Sample s
     inner join fetch s.owner
-    order by s.collector
+    order by lower(s.collector)
   </query>
   <query name="Sample.all/locationText">
     from Sample s
     inner join fetch s.owner
-    order by s.locationText
+    order by lower(s.locationText)
   </query>
   <query name="Sample.all/latitudeError">
     from Sample s
@@ -161,90 +162,6 @@
     inner join fetch s.owner
     order by s.longitudeError
   </query>
-
-  <query name="Sample.forUser,size">
-    select count(*) from Sample s
-    where s.owner.id = :id
-  </query>
-  <query name="Sample.forUser/sesarNumber">
-    from Sample s
-    inner join fetch s.owner
-    where s.owner.id = :id
-    order by s.sesarNumber
-  </query>
-  <query name="Sample.forUser/location">
-    from Sample s
-    inner join fetch s.owner
-    where s.owner.id = :id
-    order by s.location
-  </query>
-  <query name="Sample.forUser/alias">
-    from Sample s
-    inner join fetch s.owner
-    where s.owner.id = :id
-    order by s.alias
-  </query>
-  <query name="Sample.forUser/owner">
-    from Sample s
-    inner join fetch s.owner
-    where s.owner.id = :id
-    order by s.owner.emailAddress
-  </query>
-  <query name="Sample.forUser/rockType">
-    from Sample s
-    inner join fetch s.owner
-    where s.owner.id = :id
-    order by s.rockType
-  </query>
-  <query name="Sample.forUser/collectionDate">
-    from Sample s
-    inner join fetch s.owner
-    where s.owner.id = :id
-    order by s.collectionDate
-  </query>
-  <query name="Sample.forUser/publicData">
-    from Sample s
-    inner join fetch s.owner
-    where s.owner.id = :id
-    order by s.publicData
-  </query>
-  <query name="Sample.forUser/country">
-    from Sample s
-    inner join fetch s.owner
-    where s.owner.id = :id
-    order by s.country
-  </query>
-  <query name="Sample.forUser/description">
-    from Sample s
-    inner join fetch s.owner
-    where s.owner.id = :id
-    order by s.description
-  </query>
-  <query name="Sample.forUser/collector">
-    from Sample s
-    inner join fetch s.owner
-    where s.owner.id = :id
-    order by s.collector
-  </query>
-  <query name="Sample.forUser/locationText">
-    from Sample s
-    inner join fetch s.owner
-    where s.owner.id = :id
-    order by s.locationText
-  </query>
-  <query name="Sample.forUser/latitudeError">
-    from Sample s
-    inner join fetch s.owner
-    where s.owner.id = :id
-    order by s.latitudeError
-  </query>
-  <query name="Sample.forUser/longitudeError">
-    from Sample s
-    inner join fetch s.owner
-    where s.owner.id = :id
-    order by s.longitudeError
-  </query>
-  
   <query name="Sample.byUser.byAlias">
     from Sample s
     inner join fetch s.owner
@@ -262,95 +179,6 @@
   	order by s.alias
   </query>
   
-
-  <query name="Sample.allPublic,size">
-    select count(*) from Sample s
-    where s.publicData = 'Y'
-  </query>
-  <query name="Sample.allPublic/sesarNumber">
-    from Sample s
-    inner join fetch s.owner
-    where s.publicData = 'Y'
-    order by s.sesarNumber
-  </query>
-  <query name="Sample.allPublic/alias">
-    from Sample s
-    inner join fetch s.owner
-    where s.publicData = 'Y'
-    order by s.alias
-  </query>
-  <query name="Sample.allPublic/owner">
-    from Sample s
-    inner join fetch s.owner
-    where s.publicData = 'Y'
-    order by s.owner.emailAddress
-  </query>
-  <query name="Sample.allPublic/rockType">
-    from Sample s
-    inner join fetch s.owner
-    where s.publicData = 'Y'
-    order by s.rockType
-  </query>
-  <query name="Sample.allPublic/collectionDate">
-    from Sample s
-    inner join fetch s.owner
-    where s.publicData = 'Y'
-    order by s.collectionDate
-  </query>
-  <query name="Sample.allPublic/publicData">
-    from Sample s
-    inner join fetch s.owner
-    where s.publicData = 'Y'
-    order by s.publicData
-  </query>
-  <query name="Sample.allPublic/latitude">
-    from Sample s
-    inner join fetch s.owner
-    where s.publicData = 'Y'
-    order by s.location
-  </query>
-  <query name="Sample.allPublic/longitude">
-    from Sample s
-    inner join fetch s.owner
-    where s.publicData = 'Y'
-    order by s.location
-  </query>
-  <query name="Sample.allPublic/country">
-    from Sample s
-    inner join fetch s.owner
-    where s.publicData = 'Y'
-    order by s.country
-  </query>
-  <query name="Sample.allPublic/description">
-    from Sample s
-    inner join fetch s.owner
-    where s.publicData = 'Y'
-    order by s.description
-  </query>
-  <query name="Sample.allPublic/collector">
-    from Sample s
-    inner join fetch s.owner
-    where s.publicData = 'Y'
-    order by s.collector
-  </query>
-  <query name="Sample.allPublic/locationText">
-    from Sample s
-    inner join fetch s.owner
-    where s.publicData = 'Y'
-    order by s.locationText
-  </query>
-  <query name="Sample.allPublic/latitudeError">
-    from Sample s
-    inner join fetch s.owner
-    where s.publicData = 'Y'
-    order by s.latitudeError
-  </query>
-  <query name="Sample.allPublic/longitudeError">
-    from Sample s
-    inner join fetch s.owner
-    where s.publicData = 'Y'
-    order by s.longitudeError
-  </query>
   <query name="Sample.Collectors/Collector">
     Select Distinct collector
     from Sample s
@@ -365,6 +193,12 @@
   
   <filter-def name="boundingBox">
     <filter-param name="polygon" type="edu.rpi.metpetdb.server.dao.GeometryType"/>
+  </filter-def>
+  
+  <filter-def name="user">
+    <filter-param name="id" type="long"/>
+  </filter-def>
+  <filter-def name="public">
   </filter-def>
 
 </hibernate-mapping>

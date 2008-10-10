@@ -85,12 +85,6 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		return getSamples(sizeQ, pageQ);
 	}
 
-	public Results<Sample> getForUser(final PaginationParameters p, long id) {
-		final Query sizeQ = sizeQuery("Sample.forUser", id);
-		final Query pageQ = pageQuery("Sample.forUser", p, id);
-		return getSamples(sizeQ, pageQ);
-	}
-
 	public Results<Sample> getAll(final PaginationParameters p) {
 		final Query sizeQ = sizeQuery("Sample.all");
 		final Query pageQ = pageQuery("Sample.all", p);

@@ -24,10 +24,12 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 
 	public Results<Sample> allSamplesForUser(final PaginationParameters p,
 			long id) {
-		return (new SampleDAO(this.currentSession())).getForUser(p, id);
+		this.currentSession().enableFilter("user").setParameter("id", id);
+		return (new SampleDAO(this.currentSession())).getAll(p);
 	}
 	public Results<Sample> allPublicSamples(final PaginationParameters p) {
-		return (new SampleDAO(this.currentSession())).getAllPublicSamples(p);
+		this.currentSession().enableFilter("public");
+		return (new SampleDAO(this.currentSession())).getAll(p);
 	}
 
 	public Results<Sample> projectSamples(final PaginationParameters p, long id) {
