@@ -31,7 +31,7 @@
   
   <servlet>
 	<servlet-name>bulkUpload</servlet-name>
-	<servlet-class>edu.rpi.metpetdb.server.impl.BulkUploadServiceImpl</servlet-class>
+	<servlet-class>edu.rpi.metpetdb.server.impl.bulk.upload.BulkUploadSampleServiceImpl</servlet-class>
 	<load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
@@ -41,7 +41,7 @@
 
   <servlet>
 	<servlet-name>bulkUploadChemicalAnalyses</servlet-name>
-	<servlet-class>edu.rpi.metpetdb.server.impl.BulkUploadChemicalAnalysesServiceImpl</servlet-class>
+	<servlet-class>edu.rpi.metpetdb.server.impl.bulk.upload.BulkUploadChemicalAnalysesServiceImpl</servlet-class>
 	<load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
@@ -51,7 +51,7 @@
   
   <servlet>
 	<servlet-name>bulkUploadImages</servlet-name>
-	<servlet-class>edu.rpi.metpetdb.server.impl.BulkUploadImagesServiceImpl</servlet-class>
+	<servlet-class>edu.rpi.metpetdb.server.impl.bulk.upload.BulkUploadImagesServiceImpl</servlet-class>
 	<load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>

@@ -1,8 +1,9 @@
-package edu.rpi.metpetdb.server.impl;
+package edu.rpi.metpetdb.server.impl.bulk.upload;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +21,7 @@ import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.SampleParser;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 
-public class BulkUploadServiceImpl extends SampleServiceImpl implements
+public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 		BulkUploadSampleService {
 	private static final long serialVersionUID = 1L;
 
@@ -33,8 +34,9 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 						fileOnServer).executeUpdate();
 		SampleParser sp;
 		try {
-			sp = new SampleParser(new FileInputStream(
-					MpDbServlet.getFileUploadPath() + fileOnServer));
+			sp = new SampleParser(new FileInputStream(MpDbServlet
+					.getFileUploadPath()
+					+ fileOnServer));
 			sp.parse();
 			final List<Sample> samples = sp.getSamples();
 			User user = new User();
@@ -88,6 +90,16 @@ public class BulkUploadServiceImpl extends SampleServiceImpl implements
 			throw new IllegalStateException(ioe.getMessage());
 		}
 		return results;
+	}
+
+	protected void save(final Collection<Sample> samples)
+			throws ValidationException, LoginRequiredException, DAOException {
+		for (Sample sample : samples) {
+			doc.validate(sample);
+			Sample s = (sample);
+			s = (new SampleDAO(this.currentSession())).save(s);
+		}
+		commit();
 	}
 
 }

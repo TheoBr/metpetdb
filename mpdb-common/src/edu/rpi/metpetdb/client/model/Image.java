@@ -5,7 +5,9 @@ import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 
-public class Image extends MObject {
+import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
+
+public class Image extends MObject implements HasSubsample {
 	private static final long serialVersionUID = 1L;
 
 	private long id;

@@ -13,8 +13,9 @@ import org.hibernate.search.annotations.Store;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.interfaces.HasDate;
+import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
 
-public class ChemicalAnalysis extends MObject implements HasDate {
+public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample {
 	private static final long serialVersionUID = 1L;
 
 	private int id;

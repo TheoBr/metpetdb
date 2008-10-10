@@ -38,27 +38,6 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		return l;
 	}
 
-	protected void save(final Collection<ChemicalAnalysis> analyses)
-			throws ValidationException, LoginRequiredException, DAOException {
-		ChemicalAnalysisDAO dao = new ChemicalAnalysisDAO(this.currentSession());
-
-		User user = new User();
-		user.setId(currentUser());
-
-		try {
-			for (ChemicalAnalysis analysis : analyses) {
-				doc.validate(analysis);
-				ChemicalAnalysis ca = (analysis);
-				ca.getSubsample().getSample().setOwner(user);
-				ca = dao.save(ca);
-			}
-		} catch (ValidationException e) {
-			forgetChanges();
-			throw e;
-		}
-		commit();
-	}
-
 	public ChemicalAnalysis save(ChemicalAnalysis ca)
 			throws ValidationException, LoginRequiredException, DAOException {
 		doc.validate(ca);

@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
 import javax.media.jai.ImageLayout;
@@ -24,14 +23,12 @@ import javax.media.jai.operator.CompositeDescriptor;
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.Grid;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
 import edu.rpi.metpetdb.client.model.XrayImage;
 import edu.rpi.metpetdb.client.service.ImageService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.MpDbServlet;
-import edu.rpi.metpetdb.server.dao.impl.GridDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageOnGridDAO;
 import edu.rpi.metpetdb.server.dao.impl.XrayImageDAO;
@@ -77,51 +74,10 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		return (i);
 	}
 
-	protected void save(final Collection<Image> images)
-			throws ValidationException, LoginRequiredException, DAOException {
-
-		for (Image image : images) {
-			if (image instanceof XrayImage) {
-				(new XrayImageDAO(this.currentSession()))
-						.save((XrayImage) image);
-			} else {
-				(new ImageDAO(this.currentSession())).save(image);
-			}
-		}
-		commit();
-	}
-
 	public ImageOnGrid saveImageOnGrid(ImageOnGrid iog)
 			throws ValidationException, LoginRequiredException, DAOException {
 		iog = (new ImageOnGridDAO(this.currentSession())).save(iog);
 		commit();
-		return (iog);
-	}
-
-	protected ImageOnGrid saveIncompleteImageOnGrid(ImageOnGrid iog)
-			throws ValidationException, LoginRequiredException, DAOException {
-		// First save the image
-		doc.validate(iog.getImage());
-		Image i = (iog.getImage());
-		i = (new ImageDAO(this.currentSession())).save(i);
-		iog.setImage((Image) (i));
-
-		// Set the grid, either find the appropriate old one, or a new one
-		Grid g = iog.getImage().getSubsample().getGrid();
-		if (g == null) {
-			// Create New Grid
-			g = new Grid();
-			g.setSubsample(iog.getImage().getSubsample());
-
-			if (g.getSubsample().getSample().getOwner().getId() != currentUser())
-				throw new SecurityException(
-						"Cannot modify grids you don't own.");
-			g = (new GridDAO(this.currentSession())).save(g);
-		}
-		iog.setGrid(g);
-
-		// Save ImageOnGrid
-		iog = (new ImageOnGridDAO(this.currentSession())).save(iog);
 		return (iog);
 	}
 
