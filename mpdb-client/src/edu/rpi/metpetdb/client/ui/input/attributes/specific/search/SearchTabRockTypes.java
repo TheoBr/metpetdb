@@ -9,7 +9,7 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.MpDb;
 
 public class SearchTabRockTypes extends SearchTabAttribute{
-	private static SearchGenericAttribute[] atts = {new SRockTypesAttribute(MpDb.doc.SearchSample_possibleRockTypes, 4)};
+	private static SearchGenericAttribute[] atts = {new SearchRockTypesAttribute(MpDb.doc.SearchSample_possibleRockTypes, 4)};
 	
 	public SearchTabRockTypes(){
 		super(atts, "Rock Types");

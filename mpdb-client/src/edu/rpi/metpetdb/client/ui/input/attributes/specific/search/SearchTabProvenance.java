@@ -11,7 +11,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateRangeAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchOwnersAttribute;
 
-public class SearchTabOther extends SearchTabAttribute{
+public class SearchTabProvenance extends SearchTabAttribute{
 	private static SearchGenericAttribute[] atts = {new SearchOwnersAttribute(MpDb.oc.SearchSample_owner),
 		new SearchCollectorsAttribute(MpDb.oc.SearchSample_collector),
 		new SearchAliasAttribute(MpDb.oc.SearchSample_alias),
@@ -26,8 +26,8 @@ public class SearchTabOther extends SearchTabAttribute{
 		return currentEditWidgets;
 	}
 	
-	public SearchTabOther(){
-		super(atts, "Other");
+	public SearchTabProvenance(){
+		super(atts, "Provenance");
 	}
 	
 	

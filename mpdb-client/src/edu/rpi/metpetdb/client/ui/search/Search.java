@@ -28,7 +28,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabAttr
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabChemicalAnalysis;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabLocation;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabMinerals;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabOther;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabProvenance;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabRockTypes;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
@@ -71,7 +71,7 @@ public class Search extends MPagePanel implements ClickListener {
 //
 //	};
 	private static  SearchTabAttribute[] searchTabs = {
-		new SearchTabRockTypes(), new SearchTabLocation(), new SearchTabMinerals(), new SearchTabChemicalAnalysis(), new SearchTabOther()
+		new SearchTabRockTypes(), new SearchTabLocation(), new SearchTabMinerals(), new SearchTabChemicalAnalysis(), new SearchTabProvenance()
 	};
 
 	private static final String samplesParameter = "Samples";

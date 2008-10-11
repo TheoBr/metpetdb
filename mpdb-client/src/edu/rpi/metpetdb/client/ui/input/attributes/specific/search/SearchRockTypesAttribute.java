@@ -25,20 +25,20 @@ import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
-public class SRockTypesAttribute extends SearchGenericAttribute implements ClickListener {
+public class SearchRockTypesAttribute extends SearchGenericAttribute implements ClickListener {
 	private int cols;
 	private FlexTable editList;
 	private SimplePanel editListContainer = new SimplePanel();
 	/* To keep track of the physical object that is attached to the checkbox */
 	private Map<CheckBox, Object> items;
 
-	public SRockTypesAttribute(final PropertyConstraint sc) {
+	public SearchRockTypesAttribute(final PropertyConstraint sc) {
 		super(sc);
 		items = new HashMap<CheckBox, Object>();
 		cols = 1;
 	}
 
-	public SRockTypesAttribute(final PropertyConstraint sc, final int cols) {
+	public SearchRockTypesAttribute(final PropertyConstraint sc, final int cols) {
 		super(sc);
 		items = new HashMap<CheckBox, Object>();
 		this.cols = cols;
