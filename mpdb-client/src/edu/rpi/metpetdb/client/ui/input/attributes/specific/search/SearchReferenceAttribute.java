@@ -92,7 +92,7 @@ public class SearchReferenceAttribute extends SearchGenericAttribute {
 		while (itr.hasNext()) {
 			final MSuggestText st = (MSuggestText) itr.next();
 			if (!st.getText().equals(""))
-				criteria.add(new Pair(createCritRow("Owner:", st.getText()), st));
+				criteria.add(new Pair(createCritRow("Reference:", st.getText()), st));
 		}
 		return criteria;
 	}

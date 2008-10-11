@@ -92,7 +92,7 @@ public class SearchCollectorsAttribute extends SearchGenericAttribute {
 		while (itr.hasNext()) {
 			final MSuggestText st = (MSuggestText) itr.next();
 			if (!st.getText().equals(""))
-				criteria.add(new Pair(createCritRow("Owner:", st.getText()), st));
+				criteria.add(new Pair(createCritRow("Collector:", st.getText()), st));
 		}
 		return criteria;
 	}

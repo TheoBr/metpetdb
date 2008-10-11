@@ -92,7 +92,7 @@ public class SearchMetamorphicGradeAttribute extends SearchGenericAttribute {
 		while (itr.hasNext()) {
 			final MSuggestText st = (MSuggestText) itr.next();
 			if (!st.getText().equals(""))
-				criteria.add(new Pair(createCritRow("Owner:", st.getText()), st));
+				criteria.add(new Pair(createCritRow("Metamorphic Grade:", st.getText()), st));
 		}
 		return criteria;
 	}

@@ -312,9 +312,12 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 		final ArrayList<Pair> criteria = new ArrayList<Pair>();
 		try{
 	//		if (boundingBox != null)
+			if(northInput.getText().length() > 0 && southInput.getText().length() > 0 && eastInput.getText().length() > 0 && westInput.getText().length() > 0)
+			{
 				criteria.add(new Pair(createCritRow("Location:", " N: " + String.valueOf(northInput.getText()) + " S: "
 						+ String.valueOf(southInput.getText()) +  " E: " + String.valueOf(eastInput.getText())  
 						+ " W: " + String.valueOf(westInput.getText())), get(null)));
+			}
 		}
 		catch (Exception e){
 			// TODO
