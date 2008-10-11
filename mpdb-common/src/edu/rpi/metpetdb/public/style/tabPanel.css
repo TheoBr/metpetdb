@@ -23,16 +23,22 @@
 	height: 21px;
 	padding: 3px 0 0 8px;
 }
-.tabBarItem-selected,
 .tabBarItem:active {
+	background-image: url(../images/tabitem-active-bg.png);
+}
+.tabBarItem-selected {
 	background-image: url(../images/tabitem-selected-bg.png);
 }
-.tabBarItem-selected .tabBarItem-wrap,
 .tabBarItem:active .tabBarItem-wrap {
+	background-image: url(../images/tabitem-active-right.png);
+}
+.tabBarItem-selected .tabBarItem-wrap {
 	background-image: url(../images/tabitem-selected-right.png);
 }
-.tabBarItem-selected .tabBarItem-content,
 .tabBarItem:active .tabBarItem-content {
+	background: transparent url(../images/tabitem-active-left.png) no-repeat 0% 50%;
+}
+.tabBarItem-selected .tabBarItem-content {
 	color: #fff;
 	text-shadow: 1px 1px 0 #000;
 	background: transparent url(../images/tabitem-selected-left.png) no-repeat 0% 50%;
