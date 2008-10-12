@@ -367,6 +367,15 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 	text-decoration: none;
 }
 
+/*-------------------------------------
+             two-column panel
+ --------------------------------------*/
+.left-col,
+.right-col {
+	float: left;
+	width: 50%;
+}
+
 
 
 

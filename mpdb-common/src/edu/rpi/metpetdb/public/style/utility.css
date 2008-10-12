@@ -38,3 +38,14 @@
 	clear: both; 
 	visibility: hidden;
 }
+
+/*-------------------------------------
+               extras
+ --------------------------------------*/
+
+.beta {
+	background: transparent url(../images/beta-bg.png) repeat left top !important;
+	border: 1px solid #fda293;
+	border-right-color: #ea8d7e;
+	border-bottom-color: #ea8d7e;
+}

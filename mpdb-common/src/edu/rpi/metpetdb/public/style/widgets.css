@@ -1,78 +1,3 @@
-/*-------------------------------------
-              vertical panel
- --------------------------------------*/
-.gwt-VerticalPanel {
-	font-family: Helvetica,sans-serif;
-	font-size: 2em;
-	font-size-adjust: none;
-	font-style: normal;
-	font-variant: normal;
-	font-weight: normal;
-	line-height: normal;
-	margin-top: 0.7em;
-}
-
-/*-------------------------------------
-             two-column panel
- --------------------------------------*/
-.left-col,
-.right-col {
-	float: left;
-	width: 50%;
-}
-
-/*-------------------------------------
-			calendar popup
- --------------------------------------*/
-
-.gwt-DatePicker {
-	background-color: #e6eaf1;
-	border: 1px solid #91a3c1;
-}
-table.calendar-panel {
-	width: 100%;
-	background-color: #F6FFDD;
-	border: none !important;
-}
-
-.weekend {
-	background-color: #eee;
-}
-
-.date-cell, .filler-cell {
-	border: 1px solid #e4f0c3;
-	text-align: center;
-}
-.day-title {
-	background-color: #e4f0c3;
-	color: #55700a;
-	border-bottom: 1px solid #6fa4d5;
-}
-.date-cell {
-	background-color: #fff;
-	color: #7d992f;
-	padding:3px 3px 3px 3px;
-}
-
-.highlighted-cell {
-	background-color: #111;
-	color: #fff;
-	cursor:pointer;	
-}
-
-.selected-cell {
-	background-color:#222;
-	color: #fff;
-}
-
-.month-label {
-	width:100%;
-	text-align:center;
-}
-
-.month-forward, .month-backward {
-	cursor:pointer;
-}
 
 /*-------------------------------------
                data table
@@ -113,38 +38,6 @@ table.calendar-panel {
 	margin-left: 10px;
 }
 
-/*-------------------------------------
-             custom columns popup
- --------------------------------------*/
-.popup-custom-cols-container {
-	padding: 10px;
-	background: #a0a0a1 url(../images/settings-dialog-bg.png) repeat-x 0 0;
-}
-.popup-custom-cols .gwt-Label {
-	text-align: left;
-	margin-bottom: 10px;
-}
-.popup-custom-cols .checkbox {
-	display: table-row;
-}
-.popup-custom-cols .checkbox input {
-	border: 0 !important;
-	margin: 0 5px 0 0;
-}
-.popup-custom-cols .checkbox label,
-.popup-custom-cols .checkbox input {
-	display: table-cell;
-	vertical-align: middle;
-	padding-bottom: 10px;
-}
-
-.popup-custom-cols-bottom {
-	text-align: right;
-	margin-top: 6px;
-}
-.popup-custom-cols-bottom button {
-	margin-left: 10px;
-}
 
 /*-------------------------------------
 				Notices
@@ -206,6 +99,12 @@ table.calendar-panel {
 .gwt-ProgressBar-shell .gwt-ProgressBar-text-secondHalf {
 	color: #fff;
 }
+
+/*-------------------------------------
+				auto-suggest
+---------------------------------------*/
+
+
 
 
 /*-------------------------------------

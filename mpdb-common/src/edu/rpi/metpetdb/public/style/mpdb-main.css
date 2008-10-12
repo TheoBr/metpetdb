@@ -9,10 +9,11 @@
 /*-------------------------------------
              widgets
  --------------------------------------*/
-@import "detailsPanel.css";
 @import "dialogs.css";
-@import "tabPanel.css";
 @import "widgets.css";
+@import "widget-calendar.css";
+@import "widget-detailsPanel.css";
+@import "widget-tabPanel.css";
 
 /*-------------------------------------
              pages
@@ -31,4 +32,3 @@
              :(
  --------------------------------------*/
 @import "deprecated.css";
-@import "outdated.css";
