@@ -73,9 +73,9 @@ public class SampleMineral extends MObject {
 	}
 
 	public int hashCode() {
-		return mineral != null && amount != null ? mineral.hashCode()
-				+ amount.intValue() : mineral.hashCode();
-		// return mineral.hashCode();
+		//return mineral != null && amount != null ? mineral.hashCode()
+		//		+ amount.intValue() : mineral.hashCode();
+		return mineral.hashCode();
 	}
 
 	@Override

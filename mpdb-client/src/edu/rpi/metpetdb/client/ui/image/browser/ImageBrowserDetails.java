@@ -48,6 +48,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
+import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel.ZMode;
 
 public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 
@@ -537,7 +538,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		else if (sender == this.bringToFront)
 			this.doBringToFront();
 		else if (sender == this.senBack)
-			this.doSenBack();
+			this.doSendToBack();
 		else if (sender == this.addExistingImage)
 			this.doAddExistingImage();
 		else if (sender == this.addNewImageToSubsample)
@@ -549,11 +550,11 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	}
 
 	private void doBringToFront() {
-		this.grid.setZMode(1);
+		this.grid.setZMode(ZMode.BRING_TO_FRONT);
 	}
 
-	private void doSenBack() {
-		this.grid.setZMode(2);
+	private void doSendToBack() {
+		this.grid.setZMode(ZMode.SEND_TO_BACK);
 	}
 
 	private void doAddExistingImage() {
@@ -647,12 +648,14 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 
 			for (int i = 0; i < currentX.length(); ++i)
 				if (Character.isLetter(currentX.charAt(i))) {
-					x = Integer.parseInt(currentX.substring(0, i));
+					Double tmp = Double.parseDouble(currentX.substring(0,i));
+					x = tmp.intValue();
 					break;
 				}
 			for (int i = 0; i < currentY.length(); ++i)
 				if (Character.isLetter(currentY.charAt(i))) {
-					y = Integer.parseInt(currentY.substring(0, i));
+					Double tmp = Double.parseDouble(currentY.substring(0,i));
+					y = tmp.intValue();
 					break;
 				}
 		}

@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserMouseListener;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserMouseListener.MouseMode;
 
 public class AddPointListener implements ClickListener {
 
@@ -21,7 +22,7 @@ public class AddPointListener implements ClickListener {
 	}
 
 	public void onClick(final Widget sender) {
-		mouseListener.setMode(3);
+		mouseListener.setMode(MouseMode.PLACE_POINT);
 		mouseListener.setCurrentImage(iog);
 		final Image image = new Image(GWT.getModuleBaseURL()
 				+ "/images/point0.gif");

@@ -71,19 +71,8 @@ public class ImageParser extends Parser{
 					"element", "setElement", Element.class, "XrayImage_element"
 			},
 			{
-					"(lut)|(look up table)", "setLut", Integer.class,
-					"XrayImage_lut"
-			},
-			{
-					"contrast", "setContrast", Integer.class, "Image_contrast"
-			},
-			{
-					"brightness", "setBrightness", Integer.class,
-					"Image_brightness"
-			},
-			{
-					"collector", "setCollector", String.class,
-					"Image_collector"
+				"(collector)|(collected by)", "setCollector", String.class,
+				"Image_collector"
 			},
 			{
 					"scale", "setScale", Integer.class, "Image_scale"

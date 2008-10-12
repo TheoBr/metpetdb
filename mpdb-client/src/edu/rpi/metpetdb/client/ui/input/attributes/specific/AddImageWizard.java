@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 import com.google.gwt.user.client.ui.Button;
 
 import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.ImageType;
 import edu.rpi.metpetdb.client.model.XrayImage;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
@@ -10,7 +11,6 @@ import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 import edu.rpi.metpetdb.client.ui.input.WizardDialog;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 
 public class AddImageWizard extends WizardDialog {
@@ -32,8 +32,8 @@ public class AddImageWizard extends WizardDialog {
 			public void begin() {
 			}
 			public void onSuccess(final Object result) {
-				if (result instanceof String) {
-					if (result.toString().contains("X-ray")) {
+				if (result instanceof ImageType) {
+					if (((ImageType) result).getImageType().contains("X-ray")) {
 						p_xray.edit(xray);
 						AddImageWizard.this.addStep(p_xray, 1,
 								"X-ray Attributes");

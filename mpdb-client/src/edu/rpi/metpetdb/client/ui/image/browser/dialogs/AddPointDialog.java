@@ -96,7 +96,7 @@ public class AddPointDialog extends DialogBox implements ClickListener,
 					}
 				}
 			} else
-				this.continuation.onSuccess(null);
+				this.continuation.cancel();
 	}
 
 	public void onKeyPress(final Widget sender, final char kc, final int mod) {

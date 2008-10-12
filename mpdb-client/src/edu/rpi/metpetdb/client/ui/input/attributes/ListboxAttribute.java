@@ -62,7 +62,7 @@ public class ListboxAttribute extends GenericAttribute {
 			final Object o = itr.next();
 			objects.put(o.toString(), o);
 			lb.addItem(o.toString(), o.toString());
-			if (o.equals(selected)) {
+			if (o.toString().equals(selected)) {
 				lb.setItemSelected(index, true);
 			}
 			++index;

@@ -18,7 +18,13 @@ public class MAbsolutePanel extends AbsolutePanel implements
 	private ClickListenerCollection clickListeners;
 	private boolean canDrag;
 	private boolean ctrlDown;
-	private int zMode = 0;
+	private ZMode zMode = ZMode.NO_ZOOM;
+	
+	public enum ZMode {
+		NO_ZOOM,
+		SEND_TO_BACK,
+		BRING_TO_FRONT,
+	}
 
 	public MAbsolutePanel() {
 		super();
@@ -28,13 +34,13 @@ public class MAbsolutePanel extends AbsolutePanel implements
 		canDrag = true;
 	}
 
-	public int getZMode() {
+	public ZMode getZMode() {
 		return zMode;
 	}
 
-	public void setZMode(final int i) {
+	public void setZMode(final ZMode i) {
 		zMode = i;
-		if (i == 0) {
+		if (i == ZMode.NO_ZOOM) {
 			DOM.setStyleAttribute(this.getElement(), "cursor", "default");
 		} else {
 			DOM.setStyleAttribute(this.getElement(), "cursor", "crosshair");

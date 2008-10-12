@@ -81,7 +81,7 @@ public class AddImageAttribute extends GenericAttribute implements
 		imageContainer.add(new com.google.gwt.user.client.ui.Image(image
 				.get64x64ServerPath()));
 		imageContainer.add(new Label("Image Type: " + image.getImageType()));
-		if (image.getImageType().equals("X-ray")) {
+		if (image.getImageType().getImageType().contains("X-ray")) {
 			final XrayImage xray = (XrayImage) image;
 			imageContainer.add(new Label("Current: "
 					+ (xray.getCurrent() != null ? xray.getCurrent().toString()
@@ -122,7 +122,7 @@ public class AddImageAttribute extends GenericAttribute implements
 					new AddImageWizard(this).show();
 				}
 				public void onSuccess(final Image result) {
-					if (((Image) result).getImageType().equals("X-ray")) {
+					if (((Image) result).getImageType().getImageType().contains("X-ray")) {
 						AddImageAttribute.this.images.add(result);
 					} else {
 						AddImageAttribute.this.images.add(result);

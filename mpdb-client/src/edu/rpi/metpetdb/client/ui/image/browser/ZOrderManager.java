@@ -32,7 +32,7 @@ public class ZOrderManager {
 				String.valueOf(iog.getIog().getZorder()));
 	}
 
-	public void senBack(final ImageOnGridContainer iog) {
+	public void sendToBack(final ImageOnGridContainer iog) {
 		modifyAllZOrders(1);
 		iog.getIog().setZorder((getLowestZOrder() - 1));
 		DOM.setStyleAttribute(iog.getImageContainer().getElement(), "zIndex",

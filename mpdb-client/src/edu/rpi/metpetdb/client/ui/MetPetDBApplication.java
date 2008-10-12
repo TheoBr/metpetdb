@@ -38,10 +38,8 @@ import edu.rpi.metpetdb.client.ui.widgets.MText;
 public class MetPetDBApplication implements EntryPoint {
 
 	private static final String WIKI_URL = "http://trinity.db.cs.rpi.edu/xwiki/bin/view/Main/WebHome";
-	private static final String GIT_URL = "http://cgi2.cs.rpi.edu/~pearcs/gitweb.cgi?p=MetPetDB.git";
-	private static final String SVN_URL = "http://www.cs.rpi.edu/~watera2/svn/index.php";
-	private static final String JAVADOC_URL = "http://samana.cs.rpi.edu:8080/watera2/api/index.html";
-	private static final String JUNIT_URL = "http://samana.cs.rpi.edu:8080/watera2/reports/index.html";
+	private static final String JAVADOC_URL = "http://samana.cs.rpi.edu:8080/metpetwebtst/api/index.html";
+	private static final String JUNIT_URL = "http://samana.cs.rpi.edu:8080/metpetwebtst/reports/index.html";
 
 	private static RootPanel loginBar;
 	private static MMenuBar hdrnav;

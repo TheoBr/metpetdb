@@ -214,10 +214,21 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 							+ img.getFilename()));
 				} else {
 					try {
-						setRealImage(zp, img, spreadsheetPrefix);
+						//setRealImage(zp, img, spreadsheetPrefix);
 						// see if our subsample exists
-
+						// see if our sample exists
 						Subsample ss = (img.getSubsample());
+						Sample s = img.getSample();
+						s.setOwner(u);
+						try {
+							sDAO.fill(s);
+						} catch (DAOException e) {
+							// There is no sample we have to add an error
+							// Every Image needs a sample so add an error
+							errors.put(row, new PropertyRequiredException(
+									"Sample"));
+						}
+						ss.setSample(s);
 						if (ss != null) {
 							if (!subsampleNames.containsKey(img.getSample()
 									.getAlias())
@@ -229,6 +240,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 									subsampleNames.put(img.getSample()
 											.getAlias(), new HashSet<String>());
 								try {
+									ss.setSample(img.getSample());
 									ssDAO.fill(ss);
 									ssResultCount.incrementOld();
 								} catch (DAOException e) {
@@ -245,19 +257,8 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 							errors.put(row, new PropertyRequiredException(
 									"Subsample"));
 						}
-
-						// see if our sample exists
-						try {
-							Sample s = img.getSample();
-							s.setOwner(u);
-							sDAO.fill(s);
-						} catch (DAOException e) {
-							// There is no sample we have to add an error
-							// Every Image needs a sample so add an error
-							errors.put(row, new PropertyRequiredException(
-									"Sample"));
-						}
 						doc.validate(img);
+						//TODO we have no way of knowing if an image is old or not
 						if (dao.isNew(img))
 							imgResultCount.incrementFresh();
 						else
