@@ -46,19 +46,7 @@
 	padding-left: 22px;
 }
 
-.detailsPanel-editMode input {
-	border: 1px solid #ccc;
-	padding: 4px;
-}
-.detailsPanel-editMode input:focus, 
-.detailsPanel-editMode input:hover {
-	border-color: #999;
-}
 
-.detailsPanel-editMode input.invalid {
-	border-bottom: 2px solid #e31428;
-	background-color: #f9f9f9;
-}
 span.gwt-RadioButton label {
     color: #000;
     margin-right: 1em;

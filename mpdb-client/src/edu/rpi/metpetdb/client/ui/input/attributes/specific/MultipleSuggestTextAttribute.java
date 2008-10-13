@@ -16,9 +16,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.MButton;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
+import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
 
 public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 	private final boolean addShow;
@@ -73,86 +76,60 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 			final Iterator iter = s.iterator();
 			while (iter.hasNext()) {
 				final Object object = iter.next();
-				editList.add(MultipleSuggestTextAttribute.this
-						.createOptionalSuggestBox(object.toString()));
+				MultipleInputPanel t = MultipleSuggestTextAttribute.this.createOptionalSuggestBox(object.toString());
+				editList.add(t);
+				realEditWidgets.add(t);
 			}
 		}
-
-		editList.add(createOptionalSuggestBox(null));
+		MultipleInputPanel t = createOptionalSuggestBox(null);
+		editList.add(t);
+		realEditWidgets.add(t);
 		setSuggest();
 		return new Widget[] {
 			editList
 		};
 	}
 
-	public FlowPanel createOptionalSuggestBox(final String s) {
-		final FlowPanel fp = new FlowPanel();
+	public MultipleInputPanel createOptionalSuggestBox(final String s) {
+		final MultipleInputPanel panel = new MultipleInputPanel();
 		final MSuggestText st = new MSuggestText(suggestions,false);
 		st.suggestBox.setText(s);
-		final Button addButton = new Button("Add", new ClickListener() {
+		panel.setInputWidget(st);
+		panel.addButton.addClickListener(new ClickListener() {
 			public void onClick(final Widget sender) {
 				editList.add(MultipleSuggestTextAttribute.this
 						.createOptionalSuggestBox(null));
-
+				setStyles();
 			}
 		});
-		final Button removeButton = new Button("Remove", new ClickListener() {
+		panel.removeButton.addClickListener(new ClickListener() {
 			public void onClick(final Widget sender) {
 				// If there are more than one entry spaces...
 				if (realEditWidgets.size() > 1) {
 					// remove one
-					editList.remove(fp);
+					editList.remove(panel);
 					realEditWidgets.remove(st);
 				}
+				setStyles();
 			}
 		});
-		realEditWidgets.add(st);
-		st.addStyleName("inline");
-		fp.add(st);
-		fp.add(addButton);
-		fp.add(removeButton);
-
-		return fp;
+		return panel;
 	}
 	
 	public void createSuggest(final Set<String> options){
 		suggestions = options;
-		ArrayList<Widget> realEditList = new ArrayList();
-		for (int i = 0; i < realEditWidgets.size(); i++){
-			final FlowPanel fp = new FlowPanel();
-			final MSuggestText st = new MSuggestText(options,false);
-			final Button addButton = new Button("Add", new ClickListener() {
-				public void onClick(final Widget sender) {
-					editList.add(MultipleSuggestTextAttribute.this
-							.createOptionalSuggestBox(null));
-
-				}
-			});
-			final Button removeButton = new Button("Remove", new ClickListener() {
-				public void onClick(final Widget sender) {
-					// If there are more than one entry spaces...
-					if (realEditWidgets.size() > 1) {
-						// remove one
-						editList.remove(fp);
-						realEditWidgets.remove(st);
-					}
-				}
-			});
-			st.setText(((MSuggestText)((FlowPanel) editList.getWidget(i)).getWidget(0)).getText());
-			realEditWidgets.set(i, st);
-			st.addStyleName("inline");
-			fp.add(st);
-			fp.add(addButton);
-			fp.add(removeButton);
-			realEditList.add(fp);
+		ArrayList<MultipleInputPanel> realEditList = new ArrayList<MultipleInputPanel>();
+		for (int i = 0; i < realEditWidgets.size(); i++) {
+			MSuggestText temp = (MSuggestText) ((MultipleInputPanel) editList.getWidget(i)).getInputWidget();
+			realEditList.add(createOptionalSuggestBox(temp.getText()));
+			realEditWidgets.set(i, temp);
 		}
 		editList.clear();
 		while (realEditList.size() > 0){
-			final Widget w = realEditList.get(0);
+			final MultipleInputPanel w = (MultipleInputPanel) realEditList.get(0);
 			realEditList.remove(w);
 			editList.add(w);
 		}
-
 	}
 	
 	public abstract void setSuggest();
@@ -167,6 +144,14 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 	
 	public void setSuggestions(final Set<String> suggestions){
 		this.suggestions = suggestions;
+	}
+	
+	private void setStyles() {
+		if (editList.getWidgetCount() == 1)
+			((MultipleInputPanel) editList.getWidget(0)).setAlone(true);
+		else 
+			for (int i=0; i<editList.getWidgetCount(); i++)
+				((MultipleInputPanel) editList.getWidget(i)).setAlone(false);
 	}
 
 }

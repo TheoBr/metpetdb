@@ -64,13 +64,13 @@
 	width: 100%;
 }
 
-
-/* todo: these will not be necessary when we stop using detailsPanel */
-.search .detailsPanel { margin: 0; padding: 0; }
-.search .detailsPanel > table { width: 100%; }
-.search .pairedRow-label { width: 0; }
-.search .two-cols .pairedRow-label { width: auto; }
-.search .pairedRow-label label { padding-right: 0; }
-.search .two-cols .pairedRow-label label { padding-right: 0.5em; }
-.search .pairedRow-label, .search .pairedRow-value { padding-top: 0; }
-.search .two-cols .pairedRow-label, .search .two-cols .pairedRow-value { padding-top: 0.02em; }
+/* provenance */
+.search-prov {
+	margin: 10px;
+}
+.search-prov td {
+	padding-bottom: 5px;
+}
+.search-prov .label {
+	padding-right: 5px;
+}

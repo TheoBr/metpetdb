@@ -9,12 +9,16 @@ import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
 
 public class MSuggestText extends FlowPanel{
+	
 	public SuggestBox suggestBox;
+	private static final String STYLENAME = "suggest-wrap";
+	
 	public MSuggestText(){
 		this(new HashSet<String>(), false);
 	}
 	
 	public MSuggestText(final Set<String> suggestions, final boolean addShowAll){
+		setStylePrimaryName(STYLENAME);
 		final MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();	
 		oracle.addAll(suggestions);
 		suggestBox = new SuggestBox(oracle);

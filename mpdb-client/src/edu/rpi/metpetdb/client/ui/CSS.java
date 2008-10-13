@@ -45,6 +45,7 @@ public class CSS {
 	public static final String FIRST = "first";
 	public static final String CURRENT = "current";
 	public static final String EMPTY = "empty";
+	public static final String DISABLED = "disabled";
 	
 	/* ---------------- forms ---------------- */
 	public static final String SUBMIT = "submit";
@@ -139,7 +140,9 @@ public class CSS {
 	public static final String SEARCH_BUTTON = "search-button";
 	public static final String SEARCH_ROCKTYPES = "search-rt";
 	public static final String SEARCH_ROCKTYPES_TABLE = "search-rt-table";
-	
+	public static final String SEARCH_LABEL = "label";
+	public static final String SEARCH_INPUT = "input";
+	public static final String SEARCH_PROVENANCE = "search-prov";
 	
 	public static final String LAST_ROW = "last-row";
 	public static final String ACTIONS = "actions";
@@ -148,6 +151,11 @@ public class CSS {
 	public static final String FORGOT_PASS = "forgot-pass";
 	
 	public static final String REGISTER = "register";
+	public static final String ICON_PLUS = "icon-plus";
+	public static final String ICON_MINUS = "icon-minus";
+	
+	
+	
 	
 	
 	
@@ -170,7 +178,7 @@ public class CSS {
 		w.removeStyleName(HIDE);
 	}
 	
-	// Methods for getting, setting, adding, and removing styleNames to Elements. 
+	// Methods for getting, setting, adding, and removing styleNames from Elements. 
 	// Ripped from com.google.gwt.user.client.ui.UIObject
 	
 	public static void setStyleName(Element elem, String styleName) {
