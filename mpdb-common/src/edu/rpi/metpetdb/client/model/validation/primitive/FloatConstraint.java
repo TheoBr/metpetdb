@@ -16,6 +16,8 @@ public class FloatConstraint extends PropertyConstraint implements
 
 	public void validateValue(Object value) throws ValidationException {
 		super.validateValue(value);
+		if (value == null)
+			return;
 		try {
 			if (value instanceof String)
 				value = Float.parseFloat((String) value);
@@ -24,20 +26,18 @@ public class FloatConstraint extends PropertyConstraint implements
 		} catch (NumberFormatException nfe) {
 			throw new InvalidFloatException(this);
 		}
-		if (value == null || value instanceof Float) {
-			if (value instanceof Float) {
-				//make sure value is within ranges
-				if (maxValue != null)
-					if ((Float) value >= maxValue) {
-						throw new NumberTooBigException(this, (Float) value);
-					}
-				if (minValue != null) 
-					if ((Float) value <= minValue) {
-						throw new NumberTooSmallException(this, (Float) value);
-					}
-			}
-			return;
+		if (value instanceof Float) {
+			// make sure value is within ranges
+			if (maxValue != null)
+				if ((Float) value >= maxValue) {
+					throw new NumberTooBigException(this, (Float) value);
+				}
+			if (minValue != null)
+				if ((Float) value <= minValue) {
+					throw new NumberTooSmallException(this, (Float) value);
+				}
 		}
+		return;
 	}
 
 	public int getMaxLength() {
