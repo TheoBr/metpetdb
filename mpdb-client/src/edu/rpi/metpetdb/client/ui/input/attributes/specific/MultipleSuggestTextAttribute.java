@@ -97,8 +97,9 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 		panel.setInputWidget(st);
 		panel.addButton.addClickListener(new ClickListener() {
 			public void onClick(final Widget sender) {
-				editList.add(MultipleSuggestTextAttribute.this
-						.createOptionalSuggestBox(null));
+				MultipleInputPanel t = MultipleSuggestTextAttribute.this.createOptionalSuggestBox(null);
+				editList.add(t);
+				realEditWidgets.add(t);
 				setStyles();
 			}
 		});
@@ -117,7 +118,7 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 	}
 	
 	public void createSuggest(final Set<String> options){
-		suggestions = options;
+		setSuggestions(options);
 		ArrayList<MultipleInputPanel> realEditList = new ArrayList<MultipleInputPanel>();
 		for (int i = 0; i < realEditWidgets.size(); i++) {
 			MSuggestText temp = (MSuggestText) ((MultipleInputPanel) editList.getWidget(i)).getInputWidget();
