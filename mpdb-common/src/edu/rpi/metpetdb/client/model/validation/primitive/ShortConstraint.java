@@ -1,12 +1,16 @@
 package edu.rpi.metpetdb.client.model.validation.primitive;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.error.validation.InvalidShortException;
+import edu.rpi.metpetdb.client.error.validation.number.InvalidShortException;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.MaxLengthConstraint;
+import edu.rpi.metpetdb.client.model.validation.interfaces.NumberConstraint;
 
 public class ShortConstraint extends PropertyConstraint implements
-		MaxLengthConstraint {
+		MaxLengthConstraint, NumberConstraint<Short> {
+	
+	private Short minValue;
+	private Short maxValue;
 
 	public void validateValue(final Object value) throws ValidationException {
 		super.validateValue(value);
@@ -23,4 +27,19 @@ public class ShortConstraint extends PropertyConstraint implements
 		return 30;
 	}
 
+	public Short getMinValue() {
+		return minValue;
+	}
+
+	public void setMinValue(Short minValue) {
+		this.minValue = minValue;
+	}
+
+	public Short getMaxValue() {
+		return maxValue;
+	}
+
+	public void setMaxValue(Short maxValue) {
+		this.maxValue = maxValue;
+	}
 }

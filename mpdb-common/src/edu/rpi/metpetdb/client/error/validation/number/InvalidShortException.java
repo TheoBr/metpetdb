@@ -1,21 +1,22 @@
-package edu.rpi.metpetdb.client.error.validation;
+package edu.rpi.metpetdb.client.error.validation.number;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 
-public class InvalidFloatException extends ValidationException {
+public class InvalidShortException extends ValidationException {
 	private static final long serialVersionUID = 1L;
 
-	public InvalidFloatException() {
+	public InvalidShortException() {
 	}
 
-	public InvalidFloatException(final PropertyConstraint pc) {
+	public InvalidShortException(PropertyConstraint pc) {
 		super(pc);
 	}
 
+	@Override
 	public String format() {
 		return LocaleHandler.lc_text
-				.errorDesc_InvalidFloat(formatPropertyName());
+				.errorDesc_InvalidShort(formatPropertyName());
 	}
 }

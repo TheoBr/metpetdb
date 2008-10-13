@@ -11,11 +11,14 @@ import java.sql.Types;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.sf.hibernate4gwt.core.HibernateBeanManager;
 
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -240,12 +243,10 @@ public class DataStore {
 				final Object next = i.next();
 				if (next instanceof Column) {
 					col = (Column) next;;
-				}
-				else if (next instanceof Formula) {
+				} else if (next instanceof Formula) {
 					col = null;
 					isFormula = true;
-				}
-				else {
+				} else {
 					throw new RuntimeException("Unrecgonized column format:"
 							+ f.getName());
 				}
@@ -299,7 +300,22 @@ public class DataStore {
 				} else if (pc instanceof IntegerConstraint) {
 
 				} else if (pc instanceof FloatConstraint) {
-
+					// get the constraints from the database
+					final SQLQuery q = open()
+							.createSQLQuery(
+									"select consrc from pg_constraint, pg_class where pg_class.relname='"
+											+ prop.getValue().getTable()
+													.getName()
+											+ "' and pg_class.relfilenode=pg_constraint.conrelid and pg_constraint.contype='c' and conkey[1]=(select attnum from pg_attribute, pg_class where relname='"
+											+ prop.getValue().getTable()
+													.getName()
+											+ "' and attname='" + col.getName()
+											+ "' limit 1);");
+					final Iterator<String> consItr = q.list().iterator();
+					while (consItr.hasNext()) {
+						final String constraint = consItr.next();
+						handleConstraint(constraint, (FloatConstraint) pc);
+					}
 				}
 
 				if (rs.next())
@@ -307,6 +323,22 @@ public class DataStore {
 			} finally {
 				rs.close();
 			}
+		}
+	}
+	private void handleConstraint(final String constraint,
+			final FloatConstraint fc) {
+		final String compareRegex = "[<]";
+		final String numberRegex = "[><]\\s*\\(([\\d]*)\\).*";
+		final Pattern numberPattern = Pattern.compile(numberRegex);
+		final Matcher numberMatcher = numberPattern.matcher(constraint);
+		final Pattern comparePattern = Pattern.compile(compareRegex);
+		final Matcher compareMatcher = comparePattern.matcher(constraint);
+		if (numberMatcher.find()) {
+			final float number = Float.parseFloat(numberMatcher.group(1));
+			if (!compareMatcher.matches())
+				fc.setMinValue(number);
+			else
+				fc.setMaxValue(number);
 		}
 	}
 	private static Class clazz(final PersistentClass cm, final String entityName) {
