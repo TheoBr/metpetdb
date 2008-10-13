@@ -101,7 +101,7 @@
 }
 
 /*-------------------------------------
-				multiple input
+			multiple input
 ---------------------------------------*/
 .multi-input .icon-plus,
 .multi-input .icon-minus {
@@ -114,6 +114,14 @@
 .multi-input-wrap {
 	display: inline;
 }
+
+/*-------------------------------------
+			multiple suggest
+---------------------------------------*/
+.multi-suggest li+li {
+	margin-top: 5px;
+}
+
 
 /*-------------------------------------
 				auto-suggest

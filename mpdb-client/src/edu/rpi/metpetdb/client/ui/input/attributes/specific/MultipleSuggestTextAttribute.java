@@ -28,6 +28,7 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 	private Set<String> suggestions;
 	private MHtmlList editList;
 	protected final ArrayList<Widget> realEditWidgets;
+	private static final String STYLENAME = "multi-suggest";
 	
 	public ArrayList<Widget> getRealEditWidgets(){
 		return realEditWidgets;
@@ -66,6 +67,7 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 	
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		editList = new MHtmlList();
+		editList.setStylePrimaryName(STYLENAME);
 
 		realEditWidgets.clear();
 
@@ -148,11 +150,18 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 	}
 	
 	private void setStyles() {
-		if (editList.getWidgetCount() == 1)
-			((MultipleInputPanel) editList.getWidget(0)).setAlone(true);
-		else 
-			for (int i=0; i<editList.getWidgetCount(); i++)
-				((MultipleInputPanel) editList.getWidget(i)).setAlone(false);
+		if (editList.getWidgetCount() == 1) {
+			MultipleInputPanel p = (MultipleInputPanel) editList.getWidget(0);
+			p.setAlone(true);
+			CSS.show(p.addButton);
+		} else {
+			for (int i=0; i<editList.getWidgetCount(); i++) {
+				MultipleInputPanel p = (MultipleInputPanel) editList.getWidget(i);
+				p.setAlone(false);
+				if (i < editList.getWidgetCount()-1) CSS.hide(p.addButton);
+				else CSS.show(p.addButton);
+			}
+		}
 	}
 
 }
