@@ -19,7 +19,9 @@ public class NumberTooBigException extends ValidationException {
 
 	@Override
 	public String format() {
-		return value.toString() + " is greater than "
-				+ ((NumberConstraint<?>) constraint).getMaxValue();
+		return "The value of " + formatPropertyName()
+				+ " is too big, it has to be less than "
+				+ ((NumberConstraint<?>) constraint).getMaxValue()
+				+ ", current value is " + value;
 	}
 }

@@ -339,6 +339,7 @@ public class DataStore {
 				fc.setMinValue(number);
 			else
 				fc.setMaxValue(number);
+			fc.required = true;
 		}
 	}
 	private static Class clazz(final PersistentClass cm, final String entityName) {

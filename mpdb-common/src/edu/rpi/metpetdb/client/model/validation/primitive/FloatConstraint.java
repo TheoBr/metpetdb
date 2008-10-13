@@ -18,13 +18,15 @@ public class FloatConstraint extends PropertyConstraint implements
 		super.validateValue(value);
 		if (value == null)
 			return;
-		try {
-			if (value instanceof String)
-				value = Float.parseFloat((String) value);
-			else
+		if (!(value instanceof Float)) {
+			try {
+				if (value instanceof String)
+					value = Float.parseFloat((String) value);
+				else
+					throw new InvalidFloatException(this);
+			} catch (NumberFormatException nfe) {
 				throw new InvalidFloatException(this);
-		} catch (NumberFormatException nfe) {
-			throw new InvalidFloatException(this);
+			}
 		}
 		if (value instanceof Float) {
 			// make sure value is within ranges

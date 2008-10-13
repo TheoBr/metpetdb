@@ -19,10 +19,9 @@ public class NumberTooSmallException  extends ValidationException {
 
 	@Override
 	public String format() {
-		if (value != null)
-			return value.toString() + " is less than "
-				+ ((NumberConstraint<?>) constraint).getMinValue();
-		else
-			return "error emss";
+		return "The value of " + formatPropertyName()
+		+ " is too small, it has to be greater than "
+		+ ((NumberConstraint<?>) constraint).getMinValue()
+		+ ", current value is " + value;
 	}
 }
