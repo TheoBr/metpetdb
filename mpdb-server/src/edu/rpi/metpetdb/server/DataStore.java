@@ -328,7 +328,7 @@ public class DataStore {
 	private void handleConstraint(final String constraint,
 			final FloatConstraint fc) {
 		final String compareRegex = "[<]";
-		final String numberRegex = "[><]\\s*\\(([\\d]*)\\).*";
+		final String numberRegex = "[><]\\s*\\(([\\d\\.]*)\\).*";
 		final Pattern numberPattern = Pattern.compile(numberRegex);
 		final Matcher numberMatcher = numberPattern.matcher(constraint);
 		final Pattern comparePattern = Pattern.compile(compareRegex);
