@@ -24,10 +24,6 @@ import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 
 public class ChemicalAnalysisDetails extends MPagePanel {
 	private static GenericAttribute[] chemicalAnalysisAtts = {
-			new HyperlinkAttribute(MpDb.doc.ChemicalAnalysis_sampleName)
-					.setReadOnly(true),
-			new HyperlinkAttribute(MpDb.doc.ChemicalAnalysis_subsampleName)
-					.setReadOnly(true),
 			new TextAttribute(MpDb.doc.ChemicalAnalysis_spotId),
 			new ChooseImageAttribute(MpDb.doc.ChemicalAnalysis_image,
 					MpDb.doc.ChemicalAnalysis_pointX,

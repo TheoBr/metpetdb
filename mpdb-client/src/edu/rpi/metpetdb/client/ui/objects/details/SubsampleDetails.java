@@ -37,8 +37,6 @@ import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 public class SubsampleDetails extends MPagePanel {
 
 	private static GenericAttribute[] subsampleAtts = {
-			new HyperlinkAttribute(MpDb.doc.Subsample_sampleName)
-					.setReadOnly(true),
 			new TextAttribute(MpDb.doc.Subsample_name),
 			new ListboxAttribute(MpDb.doc.Subsample_subsampleType),
 			new AddImageAttribute(MpDb.doc.Subsample_images),
