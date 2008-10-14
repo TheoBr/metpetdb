@@ -18,7 +18,6 @@ public class SearchTabProvenance extends SearchTabAttribute{
 		new SearchCollectorsAttribute(MpDb.oc.SearchSample_collector),
 		new SearchAliasAttribute(MpDb.oc.SearchSample_alias),
 		new SearchSesarAttribute(MpDb.oc.SearchSample_sesarNumber),
-		new SearchMetamorphicGradeAttribute(MpDb.oc.SearchSample_metamorphicGrades),
 		new SearchReferenceAttribute(MpDb.oc.SearchSample_references),
 		new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange)};
 	

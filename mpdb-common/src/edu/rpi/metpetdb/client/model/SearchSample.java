@@ -21,28 +21,28 @@ public class SearchSample implements IsSerializable, MObject {
 	private String sesarNumber;
 	private Geometry boundingBox;
 	
-	private Set<String> collectors;
+	private Set<String> collectors  = new HashSet<String>();
 	
-	private Set<String> countries;
+	private Set<String> countries  = new HashSet<String>();
 
-	private Set<String> owners;
+	private Set<String> owners  = new HashSet<String>();
 
 	private String alias;
 
 	private DateSpan collectionDateRange;
 	private Short datePrecision;
 
-	private Set<SampleMineral> minerals;
+	private Set<SampleMineral> minerals  = new HashSet<SampleMineral>();
 
-	private Set<SearchElement> elements;
+	private Set<SearchElement> elements  = new HashSet<SearchElement>();
 
-	private Set<SearchOxide> oxides;
+	private Set<SearchOxide> oxides  = new HashSet<SearchOxide>();
 
-	private Set<Region> regions;
+	private Set<Region> regions  = new HashSet<Region>();
 	
-	private Set<Reference> references;
+	private Set<Reference> references  = new HashSet<Reference>();
 	
-	private Set<MetamorphicGrade> metamorphicGrades;
+	private Set<MetamorphicGrade> metamorphicGrades  = new HashSet<MetamorphicGrade>();
 	
 	public SearchSample() {
 		

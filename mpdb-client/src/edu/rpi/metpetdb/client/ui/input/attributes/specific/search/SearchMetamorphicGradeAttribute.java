@@ -1,43 +1,53 @@
 package edu.rpi.metpetdb.client.ui.input.attributes.specific.search;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
+import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MultipleSuggestTextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute.Pair;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 
-public class SearchMetamorphicGradeAttribute extends SearchGenericAttribute {
-
-	private MultipleSuggestTextAttribute sta;
+public class SearchMetamorphicGradeAttribute extends SearchGenericAttribute implements ClickListener{
+	private int cols;
+	private FlexTable editList;
+	private SimplePanel editListContainer = new SimplePanel();
+	/* To keep track of the physical object that is attached to the checkbox */
+	private Map<CheckBox, Object> items;
+	private Set<String> suggestions;
+	private Set<Object> selected;
 	public SearchMetamorphicGradeAttribute(final ObjectConstraint sc) {
+		this(sc,1);		
+	}
+	
+	public SearchMetamorphicGradeAttribute(final ObjectConstraint sc, int cols) {
 		super(sc);
-		sta = new MultipleSuggestTextAttribute(sc){
-			public void setSuggest(){
-				new ServerOp() {
-					@Override
-					public void begin() {
-						MpDb.metamorphicGrade_svc.allMetamorphicGrades(this);
-					}
-					public void onSuccess(final Object result) {
-						createSuggest((Set<String>) result);
-					}
-				}.begin();
-			}
-		};
+		items = new HashMap<CheckBox, Object>();
+		this.cols = cols;
 	}
 	
 	public SearchMetamorphicGradeAttribute(final StringConstraint sc) {
@@ -45,54 +55,117 @@ public class SearchMetamorphicGradeAttribute extends SearchGenericAttribute {
 	}
 	
 	public Widget[] createDisplayWidget(final MObject obj){
-		return sta.createDisplayWidget(obj);
+		final MHtmlList list = new MHtmlList();
+
+		final Set<?> s = get(obj);
+		if (s != null) {
+			final Iterator<?> itr = s.iterator();
+			while (itr.hasNext()) {
+				final Label r = new Label(itr.next().toString());
+				list.add(r);
+			}
+		}
+		return new Widget[] {
+			list
+		};
 	}
 	
 	public Widget[] createEditWidget(final MObject obj, final String id){
-		return sta.createEditWidget(obj,id);
+		editList = new FlexTable();
+		editList.setStyleName(CSS.SEARCH_ROCKTYPES_TABLE);
+		selected = (Set<Object>) get(obj);
+
+		items.clear();
+		DOM.setElementAttribute(editList.getElement(), "id", id);
+		
+		editListContainer.setWidget(editList);
+		editListContainer.setStyleName(CSS.SEARCH_ROCKTYPES);
+		new ServerOp() {
+			@Override
+			public void begin() {
+				MpDb.metamorphicGrade_svc.allMetamorphicGrades(this);
+			}
+			public void onSuccess(final Object result) {
+				suggestions = ((Set<String>) result);
+				createCheckBoxes();
+			}
+		}.begin();
+		
+		return new Widget[] {
+			editListContainer
+		};
 	}
+	
+	public void createCheckBoxes(){
+		if (suggestions != null) {
+			final Iterator<?> iter = suggestions.iterator();
+			final int numRows = (suggestions.size() / cols + suggestions
+					.size()
+					% cols) - 1;
+			int row = 0;
+			int column = 0;
+			while (iter.hasNext()) {
+				if (row >= numRows) {
+					row = 0;
+					column++;
+				}
+				final Object object = iter.next();
+				// add all standard check boxes
+				editList.setWidget(row, column, this.createCheckBox(object
+						.toString(), selected.contains(object), object));
+				row++;
+			}
+		}
+	}
+	public CheckBox createCheckBox(final String s, final boolean chosen,
+			final Object value) {
+		final MCheckBox rCheck = new MCheckBox(s == null ? "" : s, true);
+		rCheck.setStylePrimaryName("rt-checkbox");
+		rCheck.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				rCheck.applyCheckedStyle(rCheck.isChecked());
+			}
+		});
+		rCheck.setChecked(chosen);
+		items.put(rCheck, value);
+		return rCheck;
+	}
+
 	protected void set(final MObject obj, final Object o) {
 		mSet(obj, o);
 	}
-	
-	public Set get(final MObject obj) {
-		return (Set<String>) obj.mGet(this.getConstraint().property);
+
+	public void onClick(final Widget sender) {
+		setObjects(new ArrayList<Object>(Arrays.asList((items.keySet().toArray()))));
 	}
 
-	@Override
-	protected Object get(Widget editWidget) throws ValidationException {
-		final HashSet collectors = new HashSet();
-		final Iterator itr = sta.getRealEditWidgets().iterator();
-		while (itr.hasNext()) {
-			final Object obj = itr.next();
-			String name = ((MSuggestText) obj).getText();
-			if (!name.equals("")) {
-				collectors.add(name);
-			}
-		}
-		return collectors;
+	public Set<?> get(final MObject obj) {
+		return (Set<?>) obj.mGet(this.getConstraint().property);
 	}
-	public void onRemoveCriteria(final Object obj){
-		if (sta.getRealEditWidgets().contains(obj)) {
-			int index = sta.getRealEditWidgets().indexOf(obj);
-			if (sta.getRealEditWidgets().size() < 2){
-				((MSuggestText)((FlowPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getWidget(0)).setText("");
-				
-			} else {
-				sta.getRealEditWidgets().remove(obj);
-				sta.getEditList().remove(index);
-			}
+	
+	protected Object get(Widget editWidget) throws ValidationException {
+		final Iterator<CheckBox> itr = items.keySet().iterator();
+		final Set<Object> chosenItems = new HashSet<Object>();
+		while (itr.hasNext()) {
+			final CheckBox cb = itr.next();
+			if (cb.isChecked())
+				chosenItems.add(items.get(cb));
 		}
-		
+		return chosenItems;
+	}
+	
+	public void onRemoveCriteria(final Object obj){
+		if (items.get(obj) != null)
+			((MCheckBox) obj).setChecked(false);
 	}
 	
 	public ArrayList<Pair> getCriteria(){
 		final ArrayList<Pair> criteria = new ArrayList<Pair>();
-		final Iterator<Widget> itr = sta.getRealEditWidgets().iterator();
+		final Iterator<CheckBox> itr = items.keySet().iterator();
 		while (itr.hasNext()) {
-			final MSuggestText st = (MSuggestText) itr.next();
-			if (!st.getText().equals(""))
-				criteria.add(new Pair(createCritRow("Metamorphic Grade:", st.getText()), st));
+			final CheckBox cb = itr.next();
+			if (cb.isChecked())
+				criteria.add(new Pair(createCritRow("Rock Type:", items.get(cb).toString()), cb));
 		}
 		return criteria;
 	}
