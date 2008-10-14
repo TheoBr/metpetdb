@@ -66,7 +66,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		setPageTitle("My Samples");
 
 		final MLink addSample = new MLink("Add Sample", TokenSpace.enterSample);
-		final MLink bulkUpload = new MLink("Upload Samples",
+		final MLink bulkUpload = new MLink("Upload Data",
 				TokenSpace.bulkUpload);
 
 		addSample.setStylePrimaryName(CSS.LINK_LARGE_ICON);

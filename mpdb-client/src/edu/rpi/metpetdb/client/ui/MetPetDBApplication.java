@@ -348,6 +348,7 @@ public class MetPetDBApplication implements EntryPoint {
 				Window.open(WIKI_URL, "mpdb_wiki", "");
 			}
 		});
+		hdrnav.addItem("Upload Data", TokenSpace.bulkUpload);
 		hdrnav.addItem("Developers", dev);
 
 	}
