@@ -37,9 +37,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MText;
 /** Main application entry point. */
 public class MetPetDBApplication implements EntryPoint {
 
-	private static final String WIKI_URL = "http://trinity.db.cs.rpi.edu/xwiki/bin/view/Main/WebHome";
-	private static final String JAVADOC_URL = "http://samana.cs.rpi.edu:8080/metpetwebtst/api/index.html";
-	private static final String JUNIT_URL = "http://samana.cs.rpi.edu:8080/metpetwebtst/reports/index.html";
+	
 
 	private static RootPanel loginBar;
 	private static MMenuBar hdrnav;
@@ -329,12 +327,12 @@ public class MetPetDBApplication implements EntryPoint {
 		});
 		dev.addItem("JavaDocs", new Command() {
 			public void execute() {
-				Window.open(JAVADOC_URL, "mpdb_javadoc", "");
+				Window.open(MpDb.JAVADOC_URL, "mpdb_javadoc", "");
 			}
 		});
 		dev.addItem("JUnit Results", new Command() {
 			public void execute() {
-				Window.open(JUNIT_URL, "mpdb_junit", "");
+				Window.open(MpDb.JUNIT_URL, "mpdb_junit", "");
 			}
 		});
 
@@ -343,12 +341,12 @@ public class MetPetDBApplication implements EntryPoint {
 		hdrnav.addItem("My Samples", TokenSpace.samplesForUser);
 		hdrnav.addItem(LocaleHandler.lc_text.projectMenu(), projects);
 		hdrnav.addItem("Search", TokenSpace.search);
+		hdrnav.addItem("Upload Data", TokenSpace.bulkUpload);
 		hdrnav.addItem("Wiki", new Command() {
 			public void execute() {
-				Window.open(WIKI_URL, "mpdb_wiki", "");
+				Window.open(MpDb.WIKI_URL, "mpdb_wiki", "");
 			}
 		});
-		hdrnav.addItem("Upload Data", TokenSpace.bulkUpload);
 		hdrnav.addItem("Developers", dev);
 
 	}

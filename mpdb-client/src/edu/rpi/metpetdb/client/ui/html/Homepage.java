@@ -26,7 +26,7 @@ public class Homepage extends FlowPanel {
 						"<li><span>providing a platform for collaborative studies among researchers, and</span></li>" +
 						"<li><span>serving as a portal for students beginning their studies of metamorphic geology.</span></li>" +
 						"</ol>" +
-						"<p>Read more about the MetPetDB project <a href=\"#\" title=\"More about MetPetDB\">here</a>.</p>" +
+						"<p>Read more about the MetPetDB project <a href=\""+MpDb.WIKI_URL+"\" title=\"More about MetPetDB\">here</a>.</p>" +
 						"<h2>Other Databases</h2>" +
 						"<table id=\"dblist\" cellspacing=\"0\"><tbody>" +
 						"<tr><td><a href=\"http://www.earthchem.org\" title=\"EarthChem\"><img src=\"images/earthchem-logo.jpg\" alt=\"EarthChem\"></a>Advanced Data Management in Solid Earth Geochemistry</td>" +
