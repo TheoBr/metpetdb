@@ -182,10 +182,10 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		summaryPanel.setStyleName(CSS.BULK_RESULTS_SUMMARY);
 		summaryPanel.add(summaryHeading);
 		summaryPanel.add(summary);
+		summaryPanel.add(detailsLink);
 		summaryPanel.add(uploadButton);
 		uploadButton.addStyleName(CSS.PRIMARY_BUTTON);
 		hide(uploadButton);
-		summaryPanel.add(detailsLink);
 
 		resultsPanel.add(parsedPanel);
 		parsedPanel.setStyleName(CSS.BULK_RESULTS_PARSED);
