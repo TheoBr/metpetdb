@@ -63,7 +63,7 @@ public abstract class SampleListEx extends ListEx<Sample> {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new MLink(((User) data.mGet(SampleProperty.owner))
-							.getEmailAddress(), TokenSpace
+							.getName(), TokenSpace
 							.detailsOf((User) data.mGet(SampleProperty.owner)));
 				}
 			},
