@@ -1,12 +1,16 @@
 package edu.rpi.metpetdb.client.ui.search;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Hidden;
@@ -18,10 +22,12 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchSample;
+import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
+import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchInterface;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabAttribute;
@@ -32,6 +38,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabMine
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabProvenance;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabRockTypes;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
+import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 
 public class Search extends MPagePanel implements ClickListener {
@@ -40,9 +47,13 @@ public class Search extends MPagePanel implements ClickListener {
 		new SearchTabRockTypes(),new SearchTabMetamorphicGrade(), new SearchTabLocation(), new SearchTabMinerals(), new SearchTabChemicalAnalysis(), new SearchTabProvenance()
 	};
 
+	private static final String cookieString = "SearchView";
 	private static final String samplesParameter = "Samples";
 	private Button exportExcelButton;
 	private Button exportGoogleEarthButton;
+	private MLink customCols;
+	private final FlowPanel columnViewPanel = new FlowPanel();
+	private FlowPanel samplesContainer = new FlowPanel();
 	private final ObjectSearchPanel p_searchSample;
 	private final SampleListEx sampleList = new SampleListEx(
 			LocaleHandler.lc_text.search_noSamplesFound()) {
@@ -84,8 +95,12 @@ public class Search extends MPagePanel implements ClickListener {
 		};
 
 		add(p_searchSample);
+		createViewFromCookie();
+		buildSampleFilters();
 		addResultListHeader();
-		add(sampleList);
+		samplesContainer.add(columnViewPanel);
+		samplesContainer.add(sampleList);
+		add(samplesContainer);
 	}
 
 	private void addResultListHeader() {
@@ -179,6 +194,54 @@ public class Search extends MPagePanel implements ClickListener {
 			fp.setVisible(false);
 			add(fp);
 			fp.submit();
+		}
+	}
+	
+	private void buildSampleFilters() {
+		final MLink simple = new MLink("Simple", new ClickListener() {
+			public void onClick(Widget sender) {
+			}
+		});
+		simple.addStyleName(CSS.BETA);
+
+		final MLink detailed = new MLink("Detailed", new ClickListener() {
+			public void onClick(Widget sender) {
+				sampleList.newView(sampleList.getOriginalColumns());
+			}
+		});
+
+		customCols = new MLink("Custom", new ClickListener() {
+			public void onClick(Widget sender) {
+				CustomTableView myView = new CustomTableView(sampleList, cookieString);
+			}
+		});
+
+		final Label columnsLabel = new Label("Columns:");
+
+		columnViewPanel.add(columnsLabel);
+		columnViewPanel.add(simple);
+		columnViewPanel.add(detailed);
+		columnViewPanel.add(customCols);
+
+		columnViewPanel.addStyleName(CSS.DATATABLE_HEADER_FILTERS);
+
+	}
+	
+	private void createViewFromCookie() {
+		final ArrayList<Column> originalColumns = new ArrayList<Column>(sampleList
+				.getOriginalColumns());
+		final ArrayList<String> cookiedColumns;
+		final ArrayList<Column> displayColumns = new ArrayList<Column>();
+		if (Cookies.getCookie(cookieString) != null) {
+			cookiedColumns = new ArrayList<String>(Arrays.asList(Cookies
+					.getCookie(cookieString).split(",")));
+			Iterator<Column> itr = originalColumns.iterator();
+			while (itr.hasNext()) {
+				final Column col = itr.next();
+				if (cookiedColumns.contains(col.getTitle()))
+					displayColumns.add(col);
+			}
+			sampleList.newView(displayColumns);
 		}
 	}
 }
