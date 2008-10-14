@@ -24,7 +24,7 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 
 public class DateRangeAttribute extends SearchGenericAttribute implements
-		ChangeListener, KeyboardListener, ClickListener {
+		ChangeListener, ClickListener {
 	private static final String ints= "0123456789";
 	private static final int[] daysInEachMonth = {31,29,31,30,31,30,31,31,30,31,30,31};
 	private static final String[] months = {
@@ -61,9 +61,9 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		from = new TextBox();
-		from.addKeyboardListener(this);
+		//from.addKeyboardListener(this);
 		to = new TextBox();
-		to.addKeyboardListener(this);
+		//to.addKeyboardListener(this);
 		dpTo = new Button("+",this);
 		dpFrom = new Button("+",this);
 		final FlowPanel container = new FlowPanel();
@@ -119,6 +119,17 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 		try {
 			String[] fromSplit = from.getText().split("/");
 			String[] toSplit = to.getText().split("/");
+			
+			// TODO: make an error message show when invalid dates input
+			if(!validateDate(fromSplit))
+			{
+				return;
+			}
+			if(!validateDate(toSplit))
+			{
+				return;
+			}
+			
 			if (fromSplit.length == 3 && toSplit.length == 3)
 			{
 				fromDate.setMonth(Integer.parseInt(fromSplit[0]) - 1);
@@ -147,13 +158,42 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 		}
 		return count;
 	}
+	
+	private boolean validateDate(final String[] mdy)
+	{
+		// TODO: should this work for just years or just months?
+		if(mdy.length != 3)
+		{
+			return false;
+		}
+		if(!validateMonth(mdy[0]))
+		{
+			return false;
+		}
+		if(!validateDay(mdy[0] + "/" + mdy[1]))
+		{
+			return false;
+		}
+		if(!validateYear(mdy[2]))
+		{
+			return false;
+		}
+		return true;
+	}
+
 	private boolean validateMonth(final String s){
 		if (Integer.parseInt(s) < 13 && Integer.parseInt(s) > 0 )
 			return true;
 		return false;
 	}
 	
-	public void onKeyPress(final Widget sender, final char ch, final int m){
+	private boolean validateYear(final String s){
+		if (Integer.parseInt(s) > 0)
+			return true;
+		return false;
+	}
+	
+/*	public void onKeyPress(final Widget sender, final char ch, final int m){
 		try{
 			TextBox tb = (TextBox) sender;
 			// save position and original text
@@ -251,7 +291,7 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 	}
 	public void onKeyDown(final Widget sender, final char c, final int m){
 		
-	}
+	}*/
 	
 	private Timestamp getTimeInput(final String date){
 		String[] parsedDate = date.split("/");
@@ -326,7 +366,7 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 	
 	public ArrayList<Pair> getCriteria(){
 		final ArrayList<Pair> criteria = new ArrayList<Pair>();
-		if (!to.getText().equals("") && !from.getText().equals(""))
+		if (!to.getText().equals("") && !from.getText().equals("") && validateDate(to.getText().split("/")) && validateDate(from.getText().split("/")))
 			criteria.add(new Pair(createCritRow("Date Range:", from.getText() + " to " + to.getText()), to));
 		return criteria;
 	}
