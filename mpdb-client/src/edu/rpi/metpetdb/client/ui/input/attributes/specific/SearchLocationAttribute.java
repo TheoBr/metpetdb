@@ -66,7 +66,7 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 		markerPoint1 = null;
 		markerPoint2 = null;
 
-		map = new MapWidget(LatLng.newInstance(0, 0),1);
+		map = new MapWidget(LatLng.newInstance(38.2, -39.7),2);
 		map.addControl(new LargeMapControl());
 		map.addControl(new MapTypeControl());
 		map.addControl(new ScaleControl());
