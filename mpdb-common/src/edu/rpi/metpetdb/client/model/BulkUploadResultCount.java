@@ -23,7 +23,7 @@ public class BulkUploadResultCount implements IsSerializable {
 	public void setInvalid(int invalid) {
 		this.invalid = invalid;
 	}
-	public int getOld() {
+	public int getDuplicate() {
 		return old;
 	}
 	public void setOld(int old) {

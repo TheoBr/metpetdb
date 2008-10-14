@@ -127,7 +127,7 @@ public class CSS {
 	public static final String BULK_RESULTS_MPDBCOL = "parsed-mpdbcol";
 	public static final String BULK_RESULTS_SUMMARY = "summary";
 	public static final String BULK_RESULTS_NEW = "summary-new";
-	public static final String BULK_RESULTS_OLD = "summary-old";
+	public static final String BULK_RESULTS_DUPLICATE = "summary-dup";
 	public static final String BULK_RESULTS_INVALID = "summary-invalid";
 	public static final String BULK_RESULTS_TOTAL = "summary-total";
 	public static final String PROGRESSBAR_CONTAINER = "progressbar-container";

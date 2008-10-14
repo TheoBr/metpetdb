@@ -24,6 +24,7 @@ import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.ProgressBar;
@@ -39,6 +40,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.VoidServerOp;
+import edu.rpi.metpetdb.client.ui.widgets.MButton;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel;
@@ -49,8 +51,8 @@ import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel.NoticeType;
 public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		FormHandler {
 
-	private final MText desc = new MText("Upload a large amount of data at once using the form below.", "p");
-	private final MLink help = new MLink("Bulk Upload Instructions",
+	private final MText desc = new MText("Upload collections of data using the form below.", "p");
+	private final MLink help = new MLink("Bulk Upload Instructions (PDF)",
 			"docs/mpdb-bulkupload-help.pdf", true);
 
 	private final FlowPanel main = new FlowPanel();
@@ -73,12 +75,14 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 			"Chemical Analyses");
 	private final RadioButton imagesRadio = new RadioButton("type", "Images");
 
-	private final Button parseButton = new Button("Parse Samples", this);
-	private final Button uploadButton = new Button("Upload Samples", this);
-	private final Button reuploadButton = new Button("Try Uploading Again",
+	private final MButton parseButton = new MButton("Parse Samples", this);
+	private final MButton uploadButton = new MButton("Upload Samples", this);
+	private final MButton reuploadButton = new MButton("Try Uploading Again",
 			this);
-	private final Button retryButton = new Button("Retry", this);
-	private final MLink restartLink = new MLink("Start over",
+	private final MButton retryButton = new MButton("Retry", this);
+	private static final String RESET_ID = "reset-link";
+	private final HTMLPanel resetPanel = new HTMLPanel("or <span id=\""+RESET_ID+"\"></span>");
+	private final MLink resetLink = new MLink("reset the form",
 			TokenSpace.bulkUpload);
 
 	private final Grid errorgrid = new Grid();
@@ -178,6 +182,9 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		summaryPanel.setStyleName(CSS.BULK_RESULTS_SUMMARY);
 		summaryPanel.add(summaryHeading);
 		summaryPanel.add(summary);
+		summaryPanel.add(uploadButton);
+		uploadButton.addStyleName(CSS.PRIMARY_BUTTON);
+		hide(uploadButton);
 		summaryPanel.add(detailsLink);
 
 		resultsPanel.add(parsedPanel);
@@ -186,18 +193,16 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		parsedPanel.add(parsedHeading);
 		parsedPanel.add(parsed);
 
-		main.add(uploadButton);
-		uploadButton.addStyleName(CSS.PRIMARY_BUTTON);
-		hide(uploadButton);
-
 		main.add(errorgrid);
 		hide(errorgrid);
 
 		main.add(retryButton);
 		hide(retryButton);
 
-		main.add(restartLink);
-		hide(restartLink);
+		main.add(resetPanel);
+		resetPanel.setStyleName(CSS.SHOW_INLINE);
+		resetPanel.addAndReplaceElement(resetLink, RESET_ID);
+		hide(resetPanel);
 
 		clearResults();
 	}
@@ -217,13 +222,14 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 				detailsLink.setText("Show details");
 			}
 		} else if (sender == retryButton) {
-			clearResults();
 			hide(retryButton);
+			hide(resetPanel);
 			show(parseButton);
+			doParse();
 		} else if (sender == reuploadButton) {
 			hide(errorgrid);
 			hide(reuploadButton);
-			hide(restartLink);
+			hide(resetPanel);
 			doUpload();
 		} else {
 			updateContentType();
@@ -261,8 +267,8 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 			public void onSuccess() {
 				status.sendNotice(NoticeType.SUCCESS, contentType
 						+ " uploaded successfully.");
-				restartLink.setText("Upload more data");
-				show(restartLink);
+				resetLink.setText("upload more data");
+				show(resetPanel);
 			}
 		}.begin();
 	}
@@ -270,12 +276,13 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 	private void doParse() {
 		form.submit();
 		clearResults();
+		parseButton.setText("Parsing...");
+		parseButton.setEnabled(false);
 		show(progressContainer);
 		progressTimer.scheduleRepeating(3000);
 	}
 
 	private void parse() {
-		// hide(parseButton);
 		status.sendNotice(NoticeType.WORKING, "Parsing " + contentType
 				+ ", please wait...");
 		new ServerOp<BulkUploadResult>() {
@@ -289,6 +296,8 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 				populateParsedTable(results.getHeaders());
 				populateSummaryTable(results.getResultCounts());
 				show(resultsPanel);
+				hide(parseButton);
+				parseButton.setEnabled(true);
 				show(uploadButton);
 				final Map<Integer, ValidationException> errors = results
 						.getErrors();
@@ -306,8 +315,8 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 							"There were some errors in the spreadsheet:");
 					show(errorgrid);
 					show(reuploadButton);
-					restartLink.setText("Start over");
-					show(restartLink);
+					resetLink.setText("reset the form");
+					show(resetPanel);
 					uploadButton.setEnabled(false);
 				} else {
 					//TODO need to disbale this button if there are old ones
@@ -319,8 +328,10 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 				status.sendNotice(NoticeType.ERROR, "Could not parse "
 						+ contentType + ". Please see the errors below.");
 				hide(progressContainer);
+				hide(parseButton);
+				parseButton.setEnabled(true);
 				show(retryButton);
-				show(restartLink);
+				show(resetPanel);
 			}
 		}.begin();
 	}
@@ -392,31 +403,30 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 	protected void populateSummaryTable(final Map<String, BulkUploadResultCount> additions) {
 		final Iterator<String> objItr = additions.keySet().iterator();
-		int row = 0;
+		summary.setHTML(0, 1, "<div class=\"" + CSS.TYPE_SMALL_CAPS + "\">new</div>");
+		summary.setHTML(0, 2, "<div class=\"" + CSS.TYPE_SMALL_CAPS + "\">duplicate</div>");
+		summary.setHTML(0, 3, "<div class=\"" + CSS.TYPE_SMALL_CAPS + "\">invalid</div>");
+		summary.setHTML(0, 4, "<div class=\"" + CSS.TYPE_SMALL_CAPS + "\">total</div>");
+		int row = 1;
 		while(objItr.hasNext()) {
 			final String objType = objItr.next();
 			final int fresh = additions.get(objType).getFresh();
-			final int old = additions.get(objType).getOld();
+			final int dup = additions.get(objType).getDuplicate();
 			final int invalid = additions.get(objType).getInvalid();
-			final int total = fresh + old + invalid;
+			final int total = fresh + dup + invalid;
 			summary.setText(row, 0, objType);
-			addSummaryItem(row, 1, fresh, "fresh", CSS.BULK_RESULTS_NEW);
-			addSummaryItem(row, 2, old, "old", CSS.BULK_RESULTS_OLD);
-			addSummaryItem(row, 3, invalid, "invalid", CSS.BULK_RESULTS_INVALID);
-			addSummaryItem(row, 4, total, "total", CSS.BULK_RESULTS_TOTAL);
+			addSummaryItem(row, 1, fresh, CSS.BULK_RESULTS_NEW);
+			addSummaryItem(row, 2, dup, CSS.BULK_RESULTS_DUPLICATE);
+			addSummaryItem(row, 3, invalid, CSS.BULK_RESULTS_INVALID);
+			addSummaryItem(row, 4, total, CSS.BULK_RESULTS_TOTAL);
 			++row;
 		}
 	}
 
-	protected void addSummaryItem(int row, int index, int count, String title,
-			String styleName) {
-		summary.setWidget(row, index, new HTML("<div class=\""
-				+ CSS.TYPE_SMALL_CAPS + "\">" + title + "</div>"
-				+ "<div class=\"" + CSS.TYPE_LARGE_NUMBER + "\">" + count
-				+ "</div>"));
-		summary.getFlexCellFormatter().setStyleName(0, index, styleName);
-		if (count == 0)
-			summary.getFlexCellFormatter().addStyleName(0, index, CSS.EMPTY);
+	protected void addSummaryItem(int row, int index, int count, String styleName) {
+		summary.setHTML(row, index, "<div class=\"" + CSS.TYPE_LARGE_NUMBER + "\">" + count + "</div>");
+		summary.getFlexCellFormatter().setStyleName(row, index, styleName);
+		if (count == 0) summary.getFlexCellFormatter().addStyleName(row, index, CSS.EMPTY);
 	}
 
 }

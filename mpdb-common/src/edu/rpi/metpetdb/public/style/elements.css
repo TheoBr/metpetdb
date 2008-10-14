@@ -96,7 +96,6 @@ input[type="password"]:focus,
 input[type="password"]:hover {
 		border-color: #999;
 }
-
 input[type="text"].invalid,
 input[type="password"].invalid {
 	border-bottom: 2px solid #e31428;
