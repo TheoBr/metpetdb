@@ -591,12 +591,13 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 			public void begin() {
 				MpDb.imageBrowser_svc
 						.saveGrid(ImageBrowserDetails.this.g, this);
-				ImageBrowserDetails.this.info.setText("");
+				ImageBrowserDetails.this.info.setText("Saving, please wait...");
 				save.setEnabled(false);
 			}
 
 			public void onSuccess(final Grid result) {
 				save.setEnabled(true);
+				info.setText("Image map has been saved");
 			}
 		}.begin();
 		//Save any chemical analyses that have been modified
