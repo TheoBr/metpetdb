@@ -66,7 +66,7 @@ public class SearchReferenceAttribute extends SearchGenericAttribute {
 		final Iterator itr = sta.getRealEditWidgets().iterator();
 		while (itr.hasNext()) {
 			final Object obj = itr.next();
-			String name = ((MSuggestText) ((MultipleInputPanel) obj).getInputWidget()).getText();
+			String name = ((MSuggestText)  obj).getText();
 			if (!name.equals("")) {
 				collectors.add(name);
 			}

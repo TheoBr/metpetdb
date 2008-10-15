@@ -15,10 +15,10 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisElement;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxide;
 import edu.rpi.metpetdb.client.model.Element;
 import edu.rpi.metpetdb.client.model.Oxide;
+import edu.rpi.metpetdb.client.model.SearchElement;
+import edu.rpi.metpetdb.client.model.SearchOxide;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
@@ -90,16 +90,13 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			final ListBox unit = new ListBox();
 			unit.addItem("% wt");
 			unit.addItem("ppm");
-			final Button set = new Button("Set");
-			set.setStyleName("smallBtn");
 			ft.setWidget(row, 0, greaterThan);
 			ft.setWidget(row, 1, new Label("<"));
 			ft.setWidget(row, 2, new Label(element.getSymbol()));
 			ft.setWidget(row, 3, new Label("<"));
 			ft.setWidget(row, 4, lessThan);
 			ft.setWidget(row, 5, unit);
-			ft.setWidget(row, 6, set);
-			for (int i = 0; i < 7; i++) {
+			for (int i = 0; i < 6; i++) {
 				ft.getFlexCellFormatter().setAlignment(row, i,
 						HasHorizontalAlignment.ALIGN_CENTER,
 						HasVerticalAlignment.ALIGN_MIDDLE);
@@ -122,14 +119,13 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			unit.addItem("ppm");
 			final Button set = new Button("Set");
 			set.setStyleName("smallBtn");
-			ft.setWidget(row, 7, greaterThan);
-			ft.setWidget(row, 8, new Label("<"));
-			ft.setWidget(row, 9, new Label(oxide.getSpecies()));
-			ft.setWidget(row, 10, new Label("<"));
-			ft.setWidget(row, 11, lessThan);
-			ft.setWidget(row, 12, unit);
-			ft.setWidget(row, 13, set);
-			for (int i = 7; i < 12; i++) {
+			ft.setWidget(row, 6, greaterThan);
+			ft.setWidget(row, 7, new Label("<"));
+			ft.setWidget(row, 8, new Label(oxide.getSpecies()));
+			ft.setWidget(row, 9, new Label("<"));
+			ft.setWidget(row, 10, lessThan);
+			ft.setWidget(row, 11, unit);
+			for (int i = 6; i < 12; i++) {
 				ft.getFlexCellFormatter().setAlignment(row, i,
 						HasHorizontalAlignment.ALIGN_CENTER,
 						HasVerticalAlignment.ALIGN_MIDDLE);
@@ -140,17 +136,55 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 	protected void set(final MObject obj, final Object o) {
 		mSet(obj, o);
 	}
+	
+	protected void set(final MObject obj, final Object v,
+			final PropertyConstraint pc) {
+		mSet(obj, v, pc);
+	}
 
 	protected Object get(final Widget editWidget,
 			final PropertyConstraint constraint) throws ValidationException {
 		if (constraint == this.constraints[1]) {
-			final HashSet<ChemicalAnalysisOxide> Oxides = new HashSet();
-			// Add only Oxides
-
+			final HashSet<SearchOxide> Oxides = new HashSet();
+			for (int i = 0; i < ft.getRowCount(); i++){
+				try {
+					String lowerBound = ((TextBox) ft.getWidget(i, 6)).getText();
+					String upperBound = ((TextBox) ft.getWidget(i, 10)).getText();
+					String oxide = ((Label) ft.getWidget(i, 8)).getText();
+					SearchOxide o = new SearchOxide();
+					if (!lowerBound.equals(""))
+						o.setLowerBound(Float.valueOf(lowerBound));
+					if (!upperBound.equals(""))
+						o.setUpperBound(Float.valueOf(upperBound));
+					if (!lowerBound.equals("") || !upperBound.equals("")){
+						o.setSpecies(oxide);	
+						Oxides.add(o);
+					}
+				} catch (Exception e){
+					
+				}
+			}
 			return Oxides;
 		} else {
-			final HashSet<ChemicalAnalysisElement> Elements = new HashSet();
-			// Add only Elements
+			final HashSet<SearchElement> Elements = new HashSet();
+			for (int i = 0; i < ft.getRowCount(); i++){
+				try{
+					String lowerBound = ((TextBox) ft.getWidget(i, 0)).getText();
+					String upperBound = ((TextBox) ft.getWidget(i, 4)).getText();
+					String element = ((Label) ft.getWidget(i, 2)).getText();
+					SearchElement e = new SearchElement();
+					if (!lowerBound.equals(""))
+						e.setLowerBound(Float.valueOf(lowerBound));
+					if (!upperBound.equals(""))
+						e.setUpperBound(Float.valueOf(upperBound));
+					if (!lowerBound.equals("") || !upperBound.equals("")){
+						e.setElementSymbol(element);	
+						Elements.add(e);
+					}
+				} catch (Exception e){
+					
+				}
+			}
 			return Elements;
 		}
 	}
