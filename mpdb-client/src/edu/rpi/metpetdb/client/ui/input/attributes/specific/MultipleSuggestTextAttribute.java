@@ -80,12 +80,12 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 				final Object object = iter.next();
 				MultipleInputPanel t = MultipleSuggestTextAttribute.this.createOptionalSuggestBox(object.toString());
 				editList.add(t);
-				realEditWidgets.add(t);
+				realEditWidgets.add(t.getInputWidget());
 			}
 		}
 		MultipleInputPanel t = createOptionalSuggestBox(null);
 		editList.add(t);
-		realEditWidgets.add(t);
+		realEditWidgets.add(t.getInputWidget());
 		setSuggest();
 		return new Widget[] {
 			editList
@@ -101,7 +101,7 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 			public void onClick(final Widget sender) {
 				MultipleInputPanel t = MultipleSuggestTextAttribute.this.createOptionalSuggestBox(null);
 				editList.add(t);
-				realEditWidgets.add(t);
+				realEditWidgets.add(t.getInputWidget());
 				setStyles();
 			}
 		});
@@ -124,8 +124,9 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 		ArrayList<MultipleInputPanel> realEditList = new ArrayList<MultipleInputPanel>();
 		for (int i = 0; i < realEditWidgets.size(); i++) {
 			MSuggestText temp = (MSuggestText) ((MultipleInputPanel) editList.getWidget(i)).getInputWidget();
-			realEditList.add(createOptionalSuggestBox(temp.getText()));
-			realEditWidgets.set(i, temp);
+			MultipleInputPanel p = createOptionalSuggestBox(temp.getText());
+			realEditList.add(p);
+			realEditWidgets.set(i, p.getInputWidget());
 		}
 		editList.clear();
 		while (realEditList.size() > 0){
@@ -149,7 +150,7 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 		this.suggestions = suggestions;
 	}
 	
-	private void setStyles() {
+	public void setStyles() {
 		if (editList.getWidgetCount() == 1) {
 			MultipleInputPanel p = (MultipleInputPanel) editList.getWidget(0);
 			p.setAlone(true);
@@ -163,5 +164,25 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 			}
 		}
 	}
+	
+//	protected class MultipleInputEntry{
+//		private MultipleInputPanel p;
+//		public MultipleInputEntry(final MultipleInputPanel p){
+//			this.p = p;
+//		}
+//		public String getText(){
+//			String val= "";
+//			if (p.getInputWidget() instanceof MSuggestText){
+//				val = ((MSuggestText) p.getInputWidget()).getText();
+//			}
+//			return val;
+//		}
+//		
+//		public void setText(final String text){
+//			if (p.getInputWidget() instanceof MSuggestText){
+//				((MSuggestText) p.getInputWidget()).setText(text);
+//			}
+//		}
+//	}
 
 }

@@ -19,6 +19,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.MultipleSuggestTextA
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute.Pair;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
+import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
 
 public class SearchReferenceAttribute extends SearchGenericAttribute {
 
@@ -65,7 +66,7 @@ public class SearchReferenceAttribute extends SearchGenericAttribute {
 		final Iterator itr = sta.getRealEditWidgets().iterator();
 		while (itr.hasNext()) {
 			final Object obj = itr.next();
-			String name = ((MSuggestText) obj).getText();
+			String name = ((MSuggestText) ((MultipleInputPanel) obj).getInputWidget()).getText();
 			if (!name.equals("")) {
 				collectors.add(name);
 			}
@@ -76,7 +77,7 @@ public class SearchReferenceAttribute extends SearchGenericAttribute {
 		if (sta.getRealEditWidgets().contains(obj)) {
 			int index = sta.getRealEditWidgets().indexOf(obj);
 			if (sta.getRealEditWidgets().size() < 2){
-				((MSuggestText)((FlowPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getWidget(0)).setText("");
+				((MSuggestText)((MultipleInputPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getInputWidget()).setText("");
 				
 			} else {
 				sta.getRealEditWidgets().remove(obj);

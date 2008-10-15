@@ -19,6 +19,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.MultipleSuggestTextA
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute.Pair;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
+import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
 
 public class SearchRegionAttribute extends SearchGenericAttribute {
 
@@ -76,7 +77,7 @@ public class SearchRegionAttribute extends SearchGenericAttribute {
 		if (sta.getRealEditWidgets().contains(obj)) {
 			int index = sta.getRealEditWidgets().indexOf(obj);
 			if (sta.getRealEditWidgets().size() < 2){
-				((MSuggestText)((FlowPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getWidget(0)).setText("");
+				((MSuggestText)((MultipleInputPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getInputWidget()).setText("");
 				
 			} else {
 				sta.getRealEditWidgets().remove(obj);

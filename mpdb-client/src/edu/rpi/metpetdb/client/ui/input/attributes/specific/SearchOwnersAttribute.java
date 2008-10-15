@@ -16,6 +16,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
+import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
 
 public class SearchOwnersAttribute extends SearchGenericAttribute {
 
@@ -72,7 +73,7 @@ public class SearchOwnersAttribute extends SearchGenericAttribute {
 		if (sta.getRealEditWidgets().contains(obj)) {
 			int index = sta.getRealEditWidgets().indexOf(obj);
 			if (sta.getRealEditWidgets().size() < 2){
-				((MSuggestText)((FlowPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getWidget(0)).setText("");
+				((MSuggestText)((MultipleInputPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getInputWidget()).setText("");
 				
 			} else {
 				sta.getRealEditWidgets().remove(obj);
@@ -86,9 +87,11 @@ public class SearchOwnersAttribute extends SearchGenericAttribute {
 		final ArrayList<Pair> criteria = new ArrayList<Pair>();
 		final Iterator<Widget> itr = sta.getRealEditWidgets().iterator();
 		while (itr.hasNext()) {
-			final MSuggestText st = (MSuggestText) itr.next();
-			if (!st.getText().equals(""))
-				criteria.add(new Pair(createCritRow("Owner:", st.getText()), st));
+			final Widget st = itr.next();
+			if (st instanceof MSuggestText){
+				if (!((MSuggestText)st).getText().equals(""))
+					criteria.add(new Pair(createCritRow("Owner:", ((MSuggestText)st).getText()), st));
+			}
 		}
 		return criteria;
 	}

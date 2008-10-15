@@ -17,6 +17,7 @@ import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MultipleSuggestTextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute.Pair;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
+import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
 
 public class SearchCountriesAttribute extends SearchGenericAttribute {
 
@@ -74,7 +75,7 @@ public class SearchCountriesAttribute extends SearchGenericAttribute {
 		if (sta.getRealEditWidgets().contains(obj)) {
 			int index = sta.getRealEditWidgets().indexOf(obj);
 			if (sta.getRealEditWidgets().size() < 2){
-				((MSuggestText)((FlowPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getWidget(0)).setText("");
+				((MSuggestText)((MultipleInputPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getInputWidget()).setText("");
 				
 			} else {
 				sta.getRealEditWidgets().remove(obj);

@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -16,9 +14,8 @@ import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MultipleSuggestTextAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute.Pair;
-import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
+import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
 
 public class SearchCollectorsAttribute extends SearchGenericAttribute {
 
@@ -76,12 +73,13 @@ public class SearchCollectorsAttribute extends SearchGenericAttribute {
 		if (sta.getRealEditWidgets().contains(obj)) {
 			int index = sta.getRealEditWidgets().indexOf(obj);
 			if (sta.getRealEditWidgets().size() < 2){
-				((MSuggestText)((FlowPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getWidget(0)).setText("");
+				((MSuggestText)((MultipleInputPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getInputWidget()).setText("");
 				
 			} else {
 				sta.getRealEditWidgets().remove(obj);
 				sta.getEditList().remove(index);
 			}
+			sta.setStyles();
 		}
 		
 	}
