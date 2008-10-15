@@ -3,7 +3,6 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 //import java.math.BigDecimal;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.postgis.LinearRing;
 import org.postgis.Point;
@@ -18,13 +17,7 @@ import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.Overlay;
 import com.google.gwt.maps.client.overlay.Polygon;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -33,36 +26,44 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.MLink;
+import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
 public class SearchLocationAttribute extends SearchGenericAttribute implements
 		ClickListener {
-	private FlexTable ft;
-	private Button viewBounds;
-	private Button clearMarkers;
+	private final MTwoColPanel panel = new MTwoColPanel();
+	private Button viewBounds = new Button("View Bounds", this);
+	private final MLink clearMarkers = new MLink("Clear Markers", this);
 	private MapWidget map;
 	private Marker markerPoint1;
 	private Marker markerPoint2;
 	private Polygon box;
-	private TextBox northInput;
-	private TextBox southInput;
-	private TextBox eastInput;
-	private TextBox westInput;
+	private final TextBox northInput = new TextBox();
+	private final TextBox southInput = new TextBox();
+	private final TextBox eastInput = new TextBox();
+	private final TextBox westInput = new TextBox();
 	private org.postgis.Polygon boundingBox;
+	private static final String STYLENAME = "search-map";
 
 	public SearchLocationAttribute(final PropertyConstraint sc) {
 		super(sc);
+		panel.setStyleName(STYLENAME);
+		northInput.setStyleName(STYLENAME + "-nb");
+		southInput.setStyleName(STYLENAME + "-sb");
+		eastInput.setStyleName(STYLENAME + "-eb");
+		westInput.setStyleName(STYLENAME + "-wb");
 	}
 
 	public Widget[] createDisplayWidget(final MObject obj) {
-		ft = new FlexTable();
 
 		return new Widget[] {
-			ft
+			panel
 		};
 	}
 
 	public Widget[] createEditWidget(final MObject obj, final String id) {
-		ft = new FlexTable();
+		panel.clear();
+
 		markerPoint1 = null;
 		markerPoint2 = null;
 
@@ -70,42 +71,24 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 		map.addControl(new LargeMapControl());
 		map.addControl(new MapTypeControl());
 		map.addControl(new ScaleControl());
-		map.setSize("600px", "400px");
-		northInput = new TextBox();
-		southInput = new TextBox();
-		eastInput = new TextBox();
-		westInput = new TextBox();
-
-		viewBounds = new Button("View Bounds", this);
-		clearMarkers = new Button("Remove Markers", this);
-		viewBounds.addStyleName("block");
+		map.setSize("100%", "300px");
 		
-
-		final Label northBound = new Label("North Bound (Lat)");
-		final Label southBound = new Label("South Bound (Lat)");
-		final Label eastBound = new Label("East Bound (Long)");
-		final Label westBound = new Label("West Bound (Long)");
-
-		final FlowPanel TextBoxContainer = new FlowPanel();
+		panel.getLeftCol().add(map);
+		panel.getRightCol().add(viewBounds);
+		panel.getRightCol().add(northInput);
+		panel.getRightCol().add(southInput);
+		panel.getRightCol().add(eastInput);
+		panel.getRightCol().add(westInput);
+		panel.getRightCol().add(clearMarkers);
 		
-		TextBoxContainer.add(clearMarkers);
-		TextBoxContainer.add(northBound);
-		TextBoxContainer.add(northInput);
-		TextBoxContainer.add(southBound);
-		TextBoxContainer.add(southInput);
-		TextBoxContainer.add(eastBound);
-		TextBoxContainer.add(eastInput);
-		TextBoxContainer.add(westBound);
-		TextBoxContainer.add(westInput);
-		TextBoxContainer.add(viewBounds);
+		setClickHandler();
 
-		ft.setWidget(0, 0, TextBoxContainer);
-		ft.setWidget(0, 1, map);
-		
-		ft.getFlexCellFormatter().setAlignment(0, 0, HasHorizontalAlignment.ALIGN_RIGHT, HasVerticalAlignment.ALIGN_MIDDLE);
-
-		ft.setCellSpacing(3);
-
+		return new Widget[] {
+			panel
+		};
+	}
+	
+	private void setClickHandler() {
 		map.addMapClickHandler(new MapClickHandler() {
 			public void onClick(MapClickHandler.MapClickEvent sender) {
 				if (sender.getOverlay() != null) {
@@ -145,10 +128,6 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 				}
 			}
 		});
-
-		return new Widget[] {
-			ft
-		};
 	}
 
 	private void createBox() {
@@ -190,7 +169,7 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 			};
 			if (box != null)
 				map.removeOverlay(box);
-			box = new Polygon(points, "#7B8AA5", 2, .80, "#7375E7", .40);
+			box = new Polygon(points, "#0f2e3c", 1, .60, "#000000", .33);
 			map.addOverlay(box);
 
 			fillBounds(N, S, E, W);

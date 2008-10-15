@@ -2,21 +2,64 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific.search;
 
 import java.util.ArrayList;
 
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.JS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
+import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
 public class SearchTabLocation extends SearchTabAttribute{
 	private static SearchGenericAttribute[] atts = {new SearchLocationAttribute(MpDb.oc.SearchSample_boundingBox),
 		new SearchRegionAttribute(MpDb.oc.SearchSample_region),
 		new SearchCountriesAttribute(MpDb.oc.SearchSample_country)};
 	
+	private final RadioButton coordsRadio = new RadioButton("loctype","Coordinates");
+	private final RadioButton regionRadio = new RadioButton("loctype","Region");
+	private static final String COORDS_ID = "coords";
+	private static final String REGION_ID = "region";
+	private final HTMLPanel switchPanel = new HTMLPanel("<ul>\n" +
+			"<li>Specify Location by:</li>\n" +
+			"<li><span id=\"" + REGION_ID + "\"></li>\n" +
+			"<li><span id=\"" + COORDS_ID + "\"></span></li>\n" +
+			"</ul>");
+	private final FlowPanel container = new FlowPanel();
+	private final FlowPanel coordsPanel = new FlowPanel();
+	private static final String STYLENAME = "search-loc";
+	private FlexTable regionTable = new FlexTable();
+	
 	public SearchTabLocation(){
 		super(atts, "Location");
+		container.setStyleName(STYLENAME);
+		coordsPanel.setStyleName(STYLENAME + "-coords");
+		regionTable.setStyleName(STYLENAME + "-region");
+		switchPanel.addStyleName(STYLENAME + "-switch");
+		switchPanel.addAndReplaceElement(regionRadio, REGION_ID);
+		regionRadio.setChecked(true);
+		regionRadio.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				CSS.hide(coordsPanel);
+				CSS.show(regionTable);
+				regionRadio.setFocus(false);
+			}
+		});
+		switchPanel.addAndReplaceElement(coordsRadio, COORDS_ID);
+		coordsRadio.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				CSS.hide(regionTable);
+				CSS.show(coordsPanel);
+				coordsRadio.setFocus(false);
+			}
+		});
 	}
 	
 	private ArrayList<Widget[]> currentEditWidgets;
@@ -26,18 +69,36 @@ public class SearchTabLocation extends SearchTabAttribute{
 	}
 	
 	public Widget createEditWidget(final MObject obj, final String id){
+		container.clear();
+		container.add(switchPanel);
 		currentEditWidgets = new ArrayList();
-		final FlowPanel container = new FlowPanel();
-		for (int i = 0; i < atts.length; i++){
+		regionTable.clear();
+		for (int i = 0, j=0; i < atts.length; i++){
 			Widget[] w = (atts[i].createEditWidget(obj, id));
 			currentEditWidgets.add(w);
-			if (i > 0){
-				container.add(new Label(atts[i].getLabel()));
-			}
-			for (int j = 0; j < w.length; j++){
-				container.add(w[j]);
+			
+			if (atts[i] instanceof SearchRegionAttribute || 
+					atts[i] instanceof SearchCountriesAttribute) {
+				
+				Label labelWrap = new Label(atts[i].getLabel());
+				labelWrap.setStyleName(CSS.SEARCH_LABEL);
+				
+				FlowPanel inputWrap = new FlowPanel();
+				inputWrap.setStyleName(CSS.SEARCH_INPUT);
+				for (int k = 0; k < w.length; k++)
+					inputWrap.add(w[k]);
+				
+				regionTable.setWidget(j, 0, labelWrap);
+				regionTable.setWidget(j, 1, inputWrap);
+				j++;
+			} else if (atts[i] instanceof SearchLocationAttribute) {
+				for (int k = 0; k < w.length; k++)
+					coordsPanel.add(w[k]);
 			}
 		}
+		container.add(coordsPanel);
+		CSS.hide(coordsPanel);
+		container.add(regionTable);
 		return container;
 	}
 }

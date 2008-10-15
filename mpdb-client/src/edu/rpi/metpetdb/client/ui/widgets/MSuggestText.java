@@ -20,7 +20,7 @@ public class MSuggestText extends FlowPanel {
 	}
 	
 	public MSuggestText(final Set<String> suggestions, final boolean addShowAll){
-		setStylePrimaryName(STYLENAME);
+		setStylePrimaryName(STYLENAME + "-box-wrap");
 		final MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();	
 		oracle.addAll(suggestions);
 		suggestBox = new SuggestBox(oracle);

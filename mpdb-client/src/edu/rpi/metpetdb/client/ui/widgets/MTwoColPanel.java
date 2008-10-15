@@ -45,5 +45,11 @@ public class MTwoColPanel extends FlowPanel {
 	public void setRightColWidth(String w) {
 		right.setWidth(w);
 	}
+	
+	@Override
+	public void clear() {
+		leftContent.clear();
+		rightContent.clear();
+	}
 
 }
