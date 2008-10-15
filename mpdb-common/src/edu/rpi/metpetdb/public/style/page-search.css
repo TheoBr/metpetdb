@@ -89,6 +89,7 @@
 }
 .search-map .right-col .content input {
 	margin: 10px 0;
+	display: block;
 }
 .search-map-nb, .search-map-sb,
 .search-map-eb, .search-map-wb {
