@@ -49,7 +49,7 @@ public class SampleMineral extends MObject {
 
 	public String toString() {
 		if (mineral != null) {
-			if (amount != null)
+			if (amount != null && amount != 0)
 				return mineral.getName() + " (" + amount + ")";
 			else
 				return mineral.getName();
