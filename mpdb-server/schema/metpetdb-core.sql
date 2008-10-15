@@ -159,8 +159,8 @@ CREATE TABLE sample_minerals
     REFERENCES minerals (mineral_id)
     ON DELETE CASCADE,
   CONSTRAINT mineral_samples_fk_samp FOREIGN KEY (sample_id)
-    REFERENCES samples (sample_id)
-CONSTRAINT minerals_amount_ck_nonzero CHECK (
+    REFERENCES samples (sample_id),
+  CONSTRAINT minerals_amount_ck_nonzero CHECK (
      amount > 0)
 ) WITHOUT OIDS;
 
