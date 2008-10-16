@@ -33,6 +33,14 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 			if (q.uniqueResult() != null)
 				return (ChemicalAnalysis) q.uniqueResult();
 		}
+		
+		if (inst.getSubsample() != null && inst.getSubsample().getId() > 0) {
+			final Query q = namedQuery("ChemicalAnalysis.bySubsampleIdbySpotId");
+			q.setLong("id", inst.getSubsample().getId());
+			q.setString("spotId", inst.getSpotId());
+			if (q.uniqueResult() != null)
+				return (ChemicalAnalysis) q.uniqueResult();
+		}
 
 		throw new ChemicalAnalysisNotFoundException();
 	}

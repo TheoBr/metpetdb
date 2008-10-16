@@ -57,5 +57,9 @@
     select count(*) from Image i
     where i.subsample.id = :id
   </query>
+  <query name="Image.bySampleIdbyFilename">
+    from Image i
+    where i.sample.id = :id and i.filename = :filename
+  </query>
 
 </hibernate-mapping>

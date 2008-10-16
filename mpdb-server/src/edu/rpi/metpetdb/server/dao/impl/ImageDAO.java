@@ -31,6 +31,14 @@ public class ImageDAO extends MpDbDAO<Image> {
 			if (q.uniqueResult() != null)
 				return (Image) q.uniqueResult();
 		}
+		
+		if (inst.getSample() != null && inst.getSample().getId() > 0) {
+			final Query q = namedQuery("Image.bySampleIdbyFilename");
+			q.setLong("id", inst.getSample().getId());
+			q.setString("filename", inst.getFilename());
+			if (q.uniqueResult() != null)
+				return (Image) q.uniqueResult();
+		}
 
 		throw new ImageNotFoundException();
 	}

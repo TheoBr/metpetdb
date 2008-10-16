@@ -204,6 +204,10 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 			u.setId(currentUser());
 			// Keeps track of existing/new subsample names for each sample
 			final Map<String, Collection<String>> subsampleNames = new HashMap<String, Collection<String>>();
+			// maps a sample alias to an actual sample
+			final Map<String, Sample> samples = new HashMap<String, Sample>();
+			// maps a sample alias + subsample name to an actual subsample
+			final Map<String, Subsample> subsamples = new HashMap<String, Subsample>();
 			final SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
 			final SampleDAO sDAO = new SampleDAO(this.currentSession());
 			final ImageDAO dao = new ImageDAO(this.currentSession());
@@ -214,43 +218,47 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 							+ img.getFilename()));
 				} else {
 					try {
-						//setRealImage(zp, img, spreadsheetPrefix);
-						// see if our subsample exists
 						// see if our sample exists
-						Subsample ss = (img.getSubsample());
 						Sample s = img.getSample();
 						s.setOwner(u);
 						try {
-							sDAO.fill(s);
+							// if we don't have this sample already loaded check
+							// for it in the database
+							if (!samples.containsKey(s.getAlias())) {
+								s = sDAO.fill(s);
+								samples.put(s.getAlias(), s);
+								subsampleNames.put(s.getAlias(),
+										new HashSet<String>());
+							} else {
+								s = samples.get(s.getAlias());
+							}
 						} catch (DAOException e) {
 							// There is no sample we have to add an error
 							// Every Image needs a sample so add an error
 							errors.put(row, new PropertyRequiredException(
 									"Sample"));
 						}
+						Subsample ss = (img.getSubsample());
 						ss.setSample(s);
 						if (ss != null) {
-							if (!subsampleNames.containsKey(img.getSample()
-									.getAlias())
-									|| !subsampleNames.get(
-											img.getSample().getAlias())
-											.contains(ss.getName())) {
-								if (!subsampleNames.containsKey(img.getSample()
-										.getAlias()))
-									subsampleNames.put(img.getSample()
-											.getAlias(), new HashSet<String>());
+							// if we don't have the name stored already we need
+							// to load the subsample
+							if (!subsampleNames.get(s.getAlias()).contains(
+									ss.getName())) {
 								try {
-									ss.setSample(img.getSample());
-									ssDAO.fill(ss);
+									ss = ssDAO.fill(ss);
+									subsamples.put(s.getAlias() + ss.getName(), ss);
+									img.setSubsample(ss);
 									ssResultCount.incrementOld();
 								} catch (DAOException e) {
 									// Means it is new because we could not find
 									// it
 									ssResultCount.incrementFresh();
 								}
-								subsampleNames.get(
-										img.getSample().getAlias()).add(
-										img.getSubsample().getName());
+								subsampleNames.get(img.getSample().getAlias())
+										.add(img.getSubsample().getName());
+							} else {
+								img.setSubsample(subsamples.get(s.getAlias()+ss.getName()));
 							}
 						} else {
 							// Every Image needs a subsample so add an error
@@ -258,7 +266,6 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 									"Subsample"));
 						}
 						doc.validate(img);
-						//TODO we have no way of knowing if an image is old or not
 						if (dao.isNew(img))
 							imgResultCount.incrementFresh();
 						else

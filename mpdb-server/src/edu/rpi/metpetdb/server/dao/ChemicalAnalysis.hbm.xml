@@ -121,6 +121,11 @@
     where ma.subsample.id = :id
     order by ma.description
   </query>
+  
+  <query name="ChemicalAnalysis.bySubsampleIdbySpotId">
+    from ChemicalAnalysis ma
+    where ma.subsample.id = :id and ma.spotId = :spotId
+  </query>
 
    
 </hibernate-mapping>
