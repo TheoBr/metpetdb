@@ -237,7 +237,7 @@ public class MetPetDBApplication implements EntryPoint {
 	}
 
 	public static void footer(final String text) {
-		footer(new MLink(text != null ? text : "", ""));
+		footer(new Label(text != null ? text : ""));
 	}
 
 	public static void footer(final Widget w) {
