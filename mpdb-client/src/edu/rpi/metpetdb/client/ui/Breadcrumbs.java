@@ -228,7 +228,7 @@ public class Breadcrumbs extends FlowPanel {
 					}
 				}
 			}.begin();
-		} else if (name.equals("Map")) {
+		} else if (name.equals("Image Map")) {
 			new ServerOp<Grid>() {
 				public void begin() {
 					MpDb.imageBrowser_svc.details(Long.parseLong(Id), this);
