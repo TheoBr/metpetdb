@@ -95,6 +95,7 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 	protected void save(final Collection<Sample> samples)
 			throws ValidationException, LoginRequiredException, DAOException {
 		for (Sample sample : samples) {
+			sample.setPublicData(false);
 			doc.validate(sample);
 			Sample s = (sample);
 			s = (new SampleDAO(this.currentSession())).save(s);
