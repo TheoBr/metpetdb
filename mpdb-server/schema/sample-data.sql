@@ -58,3 +58,27 @@ insert into subsample_type values(nextval('subsample_type_seq'), 'Rock Chip');
 --insert into subsample_type values(nextval('subsample_type_seq'), 'Bash');
 insert into subsample_type values(nextval('subsample_type_seq'), 'Mineral Separate');
 --insert into elements values(1,1,1,1,1,1,'Silicates');
+
+--Metamorphic Grades
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Zeolite');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Prehnite-pumpellyite');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Greenschist');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Amphibolite');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Epidote Amphibolite');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Granulite');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Blueschist');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Eclogite');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Hornfels');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Chlorite zone');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Biotite zone');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Garnet zone');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Staurolite zone');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Staurolite-kyanite zone');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Kyanite zone');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Sillimanite zone');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Andalusite zone');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Sillimanite-K feldspar zone');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Garnet-cordierite zone');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Migmatite zone');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Ultra high pressure');
+insert into metamorphic_grades values(nextval('metamorphic_grade_seq'), 'Ultra high temperature');
