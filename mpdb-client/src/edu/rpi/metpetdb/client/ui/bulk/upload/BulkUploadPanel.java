@@ -201,7 +201,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 		main.add(resetPanel);
 		resetPanel.setStyleName(CSS.SHOW_INLINE);
-		resetPanel.addAndReplaceElement(resetLink, RESET_ID);
+		if (resetPanel.getElementById(RESET_ID) != null) resetPanel.addAndReplaceElement(resetLink, RESET_ID);
 		hide(resetPanel);
 
 		clearResults();

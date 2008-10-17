@@ -41,14 +41,10 @@ public class MPagePanel extends FlowPanel {
 	}
 
 	public void setPageTitle(String text, String cat) {
-		try {
-			header.addAndReplaceElement(title, TITLE_ID);
-		} catch (NoSuchElementException e) {}
+		if (header.getElementById(TITLE_ID) != null) header.addAndReplaceElement(title, TITLE_ID);
 		title.getElement().setInnerHTML(text);
 		
-		try {
-			header.addAndReplaceElement(category, CATEGORY_ID);
-		} catch (NoSuchElementException e) {}
+		if (header.getElementById(CATEGORY_ID) != null) header.addAndReplaceElement(category, CATEGORY_ID);
 		category.getElement().setInnerHTML(cat);
 		
 		if (cat == "" || cat == null) header.addStyleDependentName(NO_CATEGORY);
@@ -62,16 +58,12 @@ public class MPagePanel extends FlowPanel {
 
 	public void setPageDescription(Widget w) {
 		w.setStyleName(DESCRIPTION_ID);
-		try {
-			header.addAndReplaceElement(w, DESCRIPTION_ID);
-		} catch (NoSuchElementException e) {}
+		if (header.getElementById(DESCRIPTION_ID) != null) header.addAndReplaceElement(w, DESCRIPTION_ID);
 	}
 	
 	public void setPageActionList() {
 		actionList.setStylePrimaryName(ACTIONS_ID);
-		try {
-			header.addAndReplaceElement(actionList, ACTIONS_ID);
-		} catch (NoSuchElementException e) {}
+		if (header.getElementById(ACTIONS_ID) != null) header.addAndReplaceElement(actionList, ACTIONS_ID);
 	}
 
 	public void addPageActionItem(final MLink lnk) {
