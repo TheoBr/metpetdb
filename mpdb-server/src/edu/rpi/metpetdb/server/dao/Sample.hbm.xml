@@ -51,7 +51,7 @@
       <many-to-many class="Region" column="region_id" />
     </set>
 
-    <set name="metamorphicGrades" table="sample_metamorphic_grades" cascade="persist,merge" lazy="false">
+    <set name="metamorphicGrades" table="sample_metamorphic_grades" cascade="none" lazy="false">
       <key column="sample_id" />
       <many-to-many class="MetamorphicGrade" column="metamorphic_grade_id" />
     </set>
