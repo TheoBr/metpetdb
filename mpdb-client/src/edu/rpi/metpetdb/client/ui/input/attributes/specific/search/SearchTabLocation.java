@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific.search;
 
 import java.util.ArrayList;
 
+import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -12,11 +13,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
-import edu.rpi.metpetdb.client.ui.JS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttribute;
-import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
-import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
 public class SearchTabLocation extends SearchTabAttribute{
 	private static SearchGenericAttribute[] atts = {new SearchLocationAttribute(MpDb.oc.SearchSample_boundingBox),
@@ -29,13 +27,14 @@ public class SearchTabLocation extends SearchTabAttribute{
 	private static final String REGION_ID = "region";
 	private final HTMLPanel switchPanel = new HTMLPanel("<ul>\n" +
 			"<li>Specify Location by:</li>\n" +
-			"<li><span id=\"" + REGION_ID + "\"></li>\n" +
+			"<li><span id=\"" + REGION_ID + "\"></span></li>\n" +
 			"<li><span id=\"" + COORDS_ID + "\"></span></li>\n" +
 			"</ul>");
 	private final FlowPanel container = new FlowPanel();
 	private final FlowPanel coordsPanel = new FlowPanel();
 	private static final String STYLENAME = "search-loc";
 	private FlexTable regionTable = new FlexTable();
+	private MapWidget map;
 	
 	public SearchTabLocation(){
 		super(atts, "Location");
@@ -43,7 +42,8 @@ public class SearchTabLocation extends SearchTabAttribute{
 		coordsPanel.setStyleName(STYLENAME + "-coords");
 		regionTable.setStyleName(STYLENAME + "-region");
 		switchPanel.addStyleName(STYLENAME + "-switch");
-		switchPanel.addAndReplaceElement(regionRadio, REGION_ID);
+		if (switchPanel.getElementById(REGION_ID)!=null) 
+			switchPanel.addAndReplaceElement(regionRadio, REGION_ID);
 		regionRadio.setChecked(true);
 		regionRadio.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
@@ -52,12 +52,14 @@ public class SearchTabLocation extends SearchTabAttribute{
 				regionRadio.setFocus(false);
 			}
 		});
-		switchPanel.addAndReplaceElement(coordsRadio, COORDS_ID);
+		if (switchPanel.getElementById(COORDS_ID)!=null) 
+			switchPanel.addAndReplaceElement(coordsRadio, COORDS_ID);
 		coordsRadio.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
 				CSS.hide(regionTable);
-				CSS.show(coordsPanel);
+				CSS.show(coordsPanel);	
 				coordsRadio.setFocus(false);
+				map.checkResize();
 			}
 		});
 	}
@@ -92,6 +94,7 @@ public class SearchTabLocation extends SearchTabAttribute{
 				regionTable.setWidget(j, 1, inputWrap);
 				j++;
 			} else if (atts[i] instanceof SearchLocationAttribute) {
+				map = ((SearchLocationAttribute) atts[i]).getMap();
 				for (int k = 0; k < w.length; k++)
 					coordsPanel.add(w[k]);
 			}

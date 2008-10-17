@@ -60,6 +60,10 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 			panel
 		};
 	}
+	
+	public MapWidget getMap(){
+		return map;
+	}
 
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		panel.clear();
@@ -67,7 +71,7 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 		markerPoint1 = null;
 		markerPoint2 = null;
 
-		map = new MapWidget(LatLng.newInstance(66, -128),2);
+		map = new MapWidget(LatLng.newInstance(38, -38),2);
 		map.addControl(new LargeMapControl());
 		map.addControl(new MapTypeControl());
 		map.addControl(new ScaleControl());
