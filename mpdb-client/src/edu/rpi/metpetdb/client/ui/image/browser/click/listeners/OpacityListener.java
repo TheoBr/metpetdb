@@ -24,8 +24,8 @@ public class OpacityListener implements ClickListener {
 	public void onClick(final Widget sender) {
 		new ServerOp<String>() {
 			public void begin() {
-				new OpacityPopup(iog, this, iog.getTemporaryTopLeftX()
-						+ grid.getAbsoluteLeft(), iog.getTemporaryTopLeftY()
+				new OpacityPopup(iog, this, iog.getCurrentContainerPosition().x
+						+ grid.getAbsoluteLeft(), iog.getCurrentContainerPosition().y
 						+ grid.getAbsoluteTop()).show();
 			}
 			public void onSuccess(final String result) {

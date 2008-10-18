@@ -79,6 +79,10 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	private LockListener lockListener;
 	private HideMenuListener hideMenuListener;
 	private final ZOrderManager zOrderManager = new ZOrderManager();
+	private ZoomInListener zoomInListener;
+	private ZoomOutListener zoomOutListener;
+	
+	private final PanHandler panHandler;
 
 	// Scale
 	private int totalXOffset = 0;
@@ -111,6 +115,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		this.grid = new MAbsolutePanel();
 		this.grid.add(this.scaleDisplay);
 		this.imagesOnGrid = new HashMap<Image, ImageOnGridContainer>();
+		panHandler = new PanHandler(grid);
 		chemicalAnalyses = new ArrayList<ChemicalAnalysis>();
 	}
 
@@ -207,7 +212,9 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		this.mouseListener = new ImageBrowserMouseListener(this.grid,
 				this.imagesOnGrid.values(), this.zOrderManager, this.g
 						.getSubsample(), this, fp);
+		panHandler.setImagesOnGrid(this.imagesOnGrid.values());
 		this.grid.addMouseListener(this.mouseListener);
+		
 	}
 	public void updateScale(final float multiplier) {
 		this.scale *= multiplier;
@@ -239,13 +246,12 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		final Iterator<ImageOnGrid> itr = this.g.getImagesOnGrid().iterator();
 		while (itr.hasNext()) {
 			final ImageOnGrid iog = itr.next();
-			final ImageOnGridContainer imageOnGrid = new ImageOnGridContainer();
-			imageOnGrid.setIog(iog);
+			final ImageOnGridContainer imageOnGrid = new ImageOnGridContainer(iog);
 			if (firstTime) {
-				imageOnGrid.setWidth(Math
+				imageOnGrid.setCurrentWidth(Math
 						.round((iog.getImage().getWidth() * iog
 								.getResizeRatio())));
-				imageOnGrid.setHeight(Math
+				imageOnGrid.setCurrentHeight(Math
 						.round((iog.getImage().getHeight() * iog
 								.getResizeRatio())));
 			}
@@ -268,11 +274,10 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		iog.setGchecksum(i.getChecksum());
 		iog.setGchecksum64x64(i.getChecksum64x64());
 		iog.setGchecksumHalf(i.getChecksumHalf());
-		final ImageOnGridContainer imageOnGrid = new ImageOnGridContainer();
-		imageOnGrid.setIog(iog);
-		imageOnGrid.setWidth(Math.round((iog.getImage().getWidth() * (iog
+		final ImageOnGridContainer imageOnGrid = new ImageOnGridContainer(iog);
+		imageOnGrid.setCurrentWidth(Math.round((iog.getImage().getWidth() * (iog
 				.getResizeRatio()))));
-		imageOnGrid.setHeight(Math.round((iog.getImage().getHeight() * (iog
+		imageOnGrid.setCurrentHeight(Math.round((iog.getImage().getHeight() * (iog
 				.getResizeRatio()))));
 		this.addImage(imageOnGrid);
 		cascade[0] += 10;
@@ -284,9 +289,6 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		imageContainer.setStyleName("imageContainer");
 		iog.setImageContainer(imageContainer);
 		this.scale(iog);
-
-		iog.setTemporaryTopLeftX(iog.getIog().getTopLeftX());
-		iog.setTemporaryTopLeftY(iog.getIog().getTopLeftY());
 
 		final SimplePanel imagePanel = this.createImagePanel(iog);
 
@@ -308,8 +310,8 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		this.layers.registerImage(iog);
 		this.zOrderManager.register(iog);
 
-		this.grid.add(imageContainer, iog.getTemporaryTopLeftX(), iog
-				.getTemporaryTopLeftY());
+		this.grid.add(imageContainer, iog.getCurrentContainerPosition().x, iog
+				.getCurrentContainerPosition().y);
 
 		this.imagesOnGrid.put(iog.getIog().getImage(), iog);
 	}
@@ -348,8 +350,8 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	private SimplePanel createImagePanel(final ImageOnGridContainer iog) {
 		final SimplePanel imagePanel = new SimplePanel();
 		final AbsolutePanel ap = new AbsolutePanel();
-		ap.setHeight(iog.getHeight() + "px");
-		ap.setWidth(iog.getWidth() + "px");
+		ap.setHeight(iog.getCurrentHeight() + "px");
+		ap.setWidth(iog.getCurrentWidth() + "px");
 		final com.google.gwt.user.client.ui.Image image = new com.google.gwt.user.client.ui.Image(
 				iog.getGoodLookingPicture());
 		ap.add(image, 0, 0);
@@ -358,8 +360,8 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 						.getSubsample().getChemicalAnalyses());
 		iog.setChemicalAnalyses(chemicalAnalyses);
 
-		image.setWidth(iog.getWidth() + "px");
-		image.setHeight(iog.getHeight() + "px");
+		image.setWidth(iog.getCurrentWidth() + "px");
+		image.setHeight(iog.getCurrentHeight() + "px");
 		final ResizableWidget rw = new ResizableWidget(ap, this.grid, iog
 				.getImageContainer(), iog.getIog());
 		imagePanel.setWidget(rw);
@@ -386,8 +388,8 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 					GWT.getModuleBaseURL() + "/images/point0.gif");
 			iog.getImagePanel().add(i, ma.getPointX(), ma.getPointY());
 			ma.setActualImage(i);
-			ma.setPercentX(ma.getPointX() / (float) iog.getWidth());
-			ma.setPercentY(ma.getPointY() / (float) iog.getHeight());
+			ma.setPercentX(ma.getPointX() / (float) iog.getCurrentWidth());
+			ma.setPercentY(ma.getPointY() / (float) iog.getCurrentHeight());
 			ma.setLocked(true);
 			i.addClickListener(new ClickListener() {
 				public void onClick(final Widget sender) {
@@ -414,9 +416,9 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 
 	private void scale(final ImageOnGridContainer iog) {
 		final int multiplier = 1;
-		iog.setWidth(Math.round((iog.getIog().getImage().getWidth()
+		iog.setCurrentWidth(Math.round((iog.getIog().getImage().getWidth()
 				* multiplier * iog.getIog().getResizeRatio())));
-		iog.setHeight(Math.round((iog.getIog().getImage().getHeight()
+		iog.setCurrentHeight(Math.round((iog.getIog().getImage().getHeight()
 				* multiplier * iog.getIog().getResizeRatio())));
 	}
 
@@ -482,10 +484,12 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		DOM.setElementAttribute(viewControls.getElement(), "id", "viewControl");
 		zSlide = new MLink("", this);
 		DOM.setStyleAttribute(zSlide.getElement(), "top", "60px");
-		zIn = new MLink("", new ZoomInListener(this.imagesOnGrid.values(),
-				zSlide.getElement(), this));
-		zOut = new MLink("", new ZoomOutListener(this.imagesOnGrid.values(),
-				zSlide.getElement(), this));
+		zoomInListener = new ZoomInListener(this.imagesOnGrid.values(),
+				zSlide.getElement(), this);
+		zoomOutListener =  new ZoomOutListener(this.imagesOnGrid.values(),
+				zSlide.getElement(), this);
+		zIn = new MLink("", zoomInListener);
+		zOut = new MLink("", zoomOutListener);
 		this.panUp.setStyleName("imageBrowser-hyperlink");
 		this.panRight.setStyleName("imageBrowser-hyperlink");
 		this.panDown.setStyleName("imageBrowser-hyperlink");
@@ -598,6 +602,17 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 			public void onSuccess(final Grid result) {
 				save.setEnabled(true);
 				info.setText("Image map has been saved");
+				//After saving we have to update our copies
+				g = result;
+				final Iterator<ImageOnGrid> itr = g.getImagesOnGrid().iterator();
+				while(itr.hasNext()) {
+					final ImageOnGrid iog = itr.next();
+					final ImageOnGridContainer container = imagesOnGrid.get(iog.getImage());
+					container.setIog(iog);
+				}
+				mouseListener.setImagesOnGrid(imagesOnGrid.values());
+				zoomOutListener.setImagesOnGrid(imagesOnGrid.values());
+				zoomInListener.setImagesOnGrid(imagesOnGrid.values());
 			}
 		}.begin();
 		//Save any chemical analyses that have been modified
@@ -613,72 +628,37 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	}
 
 	private void doPanUp() {
-		this.pan(0, 201);
+		panHandler.pan(0, 201);
 	}
 
 	private void doPanLeft() {
-		this.pan(201, 0);
+		panHandler.pan(201, 0);
 	}
 
 	private void doPanRight() {
-		this.pan(-201, 0);
+		panHandler.pan(-201, 0);
 	}
 
 	private void doPanDown() {
-		this.pan(0, -201);
+		panHandler.pan(0, -201);
 	}
 
 	private void doPanHome() {
-		this.pan(-this.totalXOffset, -this.totalYOffset);
-		this.totalXOffset = 0;
-		this.totalYOffset = 0;
+		panHandler.reset();
 	}
 
-	public void pan(final int xoffset, final int yoffset) {
-		final String currentBackgroundPosition = DOM.getStyleAttribute(
-				this.grid.getElement(), "backgroundPosition");
-		this.totalXOffset += xoffset;
-		this.totalYOffset += yoffset;
-		int x = 0;
-		int y = 0;
-		if (!currentBackgroundPosition.equals("")) {
-			final String currentX = currentBackgroundPosition.split(" ")[0]
-					.toString();
-			final String currentY = currentBackgroundPosition.split(" ")[1]
-					.toString();
-
-			for (int i = 0; i < currentX.length(); ++i)
-				if (Character.isLetter(currentX.charAt(i))) {
-					Double tmp = Double.parseDouble(currentX.substring(0,i));
-					x = tmp.intValue();
-					break;
-				}
-			for (int i = 0; i < currentY.length(); ++i)
-				if (Character.isLetter(currentY.charAt(i))) {
-					Double tmp = Double.parseDouble(currentY.substring(0,i));
-					y = tmp.intValue();
-					break;
-				}
-		}
-		DOM.setStyleAttribute(this.grid.getElement(), "backgroundPosition",
-				(x + xoffset) + "px " + (y + yoffset) + "px");
-		if (this.g.getImagesOnGrid() != null) {
-			final Iterator<ImageOnGridContainer> itr = this.imagesOnGrid
-					.values().iterator();
-			while (itr.hasNext()) {
-				final ImageOnGridContainer iog = itr.next();
-				final int newX = iog.getTemporaryTopLeftX() + xoffset;
-				final int newY = iog.getTemporaryTopLeftY() + yoffset;
-				this.grid
-						.setWidgetPosition(iog.getImageContainer(), newX, newY);
-				iog.setTemporaryTopLeftX(newX);
-				iog.setTemporaryTopLeftY(newY);
-			}
-		}
-	}
+	
 
 	public MAbsolutePanel getGrid() {
 		return this.grid;
+	}
+	
+	public int getZoomScale() {
+		return zoomInListener.getCurrentScale();
+	}
+	
+	public PanHandler getPanHandler() {
+		return panHandler;
 	}
 
 }

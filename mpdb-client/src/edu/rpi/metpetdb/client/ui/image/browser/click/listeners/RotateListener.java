@@ -29,7 +29,7 @@ public class RotateListener implements ClickListener {
 			public void onSuccess(final ImageOnGridContainer result) {
 				// final float widthRatio = iog.getWidth()
 				// / (float) iog.getImage().getWidth();
-				final float heightRatio = iog.getHeight()
+				final float heightRatio = iog.getCurrentHeight()
 						/ (float) iog.getIog().getImage().getHeight();
 				iog.getIog().setImage(
 						(((ImageOnGridContainer) result).getIog().getImage()));

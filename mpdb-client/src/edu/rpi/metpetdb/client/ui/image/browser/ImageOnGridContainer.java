@@ -16,20 +16,82 @@ public class ImageOnGridContainer {
 	private FlowPanel imageContainer;
 	private com.google.gwt.user.client.ui.Image actualImage;
 	private AbsolutePanel imagePanel;
-	private int panTopLeftX;
-	private int panTopLeftY;
-	private int width;
-	private int height;
-	private int temporaryTopLeftX;
-	private int temporaryTopLeftY;
+	// Always the size of the image
+	private int currentWidth;
+	private int currentHeight;
+	// Original is used before doing a resize operation to make comparisons
+	private int originalWidth;
+	private int originalHeight;
+	private float aspectRatio;
+	private float aspectRatioHeight;
 	private boolean isShown;
 	private Set<ChemicalAnalysis> chemicalAnalyses;
 	private boolean isLocked;
 	private boolean isMenuHidden;
 	private int zoomLevelsSkipped;
+	// The point at which the container was located before a modify action was
+	// performed on it (top left x/y)
+	private Point originalContainerPosition = new Point();
+	// The current position of the container (top left x/y)
+	private Point currentContainerPosition = new Point();
+
+	public ImageOnGridContainer(final ImageOnGrid iog) {
+		this.iog = iog;
+		currentContainerPosition.x = iog.getTopLeftX();
+		currentContainerPosition.y = iog.getTopLeftY();
+	}
+
+	/**
+	 * Moves where the current container is, and also updates where the image is
+	 * with respect to the default zoom level and origin
+	 * 
+	 * @param deltaX
+	 * @param deltaY
+	 * @param scale
+	 */
+	public void move(final int deltaX, final int deltaY, final int scale) {
+		iog.setTopLeftX(iog.getTopLeftX() + (scale * deltaX));
+		iog.setTopLeftY(iog.getTopLeftY() + (scale * deltaY));
+		currentContainerPosition.x += deltaX;
+		currentContainerPosition.y += deltaY;
+	}
+
+	/**
+	 * Since panning is not saved we only update the position of the container
+	 * 
+	 * @param deltaX
+	 * @param deltaY
+	 */
+	public void pan(final int deltaX, final int deltaY) {
+		currentContainerPosition.x += deltaX;
+		currentContainerPosition.y += deltaY;
+	}
+
+	public Point getCurrentContainerPosition() {
+		return currentContainerPosition;
+	}
+
+	public void setCurrentContainerPosition(Point currentContainerPosition) {
+		this.currentContainerPosition = currentContainerPosition;
+	}
+
+	public Point getOriginalContainerPosition() {
+		return originalContainerPosition;
+	}
+
+	public void setOriginalContainerPosition(Point originalContainerPosition) {
+		this.originalContainerPosition = originalContainerPosition;
+	}
+	
+	public void setupForResize() {
+		originalWidth = currentWidth;
+		originalHeight = currentHeight;
+		aspectRatio = originalHeight / (float) originalWidth;
+		aspectRatioHeight = originalWidth / (float) originalHeight;
+	}
 
 	public boolean skipZoom(int width, int height) {
-		if (width < this.getWidth() || height < this.getHeight()) {
+		if (width < this.getCurrentWidth() || height < this.getCurrentHeight()) {
 			if (width <= 5 || height <= 5) {
 				if (this.getZoomLevelsSkipped() >= 1) {
 					this.getImageContainer().setStyleName(
@@ -64,26 +126,19 @@ public class ImageOnGridContainer {
 			}
 		}
 
-		// note does not work with resize
-		int dwidth = width - this.getWidth();
-		int dheight = height - this.getHeight();
-
-		dwidth = Math.round(dwidth / (float) 2);
-		dheight = Math.round(dheight / (float) 2);
-
 		this.getImagePanel().setWidth(width + "px");
 		this.getImagePanel().setHeight(height + "px");
 		this.getActualImage().setWidth(width + "px");
 		this.getActualImage().setHeight(height + "px");
-
-		if (!resize) {
-			this.setTemporaryTopLeftX(this.getTemporaryTopLeftX() - dwidth);
-			this.setTemporaryTopLeftY(this.getTemporaryTopLeftY() - dheight);
-		}
+		
+		currentWidth  = width;
+		currentHeight = height;
 
 		final Iterator<ChemicalAnalysis> itr = this.getChemicalAnalyses()
 				.iterator();
 		while (itr.hasNext()) {
+
+			// TODO proportionally move the chemical analyses
 			final ChemicalAnalysis ma = (ChemicalAnalysis) itr.next();
 			// ma.setPointX((int) (width * ma.getPercentX()));
 			// ma.setPointY((int) (height * ma.getPercentY()));
@@ -91,21 +146,20 @@ public class ImageOnGridContainer {
 			// ma.getPointX(), ma.getPointY());
 		}
 
-		this.setWidth(width);
-		this.setHeight(height);
+		// this.setWidth(width);
+		// this.setHeight(height);
 
 		if (!this.actualImage.getUrl().equals(this.getGoodLookingPicture()))
 			this.actualImage.setUrl(this.getGoodLookingPicture());
 	}
-	
+
 	public String get64x64ServerPath(final boolean original) {
 		final String checksum;
 		if (original)
 			checksum = this.iog.getImage().getChecksum64x64();
 		else
 			checksum = this.iog.getGchecksum64x64();
-		return GWT.getModuleBaseURL() + "/image/?checksum="
-				+ checksum;
+		return GWT.getModuleBaseURL() + "/image/?checksum=" + checksum;
 	}
 
 	public String getHalfServerPath(final boolean original) {
@@ -114,8 +168,7 @@ public class ImageOnGridContainer {
 			checksum = this.iog.getImage().getChecksumHalf();
 		else
 			checksum = this.iog.getGchecksumHalf();
-		return GWT.getModuleBaseURL() + "/image/?checksum="
-				+ checksum;
+		return GWT.getModuleBaseURL() + "/image/?checksum=" + checksum;
 	}
 
 	public String getServerPath(final boolean original) {
@@ -124,8 +177,7 @@ public class ImageOnGridContainer {
 			checksum = this.iog.getImage().getChecksum();
 		else
 			checksum = this.iog.getGchecksum();
-		return GWT.getModuleBaseURL() + "/image/?checksum="
-				+ checksum;
+		return GWT.getModuleBaseURL() + "/image/?checksum=" + checksum;
 	}
 
 	public String getGoodLookingPicture() {
@@ -133,13 +185,14 @@ public class ImageOnGridContainer {
 	}
 
 	public String getGoodLookingPicture(final boolean original) {
-		if (this.width <= 100) {
-			return get64x64ServerPath(original);	
+		if (this.currentWidth <= 100) {
+			return get64x64ServerPath(original);
 		}
-		if (this.width >= 100 && this.width <= iog.getImage().getWidth() * .5) {
+		if (this.currentWidth >= 100
+				&& this.currentWidth <= iog.getImage().getWidth() * .5) {
 			return getHalfServerPath(original);
 		}
-		if (this.width >= iog.getImage().getWidth() * .5 + 100) {
+		if (this.currentWidth >= iog.getImage().getWidth() * .5 + 100) {
 			return getServerPath(original);
 		}
 		return getServerPath(original);
@@ -177,52 +230,52 @@ public class ImageOnGridContainer {
 		this.imagePanel = imagePanel;
 	}
 
-	public int getPanTopLeftX() {
-		return panTopLeftX;
+	public int getCurrentWidth() {
+		return currentWidth;
 	}
 
-	public void setPanTopLeftX(int panTopLeftX) {
-		this.panTopLeftX = panTopLeftX;
+	public void setCurrentWidth(int width) {
+		this.currentWidth = width;
 	}
 
-	public int getPanTopLeftY() {
-		return panTopLeftY;
+	public int getCurrentHeight() {
+		return currentHeight;
 	}
 
-	public void setPanTopLeftY(int panTopLeftY) {
-		this.panTopLeftY = panTopLeftY;
+	public void setCurrentHeight(int height) {
+		this.currentHeight = height;
 	}
 
-	public int getWidth() {
-		return width;
+	public int getOriginalWidth() {
+		return originalWidth;
 	}
 
-	public void setWidth(int width) {
-		this.width = width;
+	public void setOriginalWidth(int originalWidth) {
+		this.originalWidth = originalWidth;
 	}
 
-	public int getHeight() {
-		return height;
+	public int getOriginalHeight() {
+		return originalHeight;
 	}
 
-	public void setHeight(int height) {
-		this.height = height;
+	public void setOriginalHeight(int originalHeight) {
+		this.originalHeight = originalHeight;
 	}
 
-	public int getTemporaryTopLeftX() {
-		return temporaryTopLeftX;
+	public float getAspectRatio() {
+		return aspectRatio;
 	}
 
-	public void setTemporaryTopLeftX(int temporaryTopLeftX) {
-		this.temporaryTopLeftX = temporaryTopLeftX;
+	public void setAspectRatio(float aspectRatio) {
+		this.aspectRatio = aspectRatio;
 	}
 
-	public int getTemporaryTopLeftY() {
-		return temporaryTopLeftY;
+	public float getAspectRatioHeight() {
+		return aspectRatioHeight;
 	}
 
-	public void setTemporaryTopLeftY(int temporaryTopLeftY) {
-		this.temporaryTopLeftY = temporaryTopLeftY;
+	public void setAspectRatioHeight(float aspectRatioHeight) {
+		this.aspectRatioHeight = aspectRatioHeight;
 	}
 
 	public boolean isShown() {

@@ -3,7 +3,6 @@ package edu.rpi.metpetdb.client.ui.image.browser;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -29,14 +28,8 @@ public class ImageBrowserMouseListener implements MouseListener {
 	private boolean isBeingDragged = false;
 	private int startX;
 	private int startY;
-	private int positionOnGridX;
-	private int positionOnGridY;
 	private MouseMode mode;
 	private ResizeCorner resizeDirection = ResizeCorner.NONE;
-	private int startWidth;
-	private int startHeight;
-	private float aspectRatio;
-	private float aspectRatioHeight;
 	private final ZOrderManager zOrderManager;
 	private final Subsample subsample;
 	private Image pointer;
@@ -124,18 +117,17 @@ public class ImageBrowserMouseListener implements MouseListener {
 			final int y) {
 		// User wants to drag an image, resize, or specify z
 		// order
-		if (grid.getZMode() == ZMode.NO_ZOOM) {
+		if (grid.getZMode() == ZMode.NO_ZMODE) {
 			resizeDirection = getResizeCorner(sender.getAbsoluteLeft() + x,
 					sender.getAbsoluteTop() + y);
-			positionOnGridX = currentImage.getTemporaryTopLeftX();
-			positionOnGridY = currentImage.getTemporaryTopLeftY();
+			currentImage.getOriginalContainerPosition().x = currentImage
+					.getCurrentContainerPosition().x;
+			currentImage.getOriginalContainerPosition().y = currentImage
+					.getCurrentContainerPosition().y;
 			currentImage.getImageContainer().addStyleName("image-moving");
 			if (resizeDirection != ResizeCorner.NONE) {
 				mode = MouseMode.RESIZE_IMAGE;
-				startWidth = currentImage.getWidth();
-				startHeight = currentImage.getHeight();
-				aspectRatio = startHeight / (float) startWidth;
-				aspectRatioHeight = startWidth / (float) startHeight;
+				currentImage.setupForResize();
 			} else {
 				// if we are not resizing then we are moving
 				mode = MouseMode.MOVE_IMAGE;
@@ -187,15 +179,17 @@ public class ImageBrowserMouseListener implements MouseListener {
 								.iterator();
 						while (itr.hasNext()) {
 							final ImageOnGridContainer iog = itr.next();
-							iog.setPanTopLeftX(iog.getTemporaryTopLeftX());
-							iog.setPanTopLeftY(iog.getTemporaryTopLeftY());
+							iog.getOriginalContainerPosition().x = iog
+									.getCurrentContainerPosition().x;
+							iog.getOriginalContainerPosition().y = iog
+									.getCurrentContainerPosition().y;
 						}
 					}
 				}
 			}
 		}
 		// Reset z mode
-		grid.setZMode(ZMode.NO_ZOOM);
+		grid.setZMode(ZMode.NO_ZMODE);
 	}
 
 	/**
@@ -225,8 +219,8 @@ public class ImageBrowserMouseListener implements MouseListener {
 						.show();
 			}
 		});
-		ca.setPercentX(pointX / (float) currentImage.getWidth());
-		ca.setPercentY(pointY / (float) currentImage.getHeight());
+		ca.setPercentX(pointX / (float) currentImage.getCurrentWidth());
+		ca.setPercentY(pointY / (float) currentImage.getCurrentHeight());
 		currentImage.getChemicalAnalyses().add(ca);
 		imageBrowser.getChemicalAnalysesToSave().add(ca);
 	}
@@ -246,10 +240,10 @@ public class ImageBrowserMouseListener implements MouseListener {
 				- grid.getAbsoluteLeft() + 4;
 		pointY -= currentImage.getImagePanel().getAbsoluteTop()
 				- grid.getAbsoluteTop() + 13;
-		if (pointX < 0 || pointX > currentImage.getWidth()) {
+		if (pointX < 0 || pointX > currentImage.getCurrentWidth()) {
 			return false;
 		}
-		if (pointY < 0 || pointY > currentImage.getHeight()) {
+		if (pointY < 0 || pointY > currentImage.getCurrentHeight()) {
 			return false;
 		}
 		return true;
@@ -358,11 +352,11 @@ public class ImageBrowserMouseListener implements MouseListener {
 		final ArrayList<ImageOnGridContainer> candidates = new ArrayList<ImageOnGridContainer>();
 		while (itr.hasNext()) {
 			final ImageOnGridContainer iog = itr.next();
-			if (x >= iog.getTemporaryTopLeftX()
-					&& x <= iog.getTemporaryTopLeftX()
+			if (x >= iog.getCurrentContainerPosition().x
+					&& x <= iog.getCurrentContainerPosition().x
 							+ iog.getImageContainer().getOffsetWidth()) {
-				if (y >= iog.getTemporaryTopLeftY()
-						&& y <= iog.getTemporaryTopLeftY()
+				if (y >= iog.getCurrentContainerPosition().y
+						&& y <= iog.getCurrentContainerPosition().y
 								+ iog.getImageContainer().getOffsetHeight()) {
 					candidates.add(iog);
 				}
@@ -389,22 +383,9 @@ public class ImageBrowserMouseListener implements MouseListener {
 	 * @param y
 	 */
 	private void handlePan(final int x, final int y) {
-		int newX = positionOnGridX + (x - startX);
-		int newY = positionOnGridY + (y - startY);
-		DOM.setStyleAttribute(grid.getElement(), "backgroundPosition", x
-				+ "px " + y + "px");
-
-		if (imagesOnGrid != null) {
-			final Iterator<ImageOnGridContainer> itr = imagesOnGrid.iterator();
-			while (itr.hasNext()) {
-				final ImageOnGridContainer iog = itr.next();
-				newX = iog.getTemporaryTopLeftX() + (x - startX);
-				newY = iog.getTemporaryTopLeftY() + (y - startY);
-				grid.setWidgetPosition(iog.getImageContainer(), newX, newY);
-				iog.setPanTopLeftX(newX);
-				iog.setPanTopLeftY(newY);
-			}
-		}
+		final int deltaX = x - startX;
+		final int deltaY = y - startY;
+		imageBrowser.getPanHandler().beginPan(deltaX, deltaY);
 	}
 
 	private void handleMovePoint(final int x, final int y) {
@@ -419,13 +400,12 @@ public class ImageBrowserMouseListener implements MouseListener {
 	}
 
 	private void handleMoveImage(final int x, final int y) {
-		int newX = positionOnGridX + (x - startX);
-		int newY = positionOnGridY + (y - startY);
+		final int deltaX = x - startX;
+		final int deltaY = y - startY;
+		// Just move where the image is shown to the user
+		int newX = currentImage.getOriginalContainerPosition().x + deltaX;
+		int newY = currentImage.getOriginalContainerPosition().y + deltaY;
 		grid.setWidgetPosition(currentImage.getImageContainer(), newX, newY);
-		currentImage.getIog().setTopLeftX(newX);
-		currentImage.getIog().setTopLeftY(newY);
-		currentImage.setTemporaryTopLeftX(newX);
-		currentImage.setTemporaryTopLeftY(newY);
 	}
 
 	private void handleMovingPoint(final int x, final int y) {
@@ -474,33 +454,41 @@ public class ImageBrowserMouseListener implements MouseListener {
 		int width = 0;
 		int height = 0;
 		if (resizeDirection == ResizeCorner.NORTH_WEST) {
-			int newX = positionOnGridX + (x - startX);
-			int newY = positionOnGridY + (int) ((x - startX) * aspectRatio);
+			int newX = currentImage.getOriginalContainerPosition().x
+					+ (x - startX);
+			int newY = currentImage.getOriginalContainerPosition().y
+					+ (int) ((x - startX) * currentImage.getAspectRatio());
 			grid
 					.setWidgetPosition(currentImage.getImageContainer(), newX,
 							newY);
-
-			width = startWidth + (positionOnGridX - newX);
-			height = (int) (width * aspectRatio);
+			width = currentImage.getOriginalWidth()
+					+ (currentImage.getOriginalContainerPosition().x - newX);
+			height = (int) (width * currentImage.getAspectRatio());
 		}
 		if (resizeDirection == ResizeCorner.NORTH_EAST) {
-			int newY = positionOnGridY + (int) ((y - startY) * aspectRatio);
+			int newY = currentImage.getOriginalContainerPosition().y
+					+ (int) ((y - startY) * currentImage.getAspectRatio());
 			grid.setWidgetPosition(currentImage.getImageContainer(),
-					positionOnGridX, newY);
-			height = startHeight + (positionOnGridY - newY);
-			width = (int) (height * aspectRatioHeight);
+					currentImage.getOriginalContainerPosition().x, newY);
+			height = currentImage.getOriginalHeight()
+					+ (currentImage.getOriginalContainerPosition().y - newY);
+			width = (int) (height * currentImage.getAspectRatioHeight());
 		}
 		if (resizeDirection == ResizeCorner.SOUTH_WEST) {
-			int newX = positionOnGridX + (x - startX);
+			int newX = currentImage.getOriginalContainerPosition().x
+					+ (x - startX);
 			grid.setWidgetPosition(currentImage.getImageContainer(), newX,
-					positionOnGridY);
-			width = startWidth + (positionOnGridX - newX);
-			height = (int) (width * aspectRatio);
+					currentImage.getOriginalContainerPosition().y);
+			width = currentImage.getOriginalWidth()
+					+ (currentImage.getOriginalContainerPosition().x - newX);
+			height = (int) (width * currentImage.getAspectRatio());
 		}
 		if (resizeDirection == ResizeCorner.SOUTH_EAST) {
-			int newX = positionOnGridX + (x - startX);
-			width = startWidth + (newX - positionOnGridX);
-			height = (int) (width * aspectRatio);
+			int newX = currentImage.getOriginalContainerPosition().x
+					+ (x - startX);
+			width = currentImage.getOriginalWidth()
+					+ (newX - currentImage.getOriginalContainerPosition().x);
+			height = (int) (width * currentImage.getAspectRatio());
 		}
 		if (!currentImage.getActualImage().getUrl().equals(
 				currentImage.getGoodLookingPicture()))
@@ -510,31 +498,32 @@ public class ImageBrowserMouseListener implements MouseListener {
 	}
 
 	private void handleEndPan(final int x, final int y) {
+		final int deltaX = x - startX;
+		final int deltaY = y - startY;
 		grid.removeStyleName("image-moving");
-		imageBrowser.adTotalXOffset((x - startX));
-		imageBrowser.adTotalYOffset((y - startY));
-		if (imagesOnGrid != null) {
-			final Iterator<ImageOnGridContainer> itr = imagesOnGrid.iterator();
-			while (itr.hasNext()) {
-				final ImageOnGridContainer iog = itr.next();
-				iog.setTemporaryTopLeftX(iog.getPanTopLeftX());
-				iog.setTemporaryTopLeftY(iog.getPanTopLeftY());
-			}
-		}
+		imageBrowser.getPanHandler().endPan(deltaX, deltaY);
 	}
 
 	private void handleEndResize(final int x, final int y) {
-		currentImage.setTemporaryTopLeftX(grid.getWidgetLeft(currentImage
-				.getImageContainer()));
-		currentImage.setTemporaryTopLeftY(grid.getWidgetTop(currentImage
-				.getImageContainer()));
-		currentImage.getIog().setTopLeftX(currentImage.getTemporaryTopLeftX());
-		currentImage.getIog().setTopLeftY(currentImage.getTemporaryTopLeftY());
-		currentImage.setWidth(currentImage.getActualImage().getOffsetWidth());
-		currentImage.setHeight(currentImage.getActualImage().getOffsetHeight());
+		// do the final resize
+		handleResize(x, y);
+		int deltaX = 0;
+		int deltaY = 0;
+		if (resizeDirection == ResizeCorner.NORTH_EAST) {
+			deltaY =  (int) ((y - startY) * currentImage.getAspectRatio());
+		} else if (resizeDirection == ResizeCorner.NORTH_WEST) {
+			deltaX = x - startX;
+			deltaY = (int) ((x - startX) * currentImage.getAspectRatio());
+		} else if (resizeDirection == ResizeCorner.SOUTH_WEST) {
+			deltaX = x - startX;
+		}
+		
+		final int scale = imageBrowser.getZoomScale() * -1 == 0 ? 1
+				: imageBrowser.getZoomScale() * -1;
+		currentImage.move(deltaX, deltaY, scale);
 		currentImage.getIog()
 				.setResizeRatio(
-						currentImage.getWidth()
+						currentImage.getCurrentWidth()
 								/ (float) (currentImage.getIog().getImage()
 										.getWidth()));
 		if (!((Image) currentImage.getActualImage()).getUrl().equals(
@@ -571,12 +560,16 @@ public class ImageBrowserMouseListener implements MouseListener {
 			grid.setCanDrag(true);
 			switch (mode) {
 			case MOVE_IMAGE:
-				currentImage.getIog().setTopLeftX(
-						currentImage.getTemporaryTopLeftX());
-				currentImage.getIog().setTopLeftY(
-						currentImage.getTemporaryTopLeftY());
 				currentImage.getImageContainer()
 						.removeStyleName("image-moving");
+				// we multiple by -1, because if we are zoomed out the images
+				// are
+				// smaller, but we have to multiply by the scale when moving
+				final int scale = imageBrowser.getZoomScale() * -1 == 0 ? 1
+						: imageBrowser.getZoomScale() * -1;
+				final int deltaX = x - startX;
+				final int deltaY = y - startY;
+				currentImage.move(deltaX, deltaY, scale);
 				break;
 			case PAN_GRID:
 				handleEndPan(x, y);
@@ -595,7 +588,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 		return imagesOnGrid;
 	}
 
-	public void setImagesOnGrid(Set<ImageOnGridContainer> imagesOnGrid) {
+	public void setImagesOnGrid(Collection<ImageOnGridContainer> imagesOnGrid) {
 		this.imagesOnGrid = imagesOnGrid;
 	}
 }

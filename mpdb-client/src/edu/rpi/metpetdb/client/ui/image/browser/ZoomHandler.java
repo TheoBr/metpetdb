@@ -24,14 +24,22 @@ public class ZoomHandler {
 		imageBrowser = ibm;
 	}
 
+	public Collection<ImageOnGridContainer> getImagesOnGrid() {
+		return imagesOnGrid;
+	}
+
+	public void setImagesOnGrid(Collection<ImageOnGridContainer> imagesOnGrid) {
+		this.imagesOnGrid = imagesOnGrid;
+	}
+
 	public int getCurrentZoomLevel() {
 		int top = getCurrentZoomPixel();
 		return top;
 	}
 
 	public int getCurrentScale() {
-		return 6 - (getCurrentZoomLevel() / 10) <= 0 ? 5 - (getCurrentZoomLevel() / 10)
-				: 6 - (getCurrentZoomLevel() / 10);
+		return zoomMultiplier * (6 - (getCurrentZoomLevel() / 10) <= 0 ? 6 - (getCurrentZoomLevel() / 10)
+				: 6 - (getCurrentZoomLevel() / 10));
 	}
 
 	public int getCurrentZoomPixel() {
@@ -56,17 +64,17 @@ public class ZoomHandler {
 		while (itr.hasNext()) {
 			final ImageOnGridContainer iog = itr.next();
 			final int newWidth = Math
-					.round((iog.getWidth() * (level == 1 ? zoomMultiplier
+					.round((iog.getCurrentWidth() * (level == 1 ? zoomMultiplier
 							: 1 / (float) zoomMultiplier)));
 			final int newHeight = Math
-					.round((iog.getHeight() * (level == 1 ? zoomMultiplier
+					.round((iog.getCurrentHeight() * (level == 1 ? zoomMultiplier
 							: 1 / (float) zoomMultiplier)));
 			if (!iog.skipZoom(newWidth, newHeight)) {
 				iog.resizeImage(newWidth, newHeight, false);
 				changePosition(iog, level);
 				imageBrowser.getGrid().setWidgetPosition(
-						iog.getImageContainer(), iog.getTemporaryTopLeftX(),
-						iog.getTemporaryTopLeftY());
+						iog.getImageContainer(), iog.getCurrentContainerPosition().x,
+						iog.getCurrentContainerPosition().y);
 
 			}
 		}
@@ -91,32 +99,32 @@ public class ZoomHandler {
 		centerY += referenceY;
 
 		// transform centers to top lefts
-		iog.setTemporaryTopLeftX(centerX
+		iog.getCurrentContainerPosition().x = (centerX
 				- Math.round((getCurrentWidth(iog) / (float) 2)));
-		iog.setTemporaryTopLeftY(centerY
+		iog.getCurrentContainerPosition().y = (centerY
 				- Math.round((getCurrentHeight(iog) / (float) 2)));
 	}
 
 	private int getCenterX(final ImageOnGridContainer iog) {
-		return Math.round(iog.getTemporaryTopLeftX()
+		return Math.round(iog.getCurrentContainerPosition().x
 				+ (getCurrentWidth(iog) / (float) 2));
 	}
 
 	private int getCenterY(final ImageOnGridContainer iog) {
-		return Math.round(iog.getTemporaryTopLeftY()
+		return Math.round(iog.getCurrentContainerPosition().y
 				+ (getCurrentHeight(iog) / (float) 2));
 	}
 
 	private int getCurrentWidth(final ImageOnGridContainer iog) {
 		// return Math.round((iog.getImage().getWidth() *
 		// (iog.getResizeRatio())));
-		return iog.getWidth();
+		return iog.getCurrentWidth();
 	}
 
 	private int getCurrentHeight(final ImageOnGridContainer iog) {
 		// return Math.round( (iog.getImage().getHeight() *
 		// (iog.getResizeRatio())));
-		return iog.getHeight();
+		return iog.getCurrentHeight();
 	}
 
 	public void setReferencePoint(final int x, final int y) {

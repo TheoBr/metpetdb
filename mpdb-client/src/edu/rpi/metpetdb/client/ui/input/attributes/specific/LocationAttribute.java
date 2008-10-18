@@ -66,46 +66,46 @@ public class LocationAttribute extends GenericAttribute {
 	protected Object get(final Widget[] editWidget,
 			final PropertyConstraint constraint, final int i)
 			throws ValidationException {
-		final String latitude = ((TextBox) editWidget[0]).getText();
-		final String longitude = ((TextBox) editWidget[1]).getText();
+		final String longitude = ((TextBox) editWidget[0]).getText();
+		final String latitude = ((TextBox) editWidget[1]).getText();
 		final Point p = new Point();
 		p.srid = MpDbConstants.WGS84;
 		p.dimension = 2;
-		if (latitude.length() > 0) {
-			try {
-				final double x = Double.parseDouble(latitude);
-				if (x > 90 || x < -90)
-					throw new InvalidLatitudeException(this.getConstraint(),
-							LocaleHandler.lc_entity
-									.getString("Sample_latitude"));
-				else
-					p.x = x;
-			} catch (NumberFormatException nfe) {
-				throw new InvalidGeometryException(this.getConstraint(),
-						LocaleHandler.lc_entity.getString("Sample_latitude"));
-			}
-		}
 		if (longitude.length() > 0) {
-
 			try {
-				final double y = Double.parseDouble(longitude);
-				if (y > 180 || y < -180)
+				final double x = Double.parseDouble(longitude);
+				if (x > 180 || x < -180)
 					throw new InvalidLongitudeException(this.getConstraint(),
 							LocaleHandler.lc_entity
 									.getString("Sample_longitude"));
 				else
-					p.y = y;
+					p.x = x;
 			} catch (NumberFormatException nfe) {
 				throw new InvalidGeometryException(this.getConstraint(),
 						LocaleHandler.lc_entity.getString("Sample_longitude"));
 			}
 		}
-		if (latitude.length() == 0)
-			throw new PropertyRequiredException(this.getConstraint(),
-					LocaleHandler.lc_entity.getString("Sample_latitude"));
+		if (latitude.length() > 0) {
+
+			try {
+				final double y = Double.parseDouble(latitude);
+				if (y > 90 || y < -90)
+					throw new InvalidLatitudeException(this.getConstraint(),
+							LocaleHandler.lc_entity
+									.getString("Sample_latitude"));
+				else
+					p.y = y;
+			} catch (NumberFormatException nfe) {
+				throw new InvalidGeometryException(this.getConstraint(),
+						LocaleHandler.lc_entity.getString("Sample_latitude"));
+			}
+		}
 		if (longitude.length() == 0)
 			throw new PropertyRequiredException(this.getConstraint(),
 					LocaleHandler.lc_entity.getString("Sample_longitude"));
+		if (latitude.length() == 0)
+			throw new PropertyRequiredException(this.getConstraint(),
+					LocaleHandler.lc_entity.getString("Sample_latitude"));
 		else
 			return p;
 	}
