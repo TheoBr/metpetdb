@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
@@ -22,6 +23,7 @@ import edu.rpi.metpetdb.client.model.SearchOxide;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.ui.JS;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 
 public class SearchChemistryAttribute extends SearchGenericAttribute {
@@ -121,7 +123,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			set.setStyleName("smallBtn");
 			ft.setWidget(row, 6, greaterThan);
 			ft.setWidget(row, 7, new Label("<"));
-			ft.setWidget(row, 8, new Label(oxide.getSpecies()));
+			ft.setWidget(row, 8, new HTML(oxide.getDisplayName()));
 			ft.setWidget(row, 9, new Label("<"));
 			ft.setWidget(row, 10, lessThan);
 			ft.setWidget(row, 11, unit);
@@ -150,14 +152,14 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 				try {
 					String lowerBound = ((TextBox) ft.getWidget(i, 6)).getText();
 					String upperBound = ((TextBox) ft.getWidget(i, 10)).getText();
-					String oxide = ((Label) ft.getWidget(i, 8)).getText();
+					String oxide = ((HTML) ft.getWidget(i, 8)).getHTML();
 					SearchOxide o = new SearchOxide();
 					if (!lowerBound.equals(""))
 						o.setLowerBound(Float.valueOf(lowerBound));
 					if (!upperBound.equals(""))
 						o.setUpperBound(Float.valueOf(upperBound));
 					if (!lowerBound.equals("") || !upperBound.equals("")){
-						o.setSpecies(oxide);	
+						o.setSpecies(JS.stripTags(oxide));	
 						Oxides.add(o);
 					}
 				} catch (Exception e){

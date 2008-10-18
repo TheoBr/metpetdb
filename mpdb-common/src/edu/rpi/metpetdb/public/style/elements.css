@@ -51,6 +51,10 @@ p {
 	border-radius: 1px;
 	border: 1px solid #eee;
 }
+sub {
+	vertical-align: sub;
+	font-size: 0.8em;
+}
 
 /*-------------------------------------
                hyperlinks

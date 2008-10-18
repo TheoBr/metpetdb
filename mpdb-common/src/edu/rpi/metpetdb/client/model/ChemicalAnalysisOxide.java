@@ -106,6 +106,13 @@ public class ChemicalAnalysisOxide extends MObject {
 		else
 			return oxide.getSpecies();
 	}
+	
+	public String getDisplayName() {
+		if (amount != null)
+			return oxide.getDisplayName() + " (" + amount + ")";
+		else
+			return oxide.getDisplayName();
+	}
 
 	public boolean equals(final Object o) {
 		if (o instanceof ChemicalAnalysisOxide) {
