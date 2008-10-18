@@ -51,7 +51,7 @@ public class SearchDb {
 		// Is this the current user?
 		if (userSearching != null) {
 			final TermQuery termQuery2 = new TermQuery(new Term(
-					"user_emailAddress", userSearching.getEmailAddress()));
+					"user_id", (new Integer(userSearching.getId())).toString()));
 			privacyQuery.add(termQuery2, BooleanClause.Occur.SHOULD);
 		}
 
