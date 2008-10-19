@@ -179,7 +179,9 @@ CREATE TABLE sample_metamorphic_grades
   metamorphic_grade_id INT2 NOT NULL,
   CONSTRAINT samples_metgrade_pk PRIMARY KEY (sample_id, metamorphic_grade_id),
   CONSTRAINT samples_metgrade_fk_samples FOREIGN KEY (sample_id)
-      REFERENCES samples (sample_id)
+      REFERENCES samples (sample_id),
+CONSTRAINT samples_metgrade_fk_metgrade FOREIGN KEY (metamorphic_grade_id)
+    REFERENCES metamorphic_grades (metamorphic_grade_id)
 ) WITHOUT OIDS;
 
 CREATE TABLE sample_reference
