@@ -249,20 +249,20 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 			final double w = Double.parseDouble(westInput.getText()); // x
 
 			final Point p1 = new Point();
-			p1.x = w;
-			p1.y = s;
+			p1.x = s;
+			p1.y = w;
 
 			final Point p2 = new Point();
-			p2.x = w;
-			p2.y = n;
+			p2.x = n;
+			p2.y = w;
 
 			final Point p3 = new Point();
-			p3.x = e;
-			p3.y = n;
+			p3.x = n;
+			p3.y = e;
 
 			final Point p4 = new Point();
-			p4.x = e;
-			p4.y = s;
+			p4.x = s;
+			p4.y = e;
 
 			final LinearRing[] ringArray = new LinearRing[1];
 			final Point[] points = new Point[5];
