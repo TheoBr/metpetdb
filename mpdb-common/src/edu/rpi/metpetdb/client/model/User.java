@@ -11,6 +11,7 @@ import org.hibernate.search.annotations.Store;
 public class User extends MObject {
 	private static final long serialVersionUID = 1L;
 
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private int id;
 	private int version;
 	@Field(index = Index.TOKENIZED, store = Store.NO)
