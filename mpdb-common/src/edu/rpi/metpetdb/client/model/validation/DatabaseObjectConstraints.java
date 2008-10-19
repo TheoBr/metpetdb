@@ -135,7 +135,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public ObjectConstraint Sample_regions;
 	public ObjectConstraint Sample_comments;
 	public ObjectConstraint Sample_owner;
-	public ObjectConstraint Sample_metamorphicGrades;
+	public ValueInCollectionConstraint Sample_metamorphicGrades;
 	public ObjectConstraint Sample_references;
 
 	public void validate(final Sample s) throws ValidationException {

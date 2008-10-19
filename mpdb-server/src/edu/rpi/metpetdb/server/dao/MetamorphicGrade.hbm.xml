@@ -14,8 +14,8 @@
   </class>
   
   <query name="MetamorphicGrade.byName">
-    from MetamorphicGrade mg
-    where mg.name = :name
+     from MetamorphicGrade mg
+    where lower(mg.name)=lower(:name)
   </query>
   
   <query name="MetamorphicGrades.all">
@@ -28,4 +28,5 @@
   	from MetamorphicGrade mg
     order by mg.name
    </query>
+
 </hibernate-mapping>

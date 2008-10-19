@@ -2,12 +2,13 @@ package edu.rpi.metpetdb.client.model.validation;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.ValueNotInCollectionException;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.interfaces.HasChildren;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 import edu.rpi.metpetdb.client.model.validation.interfaces.MaxLengthConstraint;
 
@@ -60,10 +61,24 @@ public class ValueInCollectionConstraint extends PropertyConstraint implements
 				throw new ValueNotInCollectionException("", values);
 		}
 	}
+	
+	public boolean valuesInCollection(final Collection<?> value, final Collection<?> values){
+		final Iterator<?> itrVal = ((Collection) value).iterator();
+		while (itrVal.hasNext()){
+			final Object val = itrVal.next();
+			if (!valueInCollection(val,values)){
+				return false;
+			}
+		}
+		return true;
+	}
 
 	public boolean valueInCollection(final Object value,
 			final Collection<?> values) {
 		if (values != null) {
+			if (value instanceof Collection){
+				return valuesInCollection((Collection<?>)value,values);
+			}
 			final Iterator<?> itr = values.iterator();
 			while (itr.hasNext()) {
 				final Object object = itr.next();

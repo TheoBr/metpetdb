@@ -15,7 +15,7 @@ public class ExcelServlet extends HttpServlet{
 	@Override
 	protected void doGet(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException {
-		response.setContentType("application/vnd.ms-excel");
+		response.setContentType("text/tab-separated-values");
 		response.addHeader("Content-Disposition", "inline;filename=results.tsv");
 
 		Session session = DataStore.open();

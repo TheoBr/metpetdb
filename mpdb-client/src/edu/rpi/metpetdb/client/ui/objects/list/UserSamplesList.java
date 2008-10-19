@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -108,21 +109,28 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		fp.setMethod(FormPanel.METHOD_GET);
 		fp.setEncoding(FormPanel.ENCODING_URLENCODED);
 		String values = "";
-		for (int i = 1; i < list.getScrollTable().getHeaderTable().getColumnCount(); i++){
-			values+=list.getScrollTable().getHeaderTable().getText(0, i) +"\t";
+		
+		for (int i = 1; i < list.getDisplayColumns().size(); i++){
+			values+=list.getDisplayColumns().get(i).getTitle() +"\t";
 		}
 		values+="\n";
+		
 		int currentpage = list.getScrollTable().getCurrentPage();
 		for (int page = 0; page < list.getScrollTable().getNumPages(); page++) {
 			list.getScrollTable().gotoPage(page, false);
 			for(int i = 0; i <list.getScrollTable().getDataTable().getRowCount(); i++) {
 				for (int j = 1; j < list.getScrollTable().getDataTable().getColumnCount(); j++){
-					values+=list.getScrollTable().getDataTable().getText(i, j) +"\t";
+					if (list.getScrollTable().getDataTable().getWidget(i, j) instanceof Image){
+						values+=list.getScrollTable().getDataTable().getWidget(i, j).toString() +"\t";
+					} else {
+						values+=list.getScrollTable().getDataTable().getText(i, j) +"\t";
+					}
 				}
 				values+="\n";
 			}
 		}
-		list.getScrollTable().gotoPage(currentpage, true);
+		
+		list.getScrollTable().gotoPage(currentpage, false);
 		Hidden data = new Hidden("excel",values);
 		fp.add(data);
 		fp.setAction(GWT.getModuleBaseURL() + "excel.svc");

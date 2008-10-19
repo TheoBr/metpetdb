@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -153,25 +154,32 @@ public class Search extends MPagePanel implements ClickListener {
 
 	public void onClick(Widget sender) {
 		if (sender == exportExcelButton) {
-		    final FormPanel fp = new FormPanel();
+			final FormPanel fp = new FormPanel();
 			fp.setMethod(FormPanel.METHOD_GET);
 			fp.setEncoding(FormPanel.ENCODING_URLENCODED);
 			String values = "";
-			for (int i = 1; i < sampleList.getScrollTable().getHeaderTable().getColumnCount(); i++){
-				values+=sampleList.getScrollTable().getHeaderTable().getText(0, i) +"\t";
+			
+			for (int i = 1; i < sampleList.getDisplayColumns().size(); i++){
+				values+=sampleList.getDisplayColumns().get(i).getTitle() +"\t";
 			}
 			values+="\n";
+			
 			int currentpage = sampleList.getScrollTable().getCurrentPage();
 			for (int page = 0; page < sampleList.getScrollTable().getNumPages(); page++) {
 				sampleList.getScrollTable().gotoPage(page, false);
 				for(int i = 0; i <sampleList.getScrollTable().getDataTable().getRowCount(); i++) {
 					for (int j = 1; j < sampleList.getScrollTable().getDataTable().getColumnCount(); j++){
-						values+=sampleList.getScrollTable().getDataTable().getText(i, j) +"\t";
+						if (sampleList.getScrollTable().getDataTable().getWidget(i, j) instanceof Image){
+							values+=sampleList.getScrollTable().getDataTable().getWidget(i, j).toString() +"\t";
+						} else {
+							values+=sampleList.getScrollTable().getDataTable().getText(i, j) +"\t";
+						}
 					}
 					values+="\n";
 				}
 			}
-			sampleList.getScrollTable().gotoPage(currentpage, true);
+			
+			sampleList.getScrollTable().gotoPage(currentpage, false);
 			Hidden data = new Hidden("excel",values);
 			fp.add(data);
 			fp.setAction(GWT.getModuleBaseURL() + "excel.svc");

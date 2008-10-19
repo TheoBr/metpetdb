@@ -94,10 +94,18 @@ public abstract class SampleListEx extends ListEx<Sample> {
 					true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
-					if ((Boolean) data.mGet(SampleProperty.publicData)) {
-						return new Image("images/checkmark.jpg");
+					if ((Boolean) data.mGet(SampleProperty.publicData)) { 
+						return new Image("images/checkmark.jpg"){
+							public String toString(){
+								return "True";
+							}
+						};
 					}
-					return new Image("images/xmark.jpg");
+					return new Image("images/xmark.jpg"){
+						public String toString(){
+							return "False";
+						}
+					};
 				}
 			},
 			new Column("Location", SampleProperty.location, true) {

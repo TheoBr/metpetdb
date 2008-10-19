@@ -93,6 +93,7 @@ public interface LocaleText extends Messages {
 	String buttonContinue();
 	String buttonExportExcel();
 	String buttonExportKML();
+	String listBoxSelect();
 
 	/* Errors */
 	String errorTitle_UnknownError();
