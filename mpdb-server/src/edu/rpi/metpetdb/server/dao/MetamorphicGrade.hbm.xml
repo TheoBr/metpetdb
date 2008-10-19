@@ -18,6 +18,11 @@
     where mg.name = :name
   </query>
   
+  <query name="MetamorphicGrades.all">
+    from MetamorphicGrade mg
+    order by lower(mg.name)
+  </query>
+  
    <query name="MetamorphicGrade.all/name">
   	select distinct name
   	from MetamorphicGrade mg

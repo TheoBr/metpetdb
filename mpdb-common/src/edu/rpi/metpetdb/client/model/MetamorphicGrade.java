@@ -32,8 +32,7 @@ public class MetamorphicGrade extends MObject {
 
 	public boolean equals(final Object o) {
 		return name != null && o instanceof MetamorphicGrade
-				&& name.equals(((MetamorphicGrade) o).name)
-				&& ((MetamorphicGrade) o).getId() == id;
+				&& name.equals(((MetamorphicGrade) o).name);
 	}
 
 	public int hashCode() {

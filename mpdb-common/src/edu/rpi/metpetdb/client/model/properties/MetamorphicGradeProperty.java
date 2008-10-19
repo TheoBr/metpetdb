@@ -14,4 +14,13 @@ public enum MetamorphicGradeProperty implements Property {
 			((MetamorphicGrade) metamorphicGrade).setName((String) name);
 		}
 	},
+	metamorphicGrade {
+		public <T extends MObject> MetamorphicGrade get(final T metamorphicGrade) {
+			return ((MetamorphicGrade) metamorphicGrade);
+		}
+
+		public <T extends MObject, K> void set(final T metamorphicGrade,
+				final K name) {
+		}
+	},
 }

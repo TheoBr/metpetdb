@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.model.validation;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
@@ -34,6 +35,20 @@ public class ObjectConstraint extends PropertyConstraint implements HasValues {
 				return (ValueInCollectionConstraint) pc;
 		}
 		return null;
+	}
+
+	public void validateValue(Object value) throws ValidationException {
+		super.validateValue(value);
+		if (value instanceof Set) {
+			final Iterator itr = ((Set) value).iterator();
+			while (itr.hasNext()) {
+				final Object val = itr.next();
+				if (val instanceof MObject) {
+					DatabaseObjectConstraints.validate((MObject)val,
+							constraints);
+				}
+			}
+		}
 	}
 
 	@Override

@@ -53,7 +53,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 	// ------ MetamorphicGrade ------
 	public PropertyConstraint[] MetamorphicGrade__all;
-	public StringConstraint MetamorphicGrade_name;
+	public ValueInCollectionConstraint MetamorphicGrade_Sample_metamorphicGrades_metamorphicGrade;
 
 	// ------ Reference ------
 	public PropertyConstraint[] Reference__all;

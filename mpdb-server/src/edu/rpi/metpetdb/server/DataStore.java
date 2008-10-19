@@ -26,6 +26,7 @@ import org.hibernate.mapping.Column;
 import org.hibernate.mapping.Component;
 import org.hibernate.mapping.ForeignKey;
 import org.hibernate.mapping.Formula;
+import org.hibernate.mapping.ManyToOne;
 import org.hibernate.mapping.OneToMany;
 import org.hibernate.mapping.PersistentClass;
 import org.hibernate.mapping.Property;
@@ -206,8 +207,11 @@ public class DataStore {
 		if (v.length == 2)
 			prop = tempProp;
 		else if (v.length == 4) {
-			prop = ((Component) ((Set) tempProp.getValue()).getElement())
-					.getProperty(v[3]);
+			if (((Set) tempProp.getValue()).getElement() instanceof Component)
+				prop = ((Component) ((Set) tempProp.getValue()).getElement())
+						.getProperty(v[3]);
+			else
+				prop = tempProp;
 		} else {
 			prop = null;
 		}
@@ -408,12 +412,14 @@ public class DataStore {
 					queryName = "Element.all";
 				else if (name.equals("oxides"))
 					queryName = "Oxide.all";
+				else if (name.equals("metamorphicGrades"))
+					queryName = "MetamorphicGrades.all";
 			}
 			final Session session = open();
 			try {
 				cc.setValues((Collection<? extends MObject>) (hbm.clone(session
 						.getNamedQuery(queryName).list())));
-			} catch (MappingException me) {
+			} catch (Exception me) {
 				cc.setValues(new HashSet<MObject>());
 			} finally {
 				session.close();
