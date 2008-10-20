@@ -21,7 +21,7 @@ public class SearchTabLocation extends SearchTabAttribute{
 		new SearchRegionAttribute(MpDb.oc.SearchSample_region),
 		new SearchCountriesAttribute(MpDb.oc.SearchSample_country)};
 	
-	private final RadioButton coordsRadio = new RadioButton("loctype","Coordinates");
+	private final RadioButton coordsRadio = new RadioButton("loctype","Map Coordinates");
 	private final RadioButton regionRadio = new RadioButton("loctype","Region");
 	private static final String COORDS_ID = "coords";
 	private static final String REGION_ID = "region";

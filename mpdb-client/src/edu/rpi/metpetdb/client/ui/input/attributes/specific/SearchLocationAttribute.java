@@ -83,7 +83,7 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 		map.addControl(new LargeMapControl());
 		map.addControl(new MapTypeControl());
 		map.addControl(new ScaleControl());
-		map.setSize("100%", "300px");
+		map.setSize("100%", "350px");
 		
 		panel.getLeftCol().add(map);
 		panel.getRightCol().add(viewBounds);
