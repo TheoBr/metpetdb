@@ -16,8 +16,12 @@ import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.Overlay;
 import com.google.gwt.maps.client.overlay.Polygon;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -44,6 +48,10 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 	private final TextBox westInput = new TextBox();
 	private org.postgis.Polygon boundingBox;
 	private static final String STYLENAME = "search-map";
+	private final Label northLabel = new Label("North Latitude");
+	private final Label southLabel = new Label("South Latitude");
+	private final Label eastLabel = new Label("East Longitude");
+	private final Label westLabel = new Label("West Longitude");
 
 	public SearchLocationAttribute(final PropertyConstraint sc) {
 		super(sc);
@@ -79,9 +87,13 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 		
 		panel.getLeftCol().add(map);
 		panel.getRightCol().add(viewBounds);
+		panel.getRightCol().add(northLabel);
 		panel.getRightCol().add(northInput);
+		panel.getRightCol().add(southLabel);
 		panel.getRightCol().add(southInput);
+		panel.getRightCol().add(eastLabel);
 		panel.getRightCol().add(eastInput);
+		panel.getRightCol().add(westLabel);
 		panel.getRightCol().add(westInput);
 		panel.getRightCol().add(clearMarkers);
 		
