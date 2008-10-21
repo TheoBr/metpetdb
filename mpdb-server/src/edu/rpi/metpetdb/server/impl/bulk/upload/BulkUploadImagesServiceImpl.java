@@ -237,6 +237,8 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 							// Every Image needs a sample so add an error
 							errors.put(row, new PropertyRequiredException(
 									"Sample"));
+							++row;
+							continue;
 						}
 						Subsample ss = (img.getSubsample());
 						ss.setSample(s);
@@ -246,7 +248,8 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 							if (!subsampleNames.get(s.getAlias()).contains(
 									ss.getName())) {
 								try {
-									ss = ssDAO.fill(ss);
+									doc.validate(ss);
+									ss = ssDAO.fill(ss);									
 									subsamples.put(s.getAlias() + ss.getName(), ss);
 									img.setSubsample(ss);
 									ssResultCount.incrementOld();

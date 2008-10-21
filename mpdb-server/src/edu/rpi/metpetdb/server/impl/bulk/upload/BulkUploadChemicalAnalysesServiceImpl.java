@@ -118,6 +118,8 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 						errors
 								.put(row, new PropertyRequiredException(
 										"Sample"));
+						++row;
+						continue;
 					}
 					Subsample ss = (ca.getSubsample());
 					ss.setSample(s);
@@ -127,6 +129,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 						if (!subsampleNames.get(s.getAlias()).contains(
 								ss.getName())) {
 							try {
+								doc.validate(ss);								
 								ss = ssDAO.fill(ss);
 								subsamples.put(s.getAlias() + ss.getName(), ss);
 								ca.setSubsample(ss);
