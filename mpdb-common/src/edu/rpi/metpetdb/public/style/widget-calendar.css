@@ -1,4 +1,28 @@
 /*-------------------------------------
+			calendar input
+ --------------------------------------*/
+.daterange .gwt-Label {
+	display: inline;
+	margin: 0 5px;
+}
+.daterange input {
+	margin-right: 3px;
+	width: 6.3em;
+}
+.daterange span {
+	margin: 0 10px;
+}
+.daterange .daterange-btn {
+	background: transparent url(../images/icon-calendar.png) no-repeat 50% 50%;
+	width: 16px;
+	height: 16px;
+	vertical-align: middle;
+}
+.daterange .daterange-btn-disabled {
+	background-image: url(../images/icon-calendar-disabled.png);
+}
+
+/*-------------------------------------
 			calendar popup
  --------------------------------------*/
 

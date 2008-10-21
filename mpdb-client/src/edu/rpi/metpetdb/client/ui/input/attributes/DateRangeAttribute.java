@@ -22,6 +22,8 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.DateSpanConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.MButton;
+import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class DateRangeAttribute extends SearchGenericAttribute implements
 		ChangeListener, ClickListener {
@@ -36,13 +38,19 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 	private DateSpan dateRange;
 	private TextBox to;
 	private TextBox from;
-	private Button dpTo;
-	private Button dpFrom;
+	private MButton dpTo = new MButton(null,this);
+	private MButton dpFrom = new MButton(null,this);
+	private final FlowPanel ew = new FlowPanel();
+	private final MText toLbl = new MText("to");
+	private static final String STYLENAME = "daterange";
 
 	public DateRangeAttribute(final DateSpanConstraint dsc) {
 		super(new PropertyConstraint[] {
 			dsc
 		});
+		ew.setStyleName(STYLENAME);
+		dpTo.setStyleName(STYLENAME + "-btn");
+		dpFrom.setStyleName(STYLENAME + "-btn");
 	}
 	public Widget[] createDisplayWidget(final MObject obj) {
 		return new Widget[] {
@@ -64,16 +72,12 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 		//from.addKeyboardListener(this);
 		to = new TextBox();
 		//to.addKeyboardListener(this);
-		dpTo = new Button("+",this);
-		dpFrom = new Button("+",this);
-		final FlowPanel container = new FlowPanel();
-		container.add(from);
-		container.add(dpFrom);
-		container.add(to);
-		container.add(dpTo);
-		return new Widget[]{
-				container
-		};
+		ew.add(from);
+		ew.add(dpFrom);
+		ew.add(toLbl);
+		ew.add(to);
+		ew.add(dpTo);
+		return new Widget[]{ ew };
 
 	}
 	protected Object get(final Widget editWidget,
@@ -319,6 +323,7 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 				if (!from.getText().equals("")) {
 					final Timestamp t = getTimeInput(from.getText());
 					if (t != null){
+						dpFrom.setEnabled(false);
 						dp.showDate(t);
 						dp.setSelectedDate(t);
 					}
@@ -331,6 +336,7 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 						from.setText(from.getText() + String.valueOf(change.getNewValue().getDate() + "/"));
 						from.setText(from.getText() + String.valueOf(cm.getCurrentYear() + 1900));
 						p.hide();
+						dpFrom.setEnabled(true);
 					}
 				});
 			}
@@ -338,6 +344,7 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 				if (!to.getText().equals("")) {
 					final Timestamp t = getTimeInput(to.getText());
 					if (t != null){
+						dpTo.setEnabled(false);
 						dp.showDate(t);
 						dp.setSelectedDate(t);
 					}
@@ -350,6 +357,7 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 						to.setText(to.getText() + String.valueOf(change.getNewValue().getDate() + "/"));
 						to.setText(to.getText() + String.valueOf(cm.getCurrentYear() + 1900));
 						p.hide();
+						dpTo.setEnabled(true);
 					}
 				});
 			}
