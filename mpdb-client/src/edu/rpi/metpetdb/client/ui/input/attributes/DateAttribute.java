@@ -174,7 +174,8 @@ public class DateAttribute extends GenericAttribute implements ChangeListener {
 	}
 
 	private void createDateFromInput() {
-		if (newDate == null)
+		if (newDate == null && month.getText().length() != 0
+				&& day.getText().length() != 0 && year.getText().length() != 0)
 			newDate = new Timestamp(0);
 		try {
 			if (month.getText().length() != 0)
