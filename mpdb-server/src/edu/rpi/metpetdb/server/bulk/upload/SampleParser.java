@@ -58,7 +58,7 @@ public class SampleParser extends Parser {
 					Float.class, "Sample_longitudeError"
 			},
 			{
-					"(longitude)|(lon\\s*)", "setLongitude", double.class,
+					"(longitude)|(^lon\\s*)", "setLongitude", double.class,
 					"Sample_longitude"
 			},
 			{
