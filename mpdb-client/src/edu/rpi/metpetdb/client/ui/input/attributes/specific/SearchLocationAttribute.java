@@ -36,8 +36,8 @@ import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 public class SearchLocationAttribute extends SearchGenericAttribute implements
 		ClickListener {
 	private final MTwoColPanel panel = new MTwoColPanel();
-	private Button viewBounds = new Button("View Bounds", this);
-	private final MLink clearMarkers = new MLink("Clear Markers", this);
+	private Button showOnMap = new Button("Show on Map", this);
+	private final MLink clear = new MLink("Clear", this);
 	private MapWidget map;
 	private Marker markerPoint1;
 	private Marker markerPoint2;
@@ -79,14 +79,13 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 		markerPoint1 = null;
 		markerPoint2 = null;
 
-		map = new MapWidget(LatLng.newInstance(38, -38),2);
+		map = new MapWidget(LatLng.newInstance(43.8, -5.6),1);
 		map.addControl(new LargeMapControl());
 		map.addControl(new MapTypeControl());
 		map.addControl(new ScaleControl());
 		map.setSize("100%", "350px");
 		
 		panel.getLeftCol().add(map);
-		panel.getRightCol().add(viewBounds);
 		panel.getRightCol().add(northLabel);
 		panel.getRightCol().add(northInput);
 		panel.getRightCol().add(southLabel);
@@ -95,7 +94,8 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 		panel.getRightCol().add(eastInput);
 		panel.getRightCol().add(westLabel);
 		panel.getRightCol().add(westInput);
-		panel.getRightCol().add(clearMarkers);
+		panel.getRightCol().add(showOnMap);
+		panel.getRightCol().add(clear);
 		
 		setClickHandler();
 
@@ -232,7 +232,7 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 	}
 
 	public void onClick(final Widget sender) {
-		if (sender == viewBounds) {
+		if (sender == showOnMap) {
 			try {
 				final double N = Double.parseDouble(northInput.getText());
 				final double S = Double.parseDouble(southInput.getText());
@@ -247,7 +247,7 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 			} catch (Exception e) {
 
 			}
-		} else if (sender == clearMarkers) {
+		} else if (sender == clear) {
 			clearMap();
 			clearBounds();
 		}

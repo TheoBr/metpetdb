@@ -87,13 +87,13 @@
 .search-map .right-col .content {
 	padding-left: 10px;
 }
-.search-map .right-col button,
-.search-map .right-col input {
-	margin-bottom: 10px;
+.search-map .right-col a {
+	margin-left: 5px;
 }
 .search-map .right-col input {
 	display: block;
 	width: 12em;
+	margin-bottom: 10px;
 }
 .search-map-nb, .search-map-sb,
 .search-map-eb, .search-map-wb {
