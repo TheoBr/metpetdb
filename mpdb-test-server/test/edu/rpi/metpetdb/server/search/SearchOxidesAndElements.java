@@ -22,7 +22,7 @@ import edu.rpi.metpetdb.server.InitDatabase;
 public class SearchOxidesAndElements extends DatabaseTestCase {
 
 	public SearchOxidesAndElements() {
-		super("test-data/test-client-data.xml");
+		super("test-data/test-sample-data.xml");
 	}
 
 	@Test
@@ -143,6 +143,32 @@ public class SearchOxidesAndElements extends DatabaseTestCase {
 		assertEquals(2, result.size());
 
 	}
+	
+	@Test
+	public void testOxideAmountRangeMinMax() {
+		final Session session = InitDatabase.getSession();
+		final FullTextSession fullTextSession = Search
+				.createFullTextSession(session);
+
+		final RangeFilter rangeFilterOnMin = new RangeFilter("subsample_chemicalAnalysis_oxides_minAmount", NumberUtils.float2sortableStr(-99999f), NumberUtils.float2sortableStr(100f),true, true);
+		final RangeFilter rangeFilterOnMax = new RangeFilter("subsample_chemicalAnalysis_oxides_maxAmount", NumberUtils.float2sortableStr(0f), NumberUtils.float2sortableStr(99999f),true, true);
+		final TermQuery termQuery = new TermQuery(new Term("subsample_chemicalAnalysis_oxides_oxide_species", "al2o3"));
+		final FilteredQuery filterOnMinQuery = new FilteredQuery(termQuery, rangeFilterOnMin);
+		final FilteredQuery filterOnBothQuery = new FilteredQuery(filterOnMinQuery, rangeFilterOnMax);
+		
+		
+		final FullTextQuery hibQuery = fullTextSession
+				.createFullTextQuery(filterOnBothQuery, Sample.class);
+		//hibQuery.enableFullTextFilter("elementAmountFilter");
+		final List<Sample> result = hibQuery.list();
+
+		for (final Sample s : result)
+			System.out.println("found sample, sesar number is "
+					+ s.getSesarNumber());
+		assertEquals(2, result.size());
+
+	}
+
 
 
 }

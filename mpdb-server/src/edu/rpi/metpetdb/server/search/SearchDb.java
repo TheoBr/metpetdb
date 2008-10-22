@@ -81,7 +81,7 @@ public class SearchDb {
 						for (SearchOxide o : (Set<SearchOxide>) methodResult) {
 							final RangeFilter rangeFilterOnMin = new RangeFilter("subsample_chemicalAnalysis_oxides_minAmount", NumberUtils.float2sortableStr(-99999), NumberUtils.float2sortableStr(o
 									.getUpperBound()),true, true);
-							final RangeFilter rangeFilterOnMax = new RangeFilter("subsample_chemicalAnalysis_oxides_minAmount", NumberUtils.float2sortableStr(o
+							final RangeFilter rangeFilterOnMax = new RangeFilter("subsample_chemicalAnalysis_oxides_maxAmount", NumberUtils.float2sortableStr(o
 									.getLowerBound()), NumberUtils.float2sortableStr(99999),true, true);
 							final TermQuery oxideQuery = new TermQuery(new Term("subsample_chemicalAnalysis_oxides_oxide_species",							o.getSpecies()));
 							final FilteredQuery filterOnMinQuery = new FilteredQuery(oxideQuery, rangeFilterOnMin);
@@ -100,7 +100,7 @@ public class SearchDb {
 						for (SearchElement o : (Set<SearchElement>) methodResult) {
 							final RangeFilter rangeFilterOnMin = new RangeFilter("subsample_chemicalAnalysis_elements_minAmount", NumberUtils.float2sortableStr(-99999), NumberUtils.float2sortableStr(o
 									.getUpperBound()),true, true);
-							final RangeFilter rangeFilterOnMax = new RangeFilter("subsample_chemicalAnalysis_elements_minAmount", NumberUtils.float2sortableStr(o
+							final RangeFilter rangeFilterOnMax = new RangeFilter("subsample_chemicalAnalysis_elements_maxAmount", NumberUtils.float2sortableStr(o
 									.getLowerBound()), NumberUtils.float2sortableStr(99999),true, true);
 							final TermQuery elementQuery = new TermQuery(
 									new Term(

@@ -49,7 +49,7 @@ public class Sample extends MObject implements IHasName, HasDate {
 	@IndexedEmbedded(prefix = "rockType_")
 	private RockType rockType;
 
-	@IndexedEmbedded(prefix = "Subsample_")
+	@IndexedEmbedded(prefix = "subsample_")
 	private Set<Subsample> Subsamples;
 
 	private Set<Project> projects;
