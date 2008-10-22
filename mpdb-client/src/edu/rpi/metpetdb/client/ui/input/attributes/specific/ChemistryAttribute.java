@@ -40,7 +40,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class ChemistryAttribute extends GenericAttribute implements
 		ClickListener, ChangeListener {
-
+	private static float defaultErr = .02F;
 	private final ArrayList<Widget> realEditWidgets;
 
 	private Button add;
@@ -291,6 +291,18 @@ public class ChemistryAttribute extends GenericAttribute implements
 							.getItemText(
 									((ListBox) ft.getWidget(i, 4))
 											.getSelectedIndex()).toUpperCase());
+					if (r.getPrecisionUnit().equalsIgnoreCase("abs")){
+						r.setMinAmount(r.getAmount() - r.getPrecision());
+						r.setMaxAmount(r.getAmount() + r.getPrecision());
+					} else if (r.getPrecisionUnit().equalsIgnoreCase("rel")){
+						if (r.getPrecision() == 0){
+							r.setMinAmount(r.getAmount() * (1-defaultErr));
+							r.setMaxAmount(r.getAmount() * (1+defaultErr));
+						} else {
+							r.setMinAmount(r.getAmount() * ((1-r.getPrecision()/100)));
+							r.setMaxAmount(r.getAmount() * ((1+r.getPrecision()/100)));
+						}
+					}
 					Oxides.add(r);
 				}
 			}
@@ -313,6 +325,18 @@ public class ChemistryAttribute extends GenericAttribute implements
 							.getItemText(
 									((ListBox) ft.getWidget(i, 4))
 											.getSelectedIndex()).toUpperCase());
+					if (r.getPrecisionUnit().equalsIgnoreCase("abs")){
+						r.setMinAmount(r.getAmount() - r.getPrecision());
+						r.setMaxAmount(r.getAmount() + r.getPrecision());
+					} else if (r.getPrecisionUnit().equalsIgnoreCase("rel")){
+						if (r.getPrecision() == 0){
+							r.setMinAmount(r.getAmount() * (1-defaultErr));
+							r.setMaxAmount(r.getAmount() * (1+defaultErr));
+						} else {
+							r.setMinAmount(r.getAmount() * ((1-r.getPrecision()/100)));
+							r.setMaxAmount(r.getAmount() * ((1+r.getPrecision()/100)));
+						}
+					}
 					Elements.add(r);
 				}
 			}
