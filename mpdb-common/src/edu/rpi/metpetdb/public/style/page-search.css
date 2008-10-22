@@ -73,7 +73,7 @@
 	margin: 10px;
 }
 .search-map {
-	padding-right: 17em;
+	padding-right: 15.4em;
 }
 .search-map .left-col {
 	position: relative;
@@ -81,18 +81,19 @@
 }
 .search-map .right-col {
 	position: relative;
-	margin-right: -17em;
-	width: 17em;
+	margin-right: -15.4em;
+	width: 15.4em;
 }
 .search-map .right-col .content {
 	padding-left: 10px;
 }
-.search-map .right-col .gwt-Label,
-.search-map .right-col a:last-child {
-	margin-top: 10px;
+.search-map .right-col button,
+.search-map .right-col input {
+	margin-bottom: 10px;
 }
 .search-map .right-col input {
 	display: block;
+	width: 12em;
 }
 .search-map-nb, .search-map-sb,
 .search-map-eb, .search-map-wb {
