@@ -24,59 +24,59 @@ public class BulkUploadTest extends DatabaseTestCase {
 
 	}
 
-	@Test
-	public void test_easy() {
-		try {
-			final SampleParser sp = new SampleParser(new FileInputStream(
-					"../mpdb-common/sample-data/easy_samples.xls"));
-			try {
-				sp.initialize();
-			} catch (final NoSuchMethodException nsme) {
-				nsme.printStackTrace();
-				fail("NoSuchMethodException");
-				// } catch (final ValidationException ve) {
-				// ve.printStackTrace();
-			} catch (final InvalidFormatException ife) {
-				ife.printStackTrace();
-				fail("InvalidFormatException");
-			}
-			// final List<List<String>> output = sp.validate(
-			// new HashSet<SampleParser.Index>(), new HashSet<Integer>(),
-			// new HashSet<Integer>());
-			// assertEquals(29, output.size());
-			sp.parse();
-			assertEquals(26, sp.getSamples().size());
-			// we'll test saving with a client-side test
-		} catch (final IOException ioe) {
-			fail("IO Exception");
-		}
-	}
+//	@Test
+//	public void test_easy() {
+//		try {
+//			final SampleParser sp = new SampleParser(new FileInputStream(
+//					"../mpdb-common/sample-data/easy_samples.xls"));
+//			try {
+//				sp.initialize();
+//			} catch (final NoSuchMethodException nsme) {
+//				nsme.printStackTrace();
+//				fail("NoSuchMethodException");
+//				// } catch (final ValidationException ve) {
+//				// ve.printStackTrace();
+//			} catch (final InvalidFormatException ife) {
+//				ife.printStackTrace();
+//				fail("InvalidFormatException");
+//			}
+//			// final List<List<String>> output = sp.validate(
+//			// new HashSet<SampleParser.Index>(), new HashSet<Integer>(),
+//			// new HashSet<Integer>());
+//			// assertEquals(29, output.size());
+//			sp.parse();
+//			assertEquals(26, sp.getSamples().size());
+//			// we'll test saving with a client-side test
+//		} catch (final IOException ioe) {
+//			fail("IO Exception");
+//		}
+//	}
 
-	@Test
-	public void test_valhalla() {
-		try {
-			final Query q = InitDatabase.getSession().getNamedQuery(
-					"User.byUsername");
-			q.setString("username", "anthony");
-			final User u = (User) q.uniqueResult();
-			final SampleParser sp = new SampleParser(new FileInputStream(
-					"../mpdb-common/sample-data/Valhalla_samples_upload.xls"));
-			try {
-				sp.initialize();
-			} catch (final NoSuchMethodException e) {
-				fail("NoSuchMethodException");
-			} catch (final InvalidFormatException ife) {
-				ife.printStackTrace();
-				fail("InvalidFormatException");
-			}
-			sp.parse();
-
-			final List<Sample> samples = sp.getSamples();
-
-		} catch (final IOException ioe) {
-			fail("IO Exception");
-		}
-	}
+//	@Test
+//	public void test_valhalla() {
+//		try {
+//			final Query q = InitDatabase.getSession().getNamedQuery(
+//					"User.byUsername");
+//			q.setString("username", "anthony");
+//			final User u = (User) q.uniqueResult();
+//			final SampleParser sp = new SampleParser(new FileInputStream(
+//					"../mpdb-common/sample-data/Valhalla_samples_upload.xls"));
+//			try {
+//				sp.initialize();
+//			} catch (final NoSuchMethodException e) {
+//				fail("NoSuchMethodException");
+//			} catch (final InvalidFormatException ife) {
+//				ife.printStackTrace();
+//				fail("InvalidFormatException");
+//			}
+//			sp.parse();
+//
+//			final List<Sample> samples = sp.getSamples();
+//
+//		} catch (final IOException ioe) {
+//			fail("IO Exception");
+//		}
+//	}
 
 	public void test_uploaded_files_table() {
 		final Session s = DataStore.open();

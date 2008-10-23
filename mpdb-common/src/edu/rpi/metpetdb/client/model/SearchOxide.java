@@ -11,8 +11,9 @@ public class SearchOxide implements IsSerializable {
 		species = aSpecies;
 	}
 
+	//TODO: this is a hack... Don't know why it must be lower case
 	public String getSpecies() {
-		return species;
+		return species.toLowerCase();
 	}
 
 	public String getName() {

@@ -24,6 +24,7 @@ public class ChemicalAnalysisElement extends MObject {
 	private Float maxAmount;
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String measurementUnit;
+	
 	@IndexedEmbedded(prefix = "element_")
 	private Element element;
 

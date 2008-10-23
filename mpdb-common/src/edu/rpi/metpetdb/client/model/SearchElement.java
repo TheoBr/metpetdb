@@ -19,8 +19,9 @@ public class SearchElement implements IsSerializable {
 		return elementSymbol + " (" + lowerBound + " - " + upperBound + ")";
 	}
 
+	// TODO: This is really a hack... not sure why this must be this way.
 	public String getElementSymbol() {
-		return elementSymbol;
+		return elementSymbol.toLowerCase();
 	}
 
 	public void setLowerBound(float aLowerBound) {

@@ -1,210 +1,251 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE dataset SYSTEM "test-data/test-database.dtd">
 <dataset>
-  <users user_id="1" version="1"  password="" email="watera2@cs.rpi.edu" name="anthony"/>
-  <users user_id="2" version="1"   password="" email="fyffem@cs.rpi.edu" name="matt"></users>
-  <rock_type rock_type_id="1" rock_type="gentoo" /><rock_type rock_type_id="2" rock_type="type 2"></rock_type>
-	<rock_type rock_type_id="3" rock_type="type 3"></rock_type>
-	<subsample_type subsample_type_id="1" subsample_type="linux" />
-  <samples sample_id="1" version="0" sesar_number="000000000" public_data="Y" rock_type_id="1" user_id="1" location="SRID=4326;POINT(50 50)" alias="1" collection_date="2008-10-10 18:32:17" />
-  <samples sample_id="2" version="0" sesar_number="000000001" public_data="Y" rock_type_id="3" user_id="1" location="SRID=4326;POINT(50 50)" alias="2" collection_date="2008-08-28 18:32:17"/>
-  <samples sample_id="3" version="0" sesar_number="000000002" public_data="N" rock_type_id="1" user_id="1" location="SRID=4326;POINT(1 1)" alias="3" collection_date="2008-10-10 18:32:17"/>
-  <samples sample_id="4" version="0" sesar_number="000000003" public_data="N" rock_type_id="1" user_id="2" location="SRID=4326;POINT(1 1)" alias="4" collection_date="2008-08-28 18:32:17"/>
-  <samples sample_id="5" version="0" sesar_number="000000004" public_data="N" rock_type_id="2" user_id="2" location="SRID=4326;POINT(1 1)" alias="5" collection_date="2008-08-28 18:32:17"/>
-  <samples sample_id="7" version="0" sesar_number="000000006" public_data="Y" rock_type_id="3" user_id="2" location="SRID=4326;POINT(1 1)" alias="6" collection_date="2008-08-28 18:32:17"/>
-  <samples sample_id="8" version="0" sesar_number="000000007" public_data="N" rock_type_id="2" user_id="1" location="SRID=4326;POINT(1 1)" alias="7" collection_date="2008-08-28 18:32:17"/>
-  <samples sample_id="9" version="0" sesar_number="000000008" public_data="N" rock_type_id="1" user_id="1" location="SRID=4326;POINT(1 1)" alias="8" collection_date="2008-10-10 18:32:17"/>
-  <subsamples subsample_id="11" version="0" sample_id="5" name="11" subsample_type_id="1"></subsamples>
-  <subsamples subsample_id="10" version="0" sample_id="2" name="10-subsample" subsample_type_id="1"></subsamples>
-  <subsamples subsample_id="9" version="0" sample_id="2" name="9" subsample_type_id="1"></subsamples>
-  <subsamples subsample_id="5" version="0" sample_id="1" name="8-subsample-0" subsample_type_id="1"/>
-  <subsamples subsample_id="6" version="0" sample_id="1" name="8-subsample-1" subsample_type_id="1"/>
-  <subsamples subsample_id="7" version="0" sample_id="3" name="7-subsample-0" subsample_type_id="1"/>
-  <image_format image_format_id="6" name="image/tiff"/>
-  <image_format image_format_id="7" name="image/gif"/>
-  <image_format image_format_id="8" name="image/jpeg"/>
-  <image_format image_format_id="9" name="image/bmp"/>
-  <image_format image_format_id="10" name="image/png"/>
+  <users user_id="1" version="1" name="Anthony Waters" email="watera2@cs.rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y"/>
+  <users user_id="2" version="1" name="Sibel Adali" email="sibel@cs.rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y"/>
+  <users user_id="3" version="1" name="Boleslaw Szymanski" email="szymansk@cs.rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y"/>
+  <users user_id="4" version="1" name="Frank Spear" email="spearf@rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y"/>
+  <users user_id="5" version="1" name="Benjamin Hallett" email="halleb3@rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y"/>
+  <users user_id="6" version="0" name="Matt Fyffe" email="fyffem@rpi.edu" password="" confirmation_code="e49c4e3105634a6ca22e7a9eb7e6087b" enabled="N"/>
+  <admin_users/>
+  <rock_type rock_type_id="1" rock_type="Slate"/>
+  <rock_type rock_type_id="2" rock_type="Phyllite"/>
+  <rock_type rock_type_id="3" rock_type="Schist"/>
+  <rock_type rock_type_id="4" rock_type="Gneiss"/>
+  <rock_type rock_type_id="5" rock_type="Migmatite"/>
+  <rock_type rock_type_id="6" rock_type="Anatectite"/>
+  <rock_type rock_type_id="7" rock_type="Marble"/>
+  <rock_type rock_type_id="8" rock_type="Calc-silicate"/>
+  <rock_type rock_type_id="9" rock_type="Greenschist"/>
+  <rock_type rock_type_id="10" rock_type="Amphibolite"/>
+  <rock_type rock_type_id="11" rock_type="Blueschist"/>
+  <rock_type rock_type_id="12" rock_type="Eclogite"/>
+  <rock_type rock_type_id="13" rock_type="Granofels"/>
+  <rock_type rock_type_id="14" rock_type="Hornfels"/>
+  <rock_type rock_type_id="15" rock_type="Skarn"/>
+  <rock_type rock_type_id="16" rock_type="Quartzite"/>
+  <rock_type rock_type_id="17" rock_type="Jadeitite"/>
+  <rock_type rock_type_id="18" rock_type="Glaucophanite"/>
+  <rock_type rock_type_id="19" rock_type="Serpentinite"/>
+  <rock_type rock_type_id="20" rock_type="Garnetite"/>
+  <rock_type rock_type_id="21" rock_type="Pyroxenite"/>
+  <rock_type rock_type_id="22" rock_type="Mylonite"/>
+  <rock_type rock_type_id="23" rock_type="Cataclasite"/>
+  <rock_type rock_type_id="24" rock_type="Metapelite"/>
+  <rock_type rock_type_id="25" rock_type="Metaigneous"/>
+  <rock_type rock_type_id="26" rock_type="Metaarkose"/>
+  <rock_type rock_type_id="27" rock_type="Metagreywacke"/>
+  <rock_type rock_type_id="28" rock_type="Metabasite"/>
+  <rock_type rock_type_id="29" rock_type="Metacarbonate"/>
+  <rock_type rock_type_id="30" rock_type="Metagranite"/>
+  <rock_type rock_type_id="31" rock_type="Cordierite-Anthophyllite"/>
+  <samples sample_id="1" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="testing sample" rock_type_id="10" user_id="6" collector="Frank Spear" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="2" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="testing private" rock_type_id="11" user_id="6" collector="Anthony Waters" location="SRID=4326;POINT(3 3)"/>
+  <samples sample_id="3" version="0" sesar_number="111111111" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="new sample" rock_type_id="10" user_id="6" collector="Two Name" location="SRID=4326;POINT(5 5)"/>
+  <samples sample_id="4" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="sample" rock_type_id="10" user_id="6" collector="Test A" location="SRID=4326;POINT(5 5)"/>
+  <samples sample_id="5" version="1" sesar_number="123456789" public_data="N" collection_date="1970-09-16 00:00:00.0" date_precision="0" alias="test more" rock_type_id="10" user_id="6" location="SRID=4326;POINT(1 1)"/>
+  <subsample_type subsample_type_id="1" subsample_type="Thin Section"/>
+  <subsample_type subsample_type_id="2" subsample_type="Polished Thin Section"/>
+  <subsample_type subsample_type_id="3" subsample_type="Rock Chip"/>
+  <subsample_type subsample_type_id="4" subsample_type="Mineral Separate"/>
+  <subsamples subsample_id ="1" version = "1" sample_id="1" name = "temp" subsample_type_id ="1"/>
+  <image_format image_format_id="1" name="image/tiff"/>
+  <image_format image_format_id="2" name="image/gif"/>
+  <image_format image_format_id="3" name="image/jpeg"/>
+  <image_format image_format_id="4" name="image/bmp"/>
+  <image_format image_format_id="5" name="image/png"/>
+  <image_type image_type_id="1" image_type="Map" abbreviation="MAP"/>
+  <image_type image_type_id="2" image_type="Cross Section" abbreviation="XC"/>
+  <image_type image_type_id="3" image_type="Field Photo" abbreviation="FP"/>
+  <image_type image_type_id="4" image_type="Photograph" abbreviation="PHOTO"/>
+  <image_type image_type_id="5" image_type="Thin Section Scan" abbreviation="TSS"/>
+  <image_type image_type_id="6" image_type="Photomicrograph-Transmitted Plane Polarized" abbreviation="TPPL"/>
+  <image_type image_type_id="7" image_type="Photomicrograph-Transmitted Crossed Polars" abbreviation="TXPL"/>
+  <image_type image_type_id="8" image_type="Photomicrograph-Reflected Plane Polarized" abbreviation="RPPL"/>
+  <image_type image_type_id="9" image_type="Photomicrograph-Reflected Crossed Polars" abbreviation="RXPL"/>
+  <image_type image_type_id="10" image_type="Secondary Electron Image" abbreviation="SE"/>
+  <image_type image_type_id="11" image_type="Back-Scattered Electron Image" abbreviation="BSE"/>
+  <image_type image_type_id="12" image_type="Cathodoluminescence Image" abbreviation="CL"/>
+  <image_type image_type_id="13" image_type="X-ray Map" abbreviation="XRM"/>
   <images/>
-  <minerals mineral_id="1" name="Tectosilicates"/>
-  <minerals mineral_id="2" name="Silica" parent_mineral_id="1"/>
-  <minerals mineral_id="3" name="Quartz" parent_mineral_id="2"/>
-  <minerals mineral_id="4" name="Coesite" parent_mineral_id="2"/>
-  <minerals mineral_id="5" name="Tridymite" parent_mineral_id="2"/>
-  <minerals mineral_id="6" name="Cristobalite" parent_mineral_id="2"/>
-  <minerals mineral_id="7" name="Feldspar" parent_mineral_id="1"/>
-  <minerals mineral_id="8" name="Plagioclase" parent_mineral_id="7"/>
-  <minerals mineral_id="9" name="Albite" parent_mineral_id="8"/>
-  <minerals mineral_id="10" name="Oligoclase" parent_mineral_id="8"/>
-  <minerals mineral_id="11" name="Andesine" parent_mineral_id="8"/>
-  <minerals mineral_id="12" name="Labradorite" parent_mineral_id="8"/>
-  <minerals mineral_id="13" name="Anorthite" parent_mineral_id="8"/>
-  <minerals mineral_id="14" name="Alkali feldspar" parent_mineral_id="7"/>
-  <minerals mineral_id="15" name="Orthoclase" parent_mineral_id="14"/>
-  <minerals mineral_id="16" name="Sanadine" parent_mineral_id="14"/>
-  <minerals mineral_id="17" name="Celsian" parent_mineral_id="7"/>
-  <minerals mineral_id="18" name="Nepheline" parent_mineral_id="1"/>
-  <minerals mineral_id="19" name="Kalsilite" parent_mineral_id="1"/>
-  <minerals mineral_id="20" name="Leucite" parent_mineral_id="1"/>
-  <minerals mineral_id="21" name="Sodalite" parent_mineral_id="1"/>
-  <minerals mineral_id="22" name="Scapolite" parent_mineral_id="1"/>
-  <minerals mineral_id="23" name="Analcite" parent_mineral_id="1"/>
-  <minerals mineral_id="24" name="Zeolite" parent_mineral_id="1"/>
-  <minerals mineral_id="25" name="Sheet silicates"/>
-  <minerals mineral_id="26" name="Mica" parent_mineral_id="25"/>
-  <minerals mineral_id="27" name="Muscovite" parent_mineral_id="26"/>
-  <minerals mineral_id="28" name="Paragonite" parent_mineral_id="26"/>
-  <minerals mineral_id="29" name="Margarite" parent_mineral_id="26"/>
-  <minerals mineral_id="30" name="Glauconite" parent_mineral_id="26"/>
-  <minerals mineral_id="31" name="Biotite" parent_mineral_id="26"/>
-  <minerals mineral_id="32" name="Phlogopite" parent_mineral_id="31"/>
-  <minerals mineral_id="33" name="Annite" parent_mineral_id="31"/>
-  <minerals mineral_id="34" name="Wonesite" parent_mineral_id="26"/>
-  <minerals mineral_id="35" name="Lepidolite" parent_mineral_id="26"/>
-  <minerals mineral_id="36" name="Clintonite" parent_mineral_id="26"/>
-  <minerals mineral_id="37" name="Stilpnomelane" parent_mineral_id="25"/>
-  <minerals mineral_id="38" name="Astrophyllite" parent_mineral_id="25"/>
-  <minerals mineral_id="39" name="Pyrophyllite" parent_mineral_id="25"/>
-  <minerals mineral_id="40" name="Talc" parent_mineral_id="25"/>
-  <minerals mineral_id="41" name="Chlorite" parent_mineral_id="25"/>
-  <minerals mineral_id="42" name="Serpentine" parent_mineral_id="25"/>
-  <minerals mineral_id="43" name="Clay" parent_mineral_id="25"/>
-  <minerals mineral_id="44" name="Kaolinite" parent_mineral_id="43"/>
-  <minerals mineral_id="45" name="Illite" parent_mineral_id="43"/>
-  <minerals mineral_id="46" name="Smectite" parent_mineral_id="43"/>
-  <minerals mineral_id="47" name="Vermiculite" parent_mineral_id="43"/>
-  <minerals mineral_id="48" name="Montmorillonite" parent_mineral_id="43"/>
-  <minerals mineral_id="49" name="Apophyllite" parent_mineral_id="25"/>
-  <minerals mineral_id="50" name="Prehnite" parent_mineral_id="25"/>
-  <minerals mineral_id="51" name="Chain silicates"/>
-  <minerals mineral_id="52" name="Pyroxene" parent_mineral_id="51"/>
-  <minerals mineral_id="53" name="Orthopyroxene" parent_mineral_id="52"/>
-  <minerals mineral_id="54" name="Enstatite" parent_mineral_id="53"/>
-  <minerals mineral_id="55" name="Ferrosilite" parent_mineral_id="53"/>
-  <minerals mineral_id="56" name="Clinopyroxene" parent_mineral_id="52"/>
-  <minerals mineral_id="57" name="Ca pyroxene" parent_mineral_id="56"/>
-  <minerals mineral_id="58" name="Diopside" parent_mineral_id="57"/>
-  <minerals mineral_id="59" name="Hedenbergite" parent_mineral_id="57"/>
-  <minerals mineral_id="60" name="Augite" parent_mineral_id="57"/>
-  <minerals mineral_id="61" name="Na pyroxene" parent_mineral_id="56"/>
-  <minerals mineral_id="62" name="Jadeite" parent_mineral_id="61"/>
-  <minerals mineral_id="63" name="Acmite" parent_mineral_id="61"/>
-  <minerals mineral_id="64" name="Omphacite" parent_mineral_id="56"/>
-  <minerals mineral_id="65" name="Aegirine" parent_mineral_id="56"/>
-  <minerals mineral_id="66" name="Spodumene" parent_mineral_id="56"/>
-  <minerals mineral_id="67" name="Clinoenstatite" parent_mineral_id="56"/>
-  <minerals mineral_id="68" name="Wollastonite" parent_mineral_id="51"/>
-  <minerals mineral_id="69" name="Pectolite" parent_mineral_id="51"/>
-  <minerals mineral_id="70" name="Rhodonite" parent_mineral_id="51"/>
-  <minerals mineral_id="71" name="Bustamite" parent_mineral_id="51"/>
-  <minerals mineral_id="72" name="Pyroxmangite" parent_mineral_id="51"/>
-  <minerals mineral_id="73" name="Sapphirine" parent_mineral_id="51"/>
-  <minerals mineral_id="74" name="Aenigmatite" parent_mineral_id="51"/>
-  <minerals mineral_id="75" name="Amphibole" parent_mineral_id="51"/>
-  <minerals mineral_id="76" name="Orthoamphibole" parent_mineral_id="75"/>
-  <minerals mineral_id="77" name="Anthophyllite" parent_mineral_id="76"/>
-  <minerals mineral_id="78" name="Gedrite" parent_mineral_id="76"/>
-  <minerals mineral_id="79" name="Clinoamphibole" parent_mineral_id="75"/>
-  <minerals mineral_id="80" name="Cummingtonite" parent_mineral_id="79"/>
-  <minerals mineral_id="81" name="Grunerite" parent_mineral_id="79"/>
-  <minerals mineral_id="82" name="Tremolite" parent_mineral_id="79"/>
-  <minerals mineral_id="83" name="Actinolite" parent_mineral_id="79"/>
-  <minerals mineral_id="84" name="Hornblende" parent_mineral_id="79"/>
-  <minerals mineral_id="85" name="Kaersutite" parent_mineral_id="79"/>
-  <minerals mineral_id="86" name="Glaucophane" parent_mineral_id="79"/>
-  <minerals mineral_id="87" name="Riebeckite" parent_mineral_id="79"/>
-  <minerals mineral_id="88" name="Richterite" parent_mineral_id="79"/>
-  <minerals mineral_id="89" name="Katophorite" parent_mineral_id="79"/>
-  <minerals mineral_id="90" name="Ekermannite" parent_mineral_id="79"/>
-  <minerals mineral_id="91" name="Arfvedsonite" parent_mineral_id="79"/>
-  <minerals mineral_id="92" name="Ortho- and Ring Silicates"/>
-  <minerals mineral_id="93" name="Olivine" parent_mineral_id="92"/>
-  <minerals mineral_id="94" name="Humite" parent_mineral_id="92"/>
-  <minerals mineral_id="95" name="Zircon" parent_mineral_id="92"/>
-  <minerals mineral_id="96" name="Sphene" parent_mineral_id="92"/>
-  <minerals mineral_id="97" name="Garnet" parent_mineral_id="92"/>
-  <minerals mineral_id="98" name="Vesuvanite" parent_mineral_id="92"/>
-  <minerals mineral_id="99" name="Sillimanite" parent_mineral_id="92"/>
-  <minerals mineral_id="100" name="Andalusite" parent_mineral_id="92"/>
-  <minerals mineral_id="101" name="Kyanite" parent_mineral_id="92"/>
-  <minerals mineral_id="102" name="Mullite" parent_mineral_id="92"/>
-  <minerals mineral_id="103" name="Topaz" parent_mineral_id="92"/>
-  <minerals mineral_id="104" name="Staurolite" parent_mineral_id="92"/>
-  <minerals mineral_id="105" name="Chloritoid" parent_mineral_id="92"/>
-  <minerals mineral_id="106" name="Larnite" parent_mineral_id="92"/>
-  <minerals mineral_id="107" name="Merwinite" parent_mineral_id="92"/>
-  <minerals mineral_id="108" name="Spurrite" parent_mineral_id="92"/>
-  <minerals mineral_id="109" name="Epidote" parent_mineral_id="92"/>
-  <minerals mineral_id="110" name="Zoisite" parent_mineral_id="109"/>
-  <minerals mineral_id="111" name="Clinozoisite" parent_mineral_id="109"/>
-  <minerals mineral_id="112" name="Piemontite" parent_mineral_id="109"/>
-  <minerals mineral_id="113" name="Allanite" parent_mineral_id="109"/>
-  <minerals mineral_id="114" name="Lawsonite" parent_mineral_id="92"/>
-  <minerals mineral_id="115" name="Pumpellyite" parent_mineral_id="92"/>
-  <minerals mineral_id="116" name="Melilite" parent_mineral_id="92"/>
-  <minerals mineral_id="117" name="Rankinite" parent_mineral_id="92"/>
-  <minerals mineral_id="118" name="Tilleyite" parent_mineral_id="92"/>
-  <minerals mineral_id="119" name="Beryl" parent_mineral_id="92"/>
-  <minerals mineral_id="120" name="Cordierite" parent_mineral_id="92"/>
-  <minerals mineral_id="121" name="Tourmaline" parent_mineral_id="92"/>
-  <minerals mineral_id="122" name="Axinite" parent_mineral_id="92"/>
-  <minerals mineral_id="123" name="Oxides"/>
-  <minerals mineral_id="124" name="Ilmenite" parent_mineral_id="123"/>
-  <minerals mineral_id="125" name="Hematite" parent_mineral_id="123"/>
-  <minerals mineral_id="126" name="Rutile" parent_mineral_id="123"/>
-  <minerals mineral_id="127" name="Spinel(1)" parent_mineral_id="123"/>
-  <minerals mineral_id="128" name="Spinel(2)" parent_mineral_id="127"/>
-  <minerals mineral_id="129" name="Magnetite" parent_mineral_id="127"/>
-  <minerals mineral_id="130" name="Chromite" parent_mineral_id="127"/>
-  <minerals mineral_id="131" name="Hercynite" parent_mineral_id="127"/>
-  <minerals mineral_id="132" name="Ghanite" parent_mineral_id="127"/>
-  <minerals mineral_id="133" name="Periclase" parent_mineral_id="123"/>
-  <minerals mineral_id="134" name="Cassiterite" parent_mineral_id="123"/>
-  <minerals mineral_id="135" name="Corundum" parent_mineral_id="123"/>
-  <minerals mineral_id="136" name="Anatase" parent_mineral_id="123"/>
-  <minerals mineral_id="137" name="Brookite" parent_mineral_id="123"/>
-  <minerals mineral_id="138" name="Perovskite" parent_mineral_id="123"/>
-  <minerals mineral_id="139" name="Hydroxides"/>
-  <minerals mineral_id="140" name="Brucite" parent_mineral_id="139"/>
-  <minerals mineral_id="141" name="Gibbsite" parent_mineral_id="139"/>
-  <minerals mineral_id="142" name="Diaspore" parent_mineral_id="139"/>
-  <minerals mineral_id="143" name="Boehmite" parent_mineral_id="139"/>
-  <minerals mineral_id="144" name="Goethite" parent_mineral_id="139"/>
-  <minerals mineral_id="145" name="Lepidocrocite" parent_mineral_id="139"/>
-  <minerals mineral_id="146" name="Limonite" parent_mineral_id="139"/>
-  <minerals mineral_id="147" name="Sulphides"/>
-  <minerals mineral_id="148" name="Pyrite" parent_mineral_id="147"/>
-  <minerals mineral_id="149" name="Pyrrhotite" parent_mineral_id="147"/>
-  <minerals mineral_id="150" name="Chalcopyrite" parent_mineral_id="147"/>
-  <minerals mineral_id="151" name="Sphalerite" parent_mineral_id="147"/>
-  <minerals mineral_id="152" name="Galena" parent_mineral_id="147"/>
-  <minerals mineral_id="153" name="Sulphates"/>
-  <minerals mineral_id="154" name="Baryte" parent_mineral_id="153"/>
-  <minerals mineral_id="155" name="Celestine" parent_mineral_id="153"/>
-  <minerals mineral_id="156" name="Gypsum" parent_mineral_id="153"/>
-  <minerals mineral_id="157" name="Anhydrite" parent_mineral_id="153"/>
-  <minerals mineral_id="158" name="Carbonates"/>
-  <minerals mineral_id="159" name="Calcite" parent_mineral_id="158"/>
-  <minerals mineral_id="160" name="Dolomite" parent_mineral_id="158"/>
-  <minerals mineral_id="161" name="Magnesite" parent_mineral_id="158"/>
-  <minerals mineral_id="162" name="Rhodochrosite" parent_mineral_id="158"/>
-  <minerals mineral_id="163" name="Siderite" parent_mineral_id="158"/>
-  <minerals mineral_id="164" name="Ankerite" parent_mineral_id="158"/>
-  <minerals mineral_id="165" name="Phosphates"/>
-  <minerals mineral_id="166" name="Apatite" parent_mineral_id="165"/>
-  <minerals mineral_id="167" name="Monazite" parent_mineral_id="165"/>
-  <minerals mineral_id="168" name="Xenotime" parent_mineral_id="165"/>
-  <minerals mineral_id="169" name="Native Elements"/>
-  <minerals mineral_id="170" name="Carbon" parent_mineral_id="169"/>
-  <minerals mineral_id="171" name="Graphite" parent_mineral_id="170"/>
-  <minerals mineral_id="172" name="Diamond" parent_mineral_id="170"/>
+  <minerals mineral_id="1" real_mineral_id="1" name="Tectosilicates"/>
+  <minerals mineral_id="2" real_mineral_id="2" name="Silica" parent_mineral_id="1"/>
+  <minerals mineral_id="3" real_mineral_id="3" name="Quartz" parent_mineral_id="2"/>
+  <minerals mineral_id="4" real_mineral_id="4" name="Coesite" parent_mineral_id="2"/>
+  <minerals mineral_id="5" real_mineral_id="5" name="Tridymite" parent_mineral_id="2"/>
+  <minerals mineral_id="6" real_mineral_id="6" name="Cristobalite" parent_mineral_id="2"/>
+  <minerals mineral_id="7" real_mineral_id="7" name="Feldspar" parent_mineral_id="1"/>
+  <minerals mineral_id="8" real_mineral_id="8" name="Plagioclase" parent_mineral_id="7"/>
+  <minerals mineral_id="9" real_mineral_id="9" name="Albite"/>
+  <minerals mineral_id="10" real_mineral_id="10" name="Oligoclase" parent_mineral_id="9"/>
+  <minerals mineral_id="11" real_mineral_id="11" name="Andesine" parent_mineral_id="9"/>
+  <minerals mineral_id="12" real_mineral_id="12" name="Labradorite" parent_mineral_id="9"/>
+  <minerals mineral_id="13" real_mineral_id="13" name="Anorthite" parent_mineral_id="9"/>
+  <minerals mineral_id="14" real_mineral_id="14" name="Alkali feldspar" parent_mineral_id="7"/>
+  <minerals mineral_id="15" real_mineral_id="14" name="K-feldspar" parent_mineral_id="0"/>
+  <minerals mineral_id="16" real_mineral_id="14" name="K feldspar" parent_mineral_id="0"/>
+  <minerals mineral_id="17" real_mineral_id="14" name="Alkali-felspar" parent_mineral_id="0"/>
+  <minerals mineral_id="18" real_mineral_id="18" name="Orthoclase" parent_mineral_id="14"/>
+  <minerals mineral_id="19" real_mineral_id="18" name="Microcline" parent_mineral_id="0"/>
+  <minerals mineral_id="20" real_mineral_id="20" name="Sanadine" parent_mineral_id="14"/>
+  <minerals mineral_id="21" real_mineral_id="21" name="Celsian" parent_mineral_id="7"/>
+  <minerals mineral_id="22" real_mineral_id="22" name="Nepheline" parent_mineral_id="1"/>
+  <minerals mineral_id="23" real_mineral_id="23" name="Kalsilite" parent_mineral_id="1"/>
+  <minerals mineral_id="24" real_mineral_id="24" name="Leucite" parent_mineral_id="1"/>
+  <minerals mineral_id="25" real_mineral_id="25" name="Sodalite" parent_mineral_id="1"/>
+  <minerals mineral_id="26" real_mineral_id="26" name="Scapolite" parent_mineral_id="1"/>
+  <minerals mineral_id="27" real_mineral_id="27" name="Analcite" parent_mineral_id="1"/>
+  <minerals mineral_id="28" real_mineral_id="28" name="Zeolite" parent_mineral_id="1"/>
+  <minerals mineral_id="29" real_mineral_id="29" name="Sheet silicates"/>
+  <minerals mineral_id="30" real_mineral_id="30" name="Mica" parent_mineral_id="29"/>
+  <minerals mineral_id="31" real_mineral_id="31" name="Muscovite" parent_mineral_id="30"/>
+  <minerals mineral_id="32" real_mineral_id="32" name="Paragonite" parent_mineral_id="30"/>
+  <minerals mineral_id="33" real_mineral_id="33" name="Margarite" parent_mineral_id="30"/>
+  <minerals mineral_id="34" real_mineral_id="34" name="Glauconite" parent_mineral_id="30"/>
+  <minerals mineral_id="35" real_mineral_id="35" name="Biotite" parent_mineral_id="30"/>
+  <minerals mineral_id="36" real_mineral_id="36" name="Phlogopite" parent_mineral_id="35"/>
+  <minerals mineral_id="37" real_mineral_id="37" name="Annite" parent_mineral_id="35"/>
+  <minerals mineral_id="38" real_mineral_id="38" name="Wonesite" parent_mineral_id="30"/>
+  <minerals mineral_id="39" real_mineral_id="39" name="Lepidolite" parent_mineral_id="30"/>
+  <minerals mineral_id="40" real_mineral_id="40" name="Clintonite" parent_mineral_id="30"/>
+  <minerals mineral_id="41" real_mineral_id="41" name="Stilpnomelane" parent_mineral_id="29"/>
+  <minerals mineral_id="42" real_mineral_id="42" name="Astrophyllite" parent_mineral_id="29"/>
+  <minerals mineral_id="43" real_mineral_id="43" name="Pyrophyllite" parent_mineral_id="29"/>
+  <minerals mineral_id="44" real_mineral_id="44" name="Talc" parent_mineral_id="29"/>
+  <minerals mineral_id="45" real_mineral_id="45" name="Chlorite" parent_mineral_id="29"/>
+  <minerals mineral_id="46" real_mineral_id="46" name="Serpentine" parent_mineral_id="29"/>
+  <minerals mineral_id="47" real_mineral_id="47" name="Clay" parent_mineral_id="29"/>
+  <minerals mineral_id="48" real_mineral_id="48" name="Kaolinite" parent_mineral_id="47"/>
+  <minerals mineral_id="49" real_mineral_id="49" name="Illite" parent_mineral_id="47"/>
+  <minerals mineral_id="50" real_mineral_id="50" name="Smectite" parent_mineral_id="47"/>
+  <minerals mineral_id="51" real_mineral_id="51" name="Vermiculite" parent_mineral_id="47"/>
+  <minerals mineral_id="52" real_mineral_id="52" name="Montmorillonite" parent_mineral_id="47"/>
+  <minerals mineral_id="53" real_mineral_id="53" name="Apophyllite" parent_mineral_id="29"/>
+  <minerals mineral_id="54" real_mineral_id="54" name="Prehnite" parent_mineral_id="29"/>
+  <minerals mineral_id="55" real_mineral_id="55" name="Chain silicates"/>
+  <minerals mineral_id="56" real_mineral_id="56" name="Pyroxene" parent_mineral_id="55"/>
+  <minerals mineral_id="57" real_mineral_id="57" name="Orthopyroxene" parent_mineral_id="56"/>
+  <minerals mineral_id="58" real_mineral_id="58" name="Enstatite" parent_mineral_id="57"/>
+  <minerals mineral_id="59" real_mineral_id="59" name="Ferrosilite" parent_mineral_id="57"/>
+  <minerals mineral_id="60" real_mineral_id="60" name="Clinopyroxene" parent_mineral_id="56"/>
+  <minerals mineral_id="61" real_mineral_id="61" name="Ca pyroxene" parent_mineral_id="60"/>
+  <minerals mineral_id="62" real_mineral_id="62" name="Diopside" parent_mineral_id="61"/>
+  <minerals mineral_id="63" real_mineral_id="63" name="Hedenbergite" parent_mineral_id="61"/>
+  <minerals mineral_id="64" real_mineral_id="64" name="Augite" parent_mineral_id="61"/>
+  <minerals mineral_id="65" real_mineral_id="65" name="Na pyroxene" parent_mineral_id="60"/>
+  <minerals mineral_id="66" real_mineral_id="66" name="Jadeite" parent_mineral_id="65"/>
+  <minerals mineral_id="67" real_mineral_id="67" name="Acmite" parent_mineral_id="65"/>
+  <minerals mineral_id="68" real_mineral_id="68" name="Omphacite" parent_mineral_id="60"/>
+  <minerals mineral_id="69" real_mineral_id="69" name="Aegirine" parent_mineral_id="60"/>
+  <minerals mineral_id="70" real_mineral_id="70" name="Spodumene" parent_mineral_id="60"/>
+  <minerals mineral_id="71" real_mineral_id="71" name="Clinoenstatite" parent_mineral_id="60"/>
+  <minerals mineral_id="72" real_mineral_id="72" name="Wollastonite" parent_mineral_id="55"/>
+  <minerals mineral_id="73" real_mineral_id="73" name="Pectolite" parent_mineral_id="55"/>
+  <minerals mineral_id="74" real_mineral_id="74" name="Rhodonite" parent_mineral_id="55"/>
+  <minerals mineral_id="75" real_mineral_id="75" name="Bustamite" parent_mineral_id="55"/>
+  <minerals mineral_id="76" real_mineral_id="76" name="Pyroxmangite" parent_mineral_id="55"/>
+  <minerals mineral_id="77" real_mineral_id="77" name="Sapphirine" parent_mineral_id="55"/>
+  <minerals mineral_id="78" real_mineral_id="78" name="Aenigmatite" parent_mineral_id="55"/>
+  <minerals mineral_id="79" real_mineral_id="79" name="Amphibole" parent_mineral_id="55"/>
+  <minerals mineral_id="80" real_mineral_id="80" name="Orthoamphibole" parent_mineral_id="79"/>
+  <minerals mineral_id="81" real_mineral_id="81" name="Anthophyllite" parent_mineral_id="80"/>
+  <minerals mineral_id="82" real_mineral_id="82" name="Gedrite" parent_mineral_id="80"/>
+  <minerals mineral_id="83" real_mineral_id="83" name="Clinoamphibole" parent_mineral_id="79"/>
+  <minerals mineral_id="84" real_mineral_id="84" name="Cummingtonite" parent_mineral_id="83"/>
+  <minerals mineral_id="85" real_mineral_id="85" name="Grunerite" parent_mineral_id="83"/>
+  <minerals mineral_id="86" real_mineral_id="86" name="Tremolite" parent_mineral_id="83"/>
+  <minerals mineral_id="87" real_mineral_id="87" name="Actinolite" parent_mineral_id="83"/>
+  <minerals mineral_id="88" real_mineral_id="88" name="Hornblende" parent_mineral_id="83"/>
+  <minerals mineral_id="89" real_mineral_id="89" name="Kaersutite" parent_mineral_id="83"/>
+  <minerals mineral_id="90" real_mineral_id="90" name="Glaucophane" parent_mineral_id="83"/>
+  <minerals mineral_id="91" real_mineral_id="91" name="Riebeckite" parent_mineral_id="83"/>
+  <minerals mineral_id="92" real_mineral_id="92" name="Richterite" parent_mineral_id="83"/>
+  <minerals mineral_id="93" real_mineral_id="93" name="Katophorite" parent_mineral_id="83"/>
+  <minerals mineral_id="94" real_mineral_id="94" name="Ekermannite" parent_mineral_id="83"/>
+  <minerals mineral_id="95" real_mineral_id="95" name="Arfvedsonite" parent_mineral_id="83"/>
+  <minerals mineral_id="96" real_mineral_id="96" name="Ortho- and Ring Silicates"/>
+  <minerals mineral_id="97" real_mineral_id="97" name="Olivine" parent_mineral_id="96"/>
+  <minerals mineral_id="98" real_mineral_id="98" name="Humite" parent_mineral_id="96"/>
+  <minerals mineral_id="99" real_mineral_id="99" name="Zircon" parent_mineral_id="96"/>
+  <minerals mineral_id="100" real_mineral_id="100" name="Sphene" parent_mineral_id="96"/>
+  <minerals mineral_id="101" real_mineral_id="101" name="Garnet" parent_mineral_id="96"/>
+  <minerals mineral_id="102" real_mineral_id="102" name="Vesuvanite" parent_mineral_id="96"/>
+  <minerals mineral_id="103" real_mineral_id="103" name="Sillimanite" parent_mineral_id="96"/>
+  <minerals mineral_id="104" real_mineral_id="104" name="Andalusite" parent_mineral_id="96"/>
+  <minerals mineral_id="105" real_mineral_id="105" name="Kyanite" parent_mineral_id="96"/>
+  <minerals mineral_id="106" real_mineral_id="106" name="Mullite" parent_mineral_id="96"/>
+  <minerals mineral_id="107" real_mineral_id="107" name="Topaz" parent_mineral_id="96"/>
+  <minerals mineral_id="108" real_mineral_id="108" name="Staurolite" parent_mineral_id="96"/>
+  <minerals mineral_id="109" real_mineral_id="109" name="Chloritoid" parent_mineral_id="96"/>
+  <minerals mineral_id="110" real_mineral_id="110" name="Larnite" parent_mineral_id="96"/>
+  <minerals mineral_id="111" real_mineral_id="111" name="Merwinite" parent_mineral_id="96"/>
+  <minerals mineral_id="112" real_mineral_id="112" name="Spurrite" parent_mineral_id="96"/>
+  <minerals mineral_id="113" real_mineral_id="113" name="Epidote" parent_mineral_id="96"/>
+  <minerals mineral_id="114" real_mineral_id="114" name="Zoisite" parent_mineral_id="113"/>
+  <minerals mineral_id="115" real_mineral_id="115" name="Clinozoisite" parent_mineral_id="113"/>
+  <minerals mineral_id="116" real_mineral_id="116" name="Piemontite" parent_mineral_id="113"/>
+  <minerals mineral_id="117" real_mineral_id="117" name="Allanite" parent_mineral_id="113"/>
+  <minerals mineral_id="118" real_mineral_id="118" name="Lawsonite" parent_mineral_id="96"/>
+  <minerals mineral_id="119" real_mineral_id="119" name="Pumpellyite" parent_mineral_id="96"/>
+  <minerals mineral_id="120" real_mineral_id="120" name="Melilite" parent_mineral_id="96"/>
+  <minerals mineral_id="121" real_mineral_id="121" name="Rankinite" parent_mineral_id="96"/>
+  <minerals mineral_id="122" real_mineral_id="122" name="Tilleyite" parent_mineral_id="96"/>
+  <minerals mineral_id="123" real_mineral_id="123" name="Beryl" parent_mineral_id="96"/>
+  <minerals mineral_id="124" real_mineral_id="124" name="Cordierite" parent_mineral_id="96"/>
+  <minerals mineral_id="125" real_mineral_id="125" name="Tourmaline" parent_mineral_id="96"/>
+  <minerals mineral_id="126" real_mineral_id="126" name="Axinite" parent_mineral_id="96"/>
+  <minerals mineral_id="127" real_mineral_id="127" name="Oxides"/>
+  <minerals mineral_id="128" real_mineral_id="128" name="Ilmenite" parent_mineral_id="127"/>
+  <minerals mineral_id="129" real_mineral_id="129" name="Hematite" parent_mineral_id="127"/>
+  <minerals mineral_id="130" real_mineral_id="130" name="Rutile" parent_mineral_id="127"/>
+  <minerals mineral_id="131" real_mineral_id="131" name="Spinel(1)" parent_mineral_id="127"/>
+  <minerals mineral_id="132" real_mineral_id="132" name="Spinel(2)" parent_mineral_id="131"/>
+  <minerals mineral_id="133" real_mineral_id="133" name="Magnetite" parent_mineral_id="131"/>
+  <minerals mineral_id="134" real_mineral_id="134" name="Chromite" parent_mineral_id="131"/>
+  <minerals mineral_id="135" real_mineral_id="135" name="Hercynite" parent_mineral_id="131"/>
+  <minerals mineral_id="136" real_mineral_id="136" name="Ghanite" parent_mineral_id="131"/>
+  <minerals mineral_id="137" real_mineral_id="137" name="Periclase" parent_mineral_id="127"/>
+  <minerals mineral_id="138" real_mineral_id="138" name="Cassiterite" parent_mineral_id="127"/>
+  <minerals mineral_id="139" real_mineral_id="139" name="Corundum" parent_mineral_id="127"/>
+  <minerals mineral_id="140" real_mineral_id="140" name="Anatase" parent_mineral_id="127"/>
+  <minerals mineral_id="141" real_mineral_id="141" name="Brookite" parent_mineral_id="127"/>
+  <minerals mineral_id="142" real_mineral_id="142" name="Perovskite" parent_mineral_id="127"/>
+  <minerals mineral_id="143" real_mineral_id="143" name="Hydroxides"/>
+  <minerals mineral_id="144" real_mineral_id="144" name="Brucite" parent_mineral_id="143"/>
+  <minerals mineral_id="145" real_mineral_id="145" name="Gibbsite" parent_mineral_id="143"/>
+  <minerals mineral_id="146" real_mineral_id="146" name="Diaspore" parent_mineral_id="143"/>
+  <minerals mineral_id="147" real_mineral_id="147" name="Boehmite" parent_mineral_id="143"/>
+  <minerals mineral_id="148" real_mineral_id="148" name="Goethite" parent_mineral_id="143"/>
+  <minerals mineral_id="149" real_mineral_id="149" name="Lepidocrocite" parent_mineral_id="143"/>
+  <minerals mineral_id="150" real_mineral_id="150" name="Limonite" parent_mineral_id="143"/>
+  <minerals mineral_id="151" real_mineral_id="151" name="Sulphides"/>
+  <minerals mineral_id="152" real_mineral_id="152" name="Pyrite" parent_mineral_id="151"/>
+  <minerals mineral_id="153" real_mineral_id="153" name="Pyrrhotite" parent_mineral_id="151"/>
+  <minerals mineral_id="154" real_mineral_id="154" name="Chalcopyrite" parent_mineral_id="151"/>
+  <minerals mineral_id="155" real_mineral_id="155" name="Sphalerite" parent_mineral_id="151"/>
+  <minerals mineral_id="156" real_mineral_id="156" name="Galena" parent_mineral_id="151"/>
+  <minerals mineral_id="157" real_mineral_id="157" name="Sulphates"/>
+  <minerals mineral_id="158" real_mineral_id="158" name="Baryte" parent_mineral_id="157"/>
+  <minerals mineral_id="159" real_mineral_id="159" name="Celestine" parent_mineral_id="157"/>
+  <minerals mineral_id="160" real_mineral_id="160" name="Gypsum" parent_mineral_id="157"/>
+  <minerals mineral_id="161" real_mineral_id="161" name="Anhydrite" parent_mineral_id="157"/>
+  <minerals mineral_id="162" real_mineral_id="162" name="Carbonates"/>
+  <minerals mineral_id="163" real_mineral_id="163" name="Calcite" parent_mineral_id="162"/>
+  <minerals mineral_id="164" real_mineral_id="164" name="Dolomite" parent_mineral_id="162"/>
+  <minerals mineral_id="165" real_mineral_id="165" name="Magnesite" parent_mineral_id="162"/>
+  <minerals mineral_id="166" real_mineral_id="166" name="Rhodochrosite" parent_mineral_id="162"/>
+  <minerals mineral_id="167" real_mineral_id="167" name="Siderite" parent_mineral_id="162"/>
+  <minerals mineral_id="168" real_mineral_id="168" name="Ankerite" parent_mineral_id="162"/>
+  <minerals mineral_id="169" real_mineral_id="169" name="Phosphates"/>
+  <minerals mineral_id="170" real_mineral_id="170" name="Apatite" parent_mineral_id="169"/>
+  <minerals mineral_id="171" real_mineral_id="171" name="Monazite" parent_mineral_id="169"/>
+  <minerals mineral_id="172" real_mineral_id="172" name="Xenotime" parent_mineral_id="169"/>
+  <minerals mineral_id="173" real_mineral_id="173" name="Native Elements"/>
+  <minerals mineral_id="174" real_mineral_id="174" name="Carbon" parent_mineral_id="173"/>
+  <minerals mineral_id="175" real_mineral_id="175" name="Graphite" parent_mineral_id="174"/>
+  <minerals mineral_id="176" real_mineral_id="176" name="Diamond" parent_mineral_id="174"/>
   <reference/>
-  
-  <chemical_analyses chemical_analysis_id="1" spot_id="0" subsample_id="5" point_x="0" point_y="0" analysis_date="1969-12-31 19:00:00.0" date_precision="365" mineral_id="22" large_rock="Y"/>
-  <chemical_analyses chemical_analysis_id="2" spot_id="0" subsample_id="7" point_x="0" point_y="0" analysis_date="1969-12-31 19:00:00.0" date_precision="365" mineral_id="22" large_rock="N"/>
-  <chemical_analyses chemical_analysis_id="3" spot_id="0" subsample_id="11" point_x="0" point_y="0" analysis_date="1969-12-31 19:00:00.0" date_precision="365" mineral_id="22" large_rock="N"></chemical_analyses>
-  <chemical_analyses chemical_analysis_id="5" subsample_id="10" mineral_id="22" spot_id="0" large_rock="N"></chemical_analyses>
-  <chemical_analyses chemical_analysis_id="6" subsample_id="9" mineral_id="22" spot_id="0" large_rock="N"></chemical_analyses>
+  <chemical_analyses chemical_analysis_id = "1" version = "1" spot_id = "temp" subsample_id = "1" point_x="0" point_y="0" large_rock = "N" />
+  <chemical_analyses chemical_analysis_id = "2" version = "1" spot_id = "temp2" subsample_id = "1" point_x="0" point_y="0" large_rock = "N" />
   <elements element_id="1" name="Aluminium" alternate_name="Aluminum" symbol="Al" atomic_number="13" weight="26.9815"/>
   <elements element_id="2" name="Americium" symbol="Am" atomic_number="95" weight="243.0"/>
   <elements element_id="3" name="Antimony" symbol="Sb" atomic_number="51" weight="121.76"/>
@@ -307,12 +348,8 @@
   <elements element_id="100" name="Yttrium" symbol="Y" atomic_number="39" weight="88.9058"/>
   <elements element_id="101" name="Zinc" symbol="Zn" atomic_number="30" weight="65.38"/>
   <elements element_id="102" name="Zirconium" symbol="Zr" atomic_number="40" weight="91.224"/>
-  <chemical_analysis_elements chemical_analysis_id="1" element_id="1" amount="5.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="3" max_amount="7"/>
-  <chemical_analysis_elements chemical_analysis_id="1" element_id="14" amount="5.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="3" max_amount="7"/>
-  <chemical_analysis_elements chemical_analysis_id="2" element_id="1" amount="10.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="7" max_amount="13"/>
-  <chemical_analysis_elements chemical_analysis_id="2" element_id="14" amount="10.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="7" max_amount="13"/><chemical_analysis_elements chemical_analysis_id="3" element_id="1" amount="6.0" measurement_unit="ppm" min_amount="4" max_amount="8"></chemical_analysis_elements>
-	<chemical_analysis_elements chemical_analysis_id="3" element_id="14" amount="8" measurement_unit="ppm" min_amount="6" max_amount="10"></chemical_analysis_elements>
-	<oxides oxide_id="1" element_id="1" oxidation_state="3" species="Al2O3" weight="101.96" cations_per_oxide="2" conversion_factor="1.8894427663399"/>
+  <chemical_analysis_elements chemical_analysis_id ="2" element_id ="1" amount ="5.0" min_amount = "2.0" max_amount = "8.0"/>
+  <oxides oxide_id="1" element_id="1" oxidation_state="3" species="Al2O3" weight="101.96" cations_per_oxide="2" conversion_factor="1.8894427663399"/>
   <oxides oxide_id="2" element_id="3" oxidation_state="5" species="Sb2O5" weight="323.517" cations_per_oxide="2" conversion_factor="1.32850279237845"/>
   <oxides oxide_id="3" element_id="3" oxidation_state="3" species="Sb2O3" weight="291.518" cations_per_oxide="2" conversion_factor="1.19710167542707"/>
   <oxides oxide_id="4" element_id="7" oxidation_state="2" species="BaO" weight="153.33" cations_per_oxide="1" conversion_factor="1.11653207308104"/>
@@ -353,12 +390,8 @@
   <oxides oxide_id="39" element_id="100" oxidation_state="3" species="Y2O3" weight="225.81" cations_per_oxide="2" conversion_factor="1.26993964398273"/>
   <oxides oxide_id="40" element_id="101" oxidation_state="2" species="ZnO" weight="81.38" cations_per_oxide="1" conversion_factor="1.24472315692872"/>
   <oxides oxide_id="41" element_id="102" oxidation_state="4" species="ZrO2" weight="123.22" cations_per_oxide="1" conversion_factor="1.35074103306148"/>
-  <chemical_analysis_oxides chemical_analysis_id="1" oxide_id="1" amount="10.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="7" max_amount="12"/>
-  <chemical_analysis_oxides chemical_analysis_id="1" oxide_id="6" amount="10.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="7" max_amount="13"/>
-  <chemical_analysis_oxides chemical_analysis_id="2" oxide_id="1" amount="15.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="12" max_amount="18"/>
-  <chemical_analysis_oxides chemical_analysis_id="2" oxide_id="6" amount="15.0" precision="0.0" precision_type="ABS" measurement_unit="ppm" min_amount="12" max_amount="18"/><chemical_analysis_oxides chemical_analysis_id="5" oxide_id="1" amount="13.0" measurement_unit="ppm" min_amount="11" max_amount="15"></chemical_analysis_oxides>
-	<chemical_analysis_oxides chemical_analysis_id="6" oxide_id="6" amount="9" measurement_unit="ppm" min_amount="7" max_amount="11"></chemical_analysis_oxides>
-	<mineral_types mineral_type_id="1" name="Silicates"></mineral_types>
+  <chemical_analysis_oxides chemical_analysis_id ="1" oxide_id ="1" amount ="5.0" min_amount = "2.0" max_amount = "8.0" />
+  <mineral_types mineral_type_id="1" name="Silicates"/>
   <mineral_types mineral_type_id="2" name="Oxides"/>
   <mineral_types mineral_type_id="3" name="Carbonates"/>
   <mineral_types mineral_type_id="4" name="Phosphates"/>
@@ -428,9 +461,10 @@
   <element_mineral_types element_id="99" mineral_type_id="4"/>
   <element_mineral_types element_id="100" mineral_type_id="4"/>
   <grids/>
+  <image_comments/>
   <image_on_grid/>
   <image_reference/>
-  <metamorphic_grades/>
+  <metamorphic_grades metamorphic_grade_id="1" name="Great Shape"/>
   <oxide_mineral_types oxide_id="1" mineral_type_id="1"/>
   <oxide_mineral_types oxide_id="1" mineral_type_id="2"/>
   <oxide_mineral_types oxide_id="1" mineral_type_id="5"/>
@@ -482,10 +516,8 @@
   <project_samples/>
   <regions/>
   <sample_comments/>
-  <sample_metamorphic_grades/>
-  <sample_minerals mineral_id="25" sample_id="9" amount="0.0"/>
-  <sample_minerals mineral_id="25" sample_id="8" amount="0.0"/>
-  <sample_minerals mineral_id="25" sample_id="7" amount="0.0"/>
+  <sample_metamorphic_grades sample_id="5" metamorphic_grade_id="1"/>
+  <sample_minerals/>
   <sample_reference/>
   <sample_regions/>
   <uploaded_files/>

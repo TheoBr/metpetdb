@@ -582,7 +582,6 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		tempOxide.setSpecies("AL2O3");
 		searchSamp.addOxide(tempOxide, 4f, 8f);
 
-		
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
 				.createFullTextSession(session);
