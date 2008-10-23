@@ -22,9 +22,8 @@ public abstract class ValidationException extends MpDbException implements
 					+ "_" + p);
 			return r != null ? r : p;
 		} catch (Exception e) {
-			// TODO handle the exception
+			return c.entityName + "_" + p;
 		}
-		return null;
 	}
 
 	protected PropertyConstraint constraint;

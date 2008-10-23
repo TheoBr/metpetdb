@@ -262,11 +262,14 @@ public class SampleParser extends Parser {
 							&& !storeMethod.getName().equals("addComment")) {
 						final String[] data = cell.toString()
 								.split("\\s*" + DATA_SEPARATOR +"\\s*");
-						for (String str : data)
-							storeMethod.invoke(s, str);
+						for (String str : data) {
+							if (!"".equals(str))
+								storeMethod.invoke(s, str);
+						}
 					} else {
 						final String data = cell.toString();
-						storeMethod.invoke(s, data);
+						if (!"".equals(data))
+							storeMethod.invoke(s, data);
 					}
 
 				} else if (dataType == Float.class) {

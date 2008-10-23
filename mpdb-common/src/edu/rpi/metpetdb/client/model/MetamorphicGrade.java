@@ -32,7 +32,7 @@ public class MetamorphicGrade extends MObject {
 
 	public boolean equals(final Object o) {
 		return name != null && o instanceof MetamorphicGrade
-				&& name.equals(((MetamorphicGrade) o).name);
+				&& name.toLowerCase().equals(((MetamorphicGrade) o).name.toLowerCase());
 	}
 
 	public int hashCode() {
