@@ -6,11 +6,11 @@ INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Tri
 INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Cristobalite',(select mineral_id from minerals where name='Silica'));
 INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Feldspar',(select mineral_id from minerals where name='Tectosilicates'));
 INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Plagioclase',(select mineral_id from minerals where name='Feldspar'));
-INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Albite',(select mineral_id from minerals where name='Albite'));
-INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Oligoclase',(select mineral_id from minerals where name='Albite'));
-INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Andesine',(select mineral_id from minerals where name='Albite'));
-INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Labradorite',(select mineral_id from minerals where name='Albite'));
-INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Anorthite',(select mineral_id from minerals where name='Albite'));
+INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Albite',(select mineral_id from minerals where name='Plagioclase'));
+INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Oligoclase',(select mineral_id from minerals where name='Plagioclase'));
+INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Andesine',(select mineral_id from minerals where name='Plagioclase'));
+INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Labradorite',(select mineral_id from minerals where name='Plagioclase'));
+INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Anorthite',(select mineral_id from minerals where name='Plagioclase'));
 INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Alkali feldspar',(select mineral_id from minerals where name='Feldspar'));
 INSERT INTO minerals VALUES (nextval('mineral_seq'), (select mineral_id from minerals where name='Alkali feldspar'),'K-feldspar',0);
 INSERT INTO minerals VALUES (nextval('mineral_seq'), (select mineral_id from minerals where name='Alkali feldspar'),'K feldspar',0);
