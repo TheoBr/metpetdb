@@ -29,18 +29,14 @@ public class PanHandler {
 		this.imagesOnGrid = imagesOnGrid;
 	}
 
-	public void pan(final int xoffset, final int yoffset) {
-		beginPan(xoffset, yoffset);
-		endPan(xoffset, yoffset);
-	}
 
 	/**
-	 * Pans the grid by xoffset and yoffset
+	 * Pans the grid by deltaX and deltaY
 	 * 
 	 * @param deltaX
 	 * @param deltaY
 	 */
-	public void beginPan(final int deltaX, final int deltaY) {
+	public void pan(final int deltaX, final int deltaY) {
 		this.xOffset += deltaX;
 		this.yOffset += deltaY;
 		DOM.setStyleAttribute(this.grid.getElement(), "backgroundPosition",
@@ -49,29 +45,20 @@ public class PanHandler {
 		final Iterator<ImageOnGridContainer> itr = imagesOnGrid.iterator();
 		while (itr.hasNext()) {
 			final ImageOnGridContainer iog = itr.next();
-			final int newX = iog.getOriginalContainerPosition().x + deltaX;
-			final int newY = iog.getOriginalContainerPosition().y + deltaY;
+			final int newX = iog.getCurrentContainerPosition().x + deltaX;
+			final int newY = iog.getCurrentContainerPosition().y + deltaY;
 			this.grid.setWidgetPosition(iog.getImageContainer(), newX, newY);
+			iog.pan(deltaX, deltaY);
 		}
-	}
-
-	public void endPan(final int deltaX, final int deltaY) {
 		currentBackgroundX += deltaX;
 		currentBackgroundY += deltaY;
-		if (imagesOnGrid != null) {
-			final Iterator<ImageOnGridContainer> itr = imagesOnGrid.iterator();
-			while (itr.hasNext()) {
-				final ImageOnGridContainer iog = itr.next();
-				iog.pan(deltaX, deltaY);
-			}
-		}
 	}
 
 	/**
 	 * Moves the grid back to the origin
 	 */
 	public void reset() {
-		beginPan(-xOffset, -yOffset);
+		pan(-xOffset, -yOffset);
 		xOffset = 0;
 		yOffset = 0;
 	}

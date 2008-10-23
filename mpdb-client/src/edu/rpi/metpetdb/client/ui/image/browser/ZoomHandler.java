@@ -38,8 +38,8 @@ public class ZoomHandler {
 	}
 
 	public int getCurrentScale() {
-		return zoomMultiplier * (6 - (getCurrentZoomLevel() / 10) <= 0 ? 6 - (getCurrentZoomLevel() / 10)
-				: 6 - (getCurrentZoomLevel() / 10));
+		return (int) Math.pow(zoomMultiplier, -1* (6 - (getCurrentZoomLevel() / 10) <= 0 ? 6 - (getCurrentZoomLevel() / 10)
+				: 6 - (getCurrentZoomLevel() / 10)));
 	}
 
 	public int getCurrentZoomPixel() {
@@ -70,8 +70,10 @@ public class ZoomHandler {
 					.round((iog.getCurrentHeight() * (level == 1 ? zoomMultiplier
 							: 1 / (float) zoomMultiplier)));
 			if (!iog.skipZoom(newWidth, newHeight)) {
+				int centerX = getCenterX(iog);
+				int centerY = getCenterY(iog);
 				iog.resizeImage(newWidth, newHeight, false);
-				changePosition(iog, level);
+				changePosition(iog, level,centerX,centerY);
 				imageBrowser.getGrid().setWidgetPosition(
 						iog.getImageContainer(), iog.getCurrentContainerPosition().x,
 						iog.getCurrentContainerPosition().y);
@@ -80,9 +82,8 @@ public class ZoomHandler {
 		}
 	}
 
-	private void changePosition(final ImageOnGridContainer iog, final int level) {
-		int centerX = getCenterX(iog);
-		int centerY = getCenterY(iog);
+	private void changePosition(final ImageOnGridContainer iog, final int level, int centerX, int centerY) {
+
 
 		// transform center based on refenceX/Y
 		centerX -= referenceX;

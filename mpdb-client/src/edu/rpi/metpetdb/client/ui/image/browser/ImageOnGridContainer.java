@@ -19,9 +19,6 @@ public class ImageOnGridContainer {
 	// Always the size of the image
 	private int currentWidth;
 	private int currentHeight;
-	// Original is used before doing a resize operation to make comparisons
-	private int originalWidth;
-	private int originalHeight;
 	private float aspectRatio;
 	private float aspectRatioHeight;
 	private boolean isShown;
@@ -29,9 +26,6 @@ public class ImageOnGridContainer {
 	private boolean isLocked;
 	private boolean isMenuHidden;
 	private int zoomLevelsSkipped;
-	// The point at which the container was located before a modify action was
-	// performed on it (top left x/y)
-	private Point originalContainerPosition = new Point();
 	// The current position of the container (top left x/y)
 	private Point currentContainerPosition = new Point();
 
@@ -74,20 +68,10 @@ public class ImageOnGridContainer {
 	public void setCurrentContainerPosition(Point currentContainerPosition) {
 		this.currentContainerPosition = currentContainerPosition;
 	}
-
-	public Point getOriginalContainerPosition() {
-		return originalContainerPosition;
-	}
-
-	public void setOriginalContainerPosition(Point originalContainerPosition) {
-		this.originalContainerPosition = originalContainerPosition;
-	}
 	
 	public void setupForResize() {
-		originalWidth = currentWidth;
-		originalHeight = currentHeight;
-		aspectRatio = originalHeight / (float) originalWidth;
-		aspectRatioHeight = originalWidth / (float) originalHeight;
+		aspectRatio = currentHeight / (float) currentWidth;
+		aspectRatioHeight = currentWidth / (float) currentHeight;
 	}
 
 	public boolean skipZoom(int width, int height) {
@@ -145,9 +129,6 @@ public class ImageOnGridContainer {
 			// this.getImagePanel().setWidgetPosition(ma.getActualImage(),
 			// ma.getPointX(), ma.getPointY());
 		}
-
-		// this.setWidth(width);
-		// this.setHeight(height);
 
 		if (!this.actualImage.getUrl().equals(this.getGoodLookingPicture()))
 			this.actualImage.setUrl(this.getGoodLookingPicture());
@@ -244,22 +225,6 @@ public class ImageOnGridContainer {
 
 	public void setCurrentHeight(int height) {
 		this.currentHeight = height;
-	}
-
-	public int getOriginalWidth() {
-		return originalWidth;
-	}
-
-	public void setOriginalWidth(int originalWidth) {
-		this.originalWidth = originalWidth;
-	}
-
-	public int getOriginalHeight() {
-		return originalHeight;
-	}
-
-	public void setOriginalHeight(int originalHeight) {
-		this.originalHeight = originalHeight;
 	}
 
 	public float getAspectRatio() {
