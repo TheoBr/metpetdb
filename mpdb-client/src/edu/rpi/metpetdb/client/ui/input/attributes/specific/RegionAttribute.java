@@ -54,4 +54,7 @@ public class RegionAttribute extends MultipleSuggestTextAttribute {
 			}
 		}.begin();
 	}
+	public void onChange(final Widget sender){
+
+	}
 }

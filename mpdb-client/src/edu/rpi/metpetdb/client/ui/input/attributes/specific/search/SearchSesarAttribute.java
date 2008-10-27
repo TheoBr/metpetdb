@@ -1,11 +1,9 @@
 package edu.rpi.metpetdb.client.ui.input.attributes.specific.search;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -13,7 +11,6 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
-import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 
 public class SearchSesarAttribute extends SearchGenericAttribute{
 	private TextBox tb;
@@ -29,6 +26,11 @@ public class SearchSesarAttribute extends SearchGenericAttribute{
 	
 	public Widget[] createEditWidget(final MObject obj, final String id){
 		tb = new TextBox();
+		tb.addChangeListener(new ChangeListener(){
+			public void onChange(final Widget sender){
+				SearchSesarAttribute.this.getSearchInterface().createCritera();
+			}
+		});
 		return new Widget[]{tb};
 	}
 	protected void set(final MObject obj, final Object o) {
@@ -43,14 +45,14 @@ public class SearchSesarAttribute extends SearchGenericAttribute{
 		if (!tb.getText().equals("")) return tb.getText();
 		return null;
 	}
-	public void onRemoveCriteria(final Object obj){
-		if (tb == obj) tb.setText("");	
+	public void onClear(){
+		tb.setText("");	
 	}
 	
-	public ArrayList<Pair> getCriteria(){
-		final ArrayList<Pair> criteria = new ArrayList<Pair>();
+	public ArrayList<Widget> getCriteria(){
+		final ArrayList<Widget> criteria = new ArrayList<Widget>();
 		if (!tb.getText().equals(""))
-			criteria.add(new Pair(createCritRow("Sesar Number:", tb.getText()), tb));
+			criteria.add(createCritRow("IGSN:" + tb.getText()));
 		return criteria;
 	}
 }

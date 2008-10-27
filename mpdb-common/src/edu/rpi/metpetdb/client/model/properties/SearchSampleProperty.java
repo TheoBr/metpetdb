@@ -6,10 +6,10 @@ import org.postgis.Geometry;
 
 import edu.rpi.metpetdb.client.model.DateSpan;
 import edu.rpi.metpetdb.client.model.MetamorphicGrade;
+import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.Region;
 import edu.rpi.metpetdb.client.model.RockType;
-import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.SearchElement;
 import edu.rpi.metpetdb.client.model.SearchOxide;
 import edu.rpi.metpetdb.client.model.SearchSample;
@@ -71,12 +71,12 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 	},
 	minerals {
-		public <T extends MObject> Set<SampleMineral> get(final T sample) {
+		public <T extends MObject> Set<Mineral> get(final T sample) {
 			return ((SearchSample) sample).getMinerals();
 		}
 
 		public <T extends MObject, K> void set(final T sample, final K minerals) {
-			((SearchSample) sample).setMinerals((Set<SampleMineral>) minerals);
+			((SearchSample) sample).setMinerals((Set<Mineral>) minerals);
 		}
 		public String columnName() {
 			return "sampleMineral_mineral_name";

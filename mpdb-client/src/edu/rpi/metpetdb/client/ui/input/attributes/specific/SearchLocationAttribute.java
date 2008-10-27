@@ -30,6 +30,7 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchRockTypesAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
@@ -142,6 +143,7 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 						createBox();
 					}
 				}
+				getSearchInterface().createCritera();
 			}
 		});
 	}
@@ -187,8 +189,10 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 				map.removeOverlay(box);
 			box = new Polygon(points, "#0f2e3c", 1, .60, "#000000", .33);
 			map.addOverlay(box);
-
+			
 			fillBounds(N, S, E, W);
+			
+			
 		}
 	}
 
@@ -251,6 +255,7 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 			clearMap();
 			clearBounds();
 		}
+		getSearchInterface().createCritera();
 	}
 
 	protected Object get(Widget editWidget) throws ValidationException {
@@ -261,20 +266,20 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 			final double w = Double.parseDouble(westInput.getText()); // x
 
 			final Point p1 = new Point();
-			p1.x = s;
-			p1.y = w;
+			p1.x = w;
+			p1.y = s;
 
 			final Point p2 = new Point();
-			p2.x = n;
-			p2.y = w;
+			p2.x = w;
+			p2.y = n;
 
 			final Point p3 = new Point();
-			p3.x = n;
-			p3.y = e;
+			p3.x = e;
+			p3.y = n;
 
 			final Point p4 = new Point();
-			p4.x = s;
-			p4.y = e;
+			p4.x = e;
+			p4.y = s;
 
 			final LinearRing[] ringArray = new LinearRing[1];
 			final Point[] points = new Point[5];
@@ -296,26 +301,19 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 		return null;
 	}
 	
-	public void onRemoveCriteria(final Object obj){
-		if (obj == boundingBox){
-			clearMap();
-			clearBounds();
-		}
+	public void onClear(){
+		clearMap();
+		clearBounds();
 	}
 	
-	public ArrayList<Pair> getCriteria(){
-		final ArrayList<Pair> criteria = new ArrayList<Pair>();
-		try{
-	//		if (boundingBox != null)
-			if(northInput.getText().length() > 0 && southInput.getText().length() > 0 && eastInput.getText().length() > 0 && westInput.getText().length() > 0)
-			{
-				criteria.add(new Pair(createCritRow("Location:", " N: " + String.valueOf(northInput.getText()) + " S: "
-						+ String.valueOf(southInput.getText()) +  " E: " + String.valueOf(eastInput.getText())  
-						+ " W: " + String.valueOf(westInput.getText())), get(null)));
-			}
-		}
-		catch (Exception e){
-			// TODO
+	public ArrayList<Widget> getCriteria(){
+		final ArrayList<Widget> criteria = new ArrayList<Widget>();
+		if (!northInput.getText().equals("") && !southInput.getText().equals("") &&
+			!eastInput.getText().equals("") && !westInput.getText().equals("")){
+			criteria.add(createCritRow(" N: " + String.valueOf(northInput.getText())));
+			criteria.add(createCritRow(" S: " + String.valueOf(southInput.getText())));
+			criteria.add(createCritRow(" E: " + String.valueOf(eastInput.getText())));
+			criteria.add(createCritRow(" W: " + String.valueOf(westInput.getText())));
 		}
 		return criteria;
 	}

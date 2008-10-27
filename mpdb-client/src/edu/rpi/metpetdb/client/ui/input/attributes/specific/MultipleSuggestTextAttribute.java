@@ -6,24 +6,20 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
-import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.widgets.MButton;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
 
-public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
+public abstract class MultipleSuggestTextAttribute extends GenericAttribute implements ChangeListener{
 	private final boolean addShow;
 	private Set<String> suggestions;
 	private MHtmlList editList;
@@ -127,6 +123,7 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute{
 			MultipleInputPanel p = createOptionalSuggestBox(temp.getText());
 			realEditList.add(p);
 			realEditWidgets.set(i, p.getInputWidget());
+			temp.suggestBox.addChangeListener(this);
 		}
 		editList.clear();
 		while (realEditList.size() > 0){

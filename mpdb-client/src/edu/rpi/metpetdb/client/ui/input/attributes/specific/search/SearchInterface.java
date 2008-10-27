@@ -19,7 +19,6 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute.Pair;
 import edu.rpi.metpetdb.client.ui.widgets.MTabPanel;
 import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
@@ -27,6 +26,7 @@ public class SearchInterface {
 	private SearchTabAttribute[] tabAtts;
 	private ArrayList<CritContainer> crits;
 	private ArrayList<Widget[]> currentEditWidgets;
+	private MTabPanel tabs = new MTabPanel();
 
 	public ArrayList<SearchGenericAttribute> getAttributes(){
 		ArrayList<SearchGenericAttribute> atts = new ArrayList();
@@ -52,23 +52,11 @@ public class SearchInterface {
 		currentEditWidgets = new ArrayList();
 		crits = new ArrayList<CritContainer>();
 		final MTwoColPanel panel = new MTwoColPanel();
-		final MTabPanel tabs = new MTabPanel();
+		
 		for (int i = 0; i < tabAtts.length; i++) {
 			final FlowPanel fp = new FlowPanel();
 			fp.add(tabAtts[i].createEditWidget(obj, id));
-			final Button set = new Button("Set " + tabAtts[i].getTitle());
-			set.addClickListener(new ClickListener(){
-				public void onClick(final Widget sender){
-					removeCriteriaForTab(tabAtts[tabs.getTabBar().getSelectedTab()]);
-					ArrayList<Pair> criteria = tabAtts[tabs.getTabBar().getSelectedTab()].getCriteria();
-					ArrayList<Widget> displayedCriteria = new ArrayList<Widget>();
-					for (int j = 0; j < criteria.size(); j++){
-						displayedCriteria.add(addConstraint(criteria.get(j).criteria));
-					}
-					crits.add(new CritContainer(displayedCriteria,criteria,tabAtts[tabs.getTabBar().getSelectedTab()]));
-				}
-			});
-			fp.add(set);
+			tabAtts[i].setSearchInterface(this);
 			tabs.add(fp,tabAtts[i].getTitle());
 			currentEditWidgets.addAll(tabAtts[i].getCurrentEditWidgets());
 		}
@@ -133,20 +121,7 @@ public class SearchInterface {
 			noConstraints.removeFromParent();
 		}
 		final FlexTable row = new FlexTable();
-		Button remove = new Button();
-		remove.setStyleName("remove");
-		remove.setPixelSize(14, 15);
-		remove.addClickListener(new ClickListener() {
-			public void onClick(final Widget sender) {
-				removeFromAtt(sender.getParent());
-				row.removeFromParent();
-			}
-		});
 		row.setWidget(0, 0, constraint);
-		row.setWidget(0, 1, remove);
-		row.getFlexCellFormatter().setAlignment(0, 1,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
 		row.setWidth("100%");
 		vp.add(row);
 		return row;
@@ -160,16 +135,8 @@ public class SearchInterface {
 		while (vp.getWidgetCount() > 1)
 			vp.remove(vp.getWidgetCount() - 1);
 		vp.add(noConstraints);
-	}
-
-	private void removeFromAtt(final Widget toBeRemoved) {
-		for (int i = 0; i < crits.size(); i++){
-			for (int j = 0; j < crits.get(i).getCriteria().size(); j++){
-				 if (crits.get(i).getDisplayedCriteria().get(j) == toBeRemoved){
-					 crits.get(i).getTabAttribute().onRemoveCriteria(crits.get(i).getCriteria().get(j).obj);
-					 return;
-				 }
-			}
+		for(SearchTabAttribute sta:  tabAtts){
+			sta.onClear();
 		}
 	}
 	
@@ -177,29 +144,34 @@ public class SearchInterface {
 		for (int i = 0; i < crits.size(); i++){
 			if (crits.get(i).getTabAttribute() == sta){
 				for (int j = 0; j < crits.get(i).getCriteria().size(); j++){
-					 vp.remove(crits.get(i).getCriteria().get(j).criteria.getParent());
+					 vp.remove(crits.get(i).getCriteria().get(j).getParent());
 				}
 				crits.remove(i);
 				return;
 			}
 		}
 	}
+	
+	public void createCritera(){
+		removeCriteriaForTab(tabAtts[tabs.getTabBar().getSelectedTab()]);
+		ArrayList<Widget> displayedCriteria = new ArrayList<Widget>();
+		ArrayList<Widget> criteria = tabAtts[tabs.getTabBar().getSelectedTab()].getCriteria();
+		for (int j = 0; j < criteria.size(); j++){
+			displayedCriteria.add(addConstraint(criteria.get(j)));
+		}
+		crits.add(new CritContainer(criteria,tabAtts[tabs.getTabBar().getSelectedTab()]));
+	}
 
 	private class CritContainer extends SimplePanel {
-		private ArrayList<Pair> criteria;
 		private ArrayList<Widget> displayedCriteria;
 		private SearchTabAttribute sta;
 
-		public CritContainer(final ArrayList<Widget> displayedCriteria, final ArrayList<Pair> criteria, final SearchTabAttribute sta) {
-			this.criteria = criteria;
+		public CritContainer(final ArrayList<Widget> displayedCriteria, final SearchTabAttribute sta) {
 			this.sta = sta;
 			this.displayedCriteria = displayedCriteria;
 		}
-		public ArrayList<Pair> getCriteria() {
-			return criteria;
-		}
 	
-		public ArrayList<Widget> getDisplayedCriteria() {
+		public ArrayList<Widget> getCriteria() {
 			return displayedCriteria;
 		}
 

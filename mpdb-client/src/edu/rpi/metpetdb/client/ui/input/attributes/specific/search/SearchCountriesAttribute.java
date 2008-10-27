@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -15,7 +14,7 @@ import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MultipleSuggestTextAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute.Pair;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchOwnersAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
 
@@ -35,6 +34,9 @@ public class SearchCountriesAttribute extends SearchGenericAttribute {
 						createSuggest((Set<String>) result);
 					}
 				}.begin();
+			}
+			public void onChange(final Widget sender){
+				SearchCountriesAttribute.this.getSearchInterface().createCritera();
 			}
 		};
 	}
@@ -71,27 +73,32 @@ public class SearchCountriesAttribute extends SearchGenericAttribute {
 		}
 		return countries;
 	}
-	public void onRemoveCriteria(final Object obj){
-		if (sta.getRealEditWidgets().contains(obj)) {
-			int index = sta.getRealEditWidgets().indexOf(obj);
-			if (sta.getRealEditWidgets().size() < 2){
-				((MSuggestText)((MultipleInputPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getInputWidget()).setText("");
-				
-			} else {
-				sta.getRealEditWidgets().remove(obj);
-				sta.getEditList().remove(index);
-			}
+
+	public void onClear(){
+		while (sta.getRealEditWidgets().size()>1){
+				sta.getRealEditWidgets().remove(0);
+				sta.getEditList().remove(0);
 		}
-		
+		((MSuggestText)((MultipleInputPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getInputWidget()).setText("");
 	}
 	
-	public ArrayList<Pair> getCriteria(){
-		final ArrayList<Pair> criteria = new ArrayList<Pair>();
+	public ArrayList<Widget> getCriteria(){
+		final ArrayList<Widget> criteria = new ArrayList<Widget>();
 		final Iterator<Widget> itr = sta.getRealEditWidgets().iterator();
+		String crit = "";
+		if (itr.hasNext()){
+			final MSuggestText st = (MSuggestText) itr.next();
+			if (!st.getText().equals(""))
+			crit = "Country: " + st.getText() + ", ";;
+		}
 		while (itr.hasNext()) {
 			final MSuggestText st = (MSuggestText) itr.next();
 			if (!st.getText().equals(""))
-				criteria.add(new Pair(createCritRow("Country:", st.getText()), st));
+				crit += st.getText() + ", ";
+		}
+		if (!crit.equals("")){
+			crit = crit.substring(0,crit.length()-2);
+			criteria.add(createCritRow(crit));
 		}
 		return criteria;
 	}

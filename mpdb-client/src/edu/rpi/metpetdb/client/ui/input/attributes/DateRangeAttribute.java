@@ -22,6 +22,7 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.DateSpanConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchSesarAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MButton;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
@@ -69,8 +70,18 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		from = new TextBox();
+		from.addChangeListener(new ChangeListener(){
+			public void onChange(final Widget sender){
+				DateRangeAttribute.this.getSearchInterface().createCritera();
+			}
+		});
 		//from.addKeyboardListener(this);
 		to = new TextBox();
+		to.addChangeListener(new ChangeListener(){
+			public void onChange(final Widget sender){
+				DateRangeAttribute.this.getSearchInterface().createCritera();
+			}
+		});
 		//to.addKeyboardListener(this);
 		ew.add(from);
 		ew.add(dpFrom);
@@ -335,6 +346,7 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 						from.setText(String.valueOf(cm.getCurrentMonth()+1) + "/");
 						from.setText(from.getText() + String.valueOf(change.getNewValue().getDate() + "/"));
 						from.setText(from.getText() + String.valueOf(cm.getCurrentYear() + 1900));
+						DateRangeAttribute.this.getSearchInterface().createCritera();
 						p.hide();
 						dpFrom.setEnabled(true);
 					}
@@ -356,6 +368,7 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 						to.setText(String.valueOf(cm.getCurrentMonth()+1) + "/");
 						to.setText(to.getText() + String.valueOf(change.getNewValue().getDate() + "/"));
 						to.setText(to.getText() + String.valueOf(cm.getCurrentYear() + 1900));
+						DateRangeAttribute.this.getSearchInterface().createCritera();
 						p.hide();
 						dpTo.setEnabled(true);
 					}
@@ -365,17 +378,15 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 			p.setPopupPosition(sender.getAbsoluteLeft(), sender.getAbsoluteTop());
 			p.show();
 	}
-	public void onRemoveCriteria(final Object obj){
-		if (to == obj) {
-			to.setText("");		
-			from.setText("");
-		}
+	public void onClear(){
+		to.setText("");		
+		from.setText("");
 	}
 	
-	public ArrayList<Pair> getCriteria(){
-		final ArrayList<Pair> criteria = new ArrayList<Pair>();
-		if (!to.getText().equals("") && !from.getText().equals("") && validateDate(to.getText().split("/")) && validateDate(from.getText().split("/")))
-			criteria.add(new Pair(createCritRow("Date Range:", from.getText() + " to " + to.getText()), to));
+	public ArrayList<Widget> getCriteria(){
+		final ArrayList<Widget> criteria = new ArrayList<Widget>();
+		if (!to.getText().equals("") && !from.getText().equals(""))
+			criteria.add(createCritRow("Date Range: "+ from.getText() + " to " + to.getText()));
 		return criteria;
 	}
 }

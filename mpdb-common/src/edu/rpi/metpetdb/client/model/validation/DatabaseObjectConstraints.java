@@ -1,17 +1,19 @@
 package edu.rpi.metpetdb.client.model.validation;
 
+import java.util.Collection;
+
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Image;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.XrayImage;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
 import edu.rpi.metpetdb.client.model.validation.primitive.BooleanConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
@@ -34,13 +36,10 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	}
 
 	// ------ SearchMineral ------
-	public ObjectConstraint SearchSample_minerals;
+	public ValueInCollectionConstraint SearchSample_minerals;
 	public ObjectConstraint SearchSample_elements;
 	public ObjectConstraint SearchSample_oxides;
-	public ObjectConstraint SearchSample_possibleRockTypes;
-
-
-	public StringConstraint SearchSample_tabs;
+	public ValueInCollectionConstraint SearchSample_possibleRockTypes;
 
 	// ------ SampleMineral ------
 	public PropertyConstraint[] SampleMineral__all;
@@ -262,7 +261,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		StartSessionRequest_password.maxLength = UserWithPassword_oldPassword.maxLength;
 
 		// Fill in fake constraints for searching
-		SearchSample_minerals.setConstraints(SampleMineral__all);
+		SearchSample_minerals.setValues((Collection<? extends MObject>)Sample_minerals.getValues());
 		SearchSample_minerals.property = SearchSampleProperty.minerals;
 		SearchSample_minerals.propertyName = "Minerals";
 		SearchSample_minerals.required = false;
@@ -280,11 +279,12 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		SearchSample_oxides.required = false;
 		SearchSample_oxides.entityName = "SearchSample";
 		
-		SearchSample_possibleRockTypes.setConstraints(new PropertyConstraint[] { Sample_rockType });
+		SearchSample_possibleRockTypes.setValues((Collection<? extends MObject>)Sample_rockType.getValues());
 		SearchSample_possibleRockTypes.property = SearchSampleProperty.possibleRockTypes;
 		SearchSample_possibleRockTypes.propertyName = "possibleRockTypes";
 		SearchSample_possibleRockTypes.required = false;
 		SearchSample_possibleRockTypes.entityName = "SearchSample";
+
 //		
 //		SearchSample_region.setConstraints(Sample_regions.getConstraints());
 //		SearchSample_region.entityName = "SearchSample";

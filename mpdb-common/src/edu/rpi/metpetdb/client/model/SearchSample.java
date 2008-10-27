@@ -32,7 +32,7 @@ public class SearchSample implements IsSerializable, MObject {
 	private DateSpan collectionDateRange;
 	private Short datePrecision;
 
-	private Set<SampleMineral> minerals  = new HashSet<SampleMineral>();
+	private Set<Mineral> minerals  = new HashSet<Mineral>();
 
 	private Set<SearchElement> elements  = new HashSet<SearchElement>();
 
@@ -151,18 +151,18 @@ public class SearchSample implements IsSerializable, MObject {
 		collectionDateRange = dateRange;
 	}
 
-	public Set<SampleMineral> getMinerals() {
+	public Set<Mineral> getMinerals() {
 		return minerals;
 	}
 
-	public void setMinerals(final Set<SampleMineral> c) {
+	public void setMinerals(final Set<Mineral> c) {
 		minerals = c;
 	}
 
 	public void addMineral(final String name) {
 		if (minerals == null)
-			minerals = new HashSet<SampleMineral>();
-		final SampleMineral m = new SampleMineral();
+			minerals = new HashSet<Mineral>();
+		final Mineral m = new Mineral();
 		// m.setName(name);
 		minerals.add(m);
 	}

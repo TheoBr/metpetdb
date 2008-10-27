@@ -3,10 +3,11 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific.search;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute.Pair;
 
 public abstract class SearchTabAttribute {
 	private final ArrayList<SearchGenericAttribute> atts;
@@ -21,21 +22,23 @@ public abstract class SearchTabAttribute {
 	
 	public abstract ArrayList<Widget[]> getCurrentEditWidgets();
 	
-//	public void onRemoveCriteria(final SearchGenericAttribute att, final Object obj){
-//		atts.get(atts.indexOf(att)).onRemoveCriteria(obj);
-//	}
-	
-	public void onRemoveCriteria(final Object obj){
-		for (int i = 0; i < atts.size(); i++)
-			atts.get(i).onRemoveCriteria(obj);
-	}
-	
-	public ArrayList<Pair> getCriteria(){
-		ArrayList<Pair> criteria = new ArrayList<Pair>();
+	public ArrayList<Widget> getCriteria(){
+		ArrayList<Widget> criteria = new ArrayList<Widget>();
 		for (int i = 0; i < atts.size(); i++){
 			criteria.addAll(atts.get(i).getCriteria());
 		}
+		if (criteria.size() > 0){
+			final FlowPanel container = new FlowPanel();
+			final Label critLabel = new Label(title);
+			container.add(critLabel);
+			criteria.add(0, container);
+		}
 		return criteria;
+	}
+	
+	public void onClear(){
+		for (int i = 0; i < atts.size(); i++)
+			atts.get(i).onClear();
 	}
 	
 	public ArrayList<SearchGenericAttribute> getAttributes(){
@@ -44,6 +47,12 @@ public abstract class SearchTabAttribute {
 	
 	public String getTitle(){
 		return title;
+	}
+	
+	public void setSearchInterface(final SearchInterface si){
+		for (int i = 0; i < atts.size(); i++){
+			atts.get(i).setSearchInterface(si);
+		}
 	}
 	
 }

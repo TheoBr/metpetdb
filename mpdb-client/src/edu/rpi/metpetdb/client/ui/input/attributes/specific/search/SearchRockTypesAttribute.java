@@ -106,6 +106,7 @@ public class SearchRockTypesAttribute extends SearchGenericAttribute implements 
 		rCheck.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
 				rCheck.applyCheckedStyle(rCheck.isChecked());
+				SearchRockTypesAttribute.this.getSearchInterface().createCritera();
 			}
 		});
 		rCheck.setChecked(chosen);
@@ -119,6 +120,7 @@ public class SearchRockTypesAttribute extends SearchGenericAttribute implements 
 
 	public void onClick(final Widget sender) {
 		setObjects(new ArrayList<Object>(Arrays.asList((items.keySet().toArray()))));
+		
 	}
 
 	public Set<?> get(final MObject obj) {
@@ -136,19 +138,24 @@ public class SearchRockTypesAttribute extends SearchGenericAttribute implements 
 		return chosenItems;
 	}
 	
-	public void onRemoveCriteria(final Object obj){
-		if (items.get(obj) != null)
-			((MCheckBox) obj).setChecked(false);
+	public void onClear(){
+		for(CheckBox cb : items.keySet())
+			cb.setChecked(false);
 	}
 	
-	public ArrayList<Pair> getCriteria(){
-		final ArrayList<Pair> criteria = new ArrayList<Pair>();
+	public ArrayList<Widget> getCriteria(){
+		final ArrayList<Widget> criteria = new ArrayList<Widget>();
 		final Iterator<CheckBox> itr = items.keySet().iterator();
+	    String crit = "";
 		while (itr.hasNext()) {
 			final CheckBox cb = itr.next();
 			if (cb.isChecked())
-				criteria.add(new Pair(createCritRow("Rock Type:", items.get(cb).toString()), cb));
+				crit += items.get(cb).toString() + ", ";
 		}
+		if (!crit.equals("")){
+			crit = crit.substring(0,crit.length()-2);
+			criteria.add(createCritRow(crit));
+		}		
 		return criteria;
 	}
 	

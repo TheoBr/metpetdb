@@ -124,8 +124,8 @@ public class SampleDetails extends MPagePanel {
 				else
 					title = "<span class=\""+CSS.IGSN_LABEL+"\">IGSN</span> " + result.getSesarNumber();
 				setPageTitle(title, LocaleHandler.lc_text.sample());
-				samplePosition = LatLng.newInstance(((Point) result.getLocation()).x,
-						((Point) result.getLocation()).y);
+				samplePosition = LatLng.newInstance(((Point) result.getLocation()).y,
+						((Point) result.getLocation()).x);
 				updateGoogleMaps();
 			}
 

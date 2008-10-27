@@ -35,7 +35,7 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 
 	protected final SimplePanel container;
 
-	private class ExtendedTreeItem extends TreeItem {
+	public class ExtendedTreeItem extends TreeItem {
 		private T obj;
 
 		public ExtendedTreeItem(final Widget w, final T o) {
@@ -330,6 +330,10 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 		} else {
 			mSet(obj, v);
 		}
+	}
+	
+	public ArrayList<Tree> getTree(){
+		return trees;
 	}
 
 	public void onClick(final Widget sender) {

@@ -51,5 +51,7 @@ public class ReferenceAttribute extends MultipleSuggestTextAttribute {
 			}
 		}.begin();
 	}
+	public void onChange(final Widget sender){
 
+	}
 }

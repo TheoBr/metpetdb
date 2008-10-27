@@ -191,13 +191,12 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 		}
 	}
 
-	public void onRemoveCriteria(final Object obj){
-//		if (items.get(obj) != null)
-//			((MCheckBox) obj).setChecked(false);
+	public void onClear(){
+		
 	}
 	
-	public ArrayList<Pair> getCriteria(){
-		final ArrayList<Pair> criteria = new ArrayList<Pair>();
+	public ArrayList<Widget> getCriteria(){
+		final ArrayList<Widget> criteria = new ArrayList<Widget>();
 //		final Iterator<CheckBox> itr = items.keySet().iterator();
 //		while (itr.hasNext()) {
 //			final CheckBox cb = itr.next();

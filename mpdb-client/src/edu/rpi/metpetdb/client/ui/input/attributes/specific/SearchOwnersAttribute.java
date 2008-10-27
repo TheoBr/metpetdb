@@ -5,7 +5,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.ChangeListener;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -18,7 +19,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGeneric
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
 
-public class SearchOwnersAttribute extends SearchGenericAttribute {
+public class SearchOwnersAttribute extends SearchGenericAttribute{
 
 	private MultipleSuggestTextAttribute sta;
 	public SearchOwnersAttribute(final ObjectConstraint sc) {
@@ -35,6 +36,9 @@ public class SearchOwnersAttribute extends SearchGenericAttribute {
 					}
 				}.begin();
 			}
+			public void onChange(final Widget sender){
+				SearchOwnersAttribute.this.getSearchInterface().createCritera();
+			}
 		};
 	}
 
@@ -47,8 +51,9 @@ public class SearchOwnersAttribute extends SearchGenericAttribute {
 	}
 	
 	public Widget[] createEditWidget(final MObject obj, final String id){
-		return sta.createEditWidget(obj,id);
+		return  sta.createEditWidget(obj,id);
 	}
+	
 	protected void set(final MObject obj, final Object o) {
 		mSet(obj, o);
 	}
@@ -69,29 +74,32 @@ public class SearchOwnersAttribute extends SearchGenericAttribute {
 		}
 		return owners;
 	}
-	public void onRemoveCriteria(final Object obj){
-		if (sta.getRealEditWidgets().contains(obj)) {
-			int index = sta.getRealEditWidgets().indexOf(obj);
-			if (sta.getRealEditWidgets().size() < 2){
-				((MSuggestText)((MultipleInputPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getInputWidget()).setText("");
-				
-			} else {
-				sta.getRealEditWidgets().remove(obj);
-				sta.getEditList().remove(index);
-			}
+	
+	public void onClear(){
+		while (sta.getRealEditWidgets().size()>1){
+				sta.getRealEditWidgets().remove(0);
+				sta.getEditList().remove(0);
 		}
-		
+		((MSuggestText)((MultipleInputPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getInputWidget()).setText("");
 	}
 	
-	public ArrayList<Pair> getCriteria(){
-		final ArrayList<Pair> criteria = new ArrayList<Pair>();
+	public ArrayList<Widget> getCriteria(){
+		final ArrayList<Widget> criteria = new ArrayList<Widget>();
 		final Iterator<Widget> itr = sta.getRealEditWidgets().iterator();
+		String crit = "";
+		if (itr.hasNext()){
+			final MSuggestText st = (MSuggestText) itr.next();
+			if (!st.getText().equals(""))
+			crit = "Owner: " + st.getText() + ", ";;
+		}
 		while (itr.hasNext()) {
-			final Widget st = itr.next();
-			if (st instanceof MSuggestText){
-				if (!((MSuggestText)st).getText().equals(""))
-					criteria.add(new Pair(createCritRow("Owner:", ((MSuggestText)st).getText()), st));
-			}
+			final MSuggestText st = (MSuggestText) itr.next();
+			if (!st.getText().equals(""))
+				crit += st.getText() + ", ";
+		}
+		if (!crit.equals("")){
+			crit = crit.substring(0,crit.length()-2);
+			criteria.add(createCritRow(crit));
 		}
 		return criteria;
 	}
