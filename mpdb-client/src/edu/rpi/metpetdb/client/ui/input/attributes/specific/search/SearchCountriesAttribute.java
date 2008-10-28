@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.user.client.ui.SuggestionEvent;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -36,6 +37,9 @@ public class SearchCountriesAttribute extends SearchGenericAttribute {
 				}.begin();
 			}
 			public void onChange(final Widget sender){
+				SearchCountriesAttribute.this.getSearchInterface().createCritera();
+			}
+			public void onSuggestionSelected(final SuggestionEvent event){
 				SearchCountriesAttribute.this.getSearchInterface().createCritera();
 			}
 		};

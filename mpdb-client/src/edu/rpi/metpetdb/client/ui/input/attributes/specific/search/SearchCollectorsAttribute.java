@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.SuggestionEvent;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -37,6 +38,9 @@ public class SearchCollectorsAttribute extends SearchGenericAttribute {
 				}.begin();
 			}
 			public void onChange(final Widget sender){
+				SearchCollectorsAttribute.this.getSearchInterface().createCritera();
+			}
+			public void onSuggestionSelected(final SuggestionEvent event){
 				SearchCollectorsAttribute.this.getSearchInterface().createCritera();
 			}
 		};
