@@ -16,7 +16,9 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -30,6 +32,7 @@ import edu.rpi.metpetdb.client.ui.dialogs.LoginDialog;
 import edu.rpi.metpetdb.client.ui.dialogs.UnknownErrorDialog;
 import edu.rpi.metpetdb.client.ui.left.side.UsesLeftColumn;
 import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
+import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MMenuBar;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
@@ -111,7 +114,7 @@ public class MetPetDBApplication implements EntryPoint {
 				}
 			}
 		});
-
+		
 	}
 
 	private void finishOnModuleLoad() {
@@ -223,7 +226,33 @@ public class MetPetDBApplication implements EntryPoint {
 
 	public static void show(final Widget w) {
 		contentContainer.clear();
-		contentContainer.add(w);
+		final Image i = new Image(GWT.getModuleBaseURL() + "/images/hw-g.png");
+		i.getElement().getStyle().setProperty("zIndex", "10000");
+		i.setVisible(false);
+		final MAbsolutePanel m = new MAbsolutePanel();
+		m.addMouseListener(new MouseListener() {
+			
+			
+			public void onMouseDown(Widget sender, int x, int y) {
+				int deltax = (int) (Math.random()*50 % 50) * (Math.random() > 0.5 ? 1 : -1);
+				int deltay = (int)(Math.random()*50 % 50) * (Math.random() > 0.5 ? 1 : -1);
+				m.setWidgetPosition(i, x+deltax, y+deltay);
+				i.setVisible(true);
+			}
+			public void onMouseEnter(Widget sender) {
+			}
+			public void onMouseLeave(Widget sender) {
+			}
+			public void onMouseMove(Widget sender, int x, int y) {
+				
+			}
+			public void onMouseUp(Widget sender, int x, int y) {
+				i.setVisible(false);
+			}
+		});
+		m.add(i);
+		m.add(w);
+		contentContainer.add(m);
 		contentContainer.setHeight("100%");
 	}
 
