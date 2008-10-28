@@ -97,7 +97,7 @@ public class MAbsolutePanel extends AbsolutePanel implements
 			final int height = this.getOffsetHeight();
 			if (eventX > x && eventX < x + width) {
 				if (eventY > y && eventY < y + height) {
-					DOM.eventPreventDefault(event);
+					//DOM.eventPreventDefault(event);
 				}
 			}
 		case Event.ONMOUSEMOVE:
@@ -112,7 +112,7 @@ public class MAbsolutePanel extends AbsolutePanel implements
 				clickListeners.fireClick(this);
 			break;
 		};
-
+		super.onBrowserEvent(event);
 	}
 
 	public void setWidgetPosition(final Widget w, final int x, final int y) {
