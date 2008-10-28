@@ -39,19 +39,15 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 	private DateSpan dateRange;
 	private TextBox to;
 	private TextBox from;
-	private MButton dpTo = new MButton(null,this);
-	private MButton dpFrom = new MButton(null,this);
-	private final FlowPanel ew = new FlowPanel();
-	private final MText toLbl = new MText("to");
+	private MButton dpTo;
+	private MButton dpFrom;
+	private FlowPanel ew;
 	private static final String STYLENAME = "daterange";
 
 	public DateRangeAttribute(final DateSpanConstraint dsc) {
 		super(new PropertyConstraint[] {
 			dsc
 		});
-		ew.setStyleName(STYLENAME);
-		dpTo.setStyleName(STYLENAME + "-btn");
-		dpFrom.setStyleName(STYLENAME + "-btn");
 	}
 	public Widget[] createDisplayWidget(final MObject obj) {
 		return new Widget[] {
@@ -61,14 +57,22 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 	
 	public boolean validateDay(final String month_day)
 	{
-		int numDay = Integer.parseInt(month_day.split("/")[1]);
-		int numMonth = Integer.parseInt(month_day.split("/")[0])-1;
-		if (daysInEachMonth[numMonth] < numDay)
-			return false;
-		return true;
+		try {
+			int numDay = Integer.parseInt(month_day.split("/")[1]);
+			int numMonth = Integer.parseInt(month_day.split("/")[0])-1;
+			if (daysInEachMonth[numMonth] >= numDay)
+				return true;
+		} catch (Exception e){
+			// TODO display error to user
+		}
+		return false;
 	}
 
 	public Widget[] createEditWidget(final MObject obj, final String id) {
+		final MText toLbl = new MText("to");
+		dpTo = new MButton(null,this);
+		dpFrom = new MButton(null,this);
+		ew = new FlowPanel();
 		from = new TextBox();
 		from.addChangeListener(new ChangeListener(){
 			public void onChange(final Widget sender){
@@ -82,6 +86,9 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 				DateRangeAttribute.this.getSearchInterface().createCritera();
 			}
 		});
+		ew.setStyleName(STYLENAME);
+		dpTo.setStyleName(STYLENAME + "-btn");
+		dpFrom.setStyleName(STYLENAME + "-btn");
 		//to.addKeyboardListener(this);
 		ew.add(from);
 		ew.add(dpFrom);
@@ -135,26 +142,46 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 			String[] fromSplit = from.getText().split("/");
 			String[] toSplit = to.getText().split("/");
 			
-			// TODO: make an error message show when invalid dates input
-			if(!validateDate(fromSplit))
-			{
-				return;
-			}
-			if(!validateDate(toSplit))
-			{
-				return;
-			}
-			
-			if (fromSplit.length == 3 && toSplit.length == 3)
-			{
+			if (fromSplit.length == 1){
+				if (toSplit[0].equals("")){
+					fromDate = new Timestamp(System.currentTimeMillis());
+				} else {
+					fromDate.setMonth(0);
+					fromDate.setDate(1);
+					fromDate.setYear(Integer.parseInt(fromSplit[0]) - 1900);
+				}
+			} else if (fromSplit.length == 2){
+				fromDate.setMonth(Integer.parseInt(fromSplit[0]));
+				fromDate.setDate(1);
+				fromDate.setYear(Integer.parseInt(fromSplit[1]) - 1900);
+			} else if (fromSplit.length == 3){
 				fromDate.setMonth(Integer.parseInt(fromSplit[0]) - 1);
 				fromDate.setDate(Integer.parseInt(fromSplit[1]));
 				fromDate.setYear(Integer.parseInt(fromSplit[2]) - 1900);
+			}
+			
+			if (toSplit.length == 1){
+				if (toSplit[0].equals("")){
+					toDate = new Timestamp(System.currentTimeMillis());
+				} else {
+					toDate.setMonth(0);
+					toDate.setDate(1);
+					toDate.setYear(Integer.parseInt(toSplit[0]) - 1900);
+				}
+			} else if (toSplit.length == 2){
+				toDate.setMonth(Integer.parseInt(toSplit[0]));
+				toDate.setDate(1);
+				toDate.setYear(Integer.parseInt(toSplit[1]) - 1900);
+			} else if (toSplit.length == 3){
 				toDate.setMonth(Integer.parseInt(toSplit[0]) - 1);
 				toDate.setDate(Integer.parseInt(toSplit[1]));
 				toDate.setYear(Integer.parseInt(toSplit[2]) - 1900);
-				dateRange = new DateSpan(fromDate, toDate);
 			}
+			
+			// TODO: make an error message show when invalid dates input
+			
+			dateRange = new DateSpan(fromDate, toDate);
+
 		} catch (NumberFormatException nfe) {
 			// TODO display validation exception
 		}
@@ -176,35 +203,62 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 	
 	private boolean validateDate(final String[] mdy)
 	{
-		// TODO: should this work for just years or just months?
-		if(mdy.length != 3)
+		if(mdy.length == 3)
 		{
-			return false;
+			if(!validateMonth(mdy[0]))
+			{
+				return false;
+			}
+			if(!validateDay(mdy[0] + "/" + mdy[1]))
+			{
+				return false;
+			}
+			if(!validateYear(mdy[2]))
+			{
+				return false;
+			}
+			return true;
 		}
-		if(!validateMonth(mdy[0]))
+		if(mdy.length == 2)
 		{
-			return false;
+			if(!validateMonth(mdy[0]))
+			{
+				return false;
+			}
+			if(!validateYear(mdy[1]))
+			{
+				return false;
+			}
+			return true;
 		}
-		if(!validateDay(mdy[0] + "/" + mdy[1]))
+		if(mdy.length == 1)
 		{
-			return false;
+			if(!validateYear(mdy[0]))
+			{
+				return false;
+			}
+			return true;
 		}
-		if(!validateYear(mdy[2]))
-		{
-			return false;
-		}
-		return true;
+		return false;
 	}
 
 	private boolean validateMonth(final String s){
-		if (Integer.parseInt(s) < 13 && Integer.parseInt(s) > 0 )
-			return true;
+		try{
+			if (Integer.parseInt(s) < 13 && Integer.parseInt(s) > 0 )
+				return true;
+		} catch (Exception e){
+			// TODO display error to user
+		}
 		return false;
 	}
 	
 	private boolean validateYear(final String s){
-		if (Integer.parseInt(s) > 0)
-			return true;
+		try {
+			if (Integer.parseInt(s) > 0)
+				return true;
+		} catch (Exception e){
+			// TODO display error to user
+		}
 		return false;
 	}
 	
@@ -330,14 +384,11 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 			final PopupPanel p = new PopupPanel(true);
 			final CalendarModel cm = new CalendarModel();
 			final DatePicker dp = new DatePicker();
+			createDateInfoFromInput();
 			if (sender == dpFrom){
-				if (!from.getText().equals("")) {
-					final Timestamp t = getTimeInput(from.getText());
-					if (t != null){
-						dpFrom.setEnabled(false);
-						dp.showDate(t);
-						dp.setSelectedDate(t);
-					}
+				if (fromDate != null){
+					dp.showDate(fromDate);
+					dp.setSelectedDate(fromDate);
 				}
 				dp.addChangeHandler(new ChangeHandler<Date>() {
 					public void onChange(ChangeEvent<Date> change) {
@@ -348,18 +399,13 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 						from.setText(from.getText() + String.valueOf(cm.getCurrentYear() + 1900));
 						DateRangeAttribute.this.getSearchInterface().createCritera();
 						p.hide();
-						dpFrom.setEnabled(true);
 					}
 				});
 			}
 			else if (sender == dpTo){
-				if (!to.getText().equals("")) {
-					final Timestamp t = getTimeInput(to.getText());
-					if (t != null){
-						dpTo.setEnabled(false);
-						dp.showDate(t);
-						dp.setSelectedDate(t);
-					}
+				if (toDate != null){
+					dp.showDate(toDate);
+					dp.setSelectedDate(toDate);
 				}
 				dp.addChangeHandler(new ChangeHandler<Date>() {
 					public void onChange(ChangeEvent<Date> change) {
@@ -370,7 +416,6 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 						to.setText(to.getText() + String.valueOf(cm.getCurrentYear() + 1900));
 						DateRangeAttribute.this.getSearchInterface().createCritera();
 						p.hide();
-						dpTo.setEnabled(true);
 					}
 				});
 			}
@@ -385,7 +430,7 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 	
 	public ArrayList<Widget> getCriteria(){
 		final ArrayList<Widget> criteria = new ArrayList<Widget>();
-		if (!to.getText().equals("") && !from.getText().equals(""))
+		if (validateDate(to.getText().split("/")) && validateDate(from.getText().split("/")))
 			criteria.add(createCritRow("Date Range: "+ from.getText() + " to " + to.getText()));
 		return criteria;
 	}
