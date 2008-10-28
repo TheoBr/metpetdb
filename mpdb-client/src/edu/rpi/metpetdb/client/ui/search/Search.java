@@ -45,7 +45,12 @@ import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 public class Search extends MPagePanel implements ClickListener {
 
 	private static  SearchTabAttribute[] searchTabs = {
-		new SearchTabRockTypes(),new SearchTabMetamorphicGrade(), new SearchTabLocation(), new SearchTabMinerals(), new SearchTabChemicalAnalysis(), new SearchTabProvenance()
+		new SearchTabRockTypes(),
+		new SearchTabMetamorphicGrade(), 
+		new SearchTabLocation(), 
+		new SearchTabMinerals(), 
+//		new SearchTabChemicalAnalysis(), 
+		new SearchTabProvenance()
 	};
 
 	private static final String cookieString = "SearchView";
