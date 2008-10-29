@@ -249,7 +249,6 @@ public class MetPetDBApplication implements EntryPoint {
 				i.setVisible(false);
 			}
 		});
-		DOM.setCapture(m.getElement());
 		m.add(i);
 		m.add(w);
 		contentContainer.add(m);
