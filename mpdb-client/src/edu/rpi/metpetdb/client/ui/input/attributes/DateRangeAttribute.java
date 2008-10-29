@@ -151,7 +151,7 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 					fromDate.setYear(Integer.parseInt(fromSplit[0]) - 1900);
 				}
 			} else if (fromSplit.length == 2){
-				fromDate.setMonth(Integer.parseInt(fromSplit[0]));
+				fromDate.setMonth(Integer.parseInt(fromSplit[0])-1);
 				fromDate.setDate(1);
 				fromDate.setYear(Integer.parseInt(fromSplit[1]) - 1900);
 			} else if (fromSplit.length == 3){
@@ -164,13 +164,13 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 				if (toSplit[0].equals("")){
 					toDate = new Timestamp(System.currentTimeMillis());
 				} else {
-					toDate.setMonth(0);
-					toDate.setDate(1);
+					toDate.setMonth(11);
+					toDate.setDate(31);
 					toDate.setYear(Integer.parseInt(toSplit[0]) - 1900);
 				}
 			} else if (toSplit.length == 2){
-				toDate.setMonth(Integer.parseInt(toSplit[0]));
-				toDate.setDate(1);
+				toDate.setMonth(Integer.parseInt(toSplit[0])-1);
+				toDate.setDate(daysInEachMonth[toDate.getMonth()]);
 				toDate.setYear(Integer.parseInt(toSplit[1]) - 1900);
 			} else if (toSplit.length == 3){
 				toDate.setMonth(Integer.parseInt(toSplit[0]) - 1);
