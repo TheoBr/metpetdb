@@ -29,6 +29,7 @@
 }
 .search-actions li {
 	margin: 5px 14px;
+	text-align: center;
 }
 .search-button {
 	background-color: #000;

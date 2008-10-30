@@ -2,48 +2,33 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific.search;
 
 import java.util.ArrayList;
 
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
-import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
-import edu.rpi.metpetdb.client.ui.search.Search;
-import edu.rpi.metpetdb.client.ui.widgets.MButton;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
-import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MTabPanel;
 import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
 public class SearchInterface {
 	private SearchTabAttribute[] tabAtts;
-	private ArrayList<CritContainer> critList;
 	private ArrayList<Widget[]> currentEditWidgets;
 	private MTabPanel tabs = new MTabPanel();
 	private static final String CRITERIA_STYLENAME = "criteria-summary";
 	private static final String CRITERIA_CONTENT_ID = CRITERIA_STYLENAME + "-content";
 	private final MHtmlList searchActions = new MHtmlList();
 	
-	private FlowPanel criteriaSummaryContents = new FlowPanel();
+	private FlowPanel critContents = new FlowPanel();
 	private final HTMLPanel criteriaSummaryPanel = new HTMLPanel(
 			"<div class=\"header-wrap\"><div class=\"header-content\"><div>Criteria Summary</div></div></div>" +
 			"<div class=\"content-wrap\"><span id=\""+CRITERIA_CONTENT_ID+"\"></span></div>" +
 			"<div class=\"bottom-wrap\"><div class=\"bottom\"></div></div>");
-	private final Label noConstraints = new Label("Set your search criteria by selecting from the categories on the left.");
+	private final Label noCriteriaMsg = new Label("Set your search criteria by selecting from the categories on the left.");
 
 	public ArrayList<SearchGenericAttribute> getAttributes(){
 		ArrayList<SearchGenericAttribute> atts = new ArrayList();
@@ -70,7 +55,6 @@ public class SearchInterface {
 
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		currentEditWidgets = new ArrayList();
-		critList = new ArrayList<CritContainer>();
 		final MTwoColPanel panel = new MTwoColPanel();
 		
 		for (int i = 0; i < tabAtts.length; i++) {
@@ -107,10 +91,10 @@ public class SearchInterface {
 	public Widget SearchConstraintDisplay() {
 		criteriaSummaryPanel.setStyleName(CRITERIA_STYLENAME);
 		if (criteriaSummaryPanel.getElementById(CRITERIA_CONTENT_ID) != null)
-			criteriaSummaryPanel.addAndReplaceElement(criteriaSummaryContents, CRITERIA_CONTENT_ID);
-		criteriaSummaryContents.setStyleName(CRITERIA_CONTENT_ID);
-		criteriaSummaryContents.add(noConstraints);
-		noConstraints.setStyleName(CSS.EMPTY);
+			criteriaSummaryPanel.addAndReplaceElement(critContents, CRITERIA_CONTENT_ID);
+		critContents.setStyleName(CRITERIA_CONTENT_ID);
+		critContents.add(noCriteriaMsg);
+		noCriteriaMsg.setStyleName(CSS.EMPTY);
 
 		return criteriaSummaryPanel;
 	}
@@ -120,32 +104,31 @@ public class SearchInterface {
 	}
 
 	public void clearConstraints() {
-		criteriaSummaryContents.clear();
-		critList.clear();
-		criteriaSummaryContents.add(noConstraints);
+		critContents.clear();
+		critContents.add(noCriteriaMsg);
 		for(SearchTabAttribute sta:  tabAtts){
 			sta.onClear();
 		}
 	}
 	
-	private void removeCriteriaForTab(final SearchTabAttribute sta){
-		for (int i = 0; i < critList.size(); i++){
-			if (critList.get(i).getTabAttribute() == sta){
-				for (int j = 0; j < critList.get(i).getCriteria().size(); j++){
-					 criteriaSummaryContents.remove(critList.get(i));
+	private void removeCriteriaForTab(){
+		for (int i = 0; i < critContents.getWidgetCount(); i++){
+			if (critContents.getWidget(i) instanceof CritContainer) {
+				if (((CritContainer)critContents.getWidget(i)).getTabAttribute() == getSelectedTabAtt()){
+					critContents.remove(i);
+					return;
 				}
-				critList.remove(i);
-				return;
 			}
 		}
 	}
 	
 	public void createCritera(){
-		removeCriteriaForTab(getSelectedTab());
-		if (noConstraints.isAttached()) noConstraints.removeFromParent();
-		CritContainer c = new CritContainer(getSelectedTab());
-		criteriaSummaryContents.add(c);
-		critList.add(c);
+		removeCriteriaForTab();
+		if (!getSelectedTabAtt().getCriteria().isEmpty()) {
+			if (noCriteriaMsg.isAttached()) noCriteriaMsg.removeFromParent();
+			critContents.add(new CritContainer(getSelectedTabAtt()));
+		} else if (critContents.getWidgetCount() == 0)
+			critContents.add(noCriteriaMsg);
 	}
 
 	private class CritContainer extends FlowPanel {
@@ -154,7 +137,7 @@ public class SearchInterface {
 		public CritContainer(final SearchTabAttribute sta) {
 			this.sta = sta;
 			setStyleName("section");
-			final Label tabTitle = new Label(getSelectedTab().getTitle());
+			final Label tabTitle = new Label(sta.getTitle());
 			tabTitle.setStyleName("section-title");
 			tabTitle.addStyleName(CSS.TYPE_SMALL_CAPS);
 			add(tabTitle);
@@ -171,7 +154,7 @@ public class SearchInterface {
 		}
 	};
 	
-	private SearchTabAttribute getSelectedTab() {
+	private SearchTabAttribute getSelectedTabAtt() {
 		return tabAtts[tabs.getTabBar().getSelectedTab()];
 	}
 	

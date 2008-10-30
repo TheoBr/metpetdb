@@ -56,7 +56,7 @@ public class Search extends MPagePanel {
 	private MLink customCols;
 	private final FlowPanel columnViewPanel = new FlowPanel();
 	private FlowPanel samplesContainer = new FlowPanel();
-	private final ObjectSearchPanel p_searchSample;
+	private final ObjectSearchPanel searchPanel;
 	private final SampleListEx sampleList = new SampleListEx(
 			LocaleHandler.lc_text.search_noSamplesFound()) {
 
@@ -80,7 +80,7 @@ public class Search extends MPagePanel {
 		setStyleName(CSS.SEARCH);
 		setPageTitle("Search");
 		SearchInterface sui = new SearchInterface(searchTabs);
-		p_searchSample = new ObjectSearchPanel<SearchSample>(sui) {
+		searchPanel = new ObjectSearchPanel<SearchSample>(sui) {
 			// TODO: Make that null into the current user from session. I don't
 			// know how to do this right now however
 			protected void searchBean(final AsyncCallback<List<Sample>> ac) {
@@ -111,7 +111,7 @@ public class Search extends MPagePanel {
 		});
 		sui.passActionWidget(exportGoogleEarth);
 		
-		add(p_searchSample);
+		add(searchPanel);
 		createViewFromCookie();
 		buildSampleFilters();
 		samplesContainer.add(columnViewPanel);
@@ -121,7 +121,7 @@ public class Search extends MPagePanel {
 
 	public Search createNew() {
 		SearchSample s = new SearchSample();
-		p_searchSample.edit(s);
+		searchPanel.edit(s);
 		return this;
 	}
 

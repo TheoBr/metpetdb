@@ -74,8 +74,7 @@ public class SearchRockTypesAttribute extends SearchGenericAttribute implements 
 		if (availableItems != null) {
 			final Iterator<?> iter = availableItems.iterator();
 			final int numRows = (availableItems.size() / cols + availableItems
-					.size()
-					% cols) - 1;
+					.size() % cols) - 1;
 			int row = 0;
 			int column = 0;
 			while (iter.hasNext()) {
