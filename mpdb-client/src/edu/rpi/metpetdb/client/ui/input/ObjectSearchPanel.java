@@ -6,12 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
@@ -20,21 +18,17 @@ import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchInterface;
+import edu.rpi.metpetdb.client.ui.widgets.MButton;
 
-public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel implements
-		ClickListener {
-	final Button search;
+public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 	private T bean;
 	protected ArrayList<SearchGenericAttribute> attributes;
 	protected ArrayList<Widget[]> currentEditWidgets;
+	private final MButton searchBtn = new MButton("Search");
+	
 //	final Element resultsTd;
 
-	protected ObjectSearchPanel(final SearchInterface atts,
-			final String header, final String description) {
-		search = new Button(LocaleHandler.lc_text.search(), this);
-		search.setStyleName(CSS.SEARCH_BUTTON);
-
-		search.setVisible(true);
+	protected ObjectSearchPanel(final SearchInterface atts) {
 		bean = (T) new SearchSample();
 		Widget[] w = atts.createEditWidget(new SearchSample(), "TEMP");
 		attributes = atts.getAttributes();
@@ -42,11 +36,14 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel imp
 		for (int i = 0; i < w.length; i++){
 			add(w[i]);
 		}
-		add(search);
-	}
-
-	protected ObjectSearchPanel(final SearchInterface atts) {
-		this(atts, "", "");
+		
+		searchBtn.setStyleName(CSS.SEARCH_BUTTON);
+		searchBtn.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				doSearch();
+			}
+		});
+		atts.passActionWidget(searchBtn);
 	}
 	
 	public T getBean(){
@@ -61,27 +58,7 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel imp
 //		super.edit(obj);
 	}
 
-	public void onClick(final Widget sender) {
-		if (search == sender)
-			doSearch();
-	}
-
-	private void removePrimaryStyle() {
-		search.removeStyleName("btnPrimary");
-	}
-
-	private void addSecondaryStyle() {
-		search.removeStyleName("btnSecondary");
-	}
-
-	private void setActiveButton(final Button b) {
-		removePrimaryStyle();
-		addSecondaryStyle();
-		b.addStyleName("btnPrimary");
-		b.removeStyleName("btnSecondary");
-	}
-
-	void doSearch() {
+	public void doSearch() {
 		new FormOp<List<Sample>>(this) {
 			protected void onSubmit() {
 				startValidation(this);
@@ -145,16 +122,10 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel imp
 		return currentEditWidgets.get(attributes.indexOf(attr));
 	}
 	
-	public void show(final List<Sample> obj) {
-
-		search.setVisible(true);
-		search.setEnabled(true);
-		setActiveButton(search);
-	}
 	protected void searchBean(final AsyncCallback<List<Sample>> ac) {
 		throw new UnsupportedOperationException();
 	}
 	protected void onSearchCompletion(final List<Sample> result) {
-		ObjectSearchPanel.this.show(result);
+		
 	}
 }

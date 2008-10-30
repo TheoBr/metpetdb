@@ -8,16 +8,13 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -32,7 +29,6 @@ import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchInterface;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabChemicalAnalysis;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabLocation;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabMetamorphicGrade;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabMinerals;
@@ -42,7 +38,7 @@ import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 
-public class Search extends MPagePanel implements ClickListener {
+public class Search extends MPagePanel {
 
 	private static  SearchTabAttribute[] searchTabs = {
 		new SearchTabRockTypes(),
@@ -55,8 +51,8 @@ public class Search extends MPagePanel implements ClickListener {
 
 	private static final String cookieString = "SearchView";
 	private static final String samplesParameter = "Samples";
-	private Button exportExcelButton;
-	private Button exportGoogleEarthButton;
+	private final MLink exportExcel = new MLink();
+	private final MLink exportGoogleEarth = new MLink();
 	private MLink customCols;
 	private final FlowPanel columnViewPanel = new FlowPanel();
 	private FlowPanel samplesContainer = new FlowPanel();
@@ -83,8 +79,8 @@ public class Search extends MPagePanel implements ClickListener {
 	public Search() {
 		setStyleName(CSS.SEARCH);
 		setPageTitle("Search");
-		p_searchSample = new ObjectSearchPanel<SearchSample>(new SearchInterface(searchTabs),
-				LocaleHandler.lc_text.search(), LocaleHandler.lc_text.search()) {
+		SearchInterface sui = new SearchInterface(searchTabs);
+		p_searchSample = new ObjectSearchPanel<SearchSample>(sui) {
 			// TODO: Make that null into the current user from session. I don't
 			// know how to do this right now however
 			protected void searchBean(final AsyncCallback<List<Sample>> ac) {
@@ -97,58 +93,30 @@ public class Search extends MPagePanel implements ClickListener {
 					sampleList.refresh();
 				}
 			}
-
 		};
-
+		
+		exportExcel.setText("Export as Spreadsheet (.tsv)");
+		exportExcel.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				exportExcel();
+			}
+		});
+		sui.passActionWidget(exportExcel);
+		
+		exportGoogleEarth.setText("Export for Google Earth (.kml)");
+		exportGoogleEarth.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				exportGoogleEarth();
+			}
+		});
+		sui.passActionWidget(exportGoogleEarth);
+		
 		add(p_searchSample);
 		createViewFromCookie();
 		buildSampleFilters();
-		addResultListHeader();
 		samplesContainer.add(columnViewPanel);
 		samplesContainer.add(sampleList);
 		add(samplesContainer);
-	}
-
-	private void addResultListHeader() {
-
-		final HorizontalPanel hpExport = new HorizontalPanel();
-
-		final Label exportResultsLabel = new Label(LocaleHandler.lc_text
-				.search_exportResults());
-		final Label exportExcelLabel = new Label(LocaleHandler.lc_text
-				.search_exportExcel());
-		final Label exportGoogleEarthLabel = new Label(LocaleHandler.lc_text
-				.search_exportKML());
-
-		exportExcelButton = new Button(LocaleHandler.lc_text
-				.buttonExportExcel(), this);
-		exportGoogleEarthButton = new Button(LocaleHandler.lc_text
-				.buttonExportKML(), this);
-
-		exportResultsLabel.setStyleName("bold");
-		exportExcelButton.setStyleName("bold");
-		exportGoogleEarthButton.setStyleName("bold");
-
-		final VerticalPanel vpExcel = new VerticalPanel();
-		final VerticalPanel vpGoogleEarth = new VerticalPanel();
-
-		vpExcel.add(exportExcelButton);
-		vpExcel.add(exportExcelLabel);
-
-		vpGoogleEarth.add(exportGoogleEarthButton);
-		vpGoogleEarth.add(exportGoogleEarthLabel);
-
-		hpExport.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
-
-		hpExport.add(exportResultsLabel);
-		hpExport.add(vpExcel);
-		hpExport.add(vpGoogleEarth);
-
-		hpExport.setStyleName("mpdb-dataTableBlue");
-		hpExport.setWidth("100%");
-
-		add(hpExport);
-
 	}
 
 	public Search createNew() {
@@ -157,57 +125,56 @@ public class Search extends MPagePanel implements ClickListener {
 		return this;
 	}
 
-	public void onClick(Widget sender) {
-		if (sender == exportExcelButton) {
-			final FormPanel fp = new FormPanel();
-			fp.setMethod(FormPanel.METHOD_GET);
-			fp.setEncoding(FormPanel.ENCODING_URLENCODED);
-			String values = "";
-			
-			for (int i = 1; i < sampleList.getDisplayColumns().size(); i++){
-				values+=sampleList.getDisplayColumns().get(i).getTitle() +"\t";
-			}
-			values+="\n";
-			
-			int currentpage = sampleList.getScrollTable().getCurrentPage();
-			for (int page = 0; page < sampleList.getScrollTable().getNumPages(); page++) {
-				sampleList.getScrollTable().gotoPage(page, false);
-				for(int i = 0; i <sampleList.getScrollTable().getDataTable().getRowCount(); i++) {
-					for (int j = 1; j < sampleList.getScrollTable().getDataTable().getColumnCount(); j++){
-						if (sampleList.getScrollTable().getDataTable().getWidget(i, j) instanceof Image){
-							values+=sampleList.getScrollTable().getDataTable().getWidget(i, j).toString() +"\t";
-						} else {
-							values+=sampleList.getScrollTable().getDataTable().getText(i, j) +"\t";
-						}
-					}
-					values+="\n";
-				}
-			}
-			
-			sampleList.getScrollTable().gotoPage(currentpage, false);
-			Hidden data = new Hidden("excel",values);
-			fp.add(data);
-			fp.setAction(GWT.getModuleBaseURL() + "excel.svc");
-			fp.setVisible(false);
-			add(fp);
-			fp.submit();
-			
-		} else if (sender == exportGoogleEarthButton) {
-			final FormPanel fp = new FormPanel();
-			fp.setMethod(FormPanel.METHOD_GET);
-			fp.setEncoding(FormPanel.ENCODING_URLENCODED);
-			final HorizontalPanel hp = new HorizontalPanel();
-			for (int i = 0; i < results.size(); i++) {
-				Hidden sample = new Hidden(samplesParameter, String
-						.valueOf(results.get(i).getId()));
-				hp.add(sample);
-			}
-			fp.add(hp);
-			fp.setAction(GWT.getModuleBaseURL() + "BasicKML.kml?");
-			fp.setVisible(false);
-			add(fp);
-			fp.submit();
+	public void exportExcel() {
+		final FormPanel fp = new FormPanel();
+		fp.setMethod(FormPanel.METHOD_GET);
+		fp.setEncoding(FormPanel.ENCODING_URLENCODED);
+		String values = "";
+		
+		for (int i = 1; i < sampleList.getDisplayColumns().size(); i++){
+			values+=sampleList.getDisplayColumns().get(i).getTitle() +"\t";
 		}
+		values+="\n";
+		
+		int currentpage = sampleList.getScrollTable().getCurrentPage();
+		for (int page = 0; page < sampleList.getScrollTable().getNumPages(); page++) {
+			sampleList.getScrollTable().gotoPage(page, false);
+			for(int i = 0; i <sampleList.getScrollTable().getDataTable().getRowCount(); i++) {
+				for (int j = 1; j < sampleList.getScrollTable().getDataTable().getColumnCount(); j++){
+					if (sampleList.getScrollTable().getDataTable().getWidget(i, j) instanceof Image){
+						values+=sampleList.getScrollTable().getDataTable().getWidget(i, j).toString() +"\t";
+					} else {
+						values+=sampleList.getScrollTable().getDataTable().getText(i, j) +"\t";
+					}
+				}
+				values+="\n";
+			}
+		}
+		
+		sampleList.getScrollTable().gotoPage(currentpage, false);
+		Hidden data = new Hidden("excel",values);
+		fp.add(data);
+		fp.setAction(GWT.getModuleBaseURL() + "excel.svc");
+		fp.setVisible(false);
+		add(fp);
+		fp.submit();
+	}
+	
+	public void exportGoogleEarth() {
+		final FormPanel fp = new FormPanel();
+		fp.setMethod(FormPanel.METHOD_GET);
+		fp.setEncoding(FormPanel.ENCODING_URLENCODED);
+		final HorizontalPanel hp = new HorizontalPanel();
+		for (int i = 0; i < results.size(); i++) {
+			Hidden sample = new Hidden(samplesParameter, String
+					.valueOf(results.get(i).getId()));
+			hp.add(sample);
+		}
+		fp.add(hp);
+		fp.setAction(GWT.getModuleBaseURL() + "BasicKML.kml?");
+		fp.setVisible(false);
+		add(fp);
+		fp.submit();
 	}
 	
 	private void buildSampleFilters() {

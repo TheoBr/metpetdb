@@ -27,12 +27,6 @@ public abstract class SearchTabAttribute {
 		for (int i = 0; i < atts.size(); i++){
 			criteria.addAll(atts.get(i).getCriteria());
 		}
-		if (criteria.size() > 0){
-			final FlowPanel container = new FlowPanel();
-			final Label critLabel = new Label(title);
-			container.add(critLabel);
-			criteria.add(0, container);
-		}
 		return criteria;
 	}
 	

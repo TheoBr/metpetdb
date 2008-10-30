@@ -102,7 +102,6 @@ public class SearchRockTypesAttribute extends SearchGenericAttribute implements 
 	public CheckBox createCheckBoxes(final String s, final boolean chosen,
 			final Object value) {
 		final MCheckBox rCheck = new MCheckBox(s == null ? "" : s, true);
-		rCheck.setStylePrimaryName("rt-checkbox");
 		rCheck.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
 				rCheck.applyCheckedStyle(rCheck.isChecked());

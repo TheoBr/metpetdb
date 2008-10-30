@@ -5,55 +5,92 @@
 .search .tabPanel {
 	width: 100%;
 }
-
-/* todo: remove "rt-" once search can be styled properly */
-.search .rt-checkbox {
+.search .checkbox {
 	display: table-row;
 	color: #444;
 }
-.search .rt-checkbox input {
+.search .checkbox input {
 	border: 0 !important;
 	margin: 0 5px 0 0;
 }
-.search .rt-checkbox label,
-.search .rt-checkbox input {
+.search .checkbox label,
+.search .checkbox input {
 	display: table-cell;
 	vertical-align: middle;
 	padding-bottom: 6px;
 }
-.search .rt-checkbox-checked {
+.search .checkbox-checked {
 	color: #000;
 	text-shadow: 1px 1px 0 #eee;
+	text-decoration: underline;
 }
-
-.criteria {
-	width: 100%;
+.search-actions {
+	margin-top: 10px;
 }
-.criteria .titlebar {
-	background-color:#DADADA;
-	border-bottom:1px solid #C8C8C8;
-	color:#324453;
-	width:100%;
+.search-actions li {
+	margin: 5px 14px;
 }
-.criteria .titlebar td {
-	height: 36px;
-}
-
-.criteria ul li {
-	border:1px solid #C8C8C8;
-	padding:0.8em 0.5em 0.5em !important;
-}
-
-.critlabel {
-	color:#3399F0;
-	font-size:0.9em;
-}
-
 .search-button {
-	margin-left: 300px;
 	background-color: #000;
 	color: #fff;
 	font-weight: bold; 	
+}
+
+/*-------------------------------------
+             criteria summary
+ --------------------------------------*/
+.criteria-summary .header-wrap {
+	background-color: #E4E4E4;
+	border-bottom: 1px solid #CBCBCB;
+	padding: 6px 6px 0 6px;
+}
+.criteria-summary .header-content {
+	background: transparent url(../images/srchsum-header-bg-start.png) no-repeat left top;
+	padding-left: 14px;
+}
+.criteria-summary .header-content div {
+	background: transparent url(../images/srchsum-header-bg-end.png) no-repeat right top;
+	padding: 9px 14px 0 0;
+	height: 21px;
+	text-transform: uppercase;
+	font-family: "Gill Sans",Verdana,sans-serif;
+	letter-spacing: 1px;
+	text-align: center;
+}
+.criteria-summary .content-wrap {
+	background: transparent url(../images/srchsum-content-bg-start.png) repeat-y 6px top;
+	padding-left: 10px;
+	margin: -1px 6px 0 0;
+}
+.criteria-summary-content {
+	background: transparent url(../images/srchsum-content-bg-end.png) repeat-y right top;
+	padding-right: 4px;
+}
+.criteria-summary .empty {
+	padding: 5px;
+	color: #888;
+	font-size: 0.9em;
+}
+.criteria-summary .bottom-wrap {
+	background: transparent url(../images/srchsum-bottom-start.png) no-repeat 5px top;
+	padding-left: 19px;
+	height: 6px;
+	margin-right: 6px;
+}
+.criteria-summary .bottom {
+	background: transparent url(../images/srchsum-bottom-end.png) no-repeat right top;
+	height: 6px;
+}
+.criteria-summary .section {
+	padding: 5px 0;
+}
+.criteria-summary .section-title {
+	padding: 5px 5px 2px;
+	border-bottom: 1px solid #ddd;
+	color: #888;
+}
+.criteria-summary .section > div+div {
+	margin: 0 5px;
 }
 
 /*-------------------------------------

@@ -232,19 +232,10 @@ public abstract class GenericAttribute {
 	}
 
 	protected void applyStyle(final Widget editWidget, final boolean valid) {
-		if (valid) {
-			if (constraints[0].required)
-				editWidget.setStyleName(CSS.REQUIRED);
-			else
-				editWidget.setStyleName("");
-		} else {
-			editWidget.setStyleName(CSS.INVALID);
-		}
-//		new hotness. too hot at the moment, though.
-//		if (constraints[0].required) editWidget.addStyleName(CSS.REQUIRED);
-//		else editWidget.removeStyleName(CSS.REQUIRED);
-//		if (valid) editWidget.removeStyleName(CSS.INVALID);
-//		else editWidget.addStyleName(CSS.INVALID);
+		if (constraints[0].required) editWidget.addStyleName(CSS.REQUIRED);
+		else editWidget.removeStyleName(CSS.REQUIRED);
+		if (valid) editWidget.removeStyleName(CSS.INVALID);
+		else editWidget.addStyleName(CSS.INVALID);
 	}
 
 	public void commitEdit(final MObject obj, final Widget[] editWidget,
