@@ -18,6 +18,28 @@ body {
 	margin-left: 201px;
 }
 
+.page-panel .page-sidebar {
+	display: none;
+}
+.page-panel-twocol {
+	padding-left: 200px;
+}
+.page-panel-twocol .page-sidebar,
+.page-panel-twocol .page-content {
+	position: relative;
+	float: left;
+}
+.page-panel-twocol .page-content {
+	width: 100%;
+}
+.page-panel-twocol .page-sidebar {
+	width: 200px;
+	right: 200px;
+	margin-left: -100%;
+	display: block;
+}
+
+
 
 /*-------------------------------------
                  header

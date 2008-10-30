@@ -1,7 +1,5 @@
 package edu.rpi.metpetdb.client.ui.widgets;
 
-import java.util.NoSuchElementException;
-
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -16,6 +14,7 @@ public class MPagePanel extends FlowPanel {
 	private final MText category = new MText("","h4");
 	private final HTMLPanel header;
 	private final FlowPanel actionList = new FlowPanel();
+	private final MTwoColPanel mainPanel = new MTwoColPanel();
 	
 	private static final String HEADER_ID = "page-header";
 	private static final String CATEGORY_ID = "page-category";
@@ -24,16 +23,28 @@ public class MPagePanel extends FlowPanel {
 	private static final String ACTION_ITEM = "action-item";
 	private static final String DESCRIPTION_ID = "page-desc";
 	private static final String NO_CATEGORY = "nocat";
+	
+	public FlowPanel sidebar;
 
-	public MPagePanel() {
+	public MPagePanel(boolean hasSidebar) {
 		super();
 		header = new HTMLPanel("<span id=\""+CATEGORY_ID+"\" class=\""+CSS.HIDE+"\"></span>" +
 				"<span id=\""+TITLE_ID+"\" class=\""+CSS.HIDE+"\">" +
 				"</span><span id=\""+DESCRIPTION_ID+"\" class=\""+CSS.HIDE+"\">" +
 				"</span><span id=\""+ACTIONS_ID+"\" class=\""+CSS.HIDE+"\"></span>");
 		header.setStylePrimaryName(HEADER_ID);
-		add(header);
+		super.add(header);
 		hide(header);
+		super.add(mainPanel);
+		mainPanel.setStylePrimaryName("page-panel");
+		if (hasSidebar) mainPanel.addStyleDependentName("twocol");
+		mainPanel.setRightColStyle("page-sidebar");
+		mainPanel.setLeftColStyle("page-content");
+		sidebar = mainPanel.getRightCol();
+	}
+	
+	public MPagePanel() {
+		this(false);
 	}
 	
 	public void setPageTitle(String text) {
@@ -88,5 +99,22 @@ public class MPagePanel extends FlowPanel {
 	public void show(Widget w) {
 		CSS.show(w);
 	}
+	
+	// FlowPanel Overrides
+	
+	public void add(Widget w) {
+		insert(w, mainPanel.getLeftCol().getWidgetCount());
+	}
+	
+	public void insert(Widget w, int pos) {
+		mainPanel.getLeftCol().insert(w, pos);
+	}
+	
+	public boolean remove(int i) {
+		return mainPanel.getLeftCol().remove(i);
+	}
 
+	public boolean remove(Widget w) {
+		return mainPanel.getLeftCol().remove(w);
+	}
 }
