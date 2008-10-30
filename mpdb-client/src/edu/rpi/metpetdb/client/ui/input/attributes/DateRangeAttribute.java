@@ -135,9 +135,9 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 
 	private void createDateInfoFromInput() {
 		if (fromDate == null)
-			fromDate = new Timestamp(0);
+			fromDate = new Timestamp(System.currentTimeMillis());
 		if (toDate == null)
-			toDate = new Timestamp(0);
+			toDate = new Timestamp(System.currentTimeMillis());
 		try {
 			String[] fromSplit = from.getText().split("/");
 			String[] toSplit = to.getText().split("/");
