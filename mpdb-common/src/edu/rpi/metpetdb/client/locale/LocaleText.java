@@ -94,6 +94,7 @@ public interface LocaleText extends Messages {
 	String buttonExportExcel();
 	String buttonExportKML();
 	String listBoxSelect();
+	String buttonYes();
 
 	/* Errors */
 	String errorTitle_UnknownError();
@@ -170,6 +171,10 @@ public interface LocaleText extends Messages {
 	/* Other Messages */
 	String message_WhyRegister();
 	String message_NewPasswordSet();
+	String confirmation_MakePublic();
+	String confirmation_Delete();
+	String confirmation_AddToProject();
+	String message_ChooseSamples();
 	
 	/* Misc */
 	String tokenSeparater();

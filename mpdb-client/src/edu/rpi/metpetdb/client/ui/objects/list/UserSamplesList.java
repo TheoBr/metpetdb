@@ -28,6 +28,7 @@ import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -36,6 +37,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.VoidServerOp;
+import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.left.side.MySamples;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
@@ -238,8 +240,25 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		}
 		projectListBox.addChangeListener(new ChangeListener() {
 			public void onChange(Widget sender) {
-				if (projectListBox.getSelectedIndex() > 0)
-					AdProjectSelected();
+				if (projectListBox.getSelectedIndex() > 0){
+					final List<Sample> CheckedSamples = getCheckedSamples();
+					if (CheckedSamples.size() > 0){
+						new ServerOp<Boolean>(){
+							public void begin() {
+								new ConfirmationDialogBox(LocaleHandler.lc_text.confirmation_AddToProject(), true, this);
+							}
+		
+							public void onSuccess(final Boolean result) {
+								if (result)
+									UserSamplesList.this.AdProjectSelected(CheckedSamples);
+							}
+						}.begin();
+					} else {
+						errMsg.setText(LocaleHandler.lc_text
+								.message_ChooseSamples());
+						UserSamplesList.this.insert(errMsg, 0);
+					}
+				}
 			}
 		});
 
@@ -265,14 +284,46 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 
 		final MLink makePublic = new MLink("Make Public", new ClickListener() {
 			public void onClick(Widget sender) {
-				MakePublicSelected();
+				final List<Sample> CheckedSamples = getCheckedSamples();
+				if (CheckedSamples.size() > 0){
+					new ServerOp<Boolean>(){
+						public void begin() {
+							new ConfirmationDialogBox(LocaleHandler.lc_text.confirmation_MakePublic(), true, this);
+						}
+	
+						public void onSuccess(final Boolean result) {
+							if (result)
+								UserSamplesList.this.MakePublicSelected(CheckedSamples);
+						}
+					}.begin();
+				} else {
+					errMsg.setText(LocaleHandler.lc_text
+							.message_ChooseSamples());
+					UserSamplesList.this.insert(errMsg, 0);
+				}
 			}
 		});
 		makePublic.addStyleName(CSS.DATATABLE_FOOTER_ITEM);
 
 		final MLink remove = new MLink("Remove", new ClickListener() {
 			public void onClick(Widget sender) {
-				deleteSelected();
+				final List<Sample> CheckedSamples = getCheckedSamples();
+				if (CheckedSamples.size() > 0){
+					new ServerOp<Boolean>(){
+						public void begin() {
+							new ConfirmationDialogBox(LocaleHandler.lc_text.confirmation_Delete(), true, this);
+						}
+	
+						public void onSuccess(final Boolean result) {
+							if (result)
+								UserSamplesList.this.deleteSelected(CheckedSamples);
+						}
+					}.begin();
+				} else {
+					errMsg.setText(LocaleHandler.lc_text
+							.message_ChooseSamples());
+					UserSamplesList.this.insert(errMsg, 0);
+				}
 			}
 		});
 		remove.addStyleName(CSS.DATATABLE_FOOTER_ITEM);
@@ -372,12 +423,11 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		return results;
 	}
 
-	private void deleteSelected() {
+	private void deleteSelected(final List<Sample> CheckedSamples) {
 		new VoidServerOp() {
 			@Override
 			public void begin() {
 				ArrayList<Sample> publicSamples = new ArrayList<Sample>();
-				List<Sample> CheckedSamples = getCheckedSamples();
 				Iterator<Sample> itr = CheckedSamples.iterator();
 				/* Check if we are trying to delete any public samples */
 				while (itr.hasNext()) {
@@ -392,15 +442,8 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 					list.getScrollTable().getDataTable().getRowFormatter()
 							.removeStyleName(i, "highlighted-row");
 				}
-				/*
-				 * if no samples were selected, just make sure to reset the
-				 * errMsg
-				 */
-				if (CheckedSamples.size() == 0) {
-					UserSamplesList.this.remove(errMsg);
-				}
 				/* if there are public samples, highlight them in the table */
-				else if (publicSamples.size() > 0) {
+				if (publicSamples.size() > 0) {
 					for (int i = 0; i < list.getScrollTable().getDataTable()
 							.getRowCount(); i++) {
 						final Sample s = (Sample) ((MCheckBox) list
@@ -437,11 +480,10 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		}.begin();
 	}
 
-	private void MakePublicSelected() {
+	private void MakePublicSelected(final List<Sample> CheckedSamples) {
 		new ServerOp() {
 			@Override
 			public void begin() {
-				List<Sample> CheckedSamples = getCheckedSamples();
 				Iterator<Sample> itr = CheckedSamples.iterator();
 				while (itr.hasNext()) {
 					Sample current = itr.next();
@@ -457,7 +499,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		}.begin();
 	}
 
-	private void AdProjectSelected() {
+	private void AdProjectSelected(final List<Sample> CheckedSamples) {
 		new ServerOp() {
 			@Override
 			public void begin() {
@@ -468,7 +510,6 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 				new ServerOp() {
 					@Override
 					public void begin() {
-						List<Sample> CheckedSamples = getCheckedSamples();
 						Iterator<Sample> itr = CheckedSamples.iterator();
 						while (itr.hasNext()) {
 							Sample current = itr.next();
@@ -506,6 +547,8 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	}
 
 	public void onClick(Widget sender) {
+		if (errMsg.isAttached())
+			UserSamplesList.this.remove(errMsg);
 		for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++) {
 			list.getScrollTable().getDataTable().getRowFormatter()
 					.removeStyleName(i, "highlighted-row");

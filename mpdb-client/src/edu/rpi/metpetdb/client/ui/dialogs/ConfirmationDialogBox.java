@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.Submit;
 
 public class ConfirmationDialogBox extends MDialogBox implements ClickListener,
@@ -17,14 +18,15 @@ public class ConfirmationDialogBox extends MDialogBox implements ClickListener,
 	private final Button submit;
 	private final Button cancel;
 	private final Label msg;
+	private final ServerOp s;
 
 	// cancel = false will display just a button that says "continue"
-	// cancel = true will display two buttons, "save", and "cancel"
-	public ConfirmationDialogBox(final String msg, final boolean cancel) {
+	// cancel = true will display two buttons, "yes", and "cancel"
+	public ConfirmationDialogBox(final String msg, final boolean cancel, ServerOp s) {
 		this.msg = new Label(msg);
-
+		this.s = s;
 		if (cancel)
-			this.submit = new Submit(LocaleHandler.lc_text.buttonSave(), this);
+			this.submit = new Submit(LocaleHandler.lc_text.buttonYes(), this);
 		else
 			this.submit = new Submit(LocaleHandler.lc_text.buttonContinue(),
 					this);
@@ -66,10 +68,12 @@ public class ConfirmationDialogBox extends MDialogBox implements ClickListener,
 	}
 
 	private void cancel() {
+		s.onSuccess(false);
 		hide();
 	}
 
 	private void submit() {
+		s.onSuccess(true);
 		hide();
 	}
 
