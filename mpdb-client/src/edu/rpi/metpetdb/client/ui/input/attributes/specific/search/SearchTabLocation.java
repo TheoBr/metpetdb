@@ -25,7 +25,7 @@ public class SearchTabLocation extends SearchTabAttribute{
 	private final RadioButton regionRadio = new RadioButton("loctype","Region");
 	private static final String COORDS_ID = "coords";
 	private static final String REGION_ID = "region";
-	private final HTMLPanel switchPanel = new HTMLPanel("<ul>\n" +
+	private final HTMLPanel tabOptionsPanel = new HTMLPanel("<ul>\n" +
 			"<li>Specify Location by:</li>\n" +
 			"<li><span id=\"" + REGION_ID + "\"></span></li>\n" +
 			"<li><span id=\"" + COORDS_ID + "\"></span></li>\n" +
@@ -41,9 +41,9 @@ public class SearchTabLocation extends SearchTabAttribute{
 		container.setStyleName(STYLENAME);
 		coordsPanel.setStyleName(STYLENAME + "-coords");
 		regionTable.setStyleName(STYLENAME + "-region");
-		switchPanel.addStyleName(STYLENAME + "-switch");
-		if (switchPanel.getElementById(REGION_ID)!=null) 
-			switchPanel.addAndReplaceElement(regionRadio, REGION_ID);
+		tabOptionsPanel.addStyleName(CSS.SEARCH_TAB_OPTIONS);
+		if (tabOptionsPanel.getElementById(REGION_ID)!=null) 
+			tabOptionsPanel.addAndReplaceElement(regionRadio, REGION_ID);
 		regionRadio.setChecked(true);
 		regionRadio.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
@@ -52,8 +52,8 @@ public class SearchTabLocation extends SearchTabAttribute{
 				regionRadio.setFocus(false);
 			}
 		});
-		if (switchPanel.getElementById(COORDS_ID)!=null) 
-			switchPanel.addAndReplaceElement(coordsRadio, COORDS_ID);
+		if (tabOptionsPanel.getElementById(COORDS_ID)!=null) 
+			tabOptionsPanel.addAndReplaceElement(coordsRadio, COORDS_ID);
 		coordsRadio.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
 				CSS.hide(regionTable);
@@ -72,7 +72,7 @@ public class SearchTabLocation extends SearchTabAttribute{
 	
 	public Widget createEditWidget(final MObject obj, final String id){
 		container.clear();
-		container.add(switchPanel);
+		container.add(tabOptionsPanel);
 		currentEditWidgets = new ArrayList();
 		regionTable.clear();
 		for (int i = 0, j=0; i < atts.length; i++){

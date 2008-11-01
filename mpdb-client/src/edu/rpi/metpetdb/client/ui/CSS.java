@@ -137,6 +137,7 @@ public class CSS {
 	
 	/* ---------------- Page: Search ---------------- */
 	public static final String SEARCH = "search";
+	public static final String SEARCH_TAB_OPTIONS = "search-taboptions";
 	public static final String SEARCH_BUTTON = "search-button";
 	public static final String SEARCH_ROCKTYPES = "search-rt";
 	public static final String SEARCH_ROCKTYPES_TABLE = "search-rt-table";
@@ -153,6 +154,7 @@ public class CSS {
 	public static final String REGISTER = "register";
 	public static final String ICON_PLUS = "icon-plus";
 	public static final String ICON_MINUS = "icon-minus";
+	
 	
 	
 	
