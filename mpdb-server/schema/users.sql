@@ -35,3 +35,6 @@ INSERT INTO users VALUES (nextval('user_seq'), 1, 'Sibel Adali', 'sibel@cs.rpi.e
 INSERT INTO users VALUES (nextval('user_seq'), 1, 'Boleslaw Szymanski', 'szymansk@cs.rpi.edu','','','','','','','','','','Y');
 INSERT INTO users VALUES (nextval('user_seq'), 1, 'Frank Spear', 'spearf@rpi.edu','','','','','','','','','','Y');
 INSERT INTO users VALUES (nextval('user_seq'), 1, 'Benjamin Hallett', 'halleb3@rpi.edu','','','','','','','','','','Y');
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Matt Fyffe', 'fyffem@rpi.edu','','','','','','','','','','Y');
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Dennis Goldfarb', 'goldfd@rpi.edu','','','','','','','','','','Y');
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Zak Linder', 'lindez@rpi.edu','','','','','','','','','','Y');
