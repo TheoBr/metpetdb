@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -29,6 +30,8 @@ public interface SampleService extends RemoteService {
 	Set<String> allCollectors();
 	
 	Set<String> allCountries();
+	
+	List<Sample> allSamplesForUser(final long id);
 
 	void delete(long id) throws DAOException, LoginRequiredException;
 	

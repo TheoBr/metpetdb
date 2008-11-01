@@ -13,17 +13,15 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.postgis.Point;
 
-import edu.rpi.metpetdb.client.model.Sample;
+import com.google.gwt.core.client.GWT;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.model.Sample;
 public class BasicKML extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	// private static final Double metersInLatDegree = 110874.40;
-
-	// private static final String baseURL =
-	// "http://localhost:8888/edu.rpi.metpetdb.MetPetDBApplication/MetPetDBApplication.html#SampleDetails-"
-	// ;
-	private static final String baseURL = "http://samana.cs.rpi.edu:8080/metpetwebtst/#SampleDetails-";
 	private static final String samplesParameter = "Samples";
+	private static final String urlParameter = "url";
 	private Double lat;
 	private Double lng;
 	private Double latErr;
@@ -35,7 +33,7 @@ public class BasicKML extends HttpServlet {
 		// This method takes a list of sample IDs and creates KML from them
 		// Ex: http://example.com/metpetdb/BasicKML.kml?1,2,3 would get samples
 		// 1, 2, and 3
-
+		
 		// response.setContentType("text/plain"); // Useful for testing
 		response.setContentType("application/vnd.google-earth.kml+xml");
 
@@ -44,6 +42,13 @@ public class BasicKML extends HttpServlet {
 
 		List<Sample> samples = new LinkedList<Sample>();
 		Query q;
+		String baseURL = "";
+		
+		if (request.getParameter(urlParameter) != null) {
+			baseURL = request.getParameterValues(urlParameter)[0];
+		}
+
+		
 
 		// If there is a GET string, fetch by ids
 		if (request.getParameter(samplesParameter) != null) {
@@ -72,8 +77,8 @@ public class BasicKML extends HttpServlet {
 
 			for (int i = 0; i < samples.size(); i++) {
 				Sample theSample = (Sample) samples.get(i);
-				lat = ((Point) theSample.getLocation()).x;
-				lng = ((Point) theSample.getLocation()).y;
+				lat = ((Point) theSample.getLocation()).y;
+				lng = ((Point) theSample.getLocation()).x;
 				if (theSample.getLatitudeError() != null)
 					latErr = theSample.getLatitudeError().doubleValue();
 				else

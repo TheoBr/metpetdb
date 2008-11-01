@@ -14,6 +14,7 @@ import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.XMLParser;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Grid;
 import edu.rpi.metpetdb.client.model.Project;
@@ -24,7 +25,7 @@ import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class Breadcrumbs extends FlowPanel {
-	private static final String tokenSep = TokenHandler.getTokenSeparator() + "";
+	private static final String tokenSep = LocaleHandler.lc_text.tokenSeparater() + "";
 	private bcNode root;
 	private String id;
 	private static bcNode current;

@@ -170,4 +170,7 @@ public interface LocaleText extends Messages {
 	/* Other Messages */
 	String message_WhyRegister();
 	String message_NewPasswordSet();
+	
+	/* Misc */
+	String tokenSeparater();
 }

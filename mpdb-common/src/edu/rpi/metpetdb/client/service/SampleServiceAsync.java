@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -33,4 +34,6 @@ public interface SampleServiceAsync {
 	void allCollectors(AsyncCallback<Set<String>> ac);
 	
 	void allCountries(AsyncCallback<Set<String>> ac);
+	
+	void allSamplesForUser(long id, AsyncCallback<List<Sample>> ac);
 }

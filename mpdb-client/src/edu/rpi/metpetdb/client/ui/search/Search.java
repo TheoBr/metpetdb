@@ -50,6 +50,7 @@ public class Search extends MPagePanel {
 	};
 
 	private static final String cookieString = "SearchView";
+	private static final String urlParameter = "url";
 	private static final String samplesParameter = "Samples";
 	private final MLink exportExcel = new MLink();
 	private final MLink exportGoogleEarth = new MLink();
@@ -170,6 +171,9 @@ public class Search extends MPagePanel {
 					.valueOf(results.get(i).getId()));
 			hp.add(sample);
 		}
+		Hidden url = new Hidden(urlParameter,GWT.getModuleBaseURL() + "#" + 
+				LocaleHandler.lc_entity.TokenSpace_Sample_Details() + LocaleHandler.lc_text.tokenSeparater());
+		hp.add(url);
 		fp.add(hp);
 		fp.setAction(GWT.getModuleBaseURL() + "BasicKML.kml?");
 		fp.setVisible(false);

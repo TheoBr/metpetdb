@@ -90,6 +90,11 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		final Query pageQ = pageQuery("Sample.all", p);
 		return getSamples(sizeQ, pageQ);
 	}
+	
+	public List<Sample> getAll() {
+		final Query q = namedQuery("Sample.all/id");
+		return q.list();
+	}
 
 	private Results<Sample> getSamples(Query sizeQuery, Query pageQuery) {
 		final List<Sample> l = pageQuery.list();

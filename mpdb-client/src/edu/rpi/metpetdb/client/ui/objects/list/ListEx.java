@@ -442,4 +442,7 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 		scrollTable.setPageSize(pageSize);
 		refresh();
 	}
+	public int getPageSize() {
+		return pageSize;
+	}
 }

@@ -45,6 +45,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 public class UserSamplesList extends MPagePanel implements ClickListener {
 	private static final String cookieString = "UserSamplesList";
 	private static final String samplesParameter = "Samples";
+	private static final String urlParameter = "url";
 	private Label errMsg = new Label();
 	private final FlexTable sampleDisplayFilters = new FlexTable();
 	private SampleListEx list;
@@ -81,62 +82,82 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	}
 
 	private void doExportGoogleEarth() {
-		final FormPanel fp = new FormPanel();
-		fp.setMethod(FormPanel.METHOD_GET);
-		fp.setEncoding(FormPanel.ENCODING_URLENCODED);
-		final HorizontalPanel hp = new HorizontalPanel();
-		int currentpage = list.getScrollTable().getCurrentPage();
-		for (int page = 0; page < list.getScrollTable().getNumPages(); page++) {
-			list.getScrollTable().gotoPage(page, false);
-			int i = 0;
-			while (list.getScrollTable().getRowValue(i) != null) {
-				Hidden sample = new Hidden(samplesParameter, String
-						.valueOf(list.getScrollTable().getRowValue(i).getId()));
-				hp.add(sample);
-				i++;
+		new ServerOp<List<Sample>>() {
+			@Override
+			public void begin() {
+				long id = (long) (MpDb.currentUser().getId());
+				MpDb.sample_svc.allSamplesForUser(id, this);
 			}
-		}
-		list.getScrollTable().gotoPage(currentpage, true);
-		fp.add(hp);
-		fp.setAction(GWT.getModuleBaseURL() + "BasicKML.kml?");
-		fp.setVisible(false);
-		add(fp);
-		fp.submit();
+			public void onSuccess(List<Sample> result) {
+				final FormPanel fp = new FormPanel();
+				fp.setMethod(FormPanel.METHOD_GET);
+				fp.setEncoding(FormPanel.ENCODING_URLENCODED);
+				final HorizontalPanel hp = new HorizontalPanel();
+				for (Sample s : result){
+					Hidden sample = new Hidden(samplesParameter,String.valueOf(s.getId()));
+					hp.add(sample);
+				}
+				Hidden url = new Hidden(urlParameter,GWT.getModuleBaseURL() + "#" + 
+						LocaleHandler.lc_entity.TokenSpace_Sample_Details() + LocaleHandler.lc_text.tokenSeparater());
+				hp.add(url);
+				fp.add(hp);
+				fp.setAction(GWT.getModuleBaseURL() + "BasicKML.kml?");
+				fp.setVisible(false);
+				add(fp);
+				fp.submit();
+			}
+		}.begin();	
 	}
 	
 	private void doExportExcel(){
-		final FormPanel fp = new FormPanel();
-		fp.setMethod(FormPanel.METHOD_GET);
-		fp.setEncoding(FormPanel.ENCODING_URLENCODED);
-		String values = "";
 		
-		for (int i = 1; i < list.getDisplayColumns().size(); i++){
-			values+=list.getDisplayColumns().get(i).getTitle() +"\t";
-		}
-		values+="\n";
-		
-		int currentpage = list.getScrollTable().getCurrentPage();
-		for (int page = 0; page < list.getScrollTable().getNumPages(); page++) {
-			list.getScrollTable().gotoPage(page, false);
-			for(int i = 0; i <list.getScrollTable().getDataTable().getRowCount(); i++) {
-				for (int j = 1; j < list.getScrollTable().getDataTable().getColumnCount(); j++){
-					if (list.getScrollTable().getDataTable().getWidget(i, j) instanceof Image){
-						values+=list.getScrollTable().getDataTable().getWidget(i, j).toString() +"\t";
-					} else {
-						values+=list.getScrollTable().getDataTable().getText(i, j) +"\t";
-					}
+		final SampleListEx listEx = new SampleListEx(LocaleHandler.lc_text.noSamplesFound()) {
+			public void update(final PaginationParameters p,
+					final AsyncCallback<Results<Sample>> ac) {
+				long id = (long) (MpDb.currentUser().getId());
+				MpDb.sample_svc.allSamplesForUser(p, id, ac);
+			}
+		};	
+		listEx.setPageSize(list.getScrollTable().getNumPages()*list.getPageSize());
+		listEx.newView(list.getDisplayColumns());
+		new ServerOp() {
+			@Override
+			public void begin() {
+				final PaginationParameters p = new PaginationParameters();
+				p.setAscending(true);
+				p.setParameter(list.getDefaultSortParameter());
+				listEx.update(p, this);
+			}
+
+			public void onSuccess(final Object result) {
+				final FormPanel fp = new FormPanel();
+				fp.setMethod(FormPanel.METHOD_GET);
+				fp.setEncoding(FormPanel.ENCODING_URLENCODED);
+				String values = "";
+				
+				for (int i = 1; i < listEx.getDisplayColumns().size(); i++){
+					values+=listEx.getDisplayColumns().get(i).getTitle() +"\t";
 				}
 				values+="\n";
+				for(int i = 0; i <listEx.getScrollTable().getDataTable().getRowCount(); i++) {
+					for (int j = 1; j < list.getScrollTable().getDataTable().getColumnCount(); j++){
+						if (listEx.getScrollTable().getDataTable().getWidget(i, j) instanceof Image){
+							values+=listEx.getScrollTable().getDataTable().getWidget(i, j).toString() +"\t";
+						} else {
+							values+=listEx.getScrollTable().getDataTable().getText(i, j) +"\t";
+						}
+					}
+					values+="\n";
+				}
+				
+				Hidden data = new Hidden("excel",values);
+				fp.add(data);
+				fp.setAction(GWT.getModuleBaseURL() + "excel.svc");
+				fp.setVisible(false);
+				add(fp);
+				fp.submit();
 			}
-		}
-		
-		list.getScrollTable().gotoPage(currentpage, false);
-		Hidden data = new Hidden("excel",values);
-		fp.add(data);
-		fp.setAction(GWT.getModuleBaseURL() + "excel.svc");
-		fp.setVisible(false);
-		add(fp);
-		fp.submit();
+		}.begin();
 	}
 
 	private void projectSamples(final long projectId) {

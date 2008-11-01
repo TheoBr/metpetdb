@@ -3,8 +3,10 @@ package edu.rpi.metpetdb.client.ui;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
+
 public abstract class TokenHandler {
-	static final char sep = '/';
+	static final char sep = LocaleHandler.lc_text.tokenSeparater().charAt(0);
 	protected final String name;
 
 	protected TokenHandler(final String n) {

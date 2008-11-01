@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.server.impl;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import edu.rpi.metpetdb.client.error.DAOException;
@@ -27,6 +28,12 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		this.currentSession().enableFilter("user").setParameter("id", id);
 		return (new SampleDAO(this.currentSession())).getAll(p);
 	}
+	
+	public List<Sample> allSamplesForUser(final long id) {
+		this.currentSession().enableFilter("user").setParameter("id", id);
+		return (new SampleDAO(this.currentSession())).getAll();
+	}
+	
 	public Results<Sample> allPublicSamples(final PaginationParameters p) {
 		this.currentSession().enableFilter("public");
 		return (new SampleDAO(this.currentSession())).getAll(p);

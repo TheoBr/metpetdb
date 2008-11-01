@@ -97,6 +97,11 @@
   <query name="Sample.all,size">
     select count(*) from Sample s
   </query>
+  <query name="Sample.all/id">
+    from Sample s
+    inner join fetch s.owner
+    order by s.id
+  </query>
   <query name="Sample.all/sesarNumber">
     from Sample s
     inner join fetch s.owner
