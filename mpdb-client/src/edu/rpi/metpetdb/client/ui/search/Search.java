@@ -29,6 +29,7 @@ import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchInterface;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabChemicalAnalysis;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabLocation;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabMetamorphicGrade;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabMinerals;
@@ -45,7 +46,7 @@ public class Search extends MPagePanel {
 		new SearchTabMetamorphicGrade(), 
 		new SearchTabLocation(), 
 		new SearchTabMinerals(), 
-//		new SearchTabChemicalAnalysis(), 
+		new SearchTabChemicalAnalysis(), 
 		new SearchTabProvenance()
 	};
 

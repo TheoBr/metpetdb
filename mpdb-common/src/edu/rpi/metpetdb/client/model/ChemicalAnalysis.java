@@ -5,8 +5,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
@@ -15,12 +17,15 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.model.interfaces.HasDate;
 import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
 
+@Indexed
 public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample {
 	private static final long serialVersionUID = 1L;
 
+	@DocumentId
 	private int id;
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String spotId;
+	private int version;
 	private int pointX;
 	private int pointY;
 	private Image image;
@@ -55,6 +60,14 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample {
 
 	public void setId(final int i) {
 		id = i;
+	}
+	
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(final int v) {
+		version = v;
 	}
 
 	public String getSpotId() {

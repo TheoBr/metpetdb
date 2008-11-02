@@ -9,7 +9,7 @@
         <param name="sequence">chemical_analyses_seq</param>
       </generator>
     </id>
-    
+    <version name="version" />
     <property name="pointX" column="point_x" />
     <property name="pointY" column="point_y" />
     <property name="datePrecision" column="date_precision" />

@@ -33,6 +33,13 @@ GRANT select,insert,update,delete ON subsample_type to @APPUSER@;
 GRANT select,insert,update,delete ON image_type to @APPUSER@;
 GRANT select,insert,update,delete ON image_comments to @APPUSER@;
 GRANT select,insert,update,delete ON admin_users to @APPUSER@;
+GRANT select,insert,update,delete ON samples_archive to @APPUSER@;
+GRANT select,insert,update,delete ON sample_minerals_archive to @APPUSER@;
+GRANT select,insert,update,delete ON sample_regions_archive to @APPUSER@;
+GRANT select,insert,update,delete ON sample_metamorphic_grades_archive to @APPUSER@;
+GRANT select,insert,update,delete ON sample_reference_archive to @APPUSER@;
+GRANT select,insert,update,delete ON subsamples_archive to @APPUSER@;
+GRANT select,insert,update,delete ON chemical_analyses_archive to @APPUSER@;
 
 GRANT update ON mineral_seq   TO @APPUSER@;
 GRANT update ON project_seq   TO @APPUSER@;
