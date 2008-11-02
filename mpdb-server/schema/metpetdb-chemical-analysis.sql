@@ -1,6 +1,7 @@
 CREATE TABLE chemical_analyses
 (
    chemical_analysis_id INT8 NOT NULL,
+   version INT4 NOT NULL,
    spot_id VARCHAR(50) NOT NULL,
    subsample_id INT8 NOT NULL,
    point_x INT2,
