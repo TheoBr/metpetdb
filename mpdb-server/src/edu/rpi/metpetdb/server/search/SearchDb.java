@@ -1,16 +1,18 @@
 package edu.rpi.metpetdb.server.search;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.DateTools;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FilteredQuery;
+import org.apache.lucene.search.Query;
 import org.apache.lucene.search.RangeFilter;
 import org.apache.lucene.search.RangeQuery;
 import org.apache.lucene.search.TermQuery;
@@ -39,25 +41,39 @@ public class SearchDb {
 		final Session session = DataStore.open();
 		FullTextSession fullTextSession = Search.createFullTextSession(session);
 
+		List<String> queries = new LinkedList<String>();
+		List<String> columnsIn = new LinkedList<String>();
+		List<BooleanClause.Occur> flags = new LinkedList<BooleanClause.Occur>();
+		
 		// The full scope of the query we want to make
 		BooleanQuery fullQuery = new BooleanQuery();
 
-		// Check if it's public data or if the user is this user
-		BooleanQuery privacyQuery = new BooleanQuery();
 		// Is this public data?
 		final TermQuery termQuery = new TermQuery(new Term("publicData",
 				Boolean.TRUE.toString()));
-		privacyQuery.add(termQuery, BooleanClause.Occur.SHOULD);
+		queries.add(termQuery.toString());
+		columnsIn.add("publicData");
+		flags.add(BooleanClause.Occur.SHOULD);
+		
 		// Is this the current user?
 		if (userSearching != null) {
 			final TermQuery termQuery2 = new TermQuery(new Term(
 					"user_id", (new Integer(userSearching.getId())).toString()));
-			privacyQuery.add(termQuery2, BooleanClause.Occur.SHOULD);
+			queries.add(termQuery2.toString());
+			columnsIn.add("user_id");
+			flags.add(BooleanClause.Occur.SHOULD);
 		}
 
-		// in the full query, make it mandatory that the privacy requirements
-		// are met
-		fullQuery.add(privacyQuery, BooleanClause.Occur.MUST);
+		if(queries.size() > 0)
+		{
+			fullQuery.add(getQuery(queries, columnsIn, flags), BooleanClause.Occur.MUST);
+		}
+		
+		queries.clear();
+		columnsIn.clear();
+		flags.clear();
+
+		
 		// Actual Search
 
 		String columnName;
@@ -118,19 +134,27 @@ public class SearchDb {
 				else if (methodResult instanceof Set) { // if a set of data is
 					// returned, it should be an
 					// OR query
+					
+					List<String> setQueries = new LinkedList<String>();
+					List<String> setColumnsIn = new LinkedList<String>();
+					List<BooleanClause.Occur> setFlags = new LinkedList<BooleanClause.Occur>();
+					
 					if (((Set) methodResult).size() > 0) {
-						final BooleanQuery setQuery = new BooleanQuery();
 						for (Object o : (Set) methodResult) {
 							// iterate through each item and add it to the query
 							final TermQuery objectQuery = new TermQuery(
 									new Term(columnName, o.toString()));
-							setQuery.add(objectQuery,
-									BooleanClause.Occur.SHOULD);
+							setQueries.add(objectQuery.toString());
+							setColumnsIn.add(columnName);
+							setFlags.add(BooleanClause.Occur.SHOULD);
 						}
 
 						// require that one of these results be found in the
 						// full query
-						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
+						if(setQueries.size() > 0)
+						{
+							fullQuery.add(getQuery(setQueries, setColumnsIn, setFlags), BooleanClause.Occur.MUST);
+						}
 					}
 				} else if (methodResult instanceof DateSpan) { // if the data is
 					// a DateSpan
@@ -146,13 +170,15 @@ public class SearchDb {
 							endDate.getMonth(), endDate.getDate());
 
 					// Do a range query on these dates
-					RangeQuery rq = new RangeQuery(new Term("collectionDate",
+					RangeQuery rq = new RangeQuery(new Term(columnName,
 							DateTools.dateToString(realStartDate,
 									DateTools.Resolution.DAY)), new Term(
-							"collectionDate", DateTools.dateToString(
+											columnName, DateTools.dateToString(
 									realEndDate, DateTools.Resolution.DAY)),
 							true);
-					fullQuery.add(rq, BooleanClause.Occur.MUST);
+					queries.add(rq.toString());
+					columnsIn.add(columnName);
+					flags.add(BooleanClause.Occur.MUST);
 				} else if (columnName.equals("location")) { // if the column
 					// being searched on
 					// is location
@@ -173,34 +199,45 @@ public class SearchDb {
 					{
 						final TermQuery stringQuery = new TermQuery(new Term(
 								columnName, methodResult.toString()));
-						fullQuery.add(stringQuery, BooleanClause.Occur.MUST);
+						queries.add(stringQuery.toString());
+						columnsIn.add(columnName);
+						flags.add(BooleanClause.Occur.MUST);
 					}
 				}
 			}
 		}
 
 		// Run the query and get the actual results
-
-		QueryParser parser = new QueryParser("title", new StandardAnalyzer() );
-		try{
-			org.apache.lucene.search.Query luceneQuery = parser.parse(fullQuery.toString());
-			final org.hibernate.Query hibQuery = fullTextSession
-			.createFullTextQuery(luceneQuery, Sample.class);
-			final List<Sample> results = hibQuery.list();
-			return results;
-			
-		}
-		catch(Exception e)
+		if(queries.size() > 0)
 		{
+			fullQuery.add(getQuery(queries, columnsIn, flags), BooleanClause.Occur.MUST);
+		}
 			final org.hibernate.Query hibQuery = fullTextSession
 			.createFullTextQuery(fullQuery, Sample.class);
 			final List<Sample> results = hibQuery.list();
-			return results;
-		}
-		finally
-		{
 			session.close();
-		}
+			return results;		
+	}
+	
+	public static Query getQuery(List<String> queries, List<String> fields, List<BooleanClause.Occur> flags)
+	{
+		String queryArray[] = new String[queries.size()];
+		queries.toArray(queryArray);
+		String columnsArray[] = new String[fields.size()];
+		fields.toArray(columnsArray);
+		BooleanClause.Occur flagsArray[] = new BooleanClause.Occur[flags
+				.size()];
+		flags.toArray(flagsArray);
 		
+		try
+		{
+			return org.apache.lucene.queryParser.MultiFieldQueryParser
+			.parse(queryArray, columnsArray, flagsArray,
+				new StandardAnalyzer());
+		}
+		catch(ParseException e)
+		{
+			return null;
+		}
 	}
 }
