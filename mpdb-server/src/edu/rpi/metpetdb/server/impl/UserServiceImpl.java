@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
+
 import org.hibernate.exception.ConstraintViolationException;
 
 import edu.rpi.metpetdb.client.error.DAOException;
@@ -21,6 +24,7 @@ import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
+import edu.rpi.metpetdb.server.dao.permissions.GwtCallbackHandler;
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
 
 public class UserServiceImpl extends MpDbServlet implements UserService {
@@ -36,33 +40,30 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		u = (new UserDAO(this.currentSession())).fill(u);
 		return (u);
 	}
-	
+
 	public Set<String> allNames() {
-		final Object[] l =  (new UserDAO(this.currentSession())).allNames();
+		final Object[] l = (new UserDAO(this.currentSession())).allNames();
 		final Set<String> options = new HashSet();
-		for (int i = 0; i < l.length; i++){
+		for (int i = 0; i < l.length; i++) {
 			if (l[i] != null)
 				options.add(l[i].toString());
 		}
 		return options;
 	}
 
-
 	public User startSession(final StartSessionRequest ssr)
 			throws LoginFailureException, ValidationException {
-		doc.validate(ssr);
+		//doc.validate(ssr);
 		try {
-			User u = new User();
-			u.setEmailAddress(ssr.getEmailAddress());
-			u = (new UserDAO(this.currentSession())).fill(u);
-
-			if (!authenticate(u, ssr.getPassword()))
-				throw new LoginFailureException(
-						doc.StartSessionRequest_password);
+			System.setProperty("java.security.auth.login.config", "bin/edu/rpi/metpetdb/server/dao/permissions/jaas.config");
+			GwtCallbackHandler cbh = new GwtCallbackHandler(ssr.getEmailAddress(), ssr.getPassword());
+			LoginContext lc = new LoginContext("MetPetDB", cbh);
+			lc.login();
+			final User u = (User) lc.getSubject().getPublicCredentials().toArray()[0];
 			setCurrentUser(u);
 			return u;
-		} catch (DAOException daoe) {
-			setCurrentUser(null);
+		} catch (LoginException e) {
+			e.printStackTrace();
 			throw new LoginFailureException(doc.StartSessionRequest_password);
 		}
 	}

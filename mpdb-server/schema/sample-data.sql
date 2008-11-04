@@ -51,6 +51,7 @@ insert into image_type values(nextval('image_type_seq'), 'Secondary Electron Ima
 insert into image_type values(nextval('image_type_seq'), 'Back-Scattered Electron Image', 'BSE');
 insert into image_type values(nextval('image_type_seq'), 'Cathodoluminescence Image', 'CL');
 insert into image_type values(nextval('image_type_seq'), 'X-ray Map', 'XRM');
+insert into image_type values(nextval('image_type_seq'), 'Drawing', 'Drawing');
 --Subsample Types
 insert into subsample_type values(nextval('subsample_type_seq'), 'Thin Section');
 insert into subsample_type values(nextval('subsample_type_seq'), 'Polished Thin Section');

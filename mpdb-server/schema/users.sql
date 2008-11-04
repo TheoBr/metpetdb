@@ -1,5 +1,6 @@
 CREATE SEQUENCE user_seq;
 CREATE SEQUENCE admin_user_seq;
+CREATE SEQUENCE role_seq;
 
 CREATE TABLE users
 (
@@ -30,6 +31,13 @@ CREATE TABLE admin_users
     REFERENCES users(user_id)
 ) WITHOUT OIDS;
 
+CREATE TABLE roles
+(
+  role_id INT2 NOT NULL,
+  role_name VARCHAR(50) NOT NULL,
+  CONSTRAINT roles_sk PRIMARY KEY (role_id)
+) WITHOUT OIDS;
+
 INSERT INTO users VALUES (nextval('user_seq'), 1, 'Anthony Waters', 'watera2@cs.rpi.edu','','','','','','','','','','Y');
 INSERT INTO users VALUES (nextval('user_seq'), 1, 'Sibel Adali', 'sibel@cs.rpi.edu','','','','','','','','','','Y');
 INSERT INTO users VALUES (nextval('user_seq'), 1, 'Boleslaw Szymanski', 'szymansk@cs.rpi.edu','','','','','','','','','','Y');
@@ -38,3 +46,6 @@ INSERT INTO users VALUES (nextval('user_seq'), 1, 'Benjamin Hallett', 'halleb3@r
 INSERT INTO users VALUES (nextval('user_seq'), 1, 'Matt Fyffe', 'fyffem@rpi.edu','','','','','','','','','','Y');
 INSERT INTO users VALUES (nextval('user_seq'), 1, 'Dennis Goldfarb', 'goldfd@rpi.edu','','','','','','','','','','Y');
 INSERT INTO users VALUES (nextval('user_seq'), 1, 'Zak Linder', 'lindez@rpi.edu','','','','','','','','','','Y');
+
+INSERT INTO roles VALUES (nextval('role_seq') , 'Champion');
+INSERT INTO roles VALUES (nextval('role_seq') , 'Patriarch');

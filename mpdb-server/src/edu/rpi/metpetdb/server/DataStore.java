@@ -48,6 +48,7 @@ import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.ShortConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
+import edu.rpi.metpetdb.server.dao.permissions.PermissionInterceptor;
 
 /** Global service support. */
 public class DataStore {
@@ -82,6 +83,7 @@ public class DataStore {
 				throw new MappingException("Missing dao/hibernate.cfg.xml.");
 			cfg.configure(x);
 			config = cfg;
+			config.setInterceptor( new PermissionInterceptor() );
 		}
 		return config;
 	}
