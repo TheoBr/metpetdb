@@ -86,7 +86,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 	private final FlowPanel errorPanel = new FlowPanel();
 	private final Grid errorGrid = new Grid();
-	private final MText errorTab = new MText("Errors (0)", "div");
+	private final HTML errorTab = new HTML("Errors <span>0</span>");
 
 	private final FlowPanel matchedColsPanel = new FlowPanel();
 	private final Grid matchedColsGrid = new Grid();
@@ -390,16 +390,18 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 			final int fresh = additions.get(objType).getFresh();
 			final int dup = additions.get(objType).getDuplicate();
 			final int invalid = additions.get(objType).getInvalid();
-			if (fresh > 0) summaryPanel.add(new MText("Found "+fresh+" new "+getPlural(objType, fresh)+"."));
-			if (dup > 0) summaryPanel.add(new MText("Found "+dup+" duplicate "+getPlural(objType, dup)+"."));
-			if (invalid > 0) summaryPanel.add(new MText("Found "+invalid+" invalid "+getPlural(objType, invalid)+"."));
+			if (fresh > 0) summaryPanel.add(new MText("Found "+fresh+" new "+getPlural(objType, fresh)+".", "p"));
+			if (dup > 0) summaryPanel.add(new MText("Found "+dup+" duplicate "+getPlural(objType, dup)+".", "p"));
+			if (invalid > 0) summaryPanel.add(new MText("Found "+invalid+" invalid "+getPlural(objType, invalid)+".", "p"));
 		}
 		// TODO provide some summary of matched columns here
 	}
 
 	private void populateErrorPanel(Map<Integer, ValidationException> errors) {
 		errorPanel.clear();
-		errorPanel.add(new MText("There were "+errors.size()+" errors:", "p"));
+		String msg = "There were "+errors.size()+" errors:";
+		if (errors.size() == 1) msg = "There was one error:";
+		errorPanel.add(new MText(msg, "p"));
 		errorPanel.add(errorGrid);
 		errorGrid.resize(errors.size() + 1, 2);
 		errorGrid.getRowFormatter().setStyleName(0, CSS.TYPE_SMALL_CAPS);
@@ -416,7 +418,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 	}
 	
 	private void setErrorTabStyle(int numErrors) {
-		errorTab.setText("Errors ("+numErrors+")");
+		errorTab.setHTML("Errors <span>"+numErrors+"</span>");
 		if (numErrors > 0) {
 			errorTab.addStyleName("has-errors");
 			errorTab.removeStyleName(CSS.EMPTY);
@@ -429,9 +431,9 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 	private String getPlural(String in, int num) {
 		String plural = in;
 		if (num != 1) {
-			if (in.equals("Sample")) plural = "Samples";
-			if (in.equals("Chemical Analysis")) plural = "Chemical Analyses";
-			if (in.equals("Image")) plural = "Images";
+			if (in.equalsIgnoreCase("Sample")) plural = "Samples";
+			if (in.equalsIgnoreCase("Chemical Analysis")) plural = "Chemical Analyses";
+			if (in.equalsIgnoreCase("Image")) plural = "Images";
 		}
 		return plural.toLowerCase();
 	}
