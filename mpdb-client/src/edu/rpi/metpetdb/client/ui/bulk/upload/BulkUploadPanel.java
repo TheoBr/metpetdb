@@ -26,9 +26,11 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.ProgressBar;
 
+import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -45,6 +47,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
+import edu.rpi.metpetdb.client.ui.widgets.MTabPanel;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel.NoticeType;
 
@@ -58,51 +61,40 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 	private final FlowPanel main = new FlowPanel();
 	private final FormPanel form = new FormPanel();
 	private final FileUpload file = new FileUpload();
-
-	private final MNoticePanel status = new MNoticePanel();
-
-	private final FlowPanel resultsPanel = new FlowPanel();
-	private final MLink detailsLink = new MLink("Show details", this);
+	private final MNoticePanel formMessage = new MNoticePanel();
+	
+	private final MTabPanel resultsPanel = new MTabPanel();
+	private final MNoticePanel resultStatus = new MNoticePanel();
 
 	private final FlowPanel progressContainer = new FlowPanel();
 	private final ProgressBar uploadProgress = new ProgressBar();
+	private final MNoticePanel uploadStatus = new MNoticePanel();
 	private final Timer progressTimer;
-	private final MLink cancelLink = new MLink("Cancel", this);
+	private final MButton cancelProgress = new MButton("Cancel", this);
 
 	private final MHtmlList uploadTypeList = new MHtmlList();
 	private final RadioButton samplesRadio = new RadioButton("type", "Samples");
-	private final RadioButton analysesRadio = new RadioButton("type",
-			"Chemical Analyses");
+	private final RadioButton analysesRadio = new RadioButton("type", "Chemical Analyses");
 	private final RadioButton imagesRadio = new RadioButton("type", "Images");
 
-	private final MButton parseButton = new MButton("Parse Samples", this);
-	private final MButton uploadButton = new MButton("Upload Samples", this);
-	private final MButton reuploadButton = new MButton("Try Uploading Again",
-			this);
-	private final MButton retryButton = new MButton("Retry", this);
-	private static final String RESET_ID = "reset-link";
-	private final HTMLPanel resetPanel = new HTMLPanel("or <span id=\""+RESET_ID+"\"></span>");
-	private final MLink resetLink = new MLink("reset the form",
-			TokenSpace.bulkUpload);
+	private final MButton uploadButton = new MButton("Upload", this);
+	private final MButton commitButton = new MButton("Submit Data", this);
 
-	private final Grid errorgrid = new Grid();
+	private final FlowPanel nextStepPanel = new FlowPanel();
+	private final MLink resetLink = new MLink("Reset the form", TokenSpace.bulkUpload);
+	private final MText nextStepText = new MText("Looks good, go ahead and commit!", "p");
 
-	private final FlowPanel parsedPanel = new FlowPanel();
-	private final MText parsedHeading = new MText(
-			"Below is a list of columns from the uploaded spreadsheet and how MetPetDB understands them.",
-			"p");
-	private final FlexTable parsed = new FlexTable();
+	private final FlowPanel errorPanel = new FlowPanel();
+	private final Grid errorGrid = new Grid();
+	private final MText errorTab = new MText("Errors (0)", "div");
 
+	private final FlowPanel matchedColsPanel = new FlowPanel();
+	private final Grid matchedColsGrid = new Grid();
+	
 	private final FlowPanel summaryPanel = new FlowPanel();
-	private final MText summaryHeading = new MText("Parse Results", "h2");
-	private final FlexTable summary = new FlexTable();
-
 	private String contentType;
-
 	private BulkUploadServiceAsync service;
-
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
-
 	private String fileOnServer;
 
 	public BulkUploadPanel() {
@@ -118,6 +110,8 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		add(main);
 		main.setStyleName(CSS.MAIN);
 
+		main.add(formMessage);
+		
 		main.add(form);
 		form.setMethod(FormPanel.METHOD_POST);
 		form.setEncoding(FormPanel.ENCODING_MULTIPART);
@@ -126,7 +120,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		form.setStyleName(CSS.BULK_UPLOAD_FORM);
 		form.setWidget(file);
 		file.setName("bulkUpload");
-		file.getElement().setAttribute("size", "40");
+		file.getElement().setAttribute("size", "61");
 
 		main.add(uploadTypeList);
 		uploadTypeList.setStyleName(CSS.BULK_TYPES);
@@ -134,7 +128,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		uploadTypeList.add(samplesRadio);
 		samplesRadio.setChecked(true);
 		samplesRadio.addClickListener(this);
-		updateContentType();
+		updateUploadType();
 
 		uploadTypeList.add(analysesRadio);
 		analysesRadio.addClickListener(this);
@@ -142,10 +136,9 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		uploadTypeList.add(imagesRadio);
 		imagesRadio.addClickListener(this);
 
-		main.add(parseButton);
+		main.add(uploadButton);
 
-		main.add(status);
-
+		main.add(uploadStatus);
 		main.add(progressContainer);
 		progressContainer.setStyleName(CSS.PROGRESSBAR_CONTAINER);
 		hide(progressContainer);
@@ -171,73 +164,73 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 				}
 			}
 		};
-
-		progressContainer.add(cancelLink);
+		progressContainer.add(cancelProgress);
+		
+		main.add(resultStatus);
 
 		main.add(resultsPanel);
 		resultsPanel.addStyleName(CSS.BULK_RESULTS);
 		hide(resultsPanel);
 
-		resultsPanel.add(summaryPanel);
+		resultsPanel.add(summaryPanel, new MText("Summary", "div"));
 		summaryPanel.setStyleName(CSS.BULK_RESULTS_SUMMARY);
-		summaryPanel.add(summaryHeading);
-		summaryPanel.add(summary);
-		summaryPanel.add(detailsLink);
-		summaryPanel.add(uploadButton);
-		uploadButton.addStyleName(CSS.PRIMARY_BUTTON);
-		hide(uploadButton);
+		resultsPanel.selectTab(0);
+		
+		resultsPanel.add(matchedColsPanel, new MText("Matched Columns", "div"));
+		matchedColsPanel.setStyleName(CSS.BULK_RESULTS_PARSED);
+		
+		resultsPanel.add(errorPanel, errorTab);
+		errorPanel.setStyleName(CSS.BULK_RESULTS_ERRORS);
 
-		resultsPanel.add(parsedPanel);
-		parsedPanel.setStyleName(CSS.BULK_RESULTS_PARSED);
-		hide(parsedPanel);
-		parsedPanel.add(parsedHeading);
-		parsedPanel.add(parsed);
-
-		main.add(errorgrid);
-		hide(errorgrid);
-
-		main.add(retryButton);
-		hide(retryButton);
-
-		main.add(resetPanel);
-		resetPanel.setStyleName(CSS.SHOW_INLINE);
-		if (resetPanel.getElementById(RESET_ID) != null) resetPanel.addAndReplaceElement(resetLink, RESET_ID);
-		hide(resetPanel);
-
+		main.add(nextStepPanel);
+		nextStepPanel.setStyleName(CSS.BULK_NEXTSTEP);
+		nextStepPanel.add(nextStepText);
+		nextStepPanel.add(commitButton);
+		commitButton.addStyleName(CSS.PRIMARY_BUTTON);
+		hide(commitButton);
+		nextStepPanel.add(resetLink);
+		hide(nextStepPanel);
+		
 		clearResults();
 	}
 
 	public void onClick(final Widget sender) {
-		if (uploadButton == sender) {
-			doUpload();
-		} else if (parseButton == sender) {
-			uploadButton.setText("Upload " + contentType);
-			doParse();
-		} else if (sender == detailsLink) {
-			if (detailsLink.getText() == "Show details") {
-				parsedPanel.removeStyleName(CSS.HIDE);
-				detailsLink.setText("Hide details");
-			} else {
-				parsedPanel.addStyleName(CSS.HIDE);
-				detailsLink.setText("Show details");
-			}
-		} else if (sender == retryButton) {
-			hide(retryButton);
-			hide(resetPanel);
-			show(parseButton);
-			doParse();
-		} else if (sender == reuploadButton) {
-			hide(errorgrid);
-			hide(reuploadButton);
-			hide(resetPanel);
-			doUpload();
+		if (commitButton == sender) {
+			doCommit();
+		} else if (uploadButton == sender) {
+			commitButton.setText("Upload " + contentType);
+			doUploadAndParse();
 		} else {
-			updateContentType();
+			updateUploadType();
 		}
-
 	}
 
-	public void updateContentType() {
+	public void onSubmitComplete(final FormSubmitCompleteEvent event) {
+		final String results = event.getResults();
+		progressTimer.cancel();
+		uploadProgress.setProgress(1.0d);
+		if (results != "NO-SCRIPT-DATA" && results != "") {
+			// TODO: This is bad! It's to strip the <pre> and </pre>
+			// tags that get stuck on the string for some reason
+			fileOnServer = results.substring(5, results.length() - 6);
+			uploadStatus.sendNotice(NoticeType.WORKING, "Upload complete. Parsing " + contentType
+					+ ", please wait...");
+			parse();
+		}
+	}
+
+	public void onSubmit(final FormSubmitEvent event) {
+		// This event is fired just before the form is submitted. We can
+		// take this opportunity to perform validation.
+		if (file.getFilename().length() == 0) {
+			formMessage.sendNotice(NoticeType.WARNING, "Please select a file");
+			file.setStyleName(CSS.INVALID);
+			event.setCancelled(true);
+		}
+		clearResults();
+	}
+	
+	public void updateUploadType() {
 		if (samplesRadio.isChecked()) {
 			updateContentType(samplesRadio.getText());
 			service = MpDb.bulkUploadSamples_svc;
@@ -252,39 +245,44 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 	private void updateContentType(String type) {
 		contentType = type;
-		parseButton.setText("Parse " + type);
 	}
 
-	private void doUpload() {
-		hide(uploadButton);
-		status.sendNotice(NoticeType.WORKING, "Uploading " + contentType
-				+ ", please wait...");
+	private void doCommit() {
+		resultStatus.sendNotice(NoticeType.WORKING, "Submitting " + contentType
+				+ " to MetPetDB. Please wait...");
+		commitButton.setText("Submitting data...");
+		commitButton.setEnabled(false);
 		new VoidServerOp() {
 			public void begin() {
 				service.commit(fileOnServer, this);
 			}
 
 			public void onSuccess() {
-				status.sendNotice(NoticeType.SUCCESS, contentType
-						+ " uploaded successfully.");
-				resetLink.setText("upload more data");
-				show(resetPanel);
+				resultStatus.sendNotice(NoticeType.SUCCESS, contentType
+						+ " added to MetPetDB.");
+				resetLink.setText("Upload more data");
+				show(nextStepPanel);
+			}
+			public void onFailure(final Throwable e) {
+				// TODO better error handling
+				resultStatus.sendNotice(NoticeType.ERROR, "There was an error submitting the data.");
+				nextStepText.setText("Please submit a bug report to the developers. We are very sorry for the inconvenience. ");
+				resetLink.setText("Reset the form");
+				show(nextStepPanel);
 			}
 		}.begin();
 	}
 	
-	private void doParse() {
+	private void doUploadAndParse() {
 		form.submit();
 		clearResults();
-		parseButton.setText("Parsing...");
-		parseButton.setEnabled(false);
+		uploadButton.setText("Uploading...");
+		uploadButton.setEnabled(false);
 		show(progressContainer);
 		progressTimer.scheduleRepeating(3000);
 	}
-
+	
 	private void parse() {
-		status.sendNotice(NoticeType.WORKING, "Parsing " + contentType
-				+ ", please wait...");
 		new ServerOp<BulkUploadResult>() {
 			public void begin() {
 				service.parser(fileOnServer, this);
@@ -292,98 +290,76 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 			public void onSuccess(final BulkUploadResult results) {
 				hide(progressContainer);
-				status.hide();
-				populateParsedTable(results.getHeaders());
-				populateSummaryTable(results.getResultCounts());
-				show(resultsPanel);
-				hide(parseButton);
-				parseButton.setEnabled(true);
-				show(uploadButton);
-				final Map<Integer, ValidationException> errors = results
-						.getErrors();
+				uploadStatus.hide();
+				uploadButton.setText("Upload");
+				uploadButton.setEnabled(true);
+				populateMatchedColsPanel(results.getHeaders());
+				final Map<Integer, ValidationException> errors = results.getErrors();
+				populateSummaryPanel(results.getResultCounts(), errors.size());
 				if (!errors.isEmpty()) {
-					errorgrid.resize(errors.size() + 1, 2);
-					int i = 1;
-					errorgrid.setText(0, 0, "Row");
-					errorgrid.setText(0, 1, "Error");
-					for (Map.Entry<Integer, ValidationException> e : errors
-							.entrySet()) {
-						errorgrid.setText(i, 0, e.getKey().toString());
-						errorgrid.setText(i++, 1, e.getValue().format());
-					}
-					status.sendNotice(NoticeType.ERROR,
-							"There were some errors in the spreadsheet:");
-					show(errorgrid);
-					show(reuploadButton);
-					resetLink.setText("reset the form");
-					show(resetPanel);
-					uploadButton.setEnabled(false);
+					populateErrorPanel(errors);
+					resultStatus.sendNotice(NoticeType.WARNING, "Upload complete, but the file contains errors.");
+					nextStepText.setText("Please fix the errors and re-upload.");
+					resultsPanel.selectTab(2);
 				} else {
-					//TODO need to disbale this button if there are old ones
-					uploadButton.setEnabled(true);
+					setErrorTabStyle(0);
+					resultStatus.sendNotice(NoticeType.SUCCESS, "Upload complete.");
+					nextStepText.setText("Looks good! Remember to double-check the matched columns before submitting.");
+					resultsPanel.selectTab(0);
+					show(commitButton);
 				}
+				show(resultsPanel);
+				show(nextStepPanel);
 			}
 			public void onFailure(final Throwable e) {
 				e.printStackTrace();
-				status.sendNotice(NoticeType.ERROR, "Could not parse "
-						+ contentType + ". Please see the errors below.");
 				hide(progressContainer);
-				hide(parseButton);
-				parseButton.setEnabled(true);
-				show(retryButton);
-				show(resetPanel);
+				uploadButton.setText("Upload");
+				uploadButton.setEnabled(true);
+				uploadStatus.hide();
+				// TODO better error handling
+				resultStatus.sendNotice(NoticeType.ERROR, "There was an error parsing.");
+				nextStepText.setText("Please submit a bug report to the developers. We are very sorry for the inconvenience. ");
+				show(nextStepPanel);
 			}
 		}.begin();
 	}
 
-	public void onSubmitComplete(final FormSubmitCompleteEvent event) {
-		final String results = event.getResults();
-		progressTimer.cancel();
-		uploadProgress.setProgress(1.0d);
-		if (results != "NO-SCRIPT-DATA" && results != "") {
-			// TODO: This is bad! It's to strip the <pre> and </pre>
-			// tags that get stuck on the string for some reason
-			fileOnServer = results.substring(5, results.length() - 6);
-			parse();
-		}
-	}
-
-	public void onSubmit(final FormSubmitEvent event) {
-		// This event is fired just before the form is submitted. We can
-		// take this opportunity to perform validation.
-		if (file.getFilename().length() == 0) {
-			status.sendNotice(NoticeType.WARNING, "Please select a file");
-			file.setStyleName(CSS.INVALID);
-			event.setCancelled(true);
-		}
-		clearResults();
-	}
-
 	public void clearResults() {
-		errorgrid.resize(0, 0);
-		parsed.clear();
-		summary.clear();
+		errorGrid.resize(0, 0);
+		matchedColsGrid.resize(0,0);
+		summaryPanel.clear();
 		uploadProgress.setProgress(0.0d);
 		hide(resultsPanel);
-		status.hide();
+		hide(nextStepPanel);
+		hide(commitButton);
+		uploadStatus.hide();
+		formMessage.hide();
+		resultStatus.hide();
 		hide(progressContainer);
 	}
 
-	protected void populateParsedTable(final Map<Integer, String[]> headers) {
-		parsed.setText(0, 1, "Spreadsheet");
-		parsed.setText(0, 2, "MetPetDB");
-		parsed.getRowFormatter().setStyleName(0, CSS.TYPE_SMALL_CAPS);
-
-		int i = 1;
+	private void populateMatchedColsPanel(final Map<Integer, String[]> headers) {
+		matchedColsPanel.clear();
+		matchedColsPanel.add(new MText("Below is a list of columns from the uploaded spreadsheet " +
+				"and how MetPetDB understands them.","p"));
+		matchedColsPanel.add(matchedColsGrid);
+		
 		ArrayList<Integer> keys = new ArrayList<Integer>(headers.keySet());
+		matchedColsGrid.resize(keys.size() + 1, 3);
+		matchedColsGrid.setText(0, 1, "Spreadsheet");
+		matchedColsGrid.setText(0, 2, "MetPetDB");
+		matchedColsGrid.getRowFormatter().setStyleName(0, CSS.TYPE_SMALL_CAPS);
+
+		int i = 1;		
 		Collections.sort(keys);
 		for (Integer k : keys) {
-			parsed.setText(i, 0, (k + 1) + ".");
-			parsed.getFlexCellFormatter().setStyleName(i, 0,
+			matchedColsGrid.setText(i, 0, (k + 1) + ".");
+			matchedColsGrid.getCellFormatter().setStyleName(i, 0,
 					CSS.BULK_RESULTS_SSCOLNUM);
-
-			parsed.setWidget(i, 1, new HTML(headers.get(k)[0]));
-			parsed.getFlexCellFormatter().setStyleName(i, 1,
+			
+			matchedColsGrid.setWidget(i, 1, new HTML(headers.get(k)[0]));
+			matchedColsGrid.getCellFormatter().setStyleName(i, 1,
 					CSS.BULK_RESULTS_SSCOL);
 
 			String matched = "";
@@ -393,40 +369,71 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 				} catch (MissingResourceException mre) {
 					matched = headers.get(k)[1].toString();
 				}
+				matchedColsGrid.getCellFormatter().setStyleName(i, 2,
+						CSS.BULK_RESULTS_MPDBCOL);
+			} else {
+				matched = "--";
+				matchedColsGrid.getCellFormatter().addStyleName(i, 2,
+						CSS.EMPTY);
 			}
-			parsed.setWidget(i, 2, new HTML(matched));
-			parsed.getFlexCellFormatter().setStyleName(i, 2,
-					CSS.BULK_RESULTS_MPDBCOL);
+			matchedColsGrid.setText(i, 2, matched);
+			
 			i++;
 		}
 	}
 
-	protected void populateSummaryTable(final Map<String, BulkUploadResultCount> additions) {
+	private void populateSummaryPanel(final Map<String, BulkUploadResultCount> additions, int numErrors) {
+		summaryPanel.clear();
 		final Iterator<String> objItr = additions.keySet().iterator();
-		summary.setHTML(0, 1, "<div class=\"" + CSS.TYPE_SMALL_CAPS + "\">new</div>");
-		summary.setHTML(0, 2, "<div class=\"" + CSS.TYPE_SMALL_CAPS + "\">duplicate</div>");
-		summary.setHTML(0, 3, "<div class=\"" + CSS.TYPE_SMALL_CAPS + "\">invalid</div>");
-		summary.setHTML(0, 4, "<div class=\"" + CSS.TYPE_SMALL_CAPS + "\">total</div>");
-		int row = 1;
 		while(objItr.hasNext()) {
 			final String objType = objItr.next();
 			final int fresh = additions.get(objType).getFresh();
 			final int dup = additions.get(objType).getDuplicate();
 			final int invalid = additions.get(objType).getInvalid();
-			final int total = fresh + dup + invalid;
-			summary.setText(row, 0, objType);
-			addSummaryItem(row, 1, fresh, CSS.BULK_RESULTS_NEW);
-			addSummaryItem(row, 2, dup, CSS.BULK_RESULTS_DUPLICATE);
-			addSummaryItem(row, 3, invalid, CSS.BULK_RESULTS_INVALID);
-			addSummaryItem(row, 4, total, CSS.BULK_RESULTS_TOTAL);
-			++row;
+			if (fresh > 0) summaryPanel.add(new MText("Found "+fresh+" new "+getPlural(objType, fresh)+"."));
+			if (dup > 0) summaryPanel.add(new MText("Found "+dup+" duplicate "+getPlural(objType, dup)+"."));
+			if (invalid > 0) summaryPanel.add(new MText("Found "+invalid+" invalid "+getPlural(objType, invalid)+"."));
+		}
+		// TODO provide some summary of matched columns here
+	}
+
+	private void populateErrorPanel(Map<Integer, ValidationException> errors) {
+		errorPanel.clear();
+		errorPanel.add(new MText("There were "+errors.size()+" errors:", "p"));
+		errorPanel.add(errorGrid);
+		errorGrid.resize(errors.size() + 1, 2);
+		errorGrid.getRowFormatter().setStyleName(0, CSS.TYPE_SMALL_CAPS);
+		
+		int i = 0;
+		errorGrid.setText(0, 0, "Row");
+		errorGrid.setText(0, 1, "Error Message");
+		// TODO sort errors by line number (key)
+		for (Map.Entry<Integer, ValidationException> e : errors.entrySet()) {
+			errorGrid.setText(++i, 0, e.getKey().toString());
+			errorGrid.setText(i, 1, e.getValue().format());
+		}
+		setErrorTabStyle(i);
+	}
+	
+	private void setErrorTabStyle(int numErrors) {
+		errorTab.setText("Errors ("+numErrors+")");
+		if (numErrors > 0) {
+			errorTab.addStyleName("has-errors");
+			errorTab.removeStyleName(CSS.EMPTY);
+		} else {
+			errorTab.removeStyleName("has-errors");
+			errorTab.addStyleName(CSS.EMPTY);
 		}
 	}
-
-	protected void addSummaryItem(int row, int index, int count, String styleName) {
-		summary.setHTML(row, index, "<div class=\"" + CSS.TYPE_LARGE_NUMBER + "\">" + count + "</div>");
-		summary.getFlexCellFormatter().setStyleName(row, index, styleName);
-		if (count == 0) summary.getFlexCellFormatter().addStyleName(row, index, CSS.EMPTY);
+	
+	private String getPlural(String in, int num) {
+		String plural = in;
+		if (num != 1) {
+			if (in.equals("Sample")) plural = "Samples";
+			if (in.equals("Chemical Analysis")) plural = "Chemical Analyses";
+			if (in.equals("Image")) plural = "Images";
+		}
+		return plural.toLowerCase();
 	}
-
+	
 }

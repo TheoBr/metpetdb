@@ -120,16 +120,15 @@ public class CSS {
 	public static final String BULK_UPLOAD = "bulk-upload";
 	public static final String BULK_UPLOAD_FORM = "bulk-upload-form";
 	public static final String BULK_TYPES = "bulk-upload-types";
+	public static final String BULK_NEXTSTEP = "bulk-next";
 	public static final String BULK_RESULTS = "bulk-results";
 	public static final String BULK_RESULTS_PARSED = "parsed";
 	public static final String BULK_RESULTS_SSCOLNUM = "parsed-num";
 	public static final String BULK_RESULTS_SSCOL = "parsed-sscol";
 	public static final String BULK_RESULTS_MPDBCOL = "parsed-mpdbcol";
 	public static final String BULK_RESULTS_SUMMARY = "summary";
-	public static final String BULK_RESULTS_NEW = "summary-new";
-	public static final String BULK_RESULTS_DUPLICATE = "summary-dup";
-	public static final String BULK_RESULTS_INVALID = "summary-invalid";
-	public static final String BULK_RESULTS_TOTAL = "summary-total";
+	public static final String BULK_RESULTS_ERRORS = "errors";
+	
 	public static final String PROGRESSBAR_CONTAINER = "progressbar-container";
 	
 	/* ---------------- Page: Image Map ---------------- */
@@ -154,6 +153,8 @@ public class CSS {
 	public static final String REGISTER = "register";
 	public static final String ICON_PLUS = "icon-plus";
 	public static final String ICON_MINUS = "icon-minus";
+	
+	
 	
 	
 	

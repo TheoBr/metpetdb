@@ -8,9 +8,13 @@
 .bulk-upload .main {
 	margin: 0 auto;
 	width: 500px;
+	text-align: center;
 }
 
 /* types */
+.bulk-upload-types {
+	margin-bottom: 10px;
+}
 .bulk-upload-types li {
 	display: inline;
 	margin-right: 10px;
@@ -28,36 +32,55 @@
 	line-height: 1;
 	vertical-align: middle;
 }
-.bulk-upload-form {
-	margin: 10px 10px 0;
-}
 .bulk-upload-form .gwt-FileUpload {
 	width: 500px;
 }
-.bulk-upload .notice-panel {
-	margin: 10px;
-}
 
 /* results */
-.bulk-results .left-col {
-	width: 15em;
+.bulk-results {
+	width: 100%;
 }
-.bulk-results .right-col {
-	width: auto;
+.bulk-results .tabBar {
+	background: transparent url(../images/tabbarlite-bg.gif) repeat-x left 50%;
+	padding: 0;
+	border-bottom: none;
 }
+.bulk-results .tabBar *,
+.bulk-results .tabBar *:active {
+	background: none;
+	padding: none;
+}
+.bulk-results .tabBar table {
+	background: color: #fff;
+}
+.bulk-results .tabBar .tabBarItem-content {
+	color: #666;
+	padding: 1px 6px;
+	height: auto;
+	border: 1px solid transparent;
+}
+.bulk-results .tabBarItem-selected .tabBarItem-content {
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	background-color: #dfdfdf;
+	color: #000;
+	border-color: #ccc;
+}
+.bulk-results,
 .bulk-results .parsed,
 .bulk-results .summary,
-.bulk-upload-types {
-	margin: 10px;
+.bulk-upload-types,
+.bulk-upload-form,
+.bulk-upload .notice-panel,
+.bulk-next {
+	margin-top: 10px;
 }
-.bulk-upload .main button {
-	margin: 0 5px 0 10px;
+.bulk-results .tabPanelBottom {
+	text-align: left;
+	border-bottom: 2px solid #bbb;
 }
-.bulk-results .summary table {
-	margin: 5px 0 10px;
-}
-.bulk-results .summary button {
-	margin-left: 0;
+.bulk-results .tabPanelBottom table {
+	margin: 0 auto;
 }
 .bulk-results .parsed td {
 	vertical-align: middle;
@@ -79,33 +102,31 @@
 .bulk-results .parsed-mpdbcol {
 	font-weight: bold;
 }
-.bulk-results .summary td {
-	padding: 0 10px;
-	border-right: 1px solid #ddd;
-	text-align: center;
-	vertical-align: middle;
-}
-.bulk-results .summary td:first-child {
-	padding-left: 0;
-}
-.bulk-results .summary td:last-child {
-	border-right: none;
-	padding-right: 0;
-}
-.bulk-results .summary .type-small-caps {
-	margin-bottom: 3px;
-}
-.bulk-results .summary-new .type-large-number {
-	color: #4a841b;
-}
-.bulk-results .summary-dup .type-large-number {
-	color: #82a9cd;
-}
-.bulk-results .summary-invalid .type-large-number {
+.bulk-results .has-errors {
 	color: #992c1a;
 }
-.bulk-results .summary .empty div {
-	color: #aaa !important;
+.bulk-results p {
+	margin: 10px 0;
+}
+.bulk-results .parsed .empty {
+	color: #aaa;
+}
+.bulk-results .errors tr td:first-child {
+	text-align: center;
+}
+.bulk-results .errors tr+tr td:first-child {
+	color: #992c1a;
+}
+.bulk-results .errors td {
+	padding: 2px 5px 2px 0;
+	border-bottom: 1px solid #eee;
+}
+.bulk-results .errors tr:last-child td {
+	padding: 2px 5px 0 0;
+	border-bottom: none;
 }
 
+.bulk-upload .notice-hide {
+	display: none;
+}
 

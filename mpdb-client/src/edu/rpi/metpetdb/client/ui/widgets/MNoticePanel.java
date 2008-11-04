@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.ui.widgets;
 
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.CSS;
 
@@ -34,6 +35,18 @@ public class MNoticePanel extends SimplePanel {
 
 	public void sendNotice(String msg) {
 		sendNotice(NoticeType.GENERIC, msg);
+	}
+	
+	public void sendNotice(NoticeType type, Widget w) {
+		notice = new MNotice(type);
+		notice.setMessage(w);
+		notice.setParent(this);
+		setWidget(notice);
+		show();
+	}
+
+	public void sendNotice(Widget w) {
+		sendNotice(NoticeType.GENERIC, w);
 	}
 
 	public void hide() {
