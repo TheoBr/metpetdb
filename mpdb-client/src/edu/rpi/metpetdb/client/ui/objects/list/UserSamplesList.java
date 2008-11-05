@@ -179,6 +179,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 				MpDb.sample_svc.allSamplesForUser(p, id, ac);
 			}
 		};
+		list.simpleView();
 	}
 
 	private void addSamples() {
@@ -353,9 +354,9 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	private void buildSampleFilters() {
 		final MLink simple = new MLink("Simple", new ClickListener() {
 			public void onClick(Widget sender) {
+				list.simpleView();
 			}
 		});
-		simple.addStyleName(CSS.BETA);
 
 		final MLink detailed = new MLink("Detailed", new ClickListener() {
 			public void onClick(Widget sender) {

@@ -11,6 +11,7 @@ import edu.rpi.metpetdb.client.model.properties.Property;
  */
 public class Column {
 
+	private boolean simpleView;
 	private String title;
 	private Property property;
 	private boolean sortable;
@@ -22,17 +23,17 @@ public class Column {
 	 * @param title
 	 * @param property
 	 */
-	public Column(final String title, final boolean customFormat) {
-		this(title, null, false, customFormat);
+	public Column(final boolean simpleView, final String title, final boolean customFormat) {
+		this(simpleView, title, null, false, customFormat);
 	}
 
-	public Column(final String title, final Property property) {
-		this(title, property, true, false);
+	public Column(final boolean simpleView, final String title, final Property property) {
+		this(simpleView, title, property, true, false);
 	}
 
-	public Column(final String title, final boolean sortable,
+	public Column(final boolean simpleView, final String title, final boolean sortable,
 			final boolean customFormat) {
-		this(title, null, sortable, customFormat);
+		this(simpleView, title, null, sortable, customFormat);
 	}
 
 	/**
@@ -42,9 +43,9 @@ public class Column {
 	 * @param property
 	 * @param customFormat
 	 */
-	public Column(final String title, final Property property,
+	public Column(final boolean simpleView, final String title, final Property property,
 			final boolean customFormat) {
-		this(title, property, true, customFormat);
+		this(simpleView, title, property, true, customFormat);
 	}
 
 	/**
@@ -52,8 +53,8 @@ public class Column {
 	 * 
 	 * @param title
 	 */
-	public Column(final String title) {
-		this(title, null, false, false);
+	public Column(final boolean simpleView, final String title) {
+		this(simpleView, title, null, false, false);
 	}
 
 	/**
@@ -68,8 +69,9 @@ public class Column {
 	 * @param customFormat
 	 * 		if it has a custom format
 	 */
-	public Column(final String title, final Property property,
+	public Column(final boolean simpleView, final String title, final Property property,
 			final boolean sortable, final boolean customFormat) {
+		this.simpleView = simpleView;
 		this.title = title;
 		this.sortable = sortable;
 		this.property = property;
@@ -179,6 +181,25 @@ public class Column {
 	 */
 	public Column setCustomFormat(boolean customFormat) {
 		this.customFormat = customFormat;
+		return this;
+	}
+	
+	/**
+	 * Whether the column is part of the simple view or not
+	 * @return
+	 */
+	public boolean isSimpleView() {
+		return simpleView;
+	}
+
+	/**
+	 * Sets Whether the column is part of the simple view or not
+	 * 
+	 * @param simpleView
+	 * @return
+	 */
+	public Column SetSimpleView(boolean simpleView) {
+		this.simpleView = simpleView;
 		return this;
 	}
 

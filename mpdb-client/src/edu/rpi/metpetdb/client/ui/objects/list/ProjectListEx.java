@@ -35,14 +35,14 @@ public abstract class ProjectListEx extends ListEx<Project> {
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
 	public static Column[] columns = {
-			new Column("Check", true, true) {
+			new Column(true, "Check", true, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new MCheckBox(data);
 				}
 			},
-			new Column(enttxt.Project_name(), ProjectProperty.name),
-			new Column(enttxt.Project_Owner(), ProjectProperty.owner, true) {
+			new Column(true,enttxt.Project_name(), ProjectProperty.name),
+			new Column(true,enttxt.Project_Owner(), ProjectProperty.owner, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new MLink(((User) data.mGet(ProjectProperty.owner))
@@ -50,14 +50,14 @@ public abstract class ProjectListEx extends ListEx<Project> {
 							.detailsOf((User) data.mGet(ProjectProperty.owner)));
 				}
 			},
-			new Column(enttxt.Project_MemberCount(),
+			new Column(true,enttxt.Project_MemberCount(),
 					ProjectProperty.memberCount),
-			new Column(enttxt.Project_LastSampleAddded(), true) {
+			new Column(true,enttxt.Project_LastSampleAddded(), true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new Label("Coming Soon");
 				}
-			}, new Column(enttxt.Project_Actions(), true) {
+			}, new Column(true,enttxt.Project_Actions(), true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new MLink("Go to project", new ClickListener() {

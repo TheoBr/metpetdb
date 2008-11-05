@@ -185,9 +185,10 @@ public class Search extends MPagePanel {
 	private void buildSampleFilters() {
 		final MLink simple = new MLink("Simple", new ClickListener() {
 			public void onClick(Widget sender) {
+				sampleList.simpleView();
 			}
 		});
-		simple.addStyleName(CSS.BETA);
+
 
 		final MLink detailed = new MLink("Detailed", new ClickListener() {
 			public void onClick(Widget sender) {

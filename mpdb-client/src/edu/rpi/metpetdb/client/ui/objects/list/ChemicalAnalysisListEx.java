@@ -32,7 +32,7 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
 	public static Column[] columns = {
-			new Column(enttxt.ChemicalAnalysis_spotId(),
+			new Column(true,enttxt.ChemicalAnalysis_spotId(),
 					ChemicalAnalysisProperty.spotId, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
@@ -49,11 +49,11 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 			// // not ordered properly
 			// new Column(enttxt.ChemicalAnalysis_subsample(),
 			// ChemicalAnalysisProperty.subsampleName),
-			new Column(enttxt.ChemicalAnalysis_pointX(),
+			new Column(true,enttxt.ChemicalAnalysis_pointX(),
 					ChemicalAnalysisProperty.pointX),
-			new Column(enttxt.ChemicalAnalysis_pointY(),
+			new Column(true,enttxt.ChemicalAnalysis_pointY(),
 					ChemicalAnalysisProperty.pointY),
-			new Column(enttxt.ChemicalAnalysis_method(),
+			new Column(true,enttxt.ChemicalAnalysis_method(),
 					ChemicalAnalysisProperty.analysisMethod, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
@@ -64,7 +64,7 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 					return new MText(text);
 				}
 			},
-			new Column(enttxt.ChemicalAnalysis_location(),
+			new Column(true,enttxt.ChemicalAnalysis_location(),
 					ChemicalAnalysisProperty.location, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
@@ -75,7 +75,7 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 					return new MText(text);
 				}
 			},
-			new Column(enttxt.ChemicalAnalysis_analyst(),
+			new Column(true,enttxt.ChemicalAnalysis_analyst(),
 					ChemicalAnalysisProperty.analyst, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
@@ -86,7 +86,7 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 					return new MText(text);
 				}
 			},
-			new Column(enttxt.ChemicalAnalysis_analysisDate(),
+			new Column(true,enttxt.ChemicalAnalysis_analysisDate(),
 					ChemicalAnalysisProperty.analysisDate, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {

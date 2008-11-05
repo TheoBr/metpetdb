@@ -428,6 +428,16 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 		headerTable.getRowFormatter().addStyleName(0, "mpdb-dataTablePink");
 		scrollTable.reloadPage();
 	}
+	
+	public void simpleView(){
+		ArrayList<Column> simple = new ArrayList<Column>();
+		for (Column c : originalColumns){
+			if (c.isSimpleView()){
+				simple.add(c);
+			}
+		}
+		newView(simple);
+	}
 
 	/**
 	 * Reloads the current page to force a refresh of the data

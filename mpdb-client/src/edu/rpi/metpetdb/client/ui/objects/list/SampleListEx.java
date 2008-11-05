@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.ui.objects.list;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 
 import org.postgis.Point;
 
@@ -10,9 +11,11 @@ import com.google.gwt.user.client.ui.Image;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Region;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
@@ -37,20 +40,20 @@ public abstract class SampleListEx extends ListEx<Sample> {
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
 	private static Column[] columns = {
-			new Column("Check", true, true) {
+			new Column(true,"Check", true, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new MCheckBox(data);
 				}
 			},
-			new Column(enttxt.Sample_alias(), SampleProperty.alias, true) {
+			new Column(true,enttxt.Sample_alias(), SampleProperty.alias, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new MLink((String) data.mGet(SampleProperty.alias),
 							TokenSpace.detailsOf((Sample) data));
 				}
 			},
-			new Column(enttxt.Sample_sesarNumber(), SampleProperty.sesarNumber,
+			new Column(false,enttxt.Sample_sesarNumber(), SampleProperty.sesarNumber,
 					true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
@@ -59,7 +62,7 @@ public abstract class SampleListEx extends ListEx<Sample> {
 							.detailsOf((Sample) data));
 				}
 			},
-			new Column(enttxt.Sample_owner(), SampleProperty.owner, true) {
+			new Column(false,enttxt.Sample_owner(), SampleProperty.owner, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new MLink(((User) data.mGet(SampleProperty.owner))
@@ -67,7 +70,7 @@ public abstract class SampleListEx extends ListEx<Sample> {
 							.detailsOf((User) data.mGet(SampleProperty.owner)));
 				}
 			},
-			new Column(enttxt.Sample_collector(), SampleProperty.collector,
+			new Column(false, enttxt.Sample_collector(), SampleProperty.collector,
 					true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
@@ -78,7 +81,7 @@ public abstract class SampleListEx extends ListEx<Sample> {
 
 				}
 			},
-			new Column(enttxt.Sample_collectionDate(),
+			new Column(false, enttxt.Sample_collectionDate(),
 					SampleProperty.collectionDate, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
@@ -89,8 +92,8 @@ public abstract class SampleListEx extends ListEx<Sample> {
 							.getText();
 				}
 			},
-			new Column(enttxt.Sample_rockType(), SampleProperty.rockType),
-			new Column(enttxt.Sample_publicData(), SampleProperty.publicData,
+			new Column(true,enttxt.Sample_rockType(), SampleProperty.rockType),
+			new Column(true,enttxt.Sample_publicData(), SampleProperty.publicData,
 					true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
@@ -108,7 +111,7 @@ public abstract class SampleListEx extends ListEx<Sample> {
 					};
 				}
 			},
-			new Column("Location", SampleProperty.location, true) {
+			new Column(false, "Location", SampleProperty.location, true) {
 				protected Object getText(final MObject data,
 						final int currentRow) {
 					final Point location = (Point) data
@@ -117,7 +120,7 @@ public abstract class SampleListEx extends ListEx<Sample> {
 							+ ")";
 				}
 			},
-			new Column(enttxt.Sample_country(), SampleProperty.country, true) {
+			new Column(true,enttxt.Sample_country(), SampleProperty.country, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					String text = ((String) data.mGet(SampleProperty.country));
@@ -127,10 +130,42 @@ public abstract class SampleListEx extends ListEx<Sample> {
 
 				}
 			},
-			new Column(enttxt.Sample_subsampleCount(),
+			new Column(true,enttxt.Sample_regions(), SampleProperty.regions, true) {
+				protected Object getWidget(final MObject data,
+						final int currentRow) {
+					Set<Region> regions = ((Set<Region>) data.mGet(SampleProperty.regions));
+					String text = "";
+					for (Region r : regions){
+						text += r.getName() + ", ";
+					}
+					if (text.equals("")){
+						text = "------";
+					} else
+						text = text.substring(0,text.length()-2);
+					return new MText(text);
+
+				}
+			},
+			new Column(true,enttxt.Sample_minerals(), SampleProperty.minerals, true) {
+				protected Object getWidget(final MObject data,
+						final int currentRow) {
+					Set<SampleMineral> minerals = ((Set<SampleMineral>) data.mGet(SampleProperty.minerals));
+					String text = "";
+					for (SampleMineral m : minerals){
+						text += m.getName() + ", ";
+					}
+					if (text.equals("")){
+						text = "------";
+					} else
+						text = text.substring(0,text.length()-2);
+					return new MText(text);
+
+				}
+			},
+			new Column(true,enttxt.Sample_subsampleCount(),
+					
 					SampleProperty.subsampleCount),
 	};
-
 	public abstract void update(final PaginationParameters p,
 			final AsyncCallback<Results<Sample>> ac);
 

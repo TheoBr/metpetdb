@@ -30,13 +30,13 @@ public abstract class SubsampleListEx extends ListEx<Subsample> {
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
 	public static Column[] columns = {
-			new Column("Check", true, true) {
+			new Column(true, "Check", true, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new CheckBox();
 				}
 			},
-			new Column(enttxt.Subsample_name(), SubsampleProperty.name, true) {
+			new Column(true, enttxt.Subsample_name(), SubsampleProperty.name, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new MLink(
@@ -44,10 +44,10 @@ public abstract class SubsampleListEx extends ListEx<Subsample> {
 							TokenSpace.detailsOf((Subsample) data));
 				}
 			},
-			new Column(enttxt.Subsample_subsampleType(), SubsampleProperty.subsampleType),
-			new Column(enttxt.Subsample_imageCount(),
+			new Column(true, enttxt.Subsample_subsampleType(), SubsampleProperty.subsampleType),
+			new Column(true, enttxt.Subsample_imageCount(),
 					SubsampleProperty.imageCount),
-			new Column(enttxt.Subsample_images(), SubsampleProperty.images,
+			new Column(true, enttxt.Subsample_images(), SubsampleProperty.images,
 					true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
@@ -55,7 +55,7 @@ public abstract class SubsampleListEx extends ListEx<Subsample> {
 							.ViewOf((Subsample) data));
 				}
 			}, // TODO image thumbnail browser
-			new Column("Image Map", true) {
+			new Column(true, "Image Map", true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					final Subsample s = (Subsample) data;
@@ -68,7 +68,7 @@ public abstract class SubsampleListEx extends ListEx<Subsample> {
 					}
 				}
 			},
-			new Column(enttxt.Subsample_analysisCount(),
+			new Column(true, enttxt.Subsample_analysisCount(),
 					SubsampleProperty.analysisCount),
 
 	};
