@@ -89,7 +89,7 @@ CREATE FUNCTION archive_sample_references() RETURNS trigger AS $archive_sample_r
 	THEN
 	    INSERT INTO sample_reference_archive SELECT NEW.sample_id, NEW.reference_id, sample.version FROM samples sample WHERE sample.sample_id = NEW.sample_id;	
 	ELSE
-	    INSERT INTO sample_reference_archive SELECT reference.sample_id, reference.reference_id, sample.version FROM samples sample inner join sample_references reference on reference.sample_id = sample.sample_id WHERE sample.sample_id = NEW.sample_id;
+	    INSERT INTO sample_reference_archive SELECT reference.sample_id, reference.reference_id, sample.version FROM samples sample inner join sample_reference reference on reference.sample_id = sample.sample_id WHERE sample.sample_id = NEW.sample_id;
 	END IF;
 
 	RETURN NEW;
