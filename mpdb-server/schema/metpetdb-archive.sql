@@ -132,3 +132,37 @@ CREATE TABLE chemical_analyses_archive
       REFERENCES minerals(mineral_id)
       ON DELETE SET NULL
 ) WITHOUT OIDS;
+
+CREATE TABLE chemical_analysis_elements_archive
+(
+    chemical_analysis_id INT8 NOT NULL,
+    chemical_analysis_version INT4 NOT NULL,
+    element_id INT2 NOT NULL,
+    amount     FLOAT4 NOT NULL,
+    precision  FLOAT4,
+    precision_type  VARCHAR(3),
+    measurement_unit VARCHAR(3),
+    min_amount FLOAT4,
+    max_amount FLOAT(4),
+    CONSTRAINT analysis_elements_archive_sk PRIMARY KEY (chemical_analysis_id, element_id, chemical_analysis_version),
+    CONSTRAINT analysis_elements_fk_chemical_analyses_archive FOREIGN KEY (chemical_analysis_id, chemical_analysis_version) REFERENCES chemical_analyses_archive(chemical_analysis_id, version),
+    CONSTRAINT analysis_elements_fk_elements_archive FOREIGN KEY (element_id) REFERENCES elements(element_id),
+    CONSTRAINT analysis_elements_ck_archive CHECK (precision_type in ('ABS', 'REL'))
+) WITHOUT OIDS ;
+
+CREATE TABLE chemical_analysis_oxides_archive
+(
+    chemical_analysis_id INT8 NOT NULL,
+    chemical_analysis_version INT4 NOT NULL,
+    oxide_id INT2 NOT NULL,
+    amount     FLOAT4 NOT NULL,
+    precision  FLOAT4,
+    precision_type  VARCHAR(3),
+    measurement_unit VARCHAR(3),
+    min_amount FLOAT4,
+    max_amount FLOAT(4),
+    CONSTRAINT analysis_oxides_archive_sk PRIMARY KEY (chemical_analysis_id, oxide_id, chemical_analysis_version),
+    CONSTRAINT analysis_oxides_fk_chemical_analyses_archive FOREIGN KEY (chemical_analysis_id, chemical_analysis_version) REFERENCES chemical_analyses_archive(chemical_analysis_id, version),
+    CONSTRAINT analysis_oxides_fk_oxides_archive FOREIGN KEY (oxide_id) REFERENCES oxides(oxide_id),
+    CONSTRAINT analysis_oxides_ck_archive CHECK (precision_type in ('ABS', 'REL'))
+) WITHOUT OIDS ;

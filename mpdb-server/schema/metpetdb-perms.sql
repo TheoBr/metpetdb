@@ -41,6 +41,8 @@ GRANT select,insert,update,delete ON sample_metamorphic_grades_archive to @APPUS
 GRANT select,insert,update,delete ON sample_reference_archive to @APPUSER@;
 GRANT select,insert,update,delete ON subsamples_archive to @APPUSER@;
 GRANT select,insert,update,delete ON chemical_analyses_archive to @APPUSER@;
+GRANT select,insert,update,delete ON chemical_analysis_elements_archive to @APPUSER@;
+GRANT select,insert,update,delete ON chemical_analysis_oxides_archive to @APPUSER@;
 
 GRANT update ON mineral_seq   TO @APPUSER@;
 GRANT update ON project_seq   TO @APPUSER@;

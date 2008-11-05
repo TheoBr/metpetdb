@@ -141,3 +141,45 @@ $archive_chemical_analysis$ LANGUAGE plpgsql;
 
 CREATE TRIGGER tafter AFTER INSERT OR UPDATE ON chemical_analyses
     FOR EACH ROW EXECUTE PROCEDURE archive_chemical_analysis();
+
+
+
+CREATE FUNCTION archive_chemical_analysis_elements() RETURNS trigger AS $archive_chemical_analysis_elements$
+    DECLARE
+	myrec INTEGER;
+    BEGIN
+	SELECT INTO myrec count(*) FROM chemical_analysis_elements_archive caea inner join chemical_analyses ca on ca.chemical_analysis_id = caea.chemical_analysis_id AND caea.chemical_analysis_version = ca.version WHERE NEW.chemical_analysis_id = ca.chemical_analysis_id;
+	IF myrec <> 0
+	THEN
+	    INSERT INTO chemical_analysis_elements_archive SELECT NEW.chemical_analysis_id, ca.version, NEW.element_id, NEW.amount, NEW.precision, NEW.precision_type, NEW.measurement_unit, NEW.min_amount, NEW.max_amount FROM chemical_analyses ca WHERE ca.chemical_analysis_id = NEW.chemical_analysis_id;
+	ELSE
+	    INSERT INTO chemical_analysis_elements_archive SELECT cae.chemical_analysis_id, ca.version, cae.element_id, cae.amount, cae.precision, cae.precision_type, cae.measurement_unit, cae.min_amount, cae.max_amount FROM chemical_analyses ca inner join chemical_analysis_elements cae on ca.chemical_analysis_id = cae.chemical_analysis_id WHERE ca.chemical_analysis_id = NEW.chemical_analysis_id;
+	END IF;
+
+	RETURN NEW;
+    END;
+$archive_chemical_analysis_elements$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tafter AFTER INSERT OR UPDATE ON chemical_analysis_elements
+    FOR EACH ROW EXECUTE PROCEDURE archive_chemical_analysis_elements();
+
+
+
+CREATE FUNCTION archive_chemical_analysis_oxides() RETURNS trigger AS $archive_chemical_analysis_oxides$
+    DECLARE
+	myrec INTEGER;
+    BEGIN
+	SELECT INTO myrec count(*) FROM chemical_analysis_oxides_archive caoa inner join chemical_analyses ca on ca.chemical_analysis_id = caoa.chemical_analysis_id AND caoa.chemical_analysis_version = ca.version WHERE NEW.chemical_analysis_id = ca.chemical_analysis_id;
+	IF myrec <> 0
+	THEN
+	    INSERT INTO chemical_analysis_oxides_archive SELECT NEW.chemical_analysis_id, ca.version, NEW.oxide_id, NEW.amount, NEW.precision, NEW.precision_type, NEW.measurement_unit, NEW.min_amount, NEW.max_amount FROM chemical_analyses ca WHERE ca.chemical_analysis_id = NEW.chemical_analysis_id;
+	ELSE
+	    INSERT INTO chemical_analysis_oxides_archive SELECT cao.chemical_analysis_id, ca.version, cao.oxide_id, cao.amount, cao.precision, cao.precision_type, cao.measurement_unit, cao.min_amount, cao.max_amount FROM chemical_analyses ca inner join chemical_analysis_oxides cao on ca.chemical_analysis_id = cao.chemical_analysis_id WHERE ca.chemical_analysis_id = NEW.chemical_analysis_id;
+	END IF;
+
+	RETURN NEW;
+    END;
+$archive_chemical_analysis_oxides$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tafter AFTER INSERT OR UPDATE ON chemical_analysis_oxides
+    FOR EACH ROW EXECUTE PROCEDURE archive_chemical_analysis_oxides();
