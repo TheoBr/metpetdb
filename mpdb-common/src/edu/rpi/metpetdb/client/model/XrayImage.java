@@ -6,7 +6,7 @@ public class XrayImage extends Image {
 	private Integer dwelltime;
 	private Integer current;
 	private Integer voltage;
-	private Element element;
+	private String element;
 
 	public Integer getDwelltime() {
 		return dwelltime;
@@ -32,11 +32,11 @@ public class XrayImage extends Image {
 		voltage = i;
 	}
 
-	public Element getElement() {
+	public String getElement() {
 		return element;
 	}
 
-	public void setElement(final Element e) {
+	public void setElement(final String e) {
 		element = e;
 	}
 

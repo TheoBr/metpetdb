@@ -30,7 +30,6 @@ public class XrayImageDAO extends MpDbDAO<XrayImage> {
 	public XrayImage save(XrayImage inst) throws DAOException {
 		inst.setSample((new SampleDAO(sess)).fill(inst.getSample()));
 		inst.setSubsample((new SubsampleDAO(sess)).fill(inst.getSubsample()));
-		inst.setElement((new ElementDAO(sess)).fill(inst.getElement()));
 		inst.setImageType(new ImageTypeDAO(sess).fill(inst.getImageType()));
 		inst = _save(inst);
 		return inst;

@@ -68,7 +68,7 @@ public class ImageParser extends Parser{
 
 			},
 			{
-					"element", "setElement", Element.class, "XrayImage_element"
+					"element", "setElement", String.class, "XrayImage_element"
 			},
 			{
 				"(collector)|(collected by)", "setCollector", String.class,
@@ -279,14 +279,6 @@ public class ImageParser extends Parser{
 
 						if (img.getSubsample().getSample() == null)
 							img.getSubsample().setSample(img.getSample());
-
-					} else if (dataType == Element.class) {
-
-						final String data = cell.toString();
-						if (img.getElement() == null)
-							img.setElement(new Element());
-						img.getElement().setName(data);
-
 					} else if (dataType == Integer.class) {
 
 						final Double data = new Double(cell

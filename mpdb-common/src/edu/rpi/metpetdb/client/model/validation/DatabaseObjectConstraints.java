@@ -97,7 +97,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public IntegerConstraint XrayImage_current;
 	public IntegerConstraint XrayImage_voltage;
 	public IntegerConstraint XrayImage_dwelltime;
-	public ValueInCollectionConstraint XrayImage_element;
+	public StringConstraint XrayImage_element;
 
 	public void validate(final XrayImage xi) throws ValidationException {
 		validate(xi, XrayImage__all);

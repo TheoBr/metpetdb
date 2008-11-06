@@ -45,7 +45,7 @@ public enum XrayImageProperty implements Property {
 
 		public <T extends MObject, K> void set(final T xrayImage,
 				final K element) {
-			((XrayImage) xrayImage).setElement((Element) element);
+			((XrayImage) xrayImage).setElement((String) element);
 		}
 	};
 }

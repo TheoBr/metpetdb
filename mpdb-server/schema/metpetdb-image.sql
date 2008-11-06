@@ -100,7 +100,8 @@ CREATE TABLE image_reference
 CREATE TABLE xray_image
 (
    image_id INT8 NOT NULL,
-   element_id INT2 NOT NULL,
+   element VARCHAR(256),
+   --element_id INT2 NOT NULL,
    --radiation BOOLEAN,
    --lines VARCHAR(100),
    dwelltime INT2, -- msec
@@ -108,9 +109,7 @@ CREATE TABLE xray_image
    voltage INT2, --kilo watts
    CONSTRAINT xray_image_sk PRIMARY KEY (image_id),
    CONSTRAINT xray_image_fk_image FOREIGN KEY (image_id)
-     REFERENCES images(image_id), --does not need ON DELET CASCADE, hibernate takes care of it
-   CONSTRAINT xray_image_fk_element FOREIGN KEY (element_id)
-     REFERENCES elements(element_id)
+     REFERENCES images(image_id) --does not need ON DELET CASCADE, hibernate takes care of it
 ) WITHOUT OIDS;
 
 

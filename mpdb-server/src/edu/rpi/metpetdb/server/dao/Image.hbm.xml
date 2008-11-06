@@ -39,8 +39,7 @@
 	    <property name="dwelltime" column="dwelltime"/>
 	    <property name="current" column="current"/>
 	    <property name="voltage" column="voltage"/>
-	    
-	    <many-to-one name="element" column="element_id" class="Element" lazy="false"/>
+	    <property name="element" column="element"/>
    </joined-subclass>
   </class>
 

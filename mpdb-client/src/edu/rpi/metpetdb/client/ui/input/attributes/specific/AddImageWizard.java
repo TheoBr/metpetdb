@@ -23,7 +23,7 @@ public class AddImageWizard extends WizardDialog {
 				new TextAttribute(MpDb.doc.XrayImage_current),
 				new TextAttribute(MpDb.doc.XrayImage_voltage),
 				new TextAttribute(MpDb.doc.XrayImage_dwelltime),
-				new ListboxAttribute(MpDb.doc.XrayImage_element),
+				new TextAttribute(MpDb.doc.XrayImage_element),
 		};
 
 		final DetailsPanel p_xray = new DetailsPanel(xray_attributes,
