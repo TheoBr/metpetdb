@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.ProgressBar;
 
 import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -312,15 +313,19 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 				show(nextStepPanel);
 			}
 			public void onFailure(final Throwable e) {
-				e.printStackTrace();
-				hide(progressContainer);
-				uploadButton.setText("Upload");
-				uploadButton.setEnabled(true);
-				uploadStatus.hide();
-				// TODO better error handling
-				resultStatus.sendNotice(NoticeType.ERROR, "There was an error parsing.");
-				nextStepText.setText("Please submit a bug report to the developers. We are very sorry for the inconvenience. ");
-				show(nextStepPanel);
+				if (e instanceof LoginRequiredException)
+					super.onFailure(e);
+				else {
+					e.printStackTrace();
+					hide(progressContainer);
+					uploadButton.setText("Upload");
+					uploadButton.setEnabled(true);
+					uploadStatus.hide();
+					// TODO better error handling
+					resultStatus.sendNotice(NoticeType.ERROR, "There was an error parsing.");
+					nextStepText.setText("Please submit a bug report to the developers. We are very sorry for the inconvenience. ");
+					show(nextStepPanel);
+				}
 			}
 		}.begin();
 	}

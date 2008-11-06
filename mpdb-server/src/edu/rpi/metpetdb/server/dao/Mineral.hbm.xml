@@ -28,7 +28,7 @@
   <query name="Mineral.byName">
     from Mineral m
     where m.id = (
-    	select m2.realMineralId from Mineral m2 where m2.name=:name
+    	select m2.realMineralId from Mineral m2 where lower(m2.name)=lower(:name)
     )
   </query>
   
