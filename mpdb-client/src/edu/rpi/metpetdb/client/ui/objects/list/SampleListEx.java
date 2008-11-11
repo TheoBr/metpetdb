@@ -162,9 +162,11 @@ public abstract class SampleListEx extends ListEx<Sample> {
 
 				}
 			},
-			new Column(true,enttxt.Sample_subsampleCount(),
-					
-					SampleProperty.subsampleCount),
+			new Column(true,enttxt.Sample_subsampleCount(), SampleProperty.subsampleCount),
+			
+			new Column(false,enttxt.Sample_imageCount(),SampleProperty.imageCount),
+							
+			new Column(false,enttxt.Sample_analysisCount(),SampleProperty.analysisCount),
 	};
 	public abstract void update(final PaginationParameters p,
 			final AsyncCallback<Results<Sample>> ac);

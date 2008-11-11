@@ -85,6 +85,10 @@ public class Sample extends MObject implements IHasName, HasDate {
 	private Set<SampleComment> comments;
 
 	private int SubsampleCount;
+	
+	private int imageCount;
+	
+	private int analysisCount;
 
 	public long getId() {
 		return id;
@@ -108,6 +112,22 @@ public class Sample extends MObject implements IHasName, HasDate {
 
 	public void setSubsampleCount(final int i) {
 		SubsampleCount = i;
+	}
+	
+	public int getImageCount() {
+		return imageCount;
+	}
+
+	public void setImageCount(final int i) {
+		imageCount = i;
+	}
+	
+	public int getAnalysisCount() {
+		return analysisCount;
+	}
+
+	public void setAnalysisCount(final int i) {
+		analysisCount = i;
 	}
 
 	public String getSesarNumber() {

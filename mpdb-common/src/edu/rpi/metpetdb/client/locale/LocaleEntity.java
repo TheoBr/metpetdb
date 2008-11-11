@@ -61,6 +61,8 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String Sample_references();
 
 	String Sample_subsampleCount();
+	String Sample_analysisCount();
+	String Sample_imageCount();
 
 	String Sample_editDescription();
 

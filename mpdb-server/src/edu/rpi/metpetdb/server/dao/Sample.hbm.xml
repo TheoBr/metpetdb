@@ -26,7 +26,12 @@
     
     <property name="subsampleCount" formula="(select count(*) from subsamples s
     																		where s.sample_id=sample_id)" />
-    
+    <property name="imageCount" formula="(select count(*) from subsamples s
+							inner join images i on i.subsample_id = s.subsample_id
+							where s.sample_id = sample_id)" />
+    <property name="analysisCount" formula="(select count(*) from subsamples s
+							inner join chemical_analyses ca on ca.subsample_id = s.subsample_id
+							where s.sample_id = sample_id)" />																		
     
     <many-to-one name="owner" column="user_id" lazy="false" />
     <many-to-one name="rockType" column="rock_type_id" lazy="false" />

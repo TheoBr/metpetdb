@@ -211,6 +211,26 @@ public enum SampleProperty implements Property {
 			((Sample) sample).setSubsampleCount((Integer) subsampleCount);
 		}
 	},
+	imageCount {
+		public <T extends MObject> Integer get(final T sample) {
+			return ((Sample) sample).getImageCount();
+		}
+
+		public <T extends MObject, K> void set(final T sample,
+				final K subsampleCount) {
+			((Sample) sample).setImageCount((Integer) subsampleCount);
+		}
+	},
+	analysisCount {
+		public <T extends MObject> Integer get(final T sample) {
+			return ((Sample) sample).getAnalysisCount();
+		}
+
+		public <T extends MObject, K> void set(final T sample,
+				final K subsampleCount) {
+			((Sample) sample).setAnalysisCount((Integer) subsampleCount);
+		}
+	},
 	datePrecision {
 		public <T extends MObject> Object get(final T sample) {
 			return ((Sample) sample).getDatePrecision();
