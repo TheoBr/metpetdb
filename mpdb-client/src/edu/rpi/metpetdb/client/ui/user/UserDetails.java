@@ -13,6 +13,13 @@ public class UserDetails extends FlowPanel {
 	private static final GenericAttribute[] mainAttributes = {
 			new TextAttribute(MpDb.doc.User_emailAddress),
 			new TextAttribute(MpDb.doc.User_name),
+			new TextAttribute(MpDb.doc.User_address), 
+			new TextAttribute(MpDb.doc.User_city), 
+			new TextAttribute(MpDb.doc.User_province),
+			new TextAttribute(MpDb.doc.User_country),
+			new TextAttribute(MpDb.doc.User_postalCode), 
+			new TextAttribute(MpDb.doc.User_institution), 
+			new TextAttribute(MpDb.doc.User_referenceEmail)
 	};
 
 	private final DetailsPanel<User> p_user;

@@ -65,6 +65,7 @@ public interface LocaleText extends Messages {
 	/* Notices */
 	String notice_Welcome();
 	String notice_PasswordChanged(String username);
+	String notice_InfoChanged(String username);
 	String notice_GridSaved(String Subsample);
 
 	/* Title Bars */
@@ -82,6 +83,7 @@ public interface LocaleText extends Messages {
 	String buttonRegister();
 	String buttonEmailPassword();
 	String buttonChangePassword();
+	String buttonUpdateInfo();
 	String buttonSave();
 	String buttonEdit();
 	String buttonDelete();

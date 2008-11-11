@@ -324,7 +324,7 @@ public class Breadcrumbs extends FlowPanel {
 								MLink l = (MLink) ((SimplePanel) w).getWidget();
 								if (((MLink) l).getText().equals(name)) {
 									((MLink) l).setText(result
-											.getEmailAddress());
+											.getName());
 									Breadcrumbs.this
 											.onFindSuccessRecursive(Node
 													.getParent());

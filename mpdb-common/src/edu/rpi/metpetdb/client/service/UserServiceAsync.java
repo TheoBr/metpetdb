@@ -4,7 +4,10 @@ import java.util.Set;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
@@ -28,4 +31,6 @@ public interface UserServiceAsync {
 	void confirmUser(String confirmationCode, AsyncCallback<User> ac);
 	
 	void allNames(AsyncCallback<Set<String>> ac);
+	
+	void save(User u, AsyncCallback<User> ac);
 }

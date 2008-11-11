@@ -128,4 +128,6 @@ public interface UserService extends RemoteService {
 	
 	User confirmUser(String confirmationCode) throws DAOException,
 			LoginRequiredException;
+	
+	User save(User user) throws DAOException, ValidationException;
 }

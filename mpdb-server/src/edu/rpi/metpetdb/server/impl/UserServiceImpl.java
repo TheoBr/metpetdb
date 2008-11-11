@@ -17,12 +17,14 @@ import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.validation.DuplicateValueException;
 import edu.rpi.metpetdb.client.error.validation.LoginFailureException;
 import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
 import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 import edu.rpi.metpetdb.server.dao.permissions.GwtCallbackHandler;
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
@@ -39,6 +41,20 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		u.setEmailAddress(emailAddress);
 		u = (new UserDAO(this.currentSession())).fill(u);
 		return (u);
+	}
+	
+	public User save(User user) throws DAOException, ValidationException
+	{
+		final UserDAO uDAO = new UserDAO(this.currentSession());
+		doc.validate(user);
+		User u = new User();
+		u.setId(user.getId());
+		u = uDAO.fill(u);
+		user.setEncryptedPassword(u.getEncryptedPassword());
+		user = uDAO.save(user);
+		commit();
+		user.setEncryptedPassword(null);
+		return (user);
 	}
 
 	public Set<String> allNames() {
