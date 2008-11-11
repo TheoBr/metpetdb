@@ -4,11 +4,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -17,12 +15,14 @@ import com.google.gwt.widgetideas.client.event.ChangeHandler;
 import com.google.gwt.widgetideas.datepicker.client.CalendarModel;
 import com.google.gwt.widgetideas.datepicker.client.DatePicker;
 
+import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.validation.InvalidLongitudeException;
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.DateSpan;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.DateSpanConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchSesarAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MButton;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
@@ -99,9 +99,11 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 
 	}
 	protected Object get(final Widget editWidget,
-			final PropertyConstraint constraint) {
+			final PropertyConstraint constraint) throws ValidationException{
 		if (constraint instanceof DateSpanConstraint) {
 			createDateInfoFromInput();
+			if (fromDate != null && toDate != null)
+				dateRange = new DateSpan(fromDate, toDate);
 			return dateRange;
 		}
 		return null;
@@ -144,7 +146,7 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 			
 			if (fromSplit.length == 1){
 				if (toSplit[0].equals("")){
-					fromDate = new Timestamp(System.currentTimeMillis());
+					fromDate = null;
 				} else {
 					fromDate.setMonth(0);
 					fromDate.setDate(1);
@@ -179,8 +181,6 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 			}
 			
 			// TODO: make an error message show when invalid dates input
-			
-			dateRange = new DateSpan(fromDate, toDate);
 
 		} catch (NumberFormatException nfe) {
 			// TODO display validation exception
@@ -262,106 +262,6 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 		return false;
 	}
 	
-/*	public void onKeyPress(final Widget sender, final char ch, final int m){
-		try{
-			TextBox tb = (TextBox) sender;
-			// save position and original text
-			int pos = tb.getCursorPos();
-			String orig = tb.getText();
-			// remove selected text
-			if (!tb.getSelectedText().equals("")){
-				String minusSelected = tb.getText().substring(0,tb.getCursorPos());
-				minusSelected+=tb.getText().substring(tb.getCursorPos()+tb.getSelectionLength());
-				tb.setText(minusSelected);
-				tb.setSelectionRange(0, 0);
-				tb.setCursorPos(pos);
-			}
-			String c = "" + ch;
-			String t = tb.getText();
-			// get text left of the cursor
-			String left = t.substring(0, pos);
-			String right = t.substring(pos);
-			// get text right of cursor up to the first '/'
-			String partright = t.substring(pos).split("/")[0];
-			String[] allleft = left.split("/");
-			String partleft = allleft[allleft.length-1];
-			
-			// User entering the month
-			if (getMatchCount(left,"/")==0){
-				if (validateMonth(left+c+partright)){
-					if ((left+c+partright).equals("1")){
-						tb.setText(left+c+right);
-						tb.cancelKey();
-					} else {
-						if ((right.length() > 0 && right.charAt(0) != '/') || right.length() == 0){
-							tb.setText(left+c+"/"+right);
-							tb.cancelKey();
-						} else{
-							tb.setText(left+c+right);
-							tb.cancelKey();
-						}
-					}
-				} else {
-					tb.cancelKey();
-				}
-			}
-			// User entering the day
-			if (getMatchCount(left,"/")==1){
-				if (c.equals("/")){
-					if (left.charAt(left.length()-1) == '/'){
-						tb.cancelKey();
-					}
-					else if (validateDay(left) && right.charAt(0) !='/'){
-						tb.setText(left+c+right);
-						tb.cancelKey();
-					} else {
-						tb.cancelKey();
-					}
-				}
-				if (validateDay(left+c+partright)){
-						if (right.length() > 0 && partleft.length() == 1){
-							if(right.charAt(0) != '/'){
-								tb.setText(left+c+"/"+right);
-								tb.cancelKey();
-							} else {
-								tb.setText(left+c+right);
-								tb.cancelKey();
-							}
-						} else if (allleft.length == 1){
-							tb.setText(left+c+right);
-							tb.cancelKey();
-						} else {
-							tb.setText(left+c+"/"+right);
-							tb.cancelKey();
-						}
-				} else {
-					tb.cancelKey();
-				}
-			}
-			// User entering year
-			if (getMatchCount(left,"/")==2){
-				if (c.equals("/") || (partleft+c+partright).length() > 4){
-					tb.cancelKey();
-				} else {
-					tb.setText(left+c+right);
-					tb.cancelKey();
-				}
-			}
-			else{
-				tb.cancelKey();
-			}
-		}
-		catch (Exception e){
-			
-		}
-	}
-	public void onKeyUp(final Widget sender, final char c, final int m){
-		
-	}
-	public void onKeyDown(final Widget sender, final char c, final int m){
-		
-	}*/
-	
 	private Timestamp getTimeInput(final String date){
 		String[] parsedDate = date.split("/");
 		final Timestamp t = new Timestamp(0);
@@ -384,7 +284,6 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 			final PopupPanel p = new PopupPanel(true);
 			final CalendarModel cm = new CalendarModel();
 			final DatePicker dp = new DatePicker();
-			createDateInfoFromInput();
 			if (sender == dpFrom){
 				if (fromDate != null){
 					dp.showDate(fromDate);
