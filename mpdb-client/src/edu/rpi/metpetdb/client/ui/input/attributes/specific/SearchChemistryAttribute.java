@@ -2,14 +2,16 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
-import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
@@ -28,6 +30,71 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGeneric
 
 public class SearchChemistryAttribute extends SearchGenericAttribute {
 	private FlexTable ft;
+	private Map<RowContainer,String> currentCriteria = new HashMap<RowContainer,String>();
+	
+	private class RowContainer extends FlowPanel implements ChangeListener{
+		private TextBox lessThan = new TextBox();
+		private TextBox greaterThan = new TextBox();
+		private ListBox unit = new ListBox();
+		final Label less = new Label("<");
+		final Label greater = new Label("<");
+		final Object elementOrOxide;
+		final HTML symbol;
+		
+		public RowContainer(final Object elementOrOxide){
+			this.elementOrOxide = elementOrOxide;
+			unit.addItem("% wt");
+			unit.addItem("ppm");
+			
+			if (elementOrOxide instanceof Element){
+				symbol = new HTML(((Element)elementOrOxide).getSymbol());
+			} else {
+				symbol = new HTML(((Oxide)elementOrOxide).getDisplayName());
+			}
+			
+			lessThan.setWidth("30px");
+			greaterThan.setWidth("30px");
+			
+			lessThan.addChangeListener(this);
+			greaterThan.addChangeListener(this);
+			unit.addChangeListener(this);
+			
+			lessThan.addStyleName("inline");
+			greaterThan.addStyleName("inline");
+			unit.addStyleName("inline");
+			less.addStyleName("inline");
+			greater.addStyleName("inline");
+			symbol.addStyleName("inline");
+			
+			add(lessThan);
+			add(less);
+				
+			add(symbol);
+			add(greater);
+			add(greaterThan);
+			add(unit);
+		}
+		
+		public void onChange(final Widget sender){
+			String symbol;
+			if (elementOrOxide instanceof Element){
+				symbol =((Element)elementOrOxide).getSymbol();
+			} else {
+				symbol = ((Oxide)elementOrOxide).getDisplayName();
+			}
+			if (currentCriteria.containsKey(this)){
+				currentCriteria.remove(this);
+				SearchChemistryAttribute.this.getSearchInterface().createCritera();
+			}
+			if (!lessThan.getText().equals("") && !greaterThan.getText().equals("")){
+				currentCriteria.put(this, lessThan.getText() + " < " + symbol + 
+						" < " + greaterThan.getText() + " " + unit.getValue(unit.getSelectedIndex()));
+				SearchChemistryAttribute.this.getSearchInterface().createCritera();
+			}
+			
+		}
+		
+	}
 
 	public SearchChemistryAttribute(final ObjectConstraint elements,
 			final ObjectConstraint oxides) {
@@ -63,20 +130,13 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 
 	private void createTableHeader() {
 		ft.getRowFormatter().addStyleName(0, "mpdb-dataTablePink");
-		ft.setWidget(0, 0, new Label("Element Range"));
-		ft.getFlexCellFormatter().setColSpan(0, 0, 5);
-		ft.getFlexCellFormatter().setAlignment(0, 0,
-				HasHorizontalAlignment.ALIGN_CENTER,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		ft.setWidget(0, 1, new Label("Units"));
-		ft.getFlexCellFormatter().setColSpan(0, 1, 2);
-		ft.setWidget(0, 2, new Label("Oxide Range"));
-		ft.getFlexCellFormatter().setColSpan(0, 2, 5);
-		ft.getFlexCellFormatter().setAlignment(0, 2,
-				HasHorizontalAlignment.ALIGN_CENTER,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		ft.setWidget(0, 3, new Label("Units"));
-		ft.getFlexCellFormatter().setColSpan(0, 3, 2);
+		final HorizontalPanel header = new HorizontalPanel();
+		header.add( new Label("Element Range"));
+		header.add( new Label("Units"));
+		header.add( new Label("Oxide Range"));
+		header.add( new Label("Units"));
+		ft.setWidget(0, 0, header);;
+		ft.getFlexCellFormatter().setColSpan(0, 0, 2);
 	}
 
 	private void createRowsElement(final Collection<?> elements) {
@@ -84,25 +144,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 		int row = 0;
 		while (itr.hasNext()) {
 			++row;
-			final Element element = (Element) itr.next();
-			final TextBox lessThan = new TextBox();
-			lessThan.setWidth("30px");
-			final TextBox greaterThan = new TextBox();
-			greaterThan.setWidth("30px");
-			final ListBox unit = new ListBox();
-			unit.addItem("% wt");
-			unit.addItem("ppm");
-			ft.setWidget(row, 0, greaterThan);
-			ft.setWidget(row, 1, new Label("<"));
-			ft.setWidget(row, 2, new Label(element.getSymbol()));
-			ft.setWidget(row, 3, new Label("<"));
-			ft.setWidget(row, 4, lessThan);
-			ft.setWidget(row, 5, unit);
-			for (int i = 0; i < 6; i++) {
-				ft.getFlexCellFormatter().setAlignment(row, i,
-						HasHorizontalAlignment.ALIGN_CENTER,
-						HasVerticalAlignment.ALIGN_MIDDLE);
-			}
+			ft.setWidget(row,0,new RowContainer((Element)itr.next()));
 		}
 	}
 
@@ -111,27 +153,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 		int row = 0;
 		while (itr.hasNext()) {
 			++row;
-			final Oxide oxide = (Oxide) itr.next();
-			final TextBox lessThan = new TextBox();
-			lessThan.setWidth("30px");
-			final TextBox greaterThan = new TextBox();
-			greaterThan.setWidth("30px");
-			final ListBox unit = new ListBox();
-			unit.addItem("% wt");
-			unit.addItem("ppm");
-			final Button set = new Button("Set");
-			set.setStyleName("smallBtn");
-			ft.setWidget(row, 6, greaterThan);
-			ft.setWidget(row, 7, new Label("<"));
-			ft.setWidget(row, 8, new HTML(oxide.getDisplayName()));
-			ft.setWidget(row, 9, new Label("<"));
-			ft.setWidget(row, 10, lessThan);
-			ft.setWidget(row, 11, unit);
-			for (int i = 6; i < 12; i++) {
-				ft.getFlexCellFormatter().setAlignment(row, i,
-						HasHorizontalAlignment.ALIGN_CENTER,
-						HasVerticalAlignment.ALIGN_MIDDLE);
-			}
+			ft.setWidget(row,1,new RowContainer((Oxide)itr.next()));
 		}
 	}
 
@@ -148,43 +170,39 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			final PropertyConstraint constraint) throws ValidationException {
 		if (constraint == this.constraints[1]) {
 			final HashSet<SearchOxide> Oxides = new HashSet();
-			for (int i = 0; i < ft.getRowCount(); i++){
-				try {
-					String lowerBound = ((TextBox) ft.getWidget(i, 6)).getText();
-					String upperBound = ((TextBox) ft.getWidget(i, 10)).getText();
-					String oxide = ((HTML) ft.getWidget(i, 8)).getHTML();
-					SearchOxide o = new SearchOxide();
-					if (!lowerBound.equals(""))
-						o.setLowerBound(Float.valueOf(lowerBound));
-					if (!upperBound.equals(""))
-						o.setUpperBound(Float.valueOf(upperBound));
-					if (!lowerBound.equals("") || !upperBound.equals("")){
-						o.setSpecies(JS.stripTags(oxide));	
+			Iterator<RowContainer> itr = currentCriteria.keySet().iterator();
+			while (itr.hasNext()){
+				final RowContainer temp = itr.next();
+				if (temp.elementOrOxide instanceof Oxide){
+					try{
+						SearchOxide o = new SearchOxide();
+						o.setLowerBound(Float.valueOf(temp.lessThan.getText()));
+						o.setUpperBound(Float.valueOf(temp.greaterThan.getText()));
+						o.setSpecies(((Oxide)temp.elementOrOxide).getSpecies());	
 						Oxides.add(o);
 					}
-				} catch (Exception e){
-					
+					catch (Exception e){
+						
+					}
 				}
 			}
 			return Oxides;
 		} else {
 			final HashSet<SearchElement> Elements = new HashSet();
-			for (int i = 0; i < ft.getRowCount(); i++){
-				try{
-					String lowerBound = ((TextBox) ft.getWidget(i, 0)).getText();
-					String upperBound = ((TextBox) ft.getWidget(i, 4)).getText();
-					String element = ((Label) ft.getWidget(i, 2)).getText();
-					SearchElement e = new SearchElement();
-					if (!lowerBound.equals(""))
-						e.setLowerBound(Float.valueOf(lowerBound));
-					if (!upperBound.equals(""))
-						e.setUpperBound(Float.valueOf(upperBound));
-					if (!lowerBound.equals("") || !upperBound.equals("")){
-						e.setElementSymbol(element);	
+			Iterator<RowContainer> itr = currentCriteria.keySet().iterator();
+			while (itr.hasNext()){
+				final RowContainer temp = itr.next();
+				if (temp.elementOrOxide instanceof Oxide){
+					try{
+						SearchElement e = new SearchElement();
+						e.setLowerBound(Float.valueOf(temp.lessThan.getText()));
+						e.setUpperBound(Float.valueOf(temp.greaterThan.getText()));
+						e.setElementSymbol(((Element)temp.elementOrOxide).getSymbol());	
 						Elements.add(e);
 					}
-				} catch (Exception e){
-					
+					catch (Exception e){
+						
+					}
 				}
 			}
 			return Elements;
@@ -197,12 +215,15 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 	
 	public ArrayList<Widget> getCriteria(){
 		final ArrayList<Widget> criteria = new ArrayList<Widget>();
-//		final Iterator<CheckBox> itr = items.keySet().iterator();
-//		while (itr.hasNext()) {
-//			final CheckBox cb = itr.next();
-//			if (cb.isChecked())
-//				criteria.add(new Pair(createCritRow("Rock Type:", items.get(cb).toString()), cb));
-//		}
+		Iterator<String> itr = currentCriteria.values().iterator();
+		String crit = "";
+		while (itr.hasNext()){
+			crit += itr.next() + "<br>";
+		}
+		if (crit.length() > 0){
+			crit = crit.substring(0, crit.length()-1);
+			criteria.add(createCritRow(new HTML(crit)));
+		}
 		return criteria;
 	}
 	

@@ -40,6 +40,12 @@ public abstract class SearchGenericAttribute extends GenericAttribute{
 		return container;	
 	}
 	
+	public Widget createCritRow(final Widget label) {
+		final FlowPanel container = new FlowPanel();
+		container.add(label);
+		return container;	
+	}
+	
 	public void setSearchInterface(final SearchInterface si){
 		this.si = si;
 	}
