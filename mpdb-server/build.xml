@@ -1,4 +1,4 @@
-<project name="mpdb" basedir="." default="war">
+<project name="mpdb" basedir="." default="tomcat-zak">
 
 	<property file="../mpdb-common/build.properties" />
 
@@ -96,6 +96,7 @@
 				<include name="${hibernate_cfg}" />
 				<include name="**/*.hbm.xml" />
 				<include name="**/*.class" />
+				<include name="**/jaas.config" />
 			</classes>
 			<classes dir="${mpdb-common-dir}/bin">
 				<include name="**/*.class" />
