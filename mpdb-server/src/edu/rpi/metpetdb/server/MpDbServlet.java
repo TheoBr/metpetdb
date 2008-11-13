@@ -155,7 +155,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		super.destroy();
 	}
 
-	private Req currentReq() {
+	public static Req currentReq() {
 		return perThreadReq.get();
 	}
 
@@ -203,7 +203,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		c.setMaxAge(u != null ? -1 : 0); // Only for this browser session.
 		getThreadLocalResponse().addCookie(c);
 		currentReq().userId = u != null ? new Integer(u.getId()) : null;
-		currentReq().subject = subject;
+		getThreadLocalRequest().getSession().setAttribute("javax.security.auth.subject", subject);
 	}
 
 	/**
@@ -254,6 +254,10 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 			return currentReq().currentSession();
 		else
 			return DataStore.open();
+	}
+	
+	protected Subject currentSubject() {
+		return (Subject) getThreadLocalRequest().getSession().getAttribute("subject");
 	}
 
 	/**
@@ -336,7 +340,9 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 
 	public String processCall(final String payload)
 			throws SerializationException {
+		System.setProperty("java.security.auth.login.config", "bin/edu/rpi/metpetdb/server/security/permissions/jaas.config");
 		final Req r = new Req();
+		r.subject = (Subject) this.getThreadLocalRequest().getSession().getAttribute("javax.security.auth.subject");
 		perThreadReq.set(r);
 		String response = "Internal server error.";
 		try {
@@ -348,10 +354,10 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		return response;
 	}
 
-	static final class Req {
+	public static final class Req {
 		Session session;
 		Integer userId;
-		Subject subject;
+		public Subject subject;
 
 		Session currentSession() {
 			if (session == null) {
