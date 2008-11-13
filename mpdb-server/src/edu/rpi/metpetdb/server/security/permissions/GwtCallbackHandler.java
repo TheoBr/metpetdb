@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server.dao.permissions;
+package edu.rpi.metpetdb.server.security.permissions;
 
 import java.io.IOException;
 

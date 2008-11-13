@@ -1,6 +1,7 @@
-package edu.rpi.metpetdb.server.dao.permissions;
+package edu.rpi.metpetdb.server.security.permissions;
 
 import java.io.Serializable;
+import java.security.AccessControlContext;
 import java.security.AccessController;
 
 import javax.security.auth.Subject;
@@ -8,6 +9,11 @@ import javax.security.auth.Subject;
 import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
+
+import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
+import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.security.permissions.principals.OwnerPrincipal;
 
 public class PermissionInterceptor extends EmptyInterceptor {
 
@@ -17,7 +23,6 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	private static final long serialVersionUID = 1L;
 	
 	public PermissionInterceptor() {
-		Subject subject = Subject.getSubject(AccessController.getContext());
 		
 	}
 
@@ -43,14 +48,17 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	public boolean onLoad(Object entity, Serializable id, Object[] state,
 			String[] propertyNames, Type[] types) throws CallbackException {
 
-		String className = entity.getClass().getName();
-		SecurityManager sm = System.getSecurityManager();
-		if (sm != null) {
-			try {
-				//sm.checkPermission();
-			} catch (SecurityException e) {
-				throw new CallbackException(e.getMessage(), e);
+		if (entity instanceof HasOwner) {
+			int ownerId = 0;
+			for(int i = 0;i<propertyNames.length;++i) {
+				if (propertyNames[i].equals("owner")) {
+					ownerId = ((User) state[i]).getId();
+					break;
+				}
 			}
+			//if (!Subject.getSubject(AccessController.getContext()).getPrincipals().contains(new OwnerPrincipal(ownerId))) {
+//				throw new CallbackException("not the owner of the object");
+			//}
 		}
 		return super.onLoad(entity, id, state, propertyNames, types);
 	}

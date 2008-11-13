@@ -93,7 +93,7 @@ public class SampleParser extends Parser {
 					"Sample_references"
 			},
 			{
-					"(sample)|(number)", "setAlias", String.class,
+					"(sample[ number| name|])|(sample)", "setAlias", String.class,
 					"Sample_alias"
 			}, {
 					"minerals", "addMineral", String.class, "Sample_minerals"
@@ -151,7 +151,7 @@ public class SampleParser extends Parser {
 				// blank column
 				continue;
 			}
-			System.out.println("Parsing header " + i + ": " + text);
+			//System.out.println("Parsing header " + i + ": " + text);
 
 			// Determine method to be used for data in this column
 			for (MethodAssociation<Sample> sma : methodAssociations) {
@@ -228,8 +228,8 @@ public class SampleParser extends Parser {
 				if (storeMethod == null)
 					continue;
 
-				System.out.println("\t Parsing Column " + i + ": "
-						+ storeMethod.getName());
+				//System.out.println("\t Parsing Column " + i + ": "
+						//+ storeMethod.getName());
 
 				// If this has an object then it isn't a normal header, handle
 				// accordingly
@@ -260,7 +260,12 @@ public class SampleParser extends Parser {
 
 					if (!storeMethod.getName().equals("addReference")
 							&& !storeMethod.getName().equals("addComment")) {
-						final String[] data = cell.toString()
+						String sanatizedData = cell.toString();
+						if (storeMethod.getName().equals("setAlias") || storeMethod.getName().equals("addRockType")) {
+							sanatizedData = sanatizedData.replace(" ", "");
+						}
+						sanatizedData = sanatizedData.replaceAll(" +", " ");
+						final String[] data = sanatizedData
 								.split("\\s*" + DATA_SEPARATOR +"\\s*");
 						for (String str : data) {
 							if (!"".equals(str))
@@ -272,15 +277,24 @@ public class SampleParser extends Parser {
 							storeMethod.invoke(s, data);
 					}
 
-				} else if (dataType == Float.class) {
-
-					final double data = cell.getNumericCellValue();
-					storeMethod.invoke(s, new Float(data));
-
-				} else if (dataType == double.class) {
-
-					final double data = cell.getNumericCellValue();
-					storeMethod.invoke(s, data);
+				} else if (dataType == Float.class || dataType == double.class) {
+					double data;
+					try {
+						data = cell.getNumericCellValue();
+						if (!cell.toString().equals(String.valueOf(data))) {
+							throw new NullPointerException();
+						}
+					} catch(NumberFormatException nfe) {
+						//most likely this cell is suppose to be a number put the person put non-numeric things in it
+						//so parse out the number of possible
+						final String tempData = cell.toString();
+						data = Double.parseDouble(tempData.replaceAll("[^-\\.0-9]", ""));
+					}
+					
+					if (dataType == Float.class)
+						storeMethod.invoke(s,new Float(data));
+					else
+						storeMethod.invoke(s,data);
 
 				} else if (dataType == Timestamp.class) {
 

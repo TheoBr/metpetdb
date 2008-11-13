@@ -307,8 +307,8 @@ public class AnalysisParser extends Parser {
 				if (type == null)
 					continue;
 
-				System.out.println("\t Parsing Column " + i + ": "
-						+ colName.get(new Integer(i)));
+				//System.out.println("\t Parsing Column " + i + ": "
+						//+ colName.get(new Integer(i)));
 
 				if (type == SAMPLE) {
 					final String data = cell.toString();

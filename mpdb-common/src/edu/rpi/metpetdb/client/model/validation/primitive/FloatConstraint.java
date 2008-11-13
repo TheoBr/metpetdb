@@ -31,11 +31,11 @@ public class FloatConstraint extends PropertyConstraint implements
 		if (value instanceof Float) {
 			// make sure value is within ranges
 			if (maxValue != null)
-				if ((Float) value >= maxValue) {
+				if ((Float) value > maxValue) {
 					throw new NumberTooBigException(this, (Float) value);
 				}
 			if (minValue != null)
-				if ((Float) value <= minValue) {
+				if ((Float) value < minValue) {
 					throw new NumberTooSmallException(this, (Float) value);
 				}
 		}

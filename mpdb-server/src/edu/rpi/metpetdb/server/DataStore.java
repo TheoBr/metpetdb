@@ -48,7 +48,7 @@ import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.ShortConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
-import edu.rpi.metpetdb.server.dao.permissions.PermissionInterceptor;
+import edu.rpi.metpetdb.server.security.permissions.PermissionInterceptor;
 
 /** Global service support. */
 public class DataStore {
@@ -88,7 +88,7 @@ public class DataStore {
 		return config;
 	}
 
-	protected static synchronized SessionFactory getFactory() {
+	public static synchronized SessionFactory getFactory() {
 		if (factory == null)
 			factory = getConfiguration().buildSessionFactory();
 		return factory;
@@ -334,14 +334,14 @@ public class DataStore {
 	private void handleConstraint(final String constraint,
 			final FloatConstraint fc) {
 		final String compareRegex = "[<]";
-		final String numberRegex = "[><]\\s*\\(([\\d\\.]*)\\).*";
+		final String numberRegex = "[><=]\\s*\\(([\\d\\.]*)\\).*";
 		final Pattern numberPattern = Pattern.compile(numberRegex);
 		final Matcher numberMatcher = numberPattern.matcher(constraint);
 		final Pattern comparePattern = Pattern.compile(compareRegex);
 		final Matcher compareMatcher = comparePattern.matcher(constraint);
 		if (numberMatcher.find()) {
 			final float number = Float.parseFloat(numberMatcher.group(1));
-			if (!compareMatcher.matches())
+			if (!compareMatcher.find())
 				fc.setMinValue(number);
 			else
 				fc.setMaxValue(number);

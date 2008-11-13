@@ -16,11 +16,12 @@ import org.postgis.Geometry;
 import org.postgis.Point;
 
 import edu.rpi.metpetdb.client.model.interfaces.HasDate;
+import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
 import edu.rpi.metpetdb.client.model.interfaces.IHasName;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 
 @Indexed
-public class Sample extends MObject implements IHasName, HasDate {
+public class Sample extends MObject implements IHasName, HasDate, HasOwner {
 	private static final long serialVersionUID = 1L;
 
 	@DocumentId

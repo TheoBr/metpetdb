@@ -6,6 +6,9 @@ import org.postgis.Polygon;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.InvalidGeometryException;
+import edu.rpi.metpetdb.client.error.validation.InvalidLatitudeException;
+import edu.rpi.metpetdb.client.error.validation.InvalidLongitudeException;
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 
 /**
@@ -28,7 +31,13 @@ public class GeometryConstraint extends PropertyConstraint {
 			throw new InvalidGeometryException(this);
 
 		if (g instanceof Point || g instanceof Polygon)
-			/* ok */;
+			if (g instanceof Point) {
+				//Check lat/long coordinates
+				if (((Point)g).x > 180 || ((Point)g).x < -180)
+					throw new InvalidGeometryException(this);
+				if (((Point)g).y > 90 || ((Point)g).y < -90)
+					throw new InvalidGeometryException(this);
+			}
 		else
 			throw new InvalidGeometryException(this);
 	}

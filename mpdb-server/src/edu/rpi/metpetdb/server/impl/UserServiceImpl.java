@@ -26,8 +26,8 @@ import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
-import edu.rpi.metpetdb.server.dao.permissions.GwtCallbackHandler;
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
+import edu.rpi.metpetdb.server.security.permissions.GwtCallbackHandler;
 
 public class UserServiceImpl extends MpDbServlet implements UserService {
 	private static final long serialVersionUID = 1L;
@@ -71,12 +71,12 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			throws LoginFailureException, ValidationException {
 		//doc.validate(ssr);
 		try {
-			System.setProperty("java.security.auth.login.config", "bin/edu/rpi/metpetdb/server/dao/permissions/jaas.config");
+			System.setProperty("java.security.auth.login.config", "bin/edu/rpi/metpetdb/server/security/permissions/jaas.config");
 			GwtCallbackHandler cbh = new GwtCallbackHandler(ssr.getEmailAddress(), ssr.getPassword());
 			LoginContext lc = new LoginContext("MetPetDB", cbh);
 			lc.login();
 			final User u = (User) lc.getSubject().getPublicCredentials().toArray()[0];
-			setCurrentUser(u);
+			setCurrentUser(u, lc.getSubject());
 			return u;
 		} catch (LoginException e) {
 			e.printStackTrace();
@@ -136,7 +136,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 							getModuleBaseURL() + "#ConfirmationCode-"
 									+ u.getConfirmationCode()
 					});
-			setCurrentUser(u);
+			setCurrentUser(u, null);
 		} catch (ConstraintViolationException cve) {
 			final String who = newUser.getEmailAddress();
 			if ("users_nk_username".equals(cve.getConstraintName()))

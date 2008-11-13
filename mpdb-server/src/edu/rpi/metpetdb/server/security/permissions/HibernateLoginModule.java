@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server.dao.permissions;
+package edu.rpi.metpetdb.server.security.permissions;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -21,6 +21,7 @@ import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
+import edu.rpi.metpetdb.server.security.permissions.principals.OwnerPrincipal;
 
 public class HibernateLoginModule implements LoginModule {
 
@@ -114,6 +115,9 @@ public class HibernateLoginModule implements LoginModule {
 			publicCredentials.add(u);
 			success = true;
 		}
+		//TODO add credentials and principals for the subject
+		
+		principals.add(new OwnerPrincipal(u));
 
 		return true; 
 	}

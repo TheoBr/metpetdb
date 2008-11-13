@@ -2,10 +2,12 @@ package edu.rpi.metpetdb.server;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.AccessController;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
+import javax.security.auth.Subject;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -140,10 +142,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		final Session s = DataStore.open();
 		final Collection<Mineral> minerals = (new MineralDAO(s).getAll());
 		SampleParser.setMinerals(minerals);
-		List<Element> elements = ((new ElementDAO(s))
-				.getAll());
-		List<Oxide> oxides = ((new OxideDAO(s))
-				.getAll());
+		List<Element> elements = ((new ElementDAO(s)).getAll());
+		List<Oxide> oxides = ((new OxideDAO(s)).getAll());
 		AnalysisParser.setElementsAndOxides(elements, oxides);
 		s.close();
 	}
@@ -159,7 +159,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		return perThreadReq.get();
 	}
 
-	private void loadAutomaticLogin() {
+	public void loadAutomaticLogin() {
 		final String propFile = "autologin.properties";
 		final InputStream i = MpDbServlet.class.getClassLoader()
 				.getResourceAsStream(propFile);
@@ -197,12 +197,13 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 * 		the user to configure as the current application user. Null will
 	 * 		clear the current application user, if it had been known.
 	 */
-	protected void setCurrentUser(final User u) {
+	protected void setCurrentUser(final User u, final Subject subject) {
 		final String v = u != null ? SessionEncrypter.crypt(u.getId()) : null;
 		final Cookie c = new Cookie(MpDbConstants.USERID_COOKIE, v);
 		c.setMaxAge(u != null ? -1 : 0); // Only for this browser session.
 		getThreadLocalResponse().addCookie(c);
 		currentReq().userId = u != null ? new Integer(u.getId()) : null;
+		currentReq().subject = subject;
 	}
 
 	/**
@@ -249,7 +250,10 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 * 	object within a single service request.
 	 */
 	protected Session currentSession() {
-		return currentReq().currentSession();
+		if (currentReq() != null)
+			return currentReq().currentSession();
+		else
+			return DataStore.open();
 	}
 
 	/**
@@ -347,6 +351,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	static final class Req {
 		Session session;
 		Integer userId;
+		Subject subject;
 
 		Session currentSession() {
 			if (session == null) {

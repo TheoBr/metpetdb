@@ -1,9 +1,14 @@
-package edu.rpi.metpetdb.server.dao.permissions;
+package edu.rpi.metpetdb.server.security.permissions.principals;
 
+import java.io.Serializable;
 import java.security.Principal;
 
-final public class HibernatePrincipal implements Principal {
+final public class HibernatePrincipal implements Principal, Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 
 	public HibernatePrincipal() {
