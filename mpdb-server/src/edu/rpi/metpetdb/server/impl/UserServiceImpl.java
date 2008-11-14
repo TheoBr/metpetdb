@@ -71,7 +71,6 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			throws LoginFailureException, ValidationException {
 		//doc.validate(ssr);
 		try {
-			System.setProperty("java.security.auth.login.config", "bin/edu/rpi/metpetdb/server/security/permissions/jaas.config");
 			GwtCallbackHandler cbh = new GwtCallbackHandler(ssr.getEmailAddress(), ssr.getPassword());
 			LoginContext lc = new LoginContext("MetPetDB", cbh);
 			lc.login();

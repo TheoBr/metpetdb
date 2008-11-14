@@ -134,6 +134,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 
 		loadAutomaticLogin();
 		initBulkUpload();
+		System.setProperty("java.security.auth.login.config", MpDbServlet.class.getClassLoader().getResource("jaas.properties").getPath());
 	}
 
 	/** Initializes the static properties of the bulk upload process */
@@ -340,7 +341,6 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 
 	public String processCall(final String payload)
 			throws SerializationException {
-		System.setProperty("java.security.auth.login.config", "bin/edu/rpi/metpetdb/server/security/permissions/jaas.config");
 		final Req r = new Req();
 		r.subject = (Subject) this.getThreadLocalRequest().getSession().getAttribute("javax.security.auth.subject");
 		perThreadReq.set(r);
