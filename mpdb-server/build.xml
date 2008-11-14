@@ -96,7 +96,7 @@
 				<include name="${hibernate_cfg}" />
 				<include name="**/*.hbm.xml" />
 				<include name="**/*.class" />
-				<include name="**/jaas.config" />
+				<include name="jaas.properties" />
 			</classes>
 			<classes dir="${mpdb-common-dir}/bin">
 				<include name="**/*.class" />
