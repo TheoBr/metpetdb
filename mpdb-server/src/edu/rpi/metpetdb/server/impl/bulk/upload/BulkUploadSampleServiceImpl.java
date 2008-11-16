@@ -1,16 +1,18 @@
 package edu.rpi.metpetdb.server.impl.bulk.upload;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import org.hibernate.HibernateException;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.BulkUploadResult;
 import edu.rpi.metpetdb.client.model.BulkUploadResultCount;
@@ -25,82 +27,73 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 		BulkUploadSampleService {
 	private static final long serialVersionUID = 1L;
 
-	public void commit(final String fileOnServer)
-			throws InvalidFormatException, LoginRequiredException, DAOException {
-		currentSession()
-				.createSQLQuery(
-						"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
-				.setParameter("user_id", currentUser()).setParameter("hash",
-						fileOnServer).executeUpdate();
-		SampleParser sp;
-		try {
-			sp = new SampleParser(new FileInputStream(MpDbServlet
-					.getFileUploadPath()
-					+ fileOnServer));
-			sp.parse();
-			final List<Sample> samples = sp.getSamples();
-			User user = new User();
-			user.setId(currentUser());
-			for (Sample s : samples) {
-				s.setOwner(user);
-			}
-			save(samples);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ValidationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public BulkUploadResult parser(String fileOnServer)
+	public BulkUploadResult parser(String fileOnServer, boolean save)
 			throws InvalidFormatException, LoginRequiredException {
 		final BulkUploadResult results = new BulkUploadResult();
 		try {
-			final Map<Integer, ValidationException> errors = new HashMap<Integer, ValidationException>();
-			final User u = new User();
-			u.setId(currentUser());
+			if (save) {
+				currentSession()
+				.createSQLQuery(
+						"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
+				.setParameter("user_id", currentUser()).setParameter(
+						"hash", fileOnServer).executeUpdate();
+			}
 			final SampleParser sp = new SampleParser(new FileInputStream(
 					MpDbServlet.getFileUploadPath() + fileOnServer));
 			sp.parse();
 			final List<Sample> samples = sp.getSamples();
 			final SampleDAO dao = new SampleDAO(this.currentSession());
-			errors.putAll(sp.getErrors());
+			final Map<Integer, ValidationException> existingErrors = sp
+					.getErrors();
+			final Set<Integer> keys = existingErrors.keySet();
+			final Iterator<Integer> itr = keys.iterator();
+			while (itr.hasNext()) {
+				final Integer i = itr.next();
+				results.addError(i.intValue(), existingErrors.get(i));
+			}
+			User user = new User();
+			user.setId(currentUser());
 			int row = 2;
 			final BulkUploadResultCount resultCount = new BulkUploadResultCount();
 			for (Sample s : samples) {
-				s.setOwner(u);
+				s.setOwner(user);
+				s.setPublicData(false);
 				try {
 					doc.validate(s);
 					if (dao.isNew(s))
 						resultCount.incrementFresh();
 					else
 						resultCount.incrementOld();
-				} catch (ValidationException e) {
+				} catch (MpDbException e) {
 					resultCount.incrementInvalid();
-					errors.put(row, e);
+					results.addError(row, e);
+				} catch (HibernateException e) {
+					resultCount.incrementInvalid();
+					results.addError(row, handleHibernateException(e));
+				}
+				if (save) {
+					try {
+						s = dao.save(s);
+					} catch (HibernateException he) {
+						results.addError(row, handleHibernateException(he));
+					} catch (DAOException e) {
+						results.addError(row, e);
+					}
 				}
 				row = row + 1;
 			}
 			results.addResultCount("Sample", resultCount);
 			results.setHeaders(sp.getHeaders());
-			results.setErrors(errors);
+			if (save && results.getErrors().isEmpty()) {
+				try {
+					commit();
+				} catch (DAOException e) {
+					results.addError(0, e);
+				}
+			}
 		} catch (final IOException ioe) {
 			throw new IllegalStateException(ioe.getMessage());
 		}
 		return results;
 	}
-
-	protected void save(final Collection<Sample> samples)
-			throws ValidationException, LoginRequiredException, DAOException {
-		for (Sample sample : samples) {
-			sample.setPublicData(false);
-			doc.validate(sample);
-			Sample s = (sample);
-			s = (new SampleDAO(this.currentSession())).save(s);
-		}
-		commit();
-	}
-
 }

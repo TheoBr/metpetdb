@@ -12,7 +12,6 @@ import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
 import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
 import edu.rpi.metpetdb.client.model.BulkUploadResult;
 import edu.rpi.metpetdb.client.model.BulkUploadResultCount;
@@ -32,51 +31,17 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 
 	public static final long serialVersionUID = 1L;
 
-	public void commit(final String fileOnServer)
-			throws InvalidFormatException, LoginRequiredException,
-			ValidationException, DAOException {
-		try {
-			currentSession()
-					.createSQLQuery(
-							"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
-					.setParameter("user_id", currentUser()).setParameter(
-							"hash", fileOnServer).executeUpdate();
-			final AnalysisParser ap = new AnalysisParser(new FileInputStream(
-					MpDbServlet.getFileUploadPath() + fileOnServer));
-			ap.parse();
-			final List<ChemicalAnalysis> analyses = ap.getAnalyses();
-			User u = new User();
-			u.setId(currentUser());
-
-			// Insert new Subsamples as required
-			SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
-			for (ChemicalAnalysis ca : analyses) {
-				Subsample ss = (ca.getSubsample());
-				ss.getSample().setOwner(u);
-				try {
-					ssDAO.fill(ss);
-				} catch (SubsampleNotFoundException daoe) {
-					ssDAO.save(ss);
-				}
-			}
-			// Save chemical analyses
-
-			save(analyses);
-		} catch (final IOException ioe) {
-			throw new IllegalStateException(ioe.getMessage());
-		}
-	}
-
-	public BulkUploadResult parser(String fileOnServer)
+	public BulkUploadResult parser(String fileOnServer, boolean save)
 			throws InvalidFormatException, LoginRequiredException {
 		final BulkUploadResult results = new BulkUploadResult();
-		final Map<Integer, ValidationException> errors = new HashMap<Integer, ValidationException>();
 		try {
+			if (save) {
 			currentSession()
 					.createSQLQuery(
 							"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
 					.setParameter("user_id", currentUser()).setParameter(
 							"hash", fileOnServer).executeUpdate();
+			}
 			final AnalysisParser ap = new AnalysisParser(new FileInputStream(
 					MpDbServlet.getFileUploadPath() + fileOnServer));
 			ap.parse();
@@ -99,6 +64,12 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 			for (ChemicalAnalysis ca : analyses) {
 				try {
 					// see if our sample exists
+					if (ca.getSubsample() == null) {
+						results.addError(row, new PropertyRequiredException(
+						"Subsample"));
+						++row;
+						continue;
+					}
 					Sample s = ca.getSubsample().getSample();
 					s.setOwner(u);
 					try {
@@ -115,21 +86,20 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 					} catch (DAOException e) {
 						// There is no sample we have to add an error
 						// Every Image needs a sample so add an error
-						errors
-								.put(row, new PropertyRequiredException(
-										"Sample"));
+						results.addError(row, new PropertyRequiredException(
+								"Sample"));
 						++row;
 						continue;
 					}
 					Subsample ss = (ca.getSubsample());
 					ss.setSample(s);
-					if (ss != null) {
+					if (ss != null && s != null) {
 						// if we don't have the name stored already we need
 						// to load the subsample
 						if (!subsampleNames.get(s.getAlias()).contains(
 								ss.getName())) {
 							try {
-								doc.validate(ss);								
+								doc.validate(ss);
 								ss = ssDAO.fill(ss);
 								subsamples.put(s.getAlias() + ss.getName(), ss);
 								ca.setSubsample(ss);
@@ -138,6 +108,16 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 								// Means it is new because we could not find
 								// it
 								ssResultCount.incrementFresh();
+								if (save) {
+									try {
+										ss = ssDAO.save(ss);
+									} catch (DAOException e1) {
+										results.addError(row, e1);
+									}
+									subsamples.put(s.getAlias()
+											+ ss.getName(), ss);
+									ca.setSubsample(ss);
+								}
 							}
 							subsampleNames.get(s.getAlias()).add(
 									ca.getSubsample().getName());
@@ -147,7 +127,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 						}
 					} else {
 						// Every Image needs a subsample so add an error
-						errors.put(row, new PropertyRequiredException(
+						results.addError(row, new PropertyRequiredException(
 								"Subsample"));
 					}
 					doc.validate(ca);
@@ -155,8 +135,15 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 						caResultCount.incrementFresh();
 					else
 						caResultCount.incrementOld();
+					if (save) {
+						try {
+							ca = dao.save(ca);
+						} catch (DAOException e) {
+							results.addError(row, e);
+						}
+					}
 				} catch (ValidationException e) {
-					errors.put(row, e);
+					results.addError(row, e);
 					caResultCount.incrementInvalid();
 				}
 				++row;
@@ -164,30 +151,16 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 			results.addResultCount("Chemical Analysis", caResultCount);
 			results.addResultCount("Subsamples", ssResultCount);
 			results.setHeaders(ap.getHeaders());
-			results.setErrors(errors);
+			if (save && results.getErrors().isEmpty()) {
+				try {
+					commit();
+				} catch (DAOException e) {
+					results.addError(0, e);
+				}
+			}
 		} catch (final IOException ioe) {
 			throw new IllegalStateException(ioe.getMessage());
 		}
 		return results;
-	}
-	protected void save(final Collection<ChemicalAnalysis> analyses)
-			throws ValidationException, LoginRequiredException, DAOException {
-		ChemicalAnalysisDAO dao = new ChemicalAnalysisDAO(this.currentSession());
-
-		User user = new User();
-		user.setId(currentUser());
-
-		try {
-			for (ChemicalAnalysis analysis : analyses) {
-				doc.validate(analysis);
-				ChemicalAnalysis ca = (analysis);
-				ca.getSubsample().getSample().setOwner(user);
-				ca = dao.save(ca);
-			}
-		} catch (ValidationException e) {
-			forgetChanges();
-			throw e;
-		}
-		commit();
 	}
 }

@@ -111,7 +111,7 @@ public class SampleParser extends Parser {
 	 * 		the input stream that points to a spreadsheet
 	 * @throws InvalidFormatException
 	 */
-	public SampleParser(final InputStream is) throws InvalidFormatException {
+	public SampleParser(final InputStream is)  {
 		super();
 		samples = new LinkedList<Sample>();
 		try {
@@ -119,7 +119,7 @@ public class SampleParser extends Parser {
 			final HSSFWorkbook wb = new HSSFWorkbook(fs);
 			sheet = wb.getSheetAt(0);
 		} catch (IOException e) {
-			throw new InvalidFormatException();
+
 		}
 	}
 
@@ -280,7 +280,7 @@ public class SampleParser extends Parser {
 				} else if (dataType == Float.class || dataType == double.class) {
 					double data;
 					try {
-						data = cell.getNumericCellValue();
+						data = Double.parseDouble(cell.toString());
 						if (!cell.toString().equals(String.valueOf(data))) {
 							throw new NullPointerException();
 						}
@@ -288,7 +288,11 @@ public class SampleParser extends Parser {
 						//most likely this cell is suppose to be a number put the person put non-numeric things in it
 						//so parse out the number of possible
 						final String tempData = cell.toString();
-						data = Double.parseDouble(tempData.replaceAll("[^-\\.0-9]", ""));
+						try {
+							data = Double.parseDouble(tempData.replaceAll("[^-\\.0-9]", ""));
+						} catch (Exception e) {
+							data = 0;
+						}
 					}
 					
 					if (dataType == Float.class)
@@ -303,7 +307,7 @@ public class SampleParser extends Parser {
 						s.setCollectionDate(new Timestamp(data.getTime()));
 						s.setDatePrecision((short) 1);
 						// storeMethod.invoke(s, new Timestamp(data.getTime()));
-					} catch (final NumberFormatException nfe) {
+					} catch (final IllegalStateException nfe) {
 						System.out.println("parsing date");
 						final String data = cell.toString();
 						try {

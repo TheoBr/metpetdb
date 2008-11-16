@@ -273,12 +273,11 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		try {
 			currentSession().getTransaction().commit();
 		} catch (final HibernateException he) {
-			handleHibernateException(he);
+			throw handleHibernateException(he);
 		}
 	}
 
-	protected void handleHibernateException(final HibernateException he)
-			throws DAOException {
+	protected DAOException handleHibernateException(final HibernateException he) {
 
 		// Sometimes we can map specific sql exceptions to specific dao
 		// exceptions, do that if we can
@@ -287,24 +286,24 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 			final String constraintName = cve.getConstraintName();
 
 			if ("projects_nk_alias".equals(constraintName))
-				throw new ProjectAlreadyExistsException();
+				return new ProjectAlreadyExistsException();
 			else if ("samples_nk_alias".equals(constraintName))
-				throw new SampleAlreadyExistsException();
+				return new SampleAlreadyExistsException();
 			else if ("users_nk_username".equals(constraintName))
-				throw new UserAlreadyExistsException();
+				return new UserAlreadyExistsException();
 			else if ("subsamples_nk_name".equals(constraintName))
-				throw new SubsampleAlreadyExistsException();
+				return new SubsampleAlreadyExistsException();
 			else if ("chemical_analyses_nk_spot_id".equals(constraintName))
-				throw new ChemicalAnalysisAlreadyExistsException();
+				return new ChemicalAnalysisAlreadyExistsException();
 			else if ("images_nk_filename".equals(constraintName))
-				throw new ImageAlreadyExistsException();
+				return new ImageAlreadyExistsException();
 		}
 
 		// If we have no idea what the exception means, should it be passed to
 		// the end user? I say so, that way they have something meaningful to
 		// bring to the dev team (instead of just' it didn't work sometime
 		// yesterday afternoon')
-		throw new GenericDAOException(formatExceptionMessage(he));
+		return new GenericDAOException(formatExceptionMessage(he));
 	}
 
 	public static String formatExceptionMessage(final HibernateException he) {

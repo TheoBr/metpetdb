@@ -408,7 +408,7 @@ public class AnalysisParser extends Parser {
 							ca.setAnalysisDate(new Timestamp(data.getTime()));
 							// storeMethod.invoke(s, new
 							// Timestamp(data.getTime()));
-						} catch (final NumberFormatException nfe) {
+						} catch (final IllegalStateException nfe) {
 							System.out.println("parsing date");
 							final String data = cell.toString();
 							parseDate(ca, data);

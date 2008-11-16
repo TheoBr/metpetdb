@@ -1,8 +1,10 @@
 package edu.rpi.metpetdb.client.ui.bulk.upload;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.MissingResourceException;
 
@@ -13,10 +15,8 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FileUpload;
-import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -24,15 +24,12 @@ import com.google.gwt.user.client.ui.FormSubmitCompleteEvent;
 import com.google.gwt.user.client.ui.FormSubmitEvent;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.ProgressBar;
 
-import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
-import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.BulkUploadResult;
@@ -42,7 +39,6 @@ import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.widgets.MButton;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -227,6 +223,11 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 			formMessage.sendNotice(NoticeType.WARNING, "Please select a file");
 			file.setStyleName(CSS.INVALID);
 			event.setCancelled(true);
+		} else {
+			uploadButton.setText("Uploading...");
+			uploadButton.setEnabled(false);
+			show(progressContainer);
+			progressTimer.scheduleRepeating(3000);
 		}
 		clearResults();
 	}
@@ -253,12 +254,13 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 				+ " to MetPetDB. Please wait...");
 		commitButton.setText("Submitting data...");
 		commitButton.setEnabled(false);
-		new VoidServerOp() {
+		new ServerOp<BulkUploadResult>() {
 			public void begin() {
-				service.commit(fileOnServer, this);
+				service.parser(fileOnServer, true, this);
 			}
 
-			public void onSuccess() {
+			public void onSuccess(BulkUploadResult result) {
+				handleErrors(result);
 				resultStatus.sendNotice(NoticeType.SUCCESS, contentType
 						+ " added to MetPetDB.");
 				resetLink.setText("Upload more data");
@@ -276,17 +278,12 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 	
 	private void doUploadAndParse() {
 		form.submit();
-		clearResults();
-		uploadButton.setText("Uploading...");
-		uploadButton.setEnabled(false);
-		show(progressContainer);
-		progressTimer.scheduleRepeating(3000);
 	}
 	
 	private void parse() {
 		new ServerOp<BulkUploadResult>() {
 			public void begin() {
-				service.parser(fileOnServer, this);
+				service.parser(fileOnServer, false, this);
 			}
 
 			public void onSuccess(final BulkUploadResult results) {
@@ -295,20 +292,8 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 				uploadButton.setText("Upload");
 				uploadButton.setEnabled(true);
 				populateMatchedColsPanel(results.getHeaders());
-				final Map<Integer, ValidationException> errors = results.getErrors();
-				populateSummaryPanel(results.getResultCounts(), errors.size());
-				if (!errors.isEmpty()) {
-					populateErrorPanel(errors);
-					resultStatus.sendNotice(NoticeType.WARNING, "Upload complete, but the file contains errors.");
-					nextStepText.setText("Please fix the errors and re-upload.");
-					resultsPanel.selectTab(2);
-				} else {
-					setErrorTabStyle(0);
-					resultStatus.sendNotice(NoticeType.SUCCESS, "Upload complete.");
-					nextStepText.setText("Looks good! Remember to double-check the matched columns before submitting.");
-					resultsPanel.selectTab(0);
-					show(commitButton);
-				}
+				populateSummaryPanel(results.getResultCounts(), results.getErrors().size());
+				handleErrors(results);
 				show(resultsPanel);
 				show(nextStepPanel);
 			}
@@ -328,6 +313,22 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 				}
 			}
 		}.begin();
+	}
+	
+	private void handleErrors(final BulkUploadResult results) {
+		final Map<Integer, Collection<MpDbException>> errors = results.getErrors();
+		if (!errors.isEmpty()) {
+			populateErrorPanel(errors);
+			resultStatus.sendNotice(NoticeType.WARNING, "Upload complete, but the file contains errors.");
+			nextStepText.setText("Please fix the errors and re-upload.");
+			resultsPanel.selectTab(2);
+		} else {
+			setErrorTabStyle(0);
+			resultStatus.sendNotice(NoticeType.SUCCESS, "Upload complete.");
+			nextStepText.setText("Looks good! Remember to double-check the matched columns before submitting.");
+			resultsPanel.selectTab(0);
+			show(commitButton);
+		}
 	}
 
 	public void clearResults() {
@@ -402,7 +403,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		// TODO provide some summary of matched columns here
 	}
 
-	private void populateErrorPanel(Map<Integer, ValidationException> errors) {
+	private void populateErrorPanel(Map<Integer, Collection<MpDbException>> errors) {
 		errorPanel.clear();
 		String msg = "There were "+errors.size()+" errors:";
 		if (errors.size() == 1) msg = "There was one error:";
@@ -414,12 +415,23 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		int i = 0;
 		errorGrid.setText(0, 0, "Row");
 		errorGrid.setText(0, 1, "Error Message");
-		// TODO sort errors by line number (key)
-		for (Map.Entry<Integer, ValidationException> e : errors.entrySet()) {
-			errorGrid.setText(++i, 0, e.getKey().toString());
-			errorGrid.setText(i, 1, e.getValue().format());
+		final List<Integer> rowNumbers = new ArrayList<Integer>();
+		rowNumbers.addAll(errors.keySet());
+		Collections.sort(rowNumbers);
+		for (Integer row : rowNumbers) {
+			errorGrid.setText(++i, 0, row.toString());
+			errorGrid.setText(i, 1, explode(errors.get(row)));
 		}
 		setErrorTabStyle(i);
+	}
+	
+	private String explode(final Collection<MpDbException> exceptions) {
+		String text = "";
+		final Iterator<MpDbException> itr = exceptions.iterator();
+		while(itr.hasNext()) {
+			text += itr.next().format() + " - ";
+		}
+		return text;
 	}
 	
 	private void setErrorTabStyle(int numErrors) {
