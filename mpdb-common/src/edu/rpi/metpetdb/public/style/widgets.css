@@ -43,11 +43,6 @@
 				Notices
 ---------------------------------------*/
 
-.notice-panel {
-	border-bottom: 1px solid #EFEFEF;
-	background-color: #EFEFEF;
-	color: #000;
-}
 .notice-panel .notice-message {
 	padding: 6px 9px;
 }
@@ -55,25 +50,30 @@
 	float: right;
 	padding: 6px 7px 6px 2px;
 }
-.notice-success {
+.notice-panel .notice {
+	border-bottom: 1px solid #EFEFEF;
+	background-color: #EFEFEF;
+	color: #000;
+}
+.notice-panel .notice-success {
 	border-bottom-color: #cbee95;
 	background-color: #f4ffe4;
 	color: #3B5C20;
 }
-.notice-error {
+.notice-panel .notice-error {
 	border-bottom-color: #ffb3a1;
 	background-color: #ffe9e4;
 	color: #c41616;
 }
-.notice-working {
+.notice-panel .notice-working {
 	border-bottom-color: #cde3f3;
 	background-color: #e7f5fe;
 	color: #617684;
 }
-.notice-warning {
+.notice-panel .notice-warning {
 	border-bottom-color: #f1f975;
-	background-color: #fdffdd;
-	color: #f1a707;
+	background-color: #E2A92F;
+	color: #BC6600;
 }
 
 

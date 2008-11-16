@@ -183,7 +183,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		nextStepPanel.setStyleName(CSS.BULK_NEXTSTEP);
 		nextStepPanel.add(nextStepText);
 		nextStepPanel.add(commitButton);
-		commitButton.addStyleName(CSS.PRIMARY_BUTTON);
+		commitButton.addStyleName(CSS.SUBMIT);
 		hide(commitButton);
 		nextStepPanel.add(resetLink);
 		hide(nextStepPanel);
@@ -195,7 +195,6 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		if (commitButton == sender) {
 			doCommit();
 		} else if (uploadButton == sender) {
-			commitButton.setText("Upload " + contentType);
 			doUploadAndParse();
 		} else {
 			updateUploadType();
@@ -324,7 +323,7 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 			resultsPanel.selectTab(2);
 		} else {
 			setErrorTabStyle(0);
-			resultStatus.sendNotice(NoticeType.SUCCESS, "Upload complete.");
+			resultStatus.sendNotice(NoticeType.SUCCESS, "Upload completed successfully.");
 			nextStepText.setText("Looks good! Remember to double-check the matched columns before submitting.");
 			resultsPanel.selectTab(0);
 			show(commitButton);

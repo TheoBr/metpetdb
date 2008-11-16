@@ -40,7 +40,7 @@
 }
 
 /*-------------------------------------
-	     Bulk Upload Results
+	         Results
 ---------------------------------------*/
 .bulk-results {
 	width: 100%;
@@ -54,6 +54,16 @@
 .bulk-next {
 	margin-top: 10px;
 }
+.bulk-results p {
+	margin: 10px 0;
+}
+.bulk-next .submit {
+	margin-right: 10px;
+}
+
+/*-------------------------------------
+	         Tabs
+---------------------------------------*/
 .bulk-results .tabBar {
 	background: transparent url(../images/tabbarlite-bg.gif) repeat-x left 50%;
 	padding: 0;
@@ -110,14 +120,11 @@
 .bulk-results .tabPanelBottom table {
 	margin: 0 auto 10px;
 }
-.bulk-results .has-errors {
-	color: #992c1a;
-}
-.bulk-results p {
-	margin: 10px 0;
-}
 
-/* matched columns */
+
+/*-------------------------------------
+	         Matched Columns
+---------------------------------------*/
 .bulk-results .parsed td {
 	vertical-align: middle;
 }
@@ -142,7 +149,10 @@
 	color: #aaa;
 }
 
-/* errors */
+
+/*-------------------------------------
+	         Errors
+---------------------------------------*/
 .bulk-results .errors td {
 	padding: 2px 0;
 }
@@ -153,7 +163,8 @@
 .bulk-results .errors tr+tr td {
 	border-bottom: 1px solid #ddd;
 }
-.bulk-results .errors tr+tr td:first-child {
+.bulk-results .errors tr+tr td:first-child,
+.bulk-results .has-errors {
 	color: #992c1a;
 }
 .bulk-results .errors tr:last-child td {
