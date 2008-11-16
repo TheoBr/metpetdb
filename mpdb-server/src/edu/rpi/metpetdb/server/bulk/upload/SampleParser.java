@@ -255,6 +255,10 @@ public class SampleParser extends Parser {
 				// Determine what class the method wants the content of the cell
 				// to be so it can parse it
 				final Class dataType = storeMethod.getParameterTypes()[0];
+				
+				if (cell.toString().equals("")) {
+					continue;
+				}
 
 				if (dataType == String.class) {
 
@@ -308,7 +312,7 @@ public class SampleParser extends Parser {
 						s.setDatePrecision((short) 1);
 						// storeMethod.invoke(s, new Timestamp(data.getTime()));
 					} catch (final IllegalStateException nfe) {
-						System.out.println("parsing date");
+						//System.out.println("parsing date");
 						final String data = cell.toString();
 						try {
 							(new DateStringConstraint()).validateValue(data);

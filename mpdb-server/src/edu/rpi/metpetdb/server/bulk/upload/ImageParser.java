@@ -128,7 +128,7 @@ public class ImageParser extends Parser{
 				// blank column
 				continue;
 			}
-			System.out.println("Parsing header " + i + ": " + text);
+			//System.out.println("Parsing header " + i + ": " + text);
 
 			// Determine method to be used for data in this column
 			for (MethodAssociation<XrayImage> sma : methodAssociations) {
@@ -203,8 +203,8 @@ public class ImageParser extends Parser{
 				if (type == null)
 					continue;
 
-				System.out.println("\t Parsing Column " + i + ": "
-						+ colName.get(new Integer(i)));
+				//System.out.println("\t Parsing Column " + i + ": "
+					//	+ colName.get(new Integer(i)));
 
 				// If an object for the column exists then handle accordingly
 				final int columnType = colType.get(new Integer(i));
@@ -214,7 +214,7 @@ public class ImageParser extends Parser{
 					// to be related to a subsample of that sample
 					if (colObjects.get(i) instanceof Sample) {
 						final String data = cell.toString();
-						System.out.println("\t\t(Sample)");
+						//System.out.println("\t\t(Sample)");
 
 						if (img.getSample() == null)
 							img.setSample(new Sample());

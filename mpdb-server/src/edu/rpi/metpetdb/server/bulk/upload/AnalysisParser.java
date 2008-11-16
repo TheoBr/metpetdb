@@ -151,7 +151,7 @@ public class AnalysisParser extends Parser {
 				// blank column
 				continue;
 			}
-			System.out.println("Parsing header " + i + ": " + text);
+			//System.out.println("Parsing header " + i + ": " + text);
 
 			// Determine method to be used for data in this column
 			for (MethodAssociation<ChemicalAnalysis> sma : methodAssociations) {
@@ -409,7 +409,7 @@ public class AnalysisParser extends Parser {
 							// storeMethod.invoke(s, new
 							// Timestamp(data.getTime()));
 						} catch (final IllegalStateException nfe) {
-							System.out.println("parsing date");
+							//System.out.println("parsing date");
 							final String data = cell.toString();
 							parseDate(ca, data);
 						}
