@@ -48,8 +48,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MTabPanel;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel.NoticeType;
 
-public class BulkUploadPanel extends MPagePanel implements ClickListener,
-		FormHandler {
+public class BulkUploadPanel extends MPagePanel implements FormHandler {
 
 	private final MText desc = new MText("Upload collections of data using the form below.", "p");
 	private final MLink help = new MLink("Bulk Upload Instructions (PDF)",
@@ -67,15 +66,15 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 	private final ProgressBar uploadProgress = new ProgressBar();
 	private final MNoticePanel uploadStatus = new MNoticePanel();
 	private final Timer progressTimer;
-	private final MButton cancelProgress = new MButton("Cancel", this);
+	private final MButton cancelProgress = new MButton("Cancel");
 
 	private final MHtmlList uploadTypeList = new MHtmlList();
 	private final RadioButton samplesRadio = new RadioButton("type", "Samples");
 	private final RadioButton analysesRadio = new RadioButton("type", "Chemical Analyses");
 	private final RadioButton imagesRadio = new RadioButton("type", "Images");
 
-	private final MButton uploadButton = new MButton("Upload", this);
-	private final MButton commitButton = new MButton("Submit Data", this);
+	private final MButton uploadButton = new MButton("Upload");
+	private final MButton commitButton = new MButton("Submit Data");
 
 	private final FlowPanel nextStepPanel = new FlowPanel();
 	private final MLink resetLink = new MLink("Reset the form", TokenSpace.bulkUpload);
@@ -93,8 +92,8 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 	private BulkUploadServiceAsync service;
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 	private String fileOnServer;
-
-	public BulkUploadPanel() {
+	
+	{
 		setStylePrimaryName(CSS.BULK_UPLOAD);
 		setPageTitle("Bulk Upload");
 		setPageDescription(desc);
@@ -121,25 +120,22 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 		main.add(uploadTypeList);
 		uploadTypeList.setStyleName(CSS.BULK_TYPES);
-
 		uploadTypeList.add(samplesRadio);
-		samplesRadio.setChecked(true);
-		samplesRadio.addClickListener(this);
-		updateUploadType();
-
 		uploadTypeList.add(analysesRadio);
-		analysesRadio.addClickListener(this);
-
 		uploadTypeList.add(imagesRadio);
-		imagesRadio.addClickListener(this);
 
 		main.add(uploadButton);
+		uploadButton.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				updateUploadType();
+				doUploadAndParse();
+			}
+		});
 
 		main.add(uploadStatus);
 		main.add(progressContainer);
 		progressContainer.setStyleName(CSS.PROGRESSBAR_CONTAINER);
-		hide(progressContainer);
-
+		
 		progressContainer.add(uploadProgress);
 		uploadProgress.setMinProgress(0);
 		uploadProgress.setMaxProgress(1);
@@ -167,11 +163,9 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 
 		main.add(resultsPanel);
 		resultsPanel.addStyleName(CSS.BULK_RESULTS);
-		hide(resultsPanel);
-
+		
 		resultsPanel.add(summaryPanel, new MText("Summary", "div"));
 		summaryPanel.setStyleName(CSS.BULK_RESULTS_SUMMARY);
-		resultsPanel.selectTab(0);
 		
 		resultsPanel.add(matchedColsPanel, new MText("Matched Columns", "div"));
 		matchedColsPanel.setStyleName(CSS.BULK_RESULTS_PARSED);
@@ -184,21 +178,20 @@ public class BulkUploadPanel extends MPagePanel implements ClickListener,
 		nextStepPanel.add(nextStepText);
 		nextStepPanel.add(commitButton);
 		commitButton.addStyleName(CSS.SUBMIT);
-		hide(commitButton);
-		nextStepPanel.add(resetLink);
-		hide(nextStepPanel);
+		commitButton.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				doCommit();
+			}
+		});
 		
-		clearResults();
+		nextStepPanel.add(resetLink);
 	}
 
-	public void onClick(final Widget sender) {
-		if (commitButton == sender) {
-			doCommit();
-		} else if (uploadButton == sender) {
-			doUploadAndParse();
-		} else {
-			updateUploadType();
-		}
+	public BulkUploadPanel() {
+		samplesRadio.setChecked(true);
+		updateUploadType();
+		resultsPanel.selectTab(0);
+		clearResults();
 	}
 
 	public void onSubmitComplete(final FormSubmitCompleteEvent event) {

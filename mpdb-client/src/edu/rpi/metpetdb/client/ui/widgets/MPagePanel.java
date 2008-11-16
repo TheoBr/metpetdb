@@ -12,9 +12,9 @@ import edu.rpi.metpetdb.client.ui.CSS;
 public class MPagePanel extends FlowPanel {
 	private final MText title = new MText("","h1");
 	private final MText category = new MText("","h4");
-	private final HTMLPanel header;
 	private final FlowPanel actionList = new FlowPanel();
 	private final MTwoColPanel mainPanel = new MTwoColPanel();
+	public FlowPanel sidebar = mainPanel.getRightCol();
 	
 	private static final String HEADER_ID = "page-header";
 	private static final String CATEGORY_ID = "page-category";
@@ -24,23 +24,23 @@ public class MPagePanel extends FlowPanel {
 	private static final String DESCRIPTION_ID = "page-desc";
 	private static final String NO_CATEGORY = "nocat";
 	
-	public FlowPanel sidebar;
-
-	public MPagePanel(boolean hasSidebar) {
-		super();
-		header = new HTMLPanel("<span id=\""+CATEGORY_ID+"\" class=\""+CSS.HIDE+"\"></span>" +
-				"<span id=\""+TITLE_ID+"\" class=\""+CSS.HIDE+"\">" +
-				"</span><span id=\""+DESCRIPTION_ID+"\" class=\""+CSS.HIDE+"\">" +
-				"</span><span id=\""+ACTIONS_ID+"\" class=\""+CSS.HIDE+"\"></span>");
-		header.setStylePrimaryName(HEADER_ID);
+	private final HTMLPanel header = new HTMLPanel("<span id=\""+CATEGORY_ID+"\" class=\""+CSS.HIDE+"\"></span>" +
+			"<span id=\""+TITLE_ID+"\" class=\""+CSS.HIDE+"\">" +
+			"</span><span id=\""+DESCRIPTION_ID+"\" class=\""+CSS.HIDE+"\">" +
+			"</span><span id=\""+ACTIONS_ID+"\" class=\""+CSS.HIDE+"\"></span>");
+	
+	{
 		super.add(header);
-		hide(header);
+		header.setStylePrimaryName(HEADER_ID);
 		super.add(mainPanel);
 		mainPanel.setStylePrimaryName("page-panel");
-		if (hasSidebar) mainPanel.addStyleDependentName("twocol");
 		mainPanel.setRightColStyle("page-sidebar");
 		mainPanel.setLeftColStyle("page-content");
-		sidebar = mainPanel.getRightCol();
+	}
+	
+	public MPagePanel(boolean hasSidebar) {
+		hide(header);
+		if (hasSidebar) mainPanel.addStyleDependentName("twocol");
 	}
 	
 	public MPagePanel() {
@@ -52,10 +52,12 @@ public class MPagePanel extends FlowPanel {
 	}
 
 	public void setPageTitle(String text, String cat) {
-		if (header.getElementById(TITLE_ID) != null) header.addAndReplaceElement(title, TITLE_ID);
+		if (header.getElementById(TITLE_ID) != null) 
+			header.addAndReplaceElement(title, TITLE_ID);
 		title.getElement().setInnerHTML(text);
 		
-		if (header.getElementById(CATEGORY_ID) != null) header.addAndReplaceElement(category, CATEGORY_ID);
+		if (header.getElementById(CATEGORY_ID) != null) 
+			header.addAndReplaceElement(category, CATEGORY_ID);
 		category.getElement().setInnerHTML(cat);
 		
 		if (cat == "" || cat == null) header.addStyleDependentName(NO_CATEGORY);
@@ -69,12 +71,14 @@ public class MPagePanel extends FlowPanel {
 
 	public void setPageDescription(Widget w) {
 		w.setStyleName(DESCRIPTION_ID);
-		if (header.getElementById(DESCRIPTION_ID) != null) header.addAndReplaceElement(w, DESCRIPTION_ID);
+		if (header.getElementById(DESCRIPTION_ID) != null) 
+			header.addAndReplaceElement(w, DESCRIPTION_ID);
 	}
 	
 	public void setPageActionList() {
 		actionList.setStylePrimaryName(ACTIONS_ID);
-		if (header.getElementById(ACTIONS_ID) != null) header.addAndReplaceElement(actionList, ACTIONS_ID);
+		if (header.getElementById(ACTIONS_ID) != null) 
+			header.addAndReplaceElement(actionList, ACTIONS_ID);
 	}
 
 	public void addPageActionItem(final MLink lnk) {
@@ -100,20 +104,22 @@ public class MPagePanel extends FlowPanel {
 		CSS.show(w);
 	}
 	
-	// FlowPanel Overrides
-	
+	@Override
 	public void add(Widget w) {
 		insert(w, mainPanel.getLeftCol().getWidgetCount());
 	}
 	
+	@Override
 	public void insert(Widget w, int pos) {
 		mainPanel.getLeftCol().insert(w, pos);
 	}
 	
+	@Override
 	public boolean remove(int i) {
 		return mainPanel.getLeftCol().remove(i);
 	}
 
+	@Override
 	public boolean remove(Widget w) {
 		return mainPanel.getLeftCol().remove(w);
 	}
