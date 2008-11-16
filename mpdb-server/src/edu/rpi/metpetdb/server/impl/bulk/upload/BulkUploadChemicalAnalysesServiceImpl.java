@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 
 import edu.rpi.metpetdb.client.error.DAOException;
@@ -45,8 +45,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 			final AnalysisParser ap = new AnalysisParser(new FileInputStream(
 					MpDbServlet.getFileUploadPath() + fileOnServer));
 			ap.parse();
-			final List<ChemicalAnalysis> analyses = ap.getAnalyses();
-			int row = 2;
+			final Map<Integer, ChemicalAnalysis> analyses = ap.getAnalyses();
 			// Keeps track of existing/new subsample names for each sample
 			final Map<String, Collection<String>> subsampleNames = new HashMap<String, Collection<String>>();
 			// maps a sample alias to an actual sample
@@ -61,13 +60,21 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 			final SampleDAO sDAO = new SampleDAO(this.currentSession());
 			User u = new User();
 			u.setId(currentUser());
-			for (ChemicalAnalysis ca : analyses) {
+			final Iterator<Integer> rows = analyses.keySet().iterator();
+			while(rows.hasNext()) {
+				int row = rows.next();
+				final ChemicalAnalysis ca = analyses.get(row);
 				try {
-					// see if our sample exists
+					// see if our subsample exists
 					if (ca.getSubsample() == null) {
 						results.addError(row, new PropertyRequiredException(
 						"Subsample"));
-						++row;
+						continue;
+					}
+					// see if our sample exists
+					if (ca.getSubsample() == null) {
+						results.addError(row, new PropertyRequiredException(
+						"Sample"));
 						continue;
 					}
 					Sample s = ca.getSubsample().getSample();
@@ -88,7 +95,6 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 						// Every Image needs a sample so add an error
 						results.addError(row, new PropertyRequiredException(
 								"Sample"));
-						++row;
 						continue;
 					}
 					Subsample ss = (ca.getSubsample());
@@ -137,7 +143,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 						caResultCount.incrementOld();
 					if (save) {
 						try {
-							ca = dao.save(ca);
+							dao.save(ca);
 						} catch (DAOException e) {
 							results.addError(row, e);
 						}

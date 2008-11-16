@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -132,9 +132,8 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 			final ImageParser ip = new ImageParser(zp
 					.getInputStream(spreadsheet));
 			ip.parse();
-			final List<Image> images = ip.getImages();
-			final List<ImageOnGrid> imagesOnGrid = ip.getImagesOnGrid();
-			int row = 2;
+			final Map<Integer, Image> images = ip.getImages();
+			final Map<Integer, ImageOnGrid> imagesOnGrid = ip.getImagesOnGrid();
 			final BulkUploadResultCount ssResultCount = new BulkUploadResultCount();
 			final BulkUploadResultCount imgResultCount = new BulkUploadResultCount();
 			User u = new User();
@@ -148,7 +147,10 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 			final SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
 			final SampleDAO sDAO = new SampleDAO(this.currentSession());
 			final ImageDAO dao = new ImageDAO(this.currentSession());
-			for (Image img : images) {
+			final Iterator<Integer> imgRows = images.keySet().iterator();
+			while(imgRows.hasNext()) {
+				final int row = imgRows.next();
+				final Image img = images.get(row);
 				// Confirm the filename is in the zip
 				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
 					results.addError(row, new InvalidImageException(
@@ -174,7 +176,6 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 							// Every Image needs a sample so add an error
 							results.addError(row,
 									new PropertyRequiredException("Sample"));
-							++row;
 							continue;
 						}
 						Subsample ss = (img.getSubsample());
@@ -241,10 +242,12 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 						imgResultCount.incrementInvalid();
 					}
 				}
-				++row;
 			}
 
-			for (ImageOnGrid iog : imagesOnGrid) {
+			final Iterator<Integer> iogRows = imagesOnGrid.keySet().iterator();
+			while(iogRows.hasNext()) {
+				final int row = iogRows.next();
+				final ImageOnGrid iog = imagesOnGrid.get(row);
 				Image img = iog.getImage();
 				// Confirm the filename is in the zip
 				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
@@ -274,7 +277,6 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 				} catch (ValidationException e) {
 					results.addError(row, e);
 				}
-				++row;
 			}
 			results.addResultCount("Subsamples", ssResultCount);
 			results.addResultCount("Images", imgResultCount);

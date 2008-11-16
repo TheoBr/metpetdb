@@ -52,7 +52,7 @@ public abstract class Parser {
 		// data mapping
 		HSSFRow header = sheet.getRow(k);
 		for (int i = 0; i < header.getLastCellNum(); ++i) {
-			final HSSFCell cell = header.getCell((short) i);
+			final HSSFCell cell = header.getCell(i);
 			final String text;
 
 			try {

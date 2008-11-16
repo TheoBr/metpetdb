@@ -4,10 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -16,7 +17,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
-import edu.rpi.metpetdb.client.model.Element;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
 import edu.rpi.metpetdb.client.model.Reference;
@@ -32,8 +32,8 @@ public class ImageParser extends Parser{
 	public static final int PARENT_LOC_X = 201;
 	public static final int PARENT_LOC_Y = 202;
 
-	private final List<Image> images;
-	private final List<ImageOnGrid> imagesOnGrid;
+	private final Map<Integer, Image> images;
+	private final Map<Integer, ImageOnGrid> imagesOnGrid;
 	// 0) Regex for header
 	// 1) methodname to set in Sample
 	// 2) datatype cell needs to be converted to for use with methodname
@@ -93,8 +93,8 @@ public class ImageParser extends Parser{
 	 */
 	public ImageParser(final InputStream is) throws IOException {
 		super();
-		images = new ArrayList<Image>();
-		imagesOnGrid = new ArrayList<ImageOnGrid>();
+		images = new HashMap<Integer, Image>();
+		imagesOnGrid = new HashMap<Integer, ImageOnGrid>();
 		final POIFSFileSystem fs = new POIFSFileSystem(is);
 		final HSSFWorkbook wb = new HSSFWorkbook(fs);
 		sheet = wb.getSheetAt(0);
@@ -118,7 +118,7 @@ public class ImageParser extends Parser{
 		HSSFRow header = sheet.getRow(rowindex);
 		for (int i = 0; i < header.getLastCellNum(); ++i) {
 			// Convert header title to String
-			final HSSFCell cell = header.getCell((short) i);
+			final HSSFCell cell = header.getCell(i);
 			final String text;
 			boolean done = false;
 
@@ -195,8 +195,8 @@ public class ImageParser extends Parser{
 		int parent_loc_x = 0;
 		int parent_loc_y = 0;
 
-		for (Integer i = 0; i <= row.getLastCellNum(); ++i) {
-			final HSSFCell cell = row.getCell((short) i.intValue());
+		for (int i = 0; i <= row.getLastCellNum(); ++i) {
+			final HSSFCell cell = row.getCell(i);
 			try {
 				// Get the method we'll be using to parse this particular cell
 				Integer type = colType.get(i);
@@ -254,7 +254,7 @@ public class ImageParser extends Parser{
 					// Determine what class the method wants the content of the
 					// cell
 					// to be so it can parse it
-					final Class dataType = storeMethod.getParameterTypes()[0];
+					final Class<?> dataType = storeMethod.getParameterTypes()[0];
 
 					if (dataType == String.class) {
 
@@ -325,19 +325,19 @@ public class ImageParser extends Parser{
 				else
 					iog.setImage(img);
 
-				imagesOnGrid.add(iog);
+				imagesOnGrid.put(rowindex, iog);
 			} else if (img.getElement() == null)
-				images.add(img.getImage());
+				images.put(rowindex+1, img.getImage());
 			else
-				images.add(img);
+				images.put(rowindex+1, img);
 		}
 	}
 
-	public List<Image> getImages() {
+	public Map<Integer, Image> getImages() {
 		return images;
 	}
 
-	public List<ImageOnGrid> getImagesOnGrid() {
+	public Map<Integer, ImageOnGrid> getImagesOnGrid() {
 		return imagesOnGrid;
 	}
 }

@@ -23,7 +23,7 @@ public class MethodAssociation<T> {
 	 * 		human readable name of what this represents
 	 */
 	public MethodAssociation(final String regex, final String method,
-			final Class param, final T t, final String name)
+			final Class<?> param, final T t, final String name)
 			throws NoSuchMethodException {
 		this.pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 		this.method = t.getClass().getMethod(method, param);

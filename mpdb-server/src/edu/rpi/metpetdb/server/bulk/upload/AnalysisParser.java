@@ -6,8 +6,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -36,7 +38,7 @@ public class AnalysisParser extends Parser {
 	public static final int PERCISIONUNIT = 102;
 	public static final int SUBSAMPLE_TYPE = 103;
 
-	private final List<ChemicalAnalysis> analyses;
+	private final Map<Integer, ChemicalAnalysis> analyses;
 	/**
 	 * sampleMethodMap[][0] === name in table sampleMethodMap[][1] === method to
 	 * call on Sample to store data sampleMethodMap[][2] === parameter to the
@@ -109,7 +111,7 @@ public class AnalysisParser extends Parser {
 	 */
 	public AnalysisParser(final InputStream is) throws IOException {
 		super();
-		analyses = new LinkedList<ChemicalAnalysis>();
+		analyses = new HashMap<Integer, ChemicalAnalysis>();
 		final POIFSFileSystem fs = new POIFSFileSystem(is);
 		final HSSFWorkbook wb = new HSSFWorkbook(fs);
 		sheet = wb.getSheetAt(0);
@@ -142,7 +144,7 @@ public class AnalysisParser extends Parser {
 		HSSFRow header = sheet.getRow(rownum);
 		for (int i = 0; i < header.getLastCellNum(); ++i) {
 			// Convert header title to String
-			final HSSFCell cell = header.getCell((short) i);
+			final HSSFCell cell = header.getCell(i);
 			final String text;
 			boolean done = false;
 			try {
@@ -197,7 +199,7 @@ public class AnalysisParser extends Parser {
 						boolean precision_next = false;
 						try {
 							String next_header = header
-									.getCell((short) (i + 1)).toString();
+									.getCell((i + 1)).toString();
 							precision_next = Pattern.compile("precision",
 									Pattern.CASE_INSENSITIVE).matcher(
 									next_header).find();
@@ -245,7 +247,7 @@ public class AnalysisParser extends Parser {
 						boolean precision_next = false;
 						try {
 							String next_header = header
-									.getCell((short) (i + 1)).toString();
+									.getCell( (i + 1)).toString();
 							precision_next = Pattern.compile("precision",
 									Pattern.CASE_INSENSITIVE).matcher(
 									next_header).find();
@@ -300,8 +302,8 @@ public class AnalysisParser extends Parser {
 		boolean sawDataInRow = false;
 
 		String precisionUnit = null;
-		for (Integer i = 0; i < row.getLastCellNum(); ++i) {
-			final HSSFCell cell = row.getCell((short) i.intValue());
+		for (int i = 0; i < row.getLastCellNum(); ++i) {
+			final HSSFCell cell = row.getCell( i);
 			try {
 				Integer type = colType.get(i);
 				if (type == null)
@@ -333,7 +335,7 @@ public class AnalysisParser extends Parser {
 					final Object o = colObjects.get(i);
 					final Float data = (float) cell.getNumericCellValue();
 					final Float precision = (float) row
-							.getCell((short) (i + 1)).getNumericCellValue();
+							.getCell( (i + 1)).getNumericCellValue();
 
 					storeMethod.invoke(ca, o, data, precision);
 
@@ -349,7 +351,7 @@ public class AnalysisParser extends Parser {
 
 					// Determine which class the method wants the content of the
 					// cell to be so it can parse it
-					final Class dataType = storeMethod.getParameterTypes()[0];
+					final Class<?> dataType = storeMethod.getParameterTypes()[0];
 
 					if (dataType == String.class) {
 
@@ -451,10 +453,10 @@ public class AnalysisParser extends Parser {
 			else
 				ca.setLargeRock(false);
 
-			analyses.add(ca);
+			analyses.put(rownum+1, ca);
 		}
 	}
-	public List<ChemicalAnalysis> getAnalyses() {
+	public Map<Integer, ChemicalAnalysis> getAnalyses() {
 		return analyses;
 	}
 

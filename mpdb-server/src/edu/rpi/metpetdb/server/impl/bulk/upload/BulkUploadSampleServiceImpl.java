@@ -3,7 +3,6 @@ package edu.rpi.metpetdb.server.impl.bulk.upload;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,7 +40,7 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 			final SampleParser sp = new SampleParser(new FileInputStream(
 					MpDbServlet.getFileUploadPath() + fileOnServer));
 			sp.parse();
-			final List<Sample> samples = sp.getSamples();
+			final Map<Integer, Sample> samples = sp.getSamples();
 			final SampleDAO dao = new SampleDAO(this.currentSession());
 			final Map<Integer, ValidationException> existingErrors = sp
 					.getErrors();
@@ -53,9 +52,11 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 			}
 			User user = new User();
 			user.setId(currentUser());
-			int row = 2;
 			final BulkUploadResultCount resultCount = new BulkUploadResultCount();
-			for (Sample s : samples) {
+			final Iterator<Integer> rows = samples.keySet().iterator();
+			while(rows.hasNext()) {
+				final int row = rows.next();
+				final Sample s = samples.get(row);
 				s.setOwner(user);
 				s.setPublicData(false);
 				try {
@@ -73,14 +74,13 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 				}
 				if (save) {
 					try {
-						s = dao.save(s);
+						dao.save(s);
 					} catch (HibernateException he) {
 						results.addError(row, handleHibernateException(he));
 					} catch (DAOException e) {
 						results.addError(row, e);
 					}
 				}
-				row = row + 1;
 			}
 			results.addResultCount("Sample", resultCount);
 			results.setHeaders(sp.getHeaders());

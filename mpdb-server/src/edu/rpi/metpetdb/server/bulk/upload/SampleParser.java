@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +25,7 @@ import edu.rpi.metpetdb.client.model.validation.DateStringConstraint;
 
 public class SampleParser extends Parser {
 
-	private final List<Sample> samples;
+	private final Map<Integer, Sample> samples;
 	private final Map<Integer, ValidationException> errors = new HashMap<Integer, ValidationException>();
 
 	/**
@@ -113,7 +112,7 @@ public class SampleParser extends Parser {
 	 */
 	public SampleParser(final InputStream is)  {
 		super();
-		samples = new LinkedList<Sample>();
+		samples = new HashMap<Integer, Sample>();
 		try {
 			final POIFSFileSystem fs = new POIFSFileSystem(is);
 			final HSSFWorkbook wb = new HSSFWorkbook(fs);
@@ -141,7 +140,7 @@ public class SampleParser extends Parser {
 		HSSFRow header = sheet.getRow(rowindex);
 		for (int i = 0; i < header.getLastCellNum(); ++i) {
 			// Convert header title to String
-			final HSSFCell cell = header.getCell((short) i);
+			final HSSFCell cell = header.getCell(i);
 			final String text;
 			boolean done = false;
 
@@ -220,7 +219,7 @@ public class SampleParser extends Parser {
 		boolean sawDataInRow = false;
 
 		for (Integer i = 0; i <= row.getLastCellNum(); ++i) {
-			final HSSFCell cell = row.getCell((short) i.intValue());
+			final HSSFCell cell = row.getCell(i.intValue());
 			try {
 				// Get the method we'll be using to parse this particular cell
 				final Method storeMethod = colMethods.get(i);
@@ -254,7 +253,7 @@ public class SampleParser extends Parser {
 
 				// Determine what class the method wants the content of the cell
 				// to be so it can parse it
-				final Class dataType = storeMethod.getParameterTypes()[0];
+				final Class<?> dataType = storeMethod.getParameterTypes()[0];
 				
 				if (cell.toString().equals("")) {
 					continue;
@@ -344,11 +343,11 @@ public class SampleParser extends Parser {
 		}
 
 		if (sawDataInRow) {
-			samples.add(s);
+			samples.put(rowindex+1, s);
 		}
 	}
 
-	public List<Sample> getSamples() {
+	public Map<Integer, Sample> getSamples() {
 		return samples;
 	}
 
