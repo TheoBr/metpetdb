@@ -2,8 +2,10 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific.search;
 
 import java.util.ArrayList;
 
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -12,20 +14,23 @@ import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
+import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MTabPanel;
 import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
-public class SearchInterface {
+public class SearchInterface implements ClickListener {
 	private SearchTabAttribute[] tabAtts;
 	private ArrayList<Widget[]> currentEditWidgets;
 	private MTabPanel tabs = new MTabPanel();
 	private static final String CRITERIA_STYLENAME = "criteria-summary";
 	private static final String CRITERIA_CONTENT_ID = CRITERIA_STYLENAME + "-content";
+	private static final String CRITERIA_CLEAR_ID = "criteria-clearall";
+	private final MLink clearAll = new MLink("Clear All", this);
 	private final MHtmlList searchActions = new MHtmlList();
 	
 	private FlowPanel critContents = new FlowPanel();
 	private final HTMLPanel criteriaSummaryPanel = new HTMLPanel(
-			"<div class=\"header-wrap\"><div class=\"header-content\"><div>Criteria Summary</div></div></div>" +
+			"<div class=\"header-wrap\"><div class=\"header-content\"><div><span id=\""+CRITERIA_CLEAR_ID+"\"></span>Criteria Summary</div></div></div>" +
 			"<div class=\"content-wrap\"><span id=\""+CRITERIA_CONTENT_ID+"\"></span></div>" +
 			"<div class=\"bottom-wrap\"><div class=\"bottom\"></div></div>");
 	private final Label noCriteriaMsg = new Label("Set your search criteria by selecting from the categories on the left.");
@@ -43,10 +48,7 @@ public class SearchInterface {
 	}
 	
 	public SearchInterface(final SearchTabAttribute[] tabAtts) {
-		this.tabAtts = tabAtts;
-		
-	
-		
+		this.tabAtts = tabAtts;	
 	}
 
 	public Widget[] createDisplayWidget(final MObject obj) {
@@ -76,6 +78,12 @@ public class SearchInterface {
 			panel
 		};
 	}
+	
+	public void onClick(Widget sender) {
+		if (sender == clearAll) {
+			// TODO clear all criteria
+		}
+	}
 
 	protected void set(final MObject obj, final Object o) {
 	}
@@ -90,6 +98,8 @@ public class SearchInterface {
 
 	public Widget SearchConstraintDisplay() {
 		criteriaSummaryPanel.setStyleName(CRITERIA_STYLENAME);
+		if (criteriaSummaryPanel.getElementById(CRITERIA_CLEAR_ID) != null)
+			criteriaSummaryPanel.addAndReplaceElement(clearAll, CRITERIA_CLEAR_ID);
 		if (criteriaSummaryPanel.getElementById(CRITERIA_CONTENT_ID) != null)
 			criteriaSummaryPanel.addAndReplaceElement(critContents, CRITERIA_CONTENT_ID);
 		critContents.setStyleName(CRITERIA_CONTENT_ID);
@@ -131,16 +141,22 @@ public class SearchInterface {
 			critContents.add(noCriteriaMsg);
 	}
 
-	private class CritContainer extends FlowPanel {
+	private class CritContainer extends FlowPanel implements ClickListener {
 		private SearchTabAttribute sta;
-
+		private MLink clearLink = new MLink("Clear", this);
+		private static final String CLEAR_ID = "clear-link";
+		private final HTMLPanel tabTitle;
+		
 		public CritContainer(final SearchTabAttribute sta) {
 			this.sta = sta;
 			setStyleName("section");
-			final Label tabTitle = new Label(sta.getTitle());
+			tabTitle = new HTMLPanel("<span id=\""+CLEAR_ID+"\"></span>"+sta.getTitle());
+			add(tabTitle);
 			tabTitle.setStyleName("section-title");
 			tabTitle.addStyleName(CSS.TYPE_SMALL_CAPS);
-			add(tabTitle);
+			if (tabTitle.getElementById(CLEAR_ID) != null)
+				tabTitle.addAndReplaceElement(clearLink,  CLEAR_ID);
+			clearLink.addStyleName("clear");
 			for (int i=0; i<sta.getCriteria().size(); i++)
 				add(sta.getCriteria().get(i));
 		}
@@ -152,6 +168,12 @@ public class SearchInterface {
 		public SearchTabAttribute getTabAttribute() {
 			return sta;
 		}
+
+		public void onClick(Widget sender) {
+			if (clearLink == sender) {
+				// TODO clear this criteria
+			}
+		}
 	};
 	
 	private SearchTabAttribute getSelectedTabAtt() {
@@ -161,4 +183,6 @@ public class SearchInterface {
 	public void passActionWidget(Widget w) {
 		searchActions.add(w);
 	}
+
+	
 }

@@ -81,7 +81,12 @@
 	text-transform: uppercase;
 	font-family: "Gill Sans",Verdana,sans-serif;
 	letter-spacing: 1px;
-	text-align: center;
+}
+.criteria-summary .header-content div a {
+	float: right;
+	font: 11px Verdana, "Lucida Grande", sans-serif;
+	letter-spacing: 0;
+	text-transform: none;
 }
 .criteria-summary .content-wrap {
 	background: transparent url(../images/srchsum-content-bg-start.png) repeat-y 6px top;
@@ -111,9 +116,18 @@
 	padding: 5px 0;
 }
 .criteria-summary .section-title {
-	padding: 5px 5px 2px;
+	position: relative;
+	padding: 5px 43px 2px 5px;
 	border-bottom: 1px solid #ddd;
 	color: #888;
+}
+.criteria-summary .section-title a.clear {
+	position: absolute;
+	bottom: 3px;
+	right: 10px;
+	font-family: Verdana, "Lucida Grande", sans-serif;
+	text-transform: none;
+	letter-spacing: 0;
 }
 .criteria-summary .section > div+div {
 	margin: 0 5px;
