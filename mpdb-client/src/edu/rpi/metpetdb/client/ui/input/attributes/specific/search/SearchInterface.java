@@ -81,7 +81,7 @@ public class SearchInterface implements ClickListener {
 	
 	public void onClick(Widget sender) {
 		if (sender == clearAll) {
-			// TODO clear all criteria
+			clearConstraints();
 		}
 	}
 
@@ -121,10 +121,10 @@ public class SearchInterface implements ClickListener {
 		}
 	}
 	
-	private void removeCriteriaForTab(){
+	private void removeCriteriaForTab(SearchTabAttribute sta){
 		for (int i = 0; i < critContents.getWidgetCount(); i++){
 			if (critContents.getWidget(i) instanceof CritContainer) {
-				if (((CritContainer)critContents.getWidget(i)).getTabAttribute() == getSelectedTabAtt()){
+				if (((CritContainer)critContents.getWidget(i)).getTabAttribute() == sta){
 					critContents.remove(i);
 					return;
 				}
@@ -133,7 +133,7 @@ public class SearchInterface implements ClickListener {
 	}
 	
 	public void createCritera(){
-		removeCriteriaForTab();
+		removeCriteriaForTab(getSelectedTabAtt());
 		if (!getSelectedTabAtt().getCriteria().isEmpty()) {
 			if (noCriteriaMsg.isAttached()) noCriteriaMsg.removeFromParent();
 			critContents.add(new CritContainer(getSelectedTabAtt()));
@@ -171,7 +171,10 @@ public class SearchInterface implements ClickListener {
 
 		public void onClick(Widget sender) {
 			if (clearLink == sender) {
-				// TODO clear this criteria
+				sta.onClear();
+				removeCriteriaForTab(sta);
+				if (critContents.getWidgetCount() == 0)
+					critContents.add(noCriteriaMsg);
 			}
 		}
 	};

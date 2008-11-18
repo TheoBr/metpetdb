@@ -210,7 +210,11 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 	}
 
 	public void onClear(){
-		
+		for(RowContainer rc : currentCriteria.keySet()){
+			rc.greaterThan.setText("");
+			rc.lessThan.setText("");
+			rc.unit.setSelectedIndex(0);
+		}
 	}
 	
 	public ArrayList<Widget> getCriteria(){
