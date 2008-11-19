@@ -42,7 +42,7 @@
     </set>
     
     <set name="comments" cascade="all,delete-orphan" lazy="false" >
-      <key column="sample_id" not-null="true"/>
+      <key column="sample_id" />
       <one-to-many class="SampleComment" />
     </set>
     
@@ -151,6 +151,21 @@
     from Sample s
     inner join fetch s.owner
     order by lower(s.country)
+  </query>
+  <query name="Sample.all/subsampleCount">
+  	from Sample s
+	inner join fetch s.owner
+	order by s.subsampleCount 
+  </query>
+  <query name="Sample.all/imageCount">
+   	from Sample s
+	inner join fetch s.owner
+	order by s.imageCount 
+  </query>
+  <query name="Sample.all/analysisCount">
+    from Sample s
+	inner join fetch s.owner
+	order by s.analysisCount
   </query>
   <query name="Sample.all/collector">
     from Sample s

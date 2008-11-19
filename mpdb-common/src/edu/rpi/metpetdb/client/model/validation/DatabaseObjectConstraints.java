@@ -9,6 +9,7 @@ import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
@@ -73,6 +74,9 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ SampleComment ------
 	public PropertyConstraint[] SampleComment__all;
 	public StringConstraint SampleComment_text;
+	public void validate(final SampleComment sc) throws ValidationException {
+		validate(sc, SampleComment__all);
+	}
 
 	// ------ ImageComment ------
 	public PropertyConstraint[] ImageComment__all;

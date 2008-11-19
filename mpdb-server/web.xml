@@ -225,6 +225,16 @@
     <servlet-name>reference</servlet-name>
     <url-pattern>/reference.svc</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>sampleComment</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.impl.SampleCommentServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>sampleComment</servlet-name>
+    <url-pattern>/sampleComment.svc</url-pattern>
+  </servlet-mapping>
 
   <!--
   * Our static data caching and compression servlet.

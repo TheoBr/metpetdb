@@ -45,16 +45,16 @@ public abstract class SubsampleListEx extends ListEx<Subsample> {
 				}
 			},
 			new Column(true, enttxt.Subsample_subsampleType(), SubsampleProperty.subsampleType),
+			new Column(true, enttxt.Subsample_analysisCount(),
+					SubsampleProperty.analysisCount),
 			new Column(true, enttxt.Subsample_imageCount(),
-					SubsampleProperty.imageCount),
-			new Column(true, enttxt.Subsample_images(), SubsampleProperty.images,
-					true) {
+					SubsampleProperty.imageCount, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
-					return new MLink("Images", TokenSpace
+					return new MLink(String.valueOf(data.mGet(SubsampleProperty.imageCount)) +" Images", TokenSpace
 							.ViewOf((Subsample) data));
 				}
-			}, // TODO image thumbnail browser
+			},
 			new Column(true, "Image Map", true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
@@ -68,9 +68,7 @@ public abstract class SubsampleListEx extends ListEx<Subsample> {
 					}
 				}
 			},
-			new Column(true, enttxt.Subsample_analysisCount(),
-					SubsampleProperty.analysisCount),
-
+			
 	};
 
 	public String getDefaultSortParameter() {

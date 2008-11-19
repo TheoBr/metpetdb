@@ -11,6 +11,8 @@ import com.google.gwt.user.client.ui.Image;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.model.MetamorphicGrade;
+import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.Region;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleMineral;
@@ -40,7 +42,7 @@ public abstract class SampleListEx extends ListEx<Sample> {
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
 	private static Column[] columns = {
-			new Column(true,"Check", true, true) {
+			new Column(true,"Check", false, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new MCheckBox(data);
@@ -53,6 +55,123 @@ public abstract class SampleListEx extends ListEx<Sample> {
 							TokenSpace.detailsOf((Sample) data));
 				}
 			},
+			new Column(true,enttxt.Sample_publicData(), SampleProperty.publicData,
+					true) {
+				protected Object getWidget(final MObject data,
+						final int currentRow) {
+					if ((Boolean) data.mGet(SampleProperty.publicData)) { 
+						return new Image("images/checkmark.jpg"){
+							public String toString(){
+								return "True";
+							}
+						};
+					}
+					return new Image("images/xmark.jpg"){
+						public String toString(){
+							return "False";
+						}
+					};
+				}
+			},
+			new Column(true,enttxt.Sample_subsampleCount(), SampleProperty.subsampleCount),
+			
+			new Column(false,enttxt.Sample_imageCount(),SampleProperty.imageCount),
+							
+			new Column(false,enttxt.Sample_analysisCount(),SampleProperty.analysisCount),
+	
+			new Column(false,enttxt.Sample_owner(), SampleProperty.owner, true) {
+				protected Object getWidget(final MObject data,
+						final int currentRow) {
+					return new MLink(((User) data.mGet(SampleProperty.owner))
+							.getName(), TokenSpace
+							.detailsOf((User) data.mGet(SampleProperty.owner)));
+				}
+			},
+			new Column(true,enttxt.Sample_regions(), SampleProperty.regions, false, true) {
+				protected Object getWidget(final MObject data,
+						final int currentRow) {
+					Set<Region> regions = ((Set<Region>) data.mGet(SampleProperty.regions));
+					String text = "";
+					for (Region r : regions){
+						text += r.getName() + ", ";
+					}
+					if (text.equals("")){
+						text = "------";
+					} else
+						text = text.substring(0,text.length()-2);
+					return new MText(text);
+
+				}
+			},
+			new Column(true,enttxt.Sample_country(), SampleProperty.country, true) {
+				protected Object getWidget(final MObject data,
+						final int currentRow) {
+					String text = ((String) data.mGet(SampleProperty.country));
+					if (text == null)
+						text = "------";
+					return new MText(text);
+
+				}
+			},
+			new Column(true,enttxt.Sample_rockType(), SampleProperty.rockType),
+			new Column(true,enttxt.Sample_metamorphicGrades(), SampleProperty.metamorphicGrades, false, true) {
+				protected Object getWidget(final MObject data,
+						final int currentRow) {
+					Set<MetamorphicGrade> metamorphicGrades = ((Set<MetamorphicGrade>) data.mGet(SampleProperty.metamorphicGrades));
+					String text = "";
+					for (MetamorphicGrade mg : metamorphicGrades){
+						text += mg.getName() + ", ";
+					}
+					if (text.equals("")){
+						text = "------";
+					} else
+						text = text.substring(0,text.length()-2);
+					return new MText(text);
+
+				}
+			},
+			new Column(true,enttxt.Sample_minerals(), SampleProperty.minerals, false, true) {
+				protected Object getWidget(final MObject data,
+						final int currentRow) {
+					Set<SampleMineral> minerals = ((Set<SampleMineral>) data.mGet(SampleProperty.minerals));
+					String text = "";
+					for (SampleMineral m : minerals){
+						text += m.getName() + ", ";
+					}
+					if (text.equals("")){
+						text = "------";
+					} else
+						text = text.substring(0,text.length()-2);
+					return new MText(text);
+
+				}
+			},
+			new Column(true,enttxt.Sample_references(), SampleProperty.references, false, true) {
+				protected Object getWidget(final MObject data,
+						final int currentRow) {
+					Set<Reference> references = ((Set<Reference>) data.mGet(SampleProperty.references));
+					String text = "";
+					for (Reference r : references){
+						text += r.getName() + ", ";
+					}
+					if (text.equals("")){
+						text = "------";
+					} else
+						text = text.substring(0,text.length()-2);
+					return new MText(text);
+
+				}
+			},
+			new Column(false, "Location", SampleProperty.location, true) {
+				protected Object getText(final MObject data,
+						final int currentRow) {
+					final Point location = (Point) data
+							.mGet(SampleProperty.location);
+					return "(" + format(location.x) + "," + format(location.y)
+							+ ")";
+				}
+			},
+			// TODO lat long error
 			new Column(false,enttxt.Sample_sesarNumber(), SampleProperty.sesarNumber,
 					true) {
 				protected Object getWidget(final MObject data,
@@ -60,14 +179,6 @@ public abstract class SampleListEx extends ListEx<Sample> {
 					return new MLink((String) data
 							.mGet(SampleProperty.sesarNumber), TokenSpace
 							.detailsOf((Sample) data));
-				}
-			},
-			new Column(false,enttxt.Sample_owner(), SampleProperty.owner, true) {
-				protected Object getWidget(final MObject data,
-						final int currentRow) {
-					return new MLink(((User) data.mGet(SampleProperty.owner))
-							.getName(), TokenSpace
-							.detailsOf((User) data.mGet(SampleProperty.owner)));
 				}
 			},
 			new Column(false, enttxt.Sample_collector(), SampleProperty.collector,
@@ -92,81 +203,19 @@ public abstract class SampleListEx extends ListEx<Sample> {
 							.getText();
 				}
 			},
-			new Column(true,enttxt.Sample_rockType(), SampleProperty.rockType),
-			new Column(true,enttxt.Sample_publicData(), SampleProperty.publicData,
+			new Column(false, enttxt.Sample_locationText(), SampleProperty.locationText,
 					true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
-					if ((Boolean) data.mGet(SampleProperty.publicData)) { 
-						return new Image("images/checkmark.jpg"){
-							public String toString(){
-								return "True";
-							}
-						};
-					}
-					return new Image("images/xmark.jpg"){
-						public String toString(){
-							return "False";
-						}
-					};
-				}
-			},
-			new Column(false, "Location", SampleProperty.location, true) {
-				protected Object getText(final MObject data,
-						final int currentRow) {
-					final Point location = (Point) data
-							.mGet(SampleProperty.location);
-					return "(" + format(location.x) + "," + format(location.y)
-							+ ")";
-				}
-			},
-			new Column(true,enttxt.Sample_country(), SampleProperty.country, true) {
-				protected Object getWidget(final MObject data,
-						final int currentRow) {
-					String text = ((String) data.mGet(SampleProperty.country));
+					String text = ((String) data.mGet(SampleProperty.locationText));
 					if (text == null)
 						text = "------";
 					return new MText(text);
 
 				}
 			},
-			new Column(true,enttxt.Sample_regions(), SampleProperty.regions, true) {
-				protected Object getWidget(final MObject data,
-						final int currentRow) {
-					Set<Region> regions = ((Set<Region>) data.mGet(SampleProperty.regions));
-					String text = "";
-					for (Region r : regions){
-						text += r.getName() + ", ";
-					}
-					if (text.equals("")){
-						text = "------";
-					} else
-						text = text.substring(0,text.length()-2);
-					return new MText(text);
-
-				}
-			},
-			new Column(true,enttxt.Sample_minerals(), SampleProperty.minerals, true) {
-				protected Object getWidget(final MObject data,
-						final int currentRow) {
-					Set<SampleMineral> minerals = ((Set<SampleMineral>) data.mGet(SampleProperty.minerals));
-					String text = "";
-					for (SampleMineral m : minerals){
-						text += m.getName() + ", ";
-					}
-					if (text.equals("")){
-						text = "------";
-					} else
-						text = text.substring(0,text.length()-2);
-					return new MText(text);
-
-				}
-			},
-			new Column(true,enttxt.Sample_subsampleCount(), SampleProperty.subsampleCount),
+			// TODO comments
 			
-			new Column(false,enttxt.Sample_imageCount(),SampleProperty.imageCount),
-							
-			new Column(false,enttxt.Sample_analysisCount(),SampleProperty.analysisCount),
 	};
 	public abstract void update(final PaginationParameters p,
 			final AsyncCallback<Results<Sample>> ac);
@@ -174,7 +223,7 @@ public abstract class SampleListEx extends ListEx<Sample> {
 	public String getDefaultSortParameter() {
 		return SampleProperty.alias.name();
 	}
-
+	
 	public static String format(final double loc) {
 		final String locStr = String.valueOf(loc);
 		final int decPos = locStr.toString().indexOf(".");

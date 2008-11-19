@@ -11,5 +11,19 @@
     </id>
     <version name="version" />
     <property name="text" column="comment_text" />
+    <many-to-one name="sample" column="sample_id" class="Sample" lazy="false"/>
+    
     </class>
+    
+  <query name="SampleComment.byId">
+    from SampleComment sc
+    where sc.id = :id
+  </query>
+  
+  <query name="SampleComment.bySampleId">
+    from SampleComment sc
+    where sc.sample.id = :sampleId
+  </query>
+  
+  
 </hibernate-mapping>
