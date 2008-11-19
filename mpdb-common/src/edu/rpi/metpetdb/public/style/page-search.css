@@ -68,7 +68,7 @@
 .criteria-summary .header-wrap {
 	background-color: #E4E4E4;
 	border-bottom: 1px solid #CBCBCB;
-	padding: 6px 6px 0 6px;
+	padding: 6px 6px 0 0;
 }
 .criteria-summary .header-content {
 	background: transparent url(../images/srchsum-header-bg-start.png) no-repeat left top;
@@ -89,8 +89,8 @@
 	text-transform: none;
 }
 .criteria-summary .content-wrap {
-	background: transparent url(../images/srchsum-content-bg-start.png) repeat-y 6px top;
-	padding-left: 10px;
+	background: transparent url(../images/srchsum-content-bg-start.png) repeat-y left top;
+	padding-left: 4px;
 	margin: -1px 6px 0 0;
 }
 .criteria-summary-content {
@@ -103,8 +103,8 @@
 	font-size: 0.9em;
 }
 .criteria-summary .bottom-wrap {
-	background: transparent url(../images/srchsum-bottom-start.png) no-repeat 5px top;
-	padding-left: 19px;
+	background: transparent url(../images/srchsum-bottom-start.png) no-repeat left top;
+	padding-left: 14px;
 	height: 6px;
 	margin-right: 6px;
 }
@@ -137,7 +137,7 @@
               rock types
  --------------------------------------*/
 .search-rt {
-	margin: 10px;
+	margin: 10px 7px 10px 10px;
 }
 .search-rt-table {
 	width: 100%;
@@ -147,7 +147,7 @@
               location
  --------------------------------------*/
 .search-loc {
-	margin: 0 10px;
+	margin: 0 7px 0 10px;
 }
 .search-loc .search-taboptions li {
 	display: inline;
