@@ -104,6 +104,8 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 			createDateInfoFromInput();
 			if (fromDate != null && toDate != null)
 				dateRange = new DateSpan(fromDate, toDate);
+			else
+				dateRange = null;
 			return dateRange;
 		}
 		return null;
@@ -145,7 +147,7 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 			String[] toSplit = to.getText().split("/");
 			
 			if (fromSplit.length == 1){
-				if (toSplit[0].equals("")){
+				if (fromSplit[0].equals("")){
 					fromDate = null;
 				} else {
 					fromDate.setMonth(0);

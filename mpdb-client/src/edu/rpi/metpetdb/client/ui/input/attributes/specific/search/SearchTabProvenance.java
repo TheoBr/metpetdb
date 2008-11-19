@@ -19,7 +19,7 @@ public class SearchTabProvenance extends SearchTabAttribute{
 		new SearchAliasAttribute(MpDb.oc.SearchSample_alias),
 		new SearchSesarAttribute(MpDb.oc.SearchSample_sesarNumber),
 		new SearchReferenceAttribute(MpDb.oc.SearchSample_references),
-		new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange)
+		// new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange)
 	};
 	
 	private ArrayList<Widget[]> currentEditWidgets;
