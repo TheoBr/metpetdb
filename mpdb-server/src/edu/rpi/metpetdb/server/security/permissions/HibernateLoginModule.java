@@ -5,7 +5,6 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Properties;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
@@ -15,6 +14,8 @@ import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
+
+import org.hibernate.Session;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.model.User;
@@ -27,8 +28,6 @@ public class HibernateLoginModule implements LoginModule {
 
 	private Subject subject;
 	private CallbackHandler callbackHandler;
-	private Map<String, ?> sharedState;
-	private Map<String, ?> options;
 	private Collection<Object> publicCredentials;
 	private Collection<Principal> principals;
 	private boolean success = true;
@@ -72,8 +71,6 @@ public class HibernateLoginModule implements LoginModule {
 			Map<String, ?> sharedState, Map<String, ?> options) {
 		this.subject = subject;
 		this.callbackHandler = callbackHandler;
-		this.sharedState = sharedState;
-		this.options = options;
 	}
 
 	public boolean login() throws LoginException {
@@ -87,22 +84,22 @@ public class HibernateLoginModule implements LoginModule {
 		try {
 			callbackHandler.handle(callbacks);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new LoginException(e.getMessage());
 		} catch (UnsupportedCallbackException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new LoginException(e.getMessage());
 		}
 		String username = nameCb.getName();
 		String password = new String(passCb.getPassword());
 
 		User u = new User();
 		u.setEmailAddress(username);
+		final Session s = DataStore.open();
 		try {
-			u = (new UserDAO(DataStore.open())).fill(u);
+			u = (new UserDAO(s)).fill(u);
 		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new LoginException(e.format());
+		} finally {
+			s.close();
 		}
 		
 		principals = new ArrayList<Principal>();
@@ -110,7 +107,7 @@ public class HibernateLoginModule implements LoginModule {
 		
 		if (!PasswordEncrypter.verify(u.getEncryptedPassword(), password)) {
 			success = false;
-			throw new LoginException("invalid credentials");
+			throw new LoginException("Invalid Credentials");
 		} else {
 			publicCredentials.add(u);
 			success = true;

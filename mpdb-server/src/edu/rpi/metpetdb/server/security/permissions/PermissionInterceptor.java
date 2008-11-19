@@ -1,8 +1,6 @@
 package edu.rpi.metpetdb.server.security.permissions;
 
 import java.io.Serializable;
-import java.security.AccessControlContext;
-import java.security.AccessController;
 
 import javax.security.auth.Subject;
 
@@ -48,19 +46,47 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	public boolean onLoad(Object entity, Serializable id, Object[] state,
 			String[] propertyNames, Type[] types) throws CallbackException {
 
+		checkPermissions(entity, state, propertyNames, false);
+		return super.onLoad(entity, id, state, propertyNames, types);
+	}
+	
+	private void checkPermissions(Object entity, Object[] state, String[] propertyNames, boolean saving) {
 		if (entity instanceof HasOwner) {
-			int ownerId = 0;
-			for(int i = 0;i<propertyNames.length;++i) {
-				if (propertyNames[i].equals("owner")) {
-					ownerId = ((User) state[i]).getId();
-					break;
+			final Subject subject =  MpDbServlet.currentReq().subject;
+			if (subject == null) {
+				//throw new CallbackException("Invalid Subject, Please Log back in");
+				//TODO remove this
+				return;
+			}
+			if (!subject.getPrincipals().contains(new OwnerPrincipal(getOwnerId(propertyNames, state)))) {
+				throw new CallbackException("Cannot load objects you don't own, we don't like to share.");
+			}
+			if (saving) {
+				if (isPublic(propertyNames, state)) {
+					throw new CallbackException("Public data cannot be modified.");
 				}
 			}
-			//if (!Subject.getSubject(AccessController.getContext()).getPrincipals().contains(new OwnerPrincipal(ownerId))) {
-//				throw new CallbackException("not the owner of the object");
-			//}
 		}
-		return super.onLoad(entity, id, state, propertyNames, types);
+	}
+	
+	private boolean isPublic(String[] propertyNames, Object[] state) {
+		for(int i = 0;i<propertyNames.length;++i) {
+			if (propertyNames[i].equals("publicData")) {
+				return Boolean.parseBoolean(state[i].toString());
+			}
+		}
+		return false;
+	}
+	
+	private int getOwnerId(String[] propertyNames, Object[] state) {
+		int ownerId = 0;
+		for(int i = 0;i<propertyNames.length;++i) {
+			if (propertyNames[i].equals("owner")) {
+				ownerId = ((User) state[i]).getId();
+				break;
+			}
+		}
+		return ownerId;
 	}
 
 	/**
@@ -86,7 +112,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	public boolean onFlushDirty(Object entity, Serializable id,
 			Object[] currentState, Object[] previousState,
 			String[] propertyNames, Type[] types) throws CallbackException {
-
+		checkPermissions(entity, previousState, propertyNames, true);
 		return super.onFlushDirty(entity, id, currentState, previousState,
 				propertyNames, types);
 	}
@@ -111,7 +137,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	 */
 	public boolean onSave(Object entity, Serializable id, Object[] state,
 			String[] propertyNames, Type[] types) throws CallbackException {
-
+		checkPermissions(entity, state, propertyNames, true);
 		return super.onSave(entity, id, state, propertyNames, types);
 	}
 

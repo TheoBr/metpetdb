@@ -6,9 +6,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.CallbackException;
+
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.security.NoPermissionsException;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -66,8 +69,12 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	public Sample details(final long id) throws DAOException {
 		Sample s = new Sample();
 		s.setId(id);
-
-		s = (new SampleDAO(this.currentSession())).fill(s);
+		try {
+			s = (new SampleDAO(this.currentSession())).fill(s);
+		} catch(CallbackException e) {
+			this.forgetChanges();
+			throw new NoPermissionsException(e.getMessage());
+		}
 		return s;
 	}
 
