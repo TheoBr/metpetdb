@@ -24,6 +24,17 @@ DROP SEQUENCE subsample_type_seq;
 DROP SEQUENCE admin_user_seq;
 
 
+
+DROP TABLE chemical_analysis_oxides_archive CASCADE;
+DROP TABLE chemical_analysis_elements_archive CASCADE;
+DROP TABLE chemical_analyses_archive CASCADE;
+DROP TABLE subsamples_archive CASCADE;
+DROP TABLE sample_reference_archive CASCADE;
+DROP TABLE sample_metamorphic_grades_archive CASCADE;
+DROP TABLE sample_regions_archive CASCADE;
+DROP TABLE sample_minerals_archive CASCADE;
+DROP TABLE samples_archive CASCADE;
+
 DROP TABLE chemical_analysis_elements CASCADE;
 DROP TABLE chemical_analysis_oxides CASCADE;
 DROP TABLE elements CASCADE;
