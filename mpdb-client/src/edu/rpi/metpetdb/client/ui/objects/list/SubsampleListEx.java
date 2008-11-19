@@ -5,11 +5,13 @@ import java.util.Arrays;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.Image;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 import edu.rpi.metpetdb.client.model.properties.SubsampleProperty;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
@@ -42,6 +44,24 @@ public abstract class SubsampleListEx extends ListEx<Subsample> {
 					return new MLink(
 							(String) data.mGet(SubsampleProperty.name),
 							TokenSpace.detailsOf((Subsample) data));
+				}
+			},
+			new Column(true,enttxt.Sample_publicData(), SubsampleProperty.publicData,
+					true) {
+				protected Object getWidget(final MObject data,
+						final int currentRow) {
+					if ((Boolean) data.mGet(SubsampleProperty.publicData)) { 
+						return new Image("images/checkmark.jpg"){
+							public String toString(){
+								return "True";
+							}
+						};
+					}
+					return new Image("images/xmark.jpg"){
+						public String toString(){
+							return "False";
+						}
+					};
 				}
 			},
 			new Column(true, enttxt.Subsample_subsampleType(), SubsampleProperty.subsampleType),

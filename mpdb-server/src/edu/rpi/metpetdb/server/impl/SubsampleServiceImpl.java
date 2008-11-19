@@ -61,9 +61,10 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 		s.setId(id);
 		s = dao.fill(s);
 
-		if (s.getSample().getOwner().getId() != currentUser())
-			throw new SecurityException(
-					"Cannot modify subsamples you don't own.");
+		if (s.getOwner().getId() != currentUser())
+			throw new SecurityException("Cannot modify subsamples you don't own.");
+		else if (s.isPublicData())
+			throw new SecurityException("Cannot modify public subsamples");
 
 		dao.delete(s);
 		commit();

@@ -45,7 +45,13 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample {
 	private Set<ChemicalAnalysisElement> elements;
 	@IndexedEmbedded(prefix = "oxides_")
 	private Set<ChemicalAnalysisOxide> oxides;
-
+	
+	@Field(index = Index.UN_TOKENIZED)
+	private Boolean publicData;
+	
+	@IndexedEmbedded(depth = 1, prefix = "user_")
+	private User owner;
+	
 	private String SubsampleName;
 	private String sampleName;
 
@@ -319,5 +325,24 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample {
 
 	public void setDate(Timestamp date) {
 		setAnalysisDate(date);
+	}
+	
+	public boolean isPublicData() {
+		if (publicData != null)
+			return publicData.booleanValue();
+		else
+			return false;
+	}
+
+	public void setPublicData(final Boolean p) {
+		publicData = p;
+	}
+	
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(final User u) {
+		owner = u;
 	}
 }

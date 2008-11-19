@@ -41,9 +41,9 @@
       <one-to-many class="Subsample" />
     </set>
     
-    <set name="comments" cascade="all,delete-orphan" lazy="false" >
+    <set name="comments" table="sample_comments" cascade="all,delete-orphan" lazy="false" >
       <key column="sample_id" />
-      <one-to-many class="SampleComment" />
+      <one-to-many class="SampleComment"/>
     </set>
     
     <set name="projects" table="project_samples" cascade="none">

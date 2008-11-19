@@ -25,18 +25,18 @@ public class CommentAttribute extends MultipleTextAttribute<SampleComment> {
 
 	@Override
 	protected Object get(Widget editWidget) throws ValidationException {
-		final HashSet metamorphicGrades = new HashSet();
+		final HashSet comments = new HashSet();
 		final Iterator itr = realEditWidgets.iterator();
 		while (itr.hasNext()) {
 			final Object obj = itr.next();
-			final SampleComment m = new SampleComment();
+			final SampleComment sc = new SampleComment();
 			String name = ((HasText) obj).getText();
 			if (!name.equals("")) {
-				m.setText(name);
-				metamorphicGrades.add(m);
+				sc.setText(name);
+				comments.add(sc);
 			}
 		}
-		return metamorphicGrades;
+		return comments;
 	}
 
 }

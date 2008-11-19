@@ -100,13 +100,14 @@ CREATE TABLE subsamples
 (
   subsample_id INT8 NOT NULL,
   version INT4 NOT NULL,
+  public_data CHAR(1) CHECK (public_data IN ('Y','N')) NOT NULL,
   sample_id INT8 NOT NULL,
-  --user_id INT4 NOT NULL,
+  user_id INT4 NOT NULL,
   grid_id INT8,
   name VARCHAR(100) NOT NULL,
   subsample_type_id int2 NOT NULL,
-  --CONSTRAINT subsamples_fk_user FOREIGN KEY (user_id)
-  --  REFERENCES users (user_id),
+  CONSTRAINT subsamples_fk_user FOREIGN KEY (user_id)
+    REFERENCES users (user_id),
   CONSTRAINT subsamples_nk_name UNIQUE(sample_id, name),
   CONSTRAINT subsamples_sk PRIMARY KEY (subsample_id),
   CONSTRAINT subsamples_fk_sample FOREIGN KEY (sample_id)
@@ -153,7 +154,7 @@ CREATE TABLE sample_minerals
 (
   mineral_id INT2 NOT NULL,
   sample_id INT8 NOT NULL,
-  amount FLOAT4 CHECK (amount >= 0 and amount <= 100) NOT NULL,
+  amount FLOAT4,
   CONSTRAINT sample_minerals_nk PRIMARY KEY (mineral_id, sample_id),
   CONSTRAINT mineral_samples_fk_min FOREIGN KEY (mineral_id)
     REFERENCES minerals (mineral_id)

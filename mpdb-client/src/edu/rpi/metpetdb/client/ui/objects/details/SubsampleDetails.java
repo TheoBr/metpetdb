@@ -27,6 +27,7 @@ import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.HyperlinkAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AddImageAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisListEx;
@@ -38,6 +39,8 @@ public class SubsampleDetails extends MPagePanel {
 
 	private static GenericAttribute[] subsampleAtts = {
 			new TextAttribute(MpDb.doc.Subsample_name),
+			new RadioButtonAttribute(MpDb.doc.Subsample_publicData,
+					LocaleHandler.lc_text.publicDataWarning()),
 			new ListboxAttribute(MpDb.doc.Subsample_subsampleType),
 			new AddImageAttribute(MpDb.doc.Subsample_images),
 			new TextAttribute(MpDb.doc.Subsample_imageCount).setReadOnly(true),
@@ -76,7 +79,7 @@ public class SubsampleDetails extends MPagePanel {
 			}
 
 			protected boolean canEdit() {
-				final Sample s = ((Subsample) getBean()).getSample();
+				final Subsample s = (Subsample) getBean();
 				if (s.isPublicData())
 					return false;
 				if (MpDb.isCurrentUser(s.getOwner()))
@@ -182,6 +185,7 @@ public class SubsampleDetails extends MPagePanel {
 	public SubsampleDetails createNew(final Sample s, final ServerOp r) {
 		continuation = r;
 		Subsample ss = new Subsample();
+		ss.setOwner(MpDb.currentUser());
 		s.addSubsample(ss);
 		ss.setSampleName(s.getAlias());
 		p_subsample.edit(ss);

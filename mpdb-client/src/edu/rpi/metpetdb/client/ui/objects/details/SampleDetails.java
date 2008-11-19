@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
+import java.util.List;
+
 import org.postgis.Point;
 
 import com.google.gwt.maps.client.InfoWindowContent;
@@ -14,6 +16,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
@@ -22,6 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -73,7 +77,7 @@ public class SampleDetails extends MPagePanel {
 			new RegionAttribute(MpDb.doc.Sample_regions),
 			new MetamorphicGradeAttribute(MpDb.doc.Sample_metamorphicGrades),
 			new ReferenceAttribute(MpDb.doc.Sample_references),
-			new CommentAttribute(MpDb.doc.Sample_comments),
+	//		new CommentAttribute(MpDb.doc.Sample_comments),
 			new TextAttribute(MpDb.doc.Sample_subsampleCount).setReadOnly(true),
 	};
 
@@ -208,6 +212,20 @@ public class SampleDetails extends MPagePanel {
 		final FlexTable comments_ft = new FlexTable();
 		Label comments_label = new Label(LocaleHandler.lc_text.comments());
 		comments_ft.setWidget(0, 0, comments_label);
+		
+		final FlowPanel fp = new FlowPanel();
+		comments_ft.setWidget(1,0,fp);
+		
+//		new ServerOp<List<SampleComment>>() {
+//			public void begin() {
+//				MpDb.sampleComment_svc.all(sampleId, this);
+//			}
+//
+//			public void onSuccess(List<SampleComment> result) {
+//				for (SampleComment sc : result)
+//					fp.add(new Label(sc.getText()));
+//			}
+//		}.begin();
 
 		// format to look pretty
 		comments_ft.setWidth("100%");

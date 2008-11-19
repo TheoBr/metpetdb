@@ -31,6 +31,12 @@ public class Subsample extends MObject {
 	private Set<Image> images;
 
 	private Grid grid;
+	
+	@Field(index = Index.UN_TOKENIZED)
+	private Boolean publicData;
+	
+	@IndexedEmbedded(depth = 1, prefix = "user_")
+	private User owner;
 
 	@IndexedEmbedded(prefix = "chemicalAnalysis_")
 	private Set<ChemicalAnalysis> chemicalAnalysis;
@@ -162,5 +168,23 @@ public class Subsample extends MObject {
 
 	public boolean mIsNew() {
 		return id == 0;
+	}
+	public boolean isPublicData() {
+		if (publicData != null)
+			return publicData.booleanValue();
+		else
+			return false;
+	}
+
+	public void setPublicData(final Boolean p) {
+		publicData = p;
+	}
+	
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(final User u) {
+		owner = u;
 	}
 }

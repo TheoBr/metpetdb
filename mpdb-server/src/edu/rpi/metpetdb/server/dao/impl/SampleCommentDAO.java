@@ -6,11 +6,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import edu.rpi.metpetdb.client.error.DAOException;
-import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
+import edu.rpi.metpetdb.client.error.dao.SampleCommentNotFoundException;
 import edu.rpi.metpetdb.client.model.SampleComment;
-import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.paging.PaginationParameters;
-import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 
 public class SampleCommentDAO extends MpDbDAO<SampleComment>{
@@ -26,24 +23,13 @@ public class SampleCommentDAO extends MpDbDAO<SampleComment>{
 
 	@Override
 	public SampleComment fill(SampleComment inst) throws DAOException {
-		// By ID
-		if (inst.getId() > 0) {
-			final Query q = namedQuery("SampleComment.byId");
-			q.setLong("id", inst.getId());
-			if (q.uniqueResult() != null)
-				return (SampleComment) q.uniqueResult();
-		}
+		// Use Region Name
+		final org.hibernate.Query sampleComments = namedQuery("SampleComment.byId");
+		sampleComments.setString("id", String.valueOf(inst.getId()));
+		if (sampleComments.uniqueResult() != null)
+			return (SampleComment) sampleComments.uniqueResult();
 
-		// By Sample and Name
-		if (inst.getSample() != null) {
-			inst.setSample((new SampleDAO(sess)).fill(inst.getSample()));
-			final Query q = namedQuery("SampleComment.bySampleId");
-			q.setParameter("id", inst.getSample().getId());
-			if (q.uniqueResult() != null)
-				return (SampleComment) q.uniqueResult();
-		}
-
-		throw new SubsampleNotFoundException();
+		throw new SampleCommentNotFoundException();
 	}
 
 	@Override
@@ -52,7 +38,7 @@ public class SampleCommentDAO extends MpDbDAO<SampleComment>{
 	}
 
 	public List<SampleComment> getAllBySampleID(final long sampleId) {
-		final Query q = namedQuery("Subsample.bySampleId");
+		final Query q = namedQuery("SampleComment.bySampleId");
 		q.setParameter("sampleId", sampleId);
 		final List<SampleComment> l = q.list();
 		return l;

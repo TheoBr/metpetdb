@@ -4,6 +4,7 @@ CREATE TABLE chemical_analyses
    version INT4 NOT NULL,
    spot_id VARCHAR(50) NOT NULL,
    subsample_id INT8 NOT NULL,
+   public_data CHAR(1) CHECK (public_data IN ('Y','N')) NOT NULL,
    point_x INT2,
    point_y INT2,
    image_id INT8,
@@ -15,15 +16,15 @@ CREATE TABLE chemical_analyses
    reference_id INT8,
    description VARCHAR(1024),
    mineral_id int2,
-   -- user_id INT4 NOT NULL,
+   user_id INT4 NOT NULL,
    large_rock CHAR(1) CHECK (large_rock IN ('Y','N')) NOT NULL,
    total real,
    CONSTRAINT chemical_analyses_sk PRIMARY KEY (chemical_analysis_id),
    CONSTRAINT chemical_analyses_nk_spot_id UNIQUE(subsample_id, spot_id),
    CONSTRAINT chemical_analyses_fk_subsamples FOREIGN KEY (subsample_id)
       REFERENCES subsamples(subsample_id),
-   --CONSTRAINT chemical_analyses_fk_user FOREIGN KEY (user_id)
-  --   REFERENCES users (user_id),
+   CONSTRAINT chemical_analyses_fk_user FOREIGN KEY (user_id)
+     REFERENCES users (user_id),
   CONSTRAINT chemical_analyses_fk_reference FOREIGN KEY (reference_id)
      REFERENCES reference (reference_id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,

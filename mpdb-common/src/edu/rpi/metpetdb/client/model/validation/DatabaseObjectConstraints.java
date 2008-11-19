@@ -153,6 +153,8 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint Subsample_sampleName;
 	public IntegerConstraint Subsample_imageCount;
 	public IntegerConstraint Subsample_analysisCount;
+	public BooleanConstraint Subsample_publicData;
+	public ObjectConstraint Subsample_owner;
 
 	public void validate(Subsample u) throws ValidationException {
 		validate(u, Subsample__all);
@@ -186,6 +188,8 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public ObjectConstraint ChemicalAnalysis_oxides;
 	public StringConstraint ChemicalAnalysis_sampleName;
 	public StringConstraint ChemicalAnalysis_subsampleName;
+	public BooleanConstraint ChemicalAnalysis_publicData;
+	public ObjectConstraint ChemicalAnalysis_owner;
 
 	public void validate(ChemicalAnalysis u) throws ValidationException {
 		validate(u, ChemicalAnalysis__all);

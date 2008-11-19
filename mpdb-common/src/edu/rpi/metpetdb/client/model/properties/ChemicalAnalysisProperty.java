@@ -7,6 +7,8 @@ import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisElement;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxide;
 import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Reference;
@@ -214,5 +216,24 @@ public enum ChemicalAnalysisProperty implements Property {
 			((ChemicalAnalysis) sample).setDatePrecision(Short
 					.parseShort(datePrecision.toString()));
 		}
-	};
+	},
+	publicData {
+		public <T extends MObject> Boolean get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).isPublicData();
+		}
+
+		public <T extends MObject, K> void set(final T chemicalAnalysis,
+				final K publicData) {
+			((ChemicalAnalysis) chemicalAnalysis).setPublicData((Boolean) publicData);
+		}
+	},
+	owner {
+		public <T extends MObject> User get(final T chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getOwner();
+		}
+
+		public <T extends MObject, K> void set(final T chemicalAnalysis, final K owner) {
+			((ChemicalAnalysis) chemicalAnalysis).setOwner((User) owner);
+		}
+	},
 }

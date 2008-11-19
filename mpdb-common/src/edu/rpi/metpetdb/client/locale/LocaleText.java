@@ -153,6 +153,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_SubsampleNotFound();
 	String errorDesc_UserAlreadyExists();
 	String errorDesc_UserNotFound();
+	String errorDesc_SampleCommentNotFound();
 
 	/* Character Names */
 	String character_space();

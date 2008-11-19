@@ -127,6 +127,8 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String Subsample_analysisCount();
 
 	String Subsample_sampleName();
+	
+	String Subsample_publicData();
 
 	/* Mineral Analysis */
 	String ChemicalAnalysis();
@@ -178,6 +180,8 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String ChemicalAnalysis_precision();
 
 	String ChemicalAnalysis_total();
+	
+	String ChemicalAnalysis_publicData();
 
 	/* Image */
 	String Image_imageType();

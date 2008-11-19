@@ -69,9 +69,10 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		ca.setId((new Long(id)).intValue());
 		ca = dao.fill(ca);
 
-		if (ca.getSubsample().getSample().getOwner().getId() != currentUser())
-			throw new SecurityException(
-					"Cannot modify ChemicalAnlaysis you don't own.");
+		if (ca.getOwner().getId() != currentUser())
+			throw new SecurityException("Cannot modify analyses you don't own.");
+		else if (ca.isPublicData())
+			throw new SecurityException("Cannot modify public analyses");
 
 		dao.delete(ca);
 		commit();

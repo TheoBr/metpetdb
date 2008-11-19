@@ -4,6 +4,7 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.Sample;
@@ -16,6 +17,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.ChooseImageAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.HyperlinkAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAreaAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AnalysisMaterialAttribute;
@@ -25,6 +27,8 @@ import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 public class ChemicalAnalysisDetails extends MPagePanel {
 	private static GenericAttribute[] chemicalAnalysisAtts = {
 			new TextAttribute(MpDb.doc.ChemicalAnalysis_spotId),
+			new RadioButtonAttribute(MpDb.doc.ChemicalAnalysis_publicData,
+					LocaleHandler.lc_text.publicDataWarning()),
 			new ChooseImageAttribute(MpDb.doc.ChemicalAnalysis_image,
 					MpDb.doc.ChemicalAnalysis_pointX,
 					MpDb.doc.ChemicalAnalysis_pointY),
@@ -68,11 +72,10 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 			}
 
 			protected boolean canEdit() {
-				final Sample s = ((ChemicalAnalysis) getBean()).getSubsample()
-						.getSample();
-				if (s.isPublicData())
+				final ChemicalAnalysis ca = (ChemicalAnalysis) getBean();
+				if (ca.isPublicData())
 					return false;
-				if (MpDb.isCurrentUser(s.getOwner()))
+				if (MpDb.isCurrentUser(ca.getOwner()))
 					return true;
 				return false;
 			}
@@ -107,6 +110,7 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 
 	public ChemicalAnalysisDetails createNew(final Subsample ss) {
 		final ChemicalAnalysis ma = new ChemicalAnalysis();
+		ma.setOwner(MpDb.currentUser());
 		ss.addChemicalAnalysis(ma);
 		ma.setSubsampleName(ss.getName());
 		ma.setSampleName(ss.getSampleName());

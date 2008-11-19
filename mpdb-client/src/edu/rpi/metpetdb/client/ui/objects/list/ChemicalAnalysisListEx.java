@@ -47,6 +47,24 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 							.detailsOf((ChemicalAnalysis) data));
 				}
 			},
+			new Column(true,enttxt.Sample_publicData(), ChemicalAnalysisProperty.publicData,
+					true) {
+				protected Object getWidget(final MObject data,
+						final int currentRow) {
+					if ((Boolean) data.mGet(ChemicalAnalysisProperty.publicData)) { 
+						return new com.google.gwt.user.client.ui.Image("images/checkmark.jpg"){
+							public String toString(){
+								return "True";
+							}
+						};
+					}
+					return new com.google.gwt.user.client.ui.Image("images/xmark.jpg"){
+						public String toString(){
+							return "False";
+						}
+					};
+				}
+			},
 			new Column(true,enttxt.ChemicalAnalysis_method(),
 					ChemicalAnalysisProperty.analysisMethod, true) {
 				protected Object getWidget(final MObject data,

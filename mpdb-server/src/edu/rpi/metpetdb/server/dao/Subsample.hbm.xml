@@ -11,14 +11,14 @@
     </id>
     <version name="version" />
     <property name="name" column="name" />
-    
+    <property name="publicData" column="public_data" type="yes_no" />    
     <property name="imageCount" formula="(select count(*) from images i
     																		where i.subsample_id=subsample_id)" />
 	<property name="analysisCount" formula="(select count(*) from chemical_analyses ca
     																		where ca.subsample_id=subsample_id)" />
     <property name="sampleName" formula="(select s.alias from samples s
     																		where s.sample_id=sample_id)" />
-    
+    <many-to-one name="owner" column="user_id" lazy="false" />
     <many-to-one name="sample" column="sample_id" class="Sample" lazy="false"/>
     <many-to-one name="subsampleType" column="subsample_type_id" class="SubsampleType" lazy="false" />
     
