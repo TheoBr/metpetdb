@@ -15,10 +15,12 @@ import org.hibernate.search.annotations.Store;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.interfaces.HasDate;
+import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
 import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
+import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 
 @Indexed
-public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample {
+public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, HasOwner, PublicData {
 	private static final long serialVersionUID = 1L;
 
 	@DocumentId

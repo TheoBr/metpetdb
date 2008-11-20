@@ -24,7 +24,7 @@ import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.XrayImage;
 
-public class ImageParser extends Parser{
+public class ImageParser extends Parser {
 	public static final int METHOD = 1;
 	public static final int IMAGE_REFERENCE = 2;
 	public static final int SAMPLE = 101;
@@ -71,8 +71,8 @@ public class ImageParser extends Parser{
 					"element", "setElement", String.class, "XrayImage_element"
 			},
 			{
-				"(collector)|(collected by)", "setCollector", String.class,
-				"Image_collector"
+					"(collector)|(collected by)", "setCollector", String.class,
+					"Image_collector"
 			},
 			{
 					"scale", "setScale", Integer.class, "Image_scale"
@@ -89,7 +89,7 @@ public class ImageParser extends Parser{
 	 * 
 	 * @param is
 	 * 		the input stream that points to a spreadsheet
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public ImageParser(final InputStream is) throws IOException {
 		super();
@@ -99,15 +99,16 @@ public class ImageParser extends Parser{
 		final HSSFWorkbook wb = new HSSFWorkbook(fs);
 		sheet = wb.getSheetAt(0);
 	}
-	
-	
+
 	static {
 		try {
 			if (methodAssociations.isEmpty())
 				for (Object[] row : imageMethodMap)
-					methodAssociations.add(new MethodAssociation<XrayImage>(
-							(String) row[0], (String) row[1], (Class<?>) row[2],
-							new XrayImage(), (String) row[3]));
+					methodAssociations
+							.add(new MethodAssociation<XrayImage>(
+									(String) row[0], (String) row[1],
+									(Class<?>) row[2], new XrayImage(),
+									(String) row[3]));
 		} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -128,7 +129,7 @@ public class ImageParser extends Parser{
 				// blank column
 				continue;
 			}
-			//System.out.println("Parsing header " + i + ": " + text);
+			// System.out.println("Parsing header " + i + ": " + text);
 
 			// Determine method to be used for data in this column
 			for (MethodAssociation<XrayImage> sma : methodAssociations) {
@@ -203,8 +204,8 @@ public class ImageParser extends Parser{
 				if (type == null)
 					continue;
 
-				//System.out.println("\t Parsing Column " + i + ": "
-					//	+ colName.get(new Integer(i)));
+				// System.out.println("\t Parsing Column " + i + ": "
+				// + colName.get(new Integer(i)));
 
 				// If an object for the column exists then handle accordingly
 				final int columnType = colType.get(new Integer(i));
@@ -214,7 +215,7 @@ public class ImageParser extends Parser{
 					// to be related to a subsample of that sample
 					if (colObjects.get(i) instanceof Sample) {
 						final String data = cell.toString();
-						//System.out.println("\t\t(Sample)");
+						// System.out.println("\t\t(Sample)");
 
 						if (img.getSample() == null)
 							img.setSample(new Sample());
@@ -256,13 +257,8 @@ public class ImageParser extends Parser{
 					// to be so it can parse it
 					final Class<?> dataType = storeMethod.getParameterTypes()[0];
 
-					if (dataType == String.class) {
-
-						final String data = cell.toString();
-						storeMethod.invoke(img, data);
-						if ("".equals(data))
-							throw new NullPointerException();
-
+					if (handleData(dataType, storeMethod, cell, img)) {
+						
 					} else if (dataType == Sample.class) {
 
 						final String data = cell.toString();
@@ -279,12 +275,6 @@ public class ImageParser extends Parser{
 
 						if (img.getSubsample().getSample() == null)
 							img.getSubsample().setSample(img.getSample());
-					} else if (dataType == Integer.class) {
-
-						final Double data = new Double(cell
-								.getNumericCellValue());
-						storeMethod.invoke(img, data.intValue());
-
 					} else {
 						throw new IllegalStateException(
 								"Don't know how to convert to datatype: "
@@ -327,9 +317,9 @@ public class ImageParser extends Parser{
 
 				imagesOnGrid.put(rowindex, iog);
 			} else if (img.getElement() == null)
-				images.put(rowindex+1, img.getImage());
+				images.put(rowindex + 1, img.getImage());
 			else
-				images.put(rowindex+1, img);
+				images.put(rowindex + 1, img);
 		}
 	}
 

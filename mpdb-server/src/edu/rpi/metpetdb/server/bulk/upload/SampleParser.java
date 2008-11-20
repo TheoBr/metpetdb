@@ -92,8 +92,8 @@ public class SampleParser extends Parser {
 					"Sample_references"
 			},
 			{
-					"(sample[ number| name|])|(sample)", "setAlias", String.class,
-					"Sample_alias"
+					"(sample[ number| name|])|(sample)", "setAlias",
+					String.class, "Sample_alias"
 			}, {
 					"minerals", "addMineral", String.class, "Sample_minerals"
 			},
@@ -110,7 +110,7 @@ public class SampleParser extends Parser {
 	 * 		the input stream that points to a spreadsheet
 	 * @throws InvalidFormatException
 	 */
-	public SampleParser(final InputStream is)  {
+	public SampleParser(final InputStream is) {
 		super();
 		samples = new HashMap<Integer, Sample>();
 		try {
@@ -127,14 +127,12 @@ public class SampleParser extends Parser {
 			if (methodAssociations.isEmpty())
 				for (Object[] row : sampleMethodMap)
 					methodAssociations.add(new MethodAssociation<Sample>(
-							(String) row[0], (String) row[1], (Class<?>) row[2],
-							new Sample(), (String) row[3]));
+							(String) row[0], (String) row[1],
+							(Class<?>) row[2], new Sample(), (String) row[3]));
 		} catch (NoSuchMethodException e) {
 
 		}
 	}
-
-	
 
 	protected void parseHeader(final int rowindex) {
 		HSSFRow header = sheet.getRow(rowindex);
@@ -150,7 +148,7 @@ public class SampleParser extends Parser {
 				// blank column
 				continue;
 			}
-			//System.out.println("Parsing header " + i + ": " + text);
+			// System.out.println("Parsing header " + i + ": " + text);
 
 			// Determine method to be used for data in this column
 			for (MethodAssociation<Sample> sma : methodAssociations) {
@@ -184,9 +182,10 @@ public class SampleParser extends Parser {
 			}
 		}
 	}
-	
+
 	/**
 	 * Replaces the alternate minerals with their correct counterparts
+	 * 
 	 * @param alternate
 	 * @return
 	 */
@@ -194,7 +193,7 @@ public class SampleParser extends Parser {
 		if (alternate.getId() == alternate.getRealMineralId())
 			return alternate;
 		final int realMineralId = alternate.getRealMineralId();
-		for(Mineral m : minerals) {
+		for (Mineral m : minerals) {
 			if (m.getId() == realMineralId)
 				return m;
 		}
@@ -227,8 +226,8 @@ public class SampleParser extends Parser {
 				if (storeMethod == null)
 					continue;
 
-				//System.out.println("\t Parsing Column " + i + ": "
-						//+ storeMethod.getName());
+				// System.out.println("\t Parsing Column " + i + ": "
+				// + storeMethod.getName());
 
 				// If this has an object then it isn't a normal header, handle
 				// accordingly
@@ -254,78 +253,33 @@ public class SampleParser extends Parser {
 				// Determine what class the method wants the content of the cell
 				// to be so it can parse it
 				final Class<?> dataType = storeMethod.getParameterTypes()[0];
-				
-				if (cell.toString().equals("")) {
-					continue;
-				}
 
-				if (dataType == String.class) {
-
-					if (!storeMethod.getName().equals("addReference")
-							&& !storeMethod.getName().equals("addComment")) {
-						String sanatizedData = cell.toString();
-						if (storeMethod.getName().equals("setAlias") || storeMethod.getName().equals("addRockType")) {
-							sanatizedData = sanatizedData.replace(" ", "");
-						}
-						sanatizedData = sanatizedData.replaceAll(" +", " ");
-						final String[] data = sanatizedData
-								.split("\\s*" + DATA_SEPARATOR +"\\s*");
-						for (String str : data) {
-							if (!"".equals(str))
-								storeMethod.invoke(s, str);
-						}
-					} else {
-						final String data = cell.toString();
-						if (!"".equals(data))
-							storeMethod.invoke(s, data);
-					}
-
-				} else if (dataType == Float.class || dataType == double.class) {
-					double data;
-					try {
-						data = Double.parseDouble(cell.toString());
-						if (!cell.toString().equals(String.valueOf(data))) {
-							throw new NullPointerException();
-						}
-					} catch(NumberFormatException nfe) {
-						//most likely this cell is suppose to be a number put the person put non-numeric things in it
-						//so parse out the number of possible
-						final String tempData = cell.toString();
-						try {
-							data = Double.parseDouble(tempData.replaceAll("[^-\\.0-9]", ""));
-						} catch (Exception e) {
-							data = 0;
-						}
-					}
-					
-					if (dataType == Float.class)
-						storeMethod.invoke(s,new Float(data));
-					else
-						storeMethod.invoke(s,data);
-
-				} else if (dataType == Timestamp.class) {
-
-					try {
-						final Date data = cell.getDateCellValue();
-						s.setCollectionDate(new Timestamp(data.getTime()));
-						s.setDatePrecision((short) 1);
-						// storeMethod.invoke(s, new Timestamp(data.getTime()));
-					} catch (final IllegalStateException nfe) {
-						//System.out.println("parsing date");
-						final String data = cell.toString();
-						try {
-							(new DateStringConstraint()).validateValue(data);
-							parseDate(s, data);
-						} catch (final ValidationException ife) {
-							errors.put(new Integer(samples.size() + 2), ife);
-						}
-					}
+				if (handleData(dataType, storeMethod, cell, s)) {
+					sawDataInRow = true;
 				} else {
-					throw new IllegalStateException(
-							"Don't know how to convert to datatype: "
-									+ dataType.toString());
+					if (dataType == Timestamp.class) {
+						try {
+							final Date data = cell.getDateCellValue();
+							s.setCollectionDate(new Timestamp(data.getTime()));
+							s.setDatePrecision((short) 1);
+							// storeMethod.invoke(s, new Timestamp(data.getTime(
+							// )));
+						} catch (final IllegalStateException nfe) {
+							// System.out.println("parsing date");
+							final String data = cell.toString();
+							try {
+								(new DateStringConstraint())
+										.validateValue(data);
+								parseDate(s, data);
+								sawDataInRow = true;
+							} catch (final ValidationException ife) {
+								errors
+										.put(new Integer(samples.size() + 2),
+												ife);
+							}
+						}
+					}
 				}
-				sawDataInRow = true;
 			} catch (final NullPointerException npe) {
 				// empty cell
 				continue;
@@ -343,10 +297,9 @@ public class SampleParser extends Parser {
 		}
 
 		if (sawDataInRow) {
-			samples.put(rowindex+1, s);
+			samples.put(rowindex + 1, s);
 		}
 	}
-
 	public Map<Integer, Sample> getSamples() {
 		return samples;
 	}

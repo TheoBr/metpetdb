@@ -10,6 +10,7 @@ import org.hibernate.type.Type;
 
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
+import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.security.permissions.principals.OwnerPrincipal;
 
@@ -66,11 +67,13 @@ public class PermissionInterceptor extends EmptyInterceptor {
 					throw new CallbackException(
 							"Cannot load objects you don't own, we don't like to share.");
 				}
-				if (saving) {
-					if (isPublic(propertyNames, state)) {
-						throw new CallbackException(
-								"Public data cannot be modified.");
-					}
+			}
+		}
+		if (entity instanceof PublicData) {
+			if (saving) {
+				if (isPublic(propertyNames, state)) {
+					throw new CallbackException(
+							"Public data cannot be modified.");
 				}
 			}
 		}

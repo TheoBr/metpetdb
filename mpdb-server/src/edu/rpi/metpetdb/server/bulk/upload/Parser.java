@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.server.bulk.upload;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -14,7 +15,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import edu.rpi.metpetdb.client.model.interfaces.HasDate;
 
 public abstract class Parser {
-	
+
 	/** the character that is used to separate multiple data in one column */
 	protected final static String DATA_SEPARATOR = ";";
 
@@ -152,11 +153,75 @@ public abstract class Parser {
 		// Loop through the remaining data rows, parsing based upon the column
 		// determinations
 		for (int i = k + 1; i <= sheet.getLastRowNum(); ++i) {
-			//System.out.println("Parsing Row " + i);
+			// System.out.println("Parsing Row " + i);
 			parseRow(i);
 		}
 	}
 
+	protected String sanitizeNumber(final String number) {
+		return number.replaceAll("[^-\\.0-9]", "");
+	}
+
+	protected boolean handleData(final Class<?> dataType,
+			final Method storeMethod, final HSSFCell cell, final Object o)
+			throws InvocationTargetException, IllegalArgumentException,
+			IllegalAccessException {
+		if (cell.toString().equals("")) {
+			return false;
+		} else if (dataType == String.class) {
+			if (!storeMethod.getName().equals("addReference")
+					&& !storeMethod.getName().equals("addComment")) {
+				String sanatizedData = cell.toString();
+				if (storeMethod.getName().equals("setAlias")
+						|| storeMethod.getName().equals("addRockType")) {
+					sanatizedData = sanatizedData.replace(" ", "");
+				}
+				sanatizedData = sanatizedData.replaceAll(" +", " ");
+				final String[] data = sanatizedData.split("\\s*"
+						+ DATA_SEPARATOR + "\\s*");
+				for (String str : data) {
+					if (!"".equals(str))
+						storeMethod.invoke(o, str);
+				}
+			} else {
+				final String data = cell.toString();
+				if (!"".equals(data))
+					storeMethod.invoke(o, data);
+			}
+			return true;
+		} else if (dataType == Float.class || dataType == double.class
+				|| dataType == Integer.class || dataType == int.class) {
+			double data;
+			try {
+				data = Double.parseDouble(cell.toString());
+				if (!cell.toString().equals(String.valueOf(data))) {
+					throw new NullPointerException();
+				}
+			} catch (NumberFormatException nfe) {
+				// most likely this cell is suppose to be a number put the
+				// person put non-numeric things in it
+				// so parse out the number of possible
+				final String tempData = cell.toString();
+				try {
+					data = Double.parseDouble(tempData.replaceAll("[^-\\.0-9]",
+							""));
+				} catch (Exception e) {
+					data = 0;
+				}
+
+			}
+
+			if (dataType == Float.class)
+				storeMethod.invoke(o, new Float(data));
+			else if (dataType == Integer.class || dataType == int.class)
+				storeMethod.invoke(o, new Double(data).intValue());
+			else
+				storeMethod.invoke(o, data);
+			return true;
+		} else {
+			return false;
+		}
+	}
 	protected abstract void parseRow(final int rowindex);
 
 	protected abstract void parseHeader(final int rownum);

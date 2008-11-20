@@ -16,6 +16,7 @@ import net.sf.hibernate4gwt.core.HibernateBeanManager;
 import net.sf.hibernate4gwt.core.hibernate.HibernateUtil;
 import net.sf.hibernate4gwt.gwt.HibernateRemoteService;
 
+import org.hibernate.CallbackException;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;

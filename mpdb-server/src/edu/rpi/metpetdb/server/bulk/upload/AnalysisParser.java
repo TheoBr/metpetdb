@@ -103,11 +103,12 @@ public class AnalysisParser extends Parser {
 
 	private static List<Element> elements = null;
 	private static List<Oxide> oxides = null;
+
 	/**
 	 * 
 	 * @param is
 	 * 		the input stream that points to a spreadsheet
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public AnalysisParser(final InputStream is) throws IOException {
 		super();
@@ -116,7 +117,7 @@ public class AnalysisParser extends Parser {
 		final HSSFWorkbook wb = new HSSFWorkbook(fs);
 		sheet = wb.getSheetAt(0);
 	}
-	
+
 	static {
 		try {
 			if (methodAssociations.isEmpty())
@@ -136,8 +137,6 @@ public class AnalysisParser extends Parser {
 		parse(1);
 	}
 
-	
-
 	protected void parseHeader(final int rownum) {
 		// First non-empty row is the header, want to associate what
 		// we know how to parse with what is observed
@@ -153,7 +152,7 @@ public class AnalysisParser extends Parser {
 				// blank column
 				continue;
 			}
-			//System.out.println("Parsing header " + i + ": " + text);
+			// System.out.println("Parsing header " + i + ": " + text);
 
 			// Determine method to be used for data in this column
 			for (MethodAssociation<ChemicalAnalysis> sma : methodAssociations) {
@@ -170,7 +169,7 @@ public class AnalysisParser extends Parser {
 				continue;
 
 			// special cases
-			if (Pattern.compile("^\\s*sample\\s*$", Pattern.CASE_INSENSITIVE)
+			if (Pattern.compile("^(sample[ number| name|])|(sample)$", Pattern.CASE_INSENSITIVE)
 					.matcher(text).find()) {
 				colType.put(new Integer(i), SAMPLE);
 				colName.put(new Integer(i), "ChemicalAnalysis_sample");
@@ -198,8 +197,8 @@ public class AnalysisParser extends Parser {
 						// Get text of the next column
 						boolean precision_next = false;
 						try {
-							String next_header = header
-									.getCell((i + 1)).toString();
+							String next_header = header.getCell((i + 1))
+									.toString();
 							precision_next = Pattern.compile("precision",
 									Pattern.CASE_INSENSITIVE).matcher(
 									next_header).find();
@@ -246,8 +245,8 @@ public class AnalysisParser extends Parser {
 						// Get text of the next column
 						boolean precision_next = false;
 						try {
-							String next_header = header
-									.getCell( (i + 1)).toString();
+							String next_header = header.getCell((i + 1))
+									.toString();
 							precision_next = Pattern.compile("precision",
 									Pattern.CASE_INSENSITIVE).matcher(
 									next_header).find();
@@ -303,14 +302,14 @@ public class AnalysisParser extends Parser {
 
 		String precisionUnit = null;
 		for (int i = 0; i < row.getLastCellNum(); ++i) {
-			final HSSFCell cell = row.getCell( i);
+			final HSSFCell cell = row.getCell(i);
 			try {
 				Integer type = colType.get(i);
 				if (type == null)
 					continue;
 
-				//System.out.println("\t Parsing Column " + i + ": "
-						//+ colName.get(new Integer(i)));
+				// System.out.println("\t Parsing Column " + i + ": "
+				// + colName.get(new Integer(i)));
 
 				if (type == SAMPLE) {
 					final String data = cell.toString();
@@ -333,9 +332,9 @@ public class AnalysisParser extends Parser {
 
 					final Method storeMethod = colMethods.get(new Integer(i));
 					final Object o = colObjects.get(i);
-					final Float data = (float) cell.getNumericCellValue();
-					final Float precision = (float) row
-							.getCell( (i + 1)).getNumericCellValue();
+					final Float data = Float.valueOf(sanitizeNumber(cell.toString()));
+					final Float precision = Float.valueOf(sanitizeNumber(row.getCell((i + 1))
+							.toString()));
 
 					storeMethod.invoke(ca, o, data, precision);
 
@@ -353,19 +352,7 @@ public class AnalysisParser extends Parser {
 					// cell to be so it can parse it
 					final Class<?> dataType = storeMethod.getParameterTypes()[0];
 
-					if (dataType == String.class) {
-
-						if (!storeMethod.getName().equals("addReference")
-								&& !storeMethod.getName().equals(
-										"setDescription")) {
-							final String[] data = cell.toString().split(
-									"\\s*" + DATA_SEPARATOR + "\\s*");
-							for (String str : data)
-								storeMethod.invoke(ca, str);
-						} else {
-							final String data = cell.toString();
-							storeMethod.invoke(ca, data);
-						}
+					if (handleData(dataType, storeMethod, cell, ca)) {
 
 					} else if (dataType == Subsample.class) {
 
@@ -387,22 +374,6 @@ public class AnalysisParser extends Parser {
 						if (ca.getReference() == null)
 							ca.setReference(new Reference());
 						ca.getReference().setName(data);
-
-					} else if (dataType == double.class) {
-
-						final double data = cell.getNumericCellValue();
-						storeMethod.invoke(ca, data);
-
-					} else if (dataType == Float.class) {
-
-						final double data = cell.getNumericCellValue();
-						storeMethod.invoke(ca, new Float(data));
-
-					} else if (dataType == int.class) {
-
-						final double data = cell.getNumericCellValue();
-						storeMethod.invoke(ca, (int) data);
-
 					} else if (dataType == Timestamp.class) {
 
 						try {
@@ -411,7 +382,7 @@ public class AnalysisParser extends Parser {
 							// storeMethod.invoke(s, new
 							// Timestamp(data.getTime()));
 						} catch (final IllegalStateException nfe) {
-							//System.out.println("parsing date");
+							// System.out.println("parsing date");
 							final String data = cell.toString();
 							parseDate(ca, data);
 						}
@@ -453,7 +424,7 @@ public class AnalysisParser extends Parser {
 			else
 				ca.setLargeRock(false);
 
-			analyses.put(rownum+1, ca);
+			analyses.put(rownum + 1, ca);
 		}
 	}
 	public Map<Integer, ChemicalAnalysis> getAnalyses() {

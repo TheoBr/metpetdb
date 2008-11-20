@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.TransientObjectException;
@@ -29,7 +30,7 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * @throws DAOException
 	 * 		Generally corresponds to 'no corresponding object was found'
 	 */
-	abstract public T fill(T inst) throws DAOException;
+	abstract public T fill(T inst) throws DAOException, HibernateException;
 
 	/**
 	 * Save the specified object to the db. Inserting if the object is new,
@@ -40,7 +41,7 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * @return Object that was saved and is now in the db (merge may update)
 	 * @throws DAOException
 	 */
-	abstract public T save(T inst) throws DAOException;
+	abstract public T save(T inst) throws DAOException, HibernateException;
 
 	/**
 	 * Remove the specified object from the db.
@@ -50,7 +51,7 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * @return
 	 * @throws DAOException
 	 */
-	abstract public T delete(T inst) throws DAOException;
+	abstract public T delete(T inst) throws DAOException, HibernateException;
 
 	public Set<T> fill(Set<T> s) {
 		if (s == null)
@@ -71,7 +72,7 @@ public abstract class MpDbDAO<T extends MObject> {
 		return filled;
 	}
 
-	public boolean isNew(T inst) {
+	public boolean isNew(T inst) throws HibernateException {
 		try {
 			// If the object in question can be fill()-ed successfully, then a
 			// corresponding object is in the db already, thus the object is not

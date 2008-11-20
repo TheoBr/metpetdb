@@ -75,7 +75,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 						continue;
 					}
 					// see if our sample exists
-					if (ca.getSubsample() == null) {
+					if (ca.getSubsample().getSample() == null) {
 						results.addError(row, new PropertyRequiredException(
 						"Sample"));
 						continue;
