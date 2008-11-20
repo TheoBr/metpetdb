@@ -160,6 +160,8 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 						// see if our sample exists
 						Sample s = img.getSample();
 						s.setOwner(u);
+						img.getSubsample().setOwner(u);
+						img.getSubsample().setPublicData(false);
 						try {
 							// if we don't have this sample already loaded check
 							// for it in the database

@@ -8,9 +8,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.hibernate.HibernateException;
+
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
 import edu.rpi.metpetdb.client.model.BulkUploadResult;
@@ -79,6 +82,10 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 					}
 					Sample s = ca.getSubsample().getSample();
 					s.setOwner(u);
+					ca.getSubsample().setOwner(u);
+					ca.setOwner(u);
+					ca.setPublicData(false);
+					ca.getSubsample().setPublicData(false);
 					try {
 						// if we don't have this sample already loaded check
 						// for it in the database
@@ -144,13 +151,17 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 					if (save) {
 						try {
 							dao.save(ca);
-						} catch (DAOException e) {
+						} catch (MpDbException e) {
 							results.addError(row, e);
+						} catch (HibernateException e) {
+							results.addError(row, handleHibernateException(e));
 						}
 					}
 				} catch (ValidationException e) {
 					results.addError(row, e);
 					caResultCount.incrementInvalid();
+				} catch (HibernateException e) {
+					results.addError(row, handleHibernateException(e));
 				}
 				++row;
 			}
