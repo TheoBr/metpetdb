@@ -24,6 +24,7 @@ import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
 import edu.rpi.metpetdb.server.security.permissions.principals.OwnerPrincipal;
 
+@Deprecated
 public class HibernateLoginModule implements LoginModule {
 
 	private Subject subject;
@@ -91,30 +92,15 @@ public class HibernateLoginModule implements LoginModule {
 		String username = nameCb.getName();
 		String password = new String(passCb.getPassword());
 
-		User u = new User();
-		u.setEmailAddress(username);
-		final Session s = DataStore.open();
-		try {
-			u = (new UserDAO(s)).fill(u);
-		} catch (DAOException e) {
-			throw new LoginException(e.format());
-		} finally {
-			s.close();
-		}
+	
 		
-		principals = new ArrayList<Principal>();
+		
 		publicCredentials = new ArrayList<Object>();
 		
-		if (!PasswordEncrypter.verify(u.getEncryptedPassword(), password)) {
-			success = false;
-			throw new LoginException("Invalid Credentials");
-		} else {
-			publicCredentials.add(u);
-			success = true;
-		}
+		
 		//TODO add credentials and principals for the subject
 		
-		principals.add(new OwnerPrincipal(u));
+		
 
 		return true; 
 	}

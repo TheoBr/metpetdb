@@ -1,10 +1,12 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -17,17 +19,15 @@ import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.validation.DuplicateValueException;
 import edu.rpi.metpetdb.client.error.validation.LoginFailureException;
 import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
-import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
 import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
-import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
-import edu.rpi.metpetdb.server.security.permissions.GwtCallbackHandler;
+import edu.rpi.metpetdb.server.security.permissions.principals.OwnerPrincipal;
 
 public class UserServiceImpl extends MpDbServlet implements UserService {
 	private static final long serialVersionUID = 1L;
@@ -42,9 +42,8 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		u = (new UserDAO(this.currentSession())).fill(u);
 		return (u);
 	}
-	
-	public User save(User user) throws DAOException, ValidationException
-	{
+
+	public User save(User user) throws DAOException, ValidationException {
 		final UserDAO uDAO = new UserDAO(this.currentSession());
 		doc.validate(user);
 		User u = new User();
@@ -59,7 +58,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 	public Set<String> allNames() {
 		final Object[] l = (new UserDAO(this.currentSession())).allNames();
-		final Set<String> options = new HashSet();
+		final Set<String> options = new HashSet<String>();
 		for (int i = 0; i < l.length; i++) {
 			if (l[i] != null)
 				options.add(l[i].toString());
@@ -69,15 +68,21 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 	public User startSession(final StartSessionRequest ssr)
 			throws LoginFailureException, ValidationException {
-		//doc.validate(ssr);
+		doc.validate(ssr);
 		try {
-			GwtCallbackHandler cbh = new GwtCallbackHandler(ssr.getEmailAddress(), ssr.getPassword());
-			LoginContext lc = new LoginContext("MetPetDB", cbh);
-			lc.login();
-			final User u = (User) lc.getSubject().getPublicCredentials().toArray()[0];
-			setCurrentUser(u, lc.getSubject());
+			User u = new User();
+			u.setEmailAddress(ssr.getEmailAddress());
+			u = (new UserDAO(currentSession())).fill(u);
+			
+			if (!PasswordEncrypter.verify(u.getEncryptedPassword(), ssr.getPassword())) {
+				throw new GenericDAOException();
+			} else {
+				final Collection<Principal> principals = new ArrayList<Principal>();
+				principals.add(new OwnerPrincipal(u));
+				setCurrentUser(u, principals);
+			}
 			return u;
-		} catch (LoginException e) {
+		} catch (DAOException e) {
 			e.printStackTrace();
 			throw new LoginFailureException(doc.StartSessionRequest_password);
 		}

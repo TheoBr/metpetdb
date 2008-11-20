@@ -2,7 +2,7 @@ package edu.rpi.metpetdb.server;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.AccessController;
+import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
@@ -134,7 +134,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 
 		loadAutomaticLogin();
 		initBulkUpload();
-		System.setProperty("java.security.auth.login.config", MpDbServlet.class.getClassLoader().getResource("jaas.properties").getPath());
+		//System.setProperty("java.security.auth.login.config", MpDbServlet.class.getClassLoader().getResource("jaas.properties").getPath());
 	}
 
 	/** Initializes the static properties of the bulk upload process */
@@ -198,13 +198,13 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 * 		the user to configure as the current application user. Null will
 	 * 		clear the current application user, if it had been known.
 	 */
-	protected void setCurrentUser(final User u, final Subject subject) {
+	protected void setCurrentUser(final User u, final Collection<Principal> principals) {
 		final String v = u != null ? SessionEncrypter.crypt(u.getId()) : null;
 		final Cookie c = new Cookie(MpDbConstants.USERID_COOKIE, v);
 		c.setMaxAge(u != null ? -1 : 0); // Only for this browser session.
 		getThreadLocalResponse().addCookie(c);
 		currentReq().userId = u != null ? new Integer(u.getId()) : null;
-		getThreadLocalRequest().getSession().setAttribute("javax.security.auth.subject", subject);
+		getThreadLocalRequest().getSession().setAttribute("principals", principals);
 	}
 
 	/**
@@ -255,10 +255,6 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 			return currentReq().currentSession();
 		else
 			return DataStore.open();
-	}
-	
-	protected Subject currentSubject() {
-		return (Subject) getThreadLocalRequest().getSession().getAttribute("subject");
 	}
 
 	/**
@@ -341,7 +337,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	public String processCall(final String payload)
 			throws SerializationException {
 		final Req r = new Req();
-		r.subject = (Subject) this.getThreadLocalRequest().getSession().getAttribute("javax.security.auth.subject");
+		r.principals = (Collection<Principal>) this.getThreadLocalRequest().getSession().getAttribute("principals");
 		perThreadReq.set(r);
 		String response = "Internal server error.";
 		try {
@@ -356,7 +352,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	public static final class Req {
 		Session session;
 		Integer userId;
-		public Subject subject;
+		public Collection<Principal> principals;
 
 		Session currentSession() {
 			if (session == null) {

@@ -1,8 +1,8 @@
 package edu.rpi.metpetdb.server.security.permissions;
 
 import java.io.Serializable;
-
-import javax.security.auth.Subject;
+import java.security.Principal;
+import java.util.Collection;
 
 import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
@@ -19,9 +19,9 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	public PermissionInterceptor() {
-		
+
 	}
 
 	/**
@@ -49,38 +49,45 @@ public class PermissionInterceptor extends EmptyInterceptor {
 		checkPermissions(entity, state, propertyNames, false);
 		return super.onLoad(entity, id, state, propertyNames, types);
 	}
-	
-	private void checkPermissions(Object entity, Object[] state, String[] propertyNames, boolean saving) {
+
+	private void checkPermissions(Object entity, Object[] state,
+			String[] propertyNames, boolean saving) {
 		if (entity instanceof HasOwner) {
-			final Subject subject =  MpDbServlet.currentReq().subject;
-			if (subject == null) {
-				//throw new CallbackException("Invalid Subject, Please Log back in");
-				//TODO remove this
-				return;
-			}
-			if (!subject.getPrincipals().contains(new OwnerPrincipal(getOwnerId(propertyNames, state)))) {
-				throw new CallbackException("Cannot load objects you don't own, we don't like to share.");
-			}
-			if (saving) {
-				if (isPublic(propertyNames, state)) {
-					throw new CallbackException("Public data cannot be modified.");
+			if (MpDbServlet.currentReq() != null) {
+				final Collection<Principal> principals = MpDbServlet.currentReq().principals;
+				if (principals == null) {
+					// throw new CallbackException(
+					// "Invalid Subject, Please Log back in");
+					// TODO remove this
+					return;
+				}
+				if (!principals.contains(
+						new OwnerPrincipal(getOwnerId(propertyNames, state)))) {
+					throw new CallbackException(
+							"Cannot load objects you don't own, we don't like to share.");
+				}
+				if (saving) {
+					if (isPublic(propertyNames, state)) {
+						throw new CallbackException(
+								"Public data cannot be modified.");
+					}
 				}
 			}
 		}
 	}
-	
+
 	private boolean isPublic(String[] propertyNames, Object[] state) {
-		for(int i = 0;i<propertyNames.length;++i) {
+		for (int i = 0; i < propertyNames.length; ++i) {
 			if (propertyNames[i].equals("publicData")) {
 				return Boolean.parseBoolean(state[i].toString());
 			}
 		}
 		return false;
 	}
-	
+
 	private int getOwnerId(String[] propertyNames, Object[] state) {
 		int ownerId = 0;
-		for(int i = 0;i<propertyNames.length;++i) {
+		for (int i = 0; i < propertyNames.length; ++i) {
 			if (propertyNames[i].equals("owner")) {
 				ownerId = ((User) state[i]).getId();
 				break;
