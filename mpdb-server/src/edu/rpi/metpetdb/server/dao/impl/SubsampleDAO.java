@@ -30,8 +30,8 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 		if (inst.getId() > 0) {
 			final Query q = namedQuery("Subsample.byId");
 			q.setLong("id", inst.getId());
-			if (q.uniqueResult() != null)
-				return (Subsample) q.uniqueResult();
+			if (getResult(q) != null)
+				return (Subsample) getResult(q);
 		}
 
 		// By Sample and Name
@@ -40,8 +40,8 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 			final Query q = namedQuery("Subsample.bySample.byName");
 			q.setParameter("id", inst.getSample().getId());
 			q.setParameter("name", inst.getName());
-			if (q.uniqueResult() != null)
-				return (Subsample) q.uniqueResult();
+			if (getResult(q) != null)
+				return (Subsample) getResult(q);
 		}
 
 		throw new SubsampleNotFoundException();
@@ -54,30 +54,30 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 		return _save(inst);
 	}
 
-	public List<Subsample> getAllBySampleID(final long sampleId) {
+	public List<Subsample> getAllBySampleID(final long sampleId)throws DAOException {
 		final Query q = namedQuery("Subsample.bySampleId");
 		q.setParameter("sampleId", sampleId);
-		final List<Subsample> l = q.list();
+		final List<Subsample> l = (List<Subsample>) getResults(q);
 		return l;
 	}
 
 	public Results<Subsample> getAllWithImagesBySampleID(
-			final PaginationParameters p, final long sampleId) {
+			final PaginationParameters p, final long sampleId) throws DAOException {
 		final Query sizeQ = sizeQuery("Subsample.allWithImages", sampleId);
 		final Query pageQ = pageQuery("Subsample.allWithImages", p, sampleId);
 		return getSubsamples(sizeQ, pageQ);
 	}
 
 	public Results<Subsample> getAllBySampleID(final PaginationParameters p,
-			final long sampleId) {
+			final long sampleId) throws DAOException {
 		final Query sizeQ = sizeQuery("Subsample.all", sampleId);
 		final Query pageQ = pageQuery("Subsample.all", p, sampleId);
 		return getSubsamples(sizeQ, pageQ);
 	}
 
-	private Results<Subsample> getSubsamples(Query sizeQuery, Query pageQuery) {
-		final List<Subsample> l = pageQuery.list();
-		final int size = ((Number) sizeQuery.uniqueResult()).intValue();
+	private Results<Subsample> getSubsamples(Query sizeQuery, Query pageQuery) throws DAOException {
+		final List<Subsample> l = (List<Subsample>) getResults(pageQuery);
+		final int size = ((Number) getResult(sizeQuery)).intValue();
 		return new Results<Subsample>(size, l);
 	}
 }

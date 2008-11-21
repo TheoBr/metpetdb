@@ -37,10 +37,10 @@ public class SampleCommentDAO extends MpDbDAO<SampleComment>{
 		return _save(inst);
 	}
 
-	public List<SampleComment> getAllBySampleID(final long sampleId) {
+	public List<SampleComment> getAllBySampleID(final long sampleId) throws DAOException{
 		final Query q = namedQuery("SampleComment.bySampleId");
 		q.setParameter("sampleId", sampleId);
-		final List<SampleComment> l = q.list();
+		final List<SampleComment> l = (List<SampleComment>) getResults(q);
 		return l;
 	}
 }

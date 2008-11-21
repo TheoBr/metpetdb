@@ -35,8 +35,8 @@ public class OxideDAO extends MpDbDAO<Oxide> {
 		throw new FunctionNotImplementedException();
 	}
 
-	public List<Oxide> getAll() {
+	public List<Oxide> getAll() throws DAOException{
 		final Query q = namedQuery("Oxide.all");
-		return q.list();
+		return (List<Oxide>) getResults(q);
 	}
 }

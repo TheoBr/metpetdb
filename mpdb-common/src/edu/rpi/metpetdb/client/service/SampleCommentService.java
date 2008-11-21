@@ -15,7 +15,7 @@ public interface SampleCommentService extends RemoteService{
 	SampleComment save(final SampleComment s) throws DAOException, ValidationException,
 			LoginRequiredException;
 
-	List<SampleComment> all(final long sampleId);
+	List<SampleComment> all(final long sampleId) throws DAOException;
 
 	void delete(long id) throws DAOException, LoginRequiredException;
 }

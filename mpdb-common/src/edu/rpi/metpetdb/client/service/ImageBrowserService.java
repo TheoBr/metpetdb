@@ -12,7 +12,7 @@ import edu.rpi.metpetdb.client.model.ImageOnGrid;
 public interface ImageBrowserService extends RemoteService {
 	Grid details(long id) throws DAOException;
 
-	List<ImageOnGrid> imagesOnGrid(long id);
+	List<ImageOnGrid> imagesOnGrid(long id) throws DAOException;
 
 	Grid saveGrid(Grid g) throws LoginRequiredException, DAOException;
 }

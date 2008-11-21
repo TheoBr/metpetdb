@@ -7,7 +7,6 @@ import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
-import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.ChemicalAnalysisService;
@@ -26,27 +25,20 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 	}
 
 	public Results<ChemicalAnalysis> all(PaginationParameters parameters,
-			final long subsampleId) {
+			final long subsampleId) throws DAOException {
 		return (new ChemicalAnalysisDAO(this.currentSession())).getAll(
 				parameters, subsampleId);
 	}
 
-	public List<ChemicalAnalysis> all(long subsampleId) {
+	public List<ChemicalAnalysis> all(long subsampleId) throws DAOException {
 		List<ChemicalAnalysis> l = (new ChemicalAnalysisDAO(this
 				.currentSession())).getAll(subsampleId);
-		// List<ChemicalAnalysis> l = (l);
 		return l;
 	}
 
 	public ChemicalAnalysis save(ChemicalAnalysis ca)
 			throws ValidationException, LoginRequiredException, DAOException {
 		doc.validate(ca);
-
-		if (ca.getSubsample().getSample().getOwner() == null)
-			throw new LoginRequiredException();
-		if (ca.getSubsample().getSample().getOwner().getId() != currentUser())
-			throw new SecurityException("Cannot modify samples you don't own.");
-
 		ca = (new ChemicalAnalysisDAO(this.currentSession())).save(ca);
 		commit();
 		return (ca);
@@ -68,11 +60,6 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		ChemicalAnalysis ca = new ChemicalAnalysis();
 		ca.setId((new Long(id)).intValue());
 		ca = dao.fill(ca);
-
-		if (ca.getOwner().getId() != currentUser())
-			throw new SecurityException("Cannot modify analyses you don't own.");
-		else if (ca.isPublicData())
-			throw new SecurityException("Cannot modify public analyses");
 
 		dao.delete(ca);
 		commit();

@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
-import javax.security.auth.Subject;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -32,6 +31,7 @@ import edu.rpi.metpetdb.client.error.dao.ProjectAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.SampleAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.UserAlreadyExistsException;
+import edu.rpi.metpetdb.client.error.security.NoPermissionsException;
 import edu.rpi.metpetdb.client.model.Element;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Oxide;
@@ -134,12 +134,21 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		oc = DataStore.getInstance().getObjectConstraints();
 
 		loadAutomaticLogin();
-		initBulkUpload();
-		//System.setProperty("java.security.auth.login.config", MpDbServlet.class.getClassLoader().getResource("jaas.properties").getPath());
+		try {
+			initBulkUpload();
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		// System.setProperty("java.security.auth.login.config", MpDbServlet.
+		// class.getClassLoader().getResource("jaas.properties").getPath());
 	}
 
-	/** Initializes the static properties of the bulk upload process */
-	public void initBulkUpload() {
+	/**
+	 * Initializes the static properties of the bulk upload process
+	 * 
+	 * @throws DAOException
+	 */
+	public void initBulkUpload() throws DAOException {
 		// Locate and set Valid Potential Minerals for the parser
 		final Session s = DataStore.open();
 		final Collection<Mineral> minerals = (new MineralDAO(s).getAll());
@@ -199,13 +208,15 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 * 		the user to configure as the current application user. Null will
 	 * 		clear the current application user, if it had been known.
 	 */
-	protected void setCurrentUser(final User u, final Collection<Principal> principals) {
+	protected void setCurrentUser(final User u,
+			final Collection<Principal> principals) {
 		final String v = u != null ? SessionEncrypter.crypt(u.getId()) : null;
 		final Cookie c = new Cookie(MpDbConstants.USERID_COOKIE, v);
 		c.setMaxAge(u != null ? -1 : 0); // Only for this browser session.
 		getThreadLocalResponse().addCookie(c);
 		currentReq().userId = u != null ? new Integer(u.getId()) : null;
-		getThreadLocalRequest().getSession().setAttribute("principals", principals);
+		getThreadLocalRequest().getSession().setAttribute("principals",
+				principals);
 	}
 
 	/**
@@ -269,6 +280,9 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	protected void commit() throws DAOException {
 		try {
 			currentSession().getTransaction().commit();
+		} catch (CallbackException e) {
+			forgetChanges();
+			throw new NoPermissionsException(e.getMessage());
 		} catch (final HibernateException he) {
 			throw handleHibernateException(he);
 		}
@@ -338,7 +352,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	public String processCall(final String payload)
 			throws SerializationException {
 		final Req r = new Req();
-		r.principals = (Collection<Principal>) this.getThreadLocalRequest().getSession().getAttribute("principals");
+		r.principals = (Collection<Principal>) this.getThreadLocalRequest()
+				.getSession().getAttribute("principals");
 		perThreadReq.set(r);
 		String response = "Internal server error.";
 		try {

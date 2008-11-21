@@ -17,11 +17,11 @@ import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	private static final long serialVersionUID = 1L;
 
-	public Results<Project> all(final PaginationParameters p, final long ownerId) {
+	public Results<Project> all(final PaginationParameters p, final long ownerId) throws DAOException {
 		return (new ProjectDAO(this.currentSession())).getForOwner(p, ownerId);
 	}
 
-	public List<Project> all(final long userId) {
+	public List<Project> all(final long userId) throws DAOException {
 		List<Project> lDAO = (new ProjectDAO(this.currentSession()))
 				.getForOwner(userId);
 		return (lDAO);
@@ -37,8 +37,6 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	public Project saveProject(Project project) throws ValidationException,
 			LoginRequiredException, DAOException {
 		doc.validate(project);
-		if (project.getOwner().getId() != currentUser())
-			throw new SecurityException("Cannot modify projects you don't own.");
 		project.getMembers().add(project.getOwner());
 
 		project = (new ProjectDAO(this.currentSession())).save(project);
@@ -48,7 +46,7 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 
 	// TODO: Code Dup? This the same as SampleServiceImpl.projectSamples()?
 	public Results<Sample> samplesFromProject(PaginationParameters parameters,
-			long id) {
+			long id) throws DAOException {
 		return (new SampleDAO(this.currentSession()).getProjectSamples(
 				parameters, id));
 	}

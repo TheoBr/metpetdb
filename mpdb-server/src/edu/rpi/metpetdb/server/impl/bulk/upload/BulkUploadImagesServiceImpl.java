@@ -309,10 +309,6 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 			// Create New Grid
 			g = new Grid();
 			g.setSubsample(iog.getImage().getSubsample());
-
-			if (g.getSubsample().getSample().getOwner().getId() != currentUser())
-				throw new SecurityException(
-						"Cannot modify grids you don't own.");
 			g = (new GridDAO(this.currentSession())).save(g);
 		}
 		iog.setGrid(g);

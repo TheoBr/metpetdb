@@ -35,9 +35,9 @@ public class ImageOnGridDAO extends MpDbDAO<ImageOnGrid> {
 		return inst;
 	}
 
-	public List<ImageOnGrid> getImagesByGrid(long id) {
+	public List<ImageOnGrid> getImagesByGrid(long id) throws DAOException{
 		final Query q = namedQuery("ImageOnGrid.byGridId");
 		q.setParameter("gridId", id);
-		return q.list();
+		return (List<ImageOnGrid>) getResults(q);
 	}
 }

@@ -22,31 +22,31 @@ import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	private static final long serialVersionUID = 1L;
 
-	public Results<Sample> all(final PaginationParameters p) {
+	public Results<Sample> all(final PaginationParameters p) throws DAOException {
 		return (new SampleDAO(this.currentSession())).getAll(p);
 	}
 
 	public Results<Sample> allSamplesForUser(final PaginationParameters p,
-			long id) {
+			long id) throws DAOException {
 		this.currentSession().enableFilter("user").setParameter("id", id);
 		return (new SampleDAO(this.currentSession())).getAll(p);
 	}
 	
-	public List<Sample> allSamplesForUser(final long id) {
+	public List<Sample> allSamplesForUser(final long id) throws DAOException {
 		this.currentSession().enableFilter("user").setParameter("id", id);
 		return (new SampleDAO(this.currentSession())).getAll();
 	}
 	
-	public Results<Sample> allPublicSamples(final PaginationParameters p) {
+	public Results<Sample> allPublicSamples(final PaginationParameters p) throws DAOException {
 		this.currentSession().enableFilter("public");
 		return (new SampleDAO(this.currentSession())).getAll(p);
 	}
 
-	public Results<Sample> projectSamples(final PaginationParameters p, long id) {
+	public Results<Sample> projectSamples(final PaginationParameters p, long id) throws DAOException {
 		return (new SampleDAO(this.currentSession()).getProjectSamples(p, id));
 	}
 	
-	public Set<String> allCollectors() {
+	public Set<String> allCollectors() throws DAOException {
 		final Object[] l =  (new SampleDAO(this.currentSession())).allCollectors();
 		final Set<String> options = new HashSet<String>();
 		for (int i = 0; i < l.length; i++){
@@ -56,7 +56,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		return options;
 	}
 	
-	public Set<String> allCountries() {
+	public Set<String> allCountries() throws DAOException {
 		final Object[] l =  (new SampleDAO(this.currentSession())).allCountries();
 		final Set<String> options = new HashSet<String>();
 		for (int i = 0; i < l.length; i++){
@@ -69,12 +69,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	public Sample details(final long id) throws DAOException {
 		Sample s = new Sample();
 		s.setId(id);
-		try {
-			s = (new SampleDAO(this.currentSession())).fill(s);
-		} catch(CallbackException e) {
-			this.forgetChanges();
-			throw new NoPermissionsException(e.getMessage());
-		}
+		s = (new SampleDAO(this.currentSession())).fill(s);
 		return s;
 	}
 
@@ -83,10 +78,6 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	public Sample save(Sample sample) throws DAOException, ValidationException,
 			LoginRequiredException {
 		doc.validate(sample);
-		if (sample.getOwner() == null)
-			throw new LoginRequiredException();
-		if (sample.getOwner().getId() != currentUser())
-			throw new SecurityException("Cannot modify samples you don't own.");
 		Sample s = (sample);
 
 		s = (new SampleDAO(this.currentSession())).save(s);
@@ -115,11 +106,6 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		Sample s = new Sample();
 		s.setId(id);
 		s = dao.fill(s);
-
-		if (s.getOwner().getId() != currentUser())
-			throw new SecurityException("Cannot modify samples you don't own.");
-		else if (s.isPublicData())
-			throw new SecurityException("Cannot modify public samples");
 		dao.delete(s);
 	}
 }

@@ -30,24 +30,24 @@ public class ElementDAO extends MpDbDAO<Element> {
 		if (inst.getName() != null) {
 			final Query q = namedQuery("Element.byName");
 			q.setString("name", inst.getName());
-			if (q.uniqueResult() != null)
-				return (Element) q.uniqueResult();
+			if (getResult(q) != null)
+				return (Element) getResult(q);
 		}
 
 		// Use Symbol
 		if (inst.getSymbol() != null) {
 			final Query q = namedQuery("Element.bySymbol");
 			q.setString("symbol", inst.getSymbol());
-			if (q.uniqueResult() != null)
-				return (Element) q.uniqueResult();
+			if (getResult(q) != null)
+				return (Element) getResult(q);
 		}
 
 		// Sometimes people use the symbol as the name, check that
 		if (inst.getName() != null && inst.getName().length() < 3) {
 			final Query q = namedQuery("Element.bySymbol");
 			q.setString("symbol", inst.getName());
-			if (q.uniqueResult() != null)
-				return (Element) q.uniqueResult();
+			if (getResult(q) != null)
+				return (Element) getResult(q);
 		}
 
 		throw new ElementNotFoundException();
@@ -59,8 +59,8 @@ public class ElementDAO extends MpDbDAO<Element> {
 		throw new FunctionNotImplementedException();
 	}
 
-	public List<Element> getAll() {
+	public List<Element> getAll() throws DAOException {
 		final Query q = namedQuery("Element.all");
-		return q.list();
+		return (List<Element>) getResults(q);
 	}
 }

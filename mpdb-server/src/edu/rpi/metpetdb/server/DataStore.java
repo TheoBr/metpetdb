@@ -317,7 +317,7 @@ public class DataStore {
 													.getName()
 											+ "' and attname='" + col.getName()
 											+ "' limit 1);");
-					final Iterator<String> consItr = q.list().iterator();
+					final Iterator<String> consItr = (Iterator<String>) q.list().iterator();
 					while (consItr.hasNext()) {
 						final String constraint = consItr.next();
 						handleConstraint(constraint, (FloatConstraint) pc);

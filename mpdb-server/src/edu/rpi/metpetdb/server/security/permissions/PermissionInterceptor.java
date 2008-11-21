@@ -63,7 +63,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 					return;
 				}
 				if (!principals.contains(
-						new OwnerPrincipal(getOwnerId(propertyNames, state)))) {
+						new OwnerPrincipal(getOwnerId(propertyNames, state))) && !isPublic(propertyNames, state)) {
 					throw new CallbackException(
 							"Cannot load objects you don't own, we don't like to share.");
 				}
@@ -170,7 +170,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	 */
 	public void onDelete(Object entity, Serializable id, Object[] state,
 			String[] propertyNames, Type[] types) throws CallbackException {
-
+		checkPermissions(entity, state, propertyNames, true);
 		super.onDelete(entity, id, state, propertyNames, types);
 	}
 }

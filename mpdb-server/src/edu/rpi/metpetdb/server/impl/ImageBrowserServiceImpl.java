@@ -24,19 +24,15 @@ public class ImageBrowserServiceImpl extends MpDbServlet implements
 		return (g);
 	}
 
-	public List<ImageOnGrid> imagesOnGrid(long id) {
+	public List<ImageOnGrid> imagesOnGrid(long id) throws DAOException {
 		List<ImageOnGrid> l = (new ImageOnGridDAO(this.currentSession()))
 				.getImagesByGrid(id);
 		return (l);
 	}
 
 	public Grid saveGrid(Grid grid) throws LoginRequiredException, DAOException {
-		if (grid.getSubsample().getSample().getOwner().getId() != currentUser())
-			throw new SecurityException("Cannot modify grids you don't own.");
-		Grid g = grid;
-
-		g = (new GridDAO(this.currentSession())).save(g);
+		grid = (new GridDAO(this.currentSession())).save(grid);
 		commit();
-		return (g);
+		return grid;
 	}
 }

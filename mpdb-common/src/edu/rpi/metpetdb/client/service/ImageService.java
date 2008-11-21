@@ -12,7 +12,7 @@ import edu.rpi.metpetdb.client.model.ImageOnGrid;
 import edu.rpi.metpetdb.client.model.XrayImage;
 
 public interface ImageService extends RemoteService {
-	List<Image> allImages(final long subsampleId);
+	List<Image> allImages(final long subsampleId) throws DAOException;
 	Image details(long id) throws DAOException;
 	Image saveImage(Image image) throws ValidationException,
 			LoginRequiredException, DAOException;

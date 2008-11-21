@@ -14,9 +14,9 @@ import edu.rpi.metpetdb.client.paging.Results;
 
 public interface ChemicalAnalysisService extends RemoteService {
 	Results<ChemicalAnalysis> all(PaginationParameters parameters,
-			final long subsampleId);
+			final long subsampleId) throws DAOException;
 
-	List<ChemicalAnalysis> all(final long subsampleId);
+	List<ChemicalAnalysis> all(final long subsampleId) throws DAOException;
 
 	ChemicalAnalysis details(long id) throws DAOException;
 

@@ -16,20 +16,20 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 		SubsampleService {
 	private static final long serialVersionUID = 1L;
 
-	public List<Subsample> all(final long sampleId) {
+	public List<Subsample> all(final long sampleId) throws DAOException {
 		final List<Subsample> l = (new SubsampleDAO(this.currentSession())
 				.getAllBySampleID(sampleId));
 		return (l);
 	}
 
 	public Results<Subsample> all(final PaginationParameters p,
-			final long sampleId) {
+			final long sampleId) throws DAOException {
 		return (new SubsampleDAO(this.currentSession()).getAllBySampleID(p,
 				sampleId));
 	}
 
 	public Results<Subsample> allWithImages(final PaginationParameters p,
-			final long sampleId) {
+			final long sampleId) throws DAOException {
 		return (new SubsampleDAO(this.currentSession())
 				.getAllWithImagesBySampleID(p, sampleId));
 	}
@@ -37,18 +37,12 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 	public Subsample details(final long id) throws DAOException {
 		Subsample s = new Subsample();
 		s.setId(id);
-
 		s = (new SubsampleDAO(this.currentSession())).fill(s);
 		return s;
 	}
 	public Subsample save(Subsample subsample) throws DAOException,
 			ValidationException, LoginRequiredException {
 		doc.validate(subsample);
-		if (subsample.getSample() == null
-				|| subsample.getSample().getOwner() == null
-				|| subsample.getSample().getOwner().getId() != currentUser())
-			throw new SecurityException(
-					"Cannot modify subsamples you don't own.");
 		subsample = (new SubsampleDAO(this.currentSession())).save(subsample);
 
 		commit();
@@ -60,12 +54,6 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 		Subsample s = new Subsample();
 		s.setId(id);
 		s = dao.fill(s);
-
-		if (s.getOwner().getId() != currentUser())
-			throw new SecurityException("Cannot modify subsamples you don't own.");
-		else if (s.isPublicData())
-			throw new SecurityException("Cannot modify public subsamples");
-
 		dao.delete(s);
 		commit();
 	}

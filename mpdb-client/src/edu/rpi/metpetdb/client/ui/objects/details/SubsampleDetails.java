@@ -79,12 +79,14 @@ public class SubsampleDetails extends MPagePanel {
 			}
 
 			protected boolean canEdit() {
-				final Subsample s = (Subsample) getBean();
-				if (s.isPublicData())
-					return false;
-				if (MpDb.isCurrentUser(s.getOwner()))
-					return true;
-				return false;
+				//TODO temporary while testing permissions
+//				final Sample s = ((Subsample) getBean()).getSample();
+//				if (s.isPublicData())
+//					return false;
+//				if (MpDb.isCurrentUser(s.getOwner()))
+//					return true;
+//				return false;
+				return true;
 			}
 
 			protected void onSaveCompletion(final Subsample result) {

@@ -15,7 +15,7 @@ import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 public class SampleCommentServiceImpl  extends MpDbServlet implements SampleCommentService {
 	private static final long serialVersionUID = 1L;
 
-	public List<SampleComment> all(final long sampleId) {
+	public List<SampleComment> all(final long sampleId) throws DAOException {
 		final List<SampleComment> l = (new SampleCommentDAO(this.currentSession())
 				.getAllBySampleID(sampleId));
 		return (l);
@@ -32,11 +32,6 @@ public class SampleCommentServiceImpl  extends MpDbServlet implements SampleComm
 	public SampleComment save(SampleComment sampleComment) throws DAOException,
 			ValidationException, LoginRequiredException {
 		doc.validate(sampleComment);
-		if (sampleComment.getSample() == null
-				|| sampleComment.getSample().getOwner() == null
-				|| sampleComment.getSample().getOwner().getId() != currentUser())
-			throw new SecurityException(
-					"Cannot modify comments you don't own.");
 		sampleComment = (new SampleCommentDAO(this.currentSession())).save(sampleComment);
 
 		commit();
@@ -48,10 +43,6 @@ public class SampleCommentServiceImpl  extends MpDbServlet implements SampleComm
 		SampleComment s = new SampleComment();
 		s.setId(id);
 		s = dao.fill(s);
-
-		if (s.getSample().getOwner().getId() != currentUser())
-			throw new SecurityException(
-					"Cannot modify comments you don't own.");
 		dao.delete(s);
 		commit();
 	}

@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -38,9 +40,9 @@ public class MetamorphicGradeDAO extends MpDbDAO<MetamorphicGrade> {
 		throw new FunctionNotImplementedException();
 	}
 	
-	public Object[] allMetamorphicGrades() {
+	public Object[] allMetamorphicGrades() throws DAOException{
 		final Query q = namedQuery("MetamorphicGrade.all/name");
-		return	q.list().toArray();
+		return	((List<MetamorphicGrade>)getResults(q)).toArray();
 	}
 
 }

@@ -124,7 +124,7 @@ public interface UserService extends RemoteService {
 	void emailPassword(String username) throws DAOException,
 			UnableToSendEmailException;
 	
-	Set<String> allNames();
+	Set<String> allNames() throws DAOException;
 	
 	User confirmUser(String confirmationCode) throws DAOException,
 			LoginRequiredException;

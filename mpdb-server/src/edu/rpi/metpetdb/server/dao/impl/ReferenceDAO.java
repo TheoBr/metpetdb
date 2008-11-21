@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -38,9 +40,9 @@ public class ReferenceDAO extends MpDbDAO<Reference> {
 		throw new FunctionNotImplementedException();
 	}
 	
-	public Object[] allReferences() {
+	public Object[] allReferences()throws DAOException {
 		final Query q = namedQuery("Reference.all/name");
-		return	q.list().toArray();
+		return ((List<Reference>)getResults(q)).toArray();
 	}
 
 }

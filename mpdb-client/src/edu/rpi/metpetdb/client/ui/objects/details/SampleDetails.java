@@ -103,12 +103,14 @@ public class SampleDetails extends MPagePanel {
 			}
 
 			protected boolean canEdit() {
-				final Sample s = (Sample) getBean();
-				if (s.isPublicData())
-					return false;
-				if (MpDb.isCurrentUser(s.getOwner()))
-					return true;
-				return false;
+				//TODO temporary while testing permissions
+//				final Sample s = (Sample) getBean();
+//				if (s.isPublicData())
+//					return false;
+//				if (MpDb.isCurrentUser(s.getOwner()))
+//					return true;
+//				return false;
+				return true;
 			}
 
 			protected void onSaveCompletion(final Sample result) {
@@ -130,7 +132,7 @@ public class SampleDetails extends MPagePanel {
 				setPageTitle(title, LocaleHandler.lc_text.sample());
 				samplePosition = LatLng.newInstance(((Point) result.getLocation()).y,
 						((Point) result.getLocation()).x);
-				updateGoogleMaps();
+				//updateGoogleMaps();
 			}
 
 			protected void onDeleteCompletion(final Object result) {

@@ -28,16 +28,16 @@ public class ImageDAO extends MpDbDAO<Image> {
 		if (inst.getId() > 0) {
 			final Query q = namedQuery("Image.id");
 			q.setLong("id", inst.getId());
-			if (q.uniqueResult() != null)
-				return (Image) q.uniqueResult();
+			if (getResult(q) != null)
+				return (Image) getResult(q);
 		}
 		
 		if (inst.getSample() != null && inst.getSample().getId() > 0) {
 			final Query q = namedQuery("Image.bySampleIdbyFilename");
 			q.setLong("id", inst.getSample().getId());
 			q.setString("filename", inst.getFilename());
-			if (q.uniqueResult() != null)
-				return (Image) q.uniqueResult();
+			if (getResult(q) != null)
+				return (Image) getResult(q);
 		}
 
 		throw new ImageNotFoundException();
@@ -52,9 +52,9 @@ public class ImageDAO extends MpDbDAO<Image> {
 		return inst;
 	}
 
-	public List<Image> getBySubsampleId(long subsampleId) {
+	public List<Image> getBySubsampleId(long subsampleId) throws DAOException{
 		Query q = namedQuery("Image.bySubsampleId");
 		q.setLong("subsampleId", subsampleId);
-		return q.list();
+		return (List<Image>) getResults(q);
 	}
 }

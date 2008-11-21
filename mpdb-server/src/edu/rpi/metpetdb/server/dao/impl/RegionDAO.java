@@ -9,8 +9,6 @@ import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.RegionNotFoundException;
 import edu.rpi.metpetdb.client.model.Region;
-import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 
 public class RegionDAO extends MpDbDAO<Region> {
@@ -42,9 +40,9 @@ public class RegionDAO extends MpDbDAO<Region> {
 		throw new FunctionNotImplementedException();
 	}
 	
-	public Object[] allNames() {
+	public Object[] allNames() throws DAOException{
 		final Query q = namedQuery("Region.all/name");
-		return	q.list().toArray();
+		return	((List<Region>)getResults(q)).toArray();
 	}
 
 }

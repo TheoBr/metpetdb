@@ -72,12 +72,15 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 			}
 
 			protected boolean canEdit() {
-				final ChemicalAnalysis ca = (ChemicalAnalysis) getBean();
-				if (ca.isPublicData())
-					return false;
-				if (MpDb.isCurrentUser(ca.getOwner()))
-					return true;
-				return false;
+				//TODO temporary while testing permissions
+//				final Sample s = ((ChemicalAnalysis) getBean()).getSubsample()
+//						.getSample();
+//				if (s.isPublicData())
+//					return false;
+//				if (MpDb.isCurrentUser(s.getOwner()))
+//					return true;
+//				return false;
+				return true;
 			}
 
 			protected void onSaveCompletion(final ChemicalAnalysis result) {

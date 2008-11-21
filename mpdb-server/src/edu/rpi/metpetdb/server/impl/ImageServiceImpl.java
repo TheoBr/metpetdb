@@ -45,7 +45,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		return (i);
 	}
 
-	public List<Image> allImages(final long subsampleId) {
+	public List<Image> allImages(final long subsampleId) throws DAOException {
 		final List<Image> images = (new ImageDAO(this.currentSession()))
 				.getBySubsampleId(subsampleId);
 		return (images);
@@ -53,9 +53,6 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 
 	public Image saveImage(Image image) throws ValidationException,
 			LoginRequiredException, DAOException {
-		// oc.validate(Image);
-		// if (Image.getSample().getOwner().getId() != currentUser())
-		// throw new SecurityException("Cannot modify images you don't own.");
 		doc.validate(image);
 		Image i = (image);
 

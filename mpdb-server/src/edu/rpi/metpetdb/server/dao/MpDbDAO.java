@@ -4,12 +4,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.hibernate.CallbackException;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.TransientObjectException;
 
 import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.security.NoPermissionsException;
 import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 
@@ -121,9 +123,15 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * 
 	 * @param u
 	 * 		object to be deleted, must already exist in the database
+	 * @throws DAOException 
 	 */
-	protected void _delete(final T u) {
-		sess.delete(u);
+	protected void _delete(final T u) throws DAOException {
+		try {
+			sess.delete(u);
+		} catch (CallbackException e) {
+			sess.clear();
+			throw new NoPermissionsException(e.getMessage());
+		}
 	}
 
 	/**
@@ -234,5 +242,23 @@ public abstract class MpDbDAO<T extends MObject> {
 		if (id != -1)
 			q.setLong("id", id);
 		return q;
+	}
+
+	protected Object getResult(final Query q) throws DAOException {
+		try {
+			return q.uniqueResult();
+		} catch (CallbackException e) {
+			sess.clear();
+			throw new NoPermissionsException(e.getMessage());
+		}
+	}
+
+	protected Object getResults(final Query q) throws DAOException {
+		try {
+			return q.list();
+		} catch (CallbackException e) {
+			sess.clear();
+			throw new NoPermissionsException(e.getMessage());
+		}
 	}
 }

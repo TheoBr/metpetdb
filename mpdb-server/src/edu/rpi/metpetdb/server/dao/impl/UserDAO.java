@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -31,24 +30,24 @@ public class UserDAO extends MpDbDAO<User> {
 		if (inst.getId() > 0) {
 			Query q = namedQuery("User.byId");
 			q.setParameter("id", inst.getId());
-			if (q.uniqueResult() != null)
-				return (User) q.uniqueResult();
+			if (getResult(q) != null)
+				return (User) getResult(q);
 		}
 
 		// Use Name
 		if (inst.getEmailAddress() != null) {
 			Query q = namedQuery("User.byEmailAddress");
 			q.setParameter("emailAddress", inst.getEmailAddress());
-			if (q.uniqueResult() != null)
-				return (User) q.uniqueResult();
+			if (getResult(q) != null)
+				return (User) getResult(q);
 		}
 
 		throw new UserNotFoundException();
 	}
 
-	public Object[] allNames() {
+	public Object[] allNames() throws DAOException{
 		final Query q = namedQuery("User.all/name");
-		return	q.list().toArray();
+		return	((List<String>)getResults(q)).toArray();
 	}
 	@Override
 	public User save(User inst) throws DAOException {

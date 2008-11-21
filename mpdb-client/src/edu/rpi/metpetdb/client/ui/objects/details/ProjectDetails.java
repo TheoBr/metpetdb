@@ -42,7 +42,9 @@ public class ProjectDetails extends FlowPanel {
 				// TODO: implement delete for project
 			}
 			protected boolean canEdit() {
-				return MpDb.isCurrentUser(((Project) getBean()).getOwner());
+				//TODO temporary while testing permissions
+				//return MpDb.isCurrentUser(((Project) getBean()).getOwner());
+				return true;
 			}
 			protected void onSaveCompletion(final MObject result) {
 				if (savedNew)

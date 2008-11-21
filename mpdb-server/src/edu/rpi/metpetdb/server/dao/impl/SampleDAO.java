@@ -3,7 +3,6 @@ package edu.rpi.metpetdb.server.dao.impl;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -33,8 +32,8 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		if (inst.getId() > 0) {
 			final Query q = namedQuery("Sample.byId");
 			q.setLong("id", inst.getId());
-			if (q.uniqueResult() != null)
-				return (Sample) q.uniqueResult();
+			if (getResult(q) != null)
+				return (Sample) getResult(q);
 		}
 
 		// Use User,Alias
@@ -43,8 +42,8 @@ public class SampleDAO extends MpDbDAO<Sample> {
 			final Query q = namedQuery("Sample.byUser.byAlias");
 			q.setLong("id", inst.getOwner().getId());
 			q.setString("alias", inst.getAlias());
-			if (q.uniqueResult() != null)
-				return (Sample) q.uniqueResult();
+			if (getResult(q) != null)
+				return (Sample) getResult(q);
 		}
 
 		throw new SampleNotFoundException();
@@ -74,42 +73,42 @@ public class SampleDAO extends MpDbDAO<Sample> {
 	}
 
 	public Results<Sample> getProjectSamples(final PaginationParameters p,
-			long id) {
+			long id) throws DAOException {
 		final Query sizeQ = sizeQuery("Sample.forProject", id);
 		final Query pageQ = pageQuery("Sample.forProject", p, id);
 		return getSamples(sizeQ, pageQ);
 	}
 
-	public Results<Sample> getAllPublicSamples(final PaginationParameters p) {
+	public Results<Sample> getAllPublicSamples(final PaginationParameters p) throws DAOException {
 		final Query sizeQ = sizeQuery("Sample.allPublic");
 		final Query pageQ = pageQuery("Sample.allPublic", p);
 		return getSamples(sizeQ, pageQ);
 	}
 
-	public Results<Sample> getAll(final PaginationParameters p) {
+	public Results<Sample> getAll(final PaginationParameters p) throws DAOException {
 		final Query sizeQ = sizeQuery("Sample.all");
 		final Query pageQ = pageQuery("Sample.all", p);
 		return getSamples(sizeQ, pageQ);
 	}
 	
-	public List<Sample> getAll() {
+	public List<Sample> getAll() throws DAOException{
 		final Query q = namedQuery("Sample.all/id");
-		return q.list();
+		return (List<Sample>) getResults(q);
 	}
 
-	private Results<Sample> getSamples(Query sizeQuery, Query pageQuery) {
-		final List<Sample> l = pageQuery.list();
-		final int size = ((Number) sizeQuery.uniqueResult()).intValue();
+	private Results<Sample> getSamples(Query sizeQuery, Query pageQuery) throws DAOException {
+		final List<Sample> l = (List<Sample>) getResults(pageQuery);
+		final int size = ((Number) getResult(sizeQuery)).intValue();
 		return new Results<Sample>(size, l);
 	}
 	
-	public Object[] allCollectors() {
+	public Object[] allCollectors() throws DAOException {
 		final Query q = namedQuery("Sample.Collectors/Collector");
-			return	q.list().toArray();
+			return	((List<String>)getResults(q)).toArray();
 	}
 	
-	public Object[] allCountries() {
+	public Object[] allCountries() throws DAOException {
 		final Query q = namedQuery("Sample.Countries/Countries");
-		return	q.list().toArray();
+		return	((List<String>)getResults(q)).toArray();
 	}
 }

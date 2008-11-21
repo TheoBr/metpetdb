@@ -30,16 +30,16 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 		if (inst.getId() > 0) {
 			final Query q = namedQuery("ChemicalAnalysis.byId");
 			q.setLong("id", inst.getId());
-			if (q.uniqueResult() != null)
-				return (ChemicalAnalysis) q.uniqueResult();
+			if (getResult(q) != null)
+				return (ChemicalAnalysis) getResult(q);
 		}
 		
 		if (inst.getSubsample() != null && inst.getSubsample().getId() > 0) {
 			final Query q = namedQuery("ChemicalAnalysis.bySubsampleIdbySpotId");
 			q.setLong("id", inst.getSubsample().getId());
 			q.setString("spotId", inst.getSpotId());
-			if (q.uniqueResult() != null)
-				return (ChemicalAnalysis) q.uniqueResult();
+			if (getResult(q) != null)
+				return (ChemicalAnalysis) getResult(q);
 		}
 
 		throw new ChemicalAnalysisNotFoundException();
@@ -65,16 +65,16 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 		return ca;
 	}
 
-	public List<ChemicalAnalysis> getAll(final long subsampleId) {
+	public List<ChemicalAnalysis> getAll(final long subsampleId) throws DAOException {
 		final Query q = namedQuery("ChemicalAnalysis.bySubsampleId");
 		q.setParameter("subsampleId", subsampleId);
-		final List<ChemicalAnalysis> l = q.list();
+		final List<ChemicalAnalysis> l = (List<ChemicalAnalysis>) getResults(q);
 
 		return l;
 	}
 
 	public Results<ChemicalAnalysis> getAll(final PaginationParameters p,
-			final long subsampleId) {
+			final long subsampleId) throws DAOException{
 
 		final Query sizeQ = sizeQuery("ChemicalAnalysis.bySubsampleId",
 				subsampleId);
@@ -84,9 +84,9 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 	}
 
 	private Results<ChemicalAnalysis> getChemicalAnalyses(Query sizeQuery,
-			Query pageQuery) {
-		final List<ChemicalAnalysis> l = pageQuery.list();
-		final int size = ((Number) sizeQuery.uniqueResult()).intValue();
+			Query pageQuery) throws DAOException {
+		final List<ChemicalAnalysis> l = (List<ChemicalAnalysis>) getResults(pageQuery);
+		final int size = ((Number) getResult(sizeQuery)).intValue();
 
 		return new Results<ChemicalAnalysis>(size, l);
 	}

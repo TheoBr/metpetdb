@@ -32,8 +32,8 @@ public class ProjectDAO extends MpDbDAO<Project> {
 		if (inst.getId() > 0) {
 			final Query q = namedQuery("Project.byId");
 			q.setLong("id", inst.getId());
-			if (q.uniqueResult() != null)
-				return (Project) q.uniqueResult();
+			if (getResult(q) != null)
+				return (Project) getResult(q);
 		}
 
 		throw new ProjectNotFoundException();
@@ -45,14 +45,14 @@ public class ProjectDAO extends MpDbDAO<Project> {
 		return inst;
 	}
 
-	public List<Project> getForOwner(final long userId) {
+	public List<Project> getForOwner(final long userId) throws DAOException{
 		Query q = namedQuery("Project.byOwnerId");
 		q.setLong("ownerId", userId);
-		return (List<Project>) q.list();
+		return (List<Project>) getResults(q);
 	}
 
 	public Results<Project> getForOwner(final PaginationParameters p,
-			final long ownerId) {
+			final long ownerId) throws DAOException {
 		final Query sizeQ = sizeQuery("Project.byOwnerId");
 		final Query pageQ = pageQuery("Project.byOwnerId", p);
 		sizeQ.setLong("ownerId", ownerId);
@@ -60,9 +60,9 @@ public class ProjectDAO extends MpDbDAO<Project> {
 		return getProjects(sizeQ, pageQ);
 	}
 
-	private Results<Project> getProjects(Query sizeQuery, Query pageQuery) {
-		final List<Project> l = pageQuery.list();
-		final int size = ((Number) sizeQuery.uniqueResult()).intValue();
+	private Results<Project> getProjects(Query sizeQuery, Query pageQuery) throws DAOException {
+		final List<Project> l = (List<Project>) getResults(pageQuery);
+		final int size = ((Number) getResult(sizeQuery)).intValue();
 
 		return new Results<Project>(size, l);
 	}

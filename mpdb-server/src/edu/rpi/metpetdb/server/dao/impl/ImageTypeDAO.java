@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -38,8 +40,8 @@ public class ImageTypeDAO extends MpDbDAO<ImageType> {
 		throw new FunctionNotImplementedException();
 	}
 	
-	public Object[] allImageTypes() {
+	public Object[] allImageTypes() throws DAOException{
 		final Query q = namedQuery("ImageType.all/ImageType");
-		return	q.list().toArray();
+		return	((List<ImageType>)getResults(q)).toArray();
 	}
 }

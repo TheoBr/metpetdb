@@ -14,24 +14,24 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 
 public interface SampleService extends RemoteService {
-	Results<Sample> all(PaginationParameters parameters);
+	Results<Sample> all(PaginationParameters parameters) throws DAOException;
 
-	Results<Sample> allPublicSamples(final PaginationParameters p);
+	Results<Sample> allPublicSamples(final PaginationParameters p) throws DAOException;
 
-	Results<Sample> allSamplesForUser(PaginationParameters parameters, long id);
+	Results<Sample> allSamplesForUser(PaginationParameters parameters, long id) throws DAOException;
 
-	Results<Sample> projectSamples(final PaginationParameters p, long id);
+	Results<Sample> projectSamples(final PaginationParameters p, long id) throws DAOException;
 
 	Sample details(long id) throws DAOException;
 
 	Sample save(Sample sample) throws DAOException, ValidationException,
 			LoginRequiredException;
 	
-	Set<String> allCollectors();
+	Set<String> allCollectors() throws DAOException;
 	
-	Set<String> allCountries();
+	Set<String> allCountries() throws DAOException;
 	
-	List<Sample> allSamplesForUser(final long id);
+	List<Sample> allSamplesForUser(final long id) throws DAOException;
 
 	void delete(long id) throws DAOException, LoginRequiredException;
 	

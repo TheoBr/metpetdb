@@ -28,16 +28,16 @@ public class GridDAO extends MpDbDAO<Grid> {
 		if (inst.getId() > 0) {
 			final Query q = namedQuery("Grid.byId");
 			q.setLong("id", inst.getId());
-			if (q.uniqueResult() != null)
-				return (Grid) q.uniqueResult();
+			if (getResult(q) != null)
+				return (Grid) getResult(q);
 		}
 
 		// By Subsample Id
 		if (inst.getSubsample() != null && inst.getSubsample().getId() > 0) {
 			final Query q = namedQuery("Grid.bySubsampleId");
 			q.setParameter("id", inst.getSubsample().getId());
-			if (q.uniqueResult() != null)
-				return (Grid) q.uniqueResult();
+			if (getResult(q) != null)
+				return (Grid) getResult(q);
 		}
 
 		throw new GridNotFoundException();
@@ -50,8 +50,8 @@ public class GridDAO extends MpDbDAO<Grid> {
 		if (inst.getSubsample() != null && inst.getSubsample().getId() > 0) {
 			final Query q = namedQuery("Grid.bySubsampleId");
 			q.setParameter("id", inst.getSubsample().getId());
-			if (q.uniqueResult() != null) {
-				inst.setId(((Grid) q.uniqueResult()).getId());
+			if (getResult(q) != null) {
+				inst.setId(((Grid) getResult(q)).getId());
 			}
 		}
 

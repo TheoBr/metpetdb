@@ -17,7 +17,7 @@ import edu.rpi.metpetdb.client.paging.Results;
  */
 public interface ProjectService extends RemoteService {
 
-	Results<Project> all(PaginationParameters p, final long ownerId);
+	Results<Project> all(PaginationParameters p, final long ownerId)  throws DAOException;
 	/**
 	 * Get the data for a project.
 	 * 
@@ -29,7 +29,7 @@ public interface ProjectService extends RemoteService {
 	 */
 	Project details(int projectId) throws DAOException;
 
-	List<Project> all(final long userId);
+	List<Project> all(final long userId) throws DAOException;
 
 	/**
 	 * Create or update an existing project.
@@ -47,5 +47,5 @@ public interface ProjectService extends RemoteService {
 	Project saveProject(Project proj) throws LoginRequiredException,
 			ValidationException, DAOException;
 
-	Results<Sample> samplesFromProject(PaginationParameters parameters, long id);
+	Results<Sample> samplesFromProject(PaginationParameters parameters, long id)  throws DAOException;
 }

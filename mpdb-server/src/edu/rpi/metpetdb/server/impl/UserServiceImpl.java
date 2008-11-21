@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.security.auth.login.LoginException;
-
 import org.hibernate.exception.ConstraintViolationException;
 
 import edu.rpi.metpetdb.client.error.DAOException;
@@ -56,7 +54,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return (user);
 	}
 
-	public Set<String> allNames() {
+	public Set<String> allNames() throws DAOException {
 		final Object[] l = (new UserDAO(this.currentSession())).allNames();
 		final Set<String> options = new HashSet<String>();
 		for (int i = 0; i < l.length; i++) {
@@ -122,7 +120,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 		final User newUser = newbie.getUser();
 		if (!newUser.mIsNew())
-			throw new SecurityException("Cannot register non-new user.");
+			throw new GenericDAOException("Cannot register non-new user.");
 
 		final String pass = newbie.getNewPassword();
 		newUser.setEncryptedPassword(PasswordEncrypter.crypt(pass));
@@ -163,7 +161,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		final UserDAO uDAO = new UserDAO(this.currentSession());
 		final User User = uwp.getUser();
 		if (User.getId() != currentUser())
-			throw new SecurityException("Administrators are not supported!");
+			throw new GenericDAOException("Administrators are not supported!");
 
 		User u = new User();
 		u.setId(User.getId());
