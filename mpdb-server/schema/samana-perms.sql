@@ -35,6 +35,16 @@ alter table subsamples owner to metpetdb_dev;
 alter table uploaded_files owner to metpetdb_dev;
 alter table users owner to metpetdb_dev;
 alter table xray_image owner to metpetdb_dev;
+alter table sample_comments_archive owner to metpetdb_dev;
+alter table sample_metamorphic_grades_archive owner to metpetdb_dev;
+alter table sample_minerals_archive owner to metpetdb_dev;
+alter table sample_reference_archive owner to metpetdb_dev;
+alter table sample_regions_archive owner to metpetdb_dev;
+alter table samples_archive owner to metpetdb_dev;
+alter table chemical_analyses_archive  owner to metpetdb_dev;
+alter table chemical_analysis_elements_archive  owner to metpetdb_dev;
+alter table chemical_analysis_oxides_archive  owner to metpetdb_dev;
+alter table subsamples_archive owner to metpetdb_dev;
 
 grant all PRIVILEGES on admin_user_seq to metpetdb_dev; 
 grant all PRIVILEGES on chemical_analysis_elements_seq to metpetdb_dev; 
