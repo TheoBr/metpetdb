@@ -7,6 +7,8 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 /** Indicates the value is not a properly formatted SESAR number. */
 public class InvalidDateStringException extends ValidationException {
 	private static final long serialVersionUID = 1L;
+	
+	private String date;
 
 	public InvalidDateStringException() {
 	}
@@ -14,7 +16,10 @@ public class InvalidDateStringException extends ValidationException {
 		super(pc);
 	}
 
+	public InvalidDateStringException(String string) {
+		date = string;
+	}
 	public String format() {
-		return LocaleHandler.lc_text.errorDesc_InvalidDateString();
+		return LocaleHandler.lc_text.errorDesc_InvalidDateString() + ":" + date;
 	}
 }

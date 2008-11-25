@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.hibernate.HibernateException;
 
@@ -39,11 +40,11 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 		final BulkUploadResult results = new BulkUploadResult();
 		try {
 			if (save) {
-			currentSession()
-					.createSQLQuery(
-							"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
-					.setParameter("user_id", currentUser()).setParameter(
-							"hash", fileOnServer).executeUpdate();
+				currentSession()
+						.createSQLQuery(
+								"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
+						.setParameter("user_id", currentUser()).setParameter(
+								"hash", fileOnServer).executeUpdate();
 			}
 			final AnalysisParser ap = new AnalysisParser(new FileInputStream(
 					MpDbServlet.getFileUploadPath() + fileOnServer));
@@ -64,20 +65,27 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 			User u = new User();
 			u.setId(currentUser());
 			final Iterator<Integer> rows = analyses.keySet().iterator();
-			while(rows.hasNext()) {
+			final Map<Integer, MpDbException> existingErrors = ap.getErrors();
+			final Set<Integer> keys = existingErrors.keySet();
+			final Iterator<Integer> itr = keys.iterator();
+			while (itr.hasNext()) {
+				final Integer i = itr.next();
+				results.addError(i.intValue(), existingErrors.get(i));
+			}
+			while (rows.hasNext()) {
 				int row = rows.next();
 				final ChemicalAnalysis ca = analyses.get(row);
 				try {
 					// see if our subsample exists
 					if (ca.getSubsample() == null) {
 						results.addError(row, new PropertyRequiredException(
-						"Subsample"));
+								"Subsample"));
 						continue;
 					}
 					// see if our sample exists
 					if (ca.getSubsample().getSample() == null) {
 						results.addError(row, new PropertyRequiredException(
-						"Sample"));
+								"Sample"));
 						continue;
 					}
 					Sample s = ca.getSubsample().getSample();
@@ -127,8 +135,8 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 									} catch (DAOException e1) {
 										results.addError(row, e1);
 									}
-									subsamples.put(s.getAlias()
-											+ ss.getName(), ss);
+									subsamples.put(s.getAlias() + ss.getName(),
+											ss);
 									ca.setSubsample(ss);
 								}
 							}

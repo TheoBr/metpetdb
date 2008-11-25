@@ -1,32 +1,23 @@
 package edu.rpi.metpetdb.server.bulk.upload;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
-import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.validation.DateStringConstraint;
 
-public class SampleParser extends Parser {
+public class SampleParser extends Parser<Sample> {
 
 	private final Map<Integer, Sample> samples;
-	private final Map<Integer, ValidationException> errors = new HashMap<Integer, ValidationException>();
 
 	/**
 	 * TODO: make this a Set of objects.
@@ -102,8 +93,6 @@ public class SampleParser extends Parser {
 
 	private final static List<MethodAssociation<Sample>> methodAssociations = new ArrayList<MethodAssociation<Sample>>();
 
-	private static Collection<Mineral> minerals;
-
 	/**
 	 * 
 	 * @param is
@@ -111,15 +100,8 @@ public class SampleParser extends Parser {
 	 * @throws InvalidFormatException
 	 */
 	public SampleParser(final InputStream is) {
-		super();
+		super(is);
 		samples = new HashMap<Integer, Sample>();
-		try {
-			final POIFSFileSystem fs = new POIFSFileSystem(is);
-			final HSSFWorkbook wb = new HSSFWorkbook(fs);
-			sheet = wb.getSheetAt(0);
-		} catch (IOException e) {
-
-		}
 	}
 
 	static {
@@ -134,181 +116,50 @@ public class SampleParser extends Parser {
 		}
 	}
 
-	protected void parseHeader(final int rowindex) {
-		HSSFRow header = sheet.getRow(rowindex);
-		for (int i = 0; i < header.getLastCellNum(); ++i) {
-			// Convert header title to String
-			final HSSFCell cell = header.getCell(i);
-			final String text;
-			boolean done = false;
-
-			try {
-				text = cell.toString(); // getString();
-			} catch (final NullPointerException npe) {
-				// blank column
-				continue;
-			}
-			// System.out.println("Parsing header " + i + ": " + text);
-
-			// Determine method to be used for data in this column
-			for (MethodAssociation<Sample> sma : methodAssociations) {
-				if (sma.matches(text)) {
-					colMethods.put(new Integer(i), sma.getMethod());
-					colName.put(new Integer(i), sma.getName());
-					done = true;
+	protected void parseHeaderSpecialCase(final HSSFRow header,Integer cellNumber,
+			final String cellText) {
+		// If we don't have an explicit match for the header, it could be a
+		// mineral, check for that
+		try {
+			for (Mineral m : minerals) {
+				if (m.getName().equalsIgnoreCase(cellText)) {
+					colMethods.put(new Integer(cellNumber),
+							Sample.class.getMethod("addMineral", Mineral.class,
+									Float.class));
+					colObjects.put(new Integer(cellNumber), getRealMineral(m));
+					colName.put(new Integer(cellNumber), "Sample_minerals");
 					break;
 				}
 			}
-
-			if (done)
-				continue;
-
-			// If we don't have an explicit match for the header, it could be a
-			// mineral, check for that
-			try {
-				for (Mineral m : minerals) {
-					if (m.getName().equalsIgnoreCase(text)) {
-						colMethods.put(new Integer(i), Sample.class.getMethod(
-								"addMineral", Mineral.class, Float.class));
-						colObjects.put(new Integer(i), getRealMineral(m));
-						colName.put(new Integer(i), "Sample_minerals");
-						done = true;
-						break;
-					}
-				}
-			} catch (NoSuchMethodException e) {
-				throw new IllegalStateException(
-						"Programming Error -- Invalid Sample Method");
-			}
+		} catch (NoSuchMethodException e) {
+			throw new IllegalStateException(
+					"Programming Error -- Invalid Sample Method");
 		}
 	}
-
-	/**
-	 * Replaces the alternate minerals with their correct counterparts
-	 * 
-	 * @param alternate
-	 * @return
-	 */
-	private Mineral getRealMineral(final Mineral alternate) {
-		if (alternate.getId() == alternate.getRealMineralId())
-			return alternate;
-		final int realMineralId = alternate.getRealMineralId();
-		for (Mineral m : minerals) {
-			if (m.getId() == realMineralId)
-				return m;
-		}
-		return alternate;
-	}
-
-	/**
-	 * 
-	 * @param row
-	 * 		the row to parse
-	 * @throws InvalidFormatException
-	 * 		if the row isn't of the format designated by the headers
-	 */
-	protected void parseRow(final int rowindex) {
-		final HSSFRow row = sheet.getRow(rowindex);
-
-		if (row == null) {
-			return;
-		}
-
-		final Sample s = new Sample();
-		boolean sawDataInRow = false;
-
-		for (Integer i = 0; i <= row.getLastCellNum(); ++i) {
-			final HSSFCell cell = row.getCell(i.intValue());
-			try {
-				// Get the method we'll be using to parse this particular cell
-				final Method storeMethod = colMethods.get(i);
-
-				if (storeMethod == null)
-					continue;
-
-				// System.out.println("\t Parsing Column " + i + ": "
-				// + storeMethod.getName());
-
-				// If this has an object then it isn't a normal header, handle
-				// accordingly
-				if (colObjects.get(i) != null) {
-					final Object o = colObjects.get(i);
-
-					// Created for Mineral Processing:
-					// * If cell is empty, keep moving
-					// * If there is a number, then that is the amount
-					// * Anything else is taken as an "unknown quantity"
-					if (cell.toString().length() > 0) {
-						try {
-							final Float data = Float
-									.parseFloat(cell.toString());
-							storeMethod.invoke(s, o, data);
-						} catch (NumberFormatException e) {
-							storeMethod.invoke(s, o, new Float(0));
-						}
-					}
-					continue;
-				}
-
-				// Determine what class the method wants the content of the cell
-				// to be so it can parse it
-				final Class<?> dataType = storeMethod.getParameterTypes()[0];
-
-				if (handleData(dataType, storeMethod, cell, s)) {
-					sawDataInRow = true;
-				} else {
-					if (dataType == Timestamp.class) {
-						try {
-							final Date data = cell.getDateCellValue();
-							s.setCollectionDate(new Timestamp(data.getTime()));
-							s.setDatePrecision((short) 1);
-							// storeMethod.invoke(s, new Timestamp(data.getTime(
-							// )));
-						} catch (final IllegalStateException nfe) {
-							// System.out.println("parsing date");
-							final String data = cell.toString();
-							try {
-								(new DateStringConstraint())
-										.validateValue(data);
-								parseDate(s, data);
-								sawDataInRow = true;
-							} catch (final ValidationException ife) {
-								errors
-										.put(new Integer(samples.size() + 2),
-												ife);
-							}
-						}
-					}
-				}
-			} catch (final NullPointerException npe) {
-				// empty cell
-				continue;
-			} catch (final InvocationTargetException ie) {
-				// this indicates a bug.
-				ie.getTargetException().printStackTrace();
-				// ie.printStackTrace();
-				// throw new IllegalStateException(ie.getMessage());
-			} catch (final IllegalAccessException iae) {
-				// I believe this is when a method is private and we don't have
-				// access. It should never get here.
-				iae.printStackTrace();
-				throw new IllegalStateException(iae.getMessage());
-			}
-		}
-
-		if (sawDataInRow) {
-			samples.put(rowindex + 1, s);
-		}
-	}
+	
 	public Map<Integer, Sample> getSamples() {
 		return samples;
 	}
-
-	public Map<Integer, ValidationException> getErrors() {
-		return errors;
+	@Override
+	protected List<MethodAssociation<Sample>> getMethodAssociations() {
+		return methodAssociations;
 	}
 
-	public static void setMinerals(final Collection<Mineral> minerals) {
-		SampleParser.minerals = minerals;
+	@Override
+	protected void addObject(int index, Sample object) {
+		samples.put(index, object);
+	}
+
+	@Override
+	protected Sample getNewObject() {
+		return new Sample();
+	}
+	@Override
+	protected boolean parseColumnSpecialCase(HSSFRow row, Integer cellNumber,
+			String cellText, Class<?> dataType, ChemicalAnalysis currentObject)
+			throws IllegalArgumentException, IllegalAccessException,
+			InvocationTargetException {
+		//samples don't have any special cases
+		return true;
 	}
 }

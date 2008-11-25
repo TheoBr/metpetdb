@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -148,7 +149,14 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 			final SampleDAO sDAO = new SampleDAO(this.currentSession());
 			final ImageDAO dao = new ImageDAO(this.currentSession());
 			final Iterator<Integer> imgRows = images.keySet().iterator();
-			while(imgRows.hasNext()) {
+			final Map<Integer, MpDbException> existingErrors = ip.getErrors();
+			final Set<Integer> keys = existingErrors.keySet();
+			final Iterator<Integer> itr = keys.iterator();
+			while (itr.hasNext()) {
+				final Integer i = itr.next();
+				results.addError(i.intValue(), existingErrors.get(i));
+			}
+			while (imgRows.hasNext()) {
 				final int row = imgRows.next();
 				final Image img = images.get(row);
 				// Confirm the filename is in the zip
@@ -247,7 +255,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 			}
 
 			final Iterator<Integer> iogRows = imagesOnGrid.keySet().iterator();
-			while(iogRows.hasNext()) {
+			while (iogRows.hasNext()) {
 				final int row = iogRows.next();
 				final ImageOnGrid iog = imagesOnGrid.get(row);
 				Image img = iog.getImage();

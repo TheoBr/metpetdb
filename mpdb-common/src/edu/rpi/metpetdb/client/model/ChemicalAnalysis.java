@@ -16,11 +16,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.interfaces.HasDate;
 import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
+import edu.rpi.metpetdb.client.model.interfaces.HasSample;
 import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
 import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 
 @Indexed
-public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, HasOwner, PublicData {
+public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, HasOwner, PublicData, HasSample {
 	private static final long serialVersionUID = 1L;
 
 	@DocumentId
@@ -346,5 +347,18 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 
 	public void setOwner(final User u) {
 		owner = u;
+	}
+
+	public Sample getSample() {
+		if (subsample != null)
+			return subsample.getSample();
+		else
+			return null;
+	}
+
+	public void setSample(Sample sample) {
+		if (subsample == null)
+			subsample = new Subsample();
+		subsample.setSample(sample);
 	}
 }

@@ -5,9 +5,10 @@ import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 
+import edu.rpi.metpetdb.client.model.interfaces.HasSample;
 import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
 
-public class Image extends MObject implements HasSubsample {
+public class Image extends MObject implements HasSubsample, HasSample {
 	private static final long serialVersionUID = 1L;
 
 	private long id;

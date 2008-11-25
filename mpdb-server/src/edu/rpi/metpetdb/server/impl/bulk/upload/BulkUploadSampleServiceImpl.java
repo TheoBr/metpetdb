@@ -12,7 +12,6 @@ import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
-import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.BulkUploadResult;
 import edu.rpi.metpetdb.client.model.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.model.Sample;
@@ -42,7 +41,7 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 			sp.parse();
 			final Map<Integer, Sample> samples = sp.getSamples();
 			final SampleDAO dao = new SampleDAO(this.currentSession());
-			final Map<Integer, ValidationException> existingErrors = sp
+			final Map<Integer, MpDbException> existingErrors = sp
 					.getErrors();
 			final Set<Integer> keys = existingErrors.keySet();
 			final Iterator<Integer> itr = keys.iterator();
