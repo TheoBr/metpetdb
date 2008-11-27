@@ -176,9 +176,10 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 				if (temp.elementOrOxide instanceof Oxide){
 					try{
 						SearchOxide o = new SearchOxide();
-						o.setLowerBound(Float.valueOf(temp.lessThan.getText()));
-						o.setUpperBound(Float.valueOf(temp.greaterThan.getText()));
-						o.setSpecies(((Oxide)temp.elementOrOxide).getSpecies());	
+						o.setValues(((Oxide)temp.elementOrOxide).getSpecies(),
+								Float.valueOf(temp.lessThan.getText()), 
+								Float.valueOf(temp.greaterThan.getText()),
+								temp.unit.getValue(temp.unit.getSelectedIndex()));	
 						Oxides.add(o);
 					}
 					catch (Exception e){
@@ -195,9 +196,10 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 				if (temp.elementOrOxide instanceof Oxide){
 					try{
 						SearchElement e = new SearchElement();
-						e.setLowerBound(Float.valueOf(temp.lessThan.getText()));
-						e.setUpperBound(Float.valueOf(temp.greaterThan.getText()));
-						e.setElementSymbol(((Element)temp.elementOrOxide).getSymbol());	
+						e.setValues(((Element)temp.elementOrOxide).getSymbol(),
+								Float.valueOf(temp.lessThan.getText()), 
+								Float.valueOf(temp.greaterThan.getText()),
+								temp.unit.getValue(temp.unit.getSelectedIndex()));	
 						Elements.add(e);
 					}
 					catch (Exception e){

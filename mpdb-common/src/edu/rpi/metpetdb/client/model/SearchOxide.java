@@ -39,4 +39,17 @@ public class SearchOxide implements IsSerializable {
 	public float getUpperBound() {
 		return upperBound;
 	}
+	
+	public void setValues(final String species, final float lowerBound,
+			final float upperBound, final String measurementUnit){
+		this.species = species;
+		float unitMod = 1;
+		if (measurementUnit.equalsIgnoreCase("% wt")){
+			unitMod = 1;
+		} else if (measurementUnit.equalsIgnoreCase("ppm")){
+			unitMod = 10000;
+		}
+		this.lowerBound = lowerBound * unitMod;
+		this.upperBound = upperBound * unitMod;
+	}
 }

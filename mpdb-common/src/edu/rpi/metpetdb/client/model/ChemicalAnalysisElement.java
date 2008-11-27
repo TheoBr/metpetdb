@@ -126,6 +126,29 @@ public class ChemicalAnalysisElement extends MObject {
 				+ amount.intValue() : element.hashCode();
 		// return mineral.hashCode();
 	}
+	
+	public void setValues(final Element e, final float amount, float precision, 
+			final String measurementUnit, final String precisionUnit){
+		element = e;
+		this.measurementUnit = measurementUnit;
+		this.precisionUnit = precisionUnit;
+		this.amount = amount;
+		float unitMod = 1;
+		if (measurementUnit.equalsIgnoreCase("% wt")){
+			unitMod = 1;
+		} else if (measurementUnit.equalsIgnoreCase("ppm")){
+			unitMod = 10000;
+		}
+		if (precisionUnit.equalsIgnoreCase("abs")){
+			this.maxAmount = (amount + precision) * unitMod;
+			this.minAmount = (amount - precision) * unitMod;
+		} else if (precisionUnit.equalsIgnoreCase("rel")){
+			if (precision == 0)
+				precision = .2F;
+			this.maxAmount = (amount * (1+precision)) * unitMod;
+			this.minAmount = (amount * (1-precision)) * unitMod;
+		}
+	}
 
 	@Override
 	public boolean mIsNew() {

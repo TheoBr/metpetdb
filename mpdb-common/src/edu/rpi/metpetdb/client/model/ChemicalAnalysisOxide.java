@@ -133,6 +133,27 @@ public class ChemicalAnalysisOxide extends MObject {
 				+ amount.intValue() : oxide.hashCode();
 		// return mineral.hashCode();
 	}
+	
+	public void setValues(final Oxide o, final float amount, final float precision, 
+			final String measurementUnit, final String precisionUnit){
+		oxide = o;
+		this.measurementUnit = measurementUnit;
+		this.precisionUnit = precisionUnit;
+		this.amount = amount;
+		float unitMod = 1;
+		if (measurementUnit.equalsIgnoreCase("% wt")){
+			unitMod = 1;
+		} else if (measurementUnit.equalsIgnoreCase("ppm")){
+			unitMod = 10000;
+		}
+		if (precisionUnit.equalsIgnoreCase("abs")){
+			this.maxAmount = (amount + precision) * unitMod;
+			this.minAmount = (amount - precision) * unitMod;
+		} else if (precisionUnit.equalsIgnoreCase("rel")){
+			this.maxAmount = (amount + precision) * unitMod;
+			this.minAmount = (amount - precision) * unitMod;
+		}
+	}
 
 	@Override
 	public boolean mIsNew() {
