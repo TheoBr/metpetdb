@@ -43,12 +43,7 @@ public class SearchElement implements IsSerializable {
 	public void setValues(final String elementSymbol, final float lowerBound,
 			final float upperBound, final String measurementUnit){
 		this.elementSymbol = elementSymbol;
-		float unitMod = 1;
-		if (measurementUnit.equalsIgnoreCase("% wt")){
-			unitMod = 1;
-		} else if (measurementUnit.equalsIgnoreCase("ppm")){
-			unitMod = 10000;
-		}
+		float unitMod = ChemicalAnalysis.getUnitOffset(measurementUnit);
 		this.lowerBound = lowerBound * unitMod;
 		this.upperBound = upperBound * unitMod;
 	}

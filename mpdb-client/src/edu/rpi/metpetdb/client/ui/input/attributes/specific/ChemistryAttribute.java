@@ -139,6 +139,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 
 		final Iterator<ChemicalAnalysisElement> itr = ca.getElements()
 				.iterator();
+		ArrayList units = new ArrayList(ChemicalAnalysis.getMeasurementUnits());
 		while (itr.hasNext()) {
 			final ChemicalAnalysisElement element = (ChemicalAnalysisElement) itr
 					.next();
@@ -153,10 +154,8 @@ public class ChemistryAttribute extends GenericAttribute implements
 				((ListBox) ft.getWidget(rows - 1, 5)).setSelectedIndex(0);
 			else
 				((ListBox) ft.getWidget(rows - 1, 5)).setSelectedIndex(1);
-			if (element.getMeasurementUnit().equalsIgnoreCase("% wt"))
-				((ListBox) ft.getWidget(rows - 1, 2)).setSelectedIndex(0);
-			else
-				((ListBox) ft.getWidget(rows - 1, 2)).setSelectedIndex(1);
+			((ListBox) ft.getWidget(rows - 1, 2)).setSelectedIndex(
+					units.indexOf(element.getMeasurementUnit().toLowerCase()));
 		}
 
 		final Iterator<ChemicalAnalysisOxide> itr2 = ca.getOxides().iterator();
@@ -174,10 +173,8 @@ public class ChemistryAttribute extends GenericAttribute implements
 				((ListBox) ft.getWidget(rows - 1, 5)).setSelectedIndex(0);
 			else
 				((ListBox) ft.getWidget(rows - 1, 5)).setSelectedIndex(1);
-			if (oxide.getMeasurementUnit().equalsIgnoreCase("% wt"))
-				((ListBox) ft.getWidget(rows - 1, 2)).setSelectedIndex(0);
-			else
-				((ListBox) ft.getWidget(rows - 1, 2)).setSelectedIndex(1);
+			((ListBox) ft.getWidget(rows - 1, 2)).setSelectedIndex(
+					units.indexOf(oxide.getMeasurementUnit().toLowerCase()));
 		}
 
 		return new Widget[] {
@@ -365,8 +362,9 @@ public class ChemistryAttribute extends GenericAttribute implements
 		listbox_precison.addItem("Rel");
 
 		ListBox listbox_measurement = new ListBox();
-		listbox_measurement.addItem("% wt");
-		listbox_measurement.addItem("ppm");
+		final Set<String> measurementUnits = ChemicalAnalysis.getMeasurementUnits();
+		for (String s : measurementUnits)
+			listbox_measurement.addItem(s);
 		
 		ChemicalAnalysisElement tryme = new ChemicalAnalysisElement();
 
@@ -417,7 +415,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 	 */
 	private void delete_row(final Widget sender) {
 		for (int i = 2; i < rows; i++) {
-			if (sender == ft.getWidget(i, 5)) {
+			if (sender == ft.getWidget(i, 6)) {
 				ft.removeRow(i);
 				species_type.remove(i - 2);
 				element_or_oxide_id.remove(i - 2);

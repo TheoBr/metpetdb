@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -18,6 +19,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Element;
 import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.SearchElement;
@@ -25,7 +27,6 @@ import edu.rpi.metpetdb.client.model.SearchOxide;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.ui.JS;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 
 public class SearchChemistryAttribute extends SearchGenericAttribute {
@@ -43,8 +44,9 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 		
 		public RowContainer(final Object elementOrOxide){
 			this.elementOrOxide = elementOrOxide;
-			unit.addItem("% wt");
-			unit.addItem("ppm");
+			final Set<String> measurementUnits = ChemicalAnalysis.getMeasurementUnits();
+			for (String s : measurementUnits)
+				unit.addItem(s);
 			
 			if (elementOrOxide instanceof Element){
 				symbol = new HTML(((Element)elementOrOxide).getSymbol());

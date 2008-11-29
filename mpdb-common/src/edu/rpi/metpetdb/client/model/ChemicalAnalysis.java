@@ -1,7 +1,9 @@
 package edu.rpi.metpetdb.client.model;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.search.annotations.ContainedIn;
@@ -62,6 +64,11 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 	private transient float percentX;
 	private transient float percentY;
 	private transient boolean isLocked;
+	
+	private static Map<String, Float> measurementUnits = new HashMap<String , Float>() {{
+	    put("% wt", 1F);
+	    put("ppm", 10000F);
+	}};
 
 	public int getId() {
 		return id;
@@ -360,5 +367,13 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 		if (subsample == null)
 			subsample = new Subsample();
 		subsample.setSample(sample);
+	}
+	
+	public static Set<String> getMeasurementUnits(){
+		return measurementUnits.keySet();
+	}
+	
+	public static float getUnitOffset(final String measurementUnit){
+		return measurementUnits.get(measurementUnit.toLowerCase());
 	}
 }

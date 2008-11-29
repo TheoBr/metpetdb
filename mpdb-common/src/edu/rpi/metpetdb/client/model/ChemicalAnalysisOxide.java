@@ -140,12 +140,8 @@ public class ChemicalAnalysisOxide extends MObject {
 		this.measurementUnit = measurementUnit;
 		this.precisionUnit = precisionUnit;
 		this.amount = amount;
-		float unitMod = 1;
-		if (measurementUnit.equalsIgnoreCase("% wt")){
-			unitMod = 1;
-		} else if (measurementUnit.equalsIgnoreCase("ppm")){
-			unitMod = 10000;
-		}
+		this.precision = precision;
+		float unitMod = ChemicalAnalysis.getUnitOffset(measurementUnit);
 		if (precisionUnit.equalsIgnoreCase("abs")){
 			this.maxAmount = (amount + precision) * unitMod;
 			this.minAmount = (amount - precision) * unitMod;
