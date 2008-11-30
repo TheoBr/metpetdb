@@ -16,6 +16,9 @@ public class CSS {
 	public static final String LOADINGMESSAGE_ID = "loadingmessage";
 	public static final String BREADCRUMBS_ID = "breadcrumbs";
 	public static final String FOOTER_ID = "nsf";
+	public static final String USERNAME_ID = "u";
+	public static final String PASSWORD_ID = "pw";
+	public static final String LOGIN_SUBMIT_ID = "submit";
 
 	/* ---------------- utility ---------------- */
 	public static final String HIDE = "hide";

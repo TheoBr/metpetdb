@@ -1,14 +1,16 @@
 package edu.rpi.metpetdb.client.ui.dialogs;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.KeyboardListener;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabListener;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
@@ -26,6 +28,7 @@ import edu.rpi.metpetdb.client.ui.input.Submit;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.PasswordAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.LoginTextAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MTabPanel;
@@ -34,9 +37,11 @@ import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel.NoticeType;
 
 public class LoginDialog extends MDialogBox implements ClickListener,
 		KeyboardListener, TabListener {
+	
+	private static PasswordAttribute passwordAtt = new PasswordAttribute(MpDb.doc.StartSessionRequest_password, CSS.PASSWORD_ID);
+	private static LoginTextAttribute usernameAtt = new LoginTextAttribute(MpDb.doc.StartSessionRequest_emailAddress, CSS.USERNAME_ID);
 	private static final GenericAttribute[] mainAttributes = {
-			new TextAttribute(MpDb.doc.StartSessionRequest_emailAddress),
-			new PasswordAttribute(MpDb.doc.StartSessionRequest_password),
+			usernameAtt,passwordAtt
 	};
 	private static final GenericAttribute[] emailAttributes = {
 		new TextAttribute(MpDb.doc.StartSessionRequest_emailAddress)
@@ -56,7 +61,7 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 	private final MNoticePanel emailNotice = new MNoticePanel();
 	private final MNoticePanel loginNotice = new MNoticePanel();
 	private final MText forgotInfo = new MText("Forgot your password? We'll send you a link to reset it.", "p");
-
+	
 	public LoginDialog(final ServerOp<?> r) {
 		continuation = r;
 		ssr = new StartSessionRequest();
@@ -189,9 +194,22 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 			}
 			public void onSuccess(final User result) {
 				MpDb.setCurrentUser((User) result);
+				try {
+					final PasswordTextBox passwordTemp = PasswordTextBox.wrap(Document.get().getElementById(CSS.PASSWORD_ID));
+					final TextBox usernameTemp = TextBox.wrap(Document.get().getElementById(CSS.USERNAME_ID));
+					
+					passwordTemp.setText(passwordAtt.getText());
+					usernameTemp.setText(usernameAtt.getText());
+				
+					final Button submit = Button.wrap(Document.get().getElementById(CSS.LOGIN_SUBMIT_ID));
+					submit.click();
+				} catch (Exception e) {
+					
+				}
 				hide();
 				if (continuation != null)
 					continuation.begin();
+				
 			}
 		}.begin();
 	}
