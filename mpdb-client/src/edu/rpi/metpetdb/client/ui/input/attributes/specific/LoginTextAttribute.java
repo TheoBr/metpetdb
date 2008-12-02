@@ -43,7 +43,7 @@ public class LoginTextAttribute extends TextAttribute{
 	@Override
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		b = new TextBox();
-		if (!elementId.isEmpty()){
+		if (!elementId.equals("")){
 			try {
 				final TextBox temp = TextBox.wrap(Document.get().getElementById(elementId));
 				b.setText(temp.getText());

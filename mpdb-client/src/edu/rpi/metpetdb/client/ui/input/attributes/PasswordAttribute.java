@@ -36,7 +36,7 @@ public class PasswordAttribute extends GenericAttribute {
 
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		b = new PasswordTextBox();
-		if (!elementId.isEmpty()){
+		if (!elementId.equals("")){
 			try {
 				final PasswordTextBox temp = PasswordTextBox.wrap(Document.get().getElementById(elementId));
 				b.setText(temp.getText());
