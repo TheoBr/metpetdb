@@ -1,0 +1,22 @@
+<module>
+	
+	<inherits name="com.google.gwt.user.User"/>
+	<!--  <inherits name="rocket.User" />-->
+	<inherits name="com.google.gwt.i18n.I18N"/>
+	<inherits name="edu.rpi.metpetdb.java_emu.Emulation"/>
+	<inherits name='net.sf.hibernate4gwt.Hibernate4Gwt'/>
+	<inherits name='com.google.gwt.widgetideas.WidgetIdeas'/>
+	<inherits name="com.google.gwt.maps.GoogleMaps" />
+	<inherits name="com.google.gwt.xml.XML"/> 
+	<inherits name ="com.google.gwt.http.HTTP"/>
+	
+	
+	<entry-point class='edu.rpi.metpetdb.client.admin.ui.MetPetDBAdminApplication'/>
+
+	<source path="client" />
+	
+	<servlet path="/adminUser.svc" class="edu.rpi.metpetdb.server.impl.admin.AdminUserServiceImpl"/>
+	<servlet path="/user.svc" class="edu.rpi.metpetdb.server.impl.UserServiceImpl"/>
+	<servlet path="/mpdbGeneric.svc" class="edu.rpi.metpetdb.server.impl.MpDbGenericServiceImpl"/>
+	
+</module>

@@ -1,0 +1,109 @@
+<project name="mpdb-admin" basedir="." default="mpdb-admin-compile-html">
+
+	<property file="../mpdb-common/build.properties" />
+	<property name="build" location="${basedir}/build" />
+	<property name="ctx_lib" location="${basedir}/../mpdb-common/lib" />
+	<property name="app_name" value="edu.rpi.metpetdb.MetPetDBAdminApplication" />
+
+	<!-- Library files for the classpath -->
+	<path id="libs">
+		<fileset dir="${ctx_lib}" includes="*.jar" />
+		<pathelement location="${gwt_home}/gwt-user.jar" />
+		<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
+	</path>
+
+	<!-- Library files for compile-html -->
+	<path id="gwt-libs">
+		<fileset dir="${ctx_lib}" includes="*.jar" />
+		<pathelement location="${gwt_home}/gwt-user.jar" />
+		<pathelement location="../mpdb-common/src" />
+		<pathelement location="../mpdb-common/bin" />
+		<pathelement location="../mpdb-client/src" />
+		<pathelement location="../mpdb-cient/bin" />
+	</path>
+
+	<target name="mpdb-admin-compile-java" description="Compiles the mpdb-admin project">
+		<mkdir dir="${basedir}/bin" />
+		<javac destdir="${basedir}/bin" srcdir="${basedir}/src" classpathref="gwt-libs" source="1.5" debug="false" optimize="true" excludes="**/java_emu/**/*.java" />
+
+		<copy todir="${basedir}/bin" includeemptydirs="no">
+			<fileset dir="${basedir}/src" excludes="**/*.java" />
+		</copy>
+	</target>
+
+	<target name="mpdb-admin-compile-html" depends="mpdb-admin-compile-java" description="Executes the GWT compiler to convert java code to javascript">
+		<java fork="true" classname="com.google.gwt.dev.GWTCompiler" taskname="gwtc" maxmemory="256m">
+			<classpath>
+				<pathelement location="${basedir}/src" />
+				<pathelement location="${basedir}/bin" />
+				<path refid="gwt-libs" />
+				<path>
+					<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
+				</path>
+			</classpath>
+			<arg value="-out" />
+			<arg value="${build}" />
+			<arg value="${app_name}" />
+			<arg value="-style" />
+			<arg value="PRETTY" />
+		</java>
+	</target>
+
+	<target name="compile" depends="mpdb-admin-compile-html" />
+
+	<target name="clean">
+		<delete dir="${build}" />
+		<delete dir="${basedir}/bin" />
+		<delete dir="${basedir}/.gwt-cache" />
+	</target>
+
+	<target name="eclipse" description="Sets up the Eclipse project mpdb-client">
+		<property name="name.e" value="MetPetDB" />
+
+		<pathconvert property="libs.e" dirsep="/" pathsep="&quot;/&gt;&#10;&#09;&lt;classpathentry kind=&quot;lib&quot; path=&quot;">
+			<path refid="libs" />
+			<map from="${basedir}/" to="" />
+		</pathconvert>
+
+		<pathconvert property="gwt.e" dirsep="/" pathsep=":">
+			<path>
+				<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
+			</path>
+		</pathconvert>
+
+		<echo file=".classpath">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;classpath&gt;
+&lt;classpathentry kind="src" path="src" excluding="**/java_emu/**/*.java"/&gt;
+&lt;classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/&gt;
+&lt;classpathentry kind=&quot;lib&quot; path=&quot;${libs.e}&quot;/&gt;
+&lt;classpathentry kind="output" path="bin"/&gt;
+&lt;classpathentry combineaccessrules="false" kind="src" path="/mpdb-common"/&gt;
+&lt;classpathentry combineaccessrules="false" kind="src" path="/mpdb-client"/&gt;
+&lt;/classpath&gt;
+	</echo>
+		
+		<echo file="mpdb-admin.launch"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/mpdb-admin"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="4"/>
+</listAttribute>
+<listAttribute key="org.eclipse.jdt.launching.CLASSPATH">
+<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#10;&lt;runtimeClasspathEntry containerPath=&quot;org.eclipse.jdt.launching.JRE_CONTAINER&quot; javaProject=&quot;mpdb-admin&quot; path=&quot;1&quot; type=&quot;4&quot;/&gt;&#10;"/>
+<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/mpdb-client/src&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#10;"/>
+<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/mpdb-common/src&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#10;"/>
+<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/mpdb-admin/src&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#10;"/>
+<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#10;&lt;runtimeClasspathEntry id=&quot;org.eclipse.jdt.launching.classpathentry.defaultClasspath&quot;&gt;&#10;&lt;memento exportedEntriesOnly=&quot;false&quot; project=&quot;mpdb-admin&quot;/&gt;&#10;&lt;/runtimeClasspathEntry&gt;&#10;"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.GWTShell"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-out ../mpdb-server http://localhost:8888/edu.rpi.metpetdb.MetPetDBAdminApplication/MetPetDBAdminApplication.html -noserver -style PRETTY"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="mpdb-admin"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx256m"/>
+</launchConfiguration>
+]]>
+		</echo>
+	</target>
+</project>
