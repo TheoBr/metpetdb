@@ -29,7 +29,7 @@
       <one-to-many class="Image" />
     </set>
     
-    <set name="chemicalAnalyses" inverse="true" table="chemical_analyses" cascade="all"> 
+    <set name="chemicalAnalyses" inverse="true" table="chemical_analyses" cascade="all-delete-orphan"> 
       <key column="subsample_id" />
       <one-to-many class="ChemicalAnalysis" />
     </set>

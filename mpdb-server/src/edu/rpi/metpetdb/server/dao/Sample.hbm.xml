@@ -36,13 +36,13 @@
     <many-to-one name="owner" column="user_id" lazy="false" />
     <many-to-one name="rockType" column="rock_type_id" lazy="false" />
 
-	<set name="subsamples" inverse="true" cascade="all" >
+	<set name="subsamples" inverse="true" cascade="all-delete-orphan" >
       <key column="sample_id"/>
       <one-to-many class="Subsample" />
     </set>
     
-    <set name="comments" table="sample_comments" cascade="all,delete-orphan" lazy="false" >
-      <key column="sample_id" />
+    <set name="comments" table="sample_comments" cascade="all-delete-orphan" lazy="false" >
+      <key column="sample_id" not-null="true" />
       <one-to-many class="SampleComment"/>
     </set>
     
