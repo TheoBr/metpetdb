@@ -11,4 +11,5 @@ import edu.rpi.metpetdb.client.model.User;
 public interface SearchServiceAsync {
 	void search(final SearchSample searchSamp, final User userSearching,
 			AsyncCallback<List<Sample>> ac);
+	void rebuildSearchIndex(AsyncCallback<Void> ac);
 }

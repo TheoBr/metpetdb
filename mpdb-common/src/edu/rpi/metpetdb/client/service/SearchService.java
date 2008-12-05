@@ -11,4 +11,6 @@ import edu.rpi.metpetdb.client.model.User;
 
 public interface SearchService extends RemoteService {
 	List<Sample> search(final SearchSample searchSamp, User userSearching) throws NoPermissionsException;
+	
+	void rebuildSearchIndex() throws NoPermissionsException;
 }

@@ -12,6 +12,7 @@ import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
 import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.security.permissions.principals.AdminPrincipal;
 import edu.rpi.metpetdb.server.security.permissions.principals.OwnerPrincipal;
 
 public class PermissionInterceptor extends EmptyInterceptor {
@@ -55,15 +56,19 @@ public class PermissionInterceptor extends EmptyInterceptor {
 			String[] propertyNames, boolean saving) {
 		if (entity instanceof HasOwner) {
 			if (MpDbServlet.currentReq() != null) {
-				final Collection<Principal> principals = MpDbServlet.currentReq().principals;
+				final Collection<Principal> principals = MpDbServlet
+						.currentReq().principals;
 				if (principals == null) {
-					// throw new CallbackException(
-					// "Invalid Subject, Please Log back in");
-					// TODO remove this
+					throw new CallbackException(
+							"Invalid Subject, Please Log back in");
+				}
+				if (principals.contains(new AdminPrincipal())) {
+					// let admins do whatever
 					return;
 				}
-				if (!principals.contains(
-						new OwnerPrincipal(getOwnerId(propertyNames, state))) && !isPublic(propertyNames, state)) {
+				if (!principals.contains(new OwnerPrincipal(getOwnerId(
+						propertyNames, state)))
+						&& !isPublic(propertyNames, state)) {
 					throw new CallbackException(
 							"Cannot load objects you don't own, we don't like to share.");
 				}

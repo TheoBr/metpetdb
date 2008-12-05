@@ -19,7 +19,7 @@ import edu.rpi.metpetdb.server.DataStore;
 public class RegenerateIndices {
 
 	@SuppressWarnings("unchecked")
-	public static void main(String args[]) {
+	public static void regenerate() {
 		Session session = DataStore.open();
 		FullTextSession fullTextSession = Search.createFullTextSession(session);
 		Transaction tx = fullTextSession.beginTransaction();
@@ -30,5 +30,10 @@ public class RegenerateIndices {
 		}
 		tx.commit(); // index are written at commit time
 		session.close();
+	}
+
+	
+	public static void main(String args[]) {
+		regenerate();
 	}
 }

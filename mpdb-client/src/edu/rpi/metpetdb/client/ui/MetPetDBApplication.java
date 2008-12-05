@@ -324,6 +324,21 @@ public class MetPetDBApplication implements EntryPoint {
 				}.begin();
 			}
 		});
+		dev.addItem("Regenerate Search Indecies", new Command() {
+
+			public void execute() {
+				new ServerOp<Void>() {
+					public void begin() {
+						MpDb.search_svc.rebuildSearchIndex(this);
+					}
+					
+					public void onSuccess(Void result) {
+						Window.alert("done regenerating indicies");
+					}
+				}.begin();
+			}
+			
+		});
 		dev.addItem("JavaDocs", new Command() {
 			public void execute() {
 				Window.open(MpDb.JAVADOC_URL, "mpdb_javadoc", "");

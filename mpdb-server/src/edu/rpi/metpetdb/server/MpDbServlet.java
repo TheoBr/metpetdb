@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 
@@ -47,6 +48,7 @@ import edu.rpi.metpetdb.server.dao.impl.MineralDAO;
 import edu.rpi.metpetdb.server.dao.impl.OxideDAO;
 import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
 import edu.rpi.metpetdb.server.security.SessionEncrypter;
+import edu.rpi.metpetdb.server.security.permissions.principals.AdminPrincipal;
 
 /**
  * Basic remote service servlet for MpDp.
@@ -184,9 +186,10 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		}
 		final boolean enabled = (Integer.parseInt(fileProps
 				.getProperty("enabled")) == 1 ? true : false);
-		if (enabled)
+		if (enabled) {
 			MpDbServlet.autoLoginId = Integer.parseInt(fileProps
 					.getProperty("userid"));
+		}
 	}
 
 	/**
@@ -231,6 +234,11 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	protected int currentUser() throws LoginRequiredException {
 		if (autoLoginId != -1) {
 			System.out.println("using autologin id of " + autoLoginId);
+			//autologins get full privileges
+			final Collection<Principal> principals = new HashSet<Principal>();
+			principals.add(new AdminPrincipal());
+			getThreadLocalRequest().getSession().setAttribute("principals",
+					principals);
 			return autoLoginId;
 		}
 		final Req r = currentReq();

@@ -25,6 +25,7 @@ import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
+import edu.rpi.metpetdb.server.security.permissions.principals.AdminPrincipal;
 import edu.rpi.metpetdb.server.security.permissions.principals.OwnerPrincipal;
 
 public class UserServiceImpl extends MpDbServlet implements UserService {
@@ -77,6 +78,8 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			} else {
 				final Collection<Principal> principals = new ArrayList<Principal>();
 				principals.add(new OwnerPrincipal(u));
+				if (ssr.getEmailAddress().equals("watera2@cs.rpi.edu"))
+					principals.add(new AdminPrincipal());
 				setCurrentUser(u, principals);
 			}
 			return u;
