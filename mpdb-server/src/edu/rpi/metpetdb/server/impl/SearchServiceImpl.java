@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.server.impl;
 
 import java.util.List;
 
+import edu.rpi.metpetdb.client.error.security.NoPermissionsException;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.User;
@@ -12,7 +13,7 @@ public class SearchServiceImpl extends SampleServiceImpl implements
 		SearchService {
 	private static final long serialVersionUID = 1L;
 
-	public List<Sample> search(SearchSample searchSamp, User userSearching) {
+	public List<Sample> search(SearchSample searchSamp, User userSearching) throws NoPermissionsException {
 		List<Sample> samples = (SearchDb
 				.sampleSearch(searchSamp, userSearching));
 		return samples;

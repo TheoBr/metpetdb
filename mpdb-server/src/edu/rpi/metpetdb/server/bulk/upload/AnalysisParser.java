@@ -133,7 +133,7 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 	protected void parseHeaderSpecialCase(final HSSFRow header,
 			Integer cellNumber, final String cellText) {
 		// special cases
-		if (Pattern.compile("^(sample[ number| name|])|(sample)$",
+		if (Pattern.compile("^(sample[ number| name|])|^(sample)$",
 				Pattern.CASE_INSENSITIVE).matcher(cellText).find()) {
 			colType.put(new Integer(cellNumber), SAMPLE);
 			colName.put(new Integer(cellNumber), "ChemicalAnalysis_sample");
@@ -257,7 +257,7 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 			Integer cellNumber, final String cellText, final Class<?> dataType,
 			final ChemicalAnalysis currentObject)
 			throws IllegalArgumentException, IllegalAccessException,
-			InvocationTargetException {
+			InvocationTargetException, NumberFormatException {
 		Integer type = colType.get(cellNumber);
 		if (type == null)
 			return false;

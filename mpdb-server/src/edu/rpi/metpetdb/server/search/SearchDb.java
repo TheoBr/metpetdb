@@ -17,10 +17,12 @@ import org.apache.lucene.search.RangeFilter;
 import org.apache.lucene.search.RangeQuery;
 import org.apache.lucene.search.TermQuery;
 import org.apache.solr.util.NumberUtils;
+import org.hibernate.CallbackException;
 import org.hibernate.Session;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 
+import edu.rpi.metpetdb.client.error.security.NoPermissionsException;
 import edu.rpi.metpetdb.client.model.DateSpan;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchElement;
@@ -36,7 +38,7 @@ public class SearchDb {
 	}
 
 	public static List<Sample> sampleSearch(SearchSample searchSamp,
-			User userSearching) {
+			User userSearching) throws NoPermissionsException {
 
 		final Session session = DataStore.open();
 		FullTextSession fullTextSession = Search.createFullTextSession(session);
@@ -214,9 +216,16 @@ public class SearchDb {
 		}
 			final org.hibernate.Query hibQuery = fullTextSession
 			.createFullTextQuery(fullQuery, Sample.class);
-			final List<Sample> results = hibQuery.list();
-			session.close();
-			return results;		
+			try {
+			
+				final List<Sample> results = hibQuery.list();
+				return results;
+			} catch (CallbackException e) {
+				session.clear();
+				throw new NoPermissionsException(e.getMessage());
+			} finally {
+				session.close();
+			}
 	}
 	
 	public static Query getQuery(List<String> queries, List<String> fields, List<BooleanClause.Occur> flags)

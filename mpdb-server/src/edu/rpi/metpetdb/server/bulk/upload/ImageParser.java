@@ -216,8 +216,7 @@ public class ImageParser extends Parser<XrayImage> {
 
 	@Override
 	protected List<MethodAssociation<XrayImage>> getMethodAssociations() {
-		// TODO Auto-generated method stub
-		return null;
+		return methodAssociations;
 	}
 
 	@Override
@@ -226,14 +225,5 @@ public class ImageParser extends Parser<XrayImage> {
 		parent_loc_x = 0;
 		parent_loc_y = 0;
 		return new XrayImage();
-	}
-
-	@Override
-	protected boolean parseColumnSpecialCase(HSSFRow row, Integer cellNumber,
-			String cellText, Class<?> dataType, ChemicalAnalysis currentObject)
-			throws IllegalArgumentException, IllegalAccessException,
-			InvocationTargetException {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }

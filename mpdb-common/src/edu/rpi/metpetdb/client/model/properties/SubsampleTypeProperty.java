@@ -1,16 +1,15 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.SubsampleType;
 
-public enum SubsampleTypeProperty implements Property {
+public enum SubsampleTypeProperty implements Property<SubsampleType> {
 	subsampleType {
-		public <T extends MObject> String get(final T subsampleType) {
+		public  String get(final SubsampleType subsampleType) {
 			return ((SubsampleType) subsampleType).getSubsampleType();
 		}
 
-		public <T extends MObject, K> void set(final T subsampleType,
-				final K name) {
+		public void set(final SubsampleType subsampleType,
+				final Object name) {
 			((SubsampleType) subsampleType).setSubsampleType((String) name);
 		}
 	},

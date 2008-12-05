@@ -7,6 +7,7 @@ import org.hibernate.Session;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.dao.ChemicalAnalysisNotFoundException;
+import edu.rpi.metpetdb.client.error.dao.ReferenceNotFoundException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -57,8 +58,13 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 
 	@Override
 	public ChemicalAnalysis save(ChemicalAnalysis ca) throws DAOException {
-		if (ca.getReference() != null)
+		if (ca.getReference() != null) {
+			try {
 			ca.setReference((new ReferenceDAO(sess)).fill(ca.getReference()));
+			} catch (ReferenceNotFoundException e) {
+				//ignore the reference if we don't find it, it will get automatically added by hibernate
+			}
+		}
 		ca.setMineral((new MineralDAO(sess)).fill(ca.getMineral()));
 		ca.setSubsample((new SubsampleDAO(sess)).fill(ca.getSubsample()));
 		ca = _save(ca);

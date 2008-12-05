@@ -1,15 +1,14 @@
 package edu.rpi.metpetdb.client.model.properties;
 
 import edu.rpi.metpetdb.client.model.ImageType;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 
-public enum ImageTypeProperty implements Property {
+public enum ImageTypeProperty implements Property<ImageType> {
 	imageType {
-		public <T extends MObject> String get(final T imageType) {
+		public  String get(final ImageType imageType) {
 			return ((ImageType) imageType).getImageType();
 		}
 
-		public <T extends MObject, K> void set(final T imageType, final K name) {
+		public void set(final ImageType imageType, final Object name) {
 			((ImageType) imageType).setImageType((String) name);
 		}
 	},

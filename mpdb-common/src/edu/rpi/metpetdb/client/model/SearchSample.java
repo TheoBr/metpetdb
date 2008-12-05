@@ -258,7 +258,7 @@ public class SearchSample implements IsSerializable, MObject {
 	public void addReferences(final String name) {
 		if (references == null)
 			references = new HashSet<Reference>();
-		final Reference r = new Reference();
+		final Reference r = new Reference(name);
 		references.add(r);
 	}
 	
@@ -273,7 +273,7 @@ public class SearchSample implements IsSerializable, MObject {
 	public void addMetamorphicGrade(final String name) {
 		if (metamorphicGrades == null)
 			metamorphicGrades = new HashSet<MetamorphicGrade>();
-		final MetamorphicGrade mg = new MetamorphicGrade();
+		final MetamorphicGrade mg = new MetamorphicGrade(name);
 		metamorphicGrades.add(mg);
 	}
 

@@ -1,89 +1,87 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-import edu.rpi.metpetdb.client.model.ChemicalAnalysisElement;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxide;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.Oxide;
 
-public enum ChemicalAnalysisOxideProperty implements Property {
+public enum ChemicalAnalysisOxideProperty implements Property<ChemicalAnalysisOxide> {
 	amount {
-		public <T extends MObject> Float get(final T chemicalAnalysisOxide) {
+		public  Float get(final ChemicalAnalysisOxide chemicalAnalysisOxide) {
 			return ((ChemicalAnalysisOxide) chemicalAnalysisOxide).getAmount();
 		}
 
-		public <T extends MObject, K> void set(final T chemicalAnalysisOxide,
-				final K amount) {
+		public  void set(final ChemicalAnalysisOxide chemicalAnalysisOxide,
+				final Object amount) {
 			((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.setAmount((Float) amount);
 		}
 	},
 	precision {
-		public <T extends MObject> Float get(final T chemicalAnalysisOxide) {
+		public  Float get(final ChemicalAnalysisOxide chemicalAnalysisOxide) {
 			return ((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.getPrecision();
 		}
 
-		public <T extends MObject, K> void set(final T chemicalAnalysisOxide,
-				final K precision) {
+		public  void set(final ChemicalAnalysisOxide chemicalAnalysisOxide,
+				final Object precision) {
 			((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.setPrecision((Float) precision);
 		}
 	},
 	precisionUnit {
-		public <T extends MObject> String get(final T chemicalAnalysisOxide) {
+		public  String get(final ChemicalAnalysisOxide chemicalAnalysisOxide) {
 			return ((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.getPrecisionUnit();
 		}
 
-		public <T extends MObject, K> void set(final T chemicalAnalysisOxide,
-				final K precisionUnit) {
+		public  void set(final ChemicalAnalysisOxide chemicalAnalysisOxide,
+				final Object precisionUnit) {
 			((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.setPrecisionUnit((String) precisionUnit);
 		}
 	},
 	minAmount {
-		public <T extends MObject> Float get(final T chemicalAnalysisOxide) {
+		public  Float get(final ChemicalAnalysisOxide chemicalAnalysisOxide) {
 			return ((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.getMinAmount();
 		}
 
-		public <T extends MObject, K> void set(final T chemicalAnalysisOxide,
-				final K minAmount) {
+		public  void set(final ChemicalAnalysisOxide chemicalAnalysisOxide,
+				final Object minAmount) {
 			((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.setMinAmount((Float) minAmount);
 		}
 	},
 	maxAmount {
-		public <T extends MObject> Float get(final T chemicalAnalysisOxide) {
+		public  Float get(final ChemicalAnalysisOxide chemicalAnalysisOxide) {
 			return ((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.getMaxAmount();
 		}
 
-		public <T extends MObject, K> void set(final T chemicalAnalysisOxide,
-				final K maxAmount) {
+		public  void set(final ChemicalAnalysisOxide chemicalAnalysisOxide,
+				final Object maxAmount) {
 			((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.setMaxAmount((Float) maxAmount);
 		}
 	},
 	measurementUnit {
-		public <T extends MObject> String get(final T chemicalAnalysisOxide) {
+		public  String get(final ChemicalAnalysisOxide chemicalAnalysisOxide) {
 			return ((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.getMeasurementUnit();
 		}
 
-		public <T extends MObject, K> void set(final T chemicalAnalysisOxide,
-				final K measurementUnit) {
+		public  void set(final ChemicalAnalysisOxide chemicalAnalysisOxide,
+				final Object measurementUnit) {
 			((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.setMeasurementUnit((String) measurementUnit);
 		}
 	},
 	oxide {
-		public <T extends MObject> Object get(final T chemicalAnalysisOxide) {
+		public  Object get(final ChemicalAnalysisOxide chemicalAnalysisOxide) {
 			return ((ChemicalAnalysisOxide) chemicalAnalysisOxide).getOxide();
 		}
 
-		public <T extends MObject, K> void set(final T chemicalAnalysisOxide,
-				final K oxide) {
+		public  void set(final ChemicalAnalysisOxide chemicalAnalysisOxide,
+				final Object oxide) {
 			((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.setOxide((Oxide) oxide);
 		}

@@ -126,8 +126,8 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 					ChemicalAnalysisProperty.reference, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
-					String text = ((String) data
-							.mGet(ChemicalAnalysisProperty.reference));
+					String text =  data
+							.mGet(ChemicalAnalysisProperty.reference).toString();
 					if (text == null)
 						text = "------";
 					return new MText(text);

@@ -1,16 +1,15 @@
 package edu.rpi.metpetdb.client.model.properties;
 
 import edu.rpi.metpetdb.client.model.ImageComment;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 
-public enum ImageCommentProperty implements Property {
+public enum ImageCommentProperty implements Property<ImageComment> {
 	text {
-		public <T extends MObject> String get(final T sampleComment) {
+		public  String get(final ImageComment sampleComment) {
 			return ((ImageComment) sampleComment).getText();
 		}
 
-		public <T extends MObject, K> void set(final T sampleComment,
-				final K text) {
+		public void set(final ImageComment sampleComment,
+				final Object text) {
 			((ImageComment) sampleComment).setText((String) text);
 		}
 	},

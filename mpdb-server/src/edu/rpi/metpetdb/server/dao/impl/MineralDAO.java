@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -45,12 +46,12 @@ public class MineralDAO extends MpDbDAO<Mineral> {
 		throw new FunctionNotImplementedException();
 	}
 
-	public List<Mineral> getAll() {
+	public List<Mineral> getAll() throws DAOException {
 		final List<Mineral> l = new LinkedList<Mineral>();
 		final Query parents = namedQuery("Mineral.all");
 		final Query children = namedQuery("Mineral.children");
-		l.addAll(parents.list());
-		l.addAll(children.list());
+		l.addAll((Collection<? extends Mineral>) getResults(parents));
+		l.addAll((Collection<? extends Mineral>) getResults(children));
 		return l;
 	}
 

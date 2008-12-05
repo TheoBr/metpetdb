@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,8 +22,8 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.validation.InvalidDateStringException;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
@@ -30,6 +31,7 @@ import edu.rpi.metpetdb.client.model.interfaces.HasDate;
 import edu.rpi.metpetdb.client.model.interfaces.HasSample;
 import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.properties.Property;
 import edu.rpi.metpetdb.client.model.validation.DateStringConstraint;
 
 public abstract class Parser<T extends MObject> {
@@ -49,6 +51,7 @@ public abstract class Parser<T extends MObject> {
 	/**
 	 * relates columns to entries in map
 	 */
+	
 	protected final Map<Integer, Integer> colType;
 	protected final Map<Integer, Method> colMethods;
 	protected final Map<Integer, Object> colObjects;
@@ -244,6 +247,7 @@ public abstract class Parser<T extends MObject> {
 				}
 
 			}
+			
 
 			if (dataType == Float.class)
 				storeMethod.invoke(o, new Float(data));
@@ -330,6 +334,15 @@ public abstract class Parser<T extends MObject> {
 
 				if (storeMethod == null)
 					continue;
+				
+
+				// Determine what class the method wants the content of the cell
+				// to be so it can parse it
+				final Class<?> dataType = storeMethod.getParameterTypes()[0];
+				
+				if (parseColumnSpecialCase(row, i, cell.toString(), dataType, newObject)) {
+					continue;
+				}
 
 				// System.out.println("\t Parsing Column " + i + ": "
 				// + storeMethod.getName());
@@ -354,10 +367,6 @@ public abstract class Parser<T extends MObject> {
 					}
 					continue;
 				}
-
-				// Determine what class the method wants the content of the cell
-				// to be so it can parse it
-				final Class<?> dataType = storeMethod.getParameterTypes()[0];
 
 				if (handleData(dataType, storeMethod, cell, newObject)) {
 					sawDataInRow = true;
@@ -394,13 +403,14 @@ public abstract class Parser<T extends MObject> {
 			} catch (final InvocationTargetException ie) {
 				// this indicates a bug.
 				ie.getTargetException().printStackTrace();
-				// ie.printStackTrace();
-				// throw new IllegalStateException(ie.getMessage());
+				errors.put(rowindex, new GenericDAOException(ie.getMessage()));
 			} catch (final IllegalAccessException iae) {
 				// I believe this is when a method is private and we don't have
 				// access. It should never get here.
 				iae.printStackTrace();
-				throw new IllegalStateException(iae.getMessage());
+				errors.put(rowindex, new GenericDAOException(iae.getMessage()));
+			} catch (Exception e) {
+				errors.put(rowindex, new GenericDAOException(e.getMessage()));
 			}
 		}
 
@@ -415,7 +425,7 @@ public abstract class Parser<T extends MObject> {
 
 	protected abstract boolean parseColumnSpecialCase(final HSSFRow row,
 			Integer cellNumber, final String cellText, final Class<?> dataType,
-			final ChemicalAnalysis currentObject) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+			final T currentObject) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException;
 
 	protected void parseHeader(final int rownum) {
 		// First non-empty row is the header, want to associate what
@@ -425,7 +435,6 @@ public abstract class Parser<T extends MObject> {
 			// Convert header title to String
 			final HSSFCell cell = header.getCell(i);
 			final String text;
-			boolean done = false;
 			try {
 				text = cell.toString(); // getString();
 			} catch (final NullPointerException npe) {
@@ -440,13 +449,11 @@ public abstract class Parser<T extends MObject> {
 					colType.put(new Integer(i), METHOD);
 					colMethods.put(new Integer(i), sma.getMethod());
 					colName.put(new Integer(i), sma.getName());
-					done = true;
 					break;
 				}
 			}
-
-			if (done)
-				continue;
+			
+			parseHeaderSpecialCase(header, i, text);
 		}
 	}
 
@@ -461,5 +468,4 @@ public abstract class Parser<T extends MObject> {
 			Integer cellNumber, final String cellText);
 
 	protected abstract List<MethodAssociation<T>> getMethodAssociations();
-
 }

@@ -1,6 +1,8 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-public interface SearchProperty extends Property {
+import edu.rpi.metpetdb.client.model.SearchSample;
+
+public interface SearchProperty extends Property<SearchSample> {
 
 	/**
 	 * The column name that is used by Lucene to query the value. For example in

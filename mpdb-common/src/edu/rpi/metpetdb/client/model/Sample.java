@@ -350,8 +350,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, Publ
 	public void addRegion(final String name) {
 		if (regions == null)
 			regions = new HashSet<Region>();
-		final Region r = new Region();
-		r.setName(name);
+		final Region r = new Region(name);
 		regions.add(r);
 	}
 
@@ -364,8 +363,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, Publ
 	}
 
 	public void addMetamorphicGrade(final String s) {
-		final MetamorphicGrade mg = new MetamorphicGrade();
-		mg.setName(s);
+		final MetamorphicGrade mg = new MetamorphicGrade(s);
 		if (metamorphicGrades == null)
 			metamorphicGrades = new HashSet<MetamorphicGrade>();
 		metamorphicGrades.add(mg);
@@ -390,17 +388,15 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, Publ
 	public void addComment(final String comment) {
 		if (comments == null)
 			comments = new HashSet<SampleComment>();
-		SampleComment sc = new SampleComment();
+		SampleComment sc = new SampleComment(comment);
 		sc.setSample(this);
-		sc.setText(comment);
 		this.comments.add(sc);
 	}
 
 	public void addReference(final String name) {
 		if (references == null)
 			references = new HashSet<Reference>();
-		final Reference m = new Reference();
-		m.setName(name);
+		final Reference m = new Reference(name);
 		references.add(m);
 	}
 

@@ -11,14 +11,13 @@ import java.util.Map;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 
 public class SampleParser extends Parser<Sample> {
 
 	private final Map<Integer, Sample> samples;
-
 	/**
 	 * TODO: make this a Set of objects.
 	 */
@@ -104,7 +103,7 @@ public class SampleParser extends Parser<Sample> {
 		samples = new HashMap<Integer, Sample>();
 	}
 
-	static {
+static {
 		try {
 			if (methodAssociations.isEmpty())
 				for (Object[] row : sampleMethodMap)
@@ -136,13 +135,9 @@ public class SampleParser extends Parser<Sample> {
 					"Programming Error -- Invalid Sample Method");
 		}
 	}
-	
+
 	public Map<Integer, Sample> getSamples() {
 		return samples;
-	}
-	@Override
-	protected List<MethodAssociation<Sample>> getMethodAssociations() {
-		return methodAssociations;
 	}
 
 	@Override
@@ -156,10 +151,14 @@ public class SampleParser extends Parser<Sample> {
 	}
 	@Override
 	protected boolean parseColumnSpecialCase(HSSFRow row, Integer cellNumber,
-			String cellText, Class<?> dataType, ChemicalAnalysis currentObject)
+			String cellText, Class<?> dataType, Sample currentObject)
 			throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException {
-		//samples don't have any special cases
-		return true;
+		// samples don't have any special cases
+		return false;
+	}
+	@Override
+	protected List<MethodAssociation<Sample>> getMethodAssociations() {
+		return methodAssociations;
 	}
 }

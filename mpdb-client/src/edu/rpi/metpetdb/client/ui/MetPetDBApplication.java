@@ -200,7 +200,7 @@ public class MetPetDBApplication implements EntryPoint {
 						new LoginDialog(null).show();
 					}
 				}));
-		// loginBar.add(new MLink(LocaleHandler.lc_text.buttonRegister(),TokenSpace.register));
+		loginBar.add(new MLink(LocaleHandler.lc_text.buttonRegister(),TokenSpace.register));
 		Cookies.setCookie(MpDbConstants.USERID_COOKIE, "", new Date());
 	}
 

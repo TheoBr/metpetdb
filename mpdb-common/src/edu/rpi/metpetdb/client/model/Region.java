@@ -12,6 +12,14 @@ public class Region extends MObject {
 
 	@Field(index = Index.TOKENIZED)
 	private String name;
+	
+	public Region() {
+		
+	}
+	
+	public Region(final String name) {
+		this.name = name;
+	}
 
 	public short getId() {
 		return id;

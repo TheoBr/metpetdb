@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.server.dao;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.CallbackException;
@@ -253,7 +254,7 @@ public abstract class MpDbDAO<T extends MObject> {
 		}
 	}
 
-	protected Object getResults(final Query q) throws DAOException {
+	protected List getResults(final Query q) throws DAOException {
 		try {
 			return q.list();
 		} catch (CallbackException e) {

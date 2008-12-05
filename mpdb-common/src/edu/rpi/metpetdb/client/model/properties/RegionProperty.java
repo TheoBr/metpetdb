@@ -1,15 +1,14 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.Region;
 
-public enum RegionProperty implements Property {
+public enum RegionProperty implements Property<Region> {
 	name {
-		public <T extends MObject> String get(final T region) {
+		public  String get(final Region region) {
 			return ((Region) region).getName();
 		}
 
-		public <T extends MObject, K> void set(final T region, final K name) {
+		public void set(final Region region, final Object name) {
 			((Region) region).setName((String) name);
 		}
 	},

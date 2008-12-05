@@ -13,6 +13,14 @@ public class MetamorphicGrade extends MObject {
 
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String name;
+	
+	public MetamorphicGrade() {
+		
+	}
+
+	public MetamorphicGrade(final String name) {
+		this.name = name;
+	}
 
 	public short getId() {
 		return id;
@@ -31,8 +39,10 @@ public class MetamorphicGrade extends MObject {
 	}
 
 	public boolean equals(final Object o) {
-		return name != null && o instanceof MetamorphicGrade
-				&& name.toLowerCase().equals(((MetamorphicGrade) o).name.toLowerCase());
+		return name != null
+				&& o instanceof MetamorphicGrade
+				&& name.toLowerCase().equals(
+						((MetamorphicGrade) o).name.toLowerCase());
 	}
 
 	public int hashCode() {

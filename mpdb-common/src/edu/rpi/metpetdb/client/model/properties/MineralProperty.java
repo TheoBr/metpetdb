@@ -1,16 +1,15 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-import edu.rpi.metpetdb.client.model.Element;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.Mineral;
 
-public enum MineralProperty implements Property {
+public enum MineralProperty implements Property<Mineral> {
 	name {
-		public <T extends MObject> String get(final T element) {
-			return ((Element) element).getName();
+		public  String get(final Mineral mineral) {
+			return mineral.getName();
 		}
 
-		public <T extends MObject, K> void set(final T element, final K name) {
-			((Element) element).setName((String) name);
+		public void set(final Mineral mineral, final Object name) {
+			mineral.setName((String) name);
 		}
 	},
 }

@@ -3,64 +3,60 @@ package edu.rpi.metpetdb.client.model.properties;
 import java.util.Set;
 
 import edu.rpi.metpetdb.client.model.Element;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.MineralType;
 
-public enum ElementProperty implements Property {
+public enum ElementProperty implements Property<Element> {
 	name {
-		public <T extends MObject> String get(final T element) {
+		public String get(final Element element) {
 			return ((Element) element).getName();
 		}
 
-		public <T extends MObject, K> void set(final T element, final K name) {
+		public void set(final Element element, final Object name) {
 			((Element) element).setName((String) name);
 		}
 	},
 	alternateName {
-		public <T extends MObject> String get(final T element) {
+		public String get(final Element element) {
 			return ((Element) element).getAlternateName();
 		}
 
-		public <T extends MObject, K> void set(final T element,
-				final K alternateName) {
+		public void set(final Element element, final Object alternateName) {
 			((Element) element).setAlternateName((String) alternateName);
 		}
 	},
 	symbol {
-		public <T extends MObject> String get(final T element) {
+		public String get(final Element element) {
 			return ((Element) element).getSymbol();
 		}
 
-		public <T extends MObject, K> void set(final T element, final K symbol) {
+		public void set(final Element element, final Object symbol) {
 			((Element) element).setSymbol((String) symbol);
 		}
 	},
 	atomicNumber {
-		public <T extends MObject> Integer get(final T element) {
+		public Integer get(final Element element) {
 			return ((Element) element).getAtomicNumber();
 		}
 
-		public <T extends MObject, K> void set(final T element,
-				final K atomicNumber) {
+		public void set(final Element element, final Object atomicNumber) {
 			((Element) element).setAtomicNumber((Integer) atomicNumber);
 		}
 	},
 	weight {
-		public <T extends MObject> Float get(final T element) {
+		public Float get(final Element element) {
 			return ((Element) element).getWeight();
 		}
 
-		public <T extends MObject, K> void set(final T element, final K weight) {
+		public void set(final Element element, final Object weight) {
 			((Element) element).setWeight((Float) weight);
 		}
 	},
 	mineralTypes {
-		public <T extends MObject> Object get(final T element) {
+		public Object get(final Element element) {
 			return ((Element) element).getMineralTypes();
 		}
 
-		public <T extends MObject, K> void set(final T element,
-				final K mineralTypes) {
+		public void set(final Element element, final Object mineralTypes) {
 			((Element) element)
 					.setMineralTypes((Set<MineralType>) mineralTypes);
 		}

@@ -1,15 +1,14 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.Reference;
 
-public enum ReferenceProperty implements Property {
+public enum ReferenceProperty implements Property<Reference> {
 	name {
-		public <T extends MObject> String get(final T reference) {
+		public String get(final Reference reference) {
 			return ((Reference) reference).getName();
 		}
 
-		public <T extends MObject, K> void set(final T reference, final K name) {
+		public void set(final Reference reference, final Object name) {
 			((Reference) reference).setName((String) name);
 		}
 	},

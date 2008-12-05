@@ -1,50 +1,50 @@
 package edu.rpi.metpetdb.client.model.properties;
 
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 
-public enum UserWithPasswordProperty implements Property {
+public enum UserWithPasswordProperty implements Property<UserWithPassword> {
 	oldPassword {
-		public <T extends MObject> String get(final T userWithPassword) {
+		public String get(final UserWithPassword userWithPassword) {
 			return ((UserWithPassword) userWithPassword).getOldPassword();
 		}
 
-		public <T extends MObject, K> void set(final T userWithPassword,
-				final K oldPassword) {
+		public void set(final UserWithPassword userWithPassword,
+				final Object oldPassword) {
 			((UserWithPassword) userWithPassword)
 					.setOldPassword((String) oldPassword);
 		}
 	},
 	newPassword {
-		public <T extends MObject> String get(final T userWithPassword) {
+		public String get(final UserWithPassword userWithPassword) {
 			return ((UserWithPassword) userWithPassword).getNewPassword();
 		}
 
-		public <T extends MObject, K> void set(final T userWithPassword,
-				final K newPassword) {
+		public void set(final UserWithPassword userWithPassword,
+				final Object newPassword) {
 			((UserWithPassword) userWithPassword)
 					.setNewPassword((String) newPassword);
 		}
 	},
 	vrfPassword {
-		public <T extends MObject> String get(final T userWithPassword) {
+		public String get(final UserWithPassword userWithPassword) {
 			return ((UserWithPassword) userWithPassword).getVrfPassword();
 		}
 
-		public <T extends MObject, K> void set(final T userWithPassword,
-				final K vrfPassword) {
+		public void set(final UserWithPassword userWithPassword,
+				final Object vrfPassword) {
 			((UserWithPassword) userWithPassword)
 					.setVrfPassword((String) vrfPassword);
 		}
 	},
 	user {
-		public <T extends MObject> User get(final T userWithPassword) {
+		public User get(final UserWithPassword userWithPassword) {
 			return ((UserWithPassword) userWithPassword).getUser();
 		}
 
-		public <T extends MObject, K> void set(final T userWithPassword,
-				final K user) {
+		public void set(final UserWithPassword userWithPassword,
+				final Object user) {
 			((UserWithPassword) userWithPassword).setUser((User) user);
 		}
 	},

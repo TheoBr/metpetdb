@@ -4,12 +4,11 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 
+public interface Property<T extends MObject> extends IsSerializable {
 
-public interface Property extends IsSerializable {
+	abstract Object get(final T object);
 
-	abstract <T extends MObject> Object get(final T object);
-
-	abstract <T extends MObject, K> void set(final T object, final K value);
+	abstract void set(final T object, final Object value);
 
 	abstract int ordinal();
 

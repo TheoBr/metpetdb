@@ -8,6 +8,14 @@ public class Reference extends MObject {
 	private short id;
 
 	private String name;
+	
+	public Reference() {
+		
+	}
+	
+	public Reference(final String name) {
+		this.name = name;
+	}
 
 	public short getId() {
 		return id;
