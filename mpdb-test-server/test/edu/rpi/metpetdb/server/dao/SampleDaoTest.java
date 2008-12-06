@@ -51,7 +51,7 @@ public class SampleDaoTest extends DatabaseTestCase {
 	public void testSampleAllSize() {
 		final Query q = InitDatabase.getSession().getNamedQuery(
 				"Sample.all,size");
-		assertEquals(8, ((Number) q.uniqueResult()).intValue());
+		assertEquals(8, ((Number) q.list()).intValue());
 	}
 
 	/**

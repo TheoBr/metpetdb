@@ -42,7 +42,7 @@ public class MineralDaoTest extends TestCase {
 	@Test
 	public void testLoadAlternativeMineral() {
 		final Query q = s.getNamedQuery("Mineral.byName").setParameter("name", "K-feldspar");
-		final Mineral m = (Mineral) q.uniqueResult();
+		final Mineral m = (Mineral) q.list();
 		assertEquals("Alkali feldspar", m.getName());
 	}
 

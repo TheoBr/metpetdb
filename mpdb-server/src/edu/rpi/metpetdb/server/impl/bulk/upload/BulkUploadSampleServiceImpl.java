@@ -30,11 +30,7 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 		final BulkUploadResult results = new BulkUploadResult();
 		try {
 			if (save) {
-				currentSession()
-				.createSQLQuery(
-						"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
-				.setParameter("user_id", currentUser()).setParameter(
-						"hash", fileOnServer).executeUpdate();
+				updateFile(fileOnServer);
 			}
 			final SampleParser sp = new SampleParser(new FileInputStream(
 					MpDbServlet.getFileUploadPath() + fileOnServer));
@@ -80,7 +76,7 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 						results.addError(row, e);
 					}
 				}
-			}
+			} 
 			results.addResultCount("Sample", resultCount);
 			results.setHeaders(sp.getHeaders());
 			if (save && results.getErrors().isEmpty()) {
@@ -95,4 +91,6 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 		}
 		return results;
 	}
+	
+	
 }

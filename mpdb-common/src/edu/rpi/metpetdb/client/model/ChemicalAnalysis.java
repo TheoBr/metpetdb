@@ -344,7 +344,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 			return false;
 	}
 
-	public void setPublicData(final Boolean p) {
+	public void setPublicData(final boolean p) {
 		publicData = p;
 	}
 	

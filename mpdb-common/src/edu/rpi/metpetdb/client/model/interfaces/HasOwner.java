@@ -6,4 +6,6 @@ public interface HasOwner {
 	
 	public User getOwner();
 
+	public void setOwner(final User user);
+
 }

@@ -115,7 +115,7 @@ public class ImageParser extends Parser<XrayImage> {
 			Integer cellNumber, final String cellText) {
 		// special case for sample
 		// TODO extract regular expressions
-		if (cellText.matches("[Ss][Aa][Mm][Pp][Ll][Ee]")) {
+		if (cellText.matches("(sample[ number| name|])|(sample)")) {
 			colType.put(new Integer(cellNumber), SAMPLE);
 			colObjects.put(new Integer(cellNumber), new Sample());
 		} else if (Pattern.compile("subsample type", Pattern.CASE_INSENSITIVE)

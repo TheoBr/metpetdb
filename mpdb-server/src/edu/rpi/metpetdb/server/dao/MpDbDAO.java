@@ -13,7 +13,7 @@ import org.hibernate.TransientObjectException;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.security.NoPermissionsException;
-import edu.rpi.metpetdb.client.model.MObject;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 
 public abstract class MpDbDAO<T extends MObject> {

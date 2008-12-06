@@ -180,7 +180,7 @@ public class Subsample extends MObject implements HasOwner, PublicData, HasSampl
 			return false;
 	}
 
-	public void setPublicData(final Boolean p) {
+	public void setPublicData(final boolean p) {
 		publicData = p;
 	}
 	

@@ -108,11 +108,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 		final BulkUploadResult results = new BulkUploadResult();
 		try {
 			if (save) {
-				currentSession()
-						.createSQLQuery(
-								"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
-						.setParameter("user_id", currentUser()).setParameter(
-								"hash", fileOnServer).executeUpdate();
+				updateFile(fileOnServer);
 			}
 			// Find the Excel Spreadsheet
 			FileInputStream is = new FileInputStream(MpDbServlet
@@ -166,68 +162,83 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 				} else {
 					try {
 						// see if our sample exists
-						Sample s = img.getSample();
-						s.setOwner(u);
-						img.getSubsample().setOwner(u);
-						img.getSubsample().setPublicData(false);
-						try {
-							// if we don't have this sample already loaded check
-							// for it in the database
-							if (!samples.containsKey(s.getAlias())) {
-								s = sDAO.fill(s);
-								samples.put(s.getAlias(), s);
-								subsampleNames.put(s.getAlias(),
-										new HashSet<String>());
-							} else {
-								s = samples.get(s.getAlias());
-							}
-						} catch (DAOException e) {
-							// There is no sample we have to add an error
-							// Every Image needs a sample so add an error
+						if (img.getSample() == null && img.getSubsample() == null) {
+							//Image needs a sample or a subsample to continue
 							results.addError(row,
-									new PropertyRequiredException("Sample"));
+									new PropertyRequiredException("Sample or Subsample"));
 							continue;
 						}
-						Subsample ss = (img.getSubsample());
-						ss.setSample(s);
-						if (ss != null) {
-							// if we don't have the name stored already we need
-							// to load the subsample
-							if (!subsampleNames.get(s.getAlias()).contains(
-									ss.getName())) {
-								try {
-									doc.validate(ss);
-									ss = ssDAO.fill(ss);
-									subsamples.put(s.getAlias() + ss.getName(),
-											ss);
-									img.setSubsample(ss);
-									ssResultCount.incrementOld();
-								} catch (DAOException e) {
-									// Means it is new because we could not find
-									// it
-									ssResultCount.incrementFresh();
-									if (save) {
-										try {
-											ss = ssDAO.save(ss);
-										} catch (DAOException e1) {
-											results.addError(row, e1);
-										}
-										subsamples.put(s.getAlias()
-												+ ss.getName(), ss);
-										img.setSubsample(ss);
-									}
+						if (img.getSample() != null && img.getSubsample() == null) {
+							//we are adding a sample image
+							img.setSubsample(null); //ignore the subsample if they specified one
+							Sample s = img.getSample();
+							s.setOwner(u);
+							try {
+								// if we don't have this sample already loaded check
+								// for it in the database
+								if (!samples.containsKey(s.getAlias())) {
+									s = sDAO.fill(s);
+									samples.put(s.getAlias(), s);
+									subsampleNames.put(s.getAlias(),
+											new HashSet<String>());
+								} else {
+									s = samples.get(s.getAlias());
 								}
-								subsampleNames.get(img.getSample().getAlias())
-										.add(img.getSubsample().getName());
-							} else {
-								img.setSubsample(subsamples.get(s.getAlias()
-										+ ss.getName()));
+							} catch (DAOException e) {
+								// There is no sample we have to add an error
+								// Every Image needs a sample so add an error
+								results.addError(row,
+										new PropertyRequiredException("Sample"));
+								continue;
 							}
 						} else {
-							// Every Image needs a subsample so add an error
-							results.addError(row,
-									new PropertyRequiredException("Subsample"));
+							//we are adding an image to a subsample
+							img.getSubsample().setSample(img.getSample());
+							img.setSample(null);
+							img.getSubsample().setOwner(u);
+							img.getSubsample().setPublicData(false);
+							Subsample ss = (img.getSubsample());
+							if (ss != null) {
+								// if we don't have the name stored already we need
+								// to load the subsample
+								if (!subsampleNames.get(ss.getSample().getAlias()).contains(
+										ss.getName())) {
+									try {
+										doc.validate(ss);
+										ss = ssDAO.fill(ss);
+										subsamples.put(ss.getSample().getAlias() + ss.getName(),
+												ss);
+										img.setSubsample(ss);
+										ssResultCount.incrementOld();
+									} catch (DAOException e) {
+										// Means it is new because we could not find
+										// it
+										ssResultCount.incrementFresh();
+										if (save) {
+											try {
+												ss = ssDAO.save(ss);
+											} catch (DAOException e1) {
+												results.addError(row, e1);
+											}
+											subsamples.put(ss.getSample().getAlias()
+													+ ss.getName(), ss);
+											img.setSubsample(ss);
+										}
+									}
+									subsampleNames.get(img.getSample().getAlias())
+											.add(img.getSubsample().getName());
+								} else {
+									img.setSubsample(subsamples.get(ss.getSample().getAlias()
+											+ ss.getName()));
+								}
+							} else {
+								// Every Image needs a subsample so add an error
+								results.addError(row,
+										new PropertyRequiredException("Subsample"));
+							}
 						}
+						
+						
 						doc.validate(img);
 						if (dao.isNew(img))
 							imgResultCount.incrementFresh();

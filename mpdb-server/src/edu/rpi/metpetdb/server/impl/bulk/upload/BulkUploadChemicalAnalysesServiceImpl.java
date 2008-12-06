@@ -40,11 +40,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 		final BulkUploadResult results = new BulkUploadResult();
 		try {
 			if (save) {
-				currentSession()
-						.createSQLQuery(
-								"UPDATE uploaded_files SET user_id = :user_id WHERE hash = :hash")
-						.setParameter("user_id", currentUser()).setParameter(
-								"hash", fileOnServer).executeUpdate();
+				updateFile(fileOnServer);
 			}
 			final AnalysisParser ap = new AnalysisParser(new FileInputStream(
 					MpDbServlet.getFileUploadPath() + fileOnServer));
