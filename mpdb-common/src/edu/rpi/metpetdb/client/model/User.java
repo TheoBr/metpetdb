@@ -4,13 +4,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
+@Indexed
 public class User extends MObject {
 	private static final long serialVersionUID = 1L;
 
+	@DocumentId
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private int id;
 	private int version;
