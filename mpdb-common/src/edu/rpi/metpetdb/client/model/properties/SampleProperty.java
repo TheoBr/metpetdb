@@ -97,7 +97,12 @@ public enum SampleProperty implements Property<Sample> {
 		}
 
 		public void set(final Sample sample, final Object rockType) {
-			sample.setRockType((RockType) rockType);
+			if (rockType instanceof RockType)
+				sample.setRockType((RockType) rockType);
+			else {
+				final RockType rt = new RockType(rockType.toString());
+				sample.setRockType(rt);
+			}
 		}
 	},
 	images {
@@ -186,8 +191,9 @@ public enum SampleProperty implements Property<Sample> {
 				if (sample.getRegions() == null)
 					sample.setRegions(new HashSet<Region>());
 				sample.getRegions().add(new Region((String) regions));
+			} else {
+				sample.setRegions((Set<Region>) regions);
 			}
-			sample.setRegions((Set<Region>) regions);
 		}
 	},
 	metamorphicGrades {
@@ -200,9 +206,10 @@ public enum SampleProperty implements Property<Sample> {
 				if (sample.getMetamorphicGrades() == null)
 					sample.setMetamorphicGrades(new HashSet<MetamorphicGrade>());
 				sample.getMetamorphicGrades().add(new MetamorphicGrade((String) metamorphicGrades));
-			}
+			} else{
 			sample
 					.setMetamorphicGrades((Set<MetamorphicGrade>) metamorphicGrades);
+			}
 		}
 	},
 	references {
@@ -215,8 +222,9 @@ public enum SampleProperty implements Property<Sample> {
 				if (sample.getReferences() == null)
 					sample.setReferences(new HashSet<Reference>());
 				sample.getReferences().add(new Reference((String) references));
+			} else {
+				sample.setReferences((Set<Reference>) references);
 			}
-			sample.setReferences((Set<Reference>) references);
 		}
 	},
 	comments {
@@ -229,8 +237,9 @@ public enum SampleProperty implements Property<Sample> {
 				if (sample.getComments() == null)
 					sample.setComments(new HashSet<SampleComment>());
 				sample.getComments().add(new SampleComment((String) comments));
-			}
+			} else {
 			sample.setComments((Set<SampleComment>) comments);
+			}
 		}
 	},
 	subsampleCount {

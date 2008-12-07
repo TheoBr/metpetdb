@@ -21,6 +21,7 @@ import org.junit.Test;
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Element;
@@ -32,6 +33,7 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
+import edu.rpi.metpetdb.server.bulk.upload.NewSampleParser;
 import edu.rpi.metpetdb.server.bulk.upload.SampleParser;
 import edu.rpi.metpetdb.server.dao.impl.ElementDAO;
 import edu.rpi.metpetdb.server.dao.impl.MineralDAO;
@@ -51,11 +53,12 @@ public class BulkUploadTest extends TestCase {
 		try {
 			minerals = (new MineralDAO(s).getAll());
 			SampleParser.setMinerals(minerals);
+			NewSampleParser.setMinerals(minerals);
 		} catch (DAOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		List<Element> elements;
 		List<Oxide> oxides;
 		try {
@@ -66,7 +69,7 @@ public class BulkUploadTest extends TestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		s.close();
 		HibernateBeanManager.getInstance().setPersistenceUtil(
 				new HibernateUtil() {
@@ -92,7 +95,7 @@ public class BulkUploadTest extends TestCase {
 				MpDbServlet.getFileUploadPath() + "samples_tests4.xls"));
 		sp.parse();
 
-		final Map<Integer,Sample> samples = sp.getSamples();
+		final Map<Integer, Sample> samples = sp.getSamples();
 		final Session session = DataStore.open();
 		session.beginTransaction();
 		final User u = new User();
@@ -100,28 +103,54 @@ public class BulkUploadTest extends TestCase {
 		final SampleDAO sdao = new SampleDAO(session);
 		for (Entry<Integer, Sample> s : samples.entrySet()) {
 			try {
+				System.out.println(s.getValue().getAlias());
 				DataStore.getInstance().getDatabaseObjectConstraints()
 						.validate(s.getValue());
-				s.getValue().setOwner(u);
-				sdao.save(s.getValue());
 			} catch (ValidationException e) {
 				e.printStackTrace();
 			}
-			
+
 		}
-		session.getTransaction().commit();
 	}
 
-	public void  testUploadAnalyses() throws ServletException,
+	@Test
+	public void testUploadNewSamples() throws FileNotFoundException,
+			MpDbException {
+		System.out.println("testUploadNewSamples");
+		final NewSampleParser sp = new NewSampleParser(new FileInputStream(
+				MpDbServlet.getFileUploadPath() + "samples_tests4.xls"));
+		NewSampleParser.initialize(DataStore.getInstance()
+				.getDatabaseObjectConstraints(), DataStore.getInstance()
+				.getObjectConstraints());
+		sp.parse();
+		final Map<Integer, Sample> samples = sp.getSamples();
+		final Session session = DataStore.open();
+		session.beginTransaction();
+		final User u = new User();
+		u.setId(1);
+		for (Entry<Integer, Sample> s : samples.entrySet()) {
+			try {
+				System.out.println(s.getValue().getAlias());
+				DataStore.getInstance().getDatabaseObjectConstraints()
+						.validate(s.getValue());
+			} catch (ValidationException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	public void testUploadAnalyses() throws ServletException,
 			InvalidFormatException, LoginRequiredException,
 			ValidationException, IOException {
 		final AnalysisParser sp = new AnalysisParser(new FileInputStream(
 				MpDbServlet.getFileUploadPath()
 						+ "PrivateExampleUpload_analyses.xls"));
 		sp.parse();
-		final Map<Integer,ChemicalAnalysis> analyses = sp.getAnalyses();
+		final Map<Integer, ChemicalAnalysis> analyses = sp.getAnalyses();
 		for (Entry<Integer, ChemicalAnalysis> s : analyses.entrySet()) {
-			DataStore.getInstance().getDatabaseObjectConstraints().validate(s.getValue());
+			DataStore.getInstance().getDatabaseObjectConstraints().validate(
+					s.getValue());
 		}
 	}
 

@@ -32,8 +32,9 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.BulkUploadResult;
-import edu.rpi.metpetdb.client.model.BulkUploadResultCount;
+import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadError;
+import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResult;
+import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadServiceAsync;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
@@ -308,7 +309,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 	}
 	
 	private void handleErrors(final BulkUploadResult results) {
-		final Map<Integer, Collection<MpDbException>> errors = results.getErrors();
+		final Map<Integer, BulkUploadError> errors = results.getErrors();
 		if (!errors.isEmpty()) {
 			populateErrorPanel(errors);
 			resultStatus.sendNotice(NoticeType.WARNING, "Upload complete, but the file contains errors.");
@@ -395,7 +396,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		// TODO provide some summary of matched columns here
 	}
 
-	private void populateErrorPanel(Map<Integer, Collection<MpDbException>> errors) {
+	private void populateErrorPanel(Map<Integer, BulkUploadError> errors) {
 		errorPanel.clear();
 		String msg = "There were "+errors.size()+" errors:";
 		if (errors.size() == 1) msg = "There was one error:";
@@ -412,7 +413,8 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		Collections.sort(rowNumbers);
 		for (Integer row : rowNumbers) {
 			errorGrid.setText(++i, 0, row.toString());
-			errorGrid.setText(i, 1, explode(errors.get(row)));
+			//errorGrid.setText(i, 1, explode(errors.get(row)));
+			errorGrid.setText(i, 1, errors.get(row).getException().format());
 		}
 		setErrorTabStyle(i);
 	}

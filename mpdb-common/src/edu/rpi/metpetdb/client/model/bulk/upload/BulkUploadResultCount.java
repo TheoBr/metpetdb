@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.model;
+package edu.rpi.metpetdb.client.model.bulk.upload;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 

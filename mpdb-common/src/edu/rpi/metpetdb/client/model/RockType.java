@@ -10,6 +10,14 @@ public class RockType extends MObject {
 	private short id;
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String rockType;
+	
+	public RockType() {
+		
+	}
+
+	public RockType(String string) {
+		rockType = string;
+	}
 
 	public short getId() {
 		return id;

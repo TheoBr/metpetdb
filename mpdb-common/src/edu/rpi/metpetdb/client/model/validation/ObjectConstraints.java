@@ -1,6 +1,8 @@
 package edu.rpi.metpetdb.client.model.validation;
 
+import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
+import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 
 /**
@@ -20,6 +22,9 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 	public ObjectConstraint SearchSample_references;
 	public ObjectConstraint SearchSample_metamorphicGrades;
 	
+	public FloatConstraint Sample_longitude;
+	public FloatConstraint Sample_latitude;
+
 	public void finishInitialization(DatabaseObjectConstraints doc) {
 		
 		SearchSample_collector.entityName = "SearchSample";
@@ -78,6 +83,21 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 		SearchSample_owner.propertyName = "Owner";
 		SearchSample_owner.required = false;
 		
+		
+		//For Bulk Upload
+		Sample_longitude.entityName = "Sample";
+		Sample_longitude.property = SampleProperty.longitude;
+		Sample_longitude.propertyName = "longitude";
+		Sample_longitude.required = true;
+		Sample_longitude.setMinValue(-90f);
+		Sample_longitude.setMaxValue(90f);
+		
+		Sample_latitude.entityName = "Sample";
+		Sample_latitude.property = SampleProperty.latitude;
+		Sample_latitude.propertyName = "latitude";
+		Sample_latitude.required = true;
+		Sample_latitude.setMinValue(-180f);
+		Sample_latitude.setMaxValue(180f);
 	}
 
 }

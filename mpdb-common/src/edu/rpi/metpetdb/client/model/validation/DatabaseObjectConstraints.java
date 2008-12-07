@@ -10,6 +10,7 @@ import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleComment;
+import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
@@ -46,6 +47,9 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public PropertyConstraint[] SampleMineral__all;
 	public ValueInCollectionConstraint SampleMineral_Sample_minerals_mineral;
 	public FloatConstraint SampleMineral_Sample_minerals_amount;
+	public void validate(final SampleMineral sc) throws ValidationException {
+		validate(sc, SampleMineral__all);
+	}
 
 	// ------ Region ------
 	public PropertyConstraint[] Region__all;

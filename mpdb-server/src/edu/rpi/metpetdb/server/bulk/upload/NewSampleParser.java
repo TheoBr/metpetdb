@@ -2,102 +2,133 @@ package edu.rpi.metpetdb.server.bulk.upload;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.properties.SampleProperty;
+import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadHeader;
+import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
+import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
+import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 
-public class NewSampleParser  {
-//
-//	private final Map<Integer, Sample> samples;
-//	private static List<ColumnMapping> columns;
-//
-//	static {
-//		columns
-//				.add(new ColumnMapping("(type)|(rock)", SampleProperty.rockType));
-//		columns.add(new ColumnMapping("(sesar)|(isgn)",
-//				SampleProperty.sesarNumber));
-//		columns.add(new ColumnMapping("(latitude error)|(lat error)",
-//				SampleProperty.latitudeError));
-//		columns.add(new ColumnMapping("(latitude)|(lat\\s*)",
-//				SampleProperty.latitude));
-//		columns.add(new ColumnMapping("(longitude error)|(lon error)",
-//				SampleProperty.longitudeError));
-//		columns.add(new ColumnMapping("(longitude)|(^lon\\s*)",
-//				SampleProperty.longitude));
-//		columns.add(new ColumnMapping("region", SampleProperty.regions));
-//		columns.add(new ColumnMapping("country", SampleProperty.country));
-//		columns.add(new ColumnMapping("(collector)|(collected by)",
-//				SampleProperty.collector));
-//		columns.add(new ColumnMapping(
-//				"(date of collection)|(collected)|(collection.+date)",
-//				SampleProperty.collectionDate));
-//		columns.add(new ColumnMapping(
-//				"(present.+location)|(current.+location)",
-//				SampleProperty.locationText));
-//		columns.add(new ColumnMapping("(grade)|(facies)",
-//				SampleProperty.metamorphicGrades));
-//		columns.add(new ColumnMapping("(comment)|(note)|(description)",
-//				SampleProperty.comments));
-//		columns.add(new ColumnMapping("(reference)|(ref)",
-//				SampleProperty.references));
-//		columns.add(new ColumnMapping("(sample[ number| name|])|(sample)",
-//				SampleProperty.alias));
-//		columns.add(new ColumnMapping("minerals", SampleProperty.minerals));
-//	}
-//
-//	public List<ColumnMapping> getColumMappings() {
-//		return columns;
-//	}
-//
-//	/**
-//	 * 
-//	 * @param is
-//	 * 		the input stream that points to a spreadsheet
-//	 * @throws InvalidFormatException
-//	 */
-//	public SampleParser(final InputStream is) {
-//		super(is);
-//		samples = new HashMap<Integer, Sample>();
-//	}
-//
-//	protected void parseHeaderSpecialCase(final HSSFRow header,
-//			Integer cellNumber, final String cellText) {
-//		// If we don't have an explicit match for the header, it could be a
-//		// mineral, check for that
-//		for (Mineral m : minerals) {
-//			if (m.getName().equalsIgnoreCase(cellText)) {
-//				columnProperties.add(SampleProperty.minerals);
-//				break;
-//			}
-//		}
-//	}
-//
-//	public Map<Integer, Sample> getSamples() {
-//		return samples;
-//	}
-//
-//	@Override
-//	protected void addObject(int index, Sample object) {
-//		samples.put(index, object);
-//	}
-//
-//	@Override
-//	protected Sample getNewObject() {
-//		return new Sample();
-//	}
-//	@Override
-//	protected boolean parseColumnSpecialCase(HSSFRow row, Integer cellNumber,
-//			String cellText, Class<?> dataType, Sample currentObject)
-//			throws IllegalArgumentException, IllegalAccessException,
-//			InvocationTargetException {
-//		// samples don't have any special cases
-//		return true;
-//	}
+public class NewSampleParser extends NewParser<Sample> {
+
+	private final Map<Integer, Sample> samples;
+	private static List<ColumnMapping> columns;
+	private static DatabaseObjectConstraints doc;
+
+	public static void initialize(final DatabaseObjectConstraints doc,
+			final ObjectConstraints oc) {
+		NewSampleParser.doc = doc;
+		columns = new ArrayList<ColumnMapping>();
+		columns.add(new ColumnMapping(RegularExpressions.ROCK_TYPE,
+				doc.Sample_rockType));
+		columns.add(new ColumnMapping(RegularExpressions.SESAR_NUMBER,
+				doc.Sample_sesarNumber));
+		columns.add(new ColumnMapping(RegularExpressions.LATITUDE_ERROR,
+				doc.Sample_latitudeError));
+		columns.add(new ColumnMapping("(latitude)|(lat\\s*)",
+				oc.Sample_latitude));
+		columns.add(new ColumnMapping("(longitude)|(^lon\\s*)",
+				oc.Sample_longitude));
+		columns.add(new ColumnMapping(RegularExpressions.LONGITUDE_ERROR,
+				doc.Sample_longitudeError));
+		columns.add(new ColumnMapping(RegularExpressions.REGION,
+				doc.Sample_regions));
+		columns.add(new ColumnMapping(RegularExpressions.COUNTRY,
+				doc.Sample_country));
+		columns.add(new ColumnMapping(RegularExpressions.COLLECTOR,
+				doc.Sample_collector));
+		columns.add(new ColumnMapping(RegularExpressions.COLLECTION_DATE,
+				doc.Sample_collectionDate));
+		columns.add(new ColumnMapping(RegularExpressions.LOCATION,
+				doc.Sample_locationText));
+		columns.add(new ColumnMapping(RegularExpressions.METAMORPHIC_GRADES,
+				doc.Sample_metamorphicGrades));
+		columns.add(new ColumnMapping(RegularExpressions.COMMENTS,
+				doc.Sample_comments));
+		columns.add(new ColumnMapping(RegularExpressions.REFERENCES,
+				doc.Sample_references));
+		columns.add(new ColumnMapping(RegularExpressions.ALIAS,
+				doc.Sample_alias));
+		columns.add(new ColumnMapping(RegularExpressions.MINERALS,
+				doc.Sample_minerals));
+	}
+	public List<ColumnMapping> getColumMappings() {
+		return columns;
+	}
+
+	/**
+	 * 
+	 * @param is
+	 * 		the input stream that points to a spreadsheet
+	 * @throws MpDbException
+	 * @throws InvalidFormatException
+	 */
+	public NewSampleParser(final InputStream is) throws MpDbException {
+		super(is);
+		samples = new TreeMap<Integer, Sample>();
+	}
+
+	protected void parseHeaderSpecialCase(final HSSFRow header,
+			Integer cellNumber, final String cellText) {
+		// If we don't have an explicit match for the header, it could be a
+		// mineral, check for that
+		for (Mineral m : minerals) {
+			if (m.getName().equalsIgnoreCase(cellText)) {
+				spreadSheetColumnMapping.put(cellNumber, doc.Sample_minerals);
+				headers.put(cellNumber, new BulkUploadHeader(cellText,
+						doc.Sample_minerals.propertyName));
+				break;
+			}
+		}
+	}
+
+	public Map<Integer, Sample> getSamples() {
+		return samples;
+	}
+
+	@Override
+	protected void addObject(int index, Sample object) {
+		samples.put(index, object);
+	}
+
+	@Override
+	protected Sample getNewObject() {
+		return new Sample();
+	}
+	@Override
+	protected boolean parseColumnSpecialCase(HSSFRow row, HSSFCell cell,
+			PropertyConstraint pc, Sample currentObject)
+			throws IllegalArgumentException, IllegalAccessException,
+			InvocationTargetException {
+		if (pc == doc.Sample_minerals) {
+			// Created for Mineral Processing:
+			// * If cell is empty, keep moving
+			// * If there is a number, then that is the amount
+			// * Anything else is taken as an "unknown quantity"
+			if (cell.toString().length() > 0) {
+				final Mineral m = new Mineral();
+				m.setName(headers.get(cell.getColumnIndex()).getHeaderText());
+				try {
+					final Float data = Float.parseFloat(sanitizeNumber(cell
+							.toString()));
+					currentObject.addMineral(m, data);
+				} catch (NumberFormatException e) {
+					currentObject.addMineral(m);
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
