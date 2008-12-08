@@ -12,8 +12,9 @@ public class InvalidDateStringException extends ValidationException {
 
 	public InvalidDateStringException() {
 	}
-	public InvalidDateStringException(final PropertyConstraint pc) {
+	public InvalidDateStringException(final PropertyConstraint pc, final String date) {
 		super(pc);
+		this.date = date;
 	}
 
 	public InvalidDateStringException(String string) {

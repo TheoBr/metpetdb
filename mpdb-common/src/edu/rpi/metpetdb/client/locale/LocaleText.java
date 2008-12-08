@@ -130,7 +130,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_InvalidLongitude(String field);
 	String errorDesc_InvalidLatitude(String field);
 	String errorTitle_UnexpectedError(String throwable);
-	String errorDesc_ValueNotInCollection(String value, String collection);
+	String errorDesc_ValueNotInCollection(String property, String value, String collection);
 
 	/* DAO Exceptions */
 	String errorDesc_ChemicalAnalysisAlreadyExists();

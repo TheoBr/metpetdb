@@ -85,8 +85,8 @@ public class NewSampleParser extends NewParser<Sample> {
 		for (Mineral m : minerals) {
 			if (m.getName().equalsIgnoreCase(cellText)) {
 				spreadSheetColumnMapping.put(cellNumber, doc.Sample_minerals);
-				headers.put(cellNumber, new BulkUploadHeader(cellText,
-						doc.Sample_minerals.propertyName));
+				headers.put(cellNumber, new BulkUploadHeader(getRealMineral(m)
+						.getName(), doc.Sample_minerals.propertyName));
 				break;
 			}
 		}
@@ -130,5 +130,8 @@ public class NewSampleParser extends NewParser<Sample> {
 		} else {
 			return false;
 		}
+	}
+	public Map<Integer, BulkUploadHeader> getHeaders() {
+		return headers;
 	}
 }

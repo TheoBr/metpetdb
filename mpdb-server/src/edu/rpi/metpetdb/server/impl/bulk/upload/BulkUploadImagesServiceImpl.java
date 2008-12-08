@@ -301,7 +301,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 			}
 			results.addResultCount("Subsamples", ssResultCount);
 			results.addResultCount("Images", imgResultCount);
-			results.setHeaders(ip.getHeaders());
+			//results.setHeaders(ip.getHeaders());
 			if (save && results.getErrors().isEmpty()) {
 				try {
 					commit();

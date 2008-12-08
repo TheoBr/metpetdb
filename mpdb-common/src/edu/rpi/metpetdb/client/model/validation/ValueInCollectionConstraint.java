@@ -55,10 +55,10 @@ public class ValueInCollectionConstraint extends PropertyConstraint implements
 			if (values != null && valueInCollection(value, this.getValues()))
 				return;
 			else if (value != null)
-				throw new ValueNotInCollectionException(value.toString(),
+				throw new ValueNotInCollectionException(this, value.toString(),
 						values);
 			else
-				throw new ValueNotInCollectionException("", values);
+				throw new ValueNotInCollectionException(this, "", values);
 		}
 	}
 	

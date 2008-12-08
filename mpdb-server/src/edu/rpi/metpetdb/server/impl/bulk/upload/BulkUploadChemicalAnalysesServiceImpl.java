@@ -171,7 +171,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 			}
 			results.addResultCount("Chemical Analysis", caResultCount);
 			results.addResultCount("Subsamples", ssResultCount);
-			results.setHeaders(ap.getHeaders());
+				//results.setHeaders(ap.getHeaders());
 			if (save && results.getErrors().isEmpty()) {
 				try {
 					commit();

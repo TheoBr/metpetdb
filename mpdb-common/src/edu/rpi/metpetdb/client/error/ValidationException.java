@@ -16,6 +16,8 @@ public abstract class ValidationException extends MpDbException implements
 	private static final long serialVersionUID = 1L;
 
 	protected static String formatPropertyName(final PropertyConstraint c) {
+		if (c == null)
+			return "";
 		final String p = c.propertyName;
 		try {
 			final String r = LocaleHandler.lc_entity.getString(c.entityName

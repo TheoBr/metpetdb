@@ -33,6 +33,7 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadError;
+import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadHeader;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResult;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadServiceAsync;
@@ -309,7 +310,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 	}
 	
 	private void handleErrors(final BulkUploadResult results) {
-		final Map<Integer, BulkUploadError> errors = results.getErrors();
+		final Map<Integer, List<BulkUploadError>> errors = results.getErrors();
 		if (!errors.isEmpty()) {
 			populateErrorPanel(errors);
 			resultStatus.sendNotice(NoticeType.WARNING, "Upload complete, but the file contains errors.");
@@ -338,7 +339,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		hide(progressContainer);
 	}
 
-	private void populateMatchedColsPanel(final Map<Integer, String[]> headers) {
+	private void populateMatchedColsPanel(final Map<Integer, BulkUploadHeader> headers) {
 		matchedColsPanel.clear();
 		matchedColsPanel.add(new MText("Below is a list of columns from the uploaded spreadsheet " +
 				"and how MetPetDB understands them.","p"));
@@ -357,16 +358,16 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			matchedColsGrid.getCellFormatter().setStyleName(i, 0,
 					CSS.BULK_RESULTS_SSCOLNUM);
 			
-			matchedColsGrid.setWidget(i, 1, new HTML(headers.get(k)[0]));
+			matchedColsGrid.setWidget(i, 1, new HTML(headers.get(k).getHeaderText()));
 			matchedColsGrid.getCellFormatter().setStyleName(i, 1,
 					CSS.BULK_RESULTS_SSCOL);
 
 			String matched = "";
-			if (headers.get(k)[1].length() > 0) {
+			if (headers.get(k).getInterpretedHeaderText().length() > 0) {
 				try {
-					matched = enttxt.getString(headers.get(k)[1]);
+					matched = enttxt.getString(headers.get(k).getInterpretedHeaderText());
 				} catch (MissingResourceException mre) {
-					matched = headers.get(k)[1].toString();
+					matched = headers.get(k).getInterpretedHeaderText().toString();
 				}
 				matchedColsGrid.getCellFormatter().setStyleName(i, 2,
 						CSS.BULK_RESULTS_MPDBCOL);
@@ -396,7 +397,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		// TODO provide some summary of matched columns here
 	}
 
-	private void populateErrorPanel(Map<Integer, BulkUploadError> errors) {
+	private void populateErrorPanel(Map<Integer, List<BulkUploadError>> errors) {
 		errorPanel.clear();
 		String msg = "There were "+errors.size()+" errors:";
 		if (errors.size() == 1) msg = "There was one error:";
@@ -414,16 +415,16 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		for (Integer row : rowNumbers) {
 			errorGrid.setText(++i, 0, row.toString());
 			//errorGrid.setText(i, 1, explode(errors.get(row)));
-			errorGrid.setText(i, 1, errors.get(row).getException().format());
+			errorGrid.setText(i, 1, explode(errors.get(row)));
 		}
 		setErrorTabStyle(i);
 	}
 	
-	private String explode(final Collection<MpDbException> exceptions) {
+	private String explode(final Collection<BulkUploadError> exceptions) {
 		String text = "";
-		final Iterator<MpDbException> itr = exceptions.iterator();
+		final Iterator<BulkUploadError> itr = exceptions.iterator();
 		while(itr.hasNext()) {
-			text += itr.next().format() + " - ";
+			text += itr.next().getException().format() + " - ";
 		}
 		return text;
 	}

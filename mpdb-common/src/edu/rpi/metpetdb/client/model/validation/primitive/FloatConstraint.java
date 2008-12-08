@@ -22,6 +22,8 @@ public class FloatConstraint extends PropertyConstraint implements
 			try {
 				if (value instanceof String)
 					value = Float.parseFloat((String) value);
+				else if (value instanceof Double)
+					value = new Float((Double)value);
 				else
 					throw new InvalidFloatException(this);
 			} catch (NumberFormatException nfe) {

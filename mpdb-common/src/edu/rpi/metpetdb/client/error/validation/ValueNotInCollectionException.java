@@ -24,15 +24,16 @@ public class ValueNotInCollectionException extends ValidationException {
 		super(pc);
 	}
 
-	public ValueNotInCollectionException(final String value,
+	public ValueNotInCollectionException(final PropertyConstraint pc, final String value,
 			final Collection<? extends MObject> collection) {
+		super(pc);
 		this.value = value == null ? "" : value.toString();
 		this.collection = collection;
 	}
 
 	public String format() {
 		String collectionItems = collection.toString();
-		return LocaleHandler.lc_text.errorDesc_ValueNotInCollection(value,
+		return LocaleHandler.lc_text.errorDesc_ValueNotInCollection(formatPropertyName(),value,
 				collectionItems);
 	}
 }

@@ -12,13 +12,15 @@ import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
+import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadError;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResult;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadSampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
-import edu.rpi.metpetdb.server.bulk.upload.SampleParser;
+import edu.rpi.metpetdb.server.bulk.upload.NewSampleParser;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 
 public class BulkUploadSampleServiceImpl extends BulkUploadService implements
@@ -32,18 +34,18 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 			if (save) {
 				updateFile(fileOnServer);
 			}
-			final SampleParser sp = new SampleParser(new FileInputStream(
+			final NewSampleParser sp = new NewSampleParser(new FileInputStream(
 					MpDbServlet.getFileUploadPath() + fileOnServer));
 			sp.parse();
 			final Map<Integer, Sample> samples = sp.getSamples();
 			final SampleDAO dao = new SampleDAO(this.currentSession());
-			final Map<Integer, MpDbException> existingErrors = sp
+			final Map<Integer, BulkUploadError> existingErrors = sp
 					.getErrors();
 			final Set<Integer> keys = existingErrors.keySet();
 			final Iterator<Integer> itr = keys.iterator();
 			while (itr.hasNext()) {
 				final Integer i = itr.next();
-				results.addError(i.intValue(), existingErrors.get(i));
+				results.addError(i.intValue(), existingErrors.get(i).getException());
 			}
 			User user = new User();
 			user.setId(currentUser());
@@ -55,14 +57,14 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 				s.setOwner(user);
 				s.setPublicData(false);
 				try {
-					doc.validate(s);
+					//doc.validate(s);
 					if (dao.isNew(s))
 						resultCount.incrementFresh();
 					else
 						resultCount.incrementOld();
-				} catch (MpDbException e) {
-					resultCount.incrementInvalid();
-					results.addError(row, e);
+//				} catch (MpDbException e) {
+//					resultCount.incrementInvalid();
+//					results.addError(row, e);
 				} catch (HibernateException e) {
 					resultCount.incrementInvalid();
 					results.addError(row, handleHibernateException(e));
@@ -86,8 +88,10 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 					results.addError(0, e);
 				}
 			}
-		} catch (final IOException ioe) {
-			throw new IllegalStateException(ioe.getMessage());
+		} catch (MpDbException e) {
+			results.addError(-1, e);
+		} catch (final Exception e) {
+			results.addError(-1, new GenericDAOException(e.getMessage()));
 		}
 		return results;
 	}

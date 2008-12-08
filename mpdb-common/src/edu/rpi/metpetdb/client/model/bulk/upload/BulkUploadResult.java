@@ -1,8 +1,9 @@
 package edu.rpi.metpetdb.client.model.bulk.upload;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -10,9 +11,9 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 
 public class BulkUploadResult implements IsSerializable {
 
-	private Map<Integer, String[]> headers;
+	private Map<Integer, BulkUploadHeader> headers;
 	//maps row numbers to a list of exceptions
-	private Map<Integer, BulkUploadError> errors = new TreeMap<Integer, BulkUploadError>();
+	private Map<Integer, List<BulkUploadError>> errors = new HashMap<Integer, List<BulkUploadError>>();
 	/**
 	 * the key is the name of the object, i.e. Sample, the value is a
 	 * ResultCount class that contains the counts of fresh, invalid, and old
@@ -32,16 +33,18 @@ public class BulkUploadResult implements IsSerializable {
 		buError.setRow(rowNumber);
 		buError.setColumn(colNumber);
 		buError.setException(e);
-		errors.put(rowNumber, buError);
+		if (!errors.containsKey(rowNumber))
+			errors.put(rowNumber, new ArrayList<BulkUploadError>());
+		errors.get(rowNumber).add(buError);
 	}
 
-	public Map<Integer, String[]> getHeaders() {
+	public Map<Integer,BulkUploadHeader> getHeaders() {
 		return headers;
 	}
-	public void setHeaders(Map<Integer, String[]> headers) {
+	public void setHeaders(Map<Integer,BulkUploadHeader> headers) {
 		this.headers = headers;
 	}
-	public Map<Integer, BulkUploadError> getErrors() {
+	public Map<Integer, List<BulkUploadError>> getErrors() {
 		return errors;
 	}
 	public Map<String, BulkUploadResultCount> getResultCounts() {

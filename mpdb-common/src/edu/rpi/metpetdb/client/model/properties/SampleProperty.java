@@ -39,20 +39,26 @@ public enum SampleProperty implements Property<Sample> {
 	},
 	latitude {
 		public Object get(final Sample sample) {
-			return ((Point) sample.getLocation()).y;
+			if (sample.getLocation() != null)
+				return ((Point) sample.getLocation()).y;
+			else
+				return null;
 		}
 
 		public void set(final Sample sample, final Object geometry) {
-			sample.setLatitude(Double.valueOf(geometry.toString()));
+			sample.setLatitude(PropertyUtils.convertToFloat( geometry.toString()));
 		}
 	},
 	longitude {
 		public Object get(final Sample sample) {
-			return ((Point) sample.getLocation()).x;
+			if (sample.getLocation() != null)
+				return ((Point) sample.getLocation()).x;
+			else
+				return null;
 		}
 
 		public void set(final Sample sample, final Object geometry) {
-			sample.setLongitude(Double.valueOf(geometry.toString()));
+			sample.setLongitude(PropertyUtils.convertToFloat( geometry.toString()));
 		}
 	},
 	owner {

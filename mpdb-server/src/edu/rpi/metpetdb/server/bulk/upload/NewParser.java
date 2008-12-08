@@ -190,54 +190,57 @@ public abstract class NewParser<T extends MObject> {
 				// get the constraint for this cell
 				final PropertyConstraint pc = spreadSheetColumnMapping.get(i);
 
-				if (pc == null || cell == null || cell.toString().equals("")) {
-					// skip cells with not data
-					continue;
-				}
+				if (pc != null && cell != null && !cell.toString().equals("")
+						&& !parseColumnSpecialCase(row, cell, pc, newObject)) {
 
-				if (parseColumnSpecialCase(row, cell, pc, newObject)) {
-					continue;
-				}
-
-				if (pc instanceof NumberConstraint<?>) {
-					// Santize numbers before setting them on the object
-					final String data = sanitizeNumber(cell.toString());
-					newObject.mSet(pc.property, data);
-				} else if (pc instanceof TimestampConstraint) {
-					// handle dates differently
-					if (newObject instanceof HasDate) {
-						final HasDate objectWithDate = (HasDate) newObject;
-						try {
-							final Date data = cell.getDateCellValue();
-							objectWithDate
-									.setDate(new Timestamp(data.getTime()));
-							objectWithDate.setDatePrecision((short) 1);
-						} catch (final IllegalStateException nfe) {
-							final String data = cell.toString();
+					if (pc instanceof NumberConstraint<?>) {
+						// Santize numbers before setting them on the object
+						final String data = sanitizeNumber(cell.toString());
+						newObject.mSet(pc.property, data);
+					} else if (pc instanceof TimestampConstraint) {
+						// handle dates differently
+						if (newObject instanceof HasDate) {
+							final HasDate objectWithDate = (HasDate) newObject;
 							try {
-								(new DateStringConstraint())
-										.validateValue(data);
-								parseDate(objectWithDate, data);
-							} catch (final ValidationException ve) {
-								errors.put(rowindex, new BulkUploadError(
-										rowindex, i, ve));
+								final Date data = cell.getDateCellValue();
+								objectWithDate.setDate(new Timestamp(data
+										.getTime()));
+								objectWithDate.setDatePrecision((short) 1);
+							} catch (final IllegalStateException nfe) {
+								final String data = cell.toString();
+								try {
+									(new DateStringConstraint())
+											.validateValue(data);
+									parseDate(objectWithDate, data);
+								} catch (final ValidationException ve) {
+									errors.put(rowindex, new BulkUploadError(
+											rowindex + 1, i + 1, ve));
+								}
 							}
 						}
-					}
-				} else {
-					final String data = cell.toString();
-					final String[] mulitpartData = data.split("\\s*"
-							+ DATA_SEPARATOR + "\\s*");
-					for (String str : mulitpartData) {
-						// TODO make sure things that support multiple data in
-						// the properties
-						newObject.mSet(pc.property, str);
+					} else {
+						final String data = cell.toString();
+						final String[] mulitpartData = data.split("\\s*"
+								+ DATA_SEPARATOR + "\\s*");
+						for (String str : mulitpartData) {
+							// TODO make sure things that support multiple data
+							// in
+							// the properties
+							newObject.mSet(pc.property, str.trim());
+						}
 					}
 				}
-				sawDataInRow = true;
+				if (pc != null) {
+					pc.validateEntity(newObject);
+					if (cell != null && !cell.equals(""))
+						sawDataInRow = true;
+				}
+			} catch (MpDbException e) {
+				errors.put(rowindex + 1, new BulkUploadError(rowindex + 1,
+						i + 1, e));
 			} catch (Exception e) {
-				errors.put(rowindex, new BulkUploadError(rowindex, i,
-						new GenericDAOException(e.getMessage())));
+				errors.put(rowindex + 1, new BulkUploadError(rowindex + 1,
+						i + 1, new GenericDAOException(e.getMessage())));
 			}
 		}
 

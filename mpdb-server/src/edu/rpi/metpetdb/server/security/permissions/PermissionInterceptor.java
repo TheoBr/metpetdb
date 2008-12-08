@@ -54,10 +54,24 @@ public class PermissionInterceptor extends EmptyInterceptor {
 
 	private void checkPermissions(Object entity, Object[] state,
 			String[] propertyNames, boolean saving) {
+		boolean isPublic = false;
+		if (entity instanceof PublicData) {
+			if (saving) {
+				if (isPublic(propertyNames, state)) {
+					isPublic = true;
+					throw new CallbackException(
+							"Public data cannot be modified.");
+				}
+			}
+		}
 		if (entity instanceof HasOwner) {
 			if (MpDbServlet.currentReq() != null) {
 				final Collection<Principal> principals = MpDbServlet
 						.currentReq().principals;
+				if (isPublic) {
+					//we always allow loading of public data
+					return;
+				}
 				if (principals == null) {
 					throw new CallbackException(
 							"Invalid Subject, Please Log back in");
@@ -71,14 +85,6 @@ public class PermissionInterceptor extends EmptyInterceptor {
 						&& !isPublic(propertyNames, state)) {
 					throw new CallbackException(
 							"Cannot load objects you don't own, we don't like to share.");
-				}
-			}
-		}
-		if (entity instanceof PublicData) {
-			if (saving) {
-				if (isPublic(propertyNames, state)) {
-					throw new CallbackException(
-							"Public data cannot be modified.");
 				}
 			}
 		}

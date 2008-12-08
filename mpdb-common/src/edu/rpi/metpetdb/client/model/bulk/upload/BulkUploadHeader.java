@@ -1,6 +1,8 @@
 package edu.rpi.metpetdb.client.model.bulk.upload;
 
-public class BulkUploadHeader {
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+public class BulkUploadHeader implements IsSerializable {
 
 	/** The text in the actual spreadsheet */
 	private String headerText;

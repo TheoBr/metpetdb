@@ -48,7 +48,7 @@ public class DateStringConstraint extends StringConstraint {
 				return;
 			}
 		}
-		throw new InvalidDateStringException(this);
+		throw new InvalidDateStringException(this, value == null ? "" : value.toString());
 	}
 
 	// This is quite naive, but still better than nothing
