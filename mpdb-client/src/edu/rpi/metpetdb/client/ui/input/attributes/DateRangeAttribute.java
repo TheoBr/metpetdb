@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -16,8 +17,6 @@ import com.google.gwt.widgetideas.datepicker.client.CalendarModel;
 import com.google.gwt.widgetideas.datepicker.client.DatePicker;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.error.validation.InvalidLongitudeException;
-import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.DateSpan;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.DateSpanConstraint;
@@ -102,8 +101,9 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 			final PropertyConstraint constraint) throws ValidationException{
 		if (constraint instanceof DateSpanConstraint) {
 			createDateInfoFromInput();
-			if (fromDate != null && toDate != null)
+			if (fromDate != null && toDate != null) {
 				dateRange = new DateSpan(fromDate, toDate);
+			}
 			else
 				dateRange = null;
 			return dateRange;
@@ -145,8 +145,9 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 		try {
 			String[] fromSplit = from.getText().split("/");
 			String[] toSplit = to.getText().split("/");
-			
-			if (fromSplit.length == 1){
+			if (fromSplit.length == 0){
+				fromDate = null;
+			} else if (fromSplit.length == 1){
 				if (fromSplit[0].equals("")){
 					fromDate = null;
 				} else {
@@ -163,8 +164,9 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 				fromDate.setDate(Integer.parseInt(fromSplit[1]));
 				fromDate.setYear(Integer.parseInt(fromSplit[2]) - 1900);
 			}
-			
-			if (toSplit.length == 1){
+			if (toSplit.length == 0){
+				toDate = new Timestamp(System.currentTimeMillis());
+			} else if (toSplit.length == 1){
 				if (toSplit[0].equals("")){
 					toDate = new Timestamp(System.currentTimeMillis());
 				} else {
@@ -185,7 +187,8 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 			// TODO: make an error message show when invalid dates input
 
 		} catch (NumberFormatException nfe) {
-			// TODO display validation exception
+			toDate = null;
+			fromDate = null;
 		}
 	}
 
