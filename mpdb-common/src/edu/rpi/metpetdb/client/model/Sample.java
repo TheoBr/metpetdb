@@ -46,7 +46,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, Publ
 	private Short datePrecision;
 
 	@Field(index = Index.UN_TOKENIZED)
-	private boolean publicData;
+	private Boolean publicData;
 
 	@IndexedEmbedded(prefix = "rockType_")
 	private RockType rockType;
@@ -204,11 +204,11 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, Publ
 		setRockType(rt);
 	}
 
-	public boolean isPublicData() {
+	public Boolean isPublicData() {
 		return publicData;
 	}
 
-	public void setPublicData(final boolean p) {
+	public void setPublicData(final Boolean p) {
 		publicData = p;
 	}
 

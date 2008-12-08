@@ -285,7 +285,8 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				uploadStatus.hide();
 				uploadButton.setText("Upload");
 				uploadButton.setEnabled(true);
-				populateMatchedColsPanel(results.getHeaders());
+				if (results.getHeaders() != null)
+					populateMatchedColsPanel(results.getHeaders());
 				populateSummaryPanel(results.getResultCounts(), results.getErrors().size());
 				handleErrors(results);
 				show(resultsPanel);

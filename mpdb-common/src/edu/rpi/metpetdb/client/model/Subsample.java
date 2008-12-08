@@ -173,14 +173,14 @@ public class Subsample extends MObject implements HasOwner, PublicData, HasSampl
 	public boolean mIsNew() {
 		return id == 0;
 	}
-	public boolean isPublicData() {
+	public Boolean isPublicData() {
 		if (publicData != null)
 			return publicData.booleanValue();
 		else
 			return false;
 	}
 
-	public void setPublicData(final boolean p) {
+	public void setPublicData(final Boolean p) {
 		publicData = p;
 	}
 	

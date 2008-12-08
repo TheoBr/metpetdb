@@ -2,8 +2,8 @@ package edu.rpi.metpetdb.client.model.interfaces;
 
 public interface PublicData {
 	
-	public boolean isPublicData();
+	public Boolean isPublicData();
 	
-	public void setPublicData(final boolean b);
+	public void setPublicData(final Boolean b);
 
 }
