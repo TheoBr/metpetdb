@@ -56,9 +56,11 @@ public class PermissionInterceptor extends EmptyInterceptor {
 			String[] propertyNames, boolean saving) {
 		boolean isPublic = false;
 		if (entity instanceof PublicData) {
+			if (isPublic(propertyNames, state)) {
+				isPublic = true;
+			}
 			if (saving) {
-				if (isPublic(propertyNames, state)) {
-					isPublic = true;
+				if (isPublic) {
 					throw new CallbackException(
 							"Public data cannot be modified.");
 				}
