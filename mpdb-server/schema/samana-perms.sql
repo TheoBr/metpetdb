@@ -35,7 +35,7 @@ alter table subsamples owner to metpetdb_dev;
 alter table uploaded_files owner to metpetdb_dev;
 alter table users owner to metpetdb_dev;
 alter table xray_image owner to metpetdb_dev;
-alter table sample_comments_archive owner to metpetdb_dev;
+--alter table sample_comments_archive owner to metpetdb_dev;
 alter table sample_metamorphic_grades_archive owner to metpetdb_dev;
 alter table sample_minerals_archive owner to metpetdb_dev;
 alter table sample_reference_archive owner to metpetdb_dev;

@@ -70,3 +70,14 @@ DROP TABLE image_reference CASCADE;
 DROP TABLE image_type CASCADE;
 DROP TABLE rock_type CASCADE;
 DROP TABLE subsample_type CASCADE;
+
+--triggers
+drop function archive_sample() cascade;
+drop function archive_sample_minerals() cascade;
+drop function archive_sample_regions() cascade;
+drop function archive_sample_grades() cascade;
+drop function archive_sample_references() cascade;
+drop function archive_subsample() cascade;
+drop function archive_chemical_analysis() cascade;
+drop function archive_chemical_analysis_elements() cascade;
+drop function archive_chemical_analysis_oxides() cascade;
