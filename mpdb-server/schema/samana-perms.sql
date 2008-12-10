@@ -46,6 +46,17 @@ alter table chemical_analysis_elements_archive  owner to metpetdb_dev;
 alter table chemical_analysis_oxides_archive  owner to metpetdb_dev;
 alter table subsamples_archive owner to metpetdb_dev;
 
+--triggers
+alter function archive_sampl()e owner to metpetdb_dev;
+alter function archive_sample_minerals() owner to metpetdb_dev;
+alter function archive_sample_regions() owner to metpetdb_dev;
+alter function archive_sample_grades() owner to metpetdb_dev;
+alter function archive_sample_references() owner to metpetdb_dev;
+alter function archive_subsample() owner to metpetdb_dev;
+alter function archive_chemical_analysis() owner to metpetdb_dev;
+alter function archive_chemical_analysis_elements() owner to metpetdb_dev;
+alter function archive_chemical_analysis_oxides() owner to metpetdb_dev;
+
 grant all PRIVILEGES on admin_user_seq to metpetdb_dev; 
 grant all PRIVILEGES on chemical_analysis_elements_seq to metpetdb_dev; 
 grant all PRIVILEGES on chemical_analysis_oxides_seq to metpetdb_dev;
