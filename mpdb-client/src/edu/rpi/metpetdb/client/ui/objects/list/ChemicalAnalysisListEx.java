@@ -12,6 +12,7 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Mineral;
+import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.properties.ChemicalAnalysisProperty;
 import edu.rpi.metpetdb.client.paging.Column;
@@ -126,10 +127,13 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 					ChemicalAnalysisProperty.reference, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
-					String text =  data
-							.mGet(ChemicalAnalysisProperty.reference).toString();
-					if (text == null)
+					final Reference r = (Reference) data
+					.mGet(ChemicalAnalysisProperty.reference); 
+					String text;
+					if (r == null)
 						text = "------";
+					else
+						text = r.toString();
 					return new MText(text);
 				}
 			},
