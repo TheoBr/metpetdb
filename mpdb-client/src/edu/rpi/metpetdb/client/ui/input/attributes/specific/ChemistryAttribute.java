@@ -169,12 +169,13 @@ public class ChemistryAttribute extends GenericAttribute implements
 					.getSpecies());
 			((TextBox) ft.getWidget(rows - 1, 4)).setText(String.valueOf(oxide
 					.getPrecision()));
-			if (oxide.getPrecisionUnit().equalsIgnoreCase("ABS"))
+			if (oxide.getPrecisionUnit() == null || oxide.getPrecisionUnit().equalsIgnoreCase("ABS"))
 				((ListBox) ft.getWidget(rows - 1, 5)).setSelectedIndex(0);
 			else
 				((ListBox) ft.getWidget(rows - 1, 5)).setSelectedIndex(1);
-			((ListBox) ft.getWidget(rows - 1, 2)).setSelectedIndex(
-					units.indexOf(oxide.getMeasurementUnit().toLowerCase()));
+			if (oxide.getMeasurementUnit() != null)
+				((ListBox) ft.getWidget(rows - 1, 2)).setSelectedIndex(
+						units.indexOf(oxide.getMeasurementUnit().toLowerCase()));
 		}
 
 		return new Widget[] {
