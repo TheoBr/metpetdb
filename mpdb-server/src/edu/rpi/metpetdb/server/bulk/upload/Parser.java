@@ -34,6 +34,13 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.properties.Property;
 import edu.rpi.metpetdb.client.model.validation.DateStringConstraint;
 
+/**
+ * 
+ * @deprecated to be replaced by NewParser once AnalysisParser and ImageParser have been updated
+ * @param <T>
+ */
+
+@Deprecated
 public abstract class Parser<T extends MObject> {
 
 	/** the character that is used to separate multiple data in one column */

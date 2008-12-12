@@ -23,15 +23,21 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.bulk.upload.InvalidSpreadSheetException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.validation.InvalidDateStringException;
+import edu.rpi.metpetdb.client.model.Element;
 import edu.rpi.metpetdb.client.model.Mineral;
+import edu.rpi.metpetdb.client.model.Oxide;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadError;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadHeader;
 import edu.rpi.metpetdb.client.model.interfaces.HasDate;
+import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.DateStringConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.NumberConstraint;
+import edu.rpi.metpetdb.server.DataStore;
 
 public abstract class NewParser<T extends MObject> {
 
@@ -40,7 +46,11 @@ public abstract class NewParser<T extends MObject> {
 	protected HSSFSheet sheet;
 	protected final Map<Integer, BulkUploadError> errors = new HashMap<Integer, BulkUploadError>();
 	protected static Collection<Mineral> minerals;
+	protected static Collection<Element> elements;
+	protected static Collection<Oxide> oxides;
 	protected final Map<Integer, BulkUploadHeader> headers = new HashMap<Integer, BulkUploadHeader>();
+	protected static DatabaseObjectConstraints doc = DataStore.getInstance()
+			.getDatabaseObjectConstraints();
 	/**
 	 * relates columns to entries in map
 	 */
@@ -176,6 +186,14 @@ public abstract class NewParser<T extends MObject> {
 		NewParser.minerals = minerals;
 	}
 
+	public static void setElements(final Collection<Element> elements) {
+		NewParser.elements = elements;
+	}
+
+	public static void setOxides(final Collection<Oxide> oxides) {
+		NewParser.oxides = oxides;
+	}
+
 	protected final void parseRow(final int rowindex) {
 		final HSSFRow row = sheet.getRow(rowindex);
 		if (row == null) {
@@ -193,51 +211,71 @@ public abstract class NewParser<T extends MObject> {
 				if (pc != null && cell != null && !cell.toString().equals("")
 						&& !parseColumnSpecialCase(row, cell, pc, newObject)) {
 
-					if (pc instanceof NumberConstraint<?>) {
-						// Santize numbers before setting them on the object
-						final String data = sanitizeNumber(cell.toString());
-						newObject.mSet(pc.property, data);
-					} else if (pc instanceof TimestampConstraint) {
-						// handle dates differently
-						if (newObject instanceof HasDate) {
-							final HasDate objectWithDate = (HasDate) newObject;
-							try {
-								final Date data = cell.getDateCellValue();
-								objectWithDate.setDate(new Timestamp(data
-										.getTime()));
-								objectWithDate.setDatePrecision((short) 1);
-							} catch (final IllegalStateException nfe) {
-								final String data = cell.toString();
-								try {
-									(new DateStringConstraint())
-											.validateValue(data);
-									parseDate(objectWithDate, data);
-								} catch (final ValidationException ve) {
-									errors.put(rowindex, new BulkUploadError(
-											rowindex + 1, i + 1, ve));
-								}
+					if (pc == doc.Subsample_subsampleType) {
+						// We have to invoke the method on a subsample
+						if (newObject instanceof HasSubsample) {
+							if (((HasSubsample) newObject).getSubsample() != null) {
+								((HasSubsample) newObject).getSubsample().mSet(
+										pc.property, cell.toString());
+							} else {
+								final Subsample s = new Subsample();
+								s.mSet(pc.property, cell.toString());
+								((HasSubsample) newObject).setSubsample(s);
 							}
 						}
-					} else {
-						final String data = cell.toString();
-						final String[] mulitpartData = data.split("\\s*"
-								+ DATA_SEPARATOR + "\\s*");
-						for (String str : mulitpartData) {
-							// TODO make sure things that support multiple data
-							// in
-							// the properties
-							newObject.mSet(pc.property, str.trim());
+					} else if (pc.entityName.equals(newObject.getClass()
+							.getSimpleName())) {
+						if (pc instanceof NumberConstraint<?>) {
+							// Santize numbers before setting them on the object
+							final String data = sanitizeNumber(cell.toString());
+							newObject.mSet(pc.property, data);
+						} else if (pc instanceof TimestampConstraint) {
+							// handle dates differently
+							if (newObject instanceof HasDate) {
+								final HasDate objectWithDate = (HasDate) newObject;
+								try {
+									final Date data = cell.getDateCellValue();
+									objectWithDate.setDate(new Timestamp(data
+											.getTime()));
+									objectWithDate.setDatePrecision((short) 1);
+								} catch (final IllegalStateException nfe) {
+									final String data = cell.toString();
+									try {
+										(new DateStringConstraint())
+												.validateValue(data);
+										parseDate(objectWithDate, data);
+									} catch (final ValidationException ve) {
+										errors
+												.put(rowindex,
+														new BulkUploadError(
+																rowindex + 1,
+																i + 1, ve));
+									}
+								}
+							}
+						} else {
+							final String data = cell.toString();
+							final String[] mulitpartData = data.split("\\s*"
+									+ DATA_SEPARATOR + "\\s*");
+							for (String str : mulitpartData) {
+								newObject.mSet(pc.property, str.trim());
+							}
 						}
 					}
 				}
-				if (pc != null) {
-					pc.validateEntity(newObject);
-					if (cell != null && !cell.equals(""))
-						sawDataInRow = true;
+				if (pc != null && cell != null && !cell.equals("")) {
+					if (pc.entityName.equals(newObject.getClass()
+							.getSimpleName()))
+						pc.validateEntity(newObject);
+					sawDataInRow = true;
 				}
 			} catch (MpDbException e) {
 				errors.put(rowindex + 1, new BulkUploadError(rowindex + 1,
 						i + 1, e));
+			} catch (NumberFormatException e) {
+				// TODO maybe handle specially?
+				errors.put(rowindex + 1, new BulkUploadError(rowindex + 1,
+						i + 1, new GenericDAOException(e.getMessage())));
 			} catch (Exception e) {
 				errors.put(rowindex + 1, new BulkUploadError(rowindex + 1,
 						i + 1, new GenericDAOException(e.getMessage())));

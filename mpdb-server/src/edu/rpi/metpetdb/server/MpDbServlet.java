@@ -42,6 +42,7 @@ import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
+import edu.rpi.metpetdb.server.bulk.upload.NewAnalysisParser;
 import edu.rpi.metpetdb.server.bulk.upload.NewSampleParser;
 import edu.rpi.metpetdb.server.bulk.upload.SampleParser;
 import edu.rpi.metpetdb.server.dao.impl.ElementDAO;
@@ -157,11 +158,10 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		final Collection<Mineral> minerals = (new MineralDAO(s).getAll());
 		SampleParser.setMinerals(minerals);
 		NewSampleParser.setMinerals(minerals);
-		NewSampleParser.initialize(DataStore.getInstance()
-				.getDatabaseObjectConstraints(), DataStore.getInstance()
-				.getObjectConstraints());
 		List<Element> elements = ((new ElementDAO(s)).getAll());
 		List<Oxide> oxides = ((new OxideDAO(s)).getAll());
+		NewAnalysisParser.setOxides(oxides);
+		NewAnalysisParser.setElements(elements);
 		AnalysisParser.setElementsAndOxides(elements, oxides);
 		s.close();
 	}

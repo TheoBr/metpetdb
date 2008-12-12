@@ -29,7 +29,10 @@ public class PropertyRequiredException extends ValidationException {
 	public String format() {
 		// return
 		// LocaleHandler.lc_text.errorDesc_Required(formatPropertyName());
-		return LocaleHandler.lc_text
-				.errorDesc_Required(formatPropertyName());
+		if (formatPropertyName() != "")
+			return LocaleHandler.lc_text
+					.errorDesc_Required(formatPropertyName());
+		else
+			return LocaleHandler.lc_text.errorDesc_Required(propertyName);
 	}
 }

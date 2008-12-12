@@ -18,7 +18,15 @@ public class Oxide extends MObject {
 	private short cationsPerOxide;
 	private Float conversionFactor;
 	private Set<MineralType> mineralTypes;
-	
+
+	public Oxide() {
+
+	}
+
+	public Oxide(final String species) {
+		this.species = species;
+	}
+
 	public Element getElement() {
 		return element;
 	}
@@ -84,9 +92,11 @@ public class Oxide extends MObject {
 	}
 
 	public boolean equals(final Object o) {
-		return o instanceof Oxide && ((Oxide) o).getOxideId() == oxideId;
+		return o instanceof Oxide
+				&& (((Oxide) o).getOxideId() == oxideId || (((Oxide) o)
+						.getOxideId() == 0 && ((Oxide) o).getSpecies()
+						.equalsIgnoreCase(species)));
 	}
-
 	public int hashCode() {
 		return oxideId;
 	}
@@ -98,9 +108,12 @@ public class Oxide extends MObject {
 	public String toString() {
 		return species;
 	}
-	
-	public native String getDisplayName() /*-{
-		var s = this.@edu.rpi.metpetdb.client.model.Oxide::species;
-		return s.replace(/(\d+)/g, "<sub>$1</sub>");
-	}-*/; 
+
+	public native String getDisplayName() /*
+										 * -{ var s =
+										 * this.@edu.rpi.metpetdb.client
+										 * .model.Oxide::species; return
+										 * s.replace(/(\d+)/g, "<sub>$1</sub>");
+										 * }-
+										 */;
 }

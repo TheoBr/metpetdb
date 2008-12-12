@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.model.validation;
 
+import edu.rpi.metpetdb.client.model.properties.ChemicalAnalysisProperty;
 import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
 import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
@@ -24,6 +25,8 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 	
 	public FloatConstraint Sample_longitude;
 	public FloatConstraint Sample_latitude;
+	
+	//public StringConstraint ChemicalAnalysis_subsampleType;
 
 	public void finishInitialization(DatabaseObjectConstraints doc) {
 		

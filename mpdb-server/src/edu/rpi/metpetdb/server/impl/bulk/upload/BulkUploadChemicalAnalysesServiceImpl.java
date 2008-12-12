@@ -10,25 +10,30 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.HibernateException;
+import org.hibernate.exception.GenericJDBCException;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadError;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResult;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadChemicalAnalysesService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
+import edu.rpi.metpetdb.server.bulk.upload.NewAnalysisParser;
 import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
+import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 
 public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 		implements BulkUploadChemicalAnalysesService {
@@ -42,10 +47,22 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 			if (save) {
 				updateFile(fileOnServer);
 			}
-			final AnalysisParser ap = new AnalysisParser(new FileInputStream(
-					MpDbServlet.getFileUploadPath() + fileOnServer));
+			final NewAnalysisParser ap = new NewAnalysisParser(
+					new FileInputStream(MpDbServlet.getFileUploadPath()
+							+ fileOnServer));
 			ap.parse();
-			final Map<Integer, ChemicalAnalysis> analyses = ap.getAnalyses();
+			final Map<Integer, ChemicalAnalysis> analyses = ap
+					.getChemicalAnalyses();
+			// Handle any existing errors found
+			final Map<Integer, BulkUploadError> existingErrors = ap.getErrors();
+			final Set<Integer> keys = existingErrors.keySet();
+			final Iterator<Integer> itr = keys.iterator();
+			while (itr.hasNext()) {
+				final Integer i = itr.next();
+				results.addError(i.intValue(), existingErrors.get(i)
+						.getException());
+			}
+
 			// Keeps track of existing/new subsample names for each sample
 			final Map<String, Collection<String>> subsampleNames = new HashMap<String, Collection<String>>();
 			// maps a sample alias to an actual sample
@@ -58,16 +75,10 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 					.currentSession());
 			final SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
 			final SampleDAO sDAO = new SampleDAO(this.currentSession());
-			User u = new User();
-			u.setId(currentUser());
+			User user = new User();
+			user.setId(currentUser());
+			user = new UserDAO(currentSession()).fill(user);
 			final Iterator<Integer> rows = analyses.keySet().iterator();
-			final Map<Integer, MpDbException> existingErrors = ap.getErrors();
-			final Set<Integer> keys = existingErrors.keySet();
-			final Iterator<Integer> itr = keys.iterator();
-			while (itr.hasNext()) {
-				final Integer i = itr.next();
-				results.addError(i.intValue(), existingErrors.get(i));
-			}
 			while (rows.hasNext()) {
 				int row = rows.next();
 				final ChemicalAnalysis ca = analyses.get(row);
@@ -85,9 +96,9 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 						continue;
 					}
 					Sample s = ca.getSubsample().getSample();
-					s.setOwner(u);
-					ca.getSubsample().setOwner(u);
-					ca.setOwner(u);
+					s.setOwner(user);
+					ca.getSubsample().setOwner(user);
+					ca.setOwner(user);
 					ca.setPublicData(false);
 					ca.getSubsample().setPublicData(false);
 					try {
@@ -106,6 +117,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 						// Every Image needs a sample so add an error
 						results.addError(row, new PropertyRequiredException(
 								"Sample"));
+						results.addError(row, e);
 						continue;
 					}
 					Subsample ss = (ca.getSubsample());
@@ -165,13 +177,19 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 					results.addError(row, e);
 					caResultCount.incrementInvalid();
 				} catch (HibernateException e) {
-					results.addError(row, handleHibernateException(e));
-				}
+					if (e instanceof GenericJDBCException) {
+						if (((GenericJDBCException)e).getSQLException().getSQLState().equals("25P02")) {
+							results.addError(row, new GenericDAOException("Bulk Upload stopped due to fatal error"));
+						}
+					} else {
+						results.addError(row, handleHibernateException(e));
+					}
+				}	
 				++row;
 			}
 			results.addResultCount("Chemical Analysis", caResultCount);
 			results.addResultCount("Subsamples", ssResultCount);
-				//results.setHeaders(ap.getHeaders());
+			// results.setHeaders(ap.getHeaders());
 			if (save && results.getErrors().isEmpty()) {
 				try {
 					commit();
@@ -179,8 +197,10 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 					results.addError(0, e);
 				}
 			}
-		} catch (final IOException ioe) {
-			throw new IllegalStateException(ioe.getMessage());
+		} catch (MpDbException e) {
+			results.addError(-1, e);
+		} catch (final Exception e) {
+			results.addError(-1, new GenericDAOException(e.getMessage()));
 		}
 		return results;
 	}

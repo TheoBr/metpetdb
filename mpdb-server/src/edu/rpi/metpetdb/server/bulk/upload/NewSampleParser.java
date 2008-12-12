@@ -18,16 +18,16 @@ import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadHeader;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.server.DataStore;
 
 public class NewSampleParser extends NewParser<Sample> {
 
 	private final Map<Integer, Sample> samples;
 	private static List<ColumnMapping> columns;
-	private static DatabaseObjectConstraints doc;
 
-	public static void initialize(final DatabaseObjectConstraints doc,
-			final ObjectConstraints oc) {
-		NewSampleParser.doc = doc;
+	static {
+		final DatabaseObjectConstraints doc = DataStore.getInstance().getDatabaseObjectConstraints();
+		final ObjectConstraints oc = DataStore.getInstance().getObjectConstraints();
 		columns = new ArrayList<ColumnMapping>();
 		columns.add(new ColumnMapping(RegularExpressions.ROCK_TYPE,
 				doc.Sample_rockType));
@@ -35,9 +35,9 @@ public class NewSampleParser extends NewParser<Sample> {
 				doc.Sample_sesarNumber));
 		columns.add(new ColumnMapping(RegularExpressions.LATITUDE_ERROR,
 				doc.Sample_latitudeError));
-		columns.add(new ColumnMapping("(latitude)|(lat\\s*)",
+		columns.add(new ColumnMapping(RegularExpressions.LATITUDE,
 				oc.Sample_latitude));
-		columns.add(new ColumnMapping("(longitude)|(^lon\\s*)",
+		columns.add(new ColumnMapping(RegularExpressions.LONGITUDE,
 				oc.Sample_longitude));
 		columns.add(new ColumnMapping(RegularExpressions.LONGITUDE_ERROR,
 				doc.Sample_longitudeError));
@@ -57,11 +57,12 @@ public class NewSampleParser extends NewParser<Sample> {
 				doc.Sample_comments));
 		columns.add(new ColumnMapping(RegularExpressions.REFERENCES,
 				doc.Sample_references));
-		columns.add(new ColumnMapping(RegularExpressions.ALIAS,
+		columns.add(new ColumnMapping(RegularExpressions.SAMPLE,
 				doc.Sample_alias));
 		columns.add(new ColumnMapping(RegularExpressions.MINERALS,
 				doc.Sample_minerals));
 	}
+	
 	public List<ColumnMapping> getColumMappings() {
 		return columns;
 	}

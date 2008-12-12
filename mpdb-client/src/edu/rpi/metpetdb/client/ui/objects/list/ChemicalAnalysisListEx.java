@@ -84,8 +84,10 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 					String text = enttxt.ChemicalAnalysis_largeRock();
 					Boolean largeRock = (Boolean)data.mGet(ChemicalAnalysisProperty.largeRock);
 					if (!largeRock){
-					text = ((Mineral) data
-							.mGet(ChemicalAnalysisProperty.mineral)).getName();
+						final Object o =data
+						.mGet(ChemicalAnalysisProperty.mineral);
+						if (o != null)
+							text = ((Mineral) o).getName();
 					}
 					return new MText(text);
 				}

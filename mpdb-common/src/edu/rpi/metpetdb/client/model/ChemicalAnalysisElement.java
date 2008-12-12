@@ -111,9 +111,7 @@ public class ChemicalAnalysisElement extends MObject {
 		if (o instanceof ChemicalAnalysisElement) {
 			final boolean one = ((ChemicalAnalysisElement) o).getElement()
 					.equals(element);
-			final boolean two = ((ChemicalAnalysisElement) o).getAmount() == null ? ((ChemicalAnalysisElement) o)
-					.getAmount() == amount
-					: ((ChemicalAnalysisElement) o).getAmount().equals(amount);
+			final boolean two = ((ChemicalAnalysisElement) o).getAmount().equals(amount);
 			return one && two;
 		} else if (o instanceof Element) {
 			return ((Element) o).equals(element);

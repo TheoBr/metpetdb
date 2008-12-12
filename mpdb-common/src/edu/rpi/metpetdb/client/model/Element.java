@@ -19,6 +19,14 @@ public class Element extends MObject implements IHasName {
 	private int atomicNumber;
 	private Float weight;
 	private Set<MineralType> mineralTypes;
+	
+	public Element() {
+		
+	}
+	
+	public Element(final String name) {
+		this.name = name;
+	}
 
 	public void setId(final short s) {
 		id = s;

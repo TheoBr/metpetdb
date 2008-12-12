@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.server.bulk.upload;
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 
+@Deprecated
 public class MethodAssociation<T> {
 	private Pattern pattern;
 	private Method method;

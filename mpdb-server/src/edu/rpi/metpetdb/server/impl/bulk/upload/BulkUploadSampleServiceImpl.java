@@ -22,6 +22,7 @@ import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadSampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.NewSampleParser;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
+import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 
 public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 		BulkUploadSampleService {
@@ -49,6 +50,7 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 			}
 			User user = new User();
 			user.setId(currentUser());
+			user = new UserDAO(currentSession()).fill(user);
 			final BulkUploadResultCount resultCount = new BulkUploadResultCount();
 			final Iterator<Integer> rows = samples.keySet().iterator();
 			while(rows.hasNext()) {
@@ -57,14 +59,10 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 				s.setOwner(user);
 				s.setPublicData(false);
 				try {
-					//doc.validate(s);
 					if (dao.isNew(s))
 						resultCount.incrementFresh();
 					else
 						resultCount.incrementOld();
-//				} catch (MpDbException e) {
-//					resultCount.incrementInvalid();
-//					results.addError(row, e);
 				} catch (HibernateException e) {
 					resultCount.incrementInvalid();
 					results.addError(row, handleHibernateException(e));

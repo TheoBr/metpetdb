@@ -23,6 +23,7 @@ import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.Subsample;
 
+@Deprecated
 public class AnalysisParser extends Parser<ChemicalAnalysis> {
 
 	public static final int CAOXIDE = 2;

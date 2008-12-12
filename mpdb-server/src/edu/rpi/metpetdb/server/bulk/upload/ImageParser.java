@@ -21,6 +21,7 @@ import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.XrayImage;
 
+@Deprecated
 public class ImageParser extends Parser<XrayImage> {
 	public static final int IMAGE_REFERENCE = 2;
 	public static final int SUBSAMPLE_TYPE = 102;

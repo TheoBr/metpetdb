@@ -66,7 +66,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 	private transient boolean isLocked;
 	
 	private static Map<String, Float> measurementUnits = new HashMap<String , Float>() {{
-	    put("% wt", 1F);
+	    put("%wt", 1F);
 	    put("ppm", 10000F);
 	}};
 
@@ -208,6 +208,18 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 
 	public void setElements(final Set<ChemicalAnalysisElement> e) {
 		elements = e;
+	}
+	
+	public void addElement(final ChemicalAnalysisElement ce) {
+		if (elements == null)
+			elements = new HashSet<ChemicalAnalysisElement>();
+		elements.add(ce);
+	}
+	
+	public void addOxide(final ChemicalAnalysisOxide co) {
+		if (oxides == null)
+			oxides = new HashSet<ChemicalAnalysisOxide>();
+		oxides.add(co);
 	}
 
 	public void addElement(final Element e, final Float amount) {

@@ -23,7 +23,13 @@ public enum SubsampleProperty implements Property<Subsample> {
 		}
 
 		public void set(final Subsample subsample, final Object type) {
-			((Subsample) subsample).setSubsampleType((SubsampleType) type);
+			if (!(type instanceof SubsampleType)) {
+				final SubsampleType st = new SubsampleType();
+				st.setSubsampleType(type == null ? "" : type.toString());
+				subsample.setSubsampleType(st);
+			} else {
+				subsample.setSubsampleType((SubsampleType) type);
+			}
 		}
 	},
 	images {

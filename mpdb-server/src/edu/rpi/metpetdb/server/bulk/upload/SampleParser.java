@@ -15,6 +15,11 @@ import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 
+/**
+ * 
+ * @deprecated to be replaced by NewSampleParser
+ */
+@Deprecated
 public class SampleParser extends Parser<Sample> {
 
 	private final Map<Integer, Sample> samples;
