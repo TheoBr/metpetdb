@@ -109,10 +109,8 @@ public class Oxide extends MObject {
 		return species;
 	}
 
-	public native String getDisplayName() /*-{ 
-	var s =
-	this.@edu.rpi.metpetdb.client.model.Oxide::species;
-	s.replace(/(\d+)/g, "<sub>$1</sub>");
-	return s;
-	}- */;
+	public native String getDisplayName() /*-{
+		var s = this.@edu.rpi.metpetdb.client.model.Oxide::species;
+		return s.replace(/(\d+)/g, "<sub>$1</sub>");
+	}-*/; 
 }
