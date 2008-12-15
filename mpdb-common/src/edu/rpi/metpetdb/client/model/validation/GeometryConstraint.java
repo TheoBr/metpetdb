@@ -30,7 +30,7 @@ public class GeometryConstraint extends PropertyConstraint {
 		if (g.dimension != 2)
 			throw new InvalidGeometryException(this);
 
-		if (g instanceof Point || g instanceof Polygon)
+		if (g instanceof Point || g instanceof Polygon) {
 			if (g instanceof Point) {
 				//Check lat/long coordinates
 				if (((Point)g).x > 180 || ((Point)g).x < -180)
@@ -38,7 +38,7 @@ public class GeometryConstraint extends PropertyConstraint {
 				if (((Point)g).y > 90 || ((Point)g).y < -90)
 					throw new InvalidGeometryException(this);
 			}
-		else
+		} else
 			throw new InvalidGeometryException(this);
 	}
 }
