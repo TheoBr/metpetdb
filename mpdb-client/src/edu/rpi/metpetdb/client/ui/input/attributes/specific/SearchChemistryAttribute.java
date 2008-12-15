@@ -195,7 +195,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			Iterator<RowContainer> itr = currentCriteria.keySet().iterator();
 			while (itr.hasNext()){
 				final RowContainer temp = itr.next();
-				if (temp.elementOrOxide instanceof Oxide){
+				if (temp.elementOrOxide instanceof Element){
 					try{
 						SearchElement e = new SearchElement();
 						e.setValues(((Element)temp.elementOrOxide).getSymbol(),
