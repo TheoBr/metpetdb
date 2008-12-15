@@ -219,6 +219,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			rc.lessThan.setText("");
 			rc.unit.setSelectedIndex(0);
 		}
+		currentCriteria.clear();
 	}
 	
 	public ArrayList<Widget> getCriteria(){
