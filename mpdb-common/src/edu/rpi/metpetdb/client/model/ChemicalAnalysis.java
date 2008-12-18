@@ -16,6 +16,7 @@ import org.hibernate.search.annotations.Store;
 
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.interfaces.HasDate;
 import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
 import edu.rpi.metpetdb.client.model.interfaces.HasSample;
@@ -66,7 +67,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 	private transient boolean isLocked;
 	
 	private static Map<String, Float> measurementUnits = new HashMap<String , Float>() {{
-	    put("%wt", 1F);
+	    put("wt%", 1F);
 	    put("ppm", 10000F);
 	}};
 
