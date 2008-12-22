@@ -68,7 +68,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 	
 	private static Map<String, Float> measurementUnits = new HashMap<String , Float>() {{
 	    put("wt%", 1F);
-	    put("ppm", 10000F);
+	    put("ppm", .00001F);
 	}};
 
 	public int getId() {
