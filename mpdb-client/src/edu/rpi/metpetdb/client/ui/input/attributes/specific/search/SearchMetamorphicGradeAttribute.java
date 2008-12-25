@@ -117,6 +117,10 @@ public class SearchMetamorphicGradeAttribute extends SearchGenericAttribute impl
 		rCheck.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
 				rCheck.applyCheckedStyle(rCheck.isChecked());
+				if (rCheck.isChecked())
+					selected.add(items.get(rCheck));
+				else
+					selected.remove(items.get(rCheck));
 				SearchMetamorphicGradeAttribute.this.getSearchInterface().createCritera();
 			}
 		});
@@ -138,14 +142,7 @@ public class SearchMetamorphicGradeAttribute extends SearchGenericAttribute impl
 	}
 	
 	protected Object get(Widget editWidget) throws ValidationException {
-		final Iterator<CheckBox> itr = items.keySet().iterator();
-		final Set<Object> chosenItems = new HashSet<Object>();
-		while (itr.hasNext()) {
-			final CheckBox cb = itr.next();
-			if (cb.isChecked())
-				chosenItems.add(items.get(cb));
-		}
-		return chosenItems;
+		return selected;
 	}
 	
 	public void onClear(){
@@ -155,18 +152,14 @@ public class SearchMetamorphicGradeAttribute extends SearchGenericAttribute impl
 	
 	public ArrayList<Widget> getCriteria(){
 		final ArrayList<Widget> criteria = new ArrayList<Widget>();
-		final Iterator<CheckBox> itr = items.keySet().iterator();
-		 String crit = "";
-			while (itr.hasNext()) {
-				final CheckBox cb = itr.next();
-				if (cb.isChecked())
-					crit += items.get(cb).toString() + ", ";
-			}
-			if (!crit.equals("")){
-				crit = crit.substring(0,crit.length()-2);
-				criteria.add(createCritRow(crit));
-			}
-			
+		String crit = "";
+		for (Object o : selected){
+			crit += o.toString() + ", ";
+		}
+		if (!crit.equals("")){
+			crit = crit.substring(0,crit.length()-2);
+			criteria.add(createCritRow(crit));
+		}	
 		return criteria;
 	}
 }
