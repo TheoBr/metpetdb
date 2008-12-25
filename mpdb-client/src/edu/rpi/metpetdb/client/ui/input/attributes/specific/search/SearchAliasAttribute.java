@@ -26,6 +26,7 @@ public class SearchAliasAttribute extends SearchGenericAttribute{
 	
 	public Widget[] createEditWidget(final MObject obj, final String id){
 		tb = new TextBox();
+		tb.setText(get(obj));
 		tb.addChangeListener(new ChangeListener(){
 			public void onChange(final Widget sender){
 				SearchAliasAttribute.this.getSearchInterface().createCritera();
@@ -36,8 +37,12 @@ public class SearchAliasAttribute extends SearchGenericAttribute{
 	protected void set(final MObject obj, final Object o) {
 		mSet(obj, o);
 	}
-	public Set get(MObject obj) {
-		return (Set<String>) obj.mGet(this.getConstraint().property);
+	protected String get(final MObject obj) {
+		final Object value = mGet(obj);
+		if (value != null)
+			return value.toString();
+		else
+			return "";
 	}
 
 	@Override

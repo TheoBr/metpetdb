@@ -5,6 +5,7 @@ package edu.rpi.metpetdb.client.ui.input;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -15,6 +16,7 @@ import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.FormOp;
+import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchInterface;
@@ -25,17 +27,14 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 	protected ArrayList<SearchGenericAttribute> attributes;
 	protected ArrayList<Widget[]> currentEditWidgets;
 	private final MButton searchBtn = new MButton("Search");
+	private final SearchInterface atts;
 	
 //	final Element resultsTd;
 
 	protected ObjectSearchPanel(final SearchInterface atts) {
 		bean = (T) new SearchSample();
-		Widget[] w = atts.createEditWidget(new SearchSample(), "TEMP");
+		this.atts = atts;
 		attributes = atts.getAttributes();
-		currentEditWidgets = atts.getCurrentEditWidgets();
-		for (int i = 0; i < w.length; i++){
-			add(w[i]);
-		}
 		
 		searchBtn.setStyleName(CSS.SEARCH_BUTTON);
 		searchBtn.addClickListener(new ClickListener() {
@@ -46,6 +45,7 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 		atts.passActionWidget(searchBtn);
 	}
 	
+	
 	public T getBean(){
 		return bean;
 	}
@@ -54,8 +54,13 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 		bean = o;
 	}
 	
-	public void edit(final SearchSample obj) {
-//		super.edit(obj);
+	public synchronized void edit(final SearchSample obj) {
+		clear();
+		Widget[] w = atts.createEditWidget(obj, "TEMP");
+		currentEditWidgets = atts.getCurrentEditWidgets();
+		for (int i = 0; i < w.length; i++){
+			add(w[i]);
+		}
 	}
 
 	public void doSearch() {
@@ -81,7 +86,7 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 
 			public void onSuccess(final Object result) {
 				succeeded++;
-				if (succeeded == attributes.size()) {
+				if (succeeded == getConstraintCount()) {
 					r.onSuccess(null);
 				}
 			}
@@ -92,6 +97,15 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 			}
 		}.begin();
 	}
+	
+	public int getConstraintCount(){
+		int count = 0;
+		for (SearchGenericAttribute s : attributes){
+			count += s.getConstraints().length;
+		}
+		return count;
+	}
+	
 	public boolean validateEdit() {
 		return validateEdit(null);
 	}

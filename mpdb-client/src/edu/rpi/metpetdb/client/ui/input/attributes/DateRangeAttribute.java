@@ -94,6 +94,17 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 		ew.add(toLbl);
 		ew.add(to);
 		ew.add(dpTo);
+		
+		dateRange = (DateSpan) get(obj);
+		if (dateRange != null) {
+			from.setText(String.valueOf(dateRange.getStartAsDate().getMonth()+1) + "/");
+			from.setText(from.getText() + String.valueOf(dateRange.getStartAsDate().getDate() + "/"));
+			from.setText(from.getText() + String.valueOf(dateRange.getStartAsDate().getYear() + 1900));
+			to.setText(String.valueOf(dateRange.getEndAsDate().getMonth()+1) + "/");
+			to.setText(to.getText() + String.valueOf(dateRange.getEndAsDate().getDate() + "/"));
+			to.setText(to.getText() + String.valueOf(dateRange.getEndAsDate().getYear() + 1900));
+		}
+		
 		return new Widget[]{ ew };
 
 	}

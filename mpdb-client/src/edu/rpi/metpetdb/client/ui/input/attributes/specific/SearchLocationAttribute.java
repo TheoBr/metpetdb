@@ -16,11 +16,8 @@ import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.Overlay;
 import com.google.gwt.maps.client.overlay.Polygon;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -30,7 +27,6 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchRockTypesAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
@@ -99,6 +95,23 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 		panel.getRightCol().add(clear);
 		
 		setClickHandler();
+		
+		boundingBox = (org.postgis.Polygon) mGet(obj);
+		if (boundingBox != null && boundingBox.getRing(0).numPoints() == 5){
+			double n = boundingBox.getRing(0).getPoint(2).y;
+			double e = boundingBox.getRing(0).getPoint(2).x;
+			double s = boundingBox.getRing(0).getPoint(0).y;
+			double w = boundingBox.getRing(0).getPoint(0).x;
+			northInput.setText(String.valueOf(n));
+			eastInput.setText(String.valueOf(e));
+			southInput.setText(String.valueOf(s));
+			westInput.setText(String.valueOf(w));
+			markerPoint1 = new Marker(LatLng.newInstance(n, w));
+			markerPoint2 = new Marker(LatLng.newInstance(s, e));
+			map.addOverlay(markerPoint1);
+			map.addOverlay(markerPoint2);
+			createBox();
+		}
 
 		return new Widget[] {
 			panel
@@ -256,6 +269,10 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 			clearBounds();
 		}
 		getSearchInterface().createCritera();
+	}
+	
+	protected Object get(final MObject obj){
+		return mGet(obj);
 	}
 
 	protected Object get(Widget editWidget) throws ValidationException {

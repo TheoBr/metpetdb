@@ -179,8 +179,8 @@ public class MetPetDBApplication implements EntryPoint {
 		final Iterator<Widget> itr = pageChangeWatchers.iterator();
 		while (itr.hasNext()) {
 			final Widget w = (Widget) itr.next();
-			if (w instanceof UsesLeftColumn) {
-				((UsesLeftColumn) w).onPageChanged();
+			if (w instanceof PageChangeListener) {
+				((PageChangeListener) w).onPageChanged();
 			}
 		}
 	}

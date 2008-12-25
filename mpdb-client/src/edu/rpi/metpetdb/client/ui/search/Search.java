@@ -7,6 +7,8 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -24,7 +26,11 @@ import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
+import edu.rpi.metpetdb.client.ui.PageChangeListener;
+import edu.rpi.metpetdb.client.ui.ServerOp;
+import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchInterface;
@@ -39,7 +45,7 @@ import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 
-public class Search extends MPagePanel {
+public class Search extends MPagePanel implements PageChangeListener {
 
 	private static  SearchTabAttribute[] searchTabs = {
 		new SearchTabRockTypes(),
@@ -79,6 +85,7 @@ public class Search extends MPagePanel {
 	private List<Sample> results = new ArrayList<Sample>();
 
 	public Search() {
+		MetPetDBApplication.registerPageWatcher(this);
 		setStyleName(CSS.SEARCH);
 		setPageTitle("Search");
 		SearchInterface sui = new SearchInterface(searchTabs);
@@ -121,9 +128,22 @@ public class Search extends MPagePanel {
 		add(samplesContainer);
 	}
 
-	public Search createNew() {
-		SearchSample s = new SearchSample();
-		searchPanel.edit(s);
+	// TODO ideally the interface should be loading while we do the server call to find out if there's a 
+	// search sample in the session. Right now it waits for the response and then either loads the interface
+	// with a new search sample or the one from the session
+	public Search createNew() {		
+		new ServerOp<SearchSample>(){
+			public void begin(){
+				MpDb.search_svc.getSessionSearchSample(this);
+			}
+			public void onSuccess(final SearchSample searchSamp){
+				if (searchSamp != null){
+					searchPanel.edit(searchSamp);
+				} else {
+					searchPanel.edit(new SearchSample());
+				}
+			}
+		}.begin();	
 		return this;
 	}
 
@@ -228,6 +248,34 @@ public class Search extends MPagePanel {
 					displayColumns.add(col);
 			}
 			sampleList.newView(displayColumns);
+		}
+	}
+	
+	public void onPageChanged(){
+		if (!History.getToken().equals(TokenSpace.search.makeToken(null))){
+			MetPetDBApplication.removePageWatcher(this);
+			new ServerOp<Void>(){
+				public void begin(){
+					try{
+						searchPanel.startValidation(this);	
+					} catch (Exception e){
+						// Do nothing, we don't want to display the errors for this.
+						// The user doesn't know that we're saving his current search object.
+						// If there's an exception for one of the attributes then that value
+						// won't be loaded.
+					}
+				}
+				public void onSuccess(Void v){
+					new ServerOp<Void>(){
+						public void begin(){
+							MpDb.search_svc.setSessionSearchSample((SearchSample) searchPanel.getBean(), this);	
+						}
+						public void onSuccess(Void vv){
+							
+						}
+					}.begin();
+				}
+			}.begin();
 		}
 	}
 }

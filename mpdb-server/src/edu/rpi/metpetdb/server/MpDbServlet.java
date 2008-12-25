@@ -36,6 +36,7 @@ import edu.rpi.metpetdb.client.error.security.NoPermissionsException;
 import edu.rpi.metpetdb.client.model.Element;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Oxide;
+import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
@@ -377,11 +378,20 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		}
 		return response;
 	}
+	
+	public SearchSample getSearchSample(){
+		return (SearchSample) this.getThreadLocalRequest().getSession().getAttribute("searchSamp");
+	}
 
+	public void setSearchSample(final SearchSample searchSamp){
+		this.getThreadLocalRequest().getSession().setAttribute("searchSamp", searchSamp);
+	}
+	
 	public static final class Req {
 		Session session;
 		Integer userId;
 		public Collection<Principal> principals;
+		public SearchSample searchSamp;
 
 		Session currentSession() {
 			if (session == null) {

@@ -2,10 +2,10 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific.search;
 
 import java.util.ArrayList;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -57,6 +57,8 @@ public class SearchInterface implements ClickListener {
 
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		currentEditWidgets = new ArrayList();
+		tabs.clear();
+		currentEditWidgets.clear();
 		final MTwoColPanel panel = new MTwoColPanel();
 		
 		for (int i = 0; i < tabAtts.length; i++) {
@@ -74,6 +76,7 @@ public class SearchInterface implements ClickListener {
 		panel.getRightCol().add(searchActions);
 		searchActions.setStyleName("search-actions");
 		panel.setRightColWidth("30%");
+		createCriteriaForAll();
 		return new Widget[] {
 			panel
 		};
@@ -130,6 +133,18 @@ public class SearchInterface implements ClickListener {
 				}
 			}
 		}
+	}
+	
+	public void createCriteriaForAll(){
+		if (noCriteriaMsg.getParent() != null) noCriteriaMsg.removeFromParent();
+		for (SearchTabAttribute sta : tabAtts){
+			removeCriteriaForTab(sta);
+			if (!sta.getCriteria().isEmpty()) {			
+				critContents.add(new CritContainer(sta));
+			}
+		}
+		if (critContents.getWidgetCount() == 0)
+			critContents.add(noCriteriaMsg);
 	}
 	
 	public void createCritera(){

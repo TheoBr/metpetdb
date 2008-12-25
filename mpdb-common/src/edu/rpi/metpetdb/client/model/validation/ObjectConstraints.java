@@ -49,7 +49,7 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 
 		SearchSample_sesarNumber.entityName = "SearchSample";
 		SearchSample_sesarNumber.property = SearchSampleProperty.sesarNumber;
-		SearchSample_sesarNumber.propertyName = "Sesar Number";
+		SearchSample_sesarNumber.propertyName = "IGSN";
 		SearchSample_sesarNumber.maxLength = doc.Sample_sesarNumber.maxLength;
 		SearchSample_sesarNumber.minLength = doc.Sample_sesarNumber.minLength;
 		SearchSample_sesarNumber.required = false;

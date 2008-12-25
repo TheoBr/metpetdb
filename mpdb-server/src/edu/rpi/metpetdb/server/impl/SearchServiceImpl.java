@@ -23,5 +23,13 @@ public class SearchServiceImpl extends SampleServiceImpl implements
 	public void rebuildSearchIndex() throws NoPermissionsException {
 		RegenerateIndices.regenerate();
 	}
+	
+	public void setSessionSearchSample(final SearchSample searchSamp){
+		setSearchSample(searchSamp);
+	}
+	
+	public SearchSample getSessionSearchSample(){
+		return getSearchSample();
+	}
 
 }

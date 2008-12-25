@@ -1,7 +1,8 @@
 package edu.rpi.metpetdb.client.ui.left.side;
 
-public interface UsesLeftColumn {
+import edu.rpi.metpetdb.client.ui.PageChangeListener;
 
-	public void onPageChanged();
+public interface UsesLeftColumn extends PageChangeListener{
+
 
 }
