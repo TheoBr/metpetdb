@@ -70,6 +70,8 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 	    put("wt%", 1F);
 	    put("ppm", .00001F);
 	}};
+	
+	public static float defaultPrecision = .02F;
 
 	public int getId() {
 		return id;

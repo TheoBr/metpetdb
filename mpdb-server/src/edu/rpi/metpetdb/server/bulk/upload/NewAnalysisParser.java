@@ -193,6 +193,7 @@ public class NewAnalysisParser extends NewParser<ChemicalAnalysis> {
 				element.setPrecisionUnit(precisionUnits.get(headers.get(
 						cell.getColumnIndex()).getHeaderText()));
 			}
+			element.setMinMax();
 			currentObject.addElement(element);
 			return true;
 		} else if (pc == doc.ChemicalAnalysis_oxides) {
@@ -207,6 +208,7 @@ public class NewAnalysisParser extends NewParser<ChemicalAnalysis> {
 				oxide.setPrecisionUnit(precisionUnits.get(headers.get(
 						cell.getColumnIndex()).getHeaderText()));
 			}
+			oxide.setMinMax();
 			currentObject.addOxide(oxide);
 			return true;
 		} else {

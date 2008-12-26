@@ -138,13 +138,23 @@ public class ChemicalAnalysisOxide extends MObject {
 		this.precisionUnit = precisionUnit;
 		this.amount = amount;
 		this.precision = precision;
+		setMinMax();
+	}
+	
+	public void setMinMax(){
+		if (amount == null || measurementUnit == null)
+			return;
+		if (precision == null){
+			precision = ChemicalAnalysis.defaultPrecision;
+			precisionUnit = "REL";
+		}
 		float unitMod = ChemicalAnalysis.getUnitOffset(measurementUnit);
-		if (precisionUnit.equalsIgnoreCase("abs")){
-			this.maxAmount = (amount + precision) * unitMod;
-			this.minAmount = (amount - precision) * unitMod;
-		} else if (precisionUnit.equalsIgnoreCase("rel")){
-			this.maxAmount = (amount + precision) * unitMod;
-			this.minAmount = (amount - precision) * unitMod;
+		if (precisionUnit.equalsIgnoreCase("ABS")){
+			maxAmount = (amount + precision) * unitMod;
+			minAmount = (amount - precision) * unitMod;
+		} else if (precisionUnit.equalsIgnoreCase("REL")){
+			maxAmount = (amount + precision) * unitMod;
+			minAmount = (amount - precision) * unitMod;
 		}
 	}
 
