@@ -32,4 +32,9 @@
     from Oxide o
     where lower(o.species) = lower(:species)
   </query>
+  
+  <query name="Oxide.byId">
+    from Oxide o
+    where o.id = :id
+  </query>
 </hibernate-mapping>

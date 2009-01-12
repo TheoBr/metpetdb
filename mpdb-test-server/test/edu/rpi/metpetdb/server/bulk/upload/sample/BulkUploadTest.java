@@ -33,6 +33,8 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
+import edu.rpi.metpetdb.server.bulk.upload.NewAnalysisParser;
+import edu.rpi.metpetdb.server.bulk.upload.NewParser;
 import edu.rpi.metpetdb.server.bulk.upload.NewSampleParser;
 import edu.rpi.metpetdb.server.bulk.upload.SampleParser;
 import edu.rpi.metpetdb.server.dao.impl.ElementDAO;
@@ -65,6 +67,8 @@ public class BulkUploadTest extends TestCase {
 			elements = ((new ElementDAO(s)).getAll());
 			oxides = ((new OxideDAO(s)).getAll());
 			AnalysisParser.setElementsAndOxides(elements, oxides);
+			NewAnalysisParser.setElements(elements);
+			NewAnalysisParser.setOxides(oxides);
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -119,9 +123,6 @@ public class BulkUploadTest extends TestCase {
 		System.out.println("testUploadNewSamples");
 		final NewSampleParser sp = new NewSampleParser(new FileInputStream(
 				MpDbServlet.getFileUploadPath() + "samples_tests4.xls"));
-		NewSampleParser.initialize(DataStore.getInstance()
-				.getDatabaseObjectConstraints(), DataStore.getInstance()
-				.getObjectConstraints());
 		sp.parse();
 		final Map<Integer, Sample> samples = sp.getSamples();
 		final Session session = DataStore.open();
@@ -151,6 +152,25 @@ public class BulkUploadTest extends TestCase {
 		for (Entry<Integer, ChemicalAnalysis> s : analyses.entrySet()) {
 			DataStore.getInstance().getDatabaseObjectConstraints().validate(
 					s.getValue());
+		}
+	}
+
+	public void testNewUploadAnalyses() throws ServletException,
+			InvalidFormatException, LoginRequiredException, IOException,
+			MpDbException {
+		final NewAnalysisParser ap = new NewAnalysisParser(new FileInputStream(
+				MpDbServlet.getFileUploadPath()
+						+ "PrivateExampleUpload_analyses.xls"));
+		ap.parse();
+		final Map<Integer, ChemicalAnalysis> analyses = ap
+				.getChemicalAnalyses();
+		for (Entry<Integer, ChemicalAnalysis> s : analyses.entrySet()) {
+			try {
+			DataStore.getInstance().getDatabaseObjectConstraints().validate(
+					s.getValue());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

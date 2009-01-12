@@ -54,6 +54,7 @@
     mineral_id CDATA #IMPLIED
     large_rock CDATA #REQUIRED
     total CDATA #IMPLIED
+    version CDATA #IMPLIED
 >
 
 <!ELEMENT chemical_analysis_elements EMPTY>

@@ -200,13 +200,13 @@ public class NewAnalysisParser extends NewParser<ChemicalAnalysis> {
 			final ChemicalAnalysisOxide oxide = new ChemicalAnalysisOxide();
 			oxide.setOxide(uploadOxides.get(headerText));
 			oxide.setAmount(Float.parseFloat(sanitizeNumber(cell.toString())));
-			oxide.setMeasurementUnit(measurementUnits.get(headerText));
+			oxide.setMeasurementUnit(measurementUnits.get(headerText).toUpperCase());
 			// see if our next column is our precision
 			if (spreadSheetColumnMapping.get(cell.getColumnIndex() + 1) == doc.ChemicalAnalysisOxide_ChemicalAnalysis_oxides_precision) {
 				oxide.setPrecision(Float.parseFloat(sanitizeNumber(row.getCell(
 						cell.getColumnIndex() + 1).toString())));
 				oxide.setPrecisionUnit(precisionUnits.get(headers.get(
-						cell.getColumnIndex()).getHeaderText()));
+						cell.getColumnIndex()).getHeaderText()).toUpperCase());
 			}
 			oxide.setMinMax();
 			currentObject.addOxide(oxide);

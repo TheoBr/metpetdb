@@ -1,11 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
-  <users user_id="1" version="1" name="Anthony Waters" email="watera2@cs.rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y"/>
-  <users user_id="2" version="1" name="Sibel Adali" email="sibel@cs.rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y"/>
-  <users user_id="3" version="1" name="Boleslaw Szymanski" email="szymansk@cs.rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y"/>
-  <users user_id="4" version="1" name="Frank Spear" email="spearf@rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y"/>
-  <users user_id="5" version="1" name="Benjamin Hallett" email="halleb3@rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y"/>
-  <users user_id="6" version="0" name="Matt Fyffe" email="fyffem@rpi.edu" password="" confirmation_code="e49c4e3105634a6ca22e7a9eb7e6087b" enabled="N"/>
+  <users user_id="1" version="1" name="Anthony Waters" email="watera2@cs.rpi.edu" password="\004c\346\340\325\357\375ZQ\210\323)\220\203H{\337\270\3426\270\257\353It" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y"/>
   <admin_users/>
   <rock_type rock_type_id="1" rock_type="Slate"/>
   <rock_type rock_type_id="2" rock_type="Phyllite"/>
@@ -38,16 +33,16 @@
   <rock_type rock_type_id="29" rock_type="Metacarbonate"/>
   <rock_type rock_type_id="30" rock_type="Metagranite"/>
   <rock_type rock_type_id="31" rock_type="Cordierite-Anthophyllite"/>
-  <samples sample_id="1" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="testing sample" rock_type_id="10" user_id="6" collector="Frank Spear" location="SRID=4326;POINT(1 1)"/>
-  <samples sample_id="2" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="testing private" rock_type_id="11" user_id="6" collector="Anthony Waters" location="SRID=4326;POINT(3 3)"/>
-  <samples sample_id="3" version="0" sesar_number="111111111" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="new sample" rock_type_id="10" user_id="6" collector="Two Name" location="SRID=4326;POINT(5 5)"/>
-  <samples sample_id="4" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="sample" rock_type_id="10" user_id="6" collector="Test A" location="SRID=4326;POINT(5 5)"/>
-  <samples sample_id="5" version="1" sesar_number="123456789" public_data="N" collection_date="1970-09-16 00:00:00.0" date_precision="0" alias="test more" rock_type_id="10" user_id="6" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="1" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="testing sample" rock_type_id="10" user_id="1" collector="Frank Spear" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="2" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="testing private" rock_type_id="11" user_id="1" collector="Anthony Waters" location="SRID=4326;POINT(3 3)"/>
+  <samples sample_id="3" version="0" sesar_number="111111111" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="new sample" rock_type_id="10" user_id="1" collector="Two Name" location="SRID=4326;POINT(5 5)"/>
+  <samples sample_id="4" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="sample" rock_type_id="10" user_id="1" collector="Test A" location="SRID=4326;POINT(5 5)"/>
+  <samples sample_id="5" version="1" sesar_number="123456789" public_data="N" collection_date="1970-09-16 00:00:00.0" date_precision="0" alias="test more" rock_type_id="10" user_id="1" location="SRID=4326;POINT(1 1)"/>
   <subsample_type subsample_type_id="1" subsample_type="Thin Section"/>
   <subsample_type subsample_type_id="2" subsample_type="Polished Thin Section"/>
   <subsample_type subsample_type_id="3" subsample_type="Rock Chip"/>
   <subsample_type subsample_type_id="4" subsample_type="Mineral Separate"/>
-  <subsamples subsample_id ="1" version = "1" sample_id="1" name = "temp" subsample_type_id ="1"/>
+  <subsamples subsample_id ="1" version = "1" user_id="1" sample_id="1" name = "temp" subsample_type_id ="1" public_data="N"/>
   <image_format image_format_id="1" name="image/tiff"/>
   <image_format image_format_id="2" name="image/gif"/>
   <image_format image_format_id="3" name="image/jpeg"/>
@@ -244,8 +239,8 @@
   <minerals mineral_id="175" real_mineral_id="175" name="Graphite" parent_mineral_id="174"/>
   <minerals mineral_id="176" real_mineral_id="176" name="Diamond" parent_mineral_id="174"/>
   <reference/>
-  <chemical_analyses chemical_analysis_id = "1" version = "1" spot_id = "temp" subsample_id = "1" point_x="0" point_y="0" large_rock = "N" />
-  <chemical_analyses chemical_analysis_id = "2" version = "1" spot_id = "temp2" subsample_id = "1" point_x="0" point_y="0" large_rock = "N" />
+  <chemical_analyses chemical_analysis_id = "1" user_id="1" public_data="N" version = "1" spot_id = "temp" subsample_id = "1" point_x="0" point_y="0" large_rock = "N" />
+  <chemical_analyses chemical_analysis_id = "2" user_id="1" public_data="N" version = "1" spot_id = "temp2" subsample_id = "1" point_x="0" point_y="0" large_rock = "N" />
   <elements element_id="1" name="Aluminium" alternate_name="Aluminum" symbol="Al" atomic_number="13" weight="26.9815"/>
   <elements element_id="2" name="Americium" symbol="Am" atomic_number="95" weight="243.0"/>
   <elements element_id="3" name="Antimony" symbol="Sb" atomic_number="51" weight="121.76"/>
