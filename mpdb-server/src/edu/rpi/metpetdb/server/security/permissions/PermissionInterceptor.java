@@ -95,7 +95,10 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	private boolean isPublic(String[] propertyNames, Object[] state) {
 		for (int i = 0; i < propertyNames.length; ++i) {
 			if (propertyNames[i].equals("publicData")) {
-				return Boolean.parseBoolean(state[i].toString());
+				if (state[i] != null)
+					return Boolean.parseBoolean(state[i].toString());
+				else
+					return false;
 			}
 		}
 		return false;

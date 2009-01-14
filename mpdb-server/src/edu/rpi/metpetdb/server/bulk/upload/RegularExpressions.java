@@ -12,8 +12,7 @@ public class RegularExpressions {
 	/** Sample */
 	public static final String ROCK_TYPE = "(type)|(rock)";
 	public static final String SESAR_NUMBER = "(sesar)|(isgn)";
-	public static final String LATITUDE_ERROR = "(latitude error)|(lat error)";
-	public static final String LONGITUDE_ERROR = "(longitude error)|(lon error)";
+	public static final String LATLON_ERROR = "lat/lon error";
 	public static final String REGION = "region";
 	public static final String COUNTRY = "country";
 	public static final String COLLECTOR = "(collector)|(collected by)";

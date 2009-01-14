@@ -119,7 +119,7 @@ public class ChemicalAnalysisOxide extends MObject {
 			final boolean one = ((ChemicalAnalysisOxide) o).getOxide().equals(
 					oxide);
 			final boolean two = ((ChemicalAnalysisOxide) o).getAmount().equals(amount);
-			return one && two;
+			return one;
 		} else if (o instanceof Oxide) {
 			return ((Oxide) o).equals(oxide);
 		}
@@ -127,8 +127,7 @@ public class ChemicalAnalysisOxide extends MObject {
 	}
 
 	public int hashCode() {
-		return oxide != null && amount != null ? oxide.hashCode()
-				+ amount.intValue() : oxide.hashCode();
+		return oxide != null ? oxide.hashCode() : 0;
 	}
 	
 	public void setValues(final Oxide o, final float amount, final float precision, 

@@ -21,8 +21,7 @@
     <property name="description" column="description" length="100" />
     <property name="collector" column="collector" length="100" />
     <property name="locationText" column="location_text" length="50" />
-    <property name="latitudeError" column="latitude_error" />
-    <property name="longitudeError" column="longitude_error" />
+    <property name="latLonError" column="lat_lon_error" />
     
     <property name="subsampleCount" formula="(select count(*) from subsamples s
     																		where s.sample_id=sample_id)" />
@@ -176,16 +175,6 @@
     from Sample s
     inner join fetch s.owner
     order by lower(s.locationText)
-  </query>
-  <query name="Sample.all/latitudeError">
-    from Sample s
-    inner join fetch s.owner
-    order by s.latitudeError
-  </query>
-  <query name="Sample.all/longitudeError">
-    from Sample s
-    inner join fetch s.owner
-    order by s.longitudeError
   </query>
   <query name="Sample.byUser.byAlias">
     from Sample s

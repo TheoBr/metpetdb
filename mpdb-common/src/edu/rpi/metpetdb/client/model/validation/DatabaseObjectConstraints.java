@@ -133,8 +133,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public ValueInCollectionConstraint Sample_rockType;
 	public IntegerConstraint Sample_subsampleCount;
 	public GeometryConstraint Sample_location;
-	public FloatConstraint Sample_latitudeError;
-	public FloatConstraint Sample_longitudeError;
+	public FloatConstraint Sample_latLonError;
 	public ShortConstraint Sample_datePrecision;
 	public BooleanConstraint Sample_publicData;
 	public TimestampConstraint Sample_collectionDate;

@@ -38,6 +38,7 @@ import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -300,6 +301,12 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		} catch (final HibernateException he) {
 			throw handleHibernateException(he);
 		}
+	}
+	
+	protected DAOException handleHibernateException(final HibernateException he, final MObject object) {
+		final DAOException e = handleHibernateException(he);
+		e.handleObject(object);
+		return e;
 	}
 
 	protected DAOException handleHibernateException(final HibernateException he) {

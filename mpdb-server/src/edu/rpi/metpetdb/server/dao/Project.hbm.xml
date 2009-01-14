@@ -123,16 +123,5 @@
   	inner join p.samples as sample with sample.id = :id
   	order by sample.locationText
   </query>
-  <query name="Project.samples/latitudeError">
-  	from Project p
-  	inner join p.samples as sample with sample.id = :id
-  	order by sample.latitudeError
-  </query>
-  
-  <query name="Project.samples/longitudeError">
-  	from Project p
-  	inner join p.samples as sample with sample.id = :id
-  	order by sample.longitudeError
-  </query>
   
 </hibernate-mapping>

@@ -73,8 +73,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, Publ
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String locationText;
 
-	private Float latitudeError;
-	private Float longitudeError;
+	private Float latLonError;
 
 	@IndexedEmbedded(prefix = "region_")
 	private Set<Region> regions;
@@ -320,20 +319,12 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, Publ
 		locationText = loc;
 	}
 
-	public Float getLatitudeError() {
-		return latitudeError;
+	public Float getLatLonError() {
+		return latLonError;
 	}
 
-	public void setLatitudeError(Float le) {
-		latitudeError = le;
-	}
-
-	public Float getLongitudeError() {
-		return longitudeError;
-	}
-
-	public void setLongitudeError(Float le) {
-		longitudeError = le;
+	public void setLatLonError(Float le) {
+		latLonError = le;
 	}
 
 	public Set<Region> getRegions() {

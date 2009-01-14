@@ -166,25 +166,15 @@ public enum SampleProperty implements Property<Sample> {
 			sample.setLocationText((String) locationText);
 		}
 	},
-	latitudeError {
+	latLonError {
 		public Float get(final Sample sample) {
-			return sample.getLatitudeError();
+			return sample.getLatLonError();
 		}
 
 		public void set(final Sample sample, final Object latitudeError) {
 			sample
-					.setLatitudeError(PropertyUtils
+					.setLatLonError(PropertyUtils
 							.convertToFloat(latitudeError));
-		}
-	},
-	longitudeError {
-		public Float get(final Sample sample) {
-			return sample.getLongitudeError();
-		}
-
-		public void set(final Sample sample, final Object longitudeError) {
-			sample.setLongitudeError(PropertyUtils
-					.convertToFloat(longitudeError));
 		}
 	},
 	regions {

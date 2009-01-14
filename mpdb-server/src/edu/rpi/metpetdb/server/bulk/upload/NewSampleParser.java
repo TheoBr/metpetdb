@@ -33,14 +33,12 @@ public class NewSampleParser extends NewParser<Sample> {
 				doc.Sample_rockType));
 		columns.add(new ColumnMapping(RegularExpressions.SESAR_NUMBER,
 				doc.Sample_sesarNumber));
-		columns.add(new ColumnMapping(RegularExpressions.LATITUDE_ERROR,
-				doc.Sample_latitudeError));
 		columns.add(new ColumnMapping(RegularExpressions.LATITUDE,
 				oc.Sample_latitude));
 		columns.add(new ColumnMapping(RegularExpressions.LONGITUDE,
 				oc.Sample_longitude));
-		columns.add(new ColumnMapping(RegularExpressions.LONGITUDE_ERROR,
-				doc.Sample_longitudeError));
+		columns.add(new ColumnMapping(RegularExpressions.LATLON_ERROR,
+				doc.Sample_latLonError));
 		columns.add(new ColumnMapping(RegularExpressions.REGION,
 				doc.Sample_regions));
 		columns.add(new ColumnMapping(RegularExpressions.COUNTRY,
