@@ -256,7 +256,10 @@ public abstract class NewParser<T extends MObject> {
 						} else if (pc == doc.Sample_description || pc == doc.ChemicalAnalysis_description) {
 							//we want to append the data to the field
 							final String currentData = (String) newObject.mGet(pc.property);
-							newObject.mSet(pc.property, currentData + "\n" + cell.toString());
+							if (currentData != null)
+								newObject.mSet(pc.property, currentData + "\n" + cell.toString());
+							else
+								newObject.mSet(pc.property, cell.toString());
 						} else {
 							final String data = cell.toString();
 							final String[] mulitpartData = data.split("\\s*"
