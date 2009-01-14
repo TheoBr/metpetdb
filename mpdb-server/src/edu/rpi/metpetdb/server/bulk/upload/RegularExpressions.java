@@ -36,7 +36,7 @@ public class RegularExpressions {
 	/** Common */
 	public static final String MINERALS = "(minerals)|(mineral)";
 	public static final String LOCATION = "(present.+location)|(current.+location)|(analytical facility)";
-	public static final String REFERENCES = "(^reference$)|(ref)";
+	public static final String REFERENCES = "(reference$)|(ref$)";
 	public static final String COLLECTION_DATE = "(date of collection)|(collected)|(collection.+date)|(analysis Date)";
 	public static final String COMMENTS = "(comment)|(note)|(description)";
 	public static final String SAMPLE = "(^sample[ number| name|])|(^sample$)";
