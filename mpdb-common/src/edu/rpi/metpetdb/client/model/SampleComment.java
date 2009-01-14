@@ -4,6 +4,7 @@ public class SampleComment extends Comment {
 
 	private static final long serialVersionUID = 1L;
 	private Sample sample;
+	private User owner;
 	
 	public SampleComment() {
 		
@@ -19,5 +20,13 @@ public class SampleComment extends Comment {
 
 	public void setSample(Sample sample) {
 		this.sample = sample;
+	}
+	
+	public User getOwner() {
+		return owner;
+	}
+	
+	public void setOwner(final User u) {
+		owner = u;
 	}
 }

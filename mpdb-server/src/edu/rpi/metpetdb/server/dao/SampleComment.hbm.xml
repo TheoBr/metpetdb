@@ -11,9 +11,12 @@
     </id>
     <version name="version" />
     <property name="text" column="comment_text" />
+    <many-to-one name="owner" column="user_id" lazy="false" />
     <many-to-one name="sample" column="sample_id" class="Sample" lazy="false" not-null="true" insert="false" update="false"/>
     
     </class>
+    
+    
     
   <query name="SampleComment.byId">
     from SampleComment sc

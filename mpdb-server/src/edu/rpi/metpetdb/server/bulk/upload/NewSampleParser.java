@@ -52,7 +52,7 @@ public class NewSampleParser extends NewParser<Sample> {
 		columns.add(new ColumnMapping(RegularExpressions.METAMORPHIC_GRADES,
 				doc.Sample_metamorphicGrades));
 		columns.add(new ColumnMapping(RegularExpressions.COMMENTS,
-				doc.Sample_comments));
+				doc.Sample_description));
 		columns.add(new ColumnMapping(RegularExpressions.REFERENCES,
 				doc.Sample_references));
 		columns.add(new ColumnMapping(RegularExpressions.SAMPLE,

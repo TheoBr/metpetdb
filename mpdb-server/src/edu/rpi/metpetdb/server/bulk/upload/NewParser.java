@@ -253,6 +253,10 @@ public abstract class NewParser<T extends MObject> {
 									}
 								}
 							}
+						} else if (pc == doc.Sample_description || pc == doc.ChemicalAnalysis_description) {
+							//we want to append the data to the field
+							final String currentData = (String) newObject.mGet(pc.property);
+							newObject.mSet(pc.property, currentData + "\n" + cell.toString());
 						} else {
 							final String data = cell.toString();
 							final String[] mulitpartData = data.split("\\s*"
@@ -263,7 +267,7 @@ public abstract class NewParser<T extends MObject> {
 						}
 					}
 				}
-				if (pc != null && cell != null && !cell.equals("")) {
+				if (pc != null && cell != null && !cell.equals("") && !cell.toString().matches("\\s*")) {
 					if (pc.entityName.equals(newObject.getClass()
 							.getSimpleName()))
 						pc.validateEntity(newObject);
