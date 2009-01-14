@@ -65,13 +65,13 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 						resultCount.incrementOld();
 				} catch (HibernateException e) {
 					resultCount.incrementInvalid();
-					results.addError(row, handleHibernateException(e));
+					results.addError(row, handleHibernateException(e, s));
 				}
 				if (save) {
 					try {
 						dao.save(s);
 					} catch (HibernateException he) {
-						results.addError(row, handleHibernateException(he));
+						results.addError(row, handleHibernateException(he, s));
 					} catch (DAOException e) {
 						results.addError(row, e);
 					}
