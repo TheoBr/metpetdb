@@ -18,8 +18,8 @@ public class RegularExpressions {
 	public static final String COUNTRY = "country";
 	public static final String COLLECTOR = "(collector)|(collected by)";
 	public static final String METAMORPHIC_GRADES = "(grade)|(facies)";
-	public static final String LATITUDE = "(latitude)|(lat\\s*)";
-	public static final String LONGITUDE = "(longitude)|(^lon\\s*)";
+	public static final String LATITUDE = "[(latitude)|(lat\\s*)]$";
+	public static final String LONGITUDE = "[(longitude)|(lon\\s*)]$";
 
 	/** Chemical Analysis */
 	public static final String SUBSAMPLE = "^\\s*subsample\\s*$";
