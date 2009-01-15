@@ -416,7 +416,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		for (Integer row : rowNumbers) {
 			errorGrid.setText(++i, 0, row.toString());
 			//errorGrid.setText(i, 1, explode(errors.get(row)));
-			errorGrid.setText(i, 1, explode(errors.get(row)));
+			errorGrid.setHTML(i, 1, explode(errors.get(row)));
 		}
 		setErrorTabStyle(i);
 	}
@@ -425,7 +425,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		String text = "";
 		final Iterator<BulkUploadError> itr = exceptions.iterator();
 		while(itr.hasNext()) {
-			text += itr.next().getException().format() + " - ";
+			text += "<span>" + itr.next().getException().format() + "</span> ";
 		}
 		return text;
 	}
