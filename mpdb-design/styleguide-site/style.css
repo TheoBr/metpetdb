@@ -1,0 +1,142 @@
+
+/* MetPetDB Styleguide CSS */
+
+body {
+	margin: 0;
+	width: 100%;
+	background: #fff;
+	font: 9pt/12pt "Lucida Grande",verdana,arial,helvetica, sans-serif;
+	color: #444;
+}
+ul, ul li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+h2, h3 {
+	margin: 1.5em 0 -0.5em;
+	clear: both;
+}
+h1 {
+	margin: 0 0 -0.3em;
+}
+h2 {
+	color: #000;
+}
+p {clear: both;}
+#header {
+	padding: 2em 0 1em;
+}
+#container {
+	margin: 0 auto;
+	width: 85%;
+}
+#sidebar {
+	float: left;
+	width: 18%;
+}
+#rcol {
+	float: right;
+	width: 80%;
+}
+#footer {
+	clear: both;
+	text-align: center;
+	padding: 2em 0;
+	color: #999
+}
+#fnav li {
+	display: inline;
+	margin: 0 1em;
+}
+
+a, a:link, #header a, #nav a:visited {
+	text-decoration: none;
+	color: #1056f5;
+}
+a:visited {
+	color: #7f15b0;
+}
+a:hover, a:active, #header a:hover, #header a:active {
+	color: #318fdf;
+}
+#nav li a {
+	display: block;
+}
+#nav li {
+	padding: 0.2em 0.3em;
+	margin-left: 1em;
+}
+#nav li.cur, #nav li.cur:hover {
+	background: #f7e7ff url(rarr.gif) no-repeat right center;
+}
+#nav li:hover {
+	background-color: #f4f7ff;
+}
+#nav li.txt {
+	color: #000;
+	margin-top: 1em;
+	font-weight: bold;
+	margin-left: 0;
+}
+#nav li.txt:hover {
+	background: transparent none;
+}
+#nav li.cur {
+	font-weight: bold;
+}
+
+pre {
+	background: #f6f6f6;
+	border: 1px solid #f0f0f0;
+	padding: 1em;
+	white-space: -moz-pre-wrap; /* Mozilla */
+	white-space: -o-pre-wrap; /* Opera 7 */
+	word-wrap: break-word; /* IE */
+	color: #222;
+}
+pre.html {
+	background-color: #f0f3ff;
+	border-color: #dee1ee;
+}
+pre.twobox {
+	width: 45%;
+	margin-bottom: 2em;
+}
+.updated {
+	float: right;
+	color: #aaa;
+}
+.hilite {
+	color: #d92151;
+}
+.ie {
+	color: #4017b7;
+}
+.notice {
+	padding: 0.5em;
+	background: #fff6d8;
+	border: 1px solid #fff0bb;
+}
+dd {margin-bottom: 1em;}
+
+
+/* generic styles */
+.tc {text-align: center;}
+.tr {text-align: right;}
+.vc {vertical-align: center;}
+.tl {text-align: left;}
+.bl {display: block;}
+.in {display: inline;}
+.r {float: right;}
+.l {float: left;}
+.clr {clear: both;}
+.clrr {clear: right;}
+.clrl {clear: left;}
+.clrn {clear: none;}
+.ctr {margin-left: auto; margin-right: auto;}
+.nobdr, a>img {border: 0 !important;}
+.smt {font-size: 0.9em;}
+.xsmt {font-size: 0.8em;}
+.xxsmt {font-size: 0.7em;}
+.bigt {font-size: 1.1em;}
