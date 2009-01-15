@@ -20,7 +20,7 @@ $file = "sections/$p.php";
 
 <div id="header">
 <h1><a href="/styleguide/" title="Style Guide">MetPetDB Style Guide</a></h1>
-<p>A reference for MPDB's CSS and HTML markup.</p>
+<p>A reference for MPDB's style and design decisions.</p>
 </div>
 
 <div id="sidebar">
@@ -31,17 +31,7 @@ $n = new nav();
 
 $n->add("changes","Change Log");
 
-$n->add("Page Sections");
-$n->add("layout","General Layout");
-$n->add("logo","Header Logo");
-$n->add("logbar","Header Logbar");
-$n->add("main-nav","Main Nav");
-$n->add("content","Content Area");
-$n->add("sidebar","Sidebar");
-$n->add("rcol","Right Column");
-$n->add("footer-nav","Footer Nav");
-$n->add("footer","Footer");
-
+/*
 $n->add("General Styles");
 $n->add("headings","Headings");
 $n->add("links","Links");
@@ -49,33 +39,14 @@ $n->add("lists","Lists");
 $n->add("forms","Forms");
 $n->add("tables","Tables");
 $n->add("multi-purpose","Multi-Purpose");
+*/
 
-$n->add("Widgets");
-$n->add("special-links","Special Links");
-$n->add("subpage-tabs","Subpage Tabs");
-$n->add("change-view","Change View Options");
-$n->add("comments","Comments");
-$n->add("notice-box","Notice Box");
-$n->add("fav-sample","Favorite Sample");
-
-$n->add("Specific Page Styles");
-$n->add("index","Index");
-$n->add("search","Search");
+$n->add("Specific Pages");
 $n->add("search-criteria","Search Criteria");
-$n->add("sample-details","Sample Details");
-$n->add("subsample-analysis","Subsample Analysis");
-//$n->add("subsample-map","Subsample Map");
-$n->add("dialog-box","Dialog Box");
 
+$n->add("Sandbox");
+$n->add("sb-notices","Notices");
 
-$n->add("CSS Dump");
-$n->add("css-style","style.css");
-$n->add("css-style-ie","style-ie.css");
-$n->add("css-index","index.css");
-$n->add("css-search","search.css");
-$n->add("css-sample-details","sample-details.css");
-$n->add("css-subsample-analysis","subsample-analysis.css");
-$n->add("css-dialog-box","dialog-box.css");
 
 $n->showNav($p);
 ?>

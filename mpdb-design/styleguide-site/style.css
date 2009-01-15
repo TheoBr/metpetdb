@@ -1,29 +1,60 @@
 
 /* MetPetDB Styleguide CSS */
 
-body {
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
 	margin: 0;
-	width: 100%;
-	background: #fff;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+:focus {
+	outline: 0;
+}
+ins {
+	text-decoration: none;
+}
+del {
+	text-decoration: line-through;
+}
+
+body {
+	background-color: #fff;
 	font: 9pt/12pt "Lucida Grande",verdana,arial,helvetica, sans-serif;
 	color: #444;
 }
-ul, ul li {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
 h2, h3 {
-	margin: 1.5em 0 -0.5em;
+	margin: 1.5em 0 0.5em;
 	clear: both;
+	font-size: 1.5em;
 }
 h1 {
-	margin: 0 0 -0.3em;
+	font-size: 2em;
+	margin-bottom: 0.2em;
 }
 h2 {
 	color: #000;
 }
-p {clear: both;}
+p {margin: 1em 0;}
 #header {
 	padding: 2em 0 1em;
 }
@@ -113,7 +144,7 @@ pre.twobox {
 .ie {
 	color: #4017b7;
 }
-.notice {
+.note {
 	padding: 0.5em;
 	background: #fff6d8;
 	border: 1px solid #fff0bb;
