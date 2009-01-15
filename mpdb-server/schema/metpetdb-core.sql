@@ -93,9 +93,9 @@ CREATE TABLE sample_comments
 	version INT4 NOT NULL,
 	CONSTRAINT sample_comments_sk PRIMARY KEY (comment_id),
 	CONSTRAINT sample_comments_fk_sample FOREIGN KEY (sample_id)
-    REFERENCES samples (sample_id)
+    REFERENCES samples (sample_id),
     CONSTRAINT sample_comments_fk_user FOREIGN KEY (user_id)
-    REFERENCES users (user_id),
+    REFERENCES users (user_id)
 ) WITHOUT OIDS;
 
 CREATE TABLE subsamples
