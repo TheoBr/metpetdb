@@ -96,6 +96,12 @@ public class ChemicalAnalysisElement extends MObject {
 			return maxAmount;
 	}
 	
+	public String getDisplayName() {
+		return element.getName();
+	}
+	
+	// FIXME this is bad, a function called 
+	// getName should only return the name
 	public String getName() {
 		return toString();
 	}

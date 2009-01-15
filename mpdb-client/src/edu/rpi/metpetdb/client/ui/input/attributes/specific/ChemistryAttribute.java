@@ -12,6 +12,8 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -32,11 +34,13 @@ import edu.rpi.metpetdb.client.model.MineralType;
 import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
+import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
 public class ChemistryAttribute extends GenericAttribute implements
 		ClickListener, ChangeListener {
@@ -64,8 +68,11 @@ public class ChemistryAttribute extends GenericAttribute implements
 		});
 		realEditWidgets = new ArrayList<Widget>();
 	}
-
+	
+	// FIXME this needs to be replaced with a working version
+	// of the code here: http://pastie.org/361942
 	public Widget[] createDisplayWidget(final MObject obj) {
+		
 		final MHtmlList list = new MHtmlList();
 		final HashMap s = this.mGetAll(obj);
 		if (s != null) {

@@ -108,10 +108,7 @@ public class ChemicalAnalysisOxide extends MObject {
 	}
 	
 	public String getDisplayName() {
-		if (amount != null)
-			return oxide.getDisplayName() + " (" + amount + ")";
-		else
-			return oxide.getDisplayName();
+		return oxide.getDisplayName();
 	}
 
 	public boolean equals(final Object o) {
