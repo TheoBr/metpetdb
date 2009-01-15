@@ -54,7 +54,10 @@ h1 {
 h2 {
 	color: #000;
 }
-p {margin: 1em 0;}
+p {
+	margin: 1em 0;
+	clear: both;	
+}
 #header {
 	padding: 2em 0 1em;
 }
