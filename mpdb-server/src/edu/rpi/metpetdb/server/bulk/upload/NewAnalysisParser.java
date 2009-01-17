@@ -43,7 +43,7 @@ public class NewAnalysisParser extends NewParser<ChemicalAnalysis> {
 		columns.add(new ColumnMapping(RegularExpressions.SAMPLE,
 				doc.ChemicalAnalysis_sampleName));
 		columns.add(new ColumnMapping(RegularExpressions.SUBSAMPLE,
-				doc.ChemicalAnalysis_subsampleName));
+				doc.Subsample_name));
 		columns.add(new ColumnMapping(RegularExpressions.SUBSAMPLE_TYPE,
 				doc.Subsample_subsampleType));
 		columns.add(new ColumnMapping(RegularExpressions.MINERALS,

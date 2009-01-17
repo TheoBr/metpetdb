@@ -2,7 +2,6 @@ package edu.rpi.metpetdb.client.model.validation;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.ValueNotInCollectionException;
@@ -20,24 +19,23 @@ import edu.rpi.metpetdb.client.model.validation.interfaces.MaxLengthConstraint;
  * 
  * @author anthony
  * 
- * @param <
- * 		T>
+ * @param < T>
  */
-public class ValueInCollectionConstraint extends PropertyConstraint implements
-		MaxLengthConstraint, HasValues {
+public class ValueInCollectionConstraint<T extends MObject> extends
+		PropertyConstraint implements MaxLengthConstraint, HasValues {
 
-	private Collection<? extends MObject> values;
+	private Collection<T> values;
 	private String collectionName;
 
 	public ValueInCollectionConstraint() {
 
 	}
 
-	public void setValues(final Collection<? extends MObject> c) {
+	public void setValues(final Collection<T> c) {
 		values = c;
 	}
 
-	public Collection<?> getValues() {
+	public Collection<T> getValues() {
 		return values;
 	}
 
@@ -61,12 +59,13 @@ public class ValueInCollectionConstraint extends PropertyConstraint implements
 				throw new ValueNotInCollectionException(this, "", values);
 		}
 	}
-	
-	public boolean valuesInCollection(final Collection<?> value, final Collection<?> values){
-		final Iterator<?> itrVal = ((Collection) value).iterator();
-		while (itrVal.hasNext()){
+
+	public boolean valuesInCollection(final Collection<?> value,
+			final Collection<?> values) {
+		final Iterator<?> itrVal = value.iterator();
+		while (itrVal.hasNext()) {
 			final Object val = itrVal.next();
-			if (!valueInCollection(val,values)){
+			if (!valueInCollection(val, values)) {
 				return false;
 			}
 		}
@@ -76,8 +75,8 @@ public class ValueInCollectionConstraint extends PropertyConstraint implements
 	public boolean valueInCollection(final Object value,
 			final Collection<?> values) {
 		if (values != null) {
-			if (value instanceof Collection){
-				return valuesInCollection((Collection<?>)value,values);
+			if (value instanceof Collection) {
+				return valuesInCollection((Collection<?>) value, values);
 			}
 			final Iterator<?> itr = values.iterator();
 			while (itr.hasNext()) {

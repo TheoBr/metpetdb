@@ -51,6 +51,7 @@ CREATE TABLE images
    --brightness INT2,
    --lut INT2,
    collector VARCHAR(50),
+   description VARCHAR(1024),
    scale int2,
    --user_id INT4 NOT NULL,
    checksum_64x64 CHAR(50) NOT NULL,

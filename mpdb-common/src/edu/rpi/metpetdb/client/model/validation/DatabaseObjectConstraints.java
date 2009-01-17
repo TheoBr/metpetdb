@@ -1,18 +1,27 @@
 package edu.rpi.metpetdb.client.model.validation;
 
-import java.util.Collection;
-
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.Element;
 import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.ImageComment;
+import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.ImageType;
+import edu.rpi.metpetdb.client.model.MetamorphicGrade;
+import edu.rpi.metpetdb.client.model.Mineral;
+import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.Reference;
+import edu.rpi.metpetdb.client.model.Region;
+import edu.rpi.metpetdb.client.model.RockType;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.SubsampleType;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.XrayImage;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
@@ -38,15 +47,16 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	}
 
 	// ------ SearchMineral ------
-	public ValueInCollectionConstraint SearchSample_minerals;
-	public ObjectConstraint SearchSample_elements;
-	public ObjectConstraint SearchSample_oxides;
-	public ValueInCollectionConstraint SearchSample_possibleRockTypes;
+	public ValueInCollectionConstraint<Mineral> SearchSample_minerals;
+	public ObjectConstraint<Element> SearchSample_elements;
+	public ObjectConstraint<Oxide> SearchSample_oxides;
+	public ValueInCollectionConstraint<RockType> SearchSample_possibleRockTypes;
 
 	// ------ SampleMineral ------
 	public PropertyConstraint[] SampleMineral__all;
-	public ValueInCollectionConstraint SampleMineral_Sample_minerals_mineral;
+	public ValueInCollectionConstraint<Mineral> SampleMineral_Sample_minerals_mineral;
 	public FloatConstraint SampleMineral_Sample_minerals_amount;
+
 	public void validate(final SampleMineral sc) throws ValidationException {
 		validate(sc, SampleMineral__all);
 	}
@@ -57,7 +67,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 	// ------ MetamorphicGrade ------
 	public PropertyConstraint[] MetamorphicGrade__all;
-	public ValueInCollectionConstraint MetamorphicGrade_Sample_metamorphicGrades_metamorphicGrade;
+	public ValueInCollectionConstraint<MetamorphicGrade> MetamorphicGrade_Sample_metamorphicGrades_metamorphicGrade;
 
 	// ------ Reference ------
 	public PropertyConstraint[] Reference__all;
@@ -78,6 +88,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ SampleComment ------
 	public PropertyConstraint[] SampleComment__all;
 	public StringConstraint SampleComment_text;
+
 	public void validate(final SampleComment sc) throws ValidationException {
 		validate(sc, SampleComment__all);
 	}
@@ -88,14 +99,14 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 	// ------ ChemicalAnalysisOxide ------
 	public PropertyConstraint[] ChemicalAnalysisOxide__all;
-	public ValueInCollectionConstraint ChemicalAnalysisOxide_ChemicalAnalysis_oxides_oxide;
+	public ValueInCollectionConstraint<Oxide> ChemicalAnalysisOxide_ChemicalAnalysis_oxides_oxide;
 	public FloatConstraint ChemicalAnalysisOxide_ChemicalAnalysis_oxides_amount;
 	public FloatConstraint ChemicalAnalysisOxide_ChemicalAnalysis_oxides_precision;
 	public StringConstraint ChemicalAnalysisOxide_ChemicalAnalysis_oxides_precisionUnit;
 
 	// ------ ChemicalAnalysisElement ------
 	public PropertyConstraint[] ChemicalAnalysisElement__all;
-	public ValueInCollectionConstraint ChemicalAnalysisElement_ChemicalAnalysis_elements_element;
+	public ValueInCollectionConstraint<Element> ChemicalAnalysisElement_ChemicalAnalysis_elements_element;
 	public FloatConstraint ChemicalAnalysisElement_ChemicalAnalysis_elements_amount;
 	public FloatConstraint ChemicalAnalysisElement_ChemicalAnalysis_elements_precision;
 	public StringConstraint ChemicalAnalysisElement_ChemicalAnalysis_elements_precisionUnit;
@@ -111,12 +122,24 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		validate(xi, XrayImage__all);
 	}
 
+	// ------ ImageOnGrid ------
+	public PropertyConstraint[] ImageOnGrid__all;
+	public IntegerConstraint ImageOnGrid_topLeftX;
+	public IntegerConstraint ImageOnGrid_topLeftY;
+
+	public void validate(final ImageOnGrid i) throws ValidationException {
+		validate(i, ImageOnGrid__all);
+	}
+
 	// ------ Image ------
 	public PropertyConstraint[] Image__all;
-	public ValueInCollectionConstraint Image_imageType;
+	public ValueInCollectionConstraint<ImageType> Image_imageType;
 	public StringConstraint Image_collector;
+	public StringConstraint Image_description;
+	public StringConstraint Image_filename;
 	public IntegerConstraint Image_scale;
-	public ObjectConstraint Image_comments;
+	public ObjectConstraint<Reference> Image_references;
+	public ObjectConstraint<ImageComment> Image_comments;
 
 	public void validate(final Image i) throws ValidationException {
 		validate(i, Image__all);
@@ -130,19 +153,19 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint Sample_description;
 	public StringConstraint Sample_collector;
 	public StringConstraint Sample_locationText;
-	public ValueInCollectionConstraint Sample_rockType;
+	public ValueInCollectionConstraint<RockType> Sample_rockType;
 	public IntegerConstraint Sample_subsampleCount;
 	public GeometryConstraint Sample_location;
-	public FloatConstraint Sample_latLonError;
+	public FloatConstraint Sample_locationError;
 	public ShortConstraint Sample_datePrecision;
 	public BooleanConstraint Sample_publicData;
 	public TimestampConstraint Sample_collectionDate;
-	public ObjectConstraint Sample_minerals;
-	public ObjectConstraint Sample_regions;
-	public ObjectConstraint Sample_comments;
-	public ObjectConstraint Sample_owner;
-	public ValueInCollectionConstraint Sample_metamorphicGrades;
-	public ObjectConstraint Sample_references;
+	public ObjectConstraint<Mineral> Sample_minerals;
+	public ObjectConstraint<Region> Sample_regions;
+	public ObjectConstraint<SampleComment> Sample_comments;
+	public ObjectConstraint<User> Sample_owner;
+	public ValueInCollectionConstraint<MetamorphicGrade> Sample_metamorphicGrades;
+	public ObjectConstraint<Reference> Sample_references;
 
 	public void validate(final Sample s) throws ValidationException {
 		validate(s, Sample__all);
@@ -151,13 +174,13 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ Subsample ------
 	public PropertyConstraint[] Subsample__all;
 	public StringConstraint Subsample_name;
-	public ValueInCollectionConstraint Subsample_subsampleType;
-	public ObjectConstraint Subsample_images;
+	public ValueInCollectionConstraint<SubsampleType> Subsample_subsampleType;
+	public ObjectConstraint<Image> Subsample_images;
 	public StringConstraint Subsample_sampleName;
 	public IntegerConstraint Subsample_imageCount;
 	public IntegerConstraint Subsample_analysisCount;
 	public BooleanConstraint Subsample_publicData;
-	public ObjectConstraint Subsample_owner;
+	public ObjectConstraint<User> Subsample_owner;
 
 	public void validate(Subsample u) throws ValidationException {
 		validate(u, Subsample__all);
@@ -183,16 +206,16 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public IntegerConstraint ChemicalAnalysis_pointX;
 	public IntegerConstraint ChemicalAnalysis_pointY;
 	public BooleanConstraint ChemicalAnalysis_largeRock;
-	public ObjectConstraint ChemicalAnalysis_image;
+	public ObjectConstraint<Image> ChemicalAnalysis_image;
 	public FloatConstraint ChemicalAnalysis_total;
-	public ObjectConstraint ChemicalAnalysis_reference;
-	public ValueInCollectionConstraint ChemicalAnalysis_mineral;
-	public ObjectConstraint ChemicalAnalysis_elements;
-	public ObjectConstraint ChemicalAnalysis_oxides;
+	public ObjectConstraint<Reference> ChemicalAnalysis_reference;
+	public ValueInCollectionConstraint<Mineral> ChemicalAnalysis_mineral;
+	public ObjectConstraint<Element> ChemicalAnalysis_elements;
+	public ObjectConstraint<Oxide> ChemicalAnalysis_oxides;
 	public StringConstraint ChemicalAnalysis_sampleName;
 	public StringConstraint ChemicalAnalysis_subsampleName;
 	public BooleanConstraint ChemicalAnalysis_publicData;
-	public ObjectConstraint ChemicalAnalysis_owner;
+	public ObjectConstraint<User> ChemicalAnalysis_owner;
 
 	public void validate(ChemicalAnalysis u) throws ValidationException {
 		validate(u, ChemicalAnalysis__all);
@@ -272,47 +295,50 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		StartSessionRequest_password.maxLength = UserWithPassword_oldPassword.maxLength;
 
 		// Fill in fake constraints for searching
-		SearchSample_minerals.setValues((Collection<? extends MObject>)Sample_minerals.getValues());
+		SearchSample_minerals.setValues(Sample_minerals.getValues());
 		SearchSample_minerals.property = SearchSampleProperty.minerals;
 		SearchSample_minerals.propertyName = "Minerals";
 		SearchSample_minerals.required = false;
 		SearchSample_minerals.entityName = "SearchSample";
-		
+
 		SearchSample_elements.setConstraints(ChemicalAnalysisElement__all);
 		SearchSample_elements.property = SearchSampleProperty.elements;
 		SearchSample_elements.propertyName = "Elements";
 		SearchSample_elements.required = false;
 		SearchSample_elements.entityName = "SearchSample";
-		
+
 		SearchSample_oxides.setConstraints(ChemicalAnalysisOxide__all);
 		SearchSample_oxides.property = SearchSampleProperty.oxides;
 		SearchSample_oxides.propertyName = "Oxides";
 		SearchSample_oxides.required = false;
 		SearchSample_oxides.entityName = "SearchSample";
-		
-		SearchSample_possibleRockTypes.setValues((Collection<? extends MObject>)Sample_rockType.getValues());
+
+		SearchSample_possibleRockTypes.setValues(Sample_rockType.getValues());
 		SearchSample_possibleRockTypes.property = SearchSampleProperty.possibleRockTypes;
 		SearchSample_possibleRockTypes.propertyName = "possibleRockTypes";
 		SearchSample_possibleRockTypes.required = false;
 		SearchSample_possibleRockTypes.entityName = "SearchSample";
 
-//		
-//		SearchSample_region.setConstraints(Sample_regions.getConstraints());
-//		SearchSample_region.entityName = "SearchSample";
-//		SearchSample_region.property = SearchSampleProperty.region;
-//		SearchSample_region.propertyName = "Region";
-//		SearchSample_region.required = false;
-//		
-//		SearchSample_references.setConstraints(Sample_references.getConstraints());
-//		SearchSample_references.entityName = "SearchSample";
-//		SearchSample_references.property = SearchSampleProperty.references;
-//		SearchSample_references.propertyName = "Reference";
-//		SearchSample_references.required = false;
-//		
-//		SearchSample_metamorphicGrades.setConstraints(Sample_metamorphicGrades.getConstraints());
-//		SearchSample_references.entityName = "SearchSample";
-//		SearchSample_references.property = SearchSampleProperty.metamorphicGrades;
-//		SearchSample_references.propertyName = "MetamorphicGrades";
-//		SearchSample_references.required = false;
+		//		
+		// SearchSample_region.setConstraints(Sample_regions.getConstraints());
+		// SearchSample_region.entityName = "SearchSample";
+		// SearchSample_region.property = SearchSampleProperty.region;
+		// SearchSample_region.propertyName = "Region";
+		// SearchSample_region.required = false;
+		//		
+		//SearchSample_references.setConstraints(Sample_references.getConstraints
+		// ());
+		// SearchSample_references.entityName = "SearchSample";
+		// SearchSample_references.property = SearchSampleProperty.references;
+		// SearchSample_references.propertyName = "Reference";
+		// SearchSample_references.required = false;
+		//		
+		//SearchSample_metamorphicGrades.setConstraints(Sample_metamorphicGrades
+		// .getConstraints());
+		// SearchSample_references.entityName = "SearchSample";
+		// SearchSample_references.property =
+		// SearchSampleProperty.metamorphicGrades;
+		// SearchSample_references.propertyName = "MetamorphicGrades";
+		// SearchSample_references.required = false;
 	}
 }

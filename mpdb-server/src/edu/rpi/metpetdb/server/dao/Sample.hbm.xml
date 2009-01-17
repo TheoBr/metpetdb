@@ -21,7 +21,7 @@
     <property name="description" column="description" length="100" />
     <property name="collector" column="collector" length="100" />
     <property name="locationText" column="location_text" length="50" />
-    <property name="latLonError" column="lat_lon_error" />
+    <property name="locationError" column="location_error" />
     
     <property name="subsampleCount" formula="(select count(*) from subsamples s
     																		where s.sample_id=sample_id)" />

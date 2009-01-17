@@ -30,6 +30,7 @@ public class Image extends MObject implements HasSubsample, HasSample {
 	private Set<Reference> references;
 	private Set<ImageComment> comments;
 	private Integer scale;
+	private String description;
 
 	public long getId() {
 		return id;
@@ -92,6 +93,14 @@ public class Image extends MObject implements HasSubsample, HasSample {
 
 	public void setSubsample(final Subsample s) {
 		Subsample = s;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public int getWidth() {

@@ -6,9 +6,6 @@ import org.postgis.Polygon;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.InvalidGeometryException;
-import edu.rpi.metpetdb.client.error.validation.InvalidLatitudeException;
-import edu.rpi.metpetdb.client.error.validation.InvalidLongitudeException;
-import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 
 /**

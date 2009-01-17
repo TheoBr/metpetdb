@@ -22,7 +22,8 @@ import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 
 @Indexed
-public class Sample extends MObject implements IHasName, HasDate, HasOwner, PublicData {
+public class Sample extends MObject implements IHasName, HasDate, HasOwner,
+		PublicData {
 	private static final long serialVersionUID = 1L;
 
 	@DocumentId
@@ -52,7 +53,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, Publ
 	private RockType rockType;
 
 	@IndexedEmbedded(prefix = "subsample_")
-	private Set<Subsample> Subsamples;
+	private Set<Subsample> subsamples;
 
 	private Set<Project> projects;
 
@@ -73,7 +74,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, Publ
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String locationText;
 
-	private Float latLonError;
+	private Float locationError;
 
 	@IndexedEmbedded(prefix = "region_")
 	private Set<Region> regions;
@@ -85,10 +86,10 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, Publ
 
 	private Set<SampleComment> comments;
 
-	private int SubsampleCount;
-	
+	private int subsampleCount;
+
 	private int imageCount;
-	
+
 	private int analysisCount;
 
 	public long getId() {
@@ -108,13 +109,13 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, Publ
 	}
 
 	public int getSubsampleCount() {
-		return SubsampleCount;
+		return subsampleCount;
 	}
 
 	public void setSubsampleCount(final int i) {
-		SubsampleCount = i;
+		subsampleCount = i;
 	}
-	
+
 	public int getImageCount() {
 		return imageCount;
 	}
@@ -122,7 +123,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, Publ
 	public void setImageCount(final int i) {
 		imageCount = i;
 	}
-	
+
 	public int getAnalysisCount() {
 		return analysisCount;
 	}
@@ -212,20 +213,20 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, Publ
 	}
 
 	public Set<Subsample> getSubsamples() {
-		if (Subsamples == null)
-			Subsamples = new HashSet<Subsample>();
-		return Subsamples;
+		if (subsamples == null)
+			subsamples = new HashSet<Subsample>();
+		return subsamples;
 	}
 
 	public void setSubsamples(final Set<Subsample> c) {
-		Subsamples = c;
+		subsamples = c;
 	}
 
 	public void addSubsample(Subsample s) {
 		s.setSample(this);
-		if (Subsamples == null)
-			Subsamples = new HashSet<Subsample>();
-		Subsamples.add(s);
+		if (subsamples == null)
+			subsamples = new HashSet<Subsample>();
+		subsamples.add(s);
 	}
 
 	public Set<Project> getProjects() {
@@ -270,7 +271,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, Publ
 	/**
 	 * 
 	 * @param minerals
-	 * 		comma separated list of minerals
+	 *            comma separated list of minerals
 	 */
 	public void addMineral(final String mineralName) {
 		final Mineral mineral = new Mineral();
@@ -319,12 +320,12 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, Publ
 		locationText = loc;
 	}
 
-	public Float getLatLonError() {
-		return latLonError;
+	public Float getLocationError() {
+		return locationError;
 	}
 
-	public void setLatLonError(Float le) {
-		latLonError = le;
+	public void setLocationError(Float le) {
+		locationError = le;
 	}
 
 	public Set<Region> getRegions() {

@@ -45,9 +45,11 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
 import edu.rpi.metpetdb.server.bulk.upload.NewAnalysisParser;
+import edu.rpi.metpetdb.server.bulk.upload.NewImageParser;
 import edu.rpi.metpetdb.server.bulk.upload.NewSampleParser;
 import edu.rpi.metpetdb.server.bulk.upload.SampleParser;
 import edu.rpi.metpetdb.server.dao.impl.ElementDAO;
+import edu.rpi.metpetdb.server.dao.impl.ImageTypeDAO;
 import edu.rpi.metpetdb.server.dao.impl.MineralDAO;
 import edu.rpi.metpetdb.server.dao.impl.OxideDAO;
 import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
@@ -164,6 +166,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		List<Oxide> oxides = ((new OxideDAO(s)).getAll());
 		NewAnalysisParser.setOxides(oxides);
 		NewAnalysisParser.setElements(elements);
+		NewImageParser.setImageTypes((new ImageTypeDAO(s).getAll()));
 		AnalysisParser.setElementsAndOxides(elements, oxides);
 		s.close();
 	}
@@ -202,8 +205,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	/**
 	 * Get the URL of this application.
 	 * 
-	 * @return the location of this application. This is the same as {@link
-	 * 	com.google.gwt.core.client.GWT#getModuleBaseURL()}.
+	 * @return the location of this application. This is the same as
+	 *         {@link com.google.gwt.core.client.GWT#getModuleBaseURL()}.
 	 */
 	protected String getModuleBaseURL() {
 		final StringBuffer u = getThreadLocalRequest().getRequestURL();
@@ -215,8 +218,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 * Configure (or forget) the current user.
 	 * 
 	 * @param u
-	 * 		the user to configure as the current application user. Null will
-	 * 		clear the current application user, if it had been known.
+	 *            the user to configure as the current application user. Null
+	 *            will clear the current application user, if it had been known.
 	 */
 	protected void setCurrentUser(final User u,
 			final Collection<Principal> principals) {
@@ -233,10 +236,11 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 * Obtain the unique user id for the current application user.
 	 * 
 	 * @return the primary key identifying the current application user. Never
-	 * 	an invalid value.
+	 *         an invalid value.
 	 * @throws LoginRequiredException
-	 * 		current application user cannot be determined as the user is not
-	 * 		actually logged in, or their authentication token is invalid.
+	 *             current application user cannot be determined as the user is
+	 *             not actually logged in, or their authentication token is
+	 *             invalid.
 	 */
 	protected int currentUser() throws LoginRequiredException {
 		if (autoLoginId != -1) {
@@ -275,7 +279,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 * </p>
 	 * 
 	 * @return the active session for this thread. Always the same session
-	 * 	object within a single service request.
+	 *         object within a single service request.
 	 */
 	protected Session currentSession() {
 		if (currentReq() != null)
@@ -302,8 +306,9 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 			throw handleHibernateException(he);
 		}
 	}
-	
-	protected DAOException handleHibernateException(final HibernateException he, final MObject object) {
+
+	protected DAOException handleHibernateException(
+			final HibernateException he, final MObject object) {
 		final DAOException e = handleHibernateException(he);
 		e.handleObject(object);
 		return e;
@@ -385,15 +390,17 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		}
 		return response;
 	}
-	
-	public SearchSample getSearchSample(){
-		return (SearchSample) this.getThreadLocalRequest().getSession().getAttribute("searchSamp");
+
+	public SearchSample getSearchSample() {
+		return (SearchSample) this.getThreadLocalRequest().getSession()
+				.getAttribute("searchSamp");
 	}
 
-	public void setSearchSample(final SearchSample searchSamp){
-		this.getThreadLocalRequest().getSession().setAttribute("searchSamp", searchSamp);
+	public void setSearchSample(final SearchSample searchSamp) {
+		this.getThreadLocalRequest().getSession().setAttribute("searchSamp",
+				searchSamp);
 	}
-	
+
 	public static final class Req {
 		Session session;
 		Integer userId;

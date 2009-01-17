@@ -1,7 +1,5 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
-import java.util.List;
-
 import org.postgis.Point;
 
 import com.google.gwt.maps.client.InfoWindowContent;
@@ -25,7 +23,6 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -40,7 +37,6 @@ import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.CommentAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.CountryAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.LocationAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MetamorphicGradeAttribute;
@@ -67,7 +63,7 @@ public class SampleDetails extends MPagePanel {
 			new RadioButtonAttribute(MpDb.doc.Sample_publicData,
 					LocaleHandler.lc_text.publicDataWarning()),
 			new LocationAttribute(MpDb.doc.Sample_location),
-			new TextAttribute(MpDb.doc.Sample_latLonError),
+			new TextAttribute(MpDb.doc.Sample_locationError),
 			new CountryAttribute(MpDb.doc.Sample_country),
 			new TextAttribute(MpDb.doc.Sample_description),
 			new TextAttribute(MpDb.doc.Sample_collector),

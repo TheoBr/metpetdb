@@ -9,7 +9,7 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 
-public class ObjectConstraint extends PropertyConstraint implements HasValues {
+public class ObjectConstraint<T extends MObject> extends PropertyConstraint implements HasValues {
 
 	private PropertyConstraint[] constraints;
 
@@ -29,10 +29,10 @@ public class ObjectConstraint extends PropertyConstraint implements HasValues {
 		return this.constraints;
 	}
 
-	public ValueInCollectionConstraint getValueInCollectionConstraint() {
+	public ValueInCollectionConstraint<T> getValueInCollectionConstraint() {
 		for (PropertyConstraint pc : this.constraints) {
 			if (pc instanceof ValueInCollectionConstraint)
-				return (ValueInCollectionConstraint) pc;
+				return (ValueInCollectionConstraint<T>) pc;
 		}
 		return null;
 	}
@@ -67,11 +67,11 @@ public class ObjectConstraint extends PropertyConstraint implements HasValues {
 		}
 	}
 
-	public Collection<?> getValues() {
+	public Collection<T> getValues() {
 		if (getValueInCollectionConstraint() != null)
 			return getValueInCollectionConstraint().getValues();
 		else
-			return new HashSet<Object>();
+			return new HashSet<T>();
 	}
 
 }

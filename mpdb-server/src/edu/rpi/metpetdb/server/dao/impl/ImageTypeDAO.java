@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.ImageTypeNotFoundException;
+import edu.rpi.metpetdb.client.model.Element;
 import edu.rpi.metpetdb.client.model.ImageType;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 
@@ -43,5 +44,10 @@ public class ImageTypeDAO extends MpDbDAO<ImageType> {
 	public Object[] allImageTypes() throws DAOException{
 		final Query q = namedQuery("ImageType.all/ImageType");
 		return	((List<ImageType>)getResults(q)).toArray();
+	}
+	
+	public List<ImageType> getAll() throws DAOException {
+		final Query q = namedQuery("ImageType.all");
+		return (List<ImageType>) getResults(q);
 	}
 }

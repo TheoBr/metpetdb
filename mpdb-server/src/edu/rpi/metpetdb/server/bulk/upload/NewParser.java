@@ -24,12 +24,15 @@ import edu.rpi.metpetdb.client.error.bulk.upload.InvalidSpreadSheetException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.validation.InvalidDateStringException;
 import edu.rpi.metpetdb.client.model.Element;
+import edu.rpi.metpetdb.client.model.ImageType;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Oxide;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadError;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadHeader;
 import edu.rpi.metpetdb.client.model.interfaces.HasDate;
+import edu.rpi.metpetdb.client.model.interfaces.HasSample;
 import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
@@ -48,6 +51,7 @@ public abstract class NewParser<T extends MObject> {
 	protected static Collection<Mineral> minerals;
 	protected static Collection<Element> elements;
 	protected static Collection<Oxide> oxides;
+	protected static Collection<ImageType> imageTypes;
 	protected final Map<Integer, BulkUploadHeader> headers = new HashMap<Integer, BulkUploadHeader>();
 	protected static DatabaseObjectConstraints doc = DataStore.getInstance()
 			.getDatabaseObjectConstraints();
@@ -182,6 +186,24 @@ public abstract class NewParser<T extends MObject> {
 		return alternate;
 	}
 
+	/**
+	 * Replaces abbreviations of image types with the correct ones
+	 * 
+	 * @param imageType
+	 * @return
+	 */
+	protected ImageType getImageType(final String imageType) {
+		for (ImageType it : imageTypes) {
+			if (it.getImageType().equals(imageType))
+				return it;
+			if (it.getAbbreviation().equals(imageType))
+				return it;
+		}
+		final ImageType it = new ImageType();
+		it.setImageType(imageType);
+		return it;
+	}
+
 	public static void setMinerals(final Collection<Mineral> minerals) {
 		NewParser.minerals = minerals;
 	}
@@ -192,6 +214,10 @@ public abstract class NewParser<T extends MObject> {
 
 	public static void setOxides(final Collection<Oxide> oxides) {
 		NewParser.oxides = oxides;
+	}
+	
+	public static void setImageTypes(final Collection<ImageType> imageTypes) {
+		NewParser.imageTypes = imageTypes;
 	}
 
 	protected final void parseRow(final int rowindex) {
@@ -214,17 +240,42 @@ public abstract class NewParser<T extends MObject> {
 					if (pc == doc.Subsample_subsampleType) {
 						// We have to invoke the method on a subsample
 						if (newObject instanceof HasSubsample) {
-							if (((HasSubsample) newObject).getSubsample() != null) {
-								((HasSubsample) newObject).getSubsample().mSet(
-										pc.property, cell.toString());
-							} else {
+							if (((HasSubsample) newObject).getSubsample() == null) {
 								final Subsample s = new Subsample();
-								s.mSet(pc.property, cell.toString());
 								((HasSubsample) newObject).setSubsample(s);
 							}
+							((HasSubsample) newObject).getSubsample().mSet(
+									pc.property, cell.toString());
+						}
+					} else if (pc == doc.Subsample_name) {
+						// We have to invoke the method on a subsample
+						if (newObject instanceof HasSubsample) {
+							if (((HasSubsample) newObject).getSubsample() == null) {
+								final Subsample s = new Subsample();
+								((HasSubsample) newObject).setSubsample(s);
+							}
+							((HasSubsample) newObject).getSubsample().mSet(
+									pc.property, cell.toString());
+						}
+					} else if (pc == doc.Sample_alias
+							&& !pc.entityName.equals(newObject.getClass()
+									.getSimpleName())) {
+						// only do sample alias if we are not working on a
+						// sample
+						if (newObject instanceof HasSample) {
+							if (((HasSample) newObject).getSample() == null) {
+								final Sample s = new Sample();
+								((HasSample) newObject).setSample(s);
+							}
+							((HasSample) newObject).getSample().mSet(
+									pc.property, cell.toString());
 						}
 					} else if (pc.entityName.equals(newObject.getClass()
-							.getSimpleName())) {
+							.getSimpleName())
+							|| ((pc.entityName.equals("Image") || pc.entityName
+									.equals("ImageOnGrid")
+									&& newObject.getClass().getSimpleName()
+											.equals(("BulkUploadImage"))))) {
 						if (pc instanceof NumberConstraint<?>) {
 							// Santize numbers before setting them on the object
 							final String data = sanitizeNumber(cell.toString());
@@ -253,11 +304,15 @@ public abstract class NewParser<T extends MObject> {
 									}
 								}
 							}
-						} else if (pc == doc.Sample_description || pc == doc.ChemicalAnalysis_description) {
-							//we want to append the data to the field
-							final String currentData = (String) newObject.mGet(pc.property);
+						} else if (pc == doc.Sample_description
+								|| pc == doc.ChemicalAnalysis_description
+								|| pc == doc.Image_description) {
+							// we want to append the data to the field
+							final String currentData = (String) newObject
+									.mGet(pc.property);
 							if (currentData != null)
-								newObject.mSet(pc.property, currentData + "\n" + cell.toString());
+								newObject.mSet(pc.property, currentData + "\n"
+										+ cell.toString());
 							else
 								newObject.mSet(pc.property, cell.toString());
 						} else {
@@ -270,7 +325,8 @@ public abstract class NewParser<T extends MObject> {
 						}
 					}
 				}
-				if (pc != null && cell != null && !cell.equals("") && !cell.toString().matches("\\s*")) {
+				if (pc != null && cell != null && !cell.equals("")
+						&& !cell.toString().matches("\\s*")) {
 					if (pc.entityName.equals(newObject.getClass()
 							.getSimpleName()))
 						pc.validateEntity(newObject);
@@ -347,7 +403,7 @@ public abstract class NewParser<T extends MObject> {
 	 * 
 	 * @param header
 	 * @param cellNumber
-	 * 		can be modified
+	 *            can be modified
 	 * @param cellText
 	 */
 	protected abstract void parseHeaderSpecialCase(final HSSFRow header,

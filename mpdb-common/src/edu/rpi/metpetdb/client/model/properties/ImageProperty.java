@@ -1,11 +1,15 @@
 package edu.rpi.metpetdb.client.model.properties;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageComment;
 import edu.rpi.metpetdb.client.model.ImageType;
+import edu.rpi.metpetdb.client.model.Reference;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.SubsampleType;
 
 public enum ImageProperty implements Property<Image> {
 	imageType {
@@ -13,8 +17,14 @@ public enum ImageProperty implements Property<Image> {
 			return ((Image) image).getImageType();
 		}
 
-		public void set(final Image image, final Object imageType) {
-			((Image) image).setImageType((ImageType) imageType);
+		public void set(final Image image, final Object type) {
+			if (!(type instanceof ImageType)) {
+				final ImageType st = new ImageType();
+				st.setImageType(type == null ? "" : type.toString());
+				image.setImageType(st);
+			} else {
+				image.setImageType((ImageType) type);
+			}
 		}
 	},
 	subsample {
@@ -61,5 +71,38 @@ public enum ImageProperty implements Property<Image> {
 		public void set(final Image sample, final Object collector) {
 			((Image) sample).setCollector((String) collector);
 		}
-	}
+	},
+	description {
+		public Object get(final Image sample) {
+			return sample.getDescription();
+		}
+
+		public void set(final Image sample, final Object collector) {
+			sample.setDescription((String) collector);
+		}
+	},
+	filename {
+		public Object get(final Image sample) {
+			return sample.getFilename();
+		}
+
+		public void set(final Image sample, final Object collector) {
+			sample.setFilename((String) collector);
+		}
+	},
+	references {
+		public Set<Reference> get(final Image sample) {
+			return sample.getReferences();
+		}
+
+		public void set(final Image sample, final Object references) {
+			if (references instanceof String) {
+				if (sample.getReferences() == null)
+					sample.setReferences(new HashSet<Reference>());
+				sample.getReferences().add(new Reference((String) references));
+			} else {
+				sample.setReferences((Set<Reference>) references);
+			}
+		}
+	},
 }

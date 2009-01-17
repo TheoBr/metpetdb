@@ -12,10 +12,10 @@ public class RegularExpressions {
 	/** Sample */
 	public static final String ROCK_TYPE = "(type)|(rock)";
 	public static final String SESAR_NUMBER = "(sesar)|(isgn)";
-	public static final String LATLON_ERROR = "lat/lon error";
+	public static final String LOCATION_ERROR = "(lat/lon error)|(Location Error)";
 	public static final String REGION = "region";
 	public static final String COUNTRY = "country";
-	public static final String COLLECTOR = "(collector)|(collected by)";
+
 	public static final String METAMORPHIC_GRADES = "(grade)|(facies)";
 	public static final String LATITUDE = "(latitude$)|(lat\\s*$)";
 	public static final String LONGITUDE = "(longitude$)|(lon\\s*$)";
@@ -32,6 +32,17 @@ public class RegularExpressions {
 	public static final String PRECISION_UNIT = "precision unit";
 	public static final String PRECISION = "precision";
 	
+	/** Image */
+	public static final String FILENAME = "(file)|(path)";
+	public static final String IMAGE_TYPE = "image type";
+	public static final String DWELL_TIME = "dwell time";
+	public static final String CURRENT = "current";
+	public static final String VOLTAGE = "voltage";
+	public static final String ELEMENT = "element";
+	public static final String SCALE = "scale";
+	public static final String PARENT_LOC_X = "^\\s*grid location x\\s*$";
+	public static final String PARENT_LOC_Y = "^\\s*grid location y\\s*$";
+	
 	/** Common */
 	public static final String MINERALS = "(minerals)|(mineral)";
 	public static final String LOCATION = "(present.+location)|(current.+location)|(analytical facility)";
@@ -39,4 +50,5 @@ public class RegularExpressions {
 	public static final String COLLECTION_DATE = "(date of collection)|(collected)|(collection.+date)|(analysis Date)";
 	public static final String COMMENTS = "(comment)|(note)|(description)";
 	public static final String SAMPLE = "(^sample[ number| name|])|(^sample$)";
+	public static final String COLLECTOR = "(collector)|(collected by)";
 }

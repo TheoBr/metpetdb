@@ -131,6 +131,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			public void onClick(Widget sender) {
 				updateUploadType();
 				doUploadAndParse();
+				commitButton.setEnabled(true);
 			}
 		});
 

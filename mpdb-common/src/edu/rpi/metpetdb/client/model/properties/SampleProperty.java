@@ -46,7 +46,8 @@ public enum SampleProperty implements Property<Sample> {
 		}
 
 		public void set(final Sample sample, final Object geometry) {
-			sample.setLatitude(PropertyUtils.convertToFloat( geometry.toString()));
+			sample.setLatitude(PropertyUtils
+					.convertToFloat(geometry.toString()));
 		}
 	},
 	longitude {
@@ -58,7 +59,8 @@ public enum SampleProperty implements Property<Sample> {
 		}
 
 		public void set(final Sample sample, final Object geometry) {
-			sample.setLongitude(PropertyUtils.convertToFloat( geometry.toString()));
+			sample.setLongitude(PropertyUtils.convertToFloat(geometry
+					.toString()));
 		}
 	},
 	owner {
@@ -126,7 +128,7 @@ public enum SampleProperty implements Property<Sample> {
 		}
 
 		public void set(final Sample sample, final Object minerals) {
-			//TODO make it accepts different types of minerals
+			// TODO make it accepts different types of minerals
 			sample.setMinerals((Set<SampleMineral>) minerals);
 		}
 	},
@@ -166,14 +168,14 @@ public enum SampleProperty implements Property<Sample> {
 			sample.setLocationText((String) locationText);
 		}
 	},
-	latLonError {
+	locationError {
 		public Float get(final Sample sample) {
-			return sample.getLatLonError();
+			return sample.getLocationError();
 		}
 
 		public void set(final Sample sample, final Object latitudeError) {
 			sample
-					.setLatLonError(PropertyUtils
+					.setLocationError(PropertyUtils
 							.convertToFloat(latitudeError));
 		}
 	},
@@ -200,11 +202,13 @@ public enum SampleProperty implements Property<Sample> {
 		public void set(final Sample sample, final Object metamorphicGrades) {
 			if (metamorphicGrades instanceof String) {
 				if (sample.getMetamorphicGrades() == null)
-					sample.setMetamorphicGrades(new HashSet<MetamorphicGrade>());
-				sample.getMetamorphicGrades().add(new MetamorphicGrade((String) metamorphicGrades));
-			} else{
-			sample
-					.setMetamorphicGrades((Set<MetamorphicGrade>) metamorphicGrades);
+					sample
+							.setMetamorphicGrades(new HashSet<MetamorphicGrade>());
+				sample.getMetamorphicGrades().add(
+						new MetamorphicGrade((String) metamorphicGrades));
+			} else {
+				sample
+						.setMetamorphicGrades((Set<MetamorphicGrade>) metamorphicGrades);
 			}
 		}
 	},
@@ -234,7 +238,7 @@ public enum SampleProperty implements Property<Sample> {
 					sample.setComments(new HashSet<SampleComment>());
 				sample.getComments().add(new SampleComment((String) comments));
 			} else {
-			sample.setComments((Set<SampleComment>) comments);
+				sample.setComments((Set<SampleComment>) comments);
 			}
 		}
 	},

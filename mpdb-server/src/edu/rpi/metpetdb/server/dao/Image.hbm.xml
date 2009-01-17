@@ -19,6 +19,7 @@
     <property name="filename" column="filename" />
     <property name="collector" column="collector" length="100" />
     <property name="scale" />
+    <property name="description" column="description" type="java.lang.String"/>
 
     <set name="references" table="image_reference" cascade="persist,merge" lazy="false">
       <key column="image_id" />

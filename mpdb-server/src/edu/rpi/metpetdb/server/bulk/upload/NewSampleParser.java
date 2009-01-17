@@ -37,8 +37,8 @@ public class NewSampleParser extends NewParser<Sample> {
 				oc.Sample_latitude));
 		columns.add(new ColumnMapping(RegularExpressions.LONGITUDE,
 				oc.Sample_longitude));
-		columns.add(new ColumnMapping(RegularExpressions.LATLON_ERROR,
-				doc.Sample_latLonError));
+		columns.add(new ColumnMapping(RegularExpressions.LOCATION_ERROR,
+				doc.Sample_locationError));
 		columns.add(new ColumnMapping(RegularExpressions.REGION,
 				doc.Sample_regions));
 		columns.add(new ColumnMapping(RegularExpressions.COUNTRY,

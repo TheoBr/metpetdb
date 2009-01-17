@@ -23,6 +23,7 @@ import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.validation.InvalidImageException;
 import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
 import edu.rpi.metpetdb.client.model.Grid;
@@ -32,12 +33,14 @@ import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.XrayImage;
+import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadError;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResult;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadImagesService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.MpDbServlet;
-import edu.rpi.metpetdb.server.bulk.upload.ImageParser;
+import edu.rpi.metpetdb.server.bulk.upload.BulkUploadImage;
+import edu.rpi.metpetdb.server.bulk.upload.NewImageParser;
 import edu.rpi.metpetdb.server.dao.impl.GridDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageOnGridDAO;
@@ -106,6 +109,8 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 	public BulkUploadResult parser(String fileOnServer, boolean save)
 			throws InvalidFormatException, LoginRequiredException {
 		final BulkUploadResult results = new BulkUploadResult();
+		final BulkUploadResultCount ssResultCount = new BulkUploadResultCount();
+		final BulkUploadResultCount imgResultCount = new BulkUploadResultCount();
 		try {
 			if (save) {
 				updateFile(fileOnServer);
@@ -126,13 +131,12 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 
 			ZipFile zp = new ZipFile(MpDbServlet.getFileUploadPath()
 					+ fileOnServer);
-			final ImageParser ip = new ImageParser(zp
+			final NewImageParser ip = new NewImageParser(zp
 					.getInputStream(spreadsheet));
 			ip.parse();
-			final Map<Integer, Image> images = ip.getImages();
-			final Map<Integer, ImageOnGrid> imagesOnGrid = ip.getImagesOnGrid();
-			final BulkUploadResultCount ssResultCount = new BulkUploadResultCount();
-			final BulkUploadResultCount imgResultCount = new BulkUploadResultCount();
+			results.setHeaders(ip.getHeaders());
+			final Map<Integer, BulkUploadImage> images = ip
+					.getBulkUploadImages();
 			User u = new User();
 			u.setId(currentUser());
 			// Keeps track of existing/new subsample names for each sample
@@ -145,16 +149,19 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 			final SampleDAO sDAO = new SampleDAO(this.currentSession());
 			final ImageDAO dao = new ImageDAO(this.currentSession());
 			final Iterator<Integer> imgRows = images.keySet().iterator();
-			final Map<Integer, MpDbException> existingErrors = ip.getErrors();
+			// Handle any existing errors found
+			final Map<Integer, BulkUploadError> existingErrors = ip.getErrors();
 			final Set<Integer> keys = existingErrors.keySet();
 			final Iterator<Integer> itr = keys.iterator();
 			while (itr.hasNext()) {
 				final Integer i = itr.next();
-				results.addError(i.intValue(), existingErrors.get(i));
+				results.addError(i.intValue(), existingErrors.get(i)
+						.getException());
 			}
+
 			while (imgRows.hasNext()) {
 				final int row = imgRows.next();
-				final Image img = images.get(row);
+				final Image img = images.get(row).getImage();
 				// Confirm the filename is in the zip
 				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
 					results.addError(row, new InvalidImageException(
@@ -162,56 +169,65 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 				} else {
 					try {
 						// see if our sample exists
-						if (img.getSample() == null && img.getSubsample() == null) {
-							//Image needs a sample or a subsample to continue
+						if (img.getSample() == null
+								&& img.getSubsample() == null) {
+							// Image needs a sample or a subsample to continue
 							results.addError(row,
-									new PropertyRequiredException("Sample or Subsample"));
+									new PropertyRequiredException(
+											"Sample or Subsample"));
 							continue;
 						}
-						if (img.getSample() != null && img.getSubsample() == null) {
-							//we are adding a sample image
-							img.setSubsample(null); //ignore the subsample if they specified one
-							Sample s = img.getSample();
-							s.setOwner(u);
-							try {
-								// if we don't have this sample already loaded check
-								// for it in the database
-								if (!samples.containsKey(s.getAlias())) {
-									s = sDAO.fill(s);
-									samples.put(s.getAlias(), s);
-									subsampleNames.put(s.getAlias(),
-											new HashSet<String>());
-								} else {
-									s = samples.get(s.getAlias());
-								}
-							} catch (DAOException e) {
-								// There is no sample we have to add an error
-								// Every Image needs a sample so add an error
-								results.addError(row,
-										new PropertyRequiredException("Sample"));
-								continue;
+						Sample s = img.getSample();
+						s.setOwner(u);
+						try {
+							// if we don't have this sample already loaded
+							// check
+							// for it in the database
+							if (!samples.containsKey(s.getAlias())) {
+								s = sDAO.fill(s);
+								samples.put(s.getAlias(), s);
+								subsampleNames.put(s.getAlias(),
+										new HashSet<String>());
+							} else {
+								s = samples.get(s.getAlias());
 							}
+						} catch (DAOException e) {
+							// There is no sample we have to add an error
+							// Every Image needs a sample so add an error
+							results.addError(row,
+									new PropertyRequiredException("Sample"));
+							continue;
+						}
+						if (img.getSample() != null
+								&& img.getSubsample() == null) {
+							// we are adding a sample image
+							img.setSubsample(null); // ignore the subsample if
+							// they specified one
 						} else {
-							//we are adding an image to a subsample
+							// we are adding an image to a subsample
 							img.getSubsample().setSample(img.getSample());
 							img.setSample(null);
 							img.getSubsample().setOwner(u);
 							img.getSubsample().setPublicData(false);
 							Subsample ss = (img.getSubsample());
 							if (ss != null) {
-								// if we don't have the name stored already we need
+								// if we don't have the name stored already we
+								// need
 								// to load the subsample
-								if (!subsampleNames.get(ss.getSample().getAlias()).contains(
+								if (!subsampleNames.get(
+										ss.getSample().getAlias()).contains(
 										ss.getName())) {
 									try {
 										doc.validate(ss);
 										ss = ssDAO.fill(ss);
-										subsamples.put(ss.getSample().getAlias() + ss.getName(),
-												ss);
+										subsamples.put(ss.getSample()
+												.getAlias()
+												+ ss.getName(), ss);
 										img.setSubsample(ss);
 										ssResultCount.incrementOld();
 									} catch (DAOException e) {
-										// Means it is new because we could not find
+										// Means it is new because we could not
+										// find
 										// it
 										ssResultCount.incrementFresh();
 										if (save) {
@@ -220,25 +236,28 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 											} catch (DAOException e1) {
 												results.addError(row, e1);
 											}
-											subsamples.put(ss.getSample().getAlias()
+											subsamples.put(ss.getSample()
+													.getAlias()
 													+ ss.getName(), ss);
 											img.setSubsample(ss);
 										}
 									}
-									subsampleNames.get(img.getSample().getAlias())
-											.add(img.getSubsample().getName());
+									subsampleNames.get(
+											ss.getSample().getAlias()).add(
+											ss.getName());
 								} else {
-									img.setSubsample(subsamples.get(ss.getSample().getAlias()
+									img.setSubsample(subsamples.get(ss
+											.getSample().getAlias()
 											+ ss.getName()));
 								}
 							} else {
 								// Every Image needs a subsample so add an error
 								results.addError(row,
-										new PropertyRequiredException("Subsample"));
+										new PropertyRequiredException(
+												"Subsample"));
 							}
 						}
-						
-						
+
 						doc.validate(img);
 						if (dao.isNew(img))
 							imgResultCount.incrementFresh();
@@ -265,10 +284,10 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 				}
 			}
 
-			final Iterator<Integer> iogRows = imagesOnGrid.keySet().iterator();
+			final Iterator<Integer> iogRows = images.keySet().iterator();
 			while (iogRows.hasNext()) {
 				final int row = iogRows.next();
-				final ImageOnGrid iog = imagesOnGrid.get(row);
+				final ImageOnGrid iog = images.get(row).getImageOnGrid();
 				Image img = iog.getImage();
 				// Confirm the filename is in the zip
 				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
@@ -299,9 +318,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 					results.addError(row, e);
 				}
 			}
-			results.addResultCount("Subsamples", ssResultCount);
-			results.addResultCount("Images", imgResultCount);
-			//results.setHeaders(ip.getHeaders());
+
 			if (save && results.getErrors().isEmpty()) {
 				try {
 					commit();
@@ -309,9 +326,14 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 					results.addError(0, e1);
 				}
 			}
-		} catch (final IOException ioe) {
-			throw new IllegalStateException(ioe.getMessage());
+		} catch (MpDbException e) {
+			results.addError(-1, e);
+		} catch (Exception e) {
+			results.addError(-1, new GenericDAOException(e.getMessage()));
+			e.printStackTrace();
 		}
+		results.addResultCount("Subsamples", ssResultCount);
+		results.addResultCount("Images", imgResultCount);
 		return results;
 	}
 	protected ImageOnGrid saveIncompleteImageOnGrid(ImageOnGrid iog)
