@@ -94,7 +94,7 @@ public class MpDb {
 
 	protected static User currentUser;
 	
-	public static final String WIKI_URL = "http://trinity.db.cs.rpi.edu/xwiki/bin/view/Main/WebHome";
+	public static final String WIKI_URL = "http://wiki.cs.rpi.edu/trac/metpetdb";
 	public static final String JAVADOC_URL = "http://samana.cs.rpi.edu:8080/metpetwebtst/api/index.html";
 	public static final String JUNIT_URL = "http://samana.cs.rpi.edu:8080/metpetwebtst/reports/index.html";
 
