@@ -66,7 +66,6 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 
 	private final FlowPanel progressContainer = new FlowPanel();
 	private final ProgressBar uploadProgress = new ProgressBar();
-	private final MNoticePanel uploadStatus = new MNoticePanel();
 	private final Timer progressTimer;
 	private final MButton cancelProgress = new MButton("Cancel");
 
@@ -135,7 +134,8 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			}
 		});
 
-		main.add(uploadStatus);
+		main.add(resultStatus);
+		
 		main.add(progressContainer);
 		progressContainer.setStyleName(CSS.PROGRESSBAR_CONTAINER);
 		
@@ -161,8 +161,6 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			}
 		};
 		progressContainer.add(cancelProgress);
-		
-		main.add(resultStatus);
 
 		main.add(resultsPanel);
 		resultsPanel.addStyleName(CSS.BULK_RESULTS);
@@ -196,6 +194,10 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		resultsPanel.selectTab(0);
 		clearResults();
 	}
+	
+	private void doUploadAndParse() {
+		form.submit();
+	}
 
 	public void onSubmitComplete(final FormSubmitCompleteEvent event) {
 		final String results = event.getResults();
@@ -205,7 +207,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			// TODO: This is bad! It's to strip the <pre> and </pre>
 			// tags that get stuck on the string for some reason
 			fileOnServer = results.substring(5, results.length() - 6);
-			uploadStatus.sendNotice(NoticeType.WORKING, "Upload complete. Parsing " + contentType
+			resultStatus.sendNotice(NoticeType.WORKING, "Upload complete. Parsing " + contentType
 					+ ", please wait...");
 			parse();
 		}
@@ -214,6 +216,9 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 	public void onSubmit(final FormSubmitEvent event) {
 		// This event is fired just before the form is submitted. We can
 		// take this opportunity to perform validation.
+		
+		// TODO check valid file types and send warning notice if invalid
+		
 		if (file.getFilename().length() == 0) {
 			formMessage.sendNotice(NoticeType.WARNING, "Please select a file");
 			file.setStyleName(CSS.INVALID);
@@ -255,13 +260,12 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			}
 
 			public void onSuccess(BulkUploadResult result) {
-				handleErrors(result);
-				resultStatus.sendNotice(NoticeType.SUCCESS, contentType
-						+ " added to MetPetDB.");
-				resetLink.setText("Upload more data");
+				hide(progressContainer);
+				handleCommitErrors(result);
 				show(nextStepPanel);
 			}
 			public void onFailure(final Throwable e) {
+				hide(progressContainer);
 				// TODO better error handling
 				resultStatus.sendNotice(NoticeType.ERROR, "There was an error submitting the data.");
 				nextStepText.setText("Please submit a bug report to the developers. We are very sorry for the inconvenience. ");
@@ -269,10 +273,6 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				show(nextStepPanel);
 			}
 		}.begin();
-	}
-	
-	private void doUploadAndParse() {
-		form.submit();
 	}
 	
 	private void parse() {
@@ -283,13 +283,13 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 
 			public void onSuccess(final BulkUploadResult results) {
 				hide(progressContainer);
-				uploadStatus.hide();
+				resultStatus.hide();
 				uploadButton.setText("Upload");
 				uploadButton.setEnabled(true);
 				if (results.getHeaders() != null)
 					populateMatchedColsPanel(results.getHeaders());
 				populateSummaryPanel(results.getResultCounts(), results.getErrors().size());
-				handleErrors(results);
+				handleParseErrors(results);
 				show(resultsPanel);
 				show(nextStepPanel);
 			}
@@ -301,7 +301,6 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 					hide(progressContainer);
 					uploadButton.setText("Upload");
 					uploadButton.setEnabled(true);
-					uploadStatus.hide();
 					// TODO better error handling
 					resultStatus.sendNotice(NoticeType.ERROR, "There was an error parsing.");
 					nextStepText.setText("Please submit a bug report to the developers. We are very sorry for the inconvenience. ");
@@ -311,19 +310,35 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		}.begin();
 	}
 	
-	private void handleErrors(final BulkUploadResult results) {
+	private void handleParseErrors(final BulkUploadResult results) {
 		final Map<Integer, List<BulkUploadError>> errors = results.getErrors();
+		populateErrorPanel(errors);
 		if (!errors.isEmpty()) {
-			populateErrorPanel(errors);
 			resultStatus.sendNotice(NoticeType.WARNING, "Upload complete, but the file contains errors.");
 			nextStepText.setText("Please fix the errors and re-upload.");
 			resultsPanel.selectTab(2);
 		} else {
-			setErrorTabStyle(0);
 			resultStatus.sendNotice(NoticeType.SUCCESS, "Upload completed successfully.");
 			nextStepText.setText("Looks good! Remember to double-check the matched columns before submitting.");
 			resultsPanel.selectTab(0);
 			show(commitButton);
+		}
+	}
+	
+	private void handleCommitErrors(final BulkUploadResult results) {
+		final Map<Integer, List<BulkUploadError>> errors = results.getErrors();
+		populateErrorPanel(errors);
+		if (!errors.isEmpty()) {
+			resultStatus.sendNotice(NoticeType.WARNING, "Could not add "+getPlural(contentType)+" to MetPetDB.");
+			nextStepText.setText("Please fix the errors and re-upload.");
+			commitButton.setText("Submit Data");
+			commitButton.setEnabled(true);
+			resetLink.setText("Reset the form");
+			resultsPanel.selectTab(2);
+		} else {
+			resultStatus.sendNotice(NoticeType.SUCCESS, " added to MetPetDB.");
+			hide(resultsPanel);
+			hide(nextStepPanel);
 		}
 	}
 
@@ -335,7 +350,6 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		hide(resultsPanel);
 		hide(nextStepPanel);
 		hide(commitButton);
-		uploadStatus.hide();
 		formMessage.hide();
 		resultStatus.hide();
 		hide(progressContainer);
@@ -403,23 +417,25 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		errorPanel.clear();
 		String msg = "There were "+errors.size()+" errors:";
 		if (errors.size() == 1) msg = "There was one error:";
+		if (errors.size() == 0) msg = "No errors. Congratulations!";
 		errorPanel.add(new MText(msg, "p"));
-		errorPanel.add(errorGrid);
-		errorGrid.resize(errors.size() + 1, 2);
-		errorGrid.getRowFormatter().setStyleName(0, CSS.TYPE_SMALL_CAPS);
-		
-		int i = 0;
-		errorGrid.setText(0, 0, "Row");
-		errorGrid.setText(0, 1, "Error Message");
-		final List<Integer> rowNumbers = new ArrayList<Integer>();
-		rowNumbers.addAll(errors.keySet());
-		Collections.sort(rowNumbers);
-		for (Integer row : rowNumbers) {
-			errorGrid.setText(++i, 0, row.toString());
-			//errorGrid.setText(i, 1, explode(errors.get(row)));
-			errorGrid.setHTML(i, 1, explode(errors.get(row)));
+		setErrorTabStyle(errors.size());
+		if (!errors.isEmpty()) {
+			errorPanel.add(errorGrid);
+			errorGrid.resize(errors.size() + 1, 2);
+			errorGrid.getRowFormatter().setStyleName(0, CSS.TYPE_SMALL_CAPS);
+			
+			int i = 0;
+			errorGrid.setText(0, 0, "Row");
+			errorGrid.setText(0, 1, "Error Message");
+			final List<Integer> rowNumbers = new ArrayList<Integer>();
+			rowNumbers.addAll(errors.keySet());
+			Collections.sort(rowNumbers);
+			for (Integer row : rowNumbers) {
+				errorGrid.setText(++i, 0, row.toString());
+				errorGrid.setHTML(i, 1, explode(errors.get(row)));
+			}
 		}
-		setErrorTabStyle(i);
 	}
 	
 	private String explode(final Collection<BulkUploadError> exceptions) {
@@ -442,6 +458,9 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		}
 	}
 	
+	private String getPlural(String in) {
+		return getPlural(in, 0);
+	}
 	private String getPlural(String in, int num) {
 		String plural = in;
 		if (num != 1) {
