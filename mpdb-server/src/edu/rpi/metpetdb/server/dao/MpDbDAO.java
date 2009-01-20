@@ -15,6 +15,7 @@ import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.security.NoPermissionsException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.server.MpDbServlet;
 
 public abstract class MpDbDAO<T extends MObject> {
 	final protected Session sess;
@@ -97,7 +98,12 @@ public abstract class MpDbDAO<T extends MObject> {
 	 */
 	protected T _save(T u) throws DAOException {
 		if (u.mIsNew()) {
-			insert(u);
+			try {
+				insert(u);
+			} catch (CallbackException e) {
+				sess.clear();
+				throw new NoPermissionsException(e.getMessage());
+			} 
 		} else {
 			try {
 				u = update(merge(u));

@@ -3,7 +3,7 @@
 \i metpetdb-image.sql
 \i metpetdb-chemical-analysis.sql
 \i metpetdb-archive.sql
-\i metpetdb-archives-triggers.sql
+--\i metpetdb-archives-triggers.sql
 \i metpetdb-perms.sql
 \i minerals.sql
 \i elements_and_oxides.sql

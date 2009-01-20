@@ -13,6 +13,7 @@ import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
 import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.security.permissions.principals.AdminPrincipal;
+import edu.rpi.metpetdb.server.security.permissions.principals.EnabledPrincipal;
 import edu.rpi.metpetdb.server.security.permissions.principals.OwnerPrincipal;
 
 public class PermissionInterceptor extends EmptyInterceptor {
@@ -32,18 +33,18 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	 * distinguish between these cases.
 	 * 
 	 * @param entity
-	 * 		uninitialized instance of the class to be loaded
+	 *            uninitialized instance of the class to be loaded
 	 * @param id
-	 * 		the identifier of the new instance.
+	 *            the identifier of the new instance.
 	 * @param state
-	 * 		array of property values.
+	 *            array of property values.
 	 * @param propertyNames
-	 * 		array of property names.
+	 *            array of property names.
 	 * @param types
-	 * 		array of property types.
+	 *            array of property types.
 	 * @return true if the state was modified in any way.
 	 * @throws CallbackException
-	 * 		if a problem occured.
+	 *             if a problem occured.
 	 */
 	public boolean onLoad(Object entity, Serializable id, Object[] state,
 			String[] propertyNames, Type[] types) throws CallbackException {
@@ -66,22 +67,22 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				}
 			}
 		}
-		if (entity instanceof HasOwner) {
-			if (MpDbServlet.currentReq() != null) {
-				final Collection<Principal> principals = MpDbServlet
-						.currentReq().principals;
-				if (isPublic) {
-					//we always allow loading of public data
-					return;
-				}
-				if (principals == null) {
-					throw new CallbackException(
-							"Invalid Subject, Please Log back in");
-				}
-				if (principals.contains(new AdminPrincipal())) {
-					// let admins do whatever
-					return;
-				}
+
+		if (MpDbServlet.currentReq() != null) {
+			final Collection<Principal> principals = MpDbServlet.currentReq().principals;
+			if (isPublic) {
+				// we always allow loading of public data
+				return;
+			}
+			if (principals == null) {
+				throw new CallbackException(
+						"Invalid Subject, Please Log back in");
+			}
+			if (principals.contains(new AdminPrincipal())) {
+				// let admins do whatever
+				return;
+			}
+			if (entity instanceof HasOwner) {
 				if (!principals.contains(new OwnerPrincipal(getOwnerId(
 						propertyNames, state)))
 						&& !isPublic(propertyNames, state)) {
@@ -89,10 +90,16 @@ public class PermissionInterceptor extends EmptyInterceptor {
 							"Cannot load objects you don't own, we don't like to share.");
 				}
 			}
+			if (!(entity instanceof User) && !principals.contains(new EnabledPrincipal(true))) {
+				throw new CallbackException(
+						"Your account is not enabled, you cannot do stuff");
+			}
 		}
 	}
 
 	private boolean isPublic(String[] propertyNames, Object[] state) {
+		if (state == null || propertyNames == null)
+			return false;
 		for (int i = 0; i < propertyNames.length; ++i) {
 			if (propertyNames[i].equals("publicData")) {
 				if (state[i] != null)
@@ -108,7 +115,8 @@ public class PermissionInterceptor extends EmptyInterceptor {
 		int ownerId = 0;
 		for (int i = 0; i < propertyNames.length; ++i) {
 			if (propertyNames[i].equals("owner")) {
-				ownerId = ((User) state[i]).getId();
+				if (state != null && state[i] != null)
+					ownerId = ((User) state[i]).getId();
 				break;
 			}
 		}
@@ -120,20 +128,20 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	 * This method is called by "modify" actions.
 	 * 
 	 * @param entity
-	 * 		object to be updated in the database.
+	 *            object to be updated in the database.
 	 * @param id
-	 * 		the identifier of the instance.
+	 *            the identifier of the instance.
 	 * @param currentState
-	 * 		array of property values.
+	 *            array of property values.
 	 * @param previousState
-	 * 		cached array of property values.
+	 *            cached array of property values.
 	 * @param propertyNames
-	 * 		array of property names.
+	 *            array of property names.
 	 * @param types
-	 * 		array of property types.
+	 *            array of property types.
 	 * @return true if the currentState was modified in any way.
 	 * @throws CallbackException
-	 * 		if a problem occured.
+	 *             if a problem occured.
 	 */
 	public boolean onFlushDirty(Object entity, Serializable id,
 			Object[] currentState, Object[] previousState,
@@ -148,18 +156,18 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	 * "create" actions.
 	 * 
 	 * @param entity
-	 * 		object to be saved to the database.
+	 *            object to be saved to the database.
 	 * @param id
-	 * 		the identifier of the instance.
+	 *            the identifier of the instance.
 	 * @param state
-	 * 		array of property values.
+	 *            array of property values.
 	 * @param propertyNames
-	 * 		array of property names.
+	 *            array of property names.
 	 * @param types
-	 * 		array of property types.
+	 *            array of property types.
 	 * @return true if the user modified the state in any way.
 	 * @throws CallbackException
-	 * 		if a problem occured.
+	 *             if a problem occured.
 	 */
 	public boolean onSave(Object entity, Serializable id, Object[] state,
 			String[] propertyNames, Type[] types) throws CallbackException {
@@ -172,17 +180,17 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	 * "delete" actions.
 	 * 
 	 * @param entity
-	 * 		object to be deleted from the database.
+	 *            object to be deleted from the database.
 	 * @param id
-	 * 		the identifier of the instance.
+	 *            the identifier of the instance.
 	 * @param state
-	 * 		array of property values.
+	 *            array of property values.
 	 * @param propertyNames
-	 * 		array of property names.
+	 *            array of property names.
 	 * @param types
-	 * 		array of property types.
+	 *            array of property types.
 	 * @throws CallbackException
-	 * 		if a problem occured.
+	 *             if a problem occured.
 	 */
 	public void onDelete(Object entity, Serializable id, Object[] state,
 			String[] propertyNames, Type[] types) throws CallbackException {
