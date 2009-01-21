@@ -74,6 +74,11 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				// we always allow loading of public data
 				return;
 			}
+			int version = getVersion(propertyNames, state);
+			if (version == 0 && entity instanceof User) {
+				//user is registering so let this one fly
+				return;
+			}
 			if (principals == null) {
 				throw new CallbackException(
 						"Invalid Subject, Please Log back in");
@@ -121,6 +126,18 @@ public class PermissionInterceptor extends EmptyInterceptor {
 			}
 		}
 		return ownerId;
+	}
+	
+	private int getVersion(String[] propertyNames, Object[] state) {
+		int version = -1;
+		for (int i = 0; i < propertyNames.length; ++i) {
+			if (propertyNames[i].equals("version")) {
+				if (state != null && state[i] != null)
+					version = Integer.valueOf(state[i].toString());
+				break;
+			}
+		}
+		return version;
 	}
 
 	/**
