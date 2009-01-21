@@ -9,6 +9,7 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -370,6 +371,20 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 		pageSizeTxt.setText(String.valueOf(pageSize));
 		final Button pageSizeBtn = new Button("Set");
 		pageSizeBtn.setStyleName("smallBtn");
+		pageSizeTxt.addKeyboardListener(new KeyboardListener() {
+			public void onKeyPress(Widget sender, char keyCode, int modifiers){
+				if(keyCode == KeyboardListener.KEY_ENTER)
+					try { 
+						setPageSize(Integer.parseInt(pageSizeTxt.getText()));
+					} catch (Exception e) {
+						
+					} finally {
+						
+					}
+			}
+			public void onKeyDown(Widget sender, char keyCode, int modifiers){}
+			public void onKeyUp(Widget sender, char keyCode, int modifiers){}
+		});
 		pageSizeBtn.addClickListener(new ClickListener() {
 			public void onClick(final Widget sender) {
 				try {
