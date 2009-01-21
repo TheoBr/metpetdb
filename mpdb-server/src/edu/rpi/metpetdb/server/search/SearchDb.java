@@ -31,13 +31,15 @@ import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.properties.SearchProperty;
 import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.DataStore;
 
 public class SearchDb {
 	public SearchDb() {
 	}
 
-	public static List<Sample> sampleSearch(SearchSample searchSamp,
+	public static Results<Sample> sampleSearch(final PaginationParameters p, SearchSample searchSamp,
 			User userSearching) throws NoPermissionsException {
 
 		final Session session = DataStore.open();
@@ -238,7 +240,7 @@ public class SearchDb {
 				.createFullTextQuery(fullQuery, Sample.class);
 		try {
 
-			final List<Sample> results = hibQuery.list();
+			final Results<Sample> results = new Results<Sample>(hibQuery.list().size(), hibQuery.list());
 			return results;
 		} catch (CallbackException e) {
 			session.clear();

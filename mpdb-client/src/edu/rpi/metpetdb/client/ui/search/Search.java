@@ -8,7 +8,6 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -26,6 +25,7 @@ import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.FormOp;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.PageChangeListener;
@@ -55,7 +55,6 @@ public class Search extends MPagePanel implements PageChangeListener {
 		new SearchTabChemicalAnalysis(), 
 		new SearchTabProvenance()
 	};
-
 	private static final String cookieString = "SearchView";
 	private static final String urlParameter = "url";
 	private static final String samplesParameter = "Samples";
@@ -65,20 +64,18 @@ public class Search extends MPagePanel implements PageChangeListener {
 	private final FlowPanel columnViewPanel = new FlowPanel();
 	private FlowPanel samplesContainer = new FlowPanel();
 	private final ObjectSearchPanel searchPanel;
+	
+	private SearchSample ss;
 	private final SampleListEx sampleList = new SampleListEx(
 			LocaleHandler.lc_text.search_noSamplesFound()) {
 
 		@Override
 		public void update(PaginationParameters p,
 				AsyncCallback<Results<Sample>> ac) {
-			/*
-			 * in reality this would somehow tie into the search rpc call to
-			 * pass in sorting data and pagination data to the server
-			 */
-			final Results<Sample> r = new Results<Sample>();
-			r.setCount(results.size());
-			r.setList(results);
-			ac.onSuccess(r);
+			if (ss != null)
+				MpDb.search_svc.search(p,ss, MpDb.currentUser(), ac);
+			else
+				ac.onSuccess(new Results<Sample>(0, new ArrayList<Sample>()));
 		}
 
 	};
@@ -92,15 +89,15 @@ public class Search extends MPagePanel implements PageChangeListener {
 		searchPanel = new ObjectSearchPanel<SearchSample>(sui) {
 			// TODO: Make that null into the current user from session. I don't
 			// know how to do this right now however
-			protected void searchBean(final AsyncCallback<List<Sample>> ac) {
-				MpDb.search_svc.search((SearchSample) getBean(), MpDb
-						.currentUser(), ac);
+			protected void searchBean(final AsyncCallback ac) {
+				ss = (SearchSample) getBean();
+				sampleList.refresh();
 			}
-			protected void onSearchCompletion(final List<Sample> r) {
-				if (r != null) {
-					results = r;
-					sampleList.refresh();
-				}
+			protected void onSearchCompletion(final FormOp ac) {
+				saveSearch();
+				saveSearchPagination();
+				sampleList.refresh();
+				ac.enable(true);
 			}
 		};
 		
@@ -121,6 +118,7 @@ public class Search extends MPagePanel implements PageChangeListener {
 		sui.passActionWidget(exportGoogleEarth);
 		
 		add(searchPanel);
+		
 		createViewFromCookie();
 		buildSampleFilters();
 		samplesContainer.add(columnViewPanel);
@@ -132,18 +130,8 @@ public class Search extends MPagePanel implements PageChangeListener {
 	// search sample in the session. Right now it waits for the response and then either loads the interface
 	// with a new search sample or the one from the session
 	public Search createNew() {		
-		new ServerOp<SearchSample>(){
-			public void begin(){
-				MpDb.search_svc.getSessionSearchSample(this);
-			}
-			public void onSuccess(final SearchSample searchSamp){
-				if (searchSamp != null){
-					searchPanel.edit(searchSamp);
-				} else {
-					searchPanel.edit(new SearchSample());
-				}
-			}
-		}.begin();	
+		loadSearch();
+		loadSearchSample();
 		return this;
 	}
 
@@ -277,5 +265,71 @@ public class Search extends MPagePanel implements PageChangeListener {
 				}
 			}.begin();
 		}
+	}
+	
+	public void saveSearch(){
+		new ServerOp<Void>(){
+			public void begin(){
+				MpDb.search_svc.setSessionLastSearchedSearchSample((SearchSample) searchPanel.getBean(), this);	
+			}
+			public void onSuccess(Void v){
+				
+			}
+		}.begin();
+	}
+	
+	public void saveSearchPagination(){
+		new ServerOp<Void>(){
+			public void begin(){
+				MpDb.search_svc.setSessionLastSearchPagination(sampleList.getPaginationParameters(), this);	
+			}
+			public void onSuccess(Void v){
+				
+			}
+		}.begin();
+	}
+	
+	public void loadSearchSample(){
+		new ServerOp<SearchSample>(){
+			public void begin(){
+				MpDb.search_svc.getSessionSearchSample(this);
+			}
+			public void onSuccess(final SearchSample searchSamp){
+				if (searchSamp != null){
+					searchPanel.edit(searchSamp);
+				} else {
+					searchPanel.edit(new SearchSample());
+				}
+			}
+		}.begin();
+	}
+	
+	public void loadSearch(){
+		new ServerOp<SearchSample>(){
+			public void begin(){
+				MpDb.search_svc.getSessionLastSearchedSearchSample(this);
+			}
+			public void onSuccess(final SearchSample searchSamp){
+				if (searchSamp != null){
+					ss = searchSamp;
+					loadPagination();			
+				}
+			}
+		}.begin();
+	}
+	
+	public void loadPagination(){
+		new ServerOp<PaginationParameters>(){
+			public void begin(){
+				MpDb.search_svc.getSessionLastSearchPagination(this);
+			}
+			public void onSuccess(final PaginationParameters p){
+				if (p != null){
+					sampleList.refresh(p);
+				} else {
+					sampleList.refresh();
+				}
+			}
+		}.begin();
 	}
 }

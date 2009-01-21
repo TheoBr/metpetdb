@@ -5,7 +5,6 @@ package edu.rpi.metpetdb.client.ui.input;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -14,9 +13,9 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.FormOp;
-import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchInterface;
@@ -64,14 +63,20 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 	}
 
 	public void doSearch() {
-		new FormOp<List<Sample>>(this) {
+		new FormOp<T>(this) {
 			protected void onSubmit() {
 				startValidation(this);
-				searchBean(this);
 			}
-			public void onSuccess(final List<Sample> result) {
-				enable(true);
-				onSearchCompletion(result);
+			public void onSuccess(final T result) {
+				new FormOp<T>(ObjectSearchPanel.this) {
+					protected void onSubmit() {
+						searchBean(this);
+						onSuccess(null);
+					}
+					public void onSuccess(final T result) {
+						onSearchCompletion(this);
+					}
+				}.begin();
 			}
 		}.begin();
 	}
@@ -136,10 +141,10 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 		return currentEditWidgets.get(attributes.indexOf(attr));
 	}
 	
-	protected void searchBean(final AsyncCallback<List<Sample>> ac) {
+	protected void searchBean(final AsyncCallback<T> ac) {
 		throw new UnsupportedOperationException();
 	}
-	protected void onSearchCompletion(final List<Sample> result) {
+	protected void onSearchCompletion(final FormOp<T> ac) {
 		
 	}
 }

@@ -35,7 +35,7 @@ public abstract class FormOp<T> extends ServerOp<T> {
 		return FocusSupport.handlesValidationException(root, e);
 	}
 
-	protected void enable(final boolean enabled) {
+	public void enable(final boolean enabled) {
 		FocusSupport.setEnabled(root, enabled);
 	}
 

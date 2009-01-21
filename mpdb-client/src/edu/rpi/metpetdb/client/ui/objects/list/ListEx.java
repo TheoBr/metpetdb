@@ -43,7 +43,9 @@ import edu.rpi.metpetdb.client.ui.ServerOp;
  */
 public abstract class ListEx<T extends MObject> extends FlowPanel {
 	private int pageSize = 10;
-
+	private PaginationParameters currentPagination;
+	private PaginationParameters oldPagination;
+	
 	/**
 	 * How we sort by default (true means ascending, false is descending)
 	 */
@@ -134,24 +136,36 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 		 */
 		public void requestRows(final Request request,
 				final Callback<T> callback) {
-			final int startRow = request.getStartRow();
-			final int numRows = request.getNumRows();
-
-			final ColumnSortList sortList = request.getColumnSortList();
-			// Get column to sort
-			final ColumnSortInfo sortInfo = sortList.getPrimaryColumnSortInfo();
-			final PaginationParameters p = new PaginationParameters();
-			if (sortInfo != null) {
-				p.setParameter(displayColumns.get(sortInfo.getColumn())
-						.getProperty().name());
-				p.setAscending(sortInfo.isAscending());
+			if (oldPagination != null) {
+				updateWithPagination(oldPagination, callback, request);
+				oldPagination = null;
 			} else {
-				p.setAscending(DEFAULT_SORT_ORDER);
-				p.setParameter(getDefaultSortParameter());
+				final int startRow = request.getStartRow();
+				final int numRows = request.getNumRows();
+	
+				final ColumnSortList sortList = request.getColumnSortList();
+				// Get column to sort
+				final ColumnSortInfo sortInfo = sortList.getPrimaryColumnSortInfo();
+				final PaginationParameters p = new PaginationParameters();
+				if (sortInfo != null) {
+					p.setParameter(displayColumns.get(sortInfo.getColumn())
+							.getProperty().name());
+					p.setAscending(sortInfo.isAscending());
+				} else {
+					p.setAscending(DEFAULT_SORT_ORDER);
+					p.setParameter(getDefaultSortParameter());
+				}
+				p.setFirstResult(startRow);
+				p.setMaxResults(numRows);
+				
+				currentPagination = p;
+	
+				updateWithPagination(p, callback, request);
 			}
-			p.setFirstResult(startRow);
-			p.setMaxResults(numRows);
-
+		}
+		
+		public void updateWithPagination(final PaginationParameters p, 
+				final Callback<T> callback, final Request request){
 			new ServerOp<Results<T>>() {
 				@Override
 				public void begin() {
@@ -180,7 +194,7 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 										headerRowCount, 0,
 										HasHorizontalAlignment.ALIGN_CENTER,
 										HasVerticalAlignment.ALIGN_MIDDLE);
-						callback.onRowsReady(request, response);
+							callback.onRowsReady(request, response);
 					} else {
 						for (int i = 0; i < ListEx.this.scrollTable
 								.getHeaderTable().getRowCount(); i++) {
@@ -192,7 +206,7 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 										.removeRow(i);
 							}
 						}
-						callback.onRowsReady(request, response);
+							callback.onRowsReady(request, response);
 					}
 
 					int size = ListEx.this.scrollTable.getHeaderTable()
@@ -446,6 +460,11 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 		scrollTable.gotoFirstPage();
 		scrollTable.reloadPage();
 	}
+	
+	public void refresh(final PaginationParameters p) {
+		oldPagination = p;
+		scrollTable.reloadPage();
+	}
 
 	public void setPageSize(final int PageSize) {
 		pageSize = PageSize;
@@ -454,5 +473,9 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 	}
 	public int getPageSize() {
 		return pageSize;
+	}
+	
+	public PaginationParameters getPaginationParameters(){
+		return currentPagination;
 	}
 }

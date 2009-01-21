@@ -2,8 +2,8 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific.search;
 
 import java.util.ArrayList;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -27,6 +27,8 @@ public class SearchInterface implements ClickListener {
 	private static final String CRITERIA_CLEAR_ID = "criteria-clearall";
 	private final MLink clearAll = new MLink("Clear All", this);
 	private final MHtmlList searchActions = new MHtmlList();
+	private int originalHeight = 0;
+	private boolean init = false;
 	
 	private FlowPanel critContents = new FlowPanel();
 	private final HTMLPanel criteriaSummaryPanel = new HTMLPanel(
@@ -61,6 +63,7 @@ public class SearchInterface implements ClickListener {
 		currentEditWidgets.clear();
 		final MTwoColPanel panel = new MTwoColPanel();
 		
+		
 		for (int i = 0; i < tabAtts.length; i++) {
 			final FlowPanel fp = new FlowPanel();
 			fp.add(tabAtts[i].createEditWidget(obj, id));
@@ -77,8 +80,15 @@ public class SearchInterface implements ClickListener {
 		searchActions.setStyleName("search-actions");
 		panel.setRightColWidth("30%");
 		createCriteriaForAll();
+		
+		final DisclosurePanel p = new DisclosurePanel("Expand/Collapse");
+		p.setAnimationEnabled(true);
+		p.setOpen(true);
+		p.add(panel);
+		
+		
 		return new Widget[] {
-			panel
+			p
 		};
 	}
 	

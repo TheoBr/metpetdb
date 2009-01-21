@@ -41,6 +41,7 @@ import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
@@ -401,11 +402,26 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 				searchSamp);
 	}
 
+	public SearchSample getLastSearchedSearchSample(){
+		return (SearchSample) this.getThreadLocalRequest().getSession().getAttribute("lastSearchSamp");
+	}
+
+	public void setLastSearchedSearchSample(final SearchSample searchSamp){
+		this.getThreadLocalRequest().getSession().setAttribute("lastSearchSamp", searchSamp);
+	}
+	
+	public PaginationParameters getLastSearchPagination(){
+		return (PaginationParameters) this.getThreadLocalRequest().getSession().getAttribute("lastSearchPagination");
+	}
+
+	public void setLastSearchPagination(final PaginationParameters p){
+		this.getThreadLocalRequest().getSession().setAttribute("lastSearchPagination", p);
+	}
+	
 	public static final class Req {
 		Session session;
 		Integer userId;
 		public Collection<Principal> principals;
-		public SearchSample searchSamp;
 
 		Session currentSession() {
 			if (session == null) {

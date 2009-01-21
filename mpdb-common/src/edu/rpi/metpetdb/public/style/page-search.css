@@ -1,6 +1,10 @@
 /*-------------------------------------
               search
  --------------------------------------*/
+ 
+ .search .gwt-DisclosurePanel {
+ 	width: 100%;
+ }
 
 .search .tabPanel {
 	width: 100%;
