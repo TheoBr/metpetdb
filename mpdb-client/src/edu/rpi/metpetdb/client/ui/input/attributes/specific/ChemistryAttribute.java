@@ -53,6 +53,8 @@ public class ChemistryAttribute extends GenericAttribute implements
 	private ListBox choice;
 	private FlexTable ft;
 	private int rows;
+	private ObjectConstraint oxideConstraint;
+	private ObjectConstraint elementConstraint;
 
 	// keeps track of what species type we have in each row
 	private ArrayList<String> species_type;
@@ -67,29 +69,55 @@ public class ChemistryAttribute extends GenericAttribute implements
 				elements, oxides
 		});
 		realEditWidgets = new ArrayList<Widget>();
+		oxideConstraint = oxides;
+		elementConstraint = elements;
 	}
 	
-	// FIXME this needs to be replaced with a working version
-	// of the code here: http://pastie.org/361942
 	public Widget[] createDisplayWidget(final MObject obj) {
 		
-		final MHtmlList list = new MHtmlList();
-		final HashMap s = this.mGetAll(obj);
-		if (s != null) {
-			final Collection<?> elementsOxides = s.values();
-			if (elementsOxides != null) {
-				final Iterator<?> iter = elementsOxides.iterator();
-				while (iter.hasNext()) {
-					final Object object = iter.next();
-					final Label r = new Label(object.toString());
-					list.add(r);
-				}
+		Collection<ChemicalAnalysisElement> elements = (Collection<ChemicalAnalysisElement>) obj.mGet(elementConstraint.property);
+		Collection<ChemicalAnalysisOxide> oxides = (Collection<ChemicalAnalysisOxide>) obj.mGet(oxideConstraint.property);
+
+		String elementDisplay = "";
+		if (elements != null) {
+			elementDisplay += "<table><tr class=\""+ CSS.TYPE_SMALL_CAPS +"\"><th>wt%</th><th>Element</th></tr>";
+			final Iterator<ChemicalAnalysisElement> iter = elements.iterator();
+			while (iter.hasNext()) {
+				final ChemicalAnalysisElement element = iter.next();
+				elementDisplay += "<tr><td class=\"wt\">" + element.getAmount() + "%</td><td>" + 
+					element.getDisplayName() + "</td></tr>";
 			}
+			elementDisplay += "</table>";
 		}
+		
+		String oxideDisplay = "";
+		if (oxides != null) {
+			oxideDisplay += "<table><tr class=\""+ CSS.TYPE_SMALL_CAPS +"\"><th>wt%</th><th>Oxide</th></tr>";
+			final Iterator<ChemicalAnalysisOxide> iter = oxides.iterator();
+			while (iter.hasNext()) {
+				final ChemicalAnalysisOxide oxide = iter.next();
+				oxideDisplay += "<tr><td class=\"wt\">" + oxide.getAmount() + "%</td><td>" + 
+					oxide.getDisplayName() + "</td></tr>";
+			}
+			oxideDisplay += "</table>";
+		}
+
+		MTwoColPanel panel = new MTwoColPanel();
+		panel.addStyleName("elements-oxides");
+
+		if (elementDisplay.length() == 0) {
+			panel.getLeftCol().add(new HTML(oxideDisplay));
+			panel.getRightCol().add(new HTML(elementDisplay));
+		} else { 
+			panel.getLeftCol().add(new HTML(elementDisplay));
+			panel.getRightCol().add(new HTML(oxideDisplay));
+		}
+
 		return new Widget[] {
-			list
+			panel
 		};
 	}
+	
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		ChemicalAnalysis ca = (ChemicalAnalysis) obj;
 

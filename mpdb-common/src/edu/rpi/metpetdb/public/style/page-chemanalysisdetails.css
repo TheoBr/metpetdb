@@ -1,0 +1,14 @@
+.elements-oxides {
+	margin: 10px;
+	width: 400px;
+}
+
+.elements-oxides td, .elements-oxides th {
+	padding: 2px 5px !important;
+}
+.elements-oxides th {
+	border-bottom: 1px solid #999;
+	background-color: #eee;
+	font-weight: normal;
+	text-align: left;
+}

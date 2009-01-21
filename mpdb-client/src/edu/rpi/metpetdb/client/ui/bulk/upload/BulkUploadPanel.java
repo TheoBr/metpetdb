@@ -270,6 +270,8 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				resultStatus.sendNotice(NoticeType.ERROR, "There was an error submitting the data.");
 				nextStepText.setText("Please submit a bug report to the developers. We are very sorry for the inconvenience. ");
 				resetLink.setText("Reset the form");
+				commitButton.setText("Submit Data");
+				commitButton.setEnabled(true);
 				show(nextStepPanel);
 			}
 		}.begin();
