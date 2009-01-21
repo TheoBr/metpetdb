@@ -34,7 +34,9 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 	private final SimplePanel container;
 	private TreeAttribute<Mineral> tree;
 	private WizardDialog dialog;
-
+	private ArrayList mineralList;
+	private ArrayList amountList;
+	
 	private DetailsPanel p_mineral;
 
 	public MineralAttribute(final ObjectConstraint mc) {
@@ -71,10 +73,17 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 		chooseMinerals.setEnabled(true);
 		this.obj = obj;
 		vp.add(chooseMinerals);
-		final ArrayList tempList = new ArrayList();
-		if (get(obj) != null)
+		mineralList = new ArrayList();
+		amountList = new ArrayList();
+		ArrayList tempList = new ArrayList();
+		if (get(obj) != null){
 			tempList.addAll(get(obj));
-		tree.setSelectedItems(tempList);
+			for (Object o : tempList){
+				mineralList.add(((SampleMineral) o).getMineral());
+				amountList.add(new Float(((SampleMineral) o).getAmount()));
+			}
+		}
+		tree.setSelectedItems(mineralList);
 		remakeContainer(obj);
 		vp.add(container);
 		this.ga = ga;
@@ -121,6 +130,9 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 					} else {
 						final SampleMineral sampleMineral = new SampleMineral();
 						sampleMineral.setMineral(mineral);
+						if (mineralList.contains(mineral)){
+							sampleMineral.setAmount((Float) amountList.get(mineralList.indexOf(mineral)));
+						}
 						newSelectedItems.add(sampleMineral);
 					}
 				}
