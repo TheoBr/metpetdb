@@ -26,24 +26,48 @@ public enum ChemicalAnalysisProperty implements Property<ChemicalAnalysis> {
 			((ChemicalAnalysis) chemicalAnalysis).setSpotId((String) spotId);
 		}
 	},
-	pointX {
+	referenceX {
 		public Integer get(final ChemicalAnalysis chemicalAnalysis) {
-			return ((ChemicalAnalysis) chemicalAnalysis).getPointX();
+			return ((ChemicalAnalysis) chemicalAnalysis).getReferenceX();
 		}
 
 		public void set(final ChemicalAnalysis chemicalAnalysis,
 				final Object pointX) {
-			((ChemicalAnalysis) chemicalAnalysis).setPointX(PropertyUtils.convertToInteger(pointX));
+			((ChemicalAnalysis) chemicalAnalysis).setReferenceX(PropertyUtils
+					.convertToInteger(pointX));
 		}
 	},
-	pointY {
+	referenceY {
 		public Integer get(final ChemicalAnalysis chemicalAnalysis) {
-			return ((ChemicalAnalysis) chemicalAnalysis).getPointY();
+			return ((ChemicalAnalysis) chemicalAnalysis).getReferenceY();
 		}
 
 		public void set(final ChemicalAnalysis chemicalAnalysis,
 				final Object pointY) {
-			((ChemicalAnalysis) chemicalAnalysis).setPointY(PropertyUtils.convertToInteger(pointY));
+			((ChemicalAnalysis) chemicalAnalysis).setReferenceY(PropertyUtils
+					.convertToInteger(pointY));
+		}
+	},
+	stageX {
+		public Object get(final ChemicalAnalysis chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getStageX();
+		}
+
+		public void set(final ChemicalAnalysis chemicalAnalysis,
+				final Object pointX) {
+			((ChemicalAnalysis) chemicalAnalysis).setStageX(PropertyUtils
+					.convertToInteger(pointX));
+		}
+	},
+	stageY {
+		public Object get(final ChemicalAnalysis chemicalAnalysis) {
+			return ((ChemicalAnalysis) chemicalAnalysis).getStageY();
+		}
+
+		public void set(final ChemicalAnalysis chemicalAnalysis,
+				final Object pointY) {
+			((ChemicalAnalysis) chemicalAnalysis).setStageY(PropertyUtils
+					.convertToInteger(pointY));
 		}
 	},
 	analysisMethod {
@@ -130,7 +154,8 @@ public enum ChemicalAnalysisProperty implements Property<ChemicalAnalysis> {
 				m.setName(mineral.toString());
 				chemicalAnalysis.setMineral(m);
 			} else {
-				((ChemicalAnalysis) chemicalAnalysis).setMineral((Mineral) mineral);
+				((ChemicalAnalysis) chemicalAnalysis)
+						.setMineral((Mineral) mineral);
 			}
 		}
 	},

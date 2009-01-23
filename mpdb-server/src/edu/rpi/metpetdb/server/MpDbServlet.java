@@ -44,16 +44,15 @@ import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
-import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
 import edu.rpi.metpetdb.server.bulk.upload.NewAnalysisParser;
 import edu.rpi.metpetdb.server.bulk.upload.NewImageParser;
 import edu.rpi.metpetdb.server.bulk.upload.NewSampleParser;
-import edu.rpi.metpetdb.server.bulk.upload.SampleParser;
 import edu.rpi.metpetdb.server.dao.impl.ElementDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageTypeDAO;
 import edu.rpi.metpetdb.server.dao.impl.MineralDAO;
 import edu.rpi.metpetdb.server.dao.impl.OxideDAO;
 import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
+import edu.rpi.metpetdb.server.security.Action;
 import edu.rpi.metpetdb.server.security.SessionEncrypter;
 import edu.rpi.metpetdb.server.security.permissions.principals.AdminPrincipal;
 
@@ -161,14 +160,12 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		// Locate and set Valid Potential Minerals for the parser
 		final Session s = DataStore.open();
 		final Collection<Mineral> minerals = (new MineralDAO(s).getAll());
-		SampleParser.setMinerals(minerals);
 		NewSampleParser.setMinerals(minerals);
 		List<Element> elements = ((new ElementDAO(s)).getAll());
 		List<Oxide> oxides = ((new OxideDAO(s)).getAll());
 		NewAnalysisParser.setOxides(oxides);
 		NewAnalysisParser.setElements(elements);
 		NewImageParser.setImageTypes((new ImageTypeDAO(s).getAll()));
-		AnalysisParser.setElementsAndOxides(elements, oxides);
 		s.close();
 	}
 
@@ -421,6 +418,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	public static final class Req {
 		Session session;
 		Integer userId;
+		public Action action;
 		public Collection<Principal> principals;
 
 		Session currentSession() {

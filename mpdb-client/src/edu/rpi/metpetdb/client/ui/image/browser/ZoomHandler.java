@@ -38,8 +38,7 @@ public class ZoomHandler {
 	}
 
 	public int getCurrentScale() {
-		return (int) Math.pow(zoomMultiplier, -1* (6 - (getCurrentZoomLevel() / 10) <= 0 ? 6 - (getCurrentZoomLevel() / 10)
-				: 6 - (getCurrentZoomLevel() / 10)));
+		return (int) Math.pow(zoomMultiplier, getCurrentZoomLevel() / 10);
 	}
 
 	public int getCurrentZoomPixel() {
@@ -138,6 +137,10 @@ public class ZoomHandler {
 	}
 	public int getReferenceY() {
 		return referenceY;
+	}
+	
+	public void updateSlider(final int offset) {
+		DOM.setStyleAttribute(zSlide, "top", getCurrentZoomPixel() + offset + "px");
 	}
 
 }

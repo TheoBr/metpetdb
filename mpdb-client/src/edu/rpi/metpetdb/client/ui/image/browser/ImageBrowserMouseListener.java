@@ -194,8 +194,8 @@ public class ImageBrowserMouseListener implements MouseListener {
 				- grid.getAbsoluteLeft() + 4;
 		pointY -= currentImage.getImagePanel().getAbsoluteTop()
 				- grid.getAbsoluteTop() + 13;
-		ca.setPointX(pointX);
-		ca.setPointY(pointY);
+		ca.setReferenceX(pointX);
+		ca.setReferenceY(pointY);
 		ca.setActualImage(pointer);
 		ca.setLocked(true);
 		((Image) pointer).addClickListener(new ClickListener() {
@@ -316,8 +316,8 @@ public class ImageBrowserMouseListener implements MouseListener {
 				.getChemicalAnalyses().iterator();
 		while (itr.hasNext()) {
 			final ChemicalAnalysis ma = (ChemicalAnalysis) itr.next();
-			if (x >= ma.getPointX() - 5 && x <= ma.getPointX() + 5) {
-				if (y >= ma.getPointY() - 15 && y <= ma.getPointY() + 5) {
+			if (x >= ma.getReferenceX() - 5 && x <= ma.getReferenceX() + 5) {
+				if (y >= ma.getReferenceY() - 15 && y <= ma.getReferenceY() + 5) {
 					return ma;
 				}
 			}
@@ -538,11 +538,11 @@ public class ImageBrowserMouseListener implements MouseListener {
 		if (newX < 0 || newY < 0
 				|| newX > currentImage.getImagePanel().getOffsetWidth()
 				|| newY > currentImage.getImagePanel().getOffsetHeight()) {
-			newX = currentPoint.getPointX();
-			newY = currentPoint.getPointY();
+			newX = currentPoint.getReferenceX();
+			newY = currentPoint.getReferenceY();
 		}
-		currentPoint.setPointX(newX);
-		currentPoint.setPointY(newY);
+		currentPoint.setReferenceX(newX);
+		currentPoint.setReferenceY(newY);
 		currentImage.getImagePanel().setWidgetPosition(
 				currentPoint.getActualImage(), newX, newY);
 	}

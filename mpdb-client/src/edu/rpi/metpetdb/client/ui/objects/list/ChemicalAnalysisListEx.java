@@ -140,9 +140,9 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 				}
 			},
 			new Column(true,enttxt.ChemicalAnalysis_pointX(),
-					ChemicalAnalysisProperty.pointX),
+					ChemicalAnalysisProperty.referenceX),
 			new Column(true,enttxt.ChemicalAnalysis_pointY(),
-					ChemicalAnalysisProperty.pointY),	
+					ChemicalAnalysisProperty.referenceY),	
 			new Column(true,enttxt.ChemicalAnalysis_image(),
 					ChemicalAnalysisProperty.image, false, true) {
 				protected Object getWidget(final MObject data,

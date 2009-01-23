@@ -11,8 +11,10 @@
     </id>
     <version name="version" />
     <property name="publicData" column="public_data" type="yes_no" />
-    <property name="pointX" column="point_x" />
-    <property name="pointY" column="point_y" />
+    <property name="referenceX" column="reference_x" />
+    <property name="referenceY" column="reference_y" />
+    <property name="stageX" column="stage_x" />
+    <property name="stageY" column="stage_y" />
     <property name="datePrecision" column="date_precision" />
     <property name="spotId" column="spot_id" type="java.lang.String"/>
     <property name="analysisMethod" column="analysis_method" type="java.lang.String"/>
@@ -86,16 +88,6 @@
     from ChemicalAnalysis ma
     where ma.subsample.id = :id
     order by ma.spotId
-  </query>
-  <query name="ChemicalAnalysis.bySubsampleId/pointX">
-    from ChemicalAnalysis ma
-    where ma.subsample.id = :id
-    order by ma.pointX
-  </query>
-  <query name="ChemicalAnalysis.bySubsampleId/pointY">
-    from ChemicalAnalysis ma
-    where ma.subsample.id = :id
-    order by ma.pointY
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/analysisMethod">
     from ChemicalAnalysis ma

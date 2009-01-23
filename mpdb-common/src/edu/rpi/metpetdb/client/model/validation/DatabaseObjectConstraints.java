@@ -203,8 +203,10 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint ChemicalAnalysis_description;
 	public TimestampConstraint ChemicalAnalysis_analysisDate;
 	public ShortConstraint ChemicalAnalysis_datePrecision;
-	public IntegerConstraint ChemicalAnalysis_pointX;
-	public IntegerConstraint ChemicalAnalysis_pointY;
+	public IntegerConstraint ChemicalAnalysis_referenceX;
+	public IntegerConstraint ChemicalAnalysis_referenceY;
+	public FloatConstraint ChemicalAnalysis_stageX;
+	public FloatConstraint ChemicalAnalysis_stageY;
 	public BooleanConstraint ChemicalAnalysis_largeRock;
 	public ObjectConstraint<Image> ChemicalAnalysis_image;
 	public FloatConstraint ChemicalAnalysis_total;

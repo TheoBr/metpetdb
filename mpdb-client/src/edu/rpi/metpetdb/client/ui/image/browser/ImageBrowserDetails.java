@@ -81,6 +81,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	private final ZOrderManager zOrderManager = new ZOrderManager();
 	private ZoomInListener zoomInListener;
 	private ZoomOutListener zoomOutListener;
+	private ZoomHandler zoomer;
 	
 	private final PanHandler panHandler;
 
@@ -386,10 +387,10 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 			final ChemicalAnalysis ma = itr.next();
 			final com.google.gwt.user.client.ui.Image i = new com.google.gwt.user.client.ui.Image(
 					GWT.getModuleBaseURL() + "/images/point0.gif");
-			iog.getImagePanel().add(i, ma.getPointX(), ma.getPointY());
+			iog.getImagePanel().add(i, ma.getReferenceX(), ma.getReferenceY());
 			ma.setActualImage(i);
-			ma.setPercentX(ma.getPointX() / (float) iog.getCurrentWidth());
-			ma.setPercentY(ma.getPointY() / (float) iog.getCurrentHeight());
+			ma.setPercentX(ma.getReferenceX() / (float) iog.getCurrentWidth());
+			ma.setPercentY(ma.getReferenceY() / (float) iog.getCurrentHeight());
 			ma.setLocked(true);
 			i.addClickListener(new ClickListener() {
 				public void onClick(final Widget sender) {
@@ -484,10 +485,11 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		DOM.setElementAttribute(viewControls.getElement(), "id", "viewControl");
 		zSlide = new MLink("", this);
 		DOM.setStyleAttribute(zSlide.getElement(), "top", "60px");
-		zoomInListener = new ZoomInListener(this.imagesOnGrid.values(),
-				zSlide.getElement(), this);
-		zoomOutListener =  new ZoomOutListener(this.imagesOnGrid.values(),
-				zSlide.getElement(), this);
+		//FIXME
+		//zoomInListener = new ZoomInListener(this.imagesOnGrid.values(),
+				//zSlide.getElement(), this);
+		//zoomOutListener =  new ZoomOutListener(this.imagesOnGrid.values(),
+				//zSlide.getElement(), this);
 		zIn = new MLink("", zoomInListener);
 		zOut = new MLink("", zoomOutListener);
 		this.panUp.setStyleName("imageBrowser-hyperlink");
@@ -611,8 +613,9 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 					container.setIog(iog);
 				}
 				mouseListener.setImagesOnGrid(imagesOnGrid.values());
-				zoomOutListener.setImagesOnGrid(imagesOnGrid.values());
-				zoomInListener.setImagesOnGrid(imagesOnGrid.values());
+				//FIXME
+				//zoomOutListener.setImagesOnGrid(imagesOnGrid.values());
+				//zoomInListener.setImagesOnGrid(imagesOnGrid.values());
 			}
 		}.begin();
 		//Save any chemical analyses that have been modified
@@ -654,7 +657,9 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	}
 	
 	public int getZoomScale() {
-		return zoomInListener.getCurrentScale();
+		//FIXME
+		return 0;
+		//return zoomInListener.getCurrentScale();
 	}
 	
 	public PanHandler getPanHandler() {

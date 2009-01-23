@@ -65,9 +65,9 @@ public class NewAnalysisParser extends NewParser<ChemicalAnalysis> {
 		columns.add(new ColumnMapping(RegularExpressions.COMMENTS,
 				doc.ChemicalAnalysis_description));
 		columns.add(new ColumnMapping(RegularExpressions.X_COORDINATE,
-				doc.ChemicalAnalysis_pointX));
+				doc.ChemicalAnalysis_referenceX));
 		columns.add(new ColumnMapping(RegularExpressions.Y_COORDINATE,
-				doc.ChemicalAnalysis_pointY));
+				doc.ChemicalAnalysis_referenceY));
 	}
 
 	public List<ColumnMapping> getColumMappings() {

@@ -24,6 +24,7 @@ import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
+import edu.rpi.metpetdb.server.security.Action;
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
 import edu.rpi.metpetdb.server.security.permissions.principals.AdminPrincipal;
 import edu.rpi.metpetdb.server.security.permissions.principals.EnabledPrincipal;
@@ -71,6 +72,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		doc.validate(ssr);
 		try {
 			User u = new User();
+			currentReq().action = Action.LOGIN;
 			u.setEmailAddress(ssr.getEmailAddress());
 			u = (new UserDAO(currentSession())).fill(u);
 			
@@ -140,7 +142,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 					"registerNewUser", new Object[] {
 							u.toString(),
 							getModuleBaseURL(),
-							getModuleBaseURL() + "#ConfirmationCode-"
+							getModuleBaseURL() + "#ConfirmationCode/"
 									+ u.getConfirmationCode()
 					});
 			setCurrentUser(u, null);

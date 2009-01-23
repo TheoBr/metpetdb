@@ -1,30 +1,22 @@
 package edu.rpi.metpetdb.client.ui.image.browser;
 
-import java.util.Collection;
-
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ZoomInListener extends ZoomHandler implements ClickListener {
+public class ZoomInListener implements ClickListener {
+	
+	private final ZoomHandler zoomer;
 
-	public ZoomInListener(final Collection<ImageOnGridContainer> imagesOnGrid,
-			final Element e, final ImageBrowserDetails ibm) {
-		super(imagesOnGrid, e, ibm);
+	public ZoomInListener(final ZoomHandler zoomer) {
+		this.zoomer = zoomer;
 	}
 
 	public void onClick(final Widget sender) {
-		final int zoomLevel = getCurrentZoomLevel();
-		if (zoomLevel <= MAXZOOM)
+		final int zoomLevel = zoomer.getCurrentZoomLevel();
+		if (zoomLevel <= ZoomHandler.MAXZOOM)
 			return;
 
-		zoom(1);
-		updateSlider();
+		zoomer.zoom(1);
+		zoomer.updateSlider(-10);
 	}
-
-	public void updateSlider() {
-		DOM.setStyleAttribute(zSlide, "top", getCurrentZoomPixel() - 10 + "px");
-	}
-
 }

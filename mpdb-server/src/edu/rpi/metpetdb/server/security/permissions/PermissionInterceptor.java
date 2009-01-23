@@ -12,6 +12,7 @@ import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
 import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.security.Action;
 import edu.rpi.metpetdb.server.security.permissions.principals.AdminPrincipal;
 import edu.rpi.metpetdb.server.security.permissions.principals.EnabledPrincipal;
 import edu.rpi.metpetdb.server.security.permissions.principals.OwnerPrincipal;
@@ -76,7 +77,12 @@ public class PermissionInterceptor extends EmptyInterceptor {
 			}
 			int version = getVersion(propertyNames, state);
 			if (version == 0 && entity instanceof User) {
-				//user is registering so let this one fly
+				// user is registering so let this one fly
+				return;
+			}
+			if (Action.LOGIN.equals(MpDbServlet.currentReq().action)
+					&& entity instanceof User) {
+				// user is trying to log in so let them load the user object
 				return;
 			}
 			if (principals == null) {
@@ -94,10 +100,11 @@ public class PermissionInterceptor extends EmptyInterceptor {
 					throw new CallbackException(
 							"Cannot load objects you don't own, we don't like to share.");
 				}
-			}
-			if (!(entity instanceof User) && !principals.contains(new EnabledPrincipal(true))) {
-				throw new CallbackException(
-						"Your account is not enabled, you cannot do stuff");
+				if (saving && !(entity instanceof User)
+						&& !principals.contains(new EnabledPrincipal(true))) {
+					throw new CallbackException(
+							"Your account is not enabled, you cannot do stuff");
+				}
 			}
 		}
 	}
@@ -127,7 +134,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 		}
 		return ownerId;
 	}
-	
+
 	private int getVersion(String[] propertyNames, Object[] state) {
 		int version = -1;
 		for (int i = 0; i < propertyNames.length; ++i) {

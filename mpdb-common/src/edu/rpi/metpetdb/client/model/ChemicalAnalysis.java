@@ -16,7 +16,6 @@ import org.hibernate.search.annotations.Store;
 
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.interfaces.HasDate;
 import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
 import edu.rpi.metpetdb.client.model.interfaces.HasSample;
@@ -32,8 +31,8 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String spotId;
 	private int version;
-	private int pointX;
-	private int pointY;
+	private int referenceX;
+	private int referenceY;
 	private Image image;
 	@ContainedIn
 	private Subsample subsample;
@@ -58,8 +57,11 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 	@IndexedEmbedded(depth = 1, prefix = "user_")
 	private User owner;
 	
-	private String SubsampleName;
+	private String subsampleName;
 	private String sampleName;
+	
+	private float stageX;
+	private float stageY;
 
 	private transient Widget actualImage;
 	private transient float percentX;
@@ -106,11 +108,11 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 	}
 
 	public String getSubsampleName() {
-		return SubsampleName;
+		return subsampleName;
 	}
 
 	public void setSubsampleName(final String SubsampleName) {
-		this.SubsampleName = SubsampleName;
+		this.subsampleName = SubsampleName;
 	}
 
 	public String getSampleName() {
@@ -121,20 +123,36 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 		this.sampleName = sampleName;
 	}
 
-	public int getPointX() {
-		return pointX;
+	public int getReferenceX() {
+		return referenceX;
 	}
 
-	public void setPointX(final int i) {
-		pointX = i;
+	public void setReferenceX(final int i) {
+		referenceX = i;
 	}
 
-	public int getPointY() {
-		return pointY;
+	public int getReferenceY() {
+		return referenceY;
 	}
 
-	public void setPointY(final int i) {
-		pointY = i;
+	public void setReferenceY(final int i) {
+		referenceY = i;
+	}
+
+	public float getStageX() {
+		return stageX;
+	}
+
+	public void setStageX(float stageX) {
+		this.stageX = stageX;
+	}
+
+	public float getStageY() {
+		return stageY;
+	}
+
+	public void setStageY(float stageY) {
+		this.stageY = stageY;
 	}
 
 	public Image getImage() {
