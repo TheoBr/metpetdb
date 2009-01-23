@@ -32,7 +32,7 @@ public class NewAnalysisParser extends NewParser<ChemicalAnalysis> {
 	private final Map<String, String> measurementUnits;
 	// Maps an oxide/element name to their precision unit
 	private final Map<String, String> precisionUnits;
-	//Oxides/Elements that are in this bulk upload process
+	// Oxides/Elements that are in this bulk upload process
 	private final Map<String, Element> uploadElements;
 	private final Map<String, Oxide> uploadOxides;
 
@@ -77,7 +77,7 @@ public class NewAnalysisParser extends NewParser<ChemicalAnalysis> {
 	/**
 	 * 
 	 * @param is
-	 * 		the input stream that points to a spreadsheet
+	 *            the input stream that points to a spreadsheet
 	 * @throws MpDbException
 	 * @throws InvalidFormatException
 	 */
@@ -89,9 +89,9 @@ public class NewAnalysisParser extends NewParser<ChemicalAnalysis> {
 		uploadElements = new HashMap<String, Element>();
 		uploadOxides = new HashMap<String, Oxide>();
 	}
-	
+
 	public void parse() {
-		//data starts on row 1 for chemical analyses
+		// data starts on row 1 for chemical analyses
 		parse(1);
 	}
 
@@ -176,20 +176,22 @@ public class NewAnalysisParser extends NewParser<ChemicalAnalysis> {
 	}
 	@Override
 	protected boolean parseColumnSpecialCase(HSSFRow row, HSSFCell cell,
-			PropertyConstraint pc, ChemicalAnalysis currentObject)
-			throws IllegalArgumentException, IllegalAccessException,
-			InvocationTargetException {
+			PropertyConstraint pc, ChemicalAnalysis currentObject,
+			Integer cellNum) throws IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException {
 		final String headerText = headers.get(cell.getColumnIndex())
 				.getHeaderText();
 		if (pc == doc.ChemicalAnalysis_elements) {
 			final ChemicalAnalysisElement element = new ChemicalAnalysisElement();
 			element.setElement(uploadElements.get(headerText));
-			element.setAmount(Float.parseFloat(sanitizeNumber(cell.toString())));
+			element
+					.setAmount(getFloatValue(cell.toString()));
 			element.setMeasurementUnit(measurementUnits.get(headerText));
 			// see if our next column is our precision
 			if (spreadSheetColumnMapping.get(cell.getColumnIndex() + 1) == doc.ChemicalAnalysisElement_ChemicalAnalysis_elements_precision) {
-				element.setPrecision(Float.parseFloat(sanitizeNumber(row
-						.getCell(cell.getColumnIndex() + 1).toString())));
+				cell = row.getCell(cell.getColumnIndex() + 1);
+				++cellNum;
+				element.setPrecision(getFloatValue(cell.toString()));
 				element.setPrecisionUnit(precisionUnits.get(headers.get(
 						cell.getColumnIndex()).getHeaderText()));
 			}
@@ -199,14 +201,17 @@ public class NewAnalysisParser extends NewParser<ChemicalAnalysis> {
 		} else if (pc == doc.ChemicalAnalysis_oxides) {
 			final ChemicalAnalysisOxide oxide = new ChemicalAnalysisOxide();
 			oxide.setOxide(uploadOxides.get(headerText));
-			oxide.setAmount(Float.parseFloat(sanitizeNumber(cell.toString())));
-			oxide.setMeasurementUnit(measurementUnits.get(headerText).toUpperCase());
+			oxide.setAmount(getFloatValue(cell.toString()));
+			oxide.setMeasurementUnit(measurementUnits.get(headerText)
+					.toUpperCase());
 			// see if our next column is our precision
 			if (spreadSheetColumnMapping.get(cell.getColumnIndex() + 1) == doc.ChemicalAnalysisOxide_ChemicalAnalysis_oxides_precision) {
-				oxide.setPrecision(Float.parseFloat(sanitizeNumber(row.getCell(
-						cell.getColumnIndex() + 1).toString())));
-				oxide.setPrecisionUnit(precisionUnits.get(headers.get(
-						cell.getColumnIndex()).getHeaderText()).toUpperCase());
+				cell = row.getCell(cell.getColumnIndex() + 1);
+				++cellNum;
+				oxide.setPrecision(getFloatValue(cell.toString()));
+				oxide.setPrecisionUnit(precisionUnits.get(
+						headers.get(cell.getColumnIndex()).getHeaderText())
+						.toUpperCase());
 			}
 			oxide.setMinMax();
 			currentObject.addOxide(oxide);

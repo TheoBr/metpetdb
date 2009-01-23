@@ -104,7 +104,7 @@ public class NewImageParser extends NewParser<BulkUploadImage> {
 	}
 	@Override
 	protected boolean parseColumnSpecialCase(HSSFRow row, HSSFCell cell,
-			PropertyConstraint pc, BulkUploadImage currentObject)
+			PropertyConstraint pc, BulkUploadImage currentObject, Integer cellNum)
 			throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException {
 		if (pc == doc.Image_imageType) {

@@ -20,6 +20,8 @@ public class PropertyUtils {
 			} catch (NumberFormatException nfe){
 				return new Float(Float.parseFloat(o.toString())).intValue();
 			}
+		} else if (o instanceof Float) {
+			return ((Float) o).intValue();
 		} else
 			return null;
 	}

@@ -229,13 +229,13 @@ public abstract class NewParser<T extends MObject> {
 		boolean sawDataInRow = false;
 
 		for (Integer i = 0; i <= row.getLastCellNum(); ++i) {
-			final HSSFCell cell = row.getCell(i.intValue());
+			HSSFCell cell = row.getCell(i.intValue());
 			try {
 				// get the constraint for this cell
 				final PropertyConstraint pc = spreadSheetColumnMapping.get(i);
 
 				if (pc != null && cell != null && !cell.toString().equals("")
-						&& !parseColumnSpecialCase(row, cell, pc, newObject)) {
+						&& !parseColumnSpecialCase(row, cell, pc, newObject, i)) {
 
 					if (pc == doc.Subsample_subsampleType) {
 						// We have to invoke the method on a subsample
@@ -277,9 +277,7 @@ public abstract class NewParser<T extends MObject> {
 									&& newObject.getClass().getSimpleName()
 											.equals(("BulkUploadImage"))))) {
 						if (pc instanceof NumberConstraint<?>) {
-							// Santize numbers before setting them on the object
-							final String data = sanitizeNumber(cell.toString());
-							newObject.mSet(pc.property, data);
+							newObject.mSet(pc.property, getFloatValue(cell.toString()));
 						} else if (pc instanceof TimestampConstraint) {
 							// handle dates differently
 							if (newObject instanceof HasDate) {
@@ -340,6 +338,7 @@ public abstract class NewParser<T extends MObject> {
 						i + 1, new GenericDAOException(e.getMessage()), cell
 								.toString()));
 			} catch (Exception e) {
+				e.printStackTrace();
 				errors.put(rowindex + 1, new BulkUploadError(rowindex + 1,
 						i + 1, new GenericDAOException(e.getMessage()), cell
 								.toString()));
@@ -354,6 +353,14 @@ public abstract class NewParser<T extends MObject> {
 	protected abstract void addObject(final int index, T object);
 
 	protected abstract T getNewObject();
+	
+	protected Float getFloatValue(final String number) {
+		final String data = sanitizeNumber(number);
+		if (data.equals("")) {
+			throw new NumberFormatException("Unable to convert '" + number +  "' to a number");
+		}
+		return Float.parseFloat(data);
+	}
 
 	/**
 	 * Return true if this column has been handled specially else false
@@ -367,9 +374,9 @@ public abstract class NewParser<T extends MObject> {
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
 	 */
-	protected abstract boolean parseColumnSpecialCase(final HSSFRow row,
-			final HSSFCell cell, final PropertyConstraint pc,
-			final T currentObject) throws IllegalArgumentException,
+	protected abstract boolean parseColumnSpecialCase(HSSFRow row,
+			HSSFCell cell, final PropertyConstraint pc,
+			final T currentObject, Integer cellNum) throws IllegalArgumentException,
 			IllegalAccessException, InvocationTargetException;
 
 	protected void parseHeader(final int rownum) {

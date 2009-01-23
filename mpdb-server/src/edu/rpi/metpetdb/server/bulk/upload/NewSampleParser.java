@@ -106,7 +106,7 @@ public class NewSampleParser extends NewParser<Sample> {
 	}
 	@Override
 	protected boolean parseColumnSpecialCase(HSSFRow row, HSSFCell cell,
-			PropertyConstraint pc, Sample currentObject)
+			PropertyConstraint pc, Sample currentObject, Integer cellNum)
 			throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException {
 		if (pc == doc.Sample_minerals) {
