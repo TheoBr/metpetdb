@@ -29,7 +29,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.ProgressBar;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
-import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadError;
@@ -444,7 +443,10 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		String text = "";
 		final Iterator<BulkUploadError> itr = exceptions.iterator();
 		while(itr.hasNext()) {
-			text += "<span>" + itr.next().getException().format() + "</span> ";
+			final BulkUploadError err = itr.next();
+			text += "<span>Column:" + err.getColumn() + "</span>";
+			text += "<span>Cell Data:" + err.getCellData() + "</span>";
+			text += "<span>Error Message:" + err.getException().format() + "</span>";
 		}
 		return text;
 	}

@@ -215,7 +215,7 @@ public abstract class NewParser<T extends MObject> {
 	public static void setOxides(final Collection<Oxide> oxides) {
 		NewParser.oxides = oxides;
 	}
-	
+
 	public static void setImageTypes(final Collection<ImageType> imageTypes) {
 		NewParser.imageTypes = imageTypes;
 	}
@@ -296,11 +296,10 @@ public abstract class NewParser<T extends MObject> {
 												.validateValue(data);
 										parseDate(objectWithDate, data);
 									} catch (final ValidationException ve) {
-										errors
-												.put(rowindex,
-														new BulkUploadError(
-																rowindex + 1,
-																i + 1, ve));
+										errors.put(rowindex,
+												new BulkUploadError(
+														rowindex + 1, i + 1,
+														ve, data));
 									}
 								}
 							}
@@ -334,14 +333,16 @@ public abstract class NewParser<T extends MObject> {
 				}
 			} catch (MpDbException e) {
 				errors.put(rowindex + 1, new BulkUploadError(rowindex + 1,
-						i + 1, e));
+						i + 1, e, cell.toString()));
 			} catch (NumberFormatException e) {
 				// TODO maybe handle specially?
 				errors.put(rowindex + 1, new BulkUploadError(rowindex + 1,
-						i + 1, new GenericDAOException(e.getMessage())));
+						i + 1, new GenericDAOException(e.getMessage()), cell
+								.toString()));
 			} catch (Exception e) {
 				errors.put(rowindex + 1, new BulkUploadError(rowindex + 1,
-						i + 1, new GenericDAOException(e.getMessage())));
+						i + 1, new GenericDAOException(e.getMessage()), cell
+								.toString()));
 			}
 		}
 

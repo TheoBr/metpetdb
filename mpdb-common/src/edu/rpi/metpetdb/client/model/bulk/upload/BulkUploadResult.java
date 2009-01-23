@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.model.bulk.upload;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 
 public class BulkUploadResult implements IsSerializable {
 
+	private Date timeTaken;
 	private Map<Integer, BulkUploadHeader> headers;
 	//maps row numbers to a list of exceptions
 	private Map<Integer, List<BulkUploadError>> errors = new HashMap<Integer, List<BulkUploadError>>();
@@ -25,20 +27,23 @@ public class BulkUploadResult implements IsSerializable {
 	}
 	
 	public void addError(final int rowNumber, final MpDbException e) {
-		addError(rowNumber, -1, e);
+		addError(rowNumber, -1, "", e);
 	}
 	
-	public void addError(final int rowNumber, final int colNumber, final MpDbException e) {
+	public void addError(final int rowNumber, final int colNumber, final String cellData, final MpDbException e) {
 		final BulkUploadError buError = new BulkUploadError();
 		buError.setRow(rowNumber);
 		buError.setColumn(colNumber);
 		buError.setException(e);
+		buError.setCellData(cellData);
 		if (!errors.containsKey(rowNumber))
 			errors.put(rowNumber, new ArrayList<BulkUploadError>());
 		errors.get(rowNumber).add(buError);
 	}
 
 	public Map<Integer,BulkUploadHeader> getHeaders() {
+		if (headers  == null)
+			headers = new HashMap<Integer, BulkUploadHeader>();
 		return headers;
 	}
 	public void setHeaders(Map<Integer,BulkUploadHeader> headers) {
@@ -57,6 +62,14 @@ public class BulkUploadResult implements IsSerializable {
 		if (resultCounts == null) 
 			resultCounts = new HashMap<String, BulkUploadResultCount>();
 		resultCounts.put(key, results);
+	}
+
+	public Date getTimeTaken() {
+		return timeTaken;
+	}
+
+	public void setTimeTaken(Date timeTaken) {
+		this.timeTaken = timeTaken;
 	}
 
 	

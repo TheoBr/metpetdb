@@ -51,6 +51,7 @@ import edu.rpi.metpetdb.server.dao.impl.ElementDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageTypeDAO;
 import edu.rpi.metpetdb.server.dao.impl.MineralDAO;
 import edu.rpi.metpetdb.server.dao.impl.OxideDAO;
+import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
 import edu.rpi.metpetdb.server.security.Action;
 import edu.rpi.metpetdb.server.security.SessionEncrypter;
@@ -139,6 +140,9 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		DataStore.setBeanManager(HibernateBeanManager.getInstance());
 		DataStore.initFactory();
 		doc = DataStore.getInstance().getDatabaseObjectConstraints();
+		if (doc == null) {
+			throw new RuntimeException("Unable to get constraints, check the tomct logs");
+		}
 		oc = DataStore.getInstance().getObjectConstraints();
 
 		loadAutomaticLogin();
@@ -240,7 +244,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 *             not actually logged in, or their authentication token is
 	 *             invalid.
 	 */
-	protected int currentUser() throws LoginRequiredException {
+	protected int currentUserId() throws LoginRequiredException {
 		if (autoLoginId != -1) {
 			System.out.println("using autologin id of " + autoLoginId);
 			// autologins get full privileges
@@ -266,6 +270,13 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 				throw new LoginRequiredException();
 		}
 		return r.userId.intValue();
+	}
+
+	protected User currentUser() throws LoginRequiredException, DAOException {
+		if (currentReq() != null)
+			return currentReq().currentUser(currentUserId());
+		else
+			throw new LoginRequiredException();
 	}
 
 	/**
@@ -399,27 +410,41 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 				searchSamp);
 	}
 
-	public SearchSample getLastSearchedSearchSample(){
-		return (SearchSample) this.getThreadLocalRequest().getSession().getAttribute("lastSearchSamp");
+	public SearchSample getLastSearchedSearchSample() {
+		return (SearchSample) this.getThreadLocalRequest().getSession()
+				.getAttribute("lastSearchSamp");
 	}
 
-	public void setLastSearchedSearchSample(final SearchSample searchSamp){
-		this.getThreadLocalRequest().getSession().setAttribute("lastSearchSamp", searchSamp);
-	}
-	
-	public PaginationParameters getLastSearchPagination(){
-		return (PaginationParameters) this.getThreadLocalRequest().getSession().getAttribute("lastSearchPagination");
+	public void setLastSearchedSearchSample(final SearchSample searchSamp) {
+		this.getThreadLocalRequest().getSession().setAttribute(
+				"lastSearchSamp", searchSamp);
 	}
 
-	public void setLastSearchPagination(final PaginationParameters p){
-		this.getThreadLocalRequest().getSession().setAttribute("lastSearchPagination", p);
+	public PaginationParameters getLastSearchPagination() {
+		return (PaginationParameters) this.getThreadLocalRequest().getSession()
+				.getAttribute("lastSearchPagination");
 	}
-	
+
+	public void setLastSearchPagination(final PaginationParameters p) {
+		this.getThreadLocalRequest().getSession().setAttribute(
+				"lastSearchPagination", p);
+	}
+
 	public static final class Req {
 		Session session;
 		Integer userId;
+		User user;
 		public Action action;
 		public Collection<Principal> principals;
+
+		User currentUser(int userId) throws DAOException {
+			if (user == null) {
+				user = new User();
+				user.setId(userId);
+				user = new UserDAO(currentSession()).fill(user);
+			}
+			return user;
+		}
 
 		Session currentSession() {
 			if (session == null) {

@@ -3,15 +3,13 @@ package edu.rpi.metpetdb.server.impl.bulk.upload;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -19,7 +17,6 @@ import java.util.zip.ZipInputStream;
 import javax.media.jai.RenderedOp;
 
 import edu.rpi.metpetdb.client.error.DAOException;
-import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -31,9 +28,7 @@ import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.XrayImage;
-import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadError;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResult;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadImagesService;
@@ -106,236 +101,142 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 		return baos.toByteArray();
 	}
 
-	public BulkUploadResult parser(String fileOnServer, boolean save)
-			throws InvalidFormatException, LoginRequiredException {
-		final BulkUploadResult results = new BulkUploadResult();
+	@Override
+	public void parserImpl(String fileOnServer, boolean save,
+			BulkUploadResult results, SampleDAO sampleDao, SubsampleDAO ssDao,
+			Map<String, Collection<String>> subsampleNames,
+			Map<String, Sample> samples, Map<String, Subsample> subsamples)
+			throws FileNotFoundException, MpDbException, LoginRequiredException {
 		final BulkUploadResultCount ssResultCount = new BulkUploadResultCount();
 		final BulkUploadResultCount imgResultCount = new BulkUploadResultCount();
+		// Find the Excel Spreadsheet
+		FileInputStream is = new FileInputStream(MpDbServlet
+				.getFileUploadPath()
+				+ fileOnServer);
+		ZipEntry spreadsheet;
 		try {
-			if (save) {
-				updateFile(fileOnServer);
-			}
-			// Find the Excel Spreadsheet
-			FileInputStream is = new FileInputStream(MpDbServlet
-					.getFileUploadPath()
-					+ fileOnServer);
-			ZipEntry spreadsheet = getSpreadsheetName(is);
-			if (spreadsheet == null)
-				throw new IllegalStateException("No Excel Spreasheet found");
-			String spreadsheetPrefix = (new File(spreadsheet.getName()))
-					.getParent();
-			if (spreadsheetPrefix == null)
-				spreadsheetPrefix = "";
-			else
-				spreadsheetPrefix += File.separator;
+			spreadsheet = getSpreadsheetName(is);
+		} catch (IOException ioe) {
+			throw new GenericDAOException(ioe.getMessage());
+		}
+		if (spreadsheet == null)
+			throw new IllegalStateException("No Excel Spreasheet found");
+		String spreadsheetPrefix = (new File(spreadsheet.getName()))
+				.getParent();
+		if (spreadsheetPrefix == null)
+			spreadsheetPrefix = "";
+		else
+			spreadsheetPrefix += File.separator;
 
-			ZipFile zp = new ZipFile(MpDbServlet.getFileUploadPath()
-					+ fileOnServer);
-			final NewImageParser ip = new NewImageParser(zp
-					.getInputStream(spreadsheet));
-			ip.parse();
-			results.setHeaders(ip.getHeaders());
-			final Map<Integer, BulkUploadImage> images = ip
-					.getBulkUploadImages();
-			User u = new User();
-			u.setId(currentUser());
-			// Keeps track of existing/new subsample names for each sample
-			final Map<String, Collection<String>> subsampleNames = new HashMap<String, Collection<String>>();
-			// maps a sample alias to an actual sample
-			final Map<String, Sample> samples = new HashMap<String, Sample>();
-			// maps a sample alias + subsample name to an actual subsample
-			final Map<String, Subsample> subsamples = new HashMap<String, Subsample>();
-			final SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
-			final SampleDAO sDAO = new SampleDAO(this.currentSession());
-			final ImageDAO dao = new ImageDAO(this.currentSession());
-			final Iterator<Integer> imgRows = images.keySet().iterator();
-			// Handle any existing errors found
-			final Map<Integer, BulkUploadError> existingErrors = ip.getErrors();
-			final Set<Integer> keys = existingErrors.keySet();
-			final Iterator<Integer> itr = keys.iterator();
-			while (itr.hasNext()) {
-				final Integer i = itr.next();
-				results.addError(i.intValue(), existingErrors.get(i)
-						.getException());
-			}
+		ZipFile zp;
+		NewImageParser ip;
+		try {
+			zp = new ZipFile(MpDbServlet.getFileUploadPath() + fileOnServer);
+			ip = new NewImageParser(zp.getInputStream(spreadsheet));
+		} catch (IOException ioe) {
+			throw new GenericDAOException(ioe.getMessage());
+		}
 
-			while (imgRows.hasNext()) {
-				final int row = imgRows.next();
-				final Image img = images.get(row).getImage();
-				// Confirm the filename is in the zip
-				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
-					results.addError(row, new InvalidImageException(
-							spreadsheetPrefix + img.getFilename()));
-				} else {
-					try {
-						// see if our sample exists
-						if (img.getSample() == null
-								&& img.getSubsample() == null) {
-							// Image needs a sample or a subsample to continue
-							results.addError(row,
-									new PropertyRequiredException(
-											"Sample or Subsample"));
-							continue;
-						}
-						Sample s = img.getSample();
-						s.setOwner(u);
-						try {
-							// if we don't have this sample already loaded
-							// check
-							// for it in the database
-							if (!samples.containsKey(s.getAlias())) {
-								s = sDAO.fill(s);
-								samples.put(s.getAlias(), s);
-								subsampleNames.put(s.getAlias(),
-										new HashSet<String>());
-							} else {
-								s = samples.get(s.getAlias());
-							}
-						} catch (DAOException e) {
-							// There is no sample we have to add an error
-							// Every Image needs a sample so add an error
-							results.addError(row,
-									new PropertyRequiredException("Sample"));
-							continue;
-						}
-						if (img.getSample() != null
-								&& img.getSubsample() == null) {
-							// we are adding a sample image
-							img.setSubsample(null); // ignore the subsample if
-							// they specified one
+		ip.parse();
+		results.setHeaders(ip.getHeaders());
+		final Map<Integer, BulkUploadImage> images = ip.getBulkUploadImages();
+		final Iterator<Integer> imgRows = images.keySet().iterator();
+		// Handle any existing errors found
+		addErrors(ip, results);
+		final ImageDAO imgDao = new ImageDAO(currentSession());
+		final XrayImageDAO xrayDao = new XrayImageDAO(currentSession());
+		while (imgRows.hasNext()) {
+			final int row = imgRows.next();
+			final Image img = images.get(row).getImage();
+			initObject(img);
+			// Confirm the filename is in the zip
+			if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
+				results.addError(row, new InvalidImageException(
+						spreadsheetPrefix + img.getFilename()));
+			} else {
+				try {
+					// see if our sample exists
+					if (img.getSample() == null && img.getSubsample() == null) {
+						// Image needs a sample or a subsample to continue
+						results.addError(row, new PropertyRequiredException(
+								"Sample or Subsample"));
+						continue;
+					}
+					Sample s = img.getSample();
+					if (!checkForSample(s, samples, sampleDao, results,
+							subsampleNames, row))
+						continue;
+					if (img.getSample() != null && img.getSubsample() == null) {
+						// we are adding a sample image
+					} else {
+						// we are adding an image to a subsample
+						Subsample ss = (img.getSubsample());
+						ss.setSample(s);
+						img.setSample(null);
+						if (ss != null) {
+							// if we don't have the name stored already we
+							// need
+							// to load the subsample
+							img.setSubsample(checkForSubsample(s, ss, samples,
+									ssDao, results, subsampleNames, row,
+									subsamples, ssResultCount, save));
 						} else {
-							// we are adding an image to a subsample
-							img.getSubsample().setSample(img.getSample());
-							img.setSample(null);
-							img.getSubsample().setOwner(u);
-							img.getSubsample().setPublicData(false);
-							Subsample ss = (img.getSubsample());
-							if (ss != null) {
-								// if we don't have the name stored already we
-								// need
-								// to load the subsample
-								if (!subsampleNames.get(
-										ss.getSample().getAlias()).contains(
-										ss.getName())) {
-									try {
-										doc.validate(ss);
-										ss = ssDAO.fill(ss);
-										subsamples.put(ss.getSample()
-												.getAlias()
-												+ ss.getName(), ss);
-										img.setSubsample(ss);
-										ssResultCount.incrementOld();
-									} catch (DAOException e) {
-										// Means it is new because we could not
-										// find
-										// it
-										ssResultCount.incrementFresh();
-										if (save) {
-											try {
-												ss = ssDAO.save(ss);
-											} catch (DAOException e1) {
-												results.addError(row, e1);
-											}
-											subsamples.put(ss.getSample()
-													.getAlias()
-													+ ss.getName(), ss);
-											img.setSubsample(ss);
-										}
-									}
-									subsampleNames.get(
-											ss.getSample().getAlias()).add(
-											ss.getName());
-								} else {
-									img.setSubsample(subsamples.get(ss
-											.getSample().getAlias()
-											+ ss.getName()));
-								}
-							} else {
-								// Every Image needs a subsample so add an error
-								results.addError(row,
-										new PropertyRequiredException(
-												"Subsample"));
-							}
+							// Every Image needs a subsample so add an error
+							results.addError(row,
+									new PropertyRequiredException("Subsample"));
 						}
-
-						doc.validate(img);
-						if (dao.isNew(img))
-							imgResultCount.incrementFresh();
-						else
-							imgResultCount.incrementOld();
-						if (save) {
-							setRealImage(zp, img, spreadsheetPrefix);
-							try {
-								if (img instanceof XrayImage) {
-									(new XrayImageDAO(this.currentSession()))
-											.save((XrayImage) img);
-								} else {
-									(new ImageDAO(this.currentSession()))
-											.save(img);
-								}
-							} catch (DAOException e1) {
-								results.addError(row, e1);
-							}
-						}
-					} catch (ValidationException e) {
-						results.addError(row, e);
-						imgResultCount.incrementInvalid();
 					}
-				}
-			}
-
-			final Iterator<Integer> iogRows = images.keySet().iterator();
-			while (iogRows.hasNext()) {
-				final int row = iogRows.next();
-				final ImageOnGrid iog = images.get(row).getImageOnGrid();
-				Image img = iog.getImage();
-				// Confirm the filename is in the zip
-				if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
-					results.addError(row, new InvalidImageException(
-							spreadsheetPrefix + img.getFilename()));
-				}
-				try {
 					doc.validate(img);
+					if (imgDao.isNew(img))
+						imgResultCount.incrementFresh();
+					else
+						imgResultCount.incrementOld();
 					if (save) {
-						setRealImage(zp, iog.getImage(), spreadsheetPrefix);
-
-						// Set image information for the Grid Copy
-						iog.setGchecksum(iog.getImage().getChecksum());
-						iog
-								.setGchecksum64x64(iog.getImage()
-										.getChecksum64x64());
-						iog.setGchecksumHalf(iog.getImage().getChecksumHalf());
-						iog.setGheight(iog.getImage().getHeight());
-						iog.setGwidth(iog.getImage().getWidth());
-						try {
-							saveIncompleteImageOnGrid(iog);
-						} catch (MpDbException e) {
-							results.addError(0, e);
+						setRealImage(zp, img, spreadsheetPrefix);
+						if (img instanceof XrayImage) {
+							xrayDao.save((XrayImage) img);
+						} else {
+							imgDao.save(img);
 						}
-
 					}
-				} catch (ValidationException e) {
-					results.addError(row, e);
+				} catch (Exception e) {
+					results.addError(row, getNiceException(e));
+					imgResultCount.incrementInvalid();
 				}
 			}
+		}
 
-			if (save && results.getErrors().isEmpty()) {
-				try {
-					commit();
-				} catch (DAOException e1) {
-					results.addError(0, e1);
-				}
+		final Iterator<Integer> iogRows = images.keySet().iterator();
+		while (iogRows.hasNext()) {
+			final int row = iogRows.next();
+			final ImageOnGrid iog = images.get(row).getImageOnGrid();
+			Image img = iog.getImage();
+			// Confirm the filename is in the zip
+			if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
+				results.addError(row, new InvalidImageException(
+						spreadsheetPrefix + img.getFilename()));
 			}
-		} catch (MpDbException e) {
-			results.addError(-1, e);
-		} catch (Exception e) {
-			results.addError(-1, new GenericDAOException(e.getMessage()));
-			e.printStackTrace();
+			try {
+				doc.validate(img);
+				if (save) {
+					setRealImage(zp, iog.getImage(), spreadsheetPrefix);
+
+					// Set image information for the Grid Copy
+					iog.setGchecksum(iog.getImage().getChecksum());
+					iog.setGchecksum64x64(iog.getImage().getChecksum64x64());
+					iog.setGchecksumHalf(iog.getImage().getChecksumHalf());
+					iog.setGheight(iog.getImage().getHeight());
+					iog.setGwidth(iog.getImage().getWidth());
+					saveIncompleteImageOnGrid(iog);
+				}
+			} catch (Exception e) {
+				results.addError(row, getNiceException(e));
+			}
 		}
 		results.addResultCount("Subsamples", ssResultCount);
 		results.addResultCount("Images", imgResultCount);
-		return results;
 	}
+
 	protected ImageOnGrid saveIncompleteImageOnGrid(ImageOnGrid iog)
 			throws ValidationException, LoginRequiredException, DAOException {
 		// First save the image

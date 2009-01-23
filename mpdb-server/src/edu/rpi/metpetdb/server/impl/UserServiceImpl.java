@@ -99,7 +99,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		r.objectConstraints = oc;
 		try {
 			User u = new User();
-			u.setId(currentUser());
+			u.setId(currentUserId());
 			u = (new UserDAO(this.currentSession())).fill(u);
 			r.user = (User) clone(u);
 		} catch (DAOException daoe) {
@@ -113,7 +113,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 	public User beginEditMyProfile() throws DAOException,
 			LoginRequiredException {
 		User u = new User();
-		u.setId(currentUser());
+		u.setId(currentUserId());
 		u = (new UserDAO(this.currentSession())).fill(u);
 		return (u);
 	}
@@ -167,7 +167,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 		final UserDAO uDAO = new UserDAO(this.currentSession());
 		final User User = uwp.getUser();
-		if (User.getId() != currentUser())
+		if (User.getId() != currentUserId())
 			throw new GenericDAOException("Administrators are not supported!");
 
 		User u = new User();
@@ -201,7 +201,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 	public User confirmUser(String confirmationCode) throws DAOException,
 			LoginRequiredException {
 		User u = new User();
-		u.setId(currentUser());
+		u.setId(currentUserId());
 		final UserDAO ud = new UserDAO(this.currentSession());
 		u = (ud).fill(u);
 		if (u.getConfirmationCode().equals(confirmationCode) && !u.getEnabled()) {

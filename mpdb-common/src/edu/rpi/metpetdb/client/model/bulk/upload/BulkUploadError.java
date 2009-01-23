@@ -9,15 +9,17 @@ public class BulkUploadError implements IsSerializable {
 	private MpDbException exception;
 	private int row;
 	private int column;
+	private String cellData;
 
 	public BulkUploadError() {
 
 	}
 	
-	public BulkUploadError(final int row, final int column, final MpDbException e) {
+	public BulkUploadError(final int row, final int column, final MpDbException e, final String cellData) {
 		this.row = row;
 		this.column = column;
 		this.exception = e;
+		this.cellData = cellData;
 	}
 
 	public MpDbException getException() {
@@ -44,4 +46,11 @@ public class BulkUploadError implements IsSerializable {
 		this.column = column;
 	}
 
+	public String getCellData() {
+		return cellData;
+	}
+
+	public void setCellData(String cellData) {
+		this.cellData = cellData;
+	}
 }
