@@ -127,7 +127,7 @@ public class SampleDetails extends MPagePanel {
 				setPageTitle(title, LocaleHandler.lc_text.sample());
 				samplePosition = LatLng.newInstance(((Point) result.getLocation()).y,
 						((Point) result.getLocation()).x);
-				//updateGoogleMaps();
+				updateGoogleMaps();
 			}
 
 			protected void onDeleteCompletion(final Object result) {
