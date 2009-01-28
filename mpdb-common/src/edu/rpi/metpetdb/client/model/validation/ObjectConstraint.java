@@ -9,7 +9,8 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 
-public class ObjectConstraint<T extends MObject> extends PropertyConstraint implements HasValues {
+public class ObjectConstraint<T extends MObject> extends PropertyConstraint
+		implements HasValues {
 
 	private PropertyConstraint[] constraints;
 
@@ -44,7 +45,7 @@ public class ObjectConstraint<T extends MObject> extends PropertyConstraint impl
 			while (itr.hasNext()) {
 				final Object val = itr.next();
 				if (val instanceof MObject) {
-					DatabaseObjectConstraints.validate((MObject)val,
+					DatabaseObjectConstraints.validate((MObject) val,
 							constraints);
 				}
 			}

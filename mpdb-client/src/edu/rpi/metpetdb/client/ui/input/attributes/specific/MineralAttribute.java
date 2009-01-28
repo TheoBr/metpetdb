@@ -3,17 +3,20 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleMineral;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
@@ -30,19 +33,21 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 
 	private final Button chooseMinerals;
 	private MObject obj;
-	private GenericAttribute ga;
 	private final SimplePanel container;
 	private TreeAttribute<Mineral> tree;
 	private WizardDialog dialog;
-	private ArrayList mineralList;
-	private ArrayList amountList;
-	
+
 	private DetailsPanel p_mineral;
 
-	public MineralAttribute(final ObjectConstraint mc) {
+	final MultipleObjectDetailsPanel<SampleMineral> p_amounts = new MultipleObjectDetailsPanel<SampleMineral>(
+			new GenericAttribute[] {
+				new TextAttribute(MpDb.doc.SampleMineral_Sample_minerals_amount)
+			});
+
+	public MineralAttribute(final ObjectConstraint<Mineral> mc) {
 		this(mc, 0);
 	}
-	public MineralAttribute(final ValueInCollectionConstraint mc,
+	public MineralAttribute(final ValueInCollectionConstraint<Mineral> mc,
 			int maxMinerals) {
 		this((PropertyConstraint) mc, maxMinerals);
 	}
@@ -50,7 +55,7 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 		super(mc);
 		chooseMinerals = new Button("Choose Minerals...", this);
 		container = new SimplePanel();
-		tree = new TreeAttribute(mc, 4, maxMinerals);
+		tree = new TreeAttribute<Mineral>(mc, 4, maxMinerals);
 	}
 
 	public Widget[] createDisplayWidget(final MObject obj) {
@@ -61,6 +66,8 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 	}
 
 	private void remakeContainer(final MObject obj) {
+		this.obj = obj;
+		addItemsToTree();
 		final Widget[] widgets = tree.createDisplayWidget(obj);
 		container.clear();
 		for (int i = 0; i < widgets.length; ++i)
@@ -73,82 +80,86 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 		chooseMinerals.setEnabled(true);
 		this.obj = obj;
 		vp.add(chooseMinerals);
-		mineralList = new ArrayList();
-		amountList = new ArrayList();
-		ArrayList tempList = new ArrayList();
-		if (get(obj) != null){
-			tempList.addAll(get(obj));
-			for (Object o : tempList){
-				mineralList.add(((SampleMineral) o).getMineral());
-				amountList.add(new Float(((SampleMineral) o).getAmount()));
-			}
-		}
-		tree.setSelectedItems(mineralList);
 		remakeContainer(obj);
 		vp.add(container);
-		this.ga = ga;
 		return new Widget[] {
 			vp
 		};
 	}
 
+	private void addItemsToTree() {
+		final ArrayList<Mineral> minerals = new ArrayList<Mineral>();
+		if (get(obj) != null) {
+			for (Object o : get(obj)) {
+				if (o instanceof SampleMineral)
+					minerals.add(((SampleMineral) o).getMineral());
+				else if (o instanceof Mineral)
+					minerals.add((Mineral) o);
+			}
+		}
+		tree.setSelectedItems(minerals);
+	}
 	private WizardDialog makeWizardDialog() {
 		final WizardDialog wd = new WizardDialog();
-
-		final MultipleObjectDetailsPanel p_amounts = new MultipleObjectDetailsPanel(
-				new GenericAttribute[] {
-					new TextAttribute(
-							MpDb.doc.SampleMineral_Sample_minerals_amount)
-				});
 
 		final GenericAttribute mineral_attributes[] = {
 			tree
 		};
 
-		p_mineral = new DetailsPanel(mineral_attributes, null, false);
+		p_mineral = new DetailsPanel(mineral_attributes, null, false) {
+			@Override
+			public boolean validateEdit(final ServerOp r) {
+				if (r != null)
+					r.onSuccess(null);
+				// don't worry about validating this, they are just selecting
+				// minerals
+				return true;
+			}
+		};
 
 		p_mineral.edit(this.obj);
 
-		final ServerOp mineral_amount = new ServerOp() {
-			public void begin() {
+		final Command mineral_amount = new Command() {
+			public void execute() {
 				// Before we edit the minerals we have to convert them to
 				// SampleMineral
-				final Iterator itr = tree.getSelectedItems().iterator();
-				final ArrayList newSelectedItems = new ArrayList();
-				while (itr.hasNext()) {
-					final Object next = itr.next();
-					final Mineral mineral;
-					if (next instanceof SampleMineral)
-						mineral = ((SampleMineral)next).getMineral();
-					else
-						mineral = (Mineral) next;
-						final Object object = containsObject(
-							((Sample) MineralAttribute.this.obj).getMinerals(),
-							mineral);
-					if (object != null) {
-						newSelectedItems.add(object);
-					} else {
-						final SampleMineral sampleMineral = new SampleMineral();
-						sampleMineral.setMineral(mineral);
-						if (mineralList.contains(mineral)){
-							sampleMineral.setAmount((Float) amountList.get(mineralList.indexOf(mineral)));
-						}
-						newSelectedItems.add(sampleMineral);
-					}
-				}
-				tree.setSelectedItems(newSelectedItems);
-				p_amounts.edit(newSelectedItems);
-			}
-			public void onSuccess(final Object result) {
+				final Iterator<Mineral> itr = tree.getSelectedItems()
+						.iterator();
+				final ArrayList<SampleMineral> newSelectedItems = new ArrayList<SampleMineral>();
 
+				while (itr.hasNext()) {
+					final Mineral mineral = itr.next();
+					final SampleMineral sampleMineral = new SampleMineral();
+					sampleMineral.setMineral(mineral);
+					newSelectedItems.add(sampleMineral);
+				}
+				p_amounts.edit(merge(tree.getSelectedItems(), ((Sample)obj).getMinerals()));
 			}
 		};
 		wd.addStep(p_mineral, 0, "Select Minerals");
-		if (ga.getConstraint().equals(MpDb.doc.Sample_minerals)) {
+		if (this.getConstraint().equals(MpDb.doc.Sample_minerals)) {
 			wd.addTabChangeListener(mineral_amount);
 			wd.addStep(p_amounts, 1, "Enter Amounts");
 		}
 		return wd;
+	}
+
+	private ArrayList<SampleMineral> merge(
+			final ArrayList<Mineral> selectedItems,
+			final Set<SampleMineral> originalItems) {
+		final ArrayList<SampleMineral> merged = new ArrayList<SampleMineral>();
+		for(SampleMineral so : originalItems) {
+			if (selectedItems.contains(so))
+				merged.add(so);
+		}
+		for(Mineral m : selectedItems) {
+			if (!merged.contains(m)) {
+				final SampleMineral sm = new SampleMineral();
+				sm.setMineral(m);
+				merged.add(sm);
+			}
+		}
+		return merged;
 	}
 
 	protected Collection get(final GenericAttribute ga) {
@@ -160,11 +171,23 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 	}
 
 	protected Object get(final Widget editWidget) {
-		return tree.get(editWidget);
+		if (this.getConstraint().equals(MpDb.doc.Sample_minerals)) {
+			// return the sample minerals
+			return p_amounts.getBeans();
+		} else {
+			// return the minerals in the tree
+			return tree.get(editWidget);
+		}
 	}
 
 	protected Collection get(final MObject obj) {
-		return tree.get(obj);
+		if (this.getConstraint().equals(MpDb.doc.Sample_minerals)) {
+			// return the sample minerals
+			return p_amounts.getBeans();
+		} else {
+			// return the minerals in the tree
+			return tree.get(obj);
+		}
 	}
 
 	/**
@@ -191,13 +214,15 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 		if (sender == chooseMinerals) {
 			if (dialog == null || !(p_mineral.getBean().equals(this.obj)))
 				dialog = makeWizardDialog();
-			final ServerOp dialog_finish = new ServerOp() {
-				public void begin() {
+			final Command dialog_finish = new Command() {
+				public void execute() {
+					if (getConstraint().equals(MpDb.doc.Sample_minerals))
+						tree.set(obj, get(obj));
+					else
+						//this is a hack to make it set the value the the user selected
+						tree.set(obj, get(new Label()));
 					MineralAttribute.this
 							.remakeContainer(MineralAttribute.this.obj);
-				}
-				public void onSuccess(final Object result) {
-
 				}
 			};
 			p_mineral.setBean(this.obj);

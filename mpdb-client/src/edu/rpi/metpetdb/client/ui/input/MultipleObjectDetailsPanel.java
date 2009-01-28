@@ -2,7 +2,9 @@ package edu.rpi.metpetdb.client.ui.input;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Widget;
@@ -16,6 +18,7 @@ public class MultipleObjectDetailsPanel<T extends MObject> extends
 		DetailsPanel<T> {
 	// HashMap<MObject, HashMap<GenericAttribute, DetailsPanelEntry >
 	protected HashMap<T, HashMap<GenericAttribute, DetailsPanelEntry>> dpBeans;
+	private Set<T> beans = new HashSet<T>();
 
 	public MultipleObjectDetailsPanel(final GenericAttribute[] atts) {
 		this.init(atts, null, false, false);
@@ -26,6 +29,10 @@ public class MultipleObjectDetailsPanel<T extends MObject> extends
 
 	public T getBean() {
 		return null;
+	}
+	
+	public Set<T> getBeans() {
+		return beans;
 	}
 
 	public void show(final ArrayList<T> beans) {
@@ -102,6 +109,8 @@ public class MultipleObjectDetailsPanel<T extends MObject> extends
 	}
 
 	public void edit(final ArrayList<T> beans) {
+		this.beans.clear();
+		this.beans.addAll(beans);
 		addStyleName(STYLENAME_DEFAULT + "-" + CSS.EDITMODE);
 		removeStyleName(STYLENAME_DEFAULT + "-" + CSS.SHOWMODE);
 		clearNonActions();

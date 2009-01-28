@@ -27,8 +27,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
  * 
  * @author anthony
  * 
- * @param <
- * 		T> the type of the items in the tree
+ * @param < T> the type of the items in the tree
  */
 public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 		implements ClickListener {
@@ -80,14 +79,14 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 		this.maxSelectable = maxSelectable;
 	}
 
-	public ArrayList<?> getSelectedItems() {
+	public ArrayList<T> getSelectedItems() {
 		return selectedItems;
 	}
 	public void setSelectedItems(final ArrayList<T> al) {
 		selectedItems = al;
 	}
-	
-	public ArrayList<Widget> getSelectedWidgets(){
+
+	public ArrayList<Widget> getSelectedWidgets() {
 		return selectedWidgets;
 	}
 
@@ -243,21 +242,21 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 			final boolean check) {
 		if (maxSelectable > 1 || maxSelectable == 0) {
 			for (int i = 0; i < parent.getChildCount(); ++i) {
-				CheckBox cb = (CheckBox) ((ExtendedTreeItem) parent.getChild(i)).getWidget();
+				CheckBox cb = (CheckBox) ((ExtendedTreeItem) parent.getChild(i))
+						.getWidget();
 				cb.setChecked(check);
 				if (check) {
-					if (!selectedItems.contains(((ExtendedTreeItem) parent.getChild(i))
-							.getObject())){
-						selectedItems.add(((ExtendedTreeItem) parent.getChild(i))
-								.getObject());
+					if (!selectedItems.contains(((ExtendedTreeItem) parent
+							.getChild(i)).getObject())) {
+						selectedItems.add(((ExtendedTreeItem) parent
+								.getChild(i)).getObject());
 						selectedWidgets.add(cb);
 					}
 				} else {
-					if (selectedItems.contains(((ExtendedTreeItem) parent.getChild(i))
-						.getObject())){
-						selectedItems
-								.remove(((ExtendedTreeItem) parent.getChild(i))
-										.getObject());
+					if (selectedItems.contains(((ExtendedTreeItem) parent
+							.getChild(i)).getObject())) {
+						selectedItems.remove(((ExtendedTreeItem) parent
+								.getChild(i)).getObject());
 						selectedWidgets.remove(cb);
 					}
 				}
@@ -331,8 +330,8 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 			mSet(obj, v);
 		}
 	}
-	
-	public ArrayList<Tree> getTree(){
+
+	public ArrayList<Tree> getTree() {
 		return trees;
 	}
 
@@ -364,5 +363,5 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 			}
 		}
 	}
-	
+
 }

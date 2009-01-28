@@ -75,7 +75,7 @@
       <key column="sample_id" />
       <composite-element class="SampleMineral">
       	<!--Composite elements CANNOT be null with a set -->
-      	<property name="amount" column="amount" type="float" not-null="true"/>
+      	<property name="amount" column="amount" type="float"/>
 	    <many-to-one name="mineral" class="Mineral" column="mineral_id" lazy="false"/>
 	  </composite-element>
     </set>

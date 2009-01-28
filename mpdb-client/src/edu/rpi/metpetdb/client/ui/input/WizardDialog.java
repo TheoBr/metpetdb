@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -31,8 +32,8 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 	private final Button next;
 	private final Button finish;
 	private final Button back;
-	private HashSet tabChangeListeners;
-	private HashSet dialogFinishListeners;
+	private HashSet<Command> tabChangeListeners;
+	private HashSet<Command> dialogFinishListeners;
 
 	public WizardDialog() {
 		panels = new ArrayList();
@@ -64,9 +65,9 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 				}
 
 				if (tabChangeListeners != null) {
-					final Iterator itr = tabChangeListeners.iterator();
+					final Iterator<Command> itr = tabChangeListeners.iterator();
 					while (itr.hasNext()) {
-						((ServerOp) itr.next()).begin();
+						itr.next().execute();
 					}
 				}
 			}
@@ -128,9 +129,10 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 				public void onSuccess(final Object result) {
 					success++;
 					if (success == panels.size()) {
-						final Iterator dfItr = dialogFinishListeners.iterator();
+						final Iterator<Command> dfItr = dialogFinishListeners
+								.iterator();
 						while (dfItr.hasNext()) {
-							((ServerOp) dfItr.next()).begin();
+							dfItr.next().execute();
 						}
 						WizardDialog.this.hide();
 
@@ -152,15 +154,15 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 		currentTab = 0;
 	}
 
-	public void addTabChangeListener(final ServerOp s) {
+	public void addTabChangeListener(final Command s) {
 		if (tabChangeListeners == null)
-			tabChangeListeners = new HashSet();
+			tabChangeListeners = new HashSet<Command>();
 		tabChangeListeners.add(s);
 	}
 
-	public void addDialogFinishListener(final ServerOp s) {
+	public void addDialogFinishListener(final Command s) {
 		if (dialogFinishListeners == null)
-			dialogFinishListeners = new HashSet();
+			dialogFinishListeners = new HashSet<Command>();
 		dialogFinishListeners.add(s);
 	}
 
