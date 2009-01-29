@@ -36,9 +36,13 @@ public class AddImageWizard extends WizardDialog {
 					if (((ImageType) result).getImageType().contains("X-ray")) {
 						p_xray.edit(xray);
 						AddImageWizard.this.addStep(p_xray, 1,
-								"X-ray Attributes");
+								" X-ray Attributes");
+						AddImageWizard.this.enableNextButton(true);
+						AddImageWizard.this.enableFinishButton(false);
 					} else {
 						AddImageWizard.this.removeStep(1);
+						AddImageWizard.this.enableNextButton(false);
+						AddImageWizard.this.enableFinishButton(true);
 					}
 				}
 			}
@@ -66,6 +70,7 @@ public class AddImageWizard extends WizardDialog {
 				r.onFailure(e);
 			}
 		};
+		
 		this.addDialogFinishListener(dialog_finish);
 		this.addStep(p_image, 0, "Upload Image");
 	}
