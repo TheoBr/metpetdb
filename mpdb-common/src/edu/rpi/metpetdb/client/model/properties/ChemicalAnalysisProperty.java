@@ -235,8 +235,8 @@ public enum ChemicalAnalysisProperty implements Property<ChemicalAnalysis> {
 
 		public void set(final ChemicalAnalysis chemicalAnalysis,
 				final Object total) {
-			((ChemicalAnalysis) chemicalAnalysis).setTotal(Float.valueOf(total
-					.toString()));
+			((ChemicalAnalysis) chemicalAnalysis).setTotal(PropertyUtils
+					.convertToFloat(total));
 		}
 	},
 	datePrecision {

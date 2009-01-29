@@ -15,6 +15,8 @@ import org.apache.lucene.search.FilteredQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.RangeFilter;
 import org.apache.lucene.search.RangeQuery;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.solr.util.NumberUtils;
 import org.hibernate.CallbackException;
@@ -229,18 +231,34 @@ public class SearchDb {
 			}
 		}
 
+		
+		
 		// Run the query and get the actual results
 		if (queries.size() > 0) {
 			fullQuery.add(getQuery(queries, columnsIn, flags),
 					BooleanClause.Occur.MUST);
 		}
+		
+		
+		
 
 		System.out.println("Search Query:" + fullQuery.toString());
+		
 		final org.hibernate.Query hibQuery = fullTextSession
 				.createFullTextQuery(fullQuery, Sample.class);
+		final org.hibernate.Query sizeQuery = fullTextSession
+				.createFullTextQuery(fullQuery, Sample.class);
+		
+		
+		
+		
+		if (p != null){
+			hibQuery.setFirstResult(p.getFirstResult());
+			hibQuery.setMaxResults(p.getMaxResults());
+		}
+		
 		try {
-
-			final Results<Sample> results = new Results<Sample>(hibQuery.list().size(), hibQuery.list());
+			final Results<Sample> results = new Results<Sample>(sizeQuery.list().size(), hibQuery.list());
 			return results;
 		} catch (CallbackException e) {
 			session.clear();

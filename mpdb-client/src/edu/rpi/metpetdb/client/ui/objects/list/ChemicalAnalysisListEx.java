@@ -165,12 +165,23 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 					else return new MText("------");
 				}
 			},
+			new Column(true,enttxt.ChemicalAnalysis_total(),
+					ChemicalAnalysisProperty.total, true) {
+				protected Object getWidget(final MObject data,
+						final int currentRow) {
+					Float total = (Float) data.mGet(ChemicalAnalysisProperty.total);
+					String text = "------";
+					if (total != null)
+						text = (String.valueOf(total));					
+					return new MText(text);
+				}
+			},
 	};
 
 	@Override
 	public String getDefaultSortParameter() {
 		// TODO Auto-generated method stub
-		return ChemicalAnalysisProperty.analysisDate.name();
+		return ChemicalAnalysisProperty.spotId.name();
 	}
 
 	@Override
