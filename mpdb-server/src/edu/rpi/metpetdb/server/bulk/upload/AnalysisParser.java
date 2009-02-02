@@ -1,336 +1,227 @@
 package edu.rpi.metpetdb.server.bulk.upload;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisElement;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxide;
 import edu.rpi.metpetdb.client.model.Element;
-import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Oxide;
-import edu.rpi.metpetdb.client.model.Reference;
-import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadHeader;
+import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
+import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.server.DataStore;
 
-@Deprecated
 public class AnalysisParser extends Parser<ChemicalAnalysis> {
 
-	public static final int CAOXIDE = 2;
-	public static final int CAELEMENT = 3;
-	public static final int CAOXIDE_WITH_PRECISION = 4;
-	public static final int CAELEMENT_WITH_PRECISION = 4;
+	private final Map<Integer, ChemicalAnalysis> chemicalAnalyses;
+	private static List<ColumnMapping> columns;
+	// Maps an oxide/element name to their measurement unit
+	private final Map<String, String> measurementUnits;
+	// Maps an oxide/element name to their precision unit
+	private final Map<String, String> precisionUnits;
+	// Oxides/Elements that are in this bulk upload process
+	private final Map<String, Element> uploadElements;
+	private final Map<String, Oxide> uploadOxides;
 
-	public static final int PERCISIONUNIT = 102;
+	static {
+		final DatabaseObjectConstraints doc = DataStore.getInstance()
+				.getDatabaseObjectConstraints();
+		columns = new ArrayList<ColumnMapping>();
+		columns.add(new ColumnMapping(RegularExpressions.SAMPLE,
+				doc.ChemicalAnalysis_sampleName));
+		columns.add(new ColumnMapping(RegularExpressions.SUBSAMPLE,
+				doc.Subsample_name));
+		columns.add(new ColumnMapping(RegularExpressions.SUBSAMPLE_TYPE,
+				doc.Subsample_subsampleType));
+		columns.add(new ColumnMapping(RegularExpressions.MINERALS,
+				doc.ChemicalAnalysis_mineral));
+		columns.add(new ColumnMapping(RegularExpressions.ANALYSIS_METHOD,
+				doc.ChemicalAnalysis_analysisMethod));
+		columns.add(new ColumnMapping(RegularExpressions.LOCATION,
+				doc.ChemicalAnalysis_location));
+		columns.add(new ColumnMapping(RegularExpressions.REFERENCES,
+				doc.ChemicalAnalysis_reference));
+		columns.add(new ColumnMapping(RegularExpressions.COLLECTION_DATE,
+				doc.ChemicalAnalysis_analysisDate));
+		columns.add(new ColumnMapping(RegularExpressions.ANALYST,
+				doc.ChemicalAnalysis_analyst));
+		columns.add(new ColumnMapping(RegularExpressions.SPOT_ID,
+				doc.ChemicalAnalysis_spotId));
+		columns.add(new ColumnMapping(RegularExpressions.TOTAL,
+				doc.ChemicalAnalysis_total));
+		columns.add(new ColumnMapping(RegularExpressions.COMMENTS,
+				doc.ChemicalAnalysis_description));
+		columns.add(new ColumnMapping(RegularExpressions.X_COORDINATE,
+				doc.ChemicalAnalysis_referenceX));
+		columns.add(new ColumnMapping(RegularExpressions.Y_COORDINATE,
+				doc.ChemicalAnalysis_referenceY));
+	}
 
-	private final Map<Integer, ChemicalAnalysis> analyses;
-	private String precisionUnit = null;
-	/**
-	 * sampleMethodMap[][0] === name in table sampleMethodMap[][1] === method to
-	 * call on Sample to store data sampleMethodMap[][2] === parameter to the
-	 * store method and return value of HSSFCell method
-	 */
-	private static final Object[][] analysisMethodMap = {
-			{
-					"^\\s*subsample\\s*$", "setSubsample", Subsample.class,
-					"ChemicalAnalysis_subsample"
-			},
-			{
-					"(mineral)|(material)", "setMineral", Mineral.class,
-					"ChemicalAnalysis_mineral"
-			},
-			{
-					"(method)|(analytical method)|(analysis method)|(^\\s*type\\s*$)",
-					"setAnalysisMethod", String.class,
-					"ChemicalAnalysis_analysisMethod"
-			},
-			{
-					"(where done)|(analytical facility)", "setLocation",
-					String.class, "ChemicalAnalysis_location"
-			},
-			{
-					"(^\\s*reference\\s*$)|(^\\s*ref\\s*$)", "setReference",
-					Reference.class, "ChemicalAnalysis_reference"
-			},
-			{
-					"(date)|(when analyzed)", "setAnalysisDate",
-					Timestamp.class, "ChemicalAnalysis_analysisDate"
-			},
-			{
-					"analyst", "setAnalyst", String.class,
-					"ChemicalAnalysis_analyst"
-			},
-			// reference image (image)
-			{
-					"(point)|(spot)|(analysis location)", "setSpotId",
-					String.class, "ChemicalAnalysis_spotId"
-			},
-			// precision (precision,error)
-			{
-					"(total)|(wt%tot)|(wt%total)", "setTotal", Float.class,
-					"ChemicalAnalysis_total"
-			},
-			{
-					"(comment)|(note)|(description)", "setDescription",
-					String.class, "ChemicalAnalysis_comment"
-			},
-			{
-					"(x position)|(x pos)|(x coordinate)|(x coord)",
-					"setPointX", int.class, "ChemicalAnalysis_pointX"
-			},
-			{
-					"(y position)|(y pos)|(y coordinate)|(y coord)",
-					"setPointY", int.class, "ChemicalAnalysis_pointY"
-			},
-
-	};
-
-	private final static List<MethodAssociation<ChemicalAnalysis>> methodAssociations = new LinkedList<MethodAssociation<ChemicalAnalysis>>();
-
-	private static List<Element> elements = null;
-	private static List<Oxide> oxides = null;
+	public List<ColumnMapping> getColumMappings() {
+		return columns;
+	}
 
 	/**
 	 * 
 	 * @param is
-	 * 		the input stream that points to a spreadsheet
-	 * @throws IOException
+	 *            the input stream that points to a spreadsheet
+	 * @throws MpDbException
+	 * @throws InvalidFormatException
 	 */
-	public AnalysisParser(final InputStream is) {
+	public AnalysisParser(final InputStream is) throws MpDbException {
 		super(is);
-		analyses = new HashMap<Integer, ChemicalAnalysis>();
-	}
-
-	static {
-		try {
-			if (methodAssociations.isEmpty())
-				for (Object[] row : analysisMethodMap)
-					methodAssociations
-							.add(new MethodAssociation<ChemicalAnalysis>(
-									(String) row[0], (String) row[1],
-									(Class<?>) row[2], new ChemicalAnalysis(),
-									(String) row[3]));
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		chemicalAnalyses = new TreeMap<Integer, ChemicalAnalysis>();
+		precisionUnits = new HashMap<String, String>();
+		measurementUnits = new HashMap<String, String>();
+		uploadElements = new HashMap<String, Element>();
+		uploadOxides = new HashMap<String, Oxide>();
 	}
 
 	public void parse() {
-		precisionUnit = null;
+		// data starts on row 1 for chemical analyses
 		parse(1);
+	}
+
+	private void handleSpecial(final HSSFRow header, Integer cellNumber,
+			final String cellText, final PropertyConstraint primary,
+			final PropertyConstraint secondary) {
+		// add it in to the columns
+		spreadSheetColumnMapping.put(cellNumber, primary);
+		headers.put(cellNumber, new BulkUploadHeader(cellText,
+				primary.propertyName));
+		// we have an element, check the next row for the
+		// measurement unit
+		final HSSFCell measurementUnitCell = sheet.getRow(
+				header.getRowNum() + 1).getCell(cellNumber);
+		measurementUnits.put(cellText, measurementUnitCell.toString());
+		// Get text of the next column
+		if (header.getLastCellNum() > cellNumber + 1) {
+			final String nextHeader = header.getCell(cellNumber + 1).toString();
+			if (Pattern.compile(RegularExpressions.PRECISION,
+					Pattern.CASE_INSENSITIVE).matcher(nextHeader).find()) {
+				// if the next column is a precion mark it is for
+				// elements
+				spreadSheetColumnMapping.put(cellNumber + 1, secondary);
+				// also store the unit
+				final HSSFCell precision = sheet.getRow(header.getRowNum() + 1)
+						.getCell(cellNumber + 1);
+				precisionUnits.put(cellText, precision.toString());
+				++cellNumber;
+				headers.put(cellNumber, new BulkUploadHeader(cellText,
+						secondary.propertyName));
+			}
+		}
 	}
 
 	protected void parseHeaderSpecialCase(final HSSFRow header,
 			Integer cellNumber, final String cellText) {
-		// special cases
-		if (Pattern.compile("^(sample[ number| name|])|^(sample)$",
-				Pattern.CASE_INSENSITIVE).matcher(cellText).find()) {
-			colType.put(new Integer(cellNumber), SAMPLE);
-			colName.put(new Integer(cellNumber), "ChemicalAnalysis_sample");
-			return;
-		} else if (Pattern.compile("precision unit", Pattern.CASE_INSENSITIVE)
-				.matcher(cellText).find()) {
-			colType.put(new Integer(cellNumber), PERCISIONUNIT);
-			colName.put(new Integer(cellNumber),
-					"ChemicalAnalysis_precisionUnit");
-			return;
-		} else if (Pattern.compile("subsample type", Pattern.CASE_INSENSITIVE)
-				.matcher(cellText).find()) {
-			colType.put(new Integer(cellNumber), SUBSAMPLE_TYPE);
-			colName.put(new Integer(cellNumber), "Subsample_subsampleType");
-			return;
-		}
-
 		// The string didn't match anything we explicitly check for, so
 		// maybe it is an element or an oxide
-		try {
-			for (Element e : elements) {
-				if (e.getName().equalsIgnoreCase(cellText)
-						|| (e.getAlternateName() != null && e
-								.getAlternateName().equalsIgnoreCase(cellText))
-						|| (e.getSymbol().equalsIgnoreCase(cellText))) {
-					// Get text of the next column
-					boolean precision_next = false;
-					try {
-						String next_header = header.getCell(cellNumber + 1)
-								.toString();
-						precision_next = Pattern.compile("precision",
-								Pattern.CASE_INSENSITIVE).matcher(next_header)
-								.find();
-
-					} catch (final NullPointerException npe) {
-						// leave precision_next as false
-					}
-
-					if (precision_next) {
-						colType.put(new Integer(cellNumber),
-								CAELEMENT_WITH_PRECISION);
-						colMethods.put(new Integer(cellNumber),
-								ChemicalAnalysis.class
-										.getMethod("addElement", Element.class,
-												Float.class, Float.class));
-
-						colName.put(new Integer(cellNumber + 1),
-								"ChemicalAnalysis_precision");
-					} else {
-						colType.put(new Integer(cellNumber), CAELEMENT);
-						colMethods.put(new Integer(cellNumber),
-								ChemicalAnalysis.class.getMethod("addElement",
-										Element.class, Float.class));
-					}
-
-					colObjects.put(new Integer(cellNumber), e);
-					colName.put(new Integer(cellNumber),
-							"ChemicalAnalysis_elements");
-
-					if (precision_next)
-						cellNumber++;
-					break;
-				}
+		for (Element e : elements) {
+			if (e.getName().equalsIgnoreCase(cellText)
+					|| (e.getAlternateName() != null && e.getAlternateName()
+							.equalsIgnoreCase(cellText))
+					|| (e.getSymbol().equalsIgnoreCase(cellText))) {
+				uploadElements.put(cellText, e);
+				handleSpecial(
+						header,
+						cellNumber,
+						cellText,
+						doc.ChemicalAnalysis_elements,
+						doc.ChemicalAnalysisElement_ChemicalAnalysis_elements_precision);
 			}
-
-			for (Oxide o : oxides) {
-				if (o.getSpecies().equalsIgnoreCase(cellText)) {
-					// Get text of the next column
-					boolean precision_next = false;
-					try {
-						String next_header = header.getCell(cellNumber + 1)
-								.toString();
-						precision_next = Pattern.compile("precision",
-								Pattern.CASE_INSENSITIVE).matcher(next_header)
-								.find();
-
-					} catch (final NullPointerException npe) {
-						// leave precision_next as false
-					}
-
-					if (precision_next) {
-						colType.put(new Integer(cellNumber),
-								CAOXIDE_WITH_PRECISION);
-						colMethods.put(new Integer(cellNumber),
-								ChemicalAnalysis.class.getMethod("addOxide",
-										Oxide.class, Float.class, Float.class));
-						colName.put(new Integer(cellNumber + 1),
-								"ChemicalAnalysis_precision");
-					} else {
-						colType.put(new Integer(cellNumber), CAOXIDE);
-						colMethods.put(new Integer(cellNumber),
-								ChemicalAnalysis.class.getMethod("addOxide",
-										Oxide.class, Float.class));
-					}
-
-					colObjects.put(new Integer(cellNumber), o);
-					colName.put(new Integer(cellNumber),
-							"ChemicalAnalysis_oxides");
-
-					if (precision_next)
-						cellNumber++;
-					break;
-				}
+		}
+		for (Oxide o : oxides) {
+			if (o.getSpecies().equalsIgnoreCase(cellText)) {
+				uploadOxides.put(cellText, o);
+				handleSpecial(
+						header,
+						cellNumber,
+						cellText,
+						doc.ChemicalAnalysis_oxides,
+						doc.ChemicalAnalysisOxide_ChemicalAnalysis_oxides_precision);
 			}
-		} catch (NoSuchMethodException e) {
-			throw new IllegalStateException(
-					"Programming Error -- Invalid Chemical Analysis Method");
 		}
 	}
-	/**
-	 * 
-	 * @param rownum
-	 * 		the row number to parse
-	 * @throws InvocationTargetException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvalidFormatException
-	 * 		if the row isn't of the format designated by the headers
-	 */
-	protected boolean parseColumnSpecialCase(final HSSFRow row,
-			Integer cellNumber, final String cellText, final Class<?> dataType,
-			final ChemicalAnalysis currentObject)
-			throws IllegalArgumentException, IllegalAccessException,
-			InvocationTargetException, NumberFormatException {
-		Integer type = colType.get(cellNumber);
-		if (type == null)
-			return false;
-		if (type == PERCISIONUNIT) {
-			precisionUnit = cellText;
-		} else if (type == CAOXIDE || type == CAELEMENT) {
-			final Method storeMethod = colMethods.get(new Integer(cellNumber));
-			final Object o = colObjects.get(cellNumber);
-			final Float data = Float.valueOf(sanitizeNumber(cellText));
-			storeMethod.invoke(currentObject, o, data);
-		} else if (type == CAOXIDE_WITH_PRECISION
-				|| type == CAELEMENT_WITH_PRECISION) {
-			final Method storeMethod = colMethods.get(new Integer(cellNumber));
-			final Object o = colObjects.get(cellNumber);
-			final Float data = Float.valueOf(sanitizeNumber(cellText));
-			final Float precision = Float.valueOf(sanitizeNumber(row.getCell(
-					(cellNumber + 1)).toString()));
-			storeMethod.invoke(currentObject, o, data, precision);
-			cellNumber++;
-		} else if (type == METHOD) {
-			// Determine which class the method wants the content of the
-			// cell to be so it can parse it
-			if (dataType == Mineral.class) {
-				if (currentObject.getMineral() == null)
-					currentObject.setMineral(new Mineral());
-				currentObject.getMineral().setName(cellText);
 
-			} else if (dataType == Reference.class) {
-				if (currentObject.getReference() == null)
-					currentObject.setReference(new Reference());
-				currentObject.getReference().setName(cellText);
-			} else 
-				return false;
-		} else
-			return false;
-		return true;
-	}
-
-	protected void addObject(final int index, final ChemicalAnalysis ca) {
-		if (precisionUnit != null) {
-			for (ChemicalAnalysisElement ele : ca.getElements())
-				ele.setPrecisionUnit(precisionUnit);
-
-			for (ChemicalAnalysisOxide ox : ca.getOxides())
-				ox.setPrecisionUnit(precisionUnit);
-		}
-
-		if (ca.getMineral() == null)
-			ca.setLargeRock(true);
-		else
-			ca.setLargeRock(false);
-
-		analyses.put(index, ca);
-	}
-
-	public Map<Integer, ChemicalAnalysis> getAnalyses() {
-		return analyses;
-	}
-
-	public static void setElementsAndOxides(final List<Element> elements,
-			final List<Oxide> oxides) {
-		AnalysisParser.elements = elements;
-		AnalysisParser.oxides = oxides;
+	public Map<Integer, ChemicalAnalysis> getChemicalAnalyses() {
+		return chemicalAnalyses;
 	}
 
 	@Override
-	protected List<MethodAssociation<ChemicalAnalysis>> getMethodAssociations() {
-		return methodAssociations;
+	protected void addObject(int index, ChemicalAnalysis object) {
+		if (object.getMineral() == null)
+			object.setLargeRock(true);
+		else
+			object.setLargeRock(false);
+		chemicalAnalyses.put(index, object);
 	}
 
 	@Override
 	protected ChemicalAnalysis getNewObject() {
 		return new ChemicalAnalysis();
 	}
+	@Override
+	protected boolean parseColumnSpecialCase(HSSFRow row, HSSFCell cell,
+			PropertyConstraint pc, ChemicalAnalysis currentObject,
+			Integer cellNum) throws IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException {
+		final String headerText = headers.get(cell.getColumnIndex())
+				.getHeaderText();
+		if (pc == doc.ChemicalAnalysis_elements) {
+			final ChemicalAnalysisElement element = new ChemicalAnalysisElement();
+			element.setElement(uploadElements.get(headerText));
+			element
+					.setAmount(getFloatValue(cell.toString()));
+			element.setMeasurementUnit(measurementUnits.get(headerText));
+			// see if our next column is our precision
+			if (spreadSheetColumnMapping.get(cell.getColumnIndex() + 1) == doc.ChemicalAnalysisElement_ChemicalAnalysis_elements_precision) {
+				cell = row.getCell(cell.getColumnIndex() + 1);
+				++cellNum;
+				element.setPrecision(getFloatValue(cell.toString()));
+				element.setPrecisionUnit(precisionUnits.get(headers.get(
+						cell.getColumnIndex()).getHeaderText()));
+			}
+			element.setMinMax();
+			currentObject.addElement(element);
+			return true;
+		} else if (pc == doc.ChemicalAnalysis_oxides) {
+			final ChemicalAnalysisOxide oxide = new ChemicalAnalysisOxide();
+			oxide.setOxide(uploadOxides.get(headerText));
+			oxide.setAmount(getFloatValue(cell.toString()));
+			oxide.setMeasurementUnit(measurementUnits.get(headerText)
+					.toUpperCase());
+			// see if our next column is our precision
+			if (spreadSheetColumnMapping.get(cell.getColumnIndex() + 1) == doc.ChemicalAnalysisOxide_ChemicalAnalysis_oxides_precision) {
+				cell = row.getCell(cell.getColumnIndex() + 1);
+				++cellNum;
+				oxide.setPrecision(getFloatValue(cell.toString()));
+				oxide.setPrecisionUnit(precisionUnits.get(
+						headers.get(cell.getColumnIndex()).getHeaderText())
+						.toUpperCase());
+			}
+			oxide.setMinMax();
+			currentObject.addOxide(oxide);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	public Map<Integer, BulkUploadHeader> getHeaders() {
+		return headers;
+	}
+
 }

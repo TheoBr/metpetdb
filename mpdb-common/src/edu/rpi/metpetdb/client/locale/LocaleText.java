@@ -67,6 +67,7 @@ public interface LocaleText extends Messages {
 	String notice_PasswordChanged(String username);
 	String notice_InfoChanged(String username);
 	String notice_GridSaved(String Subsample);
+	String notice_AccountDisabled();
 
 	/* Title Bars */
 	String title_PleaseLogin();

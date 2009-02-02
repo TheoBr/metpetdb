@@ -8,6 +8,7 @@ import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
 
+import edu.rpi.metpetdb.client.model.Role;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
 import edu.rpi.metpetdb.client.model.interfaces.PublicData;
@@ -80,9 +81,14 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				// user is registering so let this one fly
 				return;
 			}
-			if (Action.LOGIN.equals(MpDbServlet.currentReq().action)
+			if ((Action.LOGIN.equals(MpDbServlet.currentReq().action)
+					|| Action.EMAIL_PASSWORD.equals(MpDbServlet.currentReq().action))
 					&& entity instanceof User) {
-				// user is trying to log in so let them load the user object
+				// user is trying to log in (or do forgot password) so let them load the user object
+				return;
+			}
+			if (entity instanceof Role && !saving) {
+				//TODO make a list of objects that can always be loaded (like a Role)
 				return;
 			}
 			if (principals == null) {

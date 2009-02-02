@@ -190,6 +190,17 @@ public class MpDb {
 				}
 			}
 		}
+		//end the session if we are setting it to null
+		if (n == null) {
+			new VoidServerOp() {
+				public void begin() {
+					MpDb.user_svc.endSession(this);
+				}
+				@Override
+				public void onSuccess() {
+				}
+			}.execute();
+		}
 	}
 
 	// Creates user history in the left column

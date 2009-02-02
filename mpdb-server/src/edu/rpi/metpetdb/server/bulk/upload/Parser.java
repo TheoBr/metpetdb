@@ -3,9 +3,7 @@ package edu.rpi.metpetdb.server.bulk.upload;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,100 +20,55 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.bulk.upload.InvalidSpreadSheetException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.validation.InvalidDateStringException;
+import edu.rpi.metpetdb.client.model.Element;
+import edu.rpi.metpetdb.client.model.ImageType;
 import edu.rpi.metpetdb.client.model.Mineral;
+import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadError;
+import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadHeader;
 import edu.rpi.metpetdb.client.model.interfaces.HasDate;
 import edu.rpi.metpetdb.client.model.interfaces.HasSample;
 import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
-import edu.rpi.metpetdb.client.model.properties.Property;
+import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.DateStringConstraint;
+import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
+import edu.rpi.metpetdb.client.model.validation.interfaces.NumberConstraint;
+import edu.rpi.metpetdb.server.DataStore;
 
-/**
- * 
- * @deprecated to be replaced by NewParser once AnalysisParser and ImageParser have been updated
- * @param <T>
- */
-
-@Deprecated
 public abstract class Parser<T extends MObject> {
 
 	/** the character that is used to separate multiple data in one column */
 	protected final static String DATA_SEPARATOR = ";";
-	protected static final int METHOD = 1;
-	protected static final int SAMPLE = 101;
-	protected static final int SUBSAMPLE_TYPE = 103;
-
 	protected HSSFSheet sheet;
-
-	protected final Map<Integer, MpDbException> errors = new HashMap<Integer, MpDbException>();
-
+	protected final Map<Integer, BulkUploadError> errors = new HashMap<Integer, BulkUploadError>();
 	protected static Collection<Mineral> minerals;
-
+	protected static Collection<Element> elements;
+	protected static Collection<Oxide> oxides;
+	protected static Collection<ImageType> imageTypes;
+	protected final Map<Integer, BulkUploadHeader> headers = new HashMap<Integer, BulkUploadHeader>();
+	protected static DatabaseObjectConstraints doc = DataStore.getInstance()
+			.getDatabaseObjectConstraints();
 	/**
 	 * relates columns to entries in map
 	 */
-	
-	protected final Map<Integer, Integer> colType;
-	protected final Map<Integer, Method> colMethods;
-	protected final Map<Integer, Object> colObjects;
-	protected final Map<Integer, String> colName;
+	protected final Map<Integer, PropertyConstraint> spreadSheetColumnMapping;
 
-	protected Parser(final InputStream is) {
-		colType = new HashMap<Integer, Integer>();
-		colMethods = new HashMap<Integer, Method>();
-		colObjects = new HashMap<Integer, Object>();
-		colName = new HashMap<Integer, String>();
+	protected Parser(final InputStream is) throws MpDbException {
+		spreadSheetColumnMapping = new HashMap<Integer, PropertyConstraint>();
 		try {
 			final POIFSFileSystem fs = new POIFSFileSystem(is);
 			final HSSFWorkbook wb = new HSSFWorkbook(fs);
 			sheet = wb.getSheetAt(0);
 		} catch (IOException e) {
-			// TODO handle this better
-			e.printStackTrace();
+			throw new InvalidSpreadSheetException(e.getMessage());
 		}
-	}
-
-	public Map<Integer, String[]> getHeaders() {
-		int k = 0;
-		Map<Integer, String[]> headers = new HashMap<Integer, String[]>();
-
-		// Skip empty rows at the start
-		while (sheet.getRow(k) == null) {
-			k++;
-		}
-
-		// First non-empty row is the header, want to associate what
-		// we know how to parse with what is observed
-		parseHeader(k);
-
-		// Now that we've assigned columns to methods, create the column text to
-		// data mapping
-		HSSFRow header = sheet.getRow(k);
-		for (int i = 0; i < header.getLastCellNum(); ++i) {
-			final HSSFCell cell = header.getCell(i);
-			final String text;
-
-			try {
-				text = cell.toString();
-			} catch (final NullPointerException npe) {
-				continue;
-			}
-
-			String[] this_header = {
-					text, colName.get(new Integer(i))
-			};
-			if (this_header[1] == null) {
-				this_header[1] = "";
-			}
-
-			headers.put(new Integer(i), this_header);
-		}
-
-		return headers;
 	}
 
 	/**
@@ -207,80 +160,12 @@ public abstract class Parser<T extends MObject> {
 		return number.replaceAll("[^-\\.0-9]", "");
 	}
 
-	protected boolean handleData(final Class<?> dataType,
-			final Method storeMethod, final HSSFCell cell, final Object o)
-			throws InvocationTargetException, IllegalArgumentException,
-			IllegalAccessException {
-		if (cell.toString().equals("")) {
-			return false;
-		} else if (dataType == String.class) {
-			if (!storeMethod.getName().equals("addReference")
-					&& !storeMethod.getName().equals("addComment")) {
-				String sanatizedData = cell.toString();
-				if (storeMethod.getName().equals("setAlias")
-						|| storeMethod.getName().equals("addRockType")) {
-					sanatizedData = sanatizedData.replace(" ", "");
-				}
-				sanatizedData = sanatizedData.replaceAll(" +", " ");
-				final String[] data = sanatizedData.split("\\s*"
-						+ DATA_SEPARATOR + "\\s*");
-				for (String str : data) {
-					if (!"".equals(str))
-						storeMethod.invoke(o, str);
-				}
-			} else {
-				final String data = cell.toString();
-				if (!"".equals(data))
-					storeMethod.invoke(o, data);
-			}
-		} else if (dataType == Float.class || dataType == double.class
-				|| dataType == Integer.class || dataType == int.class) {
-			double data;
-			try {
-				data = Double.parseDouble(cell.toString());
-				if (!cell.toString().equals(String.valueOf(data))) {
-					throw new NullPointerException();
-				}
-			} catch (NumberFormatException nfe) {
-				// most likely this cell is suppose to be a number put the
-				// person put non-numeric things in it
-				// so parse out the number of possible
-				final String tempData = cell.toString();
-				try {
-					data = Double.parseDouble(tempData.replaceAll("[^-\\.0-9]",
-							""));
-				} catch (Exception e) {
-					data = 0;
-				}
-
-			}
-			
-
-			if (dataType == Float.class)
-				storeMethod.invoke(o, new Float(data));
-			else if (dataType == Integer.class || dataType == int.class)
-				storeMethod.invoke(o, new Double(data).intValue());
-			else
-				storeMethod.invoke(o, data);
-		} else if (dataType == Subsample.class) {
-			if (o instanceof HasSubsample) {
-				final String data = cell.toString();
-				if (((HasSubsample) o).getSubsample() == null)
-					((HasSubsample) o).setSubsample(new Subsample());
-				((HasSubsample) o).getSubsample().setName(data);
-			}
-		} else {
-			return false;
-		}
-		return true;
-	}
-
 	/**
 	 * Retrieves an exception that should be sent back to the client
 	 * 
 	 * @return
 	 */
-	public Map<Integer, MpDbException> getErrors() {
+	public Map<Integer, BulkUploadError> getErrors() {
 		return errors;
 	}
 
@@ -301,8 +186,38 @@ public abstract class Parser<T extends MObject> {
 		return alternate;
 	}
 
+	/**
+	 * Replaces abbreviations of image types with the correct ones
+	 * 
+	 * @param imageType
+	 * @return
+	 */
+	protected ImageType getImageType(final String imageType) {
+		for (ImageType it : imageTypes) {
+			if (it.getImageType().equals(imageType))
+				return it;
+			if (it.getAbbreviation().equals(imageType))
+				return it;
+		}
+		final ImageType it = new ImageType();
+		it.setImageType(imageType);
+		return it;
+	}
+
 	public static void setMinerals(final Collection<Mineral> minerals) {
 		Parser.minerals = minerals;
+	}
+
+	public static void setElements(final Collection<Element> elements) {
+		Parser.elements = elements;
+	}
+
+	public static void setOxides(final Collection<Oxide> oxides) {
+		Parser.oxides = oxides;
+	}
+
+	public static void setImageTypes(final Collection<ImageType> imageTypes) {
+		Parser.imageTypes = imageTypes;
 	}
 
 	protected final void parseRow(final int rowindex) {
@@ -314,110 +229,119 @@ public abstract class Parser<T extends MObject> {
 		boolean sawDataInRow = false;
 
 		for (Integer i = 0; i <= row.getLastCellNum(); ++i) {
-			final HSSFCell cell = row.getCell(i.intValue());
+			HSSFCell cell = row.getCell(i.intValue());
 			try {
-				// Get the method we'll be using to parse this particular cell
-				final Method storeMethod = colMethods.get(i);
-				Integer type = colType.get(i);
-				if (type == null)
-					continue;
+				// get the constraint for this cell
+				final PropertyConstraint pc = spreadSheetColumnMapping.get(i);
 
-				if (type == SAMPLE) {
-					if (newObject instanceof HasSample) {
-						if (((HasSample) newObject).getSample() == null)
-							((HasSample) newObject).setSample(new Sample());
-						((HasSample) newObject).getSample().setAlias(
-								cell.toString());
-					}
-				} else if (type == SUBSAMPLE_TYPE) {
-					if (newObject instanceof HasSubsample) {
-						if (((HasSubsample) newObject).getSubsample() == null)
-							((HasSubsample) newObject)
-									.setSubsample(new Subsample());
-						((HasSubsample) newObject).getSubsample()
-								.addSubsampleType(cell.toString());
-					}
-				}
+				if (pc != null && cell != null && !cell.toString().equals("")
+						&& !parseColumnSpecialCase(row, cell, pc, newObject, i)) {
 
-				if (storeMethod == null)
-					continue;
-				
-
-				// Determine what class the method wants the content of the cell
-				// to be so it can parse it
-				final Class<?> dataType = storeMethod.getParameterTypes()[0];
-				
-				if (parseColumnSpecialCase(row, i, cell.toString(), dataType, newObject)) {
-					continue;
-				}
-
-				// System.out.println("\t Parsing Column " + i + ": "
-				// + storeMethod.getName());
-
-				// If this has an object then it isn't a normal header, handle
-				// accordingly
-				if (colObjects.get(i) != null) {
-					final Object o = colObjects.get(i);
-
-					// Created for Mineral Processing:
-					// * If cell is empty, keep moving
-					// * If there is a number, then that is the amount
-					// * Anything else is taken as an "unknown quantity"
-					if (cell.toString().length() > 0) {
-						try {
-							final Float data = Float
-									.parseFloat(cell.toString());
-							storeMethod.invoke(newObject, o, data);
-						} catch (NumberFormatException e) {
-							storeMethod.invoke(newObject, o, new Float(0));
+					if (pc == doc.Subsample_subsampleType) {
+						// We have to invoke the method on a subsample
+						if (newObject instanceof HasSubsample) {
+							if (((HasSubsample) newObject).getSubsample() == null) {
+								final Subsample s = new Subsample();
+								((HasSubsample) newObject).setSubsample(s);
+							}
+							((HasSubsample) newObject).getSubsample().mSet(
+									pc.property, cell.toString());
 						}
-					}
-					continue;
-				}
-
-				if (handleData(dataType, storeMethod, cell, newObject)) {
-					sawDataInRow = true;
-				} else {
-					if (dataType == Timestamp.class) {
-						if (newObject instanceof HasDate) {
-							final HasDate objectWithDate = (HasDate) newObject;
-							try {
-								final Date data = cell.getDateCellValue();
-								objectWithDate.setDate(new Timestamp(data
-										.getTime()));
-								objectWithDate.setDatePrecision((short) 1);
-								// storeMethod.invoke(s, new Timestamp(data.
-								// getTime(
-								// )));
-							} catch (final IllegalStateException nfe) {
-								// System.out.println("parsing date");
-								final String data = cell.toString();
+					} else if (pc == doc.Subsample_name) {
+						// We have to invoke the method on a subsample
+						if (newObject instanceof HasSubsample) {
+							if (((HasSubsample) newObject).getSubsample() == null) {
+								final Subsample s = new Subsample();
+								((HasSubsample) newObject).setSubsample(s);
+							}
+							((HasSubsample) newObject).getSubsample().mSet(
+									pc.property, cell.toString());
+						}
+					} else if (pc == doc.Sample_alias
+							&& !pc.entityName.equals(newObject.getClass()
+									.getSimpleName())) {
+						// only do sample alias if we are not working on a
+						// sample
+						if (newObject instanceof HasSample) {
+							if (((HasSample) newObject).getSample() == null) {
+								final Sample s = new Sample();
+								((HasSample) newObject).setSample(s);
+							}
+							((HasSample) newObject).getSample().mSet(
+									pc.property, cell.toString());
+						}
+					} else if (pc.entityName.equals(newObject.getClass()
+							.getSimpleName())
+							|| ((pc.entityName.equals("Image") || pc.entityName
+									.equals("ImageOnGrid")
+									&& newObject.getClass().getSimpleName()
+											.equals(("BulkUploadImage"))))) {
+						if (pc instanceof NumberConstraint<?>) {
+							newObject.mSet(pc.property, getFloatValue(cell.toString()));
+						} else if (pc instanceof TimestampConstraint) {
+							// handle dates differently
+							if (newObject instanceof HasDate) {
+								final HasDate objectWithDate = (HasDate) newObject;
 								try {
-									(new DateStringConstraint())
-											.validateValue(data);
-									parseDate(objectWithDate, data);
-									sawDataInRow = true;
-								} catch (final ValidationException ve) {
-									errors.put(rowindex + 1, ve);
+									final Date data = cell.getDateCellValue();
+									objectWithDate.setDate(new Timestamp(data
+											.getTime()));
+									objectWithDate.setDatePrecision((short) 1);
+								} catch (final IllegalStateException nfe) {
+									final String data = cell.toString();
+									try {
+										(new DateStringConstraint())
+												.validateValue(data);
+										parseDate(objectWithDate, data);
+									} catch (final ValidationException ve) {
+										errors.put(rowindex,
+												new BulkUploadError(
+														rowindex + 1, i + 1,
+														ve, data));
+									}
 								}
+							}
+						} else if (pc == doc.Sample_description
+								|| pc == doc.ChemicalAnalysis_description
+								|| pc == doc.Image_description) {
+							// we want to append the data to the field
+							final String currentData = (String) newObject
+									.mGet(pc.property);
+							if (currentData != null)
+								newObject.mSet(pc.property, currentData + "\n"
+										+ cell.toString());
+							else
+								newObject.mSet(pc.property, cell.toString());
+						} else {
+							final String data = cell.toString();
+							final String[] mulitpartData = data.split("\\s*"
+									+ DATA_SEPARATOR + "\\s*");
+							for (String str : mulitpartData) {
+								newObject.mSet(pc.property, str.trim());
 							}
 						}
 					}
 				}
-			} catch (final NullPointerException npe) {
-				// empty cell
-				continue;
-			} catch (final InvocationTargetException ie) {
-				// this indicates a bug.
-				ie.getTargetException().printStackTrace();
-				errors.put(rowindex, new GenericDAOException(ie.getMessage()));
-			} catch (final IllegalAccessException iae) {
-				// I believe this is when a method is private and we don't have
-				// access. It should never get here.
-				iae.printStackTrace();
-				errors.put(rowindex, new GenericDAOException(iae.getMessage()));
+				if (pc != null && cell != null && !cell.equals("")
+						&& !cell.toString().matches("\\s*")) {
+					if (pc.entityName.equals(newObject.getClass()
+							.getSimpleName()))
+						pc.validateEntity(newObject);
+					sawDataInRow = true;
+				}
+			} catch (MpDbException e) {
+				errors.put(rowindex + 1, new BulkUploadError(rowindex + 1,
+						i + 1, e, cell.toString()));
+			} catch (NumberFormatException e) {
+				// TODO maybe handle specially?
+				errors.put(rowindex + 1, new BulkUploadError(rowindex + 1,
+						i + 1, new GenericDAOException(e.getMessage()), cell
+								.toString()));
 			} catch (Exception e) {
-				errors.put(rowindex, new GenericDAOException(e.getMessage()));
+				e.printStackTrace();
+				errors.put(rowindex + 1, new BulkUploadError(rowindex + 1,
+						i + 1, new GenericDAOException(e.getMessage()), cell
+								.toString()));
 			}
 		}
 
@@ -429,10 +353,31 @@ public abstract class Parser<T extends MObject> {
 	protected abstract void addObject(final int index, T object);
 
 	protected abstract T getNewObject();
+	
+	protected Float getFloatValue(final String number) {
+		final String data = sanitizeNumber(number);
+		if (data.equals("")) {
+			throw new NumberFormatException("Unable to convert '" + number +  "' to a number");
+		}
+		return Float.parseFloat(data);
+	}
 
-	protected abstract boolean parseColumnSpecialCase(final HSSFRow row,
-			Integer cellNumber, final String cellText, final Class<?> dataType,
-			final T currentObject) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException;
+	/**
+	 * Return true if this column has been handled specially else false
+	 * 
+	 * @param row
+	 * @param cell
+	 * @param pc
+	 * @param currentObject
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	protected abstract boolean parseColumnSpecialCase(HSSFRow row,
+			HSSFCell cell, final PropertyConstraint pc,
+			final T currentObject, Integer cellNum) throws IllegalArgumentException,
+			IllegalAccessException, InvocationTargetException;
 
 	protected void parseHeader(final int rownum) {
 		// First non-empty row is the header, want to associate what
@@ -448,18 +393,16 @@ public abstract class Parser<T extends MObject> {
 				// blank column
 				continue;
 			}
-			// System.out.println("Parsing header " + i + ": " + text);
 
 			// Determine method to be used for data in this column
-			for (MethodAssociation<T> sma : getMethodAssociations()) {
-				if (sma.matches(text)) {
-					colType.put(new Integer(i), METHOD);
-					colMethods.put(new Integer(i), sma.getMethod());
-					colName.put(new Integer(i), sma.getName());
+			for (ColumnMapping cm : getColumMappings()) {
+				if (cm.matches(text)) {
+					spreadSheetColumnMapping.put(i, cm.getProperty());
+					headers.put(i, new BulkUploadHeader(text,
+							cm.getProperty().propertyName));
 					break;
 				}
 			}
-			
 			parseHeaderSpecialCase(header, i, text);
 		}
 	}
@@ -468,11 +411,11 @@ public abstract class Parser<T extends MObject> {
 	 * 
 	 * @param header
 	 * @param cellNumber
-	 * 		can be modified
+	 *            can be modified
 	 * @param cellText
 	 */
 	protected abstract void parseHeaderSpecialCase(final HSSFRow header,
 			Integer cellNumber, final String cellText);
 
-	protected abstract List<MethodAssociation<T>> getMethodAssociations();
+	public abstract List<ColumnMapping> getColumMappings();
 }

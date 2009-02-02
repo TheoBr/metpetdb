@@ -16,7 +16,7 @@ import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResult;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadChemicalAnalysesService;
 import edu.rpi.metpetdb.server.MpDbServlet;
-import edu.rpi.metpetdb.server.bulk.upload.NewAnalysisParser;
+import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
 import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
@@ -33,7 +33,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 			final Map<String, Sample> samples,
 			final Map<String, Subsample> subsamples)
 			throws FileNotFoundException, MpDbException, LoginRequiredException {
-		final NewAnalysisParser ap = new NewAnalysisParser(new FileInputStream(
+		final AnalysisParser ap = new AnalysisParser(new FileInputStream(
 				MpDbServlet.getFileUploadPath() + fileOnServer));
 		ap.parse();
 		final Map<Integer, ChemicalAnalysis> analyses = ap

@@ -404,10 +404,10 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 
 		// TODO: can you say we need CSS
 		// "We need CSS" -anthony
-		scrollTable.setWidth("100%");
-		dataTable.setWidth("100%");
-		headerTable.setWidth("100%");
-		headerTable.setHeight("30px");
+		//scrollTable.setWidth("100%");
+		//dataTable.setWidth("100%");
+		//headerTable.setWidth("100%");
+		//headerTable.setHeight("30px");
 		headerTable.getRowFormatter().addStyleName(0, "mpdb-dataTablePink");
 		dataTable.addStyleName("mpdb-dataTable");
 
@@ -417,7 +417,7 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 		add(scrollTable);
 		add(options);
 		add(hp);
-		this.setWidth("100%");
+		//this.setWidth("100%");
 	}
 
 	public ListEx(final ArrayList<Column> columns, final String noResultsMessage) {

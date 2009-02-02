@@ -43,9 +43,9 @@ public class ImageOnGridContainer {
 	 * @param deltaY
 	 * @param scale
 	 */
-	public void move(final int deltaX, final int deltaY, final int scale) {
-		iog.setTopLeftX(iog.getTopLeftX() + (scale * deltaX));
-		iog.setTopLeftY(iog.getTopLeftY() + (scale * deltaY));
+	public void move(final int deltaX, final int deltaY, final float scale) {
+		iog.setTopLeftX((int) (iog.getTopLeftX() + (scale * deltaX)));
+		iog.setTopLeftY((int) (iog.getTopLeftY() + (scale * deltaY)));
 		currentContainerPosition.x += deltaX;
 		currentContainerPosition.y += deltaY;
 	}

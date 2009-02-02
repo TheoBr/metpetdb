@@ -36,6 +36,10 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 	private static boolean authenticate(final User u, final String pw) {
 		return PasswordEncrypter.verify(u.getEncryptedPassword(), pw);
 	}
+	
+	public void endSession() {
+		setCurrentUser(null, null);
+	}
 
 	public User details(final String emailAddress) throws DAOException {
 		User u = new User();
@@ -91,6 +95,12 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			e.printStackTrace();
 			throw new LoginFailureException(doc.StartSessionRequest_password);
 		}
+	}
+	
+	private void addPrincipal(final Principal newOne) {
+		currentReq().principals.add(newOne);
+		getThreadLocalRequest().getSession().setAttribute("principals",
+				currentReq().principals);
 	}
 
 	public ResumeSessionResponse resumeSession() {
@@ -187,6 +197,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		UserDAO uDAO = new UserDAO(this.currentSession());
 		User u = new User();
 		u.setEmailAddress(emailAddress);
+		currentReq().action = Action.EMAIL_PASSWORD;
 		u = uDAO.fill(u);
 		final String newpass = PasswordEncrypter.randomPassword();
 		u.setEncryptedPassword(PasswordEncrypter.crypt(newpass));
@@ -209,9 +220,11 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			u.setConfirmationCode("");
 			ud.save(u);
 			commit();
+			//update session with new permission
+			addPrincipal(new EnabledPrincipal(u));
 			return u;
 		} else {
 			throw new GenericDAOException("Confirmation code does not equal");
 		}
-	}
+	}	
 }

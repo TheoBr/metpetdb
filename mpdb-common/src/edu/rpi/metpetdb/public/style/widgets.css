@@ -59,7 +59,7 @@
 	border-bottom-color: #bee0a2;
 	color: #3B5C20;
 }
-.notice-panel .notice-error {
+.notice-panel .notice-error .notice-disabled {
 	border-color: #ffd2d2;
 	border-bottom-color: #ffb3a1;
 	color: #c41616;

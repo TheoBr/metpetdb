@@ -14,7 +14,7 @@ import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResult;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadSampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
-import edu.rpi.metpetdb.server.bulk.upload.NewSampleParser;
+import edu.rpi.metpetdb.server.bulk.upload.SampleParser;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
@@ -29,7 +29,7 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 			final Map<String, Sample> cachedSamples,
 			final Map<String, Subsample> subsamples)
 			throws FileNotFoundException, MpDbException, LoginRequiredException {
-		final NewSampleParser sp = new NewSampleParser(new FileInputStream(
+		final SampleParser sp = new SampleParser(new FileInputStream(
 				MpDbServlet.getFileUploadPath() + fileOnServer));
 		sp.parse();
 		results.setHeaders(sp.getHeaders());

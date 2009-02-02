@@ -29,7 +29,7 @@ import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 import edu.rpi.metpetdb.server.MpDbServlet;
-import edu.rpi.metpetdb.server.bulk.upload.NewParser;
+import edu.rpi.metpetdb.server.bulk.upload.Parser;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
@@ -103,7 +103,7 @@ public abstract class BulkUploadService extends MpDbServlet {
 						fileOnServer).executeUpdate();
 	}
 
-	protected void addErrors(final NewParser<?> parser,
+	protected void addErrors(final Parser<?> parser,
 			final BulkUploadResult results) {
 		final Map<Integer, BulkUploadError> existingErrors = parser.getErrors();
 		final Set<Integer> keys = existingErrors.keySet();

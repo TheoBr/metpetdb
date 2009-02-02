@@ -395,7 +395,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 		// we multiple by -1, because if we are zoomed out the images
 		// are
 		// smaller, but we have to multiply by the scale when moving
-		final int scale = imageBrowser.getZoomScale();
+		final float scale = imageBrowser.getZoomScale();
 		GWT.log("Scale:" + scale + " deltaX:" + deltaX + " deltaY:" + deltaY
 				+ " currentX:" + currentImage.getCurrentContainerPosition().x
 				+ " currentY:" + currentImage.getCurrentContainerPosition().y
@@ -508,7 +508,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 			deltaX = x - lastX;
 		}
 
-		final int scale = imageBrowser.getZoomScale() * -1 == 0 ? 1
+		final float scale = imageBrowser.getZoomScale() * -1 == 0 ? 1
 				: imageBrowser.getZoomScale() * -1;
 		currentImage.move(deltaX, deltaY, scale);
 		currentImage.getIog()

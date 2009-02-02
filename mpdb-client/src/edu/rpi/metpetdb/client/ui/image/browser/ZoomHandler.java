@@ -16,6 +16,7 @@ public class ZoomHandler {
 	public final static int MINZOOM = 130;
 	private int referenceX = 0;
 	private int referenceY = 0;
+	private int scale = 0;
 
 	public ZoomHandler(final Collection<ImageOnGridContainer> imagesOnGrid,
 			final Element e, final ImageBrowserDetails ibm) {
@@ -37,8 +38,8 @@ public class ZoomHandler {
 		return top;
 	}
 
-	public int getCurrentScale() {
-		return (int) Math.pow(zoomMultiplier, getCurrentZoomLevel() / 10);
+	public float getCurrentScale() {
+		return (float) Math.pow(zoomMultiplier, scale);
 	}
 
 	public int getCurrentZoomPixel() {
@@ -54,6 +55,7 @@ public class ZoomHandler {
 	}
 
 	public void zoom(final int level) {
+		scale += (level*-1);
 		final Iterator<ImageOnGridContainer> itr = imagesOnGrid.iterator();
 		/* by default put refence in the center */
 		referenceY = imageBrowser.getGrid().getOffsetHeight() / 2;

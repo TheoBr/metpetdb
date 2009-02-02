@@ -82,7 +82,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	private ZoomInListener zoomInListener;
 	private ZoomOutListener zoomOutListener;
 	private ZoomHandler zoomer;
-	
+
 	private final PanHandler panHandler;
 
 	// Scale
@@ -97,7 +97,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 			"um", /* micrometer 10x10^-6 */
 			"nm", /* nanometer 10x10^-9 */
 	};
-	
+
 	/** which chemical analyses that need to be saved */
 	private final Collection<ChemicalAnalysis> chemicalAnalyses;
 
@@ -161,8 +161,8 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 				new ServerOp<List<ChemicalAnalysis>>() {
 					@Override
 					public void begin() {
-						MpDb.chemicalAnalysis_svc.all((result)
-								.getSubsample().getId(), this);
+						MpDb.chemicalAnalysis_svc.all((result).getSubsample()
+								.getId(), this);
 					}
 
 					public void onSuccess(final List<ChemicalAnalysis> s) {
@@ -177,7 +177,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		}.begin();
 		return this;
 	}
-	
+
 	public Collection<ChemicalAnalysis> getChemicalAnalysesToSave() {
 		return chemicalAnalyses;
 	}
@@ -215,7 +215,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 						.getSubsample(), this, fp);
 		panHandler.setImagesOnGrid(this.imagesOnGrid.values());
 		this.grid.addMouseListener(this.mouseListener);
-		
+
 	}
 	public void updateScale(final float multiplier) {
 		this.scale *= multiplier;
@@ -247,14 +247,13 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		final Iterator<ImageOnGrid> itr = this.g.getImagesOnGrid().iterator();
 		while (itr.hasNext()) {
 			final ImageOnGrid iog = itr.next();
-			final ImageOnGridContainer imageOnGrid = new ImageOnGridContainer(iog);
+			final ImageOnGridContainer imageOnGrid = new ImageOnGridContainer(
+					iog);
 			if (firstTime) {
-				imageOnGrid.setCurrentWidth(Math
-						.round((iog.getImage().getWidth() * iog
-								.getResizeRatio())));
-				imageOnGrid.setCurrentHeight(Math
-						.round((iog.getImage().getHeight() * iog
-								.getResizeRatio())));
+				imageOnGrid.setCurrentWidth(Math.round((iog.getImage()
+						.getWidth() * iog.getResizeRatio())));
+				imageOnGrid.setCurrentHeight(Math.round((iog.getImage()
+						.getHeight() * iog.getResizeRatio())));
 			}
 			this.addImage(imageOnGrid);
 		}
@@ -276,10 +275,10 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		iog.setGchecksum64x64(i.getChecksum64x64());
 		iog.setGchecksumHalf(i.getChecksumHalf());
 		final ImageOnGridContainer imageOnGrid = new ImageOnGridContainer(iog);
-		imageOnGrid.setCurrentWidth(Math.round((iog.getImage().getWidth() * (iog
-				.getResizeRatio()))));
-		imageOnGrid.setCurrentHeight(Math.round((iog.getImage().getHeight() * (iog
-				.getResizeRatio()))));
+		imageOnGrid.setCurrentWidth(Math
+				.round((iog.getImage().getWidth() * (iog.getResizeRatio()))));
+		imageOnGrid.setCurrentHeight(Math
+				.round((iog.getImage().getHeight() * (iog.getResizeRatio()))));
 		this.addImage(imageOnGrid);
 		cascade[0] += 10;
 		this.g.addImageOnGrid(iog);
@@ -485,11 +484,9 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		DOM.setElementAttribute(viewControls.getElement(), "id", "viewControl");
 		zSlide = new MLink("", this);
 		DOM.setStyleAttribute(zSlide.getElement(), "top", "60px");
-		//FIXME
-		//zoomInListener = new ZoomInListener(this.imagesOnGrid.values(),
-				//zSlide.getElement(), this);
-		//zoomOutListener =  new ZoomOutListener(this.imagesOnGrid.values(),
-				//zSlide.getElement(), this);
+		zoomer = new ZoomHandler(imagesOnGrid.values(), zSlide.getElement(), this);
+		zoomInListener = new ZoomInListener(zoomer);
+		zoomOutListener = new ZoomOutListener(zoomer);
 		zIn = new MLink("", zoomInListener);
 		zOut = new MLink("", zoomOutListener);
 		this.panUp.setStyleName("imageBrowser-hyperlink");
@@ -591,7 +588,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 	}
 
 	private void doSave() {
-		//Save the grid
+		// Save the grid
 		new ServerOp<Grid>() {
 			@Override
 			public void begin() {
@@ -604,21 +601,20 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 			public void onSuccess(final Grid result) {
 				save.setEnabled(true);
 				info.setText("Image map has been saved");
-				//After saving we have to update our copies
+				// After saving we have to update our copies
 				g = result;
-				final Iterator<ImageOnGrid> itr = g.getImagesOnGrid().iterator();
-				while(itr.hasNext()) {
+				final Iterator<ImageOnGrid> itr = g.getImagesOnGrid()
+						.iterator();
+				while (itr.hasNext()) {
 					final ImageOnGrid iog = itr.next();
-					final ImageOnGridContainer container = imagesOnGrid.get(iog.getImage());
+					final ImageOnGridContainer container = imagesOnGrid.get(iog
+							.getImage());
 					container.setIog(iog);
 				}
 				mouseListener.setImagesOnGrid(imagesOnGrid.values());
-				//FIXME
-				//zoomOutListener.setImagesOnGrid(imagesOnGrid.values());
-				//zoomInListener.setImagesOnGrid(imagesOnGrid.values());
 			}
 		}.begin();
-		//Save any chemical analyses that have been modified
+		// Save any chemical analyses that have been modified
 		new VoidServerOp() {
 			@Override
 			public void begin() {
@@ -650,18 +646,14 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		panHandler.reset();
 	}
 
-	
-
 	public MAbsolutePanel getGrid() {
 		return this.grid;
 	}
-	
-	public int getZoomScale() {
-		//FIXME
-		return 0;
-		//return zoomInListener.getCurrentScale();
+
+	public float getZoomScale() {
+		return zoomer.getCurrentScale();
 	}
-	
+
 	public PanHandler getPanHandler() {
 		return panHandler;
 	}

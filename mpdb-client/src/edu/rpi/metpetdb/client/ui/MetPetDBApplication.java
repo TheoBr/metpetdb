@@ -28,7 +28,6 @@ import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.client.ui.dialogs.LoginDialog;
 import edu.rpi.metpetdb.client.ui.dialogs.UnknownErrorDialog;
-import edu.rpi.metpetdb.client.ui.left.side.UsesLeftColumn;
 import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MMenuBar;
@@ -36,8 +35,6 @@ import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 /** Main application entry point. */
 public class MetPetDBApplication implements EntryPoint {
-
-	
 
 	private static RootPanel loginBar;
 	private static MMenuBar hdrnav;
@@ -111,7 +108,7 @@ public class MetPetDBApplication implements EntryPoint {
 				}
 			}
 		});
-		
+
 	}
 
 	private void finishOnModuleLoad() {
@@ -200,7 +197,8 @@ public class MetPetDBApplication implements EntryPoint {
 						new LoginDialog(null).show();
 					}
 				}));
-		loginBar.add(new MLink(LocaleHandler.lc_text.buttonRegister(),TokenSpace.register));
+		loginBar.add(new MLink(LocaleHandler.lc_text.buttonRegister(),
+				TokenSpace.register));
 		Cookies.setCookie(MpDbConstants.USERID_COOKIE, "", new Date());
 	}
 
@@ -218,6 +216,12 @@ public class MetPetDBApplication implements EntryPoint {
 						History.newItem(TokenSpace.home.getName());
 					}
 				}));
+		if (!MpDb.currentUser().getEnabled()) {
+			final MLink disabled = new MLink(LocaleHandler.lc_text
+					.notice_AccountDisabled(), TokenSpace.editProfile);
+			disabled.setStyleName(CSS.NOTICE_URGENT);
+			loginBar.add(disabled);
+		}
 	}
 
 	public static void show(final Widget w) {
@@ -331,13 +335,13 @@ public class MetPetDBApplication implements EntryPoint {
 					public void begin() {
 						MpDb.search_svc.rebuildSearchIndex(this);
 					}
-					
+
 					public void onSuccess(Void result) {
 						Window.alert("done regenerating indicies");
 					}
 				}.begin();
 			}
-			
+
 		});
 		dev.addItem("JavaDocs", new Command() {
 			public void execute() {

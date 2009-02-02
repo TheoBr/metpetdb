@@ -130,4 +130,6 @@ public interface UserService extends RemoteService {
 			LoginRequiredException;
 	
 	User save(User user) throws DAOException, ValidationException;
+	
+	void endSession();
 }

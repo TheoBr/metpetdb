@@ -35,7 +35,7 @@ import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadImagesService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.BulkUploadImage;
-import edu.rpi.metpetdb.server.bulk.upload.NewImageParser;
+import edu.rpi.metpetdb.server.bulk.upload.ImageParser;
 import edu.rpi.metpetdb.server.dao.impl.GridDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageOnGridDAO;
@@ -129,10 +129,10 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 			spreadsheetPrefix += File.separator;
 
 		ZipFile zp;
-		NewImageParser ip;
+		ImageParser ip;
 		try {
 			zp = new ZipFile(MpDbServlet.getFileUploadPath() + fileOnServer);
-			ip = new NewImageParser(zp.getInputStream(spreadsheet));
+			ip = new ImageParser(zp.getInputStream(spreadsheet));
 		} catch (IOException ioe) {
 			throw new GenericDAOException(ioe.getMessage());
 		}
@@ -205,34 +205,34 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 				}
 			}
 		}
-
-		final Iterator<Integer> iogRows = images.keySet().iterator();
-		while (iogRows.hasNext()) {
-			final int row = iogRows.next();
-			final ImageOnGrid iog = images.get(row).getImageOnGrid();
-			Image img = iog.getImage();
-			// Confirm the filename is in the zip
-			if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
-				results.addError(row, new InvalidImageException(
-						spreadsheetPrefix + img.getFilename()));
-			}
-			try {
-				doc.validate(img);
-				if (save) {
-					setRealImage(zp, iog.getImage(), spreadsheetPrefix);
-
-					// Set image information for the Grid Copy
-					iog.setGchecksum(iog.getImage().getChecksum());
-					iog.setGchecksum64x64(iog.getImage().getChecksum64x64());
-					iog.setGchecksumHalf(iog.getImage().getChecksumHalf());
-					iog.setGheight(iog.getImage().getHeight());
-					iog.setGwidth(iog.getImage().getWidth());
-					saveIncompleteImageOnGrid(iog);
-				}
-			} catch (Exception e) {
-				results.addError(row, getNiceException(e));
-			}
-		}
+//ignore images on grid for now
+//		final Iterator<Integer> iogRows = images.keySet().iterator();
+//		while (iogRows.hasNext()) {
+//			final int row = iogRows.next();
+//			final ImageOnGrid iog = images.get(row).getImageOnGrid();
+//			Image img = iog.getImage();
+//			// Confirm the filename is in the zip
+//			if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
+//				results.addError(row, new InvalidImageException(
+//						spreadsheetPrefix + img.getFilename()));
+//			}
+//			try {
+//				doc.validate(img);
+//				if (save) {
+//					setRealImage(zp, iog.getImage(), spreadsheetPrefix);
+//
+//					// Set image information for the Grid Copy
+//					iog.setGchecksum(iog.getImage().getChecksum());
+//					iog.setGchecksum64x64(iog.getImage().getChecksum64x64());
+//					iog.setGchecksumHalf(iog.getImage().getChecksumHalf());
+//					iog.setGheight(iog.getImage().getHeight());
+//					iog.setGwidth(iog.getImage().getWidth());
+//					saveIncompleteImageOnGrid(iog);
+//				}
+//			} catch (Exception e) {
+//				results.addError(row, getNiceException(e));
+//			}
+//		}
 		results.addResultCount("Subsamples", ssResultCount);
 		results.addResultCount("Images", imgResultCount);
 	}

@@ -44,9 +44,9 @@ import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
-import edu.rpi.metpetdb.server.bulk.upload.NewAnalysisParser;
-import edu.rpi.metpetdb.server.bulk.upload.NewImageParser;
-import edu.rpi.metpetdb.server.bulk.upload.NewSampleParser;
+import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
+import edu.rpi.metpetdb.server.bulk.upload.ImageParser;
+import edu.rpi.metpetdb.server.bulk.upload.SampleParser;
 import edu.rpi.metpetdb.server.dao.impl.ElementDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageTypeDAO;
 import edu.rpi.metpetdb.server.dao.impl.MineralDAO;
@@ -141,7 +141,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		DataStore.initFactory();
 		doc = DataStore.getInstance().getDatabaseObjectConstraints();
 		if (doc == null) {
-			throw new RuntimeException("Unable to get constraints, check the tomct logs");
+			throw new RuntimeException(
+					"Unable to get constraints, check the tomct logs");
 		}
 		oc = DataStore.getInstance().getObjectConstraints();
 
@@ -164,12 +165,12 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		// Locate and set Valid Potential Minerals for the parser
 		final Session s = DataStore.open();
 		final Collection<Mineral> minerals = (new MineralDAO(s).getAll());
-		NewSampleParser.setMinerals(minerals);
+		SampleParser.setMinerals(minerals);
 		List<Element> elements = ((new ElementDAO(s)).getAll());
 		List<Oxide> oxides = ((new OxideDAO(s)).getAll());
-		NewAnalysisParser.setOxides(oxides);
-		NewAnalysisParser.setElements(elements);
-		NewImageParser.setImageTypes((new ImageTypeDAO(s).getAll()));
+		AnalysisParser.setOxides(oxides);
+		AnalysisParser.setElements(elements);
+		ImageParser.setImageTypes((new ImageTypeDAO(s).getAll()));
 		s.close();
 	}
 
@@ -232,6 +233,9 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		currentReq().userId = u != null ? new Integer(u.getId()) : null;
 		getThreadLocalRequest().getSession().setAttribute("principals",
 				principals);
+		if (u == null || principals == null)
+			// clear the session when we don't have a current user
+			getThreadLocalRequest().getSession().invalidate();
 	}
 
 	/**

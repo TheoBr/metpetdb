@@ -2,142 +2,92 @@ package edu.rpi.metpetdb.server.bulk.upload;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.properties.SampleProperty;
+import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadHeader;
+import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
+import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
+import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.server.DataStore;
 
-/**
- * 
- * @deprecated to be replaced by NewSampleParser
- */
-@Deprecated
 public class SampleParser extends Parser<Sample> {
 
 	private final Map<Integer, Sample> samples;
-	/**
-	 * TODO: make this a Set of objects.
-	 */
-	// 0) Regex for header
-	// 1) methodname to set in Sample
-	// 2) datatype cell needs to be converted to for use with methodname
-	// 3) id in LocaleEntity for humanreadable representation of this column
-	private static final Object[][] sampleMethodMap = {
-			{
-					"(type)|(rock)", "addRockType", String.class,
-					"Sample_rockType"
-			},
-			{
-					"(sesar)|(isgn)", "setSesarNumber", String.class,
-					"Sample_sesarNumber"
-			},
-			{
-					"(latitude error)|(lat error)", "setLatitudeError",
-					Float.class, "Sample_latitudeError"
-			},
-			{
-					"(latitude)|(lat\\s*)", "setLatitude", double.class,
-					"Sample_latitude"
-			},
-			{
-					"(longitude error)|(lon error)", "setLongitudeError",
-					Float.class, "Sample_longitudeError"
-			},
-			{
-					"(longitude)|(^lon\\s*)", "setLongitude", double.class,
-					"Sample_longitude"
-			},
-			{
-					"region", "addRegion", String.class, "Sample_regions"
-			},
-			{
-					"country", "setCountry", String.class, "Sample_country"
-			},
-			{
-					"(collector)|(collected by)", "setCollector", String.class,
-					"Sample_collector"
-			},
-			{
-					"(date of collection)|(collected)|(collection.+date)",
-					"setCollectionDate", Timestamp.class,
-					"Sample_collectionDate"
-			},
-			{
-					"(present.+location)|(current.+location)",
-					"setLocationText", String.class, "Sample_locationText"
-			},
-			{
-					"(grade)|(facies)", "addMetamorphicGrade", String.class,
-					"Sample_metamorphicGrades"
-			},
-			{
-					"(comment)|(note)|(description)", "addComment",
-					String.class, "Sample_comments"
-			},
-			{
-					"(reference)|(ref)", "addReference", String.class,
-					"Sample_references"
-			},
-			{
-					"(sample[ number| name|])|(sample)", "setAlias",
-					String.class, "Sample_alias"
-			}, {
-					"minerals", "addMineral", String.class, "Sample_minerals"
-			},
+	private static List<ColumnMapping> columns;
 
-	};
-
-	private final static List<MethodAssociation<Sample>> methodAssociations = new ArrayList<MethodAssociation<Sample>>();
+	static {
+		final DatabaseObjectConstraints doc = DataStore.getInstance().getDatabaseObjectConstraints();
+		final ObjectConstraints oc = DataStore.getInstance().getObjectConstraints();
+		columns = new ArrayList<ColumnMapping>();
+		columns.add(new ColumnMapping(RegularExpressions.ROCK_TYPE,
+				doc.Sample_rockType));
+		columns.add(new ColumnMapping(RegularExpressions.SESAR_NUMBER,
+				doc.Sample_sesarNumber));
+		columns.add(new ColumnMapping(RegularExpressions.LATITUDE,
+				oc.Sample_latitude));
+		columns.add(new ColumnMapping(RegularExpressions.LONGITUDE,
+				oc.Sample_longitude));
+		columns.add(new ColumnMapping(RegularExpressions.LOCATION_ERROR,
+				doc.Sample_locationError));
+		columns.add(new ColumnMapping(RegularExpressions.REGION,
+				doc.Sample_regions));
+		columns.add(new ColumnMapping(RegularExpressions.COUNTRY,
+				doc.Sample_country));
+		columns.add(new ColumnMapping(RegularExpressions.COLLECTOR,
+				doc.Sample_collector));
+		columns.add(new ColumnMapping(RegularExpressions.COLLECTION_DATE,
+				doc.Sample_collectionDate));
+		columns.add(new ColumnMapping(RegularExpressions.LOCATION,
+				doc.Sample_locationText));
+		columns.add(new ColumnMapping(RegularExpressions.METAMORPHIC_GRADES,
+				doc.Sample_metamorphicGrades));
+		columns.add(new ColumnMapping(RegularExpressions.COMMENTS,
+				doc.Sample_description));
+		columns.add(new ColumnMapping(RegularExpressions.REFERENCES,
+				doc.Sample_references));
+		columns.add(new ColumnMapping(RegularExpressions.SAMPLE,
+				doc.Sample_alias));
+		columns.add(new ColumnMapping(RegularExpressions.MINERALS,
+				doc.Sample_minerals));
+	}
+	
+	public List<ColumnMapping> getColumMappings() {
+		return columns;
+	}
 
 	/**
 	 * 
 	 * @param is
 	 * 		the input stream that points to a spreadsheet
+	 * @throws MpDbException
 	 * @throws InvalidFormatException
 	 */
-	public SampleParser(final InputStream is) {
+	public SampleParser(final InputStream is) throws MpDbException {
 		super(is);
-		samples = new HashMap<Integer, Sample>();
+		samples = new TreeMap<Integer, Sample>();
 	}
 
-static {
-		try {
-			if (methodAssociations.isEmpty())
-				for (Object[] row : sampleMethodMap)
-					methodAssociations.add(new MethodAssociation<Sample>(
-							(String) row[0], (String) row[1],
-							(Class<?>) row[2], new Sample(), (String) row[3]));
-		} catch (NoSuchMethodException e) {
-
-		}
-	}
-
-	protected void parseHeaderSpecialCase(final HSSFRow header,Integer cellNumber,
-			final String cellText) {
+	protected void parseHeaderSpecialCase(final HSSFRow header,
+			Integer cellNumber, final String cellText) {
 		// If we don't have an explicit match for the header, it could be a
 		// mineral, check for that
-		try {
-			for (Mineral m : minerals) {
-				if (m.getName().equalsIgnoreCase(cellText)) {
-					colMethods.put(new Integer(cellNumber),
-							Sample.class.getMethod("addMineral", Mineral.class,
-									Float.class));
-					colObjects.put(new Integer(cellNumber), getRealMineral(m));
-					colName.put(new Integer(cellNumber), "Sample_minerals");
-					break;
-				}
+		for (Mineral m : minerals) {
+			if (m.getName().equalsIgnoreCase(cellText)) {
+				spreadSheetColumnMapping.put(cellNumber, doc.Sample_minerals);
+				headers.put(cellNumber, new BulkUploadHeader(getRealMineral(m)
+						.getName(), doc.Sample_minerals.propertyName));
+				break;
 			}
-		} catch (NoSuchMethodException e) {
-			throw new IllegalStateException(
-					"Programming Error -- Invalid Sample Method");
 		}
 	}
 
@@ -155,15 +105,32 @@ static {
 		return new Sample();
 	}
 	@Override
-	protected boolean parseColumnSpecialCase(HSSFRow row, Integer cellNumber,
-			String cellText, Class<?> dataType, Sample currentObject)
+	protected boolean parseColumnSpecialCase(HSSFRow row, HSSFCell cell,
+			PropertyConstraint pc, Sample currentObject, Integer cellNum)
 			throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException {
-		// samples don't have any special cases
-		return false;
+		if (pc == doc.Sample_minerals) {
+			// Created for Mineral Processing:
+			// * If cell is empty, keep moving
+			// * If there is a number, then that is the amount
+			// * Anything else is taken as an "unknown quantity"
+			if (cell.toString().length() > 0) {
+				final Mineral m = new Mineral();
+				m.setName(headers.get(cell.getColumnIndex()).getHeaderText());
+				try {
+					final Float data = Float.parseFloat(sanitizeNumber(cell
+							.toString()));
+					currentObject.addMineral(m, data);
+				} catch (NumberFormatException e) {
+					currentObject.addMineral(m);
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
-	@Override
-	protected List<MethodAssociation<Sample>> getMethodAssociations() {
-		return methodAssociations;
+	public Map<Integer, BulkUploadHeader> getHeaders() {
+		return headers;
 	}
 }
