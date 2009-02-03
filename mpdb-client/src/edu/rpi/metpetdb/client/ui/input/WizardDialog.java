@@ -61,7 +61,7 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 					finish.setEnabled(true);
 				} else {
 					next.setEnabled(true);
-					//finish.setEnabled(false);
+					finish.setEnabled(false);
 				}
 
 				if (tabChangeListeners != null) {
