@@ -365,7 +365,8 @@ public class MetPetDBApplication implements EntryPoint {
 				Window.open(MpDb.WIKI_URL, "mpdb_wiki", "");
 			}
 		});
-		hdrnav.addItem("Developers", dev);
+		if (!GWT.getHostPageBaseURL().contains("metpetweb"))
+			hdrnav.addItem("Developers", dev);
 
 	}
 
