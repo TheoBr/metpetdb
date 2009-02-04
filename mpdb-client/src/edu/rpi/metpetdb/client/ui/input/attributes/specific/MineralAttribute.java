@@ -148,9 +148,11 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 			final ArrayList<Mineral> selectedItems,
 			final Set<SampleMineral> originalItems) {
 		final ArrayList<SampleMineral> merged = new ArrayList<SampleMineral>();
-		for(SampleMineral so : originalItems) {
-			if (selectedItems.contains(so))
-				merged.add(so);
+		if (originalItems != null) {
+			for(SampleMineral so : originalItems) {
+				if (selectedItems.contains(so))
+					merged.add(so);
+			}
 		}
 		for(Mineral m : selectedItems) {
 			if (!merged.contains(m)) {
