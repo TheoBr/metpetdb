@@ -87,13 +87,19 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				// user is trying to log in (or do forgot password) so let them load the user object
 				return;
 			}
-			if (entity instanceof Role && !saving) {
-				//TODO make a list of objects that can always be loaded (like a Role)
+			if (!(entity instanceof HasOwner) && !saving) {
+				return;
+			}
+			if (isPublic && !saving) {
 				return;
 			}
 			if (principals == null) {
+				String object = "";
+				for(int i = 0;i<state.length;++i) {
+					object += propertyNames[i] + "=" + state[i] + ",";
+				}
 				throw new CallbackException(
-						"Invalid Subject, Please Log back in");
+						"Invalid Subject, Please Log back in. Failed to load: " + object);
 			}
 			if (principals.contains(new AdminPrincipal())) {
 				// let admins do whatever
