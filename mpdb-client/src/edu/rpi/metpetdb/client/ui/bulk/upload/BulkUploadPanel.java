@@ -401,6 +401,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 
 	private void populateSummaryPanel(final Map<String, BulkUploadResultCount> additions, int numErrors) {
 		summaryPanel.clear();
+		if (additions != null)  {
 		final Iterator<String> objItr = additions.keySet().iterator();
 		while(objItr.hasNext()) {
 			final String objType = objItr.next();
@@ -410,6 +411,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			if (fresh > 0) summaryPanel.add(new MText("Found "+fresh+" new "+getPlural(objType, fresh)+".", "p"));
 			if (dup > 0) summaryPanel.add(new MText("Found "+dup+" duplicate "+getPlural(objType, dup)+".", "p"));
 			if (invalid > 0) summaryPanel.add(new MText("Found "+invalid+" invalid "+getPlural(objType, invalid)+".", "p"));
+		}
 		}
 		// TODO provide some summary of matched columns here
 	}

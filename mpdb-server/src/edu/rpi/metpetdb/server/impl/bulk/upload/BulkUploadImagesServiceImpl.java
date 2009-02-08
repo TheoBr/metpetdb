@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -46,12 +47,28 @@ import edu.rpi.metpetdb.server.dao.impl.XrayImageDAO;
 public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 		BulkUploadImagesService {
 	private static final long serialVersionUID = 1L;
+	
+	private ZipEntry getZipEntry(final ZipFile zp, final Image img, final String prefix) {
+		// Get Image Data from Zip
+		final String imageName = prefix + img.getFilename();
+		ZipEntry ze = zp.getEntry(imageName);
+		if (ze == null) {
+			//try a search without comparing case
+			final Enumeration<? extends ZipEntry> entries = zp.entries();
+			while(entries.hasMoreElements()) {
+				final ZipEntry next = entries.nextElement();
+				if (next.getName().equalsIgnoreCase(imageName)) {
+					ze = next;
+				}
+			}
+		}
+		return ze;
+	}
 
 	private void setRealImage(ZipFile zp, Image img, String prefix)
 			throws IOException {
-		// Get Image Data from Zip
-		ZipEntry ze = zp.getEntry(prefix + img.getFilename());
-		final byte[] imgData = getBytesFromInputStream(zp.getInputStream(ze));
+		
+		final byte[] imgData = getBytesFromInputStream(zp.getInputStream(getZipEntry(zp, img, prefix)));
 
 		// Save Image Data, in various forms, to the server
 		RenderedOp ro = ImageUploadServlet.loadImage(imgData);
@@ -150,7 +167,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 			final Image img = images.get(row).getImage();
 			initObject(img);
 			// Confirm the filename is in the zip
-			if (zp.getEntry(spreadsheetPrefix + img.getFilename()) == null) {
+			if (getZipEntry(zp, img, spreadsheetPrefix)== null) {
 				results.addError(row, new InvalidImageException(
 						spreadsheetPrefix + img.getFilename()));
 			} else {

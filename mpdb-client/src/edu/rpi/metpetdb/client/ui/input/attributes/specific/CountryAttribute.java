@@ -2,7 +2,7 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 
 import java.util.Set;
 
-import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -24,8 +24,8 @@ public class CountryAttribute  extends SuggestTextAttribute {
 	}
 	
 	protected Object get(Widget editWidget) throws ValidationException {
-		if (editWidget instanceof MSuggestText){
-			String name = ((MSuggestText) editWidget).suggestBox.getText();
+		if (editWidget instanceof SimplePanel){
+			String name = ((MSuggestText) ((SimplePanel)editWidget).getWidget()).suggestBox.getText();
 			if (!name.equals("")) {
 				return name;
 			}

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.user.client.HistoryListener;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -325,6 +326,24 @@ public class TokenSpace implements HistoryListener {
 			}.execute();
 		}
 	};
+	public static final Screen rebuildSearchIndex = new Screen("RebuildSearchIndex") {
+		public void executeToken(final String args) {
+			new LoggedInServerOp() {
+				@Override
+				public void command() {
+					new ServerOp<Void>() {
+						public void begin() {
+							MpDb.search_svc.rebuildSearchIndex(this);
+						}
+
+						public void onSuccess(Void result) {
+							Window.alert("done regenerating indicies");
+						}
+					}.begin();
+				}
+			}.execute();
+		}
+	};
 	static {
 		register(sampleDetails);
 		register(userDetails);
@@ -351,6 +370,7 @@ public class TokenSpace implements HistoryListener {
 		register(newChemicalAnalysis);
 		register(createImageMap);
 		register(confirmation);
+		register(rebuildSearchIndex);
 
 		// DefaultPaginationBehavior
 		register(new TokenHandler.NoOp("previousPage"));

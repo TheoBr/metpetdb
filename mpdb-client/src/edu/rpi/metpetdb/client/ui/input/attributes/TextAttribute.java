@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.ui.input.attributes;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -10,7 +11,7 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.MaxLengthConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
-import edu.rpi.metpetdb.client.ui.widgets.MText;
+import edu.rpi.metpetdb.client.ui.Util;
 
 public class TextAttribute extends GenericAttribute {
 	protected int visibleLength;
@@ -35,7 +36,7 @@ public class TextAttribute extends GenericAttribute {
 
 	public Widget[] createDisplayWidget(final MObject obj) {
 		return new Widget[] {
-			new MText(get(obj))
+			new HTML(Util.convertForWeb(get(obj)))
 		};
 	}
 
