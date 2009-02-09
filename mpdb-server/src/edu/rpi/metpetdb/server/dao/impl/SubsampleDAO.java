@@ -5,7 +5,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
@@ -19,13 +19,13 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 	}
 
 	@Override
-	public Subsample delete(Subsample inst) throws DAOException {
+	public Subsample delete(Subsample inst) throws MpDbException {
 		_delete(inst);
 		return null;
 	}
 
 	@Override
-	public Subsample fill(Subsample inst) throws DAOException {
+	public Subsample fill(Subsample inst) throws MpDbException {
 		// By ID
 		if (inst.getId() > 0) {
 			final Query q = namedQuery("Subsample.byId");
@@ -48,13 +48,13 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 	}
 
 	@Override
-	public Subsample save(Subsample inst) throws DAOException {
+	public Subsample save(Subsample inst) throws MpDbException {
 		inst.setSubsampleType(new SubsampleTypeDAO(sess).fill(inst
 				.getSubsampleType()));
 		return _save(inst);
 	}
 
-	public List<Subsample> getAllBySampleID(final long sampleId)throws DAOException {
+	public List<Subsample> getAllBySampleID(final long sampleId)throws MpDbException {
 		final Query q = namedQuery("Subsample.bySampleId");
 		q.setParameter("sampleId", sampleId);
 		final List<Subsample> l = (List<Subsample>) getResults(q);
@@ -62,20 +62,20 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 	}
 
 	public Results<Subsample> getAllWithImagesBySampleID(
-			final PaginationParameters p, final long sampleId) throws DAOException {
+			final PaginationParameters p, final long sampleId) throws MpDbException {
 		final Query sizeQ = sizeQuery("Subsample.allWithImages", sampleId);
 		final Query pageQ = pageQuery("Subsample.allWithImages", p, sampleId);
 		return getSubsamples(sizeQ, pageQ);
 	}
 
 	public Results<Subsample> getAllBySampleID(final PaginationParameters p,
-			final long sampleId) throws DAOException {
+			final long sampleId) throws MpDbException {
 		final Query sizeQ = sizeQuery("Subsample.all", sampleId);
 		final Query pageQ = pageQuery("Subsample.all", p, sampleId);
 		return getSubsamples(sizeQ, pageQ);
 	}
 
-	private Results<Subsample> getSubsamples(Query sizeQuery, Query pageQuery) throws DAOException {
+	private Results<Subsample> getSubsamples(Query sizeQuery, Query pageQuery) throws MpDbException {
 		final List<Subsample> l = (List<Subsample>) getResults(pageQuery);
 		final int size = ((Number) getResult(sizeQuery)).intValue();
 		return new Results<Subsample>(size, l);

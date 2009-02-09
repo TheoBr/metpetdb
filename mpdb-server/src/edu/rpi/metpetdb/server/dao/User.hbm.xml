@@ -27,6 +27,8 @@
       <key column="user_id" />
       <many-to-many class="Project" column="project_id" />
     </set>
+    
+    <many-to-one name="role" column="role_id" lazy="false" />
   </class>
 
   <query name="User.byId">
@@ -42,5 +44,10 @@
   	select name
   	from User u
     order by u.name
+   </query>
+   <query name="User.eligableSponsors">
+     from User u
+     where u.role.rank >= :rank
+     order by lower(u.name)
    </query>
 </hibernate-mapping>

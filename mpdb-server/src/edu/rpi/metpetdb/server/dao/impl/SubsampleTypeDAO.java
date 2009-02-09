@@ -3,7 +3,7 @@ package edu.rpi.metpetdb.server.dao.impl;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
 import edu.rpi.metpetdb.client.model.SubsampleType;
@@ -16,13 +16,13 @@ public class SubsampleTypeDAO extends MpDbDAO<SubsampleType> {
 	}
 
 	@Override
-	public SubsampleType delete(SubsampleType inst) throws DAOException {
+	public SubsampleType delete(SubsampleType inst) throws MpDbException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
 	}
 
 	@Override
-	public SubsampleType fill(SubsampleType m) throws DAOException {
+	public SubsampleType fill(SubsampleType m) throws MpDbException {
 		// Use Mineral Name
 		final Query subsampleTypes = namedQuery("SubsampleType.bySubsampleType");
 		subsampleTypes.setString("subsampleType", m.getSubsampleType());
@@ -33,7 +33,7 @@ public class SubsampleTypeDAO extends MpDbDAO<SubsampleType> {
 	}
 
 	@Override
-	public SubsampleType save(SubsampleType inst) throws DAOException {
+	public SubsampleType save(SubsampleType inst) throws MpDbException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
 	}

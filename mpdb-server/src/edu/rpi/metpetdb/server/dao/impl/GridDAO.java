@@ -3,7 +3,7 @@ package edu.rpi.metpetdb.server.dao.impl;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.GridNotFoundException;
 import edu.rpi.metpetdb.client.model.Grid;
@@ -17,13 +17,13 @@ public class GridDAO extends MpDbDAO<Grid> {
 	}
 
 	@Override
-	public Grid delete(Grid inst) throws DAOException {
+	public Grid delete(Grid inst) throws MpDbException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
 	}
 
 	@Override
-	public Grid fill(Grid inst) throws DAOException {
+	public Grid fill(Grid inst) throws MpDbException {
 		// By ID
 		if (inst.getId() > 0) {
 			final Query q = namedQuery("Grid.byId");
@@ -44,7 +44,7 @@ public class GridDAO extends MpDbDAO<Grid> {
 	}
 
 	@Override
-	public Grid save(Grid inst) throws DAOException {
+	public Grid save(Grid inst) throws MpDbException {
 		// Right now there is just one grid per subsample, so if a grid already
 		// exists for the subsample, we're going to overwrite it
 		if (inst.getSubsample() != null && inst.getSubsample().getId() > 0) {

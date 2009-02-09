@@ -2,7 +2,7 @@ package edu.rpi.metpetdb.server.impl;
 
 import java.util.List;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Project;
@@ -17,17 +17,17 @@ import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	private static final long serialVersionUID = 1L;
 
-	public Results<Project> all(final PaginationParameters p, final long ownerId) throws DAOException {
+	public Results<Project> all(final PaginationParameters p, final long ownerId) throws MpDbException {
 		return (new ProjectDAO(this.currentSession())).getForOwner(p, ownerId);
 	}
 
-	public List<Project> all(final long userId) throws DAOException {
+	public List<Project> all(final long userId) throws MpDbException {
 		List<Project> lDAO = (new ProjectDAO(this.currentSession()))
 				.getForOwner(userId);
 		return (lDAO);
 	}
 
-	public Project details(final int projectId) throws DAOException {
+	public Project details(final int projectId) throws MpDbException {
 		Project p = new Project();
 		p.setId(projectId);
 		p = (new ProjectDAO(this.currentSession())).fill(p);
@@ -35,7 +35,7 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	}
 
 	public Project saveProject(Project project) throws ValidationException,
-			LoginRequiredException, DAOException {
+			LoginRequiredException, MpDbException {
 		doc.validate(project);
 		project.getMembers().add(project.getOwner());
 
@@ -46,7 +46,7 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 
 	// TODO: Code Dup? This the same as SampleServiceImpl.projectSamples()?
 	public Results<Sample> samplesFromProject(PaginationParameters parameters,
-			long id) throws DAOException {
+			long id) throws MpDbException {
 		return (new SampleDAO(this.currentSession()).getProjectSamples(
 				parameters, id));
 	}

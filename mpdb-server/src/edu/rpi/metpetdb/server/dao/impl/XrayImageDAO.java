@@ -2,7 +2,7 @@ package edu.rpi.metpetdb.server.dao.impl;
 
 import org.hibernate.Session;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.model.XrayImage;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
@@ -15,19 +15,19 @@ public class XrayImageDAO extends MpDbDAO<XrayImage> {
 	}
 
 	@Override
-	public XrayImage delete(XrayImage inst) throws DAOException {
+	public XrayImage delete(XrayImage inst) throws MpDbException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
 	}
 
 	@Override
-	public XrayImage fill(XrayImage inst) throws DAOException {
+	public XrayImage fill(XrayImage inst) throws MpDbException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
 	}
 
 	@Override
-	public XrayImage save(XrayImage inst) throws DAOException {
+	public XrayImage save(XrayImage inst) throws MpDbException {
 		if (inst.getSample() != null)
 			inst.setSample((new SampleDAO(sess)).fill(inst.getSample()));
 		inst.setSubsample((new SubsampleDAO(sess)).fill(inst.getSubsample()));

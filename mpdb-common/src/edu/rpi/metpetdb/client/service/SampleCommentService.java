@@ -4,18 +4,18 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.SampleComment;
 
 public interface SampleCommentService extends RemoteService{
-	SampleComment details(long id) throws DAOException;
+	SampleComment details(long id) throws MpDbException;
 
-	SampleComment save(final SampleComment s) throws DAOException, ValidationException,
+	SampleComment save(final SampleComment s) throws MpDbException, ValidationException,
 			LoginRequiredException;
 
-	List<SampleComment> all(final long sampleId) throws DAOException;
+	List<SampleComment> all(final long sampleId) throws MpDbException;
 
-	void delete(long id) throws DAOException, LoginRequiredException;
+	void delete(long id) throws MpDbException, LoginRequiredException;
 }

@@ -5,7 +5,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.ProjectNotFoundException;
 import edu.rpi.metpetdb.client.model.Project;
@@ -21,13 +21,13 @@ public class ProjectDAO extends MpDbDAO<Project> {
 	}
 
 	@Override
-	public Project delete(Project inst) throws DAOException {
+	public Project delete(Project inst) throws MpDbException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
 	}
 
 	@Override
-	public Project fill(Project inst) throws DAOException {
+	public Project fill(Project inst) throws MpDbException {
 		// Use Id
 		if (inst.getId() > 0) {
 			final Query q = namedQuery("Project.byId");
@@ -40,19 +40,19 @@ public class ProjectDAO extends MpDbDAO<Project> {
 	}
 
 	@Override
-	public Project save(Project inst) throws DAOException {
+	public Project save(Project inst) throws MpDbException {
 		inst = _save(inst);
 		return inst;
 	}
 
-	public List<Project> getForOwner(final long userId) throws DAOException{
+	public List<Project> getForOwner(final long userId) throws MpDbException{
 		Query q = namedQuery("Project.byOwnerId");
 		q.setLong("ownerId", userId);
 		return (List<Project>) getResults(q);
 	}
 
 	public Results<Project> getForOwner(final PaginationParameters p,
-			final long ownerId) throws DAOException {
+			final long ownerId) throws MpDbException {
 		final Query sizeQ = sizeQuery("Project.byOwnerId");
 		final Query pageQ = pageQuery("Project.byOwnerId", p);
 		sizeQ.setLong("ownerId", ownerId);
@@ -60,7 +60,7 @@ public class ProjectDAO extends MpDbDAO<Project> {
 		return getProjects(sizeQ, pageQ);
 	}
 
-	private Results<Project> getProjects(Query sizeQuery, Query pageQuery) throws DAOException {
+	private Results<Project> getProjects(Query sizeQuery, Query pageQuery) throws MpDbException {
 		final List<Project> l = (List<Project>) getResults(pageQuery);
 		final int size = ((Number) getResult(sizeQuery)).intValue();
 

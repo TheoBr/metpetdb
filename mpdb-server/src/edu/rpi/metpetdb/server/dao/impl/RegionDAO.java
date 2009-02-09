@@ -5,7 +5,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.RegionNotFoundException;
 import edu.rpi.metpetdb.client.model.Region;
@@ -18,13 +18,13 @@ public class RegionDAO extends MpDbDAO<Region> {
 	}
 
 	@Override
-	public Region delete(Region inst) throws DAOException {
+	public Region delete(Region inst) throws MpDbException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
 	}
 
 	@Override
-	public Region fill(Region reg) throws DAOException {
+	public Region fill(Region reg) throws MpDbException {
 		// Use Region Name
 		final org.hibernate.Query regions = namedQuery("Region.byName");
 		regions.setString("name", reg.getName());
@@ -35,12 +35,12 @@ public class RegionDAO extends MpDbDAO<Region> {
 	}
 
 	@Override
-	public Region save(Region inst) throws DAOException {
+	public Region save(Region inst) throws MpDbException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
 	}
 	
-	public Object[] allNames() throws DAOException{
+	public Object[] allNames() throws MpDbException{
 		final Query q = namedQuery("Region.all/name");
 		return	((List<Region>)getResults(q)).toArray();
 	}

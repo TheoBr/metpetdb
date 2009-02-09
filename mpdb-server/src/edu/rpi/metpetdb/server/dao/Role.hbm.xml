@@ -1,0 +1,26 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="Role" table="roles">
+    <id name="id" column="role_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">role_seq</param>
+      </generator>
+    </id>
+    
+    <property name="rank" column="rank" />
+    <property name="roleName" column="role_name" />
+
+  </class>
+  
+    <query name="Role.byId">
+    from Role r
+    where r.id = :id
+  </query>
+      <query name="Role.byRank">
+    from Role r
+    where r.rank = :rank
+  </query>
+</hibernate-mapping>

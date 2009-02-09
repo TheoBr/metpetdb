@@ -3,7 +3,7 @@ package edu.rpi.metpetdb.server.impl;
 import java.util.Collection;
 import java.util.List;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
@@ -17,7 +17,7 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		ChemicalAnalysisService {
 	private static final long serialVersionUID = 1L;
 
-	public ChemicalAnalysis details(long id) throws DAOException {
+	public ChemicalAnalysis details(long id) throws MpDbException {
 		ChemicalAnalysis ca = new ChemicalAnalysis();
 		ca.setId(new Long(id).intValue());
 		ca = (new ChemicalAnalysisDAO(this.currentSession())).fill(ca);
@@ -25,19 +25,19 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 	}
 
 	public Results<ChemicalAnalysis> all(PaginationParameters parameters,
-			final long subsampleId) throws DAOException {
+			final long subsampleId) throws MpDbException {
 		return (new ChemicalAnalysisDAO(this.currentSession())).getAll(
 				parameters, subsampleId);
 	}
 
-	public List<ChemicalAnalysis> all(long subsampleId) throws DAOException {
+	public List<ChemicalAnalysis> all(long subsampleId) throws MpDbException {
 		List<ChemicalAnalysis> l = (new ChemicalAnalysisDAO(this
 				.currentSession())).getAll(subsampleId);
 		return l;
 	}
 
 	public ChemicalAnalysis save(ChemicalAnalysis ca)
-			throws ValidationException, LoginRequiredException, DAOException {
+			throws ValidationException, LoginRequiredException, MpDbException {
 		doc.validate(ca);
 		ca = (new ChemicalAnalysisDAO(this.currentSession())).save(ca);
 		commit();
@@ -45,7 +45,7 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 	}
 	
 	public void saveAll(Collection<ChemicalAnalysis> chemicalAnalyses)
-	throws ValidationException, LoginRequiredException, DAOException {
+	throws ValidationException, LoginRequiredException, MpDbException {
 			final ChemicalAnalysisDAO dao = new ChemicalAnalysisDAO(this.currentSession());
 			for(ChemicalAnalysis ca : chemicalAnalyses) {
 				doc.validate(ca);
@@ -54,7 +54,7 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 			commit();
 	}
 
-	public void delete(long id) throws DAOException, LoginRequiredException {
+	public void delete(long id) throws MpDbException, LoginRequiredException {
 		ChemicalAnalysisDAO dao = new ChemicalAnalysisDAO(this.currentSession());
 
 		ChemicalAnalysis ca = new ChemicalAnalysis();

@@ -17,7 +17,6 @@ import java.util.zip.ZipInputStream;
 
 import javax.media.jai.RenderedOp;
 
-import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -255,7 +254,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 	}
 
 	protected ImageOnGrid saveIncompleteImageOnGrid(ImageOnGrid iog)
-			throws ValidationException, LoginRequiredException, DAOException {
+			throws ValidationException, LoginRequiredException, MpDbException {
 		// First save the image
 		doc.validate(iog.getImage());
 		Image i = (iog.getImage());

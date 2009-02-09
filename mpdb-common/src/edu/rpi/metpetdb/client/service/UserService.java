@@ -4,7 +4,7 @@ import java.util.Set;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -47,7 +47,7 @@ public interface UserService extends RemoteService {
 	 */
 	ResumeSessionResponse resumeSession();
 
-	User beginEditMyProfile() throws DAOException, LoginRequiredException;
+	User beginEditMyProfile() throws MpDbException, LoginRequiredException;
 
 	/**
 	 * Register a new user account.
@@ -61,13 +61,13 @@ public interface UserService extends RemoteService {
 	 * @throws ValidationException
 	 * 		one or more values within the new registration application are not
 	 * 		valid.
-	 * @throws DAOException
+	 * @throws MpDbException
 	 * 		error saving user to the database
 	 * @throws UnableToSendEmailException
 	 * 		the welcome message could not be sent to the user's account.
 	 */
 	User registerNewUser(UserWithPassword newbie) throws ValidationException,
-			DAOException, UnableToSendEmailException;
+			MpDbException, UnableToSendEmailException;
 
 	/**
 	 * Change an existing user's password to a new (known) string.
@@ -76,7 +76,7 @@ public interface UserService extends RemoteService {
 	 * 		combination of the user to modify, that user's old password, the new
 	 * 		password, and the new password again (to confirm it was entered
 	 * 		correctly).
-	 * @throws DAOException
+	 * @throws MpDbException
 	 * 		user specified does not exist, or some other error retrieving the
 	 * 		user from the db or saving the modified version to the db
 	 * @throws LoginFailureException
@@ -89,7 +89,7 @@ public interface UserService extends RemoteService {
 	 * 		supplied, the new password does not meet our minimum password rules,
 	 * 		or the verify password does not match the new password.
 	 */
-	void changePassword(UserWithPassword uwp) throws DAOException,
+	void changePassword(UserWithPassword uwp) throws MpDbException,
 			LoginFailureException, LoginRequiredException, ValidationException;
 
 	/**
@@ -98,12 +98,12 @@ public interface UserService extends RemoteService {
 	 * @param username
 	 * 		unique username of the user to show the details of.
 	 * @return the user. Never null.
-	 * @throws DAOException
+	 * @throws MpDbException
 	 * 		the user does not exist in the database. The caller has bad
 	 * 		information and should reevaluate whatever source supplied it with
 	 * 		this bad key.
 	 */
-	User details(String username) throws DAOException;
+	User details(String username) throws MpDbException;
 
 	/**
 	 * Generates a new password for the user and emails it.
@@ -115,21 +115,21 @@ public interface UserService extends RemoteService {
 	 * 
 	 * @param username
 	 * 		username to change the password for.
-	 * @throws DAOException
+	 * @throws MpDbException
 	 * 		user does not exist in the database.
 	 * @throws UnableToSendEmailException
 	 * 		email system failed unexpectedly, and the server is unable to send a
 	 * 		message to the user.
 	 */
-	void emailPassword(String username) throws DAOException,
+	void emailPassword(String username) throws MpDbException,
 			UnableToSendEmailException;
 	
-	Set<String> allNames() throws DAOException;
+	Set<String> allNames() throws MpDbException;
 	
-	User confirmUser(String confirmationCode) throws DAOException,
+	User confirmUser(String confirmationCode) throws MpDbException,
 			LoginRequiredException;
 	
-	User save(User user) throws DAOException, ValidationException;
+	User save(User user) throws MpDbException, ValidationException;
 	
 	void endSession();
 }

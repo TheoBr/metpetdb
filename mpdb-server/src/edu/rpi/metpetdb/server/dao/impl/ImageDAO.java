@@ -5,7 +5,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.ImageNotFoundException;
 import edu.rpi.metpetdb.client.model.Image;
@@ -18,13 +18,13 @@ public class ImageDAO extends MpDbDAO<Image> {
 	}
 
 	@Override
-	public Image delete(Image inst) throws DAOException {
+	public Image delete(Image inst) throws MpDbException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
 	}
 
 	@Override
-	public Image fill(Image inst) throws DAOException {
+	public Image fill(Image inst) throws MpDbException {
 		if (inst.getId() > 0) {
 			final Query q = namedQuery("Image.id");
 			q.setLong("id", inst.getId());
@@ -44,7 +44,7 @@ public class ImageDAO extends MpDbDAO<Image> {
 	}
 
 	@Override
-	public Image save(Image inst) throws DAOException {
+	public Image save(Image inst) throws MpDbException {
 		if (inst.getSample() != null)
 			inst.setSample((new SampleDAO(sess)).fill(inst.getSample()));
 		inst.setSubsample((new SubsampleDAO(sess)).fill(inst.getSubsample()));
@@ -53,7 +53,7 @@ public class ImageDAO extends MpDbDAO<Image> {
 		return inst;
 	}
 
-	public List<Image> getBySubsampleId(long subsampleId) throws DAOException{
+	public List<Image> getBySubsampleId(long subsampleId) throws MpDbException{
 		Query q = namedQuery("Image.bySubsampleId");
 		q.setLong("subsampleId", subsampleId);
 		return (List<Image>) getResults(q);

@@ -29,4 +29,11 @@ public class JS {
 		var str = s.replace(/<[\/]{0,1}(U|u)[^><]*>/g,"");
 		return str;
 	}-*/; 
+	
+	/**
+	 * Scrolls users browser window to the tippity top
+	 */
+	public static  native void scrollWindowToTop() /*-{
+	$wnd.scrollTo(0,0);
+	}-*/;
 }

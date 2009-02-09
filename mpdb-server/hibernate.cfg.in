@@ -38,6 +38,10 @@
 	<mapping resource="edu/rpi/metpetdb/server/dao/ImageType.hbm.xml" />
 	<mapping resource="edu/rpi/metpetdb/server/dao/ImageComment.hbm.xml" />
 	<mapping resource="edu/rpi/metpetdb/server/dao/AdminUser.hbm.xml" />
+	<mapping resource="edu/rpi/metpetdb/server/dao/Role.hbm.xml" />
+	<mapping resource="edu/rpi/metpetdb/server/dao/PendingRole.hbm.xml" />
+	<mapping resource="edu/rpi/metpetdb/server/dao/A.hbm.xml" />
+	<mapping resource="edu/rpi/metpetdb/server/dao/B.hbm.xml" />
     <event type="post-update">
         <listener class="org.hibernate.search.event.FullTextIndexEventListener"/>
     </event>

@@ -5,7 +5,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.ImageTypeNotFoundException;
 import edu.rpi.metpetdb.client.model.Element;
@@ -19,13 +19,13 @@ public class ImageTypeDAO extends MpDbDAO<ImageType> {
 	}
 
 	@Override
-	public ImageType delete(ImageType inst) throws DAOException {
+	public ImageType delete(ImageType inst) throws MpDbException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
 	}
 
 	@Override
-	public ImageType fill(ImageType m) throws DAOException {
+	public ImageType fill(ImageType m) throws MpDbException {
 		// Use Image Type
 		final Query imageTypes = namedQuery("ImageType.byImageType");
 		imageTypes.setString("imageType", m.getImageType());
@@ -36,17 +36,17 @@ public class ImageTypeDAO extends MpDbDAO<ImageType> {
 	}
 
 	@Override
-	public ImageType save(ImageType inst) throws DAOException {
+	public ImageType save(ImageType inst) throws MpDbException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
 	}
 	
-	public Object[] allImageTypes() throws DAOException{
+	public Object[] allImageTypes() throws MpDbException{
 		final Query q = namedQuery("ImageType.all/ImageType");
 		return	((List<ImageType>)getResults(q)).toArray();
 	}
 	
-	public List<ImageType> getAll() throws DAOException {
+	public List<ImageType> getAll() throws MpDbException {
 		final Query q = namedQuery("ImageType.all");
 		return (List<ImageType>) getResults(q);
 	}

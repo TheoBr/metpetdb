@@ -4,9 +4,9 @@ import java.util.Set;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 
 public interface ReferenceService extends RemoteService {
-	Set<String> allReferences() throws DAOException;
+	Set<String> allReferences() throws MpDbException;
 }
 

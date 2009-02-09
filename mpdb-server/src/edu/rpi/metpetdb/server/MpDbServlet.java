@@ -25,6 +25,7 @@ import com.google.gwt.user.client.rpc.SerializationException;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.ChemicalAnalysisAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.dao.ImageAlreadyExistsException;
@@ -149,7 +150,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		loadAutomaticLogin();
 		try {
 			initBulkUpload();
-		} catch (DAOException e) {
+		} catch (MpDbException e) {
 			e.printStackTrace();
 		}
 		// System.setProperty("java.security.auth.login.config", MpDbServlet.
@@ -161,7 +162,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 * 
 	 * @throws DAOException
 	 */
-	public void initBulkUpload() throws DAOException {
+	public void initBulkUpload() throws MpDbException {
 		// Locate and set Valid Potential Minerals for the parser
 		final Session s = DataStore.open();
 		final Collection<Mineral> minerals = (new MineralDAO(s).getAll());
@@ -276,7 +277,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		return r.userId.intValue();
 	}
 
-	protected User currentUser() throws LoginRequiredException, DAOException {
+	protected User currentUser() throws LoginRequiredException, MpDbException {
 		if (currentReq() != null)
 			return currentReq().currentUser(currentUserId());
 		else
@@ -441,7 +442,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		public Action action;
 		public Collection<Principal> principals;
 
-		User currentUser(int userId) throws DAOException {
+		User currentUser(int userId) throws MpDbException {
 			if (user == null) {
 				user = new User();
 				user.setId(userId);

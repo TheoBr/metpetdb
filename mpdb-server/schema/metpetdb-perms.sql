@@ -44,6 +44,9 @@ GRANT select,insert,update,delete ON chemical_analyses_archive to @APPUSER@;
 GRANT select,insert,update,delete ON chemical_analysis_elements_archive to @APPUSER@;
 GRANT select,insert,update,delete ON chemical_analysis_oxides_archive to @APPUSER@;
 
+GRANT select,insert,update,delete ON pending_roles to @APPUSER@;
+GRANT select,insert,update,delete ON roles_changed to @APPUSER@;
+
 GRANT update ON mineral_seq   TO @APPUSER@;
 GRANT update ON project_seq   TO @APPUSER@;
 GRANT update ON region_seq    TO @APPUSER@;
@@ -70,3 +73,6 @@ GRANT update ON image_type_seq TO @APPUSER@;
 GRANT update ON rock_type_seq TO @APPUSER@;
 GRANT update ON subsample_type_seq TO @APPUSER@;
 GRANT update ON admin_user_seq TO @APPUSER@;
+GRANT update ON pending_roles_seq TO @APPUSER@;
+GRANT update ON roles_changed_seq TO @APPUSER@;
+GRANT update ON role_seq TO @APPUSER@;

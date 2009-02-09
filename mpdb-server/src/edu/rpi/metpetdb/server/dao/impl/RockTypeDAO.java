@@ -3,7 +3,7 @@ package edu.rpi.metpetdb.server.dao.impl;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.RockTypeNotFoundException;
 import edu.rpi.metpetdb.client.model.RockType;
@@ -16,13 +16,13 @@ public class RockTypeDAO extends MpDbDAO<RockType> {
 	}
 
 	@Override
-	public RockType delete(RockType inst) throws DAOException {
+	public RockType delete(RockType inst) throws MpDbException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
 	}
 
 	@Override
-	public RockType fill(RockType m) throws DAOException {
+	public RockType fill(RockType m) throws MpDbException {
 		// Use Mineral Name
 		final Query rockTypes = namedQuery("RockType.byRockType");
 		rockTypes.setString("rockType", m.getRockType());
@@ -33,7 +33,7 @@ public class RockTypeDAO extends MpDbDAO<RockType> {
 	}
 
 	@Override
-	public RockType save(RockType inst) throws DAOException {
+	public RockType save(RockType inst) throws MpDbException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
 	}

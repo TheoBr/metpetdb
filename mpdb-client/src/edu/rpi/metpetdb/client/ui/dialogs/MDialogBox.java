@@ -8,6 +8,8 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.widgetideas.client.GlassPanel;
 
+import edu.rpi.metpetdb.client.ui.JS;
+
 public class MDialogBox extends DialogBox implements PopupListener,
 		WindowResizeListener {
 	private GlassPanel glassPanel;
@@ -31,10 +33,10 @@ public class MDialogBox extends DialogBox implements PopupListener,
 	public void show() {
 		// hideSelects();
 		RootPanel.get().add(glassPanel, 0, 0);
-		Window.addWindowResizeListener(this);
-
+		Window.addWindowResizeListener(this);	
 		setPopupPosition(25, 25);
 		super.show();
+		JS.scrollWindowToTop();
 	}
 
 	protected void onLoad() {
@@ -42,4 +44,6 @@ public class MDialogBox extends DialogBox implements PopupListener,
 		final int top = (Window.getClientHeight() - getOffsetHeight()) / 2;
 		setPopupPosition(left, top);
 	}
+	
+	
 }

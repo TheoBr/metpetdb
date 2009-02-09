@@ -2,7 +2,7 @@ package edu.rpi.metpetdb.server.impl;
 
 import java.util.List;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.SampleComment;
@@ -15,13 +15,13 @@ import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 public class SampleCommentServiceImpl  extends MpDbServlet implements SampleCommentService {
 	private static final long serialVersionUID = 1L;
 
-	public List<SampleComment> all(final long sampleId) throws DAOException {
+	public List<SampleComment> all(final long sampleId) throws MpDbException {
 		final List<SampleComment> l = (new SampleCommentDAO(this.currentSession())
 				.getAllBySampleID(sampleId));
 		return (l);
 	}
 	
-	public SampleComment details(final long id) throws DAOException {
+	public SampleComment details(final long id) throws MpDbException {
 		SampleComment s = new SampleComment();
 		s.setId(id);
 
@@ -29,7 +29,7 @@ public class SampleCommentServiceImpl  extends MpDbServlet implements SampleComm
 		return s;
 	}
 	
-	public SampleComment save(SampleComment sampleComment) throws DAOException,
+	public SampleComment save(SampleComment sampleComment) throws MpDbException,
 			ValidationException, LoginRequiredException {
 		doc.validate(sampleComment);
 		sampleComment = (new SampleCommentDAO(this.currentSession())).save(sampleComment);
@@ -38,7 +38,7 @@ public class SampleCommentServiceImpl  extends MpDbServlet implements SampleComm
 		return (sampleComment);
 	}
 
-	public void delete(long id) throws DAOException, LoginRequiredException {
+	public void delete(long id) throws MpDbException, LoginRequiredException {
 		final SampleCommentDAO dao = new SampleCommentDAO(this.currentSession());
 		SampleComment s = new SampleComment();
 		s.setId(id);

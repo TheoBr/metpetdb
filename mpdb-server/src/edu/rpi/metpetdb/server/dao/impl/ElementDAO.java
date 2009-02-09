@@ -5,7 +5,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.ElementNotFoundException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.model.Element;
@@ -19,13 +19,13 @@ public class ElementDAO extends MpDbDAO<Element> {
 	}
 
 	@Override
-	public Element delete(Element inst) throws DAOException {
+	public Element delete(Element inst) throws MpDbException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
 	}
 
 	@Override
-	public Element fill(Element inst) throws DAOException {
+	public Element fill(Element inst) throws MpDbException {
 		// Use Name
 		if (inst.getName() != null) {
 			final Query q = namedQuery("Element.byName");
@@ -54,12 +54,12 @@ public class ElementDAO extends MpDbDAO<Element> {
 	}
 
 	@Override
-	public Element save(Element inst) throws DAOException {
+	public Element save(Element inst) throws MpDbException {
 		// TODO Auto-generated method stub
 		throw new FunctionNotImplementedException();
 	}
 
-	public List<Element> getAll() throws DAOException {
+	public List<Element> getAll() throws MpDbException {
 		final Query q = namedQuery("Element.all");
 		return (List<Element>) getResults(q);
 	}

@@ -20,7 +20,7 @@ import javax.media.jai.RasterFactory;
 import javax.media.jai.RenderedOp;
 import javax.media.jai.operator.CompositeDescriptor;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Image;
@@ -37,7 +37,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 	private static final long serialVersionUID = 1L;
 	private static String baseFolder = "";
 
-	public Image details(final long id) throws DAOException {
+	public Image details(final long id) throws MpDbException {
 		Image i = new Image();
 		i.setId(id);
 		i = (new ImageDAO(this.currentSession())).fill(i);
@@ -45,14 +45,14 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		return (i);
 	}
 
-	public List<Image> allImages(final long subsampleId) throws DAOException {
+	public List<Image> allImages(final long subsampleId) throws MpDbException {
 		final List<Image> images = (new ImageDAO(this.currentSession()))
 				.getBySubsampleId(subsampleId);
 		return (images);
 	}
 
 	public Image saveImage(Image image) throws ValidationException,
-			LoginRequiredException, DAOException {
+			LoginRequiredException, MpDbException {
 		doc.validate(image);
 		Image i = (image);
 
@@ -63,7 +63,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 	}
 
 	public XrayImage saveImage(XrayImage xrayimg) throws ValidationException,
-			LoginRequiredException, DAOException {
+			LoginRequiredException, MpDbException {
 		doc.validate(xrayimg);
 		XrayImage i = (xrayimg);
 		i = (new XrayImageDAO(this.currentSession())).save(i);
@@ -72,7 +72,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 	}
 
 	public ImageOnGrid saveImageOnGrid(ImageOnGrid iog)
-			throws ValidationException, LoginRequiredException, DAOException {
+			throws ValidationException, LoginRequiredException, MpDbException {
 		iog = (new ImageOnGridDAO(this.currentSession())).save(iog);
 		commit();
 		return (iog);
@@ -121,7 +121,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 
 			} catch (ValidationException ve) {
 
-			} catch (DAOException daoe) {
+			} catch (MpDbException daoe) {
 
 			}
 		} catch (FileNotFoundException fnfe) {

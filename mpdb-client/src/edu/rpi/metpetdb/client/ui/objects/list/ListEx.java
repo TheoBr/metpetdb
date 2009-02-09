@@ -31,6 +31,7 @@ import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.PagingResponseIterator;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.ui.JS;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 
 /**
@@ -224,6 +225,7 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 						ListEx.this.scrollTable.setHeight(String.valueOf(size)
 								+ "px");
 					}
+					JS.scrollWindowToTop();
 
 				}
 			}.begin();

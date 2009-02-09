@@ -5,8 +5,8 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.TabListener;
@@ -62,7 +62,10 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 	private final MNoticePanel loginNotice = new MNoticePanel();
 	private final MText forgotInfo = new MText("Forgot your password? We'll send you a link to reset it.", "p");
 	
-	public LoginDialog(final ServerOp<?> r) {
+	public LoginDialog(final ServerOp<?> r, final String message) {
+		loginNotice.add(new Label(message));
+		if (message != null && !message.equals(""))
+			CSS.show(loginNotice);
 		continuation = r;
 		ssr = new StartSessionRequest();
 		setText("Please Login");
@@ -102,6 +105,10 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 
 		setWidget(f);
 		this.addStyleName(CSS.LOGIN_DIALOG);
+	}
+	
+	public LoginDialog(final ServerOp<?> r) {
+		this(r, "");
 	}
 
 	protected void onLoad() {

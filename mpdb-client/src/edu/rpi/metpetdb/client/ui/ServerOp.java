@@ -24,7 +24,7 @@ public abstract class ServerOp<T> implements AsyncCallback<T>, Command {
 
 	public void onFailure(final Throwable e) {
 		if (e instanceof LoginRequiredException)
-			new LoginDialog(this).show();
+			new LoginDialog(this, ((LoginRequiredException) e).format()).show();
 		else if (e instanceof MpDbException)
 			new MpDbExceptionDialog((MpDbException) e, this).show();
 		else

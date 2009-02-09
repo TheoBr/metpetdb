@@ -8,12 +8,12 @@ import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
 
-import edu.rpi.metpetdb.client.model.Role;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
 import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.security.Action;
+import edu.rpi.metpetdb.server.security.SecurityExceptionConsts;
 import edu.rpi.metpetdb.server.security.permissions.principals.AdminPrincipal;
 import edu.rpi.metpetdb.server.security.permissions.principals.EnabledPrincipal;
 import edu.rpi.metpetdb.server.security.permissions.principals.OwnerPrincipal;
@@ -65,7 +65,8 @@ public class PermissionInterceptor extends EmptyInterceptor {
 			if (saving) {
 				if (isPublic) {
 					throw new CallbackException(
-							"Public data cannot be modified.");
+							SecurityExceptionConsts.PUBLIC_DATA_MODIFICATION
+									.name());
 				}
 			}
 		}
@@ -81,10 +82,11 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				// user is registering so let this one fly
 				return;
 			}
-			if ((Action.LOGIN.equals(MpDbServlet.currentReq().action)
-					|| Action.EMAIL_PASSWORD.equals(MpDbServlet.currentReq().action))
+			if ((Action.LOGIN.equals(MpDbServlet.currentReq().action) || Action.EMAIL_PASSWORD
+					.equals(MpDbServlet.currentReq().action))
 					&& entity instanceof User) {
-				// user is trying to log in (or do forgot password) so let them load the user object
+				// user is trying to log in (or do forgot password) so let them
+				// load the user object
 				return;
 			}
 			if (!(entity instanceof HasOwner) && !saving) {
@@ -94,12 +96,8 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				return;
 			}
 			if (principals == null) {
-				String object = "";
-				for(int i = 0;i<state.length;++i) {
-					object += propertyNames[i] + "=" + state[i] + ",";
-				}
 				throw new CallbackException(
-						"Invalid Subject, Please Log back in. Failed to load: " + object);
+						SecurityExceptionConsts.INVALID_SUBJECT.name());
 			}
 			if (principals.contains(new AdminPrincipal())) {
 				// let admins do whatever
@@ -110,12 +108,12 @@ public class PermissionInterceptor extends EmptyInterceptor {
 						propertyNames, state)))
 						&& !isPublic(propertyNames, state)) {
 					throw new CallbackException(
-							"Cannot load objects you don't own, we don't like to share.");
+							SecurityExceptionConsts.NOT_OWNER.name());
 				}
 				if (saving && !(entity instanceof User)
 						&& !principals.contains(new EnabledPrincipal(true))) {
 					throw new CallbackException(
-							"Your account is not enabled, you cannot do stuff");
+							SecurityExceptionConsts.DISABLED_ACCOUNT.name());
 				}
 			}
 		}

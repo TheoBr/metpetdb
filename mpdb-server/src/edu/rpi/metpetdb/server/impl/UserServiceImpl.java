@@ -9,14 +9,15 @@ import java.util.UUID;
 
 import org.hibernate.exception.ConstraintViolationException;
 
-import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.validation.DuplicateValueException;
 import edu.rpi.metpetdb.client.error.validation.LoginFailureException;
 import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
+import edu.rpi.metpetdb.client.model.Role;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
@@ -41,14 +42,14 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		setCurrentUser(null, null);
 	}
 
-	public User details(final String emailAddress) throws DAOException {
+	public User details(final String emailAddress) throws MpDbException {
 		User u = new User();
 		u.setEmailAddress(emailAddress);
 		u = (new UserDAO(this.currentSession())).fill(u);
 		return (u);
 	}
 
-	public User save(User user) throws DAOException, ValidationException {
+	public User save(User user) throws MpDbException, ValidationException {
 		final UserDAO uDAO = new UserDAO(this.currentSession());
 		doc.validate(user);
 		User u = new User();
@@ -61,7 +62,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return (user);
 	}
 
-	public Set<String> allNames() throws DAOException {
+	public Set<String> allNames() throws MpDbException {
 		final Object[] l = (new UserDAO(this.currentSession())).allNames();
 		final Set<String> options = new HashSet<String>();
 		for (int i = 0; i < l.length; i++) {
@@ -91,7 +92,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 				setCurrentUser(u, principals);
 			}
 			return u;
-		} catch (DAOException e) {
+		} catch (MpDbException e) {
 			e.printStackTrace();
 			throw new LoginFailureException(doc.StartSessionRequest_password);
 		}
@@ -112,15 +113,13 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			u.setId(currentUserId());
 			u = (new UserDAO(this.currentSession())).fill(u);
 			r.user = (User) clone(u);
-		} catch (DAOException daoe) {
-			r.user = null;
-		} catch (LoginRequiredException err) {
+		} catch (MpDbException daoe) {
 			r.user = null;
 		}
 		return r;
 	}
 
-	public User beginEditMyProfile() throws DAOException,
+	public User beginEditMyProfile() throws MpDbException,
 			LoginRequiredException {
 		User u = new User();
 		u.setId(currentUserId());
@@ -129,7 +128,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 	}
 
 	public User registerNewUser(final UserWithPassword newbie)
-			throws ValidationException, DAOException,
+			throws ValidationException, MpDbException,
 			UnableToSendEmailException {
 		doc.UserWithPassword_user.validateEntity(newbie);
 		doc.UserWithPassword_newPassword.validateEntity(newbie);
@@ -144,6 +143,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		doc.validate(newUser);
 		User u = newUser;
 		u.setEnabled(false);
+		u.setRole((Role) currentSession().createQuery("from Role r where r.rank=0").uniqueResult());
 		u.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-", ""));
 		try {
 			u = (new UserDAO(this.currentSession())).save(u);
@@ -168,7 +168,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 	}
 
 	public void changePassword(final UserWithPassword uwp)
-			throws LoginRequiredException, LoginFailureException, DAOException,
+			throws LoginRequiredException, LoginFailureException, MpDbException,
 			ValidationException {
 		doc.UserWithPassword_user.validateEntity(uwp);
 		doc.UserWithPassword_oldPassword.validateEntity(uwp);
@@ -192,7 +192,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		commit();
 	}
 
-	public void emailPassword(final String emailAddress) throws DAOException,
+	public void emailPassword(final String emailAddress) throws MpDbException,
 			UnableToSendEmailException {
 		UserDAO uDAO = new UserDAO(this.currentSession());
 		User u = new User();
@@ -209,7 +209,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 				});
 	}
 
-	public User confirmUser(String confirmationCode) throws DAOException,
+	public User confirmUser(String confirmationCode) throws MpDbException,
 			LoginRequiredException {
 		User u = new User();
 		u.setId(currentUserId());

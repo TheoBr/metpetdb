@@ -5,7 +5,8 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import edu.rpi.metpetdb.client.error.DAOException;
+import edu.rpi.metpetdb.client.error.MpDbException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.ChemicalAnalysisNotFoundException;
 import edu.rpi.metpetdb.client.error.dao.ReferenceNotFoundException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
@@ -20,13 +21,13 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 	}
 
 	@Override
-	public ChemicalAnalysis delete(ChemicalAnalysis inst) throws DAOException {
+	public ChemicalAnalysis delete(ChemicalAnalysis inst) throws MpDbException {
 		_delete(inst);
 		return null;
 	}
 
 	@Override
-	public ChemicalAnalysis fill(ChemicalAnalysis inst) throws DAOException {
+	public ChemicalAnalysis fill(ChemicalAnalysis inst) throws MpDbException {
 		// Use Id
 		if (inst.getId() > 0) {
 			final Query q = namedQuery("ChemicalAnalysis.byId");
@@ -46,7 +47,7 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 		throw new ChemicalAnalysisNotFoundException();
 	}
 
-	public ChemicalAnalysis populate(ChemicalAnalysis inst) throws DAOException {
+	public ChemicalAnalysis populate(ChemicalAnalysis inst) throws MpDbException {
 		// If we can, let's try to fill the subsample
 		if (inst.getSubsample() != null) {
 			inst.setSubsample((new SubsampleDAO(sess))
@@ -57,7 +58,7 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 	}
 
 	@Override
-	public ChemicalAnalysis save(ChemicalAnalysis ca) throws DAOException {
+	public ChemicalAnalysis save(ChemicalAnalysis ca) throws MpDbException {
 		if (ca.getReference() != null) {
 			try {
 			ca.setReference((new ReferenceDAO(sess)).fill(ca.getReference()));
@@ -71,7 +72,7 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 		return ca;
 	}
 
-	public List<ChemicalAnalysis> getAll(final long subsampleId) throws DAOException {
+	public List<ChemicalAnalysis> getAll(final long subsampleId) throws MpDbException {
 		final Query q = namedQuery("ChemicalAnalysis.bySubsampleId");
 		q.setParameter("subsampleId", subsampleId);
 		final List<ChemicalAnalysis> l = (List<ChemicalAnalysis>) getResults(q);
@@ -80,7 +81,7 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 	}
 
 	public Results<ChemicalAnalysis> getAll(final PaginationParameters p,
-			final long subsampleId) throws DAOException{
+			final long subsampleId) throws MpDbException{
 
 		final Query sizeQ = sizeQuery("ChemicalAnalysis.bySubsampleId",
 				subsampleId);
@@ -90,7 +91,7 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 	}
 
 	private Results<ChemicalAnalysis> getChemicalAnalyses(Query sizeQuery,
-			Query pageQuery) throws DAOException {
+			Query pageQuery) throws MpDbException {
 		final List<ChemicalAnalysis> l = (List<ChemicalAnalysis>) getResults(pageQuery);
 		final int size = ((Number) getResult(sizeQuery)).intValue();
 

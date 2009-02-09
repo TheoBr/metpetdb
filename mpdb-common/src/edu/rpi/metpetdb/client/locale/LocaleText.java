@@ -168,6 +168,9 @@ public interface LocaleText extends Messages {
 	/* Permission */
 	String Permission_Denied();
 	String Permission_NotYours();
+	String Account_Not_Enabled();
+	String Not_Owner();
+	String Modify_Public_Data();
 
 	/* User Samples List */
 	String cannotDeletePublicSamples();

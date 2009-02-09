@@ -35,6 +35,7 @@ public class User extends MObject {
 	private Set<Project> projects;
 	@ContainedIn
 	private Set<Sample> samples;
+	private Role role;
 
 	private transient byte[] encryptedPassword;
 
@@ -168,6 +169,14 @@ public class User extends MObject {
 
 	public void setConfirmationCode(String confirmationCode) {
 		this.confirmationCode = confirmationCode;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	public int hashCode() {

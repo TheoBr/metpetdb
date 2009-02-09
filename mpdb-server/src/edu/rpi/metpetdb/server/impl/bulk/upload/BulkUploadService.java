@@ -11,7 +11,6 @@ import java.util.Set;
 import org.hibernate.HibernateException;
 import org.hibernate.exception.GenericJDBCException;
 
-import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -45,7 +44,7 @@ public abstract class BulkUploadService extends MpDbServlet {
 	private static final long serialVersionUID = 1L;
 
 	public BulkUploadResult parser(String fileOnServer, boolean save)
-			throws LoginRequiredException, DAOException {
+			throws LoginRequiredException, MpDbException {
 		final BulkUploadResult results = new BulkUploadResult();
 		try {
 			if (save) {
@@ -141,7 +140,7 @@ public abstract class BulkUploadService extends MpDbServlet {
 
 	}
 	protected <T extends MObject> void initObject(T obj)
-			throws LoginRequiredException, DAOException {
+			throws LoginRequiredException, MpDbException {
 		if (obj instanceof HasOwner)
 			((HasOwner) obj).setOwner(currentUser());
 		if (obj instanceof PublicData)
@@ -170,7 +169,7 @@ public abstract class BulkUploadService extends MpDbServlet {
 				s = samples.get(s.getAlias());
 			}
 			return true;
-		} catch (DAOException e) {
+		} catch (MpDbException e) {
 			// There is no sample we have to add an error
 			// Every Image needs a sample so add an error
 			results.addError(row, new PropertyRequiredException("Sample"));
@@ -194,14 +193,14 @@ public abstract class BulkUploadService extends MpDbServlet {
 				subsamples.put(s.getAlias() + ss.getName(), ss);
 				ssResultCount.incrementOld();
 				return ss;
-			} catch (DAOException e) {
+			} catch (MpDbException e) {
 				// Means it is new because we could not find
 				// it
 				ssResultCount.incrementFresh();
 				if (save) {
 					try {
 						ss = ssDao.save(ss);
-					} catch (DAOException e1) {
+					} catch (MpDbException e1) {
 						results.addError(row, e1);
 					}
 					subsamples.put(s.getAlias() + ss.getName(), ss);
@@ -241,7 +240,7 @@ public abstract class BulkUploadService extends MpDbServlet {
 					dao.save(result);
 				} catch (HibernateException he) {
 					parseResults.addError(row, handleHibernateException(he));
-				} catch (DAOException e) {
+				} catch (MpDbException e) {
 					parseResults.addError(row, e);
 				}
 			}
