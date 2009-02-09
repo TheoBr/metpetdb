@@ -1,9 +1,6 @@
 package edu.rpi.metpetdb.server.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.security.NoPermissionsException;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchSample;
@@ -17,36 +14,37 @@ import edu.rpi.metpetdb.server.search.lucene.RegenerateIndices;
 public class SearchServiceImpl extends SampleServiceImpl implements
 		SearchService {
 	private static final long serialVersionUID = 1L;
-	
-	public Results<Sample> search(final PaginationParameters p, SearchSample searchSamp, User userSearching) throws NoPermissionsException {	
+
+	public Results<Sample> search(final PaginationParameters p,
+			SearchSample searchSamp, User userSearching) throws MpDbException {
 		return (SearchDb.sampleSearch(p, searchSamp, userSearching));
 	}
 
 	public void rebuildSearchIndex() throws NoPermissionsException {
 		RegenerateIndices.regenerate();
 	}
-	
-	public void setSessionSearchSample(final SearchSample searchSamp){
+
+	public void setSessionSearchSample(final SearchSample searchSamp) {
 		setSearchSample(searchSamp);
 	}
-	
-	public SearchSample getSessionSearchSample(){
+
+	public SearchSample getSessionSearchSample() {
 		return getSearchSample();
 	}
-	
-	public void setSessionLastSearchedSearchSample(final SearchSample searchSamp){
+
+	public void setSessionLastSearchedSearchSample(final SearchSample searchSamp) {
 		setLastSearchedSearchSample(searchSamp);
 	}
-	
-	public SearchSample getSessionLastSearchedSearchSample(){
+
+	public SearchSample getSessionLastSearchedSearchSample() {
 		return getLastSearchedSearchSample();
 	}
-	
-	public void setSessionLastSearchPagination(final PaginationParameters p){
+
+	public void setSessionLastSearchPagination(final PaginationParameters p) {
 		setLastSearchPagination(p);
 	}
-	
-	public PaginationParameters getSessionLastSearchPagination(){
+
+	public PaginationParameters getSessionLastSearchPagination() {
 		return getLastSearchPagination();
 	}
 

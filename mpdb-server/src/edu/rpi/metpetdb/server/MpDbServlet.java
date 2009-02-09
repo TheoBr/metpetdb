@@ -33,7 +33,6 @@ import edu.rpi.metpetdb.client.error.dao.ProjectAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.SampleAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleAlreadyExistsException;
 import edu.rpi.metpetdb.client.error.dao.UserAlreadyExistsException;
-import edu.rpi.metpetdb.client.error.security.NoPermissionsException;
 import edu.rpi.metpetdb.client.model.Element;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Oxide;
@@ -55,6 +54,7 @@ import edu.rpi.metpetdb.server.dao.impl.OxideDAO;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
 import edu.rpi.metpetdb.server.security.Action;
+import edu.rpi.metpetdb.server.security.ConvertSecurityException;
 import edu.rpi.metpetdb.server.security.SessionEncrypter;
 import edu.rpi.metpetdb.server.security.permissions.principals.AdminPrincipal;
 
@@ -309,13 +309,14 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 * returning, as otherwise our framework code will rollback the transaction
 	 * and throw an exception back to the client.
 	 * </p>
+	 * @throws MpDbException 
 	 */
-	protected void commit() throws DAOException {
+	protected void commit() throws MpDbException {
 		try {
 			currentSession().getTransaction().commit();
 		} catch (CallbackException e) {
 			forgetChanges();
-			throw new NoPermissionsException(e.getMessage());
+			throw ConvertSecurityException.convertToException(e.getMessage());
 		} catch (final HibernateException he) {
 			throw handleHibernateException(he);
 		}

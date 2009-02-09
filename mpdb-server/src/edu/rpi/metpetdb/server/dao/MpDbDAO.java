@@ -11,11 +11,10 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.TransientObjectException;
 
-import edu.rpi.metpetdb.client.error.DAOException;
-import edu.rpi.metpetdb.client.error.security.NoPermissionsException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
-import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.security.ConvertSecurityException;
 
 public abstract class MpDbDAO<T extends MObject> {
 	final protected Session sess;
@@ -31,10 +30,10 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * @param inst
 	 * 		Partially completed object
 	 * @return Filled object from database
-	 * @throws DAOException
+	 * @throws MpDbException
 	 * 		Generally corresponds to 'no corresponding object was found'
 	 */
-	abstract public T fill(T inst) throws DAOException, HibernateException;
+	abstract public T fill(T inst) throws MpDbException, HibernateException;
 
 	/**
 	 * Save the specified object to the db. Inserting if the object is new,
@@ -43,9 +42,9 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * @param inst
 	 * 		Object to save
 	 * @return Object that was saved and is now in the db (merge may update)
-	 * @throws DAOException
+	 * @throws MpDbException
 	 */
-	abstract public T save(T inst) throws DAOException, HibernateException;
+	abstract public T save(T inst) throws MpDbException, HibernateException;
 
 	/**
 	 * Remove the specified object from the db.
@@ -53,9 +52,9 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * @param inst
 	 * 		Object to remove
 	 * @return
-	 * @throws DAOException
+	 * @throws MpDbException
 	 */
-	abstract public T delete(T inst) throws DAOException, HibernateException;
+	abstract public T delete(T inst) throws MpDbException, HibernateException;
 
 	public Set<T> fill(Set<T> s) {
 		if (s == null)
@@ -69,7 +68,7 @@ public abstract class MpDbDAO<T extends MObject> {
 				final T fill = fill(obj);
 				itr.remove();
 				filled.add(fill);
-			} catch (final DAOException daoe) {
+			} catch (final MpDbException daoe) {
 				filled.add(obj);
 			}
 		}
@@ -83,7 +82,7 @@ public abstract class MpDbDAO<T extends MObject> {
 			// new
 			fill(inst);
 			return false;
-		} catch (final DAOException daoe) {
+		} catch (final MpDbException daoe) {
 			// If we can't fill() it, then it's new
 			return true;
 		}
@@ -94,15 +93,15 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * 
 	 * @param u
 	 * @return
-	 * @throws DAOException
+	 * @throws MpDbException
 	 */
-	protected T _save(T u) throws DAOException {
+	protected T _save(T u) throws MpDbException {
 		if (u.mIsNew()) {
 			try {
 				insert(u);
 			} catch (CallbackException e) {
 				sess.clear();
-				throw new NoPermissionsException(e.getMessage());
+				throw ConvertSecurityException.convertToException(e.getMessage());
 			} 
 		} else {
 			try {
@@ -130,14 +129,14 @@ public abstract class MpDbDAO<T extends MObject> {
 	 * 
 	 * @param u
 	 * 		object to be deleted, must already exist in the database
-	 * @throws DAOException 
+	 * @throws MpDbException 
 	 */
-	protected void _delete(final T u) throws DAOException {
+	protected void _delete(final T u) throws MpDbException {
 		try {
 			sess.delete(u);
 		} catch (CallbackException e) {
 			sess.clear();
-			throw new NoPermissionsException(e.getMessage());
+			throw ConvertSecurityException.convertToException(e.getMessage());
 		}
 	}
 
@@ -251,21 +250,21 @@ public abstract class MpDbDAO<T extends MObject> {
 		return q;
 	}
 
-	protected Object getResult(final Query q) throws DAOException {
+	protected Object getResult(final Query q) throws MpDbException {
 		try {
 			return q.uniqueResult();
 		} catch (CallbackException e) {
 			sess.clear();
-			throw new NoPermissionsException(e.getMessage());
+			throw ConvertSecurityException.convertToException(e.getMessage());
 		}
 	}
 
-	protected List getResults(final Query q) throws DAOException {
+	protected List getResults(final Query q) throws MpDbException {
 		try {
 			return q.list();
 		} catch (CallbackException e) {
 			sess.clear();
-			throw new NoPermissionsException(e.getMessage());
+			throw ConvertSecurityException.convertToException(e.getMessage());
 		}
 	}
 }

@@ -15,8 +15,6 @@ import org.apache.lucene.search.FilteredQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.RangeFilter;
 import org.apache.lucene.search.RangeQuery;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.SortField;
 import org.apache.lucene.search.TermQuery;
 import org.apache.solr.util.NumberUtils;
 import org.hibernate.CallbackException;
@@ -24,7 +22,7 @@ import org.hibernate.Session;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 
-import edu.rpi.metpetdb.client.error.security.NoPermissionsException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.model.DateSpan;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchElement;
@@ -36,13 +34,14 @@ import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.DataStore;
+import edu.rpi.metpetdb.server.security.ConvertSecurityException;
 
 public class SearchDb {
 	public SearchDb() {
 	}
 
 	public static Results<Sample> sampleSearch(final PaginationParameters p, SearchSample searchSamp,
-			User userSearching) throws NoPermissionsException {
+			User userSearching) throws MpDbException {
 
 		final Session session = DataStore.open();
 		FullTextSession fullTextSession = Search.createFullTextSession(session);
@@ -262,7 +261,7 @@ public class SearchDb {
 			return results;
 		} catch (CallbackException e) {
 			session.clear();
-			throw new NoPermissionsException(e.getMessage());
+			throw ConvertSecurityException.convertToException(e.getMessage());
 		} finally {
 			session.close();
 		}
