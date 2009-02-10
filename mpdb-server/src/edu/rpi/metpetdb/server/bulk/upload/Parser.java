@@ -273,9 +273,9 @@ public abstract class Parser<T extends MObject> {
 					} else if (pc.entityName.equals(newObject.getClass()
 							.getSimpleName())
 							|| ((pc.entityName.equals("Image") || pc.entityName
-									.equals("ImageOnGrid")
+									.equals("ImageOnGrid") || pc.entityName.equals("XrayImage"))
 									&& newObject.getClass().getSimpleName()
-											.equals(("BulkUploadImage"))))) {
+											.equals(("BulkUploadImage")))) {
 						if (pc instanceof NumberConstraint<?>) {
 							newObject.mSet(pc.property, getFloatValue(cell.toString()));
 						} else if (pc instanceof TimestampConstraint) {
