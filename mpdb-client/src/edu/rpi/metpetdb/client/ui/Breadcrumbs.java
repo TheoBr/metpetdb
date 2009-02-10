@@ -95,8 +95,6 @@ public class Breadcrumbs extends FlowPanel {
 				Root.setToken(tempXML.getFirstChild().getNodeValue());
 			} else if (tempXML.getNodeName().equals("screen")) {
 				Root.setScreen(false);
-			} else if (tempXML.getNodeName().equals("leftside")) {
-				Root.setLeftSide(tempXML.getFirstChild().getNodeValue());
 			} else if (tempXML.getNodeName().equals("page")) {
 				final bcNode temp = new bcNode(Root);
 				Root.addChild(temp);
@@ -135,7 +133,6 @@ public class Breadcrumbs extends FlowPanel {
 	private void onFindSuccess(final bcNode currentPage) {
 		bcNode Node = currentPage;
 		current = currentPage;
-		LeftColWidget.updateLeftSide(Node.getLeftSide());
 		onFindSuccessRecursive(Node);
 		getWidget((getWidgetCount() - 1)).addStyleName(CSS.CURRENT);
 	}
@@ -216,9 +213,6 @@ public class Breadcrumbs extends FlowPanel {
 								MLink l = (MLink) ((SimplePanel) w).getWidget();
 								if (l.getText().equals(name)) {
 									l.setText(result.getAlias());
-									if (MetPetDBApplication.getLeftCount() == 0)
-										LeftColWidget.updateLeftSide(Node
-												.getLeftSide(), result);
 									Breadcrumbs.this
 											.onFindSuccessRecursive(Node
 													.getParent());
@@ -240,11 +234,6 @@ public class Breadcrumbs extends FlowPanel {
 							if (((SimplePanel) w).getWidget() instanceof MLink) {
 								MLink l = (MLink) ((SimplePanel) w).getWidget();
 								if (((MLink) l).getText().equals(name)) {
-									if (MetPetDBApplication.getLeftCount() == 0)
-										LeftColWidget.updateLeftSide(Node
-												.getLeftSide(), result
-												.getSubsample().getSample(),
-												result.getSubsample());
 									Breadcrumbs.this.id = String.valueOf(result
 											.getSubsample().getId());
 									Breadcrumbs.this
@@ -270,10 +259,6 @@ public class Breadcrumbs extends FlowPanel {
 								MLink l = (MLink) ((SimplePanel) w).getWidget();
 								if (((MLink) l).getText().equals(name)) {
 									((MLink) l).setText(result.getName());
-									if (MetPetDBApplication.getLeftCount() == 0)
-										LeftColWidget.updateLeftSide(Node
-												.getLeftSide(), result
-												.getSample(), result);
 									Breadcrumbs.this.id = String.valueOf(result
 											.getSample().getId());
 									Breadcrumbs.this
@@ -342,8 +327,6 @@ public class Breadcrumbs extends FlowPanel {
 				}
 
 				public void onSuccess(Subsample result) {
-					LeftColWidget.updateLeftSide(Node.getLeftSide(), result
-							.getSample(), result);
 					Breadcrumbs.this.onFindSuccessRecursive(Node.getParent());
 				}
 			}.begin();

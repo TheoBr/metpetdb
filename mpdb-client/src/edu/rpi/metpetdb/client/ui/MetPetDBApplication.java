@@ -248,42 +248,8 @@ public class MetPetDBApplication implements EntryPoint {
 		footerContainer.add(w);
 	}
 
-	public static void left(final Widget w) {
-		leftContainer.clear();
-		leftContainer.add(w);
-	}
-
-	public static void appenLeft(final Widget w) {
-		leftContainer.add(w);
-	}
-
-	public static void removeFromLeft(final Widget w) {
-		if (w != null)
-			leftContainer.remove(w);
-	}
-
-	public static int getFromLeft(final Widget w) {
-		return leftContainer.getWidgetIndex(w);
-	}
-
-	public static Widget getFromLeft(final int index) {
-		return leftContainer.getWidget(index);
-	}
-
-	public static void resetLeftSide() {
-		leftContainer.clear();
-		final Element sidebarElem = DOM.getElementById("sidebar-Default");
-		final HTML sidebar = new HTML();
-		// sidebar.setHTML(sidebarElem.toString());
-		leftContainer.add(sidebar);
-	}
-
-	public static void clearLeftSide() {
-		leftContainer.clear();
-	}
-
-	public static int getLeftCount() {
-		return leftContainer.getWidgetCount();
+	public static RootPanel getLeftPanel(){
+		return leftContainer;
 	}
 
 	public static void appenBreadCrumbs(final Widget w) {

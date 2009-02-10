@@ -172,7 +172,7 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 					Float total = (Float) data.mGet(ChemicalAnalysisProperty.total);
 					String text = "------";
 					if (total != null)
-						text = (String.valueOf(total));					
+						text = (ListExUtil.formatDouble(total,ListExUtil.defaultDigits));					
 					return new MText(text);
 				}
 			},

@@ -9,20 +9,20 @@ body {
 	width: 100%;
 	min-width: 600px;
 	font-size: 1.1em;
-	background: #fff url(../images/bg-sidebar.gif) repeat-y left top;
+/*	background: #fff url(../images/bg-sidebar.gif) repeat-y left top; */
 }
 .pageWrapper {
-	background: transparent url(../images/bg-sidebar.gif) repeat-y left top;
+/*	background: transparent url(../images/bg-sidebar.gif) repeat-y left top; */
 }
 #container {
-	margin-left: 201px;
+	margin-left: 0px;
 }
 
 .page-panel .page-sidebar {
 	display: none;
 }
 .page-panel-twocol {
-	padding-left: 200px;
+	padding-left: 0px;
 }
 .page-panel-twocol .page-sidebar,
 .page-panel-twocol .page-content {
@@ -33,10 +33,7 @@ body {
 	width: 100%;
 }
 .page-panel-twocol .page-sidebar {
-	width: 200px;
-	right: 200px;
-	margin-left: -100%;
-	display: block;
+
 }
 
 
@@ -185,11 +182,14 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 /*-------------------------------------
               left col
  --------------------------------------*/
+
 #leftcol {
 	float: left;
 	width: 201px;
+	height: 100%;
 	color: #3a3436;
 	position: relative;
+	background: #fff url(../images/bg-sidebar.gif) repeat-y left top;
 }
 #leftcol ul.lcol-sectionList {
 	margin-bottom: 1.2em;
@@ -298,7 +298,7 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 }
 #nsf {
 	height: 40px;
-	margin: 2.5em 1em 1em 200px;
+	margin: 2.5em 1em 1em 0px;
 	padding-bottom: 10px;
 	font-size: 0.9em;
 	text-align: left;

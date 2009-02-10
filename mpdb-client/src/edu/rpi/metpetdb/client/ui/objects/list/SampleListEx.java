@@ -136,7 +136,11 @@ public abstract class SampleListEx extends ListEx<Sample> {
 					Set<SampleMineral> minerals = ((Set<SampleMineral>) data.mGet(SampleProperty.minerals));
 					String text = "";
 					for (SampleMineral m : minerals){
-						text += m.getName() + ", ";
+						if (m.getAmount() > 0) {
+							text += m.getName() + " " + String.valueOf(ListExUtil.formatDouble(m.getAmount(),ListExUtil.defaultDigits)) + ", ";
+						} else {
+							text += m.getName() + ", "; 
+						}
 					}
 					if (text.equals("")){
 						text = "------";
@@ -167,8 +171,8 @@ public abstract class SampleListEx extends ListEx<Sample> {
 						final int currentRow) {
 					final Point location = (Point) data
 							.mGet(SampleProperty.location);
-					return "(" + format(location.x) + "," + format(location.y)
-							+ ")";
+					return "(" + ListExUtil.formatDouble(location.x, ListExUtil.latlngDigits) + "," + 
+						ListExUtil.formatDouble(location.y,ListExUtil.latlngDigits) + ")";
 				}
 			},
 			// TODO lat long error
@@ -222,14 +226,6 @@ public abstract class SampleListEx extends ListEx<Sample> {
 
 	public String getDefaultSortParameter() {
 		return SampleProperty.alias.name();
-	}
-	
-	public static String format(final double loc) {
-		final String locStr = String.valueOf(loc);
-		final int decPos = locStr.toString().indexOf(".");
-		if (locStr.length() < decPos + 4 && decPos >= 0)
-			return locStr;
-		return locStr.substring(0, decPos + 4);
 	}
 
 }

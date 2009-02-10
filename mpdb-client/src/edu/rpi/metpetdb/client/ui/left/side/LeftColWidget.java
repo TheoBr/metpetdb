@@ -47,58 +47,6 @@ public class LeftColWidget extends SimplePanel {
 		item.add(w);
 	}
 
-	public static void updateLeftSide(final String left) {
-		MetPetDBApplication.clearLeftSide();
-		if (left.equals(LocaleHandler.lc_entity.LeftSide_UserInfo())) {
-			MetPetDBApplication.appenLeft(new UserInfo(MpDb.currentUser()));
-		} else if (left.equals(LocaleHandler.lc_entity.LeftSide_MySamples())) {
-			MetPetDBApplication.appenLeft(new MySamples());
-		} else if (left.equals(LocaleHandler.lc_entity.LeftSide_MySearch())) {
-			MetPetDBApplication.appenLeft(new MySearch());
-		} else if (left.equals(LocaleHandler.lc_entity.LeftSide_MyProjects())) {
-			new ServerOp() {
-				@Override
-				public void begin() {
-					MpDb.project_svc.all(MpDb.currentUser().getId(), this);
-				}
-				public void onSuccess(Object result) {
-					MetPetDBApplication.appenLeft(new MyProjects(
-							new HashSet<Project>((List<Project>) result)));
-				}
-			}.begin();
-		}
-	}
-
-	public static void updateLeftSide(final String left, final Sample sample) {
-		MetPetDBApplication.clearLeftSide();
-		if (left.equals(LocaleHandler.lc_entity.LeftSide_MySubsamples())) {
-			MetPetDBApplication.appenLeft(new MySubsamples(sample, History
-					.getToken().split("-")[0]) {
-				public void onLoadCompletion() {
-				};
-			});
-		}
-	}
-
-	public static void updateLeftSide(final String left, final Sample sample,
-			final Subsample subsample) {
-		MetPetDBApplication.clearLeftSide();
-		if (left.equals(LocaleHandler.lc_entity.LeftSide_MySubsamples())) {
-			MetPetDBApplication.appenLeft(new MySubsamples(sample, subsample) {
-				public void onLoadCompletion() {
-				};
-			});
-		} else if (left
-				.equals(LocaleHandler.lc_entity.LeftSide_LeftSideLayer())) {
-			final MySubsamples ms = new MySubsamples(sample, subsample) {
-				public void onLoadCompletion() {
-					LeftColWidget.insertMySubsamplesLeftSide(this);
-				}
-			};
-			MetPetDBApplication.appenLeft(ms);
-		}
-	}
-
 	public static void insertLayersLeftSide(final LeftSideLayer layer,
 			final Subsample sub) {
 		l = layer;

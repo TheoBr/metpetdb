@@ -34,7 +34,6 @@ import edu.rpi.metpetdb.client.ui.objects.details.SubsampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 import edu.rpi.metpetdb.client.ui.objects.list.UserProjectsListEx;
 import edu.rpi.metpetdb.client.ui.objects.list.UserSamplesList;
-import edu.rpi.metpetdb.client.ui.permission.PermissionDenied;
 import edu.rpi.metpetdb.client.ui.search.Search;
 import edu.rpi.metpetdb.client.ui.user.Confirmation;
 import edu.rpi.metpetdb.client.ui.user.EditUserProfile;
@@ -160,12 +159,6 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 
-	public static final Screen permissionDenied = new Screen(
-			LocaleHandler.lc_entity.TokenSpace_Permission_Denied()) {
-		public void executeToken(final String args) {
-			show(new PermissionDenied());
-		}
-	};
 	public static final Screen editProfile = new Screen(LocaleHandler.lc_entity
 			.TokenSpace_Edit_Profile()) {
 		public void executeToken(final String args) {
@@ -365,7 +358,6 @@ public class TokenSpace implements HistoryListener {
 		register(search);
 		register(ImageListViewer);
 		register(allProjects);
-		register(permissionDenied);
 		register(newSubsample);
 		register(newChemicalAnalysis);
 		register(createImageMap);

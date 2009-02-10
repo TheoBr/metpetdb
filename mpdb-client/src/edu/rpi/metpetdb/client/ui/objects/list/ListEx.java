@@ -1,10 +1,13 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -45,6 +48,8 @@ import edu.rpi.metpetdb.client.ui.ServerOp;
  */
 public abstract class ListEx<T extends MObject> extends FlowPanel {
 	private int pageSize = 10;
+	private final static long millisecondsIn30Days = 2592000000L;
+	private final static String pageSizeCookie = "pageSize";
 	private PaginationParameters currentPagination;
 	private PaginationParameters oldPagination;
 	
@@ -338,7 +343,7 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 		};
 		PagingOptions options = new PagingOptions(scrollTable);
 
-		scrollTable.setPageSize(pageSize);
+		scrollTable.setPageSize(loadPageSizeCookie());
 		tableModel.setRowCount(1);
 
 		for (int i = 0; i < displayColumns.size(); ++i) {
@@ -484,9 +489,12 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 	}
 
 	public void setPageSize(final int PageSize) {
-		pageSize = PageSize;
-		scrollTable.setPageSize(pageSize);
-		refresh();
+		if (PageSize > 0){
+			pageSize = PageSize;
+			scrollTable.setPageSize(pageSize);
+			createPageSizeCookie(pageSize);
+			refresh();
+		}
 	}
 	public int getPageSize() {
 		return pageSize;
@@ -494,5 +502,18 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 	
 	public PaginationParameters getPaginationParameters(){
 		return currentPagination;
+	}
+	
+	public void createPageSizeCookie(final int newPageSize) {
+		final Date expires = new Date();
+		expires.setTime(expires.getTime() + millisecondsIn30Days);
+		Cookies.setCookie(pageSizeCookie, String.valueOf(newPageSize), expires);
+	}
+	
+	private int loadPageSizeCookie() {
+		if (Cookies.getCookie(pageSizeCookie) != null) {
+			return Integer.parseInt(Cookies.getCookie(pageSizeCookie));
+		}
+		else return 10;
 	}
 }

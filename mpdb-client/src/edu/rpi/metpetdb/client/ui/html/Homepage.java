@@ -1,18 +1,18 @@
 package edu.rpi.metpetdb.client.ui.html;
 
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
-import edu.rpi.metpetdb.client.ui.left.side.UserInfo;
 
 public class Homepage extends FlowPanel {
-	private long UserID;
-
+	
 	public Homepage() {
-		MetPetDBApplication.clearLeftSide();
-		MetPetDBApplication.appenLeft(new UserInfo(MpDb.currentUser()));
 		this.add(new HTML(
 						"<h1>Welcome to MetPetDB</h1> " +
 						"<img src=\"images/slices.jpg\" alt=\"\" class=\"r\">" +

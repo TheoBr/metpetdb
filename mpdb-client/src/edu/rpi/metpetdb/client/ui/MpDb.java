@@ -181,13 +181,7 @@ public class MpDb {
 		if (o != n && (o == null || n == null || o.getId() != n.getId())) {
 			MetPetDBApplication.onCurrentUserChanged(n);
 			if (n != null) {
-				if (Breadcrumbs.getCurrentNode() != null) {
-					if (Breadcrumbs.getCurrentNode().getLeftSide().equals(
-							LocaleHandler.lc_entity.LeftSide_UserInfo())) {
-						LeftColWidget.updateLeftSide(LocaleHandler.lc_entity
-								.LeftSide_UserInfo());
-					}
-				}
+
 			}
 		}
 		//end the session if we are setting it to null
@@ -206,7 +200,7 @@ public class MpDb {
 	// Creates user history in the left column
 	// My Samples and My Projects history
 	public static void createUserHistory(User n) {
-		MetPetDBApplication.clearLeftSide();
+//		MetPetDBApplication.clearLeftSide();
 
 	}
 

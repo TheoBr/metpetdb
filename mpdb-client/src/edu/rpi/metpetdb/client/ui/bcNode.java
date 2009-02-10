@@ -10,7 +10,6 @@ public class bcNode {
 	private ArrayList<bcNode> children;
 	private String name;
 	private String token;
-	private String leftSide;
 	private boolean isScreen;
 
 	public bcNode() {
@@ -18,7 +17,6 @@ public class bcNode {
 		isScreen = true;
 		name = "";
 		token = "";
-		leftSide = "";
 	}
 
 	public bcNode(final bcNode parent) {
@@ -82,13 +80,5 @@ public class bcNode {
 
 	public boolean isScreen() {
 		return isScreen;
-	}
-
-	public void setLeftSide(final String leftSide) {
-		this.leftSide = leftSide;
-	}
-
-	public String getLeftSide() {
-		return leftSide;
 	}
 }
