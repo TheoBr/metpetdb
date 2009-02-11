@@ -26,6 +26,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
+import edu.rpi.metpetdb.client.ui.widgets.MCollapsedText;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
@@ -146,7 +147,7 @@ public abstract class SampleListEx extends ListEx<Sample> {
 						text = "------";
 					} else
 						text = text.substring(0,text.length()-2);
-					return new MText(text);
+					return new MCollapsedText(text);
 
 				}
 			},
