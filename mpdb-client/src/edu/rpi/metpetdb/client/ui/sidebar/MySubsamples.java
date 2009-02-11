@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.left.side;
+package edu.rpi.metpetdb.client.ui.sidebar;
 
 import java.util.Iterator;
 import java.util.List;
@@ -13,12 +13,13 @@ import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.image.browser.LeftSideLayer;
+import edu.rpi.metpetdb.client.ui.image.browser.LayersSidebar;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
+import edu.rpi.metpetdb.client.ui.widgets.MText;
 
-public abstract class MySubsamples extends LeftColWidget implements
-		UsesLeftColumn {
+public abstract class MySubsamples extends Sidebar implements
+		UsesSidebar {
 	private MHtmlList pList;
 	private MHtmlList details;
 	private Subsample current;
@@ -26,7 +27,7 @@ public abstract class MySubsamples extends LeftColWidget implements
 	private MLink addSubsampleLink;
 
 	public MySubsamples(final Sample sample, final String token) {
-		super("Sample " + sample.getName());
+		add(new MText("Sample " + sample.getName(),"h1"));
 		this.setStyleName("lcol-MyProjects");
 		MetPetDBApplication.registerPageWatcher(this);
 		details = new MHtmlList();
@@ -93,7 +94,7 @@ public abstract class MySubsamples extends LeftColWidget implements
 		addSubsampleLink.removeStyleName("cur");
 	}
 
-	public void insertLayers(final LeftSideLayer layers,
+	public void insertLayers(final LayersSidebar layers,
 			final Subsample subsample) {
 		for (int i = 0; i < pList.getWidgetCount(); i++) {
 			Widget w = pList.getWidget(i);
@@ -106,7 +107,7 @@ public abstract class MySubsamples extends LeftColWidget implements
 		}
 	}
 
-	public void removeLayers(final LeftSideLayer layers) {
+	public void removeLayers(final LayersSidebar layers) {
 		pList.remove(layers);
 	}
 
@@ -128,7 +129,7 @@ public abstract class MySubsamples extends LeftColWidget implements
 	}
 
 	public void onPageChanged() {
-		LeftColWidget.clearLeft();
+		Sidebar.clearLeft();
 	}
 
 	public abstract void onLoadCompletion();

@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.sidebar.Sidebar;
 
 public class MPagePanel extends FlowPanel {
 	private final MText title = new MText("","h1");
@@ -38,13 +39,13 @@ public class MPagePanel extends FlowPanel {
 		mainPanel.setLeftColStyle("page-content");
 	}
 	
-	public MPagePanel(boolean hasSidebar) {
+	public MPagePanel() {
 		hide(header);
-		if (hasSidebar) mainPanel.addStyleDependentName("twocol");
 	}
 	
-	public MPagePanel() {
-		this(false);
+	public void setSidebar(Sidebar sb) {
+		mainPanel.addStyleDependentName("twocol");
+		mainPanel.getRightCol().add(sb);
 	}
 	
 	public void setPageTitle(String text) {

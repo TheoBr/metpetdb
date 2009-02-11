@@ -29,6 +29,7 @@ import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.client.ui.dialogs.LoginDialog;
 import edu.rpi.metpetdb.client.ui.dialogs.UnknownErrorDialog;
 import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MMenuBar;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
@@ -36,13 +37,20 @@ import edu.rpi.metpetdb.client.ui.widgets.MText;
 /** Main application entry point. */
 public class MetPetDBApplication implements EntryPoint {
 
-	private static RootPanel loginBar;
+	private static RootPanel logbar;
+	private static MHtmlList logbarLinks = new MHtmlList();
+	private static MLink loginLink;
+	private static MLink registerLink;
+	private static MLink editProfileLink;
+	private static MLink logoutLink;
+	private static MLink reportBugLink;
+	private static MLink disabledAccountLink;
+	
 	private static MMenuBar hdrnav;
 	private static RootPanel breadcrumbsBar;
 	// private static MenuBar datePanel;
 	private static RootPanel contentContainer;
 	private static RootPanel noticeContainer;
-	private static RootPanel leftContainer;
 	private static HashSet<Widget> pageChangeWatchers;
 	private static RootPanel footerContainer;
 
@@ -53,24 +61,13 @@ public class MetPetDBApplication implements EntryPoint {
 		GWT.setUncaughtExceptionHandler(ErrorHandler.INSTANCE);
 		History.addHistoryListener(TokenSpace.INSTANCE);
 
-		loginBar = RootPanel.get(CSS.LOGBAR_ID);
+		logbar = RootPanel.get(CSS.LOGBAR_ID);
 		breadcrumbsBar = RootPanel.get(CSS.BREADCRUMBS_ID);
 		hdrnav = new MMenuBar();
 		RootPanel.get(CSS.HDRNAV_ID).add(hdrnav);
 		contentContainer = RootPanel.get(CSS.CONTENT_ID);
 		noticeContainer = RootPanel.get(CSS.NOTICE_ID);
-		leftContainer = RootPanel.get(CSS.LEFTCOL_ID);
 		footerContainer = RootPanel.get(CSS.FOOTER_ID);
-
-		// make MPDB logo a link to the introduction screen
-		/*
-		 * logoLink = MpDb.factory.getLogoLink();
-		 * logoLink.setTargetHistoryToken(
-		 * TokenSpace.introduction.makeToken(null));
-		 * logoLink.addMouseEventListener(new MouseEventAdapter() { public void
-		 * onClick(MouseClickEvent event) { TokenSpace.introduction.execute(); }
-		 * });
-		 */
 
 		// setupIntroduction();
 		pageChangeWatchers = new HashSet<Widget>();
@@ -113,7 +110,7 @@ public class MetPetDBApplication implements EntryPoint {
 
 	private void finishOnModuleLoad() {
 		createHdrNav();
-
+		
 		// If there is no user we didn't receive a user change event,
 		// as null (initial user) == null (current user).
 		if (!MpDb.isLoggedIn())
@@ -148,11 +145,20 @@ public class MetPetDBApplication implements EntryPoint {
 	}
 
 	static void onCurrentUserChanged(final User n) {
-		loginBar.clear();
+		logbar.clear();
+		logbarLinks.clear();
 		if (n != null)
 			createLoginBarLoggedIn();
 		else
 			createLoginBarLoggedOut();
+		logbar.add(logbarLinks);
+		reportBugLink = new MLink("Report a Bug",new ClickListener() {
+			public void onClick(final Widget sender) {
+				Window.open(MpDb.BUG_REPORT_URL, "mpdb_trac", "");
+			}
+		});
+		reportBugLink.addStyleName("report-bug");
+		logbar.add(reportBugLink);
 		dispatchCurrentUserChanged(contentContainer, n);
 	}
 
@@ -191,36 +197,41 @@ public class MetPetDBApplication implements EntryPoint {
 	}
 
 	private static void createLoginBarLoggedOut() {
-		loginBar.add(new MLink(LocaleHandler.lc_text.buttonLogin(),
+		loginLink = new MLink(LocaleHandler.lc_text.buttonLogin(),
 				new ClickListener() {
 					public void onClick(final Widget sender) {
 						new LoginDialog(null).show();
 					}
-				}));
-		loginBar.add(new MLink(LocaleHandler.lc_text.buttonRegister(),
-				TokenSpace.register));
+				});
+		registerLink = new MLink(LocaleHandler.lc_text.buttonRegister(),
+				TokenSpace.register);
+		logbarLinks.add(loginLink);
+		logbarLinks.add(registerLink);
 		Cookies.setCookie(MpDbConstants.USERID_COOKIE, "", new Date());
 	}
 
 	private static void createLoginBarLoggedIn() {
-		MText userName = new MText(MpDb.currentUser().getEmailAddress());
-		userName.setStyleName("logbar-username");
-		loginBar.add(userName);
-		loginBar.add(new MLink(LocaleHandler.lc_text.tools_EditProfile(),
-				TokenSpace.editProfile));
-		loginBar.add(new MLink(LocaleHandler.lc_text.buttonLogout(),
+		HTML loggedIn = new HTML("Logged in as <span>" + MpDb.currentUser().getEmailAddress() + "</span>");
+		loggedIn.setStyleName("identity");
+		editProfileLink = new MLink(LocaleHandler.lc_text.tools_EditProfile(),
+				TokenSpace.editProfile);
+		logoutLink = new MLink(LocaleHandler.lc_text.buttonLogout(),
 				new ClickListener() {
 					public void onClick(Widget sender) {
 						MpDb.setCurrentUser(null);
 						TokenSpace.home.execute();
 						History.newItem(TokenSpace.home.getName());
 					}
-				}));
+				});
+		logoutLink.addStyleName("logout");
+		logbarLinks.add(loggedIn);
+		logbarLinks.add(editProfileLink);
+		logbarLinks.add(logoutLink);
 		if (!MpDb.currentUser().getEnabled()) {
-			final MLink disabled = new MLink(LocaleHandler.lc_text
+			disabledAccountLink = new MLink(LocaleHandler.lc_text
 					.notice_AccountDisabled(), TokenSpace.editProfile);
-			disabled.setStyleName(CSS.NOTICE_URGENT);
-			loginBar.add(disabled);
+			disabledAccountLink.addStyleName(CSS.WARNING);
+			logbarLinks.add(disabledAccountLink);
 		}
 	}
 
@@ -246,10 +257,6 @@ public class MetPetDBApplication implements EntryPoint {
 	public static void footer(final Widget w) {
 		footerContainer.clear();
 		footerContainer.add(w);
-	}
-
-	public static RootPanel getLeftPanel(){
-		return leftContainer;
 	}
 
 	public static void appenBreadCrumbs(final Widget w) {

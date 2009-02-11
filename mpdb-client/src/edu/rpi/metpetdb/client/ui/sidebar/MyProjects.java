@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.left.side;
+package edu.rpi.metpetdb.client.ui.sidebar;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -8,10 +8,9 @@ import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
-public class MyProjects extends LeftColWidget implements UsesLeftColumn {
+public class MyProjects extends Sidebar implements UsesSidebar {
 
 	public MyProjects(final Set projects) {
-		super("My Projects");
 		this.setStyleName("lcol-MyProjects");
 
 		final MHtmlList pList = new MHtmlList();

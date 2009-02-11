@@ -42,15 +42,16 @@ import edu.rpi.metpetdb.client.ui.image.browser.dialogs.PointPopup;
 import edu.rpi.metpetdb.client.ui.image.browser.dialogs.PopupMenu;
 import edu.rpi.metpetdb.client.ui.image.browser.widgets.DCFlowPanel;
 import edu.rpi.metpetdb.client.ui.image.browser.widgets.ResizableWidget;
-import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
+import edu.rpi.metpetdb.client.ui.sidebar.Sidebar;
 import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
+import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel.ZMode;
 
-public class ImageBrowserDetails extends FlowPanel implements ClickListener {
+public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 
 	// Links
 	private final MLink addExistingImage;
@@ -72,7 +73,7 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 
 	private Grid g;
 	private final MAbsolutePanel grid;
-	private LeftSideLayer layers;
+	private LayersSidebar layers;
 
 	// Listeners
 	private ImageBrowserMouseListener mouseListener;
@@ -208,8 +209,8 @@ public class ImageBrowserDetails extends FlowPanel implements ClickListener {
 		this.add(this.grid);
 		this.add(this.save);
 		this.add(this.info);
-		this.layers = new LeftSideLayer(this.g.getSubsample().getName());
-		LeftColWidget.insertLayersLeftSide(this.layers, this.g.getSubsample());
+		this.layers = new LayersSidebar(this.g.getSubsample().getName());
+		setSidebar(this.layers);
 		this.mouseListener = new ImageBrowserMouseListener(this.grid,
 				this.imagesOnGrid.values(), this.zOrderManager, this.g
 						.getSubsample(), this, fp);

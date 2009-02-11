@@ -39,7 +39,6 @@ import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
-import edu.rpi.metpetdb.client.ui.left.side.MySamples;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
@@ -51,7 +50,6 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	private Label errMsg = new Label();
 	private final FlexTable sampleDisplayFilters = new FlexTable();
 	private SampleListEx list;
-	private MySamples mysamples;
 	private final FlowPanel footerContainer = new FlowPanel();
 	private final SimplePanel footerWrapper = new SimplePanel();
 	private Set<Project> projectsList;

@@ -2,27 +2,20 @@
                 content
  --------------------------------------*/
 html {
-	font: 62.5%/1.5 Verdana,Helvetica,Arial,sans-serif;
+	font: 62.5% Verdana,Helvetica,Arial,sans-serif;
 	color: #000;
 }
 body {
 	width: 100%;
 	min-width: 600px;
 	font-size: 1.1em;
-/*	background: #fff url(../images/bg-sidebar.gif) repeat-y left top; */
 }
-.pageWrapper {
-/*	background: transparent url(../images/bg-sidebar.gif) repeat-y left top; */
-}
-#container {
-	margin-left: 0px;
-}
-
 .page-panel .page-sidebar {
 	display: none;
 }
 .page-panel-twocol {
-	padding-left: 0px;
+	padding-left: 250px;
+	background: transparent url(../images/bg-sidebar.gif) repeat-y left top;
 }
 .page-panel-twocol .page-sidebar,
 .page-panel-twocol .page-content {
@@ -33,7 +26,10 @@ body {
 	width: 100%;
 }
 .page-panel-twocol .page-sidebar {
-
+	display: block;
+	width: 250px;
+	margin-left: -100%;
+	right: 250px;
 }
 
 
@@ -70,34 +66,83 @@ body {
 /*-------------------------------------
                  logbar
  --------------------------------------*/
-#logbar-bg {
+.page-logbar {
 	position: absolute;
 	right: 16px;
 	top: 0;
 	height: 30px;
-	background: transparent url(../images/logbar-left.gif) no-repeat left top;
-	padding-left: 2px;
+	line-height: 30px;
+	padding: 0 0.5em;
+	-moz-border-radius-bottomleft: 3px;
+	-moz-border-radius-bottomright: 3px;
+	-webkit-border-bottom-left-radius: 3px;
+	-webkit-border-bottom-right-radius: 3px;
+	background-color: #4a4a4a;
+	color: #838383;
 }
-#logbar-end {
-	height: 30px;
-	padding-right: 2px;
-	background: transparent url(../images/logbar-right.gif) no-repeat right top;
+.page-logbar ul,
+.page-logbar ul li,
+.page-logbar .identity {
+	display: inline;
 }
-#logbar {
-	height: 20px;
-	background: transparent url(../images/logbar-bg.gif) repeat-x left top;
-	color: #404040;
-	padding: 5px 1em;
+.page-logbar ul li {
+	margin: 0 0.5em;
 }
-#logbar .logbar-username {
-	padding-right: 1em;
-	margin-right: 0.8em;
-	border-right: 1px solid #b4b7bc;
+.page-logbar .identity span {
+	color: #a9a9a9;
 }
-#logbar a,
-#logbar a:link {
+.page-logbar a,
+.page-logbar a:link,
+.page-logbar a:visited  {
+	color: #9ed2ff;
 	text-decoration: none;
-	margin: 0 0.2em;
+}
+.page-logbar a:focus,
+.page-logbar a:hover,
+.page-logbar a:active  {
+	color: #cce8ff;
+	text-decoration: underline;
+}
+.page-logbar a.warning,
+.page-logbar a.warning:link,
+.page-logbar a.warning:visited {
+	text-decoration: none;
+	background-color: #f3890b;
+	color: #fff;
+	padding: 0.1em 0.4em 0.3em;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
+.page-logbar a.warning:focus,
+.page-logbar a.warning:hover,
+.page-logbar a.warning:active {
+	text-decoration: underline;
+	color: #fff;
+}
+.page-logbar a.logout,
+.page-logbar a.logout:link,
+.page-logbar a.logout:visited {
+	text-decoration: none;
+	background-color: #000;
+	color: #eee;
+	padding: 0.1em 0.4em 0.3em;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
+.page-logbar a.logout:focus,
+.page-logbar a.logout:hover,
+.page-logbar a.logout:active {
+	color: #fff;
+}
+.page-logbar a.report-bug,
+.page-logbar a.report-bug:link,
+.page-logbar a.report-bug:visited,
+.page-logbar a.report-bug:focus,
+.page-logbar a.report-bug:hover,
+.page-logbar a.report-bug:active {
+	position: absolute;
+	left: -7.2em;
+	color: #B1DC8B;
 }
 
 /*-------------------------------------
@@ -398,6 +443,12 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 	width: 50%;
 }
 
-
-
+/*-------------------------------------
+             GWT Stuff
+ --------------------------------------*/
+iframe#__gwt_historyFrame,
+#login {
+	display: none;
+}
+ 
 

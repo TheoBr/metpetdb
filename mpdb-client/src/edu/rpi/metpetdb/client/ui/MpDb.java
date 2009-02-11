@@ -41,7 +41,7 @@ import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadImagesService;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadImagesServiceAsync;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadSampleService;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadSampleServiceAsync;
-import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
+import edu.rpi.metpetdb.client.ui.sidebar.Sidebar;
 
 /**
  * Client side async service proxies and global constants.
@@ -97,6 +97,7 @@ public class MpDb {
 	public static final String WIKI_URL = "http://wiki.cs.rpi.edu/trac/metpetdb";
 	public static final String JAVADOC_URL = "http://samana.cs.rpi.edu:8080/metpetwebtst/api/index.html";
 	public static final String JUNIT_URL = "http://samana.cs.rpi.edu:8080/metpetwebtst/reports/index.html";
+	public static final String BUG_REPORT_URL = "http://wiki.cs.rpi.edu/trac/metpetdb/newticket";
 
 	// public static final HtmlFactory factory;
 

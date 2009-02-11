@@ -17,84 +17,23 @@
 
 <body>
 
-<script type="text/javascript" language='javascript' src='edu.rpi.metpetdb.MetPetDBApplication.nocache.js'></script>
-<iframe id="__gwt_historyFrame" style="width:0;height:0;border:0"></iframe>
+<script type="text/javascript" src="edu.rpi.metpetdb.MetPetDBApplication.nocache.js"></script>
+<iframe id="__gwt_historyFrame"></iframe>
 
 <div id="loadingmessage"><div><span>Starting MetPetDB. Please wait...</span></div></div>
 <div id="mpdb-notice"></div>
 
 <div id="header">
-	<div id="logbar-bg">
-		<div id="logbar-end">
-			<div id="logbar"></div>
-		</div>
-	</div>
+	<div id="logbar" class="page-logbar"></div>
 	<div class="hdrmsg">A Database for Metamorphic Petrology</div>
 	<div id="hdrnav"></div>
 	<a href="#home" id="mpdb-logo"></a>
 </div> <!-- end #header -->
 
-<div class="pageWrapper clearfix">
-
-
-<div id="leftcol" class="page-leftcol">
-	<div id="tools"></div>
-</div>
-
-
 <div id="container" class="page-container">
 	<div id="breadcrumbs"></div>
 	<div id="content"></div>
 </div> <!-- end #container -->
-
-</div> <!-- end #pageWrapper -->
-
-<!-- source elements -->
-<div style="visibilty:hidden;display:none">
-<div id="screen-Introduction">
-	<h1>Welcome to MetPetDB</h1>
-
-	<img src="images/slices.jpg" alt="" class="r">
-	<p><strong>MetPetDB</strong> is a database for metamorphic petrology that is being designed and built by a global community of metamorphic petrologists in collaboration with computer scientists at Rensselaer Polytechnic Institute as part of the National Cyberinfrastructure Initiative and supported by the National Science Foundation.</p>
-	<p>This project will support the development, implementation and population of MetPetDB with the purpose of:</p>
-	<ol>
-		<li><span>archiving published data,</span></li>
-		<li><span>storing new data for ready access to researchers and students,</span></li>
-		<li><span>facilitating the gathering of information for researchers beginning new projects,</span></li>
-		<li><span>providing a search mechanism for data relating to anywhere on the globe,</span></li>
-		<li><span>providing a platform for collaborative studies among researchers, and</span></li>
-		<li><span>serving as a portal for students beginning their studies of metamorphic geology.</span></li>
-	</ol>
-	
-	<p>Read more about the MetPetDB project <a href="#" title="More about MetPetDB">here</a>.</p>
-	
-	<h2>Other Databases</h2>
-	
-	<table id="dblist" cellspacing="0">
-		<tbody><tr><td><a href="http://www.earthchem.org" title="EarthChem"><img src="images/earthchem-logo.jpg" alt="EarthChem"></a>Advanced Data Management in Solid Earth Geochemistry</td>
-		<td><a href="http://www.petdb.org" title="PETDB"><img src="images/petdb-logo.jpg" alt="PETDB"></a>Petrological Database of the Ocean Floor</td>
-		<td><a href="http://navdat.kgs.ku.edu" title="NAVDAT"><img src="images/navdat-logo.jpg" alt="NAVDAT"></a>The Western North American Volcanic and Intrusive Rock Database</td>
-		<td><a href="http://georoc.mpch-mainz.gwdg.de/georoc/Start.asp" title="GEOROC"><img src="images/georoc-logo.jpg" alt="GEOROC"></a>Geochemistry of Rocks of the Ocean and Continents</td>
-		<td><a href="http://www.geosamples.org" title="SESAR"><img src="images/sesar-logo.jpg" alt="SESAR"></a>System for Earth Sample Registration</td></tr>
-	</tbody></table>
-</div>
-
-<div id="sidebar-Default">
-<div id="sidebar">
-<div class="titlebar">User Information</div>
-<p class="notice">You are not logged in.</p>
-<p>Please <span id="sidebar-Login">Login</span> or <span id="sidebar-Register">Register</span> to gain full access to MetPetDB's features:</p>
-
-<ul class="bullet">
-	<li><strong>Upload sample data.</strong></li>
-	<li><strong>Save searches.</strong></li>
-	<li><strong>Create/Join projects.</strong></li>
-</ul> 
-</div> <!-- end #sidebar -->
-</div> <!-- end #sidebar-Default -->
-
-</div> <!-- end source elements --> 
-
 
 <div id="footer">
 <div id="nsf">
@@ -105,14 +44,12 @@
 </div> <!-- end #footer -->
 
 <!-- login  -->
-<div style="visibilty:hidden;display:none">
-	<div id="login">
-	<form action="login" id=loginForm>
-		<input id=u name=u>
-	  	<input ud=pw name=pw type=password>
-		<button id=submit type=submit>Sign In</button>
-	</form>
-	</div>
+<div id="login">
+<form action="login" id=loginForm>
+	<input id=u name=u>
+  	<input ud=pw name=pw type=password>
+	<button id=submit type=submit>Sign In</button>
+</form>
 </div>
 
 

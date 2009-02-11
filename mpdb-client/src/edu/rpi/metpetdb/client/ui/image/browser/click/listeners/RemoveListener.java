@@ -9,16 +9,16 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
-import edu.rpi.metpetdb.client.ui.image.browser.LeftSideLayer;
+import edu.rpi.metpetdb.client.ui.image.browser.LayersSidebar;
 
 public class RemoveListener implements ClickListener {
 
 	private final ImageOnGridContainer iog;
-	private final LeftSideLayer leftSideLayer;
+	private final LayersSidebar leftSideLayer;
 	private final Map<Image, ImageOnGridContainer> imagesOnGrid;
 
 	public RemoveListener(final ImageOnGridContainer imageOnGrid,
-			final LeftSideLayer lsl,
+			final LayersSidebar lsl,
 			final Map<Image, ImageOnGridContainer> imagesOnGrid) {
 		iog = imageOnGrid;
 		leftSideLayer = lsl;

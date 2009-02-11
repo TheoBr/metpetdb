@@ -8,18 +8,19 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.ui.left.side.LeftColWidget;
-import edu.rpi.metpetdb.client.ui.left.side.UsesLeftColumn;
+import edu.rpi.metpetdb.client.ui.sidebar.Sidebar;
+import edu.rpi.metpetdb.client.ui.sidebar.UsesSidebar;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
+import edu.rpi.metpetdb.client.ui.widgets.MText;
 
-public class LeftSideLayer extends LeftColWidget implements UsesLeftColumn {
+public class LayersSidebar extends Sidebar implements UsesSidebar {
 
 	private final MHtmlList ul;
 	private final LayerDragMouseListener layerDragger;
 	private final HashSet<LayerItem> layerItems;
 
-	public LeftSideLayer(final String subsampleName) {
-		super(subsampleName + "'s Layers");
+	public LayersSidebar(final String subsampleName) {
+		add(new MText(subsampleName + "'s Layers", "h1"));
 		layerItems = new HashSet<LayerItem>();
 		ul = new MHtmlList();
 		this.add(ul);

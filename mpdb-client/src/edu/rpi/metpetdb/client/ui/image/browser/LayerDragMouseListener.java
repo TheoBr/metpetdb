@@ -106,7 +106,7 @@ public class LayerDragMouseListener implements MouseListener {
 		final Iterator itr = layerItems.iterator();
 		final boolean movedDown = source < target ? true : false;
 		while (itr.hasNext()) {
-			final LeftSideLayer.LayerItem layerItem = (LeftSideLayer.LayerItem) itr
+			final LayersSidebar.LayerItem layerItem = (LayersSidebar.LayerItem) itr
 					.next();
 			if (movedDown) {
 				if (layerItem.getIndex() <= target
