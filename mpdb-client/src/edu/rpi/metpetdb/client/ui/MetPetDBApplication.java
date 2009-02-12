@@ -16,6 +16,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -44,10 +45,10 @@ public class MetPetDBApplication implements EntryPoint {
 	private static MLink editProfileLink;
 	private static MLink logoutLink;
 	private static MLink reportBugLink;
-	private static MLink disabledAccountLink;
 	
 	private static MMenuBar hdrnav;
 	private static RootPanel breadcrumbsBar;
+	private static RootPanel inPageNotice;
 	private static RootPanel contentContainer;
 	private static RootPanel noticeContainer;
 	private static HashSet<Widget> pageChangeWatchers;
@@ -60,8 +61,10 @@ public class MetPetDBApplication implements EntryPoint {
 						new LoginDialog(null).show();
 					}
 				});
+		loginLink.addStyleName(CSS.LIGHT_LINK);
 		registerLink = new MLink(LocaleHandler.lc_text.buttonRegister(),
 				TokenSpace.register);
+		registerLink.addStyleName(CSS.LIGHT_LINK);
 		reportBugLink = new MLink("Report a Bug",new ClickListener() {
 			public void onClick(final Widget sender) {
 				Window.open(MpDb.BUG_REPORT_URL, "mpdb_trac", "");
@@ -70,6 +73,7 @@ public class MetPetDBApplication implements EntryPoint {
 		reportBugLink.addStyleName("report-bug");
 		editProfileLink = new MLink(LocaleHandler.lc_text.tools_EditProfile(),
 				TokenSpace.editProfile);
+		editProfileLink.addStyleName(CSS.LIGHT_LINK);
 		logoutLink = new MLink(LocaleHandler.lc_text.buttonLogout(),
 				new ClickListener() {
 					public void onClick(Widget sender) {
@@ -79,9 +83,6 @@ public class MetPetDBApplication implements EntryPoint {
 					}
 				});
 		logoutLink.addStyleName("logout");
-		disabledAccountLink = new MLink(LocaleHandler.lc_text
-				.notice_AccountDisabled(), TokenSpace.editProfile);
-		disabledAccountLink.addStyleName(CSS.WARNING);
 	}
 
 	public void onModuleLoad() {
@@ -90,6 +91,7 @@ public class MetPetDBApplication implements EntryPoint {
 
 		logbar = RootPanel.get(CSS.LOGBAR_ID);
 		breadcrumbsBar = RootPanel.get(CSS.BREADCRUMBS_ID);
+		inPageNotice = RootPanel.get(CSS.IN_PAGE_NOTICE_ID);
 		hdrnav = new MMenuBar();
 		RootPanel.get(CSS.HDRNAV_ID).add(hdrnav);
 		contentContainer = RootPanel.get(CSS.CONTENT_ID);
@@ -170,6 +172,19 @@ public class MetPetDBApplication implements EntryPoint {
 
 	static void onCurrentUserChanged(final User n) {
 		populateLogbar(n);
+		inPageNotice.clear();
+		if (!MpDb.currentUser().getEnabled()) {
+			HTMLPanel p = new HTMLPanel("Your account is not confirmed. Please click the confirmation link in your email. <span id=\"resend-email\"></span>");
+			p.setStyleName("confirm-account-msg");
+			MLink resend = new MLink("Resend confirmation email", new ClickListener() {
+				public void onClick(Widget sender) {
+					// TODO send confirmation email
+				}
+			});
+			resend.addStyleName(CSS.LIGHT_LINK);
+			p.addAndReplaceElement(resend, "resend-email");
+			inPageNotice.add(p);
+		}
 		dispatchCurrentUserChanged(contentContainer, n);
 	}
 
@@ -216,9 +231,7 @@ public class MetPetDBApplication implements EntryPoint {
 			logbarLinks.add(loggedIn);
 			logbarLinks.add(editProfileLink);
 			logbarLinks.add(logoutLink);
-			if (!MpDb.currentUser().getEnabled()) {
-				logbarLinks.add(disabledAccountLink);
-			}
+			
 		} else {
 			logbarLinks.add(loginLink);
 			logbarLinks.add(registerLink);
@@ -269,17 +282,6 @@ public class MetPetDBApplication implements EntryPoint {
 				TokenSpace.newProject);
 
 		final MMenuBar dev = new MMenuBar(true);
-		// about.addItem(LocaleHandler.lc_text.aboutMenu_VersionControl(),
-		// new Command() {
-		// public void execute() {
-		// Window.open(GIT_URL, "mpdb_git", "");
-		// }
-		// });
-		// about.addItem("SVN Version Control", new Command() {
-		// public void execute() {
-		// Window.open(SVN_URL, "mpdb_svn", "");
-		// }
-		// });
 		dev.addItem("Regenerate Constraints", new Command() {
 			public void execute() {
 				new ServerOp<ResumeSessionResponse>() {
@@ -320,8 +322,6 @@ public class MetPetDBApplication implements EntryPoint {
 			}
 		});
 
-		// hdrnav.addItem(LocaleHandler.lc_text.homeMenu(),
-		// TokenSpace.introduction);
 		hdrnav.addItem("My Samples", TokenSpace.samplesForUser);
 		hdrnav.addItem(LocaleHandler.lc_text.projectMenu(), projects);
 		hdrnav.addItem("Search", TokenSpace.search);
@@ -334,13 +334,5 @@ public class MetPetDBApplication implements EntryPoint {
 		if (!GWT.getHostPageBaseURL().contains("metpetweb"))
 			hdrnav.addItem("Developers", dev);
 
-	}
-
-	/**
-	 * Creates the introduction screen and assigns click listeners to necessary
-	 * links
-	 */
-	private static void setupIntroduction() {
-		// introduction = MpDb.factory.getIntroduction();
 	}
 }

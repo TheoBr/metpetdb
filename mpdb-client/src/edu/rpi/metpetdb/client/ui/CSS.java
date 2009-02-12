@@ -19,6 +19,7 @@ public class CSS {
 	public static final String USERNAME_ID = "u";
 	public static final String PASSWORD_ID = "pw";
 	public static final String LOGIN_SUBMIT_ID = "submit";
+	public static final String IN_PAGE_NOTICE_ID = "in-page-notice";
 
 	/* ---------------- utility ---------------- */
 	public static final String HIDE = "hide";
@@ -58,6 +59,7 @@ public class CSS {
 	public static final String CHECKBOX = "checkbox";
 
 	/* ---------------- links and buttons ---------------- */
+	public static final String LIGHT_LINK = "light-link";
 	public static final String LINK_LARGE_ICON = "large-icon-link";
 	public static final String LINK_UPLOAD = "upload-link";
 	public static final String LINK_UPLOAD_MULTI = "upload-multi-link";

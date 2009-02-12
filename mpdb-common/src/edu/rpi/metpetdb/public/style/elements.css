@@ -67,6 +67,16 @@ a, a:link, a:visited {
 a:focus, a:hover, a:active {
 	color: #318fdf;
 }
+a.light-link,
+a.light-link:link,
+a.light-link:visited  {
+	color: #9ed2ff;
+}
+a.light-link:focus,
+a.light-link:hover,
+a.light-link:active  {
+	color: #cce8ff;
+}
 .large-icon-link {
 	padding: 10px 0 10px 24px;
 	background-repeat: no-repeat;

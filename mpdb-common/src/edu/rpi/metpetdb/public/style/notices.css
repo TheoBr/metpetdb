@@ -1,0 +1,11 @@
+/*-------------------------------------
+    confirm account (to enable it)
+ --------------------------------------*/
+.confirm-account-msg {
+	background: #1c1c1c url(../images/bg-notconfirmed.gif) repeat-x left top;
+	line-height: 30px;
+	height: 32px;
+	color: #fff;
+	padding: 0 10px;
+	text-align: center;
+}
