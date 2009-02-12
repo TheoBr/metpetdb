@@ -48,14 +48,41 @@ public class MetPetDBApplication implements EntryPoint {
 	
 	private static MMenuBar hdrnav;
 	private static RootPanel breadcrumbsBar;
-	// private static MenuBar datePanel;
 	private static RootPanel contentContainer;
 	private static RootPanel noticeContainer;
 	private static HashSet<Widget> pageChangeWatchers;
 	private static RootPanel footerContainer;
-
-	// public static Html introduction;
-	// public static Hyperlink logoLink;
+	
+	{
+		loginLink = new MLink(LocaleHandler.lc_text.buttonLogin(),
+				new ClickListener() {
+					public void onClick(final Widget sender) {
+						new LoginDialog(null).show();
+					}
+				});
+		registerLink = new MLink(LocaleHandler.lc_text.buttonRegister(),
+				TokenSpace.register);
+		reportBugLink = new MLink("Report a Bug",new ClickListener() {
+			public void onClick(final Widget sender) {
+				Window.open(MpDb.BUG_REPORT_URL, "mpdb_trac", "");
+			}
+		});
+		reportBugLink.addStyleName("report-bug");
+		editProfileLink = new MLink(LocaleHandler.lc_text.tools_EditProfile(),
+				TokenSpace.editProfile);
+		logoutLink = new MLink(LocaleHandler.lc_text.buttonLogout(),
+				new ClickListener() {
+					public void onClick(Widget sender) {
+						MpDb.setCurrentUser(null);
+						TokenSpace.home.execute();
+						History.newItem(TokenSpace.home.getName());
+					}
+				});
+		logoutLink.addStyleName("logout");
+		disabledAccountLink = new MLink(LocaleHandler.lc_text
+				.notice_AccountDisabled(), TokenSpace.editProfile);
+		disabledAccountLink.addStyleName(CSS.WARNING);
+	}
 
 	public void onModuleLoad() {
 		GWT.setUncaughtExceptionHandler(ErrorHandler.INSTANCE);
@@ -69,18 +96,15 @@ public class MetPetDBApplication implements EntryPoint {
 		noticeContainer = RootPanel.get(CSS.NOTICE_ID);
 		footerContainer = RootPanel.get(CSS.FOOTER_ID);
 
-		// setupIntroduction();
 		pageChangeWatchers = new HashSet<Widget>();
 
 		appenBreadCrumbs(new Breadcrumbs());
 
 		// Try to restore the user's current session.
-		//
 		MpDb.user_svc.resumeSession(new AsyncCallback<ResumeSessionResponse>() {
 			public void onFailure(final Throwable caught) {
 				// Dead. As a doornail. We cannot let the user
 				// continue as we have no ObjectConstraints!
-				//
 				new UnknownErrorDialog(caught, false).show();
 			}
 
@@ -114,7 +138,7 @@ public class MetPetDBApplication implements EntryPoint {
 		// If there is no user we didn't receive a user change event,
 		// as null (initial user) == null (current user).
 		if (!MpDb.isLoggedIn())
-			createLoginBarLoggedOut();
+			populateLogbar(null);
 
 		// Throw away the loading message that users see while GWT
 		// starts up and is able to finish loading its resources.
@@ -145,20 +169,7 @@ public class MetPetDBApplication implements EntryPoint {
 	}
 
 	static void onCurrentUserChanged(final User n) {
-		logbar.clear();
-		logbarLinks.clear();
-		if (n != null)
-			createLoginBarLoggedIn();
-		else
-			createLoginBarLoggedOut();
-		logbar.add(logbarLinks);
-		reportBugLink = new MLink("Report a Bug",new ClickListener() {
-			public void onClick(final Widget sender) {
-				Window.open(MpDb.BUG_REPORT_URL, "mpdb_trac", "");
-			}
-		});
-		reportBugLink.addStyleName("report-bug");
-		logbar.add(reportBugLink);
+		populateLogbar(n);
 		dispatchCurrentUserChanged(contentContainer, n);
 	}
 
@@ -196,43 +207,25 @@ public class MetPetDBApplication implements EntryPoint {
 		pageChangeWatchers.remove(w);
 	}
 
-	private static void createLoginBarLoggedOut() {
-		loginLink = new MLink(LocaleHandler.lc_text.buttonLogin(),
-				new ClickListener() {
-					public void onClick(final Widget sender) {
-						new LoginDialog(null).show();
-					}
-				});
-		registerLink = new MLink(LocaleHandler.lc_text.buttonRegister(),
-				TokenSpace.register);
-		logbarLinks.add(loginLink);
-		logbarLinks.add(registerLink);
-		Cookies.setCookie(MpDbConstants.USERID_COOKIE, "", new Date());
-	}
-
-	private static void createLoginBarLoggedIn() {
-		HTML loggedIn = new HTML("Logged in as <span>" + MpDb.currentUser().getEmailAddress() + "</span>");
-		loggedIn.setStyleName("identity");
-		editProfileLink = new MLink(LocaleHandler.lc_text.tools_EditProfile(),
-				TokenSpace.editProfile);
-		logoutLink = new MLink(LocaleHandler.lc_text.buttonLogout(),
-				new ClickListener() {
-					public void onClick(Widget sender) {
-						MpDb.setCurrentUser(null);
-						TokenSpace.home.execute();
-						History.newItem(TokenSpace.home.getName());
-					}
-				});
-		logoutLink.addStyleName("logout");
-		logbarLinks.add(loggedIn);
-		logbarLinks.add(editProfileLink);
-		logbarLinks.add(logoutLink);
-		if (!MpDb.currentUser().getEnabled()) {
-			disabledAccountLink = new MLink(LocaleHandler.lc_text
-					.notice_AccountDisabled(), TokenSpace.editProfile);
-			disabledAccountLink.addStyleName(CSS.WARNING);
-			logbarLinks.add(disabledAccountLink);
+	private static void populateLogbar(final User n) {
+		logbar.clear();
+		logbarLinks.clear();
+		if (n != null) {
+			HTML loggedIn = new HTML("Logged in as <span>" + MpDb.currentUser().getEmailAddress() + "</span>");
+			loggedIn.setStyleName("identity");
+			logbarLinks.add(loggedIn);
+			logbarLinks.add(editProfileLink);
+			logbarLinks.add(logoutLink);
+			if (!MpDb.currentUser().getEnabled()) {
+				logbarLinks.add(disabledAccountLink);
+			}
+		} else {
+			logbarLinks.add(loginLink);
+			logbarLinks.add(registerLink);
+			Cookies.setCookie(MpDbConstants.USERID_COOKIE, "", new Date());
 		}
+		logbar.add(logbarLinks);
+		logbar.add(reportBugLink);
 	}
 
 	public static void show(final Widget w) {
