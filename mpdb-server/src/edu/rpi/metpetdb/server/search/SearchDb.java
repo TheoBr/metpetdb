@@ -19,6 +19,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.solr.util.NumberUtils;
 import org.hibernate.CallbackException;
 import org.hibernate.Session;
+import org.hibernate.search.FullTextQuery;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 
@@ -243,13 +244,8 @@ public class SearchDb {
 
 		System.out.println("Search Query:" + fullQuery.toString());
 		
-		final org.hibernate.Query hibQuery = fullTextSession
+		final FullTextQuery hibQuery = fullTextSession
 				.createFullTextQuery(fullQuery, Sample.class);
-		final org.hibernate.Query sizeQuery = fullTextSession
-				.createFullTextQuery(fullQuery, Sample.class);
-		
-		
-		
 		
 		if (p != null){
 			hibQuery.setFirstResult(p.getFirstResult());
@@ -257,11 +253,11 @@ public class SearchDb {
 		}
 		
 		try {
-			final Results<Sample> results = new Results<Sample>(sizeQuery.list().size(), hibQuery.list());
+			final Results<Sample> results = new Results<Sample>(hibQuery.getResultSize(), hibQuery.list());
 			return results;
 		} catch (CallbackException e) {
 			session.clear();
-			throw ConvertSecurityException.convertToException(e.getMessage());
+			throw ConvertSecurityException.convertToException(e);
 		} finally {
 			session.close();
 		}

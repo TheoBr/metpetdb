@@ -37,7 +37,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 	private static boolean authenticate(final User u, final String pw) {
 		return PasswordEncrypter.verify(u.getEncryptedPassword(), pw);
 	}
-	
+
 	public void endSession() {
 		setCurrentUser(null, null);
 	}
@@ -80,8 +80,9 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			currentReq().action = Action.LOGIN;
 			u.setEmailAddress(ssr.getEmailAddress());
 			u = (new UserDAO(currentSession())).fill(u);
-			
-			if (!PasswordEncrypter.verify(u.getEncryptedPassword(), ssr.getPassword())) {
+
+			if (!PasswordEncrypter.verify(u.getEncryptedPassword(), ssr
+					.getPassword())) {
 				throw new GenericDAOException();
 			} else {
 				final Collection<Principal> principals = new ArrayList<Principal>();
@@ -97,7 +98,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			throw new LoginFailureException(doc.StartSessionRequest_password);
 		}
 	}
-	
+
 	private void addPrincipal(final Principal newOne) {
 		currentReq().principals.add(newOne);
 		getThreadLocalRequest().getSession().setAttribute("principals",
@@ -143,7 +144,8 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		doc.validate(newUser);
 		User u = newUser;
 		u.setEnabled(false);
-		u.setRole((Role) currentSession().createQuery("from Role r where r.rank=0").uniqueResult());
+		u.setRole((Role) currentSession().createQuery(
+				"from Role r where r.rank=0").uniqueResult());
 		u.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-", ""));
 		try {
 			u = (new UserDAO(this.currentSession())).save(u);
@@ -168,8 +170,8 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 	}
 
 	public void changePassword(final UserWithPassword uwp)
-			throws LoginRequiredException, LoginFailureException, MpDbException,
-			ValidationException {
+			throws LoginRequiredException, LoginFailureException,
+			MpDbException, ValidationException {
 		doc.UserWithPassword_user.validateEntity(uwp);
 		doc.UserWithPassword_oldPassword.validateEntity(uwp);
 		doc.UserWithPassword_newPassword.validateEntity(uwp);
@@ -209,6 +211,26 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 				});
 	}
 
+	public void sendConfirmationCode(User user) throws ValidationException,
+			MpDbException, UnableToSendEmailException {
+		final UserDAO uDAO = new UserDAO(this.currentSession());
+		user.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-",
+				""));
+		User u = new User();
+		u.setId(user.getId());
+		u = uDAO.fill(u);
+		user.setEncryptedPassword(u.getEncryptedPassword());
+		user = uDAO.save(user);
+		commit();
+		EmailSupport.sendMessage(this, u.getEmailAddress(),
+				"sendConfirmationCode", new Object[] {
+						user.toString(),
+						getModuleBaseURL() + "#ConfirmationCode/"
+								+ user.getConfirmationCode()
+				});
+		setCurrentUser(user, null);
+	}
+
 	public User confirmUser(String confirmationCode) throws MpDbException,
 			LoginRequiredException {
 		User u = new User();
@@ -220,11 +242,11 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			u.setConfirmationCode("");
 			ud.save(u);
 			commit();
-			//update session with new permission
+			// update session with new permission
 			addPrincipal(new EnabledPrincipal(u));
 			return u;
 		} else {
 			throw new GenericDAOException("Confirmation code does not equal");
 		}
-	}	
+	}
 }

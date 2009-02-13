@@ -132,4 +132,7 @@ public interface UserService extends RemoteService {
 	User save(User user) throws MpDbException, ValidationException;
 	
 	void endSession();
+	
+	public void sendConfirmationCode(User u) throws ValidationException,
+	MpDbException, UnableToSendEmailException;
 }

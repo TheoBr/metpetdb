@@ -33,7 +33,6 @@ import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MMenuBar;
-import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 /** Main application entry point. */
 public class MetPetDBApplication implements EntryPoint {
@@ -173,12 +172,23 @@ public class MetPetDBApplication implements EntryPoint {
 	static void onCurrentUserChanged(final User n) {
 		populateLogbar(n);
 		inPageNotice.clear();
-		if (!MpDb.currentUser().getEnabled()) {
+		if (n != null && !n.getEnabled()) {
 			HTMLPanel p = new HTMLPanel("Your account is not confirmed. Please click the confirmation link in your email. <span id=\"resend-email\"></span>");
 			p.setStyleName("confirm-account-msg");
 			MLink resend = new MLink("Resend confirmation email", new ClickListener() {
 				public void onClick(Widget sender) {
-					// TODO send confirmation email
+					new VoidServerOp() {
+						@Override
+						public void onSuccess() {
+							inPageNotice.clear();
+							inPageNotice.add(new Label("email send to your email address"));
+						}
+
+						@Override
+						public void begin() {
+							MpDb.user_svc.sendConfirmationCode(MpDb.currentUser(), this);
+						}
+					}.begin();
 				}
 			});
 			resend.addStyleName(CSS.LIGHT_LINK);

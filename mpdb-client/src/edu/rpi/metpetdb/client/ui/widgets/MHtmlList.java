@@ -122,6 +122,7 @@ public class MHtmlList extends Panel implements IndexedPanel,
 					listItem.decrementIndex();
 				}
 			}
+			orphan(w);
 			return true;
 		}
 	}

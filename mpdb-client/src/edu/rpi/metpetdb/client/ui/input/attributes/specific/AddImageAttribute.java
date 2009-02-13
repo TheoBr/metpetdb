@@ -83,18 +83,14 @@ public class AddImageAttribute extends GenericAttribute implements
 		imageContainer.add(new Label("Image Type: " + image.getImageType()));
 		if (image.getImageType().getImageType().contains("X-ray")) {
 			final XrayImage xray = (XrayImage) image;
-			imageContainer.add(new Label("Current: "
-					+ (xray.getCurrent() != null ? xray.getCurrent().toString()
-							: "")));
-			imageContainer.add(new Label("Voltage: "
-					+ (xray.getVoltage() != null ? xray.getVoltage().toString()
-							: "")));
-			imageContainer.add(new Label("Dwelltime: "
-					+ (xray.getDwelltime() != null ? xray.getDwelltime()
-							.toString() : "")));
-			imageContainer.add(new Label("Element: "
-					+ (xray.getElement() != null ? xray.getElement().toString()
-							: "")));
+			if (xray.getCurrent() != null)
+				imageContainer.add(new Label("Current: " + xray.getCurrent()));
+			if (xray.getVoltage() != null)
+				imageContainer.add(new Label("Voltage: " + xray.getVoltage()));
+			if (xray.getDwelltime() != null)
+				imageContainer.add(new Label("Dwelltime: " + xray.getDwelltime()));
+			if (xray.getElement() != null && xray.getElement().length() > 0)
+				imageContainer.add(new Label("Element: " + xray.getElement()));
 		}
 		if (editMode) {
 			imageContainer.add(new Button("Remove", new ClickListener() {
