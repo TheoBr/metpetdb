@@ -180,8 +180,10 @@ public class MetPetDBApplication implements EntryPoint {
 					new VoidServerOp() {
 						@Override
 						public void onSuccess() {
+							Label emailSent = new Label("A confirmation email has been sent to "+n.getEmailAddress()+".");
+							emailSent.setStyleName("confirm-account-msg");
 							inPageNotice.clear();
-							inPageNotice.add(new Label("email send to your email address"));
+							inPageNotice.add(emailSent);
 						}
 
 						@Override
