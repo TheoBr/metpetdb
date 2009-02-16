@@ -171,7 +171,7 @@ public class MetPetDBApplication implements EntryPoint {
 		
 		// add message to the top of the screen to tell the user
 		// which browsers we currently support.
-		if (JS.getUserAgent().contains("firefox")) {
+		if (!JS.getUserAgent().contains("firefox")) {
 			MNoticePanel browserMsg = new MNoticePanel();
 			noticeContainer.add(browserMsg);
 			browserMsg.sendNotice(NoticeType.ALERT, "You are using a <strong>currently-unsupported browser</strong>. " +
