@@ -83,6 +83,9 @@ public class MNotice extends FlowPanel {
 		case WARNING:
 			setStyleName(CSS.WARNING);
 			break;
+		case ALERT:
+			setStyleName(CSS.ALERT);
+			break;
 		default:
 		}
 	}

@@ -33,6 +33,8 @@ import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MMenuBar;
+import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel;
+import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel.NoticeType;
 
 /** Main application entry point. */
 public class MetPetDBApplication implements EntryPoint {
@@ -147,8 +149,7 @@ public class MetPetDBApplication implements EntryPoint {
 		DOM.removeChild(DOM.getParent(lm), lm);
 
 		// If we were given a state to jump to, go there. Otherwise
-		// go to the introduction state, which displays some pretty
-		// message about what we are all about.
+		// go to the home state
 		new ServerOp<String>() {
 			public void begin() {
 				MpDb.mpdbGeneric_svc.getBuildDate(this);
@@ -167,6 +168,16 @@ public class MetPetDBApplication implements EntryPoint {
 			// notice(MpDb.lc_text.notice_Welcome());
 			DeferredCommand.addCommand(TokenSpace.home);
 		}
+		
+		// add message to the top of the screen to tell the user
+		// which browsers we currently support.
+		if (JS.getUserAgent().contains("firefox")) {
+			MNoticePanel browserMsg = new MNoticePanel();
+			noticeContainer.add(browserMsg);
+			browserMsg.sendNotice(NoticeType.ALERT, "You are using a <strong>currently-unsupported browser</strong>. " +
+					"For the best experience please test MetPetDB using the latest version of <a href=\"http://firefox.com\" title=\"Mozilla Firefox\"><strong>Firefox</strong></a>.");
+		}
+		
 	}
 
 	static void onCurrentUserChanged(final User n) {

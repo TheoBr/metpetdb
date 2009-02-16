@@ -9,3 +9,29 @@
 	padding: 0 10px;
 	text-align: center;
 }
+
+/*-------------------------------------
+    top alert (unsupported browser)
+ --------------------------------------*/
+.top-notice .notice-panel .notice-alert {
+	background: #7e0d0c url(../images/bg-alert.gif) repeat-x left top;
+	line-height: 30px;
+	height: 32px;
+	color: #fff;
+	padding: 0 10px;
+	border: none;
+}
+.top-notice .notice-panel .notice-message,
+.top-notice .notice-panel .notice-hide {
+	padding: 0;
+}
+.top-notice .notice-panel .notice-alert a,
+.top-notice .notice-panel .notice-alert a:link,
+.top-notice .notice-panel .notice-alert a:visited {
+	color: #e68887;
+}
+.top-notice .notice-panel .notice-alert a:focus,
+.top-notice .notice-panel .notice-alert a:hover,
+.top-notice .notice-panel .notice-alert a:active {
+	color: #ffb6b5;
+}

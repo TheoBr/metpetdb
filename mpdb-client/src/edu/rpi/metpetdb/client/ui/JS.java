@@ -36,4 +36,11 @@ public class JS {
 	public static  native void scrollWindowToTop() /*-{
 	$wnd.scrollTo(0,0);
 	}-*/;
+	
+	/**
+	 * Returns the User Agent string for browser detection
+	 */
+	public static native String getUserAgent() /*-{
+		return navigator.userAgent.toLowerCase();
+	}-*/;
 }

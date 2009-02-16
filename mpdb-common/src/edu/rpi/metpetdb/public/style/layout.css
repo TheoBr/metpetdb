@@ -40,6 +40,8 @@ body {
 #header {
 	background: #585858 url(../images/header-bg.gif) repeat-x left top;
 	padding-top: 47px;
+	position: relative;
+	border-top: 5px solid #4a4a4a;
 }
 #mpdb-logo {
 	position: absolute;
@@ -70,13 +72,13 @@ body {
 	position: absolute;
 	right: 16px;
 	top: 0;
-	height: 30px;
-	line-height: 30px;
-	padding: 0 0.5em;
-	-moz-border-radius-bottomleft: 3px;
-	-moz-border-radius-bottomright: 3px;
-	-webkit-border-bottom-left-radius: 3px;
-	-webkit-border-bottom-right-radius: 3px;
+	height: 25px;
+	line-height: 20px;
+	padding-left: 0.2em;
+	-moz-border-radius-bottomleft: 6px;
+	-moz-border-radius-bottomright: 6px;
+	-webkit-border-bottom-left-radius: 6px;
+	-webkit-border-bottom-right-radius: 6px;
 	background-color: #4a4a4a;
 	color: #838383;
 }
@@ -95,29 +97,11 @@ body {
 .page-logbar a:link,
 .page-logbar a:visited  {
 	color: #9ed2ff;
-	text-decoration: none;
 }
 .page-logbar a:focus,
 .page-logbar a:hover,
 .page-logbar a:active  {
 	color: #cce8ff;
-	text-decoration: underline;
-}
-.page-logbar a.warning,
-.page-logbar a.warning:link,
-.page-logbar a.warning:visited {
-	text-decoration: none;
-	background-color: #f3890b;
-	color: #fff;
-	padding: 0.1em 0.4em 0.3em;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-}
-.page-logbar a.warning:focus,
-.page-logbar a.warning:hover,
-.page-logbar a.warning:active {
-	text-decoration: underline;
-	color: #fff;
 }
 .page-logbar a.logout,
 .page-logbar a.logout:link,
@@ -362,15 +346,6 @@ div.hdrnavMenu .gwt-MenuItem a:active {
 /*-------------------------------------
             notices/messages
  --------------------------------------*/
-#mpdb-notice {
-	background: transparent url(../images/notice-bg.png) repeat left top;
-	padding: 0.3em 0;
-	font-size: 0.8em;
-	text-align: center;
-	position: absolute;
-	width: 100%;
-	color: #fff;
-}
 #loadingmessage {
 	position: absolute;
 	background: #818181 url(../images/loading-bg.gif) repeat-x left top;

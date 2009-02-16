@@ -14,7 +14,7 @@ import edu.rpi.metpetdb.client.ui.CSS;
 public class MNoticePanel extends SimplePanel {
 
 	public enum NoticeType {
-		GENERIC, WORKING, SUCCESS, ERROR, WARNING
+		GENERIC, WORKING, SUCCESS, ERROR, WARNING, ALERT
 	}
 
 	private MNotice notice;

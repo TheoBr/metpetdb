@@ -88,12 +88,13 @@ public class CSS {
 	public static final String ERROR = "error";
 	public static final String WORKING = "working";
 	public static final String WARNING = "warning";
+	public static final String ALERT = "alert";
 	public static final String NOTICE = "notice";
 	public static final String NOTICE_PANEL = "notice-panel";
 	public static final String NOTICE_MESSAGE = "notice-message";
 	public static final String NOTICE_HIDE = "notice-hide";
 	public static final String NOTICE_URGENT = "notice-urgent";
-
+	
 	/* ---------------- Widget: DataTable ---------------- */
 	public static final String DATATABLE = "mpdb-dataTable";
 	public static final String PAGETABLE = "mpdb-pageTable";
@@ -159,6 +160,7 @@ public class CSS {
 	public static final String REGISTER = "register";
 	public static final String ICON_PLUS = "icon-plus";
 	public static final String ICON_MINUS = "icon-minus";
+	
 	
 	
 	
