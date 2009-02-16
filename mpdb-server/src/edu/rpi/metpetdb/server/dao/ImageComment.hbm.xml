@@ -11,5 +11,11 @@
     </id>
     <version name="version" />
     <property name="text" column="comment_text" />
+    <many-to-one name="image" column="image_id" class="Image" lazy="false" not-null="true" insert="false" update="false"/>
     </class>
+    
+    <query name="ImageComment.byId">
+    from ImageComment ic
+    where ic.id = :id
+  </query>
 </hibernate-mapping>

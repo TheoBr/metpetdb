@@ -171,6 +171,11 @@ public interface LocaleText extends Messages {
 	String Account_Not_Enabled();
 	String Not_Owner();
 	String Modify_Public_Data();
+	String Cannot_Load_Private_Data();
+	String Cannot_Load_Public_Data();
+	String Cannot_Load_Other_Users();
+	String Cannot_Load_Pending_Roles();
+	String Cannot_Save_Data();
 
 	/* User Samples List */
 	String cannotDeletePublicSamples();

@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server.dao;
+package edu.rpi.metpetdb.server.dao.mineral;
 
 import java.util.Collection;
 import java.util.Iterator;

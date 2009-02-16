@@ -20,6 +20,8 @@
     <property name="collector" column="collector" length="100" />
     <property name="scale" />
     <property name="description" column="description" type="java.lang.String"/>
+    <property name="publicData" column="public_data" type="yes_no" />
+    <many-to-one name="owner" column="user_id" />
 
     <set name="references" table="image_reference" cascade="persist,merge" lazy="false">
       <key column="image_id" />
@@ -44,7 +46,7 @@
    </joined-subclass>
   </class>
 
-  <query name="Image.id">
+  <query name="Image.byId">
     from Image i
     where i.id = :id
   </query>

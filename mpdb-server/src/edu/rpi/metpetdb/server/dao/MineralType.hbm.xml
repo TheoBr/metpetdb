@@ -12,4 +12,9 @@
     
     <property name="name" column="name"/>
   </class>
+  
+  <query name="MineralType.byName">
+    from MineralType mt
+    where lower(mt.name)=lower(:name)
+  </query>
 </hibernate-mapping>

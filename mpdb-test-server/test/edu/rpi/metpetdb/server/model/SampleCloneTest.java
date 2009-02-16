@@ -1,5 +1,5 @@
 package edu.rpi.metpetdb.server.model;
-
+import static org.junit.Assert.*;
 import net.sf.hibernate4gwt.core.HibernateBeanManager;
 import net.sf.hibernate4gwt.core.beanlib.mapper.DirectoryClassMapper;
 

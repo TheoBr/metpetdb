@@ -1,5 +1,5 @@
-package edu.rpi.metpetdb.server.dao;
-
+package edu.rpi.metpetdb.server.dao.user;
+import static org.junit.Assert.*;
 import org.hibernate.Query;
 import org.junit.Test;
 

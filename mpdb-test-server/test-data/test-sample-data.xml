@@ -1,6 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
-  <users user_id="1" version="1" name="Anthony Waters" email="watera2@cs.rpi.edu" password="\004c\346\340\325\357\375ZQ\210\323)\220\203H{\337\270\3426\270\257\353It" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y"/>
+<roles role_id="1" rank="0" role_name="Member"/>
+  <roles role_id="2" rank="1" role_name="Contributor"/>
+  <roles role_id="3" rank="2" role_name="Fellow"/>
+  <users user_id="1" version="1" name="Contributor" email="watera2@cs.rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y" role_id="2"/>
+  <users user_id="2" version="1" name="Sibel Adali" email="sibel@cs.rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y" role_id="1"/>
+  <users user_id="3" version="1" name="Boleslaw Szymanski" email="szymansk@cs.rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y" role_id="1"/>
+  <users user_id="4" version="1" name="Frank Spear" email="spearf@rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y" role_id="1"/>
+  <users user_id="5" version="1" name="Benjamin Hallett" email="halleb3@rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y" role_id="1"/>
+  <users user_id="6" version="1" name="Matt Fyffe" email="fyffem@rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y" role_id="1"/>
+  <users user_id="7" version="1" name="Dennis Goldfarb" email="goldfd@rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y" role_id="2"/>
+  <users user_id="8" version="1" name="Zak Linder" email="lindez@rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y" role_id="2"/>
+  <pending_roles pending_role_id="1" user_id="2" sponsor_id="1" role_id="2" request_date="1969-12-31 19:00:00.0"/>
+  <pending_roles pending_role_id="2" user_id="3" sponsor_id="1" role_id="2" request_date="1969-12-31 19:00:00.0"/>
   <admin_users/>
   <rock_type rock_type_id="1" rock_type="Slate"/>
   <rock_type rock_type_id="2" rock_type="Phyllite"/>
@@ -34,15 +46,19 @@
   <rock_type rock_type_id="30" rock_type="Metagranite"/>
   <rock_type rock_type_id="31" rock_type="Cordierite-Anthophyllite"/>
   <samples sample_id="1" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="testing sample" rock_type_id="10" user_id="1" collector="Frank Spear" location="SRID=4326;POINT(1 1)"/>
-  <samples sample_id="2" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="testing private" rock_type_id="11" user_id="1" collector="Anthony Waters" location="SRID=4326;POINT(3 3)"/>
+  <samples sample_id="2" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="testing private" rock_type_id="11" user_id="2" collector="Anthony Waters" location="SRID=4326;POINT(3 3)"/>
   <samples sample_id="3" version="0" sesar_number="111111111" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="new sample" rock_type_id="10" user_id="1" collector="Two Name" location="SRID=4326;POINT(5 5)"/>
   <samples sample_id="4" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="sample" rock_type_id="10" user_id="1" collector="Test A" location="SRID=4326;POINT(5 5)"/>
   <samples sample_id="5" version="1" sesar_number="123456789" public_data="N" collection_date="1970-09-16 00:00:00.0" date_precision="0" alias="test more" rock_type_id="10" user_id="1" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="6" version="0" public_data="Y" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="testing public" rock_type_id="11" user_id="1" collector="Anthony Waters" location="SRID=4326;POINT(3 3)"/>
   <subsample_type subsample_type_id="1" subsample_type="Thin Section"/>
   <subsample_type subsample_type_id="2" subsample_type="Polished Thin Section"/>
   <subsample_type subsample_type_id="3" subsample_type="Rock Chip"/>
   <subsample_type subsample_type_id="4" subsample_type="Mineral Separate"/>
-  <subsamples subsample_id ="1" version = "1" user_id="1" sample_id="1" name = "temp" subsample_type_id ="1" public_data="N"/>
+  <subsamples subsample_id ="1" version = "1" user_id="1" sample_id="1" name = "temp1" subsample_type_id ="1" public_data="N"/>
+  <subsamples subsample_id ="2" version = "1" user_id="1" sample_id="1" name = "temp2" subsample_type_id ="1" public_data="N"/>
+  <subsamples subsample_id ="3" version = "1" user_id="1" sample_id="1" name = "temp3" subsample_type_id ="1" public_data="N"/>
+ 
   <image_format image_format_id="1" name="image/tiff"/>
   <image_format image_format_id="2" name="image/gif"/>
   <image_format image_format_id="3" name="image/jpeg"/>
@@ -61,7 +77,21 @@
   <image_type image_type_id="11" image_type="Back-Scattered Electron Image" abbreviation="BSE"/>
   <image_type image_type_id="12" image_type="Cathodoluminescence Image" abbreviation="CL"/>
   <image_type image_type_id="13" image_type="X-ray Map" abbreviation="XRM"/>
-  <images/>
+  <images image_id="1" checksum="11111111111111111111111111111111111111111111111111"
+  version="1" image_type_id="1" width="1" height="1" user_id="1" public_data="N" 
+  checksum_64x64="11111111111111111111111111111111111111111111111111"
+  checksum_half="11111111111111111111111111111111111111111111111111"
+  filename="image.jpg" />
+  <images image_id="2" checksum="11111111111111111111111111111111111111111111111111"
+  version="1" image_type_id="1" width="1" height="1" user_id="1" public_data="Y" 
+  checksum_64x64="11111111111111111111111111111111111111111111111111"
+  checksum_half="11111111111111111111111111111111111111111111111111"
+  filename="image.jpg" />
+   <images image_id="3" checksum="11111111111111111111111111111111111111111111111111"
+  version="1" image_type_id="1" width="1" height="1" user_id="2" public_data="N" 
+  checksum_64x64="11111111111111111111111111111111111111111111111111"
+  checksum_half="11111111111111111111111111111111111111111111111111"
+  filename="image.jpg" />
   <minerals mineral_id="1" real_mineral_id="1" name="Tectosilicates"/>
   <minerals mineral_id="2" real_mineral_id="2" name="Silica" parent_mineral_id="1"/>
   <minerals mineral_id="3" real_mineral_id="3" name="Quartz" parent_mineral_id="2"/>
@@ -238,9 +268,9 @@
   <minerals mineral_id="174" real_mineral_id="174" name="Carbon" parent_mineral_id="173"/>
   <minerals mineral_id="175" real_mineral_id="175" name="Graphite" parent_mineral_id="174"/>
   <minerals mineral_id="176" real_mineral_id="176" name="Diamond" parent_mineral_id="174"/>
-  <reference/>
-  <chemical_analyses chemical_analysis_id = "1" user_id="1" public_data="N" version = "1" spot_id = "temp" subsample_id = "1" point_x="0" point_y="0" large_rock = "N" />
-  <chemical_analyses chemical_analysis_id = "2" user_id="1" public_data="N" version = "1" spot_id = "temp2" subsample_id = "1" point_x="0" point_y="0" large_rock = "N" />
+  <reference reference_id="1" name="this publication" />
+  <chemical_analyses chemical_analysis_id = "1" user_id="1" public_data="N" version = "1" spot_id = "temp" subsample_id = "1" stage_x="0" stage_y="0" reference_x="0" reference_y="0" large_rock = "N" />
+  <chemical_analyses chemical_analysis_id = "2" user_id="1" public_data="N" version = "1" spot_id = "temp2" subsample_id = "1" stage_x="0" stage_y="0" reference_x="0" reference_y="0" large_rock = "N" />
   <elements element_id="1" name="Aluminium" alternate_name="Aluminum" symbol="Al" atomic_number="13" weight="26.9815"/>
   <elements element_id="2" name="Americium" symbol="Am" atomic_number="95" weight="243.0"/>
   <elements element_id="3" name="Antimony" symbol="Sb" atomic_number="51" weight="121.76"/>
@@ -456,7 +486,8 @@
   <element_mineral_types element_id="99" mineral_type_id="4"/>
   <element_mineral_types element_id="100" mineral_type_id="4"/>
   <grids/>
-  <image_comments/>
+  <image_comments comment_id="1" image_id="1" comment_text="Zoey" version="1" />
+  <image_comments comment_id="2" image_id="2" comment_text="Zoey" version="1" />
   <image_on_grid/>
   <image_reference/>
   <metamorphic_grades metamorphic_grade_id="1" name="Great Shape"/>
@@ -509,8 +540,9 @@
   <projects/>
   <project_members/>
   <project_samples/>
-  <regions/>
-  <sample_comments/>
+  <regions region_id="1" name="test region" />
+  <sample_comments user_id="1" sample_id="1" comment_id="1" comment_text="wowo" version="1" />
+  <sample_comments user_id="1" sample_id="6" comment_id="2" comment_text="wowo" version="1" />
   <sample_metamorphic_grades sample_id="5" metamorphic_grade_id="1"/>
   <sample_minerals/>
   <sample_reference/>

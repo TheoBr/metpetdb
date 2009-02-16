@@ -3,7 +3,9 @@ package edu.rpi.metpetdb.client.model;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Grid extends MObject {
+import edu.rpi.metpetdb.client.model.interfaces.PublicData;
+
+public class Grid extends MObject implements PublicData {
 	private static final long serialVersionUID = 1L;
 
 	private int id;
@@ -12,6 +14,7 @@ public class Grid extends MObject {
 	private int height;
 	private Subsample Subsample;
 	private Set<ImageOnGrid> imagesOnGrid;
+	private Boolean publicData;
 
 	public int getId() {
 		return id;
@@ -70,6 +73,14 @@ public class Grid extends MObject {
 		imagesOnGrid.add(imageOnGrid);
 	}
 
+	public Boolean getPublicData() {
+		return publicData;
+	}
+
+	public void setPublicData(Boolean publicData) {
+		this.publicData = publicData;
+	}
+
 	public boolean equals(final Object o) {
 		return o instanceof Grid && id == ((Grid) o).id;
 	}
@@ -80,5 +91,9 @@ public class Grid extends MObject {
 
 	public boolean mIsNew() {
 		return id == 0;
+	}
+
+	public Boolean isPublicData() {
+		return publicData;
 	}
 }

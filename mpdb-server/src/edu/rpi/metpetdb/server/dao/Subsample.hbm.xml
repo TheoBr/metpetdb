@@ -38,11 +38,13 @@
 
   <query name="Subsample.byId">
     from Subsample s
+    inner join fetch s.owner
     where s.id = :id
   </query>
   
   <query name="Subsample.bySample.byName">
     from Subsample s
+    inner join fetch s.owner
     where s.sample.id = :id
     and s.name = :name
   </query>
@@ -54,6 +56,7 @@
   
   <query name="Subsample.bySampleId">
   	from Subsample s
+  	inner join fetch s.owner
   	where s.sample.id = :sampleId
   </query>
   
@@ -63,6 +66,7 @@
   </query>
   <query name="Subsample.allWithImages/name">
     from Subsample s
+    inner join fetch s.owner
     where s.sample.id = :id and size( s.images ) > 0
     order by s.name
   </query>
@@ -72,6 +76,7 @@
   </query>
   <query name="Subsample.all/name">
     from Subsample s
+    inner join fetch s.owner
     where s.sample.id = :id
     order by s.name
   </query>

@@ -1,5 +1,5 @@
 package edu.rpi.metpetdb.server.search;
-
+import static org.junit.Assert.*;
 import java.util.Iterator;
 import java.util.List;
 

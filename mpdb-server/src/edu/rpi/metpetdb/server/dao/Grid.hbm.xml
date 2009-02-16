@@ -13,6 +13,7 @@
     <version name="version" />
     <property name="width" column="width" />
     <property name="height" column="height" />
+    <property name="publicData" column="public_data" type="yes_no" />
     
 	<many-to-one name="subsample" column="subsample_id" unique="true" not-null="true" lazy="false" cascade="none"/>
     

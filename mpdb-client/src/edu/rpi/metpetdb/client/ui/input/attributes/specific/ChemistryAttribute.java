@@ -2,7 +2,6 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -12,7 +11,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -29,16 +27,15 @@ import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisElement;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxide;
 import edu.rpi.metpetdb.client.model.Element;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.MineralType;
 import edu.rpi.metpetdb.client.model.Oxide;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
-import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
@@ -181,7 +178,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 			add_row("Element", String.valueOf(element.getElement().getId()));
 			((TextBox) ft.getWidget(rows - 1, 1)).setText(String
 					.valueOf(element.getAmount()));
-			((MText) ft.getWidget(rows - 1, 3)).setText(element.getElement()
+			((HTML) ft.getWidget(rows - 1, 3)).setText(element.getElement()
 					.getName());
 			((TextBox) ft.getWidget(rows - 1, 4)).setText(String
 					.valueOf(element.getPrecision()));
@@ -200,7 +197,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 			add_row("Oxide", String.valueOf(oxide.getOxide().getOxideId()));
 			((TextBox) ft.getWidget(rows - 1, 1)).setText(String.valueOf(oxide
 					.getAmount()));
-			((MText) ft.getWidget(rows - 1, 3)).setText(oxide.getOxide()
+			((HTML) ft.getWidget(rows - 1, 3)).setText(oxide.getOxide()
 					.getSpecies());
 			((TextBox) ft.getWidget(rows - 1, 4)).setText(String.valueOf(oxide
 					.getPrecision()));
@@ -427,9 +424,8 @@ public class ChemistryAttribute extends GenericAttribute implements
 		ft.setWidget(rows, 1,
 				amount_input_text.createEditWidget(tryme, "test")[0]);
 		ft.setWidget(rows, 2,listbox_measurement);
-		ft.setWidget(rows, 3, choice_label.createDisplayWidget(tryme)[0]);
-		MText temp = new MText();
-		temp = (MText) ft.getWidget(rows, 3);
+		final HTML temp = (HTML) choice_label.createDisplayWidget(tryme)[0];
+		ft.setWidget(rows, 3, temp);
 		if (choice.getSelectedIndex() != -1)
 			temp.setText(choice.getItemText(choice.getSelectedIndex()));
 		ft.setWidget(rows, 4, precision_input_text.createEditWidget(tryme,

@@ -1,5 +1,5 @@
-package edu.rpi.metpetdb.server.model.chemical.analysis;
-
+package edu.rpi.metpetdb.server.dao.chemical.analysis;
+import static org.junit.Assert.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -19,7 +19,7 @@ import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.InitDatabase;
 import edu.rpi.metpetdb.server.MpDbServlet;
-import edu.rpi.metpetdb.server.bulk.upload.NewAnalysisParser;
+import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
 import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
 import edu.rpi.metpetdb.server.dao.impl.ElementDAO;
 import edu.rpi.metpetdb.server.dao.impl.OxideDAO;
@@ -39,13 +39,13 @@ public class ChemicalAnalysisTest extends DatabaseTestCase {
 		try {
 			elements = ((new ElementDAO(InitDatabase.getSession())).getAll());
 			oxides = ((new OxideDAO(InitDatabase.getSession())).getAll());
-			NewAnalysisParser.setElements(elements);
-			NewAnalysisParser.setOxides(oxides);
+			AnalysisParser.setElements(elements);
+			AnalysisParser.setOxides(oxides);
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		final NewAnalysisParser ap = new NewAnalysisParser(new FileInputStream(
+		final AnalysisParser ap = new AnalysisParser(new FileInputStream(
 				MpDbServlet.getFileUploadPath()
 						+ "PrivateExampleUpload_analyses.xls"));
 		final User owner = byId("User",1);
@@ -67,7 +67,10 @@ public class ChemicalAnalysisTest extends DatabaseTestCase {
 		ca.setDescription("testing123");
 		for(ChemicalAnalysisOxide cao: ca.getOxides()) {
 			cao.setMeasurementUnit(cao.getMeasurementUnit().toUpperCase());
+			cao.setPrecisionUnit(cao.getPrecisionUnit().toUpperCase());
+			cao.setPrecision(0.123321f);
 		}
+		System.err.println("BEFORE SAVE");
 		dao.save(ca);
 		InitDatabase.getSession().getTransaction().commit();
 		

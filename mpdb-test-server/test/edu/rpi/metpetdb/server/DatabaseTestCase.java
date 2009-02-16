@@ -4,17 +4,17 @@ import java.io.FileInputStream;
 import java.sql.SQLException;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.hibernate.Query;
+import org.junit.After;
+import org.junit.Before;
 
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.model.MObject;
 
-public class DatabaseTestCase extends TestCase {
+public class DatabaseTestCase {
 
 	private final String xmlFile;
 
@@ -35,7 +35,7 @@ public class DatabaseTestCase extends TestCase {
 		}
 	}
 
-	@Override
+	@Before
 	public void setUp() {
 		if (BACKUP_DATABASE) {
 			try {
@@ -52,7 +52,6 @@ public class DatabaseTestCase extends TestCase {
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
-		
 		try {
 			InitDatabase.getHibernateConnection().commit();
 		} catch (SQLException e) {
@@ -61,7 +60,7 @@ public class DatabaseTestCase extends TestCase {
 		}
 	}
 
-	@Override
+	@After
 	public void tearDown() {
 		try {
 			// Delete test data
@@ -78,7 +77,6 @@ public class DatabaseTestCase extends TestCase {
 				e.printStackTrace();
 			}
 		}
-		
 		try {
 			InitDatabase.getHibernateConnection().commit();
 		} catch (SQLException e) {

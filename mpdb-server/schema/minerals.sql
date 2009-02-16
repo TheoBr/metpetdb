@@ -98,6 +98,7 @@ INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Oli
 INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Humite',(select mineral_id from minerals where name='Ortho- and Ring Silicates'));
 INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Zircon',(select mineral_id from minerals where name='Ortho- and Ring Silicates'));
 INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Sphene',(select mineral_id from minerals where name='Ortho- and Ring Silicates'));
+INSERT INTO minerals VALUES (nextval('mineral_seq'), (select mineral_id from minerals where name='Sphene'),'Titanite',0);
 INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Garnet',(select mineral_id from minerals where name='Ortho- and Ring Silicates'));
 INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Vesuvanite',(select mineral_id from minerals where name='Ortho- and Ring Silicates'));
 INSERT INTO minerals VALUES (nextval('mineral_seq'), currval('mineral_seq'),'Sillimanite',(select mineral_id from minerals where name='Ortho- and Ring Silicates'));

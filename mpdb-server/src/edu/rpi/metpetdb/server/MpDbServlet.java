@@ -76,6 +76,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 
 	/** The current thread's {@link Req}. */
 	private static final ThreadLocal<Req> perThreadReq = new ThreadLocal<Req>();
+	//req used for unit tests
+	public static Req testReq = null;
 
 	/** The server's object constraint instance. */
 	protected DatabaseObjectConstraints doc;
@@ -183,6 +185,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	}
 
 	public static Req currentReq() {
+		if (testReq != null)
+			return testReq;
 		return perThreadReq.get();
 	}
 
@@ -234,6 +238,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		currentReq().userId = u != null ? new Integer(u.getId()) : null;
 		getThreadLocalRequest().getSession().setAttribute("principals",
 				principals);
+		getThreadLocalRequest().getSession().setAttribute("user",
+				u);
 		if (u == null || principals == null)
 			// clear the session when we don't have a current user
 			getThreadLocalRequest().getSession().invalidate();
@@ -316,7 +322,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 			currentSession().getTransaction().commit();
 		} catch (CallbackException e) {
 			forgetChanges();
-			throw ConvertSecurityException.convertToException(e.getMessage());
+			throw ConvertSecurityException.convertToException(e);
 		} catch (final HibernateException he) {
 			throw handleHibernateException(he);
 		}
@@ -395,6 +401,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		final Req r = new Req();
 		r.principals = (Collection<Principal>) this.getThreadLocalRequest()
 				.getSession().getAttribute("principals");
+		r.user = (User) this.getThreadLocalRequest().getSession().getAttribute("user");
 		perThreadReq.set(r);
 		String response = "Internal server error.";
 		try {
@@ -439,7 +446,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	public static final class Req {
 		Session session;
 		Integer userId;
-		User user;
+		public User user;
 		public Action action;
 		public Collection<Principal> principals;
 

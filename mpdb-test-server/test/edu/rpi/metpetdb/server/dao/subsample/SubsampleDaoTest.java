@@ -1,5 +1,5 @@
-package edu.rpi.metpetdb.server.dao;
-
+package edu.rpi.metpetdb.server.dao.subsample;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;

@@ -33,14 +33,10 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
-import edu.rpi.metpetdb.server.bulk.upload.NewAnalysisParser;
-import edu.rpi.metpetdb.server.bulk.upload.NewParser;
-import edu.rpi.metpetdb.server.bulk.upload.NewSampleParser;
 import edu.rpi.metpetdb.server.bulk.upload.SampleParser;
 import edu.rpi.metpetdb.server.dao.impl.ElementDAO;
 import edu.rpi.metpetdb.server.dao.impl.MineralDAO;
 import edu.rpi.metpetdb.server.dao.impl.OxideDAO;
-import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 
 public class BulkUploadTest extends TestCase {
 
@@ -55,10 +51,12 @@ public class BulkUploadTest extends TestCase {
 		try {
 			minerals = (new MineralDAO(s).getAll());
 			SampleParser.setMinerals(minerals);
-			NewSampleParser.setMinerals(minerals);
 		} catch (DAOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+		} catch (MpDbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		List<Element> elements;
@@ -66,10 +64,12 @@ public class BulkUploadTest extends TestCase {
 		try {
 			elements = ((new ElementDAO(s)).getAll());
 			oxides = ((new OxideDAO(s)).getAll());
-			AnalysisParser.setElementsAndOxides(elements, oxides);
-			NewAnalysisParser.setElements(elements);
-			NewAnalysisParser.setOxides(oxides);
+			AnalysisParser.setElements(elements);
+			AnalysisParser.setOxides(oxides);
 		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MpDbException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -91,37 +91,12 @@ public class BulkUploadTest extends TestCase {
 		DataStore.setBeanManager(HibernateBeanManager.getInstance());
 	}
 
-	@Test
-	public void testUploadSamples() throws ServletException,
-			InvalidFormatException, LoginRequiredException,
-			FileNotFoundException, ValidationException, DAOException {
-		final SampleParser sp = new SampleParser(new FileInputStream(
-				MpDbServlet.getFileUploadPath() + "samples_tests4.xls"));
-		sp.parse();
-
-		final Map<Integer, Sample> samples = sp.getSamples();
-		final Session session = DataStore.open();
-		session.beginTransaction();
-		final User u = new User();
-		u.setId(1);
-		final SampleDAO sdao = new SampleDAO(session);
-		for (Entry<Integer, Sample> s : samples.entrySet()) {
-			try {
-				System.out.println(s.getValue().getAlias());
-				DataStore.getInstance().getDatabaseObjectConstraints()
-						.validate(s.getValue());
-			} catch (ValidationException e) {
-				e.printStackTrace();
-			}
-
-		}
-	}
 
 	@Test
 	public void testUploadNewSamples() throws FileNotFoundException,
 			MpDbException {
 		System.out.println("testUploadNewSamples");
-		final NewSampleParser sp = new NewSampleParser(new FileInputStream(
+		final SampleParser sp = new SampleParser(new FileInputStream(
 				MpDbServlet.getFileUploadPath() + "samples_tests4.xls"));
 		sp.parse();
 		final Map<Integer, Sample> samples = sp.getSamples();
@@ -141,24 +116,11 @@ public class BulkUploadTest extends TestCase {
 		}
 	}
 
-	public void testUploadAnalyses() throws ServletException,
-			InvalidFormatException, LoginRequiredException,
-			ValidationException, IOException {
-		final AnalysisParser sp = new AnalysisParser(new FileInputStream(
-				MpDbServlet.getFileUploadPath()
-						+ "PrivateExampleUpload_analyses.xls"));
-		sp.parse();
-		final Map<Integer, ChemicalAnalysis> analyses = sp.getAnalyses();
-		for (Entry<Integer, ChemicalAnalysis> s : analyses.entrySet()) {
-			DataStore.getInstance().getDatabaseObjectConstraints().validate(
-					s.getValue());
-		}
-	}
 
 	public void testNewUploadAnalyses() throws ServletException,
 			InvalidFormatException, LoginRequiredException, IOException,
 			MpDbException {
-		final NewAnalysisParser ap = new NewAnalysisParser(new FileInputStream(
+		final AnalysisParser ap = new AnalysisParser(new FileInputStream(
 				MpDbServlet.getFileUploadPath()
 						+ "PrivateExampleUpload_analyses.xls"));
 		ap.parse();

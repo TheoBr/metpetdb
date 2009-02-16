@@ -8,6 +8,7 @@ CREATE TABLE grids
    subsample_id INT8 NOT NULL,
    width INT2 NOT NULL,
    height INT2 NOT NULL,
+   public_data CHAR(1) CHECK (public_data IN ('Y','N')) NOT NULL,
    CONSTRAINT grids_sk PRIMARY KEY (grid_id),
    CONSTRAINT grids_fk FOREIGN KEY (subsample_id) 
       REFERENCES subsamples(subsample_id)
@@ -53,7 +54,8 @@ CREATE TABLE images
    collector VARCHAR(50),
    description VARCHAR(1024),
    scale int2,
-   --user_id INT4 NOT NULL,
+   user_id INT4 NOT NULL,
+   public_data CHAR(1) CHECK (public_data IN ('Y','N')) NOT NULL,
    checksum_64x64 CHAR(50) NOT NULL,
    checksum_half CHAR(50) NOT NULL,
    filename VARCHAR(256) NOT NULL,
@@ -63,8 +65,8 @@ CREATE TABLE images
      REFERENCES image_format(image_format_id),
 CONSTRAINT images_fk_image_type FOREIGN KEY (image_type_id)
      REFERENCES image_type(image_type_id),
-   --CONSTRAINT images_fk_user FOREIGN KEY (user_id)
-   --  REFERENCES users (user_id),
+   CONSTRAINT images_fk_user FOREIGN KEY (user_id)
+     REFERENCES users (user_id),
    CONSTRAINT images_fk_subsample FOREIGN KEY (subsample_id)
      REFERENCES subsamples(subsample_id) ON DELETE CASCADE,
    CONSTRAINT images_fk_sample FOREIGN KEY (sample_id)

@@ -101,7 +101,7 @@ public abstract class MpDbDAO<T extends MObject> {
 				insert(u);
 			} catch (CallbackException e) {
 				sess.clear();
-				throw ConvertSecurityException.convertToException(e.getMessage());
+				throw ConvertSecurityException.convertToException(e);
 			} 
 		} else {
 			try {
@@ -136,7 +136,7 @@ public abstract class MpDbDAO<T extends MObject> {
 			sess.delete(u);
 		} catch (CallbackException e) {
 			sess.clear();
-			throw ConvertSecurityException.convertToException(e.getMessage());
+			throw ConvertSecurityException.convertToException(e);
 		}
 	}
 
@@ -255,7 +255,7 @@ public abstract class MpDbDAO<T extends MObject> {
 			return q.uniqueResult();
 		} catch (CallbackException e) {
 			sess.clear();
-			throw ConvertSecurityException.convertToException(e.getMessage());
+			throw ConvertSecurityException.convertToException(e);
 		}
 	}
 
@@ -264,7 +264,7 @@ public abstract class MpDbDAO<T extends MObject> {
 			return q.list();
 		} catch (CallbackException e) {
 			sess.clear();
-			throw ConvertSecurityException.convertToException(e.getMessage());
+			throw ConvertSecurityException.convertToException(e);
 		}
 	}
 }

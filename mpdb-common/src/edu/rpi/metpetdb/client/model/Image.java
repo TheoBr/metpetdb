@@ -5,10 +5,12 @@ import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 
+import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
 import edu.rpi.metpetdb.client.model.interfaces.HasSample;
 import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
+import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 
-public class Image extends MObject implements HasSubsample, HasSample {
+public class Image extends MObject implements HasSubsample, HasSample, PublicData, HasOwner {
 	private static final long serialVersionUID = 1L;
 
 	private long id;
@@ -31,6 +33,10 @@ public class Image extends MObject implements HasSubsample, HasSample {
 	private Set<ImageComment> comments;
 	private Integer scale;
 	private String description;
+	private User owner;
+	private Boolean publicData;
+	
+	
 
 	public long getId() {
 		return id;
@@ -46,6 +52,27 @@ public class Image extends MObject implements HasSubsample, HasSample {
 
 	public void setVersion(final int v) {
 		version = v;
+	}
+	
+	
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public Boolean getPublicData() {
+		//by default be private
+		if (publicData == null)
+			publicData = false;
+		return publicData;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
+	}
+
+	public void setPublicData(Boolean publicData) {
+		this.publicData = publicData;
 	}
 
 	public ImageType getImageType() {
@@ -217,5 +244,9 @@ public class Image extends MObject implements HasSubsample, HasSample {
 
 	public void setReferences(Set<Reference> references) {
 		this.references = references;
+	}
+
+	public Boolean isPublicData() {
+		return publicData;
 	}
 }

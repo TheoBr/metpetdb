@@ -1,5 +1,5 @@
 package edu.rpi.metpetdb.server.search;
-
+import static org.junit.Assert.*;
 import java.sql.SQLException;
 import java.util.List;
 

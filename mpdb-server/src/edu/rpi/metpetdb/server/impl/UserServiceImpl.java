@@ -113,7 +113,13 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			User u = new User();
 			u.setId(currentUserId());
 			u = (new UserDAO(this.currentSession())).fill(u);
-			r.user = (User) clone(u);
+			r.user = u;
+			final Collection<Principal> principals = new ArrayList<Principal>();
+			principals.add(new OwnerPrincipal(u));
+			principals.add(new EnabledPrincipal(u));
+			if (u.getEmailAddress().equals("watera2@cs.rpi.edu"))
+				principals.add(new AdminPrincipal());
+			setCurrentUser(u, principals);
 		} catch (MpDbException daoe) {
 			r.user = null;
 		}

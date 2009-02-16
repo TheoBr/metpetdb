@@ -69,6 +69,7 @@ public class UploadImageAttribute extends GenericAttribute {
 					image.setHeight(Integer.parseInt(results.split(",")[4]
 							.trim()));
 					image.setFilename(results.split(",")[5].trim());
+					image.setOwner(MpDb.currentUser());
 					error.setText("Image Upload Successfully");
 					hasBeenUploaded = true;
 					hasBeenErrored = false;

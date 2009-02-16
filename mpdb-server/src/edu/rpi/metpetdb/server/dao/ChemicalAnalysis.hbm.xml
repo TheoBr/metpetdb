@@ -69,10 +69,12 @@
 
   <query name="ChemicalAnalysis.byId">
     from ChemicalAnalysis ma
+    inner join fetch ma.owner
     where ma.id = :id
   </query>
   <query name="ChemicalAnalysis.bySubsampleId">
     from ChemicalAnalysis ma
+    inner join fetch ma.owner
     where ma.subsample.id = :subsampleId
   </query>
   <query name="ChemicalAnalysis.bySubsampleId,size">
@@ -81,42 +83,50 @@
   </query>
   <query name="ChemicalAnalysis.bySubsampleId.byspotId">
   	from ChemicalAnalysis ma
+  	inner join fetch ma.owner
   	where ma.subsample.id = :id
   	and ma.spotId = :spotId
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/spotId">
     from ChemicalAnalysis ma
+    inner join fetch ma.owner
     where ma.subsample.id = :id
     order by ma.spotId
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/analysisMethod">
     from ChemicalAnalysis ma
+    inner join fetch ma.owner
     where ma.subsample.id = :id
     order by ma.analysisMethod
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/location">
     from ChemicalAnalysis ma
+    inner join fetch ma.owner
     where ma.subsample.id = :id
     order by ma.location
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/analyst">
     from ChemicalAnalysis ma
+    inner join fetch ma.owner
     where ma.subsample.id = :id
     order by ma.analyst
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/analysisDate">
     from ChemicalAnalysis ma
+    inner join fetch ma.owner
     where ma.subsample.id = :id
     order by ma.analysisDate
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/description">
     from ChemicalAnalysis ma
+    inner join fetch ma.owner
     where ma.subsample.id = :id
     order by ma.description
   </query>
   
   <query name="ChemicalAnalysis.bySubsampleIdbySpotId">
     from ChemicalAnalysis ma
+    inner join fetch ma.owner
     where ma.subsample.id = :id and ma.spotId = :spotId
   </query>
 

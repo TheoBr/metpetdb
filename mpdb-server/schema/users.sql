@@ -82,15 +82,15 @@ CREATE TABLE roles_changed
     REFERENCES roles(role_id)
 ) WITHOUT OIDS;
 
-INSERT INTO roles VALUES (nextval('role_seq') ,0, 'Peon');
-INSERT INTO roles VALUES (nextval('role_seq') ,1, 'Champion');
-INSERT INTO roles VALUES (nextval('role_seq') ,2, 'Patriarch');
+INSERT INTO roles VALUES (nextval('role_seq') ,0, 'Member');
+INSERT INTO roles VALUES (nextval('role_seq') ,1, 'Contributor');
+INSERT INTO roles VALUES (nextval('role_seq') ,2, 'Fellow');
 
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Anthony Waters', 'watera2@cs.rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=0));
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Sibel Adali', 'sibel@cs.rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=0));
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Boleslaw Szymanski', 'szymansk@cs.rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=0));
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Frank Spear', 'spearf@rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=0));
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Benjamin Hallett', 'halleb3@rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=0));
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Matt Fyffe', 'fyffem@rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=0));
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Dennis Goldfarb', 'goldfd@rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=0));
-INSERT INTO users VALUES (nextval('user_seq'), 1, 'Zak Linder', 'lindez@rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=0));
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Anthony Waters', 'watera2@cs.rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=1));
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Sibel Adali', 'sibel@cs.rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=1));
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Boleslaw Szymanski', 'szymansk@cs.rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=1));
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Frank Spear', 'spearf@rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=1));
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Benjamin Hallett', 'halleb3@rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=1));
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Matt Fyffe', 'fyffem@rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=1));
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Dennis Goldfarb', 'goldfd@rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=1));
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Zak Linder', 'lindez@rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=1));

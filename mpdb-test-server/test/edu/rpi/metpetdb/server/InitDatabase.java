@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
 
 import org.dbunit.Assertion;
 import org.dbunit.DatabaseUnitException;
@@ -24,9 +24,11 @@ import org.dbunit.dataset.xml.FlatDtdDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.hibernate.Session;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-public class InitDatabase extends TestCase {
+public class InitDatabase  {
 
 	private static Session s;
 
@@ -42,28 +44,6 @@ public class InitDatabase extends TestCase {
 	private static final String excludedTables[] = {
 			"geometry_columns", "spatial_ref_sys"
 	};
-
-	public InitDatabase() {
-		DataStore.initFactory();
-
-		s = DataStore.open();
-		
-		
-
-		try {
-			hiberateConnection = ((org.hibernate.engine.SessionFactoryImplementor) DataStore
-					.getFactory()).getConnectionProvider()
-					.getConnection();
-			// conn = new DatabaseConnection(DataStore.getConfiguration()
-			// .buildSettings().getConnectionProvider().getConnection());
-			conn = new DatabaseConnection(
-					hiberateConnection);
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-		}
-		
-		
-	}
 
 	public static IDatabaseConnection getConnection() {
 		return conn;
@@ -147,9 +127,25 @@ public class InitDatabase extends TestCase {
 		Assertion.assertEquals(expectedTable, actualTable);
 	}
 
-	@Override
+	@Before
 	protected void setUp() throws Exception {
-		super.setUp();
+		DataStore.initFactory();
+
+		s = DataStore.open();
+		
+		
+
+		try {
+			hiberateConnection = ((org.hibernate.engine.SessionFactoryImplementor) DataStore
+					.getFactory()).getConnectionProvider()
+					.getConnection();
+			// conn = new DatabaseConnection(DataStore.getConfiguration()
+			// .buildSettings().getConnectionProvider().getConnection());
+			conn = new DatabaseConnection(
+					hiberateConnection);
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
 		backupDatabase();
 		try {
 			DatabaseOperation.DELETE_ALL.execute(conn, originalData);
@@ -159,14 +155,14 @@ public class InitDatabase extends TestCase {
 		}
 	}
 
-	@Override
+	@After
 	protected void tearDown() throws Exception {
-		super.tearDown();
 		try {
 			DatabaseOperation.INSERT.execute(conn, originalData);
 		} catch (Exception e) {
 
 			e.printStackTrace();
 		}
+		s.close();
 	}
 }
