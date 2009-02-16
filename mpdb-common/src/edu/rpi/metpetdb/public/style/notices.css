@@ -13,6 +13,13 @@
 /*-------------------------------------
     top alert (unsupported browser)
  --------------------------------------*/
+.top-notice .notice-panel .notice-message,
+.top-notice .notice-panel .notice-hide {
+	padding: 0;
+}
+.top-notice .notice-panel .notice-message {
+	margin-right: 3em;
+}
 .top-notice .notice-panel .notice-alert {
 	background: #7e0d0c url(../images/bg-alert.gif) repeat-x left top;
 	line-height: 30px;
@@ -21,9 +28,9 @@
 	padding: 0 10px;
 	border: none;
 }
-.top-notice .notice-panel .notice-message,
-.top-notice .notice-panel .notice-hide {
-	padding: 0;
+.top-notice .notice-panel .notice-alert .notice-message {
+	background: transparent url(../images/icon-warning.png) no-repeat left 9px;
+	padding-left: 17px;
 }
 .top-notice .notice-panel .notice-alert a,
 .top-notice .notice-panel .notice-alert a:link,
