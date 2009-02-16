@@ -21,16 +21,29 @@
 	margin-right: 3em;
 }
 .top-notice .notice-panel .notice-alert {
-	background: #7e0d0c url(../images/bg-alert.gif) repeat-x left top;
-	line-height: 30px;
-	height: 32px;
+	background: #87241d url(../images/bg-alert.gif) repeat-x left top;
 	color: #fff;
-	padding: 0 10px;
+	padding: 10px;
 	border: none;
 }
 .top-notice .notice-panel .notice-alert .notice-message {
-	background: transparent url(../images/icon-warning.png) no-repeat left 9px;
+	background: transparent url(../images/icon-warning.png) no-repeat left 2px;
 	padding-left: 17px;
+}
+.top-notice .notice-panel .notice-alert .notice-hide,
+.top-notice .notice-panel .notice-alert .notice-hide:link,
+.top-notice .notice-panel .notice-alert .notice-hide:visited {
+	display: block;
+	text-indent: -9999px;
+	width: 13px;
+	height: 14px;
+	margin-top: 2px;
+	background: transparent url(../images/icon-close-red.png) no-repeat left top;
+}
+.top-notice .notice-panel .notice-alert .notice-hide:focus,
+.top-notice .notice-panel .notice-alert .notice-hide:hover,
+.top-notice .notice-panel .notice-alert .notice-hide:active {
+	background-position: left -14px;
 }
 .top-notice .notice-panel .notice-alert a,
 .top-notice .notice-panel .notice-alert a:link,
