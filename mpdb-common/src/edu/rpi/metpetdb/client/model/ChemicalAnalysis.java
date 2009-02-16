@@ -23,7 +23,8 @@ import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
 import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 
 @Indexed
-public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, HasOwner, PublicData, HasSample {
+public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
+		HasOwner, PublicData, HasSample {
 	private static final long serialVersionUID = 1L;
 
 	@DocumentId
@@ -50,16 +51,16 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 	private Set<ChemicalAnalysisElement> elements;
 	@IndexedEmbedded(prefix = "oxides_")
 	private Set<ChemicalAnalysisOxide> oxides;
-	
+
 	@Field(index = Index.UN_TOKENIZED)
 	private Boolean publicData;
-	
+
 	@IndexedEmbedded(depth = 1, prefix = "user_")
 	private User owner;
-	
+
 	private String subsampleName;
 	private String sampleName;
-	
+
 	private float stageX;
 	private float stageY;
 
@@ -67,12 +68,14 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 	private transient float percentX;
 	private transient float percentY;
 	private transient boolean isLocked;
-	
-	private static Map<String, Float> measurementUnits = new HashMap<String , Float>() {{
-	    put("wt%", 1F);
-	    put("ppm", .00001F);
-	}};
-	
+
+	private static Map<String, Float> measurementUnits = new HashMap<String, Float>() {
+		{
+			put("wt%", 1F);
+			put("ppm", .00001F);
+		}
+	};
+
 	public static float defaultPrecision = .02F;
 
 	public int getId() {
@@ -82,7 +85,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 	public void setId(final int i) {
 		id = i;
 	}
-	
+
 	public int getVersion() {
 		return version;
 	}
@@ -230,13 +233,13 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 	public void setElements(final Set<ChemicalAnalysisElement> e) {
 		elements = e;
 	}
-	
+
 	public void addElement(final ChemicalAnalysisElement ce) {
 		if (elements == null)
 			elements = new HashSet<ChemicalAnalysisElement>();
 		elements.add(ce);
 	}
-	
+
 	public void addOxide(final ChemicalAnalysisOxide co) {
 		if (oxides == null)
 			oxides = new HashSet<ChemicalAnalysisOxide>();
@@ -369,7 +372,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 	public void setDate(Timestamp date) {
 		setAnalysisDate(date);
 	}
-	
+
 	public Boolean isPublicData() {
 		if (publicData != null)
 			return publicData.booleanValue();
@@ -380,7 +383,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 	public void setPublicData(final Boolean p) {
 		publicData = p;
 	}
-	
+
 	public User getOwner() {
 		return owner;
 	}
@@ -401,12 +404,15 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample, 
 			subsample = new Subsample();
 		subsample.setSample(sample);
 	}
-	
-	public static Set<String> getMeasurementUnits(){
+
+	public static Set<String> getMeasurementUnits() {
 		return measurementUnits.keySet();
 	}
-	
-	public static float getUnitOffset(final String measurementUnit){
-		return measurementUnits.get(measurementUnit.toLowerCase());
+
+	public static float getUnitOffset(final String measurementUnit) {
+		if (measurementUnit.toLowerCase().contains("wt"))
+			return measurementUnits.get("wt%");
+		else
+			return measurementUnits.get("ppm");
 	}
 }

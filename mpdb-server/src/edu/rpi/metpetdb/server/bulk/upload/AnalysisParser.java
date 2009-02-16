@@ -18,6 +18,7 @@ import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisElement;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxide;
 import edu.rpi.metpetdb.client.model.Element;
+import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadHeader;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
@@ -108,7 +109,7 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 				header.getRowNum() + 1).getCell(cellNumber);
 		measurementUnits.put(cellText, measurementUnitCell.toString());
 		// Get text of the next column
-		if (header.getLastCellNum() > cellNumber + 1) {
+		if (header.getPhysicalNumberOfCells() > cellNumber + 1) {
 			final String nextHeader = header.getCell(cellNumber + 1).toString();
 			if (Pattern.compile(RegularExpressions.PRECISION,
 					Pattern.CASE_INSENSITIVE).matcher(nextHeader).find()) {
@@ -165,11 +166,16 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 	protected void addObject(int index, ChemicalAnalysis object) {
 		if (object.getMineral() == null)
 			object.setLargeRock(true);
-		else
-			object.setLargeRock(false);
+		else {
+			if (object.getMineral().getName().toLowerCase().matches(
+					RegularExpressions.WHOLE_ROCK)) {
+				object.setLargeRock(true);
+				object.setMineral(null);
+			} else
+				object.setLargeRock(false);
+		}
 		chemicalAnalyses.put(index, object);
 	}
-
 	@Override
 	protected ChemicalAnalysis getNewObject() {
 		return new ChemicalAnalysis();
@@ -184,16 +190,17 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 		if (pc == doc.ChemicalAnalysis_elements) {
 			final ChemicalAnalysisElement element = new ChemicalAnalysisElement();
 			element.setElement(uploadElements.get(headerText));
-			element
-					.setAmount(getFloatValue(cell.toString()));
+			element.setAmount(getFloatValue(cell));
 			element.setMeasurementUnit(measurementUnits.get(headerText));
 			// see if our next column is our precision
 			if (spreadSheetColumnMapping.get(cell.getColumnIndex() + 1) == doc.ChemicalAnalysisElement_ChemicalAnalysis_elements_precision) {
 				cell = row.getCell(cell.getColumnIndex() + 1);
 				++cellNum;
-				element.setPrecision(getFloatValue(cell.toString()));
-				element.setPrecisionUnit(precisionUnits.get(headers.get(
-						cell.getColumnIndex()).getHeaderText()));
+				if (cell != null) {
+					element.setPrecision(getFloatValue(cell));
+					element.setPrecisionUnit(precisionUnits.get(headers.get(
+							cell.getColumnIndex()).getHeaderText()));
+				}
 			}
 			element.setMinMax();
 			currentObject.addElement(element);
@@ -201,20 +208,36 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 		} else if (pc == doc.ChemicalAnalysis_oxides) {
 			final ChemicalAnalysisOxide oxide = new ChemicalAnalysisOxide();
 			oxide.setOxide(uploadOxides.get(headerText));
-			oxide.setAmount(getFloatValue(cell.toString()));
+			oxide.setAmount(getFloatValue(cell));
 			oxide.setMeasurementUnit(measurementUnits.get(headerText)
 					.toUpperCase());
 			// see if our next column is our precision
 			if (spreadSheetColumnMapping.get(cell.getColumnIndex() + 1) == doc.ChemicalAnalysisOxide_ChemicalAnalysis_oxides_precision) {
 				cell = row.getCell(cell.getColumnIndex() + 1);
 				++cellNum;
-				oxide.setPrecision(getFloatValue(cell.toString()));
-				oxide.setPrecisionUnit(precisionUnits.get(
-						headers.get(cell.getColumnIndex()).getHeaderText())
-						.toUpperCase());
+				if (cell != null) {
+					oxide.setPrecision(getFloatValue(cell));
+					oxide.setPrecisionUnit(precisionUnits.get(
+							headers.get(cell.getColumnIndex()).getHeaderText())
+							.toUpperCase());
+				}
 			}
 			oxide.setMinMax();
 			currentObject.addOxide(oxide);
+			return true;
+		} else if (pc == doc.ChemicalAnalysis_mineral) {
+			if (cell.toString().toLowerCase().matches(RegularExpressions.WHOLE_ROCK)) {
+				//special case of whole rock
+				currentObject.setLargeRock(true);
+			} else {
+				//search for the correct mineral (so alternate minerals work)
+				for (Mineral m : minerals) {
+					if (m.getName().equalsIgnoreCase(cell.toString())) {
+						currentObject.setMineral(getRealMineral(m));
+						break;
+					}
+				}
+			}
 			return true;
 		} else {
 			return false;

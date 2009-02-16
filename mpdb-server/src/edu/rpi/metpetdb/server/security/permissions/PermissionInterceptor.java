@@ -163,7 +163,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				}
 			} else {
 				//user is trying to save something
-				if (enabled) {
+				if (enabled || MpDbServlet.currentReq().action != null) {
 					if (isPublic) {
 						//public data cannot be saved
 						throw new CallbackException(new UnableToModifyPublicDataException());

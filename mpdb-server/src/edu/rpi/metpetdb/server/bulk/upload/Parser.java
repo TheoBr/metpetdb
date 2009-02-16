@@ -277,7 +277,7 @@ public abstract class Parser<T extends MObject> {
 									&& newObject.getClass().getSimpleName()
 											.equals(("BulkUploadImage")))) {
 						if (pc instanceof NumberConstraint<?>) {
-							newObject.mSet(pc.property, getFloatValue(cell.toString()));
+							newObject.mSet(pc.property, getFloatValue(cell));
 						} else if (pc instanceof TimestampConstraint) {
 							// handle dates differently
 							if (newObject instanceof HasDate) {
@@ -354,12 +354,18 @@ public abstract class Parser<T extends MObject> {
 
 	protected abstract T getNewObject();
 	
-	protected Float getFloatValue(final String number) {
-		final String data = sanitizeNumber(number);
-		if (data.equals("")) {
-			throw new NumberFormatException("Unable to convert '" + number +  "' to a number");
+	protected Float getFloatValue(final HSSFCell cell) {
+		//first try to get the numeric value, if that fails try to parse it out of a string
+		try {
+			return new Float(cell.getNumericCellValue());
+		} catch (Exception e) {
+			final String number = cell.toString();
+			final String data = sanitizeNumber(number);
+			if (data.equals("")) {
+				throw new NumberFormatException("Unable to convert '" + number +  "' to a number");
+			}
+			return Float.parseFloat(data);
 		}
-		return Float.parseFloat(data);
 	}
 
 	/**

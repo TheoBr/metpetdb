@@ -31,6 +31,7 @@ public class RegularExpressions {
 	public static final String SUBSAMPLE_TYPE = "^subsample type$";
 	public static final String PRECISION_UNIT = "precision unit";
 	public static final String PRECISION = "precision";
+	public static final String WHOLE_ROCK = "whole rock";
 	
 	/** Image */
 	public static final String FILENAME = "(file)|(path)";
