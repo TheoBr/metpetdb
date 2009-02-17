@@ -144,15 +144,19 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		progressTimer = new Timer() {
 			public void run() {
 				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET,
-						GWT.getModuleBaseURL() + "/spreadsheetUpload");
+						GWT.getModuleBaseURL() + "//spreadsheetUpload");
 				try {
 					builder.sendRequest("", new RequestCallback() {
 						public void onError(Request request, Throwable exception) {
 						}
 						public void onResponseReceived(Request request,
 								Response response) {
-							uploadProgress.setProgress(Double
-									.parseDouble(response.getText()));
+							try {
+								uploadProgress.setProgress(Double
+										.parseDouble(response.getText()));
+							} catch (Exception e) {
+								
+							}
 						}
 					});
 				} catch (RequestException e) {
@@ -225,7 +229,8 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		} else {
 			uploadButton.setText("Uploading...");
 			uploadButton.setEnabled(false);
-			show(progressContainer);
+			//show(progressContainer);
+			progressContainer.setStyleName(CSS.PROGRESSBAR_CONTAINER);
 			progressTimer.scheduleRepeating(3000);
 		}
 		clearResults();
