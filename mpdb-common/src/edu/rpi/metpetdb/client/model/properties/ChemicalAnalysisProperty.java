@@ -149,13 +149,15 @@ public enum ChemicalAnalysisProperty implements Property<ChemicalAnalysis> {
 
 		public void set(final ChemicalAnalysis chemicalAnalysis,
 				final Object mineral) {
-			if (!(mineral instanceof Mineral)) {
-				final Mineral m = new Mineral();
-				m.setName(mineral.toString());
-				chemicalAnalysis.setMineral(m);
-			} else {
-				((ChemicalAnalysis) chemicalAnalysis)
-						.setMineral((Mineral) mineral);
+			if (mineral != null) {
+				if (!(mineral instanceof Mineral)) {
+					final Mineral m = new Mineral();
+					m.setName(mineral.toString());
+					chemicalAnalysis.setMineral(m);
+				} else {
+					((ChemicalAnalysis) chemicalAnalysis)
+							.setMineral((Mineral) mineral);
+				}
 			}
 		}
 	},
