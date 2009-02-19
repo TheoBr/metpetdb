@@ -69,33 +69,75 @@ public class ChemistryAttribute extends GenericAttribute implements
 		oxideConstraint = oxides;
 		elementConstraint = elements;
 	}
-	
+
 	public Widget[] createDisplayWidget(final MObject obj) {
-		
-		Collection<ChemicalAnalysisElement> elements = (Collection<ChemicalAnalysisElement>) obj.mGet(elementConstraint.property);
-		Collection<ChemicalAnalysisOxide> oxides = (Collection<ChemicalAnalysisOxide>) obj.mGet(oxideConstraint.property);
+
+		Collection<ChemicalAnalysisElement> elements = (Collection<ChemicalAnalysisElement>) obj
+				.mGet(elementConstraint.property);
+		Collection<ChemicalAnalysisOxide> oxides = (Collection<ChemicalAnalysisOxide>) obj
+				.mGet(oxideConstraint.property);
 
 		String elementDisplay = "";
 		if (elements != null) {
-			elementDisplay += "<table><tr class=\""+ CSS.TYPE_SMALL_CAPS +"\"><th>wt%</th><th>Element</th></tr>";
+			String elementWT = "";
+			String elementPPM = "";
+			elementDisplay += "<table>";
 			final Iterator<ChemicalAnalysisElement> iter = elements.iterator();
 			while (iter.hasNext()) {
 				final ChemicalAnalysisElement element = iter.next();
-				elementDisplay += "<tr><td class=\"wt\">" + element.getAmount() + "%</td><td>" + 
-					element.getDisplayName() + "</td></tr>";
+				if (element.getMeasurementUnit().equalsIgnoreCase("ppm")) {
+					if (elementPPM.length() == 0)
+						//add in header
+						elementPPM = "<tr class=\\\"\" + CSS.TYPE_SMALL_CAPS\n" + 
+								"					+ \"\\\"><th>ppm</th><th>Element</th></tr>";
+					elementPPM += "<tr><td class=\"ppm\">" + element.getAmount()
+					+ "</td><td>" + element.getDisplayName()
+					+ "</td></tr>";
+				} else {
+					if (elementWT.length() == 0)
+						//add in header
+						elementWT = "<tr class=\\\"\" + CSS.TYPE_SMALL_CAPS\n" + 
+								"					+ \"\\\"><th>wt%</th><th>Element</th></tr>";
+					elementWT += "<tr><td class=\"wt\">" + element.getAmount()
+					+ "%</td><td>" + element.getDisplayName()
+					+ "</td></tr>";
+				}
+				if (elementWT.length() > 0)
+					elementDisplay += elementWT;
+				if (elementPPM.length() > 0)
+					elementDisplay += elementPPM;
 			}
 			elementDisplay += "</table>";
 		}
-		
+
 		String oxideDisplay = "";
 		if (oxides != null) {
-			oxideDisplay += "<table><tr class=\""+ CSS.TYPE_SMALL_CAPS +"\"><th>wt%</th><th>Oxide</th></tr>";
+			String oxidePPM = "";
+			String oxideWT = "";
+			oxideDisplay += "<table>";
 			final Iterator<ChemicalAnalysisOxide> iter = oxides.iterator();
 			while (iter.hasNext()) {
 				final ChemicalAnalysisOxide oxide = iter.next();
-				oxideDisplay += "<tr><td class=\"wt\">" + oxide.getAmount() + "%</td><td>" + 
-					oxide.getDisplayName() + "</td></tr>";
+				if (oxide.getMeasurementUnit().equalsIgnoreCase("ppm")) {
+					if (oxidePPM.length() == 0)
+						// add in the header row
+						oxidePPM = "<tr class=\\\"\"+ CSS.TYPE_SMALL_CAPS +\"\\\"><th>ppm</th><th>Oxide</th></tr>";
+					oxidePPM += "<tr><td class=\"ppm\">" + oxide.getAmount()
+							+ "</td><td>" + oxide.getDisplayName()
+							+ "</td></tr>";
+				} else {
+					if (oxideWT.length() == 0)
+						// add in the header row
+						oxideWT = "<tr class=\\\"\"+ CSS.TYPE_SMALL_CAPS +\"\\\"><th>wt%</th><th>Oxide</th></tr>";
+					oxideWT += "<tr><td class=\"wt\">" + oxide.getAmount()
+							+ "%</td><td>" + oxide.getDisplayName()
+							+ "</td></tr>";
+				}
 			}
+			if (oxideWT.length() > 0)
+				oxideDisplay += oxideWT;
+			if (oxidePPM.length() > 0)
+				oxideDisplay += oxidePPM;
 			oxideDisplay += "</table>";
 		}
 
@@ -105,7 +147,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 		if (elementDisplay.length() == 0) {
 			panel.getLeftCol().add(new HTML(oxideDisplay));
 			panel.getRightCol().add(new HTML(elementDisplay));
-		} else { 
+		} else {
 			panel.getLeftCol().add(new HTML(elementDisplay));
 			panel.getRightCol().add(new HTML(oxideDisplay));
 		}
@@ -114,7 +156,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 			panel
 		};
 	}
-	
+
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		ChemicalAnalysis ca = (ChemicalAnalysis) obj;
 
@@ -186,8 +228,8 @@ public class ChemistryAttribute extends GenericAttribute implements
 				((ListBox) ft.getWidget(rows - 1, 5)).setSelectedIndex(0);
 			else
 				((ListBox) ft.getWidget(rows - 1, 5)).setSelectedIndex(1);
-			((ListBox) ft.getWidget(rows - 1, 2)).setSelectedIndex(
-					units.indexOf(element.getMeasurementUnit().toLowerCase()));
+			((ListBox) ft.getWidget(rows - 1, 2)).setSelectedIndex(units
+					.indexOf(element.getMeasurementUnit().toLowerCase()));
 		}
 
 		final Iterator<ChemicalAnalysisOxide> itr2 = ca.getOxides().iterator();
@@ -201,13 +243,14 @@ public class ChemistryAttribute extends GenericAttribute implements
 					.getSpecies());
 			((TextBox) ft.getWidget(rows - 1, 4)).setText(String.valueOf(oxide
 					.getPrecision()));
-			if (oxide.getPrecisionUnit() == null || oxide.getPrecisionUnit().equalsIgnoreCase("ABS"))
+			if (oxide.getPrecisionUnit() == null
+					|| oxide.getPrecisionUnit().equalsIgnoreCase("ABS"))
 				((ListBox) ft.getWidget(rows - 1, 5)).setSelectedIndex(0);
 			else
 				((ListBox) ft.getWidget(rows - 1, 5)).setSelectedIndex(1);
 			if (oxide.getMeasurementUnit() != null)
-				((ListBox) ft.getWidget(rows - 1, 2)).setSelectedIndex(
-						units.indexOf(oxide.getMeasurementUnit().toLowerCase()));
+				((ListBox) ft.getWidget(rows - 1, 2)).setSelectedIndex(units
+						.indexOf(oxide.getMeasurementUnit().toLowerCase()));
 		}
 
 		return new Widget[] {
@@ -318,13 +361,18 @@ public class ChemistryAttribute extends GenericAttribute implements
 			for (int i = 2; i < element_or_oxide_id.size() + 2; i++) {
 				if (species_type.get(i - 2).equals("Oxide")) {
 					final ChemicalAnalysisOxide r = new ChemicalAnalysisOxide();
-					r.setValues(getOxidewithID(element_or_oxide_id.get(i - 2)), 
-							Float.valueOf(((TextBox) ft.getWidget(i, 1)).getText()).floatValue(), 
-							Float.valueOf(((TextBox) ft.getWidget(i, 4)).getText()).floatValue(), 
-							((ListBox) ft.getWidget(i, 2))
-							.getItemText(((ListBox) ft.getWidget(i, 2)).getSelectedIndex()).toUpperCase(),
-							((ListBox) ft.getWidget(i, 5))
-							.getItemText(((ListBox) ft.getWidget(i, 5)).getSelectedIndex()).toUpperCase());
+					r.setValues(getOxidewithID(element_or_oxide_id.get(i - 2)),
+							Double.valueOf(
+									((TextBox) ft.getWidget(i, 1)).getText())
+									.doubleValue(), Double.valueOf(
+									((TextBox) ft.getWidget(i, 4)).getText())
+									.doubleValue(), ((ListBox) ft.getWidget(i,
+									2)).getItemText(
+									((ListBox) ft.getWidget(i, 2))
+											.getSelectedIndex()).toUpperCase(),
+							((ListBox) ft.getWidget(i, 5)).getItemText(
+									((ListBox) ft.getWidget(i, 5))
+											.getSelectedIndex()).toUpperCase());
 					Oxides.add(r);
 				}
 			}
@@ -335,13 +383,19 @@ public class ChemistryAttribute extends GenericAttribute implements
 			for (int i = 2; i < element_or_oxide_id.size() + 2; i++) {
 				if (species_type.get(i - 2).equals("Element")) {
 					final ChemicalAnalysisElement r = new ChemicalAnalysisElement();
-					r.setValues(getElementwithID(element_or_oxide_id.get(i - 2)), 
-							Float.valueOf(((TextBox) ft.getWidget(i, 1)).getText()).floatValue(), 
-							Float.valueOf(((TextBox) ft.getWidget(i, 4)).getText()).floatValue(), 
-							((ListBox) ft.getWidget(i, 2))
-							.getItemText(((ListBox) ft.getWidget(i, 2)).getSelectedIndex()).toUpperCase(),
-							((ListBox) ft.getWidget(i, 5))
-							.getItemText(((ListBox) ft.getWidget(i, 5)).getSelectedIndex()).toUpperCase());
+					r.setValues(
+							getElementwithID(element_or_oxide_id.get(i - 2)),
+							Double.valueOf(
+									((TextBox) ft.getWidget(i, 1)).getText())
+									.doubleValue(), Double.valueOf(
+									((TextBox) ft.getWidget(i, 4)).getText())
+									.doubleValue(), ((ListBox) ft.getWidget(i,
+									2)).getItemText(
+									((ListBox) ft.getWidget(i, 2))
+											.getSelectedIndex()).toUpperCase(),
+							((ListBox) ft.getWidget(i, 5)).getItemText(
+									((ListBox) ft.getWidget(i, 5))
+											.getSelectedIndex()).toUpperCase());
 					Elements.add(r);
 				}
 			}
@@ -395,10 +449,11 @@ public class ChemistryAttribute extends GenericAttribute implements
 		listbox_precison.addItem("Rel");
 
 		ListBox listbox_measurement = new ListBox();
-		final Set<String> measurementUnits = ChemicalAnalysis.getMeasurementUnits();
+		final Set<String> measurementUnits = ChemicalAnalysis
+				.getMeasurementUnits();
 		for (String s : measurementUnits)
 			listbox_measurement.addItem(s);
-		
+
 		ChemicalAnalysisElement tryme = new ChemicalAnalysisElement();
 
 		TextAttribute amount_input_text = new TextAttribute(
@@ -423,7 +478,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 
 		ft.setWidget(rows, 1,
 				amount_input_text.createEditWidget(tryme, "test")[0]);
-		ft.setWidget(rows, 2,listbox_measurement);
+		ft.setWidget(rows, 2, listbox_measurement);
 		final HTML temp = (HTML) choice_label.createDisplayWidget(tryme)[0];
 		ft.setWidget(rows, 3, temp);
 		if (choice.getSelectedIndex() != -1)

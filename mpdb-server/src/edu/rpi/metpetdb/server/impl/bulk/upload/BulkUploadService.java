@@ -172,7 +172,6 @@ public abstract class BulkUploadService extends MpDbServlet {
 		} catch (MpDbException e) {
 			// There is no sample we have to add an error
 			// Every Image needs a sample so add an error
-			results.addError(row, new PropertyRequiredException("Sample"));
 			results.addError(row, e);
 			return false;
 		}

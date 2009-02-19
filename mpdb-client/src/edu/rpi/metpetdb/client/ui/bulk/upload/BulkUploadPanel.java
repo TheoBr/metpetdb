@@ -221,7 +221,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		// take this opportunity to perform validation.
 		
 		// TODO check valid file types and send warning notice if invalid
-		
+		clearResults();
 		if (file.getFilename().length() == 0) {
 			formMessage.sendNotice(NoticeType.WARNING, "Please select a file");
 			file.setStyleName(CSS.INVALID);
@@ -229,11 +229,10 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		} else {
 			uploadButton.setText("Uploading...");
 			uploadButton.setEnabled(false);
-			//show(progressContainer);
-			progressContainer.setStyleName(CSS.PROGRESSBAR_CONTAINER);
+			show(progressContainer);
 			progressTimer.scheduleRepeating(3000);
 		}
-		clearResults();
+		
 	}
 	
 	public void updateUploadType() {
@@ -451,8 +450,10 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		final Iterator<BulkUploadError> itr = exceptions.iterator();
 		while(itr.hasNext()) {
 			final BulkUploadError err = itr.next();
-			text += "<span>Column:" + err.getColumn() + "</span>";
-			text += "<span>Cell Data:" + err.getCellData() + "</span>";
+			if (err.getColumn() != -1)
+				text += "<span>Column:" + err.getColumn() + "</span>";
+			if (err.getCellData() != null && err.getCellData().length() > 0)
+				text += "<span>Cell Data:" + err.getCellData() + "</span>";
 			text += "<span>Error Message:" + err.getException().format() + "</span>";
 		}
 		return text;

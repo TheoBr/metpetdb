@@ -82,7 +82,8 @@ grant all PRIVILEGES on sample_seq to metpetdb_dev;
 grant all PRIVILEGES on subsample_seq to metpetdb_dev;
 grant all PRIVILEGES on subsample_type_seq to metpetdb_dev; 
 grant all PRIVILEGES on uploaded_files_seq to metpetdb_dev; 
-grant all PRIVILEGES on user_seq to metpetdb_dev; 
+grant all PRIVILEGES on user_seq to metpetdb_dev;
+grant all PRIVILEGES on role_seq to metpetdb_dev;  
 
 grant create on database mpdb_test to metpetdb_dev;
 grant all privileges on database mpdb_test to metpetdb_dev;

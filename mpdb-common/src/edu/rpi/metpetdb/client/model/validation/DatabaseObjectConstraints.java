@@ -27,6 +27,7 @@ import edu.rpi.metpetdb.client.model.XrayImage;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
 import edu.rpi.metpetdb.client.model.validation.primitive.BooleanConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.DoubleConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.ShortConstraint;
@@ -100,15 +101,15 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ ChemicalAnalysisOxide ------
 	public PropertyConstraint[] ChemicalAnalysisOxide__all;
 	public ValueInCollectionConstraint<Oxide> ChemicalAnalysisOxide_ChemicalAnalysis_oxides_oxide;
-	public FloatConstraint ChemicalAnalysisOxide_ChemicalAnalysis_oxides_amount;
-	public FloatConstraint ChemicalAnalysisOxide_ChemicalAnalysis_oxides_precision;
+	public DoubleConstraint ChemicalAnalysisOxide_ChemicalAnalysis_oxides_amount;
+	public DoubleConstraint ChemicalAnalysisOxide_ChemicalAnalysis_oxides_precision;
 	public StringConstraint ChemicalAnalysisOxide_ChemicalAnalysis_oxides_precisionUnit;
 
 	// ------ ChemicalAnalysisElement ------
 	public PropertyConstraint[] ChemicalAnalysisElement__all;
 	public ValueInCollectionConstraint<Element> ChemicalAnalysisElement_ChemicalAnalysis_elements_element;
-	public FloatConstraint ChemicalAnalysisElement_ChemicalAnalysis_elements_amount;
-	public FloatConstraint ChemicalAnalysisElement_ChemicalAnalysis_elements_precision;
+	public DoubleConstraint ChemicalAnalysisElement_ChemicalAnalysis_elements_amount;
+	public DoubleConstraint ChemicalAnalysisElement_ChemicalAnalysis_elements_precision;
 	public StringConstraint ChemicalAnalysisElement_ChemicalAnalysis_elements_precisionUnit;
 
 	// ------ XrayImage ------
@@ -205,11 +206,11 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public ShortConstraint ChemicalAnalysis_datePrecision;
 	public IntegerConstraint ChemicalAnalysis_referenceX;
 	public IntegerConstraint ChemicalAnalysis_referenceY;
-	public FloatConstraint ChemicalAnalysis_stageX;
-	public FloatConstraint ChemicalAnalysis_stageY;
+	public DoubleConstraint ChemicalAnalysis_stageX;
+	public DoubleConstraint ChemicalAnalysis_stageY;
 	public BooleanConstraint ChemicalAnalysis_largeRock;
 	public ObjectConstraint<Image> ChemicalAnalysis_image;
-	public FloatConstraint ChemicalAnalysis_total;
+	public DoubleConstraint ChemicalAnalysis_total;
 	public ObjectConstraint<Reference> ChemicalAnalysis_reference;
 	public ValueInCollectionConstraint<Mineral> ChemicalAnalysis_mineral;
 	public ObjectConstraint<Element> ChemicalAnalysis_elements;

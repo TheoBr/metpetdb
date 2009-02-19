@@ -44,6 +44,7 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
 import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.BooleanConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.DoubleConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.ShortConstraint;
@@ -398,6 +399,10 @@ public class DataStore {
 			return ShortConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
 					.newInstance()
 					: new ShortConstraint();
+		else if (rc == Double.class)
+			return DoubleConstraint.class.isAssignableFrom(c) ? (PropertyConstraint) c
+					.newInstance()
+					: new DoubleConstraint();
 		else if (c == ValueInCollectionConstraint.class) {
 			// We want to fetch the applicable values for the one end of a
 			// Many-to-one

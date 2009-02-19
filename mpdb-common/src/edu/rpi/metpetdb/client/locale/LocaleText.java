@@ -150,6 +150,8 @@ public interface LocaleText extends Messages {
 	String errorDesc_RegionNotFound();
 	String errorDesc_SampleAlreadyExists();
 	String errorDesc_SampleNotFound();
+	String errorDesc_SampleNotFoundId(Long id);
+	String errorDesc_SampleNotFoundAlias(String alias);
 	String errorDesc_SubsampleAlreadyExists();
 	String errorDesc_SubsampleNotFound();
 	String errorDesc_UserAlreadyExists();

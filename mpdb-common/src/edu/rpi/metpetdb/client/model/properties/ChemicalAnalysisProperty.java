@@ -56,7 +56,7 @@ public enum ChemicalAnalysisProperty implements Property<ChemicalAnalysis> {
 		public void set(final ChemicalAnalysis chemicalAnalysis,
 				final Object pointX) {
 			((ChemicalAnalysis) chemicalAnalysis).setStageX(PropertyUtils
-					.convertToInteger(pointX));
+					.convertToDouble(pointX));
 		}
 	},
 	stageY {
@@ -67,7 +67,7 @@ public enum ChemicalAnalysisProperty implements Property<ChemicalAnalysis> {
 		public void set(final ChemicalAnalysis chemicalAnalysis,
 				final Object pointY) {
 			((ChemicalAnalysis) chemicalAnalysis).setStageY(PropertyUtils
-					.convertToInteger(pointY));
+					.convertToDouble(pointY));
 		}
 	},
 	analysisMethod {
@@ -231,14 +231,14 @@ public enum ChemicalAnalysisProperty implements Property<ChemicalAnalysis> {
 		}
 	},
 	total {
-		public Float get(final ChemicalAnalysis chemicalAnalysis) {
+		public Object get(final ChemicalAnalysis chemicalAnalysis) {
 			return ((ChemicalAnalysis) chemicalAnalysis).getTotal();
 		}
 
 		public void set(final ChemicalAnalysis chemicalAnalysis,
 				final Object total) {
 			((ChemicalAnalysis) chemicalAnalysis).setTotal(PropertyUtils
-					.convertToFloat(total));
+					.convertToDouble(total));
 		}
 	},
 	datePrecision {

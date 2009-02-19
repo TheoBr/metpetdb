@@ -46,7 +46,7 @@ public class SampleDAO extends MpDbDAO<Sample> {
 				return (Sample) getResult(q);
 		}
 
-		throw new SampleNotFoundException();
+		throw new SampleNotFoundException(inst);
 	}
 
 	public Set<SampleMineral> replaceMinerals(final Set<SampleMineral> s) {

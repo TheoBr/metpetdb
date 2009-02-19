@@ -207,8 +207,8 @@ public class SearchSample implements IsSerializable, MObject {
 		return elements;
 	}
 
-	public void addElement(final Element e, final Float lowerBound,
-			final Float upperBound) {
+	public void addElement(final Element e, final Double lowerBound,
+			final Double upperBound) {
 		if (elements == null)
 			elements = new HashSet<SearchElement>();
 		SearchElement c = new SearchElement();
@@ -236,8 +236,8 @@ public class SearchSample implements IsSerializable, MObject {
 		regions = r;
 	}
 
-	public void addOxide(final Oxide e, final Float lowerBound,
-			final Float upperBound) {
+	public void addOxide(final Oxide e, final Double lowerBound,
+			final Double upperBound) {
 		if (oxides == null)
 			oxides = new HashSet<SearchOxide>();
 		SearchOxide c = new SearchOxide();

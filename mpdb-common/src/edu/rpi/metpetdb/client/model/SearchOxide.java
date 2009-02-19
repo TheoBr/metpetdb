@@ -4,8 +4,8 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 
 public class SearchOxide implements IsSerializable {
 	private String species;
-	private float lowerBound;
-	private float upperBound;
+	private Double lowerBound;
+	private Double upperBound;
 
 	public void setSpecies(String aSpecies) {
 		species = aSpecies;
@@ -24,26 +24,26 @@ public class SearchOxide implements IsSerializable {
 		return species + " (" + lowerBound + " - " + upperBound + ")";
 	}
 
-	public void setLowerBound(float aLowerBound) {
+	public void setLowerBound(Double aLowerBound) {
 		lowerBound = aLowerBound;
 	}
 
-	public float getLowerBound() {
+	public Double getLowerBound() {
 		return lowerBound;
 	}
 
-	public void setUpperBound(float aUpperBound) {
+	public void setUpperBound(Double aUpperBound) {
 		upperBound = aUpperBound;
 	}
 
-	public float getUpperBound() {
+	public Double getUpperBound() {
 		return upperBound;
 	}
 	
 	public void setValues(final String species, final float lowerBound,
 			final float upperBound, final String measurementUnit){
 		this.species = species;
-		float unitMod = ChemicalAnalysis.getUnitOffset(measurementUnit);
+		Double unitMod = ChemicalAnalysis.getUnitOffset(measurementUnit);
 		this.lowerBound = lowerBound * unitMod;
 		this.upperBound = upperBound * unitMod;
 	}

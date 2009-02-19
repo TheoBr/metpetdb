@@ -6,46 +6,46 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
-import edu.rpi.metpetdb.server.search.bridges.FloatBridge;
+import edu.rpi.metpetdb.server.search.bridges.DoubleBridge;
 
 public class ChemicalAnalysisOxide extends MObject {
 	private static final long serialVersionUID = 1L;
 
 	@Field(index = Index.UN_TOKENIZED)
-	@FieldBridge(impl = FloatBridge.class)
-	private Float amount;
-	private Float precision;
+	@FieldBridge(impl = DoubleBridge.class)
+	private Double amount;
+	private Double precision;
 	private String precisionUnit;
 	@Field(index = Index.UN_TOKENIZED)
-	@FieldBridge(impl = FloatBridge.class)
-	private Float minAmount;
+	@FieldBridge(impl = DoubleBridge.class)
+	private Double minAmount;
 	@Field(index = Index.UN_TOKENIZED)
-	@FieldBridge(impl = FloatBridge.class)
-	private Float maxAmount;
+	@FieldBridge(impl = DoubleBridge.class)
+	private Double maxAmount;
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String measurementUnit;
 
 	@IndexedEmbedded(prefix = "oxide_")
 	private Oxide oxide;
 
-	public void setAmount(final Float f) {
+	public void setAmount(final Double f) {
 		amount = f;
 	}
 
-	public Float getAmount() {
+	public Double getAmount() {
 		if (amount == null)
-			return new Float(0);
+			return new Double(0);
 		else
 			return amount;
 	}
 
-	public void setPrecision(final Float p) {
+	public void setPrecision(final Double p) {
 		precision = p;
 	}
 
-	public Float getPrecision() {
+	public Double getPrecision() {
 		if (precision == null)
-			return new Float(0);
+			return new Double(0);
 		else
 			return precision;
 	}
@@ -74,24 +74,24 @@ public class ChemicalAnalysisOxide extends MObject {
 		return measurementUnit;
 	}
 	
-	public void setMinAmount(final Float ma) {
+	public void setMinAmount(final Double ma) {
 		minAmount = ma;
 	}
 
-	public Float getMinAmount() {
+	public Double getMinAmount() {
 		if (minAmount == null)
-			return new Float(0);
+			return new Double(0);
 		else
 			return minAmount;
 	}
 	
-	public void setMaxAmount(final Float ma) {
+	public void setMaxAmount(final Double ma) {
 		maxAmount = ma;
 	}
 
-	public Float getMaxAmount() {
+	public Double getMaxAmount() {
 		if (maxAmount == null)
-			return new Float(0);
+			return new Double(0);
 		else
 			return maxAmount;
 	}
@@ -127,7 +127,7 @@ public class ChemicalAnalysisOxide extends MObject {
 		return oxide != null ? oxide.hashCode() : 0;
 	}
 	
-	public void setValues(final Oxide o, final float amount, final float precision, 
+	public void setValues(final Oxide o, final Double amount, final Double precision, 
 			final String measurementUnit, final String precisionUnit){
 		oxide = o;
 		this.measurementUnit = measurementUnit;
@@ -144,7 +144,7 @@ public class ChemicalAnalysisOxide extends MObject {
 			precision = ChemicalAnalysis.defaultPrecision;
 			precisionUnit = "REL";
 		}
-		float unitMod = ChemicalAnalysis.getUnitOffset(measurementUnit);
+		Double unitMod = ChemicalAnalysis.getUnitOffset(measurementUnit);
 		if (precisionUnit.equalsIgnoreCase("ABS")){
 			maxAmount = (amount + precision) * unitMod;
 			minAmount = (amount - precision) * unitMod;

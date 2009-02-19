@@ -424,4 +424,11 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner,
 	public void setDate(Timestamp date) {
 		setCollectionDate(date);
 	}
+	
+	public String toString() {
+		if (alias != null && alias.length() > 0)
+			return alias;
+		else
+			return String.valueOf(id);
+	}
 }

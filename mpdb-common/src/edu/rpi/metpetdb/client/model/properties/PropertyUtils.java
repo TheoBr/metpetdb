@@ -10,6 +10,15 @@ public class PropertyUtils {
 		} else
 			return null;
 	}
+	
+	public static Double convertToDouble(final Object o) {
+		if (o instanceof Double) {
+			return (Double) o;
+		} else if (o instanceof String) {
+			return Double.parseDouble(o.toString());
+		} else
+			return null;
+	}
 
 	public static Integer convertToInteger(final Object o) {
 		if (o instanceof Integer) {

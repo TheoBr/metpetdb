@@ -46,7 +46,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	private Reference reference;
 	private Mineral mineral;
 	private Boolean largeRock;
-	private Float total;
+	private Double total;
 	@IndexedEmbedded(prefix = "elements_")
 	private Set<ChemicalAnalysisElement> elements;
 	@IndexedEmbedded(prefix = "oxides_")
@@ -61,22 +61,22 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	private String subsampleName;
 	private String sampleName;
 
-	private float stageX;
-	private float stageY;
+	private Double stageX;
+	private Double stageY;
 
 	private transient Widget actualImage;
 	private transient float percentX;
 	private transient float percentY;
 	private transient boolean isLocked;
 
-	private static Map<String, Float> measurementUnits = new HashMap<String, Float>() {
+	private static Map<String, Double> measurementUnits = new HashMap<String, Double>() {
 		{
-			put("wt%", 1F);
-			put("ppm", .00001F);
+			put("wt%", 1d);
+			put("ppm", .00001d);
 		}
 	};
 
-	public static float defaultPrecision = .02F;
+	public static double defaultPrecision = .02d;
 
 	public int getId() {
 		return id;
@@ -142,19 +142,19 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		referenceY = i;
 	}
 
-	public float getStageX() {
+	public Double getStageX() {
 		return stageX;
 	}
 
-	public void setStageX(float stageX) {
+	public void setStageX(Double stageX) {
 		this.stageX = stageX;
 	}
 
-	public float getStageY() {
+	public Double getStageY() {
 		return stageY;
 	}
 
-	public void setStageY(float stageY) {
+	public void setStageY(Double stageY) {
 		this.stageY = stageY;
 	}
 
@@ -246,7 +246,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		oxides.add(co);
 	}
 
-	public void addElement(final Element e, final Float amount) {
+	public void addElement(final Element e, final Double amount) {
 		if (elements == null)
 			elements = new HashSet<ChemicalAnalysisElement>();
 		ChemicalAnalysisElement c = new ChemicalAnalysisElement();
@@ -255,8 +255,8 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		elements.add(c);
 	}
 
-	public void addElement(final Element e, final Float amount,
-			final Float precision) {
+	public void addElement(final Element e, final Double amount,
+			final Double precision) {
 		if (elements == null)
 			elements = new HashSet<ChemicalAnalysisElement>();
 		ChemicalAnalysisElement c = new ChemicalAnalysisElement();
@@ -282,7 +282,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		return oxides;
 	}
 
-	public void addOxide(final Oxide e, final Float amount) {
+	public void addOxide(final Oxide e, final Double amount) {
 		if (oxides == null)
 			oxides = new HashSet<ChemicalAnalysisOxide>();
 		ChemicalAnalysisOxide c = new ChemicalAnalysisOxide();
@@ -291,8 +291,8 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		oxides.add(c);
 	}
 
-	public void addOxide(final Oxide e, final Float amount,
-			final Float precision) {
+	public void addOxide(final Oxide e, final Double amount,
+			final Double precision) {
 		if (oxides == null)
 			oxides = new HashSet<ChemicalAnalysisOxide>();
 		ChemicalAnalysisOxide c = new ChemicalAnalysisOxide();
@@ -357,11 +357,11 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		this.reference = reference;
 	}
 
-	public Float getTotal() {
+	public Double getTotal() {
 		return total;
 	}
 
-	public void setTotal(Float total) {
+	public void setTotal(Double total) {
 		this.total = total;
 	}
 
@@ -409,7 +409,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		return measurementUnits.keySet();
 	}
 
-	public static float getUnitOffset(final String measurementUnit) {
+	public static Double getUnitOffset(final String measurementUnit) {
 		if (measurementUnit.toLowerCase().contains("wt"))
 			return measurementUnits.get("wt%");
 		else

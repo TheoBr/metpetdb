@@ -5,7 +5,7 @@ import edu.rpi.metpetdb.client.model.Element;
 
 public enum ChemicalAnalysisElementProperty implements Property<ChemicalAnalysisElement> {
 	amount {
-		public  Float get(final ChemicalAnalysisElement chemicalAnalysisElement) {
+		public  Object get(final ChemicalAnalysisElement chemicalAnalysisElement) {
 			return ((ChemicalAnalysisElement) chemicalAnalysisElement)
 					.getAmount();
 		}
@@ -13,11 +13,11 @@ public enum ChemicalAnalysisElementProperty implements Property<ChemicalAnalysis
 		public  void set(final ChemicalAnalysisElement chemicalAnalysisElement,
 				final Object amount) {
 			((ChemicalAnalysisElement) chemicalAnalysisElement)
-					.setAmount((Float) amount);
+					.setAmount(PropertyUtils.convertToDouble(amount));
 		}
 	},
 	precision {
-		public  Float get(final ChemicalAnalysisElement chemicalAnalysisElement) {
+		public  Object get(final ChemicalAnalysisElement chemicalAnalysisElement) {
 			return ((ChemicalAnalysisElement) chemicalAnalysisElement)
 					.getPrecision();
 		}
@@ -25,7 +25,7 @@ public enum ChemicalAnalysisElementProperty implements Property<ChemicalAnalysis
 		public  void set(final ChemicalAnalysisElement chemicalAnalysisElement,
 				final Object precision) {
 			((ChemicalAnalysisElement) chemicalAnalysisElement)
-					.setPrecision((Float) precision);
+					.setPrecision(PropertyUtils.convertToDouble(precision));
 		}
 	},
 	precisionUnit {
@@ -41,7 +41,7 @@ public enum ChemicalAnalysisElementProperty implements Property<ChemicalAnalysis
 		}
 	},
 	minAmount {
-		public  Float get(final ChemicalAnalysisElement chemicalAnalysisElement) {
+		public  Object get(final ChemicalAnalysisElement chemicalAnalysisElement) {
 			return ((ChemicalAnalysisElement) chemicalAnalysisElement)
 					.getMinAmount();
 		}
@@ -49,11 +49,11 @@ public enum ChemicalAnalysisElementProperty implements Property<ChemicalAnalysis
 		public  void set(final ChemicalAnalysisElement chemicalAnalysisElement,
 				final Object minAmount) {
 			((ChemicalAnalysisElement) chemicalAnalysisElement)
-					.setMinAmount((Float) minAmount);
+					.setMinAmount(PropertyUtils.convertToDouble(minAmount));
 		}
 	},
 	maxAmount {
-		public  Float get(final ChemicalAnalysisElement chemicalAnalysisElement) {
+		public  Object get(final ChemicalAnalysisElement chemicalAnalysisElement) {
 			return ((ChemicalAnalysisElement) chemicalAnalysisElement)
 					.getMaxAmount();
 		}
@@ -61,7 +61,7 @@ public enum ChemicalAnalysisElementProperty implements Property<ChemicalAnalysis
 		public  void set(final ChemicalAnalysisElement chemicalAnalysisElement,
 				final Object maxAmount) {
 			((ChemicalAnalysisElement) chemicalAnalysisElement)
-					.setMaxAmount((Float) maxAmount);
+					.setMaxAmount(PropertyUtils.convertToDouble(maxAmount));
 		}
 	},
 	measurementUnit {

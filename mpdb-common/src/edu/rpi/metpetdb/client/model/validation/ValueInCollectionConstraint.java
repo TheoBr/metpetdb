@@ -60,20 +60,20 @@ public class ValueInCollectionConstraint<T extends MObject> extends
 		}
 	}
 
-	public boolean valuesInCollection(final Collection<?> value,
-			final Collection<?> values) {
+	private boolean valuesInCollection(final Collection<?> value,
+			final Collection<T> values) throws ValueNotInCollectionException {
 		final Iterator<?> itrVal = value.iterator();
 		while (itrVal.hasNext()) {
 			final Object val = itrVal.next();
 			if (!valueInCollection(val, values)) {
-				return false;
+				throw new ValueNotInCollectionException(this, val.toString(), values);
 			}
 		}
 		return true;
 	}
 
-	public boolean valueInCollection(final Object value,
-			final Collection<?> values) {
+	private boolean valueInCollection(final Object value,
+			final Collection<T> values) throws ValueNotInCollectionException {
 		if (values != null) {
 			if (value instanceof Collection) {
 				return valuesInCollection((Collection<?>) value, values);
@@ -84,7 +84,7 @@ public class ValueInCollectionConstraint<T extends MObject> extends
 				if (object.equals(value))
 					return true;
 				if (object instanceof HasChildren) {
-					if (valueInCollection(value, ((HasChildren<?>) object)
+					if (valueInCollection(value, ((HasChildren<T>) object)
 							.getChildren()))
 						return true;
 				}

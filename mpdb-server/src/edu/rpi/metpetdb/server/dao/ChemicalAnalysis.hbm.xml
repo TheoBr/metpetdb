@@ -34,19 +34,19 @@
     <many-to-one name="subsample" column="subsample_id" lazy="false" class="Subsample"  cascade="none"/>
 
 	<property name="largeRock" column="large_rock" type="yes_no" />
-	<property name="total" column="total" type="java.lang.Float" />
+	<property name="total" column="total" />
 	<many-to-one name="mineral" column="mineral_id" class="Mineral" lazy="false" cascade="none"/>
 
     <set name="elements" table="chemical_analysis_elements" lazy="false" cascade="save-update">
       <key column="chemical_analysis_id" />
       <composite-element class="ChemicalAnalysisElement">
       	<!--Composite elements CANNOT be null with a set -->
-      	<property name="amount" column="amount" type="float"/>
-      	<property name="precision" column="precision" type="float" />
+      	<property name="amount" column="amount"/>
+      	<property name="precision" column="precision"/>
       	<property name="precisionUnit" column="precision_type" />
       	<property name="measurementUnit" column="measurement_unit"/>
-      	<property name="minAmount" column="min_amount" type="float" />
-      	<property name="maxAmount" column="max_amount" type="float" />
+      	<property name="minAmount" column="min_amount" />
+      	<property name="maxAmount" column="max_amount" />
         <many-to-one name="element" class="Element" column="element_id" lazy="false" not-null="true"/>
 	  </composite-element>
     </set>
@@ -55,12 +55,12 @@
       <key column="chemical_analysis_id" />
       <composite-element class="ChemicalAnalysisOxide">
       	<!--Composite elements CANNOT be null with a set -->
-      	<property name="amount" column="amount" type="float"/>
-      	<property name="precision" column="precision" type="float" />
+      	<property name="amount" column="amount" />
+      	<property name="precision" column="precision" />
       	<property name="precisionUnit" column="precision_type" />
       	<property name="measurementUnit" column="measurement_unit"/>
-      	<property name="minAmount" column="min_amount" type="float" />
-      	<property name="maxAmount" column="max_amount" type="float" />
+      	<property name="minAmount" column="min_amount" />
+      	<property name="maxAmount" column="max_amount"  />
         <many-to-one name="oxide" class="Oxide" column="oxide_id" lazy="false" not-null="true"/>
 	  </composite-element>
     </set>

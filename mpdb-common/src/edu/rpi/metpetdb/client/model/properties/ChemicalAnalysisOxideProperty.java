@@ -5,18 +5,18 @@ import edu.rpi.metpetdb.client.model.Oxide;
 
 public enum ChemicalAnalysisOxideProperty implements Property<ChemicalAnalysisOxide> {
 	amount {
-		public  Float get(final ChemicalAnalysisOxide chemicalAnalysisOxide) {
+		public  Object get(final ChemicalAnalysisOxide chemicalAnalysisOxide) {
 			return ((ChemicalAnalysisOxide) chemicalAnalysisOxide).getAmount();
 		}
 
 		public  void set(final ChemicalAnalysisOxide chemicalAnalysisOxide,
 				final Object amount) {
 			((ChemicalAnalysisOxide) chemicalAnalysisOxide)
-					.setAmount((Float) amount);
+					.setAmount(PropertyUtils.convertToDouble(amount));
 		}
 	},
 	precision {
-		public  Float get(final ChemicalAnalysisOxide chemicalAnalysisOxide) {
+		public  Object get(final ChemicalAnalysisOxide chemicalAnalysisOxide) {
 			return ((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.getPrecision();
 		}
@@ -24,7 +24,7 @@ public enum ChemicalAnalysisOxideProperty implements Property<ChemicalAnalysisOx
 		public  void set(final ChemicalAnalysisOxide chemicalAnalysisOxide,
 				final Object precision) {
 			((ChemicalAnalysisOxide) chemicalAnalysisOxide)
-					.setPrecision((Float) precision);
+					.setPrecision(PropertyUtils.convertToDouble(precision));
 		}
 	},
 	precisionUnit {
@@ -40,7 +40,7 @@ public enum ChemicalAnalysisOxideProperty implements Property<ChemicalAnalysisOx
 		}
 	},
 	minAmount {
-		public  Float get(final ChemicalAnalysisOxide chemicalAnalysisOxide) {
+		public Object get(final ChemicalAnalysisOxide chemicalAnalysisOxide) {
 			return ((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.getMinAmount();
 		}
@@ -48,11 +48,11 @@ public enum ChemicalAnalysisOxideProperty implements Property<ChemicalAnalysisOx
 		public  void set(final ChemicalAnalysisOxide chemicalAnalysisOxide,
 				final Object minAmount) {
 			((ChemicalAnalysisOxide) chemicalAnalysisOxide)
-					.setMinAmount((Float) minAmount);
+					.setMinAmount(PropertyUtils.convertToDouble(minAmount));
 		}
 	},
 	maxAmount {
-		public  Float get(final ChemicalAnalysisOxide chemicalAnalysisOxide) {
+		public  Object get(final ChemicalAnalysisOxide chemicalAnalysisOxide) {
 			return ((ChemicalAnalysisOxide) chemicalAnalysisOxide)
 					.getMaxAmount();
 		}
@@ -60,7 +60,7 @@ public enum ChemicalAnalysisOxideProperty implements Property<ChemicalAnalysisOx
 		public  void set(final ChemicalAnalysisOxide chemicalAnalysisOxide,
 				final Object maxAmount) {
 			((ChemicalAnalysisOxide) chemicalAnalysisOxide)
-					.setMaxAmount((Float) maxAmount);
+					.setMaxAmount(PropertyUtils.convertToDouble(maxAmount));
 		}
 	},
 	measurementUnit {
