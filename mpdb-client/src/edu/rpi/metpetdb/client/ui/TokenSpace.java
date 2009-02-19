@@ -31,6 +31,7 @@ import edu.rpi.metpetdb.client.ui.objects.details.ChemicalAnalysisDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.ProjectDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SubsampleDetails;
+import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 import edu.rpi.metpetdb.client.ui.objects.list.UserProjectsListEx;
 import edu.rpi.metpetdb.client.ui.objects.list.UserSamplesList;
@@ -177,11 +178,11 @@ public class TokenSpace implements HistoryListener {
 	public static final Screen allSamples = new Screen(LocaleHandler.lc_entity
 			.TokenSpace_All_Samples()) {
 		public void executeToken(final String args) {
-			show(new SampleListEx() {
+			show(new SampleList() {
 				@Override
 				public void update(PaginationParameters p,
 						AsyncCallback<Results<Sample>> ac) {
-					MpDb.sample_svc.all(p, ac);
+					MpDb.sample_svc.allPublicSamples(p, ac);
 				}
 			});
 		}
