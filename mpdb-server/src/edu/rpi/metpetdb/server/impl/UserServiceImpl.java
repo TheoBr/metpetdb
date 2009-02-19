@@ -112,8 +112,9 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		try {
 			User u = new User();
 			u.setId(currentUserId());
+			currentReq().action = Action.LOGIN;
 			u = (new UserDAO(this.currentSession())).fill(u);
-			r.user = u;
+			r.user = (User) clone(u);
 			final Collection<Principal> principals = new ArrayList<Principal>();
 			principals.add(new OwnerPrincipal(u));
 			principals.add(new EnabledPrincipal(u));
