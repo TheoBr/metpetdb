@@ -26,7 +26,10 @@ public class MSimplePanel extends SimplePanel {
 	}
 
 	public void onBrowserEvent(Event event) {
-		if (DOM.eventGetType(event) == Event.KEYEVENTS) {
+		switch (DOM.eventGetType(event)) {
+		case Event.ONKEYDOWN:
+		case Event.ONKEYPRESS:
+		case Event.ONKEYUP:
 			if (keyboardListeners != null)
 				keyboardListeners.fireKeyboardEvent(this, event);
 		}

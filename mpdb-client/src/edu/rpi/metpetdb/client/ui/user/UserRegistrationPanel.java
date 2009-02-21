@@ -3,8 +3,6 @@ package edu.rpi.metpetdb.client.ui.user;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -23,9 +21,8 @@ import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.PasswordAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
-import edu.rpi.metpetdb.client.ui.widgets.MText;
 
-public class UserRegistrationPanel extends MPagePanel implements ClickListener, KeyboardListener {
+public class UserRegistrationPanel extends MPagePanel implements ClickListener { 
 	private static final GenericAttribute[] mainAttributes = {
 			new TextAttribute(MpDb.doc.User_name) {
 				protected MObject resolve(final MObject obj) {
@@ -116,13 +113,4 @@ public class UserRegistrationPanel extends MPagePanel implements ClickListener, 
 			}
 		}.begin();
 	}
-
-	public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-		if (keyCode == KEY_ENTER) {
-			doRegister();
-		}
-	}
-	
-	public void onKeyDown(Widget sender, char keyCode, int modifiers) {}
-	public void onKeyUp(Widget sender, char keyCode, int modifiers) {}
 }

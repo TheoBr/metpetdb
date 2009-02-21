@@ -1,6 +1,8 @@
 package edu.rpi.metpetdb.client.ui.dialogs;
 
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -197,6 +199,11 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 			public void onFailure(final Throwable e) {
 				ssr.setPassword(null);
 				p_main.edit(ssr);
+				DeferredCommand.addCommand(new Command() {
+					public void execute() {
+						FocusSupport.requestFocus(tabs.getDeckPanel().getWidget(p_mainIdx));	
+					}
+				});
 				super.onFailure(e);
 			}
 			public void onSuccess(final User result) {
