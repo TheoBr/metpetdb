@@ -58,12 +58,12 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	public boolean onLoad(Object entity, Serializable id, Object[] state,
 			String[] propertyNames, Type[] types) throws CallbackException {
 
-		checkPermissions(id, entity, state, propertyNames, false);
+		checkPermissions(id, entity, state, propertyNames, false, false);
 		return super.onLoad(entity, id, state, propertyNames, types);
 	}
 
 	private void checkPermissions(Serializable id, Object entity, Object[] state,
-			String[] propertyNames, boolean saving) {
+			String[] propertyNames, boolean saving, boolean creating) {
 		if (MpDbServlet.currentReq() != null) {
 			final Collection<Principal> principals = MpDbServlet.currentReq().principals;
 			final int usersRank;
@@ -162,19 +162,20 @@ public class PermissionInterceptor extends EmptyInterceptor {
 					}
 				}
 			} else {
-				//user is trying to save something
-				if (enabled || MpDbServlet.currentReq().action != null) {
-					if (isPublic) {
-						//public data cannot be saved
+				//user is trying to save something, if they are creating an account let it go
+				if (enabled || (creating && entity instanceof User)) {
+					if (isPublic && !creating) {
+						//public data cannot be saved (except when creating it initially)
 						throw new CallbackException(new UnableToModifyPublicDataException());
 					} else {
 						if (RoleDefinitions.roleDefinitions.get(usersRank).contains(Privilages.SAVE_PRIVATE_DATA)) {
+							//TODO check saving of other user's private data
 							return; //let it fly
 						} else {
 							//let email password save the user instance
 							if (Action.EMAIL_PASSWORD.equals(MpDbServlet.currentReq().action) && entity instanceof User)
 								return;
-							else if (entity instanceof User && getVersion(propertyNames, state) == 0)
+							else if (entity instanceof User && creating)
 								//let them register
 								return;
 							else
@@ -265,7 +266,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	public boolean onFlushDirty(Object entity, Serializable id,
 			Object[] currentState, Object[] previousState,
 			String[] propertyNames, Type[] types) throws CallbackException {
-		checkPermissions(id, entity, previousState, propertyNames, true);
+		checkPermissions(id, entity, previousState, propertyNames, true, false);
 		return super.onFlushDirty(entity, id, currentState, previousState,
 				propertyNames, types);
 	}
@@ -290,7 +291,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	 */
 	public boolean onSave(Object entity, Serializable id, Object[] state,
 			String[] propertyNames, Type[] types) throws CallbackException {
-		checkPermissions(id, entity, state, propertyNames, true);
+		checkPermissions(id, entity, state, propertyNames, true, true);
 		return super.onSave(entity, id, state, propertyNames, types);
 	}
 
@@ -313,7 +314,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	 */
 	public void onDelete(Object entity, Serializable id, Object[] state,
 			String[] propertyNames, Type[] types) throws CallbackException {
-		checkPermissions(id, entity, state, propertyNames, true);
+		checkPermissions(id, entity, state, propertyNames, true, false);
 		super.onDelete(entity, id, state, propertyNames, types);
 	}
 }
