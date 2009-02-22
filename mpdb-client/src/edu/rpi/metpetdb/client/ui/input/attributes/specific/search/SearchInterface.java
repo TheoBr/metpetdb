@@ -16,6 +16,7 @@ import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MTabPanel;
+import edu.rpi.metpetdb.client.ui.widgets.MText;
 import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
 
 public class SearchInterface implements ClickListener {
@@ -81,14 +82,17 @@ public class SearchInterface implements ClickListener {
 		panel.setRightColWidth("30%");
 		createCriteriaForAll();
 		
-		final DisclosurePanel p = new DisclosurePanel("Expand/Collapse");
+		final Label hideLabel = new Label("Hide");
+		final DisclosurePanel p = new DisclosurePanel(hideLabel, true);
+		p.setStylePrimaryName("criteria-collapse");
 		p.setAnimationEnabled(true);
-		p.setOpen(true);
 		p.add(panel);
 		
+		final MText shadow = new MText("","div");
+		shadow.setStyleName("criteria-dropshadow");
 		
 		return new Widget[] {
-			p
+			p,shadow
 		};
 	}
 	

@@ -31,6 +31,8 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 //	final Element resultsTd;
 
 	protected ObjectSearchPanel(final SearchInterface atts) {
+		this.setStyleName("criteria");
+		
 		bean = (T) new SearchSample();
 		this.atts = atts;
 		attributes = atts.getAttributes();

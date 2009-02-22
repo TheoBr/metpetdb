@@ -2,10 +2,9 @@
               search
  --------------------------------------*/
  
- .search .gwt-DisclosurePanel {
- 	width: 100%;
- }
-
+.search .page-header {
+	border-bottom: 0;
+}
 .search .tabPanel {
 	width: 100%;
 }
@@ -35,6 +34,38 @@
 	margin: 5px 14px;
 	text-align: center;
 }
+
+
+/* criteria */
+.search .criteria-collapse {
+	background-color: #ededed;
+	width: 100%;
+}
+.search .criteria-dropshadow {
+	background: #ededed url(../images/search-criteria-shadow.png) repeat-x left bottom;
+	height: 6px;
+}
+.search .criteria-collapse a.header {
+	background: #c2c2c2 url(../images/search-collapsebar-bg.png) repeat-x left top;
+	height: 7px;
+	padding-top: 4px;
+}
+.search .criteria-collapse a.header:focus,
+.search .criteria-collapse a.header:hover,
+.search .criteria-collapse a.header:active {
+	background-position: left -11px;
+}
+.search .criteria-collapse a.header div {
+	width: 10px;
+	height: 5px;
+	background: transparent url(../images/search-collapsebar-arrow.png) no-repeat left top;
+	margin: 0 auto;
+	text-indent: -9999px;
+}
+.search .criteria-collapse-closed a.header div {
+	background-position: left -5px;
+}
+
 .search-button {
 	background-color: #000;
 	color: #fff;
@@ -198,9 +229,6 @@
 	padding-right: 7px;
 	text-align: right;
 }
-
-
-
 
 /*-------------------------------------
               provenance
