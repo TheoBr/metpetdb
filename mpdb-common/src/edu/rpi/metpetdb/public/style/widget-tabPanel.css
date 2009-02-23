@@ -20,8 +20,8 @@
 }
 .tabBarItem-content {
 	color: #000;
-	height: 21px;
-	padding: 3px 0 0 8px;
+	height: 20px;
+	padding: 4px 0 0 8px;
 }
 .tabBarItem:active {
 	background-image: url(../images/tabitem-active-bg.png);

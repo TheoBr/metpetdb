@@ -34,13 +34,14 @@ import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
+import edu.rpi.metpetdb.client.ui.widgets.MText;
 import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
 
 public class SearchChemistryAttribute extends SearchGenericAttribute {
 	private Map<RowContainer,String> currentCriteria = new HashMap<RowContainer,String>();
 	private MHtmlList editList;
 	protected final ArrayList<Widget> realEditWidgets = new ArrayList<Widget>();
-	private static final String STYLENAME = "multi-suggest";
+	private static final String STYLENAME = "chem-list";
 	
 	private static final String[] rangeChoices = {"is between", "is greater than", "is less than", "is equal to" };
 	
@@ -52,9 +53,9 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 		private TextBox lessThan = new TextBox();
 		private TextBox greaterThan = new TextBox();
 		private TextBox precision = new TextBox();
-		private final Label and = new Label("and");
-		private final Label percent = new Label("%");
-		private final HTML plusminus = new HTML("&plusmn");
+		private final MText and = new MText("and","span");
+		private final MText percent = new MText("%", "span");
+		private final HTML plusminus = new HTML("&#177;");
 		
 		public RowContainer(){
 			final Set<String> measurementUnits = ChemicalAnalysis.getMeasurementUnits();
@@ -74,11 +75,11 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			final Set<String> options = new HashSet<String>();
 			
 			for (Element e : elements){
-				options.add(e.getSymbol() + "&nbsp<span>" + e.getName() +"<span>");
+				options.add(e.getSymbol() + "&nbsp;<span>" + e.getName() +"<span>");
 			}
 			
 			for (Oxide o : oxides){
-				options.add(o.getDisplayName() + "&nbsp<span>" + o.getElement().getName() +"<span>");
+				options.add(o.getDisplayName() + "&nbsp;<span>" + o.getElement().getName() +"<span>");
 			}
 			
 			st = new MSuggestText(options, false);
@@ -90,24 +91,18 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 				}
 			});
 			st.suggestBox.addChangeListener(this);
+			st.addPopupStyleName("chem-suggest-popup");
 			lessThan.addChangeListener(this);
 			greaterThan.addChangeListener(this);
 			unit.addChangeListener(this);
 			range.addChangeListener(this);
 			
-			lessThan.setWidth("40px");
-			greaterThan.setWidth("40px");
-			precision.setWidth("40px");
+			lessThan.addStyleName("number-input");
+			greaterThan.addStyleName("number-input");
+			precision.addStyleName("number-input");
 			
-			lessThan.addStyleName("inline");
-			greaterThan.addStyleName("inline");
-			unit.addStyleName("inline");
-			range.addStyleName("inline");
 			plusminus.addStyleName("inline");
-			and.addStyleName("inline");
-			st.addStyleName("inline");
-			precision.addStyleName("inline");
-			percent.addStyleName("inline");
+			setStyleName("chem-item");
 			
 			add(st);
 			add(range);
@@ -136,22 +131,26 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 				currentCriteria.remove(this);
 			}
 			if (!displayString.equals("")){
+				// between
 				if (range.getItemText(range.getSelectedIndex()).equals(rangeChoices[0]) && 
 						!lessThan.getText().equals("") && !greaterThan.getText().equals("")){
-					currentCriteria.put(this, greaterThan.getText() + " < " + displayString + 
-							" < " + lessThan.getText() + " " + unit.getValue(unit.getSelectedIndex()));
+					currentCriteria.put(this, displayString + " is between " + greaterThan.getText() + " and " +  
+							lessThan.getText() + " " + unit.getValue(unit.getSelectedIndex()));
+				// greater than
 				} else if (range.getItemText(range.getSelectedIndex()).equals(rangeChoices[1]) && 
 						!greaterThan.getText().equals("")){
-					currentCriteria.put(this, greaterThan.getText() + " < " + displayString + 
+					currentCriteria.put(this, displayString + " is greater than " + greaterThan.getText() + 
 							" " + unit.getValue(unit.getSelectedIndex()));
+				// less than
 				} else if (range.getItemText(range.getSelectedIndex()).equals(rangeChoices[2]) && 
 						!lessThan.getText().equals("")){
-					currentCriteria.put(this, displayString + 
-							" < " + lessThan.getText() + " " + unit.getValue(unit.getSelectedIndex()));
+					currentCriteria.put(this, displayString + " is less than " + lessThan.getText() + 
+							" " + unit.getValue(unit.getSelectedIndex()));
+				// equal to
 				} else if (range.getItemText(range.getSelectedIndex()).equals(rangeChoices[3]) && 
 						!lessThan.getText().equals("")){
 					currentCriteria.put(this, displayString + 
-							" = " + lessThan.getText() + " " + unit.getValue(unit.getSelectedIndex()));
+							" is " + lessThan.getText() + " " + unit.getValue(unit.getSelectedIndex()));
 				}
 			}
 			SearchChemistryAttribute.this.getSearchInterface().createCritera();

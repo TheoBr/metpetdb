@@ -25,6 +25,7 @@ public class SearchTabChemicalAnalysis extends SearchTabAttribute{
 	public Widget createEditWidget(final MObject obj, final String id){
 		currentEditWidgets = new ArrayList();
 		final FlowPanel container = new FlowPanel();
+		container.setStyleName("search-chem");
 		for (int i = 0; i < atts.length; i++){
 			Widget[] w = (atts[i].createEditWidget(obj, id, atts[i]));
 			currentEditWidgets.add(w);

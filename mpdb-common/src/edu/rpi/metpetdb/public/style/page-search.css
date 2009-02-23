@@ -5,9 +5,6 @@
 .search .page-header {
 	border-bottom: 0;
 }
-.search .tabPanel {
-	width: 100%;
-}
 .search .checkbox {
 	display: table-row;
 	color: #444;
@@ -28,15 +25,22 @@
 	text-decoration: underline;
 }
 .search-actions {
-	margin-top: 10px;
+	margin: 10px 0;
 }
 .search-actions li {
 	margin: 5px 14px;
 	text-align: center;
 }
 
-
-/* criteria */
+/*-------------------------------------
+                criteria
+ --------------------------------------*/
+.search .criteria .tabPanel {
+	width: 100%;
+}
+.search .criteria .tabBar {
+	padding: 7px 6px;
+}
 .search .criteria-collapse {
 	background-color: #ededed;
 	width: 100%;
@@ -50,9 +54,7 @@
 	height: 7px;
 	padding-top: 4px;
 }
-.search .criteria-collapse a.header:focus,
-.search .criteria-collapse a.header:hover,
-.search .criteria-collapse a.header:active {
+.search .criteria-collapse a.header:hover {
 	background-position: left -11px;
 }
 .search .criteria-collapse a.header div {
@@ -65,7 +67,6 @@
 .search .criteria-collapse-closed a.header div {
 	background-position: left -5px;
 }
-
 .search-button {
 	background-color: #000;
 	color: #fff;
@@ -103,7 +104,7 @@
 .criteria-summary .header-wrap {
 	background-color: #E4E4E4;
 	border-bottom: 1px solid #CBCBCB;
-	padding: 6px 6px 0 0;
+	padding: 8px 6px 0 0;
 }
 .criteria-summary .header-content {
 	background: transparent url(../images/srchsum-header-bg-start.png) no-repeat left top;
@@ -182,7 +183,7 @@
               location
  --------------------------------------*/
 .search-loc {
-	margin: 0 7px 0 10px;
+	margin: 0 7px 10px 10px;
 }
 .search-loc .search-taboptions li {
 	display: inline;
@@ -222,6 +223,9 @@
 .search-map-eb { background-image: url(../images/icon-bounds-east.png); }
 .search-map-wb { background-image: url(../images/icon-bounds-west.png); }
 
+.search-loc-region {
+	margin: 0 auto;
+}
 .search-loc-region td {
 	padding-bottom: 10px;
 }
@@ -231,10 +235,55 @@
 }
 
 /*-------------------------------------
+              chemistry
+ --------------------------------------*/
+.search-chem {
+	margin: 10px;
+}
+.search-chem .chem-list {
+	width: 42.5em;
+	margin: 1.3em auto 0;
+}
+.search-chem .chem-list li {
+	clear: both;
+}
+.search-chem .chem-list .multi-input-wrap {
+	display: block;
+	float: left;
+	height: 3.35em;
+	margin-top: -0.35em;
+	width: 36.6em;
+}
+.search-chem .suggest-box {
+	width: 6em;
+}
+.search-chem .number-input {
+	width: 4em;
+}
+.search-chem .chem-item {
+	display: inline;
+}
+.search-chem .chem-item > *+* {
+	margin-left: 5px;
+}
+.chem-suggest-popup .item span {
+	margin-left: 3px;
+	font-size: 0.9em;
+	color: #6e7e91;
+}
+.chem-suggest-popup .item-selected span {
+	color: #b8c8da;
+}
+.chem-suggest-popup .item sub {
+	text-align: bottom;
+}
+
+
+/*-------------------------------------
               provenance
  --------------------------------------*/
 .search-prov {
-	margin: 10px;
+	margin: 10px auto;
 }
 .search-prov td {
 	padding-bottom: 10px;

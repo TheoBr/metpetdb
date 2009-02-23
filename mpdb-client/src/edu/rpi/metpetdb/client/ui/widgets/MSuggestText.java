@@ -13,7 +13,8 @@ import com.google.gwt.user.client.ui.Widget;
 public class MSuggestText extends FlowPanel {
 	
 	public SuggestBox suggestBox;
-	private static final String STYLENAME = "suggest";
+	private final String STYLENAME = "suggest";
+	private String popupStyleName;
 	
 	public MSuggestText(){
 		this(new HashSet<String>(), false);
@@ -25,13 +26,24 @@ public class MSuggestText extends FlowPanel {
 		oracle.addAll(suggestions);
 		suggestBox = new SuggestBox(oracle);
 		suggestBox.setStyleName(STYLENAME+"-box");
-		suggestBox.setPopupStyleName(STYLENAME+"-popup");
+		setPopupStyleName(STYLENAME+"-popup");
 		add(suggestBox);
 		
 		if (addShowAll){
 			final Button showAll = new Button("+");
 			add(showAll);
 		}
+	}
+	
+	public void setPopupStyleName(String name) {
+		suggestBox.setPopupStyleName(name.trim());
+		popupStyleName = name.trim();
+	}
+	
+	public void addPopupStyleName(String name) {
+		String stylename = (popupStyleName + " " + name).trim();
+		suggestBox.setPopupStyleName(stylename);
+		popupStyleName = stylename;
 	}
 	
 	public String getText(){
