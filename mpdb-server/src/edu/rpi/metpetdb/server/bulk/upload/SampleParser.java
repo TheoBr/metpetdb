@@ -77,7 +77,7 @@ public class SampleParser extends Parser<Sample> {
 		samples = new TreeMap<Integer, Sample>();
 	}
 
-	protected void parseHeaderSpecialCase(final HSSFRow header,
+	protected boolean parseHeaderSpecialCase(final HSSFRow header,
 			Integer cellNumber, final String cellText) {
 		// If we don't have an explicit match for the header, it could be a
 		// mineral, check for that
@@ -86,9 +86,10 @@ public class SampleParser extends Parser<Sample> {
 				spreadSheetColumnMapping.put(cellNumber, doc.Sample_minerals);
 				headers.put(cellNumber, new BulkUploadHeader(getRealMineral(m)
 						.getName(), doc.Sample_minerals.propertyName));
-				break;
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public Map<Integer, Sample> getSamples() {
@@ -122,7 +123,14 @@ public class SampleParser extends Parser<Sample> {
 							.toString()));
 					currentObject.addMineral(m, data);
 				} catch (NumberFormatException e) {
-					currentObject.addMineral(m);
+					//check if the actual column is a column of minerals
+					//search for the correct mineral (so alternate minerals work)
+					for (Mineral mineral : minerals) {
+						if (mineral.getName().equalsIgnoreCase(cell.toString())) {
+							currentObject.addMineral(getRealMineral(mineral));
+							break;
+						}
+					}
 				}
 			}
 			return true;

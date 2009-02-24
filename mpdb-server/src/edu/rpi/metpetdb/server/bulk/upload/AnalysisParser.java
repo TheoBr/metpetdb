@@ -141,7 +141,7 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 			return "rel";
 	}
 
-	protected void parseHeaderSpecialCase(final HSSFRow header,
+	protected boolean parseHeaderSpecialCase(final HSSFRow header,
 			Integer cellNumber, final String cellText) {
 		// The string didn't match anything we explicitly check for, so
 		// maybe it is an element or an oxide
@@ -157,6 +157,7 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 						cellText,
 						doc.ChemicalAnalysis_elements,
 						doc.ChemicalAnalysisElement_ChemicalAnalysis_elements_precision);
+				return true;
 			}
 		}
 		for (Oxide o : oxides) {
@@ -168,8 +169,10 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 						cellText,
 						doc.ChemicalAnalysis_oxides,
 						doc.ChemicalAnalysisOxide_ChemicalAnalysis_oxides_precision);
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public Map<Integer, ChemicalAnalysis> getChemicalAnalyses() {

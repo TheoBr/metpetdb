@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -389,6 +390,7 @@ public abstract class Parser<T extends MObject> {
 		// First non-empty row is the header, want to associate what
 		// we know how to parse with what is observed
 		HSSFRow header = sheet.getRow(rownum);
+		final ArrayList<String> unmatched = new ArrayList<String>();
 		for (int i = 0; i < header.getLastCellNum(); ++i) {
 			// Convert header title to String
 			final HSSFCell cell = header.getCell(i);
@@ -409,7 +411,11 @@ public abstract class Parser<T extends MObject> {
 					break;
 				}
 			}
-			parseHeaderSpecialCase(header, i, text);
+			if (!parseHeaderSpecialCase(header, i, text)) {
+				//unmatched column
+				if (!headers.containsKey(i))
+					headers.put(i, new BulkUploadHeader(text, "Not matched by MetPetDB"));
+			}
 		}
 	}
 
@@ -419,8 +425,10 @@ public abstract class Parser<T extends MObject> {
 	 * @param cellNumber
 	 *            can be modified
 	 * @param cellText
+	 * 
+	 * @Return true if the header is used
 	 */
-	protected abstract void parseHeaderSpecialCase(final HSSFRow header,
+	protected abstract boolean parseHeaderSpecialCase(final HSSFRow header,
 			Integer cellNumber, final String cellText);
 
 	public abstract List<ColumnMapping> getColumMappings();

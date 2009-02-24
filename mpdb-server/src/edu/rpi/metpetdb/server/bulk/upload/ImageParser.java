@@ -76,9 +76,9 @@ public class ImageParser extends Parser<BulkUploadImage> {
 		bulkUploadImages = new TreeMap<Integer, BulkUploadImage>();
 	}
 
-	protected void parseHeaderSpecialCase(final HSSFRow header,
+	protected boolean parseHeaderSpecialCase(final HSSFRow header,
 			Integer cellNumber, final String cellText) {
-
+		return false;
 	}
 
 	public Map<Integer, BulkUploadImage> getBulkUploadImages() {
