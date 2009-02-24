@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -390,7 +389,6 @@ public abstract class Parser<T extends MObject> {
 		// First non-empty row is the header, want to associate what
 		// we know how to parse with what is observed
 		HSSFRow header = sheet.getRow(rownum);
-		final ArrayList<String> unmatched = new ArrayList<String>();
 		for (int i = 0; i < header.getLastCellNum(); ++i) {
 			// Convert header title to String
 			final HSSFCell cell = header.getCell(i);
