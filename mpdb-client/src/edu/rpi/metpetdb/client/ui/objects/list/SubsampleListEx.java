@@ -32,7 +32,7 @@ public abstract class SubsampleListEx extends ListEx<Subsample> {
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
 	public static Column[] columns = {
-			new Column(true, "Check", true, true) {
+			new Column(true, "Check", false, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new CheckBox();
@@ -47,7 +47,7 @@ public abstract class SubsampleListEx extends ListEx<Subsample> {
 				}
 			},
 			new Column(true,enttxt.Sample_publicData(), SubsampleProperty.publicData,
-					true) {
+					false, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					if ((Boolean) data.mGet(SubsampleProperty.publicData)) { 
@@ -64,11 +64,11 @@ public abstract class SubsampleListEx extends ListEx<Subsample> {
 					};
 				}
 			},
-			new Column(true, enttxt.Subsample_subsampleType(), SubsampleProperty.subsampleType),
+			new Column(true, enttxt.Subsample_subsampleType(), SubsampleProperty.subsampleType, false, false),
 			new Column(true, enttxt.Subsample_analysisCount(),
-					SubsampleProperty.analysisCount),
+					SubsampleProperty.analysisCount, false, false),
 			new Column(true, enttxt.Subsample_imageCount(),
-					SubsampleProperty.imageCount, true) {
+					SubsampleProperty.imageCount,false, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new MLink(String.valueOf(data.mGet(SubsampleProperty.imageCount)) +" Images", TokenSpace

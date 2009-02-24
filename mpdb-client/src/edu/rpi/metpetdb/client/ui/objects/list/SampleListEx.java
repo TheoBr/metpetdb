@@ -167,7 +167,7 @@ public abstract class SampleListEx extends ListEx<Sample> {
 
 				}
 			},
-			new Column(false, "Location", SampleProperty.location, true) {
+			new Column(false, "Location", SampleProperty.location, false, true) {
 				protected Object getText(final MObject data,
 						final int currentRow) {
 					final Point location = (Point) data
