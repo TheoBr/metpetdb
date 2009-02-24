@@ -45,6 +45,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 		final Iterator<Integer> rows = analyses.keySet().iterator();
 		final ChemicalAnalysisDAO caDao = new ChemicalAnalysisDAO(
 				currentSession());
+		results.setHeaders(ap.getHeaders());
 		while (rows.hasNext()) {
 			int row = rows.next();
 			final ChemicalAnalysis ca = analyses.get(row);
@@ -93,6 +94,5 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 		}
 		results.addResultCount("Chemical Analysis", caResultCount);
 		results.addResultCount("Subsamples", ssResultCount);
-		results.setHeaders(ap.getHeaders());
 	}
 }

@@ -248,8 +248,8 @@ public class SearchDb {
 				.createFullTextQuery(fullQuery, Sample.class);
 		
 		if (p != null){
-			hibQuery.setFirstResult(p.getFirstResult());
-			hibQuery.setMaxResults(p.getMaxResults());
+		    //hibQuery.setFirstResult(p.getFirstResult());
+		    //hibQuery.setMaxResults(p.getMaxResults());
 		}
 		hibQuery.list();
 		hibQuery.scroll();

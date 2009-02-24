@@ -421,40 +421,45 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 	}
 
 	private void populateErrorPanel(Map<Integer, List<BulkUploadError>> errors) {
-		errorPanel.clear();
-		String msg = "There were "+errors.size()+" errors:";
-		if (errors.size() == 1) msg = "There was one error:";
-		if (errors.size() == 0) msg = "No errors. Congratulations!";
-		errorPanel.add(new MText(msg, "p"));
-		setErrorTabStyle(errors.size());
-		if (!errors.isEmpty()) {
-			errorPanel.add(errorGrid);
-			errorGrid.resize(errors.size() + 1, 2);
-			errorGrid.getRowFormatter().setStyleName(0, CSS.TYPE_SMALL_CAPS);
-			
-			int i = 0;
-			errorGrid.setText(0, 0, "Row");
-			errorGrid.setText(0, 1, "Error Message");
-			final List<Integer> rowNumbers = new ArrayList<Integer>();
-			rowNumbers.addAll(errors.keySet());
-			Collections.sort(rowNumbers);
-			for (Integer row : rowNumbers) {
-				errorGrid.setText(++i, 0, row.toString());
-				errorGrid.setHTML(i, 1, explode(errors.get(row)));
+		if (errors != null) {
+			errorPanel.clear();
+			String msg = "There were "+errors.size()+" errors:";
+			if (errors.size() == 1) msg = "There was one error:";
+			if (errors.size() == 0) msg = "No errors. Congratulations!";
+			errorPanel.add(new MText(msg, "p"));
+			setErrorTabStyle(errors.size());
+			if (!errors.isEmpty()) {
+				errorPanel.add(errorGrid);
+				errorGrid.resize(errors.size() + 1, 2);
+				errorGrid.getRowFormatter().setStyleName(0, CSS.TYPE_SMALL_CAPS);
+				
+				int i = 0;
+				errorGrid.setText(0, 0, "Row");
+				errorGrid.setText(0, 1, "Error Message");
+				final List<Integer> rowNumbers = new ArrayList<Integer>();
+				rowNumbers.addAll(errors.keySet());
+				Collections.sort(rowNumbers);
+				for (Integer row : rowNumbers) {
+					errorGrid.setText(++i, 0, row.toString());
+					errorGrid.setHTML(i, 1, explode(errors.get(row)));
+				}
 			}
 		}
 	}
 	
 	private String explode(final Collection<BulkUploadError> exceptions) {
 		String text = "";
-		final Iterator<BulkUploadError> itr = exceptions.iterator();
-		while(itr.hasNext()) {
-			final BulkUploadError err = itr.next();
-			if (err.getColumn() != -1)
-				text += "<span>Column:" + err.getColumn() + "</span>";
-			if (err.getCellData() != null && err.getCellData().length() > 0)
-				text += "<span>Cell Data:" + err.getCellData() + "</span>";
-			text += "<span>Error Message:" + err.getException().format() + "</span>";
+		if (exceptions != null) {
+			final Iterator<BulkUploadError> itr = exceptions.iterator();
+			while(itr.hasNext()) {
+				final BulkUploadError err = itr.next();
+				if (err.getColumn() != -1)
+					text += "<span>Column:" + err.getColumn() + "</span>";
+				if (err.getCellData() != null && err.getCellData().length() > 0)
+					text += "<span>Cell Data:" + err.getCellData() + "</span>";
+				if (err.getException() != null)
+					text += "<span>Error Message:" + err.getException().format() + "</span>";
+			}
 		}
 		return text;
 	}

@@ -135,7 +135,7 @@ public abstract class BulkUploadService extends MpDbServlet {
 		} else if (e instanceof HibernateException) {
 			return handleHibernateException((HibernateException) e, obj);
 		} else {
-			return null;
+			return new GenericDAOException(e.getMessage());
 		}
 
 	}
