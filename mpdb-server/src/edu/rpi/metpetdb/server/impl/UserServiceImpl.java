@@ -152,7 +152,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		User u = newUser;
 		u.setEnabled(false);
 		u.setRole((Role) currentSession().createQuery(
-				"from Role r where r.rank=0").uniqueResult());
+				"from Role r where r.rank=1").uniqueResult());
 		u.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-", ""));
 		try {
 			u = (new UserDAO(this.currentSession())).save(u);
@@ -224,7 +224,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		user.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-",
 				""));
 		User u = new User();
-		u.setId(user.getId());
+		u.setId(currentUserId());
 		u = uDAO.fill(u);
 		user.setEncryptedPassword(u.getEncryptedPassword());
 		user = uDAO.save(user);
