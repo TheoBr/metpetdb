@@ -16,19 +16,19 @@ public class SubsampleDaoTest extends DatabaseTestCase {
 	
 	@Test
 	public void testSubsampleSampleName() throws NoSuchObjectException {
-		final Subsample s = (Subsample) super.byId(typeName, 5);
-		assertEquals("1", s.getSampleName());
+		final Subsample s = (Subsample) super.byId(typeName, 1);
+		assertEquals("testing sample", s.getSampleName());
 	}
 	
 	@Test
 	public void testSubsampleImageCount() throws NoSuchObjectException {
-		final Subsample s = (Subsample) super.byId(typeName, 5);
-		assertEquals(0, s.getImageCount());
+		final Subsample s = (Subsample) super.byId(typeName, 1);
+		assertEquals(1, s.getImageCount());
 	}
 	
 	@Test
 	public void testSubsampleAnalysisCount() throws NoSuchObjectException {
-		final Subsample s = (Subsample) super.byId(typeName, 5);
+		final Subsample s = (Subsample) super.byId(typeName, 1);
 		assertEquals(1, s.getAnalysisCount());
 	}
 }

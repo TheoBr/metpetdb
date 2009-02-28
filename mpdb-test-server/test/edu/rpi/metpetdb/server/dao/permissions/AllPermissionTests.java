@@ -6,7 +6,9 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
 	AnonymousLoadingPermissionsTest.class,
-	ContributorLoadingPermissionsTest.class
+	ContributorLoadingPermissionsTest.class,
+	ContributorSavingPermissionsTest.class,
+	MiscSavingPermissionsTest.class
 })
 public class AllPermissionTests {
 

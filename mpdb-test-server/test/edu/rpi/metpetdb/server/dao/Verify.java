@@ -8,7 +8,7 @@ import edu.rpi.metpetdb.client.model.Sample;
 public class Verify {
 	
 	public static void verifyEqual(final Sample s1, final Sample s2) {
-		assertEquals(s1.getAlias(), s2.getAlias());
+		assertEquals(s1.getNumber(), s2.getNumber());
 		assertEquals(s1.getAnalysisCount(), s2.getAnalysisCount());
 		assertEquals(s1.getCollectionDate(), s2.getCollectionDate());
 		assertEquals(s1.getCollector(), s2.getCollector());

@@ -11,7 +11,7 @@ import edu.rpi.metpetdb.server.InitDatabase;
 public class UserDaoTest extends DatabaseTestCase {
 	
 	public UserDaoTest() {
-		super("test-data/test-user-data.xml");
+		super("test-data/test-sample-data.xml");
 	}
 	
 	@Test
@@ -29,5 +29,6 @@ public class UserDaoTest extends DatabaseTestCase {
 		final User u = (User) q.uniqueResult();
 		assertEquals("anthony",u.getEmailAddress());
 	}
+	
 
 }

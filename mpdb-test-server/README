@@ -1,3 +1,0 @@
-mpdb-test-server is for JUnit test that test the named quiries in the *.hbm.xml files
-
-To test specific implementation code use mpdb-test-client

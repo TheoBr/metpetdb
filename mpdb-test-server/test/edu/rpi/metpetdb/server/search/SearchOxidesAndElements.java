@@ -118,13 +118,13 @@ public class SearchOxidesAndElements extends DatabaseTestCase {
 		final SearchSample searchSamp = new SearchSample();
 		Element tempOxide = new Element();
 		tempOxide.setSymbol("Al");
-		searchSamp.addElement(tempOxide, 4f, 6f);
+		searchSamp.addElement(tempOxide, 4d, 6d);
 		BooleanQuery fullQuery = new BooleanQuery();
 		for (SearchElement o : (Set<SearchElement>) searchSamp.getElements()) {
-			final RangeFilter rangeFilterOnMin = new RangeFilter("subsample_chemicalAnalysis_elements_minAmount", NumberUtils.float2sortableStr(-99999f), NumberUtils.float2sortableStr(o
+			final RangeFilter rangeFilterOnMin = new RangeFilter("subsample_chemicalAnalysis_elements_minAmount", NumberUtils.double2sortableStr(-99999f), NumberUtils.double2sortableStr(o
 			.getUpperBound()),true, true);
-			final RangeFilter rangeFilterOnMax = new RangeFilter("subsample_chemicalAnalysis_elements_maxAmount", NumberUtils.float2sortableStr(o
-			.getLowerBound()), NumberUtils.float2sortableStr(99999f),true, true);
+			final RangeFilter rangeFilterOnMax = new RangeFilter("subsample_chemicalAnalysis_elements_maxAmount", NumberUtils.double2sortableStr(o
+			.getLowerBound()), NumberUtils.double2sortableStr(99999f),true, true);
 			final TermQuery termQuery = new TermQuery(new Term("subsample_chemicalAnalysis_elements_element_symbol", o.getElementSymbol()));
 			final FilteredQuery filterOnMinQuery = new FilteredQuery(termQuery, rangeFilterOnMin);
 			final FilteredQuery filterOnBothQuery = new FilteredQuery(filterOnMinQuery, rangeFilterOnMax);
@@ -195,16 +195,16 @@ public class SearchOxidesAndElements extends DatabaseTestCase {
 		final SearchSample searchSamp = new SearchSample();
 		Oxide tempOxide = new Oxide();
 		tempOxide.setSpecies("AL2O3");
-		searchSamp.addOxide(tempOxide, 4f, 8f);
+		searchSamp.addOxide(tempOxide, 4d, 8d);
 		
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
 				.createFullTextSession(session);
 		for (SearchOxide o : (Set<SearchOxide>) searchSamp.getOxides()) {
-			final RangeFilter rangeFilterOnMin = new RangeFilter("subsample_chemicalAnalysis_oxides_minAmount", NumberUtils.float2sortableStr(-99999f), NumberUtils.float2sortableStr(o
+			final RangeFilter rangeFilterOnMin = new RangeFilter("subsample_chemicalAnalysis_oxides_minAmount", NumberUtils.double2sortableStr(-99999f), NumberUtils.double2sortableStr(o
 			.getUpperBound()),true, true);
-			final RangeFilter rangeFilterOnMax = new RangeFilter("subsample_chemicalAnalysis_oxides_maxAmount", NumberUtils.float2sortableStr(o
-			.getLowerBound()), NumberUtils.float2sortableStr(99999f),true, true);
+			final RangeFilter rangeFilterOnMax = new RangeFilter("subsample_chemicalAnalysis_oxides_maxAmount", NumberUtils.double2sortableStr(o
+			.getLowerBound()), NumberUtils.double2sortableStr(99999f),true, true);
 			final TermQuery termQuery = new TermQuery(new Term("subsample_chemicalAnalysis_oxides_oxide_species", o.getSpecies()));
 			final FilteredQuery filterOnMinQuery = new FilteredQuery(termQuery, rangeFilterOnMin);
 			final FilteredQuery filterOnBothQuery = new FilteredQuery(filterOnMinQuery, rangeFilterOnMax);

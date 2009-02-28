@@ -332,7 +332,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final List<Sample> results = hibQuery.list();
 
 		for (final Sample s : results)
-			System.out.println("found sample, alias is " + s.getAlias());
+			System.out.println("found sample, alias is " + s.getNumber());
 
 		assertEquals(5, results.size());
 	}
@@ -381,7 +381,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final List<Sample> results = hibQuery.list();
 
 		for (final Sample s : results)
-			System.out.println("found sample, alias is " + s.getAlias());
+			System.out.println("found sample, alias is " + s.getNumber());
 
 		assertEquals(4, results.size());
 	}
@@ -391,7 +391,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final SearchSample searchSamp = new SearchSample();
 		Oxide tempOxide = new Oxide();
 		tempOxide.setSpecies("al2o3");
-		searchSamp.addOxide(tempOxide, 10f, 16f);
+		searchSamp.addOxide(tempOxide, 10d, 16d);
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search
 				.createFullTextSession(session);
@@ -418,9 +418,9 @@ public class HibernateSearchTest extends DatabaseTestCase {
 						for (SearchOxide o : (Set<SearchOxide>) methodResult) {
 							final RangeFilter rangeFilter = new RangeFilter(
 									"subsample_chemicalAnalysis_oxides_amount",
-									NumberUtils.float2sortableStr(o
+									NumberUtils.double2sortableStr(o
 											.getLowerBound()), NumberUtils
-											.float2sortableStr(o
+											.double2sortableStr(o
 													.getUpperBound()), true,
 									true);
 							final TermQuery oxideQuery = new TermQuery(
@@ -442,9 +442,9 @@ public class HibernateSearchTest extends DatabaseTestCase {
 						for (SearchElement o : (Set<SearchElement>) methodResult) {
 							final RangeFilter rangeFilter = new RangeFilter(
 									"subsample_chemicalAnalysis_elements_amount",
-									NumberUtils.float2sortableStr(o
+									NumberUtils.double2sortableStr(o
 											.getLowerBound()), NumberUtils
-											.float2sortableStr(o
+											.double2sortableStr(o
 													.getUpperBound()), true,
 									true);
 							final TermQuery elementQuery = new TermQuery(
@@ -617,7 +617,7 @@ public class HibernateSearchTest extends DatabaseTestCase {
 		final SearchSample searchSamp = new SearchSample();
 		Oxide tempOxide = new Oxide();
 		tempOxide.setSpecies("AL2O3");
-		searchSamp.addOxide(tempOxide, 4f, 8f);
+		searchSamp.addOxide(tempOxide, 4d, 8d);
 
 		final Session session = InitDatabase.getSession();
 		final FullTextSession fullTextSession = Search

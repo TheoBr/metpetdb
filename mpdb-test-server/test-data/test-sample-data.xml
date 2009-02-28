@@ -10,7 +10,7 @@
   <users user_id="5" version="1" name="Benjamin Hallett" email="halleb3@rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y" role_id="1"/>
   <users user_id="6" version="1" name="Matt Fyffe" email="fyffem@rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y" role_id="1"/>
   <users user_id="7" version="1" name="Dennis Goldfarb" email="goldfd@rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y" role_id="2"/>
-  <users user_id="8" version="1" name="Zak Linder" email="lindez@rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="Y" role_id="2"/>
+  <users user_id="8" version="1" name="Zak Linder" email="lindez@rpi.edu" password="" address="" city="" province="" country="" postal_code="" institution="" reference_email="" confirmation_code="                                " enabled="N" role_id="2"/>
   <pending_roles pending_role_id="1" user_id="2" sponsor_id="1" role_id="2" request_date="1969-12-31 19:00:00.0"/>
   <pending_roles pending_role_id="2" user_id="3" sponsor_id="1" role_id="2" request_date="1969-12-31 19:00:00.0"/>
   <admin_users/>
@@ -45,12 +45,13 @@
   <rock_type rock_type_id="29" rock_type="Metacarbonate"/>
   <rock_type rock_type_id="30" rock_type="Metagranite"/>
   <rock_type rock_type_id="31" rock_type="Cordierite-Anthophyllite"/>
-  <samples sample_id="1" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="testing sample" rock_type_id="10" user_id="1" collector="Frank Spear" location="SRID=4326;POINT(1 1)"/>
-  <samples sample_id="2" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="testing private" rock_type_id="11" user_id="2" collector="Anthony Waters" location="SRID=4326;POINT(3 3)"/>
-  <samples sample_id="3" version="0" sesar_number="111111111" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="new sample" rock_type_id="10" user_id="1" collector="Two Name" location="SRID=4326;POINT(5 5)"/>
-  <samples sample_id="4" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="sample" rock_type_id="10" user_id="1" collector="Test A" location="SRID=4326;POINT(5 5)"/>
-  <samples sample_id="5" version="1" sesar_number="123456789" public_data="N" collection_date="1970-09-16 00:00:00.0" date_precision="0" alias="test more" rock_type_id="10" user_id="1" location="SRID=4326;POINT(1 1)"/>
-  <samples sample_id="6" version="0" public_data="Y" collection_date="1969-12-31 19:00:00.0" date_precision="365" alias="testing public" rock_type_id="11" user_id="1" collector="Anthony Waters" location="SRID=4326;POINT(3 3)"/>
+  <samples sample_id="1" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" number="testing sample" rock_type_id="10" user_id="1" collector="Frank Spear" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="2" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" number="testing private" rock_type_id="11" user_id="2" collector="Anthony Waters" location="SRID=4326;POINT(3 3)"/>
+  <samples sample_id="3" version="0" sesar_number="111111111" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" number="new sample" rock_type_id="10" user_id="1" collector="Two Name" location="SRID=4326;POINT(5 5)"/>
+  <samples sample_id="4" version="0" public_data="N" collection_date="1969-12-31 19:00:00.0" date_precision="365" number="sample" rock_type_id="10" user_id="1" collector="Test A" location="SRID=4326;POINT(5 5)"/>
+  <samples sample_id="5" version="1" sesar_number="123456789" public_data="N" collection_date="1970-09-16 00:00:00.0" date_precision="0" number="test more" rock_type_id="10" user_id="1" location="SRID=4326;POINT(1 1)"/>
+  <samples sample_id="6" version="0" public_data="Y" collection_date="1969-12-31 19:00:00.0" date_precision="365" number="testing public" rock_type_id="11" user_id="1" collector="Anthony Waters" location="SRID=4326;POINT(3 3)"/>
+  <samples sample_id="7" version="0" public_data="Y" collection_date="1969-12-31 19:00:00.0" date_precision="365" number="testing public" rock_type_id="11" user_id="2" collector="Anthony Waters" location="SRID=4326;POINT(3 3)"/>
   <subsample_type subsample_type_id="1" subsample_type="Thin Section"/>
   <subsample_type subsample_type_id="2" subsample_type="Polished Thin Section"/>
   <subsample_type subsample_type_id="3" subsample_type="Rock Chip"/>
@@ -89,6 +90,16 @@
   filename="image.jpg" />
    <images image_id="3" checksum="11111111111111111111111111111111111111111111111111"
   version="1" image_type_id="1" width="1" height="1" user_id="2" public_data="N" 
+  checksum_64x64="11111111111111111111111111111111111111111111111111"
+  checksum_half="11111111111111111111111111111111111111111111111111"
+  filename="image.jpg" />
+     <images image_id="4" checksum="11111111111111111111111111111111111111111111111111"
+  version="1" image_type_id="1" width="1" height="1" user_id="1" public_data="Y" subsample_id="1" 
+  checksum_64x64="11111111111111111111111111111111111111111111111111"
+  checksum_half="11111111111111111111111111111111111111111111111111"
+  filename="image.jpg" />
+     <images image_id="5" checksum="11111111111111111111111111111111111111111111111111"
+  version="1" image_type_id="1" width="1" height="1" user_id="1" public_data="N" subsample_id="1"
   checksum_64x64="11111111111111111111111111111111111111111111111111"
   checksum_half="11111111111111111111111111111111111111111111111111"
   filename="image.jpg" />

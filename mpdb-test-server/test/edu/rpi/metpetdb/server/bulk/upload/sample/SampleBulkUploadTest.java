@@ -85,7 +85,7 @@ public class SampleBulkUploadTest extends TestCase {
 		for (Entry<Integer, Sample> s : samples.entrySet()) {
 			s.getValue().setOwner(u);
 			s.getValue().setPublicData(false);
-			System.out.println(s.getValue().getAlias());
+			System.out.println(s.getValue().getNumber());
 			dao.save(s.getValue());
 		}
 		session.getTransaction().commit();

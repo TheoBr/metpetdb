@@ -106,7 +106,7 @@ public class BulkUploadTest extends TestCase {
 		u.setId(1);
 		for (Entry<Integer, Sample> s : samples.entrySet()) {
 			try {
-				System.out.println(s.getValue().getAlias());
+				System.out.println(s.getValue().getNumber());
 				DataStore.getInstance().getDatabaseObjectConstraints()
 						.validate(s.getValue());
 			} catch (ValidationException e) {

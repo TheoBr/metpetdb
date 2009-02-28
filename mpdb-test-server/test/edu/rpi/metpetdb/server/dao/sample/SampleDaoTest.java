@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.model.Sample;
@@ -30,7 +29,7 @@ public class SampleDaoTest extends DatabaseTestCase {
 	public void loadById() throws NoSuchObjectException {
 		final Sample s = (Sample) super.byId(typeName, 1);
 		assertEquals(1, s.getId());
-		assertEquals("testing sample", s.getAlias());
+		assertEquals("testing sample", s.getNumber());
 		assertEquals("Frank Spear", s.getCollector());
 		assertEquals("Amphibolite", s.getRockType().getRockType());
 	}

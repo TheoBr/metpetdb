@@ -68,7 +68,7 @@ public class ChemicalAnalysisTest extends DatabaseTestCase {
 		for(ChemicalAnalysisOxide cao: ca.getOxides()) {
 			cao.setMeasurementUnit(cao.getMeasurementUnit().toUpperCase());
 			cao.setPrecisionUnit(cao.getPrecisionUnit().toUpperCase());
-			cao.setPrecision(0.123321f);
+			cao.setPrecision(0.123321d);
 		}
 		System.err.println("BEFORE SAVE");
 		dao.save(ca);
