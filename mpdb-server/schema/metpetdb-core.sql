@@ -70,7 +70,7 @@ CREATE TABLE samples
   location_text VARCHAR(50),
   CONSTRAINT samples_sk PRIMARY KEY (sample_id),
 -- CONSTRAINT samples_nk UNIQUE (sesar_number),
-  CONSTRAINT samples_nk_alias UNIQUE (user_id, alias),
+  CONSTRAINT samples_nk_number UNIQUE (user_id, number),
   CONSTRAINT samples_fk_user FOREIGN KEY (user_id)
     REFERENCES users (user_id),
   CONSTRAINT samples_fk_collector FOREIGN KEY (collector_id)
