@@ -13,18 +13,21 @@
     <property name="name" column="name" />
     <property name="publicData" column="public_data" type="yes_no" />    
     <property name="imageCount" formula="(select count(*) from images i
-    																		where i.subsample_id=subsample_id)" />
+    									where i.subsample_id=subsample_id 
+    									AND (i.public_data='Y' OR i.user_id=user_id))" />
 	<property name="analysisCount" formula="(select count(*) from chemical_analyses ca
     																		where ca.subsample_id=subsample_id)" />
-    <property name="sampleName" formula="(select s.alias from samples s
+    <property name="sampleName" formula="(select s.number from samples s
     																		where s.sample_id=sample_id)" />
     <many-to-one name="owner" column="user_id" lazy="false" />
-    <many-to-one name="sample" column="sample_id" class="Sample" lazy="false"/>
+    <many-to-one name="sample" column="sample_id" class="Sample"  not-null="true" lazy="false"/>
     <many-to-one name="subsampleType" column="subsample_type_id" class="SubsampleType" lazy="false" />
     
     <one-to-one name="grid" property-ref="subsample" cascade="delete"/>
    
-   <set name="images" table="images" cascade="all-delete-orphan" lazy="false"> 
+   <!-- only load images that are public or match the userid of the subsample -->
+   <set name="images" table="images" cascade="all-delete-orphan" lazy="false" order-by="filename DESC"
+   	where="public_data='Y' OR user_id=(select user_id from subsamples ss where ss.subsample_id=subsample_id)" > 
       <key column="subsample_id" />
       <one-to-many class="Image" />
     </set>
@@ -33,6 +36,9 @@
       <key column="subsample_id" />
       <one-to-many class="ChemicalAnalysis" />
     </set>
+    
+    <filter name="subsamplePublicOrUser"
+     		condition="( user_id=:userId OR public_data='Y')" />
     
   </class>
 
@@ -68,7 +74,7 @@
     from Subsample s
     inner join fetch s.owner
     where s.sample.id = :id and size( s.images ) > 0
-    order by s.name
+    order by (lower(s.name))
   </query>
   <query name="Subsample.all,size">
     select count(*) from Subsample s
@@ -78,6 +84,13 @@
     from Subsample s
     inner join fetch s.owner
     where s.sample.id = :id
-    order by s.name
+    order by (lower(s.name))
   </query>
+  
+   <!-- only returns data that is either public or owned by the current user
+   	used when showing the subsamples for a user 
+   -->
+  <filter-def name="subsamplePublicOrUser">
+  	<filter-param name="userId" type="long" />
+  </filter-def>
 </hibernate-mapping>

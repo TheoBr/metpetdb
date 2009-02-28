@@ -11,7 +11,7 @@ public class RegularExpressions {
 
 	/** Sample */
 	public static final String ROCK_TYPE = "(type)|(rock)";
-	public static final String SESAR_NUMBER = "(sesar)|(isgn)";
+	public static final String SESAR_NUMBER = "(sesar)|(igsn)";
 	public static final String LOCATION_ERROR = "(lat/lon error)|(Location Error)";
 	public static final String REGION = "region";
 	public static final String COUNTRY = "country";
@@ -25,8 +25,10 @@ public class RegularExpressions {
 	public static final String ANALYSIS_METHOD = "(method)|(analytical method)|(analysis method)|(^\\s*type\\s*$)";
 	public static final String SPOT_ID = "(point)|(spot)|(analysis location)";
 	public static final String TOTAL = "(total)|(wt%tot)|(wt%total)";
-	public static final String X_COORDINATE = "(x position)|(x pos)|(x coordinate)|(x coord)";
-	public static final String Y_COORDINATE = "(y position)|(y pos)|(y coordinate)|(y coord)";
+	public static final String X_COORDINATE = "(x position)|(x pos)|(x coordinate)|(x coord)|(x reference)";
+	public static final String Y_COORDINATE = "(y position)|(y pos)|(y coordinate)|(y coord)|(x reference)";
+	public static final String X_STAGE = "(x stage)";
+	public static final String Y_STAGE = "(y stage)";
 	public static final String ANALYST = "analyst";
 	public static final String SUBSAMPLE_TYPE = "^subsample type$";
 	public static final String PRECISION_UNIT = "precision unit";

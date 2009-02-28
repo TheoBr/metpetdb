@@ -7,7 +7,6 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
 import edu.rpi.metpetdb.server.search.bridges.DoubleBridge;
-import edu.rpi.metpetdb.server.search.bridges.DoubleBridge;
 
 public class ChemicalAnalysisElement extends MObject {
 	private static final long serialVersionUID = 1L;

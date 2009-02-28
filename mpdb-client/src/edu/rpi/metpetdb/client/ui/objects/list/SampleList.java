@@ -36,10 +36,10 @@ public abstract class SampleList extends List<Sample> {
 			}
 		});
 
-		columns.add(new Column<Sample, MLink>(enttxt.Sample_alias(),
-				SampleProperty.alias) {
+		columns.add(new Column<Sample, MLink>(enttxt.Sample_number(),
+				SampleProperty.number) {
 			public MLink getCellValue(Sample rowValue) {
-				return new MLink((String) rowValue.mGet(SampleProperty.alias),
+				return new MLink((String) rowValue.mGet(SampleProperty.number),
 						TokenSpace.detailsOf(rowValue));
 			}
 		});
@@ -141,7 +141,7 @@ public abstract class SampleList extends List<Sample> {
 
 	@Override
 	public String getDefaultSortParameter() {
-		return "alias";
+		return "number";
 	}
 
 	@Override

@@ -13,7 +13,7 @@
     <property name="sesarNumber" column="sesar_number" length="9" />
     <property name="location" column="location"
               type="edu.rpi.metpetdb.server.dao.GeometryType" />
-    <property name="alias" column="alias" length="20" />
+    <property name="number" column="number" />
     <property name="collectionDate" column="collection_date" />
     <property name="datePrecision" column="date_precision" />
     <property name="publicData" column="public_data" type="yes_no" />
@@ -36,11 +36,11 @@
     <many-to-one name="rockType" column="rock_type_id" lazy="false" />
 
 	<set name="subsamples" inverse="true" cascade="delete"  >
-      <key column="sample_id"/>
+      <key column="sample_id" not-null="true"/>
       <one-to-many class="Subsample" />
     </set>
     
-    <set name="comments" table="sample_comments" cascade="all-delete-orphan" lazy="false" >
+    <set name="comments" inverse="true" table="sample_comments" cascade="all-delete-orphan" lazy="false" >
       <key column="sample_id" not-null="true" />
       <one-to-many class="SampleComment"/>
     </set>
@@ -110,15 +110,15 @@
     inner join fetch s.owner
     order by s.sesarNumber
   </query>
-  <query name="Sample.all/alias">
+  <query name="Sample.all/number">
     from Sample s
     inner join fetch s.owner
-    order by lower(s.alias)
+    order by (lower(s.number))
   </query>
   <query name="Sample.all/owner">
     from Sample s
     inner join fetch s.owner
-    order by lower(s.owner.name)
+    order by (lower(s.owner.name))
   </query>
   <query name="Sample.all/rockType">
     from Sample s
@@ -148,7 +148,7 @@
   <query name="Sample.all/country">
     from Sample s
     inner join fetch s.owner
-    order by lower(s.country)
+    order by (lower(s.country))
   </query>
   <query name="Sample.all/subsampleCount">
   	from Sample s
@@ -168,28 +168,28 @@
   <query name="Sample.all/collector">
     from Sample s
     inner join fetch s.owner
-    order by lower(s.collector)
+    order by (lower(s.collector))
   </query>
   <query name="Sample.all/locationText">
     from Sample s
     inner join fetch s.owner
-    order by lower(s.locationText)
+    order by (lower(s.locationText))
   </query>
-  <query name="Sample.byUser.byAlias">
+  <query name="Sample.byUser.byNumber">
     from Sample s
     inner join fetch s.owner
     where s.owner.id = :id
-    and s.alias = :alias
+    and s.number = :number
   </query>
   
   <query name="Sample.forProject,size">
   	select count(*) from Sample s
   	inner join s.projects as project with project.id = :id
   </query>
-  <query name="Sample.forProject/alias">
+  <query name="Sample.forProject/number">
   	select s from Sample s
   	inner join s.projects as project with project.id = :id
-  	order by s.alias
+  	order by s.number
   </query>
   
   <query name="Sample.Collectors/Collector">
@@ -213,5 +213,6 @@
   </filter-def>
   <filter-def name="public">
   </filter-def>
+ 
 
 </hibernate-mapping>

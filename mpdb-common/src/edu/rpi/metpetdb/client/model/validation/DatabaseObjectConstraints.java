@@ -149,7 +149,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ Sample ------
 	public PropertyConstraint[] Sample__all;
 	public Sample_sesarNumber Sample_sesarNumber;
-	public StringConstraint Sample_alias;
+	public StringConstraint Sample_number;
 	public StringConstraint Sample_country;
 	public StringConstraint Sample_description;
 	public StringConstraint Sample_collector;

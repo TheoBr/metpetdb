@@ -13,9 +13,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.postgis.Point;
 
-import com.google.gwt.core.client.GWT;
-
-import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Sample;
 public class BasicKML extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -86,16 +83,16 @@ public class BasicKML extends HttpServlet {
 					latErr = 0D;
 				response.getWriter().write(" <Folder>\n");
 				response.getWriter().write(
-						"<name>" + theSample.getAlias() + "</name>\n");
+						"<name>" + theSample.getNumber() + "</name>\n");
 				response.getWriter().write(" <Placemark>\n");
 				response.getWriter().write(
-						"<name>" + theSample.getAlias() + "</name>\n");
+						"<name>" + theSample.getNumber() + "</name>\n");
 
 				response.getWriter().write(" <description>");
 				response.getWriter().write(
 						"<![CDATA[\n" + "<a href='" + baseURL
 								+ theSample.getId() + "'>"
-								+ theSample.getAlias() + "</a>  ]]>");
+								+ theSample.getNumber() + "</a>  ]]>");
 
 				/* Add Sample info that isn't null */
 				if (theSample.getDescription() != null) {
@@ -137,7 +134,7 @@ public class BasicKML extends HttpServlet {
 						.getWriter()
 						.write(
 								" <description>This is the area that "
-										+ theSample.getAlias()
+										+ theSample.getNumber()
 										+ " can be found in based on it's latitutde and longitude errors </description>\n");
 				response.getWriter().write(
 						" <styleUrl>#RedPerimeter</styleUrl>\n ");

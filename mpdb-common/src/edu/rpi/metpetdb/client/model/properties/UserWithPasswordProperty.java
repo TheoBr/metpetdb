@@ -2,7 +2,6 @@ package edu.rpi.metpetdb.client.model.properties;
 
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 
 public enum UserWithPasswordProperty implements Property<UserWithPassword> {
 	oldPassword {

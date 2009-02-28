@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MetamorphicGrade;
-import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
@@ -27,7 +26,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
 
 public class MetamorphicGradeAttribute extends GenericAttribute {	
 	private MHtmlList editList = new MHtmlList();
-	protected final ArrayList<Widget> realEditWidgets = new ArrayList();
+	protected final ArrayList<Widget> realEditWidgets = new ArrayList<Widget>();
 	
 	public MetamorphicGradeAttribute(final ObjectConstraint sc) {
 		super(new PropertyConstraint[] {sc});

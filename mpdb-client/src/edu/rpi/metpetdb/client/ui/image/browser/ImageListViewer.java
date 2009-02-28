@@ -20,14 +20,14 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.ui.MpDb;
-import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.image.browser.dialogs.ViewImage;
 import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class ImageListViewer extends FlowPanel implements ClickListener {
-	private ArrayList images;
+	private ArrayList<Image> images;
 	private final long id;
 	private FlowPanel fp;
 	private ListBox lb;
@@ -54,13 +54,13 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 				if (result == null) {
 					return;
 				} else {
-					images = (ArrayList) ((ArrayList) result).clone();
+					images = (ArrayList<Image>) ((ArrayList<Image>) result).clone();
 					if (images == null || images.size() <= 0) {
 						add(new Label(
 								"There are no images associated with this subsample"));
 					} else {
-						((Image) images.get(0)).getSubsample().setImages(
-								new HashSet(images));
+						images.get(0).getSubsample().setImages(
+								new HashSet<Image>(images));
 						buildInterface(isScreen, type);
 					}
 				}
@@ -72,18 +72,18 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 	private void buildInterface(final boolean isScreen, final String type) {
 		if (isScreen) {
 			final FlexTable header2 = new FlexTable();
-			final Label title = new Label(((Image) images.get(0))
+			final Label title = new Label(images.get(0)
 					.getSubsample().getName()
 					+ " Images");
 			final Label title2 = new Label("Images attached to");
-			final MLink subsampleLink = new MLink(((Image) images.get(0))
+			final MLink subsampleLink = new MLink(images.get(0)
 					.getSubsample().getName(), TokenSpace
-					.detailsOf(((Image) images.get(0)).getSubsample()));
+					.detailsOf(images.get(0).getSubsample()));
 			final Button addImage = new Button("Add Image",
 					new ClickListener() {
 						public void onClick(Widget sender) {
-							History.newItem(TokenSpace.edit(((Image) images
-									.get(0)).getSubsample()));
+							History.newItem(TokenSpace.edit(images
+									.get(0).getSubsample()));
 						}
 					});
 			title.addStyleName("big");
@@ -154,12 +154,12 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 			remove(noImagesContainer);
 		fp.clear();
 		fp.addStyleName("subsample-imagetypes");
-		final ArrayList imagesToDisplay = new ArrayList();
+		final ArrayList<Image> imagesToDisplay = new ArrayList<Image>();
 		imagesLabel.setText("Images");
 		if (type != null && !type.equals("All")) {
 			imagesLabel.setText(type);
 			for (int i = 0; i < images.size(); i++) {
-				if (((Image) images.get(i)).getImageType().equals(type)) {
+				if (images.get(i).getImageType().equals(type)) {
 					imagesToDisplay.add(images.get(i));
 				}
 			}
@@ -167,12 +167,12 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 			imagesToDisplay.addAll(images);
 		}
 
-		final Iterator itr = imagesToDisplay.iterator();
+		final Iterator<Image> itr = imagesToDisplay.iterator();
 		int i = 0;
 		while (itr.hasNext()) {
 			final FlexTable cell = new FlexTable();
 			cell.setStyleName("inline");
-			final Image currentImage = (Image) itr.next();
+			final Image currentImage = itr.next();
 			final com.google.gwt.user.client.ui.Image image = new com.google.gwt.user.client.ui.Image();
 			image.setUrl(currentImage.get64x64ServerPath());
 			final com.google.gwt.user.client.ui.Image bigImage = new com.google.gwt.user.client.ui.Image();

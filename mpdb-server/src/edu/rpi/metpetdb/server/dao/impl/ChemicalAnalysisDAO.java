@@ -6,7 +6,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
-import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.ChemicalAnalysisNotFoundException;
 import edu.rpi.metpetdb.client.error.dao.ReferenceNotFoundException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
@@ -72,7 +71,8 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 		return ca;
 	}
 
-	public List<ChemicalAnalysis> getAll(final long subsampleId) throws MpDbException {
+	public List<ChemicalAnalysis> getAll(final long subsampleId, long userId) throws MpDbException {
+		sess.enableFilter("chemicalAnalysisPublicOrUser").setParameter("userId", userId);
 		final Query q = namedQuery("ChemicalAnalysis.bySubsampleId");
 		q.setParameter("subsampleId", subsampleId);
 		final List<ChemicalAnalysis> l = (List<ChemicalAnalysis>) getResults(q);
@@ -81,8 +81,8 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 	}
 
 	public Results<ChemicalAnalysis> getAll(final PaginationParameters p,
-			final long subsampleId) throws MpDbException{
-
+			final long subsampleId, long userId) throws MpDbException{
+		sess.enableFilter("chemicalAnalysisPublicOrUser").setParameter("userId", userId);
 		final Query sizeQ = sizeQuery("ChemicalAnalysis.bySubsampleId",
 				subsampleId);
 		final Query pageQ = pageQuery("ChemicalAnalysis.bySubsampleId", p,

@@ -1,4 +1,5 @@
-package edu.rpi.metpetdb.client.ui;
+package edu.rpi.metpetdb.client.ui.commands;
+
 
 public abstract class VoidServerOp extends ServerOp<Void> {
 

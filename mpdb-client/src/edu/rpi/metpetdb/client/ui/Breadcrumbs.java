@@ -21,7 +21,7 @@ import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
-import edu.rpi.metpetdb.client.ui.sidebar.Sidebar;
+import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class Breadcrumbs extends FlowPanel {
@@ -149,7 +149,7 @@ public class Breadcrumbs extends FlowPanel {
 						+ getId());
 				bcItemLink.setText(Node.getName());
 				insertBcItem(bcItem, Node);
-				getAliasById(id, Node.getName(), Node);
+				getNumberById(id, Node.getName(), Node);
 			} else {
 				bcItemLink.setTargetHistoryToken(Node.getToken());
 				bcItemLink.setText(Node.getName());
@@ -198,7 +198,7 @@ public class Breadcrumbs extends FlowPanel {
 	 * Breadcrumbs.this.onFindSuccessRecursive(node.getParent()); to continue
 	 * the traversing of the tree back to "Home".
 	 */
-	private void getAliasById(final String Id, final String name,
+	private void getNumberById(final String Id, final String name,
 			final bcNode Node) {
 		if (name.equals("Specific Sample")) {
 			new ServerOp<Sample>() {
@@ -212,7 +212,7 @@ public class Breadcrumbs extends FlowPanel {
 							if (((SimplePanel) w).getWidget() instanceof MLink) {
 								MLink l = (MLink) ((SimplePanel) w).getWidget();
 								if (l.getText().equals(name)) {
-									l.setText(result.getAlias());
+									l.setText(result.getNumber());
 									Breadcrumbs.this
 											.onFindSuccessRecursive(Node
 													.getParent());

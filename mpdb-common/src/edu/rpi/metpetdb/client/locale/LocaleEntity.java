@@ -2,8 +2,6 @@ package edu.rpi.metpetdb.client.locale;
 
 import com.google.gwt.i18n.client.ConstantsWithLookup;
 
-import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
-
 /** Entity property description message text constants, to support i18n. */
 public interface LocaleEntity extends ConstantsWithLookup {
 	/* Project */
@@ -24,7 +22,7 @@ public interface LocaleEntity extends ConstantsWithLookup {
 
 	String Sample_sesarNumber();
 
-	String Sample_alias();
+	String Sample_number();
 
 	String Sample_owner();
 
@@ -139,9 +137,9 @@ public interface LocaleEntity extends ConstantsWithLookup {
 
 	String ChemicalAnalysis_spotId();
 
-	String ChemicalAnalysis_pointX();
+	String ChemicalAnalysis_referenceX();
 
-	String ChemicalAnalysis_pointY();
+	String ChemicalAnalysis_referenceY();
 
 	String ChemicalAnalysis_method();
 
@@ -182,6 +180,9 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String ChemicalAnalysis_total();
 	
 	String ChemicalAnalysis_publicData();
+	
+	String ChemicalAnalysis_stageX();
+	String ChemicalAnalysis_stageY();
 
 	/* Image */
 	String Image_imageType();

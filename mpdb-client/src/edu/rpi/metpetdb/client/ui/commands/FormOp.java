@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui;
+package edu.rpi.metpetdb.client.ui.commands;
 
 import com.google.gwt.user.client.ui.Widget;
 

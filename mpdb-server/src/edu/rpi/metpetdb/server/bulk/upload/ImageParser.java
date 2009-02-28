@@ -28,7 +28,7 @@ public class ImageParser extends Parser<BulkUploadImage> {
 				.getDatabaseObjectConstraints();
 		columns = new ArrayList<ColumnMapping>();
 		columns.add(new ColumnMapping(RegularExpressions.SAMPLE,
-				doc.Sample_alias));
+				doc.Sample_number));
 		columns.add(new ColumnMapping(RegularExpressions.SUBSAMPLE,
 				doc.Subsample_name));
 		columns.add(new ColumnMapping(RegularExpressions.SUBSAMPLE_TYPE,

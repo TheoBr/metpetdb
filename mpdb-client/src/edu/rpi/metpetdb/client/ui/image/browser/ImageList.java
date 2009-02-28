@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.client.ui.image.browser;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -14,7 +13,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.MpDb;
-import edu.rpi.metpetdb.client.ui.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
@@ -29,13 +28,11 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 	private boolean onlySelectOne;
 	int counter = 0;
 
-	public ImageList(final long subsampleId, final ArrayList sal,
-			final boolean showAll) {
+	public ImageList(final long subsampleId, final boolean showAll) {
 		this(subsampleId, showAll, false, null);
 	}
 
-	public ImageList(final long subsampleId, final ArrayList sal,
-			final boolean showAll,
+	public ImageList(final long subsampleId, final boolean showAll,
 			final Collection<ImageOnGridContainer> imagesOnGrid) {
 		this(subsampleId, showAll, false, imagesOnGrid);
 	}
@@ -48,11 +45,11 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 	public ImageList(final long subsampleId, final boolean showAll,
 			final boolean onlySelectOne,
 			final Collection<ImageOnGridContainer> imagesOnGrid) {
-		new ServerOp() {
+		new ServerOp<List<edu.rpi.metpetdb.client.model.Image>>() {
 			public void begin() {
 				MpDb.image_svc.allImages(subsampleId, this);
 			}
-			public void onSuccess(final Object result) {
+			public void onSuccess(final List<edu.rpi.metpetdb.client.model.Image> result) {
 				if (result == null) {
 					return;
 				} else {
@@ -62,24 +59,24 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 						while (itr.hasNext()) {
 							final edu.rpi.metpetdb.client.model.Image image = itr
 									.next().getIog().getImage();
-							if (((List<Image>) result).contains(image)) {
-								((List<Image>) result).remove(image);
+							if (result.contains(image)) {
+								result.remove(image);
 							}
 						}
 					}
-					images = (ArrayList) ((ArrayList) result).clone();
+					images = result;
 					if (images == null || images.size() <= 0) {
 						add(new Label("No Image"));
 					} else {
 						((edu.rpi.metpetdb.client.model.Image) images.get(0))
-								.getSubsample().setImages(new HashSet(images));
+								.getSubsample().setImages(new HashSet<edu.rpi.metpetdb.client.model.Image>(images));
 						buildInterface(showAll);
 					}
 				}
 			}
 		}.begin();
 		this.onlySelectOne = onlySelectOne;
-		selectedImages = new HashSet();
+		selectedImages = new HashSet<edu.rpi.metpetdb.client.model.Image>();
 	}
 
 	public Collection<edu.rpi.metpetdb.client.model.Image> getSelectedImages() {
@@ -100,7 +97,7 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 
 	public void buildInterface(final boolean showAll) {
 		if (showAll) {
-			final Iterator itr = images.iterator();
+			final Iterator<edu.rpi.metpetdb.client.model.Image> itr = images.iterator();
 			final Grid g = new Grid((int) (Math.ceil(images.size() / 3.0)), 3);
 			int row = 0;
 			while (itr.hasNext()) {
@@ -177,8 +174,9 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 							selectedImages.clear();
 							lastImage.setStyleName("ssimg");
 						}
-						selectedImages.add((edu.rpi.metpetdb.client.model.Image)((ImageHyperlink) sender)
-								.getObject());
+						selectedImages
+								.add((edu.rpi.metpetdb.client.model.Image) ((ImageHyperlink) sender)
+										.getObject());
 
 					}
 				}

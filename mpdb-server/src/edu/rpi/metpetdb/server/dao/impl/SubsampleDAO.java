@@ -54,7 +54,8 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 		return _save(inst);
 	}
 
-	public List<Subsample> getAllBySampleID(final long sampleId)throws MpDbException {
+	public List<Subsample> getAllBySampleID(final long sampleId, long userId)throws MpDbException {
+		sess.enableFilter("subsamplePublicOrUser").setParameter("userId", userId);
 		final Query q = namedQuery("Subsample.bySampleId");
 		q.setParameter("sampleId", sampleId);
 		final List<Subsample> l = (List<Subsample>) getResults(q);
@@ -69,7 +70,8 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 	}
 
 	public Results<Subsample> getAllBySampleID(final PaginationParameters p,
-			final long sampleId) throws MpDbException {
+			final long sampleId, long userId) throws MpDbException {
+		sess.enableFilter("subsamplePublicOrUser").setParameter("userId", userId);
 		final Query sizeQ = sizeQuery("Subsample.all", sampleId);
 		final Query pageQ = pageQuery("Subsample.all", p, sampleId);
 		return getSubsamples(sizeQ, pageQ);

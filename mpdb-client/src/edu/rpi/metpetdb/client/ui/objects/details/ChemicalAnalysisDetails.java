@@ -2,12 +2,9 @@ package edu.rpi.metpetdb.client.ui.objects.details;
 
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.FlowPanel;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
-import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
@@ -16,7 +13,6 @@ import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.ChooseImageAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.HyperlinkAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAreaAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
@@ -44,6 +40,8 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 			new ChemistryAttribute(MpDb.doc.ChemicalAnalysis_elements,
 					MpDb.doc.ChemicalAnalysis_oxides),
 			new TextAttribute(MpDb.doc.ChemicalAnalysis_total),
+			new TextAttribute(MpDb.doc.ChemicalAnalysis_stageX),
+			new TextAttribute(MpDb.doc.ChemicalAnalysis_stageY),
 	};
 
 	private final ObjectEditorPanel<ChemicalAnalysis> p_chemicalAnalysis;
@@ -54,19 +52,19 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 	public ChemicalAnalysisDetails() {
 		p_chemicalAnalysis = new ObjectEditorPanel<ChemicalAnalysis>(
 				chemicalAnalysisAtts) {
-			protected void loadBean(final AsyncCallback ac) {
+			protected void loadBean(final AsyncCallback<ChemicalAnalysis> ac) {
 				final ChemicalAnalysis ma = (ChemicalAnalysis) getBean();
 				MpDb.chemicalAnalysis_svc.details(
 						ma != null && !ma.mIsNew() ? ma.getId()
 								: chemicalAnalysisId, ac);
 			}
 
-			protected void saveBean(final AsyncCallback ac) {
+			protected void saveBean(final AsyncCallback<ChemicalAnalysis> ac) {
 				MpDb.chemicalAnalysis_svc
 						.save((ChemicalAnalysis) getBean(), ac);
 			}
 
-			protected void deleteBean(final AsyncCallback ac) {
+			protected void deleteBean(final AsyncCallback<Object> ac) {
 				subsampleObj = ((ChemicalAnalysis) getBean()).getSubsample();
 				MpDb.chemicalAnalysis_svc.delete(((ChemicalAnalysis) getBean())
 						.getId(), ac);

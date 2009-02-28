@@ -79,17 +79,17 @@ public enum SearchSampleProperty implements SearchProperty {
 			return "sampleMineral_mineral_name";
 		}
 	},
-	alias {
+	number {
 		public String get(final SearchSample sample) {
-			return ((SearchSample) sample).getAlias();
+			return ((SearchSample) sample).getNumber();
 		}
 
-		public void set(final SearchSample sample, final Object alias) {
-			((SearchSample) sample).setAlias((String) alias);
+		public void set(final SearchSample sample, final Object number) {
+			((SearchSample) sample).setNumber((String) number);
 		}
 
 		public String columnName() {
-			return "alias";
+			return "number";
 		}
 	},
 	collectionDateRange {

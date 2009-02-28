@@ -26,8 +26,10 @@ public class SampleParser extends Parser<Sample> {
 	private static List<ColumnMapping> columns;
 
 	static {
-		final DatabaseObjectConstraints doc = DataStore.getInstance().getDatabaseObjectConstraints();
-		final ObjectConstraints oc = DataStore.getInstance().getObjectConstraints();
+		final DatabaseObjectConstraints doc = DataStore.getInstance()
+				.getDatabaseObjectConstraints();
+		final ObjectConstraints oc = DataStore.getInstance()
+				.getObjectConstraints();
 		columns = new ArrayList<ColumnMapping>();
 		columns.add(new ColumnMapping(RegularExpressions.ROCK_TYPE,
 				doc.Sample_rockType));
@@ -56,11 +58,11 @@ public class SampleParser extends Parser<Sample> {
 		columns.add(new ColumnMapping(RegularExpressions.REFERENCES,
 				doc.Sample_references));
 		columns.add(new ColumnMapping(RegularExpressions.SAMPLE,
-				doc.Sample_alias));
+				doc.Sample_number));
 		columns.add(new ColumnMapping(RegularExpressions.MINERALS,
 				doc.Sample_minerals));
 	}
-	
+
 	public List<ColumnMapping> getColumMappings() {
 		return columns;
 	}
@@ -68,7 +70,7 @@ public class SampleParser extends Parser<Sample> {
 	/**
 	 * 
 	 * @param is
-	 * 		the input stream that points to a spreadsheet
+	 *            the input stream that points to a spreadsheet
 	 * @throws MpDbException
 	 * @throws InvalidFormatException
 	 */
@@ -85,7 +87,8 @@ public class SampleParser extends Parser<Sample> {
 			if (m.getName().equalsIgnoreCase(cellText)) {
 				spreadSheetColumnMapping.put(cellNumber, doc.Sample_minerals);
 				headers.put(cellNumber, new BulkUploadHeader(getRealMineral(m)
-						.getName(), doc.Sample_minerals.propertyName));
+						.getName(), doc.Sample_minerals.entityName + "_"
+						+ doc.Sample_minerals.propertyName));
 				return true;
 			}
 		}
@@ -123,8 +126,9 @@ public class SampleParser extends Parser<Sample> {
 							.toString()));
 					currentObject.addMineral(m, data);
 				} catch (NumberFormatException e) {
-					//check if the actual column is a column of minerals
-					//search for the correct mineral (so alternate minerals work)
+					// check if the actual column is a column of minerals
+					// search for the correct mineral (so alternate minerals
+					// work)
 					for (Mineral mineral : minerals) {
 						if (mineral.getName().equalsIgnoreCase(cell.toString())) {
 							currentObject.addMineral(getRealMineral(mineral));

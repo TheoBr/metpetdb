@@ -24,6 +24,8 @@ import edu.rpi.metpetdb.client.ui.TokenHandler.LKey;
 import edu.rpi.metpetdb.client.ui.TokenHandler.SKey;
 import edu.rpi.metpetdb.client.ui.TokenHandler.Screen;
 import edu.rpi.metpetdb.client.ui.bulk.upload.BulkUploadPanel;
+import edu.rpi.metpetdb.client.ui.commands.LoggedInServerOp;
+import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.html.Homepage;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserDetails;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageListViewer;
@@ -276,7 +278,7 @@ public class TokenSpace implements HistoryListener {
 				}
 
 				public void onSuccess(final Sample result) {
-					show(new SubsampleDetails().createNew(result, null));
+					show(new SubsampleDetails().createNew(result));
 				}
 			}.begin();
 		}

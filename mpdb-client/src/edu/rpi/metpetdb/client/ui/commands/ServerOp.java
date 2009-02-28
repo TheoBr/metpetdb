@@ -1,10 +1,11 @@
-package edu.rpi.metpetdb.client.ui;
+package edu.rpi.metpetdb.client.ui.commands;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
+import edu.rpi.metpetdb.client.ui.ErrorHandler;
 import edu.rpi.metpetdb.client.ui.dialogs.LoginDialog;
 import edu.rpi.metpetdb.client.ui.dialogs.MpDbExceptionDialog;
 

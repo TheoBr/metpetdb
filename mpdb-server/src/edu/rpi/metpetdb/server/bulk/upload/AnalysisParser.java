@@ -69,6 +69,10 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 				doc.ChemicalAnalysis_referenceX));
 		columns.add(new ColumnMapping(RegularExpressions.Y_COORDINATE,
 				doc.ChemicalAnalysis_referenceY));
+		columns.add(new ColumnMapping(RegularExpressions.X_STAGE,
+				doc.ChemicalAnalysis_stageX));
+		columns.add(new ColumnMapping(RegularExpressions.Y_STAGE,
+				doc.ChemicalAnalysis_stageY));
 	}
 
 	public List<ColumnMapping> getColumMappings() {
@@ -102,12 +106,13 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 		// add it in to the columns
 		spreadSheetColumnMapping.put(cellNumber, primary);
 		headers.put(cellNumber, new BulkUploadHeader(cellText,
-				primary.propertyName));
+				primary.entityName + "_" + primary.propertyName));
 		// we have an element, check the next row for the
 		// measurement unit
 		final HSSFCell measurementUnitCell = sheet.getRow(
 				header.getRowNum() + 1).getCell(cellNumber);
-		measurementUnits.put(cellText, parseOutMeasurementUnit(measurementUnitCell.toString()));
+		measurementUnits.put(cellText,
+				parseOutMeasurementUnit(measurementUnitCell.toString()));
 		// Get text of the next column
 		if (header.getPhysicalNumberOfCells() > cellNumber + 1) {
 			final String nextHeader = header.getCell(cellNumber + 1).toString();
@@ -119,26 +124,27 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 				// also store the unit
 				final HSSFCell precision = sheet.getRow(header.getRowNum() + 1)
 						.getCell(cellNumber + 1);
-				precisionUnits.put(cellText, parseOutPrecisionUnit(precision.toString()));
+				precisionUnits.put(cellText, parseOutPrecisionUnit(precision
+						.toString()));
 				++cellNumber;
 				headers.put(cellNumber, new BulkUploadHeader(cellText,
-						secondary.propertyName));
+						secondary.entityName + "_" + secondary.propertyName));
 			}
 		}
 	}
-	
+
 	private String parseOutMeasurementUnit(final String text) {
 		if (text.toLowerCase().contains("ppm"))
-			return "ppm";
+			return "PPM";
 		else
-			return "wt%";
+			return "WT%";
 	}
-	
+
 	private String parseOutPrecisionUnit(final String text) {
 		if (text.toLowerCase().contains("abs"))
-			return "abs";
+			return "ABS";
 		else
-			return "rel";
+			return "REL";
 	}
 
 	protected boolean parseHeaderSpecialCase(final HSSFRow header,
@@ -235,11 +241,12 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 			currentObject.addOxide(oxide);
 			return true;
 		} else if (pc == doc.ChemicalAnalysis_mineral) {
-			if (cell.toString().toLowerCase().matches(RegularExpressions.WHOLE_ROCK)) {
-				//special case of whole rock
+			if (cell.toString().toLowerCase().matches(
+					RegularExpressions.WHOLE_ROCK)) {
+				// special case of whole rock
 				currentObject.setLargeRock(true);
 			} else {
-				//search for the correct mineral (so alternate minerals work)
+				// search for the correct mineral (so alternate minerals work)
 				for (Mineral m : minerals) {
 					if (m.getName().equalsIgnoreCase(cell.toString())) {
 						currentObject.setMineral(getRealMineral(m));

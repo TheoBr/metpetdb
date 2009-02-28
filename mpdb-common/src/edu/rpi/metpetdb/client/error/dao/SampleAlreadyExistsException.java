@@ -11,8 +11,8 @@ public class SampleAlreadyExistsException extends DAOException {
 
 	public void handleObject(final MObject object) {
 		if (object instanceof Sample) {
-			additionalInformation = " duplicate alias of "
-					+ ((Sample) object).getAlias();
+			additionalInformation = " duplicate number of "
+					+ ((Sample) object).getNumber();
 		}
 	}
 

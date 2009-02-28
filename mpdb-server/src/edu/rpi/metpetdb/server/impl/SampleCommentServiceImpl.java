@@ -2,15 +2,13 @@ package edu.rpi.metpetdb.server.impl;
 
 import java.util.List;
 
-import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.SampleComment;
-import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.service.SampleCommentService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.SampleCommentDAO;
-import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
 public class SampleCommentServiceImpl  extends MpDbServlet implements SampleCommentService {
 	private static final long serialVersionUID = 1L;

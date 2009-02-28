@@ -59,7 +59,7 @@ CREATE TABLE samples
   public_data CHAR(1) CHECK (public_data IN ('Y','N')) NOT NULL,
   collection_date TIMESTAMP,
   date_precision INT2,
-  alias VARCHAR(20) NOT NULL,
+  number VARCHAR(35) NOT NULL,
   rock_type_id int2 NOT NULL,
   user_id INT4 NOT NULL,
   location_error FLOAT4,

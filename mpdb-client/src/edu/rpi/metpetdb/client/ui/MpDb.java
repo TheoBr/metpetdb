@@ -3,7 +3,6 @@ package edu.rpi.metpetdb.client.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 
-import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
@@ -41,7 +40,7 @@ import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadImagesService;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadImagesServiceAsync;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadSampleService;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadSampleServiceAsync;
-import edu.rpi.metpetdb.client.ui.sidebar.Sidebar;
+import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
 
 /**
  * Client side async service proxies and global constants.

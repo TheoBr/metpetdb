@@ -4,7 +4,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.FlowPanel;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
@@ -17,20 +16,20 @@ public class ProjectDetails extends FlowPanel {
 		new TextAttribute(MpDb.doc.Project_name)
 	};
 
-	private final ObjectEditorPanel p_project;
+	private final ObjectEditorPanel<Project> p_project;
 	private int projectId;
 
 	public ProjectDetails() {
-		p_project = new ObjectEditorPanel(projectAtts, LocaleHandler.lc_text
+		p_project = new ObjectEditorPanel<Project>(projectAtts, LocaleHandler.lc_text
 				.addProject(), LocaleHandler.lc_text.addProjectDescription()) {
 			private boolean savedNew;
 
-			protected void loadBean(final AsyncCallback ac) {
+			protected void loadBean(final AsyncCallback<Project> ac) {
 				final Project p = (Project) getBean();
 				MpDb.project_svc.details(p != null && !p.mIsNew() ? p.getId()
 						: projectId, ac);
 			}
-			protected void saveBean(final AsyncCallback ac) {
+			protected void saveBean(final AsyncCallback<Project> ac) {
 				// true when saved the first time or saved after editing
 				savedNew = true;
 				final Project p = (Project) getBean();
@@ -38,7 +37,7 @@ public class ProjectDetails extends FlowPanel {
 				// p.setOwner(MpDb.currentUser());
 				MpDb.project_svc.saveProject(p, ac);
 			}
-			protected void deleteBean(final AsyncCallback ac) {
+			protected void deleteBean(final AsyncCallback<Object> ac) {
 				// TODO: implement delete for project
 			}
 			protected boolean canEdit() {
@@ -46,7 +45,7 @@ public class ProjectDetails extends FlowPanel {
 				//return MpDb.isCurrentUser(((Project) getBean()).getOwner());
 				return true;
 			}
-			protected void onSaveCompletion(final MObject result) {
+			protected void onSaveCompletion(final Project result) {
 				if (savedNew)
 					MpDb.currentUser().getProjects().add((Project) result);
 				this.show(result);

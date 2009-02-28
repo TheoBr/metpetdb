@@ -5,7 +5,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.WindowResizeListener;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.widgetideas.client.GlassPanel;
 
 import edu.rpi.metpetdb.client.ui.JS;
@@ -32,7 +31,7 @@ public class MDialogBox extends DialogBox implements PopupListener,
 
 	public void show() {
 		// hideSelects();
-		RootPanel.get().add(glassPanel, 0, 0);
+		//RootPanel.get().add(glassPanel, 0, 0);
 		Window.addWindowResizeListener(this);	
 		setPopupPosition(25, 25);
 		super.show();

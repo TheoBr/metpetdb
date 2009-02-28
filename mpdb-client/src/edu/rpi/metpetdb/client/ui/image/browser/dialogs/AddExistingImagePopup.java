@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.client.ui.image.browser.dialogs;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
@@ -14,7 +13,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.ui.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageList;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
 
@@ -27,8 +26,7 @@ public class AddExistingImagePopup extends PopupPanel {
 		final VerticalPanel vp = new VerticalPanel();
 		this.setPopupPosition(sender.getAbsoluteLeft(),
 				sender.getAbsoluteTop() + 20);
-		final ArrayList<Image> images = new ArrayList<Image>();
-		final ImageList list = new ImageList(subsample.getId(), images, true,
+		final ImageList list = new ImageList(subsample.getId(), true,
 				imagesOnGrid.values());
 		vp.add(new Button("Add Selected", new ClickListener() {
 			public void onClick(final Widget sender) {

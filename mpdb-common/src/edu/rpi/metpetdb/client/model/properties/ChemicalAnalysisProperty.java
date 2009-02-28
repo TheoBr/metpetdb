@@ -11,7 +11,6 @@ import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.model.SubsampleType;
 import edu.rpi.metpetdb.client.model.User;
 
 public enum ChemicalAnalysisProperty implements Property<ChemicalAnalysis> {
@@ -182,7 +181,7 @@ public enum ChemicalAnalysisProperty implements Property<ChemicalAnalysis> {
 				final Object sample) {
 			if (chemicalAnalysis.getSample() == null)
 				chemicalAnalysis.setSample(new Sample());
-			chemicalAnalysis.getSample().setAlias(sample.toString());
+			chemicalAnalysis.getSample().setNumber(sample.toString());
 		}
 	},
 	image {

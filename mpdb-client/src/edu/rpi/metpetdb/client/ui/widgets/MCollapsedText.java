@@ -1,7 +1,6 @@
 package edu.rpi.metpetdb.client.ui.widgets;
 
 import com.google.gwt.user.client.ui.Label;
-import edu.rpi.metpetdb.client.ui.widgets.TooltipListener;
 
 
 public class MCollapsedText extends Label {

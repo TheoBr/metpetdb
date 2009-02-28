@@ -2,8 +2,8 @@ package edu.rpi.metpetdb.server.impl;
 
 import java.util.List;
 
-import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
@@ -18,14 +18,14 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 
 	public List<Subsample> all(final long sampleId) throws MpDbException {
 		final List<Subsample> l = (new SubsampleDAO(this.currentSession())
-				.getAllBySampleID(sampleId));
+				.getAllBySampleID(sampleId, currentUserIdIfExists()));
 		return (l);
 	}
 
 	public Results<Subsample> all(final PaginationParameters p,
 			final long sampleId) throws MpDbException {
 		return (new SubsampleDAO(this.currentSession()).getAllBySampleID(p,
-				sampleId));
+				sampleId, currentUserIdIfExists()));
 	}
 
 	public Results<Subsample> allWithImages(final PaginationParameters p,

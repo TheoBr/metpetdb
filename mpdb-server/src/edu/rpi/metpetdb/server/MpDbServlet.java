@@ -282,6 +282,20 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		}
 		return r.userId.intValue();
 	}
+	
+	/**
+	 * Only returns a user id if someone is logged in, otherwise it returns 0
+	 * @return
+	 */
+	protected int currentUserIdIfExists() {
+		int userId = 0;
+		try {
+			userId = currentUserId();
+		} catch(Exception e) {
+			
+		}
+		return userId;
+	}
 
 	protected User currentUser() throws LoginRequiredException, MpDbException {
 		if (currentReq() != null)

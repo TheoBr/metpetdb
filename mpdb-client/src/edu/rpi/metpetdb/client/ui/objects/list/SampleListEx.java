@@ -49,10 +49,10 @@ public abstract class SampleListEx extends ListEx<Sample> {
 					return new MCheckBox(data);
 				}
 			},
-			new Column(true,enttxt.Sample_alias(), SampleProperty.alias, true) {
+			new Column(true,enttxt.Sample_number(), SampleProperty.number, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
-					return new MLink((String) data.mGet(SampleProperty.alias),
+					return new MLink((String) data.mGet(SampleProperty.number),
 							TokenSpace.detailsOf((Sample) data));
 				}
 			},
@@ -226,7 +226,7 @@ public abstract class SampleListEx extends ListEx<Sample> {
 			final AsyncCallback<Results<Sample>> ac);
 
 	public String getDefaultSortParameter() {
-		return SampleProperty.alias.name();
+		return SampleProperty.number.name();
 	}
 
 }

@@ -36,12 +36,12 @@ public class SampleDAO extends MpDbDAO<Sample> {
 				return (Sample) getResult(q);
 		}
 
-		// Use User,Alias
+		// Use User,Number
 		if (inst.getOwner() != null && inst.getOwner().getId() > 0
-				&& inst.getAlias() != null) {
-			final Query q = namedQuery("Sample.byUser.byAlias");
+				&& inst.getNumber() != null) {
+			final Query q = namedQuery("Sample.byUser.byNumber");
 			q.setLong("id", inst.getOwner().getId());
-			q.setString("alias", inst.getAlias());
+			q.setString("number", inst.getNumber());
 			if (getResult(q) != null)
 				return (Sample) getResult(q);
 		}

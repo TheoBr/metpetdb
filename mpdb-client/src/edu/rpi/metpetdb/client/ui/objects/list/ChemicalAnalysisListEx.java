@@ -139,9 +139,9 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 					return new MText(text);
 				}
 			},
-			new Column(true,enttxt.ChemicalAnalysis_pointX(),
+			new Column(true,enttxt.ChemicalAnalysis_referenceX(),
 					ChemicalAnalysisProperty.referenceX),
-			new Column(true,enttxt.ChemicalAnalysis_pointY(),
+			new Column(true,enttxt.ChemicalAnalysis_referenceY(),
 					ChemicalAnalysisProperty.referenceY),	
 			new Column(true,enttxt.ChemicalAnalysis_image(),
 					ChemicalAnalysisProperty.image, false, true) {
@@ -154,7 +154,7 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 						image.setUrl(currentImage.get64x64ServerPath());
 						final com.google.gwt.user.client.ui.Image bigImage = new com.google.gwt.user.client.ui.Image();
 						bigImage.setUrl(currentImage.getServerPath());
-						final ArrayList imagesToDisplay = new ArrayList();
+						final ArrayList<Image> imagesToDisplay = new ArrayList<Image>();
 						imagesToDisplay.add(currentImage);
 							return new ImageHyperlink(image, new ClickListener() {
 								public void onClick(final Widget sender) {

@@ -15,7 +15,6 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
-import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
@@ -55,9 +54,9 @@ public abstract class BulkUploadService extends MpDbServlet {
 
 			// Keeps track of existing/new subsample names for each sample
 			final Map<String, Collection<String>> subsampleNames = new HashMap<String, Collection<String>>();
-			// maps a sample alias to an actual sample
+			// maps a sample number to an actual sample
 			final Map<String, Sample> samples = new HashMap<String, Sample>();
-			// maps a sample alias + subsample name to an actual subsample
+			// maps a sample number + subsample name to an actual subsample
 			final Map<String, Subsample> subsamples = new HashMap<String, Subsample>();
 
 			parserImpl(fileOnServer, save, results, sampleDao, ssDAO,
@@ -161,12 +160,12 @@ public abstract class BulkUploadService extends MpDbServlet {
 		try {
 			// if we don't have this sample already loaded check
 			// for it in the database
-			if (!samples.containsKey(s.getAlias())) {
+			if (!samples.containsKey(s.getNumber())) {
 				s = sampleDao.fill(s);
-				samples.put(s.getAlias(), s);
-				subsampleNames.put(s.getAlias(), new HashSet<String>());
+				samples.put(s.getNumber(), s);
+				subsampleNames.put(s.getNumber(), new HashSet<String>());
 			} else {
-				s = samples.get(s.getAlias());
+				s = samples.get(s.getNumber());
 			}
 			return true;
 		} catch (MpDbException e) {
@@ -184,12 +183,12 @@ public abstract class BulkUploadService extends MpDbServlet {
 			final Map<String, Subsample> subsamples,
 			BulkUploadResultCount ssResultCount, boolean save)
 			throws ValidationException {
-		if (subsampleNames.get(s.getAlias()) != null
-				&& !subsampleNames.get(s.getAlias()).contains(ss.getName())) {
+		if (subsampleNames.get(s.getNumber()) != null
+				&& !subsampleNames.get(s.getNumber()).contains(ss.getName())) {
 			try {
 				doc.validate(ss);
 				ss = ssDao.fill(ss);
-				subsamples.put(s.getAlias() + ss.getName(), ss);
+				subsamples.put(s.getNumber() + ss.getName(), ss);
 				ssResultCount.incrementOld();
 				return ss;
 			} catch (MpDbException e) {
@@ -202,14 +201,14 @@ public abstract class BulkUploadService extends MpDbServlet {
 					} catch (MpDbException e1) {
 						results.addError(row, e1);
 					}
-					subsamples.put(s.getAlias() + ss.getName(), ss);
+					subsamples.put(s.getNumber() + ss.getName(), ss);
 					return ss;
 				}
 			}
-			subsampleNames.get(s.getAlias()).add(ss.getName());
+			subsampleNames.get(s.getNumber()).add(ss.getName());
 			return ss;
 		} else {
-			return subsamples.get(s.getAlias() + ss.getName());
+			return subsamples.get(s.getNumber() + ss.getName());
 		}
 	}
 	protected <T extends MObject> void analyzeResults(

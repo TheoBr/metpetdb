@@ -1,11 +1,12 @@
-package edu.rpi.metpetdb.client.ui;
+package edu.rpi.metpetdb.client.ui.commands;
 
 import com.google.gwt.user.client.History;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
+import edu.rpi.metpetdb.client.ui.MpDb;
 
 /**
- * Similar to a serverop but a user <b>must</b> be logged in for the call to
+ * Similar to a serverop but a user <b>must</b> be logged in for the command to
  * execute
  * 
  * @author anthony

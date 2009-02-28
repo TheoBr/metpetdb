@@ -1,13 +1,13 @@
 package edu.rpi.metpetdb.client.ui.widgets;
 
-import com.google.gwt.core.client.JavaScriptObject;
-
 import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import com.google.gwt.core.client.JavaScriptObject;
 
 /**
  * A prefix tree (aka trie).

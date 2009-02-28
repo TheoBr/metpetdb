@@ -28,8 +28,6 @@ public class SearchInterface implements ClickListener {
 	private static final String CRITERIA_CLEAR_ID = "criteria-clearall";
 	private final MLink clearAll = new MLink("Clear All", this);
 	private final MHtmlList searchActions = new MHtmlList();
-	private int originalHeight = 0;
-	private boolean init = false;
 	
 	private FlowPanel critContents = new FlowPanel();
 	private final HTMLPanel criteriaSummaryPanel = new HTMLPanel(
@@ -39,7 +37,7 @@ public class SearchInterface implements ClickListener {
 	private final Label noCriteriaMsg = new Label("Set your search criteria by selecting from the categories on the left.");
 
 	public ArrayList<SearchGenericAttribute> getAttributes(){
-		ArrayList<SearchGenericAttribute> atts = new ArrayList();
+		ArrayList<SearchGenericAttribute> atts = new ArrayList<SearchGenericAttribute>();
 		for (int i = 0; i < tabAtts.length; i++){
 			atts.addAll(tabAtts[i].getAttributes());
 		}
@@ -59,7 +57,7 @@ public class SearchInterface implements ClickListener {
 	}
 
 	public Widget[] createEditWidget(final MObject obj, final String id) {
-		currentEditWidgets = new ArrayList();
+		currentEditWidgets = new ArrayList<Widget[]>();
 		tabs.clear();
 		currentEditWidgets.clear();
 		final MTwoColPanel panel = new MTwoColPanel();

@@ -14,7 +14,7 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.CSS;
-import edu.rpi.metpetdb.client.ui.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.CurrentError;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 
@@ -58,7 +58,7 @@ public abstract class GenericAttribute {
 				}
 			}
 		} else if (pcs.length > 1) {
-			final ArrayList al = new ArrayList();
+			final ArrayList<String> al = new ArrayList<String>();
 			for (int i = 0; i < pcs.length; ++i) {
 				constraints = pcs;
 				try {

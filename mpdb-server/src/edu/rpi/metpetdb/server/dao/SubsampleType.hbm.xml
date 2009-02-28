@@ -14,6 +14,11 @@
 
   </class>
   
+   <query name="SubsampleType.byId">
+    from SubsampleType st
+    where st.id = :id
+  </query>
+  
   <query name="SubsampleType.all">
     from SubsampleType st
     order by st.subsampleType

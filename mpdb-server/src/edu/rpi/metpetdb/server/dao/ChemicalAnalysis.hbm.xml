@@ -23,7 +23,7 @@
     <property name="analysisDate" column="analysis_date" />
     <property name="description" column="description" type="java.lang.String"/>
     
-    <property name="sampleName" formula="(select sample.alias from samples sample
+    <property name="sampleName" formula="(select sample.number from samples sample
     																		where sample.sample_id= ( select ss.sample_id from subsamples ss
     																		where ss.subsample_id=subsample_id))" />
     <property name="subsampleName" formula="(select s.name from subsamples s
@@ -64,6 +64,9 @@
         <many-to-one name="oxide" class="Oxide" column="oxide_id" lazy="false" not-null="true"/>
 	  </composite-element>
     </set>
+    
+      <filter name="chemicalAnalysisPublicOrUser"
+     		condition="public_data='Y' OR user_id=:userId" />
 
   </class>
 
@@ -91,37 +94,37 @@
     from ChemicalAnalysis ma
     inner join fetch ma.owner
     where ma.subsample.id = :id
-    order by ma.spotId
+    order by (lower(ma.spotId))
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/analysisMethod">
     from ChemicalAnalysis ma
     inner join fetch ma.owner
     where ma.subsample.id = :id
-    order by ma.analysisMethod
+    order by (lower(ma.analysisMethod))
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/location">
     from ChemicalAnalysis ma
     inner join fetch ma.owner
     where ma.subsample.id = :id
-    order by ma.location
+    order by (lower(location))
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/analyst">
     from ChemicalAnalysis ma
     inner join fetch ma.owner
     where ma.subsample.id = :id
-    order by ma.analyst
+    order by (lower(ma.analyst))
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/analysisDate">
     from ChemicalAnalysis ma
     inner join fetch ma.owner
     where ma.subsample.id = :id
-    order by ma.analysisDate
+    order by (lower(ma.analysisDate))
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/description">
     from ChemicalAnalysis ma
     inner join fetch ma.owner
     where ma.subsample.id = :id
-    order by ma.description
+    order by (lower(ma.description))
   </query>
   
   <query name="ChemicalAnalysis.bySubsampleIdbySpotId">
@@ -130,5 +133,11 @@
     where ma.subsample.id = :id and ma.spotId = :spotId
   </query>
 
+<!-- only returns data that is either public or owned by the current user
+   	used when showing the chemical analyses for a user 
+   -->
+  <filter-def name="chemicalAnalysisPublicOrUser">
+  	<filter-param name="userId" type="long" />
+  </filter-def>
    
 </hibernate-mapping>

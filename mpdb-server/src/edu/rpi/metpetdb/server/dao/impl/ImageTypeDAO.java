@@ -8,7 +8,6 @@ import org.hibernate.Session;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.ImageTypeNotFoundException;
-import edu.rpi.metpetdb.client.model.Element;
 import edu.rpi.metpetdb.client.model.ImageType;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 

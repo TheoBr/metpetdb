@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.client.model.validation;
 
-import edu.rpi.metpetdb.client.model.properties.ChemicalAnalysisProperty;
 import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
 import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
@@ -12,7 +11,7 @@ import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
  */
 public class ObjectConstraints extends DatabaseObjectConstraints {
 
-	public StringConstraint SearchSample_alias;
+	public StringConstraint SearchSample_number;
 	public Sample_sesarNumber SearchSample_sesarNumber;
 	public GeometryConstraint SearchSample_boundingBox;
 	public DateSpanConstraint SearchSample_collectionDateRange;
@@ -40,12 +39,12 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 		SearchSample_country.propertyName = "Country";
 		SearchSample_country.required = false;
 		
-		SearchSample_alias.entityName = "SearchSample";
-		SearchSample_alias.property = SearchSampleProperty.alias;
-		SearchSample_alias.propertyName = "Alias";
-		SearchSample_alias.maxLength = doc.Sample_alias.maxLength;
-		SearchSample_alias.minLength = doc.Sample_alias.minLength;
-		SearchSample_alias.required = false;
+		SearchSample_number.entityName = "SearchSample";
+		SearchSample_number.property = SearchSampleProperty.number;
+		SearchSample_number.propertyName = "Number";
+		SearchSample_number.maxLength = doc.Sample_number.maxLength;
+		SearchSample_number.minLength = doc.Sample_number.minLength;
+		SearchSample_number.required = false;
 
 		SearchSample_sesarNumber.entityName = "SearchSample";
 		SearchSample_sesarNumber.property = SearchSampleProperty.sesarNumber;

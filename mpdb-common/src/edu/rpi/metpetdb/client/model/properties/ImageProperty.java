@@ -7,9 +7,7 @@ import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageComment;
 import edu.rpi.metpetdb.client.model.ImageType;
 import edu.rpi.metpetdb.client.model.Reference;
-import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.model.SubsampleType;
 
 public enum ImageProperty implements Property<Image> {
 	imageType {

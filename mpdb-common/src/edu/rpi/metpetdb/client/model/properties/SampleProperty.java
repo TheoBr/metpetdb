@@ -72,13 +72,13 @@ public enum SampleProperty implements Property<Sample> {
 			sample.setOwner((User) owner);
 		}
 	},
-	alias {
+	number {
 		public String get(final Sample sample) {
-			return sample.getAlias();
+			return sample.getNumber();
 		}
 
-		public void set(final Sample sample, final Object alias) {
-			sample.setAlias((String) alias);
+		public void set(final Sample sample, final Object number) {
+			sample.setNumber((String) number);
 		}
 	},
 	collectionDate {

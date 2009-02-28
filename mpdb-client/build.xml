@@ -30,7 +30,7 @@
 	</target>
 
 	<target name="mpdb-client-compile-html" depends="mpdb-client-compile-java" description="Executes the GWT compiler to convert java code to javascript">
-		<java fork="true" classname="com.google.gwt.dev.GWTCompiler" taskname="gwtc" maxmemory="256m">
+		<java fork="true" classname="com.google.gwt.dev.GWTCompiler" taskname="gwtc" maxmemory="512m">
 			<classpath>
 				<pathelement location="${basedir}/src" />
 				<pathelement location="${basedir}/bin" />

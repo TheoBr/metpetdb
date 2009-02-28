@@ -27,7 +27,7 @@ public class SearchSample implements IsSerializable, MObject {
 
 	private Set<String> owners  = new HashSet<String>();
 
-	private String alias;
+	private String number;
 
 	private DateSpan collectionDateRange;
 	private Short datePrecision;
@@ -135,12 +135,12 @@ public class SearchSample implements IsSerializable, MObject {
 	}
 
 
-	public String getAlias() {
-		return alias;
+	public String getNumber() {
+		return number;
 	}
 
-	public void setAlias(final String s) {
-		alias = s;
+	public void setNumber(final String s) {
+		number = s;
 	}
 
 	public DateSpan getCollectionDateRange() {
@@ -168,8 +168,8 @@ public class SearchSample implements IsSerializable, MObject {
 	}
 
 	public String getName() {
-		if (this.alias != null || !this.alias.equals(""))
-			return this.alias;
+		if (this.number != null || !this.number.equals(""))
+			return this.number;
 		else
 			return this.sesarNumber;
 	}

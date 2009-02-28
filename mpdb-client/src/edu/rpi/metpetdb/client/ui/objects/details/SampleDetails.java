@@ -28,8 +28,8 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
-import edu.rpi.metpetdb.client.ui.ServerOp;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
@@ -56,7 +56,7 @@ public class SampleDetails extends MPagePanel {
 	private static GenericAttribute[] sampleAtts = {
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
 			new TextAttribute(MpDb.doc.Sample_sesarNumber).setImmutable(true),
-			new TextAttribute(MpDb.doc.Sample_alias),
+			new TextAttribute(MpDb.doc.Sample_number),
 			new DateAttribute(MpDb.doc.Sample_collectionDate,
 					MpDb.doc.Sample_datePrecision),
 			new ListboxAttribute(MpDb.doc.Sample_rockType),
@@ -120,8 +120,8 @@ public class SampleDetails extends MPagePanel {
 			protected void onLoadCompletion(final Sample result) {
 				super.onLoadCompletion(result);
 				final String title;
-				if (result.getAlias() != null || !result.getAlias().equals(""))
-					title = result.getAlias();
+				if (result.getNumber() != null || !result.getNumber().equals(""))
+					title = result.getNumber();
 				else
 					title = "<span class=\""+CSS.IGSN_LABEL+"\">IGSN</span> " + result.getSesarNumber();
 				setPageTitle(title, LocaleHandler.lc_text.sample());

@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
-import edu.rpi.metpetdb.client.ui.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.widgets.paging.Column;
 
 /**

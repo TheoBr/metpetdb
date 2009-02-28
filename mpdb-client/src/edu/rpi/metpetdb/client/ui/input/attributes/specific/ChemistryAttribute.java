@@ -32,7 +32,6 @@ import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
@@ -213,7 +212,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 
 		final Iterator<ChemicalAnalysisElement> itr = ca.getElements()
 				.iterator();
-		ArrayList units = new ArrayList(ChemicalAnalysis.getMeasurementUnits());
+		ArrayList<String> units = new ArrayList<String>(ChemicalAnalysis.getMeasurementUnits());
 		while (itr.hasNext()) {
 			final ChemicalAnalysisElement element = (ChemicalAnalysisElement) itr
 					.next();

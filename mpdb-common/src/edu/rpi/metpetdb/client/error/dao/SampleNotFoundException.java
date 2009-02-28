@@ -6,23 +6,23 @@ import edu.rpi.metpetdb.client.model.Sample;
 
 public class SampleNotFoundException extends DAOException {
 	private static final long serialVersionUID = 1L;
-	private String alias;
+	private String number;
 	private long id;
 	
 	public SampleNotFoundException() {
-		alias = "";
+		number = "";
 		id = 0;
 	}
 	
 	public SampleNotFoundException(final Sample tryToLoad) {
-		alias = tryToLoad.getAlias();
+		number = tryToLoad.getNumber();
 		id = tryToLoad.getId();
 	}
 
 	@Override
 	public String format() {
-		if (alias != null && alias.length() > 0)
-			return LocaleHandler.lc_text.errorDesc_SampleNotFoundAlias(alias);
+		if (number != null && number.length() > 0)
+			return LocaleHandler.lc_text.errorDesc_SampleNotFoundNumber(number);
 		else if (id != 0)
 			return LocaleHandler.lc_text.errorDesc_SampleNotFoundId(id);
 		else

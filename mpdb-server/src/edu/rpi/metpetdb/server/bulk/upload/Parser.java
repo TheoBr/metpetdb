@@ -257,10 +257,10 @@ public abstract class Parser<T extends MObject> {
 							((HasSubsample) newObject).getSubsample().mSet(
 									pc.property, cell.toString());
 						}
-					} else if (pc == doc.Sample_alias
+					} else if (pc == doc.Sample_number
 							&& !pc.entityName.equals(newObject.getClass()
 									.getSimpleName())) {
-						// only do sample alias if we are not working on a
+						// only do sample number if we are not working on a
 						// sample
 						if (newObject instanceof HasSample) {
 							if (((HasSample) newObject).getSample() == null) {
@@ -405,7 +405,7 @@ public abstract class Parser<T extends MObject> {
 				if (cm.matches(text)) {
 					spreadSheetColumnMapping.put(i, cm.getProperty());
 					headers.put(i, new BulkUploadHeader(text,
-							cm.getProperty().propertyName));
+							cm.getProperty().entityName + "_" + cm.getProperty().propertyName));
 					break;
 				}
 			}

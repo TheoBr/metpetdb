@@ -38,7 +38,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner,
 	private User owner;
 
 	@Field(index = Index.TOKENIZED, store = Store.NO)
-	private String alias;
+	private String number;
 
 	@Field(index = Index.UN_TOKENIZED)
 	@DateBridge(resolution = Resolution.DAY)
@@ -174,12 +174,12 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner,
 		owner = u;
 	}
 
-	public String getAlias() {
-		return alias;
+	public String getNumber() {
+		return number;
 	}
 
-	public void setAlias(final String s) {
-		alias = s;
+	public void setNumber(final String s) {
+		number = s;
 	}
 
 	public Timestamp getCollectionDate() {
@@ -367,6 +367,8 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner,
 	}
 
 	public Set<SampleComment> getComments() {
+		if (comments == null)
+			comments = new HashSet<SampleComment>();
 		return comments;
 	}
 
@@ -390,8 +392,8 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner,
 	}
 
 	public String getName() {
-		if (this.alias != null || !this.alias.equals(""))
-			return this.alias;
+		if (this.number != null || !this.number.equals(""))
+			return this.number;
 		else
 			return this.sesarNumber;
 	}
@@ -426,8 +428,8 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner,
 	}
 	
 	public String toString() {
-		if (alias != null && alias.length() > 0)
-			return alias;
+		if (number != null && number.length() > 0)
+			return number;
 		else
 			return String.valueOf(id);
 	}

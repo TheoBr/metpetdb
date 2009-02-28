@@ -37,7 +37,7 @@ public interface LocaleText extends Messages {
 	/* Subsamples */
 	String subsamples();
 	String addSubsample();
-	String addSubsampleDescription(String sampleAlias);
+	String addSubsampleDescription(String sampleNumber);
 	String noSubsamplesFound();
 
 	/* Mineral Analyses */
@@ -151,7 +151,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_SampleAlreadyExists();
 	String errorDesc_SampleNotFound();
 	String errorDesc_SampleNotFoundId(Long id);
-	String errorDesc_SampleNotFoundAlias(String alias);
+	String errorDesc_SampleNotFoundNumber(String number);
 	String errorDesc_SubsampleAlreadyExists();
 	String errorDesc_SubsampleNotFound();
 	String errorDesc_UserAlreadyExists();

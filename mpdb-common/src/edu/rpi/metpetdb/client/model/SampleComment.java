@@ -1,6 +1,9 @@
 package edu.rpi.metpetdb.client.model;
 
-public class SampleComment extends Comment {
+import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
+import edu.rpi.metpetdb.client.model.interfaces.HasSample;
+
+public class SampleComment extends Comment implements HasSample, HasOwner {
 
 	private static final long serialVersionUID = 1L;
 	private Sample sample;
