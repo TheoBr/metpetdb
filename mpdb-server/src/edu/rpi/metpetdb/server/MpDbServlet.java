@@ -76,7 +76,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 
 	/** The current thread's {@link Req}. */
 	private static final ThreadLocal<Req> perThreadReq = new ThreadLocal<Req>();
-	//req used for unit tests
+	// req used for unit tests
 	public static Req testReq = null;
 
 	/** The server's object constraint instance. */
@@ -167,14 +167,19 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	public void initBulkUpload() throws MpDbException {
 		// Locate and set Valid Potential Minerals for the parser
 		final Session s = DataStore.open();
-		final Collection<Mineral> minerals = (new MineralDAO(s).getAll());
-		SampleParser.setMinerals(minerals);
-		List<Element> elements = ((new ElementDAO(s)).getAll());
-		List<Oxide> oxides = ((new OxideDAO(s)).getAll());
-		AnalysisParser.setOxides(oxides);
-		AnalysisParser.setElements(elements);
-		ImageParser.setImageTypes((new ImageTypeDAO(s).getAll()));
-		s.close();
+		try {
+			final Collection<Mineral> minerals = (new MineralDAO(s).getAll());
+			SampleParser.setMinerals(minerals);
+			List<Element> elements = ((new ElementDAO(s)).getAll());
+			List<Oxide> oxides = ((new OxideDAO(s)).getAll());
+			AnalysisParser.setOxides(oxides);
+			AnalysisParser.setElements(elements);
+			ImageParser.setImageTypes((new ImageTypeDAO(s).getAll()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			s.close();
+		}
 	}
 
 	public void destroy() {
@@ -238,8 +243,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		currentReq().userId = u != null ? new Integer(u.getId()) : null;
 		getThreadLocalRequest().getSession().setAttribute("principals",
 				principals);
-		getThreadLocalRequest().getSession().setAttribute("user",
-				u);
+		getThreadLocalRequest().getSession().setAttribute("user", u);
 		if (u == null || principals == null)
 			// clear the session when we don't have a current user
 			getThreadLocalRequest().getSession().invalidate();
@@ -282,17 +286,18 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		}
 		return r.userId.intValue();
 	}
-	
+
 	/**
 	 * Only returns a user id if someone is logged in, otherwise it returns 0
+	 * 
 	 * @return
 	 */
 	protected int currentUserIdIfExists() {
 		int userId = 0;
 		try {
 			userId = currentUserId();
-		} catch(Exception e) {
-			
+		} catch (Exception e) {
+
 		}
 		return userId;
 	}
@@ -329,7 +334,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	 * returning, as otherwise our framework code will rollback the transaction
 	 * and throw an exception back to the client.
 	 * </p>
-	 * @throws MpDbException 
+	 * 
+	 * @throws MpDbException
 	 */
 	protected void commit() throws MpDbException {
 		try {
@@ -415,7 +421,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		final Req r = new Req();
 		r.principals = (Collection<Principal>) this.getThreadLocalRequest()
 				.getSession().getAttribute("principals");
-		r.user = (User) this.getThreadLocalRequest().getSession().getAttribute("user");
+		r.user = (User) this.getThreadLocalRequest().getSession().getAttribute(
+				"user");
 		perThreadReq.set(r);
 		String response = "Internal server error.";
 		try {
@@ -459,10 +466,18 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 
 	public static final class Req {
 		Session session;
-		Integer userId;
+		Integer userId = 0;
 		public User user;
 		public Action action;
 		public Collection<Principal> principals;
+		
+		public void setUser(final User u) {
+			user = u;
+			if (u == null)
+				userId = 0;
+			else
+				userId = u.getId();
+		}
 
 		User currentUser(int userId) throws MpDbException {
 			if (user == null) {
@@ -476,6 +491,11 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		Session currentSession() {
 			if (session == null) {
 				session = DataStore.open();
+				//enable filters to make it so loading public data does not load the private
+				//data unless the current user is the owner of the private data
+				session.enableFilter("samplePublicOrUser").setParameter("userId", userId);
+				session.enableFilter("subsamplePublicOrUser").setParameter("userId", userId);
+				session.enableFilter("chemicalAnalysisPublicOrUser").setParameter("userId", userId);
 				session.beginTransaction();
 			}
 			return session;

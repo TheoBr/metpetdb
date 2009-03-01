@@ -28,13 +28,13 @@
       <many-to-many class="Reference" column="reference_id" />
     </set>
     
-    <set name="comments" cascade="all,delete-orphan" lazy="false" >
+    <set name="comments" cascade="all,delete-orphan" >
       <key column="image_id" not-null="true"/>
       <one-to-many class="ImageComment" />
     </set>
 
-   <many-to-one name="subsample" column="subsample_id" class="Subsample" lazy="false"/>
-   <many-to-one name="sample" column="sample_id" class="Sample" lazy="false" cascade="none"/>
+   <many-to-one name="subsample" column="subsample_id" class="Subsample" />
+   <many-to-one name="sample" column="sample_id" class="Sample"  cascade="none"/>
    <many-to-one name="imageType" column="image_type_id" class="ImageType" lazy="false" cascade="none"/>
    
    <joined-subclass name="XrayImage" table="xray_image">
@@ -44,6 +44,9 @@
 	    <property name="voltage" column="voltage"/>
 	    <property name="element" column="element"/>
    </joined-subclass>
+     
+  <filter name="imagePublicOrUser"
+     		condition="( user_id=:userId OR public_data='Y')" />
   </class>
 
   <query name="Image.byId">
@@ -63,5 +66,9 @@
     from Image i
     where i.sample.id = :id and i.filename = :filename
   </query>
+  
+  <filter-def name="imagePublicOrUser">
+  	<filter-param name="userId" type="long" />
+  </filter-def>
 
 </hibernate-mapping>

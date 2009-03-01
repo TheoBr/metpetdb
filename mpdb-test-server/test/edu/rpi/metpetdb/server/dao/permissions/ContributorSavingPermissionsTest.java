@@ -1,10 +1,10 @@
 package edu.rpi.metpetdb.server.dao.permissions;
 
-import java.security.Principal;
-import java.util.ArrayList;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+
+import java.security.Principal;
+import java.util.ArrayList;
 
 import org.hibernate.CallbackException;
 import org.junit.Before;
@@ -20,7 +20,6 @@ import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.SubsampleType;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
-import edu.rpi.metpetdb.server.InitDatabase;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.SampleCommentDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
@@ -57,16 +56,14 @@ public class ContributorSavingPermissionsTest extends DatabaseTestCase {
 	public void savePrivateSample() throws MpDbException {
 		final Sample s = new Sample();
 		final RockType rt = new RockType();
-		rt.setRockType("Schist");
+		rt.setRockType("Slate");
 		s.setOwner(MpDbServlet.currentReq().user);
 		s.setNumber("Bill");
 		s.setLongitude(32d);
 		s.setLatitude(12d);
 		s.setRockType(rt);
 		s.setPublicData(false);
-		InitDatabase.getSession().beginTransaction();
-		final Sample saved = new SampleDAO(InitDatabase.getSession()).save(s);
-		InitDatabase.getSession().getTransaction().commit();
+		final Sample saved = new SampleDAO(session).save(s);
 		assertFalse(saved.mIsNew());
 	}
 
@@ -80,10 +77,9 @@ public class ContributorSavingPermissionsTest extends DatabaseTestCase {
 		try {
 			final Sample s = super.byId("Sample", 6);
 			s.setPublicData(false);
-			InitDatabase.getSession().beginTransaction();
-			new SampleDAO(InitDatabase.getSession()).save(s);
-			InitDatabase.getSession().getTransaction().commit();
+			new SampleDAO(session).save(s);
 		} catch (CallbackException e) {
+			session.clear();
 			throw e.getCause();
 		}
 	}
@@ -103,10 +99,7 @@ public class ContributorSavingPermissionsTest extends DatabaseTestCase {
 		sc.setOwner(MpDbServlet.testReq.user);
 		sc.setText("Sample comment");
 		sample.getComments().add(sc);
-		InitDatabase.getSession().beginTransaction();
-		final SampleComment saved = new SampleCommentDAO(InitDatabase
-				.getSession()).save(sc);
-		InitDatabase.getSession().getTransaction().commit();
+		final SampleComment saved = new SampleCommentDAO(session).save(sc);
 		final SampleComment loaded = super.byId("SampleComment", (int) saved
 				.getId());
 		assertEquals(loaded.getId(), saved.getId());
@@ -128,8 +121,9 @@ public class ContributorSavingPermissionsTest extends DatabaseTestCase {
 		sc.setOwner(MpDbServlet.testReq.user);
 		sc.setText("comment samples");
 		try {
-			new SampleCommentDAO(InitDatabase.getSession()).save(sc);
+			new SampleCommentDAO(session).save(sc);
 		} catch (CallbackException ce) {
+			session.clear();
 			throw ce.getCause();
 		}
 	}
@@ -147,10 +141,7 @@ public class ContributorSavingPermissionsTest extends DatabaseTestCase {
 		sc.setSample(sample);
 		sc.setOwner(MpDbServlet.testReq.user);
 		sc.setText("comment samples");
-		InitDatabase.getSession().beginTransaction();
-		final SampleComment saved = new SampleCommentDAO(InitDatabase
-				.getSession()).save(sc);
-		InitDatabase.getSession().getTransaction().commit();
+		final SampleComment saved = new SampleCommentDAO(session).save(sc);
 		final SampleComment loaded = super.byId("SampleComment", (int) saved
 				.getId());
 		assertEquals(loaded.getId(), saved.getId());
@@ -173,10 +164,8 @@ public class ContributorSavingPermissionsTest extends DatabaseTestCase {
 		subsample.setOwner(MpDbServlet.testReq.user);
 		subsample.setName("my subsample");
 		subsample.setSample(sample);
-		InitDatabase.getSession().beginTransaction();
-		final Subsample saved = new SubsampleDAO(InitDatabase.getSession())
+		final Subsample saved = new SubsampleDAO(session)
 				.save(subsample);
-		InitDatabase.getSession().getTransaction().commit();
 		final Subsample loaded = super.byId("Subsample", (int) saved.getId());
 		assertEquals(loaded.getId(), saved.getId());
 		assertEquals("my subsample", loaded.getName());
@@ -198,10 +187,8 @@ public class ContributorSavingPermissionsTest extends DatabaseTestCase {
 		subsample.setOwner(MpDbServlet.testReq.user);
 		subsample.setName("my subsample");
 		subsample.setSample(sample);
-		InitDatabase.getSession().beginTransaction();
-		final Subsample saved = new SubsampleDAO(InitDatabase.getSession())
+		final Subsample saved = new SubsampleDAO(session)
 				.save(subsample);
-		InitDatabase.getSession().getTransaction().commit();
 		final Subsample loaded = super.byId("Subsample", (int) saved.getId());
 		assertEquals(loaded.getId(), saved.getId());
 		assertEquals("my subsample", loaded.getName());
@@ -224,8 +211,9 @@ public class ContributorSavingPermissionsTest extends DatabaseTestCase {
 		subsample.setName("my subsample");
 		subsample.setSample(sample);
 		try {
-			new SubsampleDAO(InitDatabase.getSession()).save(subsample);
+			new SubsampleDAO(session).save(subsample);
 		} catch (CallbackException ce) {
+			session.clear();
 			throw ce.getCause();
 		}
 	}

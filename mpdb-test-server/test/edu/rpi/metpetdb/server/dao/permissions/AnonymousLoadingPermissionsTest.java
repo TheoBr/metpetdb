@@ -1,8 +1,5 @@
 package edu.rpi.metpetdb.server.dao.permissions;
 
-import java.security.Principal;
-import java.util.ArrayList;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -31,7 +28,6 @@ import edu.rpi.metpetdb.client.model.SubsampleType;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
-import edu.rpi.metpetdb.server.MpDbServlet;
 
 /**
  * Verifies that the loading permissions for Anonymous users are correct, since Members
@@ -48,11 +44,6 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 	@Before
 	public void setUp() {
 		super.setUp();
-		// setup an anonymous request
-		final MpDbServlet.Req req = new MpDbServlet.Req();
-		req.user = null;
-		req.principals = new ArrayList<Principal>();
-		MpDbServlet.testReq = req;
 	}
 
 	/**
@@ -66,6 +57,7 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 		try {
 			super.byId("Sample", 1);
 		} catch (CallbackException c) {
+			session.clear();
 			throw c.getCause();
 		}
 	}
@@ -79,6 +71,7 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 		try {
 			super.byId("Subsample", 1);
 		} catch (CallbackException c) {
+			session.clear();
 			throw c.getCause();
 		}
 	}
@@ -92,17 +85,19 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 		try {
 			super.byId("ChemicalAnalysis", 1);
 		} catch (CallbackException c) {
+			session.clear();
 			throw c.getCause();
 		}
 	}
 
 	/**
 	 * Tries to load a user's data
+	 * @throws NoSuchObjectException 
 	 * 
 	 * @throws Throwable
 	 */
 	@Test
-	public void loadOtherUser() throws Throwable {
+	public void loadOtherUser() throws NoSuchObjectException  {
 		final User u = super.byId("User", 1);
 		assertEquals(1, u.getId());
 	}
@@ -117,6 +112,7 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 		try {
 			super.byId("Sample", 6);
 		} catch (CallbackException c) {
+			session.clear();
 			throw c.getCause();
 		}
 	}
@@ -169,6 +165,7 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 		try {
 			super.byId("SampleComment", 1);
 		} catch (CallbackException c) {
+			session.clear();
 			throw c.getCause();
 		}
 	}
@@ -193,6 +190,7 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 		try {
 			super.byId("ImageComment", 1);
 		} catch(CallbackException ce) {
+			session.clear();
 			throw ce.getCause();
 		}
 	}
@@ -221,6 +219,7 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 		try {
 			super.byId("Image", 1);
 		} catch (CallbackException ce) {
+			session.clear();
 			throw ce.getCause();
 		}
 	}
@@ -235,8 +234,8 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 	public void loadElement() {
 		final Session s = DataStore.open();
 		final Element element = (Element) s.getNamedQuery("Element.byName")
-				.setParameter("name", "hydrogen").uniqueResult();
-		assertEquals("Hydrogen", element.getName());
+				.setParameter("name", "aluminium").uniqueResult();
+		assertEquals("Aluminium", element.getName());
 		s.close();
 	}
 	
@@ -244,8 +243,8 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 	public void loadOxide() {
 		final Session s = DataStore.open();
 		final Oxide oxide = (Oxide) s.getNamedQuery("Oxide.bySpecies")
-				.setParameter("species", "Sb2O5").uniqueResult();
-		assertEquals("Sb2O5", oxide.getSpecies());
+				.setParameter("species", "Al2O3").uniqueResult();
+		assertEquals("Al2O3", oxide.getSpecies());
 		s.close();
 	}
 	
@@ -287,6 +286,7 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 		try {
 			super.byId("PendingRole", 1);
 		} catch (CallbackException ce) {
+			session.clear();
 			throw ce.getCause();
 		}
 	}

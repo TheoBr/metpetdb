@@ -221,21 +221,20 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 	public void sendConfirmationCode(User user) throws ValidationException,
 			MpDbException, UnableToSendEmailException {
 		final UserDAO uDAO = new UserDAO(this.currentSession());
-		user.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-",
-				""));
 		User u = new User();
 		u.setId(currentUserId());
 		u = uDAO.fill(u);
-		user.setEncryptedPassword(u.getEncryptedPassword());
-		user = uDAO.save(user);
+		u.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-",
+		""));
+		u = uDAO.save(u);
 		commit();
 		EmailSupport.sendMessage(this, u.getEmailAddress(),
 				"sendConfirmationCode", new Object[] {
-						user.toString(),
+						u.toString(),
 						getModuleBaseURL() + "#ConfirmationCode/"
-								+ user.getConfirmationCode()
+								+ u.getConfirmationCode()
 				});
-		setCurrentUser(user, null);
+		setCurrentUser(u, null);
 	}
 
 	public User confirmUser(String confirmationCode) throws MpDbException,

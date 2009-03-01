@@ -14,27 +14,31 @@
     <property name="publicData" column="public_data" type="yes_no" />    
     <property name="imageCount" formula="(select count(*) from images i
     									where i.subsample_id=subsample_id 
-    									AND (i.public_data='Y' OR i.user_id=user_id))" />
+    									AND (i.public_data='Y'))" />
 	<property name="analysisCount" formula="(select count(*) from chemical_analyses ca
     																		where ca.subsample_id=subsample_id)" />
     <property name="sampleName" formula="(select s.number from samples s
     																		where s.sample_id=sample_id)" />
     <many-to-one name="owner" column="user_id" lazy="false" />
-    <many-to-one name="sample" column="sample_id" class="Sample"  not-null="true" lazy="false"/>
+    <many-to-one name="sample" column="sample_id" class="Sample"  not-null="true" lazy="false" />
     <many-to-one name="subsampleType" column="subsample_type_id" class="SubsampleType" lazy="false" />
     
     <one-to-one name="grid" property-ref="subsample" cascade="delete"/>
    
-   <!-- only load images that are public or match the userid of the subsample -->
-   <set name="images" table="images" cascade="all-delete-orphan" lazy="false" order-by="filename DESC"
-   	where="public_data='Y' OR user_id=(select user_id from subsamples ss where ss.subsample_id=subsample_id)" > 
+   <!-- only load images that are public or match the userid of the current user -->
+   <set name="images" table="images" cascade="all-delete-orphan" order-by="filename DESC"> 
       <key column="subsample_id" />
       <one-to-many class="Image" />
+      <filter name="subsamplePublicOrUser"
+     		condition="( user_id=:userId OR public_data='Y')" />
     </set>
     
-    <set name="chemicalAnalyses" inverse="true" table="chemical_analyses" cascade="all-delete-orphan"> 
+    <set name="chemicalAnalyses" inverse="true" table="chemical_analyses" cascade="all-delete-orphan"
+    	order-by="spot_id DESC"> 
       <key column="subsample_id" />
       <one-to-many class="ChemicalAnalysis" />
+      <filter name="subsamplePublicOrUser"
+     		condition="( user_id=:userId OR public_data='Y')" />
     </set>
     
     <filter name="subsamplePublicOrUser"
@@ -45,12 +49,14 @@
   <query name="Subsample.byId">
     from Subsample s
     inner join fetch s.owner
+    inner join fetch s.subsampleType
     where s.id = :id
   </query>
   
   <query name="Subsample.bySample.byName">
     from Subsample s
     inner join fetch s.owner
+    inner join fetch s.subsampleType
     where s.sample.id = :id
     and s.name = :name
   </query>
@@ -63,6 +69,7 @@
   <query name="Subsample.bySampleId">
   	from Subsample s
   	inner join fetch s.owner
+  	inner join fetch s.subsampleType
   	where s.sample.id = :sampleId
   </query>
   
@@ -73,6 +80,7 @@
   <query name="Subsample.allWithImages/name">
     from Subsample s
     inner join fetch s.owner
+    inner join fetch s.subsampleType
     where s.sample.id = :id and size( s.images ) > 0
     order by (lower(s.name))
   </query>
@@ -83,6 +91,7 @@
   <query name="Subsample.all/name">
     from Subsample s
     inner join fetch s.owner
+    inner join fetch s.subsampleType
     where s.sample.id = :id
     order by (lower(s.name))
   </query>
@@ -91,6 +100,6 @@
    	used when showing the subsamples for a user 
    -->
   <filter-def name="subsamplePublicOrUser">
-  	<filter-param name="userId" type="long" />
+  	<filter-param name="userId" type="int" />
   </filter-def>
 </hibernate-mapping>

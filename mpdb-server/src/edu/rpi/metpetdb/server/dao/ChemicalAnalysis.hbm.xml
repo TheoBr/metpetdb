@@ -31,7 +31,7 @@
     <many-to-one name="owner" column="user_id" lazy="false" />
 	<many-to-one name="reference" column="reference_id" class="Reference" lazy="false" cascade="save-update"/>
 	<many-to-one name="image" column="image_id" class="Image" lazy="false" cascade="none"/>
-    <many-to-one name="subsample" column="subsample_id" lazy="false" class="Subsample"  cascade="none"/>
+    <many-to-one name="subsample" column="subsample_id" class="Subsample"  cascade="none"/>
 
 	<property name="largeRock" column="large_rock" type="yes_no" />
 	<property name="total" column="total" />
@@ -66,7 +66,8 @@
     </set>
     
       <filter name="chemicalAnalysisPublicOrUser"
-     		condition="public_data='Y' OR user_id=:userId" />
+     		condition="(public_data='Y' OR user_id=:userId)" />
+     		
 
   </class>
 
@@ -78,7 +79,7 @@
   <query name="ChemicalAnalysis.bySubsampleId">
     from ChemicalAnalysis ma
     inner join fetch ma.owner
-    where ma.subsample.id = :subsampleId
+    where ma.subsample.id = :id
   </query>
   <query name="ChemicalAnalysis.bySubsampleId,size">
     select count(*) from ChemicalAnalysis ma
@@ -137,7 +138,7 @@
    	used when showing the chemical analyses for a user 
    -->
   <filter-def name="chemicalAnalysisPublicOrUser">
-  	<filter-param name="userId" type="long" />
+  	<filter-param name="userId" type="int" />
   </filter-def>
    
 </hibernate-mapping>

@@ -82,8 +82,8 @@ public class InitDatabase  {
 			// Export the database excluding certain tables
 			originalData = new FilteredDataSet(sequenceFilter, conn
 					.createDataSet());
-			FlatXmlDataSet.write(originalData, new FileOutputStream(
-					"test-data/test-backup.xml"));
+			//FlatXmlDataSet.write(originalData, new FileOutputStream(
+			//		"test-data/test-backup.xml"));
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -128,7 +128,7 @@ public class InitDatabase  {
 	}
 
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		DataStore.initFactory();
 
 		s = DataStore.open();
@@ -156,7 +156,7 @@ public class InitDatabase  {
 	}
 
 	@After
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		try {
 			DatabaseOperation.INSERT.execute(conn, originalData);
 		} catch (Exception e) {

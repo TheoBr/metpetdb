@@ -52,6 +52,7 @@ public class ContributorLoadingPermissionsTest extends DatabaseTestCase {
 			final Sample s = super.byId("Sample", 1);
 			assertEquals(1, s.getOwner().getId());
 		} catch (CallbackException c) {
+			session.clear();
 			throw c.getCause();
 		}
 	}
@@ -66,6 +67,7 @@ public class ContributorLoadingPermissionsTest extends DatabaseTestCase {
 			final Subsample s = super.byId("Subsample", 1);
 			assertEquals(1, s.getOwner().getId());
 		} catch (CallbackException c) {
+			session.clear();
 			throw c.getCause();
 		}
 	}
@@ -80,6 +82,7 @@ public class ContributorLoadingPermissionsTest extends DatabaseTestCase {
 			final ChemicalAnalysis ca = super.byId("ChemicalAnalysis", 1);
 			assertEquals(1, ca.getOwner().getId());
 		} catch (CallbackException c) {
+			session.clear();
 			throw c.getCause();
 		}
 	}
@@ -94,6 +97,7 @@ public class ContributorLoadingPermissionsTest extends DatabaseTestCase {
 			final Image ca = super.byId("Image", 1);
 			assertEquals(1, ca.getOwner().getId());
 		} catch (CallbackException c) {
+			session.clear();
 			throw c.getCause();
 		}
 	}
@@ -107,6 +111,7 @@ public class ContributorLoadingPermissionsTest extends DatabaseTestCase {
 		try {
 			super.byId("Sample", 2);
 		} catch (CallbackException c) {
+			session.clear();
 			throw c.getCause();
 		}
 	}
@@ -120,6 +125,7 @@ public class ContributorLoadingPermissionsTest extends DatabaseTestCase {
 		try {
 			super.byId("Image", 3);
 		} catch (CallbackException c) {
+			session.clear();
 			throw c.getCause();
 		}
 	}

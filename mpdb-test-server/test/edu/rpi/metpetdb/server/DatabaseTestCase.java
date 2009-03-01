@@ -1,24 +1,53 @@
 package edu.rpi.metpetdb.server;
 
-import java.io.FileInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.security.Principal;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.dbunit.DatabaseUnitException;
+import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.DatabaseConnection;
+import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.filter.DefaultTableFilter;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.model.MObject;
 
 public class DatabaseTestCase {
 
-	private final String xmlFile;
+	private static String xmlFile = "test-data/test-sample-data.xml";
 
-	private IDataSet loadedDataSet;
+	private static IDataSet loadedDataSet;
+
+	public static Session session;
+
+	private static IDatabaseConnection conn;
+
+	private static Connection hiberateConnection;
+	
+	public static final int PUBLIC_SAMPLE=6;
+	public static final long PUBLIC_SUBSAMPLE=4;
+	public static final int PUBLIC_CHEMICAL_ANALYSIS=3;
+
+	/**
+	 * Tables excluded from the database backup
+	 */
+	private static final String excludedTables[] = {
+			"geometry_columns", "spatial_ref_sys"
+	};
 
 	/**
 	 * When true it backups/restores the database this is false when running the
@@ -26,63 +55,71 @@ public class DatabaseTestCase {
 	 */
 	public static boolean BACKUP_DATABASE = true;
 
-	private InitDatabase initDb = null;
-
 	public DatabaseTestCase(final String xmlFile) {
-		this.xmlFile = xmlFile;
-		if (BACKUP_DATABASE) {
-			initDb = new InitDatabase();
+		DatabaseTestCase.xmlFile = xmlFile;
+	}
+
+	@BeforeClass
+	public static void beforeClass() {
+		try {
+			DataStore.initFactory();
+			hiberateConnection = ((org.hibernate.engine.SessionFactoryImplementor) DataStore
+					.getFactory()).getConnectionProvider().getConnection();
+			conn = new DatabaseConnection(hiberateConnection);
+			DatabaseConfig config = conn.getConfig();
+			// We need this so that DbUnit can understand PostGIS geometry
+			config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY,
+					new PostGisDataTypeFactory());
+			// config.setFeature(
+			// "http://www.dbunit.org/features/batchedStatements", true);
+			// Setup the excluded tables
+			DefaultTableFilter tableFilter = new DefaultTableFilter();
+			for (final String s : excludedTables) {
+				tableFilter.excludeTable(s);
+			}
+			// IDataSet filteredTable = new FilteredDataSet(tableFilter, conn
+			// .createDataSet());
+			// DatabaseSequenceFilter sequenceFilter = new
+			// DatabaseSequenceFilter(
+			// conn, filteredTable.getTableNames());
+			// Export the database excluding certain tables
+			// IDataSet originalData = new FilteredDataSet(sequenceFilter, conn
+			// .createDataSet());
+			loadedDataSet = new FlatXmlDataSet(new File(xmlFile), false, true);
+			DatabaseOperation.CLEAN_INSERT.execute(conn, loadedDataSet);
+			hiberateConnection.commit();
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+		} catch (DatabaseUnitException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
 	@Before
 	public void setUp() {
-		if (BACKUP_DATABASE) {
-			try {
-				initDb.setUp();
-			} catch (final Exception e) {
-				e.printStackTrace();
-			}
-		}
-		try {
-			loadedDataSet = new FlatXmlDataSet(new FileInputStream(xmlFile));
-			// Insert test data
-			DatabaseOperation.INSERT.execute(InitDatabase.getConnection(),
-					loadedDataSet);
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			InitDatabase.getHibernateConnection().commit();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		session = DataStore.open();
+		session.beginTransaction();
+		// setup an anonymous request
+		final MpDbServlet.Req req = new MpDbServlet.Req();
+		req.user = null;
+		req.principals = new ArrayList<Principal>();
+		MpDbServlet.testReq = req;
 	}
 
 	@After
 	public void tearDown() {
-		try {
-			// Delete test data
-			DatabaseOperation.DELETE_ALL.execute(InitDatabase.getConnection(),
-					loadedDataSet);
-		} catch (Exception e) {
+		session.getTransaction().commit();
+		session.close();
+	}
 
-			e.printStackTrace();
-		}
-		if (BACKUP_DATABASE) {
-			try {
-				initDb.tearDown();
-			} catch (final Exception e) {
-				e.printStackTrace();
-			}
-		}
-		try {
-			InitDatabase.getHibernateConnection().commit();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	@AfterClass
+	public static void afterClass() throws Exception {
+		if (hiberateConnection != null)
+			hiberateConnection.close();
+		if (conn != null)
+			conn.close();
 	}
 
 	@SuppressWarnings( {
@@ -90,7 +127,7 @@ public class DatabaseTestCase {
 	})
 	protected <T extends MObject> T byId(final String name, final int id)
 			throws NoSuchObjectException {
-		final Query q = InitDatabase.getSession().getNamedQuery(name + ".byId");
+		final Query q = session.getNamedQuery(name + ".byId");
 		q.setInteger("id", id);
 		final Object r = q.uniqueResult();
 		if (r == null)
@@ -119,7 +156,7 @@ public class DatabaseTestCase {
 			final String parameter, final boolean assending,
 			final int firstResult, final int maxResults) {
 		Query q;
-		q = InitDatabase.getSession().getNamedQuery(name + ".all/" + parameter);
+		q = session.getNamedQuery(name + ".all/" + parameter);
 		if (!assending)
 			q = InitDatabase.getSession().createQuery(
 					q.getQueryString() + " desc");

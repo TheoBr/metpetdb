@@ -13,7 +13,7 @@ public interface MObject {
 	 * @return the value of the property; null if the property value is null and
 	 * 	allows nulls (it is not a primitive).
 	 */
-	public Object mGet(final Property property);
+	public Object mGet(final Property<?> property);
 
 	/**
 	 * Set the value of any supported property.
@@ -30,7 +30,7 @@ public interface MObject {
 	 * 		the property is a primitive type and cannot accept a null, but the
 	 * 		new value was null.
 	 */
-	public void mSet(final Property property, final Object newVal);
+	public void mSet(final Property<?> property, final Object newVal);
 
 	/**
 	 * Is this a new object instance?

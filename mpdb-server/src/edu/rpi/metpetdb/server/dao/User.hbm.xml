@@ -33,11 +33,13 @@
 
   <query name="User.byId">
     from User u
+    inner join fetch u.role
     where u.id = :id
   </query>
 
   <query name="User.byEmailAddress">
     from User u
+    inner join fetch u.role
     where u.emailAddress = :emailAddress
   </query>
   <query name="User.all/name">
@@ -47,6 +49,7 @@
    </query>
    <query name="User.eligableSponsors">
      from User u
+     inner join fetch u.role
      where u.role.rank >= :rank
      order by lower(u.name)
    </query>

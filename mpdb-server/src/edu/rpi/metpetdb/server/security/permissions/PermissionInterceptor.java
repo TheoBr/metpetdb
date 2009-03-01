@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.server.security.permissions;
 import java.io.Serializable;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
@@ -24,6 +25,7 @@ import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
 import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.security.Action;
+import edu.rpi.metpetdb.server.security.permissions.principals.AdminPrincipal;
 import edu.rpi.metpetdb.server.security.permissions.principals.OwnerPrincipal;
 
 public class PermissionInterceptor extends EmptyInterceptor {
@@ -67,7 +69,11 @@ public class PermissionInterceptor extends EmptyInterceptor {
 			Object[] previousState, Object[] newstate, String[] propertyNames,
 			boolean saving, boolean creating) {
 		if (MpDbServlet.currentReq() != null) {
-			final Collection<Principal> principals = MpDbServlet.currentReq().principals;
+			Collection<Principal> principals = MpDbServlet.currentReq().principals;
+			if (principals == null)
+				principals = new HashSet<Principal>();
+			if (principals.contains(new AdminPrincipal()))
+				return; //admins can do whatever :)
 			final int usersRank;
 			boolean enabled = false;
 			if (MpDbServlet.currentReq().user != null

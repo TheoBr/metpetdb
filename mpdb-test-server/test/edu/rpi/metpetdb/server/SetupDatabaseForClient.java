@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.DatabaseSequenceFilter;
@@ -44,6 +45,9 @@ public class SetupDatabaseForClient {
 			conn = new DatabaseConnection(hibernateConnection);
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
+		} catch (DatabaseUnitException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		if (args.length > 0)

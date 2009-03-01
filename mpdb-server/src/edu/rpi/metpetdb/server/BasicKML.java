@@ -79,8 +79,10 @@ public class BasicKML extends HttpServlet {
 				if (theSample.getLocationError() != null) {
 					latErr = theSample.getLocationError().doubleValue();
 					lngErr = theSample.getLocationError().doubleValue();
-				} else
+				} else {
 					latErr = 0D;
+					lngErr = 0D;
+				}
 				response.getWriter().write(" <Folder>\n");
 				response.getWriter().write(
 						"<name>" + theSample.getNumber() + "</name>\n");

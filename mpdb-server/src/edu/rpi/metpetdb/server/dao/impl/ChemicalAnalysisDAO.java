@@ -72,7 +72,7 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 	}
 
 	public List<ChemicalAnalysis> getAll(final long subsampleId, long userId) throws MpDbException {
-		sess.enableFilter("chemicalAnalysisPublicOrUser").setParameter("userId", userId);
+		//sess.enableFilter("chemicalAnalysisPublicOrUser").setParameter("userId", userId);
 		final Query q = namedQuery("ChemicalAnalysis.bySubsampleId");
 		q.setParameter("subsampleId", subsampleId);
 		final List<ChemicalAnalysis> l = (List<ChemicalAnalysis>) getResults(q);
@@ -82,7 +82,7 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 
 	public Results<ChemicalAnalysis> getAll(final PaginationParameters p,
 			final long subsampleId, long userId) throws MpDbException{
-		sess.enableFilter("chemicalAnalysisPublicOrUser").setParameter("userId", userId);
+		//sess.enableFilter("chemicalAnalysisPublicOrUser").setParameter("userId", userId);
 		final Query sizeQ = sizeQuery("ChemicalAnalysis.bySubsampleId",
 				subsampleId);
 		final Query pageQ = pageQuery("ChemicalAnalysis.bySubsampleId", p,

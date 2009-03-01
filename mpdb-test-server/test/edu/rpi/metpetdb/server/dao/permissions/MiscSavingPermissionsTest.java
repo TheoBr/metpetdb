@@ -1,9 +1,9 @@
 package edu.rpi.metpetdb.server.dao.permissions;
 
+import static org.junit.Assert.assertEquals;
+
 import java.security.Principal;
 import java.util.ArrayList;
-
-import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,6 @@ import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.model.Role;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
-import edu.rpi.metpetdb.server.InitDatabase;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
@@ -53,9 +52,7 @@ public class MiscSavingPermissionsTest extends DatabaseTestCase {
 		u.setName("tester");
 		u.setEmailAddress("tester@test.com");
 		u.setEncryptedPassword(PasswordEncrypter.crypt("asdf"));
-		InitDatabase.getSession().beginTransaction();
-		final User saved = new UserDAO(InitDatabase.getSession()).save(u);
-		InitDatabase.getSession().getTransaction().commit();
+		final User saved = new UserDAO(session).save(u);
 		// load it back
 		final User loaded = super.byId("User", saved.getId());
 		assertEquals(loaded.getEmailAddress(), saved.getEmailAddress());
@@ -74,9 +71,7 @@ public class MiscSavingPermissionsTest extends DatabaseTestCase {
 		final User u = super.byId("User", 8);
 		MpDbServlet.testReq.user = u;
 		u.setEnabled(true);
-		InitDatabase.getSession().beginTransaction();
-		final User saved = new UserDAO(InitDatabase.getSession()).save(u);
-		InitDatabase.getSession().getTransaction().commit();
+		final User saved = new UserDAO(session).save(u);
 		// load it back
 		final User loaded = super.byId("User", saved.getId());
 		assertEquals(loaded.getEmailAddress(), saved.getEmailAddress());

@@ -24,10 +24,13 @@
     <property name="locationError" column="location_error" />
     
     <property name="subsampleCount" formula="(select count(*) from subsamples s
-    																		where s.sample_id=sample_id)" />
-    <property name="imageCount" formula="(select count(*) from subsamples s
-							inner join images i on i.subsample_id = s.subsample_id
-							where s.sample_id = sample_id)" />
+    																		where s.sample_id=sample_id
+    																		AND (s.public_data='Y' OR s.user_id=user_id))" />
+	<property name="imageCount" formula="(select count(*) from images i
+										where (i.sample_id=sample_id AND (i.public_data='Y'
+										OR i.user_id=user_id)) OR (i.subsample_id IN (select ss.subsample_id
+										from subsamples ss where ss.sample_id=sample_id AND (ss.user_id=user_id 
+											OR ss.public_data='Y'))))" />
     <property name="analysisCount" formula="(select count(*) from subsamples s
 							inner join chemical_analyses ca on ca.subsample_id = s.subsample_id
 							where s.sample_id = sample_id)" />																		
@@ -35,9 +38,11 @@
     <many-to-one name="owner" column="user_id" lazy="false" />
     <many-to-one name="rockType" column="rock_type_id" lazy="false" />
 
-	<set name="subsamples" inverse="true" cascade="delete"  >
+	<set name="subsamples" inverse="true" cascade="delete" >
       <key column="sample_id" not-null="true"/>
       <one-to-many class="Subsample" />
+      <filter name="samplePublicOrUser"
+     		condition="( user_id=:userId OR public_data='Y')" />
     </set>
     
     <set name="comments" inverse="true" table="sample_comments" cascade="all-delete-orphan" lazy="false" >
@@ -68,6 +73,8 @@
     <set name="images" inverse="true" lazy="false">
       <key column="sample_id" />
       <one-to-many class="Image" />
+      <filter name="samplePublicOrUser"
+     		condition="( user_id=:userId OR public_data='Y')" />
     </set>
     
     <!-- Hibernate updates sets by using insert/delete, not update -->
@@ -88,6 +95,9 @@
      		
      <filter name="public"
      		condition="public_data='Y'" />
+     		
+     <filter name="samplePublicOrUser"
+     		condition="( user_id=:userId OR public_data='Y')" />
   </class>
   
   
@@ -209,10 +219,15 @@
   </filter-def>
   
   <filter-def name="user">
-    <filter-param name="id" type="long"/>
+    <filter-param name="id" type="int"/>
   </filter-def>
   <filter-def name="public">
   </filter-def>
+  <filter-def name="samplePublicOrUser">
+  	<filter-param name="userId" type="int" />
+  </filter-def>
+  
+  
  
 
 </hibernate-mapping>
