@@ -365,7 +365,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 
 			if ("projects_nk_alias".equals(constraintName))
 				return new ProjectAlreadyExistsException();
-			else if ("samples_nk_alias".equals(constraintName))
+			else if ("samples_nk_number".equals(constraintName))
 				return new SampleAlreadyExistsException();
 			else if ("users_nk_username".equals(constraintName))
 				return new UserAlreadyExistsException();
@@ -421,8 +421,8 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		final Req r = new Req();
 		r.principals = (Collection<Principal>) this.getThreadLocalRequest()
 				.getSession().getAttribute("principals");
-		r.user = (User) this.getThreadLocalRequest().getSession().getAttribute(
-				"user");
+		r.setUser((User) this.getThreadLocalRequest().getSession().getAttribute(
+		"user"));
 		perThreadReq.set(r);
 		String response = "Internal server error.";
 		try {
@@ -466,7 +466,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 
 	public static final class Req {
 		Session session;
-		Integer userId = 0;
+		Integer userId = null;
 		public User user;
 		public Action action;
 		public Collection<Principal> principals;
@@ -474,7 +474,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 		public void setUser(final User u) {
 			user = u;
 			if (u == null)
-				userId = 0;
+				userId = null;
 			else
 				userId = u.getId();
 		}
@@ -493,9 +493,10 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 				session = DataStore.open();
 				//enable filters to make it so loading public data does not load the private
 				//data unless the current user is the owner of the private data
-				session.enableFilter("samplePublicOrUser").setParameter("userId", userId);
-				session.enableFilter("subsamplePublicOrUser").setParameter("userId", userId);
-				session.enableFilter("chemicalAnalysisPublicOrUser").setParameter("userId", userId);
+				int userIdToUser = userId == null ? 0 : userId;
+				session.enableFilter("samplePublicOrUser").setParameter("userId", userIdToUser);
+				session.enableFilter("subsamplePublicOrUser").setParameter("userId", userIdToUser);
+				session.enableFilter("chemicalAnalysisPublicOrUser").setParameter("userId", userIdToUser);
 				session.beginTransaction();
 			}
 			return session;

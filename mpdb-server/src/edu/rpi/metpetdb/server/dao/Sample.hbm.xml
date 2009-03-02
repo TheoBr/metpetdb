@@ -219,7 +219,7 @@
   </filter-def>
   
   <filter-def name="user">
-    <filter-param name="id" type="int"/>
+    <filter-param name="id" type="long"/>
   </filter-def>
   <filter-def name="public">
   </filter-def>

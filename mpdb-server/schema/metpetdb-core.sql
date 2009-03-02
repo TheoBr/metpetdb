@@ -156,7 +156,7 @@ CREATE TABLE sample_minerals
 (
   mineral_id INT2 NOT NULL,
   sample_id INT8 NOT NULL,
-  amount FLOAT4,
+  amount FLOAT8,
   CONSTRAINT sample_minerals_nk PRIMARY KEY (mineral_id, sample_id),
   CONSTRAINT mineral_samples_fk_min FOREIGN KEY (mineral_id)
     REFERENCES minerals (mineral_id)
