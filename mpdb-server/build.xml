@@ -93,10 +93,10 @@
 				<include name="log4j.properties" />
 				<include name="files.properties" />
 				<include name="builddate.properties" />
+				<include name="autologin.properties" />
 				<include name="${hibernate_cfg}" />
 				<include name="**/*.hbm.xml" />
 				<include name="**/*.class" />
-				<include name="jaas.properties" />
 			</classes>
 			<classes dir="${mpdb-common-dir}/bin">
 				<include name="**/*.class" />
@@ -117,6 +117,41 @@
 		  </fileset>
 		</chmod>
 		
+	</target>
+	
+	<target name="war-only" description="Generates a .war file for use with a servlet container(Apache Tomcat) (DOES NOT COMPILE)">
+			<mkdir dir="${build}" />
+			<war destfile="${war}" filesonly="true" webxml="${basedir}/web.xml">
+				<fileset dir="${mpdb-client-dir}/build/${app_name}" />
+				<classes dir="${basedir}/bin">
+					<include name="email.properties" />
+					<include name="log4j.properties" />
+					<include name="files.properties" />
+					<include name="builddate.properties" />
+					<include name="autologin.properties" />
+					<include name="${hibernate_cfg}" />
+					<include name="**/*.hbm.xml" />
+					<include name="**/*.class" />
+				</classes>
+				<classes dir="${mpdb-common-dir}/bin">
+					<include name="**/*.class" />
+				</classes>
+				<classes dir="${mpdb-client-dir}/bin">
+					<include name="**/*.class" />
+				</classes>
+				<!--
+				<fileset dir="${mpdb-common-dir}/docs" />
+				<fileset dir="${mpdb-common-dir}/reports" />
+				-->
+				<lib dir="${ctx_lib_server}" includes="*" />
+				<lib dir="${ctx_lib}" includes="*" />
+				<lib dir="${gwt_home}" includes="gwt-servlet.jar" />
+			</war>
+			<chmod perm="g+w" type="both">
+			  <fileset dir="${build}">
+			  </fileset>
+			</chmod>
+			
 	</target>
 
 	<target name="clean" description="Cleans the build by deleting bin and .gwt-cache dirs">
@@ -152,13 +187,8 @@
 	</target>
 	
 	<target name="tomcat-anthony" depends="war">
-			
-			<exec executable="/opt/apache-tomcat-5.5.26/bin/shutdown.sh" taskname="tomcat">
-			</exec>
-		<copy file="${war}" tofile="/opt/apache-tomcat-5.5.26/webapps/MetPetDB.war" />
-		<delete dir="/opt/apache-tomcat-5.5.26/webapps/MetPetDB/" />
-		<exec executable="/opt/apache-tomcat-5.5.26/bin/startup.sh" taskname="tomcat">
-					</exec>
+		<delete failonerror="true"  dir="/usr/share/tomcat-6/webapps/MetPetDB/" />	
+		<copy failonerror="true"  file="${war}" tofile="/usr/share/tomcat-6/webapps/MetPetDB.war" />
 		</target>
 	
 	<target name="tomcat-zak" depends="war">
