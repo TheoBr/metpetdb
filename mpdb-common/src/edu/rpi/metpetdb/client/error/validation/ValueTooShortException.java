@@ -20,7 +20,4 @@ public class ValueTooShortException extends ValidationException {
 				.errorDesc_TooShort(formatPropertyName(), n);
 	}
 
-	public String getMessage() {
-		return format();
-	}
 }

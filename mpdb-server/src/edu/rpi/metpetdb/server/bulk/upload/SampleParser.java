@@ -129,11 +129,16 @@ public class SampleParser extends Parser<Sample> {
 					// check if the actual column is a column of minerals
 					// search for the correct mineral (so alternate minerals
 					// work)
-					for (Mineral mineral : minerals) {
-						if (mineral.getName().equalsIgnoreCase(cell.toString())) {
-							currentObject.addMineral(getRealMineral(mineral));
-							break;
+					if (cell.toString().length() > 0) {
+						for (Mineral mineral : minerals) {
+							if (mineral.getName().equalsIgnoreCase(cell.toString())) {
+								currentObject.addMineral(getRealMineral(mineral));
+								break;
+							}
 						}
+						//if we got here the cell name doesn't equal a mineral so take the one formed
+						//above from the header
+						currentObject.addMineral(m);
 					}
 				}
 			}

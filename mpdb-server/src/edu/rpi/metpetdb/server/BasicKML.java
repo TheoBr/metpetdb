@@ -94,7 +94,7 @@ public class BasicKML extends HttpServlet {
 				response.getWriter().write(
 						"<![CDATA[\n" + "<a href='" + baseURL
 								+ theSample.getId() + "'>"
-								+ theSample.getNumber() + "</a>  ]]>");
+								+ theSample.getNumber() + "</a> ");
 
 				/* Add Sample info that isn't null */
 				if (theSample.getDescription() != null) {
@@ -121,7 +121,7 @@ public class BasicKML extends HttpServlet {
 							"&lt;br&gt; IGSN: " + theSample.getSesarNumber());
 				}
 
-				response.getWriter().write("</description>\n");
+				response.getWriter().write(" ]]></description>\n");
 				response.getWriter().write(" <Point>\n");
 
 				response.getWriter().write(
