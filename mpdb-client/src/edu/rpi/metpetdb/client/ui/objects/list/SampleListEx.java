@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.ui.objects.list;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
 
 import org.postgis.Point;
@@ -14,6 +15,7 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MetamorphicGrade;
 import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.Region;
+import edu.rpi.metpetdb.client.model.RockType;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.User;
@@ -147,8 +149,9 @@ public abstract class SampleListEx extends ListEx<Sample> {
 						text = "------";
 					} else
 						text = text.substring(0,text.length()-2);
-					return new MCollapsedText(text);
-
+					
+					String tooltipData = processTooltipData(data, text);
+					return new MCollapsedText(text, tooltipData);
 				}
 			},
 			new Column(true,enttxt.Sample_references(), SampleProperty.references, false, true) {
@@ -228,5 +231,29 @@ public abstract class SampleListEx extends ListEx<Sample> {
 	public String getDefaultSortParameter() {
 		return SampleProperty.number.name();
 	}
-
+	
+	private static String processTooltipData(MObject data, String mineralText){
+		String tooltipData = new String();
+		
+		for(Column c: columns){	
+			//Columns to skip
+			if(c.getTitle() == "Check"){}
+			//bold for the minerals since that's what's being looked at
+			else if(c.getTitle() == "Minerals"){
+				tooltipData += "<b>" + c.getTitle() + ": " +
+				mineralText + "</b></br>";
+			}
+			else{
+				tooltipData += c.getTitle() + ": ";
+				//null values or special case for IGSN
+				if(c.getRepresentation(data, 0) == "" || (c.getRepresentation(data, 0).toString().length() == 40 && c.getTitle() == "IGSN"))
+					tooltipData += "------";
+				else
+					tooltipData += c.getRepresentation(data, 0);
+				tooltipData += "</br>";
+			}				
+		}
+		return tooltipData;
+	}
+	
 }

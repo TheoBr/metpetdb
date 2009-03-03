@@ -6,7 +6,11 @@ import com.google.gwt.user.client.ui.Label;
 public class MCollapsedText extends Label {
 	
 	public MCollapsedText(String text){
-		this(text, 8000, 15);
+		this(text, 20000, 15);
+	}
+	
+	public MCollapsedText(String text, String tooltipData){
+		this(text, tooltipData, 20000, 15);
 	}
 
 	public MCollapsedText(String textFull, int timeout, int truncLength) {
@@ -18,5 +22,22 @@ public class MCollapsedText extends Label {
 		}
 		setText(textTruncated);
 	}
+	
+	public MCollapsedText(String textFull, String tooltipData, int timeout, int truncLength){
+		String textTruncated = textFull;
+		if(textTruncated.length() > truncLength){
+			addMouseListener(new TooltipListener(tooltipData, timeout, "dialogBox-content"));
+			textTruncated = textTruncated.substring(0, truncLength - 3);
+			textTruncated += "...";
+		}
+		setText(textTruncated);
+	}
+	
+	public String getText(){
+		return textFull;
+	}
+	
+	private String textFull;
+
 	
 }

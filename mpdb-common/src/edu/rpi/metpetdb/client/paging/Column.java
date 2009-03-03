@@ -159,7 +159,7 @@ public class Column {
 	 * @return the text
 	 */
 	protected Object getText(final MObject data, final int row) {
-		return "";
+		return data.mGet(getProperty()).toString();
 	}
 
 	/**
