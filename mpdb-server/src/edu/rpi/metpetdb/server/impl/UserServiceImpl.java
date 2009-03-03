@@ -164,7 +164,9 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 							getModuleBaseURL() + "#ConfirmationCode/"
 									+ u.getConfirmationCode()
 					});
-			setCurrentUser(u, null);
+			final Collection<Principal> principals = new ArrayList<Principal>();
+			principals.add(new OwnerPrincipal(u));
+			setCurrentUser(u, principals);
 		} catch (ConstraintViolationException cve) {
 			final String who = newUser.getEmailAddress();
 			if ("users_nk_username".equals(cve.getConstraintName()))
@@ -246,10 +248,18 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		if (u.getConfirmationCode().equals(confirmationCode) && !u.getEnabled()) {
 			u.setEnabled(true);
 			u.setConfirmationCode("");
-			ud.save(u);
+			u = ud.save(u);
 			commit();
 			// update session with new permission
-			addPrincipal(new EnabledPrincipal(u));
+			final Collection<Principal> principals;
+			if (currentReq().principals != null)
+				principals = currentReq().principals;
+			else
+				principals = new HashSet<Principal>();
+			//remove any old enabled principals
+			principals.remove(new EnabledPrincipal(false));
+			principals.add(new EnabledPrincipal(u));
+			setCurrentUser(u, principals);
 			return u;
 		} else {
 			throw new GenericDAOException("Confirmation code does not equal");

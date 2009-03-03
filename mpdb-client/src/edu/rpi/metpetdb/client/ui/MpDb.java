@@ -78,13 +78,13 @@ public class MpDb {
 	public static final BulkUploadImagesServiceAsync bulkUploadImages_svc;
 
 	public static final SearchServiceAsync search_svc;
-	
+
 	public static final RegionServiceAsync region_svc;
-	
+
 	public static final ImageTypeServiceAsync imageType_svc;
-	
+
 	public static final ReferenceServiceAsync reference_svc;
-	
+
 	public static final MetamorphicGradeServiceAsync metamorphicGrade_svc;
 
 	public static DatabaseObjectConstraints doc;
@@ -92,7 +92,7 @@ public class MpDb {
 	public static ObjectConstraints oc;
 
 	protected static User currentUser;
-	
+
 	public static final String WIKI_URL = "http://wiki.cs.rpi.edu/trac/metpetdb";
 	public static final String JAVADOC_URL = "http://samana.cs.rpi.edu:8080/metpetwebtst/api/index.html";
 	public static final String JUNIT_URL = "http://samana.cs.rpi.edu:8080/metpetwebtst/reports/index.html";
@@ -140,19 +140,19 @@ public class MpDb {
 
 		search_svc = (SearchServiceAsync) bindService(GWT
 				.create(SearchService.class), "search");
-		
+
 		region_svc = (RegionServiceAsync) bindService(GWT
 				.create(RegionService.class), "region");
-		
+
 		imageType_svc = (ImageTypeServiceAsync) bindService(GWT
 				.create(ImageTypeService.class), "imageType");
-		
+
 		reference_svc = (ReferenceServiceAsync) bindService(GWT
 				.create(ReferenceService.class), "reference");
-		
+
 		metamorphicGrade_svc = (MetamorphicGradeServiceAsync) bindService(GWT
 				.create(MetamorphicGradeService.class), "metamorphicGrade");
-		
+
 		// factory = (HtmlFactory) GWT.create(HtmlFactory.class);
 	}
 
@@ -178,13 +178,15 @@ public class MpDb {
 	public static void setCurrentUser(final User n) {
 		final User o = currentUser;
 		currentUser = n;
-		if (o != n && (o == null || n == null || o.getId() != n.getId())) {
+		if (o != n
+				&& (o == null || n == null || o.getId() != n.getId() || o
+						.getEnabled() != n.getEnabled())) {
 			MetPetDBApplication.onCurrentUserChanged(n);
 			if (n != null) {
 
 			}
 		}
-		//end the session if we are setting it to null
+		// end the session if we are setting it to null
 		if (n == null) {
 			new VoidServerOp() {
 				public void begin() {
@@ -200,7 +202,7 @@ public class MpDb {
 	// Creates user history in the left column
 	// My Samples and My Projects history
 	public static void createUserHistory(User n) {
-//		MetPetDBApplication.clearLeftSide();
+		// MetPetDBApplication.clearLeftSide();
 
 	}
 
