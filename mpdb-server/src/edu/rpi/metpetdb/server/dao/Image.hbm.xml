@@ -33,8 +33,8 @@
       <one-to-many class="ImageComment" />
     </set>
 
-   <many-to-one name="subsample" column="subsample_id" class="Subsample" />
-   <many-to-one name="sample" column="sample_id" class="Sample"  cascade="none"/>
+   <many-to-one name="subsample" column="subsample_id" class="Subsample" lazy="false" />
+   <many-to-one name="sample" column="sample_id" class="Sample"  cascade="none" lazy="false"/>
    <many-to-one name="imageType" column="image_type_id" class="ImageType" lazy="false" cascade="none"/>
    
    <joined-subclass name="XrayImage" table="xray_image">
