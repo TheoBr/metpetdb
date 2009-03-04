@@ -5,3 +5,8 @@
 .samples-container {
 	margin: 0 10px 10px;
 }
+
+.samples-container .sample-number {
+	padding-right: 20px;
+	background: transparent url(../images/icon-info-small.png) no-repeat right 50%;
+}

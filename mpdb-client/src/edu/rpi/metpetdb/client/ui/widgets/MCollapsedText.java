@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.Label;
 
 
 public class MCollapsedText extends Label {
+	private String textFull;
 	
 	public MCollapsedText(String text){
 		this(text, 20000, 15);
@@ -36,8 +37,5 @@ public class MCollapsedText extends Label {
 	public String getText(){
 		return textFull;
 	}
-	
-	private String textFull;
-
 	
 }

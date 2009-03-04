@@ -8,7 +8,11 @@ import java.util.Set;
 import org.postgis.Point;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -31,6 +35,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MCollapsedText;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
+import edu.rpi.metpetdb.client.ui.widgets.TooltipListener;
 
 public abstract class SampleListEx extends ListEx<Sample> {
 
@@ -53,6 +58,18 @@ public abstract class SampleListEx extends ListEx<Sample> {
 			},
 			new Column(true,enttxt.Sample_number(), SampleProperty.number, true) {
 				protected Object getWidget(final MObject data,
+						final int currentRow) {
+					MLink sampleNumber = new MLink((String) data.mGet(SampleProperty.number),
+							TokenSpace.detailsOf((Sample) data));
+					sampleNumber.addMouseListener(new TooltipListener("Loading...", 0, "sample-infobox"){
+						public String getTooltipContents() {
+							return processTooltipData(data);
+						}
+					});
+					sampleNumber.addStyleName("sample-number");
+					return sampleNumber;
+				}
+				public Object getTooltipRepresentation(final MObject data,
 						final int currentRow) {
 					return new MLink((String) data.mGet(SampleProperty.number),
 							TokenSpace.detailsOf((Sample) data));
@@ -136,6 +153,14 @@ public abstract class SampleListEx extends ListEx<Sample> {
 			new Column(true,enttxt.Sample_minerals(), SampleProperty.minerals, false, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
+					String text = getText(data);
+					return new MCollapsedText(text);
+				}
+				public Object getTooltipRepresentation(final MObject data,
+						final int currentRow) {
+					return getText(data); 
+				}
+				private String getText(final MObject data) {
 					Set<SampleMineral> minerals = ((Set<SampleMineral>) data.mGet(SampleProperty.minerals));
 					String text = "";
 					for (SampleMineral m : minerals){
@@ -149,9 +174,7 @@ public abstract class SampleListEx extends ListEx<Sample> {
 						text = "------";
 					} else
 						text = text.substring(0,text.length()-2);
-					
-					String tooltipData = processTooltipData(data, text);
-					return new MCollapsedText(text, tooltipData);
+					return text;
 				}
 			},
 			new Column(true,enttxt.Sample_references(), SampleProperty.references, false, true) {
@@ -232,27 +255,25 @@ public abstract class SampleListEx extends ListEx<Sample> {
 		return SampleProperty.number.name();
 	}
 	
-	private static String processTooltipData(MObject data, String mineralText){
-		String tooltipData = new String();
+	private static String processTooltipData(MObject data){
+		String tooltipData = "<table class=\"info\" cellspacing=\"0\"><tbody>";
 		
 		for(Column c: columns){	
-			//Columns to skip
-			if(c.getTitle() == "Check"){}
-			//bold for the minerals since that's what's being looked at
-			else if(c.getTitle() == "Minerals"){
-				tooltipData += "<b>" + c.getTitle() + ": " +
-				mineralText + "</b></br>";
-			}
-			else{
-				tooltipData += c.getTitle() + ": ";
+			
+			if(c.getTitle() == "Check") {
+				continue;
+			} else {
+				String value = c.getTooltipRepresentation(data, 0).toString();
+				tooltipData += "<tr><th>"+ c.getTitle() + "</th><td>";
 				//null values or special case for IGSN
-				if(c.getRepresentation(data, 0) == "" || (c.getRepresentation(data, 0).toString().length() == 40 && c.getTitle() == "IGSN"))
-					tooltipData += "------";
+				if (value == "" || (value.length() == 40 && c.getTitle() == "IGSN"))
+					tooltipData += "&#8211;";
 				else
-					tooltipData += c.getRepresentation(data, 0);
-				tooltipData += "</br>";
+					tooltipData += value;
+				tooltipData += "</td></tr>";
 			}				
 		}
+		tooltipData += "</tbody></table>";
 		return tooltipData;
 	}
 	

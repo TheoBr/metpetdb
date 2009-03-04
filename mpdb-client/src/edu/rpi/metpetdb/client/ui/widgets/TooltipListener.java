@@ -25,15 +25,15 @@ import com.google.gwt.user.client.ui.Widget;
  * nameLabel.setText(nameTruncated);
  */
 public class TooltipListener extends MouseListenerAdapter {
-	private static final String DEFAULT_TOOLTIP_STYLE = "TooltipPopup";
+	private static final String DEFAULT_TOOLTIP_STYLE = "tooltip-popup";
 	private static final int DEFAULT_OFFSET_X = 10;
 	private static final int DEFAULT_OFFSET_Y = 25;
 
 	private Widget widgetLaunching;
 
-	private class Tooltip extends PopupPanel {
+	public class Tooltip extends PopupPanel {
 		private final int delay;
-		private final HTML contents = new HTML();
+		protected final HTML contents = new HTML();
 
 		public Tooltip(String text, int delay, String styleName) {
 			super(true);
@@ -41,7 +41,7 @@ public class TooltipListener extends MouseListenerAdapter {
 
 			contents.setHTML(text);
 			contents.addClickListener(hideClickListener);
-			contents.addStyleName("tooltipContent");
+			contents.addStyleName("tooltip-content");
 			add(contents);
 
 			setStyleName(styleName);
@@ -66,7 +66,7 @@ public class TooltipListener extends MouseListenerAdapter {
 				setPopupPosition(left, top);
 			}
 			super.show();
-			hideTimer.schedule(delay);
+			if (delay > 0) hideTimer.schedule(delay);
 		}
 		
 		public void setContents(String html) {
@@ -89,6 +89,7 @@ public class TooltipListener extends MouseListenerAdapter {
 
 	public void onMouseEnter(Widget sender) {
 		widgetLaunching = sender;
+		setTooltipContents(getTooltipContents());
 		tooltip.show();
 	}
 
@@ -114,6 +115,10 @@ public class TooltipListener extends MouseListenerAdapter {
 	
 	public void setTooltipContents(String html) {
 		tooltip.setContents(html);
+	}
+	
+	public String getTooltipContents() {
+		return tooltip.contents.getHTML();
 	}
 
 }

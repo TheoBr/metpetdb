@@ -128,10 +128,20 @@ public class Column {
 	 * @return either a string or a widget
 	 */
 	public Object getRepresentation(final MObject data, final int row) {
-		if (getWidget(data, row) == null)
-			return getText(data, row);
-		else
-			return getWidget(data, row);
+		return getWidget(data, row);
+	}
+	
+	/**
+	 * Returns the custom widget/text in this column for displaying in a tooltip
+	 * 
+	 * @param data
+	 * 		the bean that is being worked on
+	 * @param row
+	 * 		the row that is being worked on
+	 * @return either a string or a widget
+	 */
+	public Object getTooltipRepresentation(final MObject data, final int row) {
+		return getWidget(data, row);
 	}
 
 	/**
@@ -145,7 +155,7 @@ public class Column {
 	 * @return the widget
 	 */
 	protected Object getWidget(final MObject data, final int row) {
-		return null;
+		return getText(data, row);
 	}
 
 	/**

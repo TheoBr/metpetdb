@@ -77,3 +77,23 @@
 .popup-custom-cols-bottom button {
 	margin-left: 10px;
 }
+
+/*-------------------------------------
+          sample infobox tooltip
+ --------------------------------------*/
+.sample-infobox {
+	background-color: #f4f4f4;
+	max-width: 500px;
+}
+.sample-infobox .tooltip-content {
+	border: 1px solid #c4c4c4;
+}
+.sample-infobox .info th,
+.sample-infobox .info td {
+	padding: 0.2em 0.3em;
+}
+.sample-infobox .info th {
+	color: #575757;
+	font-weight: normal;
+	text-align: right;
+}

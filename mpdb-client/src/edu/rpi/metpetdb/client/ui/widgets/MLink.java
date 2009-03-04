@@ -6,20 +6,25 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.ClickListenerCollection;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.MouseListener;
+import com.google.gwt.user.client.ui.MouseListenerCollection;
 import com.google.gwt.user.client.ui.SourcesClickEvents;
+import com.google.gwt.user.client.ui.SourcesMouseEvents;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.TokenHandler;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 
-public class MLink extends Widget implements HasText, SourcesClickEvents {
+public class MLink extends Widget implements HasText, SourcesClickEvents, SourcesMouseEvents {
 	private String targetHistoryToken;
 	private ClickListenerCollection clickListeners;
+	private MouseListenerCollection mouseListeners;
 	private boolean usePureHref = false;
 
 	public MLink() {
 		setElement(DOM.createAnchor());
 		sinkEvents(Event.ONCLICK);
+		sinkEvents(Event.MOUSEEVENTS);
 	}
 	
 	public MLink(final String text, final TokenHandler whereTo) {
@@ -92,5 +97,27 @@ public class MLink extends Widget implements HasText, SourcesClickEvents {
 				DOM.eventPreventDefault(event);
 			}
 		}
+		switch (event.getTypeInt()) {
+
+	      case Event.ONMOUSEOVER:
+	      case Event.ONMOUSEOUT:
+	        if (mouseListeners != null) {
+	          mouseListeners.fireMouseEvent(this, event);
+	        }
+	        break;
+		 }
 	}
+
+	public void addMouseListener(MouseListener listener) {
+	    if (mouseListeners == null) {
+	      mouseListeners = new MouseListenerCollection();
+	    }
+	    mouseListeners.add(listener);
+	  }
+
+	public void removeMouseListener(MouseListener listener) {
+	    if (mouseListeners != null) {
+	      mouseListeners.remove(listener);
+	    }
+	  }
 }
