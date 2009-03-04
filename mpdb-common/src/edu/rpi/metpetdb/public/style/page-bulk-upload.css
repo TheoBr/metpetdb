@@ -38,6 +38,9 @@
 .bulk-upload-form .gwt-FileUpload {
 	width: 500px;
 }
+.bulk-upload .progressbar-container {
+	margin: 10px 0;
+} 
 
 /*-------------------------------------
 	         Results

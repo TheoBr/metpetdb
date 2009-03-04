@@ -66,7 +66,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 	private final FlowPanel progressContainer = new FlowPanel();
 	private final ProgressBar uploadProgress = new ProgressBar();
 	private final Timer progressTimer;
-	private final MButton cancelProgress = new MButton("Cancel");
+	private final MLink cancelProgress;
 
 	private final MHtmlList uploadTypeList = new MHtmlList();
 	private final RadioButton samplesRadio = new RadioButton("type", "Samples");
@@ -138,6 +138,12 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		main.add(progressContainer);
 		progressContainer.setStyleName(CSS.PROGRESSBAR_CONTAINER);
 		
+		cancelProgress = new MLink("Cancel", new ClickListener() {
+			public void onClick(Widget sender) {
+				// TODO Cancel progress
+			}
+		});
+		progressContainer.add(cancelProgress);
 		progressContainer.add(uploadProgress);
 		uploadProgress.setMinProgress(0);
 		uploadProgress.setMaxProgress(1);
@@ -163,7 +169,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				}
 			}
 		};
-		progressContainer.add(cancelProgress);
+		
 
 		main.add(resultsPanel);
 		resultsPanel.addStyleName(CSS.BULK_RESULTS);
@@ -265,7 +271,6 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			public void onSuccess(BulkUploadResult result) {
 				hide(progressContainer);
 				handleCommitErrors(result);
-				show(nextStepPanel);
 			}
 			public void onFailure(final Throwable e) {
 				hide(progressContainer);
@@ -340,8 +345,9 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			commitButton.setEnabled(true);
 			resetLink.setText("Reset the form");
 			resultsPanel.selectTab(2);
+			show(nextStepPanel);
 		} else {
-			resultStatus.sendNotice(NoticeType.SUCCESS, " added to MetPetDB.");
+			resultStatus.sendNotice(NoticeType.SUCCESS, "Successfully added " + getPlural(contentType) + " to MetPetDB.");
 			hide(resultsPanel);
 			hide(nextStepPanel);
 		}

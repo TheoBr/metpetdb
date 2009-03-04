@@ -83,23 +83,34 @@
 				ProgressBar
 ---------------------------------------*/
 .progressbar-container {
-	border: 1px solid #bebebe;
-	background-color: #fff;
-	padding: 1px;
-	margin: 10px;
+	position: relative;
+	padding-right: 18px;
 }
 .gwt-ProgressBar-shell {
-	background-color: #f2f2f2;
-	height: 17px;
+	background: #fff url(../images/progress-shell-bg.gif) repeat-x left top;
+	height: 24px;
+	border: 1px solid #d6d6d6;
 }
 .gwt-ProgressBar-shell .gwt-ProgressBar-bar {
-	background-color: #97b814;
+	background: #4a91cf url(../images/progress-bar-bg.gif) repeat-x left top;
 }
 .gwt-ProgressBar-shell .gwt-ProgressBar-text {
-	color: #aaa;
+	color: #888;
+	top: 4px !important;
 }
 .gwt-ProgressBar-shell .gwt-ProgressBar-text-secondHalf {
 	color: #fff;
+}
+.progressbar-container a {
+	display: block;
+	position: absolute;
+	right: 0;
+	top: 50%;
+	width: 13px;
+	height: 13px;
+	text-indent: -9999px;
+	background: transparent url(../images/icon-cancel.png) no-repeat 50% 50%;
+	margin-top: -6px;
 }
 
 /*-------------------------------------
