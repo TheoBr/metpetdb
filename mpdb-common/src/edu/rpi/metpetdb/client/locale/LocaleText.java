@@ -51,6 +51,9 @@ public interface LocaleText extends Messages {
 
 	/* Comments */
 	String comments();
+	
+	/* Google Earth */
+	String googleEarth_GoToSample();
 
 	/* Search */
 	String search();

@@ -8,15 +8,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.maps.client.MapType;
-import com.google.gwt.maps.client.MapWidget;
-import com.google.gwt.maps.client.control.SmallMapControl;
-import com.google.gwt.maps.client.event.EarthInstanceHandler;
-import com.google.gwt.maps.client.event.EarthInstanceHandler.EarthInstanceEvent;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -44,9 +38,8 @@ import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
-import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
-import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarth;
+import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarthPopUp;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 
@@ -68,7 +61,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	private MLink exportExcel;
 	private MLink exportGoogleEarth;
 	private MLink viewGoogleEarth;
-	private MDialogBox earthPopup = new MDialogBox();
+	private MGoogleEarthPopUp earthPopup = new MGoogleEarthPopUp();
 
 	public UserSamplesList() {
 	}
@@ -91,37 +84,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	}
 
 	private void doViewGoogleEarth() {
-		final FlowPanel earthContainer = new FlowPanel();
-		final Button close = new Button("Close");
-		close.addClickListener(new ClickListener(){
-			public void onClick(final Widget sender){
-				earthPopup.hide();
-			}
-		});
-		final MapWidget map = new MapWidget();
-		new ServerOp<String>(){
-			public void begin(){
-				final String baseURL = GWT.getModuleBaseURL() + "#" + 
-				LocaleHandler.lc_entity.TokenSpace_Sample_Details() + LocaleHandler.lc_text.tokenSeparater();
-				MpDb.search_svc.createKML((ArrayList<Sample>) list.data, baseURL, this);
-			}
-			public void onSuccess(final String kml){
-				map.getEarthInstance(new EarthInstanceHandler(){
-					public void onEarthInstance(final EarthInstanceEvent e){
-						MGoogleEarth.parseKML(e,kml);
-				      }
-				});
-			}
-		}.begin();
-		
-		map.setSize("500px", "500px");
-	    map.addControl(new SmallMapControl());
-	    map.addMapType(MapType.getEarthMap());
-	    map.setCurrentMapType(MapType.getEarthMap());
-	    
-    	earthContainer.add(map);
-    	earthContainer.add(close);
-		earthPopup.setWidget(earthContainer);
+		earthPopup.createUI((ArrayList<Sample>) list.data);
 		earthPopup.show();
 	}
 	
