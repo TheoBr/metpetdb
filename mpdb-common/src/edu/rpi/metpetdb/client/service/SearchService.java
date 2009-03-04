@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.List;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
@@ -26,4 +28,7 @@ public interface SearchService extends RemoteService {
 	void setSessionLastSearchPagination(final PaginationParameters p);
 	
 	PaginationParameters getSessionLastSearchPagination();
+	
+	String createKML(final List<Sample> samples, final String baseURL);
+	
 }

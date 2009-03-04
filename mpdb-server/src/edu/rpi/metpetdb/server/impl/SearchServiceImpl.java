@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.util.List;
+
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.security.NoPermissionsException;
 import edu.rpi.metpetdb.client.model.Sample;
@@ -8,6 +10,7 @@ import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SearchService;
+import edu.rpi.metpetdb.server.KMLCreater;
 import edu.rpi.metpetdb.server.search.SearchDb;
 import edu.rpi.metpetdb.server.search.lucene.RegenerateIndices;
 
@@ -47,5 +50,11 @@ public class SearchServiceImpl extends SampleServiceImpl implements
 	public PaginationParameters getSessionLastSearchPagination() {
 		return getLastSearchPagination();
 	}
+	
+	public String createKML(final List<Sample> samples, final String baseURL){
+		return KMLCreater.createKML(samples, baseURL);
+	}
+	
+	
 
 }

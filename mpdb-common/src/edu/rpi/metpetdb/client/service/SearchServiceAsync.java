@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.List;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.model.Sample;
@@ -26,4 +28,6 @@ public interface SearchServiceAsync {
 	void setSessionLastSearchPagination(final PaginationParameters p, AsyncCallback<Void> ac);
 	
 	void getSessionLastSearchPagination(AsyncCallback<PaginationParameters> ac);
+	
+	void createKML(final List<Sample> samples, final String baseURL, AsyncCallback<String> KML);
 }

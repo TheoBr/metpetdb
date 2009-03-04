@@ -6,9 +6,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.maps.client.MapType;
+import com.google.gwt.maps.client.MapWidget;
+import com.google.gwt.maps.client.control.SmallMapControl;
+import com.google.gwt.maps.client.event.EarthInstanceHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -32,6 +37,7 @@ import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.FormOp;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
+import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchInterface;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabAttribute;
@@ -42,6 +48,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabMine
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabProvenance;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabRockTypes;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
+import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarth;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 
@@ -60,10 +67,12 @@ public class Search extends MPagePanel implements PageChangeListener {
 	private static final String samplesParameter = "Samples";
 	private final MLink exportExcel = new MLink();
 	private final MLink exportGoogleEarth = new MLink();
+	private final MLink viewGoogleEarth = new MLink();
 	private MLink customCols;
 	private final FlowPanel columnViewPanel = new FlowPanel();
 	private FlowPanel samplesContainer = new FlowPanel();
 	private final ObjectSearchPanel searchPanel;
+	private MDialogBox earthPopup = new MDialogBox();
 	
 	private SearchSample ss;
 	private final SampleListEx sampleList = new SampleListEx(
@@ -117,6 +126,14 @@ public class Search extends MPagePanel implements PageChangeListener {
 		});
 		sui.passActionWidget(exportGoogleEarth);
 		
+		viewGoogleEarth.setText("View in Google Earth");
+		viewGoogleEarth.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				viewGoogleEarth();
+			}
+		});
+		sui.passActionWidget(viewGoogleEarth);
+		
 		add(searchPanel);
 		
 		createViewFromCookie();
@@ -164,7 +181,7 @@ public class Search extends MPagePanel implements PageChangeListener {
 		sampleList.getScrollTable().gotoPage(currentpage, false);
 		Hidden data = new Hidden("excel",values);
 		fp.add(data);
-		fp.setAction(GWT.getModuleBaseURL() + "excel.svc");
+		fp.setAction(GWT.getModuleBaseURL() + "excel.svc?");
 		fp.setVisible(false);
 		add(fp);
 		fp.submit();
@@ -188,6 +205,41 @@ public class Search extends MPagePanel implements PageChangeListener {
 		fp.setVisible(false);
 		add(fp);
 		fp.submit();
+	}
+	
+	public void viewGoogleEarth() {
+		final FlowPanel earthContainer = new FlowPanel();
+		final Button close = new Button("Close");
+		close.addClickListener(new ClickListener(){
+			public void onClick(final Widget sender){
+				earthPopup.hide();
+			}
+		});
+		final MapWidget map = new MapWidget();
+		new ServerOp<String>(){
+			public void begin(){
+				final String baseURL = GWT.getModuleBaseURL() + "#" + 
+				LocaleHandler.lc_entity.TokenSpace_Sample_Details() + LocaleHandler.lc_text.tokenSeparater();
+				MpDb.search_svc.createKML((ArrayList<Sample>) sampleList.data, baseURL, this);
+			}
+			public void onSuccess(final String kml){
+				map.getEarthInstance(new EarthInstanceHandler(){
+					public void onEarthInstance(final EarthInstanceEvent e){
+						MGoogleEarth.parseKML(e,kml);
+				      }
+				});
+			}
+		}.begin();
+		
+		map.setSize("500px", "500px");
+	    map.addControl(new SmallMapControl());
+	    map.addMapType(MapType.getEarthMap());
+	    map.setCurrentMapType(MapType.getEarthMap());
+	    
+    	earthContainer.add(map);
+    	earthContainer.add(close);
+		earthPopup.setWidget(earthContainer);
+		earthPopup.show();
 	}
 	
 	private void buildSampleFilters() {

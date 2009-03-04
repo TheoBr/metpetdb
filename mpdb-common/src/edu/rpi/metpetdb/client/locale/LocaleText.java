@@ -55,6 +55,7 @@ public interface LocaleText extends Messages {
 	/* Search */
 	String search();
 	String search_exportExcel();
+	String search_viewGoogleEarth();
 	String search_exportKML();
 	String search_exportResults();
 	String search_noSamplesFound();

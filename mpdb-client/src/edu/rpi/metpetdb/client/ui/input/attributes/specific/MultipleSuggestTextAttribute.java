@@ -91,7 +91,7 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute impl
 
 	public MultipleInputPanel createOptionalSuggestBox(final String s) {
 		final MultipleInputPanel panel = new MultipleInputPanel();
-		final MSuggestText st = new MSuggestText(suggestions,false);
+		final MSuggestText st = new MSuggestText(suggestions,true);
 		st.suggestBox.setText(s);
 		st.suggestBox.addChangeListener(this);
 		st.suggestBox.addEventHandler(this);

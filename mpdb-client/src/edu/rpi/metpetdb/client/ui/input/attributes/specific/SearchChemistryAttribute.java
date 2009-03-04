@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestionEvent;
 import com.google.gwt.user.client.ui.SuggestionHandler;
 import com.google.gwt.user.client.ui.TextBox;
@@ -31,6 +32,7 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
+import edu.rpi.metpetdb.client.ui.widgets.MMultiWordSuggestOracle;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
@@ -38,6 +40,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
 public class SearchChemistryAttribute extends SearchGenericAttribute {
 	private Map<RowContainer,String> currentCriteria = new HashMap<RowContainer,String>();
 	private MHtmlList editList;
+	private final static String lessThanEqualToHTML = " &#8804 ";
 	protected final ArrayList<Widget> realEditWidgets = new ArrayList<Widget>();
 	private static final String STYLENAME = "chem-list";
 	
@@ -45,7 +48,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 	
 
 	private class RowContainer extends FlowPanel implements ChangeListener{
-		private MSuggestText st;
+		private ChemMSuggestText st;
 		private ListBox range = new ListBox();
 		private ListBox unit = new ListBox();
 		private TextBox lessThan = new TextBox();
@@ -54,6 +57,19 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 		private final MText and = new MText("and","span");
 		private final MText percent = new MText("%", "span");
 		private final HTML plusminus = new HTML("&#177;");
+		
+		private class ChemMSuggestText extends MSuggestText{
+			public ChemMSuggestText(){
+				super(new HashSet<String>(), false);
+			}
+			
+			public ChemMSuggestText(final Set<String> suggestions, final boolean addShowAll){
+				super(suggestions,addShowAll);
+			}
+			protected String getValue(String input) {
+				return removeHTML(input);
+			}
+		}
 		
 		public RowContainer(){
 			final Set<String> measurementUnits = ChemicalAnalysis.getMeasurementUnits();
@@ -80,7 +96,9 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 				options.add(o.getDisplayName() + "&nbsp;<span>" + o.getElement().getName() +"<span>");
 			}
 			
-			st = new MSuggestText(options, false);
+			st = new ChemMSuggestText(options, true){
+				
+			};
 			
 			st.suggestBox.addEventHandler(new SuggestionHandler(){
 				public void onSuggestionSelected(final SuggestionEvent e){

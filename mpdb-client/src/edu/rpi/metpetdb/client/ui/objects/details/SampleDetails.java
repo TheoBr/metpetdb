@@ -3,11 +3,16 @@ package edu.rpi.metpetdb.client.ui.objects.details;
 import org.postgis.Point;
 
 import com.google.gwt.maps.client.InfoWindowContent;
+import com.google.gwt.maps.client.MapType;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.control.LargeMapControl;
 import com.google.gwt.maps.client.control.MapTypeControl;
 import com.google.gwt.maps.client.control.ScaleControl;
+import com.google.gwt.maps.client.event.EarthInstanceHandler;
+import com.google.gwt.maps.client.event.MapTypeChangedHandler;
 import com.google.gwt.maps.client.event.MarkerClickHandler;
+import com.google.gwt.maps.client.event.EarthInstanceHandler.EarthInstanceEvent;
+import com.google.gwt.maps.client.event.MapTypeChangedHandler.MapTypeChangedEvent;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.user.client.History;
@@ -44,6 +49,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.MineralAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.ReferenceAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.RegionAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.SubsampleListEx;
+import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarth;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
@@ -52,6 +58,7 @@ public class SampleDetails extends MPagePanel {
 	private LatLng samplePosition;
 	private MapWidget map;
 	private MTwoColPanel panel = new MTwoColPanel();
+	private boolean geInit = false;
 
 	private static GenericAttribute[] sampleAtts = {
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
@@ -243,6 +250,7 @@ public class SampleDetails extends MPagePanel {
 		map.addControl(new LargeMapControl());
 		map.addControl(new MapTypeControl());
 		map.addControl(new ScaleControl());
+		map.addMapType(MapType.getEarthMap());
 		map.setStyleName(CSS.SD_GOOGLE_MAP);
 		panel.getRightCol().add(map);
 	}
@@ -261,6 +269,39 @@ public class SampleDetails extends MPagePanel {
 
 		map.addOverlay(sampleMarker);
 		map.setCenter(samplePosition);
+		
+		map.addMapTypeChangedHandler(new MapTypeChangedHandler(){
+			public void onTypeChanged(final MapTypeChangedEvent e){
+				map.getEarthInstance(new EarthInstanceHandler(){
+					public void onEarthInstance(final EarthInstanceEvent e){
+						if (!geInit){
+							MGoogleEarth.addControls(e);
+							geInit = true;
+						}
+					}
+				});
+			}
+		});
+		
+		createGEplacemark(samplePosition.getLatitude(),samplePosition.getLongitude());
+		setGEview(samplePosition.getLatitude(),samplePosition.getLongitude());
+		
+	}
+	
+	private void createGEplacemark(final double x, final double y){
+		map.getEarthInstance(new EarthInstanceHandler(){
+			public void onEarthInstance(final EarthInstanceEvent e){
+				MGoogleEarth.createPlacemark(e,x,y);
+		      }
+		});
+	}
+	
+	private void setGEview(final double x, final double y){
+		map.getEarthInstance(new EarthInstanceHandler(){
+			public void onEarthInstance(final EarthInstanceEvent e){
+				MGoogleEarth.setView(e,x,y);
+		      }
+		});
 	}
 
 	public SampleDetails showById(final long id) {

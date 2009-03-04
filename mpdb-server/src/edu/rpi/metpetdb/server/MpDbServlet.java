@@ -85,7 +85,7 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 
 	protected static final Properties fileProps = new Properties();
 
-	private static int autoLoginId = -1;
+	private static int autoLoginId = 7;
 	private static final String fileUploadPath;
 
 	static {

@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.objects.list;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,6 +52,8 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 	private final static String pageSizeCookie = "pageSize";
 	private PaginationParameters currentPagination;
 	private PaginationParameters oldPagination;
+	
+	public List<?> data = new ArrayList();
 	
 	/**
 	 * How we sort by default (true means ascending, false is descending)
@@ -179,6 +182,7 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 				}
 
 				public void onSuccess(final Results<T> result) {
+					data = result.getList();
 					TableModel.this.setRowCount(result.getCount());
 					final PagingResponse response = new PagingResponse(
 							getList(result.getList()), result.getList());
