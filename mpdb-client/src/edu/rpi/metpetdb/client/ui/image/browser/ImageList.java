@@ -26,7 +26,6 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 	private Widget lastImage;
 	boolean selected = false;
 	private boolean onlySelectOne;
-	int counter = 0;
 
 	public ImageList(final long subsampleId, final boolean showAll) {
 		this(subsampleId, showAll, false, null);
@@ -49,7 +48,8 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 			public void begin() {
 				MpDb.image_svc.allImages(subsampleId, this);
 			}
-			public void onSuccess(final List<edu.rpi.metpetdb.client.model.Image> result) {
+			public void onSuccess(
+					final List<edu.rpi.metpetdb.client.model.Image> result) {
 				if (result == null) {
 					return;
 				} else {
@@ -69,7 +69,10 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 						add(new Label("No Image"));
 					} else {
 						((edu.rpi.metpetdb.client.model.Image) images.get(0))
-								.getSubsample().setImages(new HashSet<edu.rpi.metpetdb.client.model.Image>(images));
+								.getSubsample()
+								.setImages(
+										new HashSet<edu.rpi.metpetdb.client.model.Image>(
+												images));
 						buildInterface(showAll);
 					}
 				}
@@ -97,7 +100,8 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 
 	public void buildInterface(final boolean showAll) {
 		if (showAll) {
-			final Iterator<edu.rpi.metpetdb.client.model.Image> itr = images.iterator();
+			final Iterator<edu.rpi.metpetdb.client.model.Image> itr = images
+					.iterator();
 			final Grid g = new Grid((int) (Math.ceil(images.size() / 3.0)), 3);
 			int row = 0;
 			while (itr.hasNext()) {
@@ -108,7 +112,8 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 						final Image image = new Image();
 						image.setUrl(currentImage.get64x64ServerPath());
 						final ImageHyperlink imageLink = new ImageHyperlink(
-								image, this, currentImage);
+								image, this, currentImage, currentImage
+										.getFilename());
 						imageLink.setStyleName("ssimg");
 						g.setWidget(row, i, imageLink);
 					}
@@ -128,7 +133,7 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 			currentImage.setUrl(((edu.rpi.metpetdb.client.model.Image) images
 					.get(0)).get64x64ServerPath());
 			final ImageHyperlink imageLink = new ImageHyperlink(currentImage,
-					this);
+					images.get(0).getFilename(), this, true);
 			imageLink.setStyleName("ssimg");
 			add(imageLink);
 			if (images.size() > 1)
@@ -157,35 +162,30 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 	}
 
 	public void onClick(final Widget sender) {
-		if ((counter % 2) == 0) {
-			if (sender.getStyleName().equals("ssimg-checked")) {
-				sender.setStyleName("ssimg");
-				if (sender instanceof ImageHyperlink) {
-					if (((ImageHyperlink) sender).getObject() != null) {
-						selectedImages.remove(((ImageHyperlink) sender)
-								.getObject());
-					}
+		if (sender.getStyleName().equals("ssimg-checked")) {
+			sender.setStyleName("ssimg");
+			if (sender instanceof ImageHyperlink) {
+				if (((ImageHyperlink) sender).getObject() != null) {
+					selectedImages
+							.remove(((ImageHyperlink) sender).getObject());
 				}
-			} else {
-				sender.setStyleName("ssimg-checked");
-				if (sender instanceof ImageHyperlink) {
-					if (((ImageHyperlink) sender).getObject() != null) {
-						if (lastImage != null && onlySelectOne) {
-							selectedImages.clear();
-							lastImage.setStyleName("ssimg");
-						}
-						selectedImages
-								.add((edu.rpi.metpetdb.client.model.Image) ((ImageHyperlink) sender)
-										.getObject());
-
-					}
-				}
-				lastImage = sender;
 			}
-			selected = !selected;
 		} else {
-			counter = -1;
+			sender.setStyleName("ssimg-checked");
+			if (sender instanceof ImageHyperlink) {
+				if (((ImageHyperlink) sender).getObject() != null) {
+					if (lastImage != null && onlySelectOne) {
+						selectedImages.clear();
+						lastImage.setStyleName("ssimg");
+					}
+					selectedImages
+							.add((edu.rpi.metpetdb.client.model.Image) ((ImageHyperlink) sender)
+									.getObject());
+
+				}
+			}
+			lastImage = sender;
 		}
-		counter++;
+		selected = !selected;
 	}
 }

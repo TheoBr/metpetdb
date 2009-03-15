@@ -103,6 +103,11 @@ public class ImageBrowserMouseListener implements MouseListener {
 				addChemicalAnalysis(result, x, y);
 				mode = MouseMode.NONE;
 			}
+			public void cancel() {
+				mode = MouseMode.NONE;
+				//remove the arrow for the spot
+				pointer.removeFromParent();
+			}
 		}.begin();
 	}
 

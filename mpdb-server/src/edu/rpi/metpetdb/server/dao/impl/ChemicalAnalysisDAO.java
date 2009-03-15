@@ -34,7 +34,7 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 			if (getResult(q) != null)
 				return (ChemicalAnalysis) getResult(q);
 		}
-		
+
 		if (inst.getSubsample() != null && inst.getSubsample().getId() > 0) {
 			final Query q = namedQuery("ChemicalAnalysis.bySubsampleId.byspotId");
 			q.setLong("id", inst.getSubsample().getId());
@@ -46,7 +46,8 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 		throw new ChemicalAnalysisNotFoundException();
 	}
 
-	public ChemicalAnalysis populate(ChemicalAnalysis inst) throws MpDbException {
+	public ChemicalAnalysis populate(ChemicalAnalysis inst)
+			throws MpDbException {
 		// If we can, let's try to fill the subsample
 		if (inst.getSubsample() != null) {
 			inst.setSubsample((new SubsampleDAO(sess))
@@ -60,29 +61,31 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 	public ChemicalAnalysis save(ChemicalAnalysis ca) throws MpDbException {
 		if (ca.getReference() != null) {
 			try {
-			ca.setReference((new ReferenceDAO(sess)).fill(ca.getReference()));
+				ca.setReference((new ReferenceDAO(sess))
+						.fill(ca.getReference()));
 			} catch (ReferenceNotFoundException e) {
-				//ignore the reference if we don't find it, it will get automatically added by hibernate
+				// ignore the reference if we don't find it, it will get
+				// automatically added by hibernate
 			}
 		}
 		ca.setMineral((new MineralDAO(sess)).fill(ca.getMineral()));
-		//ca.setSubsample((new SubsampleDAO(sess)).fill(ca.getSubsample()));
+		// ca.setSubsample((new SubsampleDAO(sess)).fill(ca.getSubsample()));
 		ca = _save(ca);
 		return ca;
 	}
 
-	public List<ChemicalAnalysis> getAll(final long subsampleId, long userId) throws MpDbException {
-		//sess.enableFilter("chemicalAnalysisPublicOrUser").setParameter("userId", userId);
+	public List<ChemicalAnalysis> getAll(final long subsampleId)
+			throws MpDbException {
 		final Query q = namedQuery("ChemicalAnalysis.bySubsampleId");
-		q.setParameter("subsampleId", subsampleId);
+		q.setParameter("id", subsampleId);
 		final List<ChemicalAnalysis> l = (List<ChemicalAnalysis>) getResults(q);
-
 		return l;
 	}
 
 	public Results<ChemicalAnalysis> getAll(final PaginationParameters p,
-			final long subsampleId, long userId) throws MpDbException{
-		//sess.enableFilter("chemicalAnalysisPublicOrUser").setParameter("userId", userId);
+			final long subsampleId, long userId) throws MpDbException {
+		// sess.enableFilter("chemicalAnalysisPublicOrUser").setParameter("userId",
+		// userId);
 		final Query sizeQ = sizeQuery("ChemicalAnalysis.bySubsampleId",
 				subsampleId);
 		final Query pageQ = pageQuery("ChemicalAnalysis.bySubsampleId", p,

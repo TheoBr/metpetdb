@@ -32,7 +32,7 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 
 	public List<ChemicalAnalysis> all(long subsampleId) throws MpDbException {
 		List<ChemicalAnalysis> l = (new ChemicalAnalysisDAO(this
-				.currentSession())).getAll(subsampleId, currentUserIdIfExists());
+				.currentSession())).getAll(subsampleId);
 		return l;
 	}
 

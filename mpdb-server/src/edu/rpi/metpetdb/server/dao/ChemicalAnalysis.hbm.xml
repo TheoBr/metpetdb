@@ -76,7 +76,10 @@
     inner join fetch ma.owner
     where ma.id = :id
   </query>
+  <!-- only return a subset of the CA when we are fetching all of them for a sample
+  	to reduce the overhead of loading the elements and oxides -->
   <query name="ChemicalAnalysis.bySubsampleId">
+  select new ChemicalAnalysis(ma.id, ma.spotId) 
     from ChemicalAnalysis ma
     where ma.subsample.id = :id
   </query>

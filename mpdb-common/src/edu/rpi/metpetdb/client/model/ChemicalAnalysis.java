@@ -35,7 +35,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	private int referenceX;
 	private int referenceY;
 	private Image image;
-	//@ContainedIn
+	// @ContainedIn
 	private Subsample subsample;
 	private String analysisMethod;
 	private String location;
@@ -77,6 +77,15 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	};
 
 	public static double defaultPrecision = .02d;
+
+	public ChemicalAnalysis() {
+
+	}
+
+	public ChemicalAnalysis(int id, String spotId) {
+		this.id = id;
+		this.spotId = spotId;
+	}
 
 	public int getId() {
 		return id;
@@ -415,7 +424,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		else
 			return measurementUnits.get("ppm");
 	}
-	
+
 	@Override
 	public String toString() {
 		return spotId;

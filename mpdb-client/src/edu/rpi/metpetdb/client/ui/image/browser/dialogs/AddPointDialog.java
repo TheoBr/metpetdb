@@ -112,7 +112,7 @@ public class AddPointDialog extends DialogBox implements ClickListener,
 	private void cancel() {
 		this.hide();
 		if (this.continuation != null)
-			this.continuation.onSuccess(null);
+			this.continuation.cancel();
 	}
 
 }

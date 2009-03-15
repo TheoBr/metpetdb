@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import org.hibernate.Query;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -74,5 +75,20 @@ public class ChemicalAnalysisTest extends DatabaseTestCase {
 	public void loadChemicalAnalysis() throws NoSuchObjectException {
 		final ChemicalAnalysis ca = super.byId("ChemicalAnalysis",
 				PUBLIC_CHEMICAL_ANALYSIS);
+	}
+	
+	/**
+	 * Tests loading chemical analyses for an image map that have reduced properties
+	 * @throws NoSuchObjectException 
+	 */
+	@Test
+	public void bySubsampleId() throws NoSuchObjectException {
+		MpDbServlet.currentReq().user = super.byId("User", 1);
+		MpDbServlet.currentReq().principals.add(new OwnerPrincipal(MpDbServlet
+				.currentReq().user));
+		setupSession(1);
+		final Query q = session.getNamedQuery("ChemicalAnalysis.bySubsampleId");
+		q.setParameter("id", 1l);
+		q.list();
 	}
 }

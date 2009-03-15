@@ -50,6 +50,12 @@ public class ImageHyperlink extends MLink {
 		this(image, whereTo);
 		obj = o;
 	}
+	
+	public ImageHyperlink(final Image image, final ClickListener whereTo,
+			final Object o, final String text) {
+		this(image, text, whereTo, true);
+		obj = o;
+	}
 
 	public Object getObject() {
 		return obj;
