@@ -189,7 +189,7 @@
     from Sample s
     inner join fetch s.owner
     where s.owner.id = :id
-    and s.number = :number
+    and lower(s.number) = lower(:number)
   </query>
   
   <query name="Sample.forProject,size">

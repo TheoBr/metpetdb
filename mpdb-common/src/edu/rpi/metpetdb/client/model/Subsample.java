@@ -3,7 +3,6 @@ package edu.rpi.metpetdb.client.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
@@ -174,7 +173,7 @@ public class Subsample extends MObject implements HasOwner, PublicData, HasSampl
 	}
 
 	public int hashCode() {
-		return name != null ? name.hashCode() + (int) id : 0;
+		return name != null ? name.toLowerCase().hashCode() + (int) id : 0;
 	}
 
 	public String toString() {

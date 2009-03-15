@@ -19,7 +19,7 @@ public class SampleAlreadyExistsException extends DAOException {
 	@Override
 	public String format() {
 		return LocaleHandler.lc_text.errorDesc_SampleAlreadyExists()
-				+ additionalInformation == null ? "" : additionalInformation;
+				+ (additionalInformation == null ? "" : additionalInformation);
 	}
 
 }

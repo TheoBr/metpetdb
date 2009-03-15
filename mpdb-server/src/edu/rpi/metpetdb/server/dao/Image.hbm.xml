@@ -64,9 +64,16 @@
   </query>
   <query name="Image.bySampleIdbyFilename">
     from Image i
-    where i.sample.id = :id and i.filename = :filename
+    where i.sample.id = :id 
+    and lower(i.filename) = lower(:filename)
   </query>
   
+  
+  <query name="Image.bySubsampleIddbyFilename">
+    from Image i
+    where i.subsample.id = :id 
+    and lower(i.filename) = lower(:filename)
+  </query>
   <filter-def name="imagePublicOrUser">
   	<filter-param name="userId" type="long" />
   </filter-def>

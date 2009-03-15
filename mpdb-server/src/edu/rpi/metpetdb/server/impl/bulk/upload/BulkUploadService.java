@@ -149,7 +149,7 @@ public abstract class BulkUploadService extends MpDbServlet {
 			((HasSubsample) obj).getSubsample().setPublicData(false);
 		}
 		if (obj instanceof HasSample) {
-			((HasSample)obj).getSample().setOwner(currentUser());
+			((HasSample) obj).getSample().setOwner(currentUser());
 		}
 	}
 
@@ -160,12 +160,13 @@ public abstract class BulkUploadService extends MpDbServlet {
 		try {
 			// if we don't have this sample already loaded check
 			// for it in the database
-			if (!samples.containsKey(s.getNumber())) {
+			if (!samples.containsKey(s.getNumber().toLowerCase())) {
 				s = sampleDao.fill(s);
-				samples.put(s.getNumber(), s);
-				subsampleNames.put(s.getNumber(), new HashSet<String>());
+				samples.put(s.getNumber().toLowerCase(), s);
+				subsampleNames.put(s.getNumber().toLowerCase(),
+						new HashSet<String>());
 			} else {
-				s = samples.get(s.getNumber());
+				s = samples.get(s.getNumber().toLowerCase());
 			}
 			return true;
 		} catch (MpDbException e) {
@@ -183,14 +184,15 @@ public abstract class BulkUploadService extends MpDbServlet {
 			final Map<String, Subsample> subsamples,
 			BulkUploadResultCount ssResultCount, boolean save)
 			throws ValidationException {
-		if (subsampleNames.get(s.getNumber()) != null
-				&& !subsampleNames.get(s.getNumber()).contains(ss.getName())) {
+		if (subsampleNames.get(s.getNumber().toLowerCase()) != null
+				&& !subsampleNames.get(s.getNumber().toLowerCase()).contains(
+						ss.getName().toLowerCase())) {
 			try {
 				doc.validate(ss);
 				ss = ssDao.fill(ss);
-				subsamples.put(s.getNumber() + ss.getName(), ss);
+				subsamples.put(s.getNumber().toLowerCase()
+						+ ss.getName().toLowerCase(), ss);
 				ssResultCount.incrementOld();
-				return ss;
 			} catch (MpDbException e) {
 				// Means it is new because we could not find
 				// it
@@ -201,14 +203,16 @@ public abstract class BulkUploadService extends MpDbServlet {
 					} catch (MpDbException e1) {
 						results.addError(row, e1);
 					}
-					subsamples.put(s.getNumber() + ss.getName(), ss);
-					return ss;
+					subsamples.put(s.getNumber().toLowerCase()
+							+ ss.getName().toLowerCase(), ss);
 				}
 			}
-			subsampleNames.get(s.getNumber()).add(ss.getName());
+			subsampleNames.get(s.getNumber().toLowerCase()).add(
+					ss.getName().toLowerCase());
 			return ss;
 		} else {
-			return subsamples.get(s.getNumber() + ss.getName());
+			return subsamples.get(s.getNumber().toLowerCase()
+					+ ss.getName().toLowerCase());
 		}
 	}
 	protected <T extends MObject> void analyzeResults(

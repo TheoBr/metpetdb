@@ -22,7 +22,6 @@ CREATE TABLE chemical_analyses
    large_rock CHAR(1) CHECK (large_rock IN ('Y','N')) NOT NULL,
    total 	float8,
    CONSTRAINT chemical_analyses_sk PRIMARY KEY (chemical_analysis_id),
-   CONSTRAINT chemical_analyses_nk_spot_id UNIQUE(subsample_id, spot_id),
    CONSTRAINT chemical_analyses_fk_subsamples FOREIGN KEY (subsample_id)
       REFERENCES subsamples(subsample_id),
    CONSTRAINT chemical_analyses_fk_user FOREIGN KEY (user_id)
@@ -35,7 +34,7 @@ CREATE TABLE chemical_analyses
    CONSTRAINT chemical_analyses_fk_mineral FOREIGN KEY (mineral_id)
       REFERENCES minerals(mineral_id)
 ) WITHOUT OIDS;
-
+CREATE UNIQUE INDEX chemical_analyses_nk_spot_id on chemical_analyses (subsample_id, lower(spot_id));
 
 
 CREATE TABLE oxides

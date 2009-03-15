@@ -1,11 +1,15 @@
 package edu.rpi.metpetdb.server.dao.sample;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Test;
+import org.postgis.Point;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
+import edu.rpi.metpetdb.client.model.RockType;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.MpDbServlet;
@@ -65,7 +69,7 @@ public class SampleDaoTest extends DatabaseTestCase {
 		final Sample s = super.byId("Sample", PUBLIC_SAMPLE);
 		assertEquals(PUBLIC_SAMPLE, s.getId());
 	}
-	
+
 	@Test
 	public void deleteSample() throws NoSuchObjectException, MpDbException {
 		MpDbServlet.currentReq().user = super.byId("User", 1);
@@ -74,6 +78,41 @@ public class SampleDaoTest extends DatabaseTestCase {
 		session.enableFilter("samplePublicOrUser").setParameter("userId", 1);
 		final Sample s = super.byId("Sample", 1);
 		new SampleDAO(session).delete(s);
+	}
+
+	/**
+	 * Tries to create a sample with the same number as another sample but with
+	 * different casing, should fail because number is case insensitive
+	 * 
+	 * @throws NoSuchObjectException
+	 * @throws MpDbException
+	 */
+	@Test
+	public void duplicateNumber() throws NoSuchObjectException,
+			MpDbException {
+		MpDbServlet.currentReq().user = super.byId("User", 1);
+		MpDbServlet.currentReq().principals.add(new OwnerPrincipal(MpDbServlet
+				.currentReq().user));
+		final Sample s = new Sample();
+		final RockType rt = new RockType("Slate");
+		final Point p = new Point();
+		p.setSrid(4326);
+		s.setNumber("testing SAMPLE");
+		s.setOwner(MpDbServlet.currentReq().user);
+		s.setRockType(rt);
+		s.setPublicData(false);
+		s.setLocation(p);
+		try {
+			new SampleDAO(session).save(s);
+			session.getTransaction().commit();
+		} catch (ConstraintViolationException e) {
+			assertEquals("samples_nk_number", e.getConstraintName());
+			session.clear();
+			return;
+		} finally {
+			session.clear();
+		}
+		fail("Expected constraint exception");
 	}
 
 }

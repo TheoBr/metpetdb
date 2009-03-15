@@ -5,6 +5,14 @@ public class SubsampleType extends MObject {
 
 	private short id;
 	private String subsampleType;
+	
+	public SubsampleType() {
+		
+	}
+
+	public SubsampleType(String string) {
+		subsampleType = string;
+	}
 
 	public short getId() {
 		return id;

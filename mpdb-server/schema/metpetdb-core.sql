@@ -69,8 +69,6 @@ CREATE TABLE samples
   collector_id INT4,
   location_text VARCHAR(50),
   CONSTRAINT samples_sk PRIMARY KEY (sample_id),
--- CONSTRAINT samples_nk UNIQUE (sesar_number),
-  CONSTRAINT samples_nk_number UNIQUE (user_id, number),
   CONSTRAINT samples_fk_user FOREIGN KEY (user_id)
     REFERENCES users (user_id),
   CONSTRAINT samples_fk_collector FOREIGN KEY (collector_id)
@@ -83,6 +81,7 @@ SELECT AddGeometryColumn('samples', 'location', 4326, 'POINT', 2);
 CREATE INDEX samples_ix_loc ON samples
   USING GIST (location GIST_GEOMETRY_OPS);
 ALTER TABLE samples ALTER location SET NOT NULL;
+CREATE UNIQUE INDEX samples_nk_number on samples (user_id, lower(number));
 
 CREATE TABLE sample_comments
 (
@@ -110,13 +109,13 @@ CREATE TABLE subsamples
   subsample_type_id int2 NOT NULL,
   CONSTRAINT subsamples_fk_user FOREIGN KEY (user_id)
     REFERENCES users (user_id),
-  CONSTRAINT subsamples_nk_name UNIQUE(sample_id, name),
   CONSTRAINT subsamples_sk PRIMARY KEY (subsample_id),
   CONSTRAINT subsamples_fk_sample FOREIGN KEY (sample_id)
     REFERENCES samples (sample_id),
   CONSTRAINT subsamples_fk_subsample_type FOREIGN KEY (subsample_type_id)
     REFERENCES subsample_type (subsample_type_id)
 ) WITHOUT OIDS;
+CREATE UNIQUE INDEX subsamples_nk_name on subsamples (sample_id, lower(name));
 
 CREATE TABLE projects
 (

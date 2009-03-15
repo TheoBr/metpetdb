@@ -399,12 +399,12 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner,
 	}
 
 	public boolean equals(final Object o) {
-		return sesarNumber != null && o instanceof Sample
-				&& sesarNumber.equals(((Sample) o).sesarNumber);
+		return number != null && o instanceof Sample
+				&& number.equalsIgnoreCase(((Sample) o).number);
 	}
 
 	public int hashCode() {
-		return sesarNumber != null ? sesarNumber.hashCode() : 0;
+		return number == null ? 0 : number.toLowerCase().hashCode();
 	}
 
 	public boolean mIsNew() {

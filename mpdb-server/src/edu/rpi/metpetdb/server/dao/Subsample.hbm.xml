@@ -57,7 +57,7 @@
     from Subsample s
     inner join fetch s.subsampleType
     where s.sample.id = :id
-    and s.name = :name
+    and lower(s.name) = lower(:name)
   </query>
   
    <query name="Subsample.bySampleId,size">

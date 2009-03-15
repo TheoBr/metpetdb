@@ -60,7 +60,6 @@ CREATE TABLE images
    checksum_half CHAR(50) NOT NULL,
    filename VARCHAR(256) NOT NULL,
    CONSTRAINT images_sk PRIMARY KEY (image_id),
-   CONSTRAINT images_nk_filename UNIQUE(sample_id, filename),
    CONSTRAINT images_fk_image_format FOREIGN KEY (image_format_id)
      REFERENCES image_format(image_format_id),
 CONSTRAINT images_fk_image_type FOREIGN KEY (image_type_id)
@@ -74,6 +73,8 @@ CONSTRAINT images_fk_image_type FOREIGN KEY (image_type_id)
    CONSTRAINT images_ck_nonzero CHECK (
      width > 0 AND height > 0)
 ) WITHOUT OIDS;
+CREATE UNIQUE INDEX images_nk_filename_sample on images (sample_id, lower(filename));
+CREATE UNIQUE INDEX images_nk_filename_subsample on images (subsample_id, lower(filename));
 
 CREATE TABLE image_comments
 (
