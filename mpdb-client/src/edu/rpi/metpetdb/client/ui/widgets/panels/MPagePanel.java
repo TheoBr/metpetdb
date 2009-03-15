@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.widgets;
+package edu.rpi.metpetdb.client.ui.widgets.panels;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
@@ -9,6 +9,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.sidebar.Sidebar;
+import edu.rpi.metpetdb.client.ui.widgets.MLink;
+import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class MPagePanel extends FlowPanel {
 	private final MText title = new MText("","h1");

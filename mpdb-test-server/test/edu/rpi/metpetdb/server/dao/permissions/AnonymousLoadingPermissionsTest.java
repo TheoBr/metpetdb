@@ -48,11 +48,12 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 
 	/**
 	 * Attemps to load a private sample of another user and should fail with an
-	 * exception.
+	 * exception, it is a NoSuchObjectException because the extra where clauses
+	 * prohibit loading of other user's data
 	 * 
 	 * @throws Throwable
 	 */
-	@Test(expected = CannotLoadPrivateDataException.class)
+	@Test(expected = NoSuchObjectException.class)
 	public void loadPrivateSample() throws Throwable {
 		try {
 			super.byId("Sample", 1);
@@ -66,7 +67,7 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 	 * @see AnonymousLoadingPermissionsTest#loadPrivateSample()
 	 * @throws Throwable
 	 */
-	@Test(expected = CannotLoadPrivateDataException.class)
+	@Test(expected = NoSuchObjectException.class)
 	public void loadPrivateSubsample() throws Throwable {
 		try {
 			super.byId("Subsample", 1);
@@ -80,7 +81,7 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 	 * @see AnonymousLoadingPermissionsTest#loadPrivateSample()
 	 * @throws Throwable
 	 */
-	@Test(expected = CannotLoadPrivateDataException.class)
+	@Test(expected = NoSuchObjectException.class)
 	public void loadPrivateChemicalAnalysis() throws Throwable {
 		try {
 			super.byId("ChemicalAnalysis", 1);
@@ -110,7 +111,7 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 	@Test
 	public void loadPublicSample() throws Throwable {
 		try {
-			super.byId("Sample", 6);
+			super.byId("Sample", PUBLIC_SAMPLE);
 		} catch (CallbackException c) {
 			session.clear();
 			throw c.getCause();

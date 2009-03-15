@@ -1,9 +1,11 @@
-package edu.rpi.metpetdb.client.ui.widgets;
+package edu.rpi.metpetdb.client.ui.widgets.panels;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.widgets.MButton;
+import edu.rpi.metpetdb.client.ui.widgets.MSimplePanel;
 
 public class MultipleInputPanel extends FlowPanel {
 

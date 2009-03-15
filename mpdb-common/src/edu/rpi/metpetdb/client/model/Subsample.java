@@ -22,7 +22,7 @@ public class Subsample extends MObject implements HasOwner, PublicData, HasSampl
 	@DocumentId
 	private long id;
 
-	@ContainedIn
+	//@ContainedIn
 	private Sample sample;
 
 	private int version;
@@ -42,10 +42,11 @@ public class Subsample extends MObject implements HasOwner, PublicData, HasSampl
 	@IndexedEmbedded(depth = 1, prefix = "user_")
 	private User owner;
 
-	@IndexedEmbedded(prefix = "chemicalAnalysis_")
+	//@IndexedEmbedded(prefix = "chemicalAnalysis_")
 	private Set<ChemicalAnalysis> chemicalAnalysis;
 	private int imageCount;
 	private int analysisCount;
+	private Long sampleId;
 
 	private String sampleName;
 
@@ -57,6 +58,9 @@ public class Subsample extends MObject implements HasOwner, PublicData, HasSampl
 		id = i;
 	}
 
+	/**
+	 * Lazy loaded
+	 */
 	public Sample getSample() {
 		return sample;
 	}
@@ -71,6 +75,14 @@ public class Subsample extends MObject implements HasOwner, PublicData, HasSampl
 
 	public void setSampleName(final String sampleName) {
 		this.sampleName = sampleName;
+	}
+
+	public Long getSampleId() {
+		return sampleId;
+	}
+
+	public void setSampleId(Long sampleId) {
+		this.sampleId = sampleId;
 	}
 
 	public int getVersion() {
@@ -113,7 +125,6 @@ public class Subsample extends MObject implements HasOwner, PublicData, HasSampl
 
 	public void addImage(Image i) {
 		i.setSubsample(this);
-		this.getSample().addImage(i);
 		if (images == null)
 			images = new HashSet<Image>();
 		images.add(i);

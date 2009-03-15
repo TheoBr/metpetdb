@@ -35,17 +35,17 @@
 							inner join chemical_analyses ca on ca.subsample_id = s.subsample_id
 							where s.sample_id = sample_id)" />																		
     
-    <many-to-one name="owner" column="user_id" lazy="false" />
+    <many-to-one name="owner" column="user_id" lazy="false"/>
     <many-to-one name="rockType" column="rock_type_id" lazy="false" />
 
-	<set name="subsamples" inverse="true" cascade="delete" >
+	<set name="subsamples" inverse="true" cascade="delete-orphan" >
       <key column="sample_id" not-null="true"/>
       <one-to-many class="Subsample" />
       <filter name="samplePublicOrUser"
      		condition="( user_id=:userId OR public_data='Y')" />
     </set>
     
-    <set name="comments" inverse="true" table="sample_comments" cascade="all-delete-orphan" lazy="false" >
+    <set name="comments" inverse="true" table="sample_comments" cascade="delete-orphan" >
       <key column="sample_id" not-null="true" />
       <one-to-many class="SampleComment"/>
     </set>
@@ -57,20 +57,20 @@
 
     <set name="regions" table="sample_regions" cascade="persist,merge" lazy="false">
       <key column="sample_id" />
-      <many-to-many class="Region" column="region_id" />
+      <many-to-many class="Region" column="region_id" order-by="lower(name)"/>
     </set>
 
     <set name="metamorphicGrades" table="sample_metamorphic_grades" cascade="none" lazy="false">
       <key column="sample_id" />
-      <many-to-many class="MetamorphicGrade" column="metamorphic_grade_id" />
+      <many-to-many class="MetamorphicGrade" column="metamorphic_grade_id" order-by="lower(name)"/>
     </set>
 
     <set name="references" table="sample_reference" cascade="persist,merge" lazy="false">
       <key column="sample_id" />
-      <many-to-many class="Reference" column="reference_id" />
+      <many-to-many class="Reference" column="reference_id" order-by="lower(name)"/>
     </set>
 
-    <set name="images" inverse="true" lazy="false">
+    <set name="images" inverse="true">
       <key column="sample_id" />
       <one-to-many class="Image" />
       <filter name="samplePublicOrUser"
@@ -80,9 +80,9 @@
     <!-- Hibernate updates sets by using insert/delete, not update -->
     <set name="minerals" table="sample_minerals" cascade="save-update" lazy="false">
       <key column="sample_id" />
-      <composite-element class="SampleMineral">
+      <composite-element class="SampleMineral" >
       	<property name="amount" column="amount" type="float"/>
-	    <many-to-one name="mineral" class="Mineral" column="mineral_id" lazy="false"/>
+	    <many-to-one name="mineral" class="Mineral" column="mineral_id" lazy="false" />
 	  </composite-element>
     </set>
     

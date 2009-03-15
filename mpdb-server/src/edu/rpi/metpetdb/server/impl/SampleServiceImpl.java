@@ -75,13 +75,9 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	public Sample save(Sample sample) throws MpDbException, ValidationException,
 			LoginRequiredException {
 		doc.validate(sample);
-		Sample s = (sample);
-
-		s = (new SampleDAO(this.currentSession())).save(s);
-
+		sample = (new SampleDAO(this.currentSession())).save(sample);
 		commit();
-		return (s);
-
+		return sample;
 	}
 
 	public void delete(long id) throws MpDbException, LoginRequiredException {

@@ -7,7 +7,8 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.CSS;
-import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel.NoticeType;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MNoticePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MNoticePanel.NoticeType;
 
 /**
  * Panel for inline notice messages, i.e. "File uploaded successfully"

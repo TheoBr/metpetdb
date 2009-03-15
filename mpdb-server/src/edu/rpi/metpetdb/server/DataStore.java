@@ -34,6 +34,7 @@ import org.hibernate.mapping.Value;
 import org.postgis.Geometry;
 
 import edu.rpi.metpetdb.client.model.MObject;
+import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.GeometryConstraint;
 import edu.rpi.metpetdb.client.model.validation.MObjectConstraint;
@@ -48,6 +49,7 @@ import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.ShortConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
+import edu.rpi.metpetdb.server.dao.impl.MineralDAO;
 import edu.rpi.metpetdb.server.security.permissions.PermissionInterceptor;
 
 /** Global service support. */
@@ -83,7 +85,7 @@ public class DataStore {
 				throw new MappingException("Missing dao/hibernate.cfg.xml.");
 			cfg.configure(x);
 			config = cfg;
-			config.setInterceptor( new PermissionInterceptor() );
+			config.setInterceptor(new PermissionInterceptor());
 		}
 		return config;
 	}
@@ -317,7 +319,8 @@ public class DataStore {
 													.getName()
 											+ "' and attname='" + col.getName()
 											+ "' limit 1);");
-					final Iterator<String> consItr = (Iterator<String>) q.list().iterator();
+					final Iterator<String> consItr = (Iterator<String>) q
+							.list().iterator();
 					while (consItr.hasNext()) {
 						final String constraint = consItr.next();
 						handleConstraint(constraint, (FloatConstraint) pc);
@@ -423,8 +426,16 @@ public class DataStore {
 			}
 			final Session session = open();
 			try {
-				cc.setValues((Collection<? extends MObject>) (hbm.clone(session
-						.getNamedQuery(queryName).list())));
+				if (name.equals("mineral")) {
+					final Collection<Mineral> minerals = session.getNamedQuery(
+							queryName).list();
+					new MineralDAO(session).initMinerals(minerals);
+					cc.setValues((Collection<? extends MObject>) (hbm
+							.clone(minerals)));
+				} else {
+					cc.setValues((Collection<? extends MObject>) (hbm
+							.clone(session.getNamedQuery(queryName).list())));
+				}
 			} catch (Exception me) {
 				cc.setValues(new HashSet<MObject>());
 			} finally {
@@ -476,7 +487,6 @@ public class DataStore {
 					+ p.getPersistentClass().getClassName() + " property "
 					+ p.getName() + ".");
 	}
-
 	private static edu.rpi.metpetdb.client.model.properties.Property property(
 			final Class who, final String name) throws IllegalAccessException {
 		try {
@@ -522,7 +532,7 @@ public class DataStore {
 	 * Obtain a new Hibernate session.
 	 * 
 	 * @return a new hibernate session. This will always be a new session, even
-	 * 	if the caller already has one.
+	 *         if the caller already has one.
 	 */
 	public static Session open() {
 		return getFactory().openSession();

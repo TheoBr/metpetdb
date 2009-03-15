@@ -27,6 +27,11 @@ public class Oxide extends MObject {
 		this.species = species;
 	}
 
+	/**
+	 * Lazy loaded
+	 * 
+	 * @return
+	 */
 	public Element getElement() {
 		return element;
 	}
@@ -112,5 +117,5 @@ public class Oxide extends MObject {
 	public native String getDisplayName() /*-{
 		var s = this.@edu.rpi.metpetdb.client.model.Oxide::species;
 		return s.replace(/(\d+)/g, "<sub>$1</sub>");
-	}-*/; 
+	}-*/;
 }

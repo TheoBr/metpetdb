@@ -25,7 +25,9 @@ import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class Breadcrumbs extends FlowPanel {
-	private static final String tokenSep = LocaleHandler.lc_text.tokenSeparater() + "";
+	private static final String tokenSep = LocaleHandler.lc_text
+			.tokenSeparater()
+			+ "";
 	private bcNode root;
 	private String id;
 	private static bcNode current;
@@ -260,7 +262,7 @@ public class Breadcrumbs extends FlowPanel {
 								if (((MLink) l).getText().equals(name)) {
 									((MLink) l).setText(result.getName());
 									Breadcrumbs.this.id = String.valueOf(result
-											.getSample().getId());
+											.getSampleId());
 									Breadcrumbs.this
 											.onFindSuccessRecursive(Node
 													.getParent());
@@ -308,8 +310,7 @@ public class Breadcrumbs extends FlowPanel {
 							if (((SimplePanel) w).getWidget() instanceof MLink) {
 								MLink l = (MLink) ((SimplePanel) w).getWidget();
 								if (((MLink) l).getText().equals(name)) {
-									((MLink) l).setText(result
-											.getName());
+									((MLink) l).setText(result.getName());
 									Breadcrumbs.this
 											.onFindSuccessRecursive(Node
 													.getParent());

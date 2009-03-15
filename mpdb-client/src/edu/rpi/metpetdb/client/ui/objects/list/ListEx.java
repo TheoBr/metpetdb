@@ -52,6 +52,7 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 	private final static String pageSizeCookie = "pageSize";
 	private PaginationParameters currentPagination;
 	private PaginationParameters oldPagination;
+	private final Label numResultsLabel;
 	
 	public List<?> data = new ArrayList();
 	
@@ -183,6 +184,7 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 
 				public void onSuccess(final Results<T> result) {
 					data = result.getList();
+					updateResultsLabel(result.getCount());
 					TableModel.this.setRowCount(result.getCount());
 					final PagingResponse response = new PagingResponse(
 							getList(result.getList()), result.getList());
@@ -239,6 +241,10 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 			}.begin();
 		}
 
+	}
+	
+	private void updateResultsLabel(final int numResults) {
+		numResultsLabel.setText(numResults + " Results Total");
 	}
 
 	/**
@@ -331,6 +337,8 @@ public abstract class ListEx<T extends MObject> extends FlowPanel {
 	public ListEx(final ArrayList<Column> columns) {
 		this.originalColumns = columns;
 		this.displayColumns = columns;
+		numResultsLabel = new Label();
+		add(numResultsLabel);
 		tableModel = new TableModel();
 		dataTable = new FixedWidthGrid();
 		headerTable = new FixedWidthFlexTable();

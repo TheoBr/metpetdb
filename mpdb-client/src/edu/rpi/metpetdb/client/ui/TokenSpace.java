@@ -26,6 +26,7 @@ import edu.rpi.metpetdb.client.ui.TokenHandler.Screen;
 import edu.rpi.metpetdb.client.ui.bulk.upload.BulkUploadPanel;
 import edu.rpi.metpetdb.client.ui.commands.LoggedInServerOp;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.VoidLoggedInOp;
 import edu.rpi.metpetdb.client.ui.html.Homepage;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserDetails;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageListViewer;
@@ -59,7 +60,10 @@ public class TokenSpace implements HistoryListener {
 	private static final TokenHandler sampleDetails = new LKey(
 			LocaleHandler.lc_entity.TokenSpace_Sample_Details()) {
 		public long get(final Object obj) {
-			return ((Sample) obj).getId();
+			if (obj instanceof Sample)
+				return ((Sample) obj).getId();
+			else
+				return Long.parseLong(obj.toString());
 		}
 
 		public void execute(final long id) {
@@ -143,8 +147,8 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 
-	public static final Screen home = new Screen(
-			LocaleHandler.lc_entity.TokenSpace_Home()) {
+	public static final Screen home = new Screen(LocaleHandler.lc_entity
+			.TokenSpace_Home()) {
 		public void executeToken(final String args) {
 			show(new Homepage());
 		}
@@ -208,7 +212,7 @@ public class TokenSpace implements HistoryListener {
 	public static final Screen allProjects = new Screen(LocaleHandler.lc_entity
 			.TokenSpace_All_Projects()) {
 		public void executeToken(final String args) {
-			new LoggedInServerOp() {
+			new VoidLoggedInOp() {
 				public void command() {
 					show(new UserProjectsListEx().display());
 				}
@@ -223,7 +227,7 @@ public class TokenSpace implements HistoryListener {
 		}
 
 		public void execute(final long id) {
-			new LoggedInServerOp() {
+			new VoidLoggedInOp() {
 				public void command() {
 					show(new UserSamplesList().display(id));
 				}
@@ -234,7 +238,7 @@ public class TokenSpace implements HistoryListener {
 	public static final Screen samplesForUser = new Screen(
 			LocaleHandler.lc_entity.TokenSpace_Samples_For_User()) {
 		public void executeToken(final String args) {
-			new LoggedInServerOp() {
+			new VoidLoggedInOp() {
 				public void command() {
 					show(new UserSamplesList().display());
 				}
@@ -246,7 +250,7 @@ public class TokenSpace implements HistoryListener {
 	public static final Screen enterSample = new Screen(LocaleHandler.lc_entity
 			.TokenSpace_Enter_Sample()) {
 		public void executeToken(final String args) {
-			new LoggedInServerOp() {
+			new VoidLoggedInOp() {
 				public void command() {
 					show(new SampleDetails().createNew());
 				}
@@ -257,7 +261,7 @@ public class TokenSpace implements HistoryListener {
 	public static final Screen newProject = new Screen(LocaleHandler.lc_entity
 			.TokenSpace_New_Project()) {
 		public void executeToken(final String args) {
-			new LoggedInServerOp() {
+			new VoidLoggedInOp() {
 				public void command() {
 					show(new ProjectDetails().createNew());
 				}
@@ -314,7 +318,7 @@ public class TokenSpace implements HistoryListener {
 	};
 	public static final Screen confirmation = new Screen("ConfirmationCode") {
 		public void executeToken(final String args) {
-			new LoggedInServerOp() {
+			new VoidLoggedInOp() {
 				@Override
 				public void command() {
 					show(new Confirmation().fill(args));
@@ -322,9 +326,10 @@ public class TokenSpace implements HistoryListener {
 			}.execute();
 		}
 	};
-	public static final Screen rebuildSearchIndex = new Screen("RebuildSearchIndex") {
+	public static final Screen rebuildSearchIndex = new Screen(
+			"RebuildSearchIndex") {
 		public void executeToken(final String args) {
-			new LoggedInServerOp() {
+			new LoggedInServerOp<Void>() {
 				@Override
 				public void command() {
 					new ServerOp<Void>() {
@@ -387,14 +392,14 @@ public class TokenSpace implements HistoryListener {
 				.update(currentToken);
 	}
 
-	private static void show(final Widget content, final String token) {
-		MetPetDBApplication.show(content);
-	}
-
 	// private static void showIntroduction() {
 	// // show(MetPetDBApplication.introduction);
 	// show(RootPanel.get("screen-Introduction"));
 	// }
+
+	public static String detailsOfSample(final long sampleId) {
+		return sampleDetails.makeToken(sampleId);
+	}
 
 	public static String detailsOf(final Sample s) {
 		return sampleDetails.makeToken(s);

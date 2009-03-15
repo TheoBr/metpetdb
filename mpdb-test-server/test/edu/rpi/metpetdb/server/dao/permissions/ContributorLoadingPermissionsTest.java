@@ -40,6 +40,7 @@ public class ContributorLoadingPermissionsTest extends DatabaseTestCase {
 		req.principals.add(new OwnerPrincipal(req.user));
 		req.principals.add(new EnabledPrincipal(req.user));
 		MpDbServlet.testReq = req;
+		setupSession(1);
 	}
 	
 	/**
@@ -106,7 +107,7 @@ public class ContributorLoadingPermissionsTest extends DatabaseTestCase {
 	 * Tests loading the private sample of another user
 	 * @throws Throwable
 	 */
-	@Test(expected = NotOwnerException.class)
+	@Test(expected = NoSuchObjectException.class)
 	public void loadOthersPrivateSample() throws Throwable {
 		try {
 			super.byId("Sample", 2);

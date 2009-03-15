@@ -1,9 +1,10 @@
-package edu.rpi.metpetdb.client.ui.widgets;
+package edu.rpi.metpetdb.client.ui.widgets.panels;
 
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.widgets.MNotice;
 
 /**
  * Panel for inline notice messages, i.e. "File uploaded successfully"

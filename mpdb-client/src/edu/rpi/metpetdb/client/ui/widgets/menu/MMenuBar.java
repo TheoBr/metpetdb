@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.widgets;
+package edu.rpi.metpetdb.client.ui.widgets.menu;
 
 import java.util.List;
 
@@ -25,16 +25,6 @@ public class MMenuBar extends MenuBar {
 				.isEmpty()) ? "<a class=\"hasMenu\">" : "<a>";
 		anchor += text + "</a>";
 		return super.addItem(anchor, true, menuBar);
-	}
-
-	public MenuItem addItem(final String text, final MenuItem menuItem) {
-		final Element anchor = DOM.createAnchor();
-		if (menuItem.getSubMenu() != null)
-			DOM.setElementAttribute(anchor, "class", "hasMenu");
-		DOM.setInnerText(anchor, text);
-		DOM.setInnerText(menuItem.getElement(), "");
-		DOM.appendChild(menuItem.getElement(), anchor);
-		return menuItem;
 	}
 
 	public MenuItem addItem(final String text, final Command cmd) {

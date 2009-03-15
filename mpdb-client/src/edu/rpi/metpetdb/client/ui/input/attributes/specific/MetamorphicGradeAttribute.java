@@ -22,7 +22,7 @@ import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
-import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MultipleInputPanel;
 
 public class MetamorphicGradeAttribute extends GenericAttribute {	
 	private MHtmlList editList = new MHtmlList();

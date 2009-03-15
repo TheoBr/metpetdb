@@ -19,8 +19,8 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.commands.LoggedInServerOp;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.VoidLoggedInOp;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageListViewer;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
@@ -31,12 +31,13 @@ import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AddImageAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
-import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
-import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
 
 public class SubsampleDetails extends MPagePanel {
 
 	private static GenericAttribute[] subsampleAtts = {
+			new TextAttribute(MpDb.doc.Subsample_owner).setReadOnly(true),
 			new TextAttribute(MpDb.doc.Subsample_name),
 			new RadioButtonAttribute(MpDb.doc.Subsample_publicData,
 					LocaleHandler.lc_text.publicDataWarning()),
@@ -49,7 +50,7 @@ public class SubsampleDetails extends MPagePanel {
 
 	private final ObjectEditorPanel<Subsample> p_subsample;
 	private long subsampleId;
-	private Sample sampleObj;
+	private long sampleId;
 	private String sampleNumber;
 	private final MLink map = new MLink();
 	private Widget images;
@@ -70,7 +71,7 @@ public class SubsampleDetails extends MPagePanel {
 			}
 
 			protected void deleteBean(final AsyncCallback<Object> ac) {
-				sampleObj = ((Subsample) getBean()).getSample();
+				sampleId = getBean().getSampleId();
 				MpDb.subsample_svc.delete(((Subsample) getBean()).getId(), ac);
 			}
 
@@ -112,7 +113,7 @@ public class SubsampleDetails extends MPagePanel {
 
 			}
 			protected void onDeleteCompletion(final Object result) {
-				History.newItem(TokenSpace.detailsOf((sampleObj)));
+				History.newItem(TokenSpace.detailsOfSample((sampleId)));
 			}
 		};
 
@@ -137,12 +138,11 @@ public class SubsampleDetails extends MPagePanel {
 		final MLink addChemicalAnalysis = new MLink(LocaleHandler.lc_text
 				.addChemicalAnalysis(), new ClickListener() {
 			public void onClick(final Widget sender) {
-				new LoggedInServerOp() {
+				new VoidLoggedInOp() {
 					public void command() {
-						History
-								.newItem(TokenSpace
-										.createNewChemicalAnalysis((Subsample) p_subsample
-												.getBean()));
+						History.newItem(TokenSpace
+								.createNewChemicalAnalysis(p_subsample
+										.getBean()));
 					}
 				}.begin();
 			}

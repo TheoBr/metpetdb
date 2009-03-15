@@ -28,7 +28,7 @@
     																		where ss.subsample_id=subsample_id))" />
     <property name="subsampleName" formula="(select s.name from subsamples s
     																		where s.subsample_id=subsample_id)" />
-    <many-to-one name="owner" column="user_id" lazy="false" />
+    <many-to-one name="owner" column="user_id" />
 	<many-to-one name="reference" column="reference_id" class="Reference" lazy="false" cascade="save-update"/>
 	<many-to-one name="image" column="image_id" class="Image" lazy="false" cascade="none"/>
     <many-to-one name="subsample" column="subsample_id" class="Subsample"  cascade="none"/>
@@ -78,7 +78,6 @@
   </query>
   <query name="ChemicalAnalysis.bySubsampleId">
     from ChemicalAnalysis ma
-    inner join fetch ma.owner
     where ma.subsample.id = :id
   </query>
   <query name="ChemicalAnalysis.bySubsampleId,size">
@@ -87,53 +86,40 @@
   </query>
   <query name="ChemicalAnalysis.bySubsampleId.byspotId">
   	from ChemicalAnalysis ma
-  	inner join fetch ma.owner
   	where ma.subsample.id = :id
   	and ma.spotId = :spotId
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/spotId">
     from ChemicalAnalysis ma
-    inner join fetch ma.owner
     where ma.subsample.id = :id
     order by (lower(ma.spotId))
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/analysisMethod">
     from ChemicalAnalysis ma
-    inner join fetch ma.owner
     where ma.subsample.id = :id
     order by (lower(ma.analysisMethod))
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/location">
     from ChemicalAnalysis ma
-    inner join fetch ma.owner
     where ma.subsample.id = :id
     order by (lower(location))
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/analyst">
     from ChemicalAnalysis ma
-    inner join fetch ma.owner
     where ma.subsample.id = :id
     order by (lower(ma.analyst))
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/analysisDate">
     from ChemicalAnalysis ma
-    inner join fetch ma.owner
     where ma.subsample.id = :id
     order by (lower(ma.analysisDate))
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/description">
     from ChemicalAnalysis ma
-    inner join fetch ma.owner
     where ma.subsample.id = :id
     order by (lower(ma.description))
   </query>
   
-  <query name="ChemicalAnalysis.bySubsampleIdbySpotId">
-    from ChemicalAnalysis ma
-    inner join fetch ma.owner
-    where ma.subsample.id = :id and ma.spotId = :spotId
-  </query>
-
 <!-- only returns data that is either public or owned by the current user
    	used when showing the chemical analyses for a user 
    -->

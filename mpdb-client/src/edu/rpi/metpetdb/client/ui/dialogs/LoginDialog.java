@@ -32,10 +32,10 @@ import edu.rpi.metpetdb.client.ui.input.attributes.PasswordAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.LoginTextAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
-import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel;
-import edu.rpi.metpetdb.client.ui.widgets.MTabPanel;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
-import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel.NoticeType;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MNoticePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MTabPanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MNoticePanel.NoticeType;
 
 public class LoginDialog extends MDialogBox implements ClickListener,
 		KeyboardListener, TabListener {

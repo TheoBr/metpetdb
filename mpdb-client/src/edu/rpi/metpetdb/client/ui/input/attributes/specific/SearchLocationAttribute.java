@@ -28,7 +28,7 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
-import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
 
 public class SearchLocationAttribute extends SearchGenericAttribute implements
 		ClickListener {

@@ -16,6 +16,8 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
+
 public class MSuggestText extends FlowPanel implements ClickListener {
 	public SuggestBox suggestBox;
 	private final String STYLENAME = "suggest";

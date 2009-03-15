@@ -15,9 +15,9 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
-import edu.rpi.metpetdb.client.ui.widgets.MTabPanel;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
-import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MTabPanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
 
 public class SearchInterface implements ClickListener {
 	private SearchTabAttribute[] tabAtts;

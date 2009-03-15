@@ -12,7 +12,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
  * @author anthony
  * 
  */
-public abstract class LoggedInServerOp extends ServerOp<Object> {
+public abstract class LoggedInServerOp<T> extends ServerOp<T> {
 
 	public void begin() {
 		if (MpDb.isLoggedIn()) {
@@ -26,7 +26,7 @@ public abstract class LoggedInServerOp extends ServerOp<Object> {
 	 */
 	public abstract void command();
 
-	public void onSuccess(final Object result) {
+	public void onSuccess(final T result) {
 
 	}
 

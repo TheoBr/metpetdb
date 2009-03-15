@@ -14,7 +14,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package edu.rpi.metpetdb.client.ui.widgets;
+package edu.rpi.metpetdb.client.ui.widgets.panels;
 
 import java.util.Iterator;
 
@@ -28,6 +28,8 @@ import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabListenerCollection;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+
+import edu.rpi.metpetdb.client.ui.widgets.MTabBar;
 
 /**
  * A panel that represents a tabbed set of pages, each of which contains another

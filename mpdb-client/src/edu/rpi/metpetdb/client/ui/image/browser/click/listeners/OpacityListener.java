@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
 import edu.rpi.metpetdb.client.ui.image.browser.dialogs.OpacityPopup;
-import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MAbsolutePanel;
 
 public class OpacityListener implements ClickListener {
 

@@ -17,8 +17,8 @@ import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.image.browser.dialogs.AddPointDialog;
 import edu.rpi.metpetdb.client.ui.image.browser.dialogs.PointPopup;
-import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel;
-import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel.ZMode;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MAbsolutePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MAbsolutePanel.ZMode;
 
 public class ImageBrowserMouseListener implements MouseListener {
 

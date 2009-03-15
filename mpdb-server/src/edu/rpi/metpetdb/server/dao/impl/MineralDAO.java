@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -37,6 +38,18 @@ public class MineralDAO extends MpDbDAO<Mineral> {
 			throw new MineralNotFoundException();
 		} else {
 			return null;
+		}
+	}
+	
+	/**
+	 * Forces hibernate to load the children of the minerals
+	 * @param minerals
+	 */
+	public void initMinerals(final Collection<Mineral> minerals) {
+		for(Mineral m : minerals) {
+			Hibernate.initialize(m);
+			Hibernate.initialize(m.getChildren());
+			initMinerals(m.getChildren());
 		}
 	}
 

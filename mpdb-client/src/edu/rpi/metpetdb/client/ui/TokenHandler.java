@@ -39,7 +39,11 @@ public abstract class TokenHandler {
 			return getName();
 		}
 		public void execute() {
-			History.newItem(makeToken(null));
+			final String token = makeToken(null);
+			if (token.equals(History.getToken()))
+				TokenSpace.dispatch(token);
+			else
+				History.newItem(token);
 		}
 	}
 

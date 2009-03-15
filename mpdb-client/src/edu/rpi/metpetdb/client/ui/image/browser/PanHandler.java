@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import com.google.gwt.user.client.DOM;
 
-import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MAbsolutePanel;
 
 public class PanHandler {
 

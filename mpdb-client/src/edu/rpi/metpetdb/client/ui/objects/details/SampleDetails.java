@@ -11,8 +11,6 @@ import com.google.gwt.maps.client.control.ScaleControl;
 import com.google.gwt.maps.client.event.EarthInstanceHandler;
 import com.google.gwt.maps.client.event.MapTypeChangedHandler;
 import com.google.gwt.maps.client.event.MarkerClickHandler;
-import com.google.gwt.maps.client.event.EarthInstanceHandler.EarthInstanceEvent;
-import com.google.gwt.maps.client.event.MapTypeChangedHandler.MapTypeChangedEvent;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.user.client.History;
@@ -25,7 +23,6 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
@@ -34,7 +31,7 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.LoggedInServerOp;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
@@ -51,8 +48,8 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.RegionAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.SubsampleListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarth;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
-import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
-import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
 
 public class SampleDetails extends MPagePanel {
 	private LatLng samplePosition;
@@ -79,7 +76,7 @@ public class SampleDetails extends MPagePanel {
 			new RegionAttribute(MpDb.doc.Sample_regions),
 			new MetamorphicGradeAttribute(MpDb.doc.Sample_metamorphicGrades),
 			new ReferenceAttribute(MpDb.doc.Sample_references),
-	//		new CommentAttribute(MpDb.doc.Sample_comments),
+			// new CommentAttribute(MpDb.doc.Sample_comments),
 			new TextAttribute(MpDb.doc.Sample_subsampleCount).setReadOnly(true)
 	};
 
@@ -105,13 +102,13 @@ public class SampleDetails extends MPagePanel {
 			}
 
 			protected boolean canEdit() {
-				//TODO temporary while testing permissions
-//				final Sample s = (Sample) getBean();
-//				if (s.isPublicData())
-//					return false;
-//				if (MpDb.isCurrentUser(s.getOwner()))
-//					return true;
-//				return false;
+				// TODO temporary while testing permissions
+				// final Sample s = (Sample) getBean();
+				// if (s.isPublicData())
+				// return false;
+				// if (MpDb.isCurrentUser(s.getOwner()))
+				// return true;
+				// return false;
 				return true;
 			}
 
@@ -127,13 +124,15 @@ public class SampleDetails extends MPagePanel {
 			protected void onLoadCompletion(final Sample result) {
 				super.onLoadCompletion(result);
 				final String title;
-				if (result.getNumber() != null || !result.getNumber().equals(""))
+				if (result.getNumber() != null
+						|| !result.getNumber().equals(""))
 					title = result.getNumber();
 				else
-					title = "<span class=\""+CSS.IGSN_LABEL+"\">IGSN</span> " + result.getSesarNumber();
+					title = "<span class=\"" + CSS.IGSN_LABEL
+							+ "\">IGSN</span> " + result.getSesarNumber();
 				setPageTitle(title, LocaleHandler.lc_text.sample());
-				samplePosition = LatLng.newInstance(((Point) result.getLocation()).y,
-						((Point) result.getLocation()).x);
+				samplePosition = LatLng.newInstance(((Point) result
+						.getLocation()).y, ((Point) result.getLocation()).x);
 				updateGoogleMaps();
 			}
 
@@ -158,19 +157,11 @@ public class SampleDetails extends MPagePanel {
 		final MLink addSubsample = new MLink(LocaleHandler.lc_text
 				.addSubsample(), new ClickListener() {
 			public void onClick(final Widget sender) {
-				new ServerOp<Object>() {
-					public void begin() {
-						if (MpDb.isLoggedIn())
-							History.newItem(TokenSpace
-									.createNewSubsample((Sample) p_sample
-											.getBean()));
-						else
-							onFailure(new LoginRequiredException());
-					}
-
-					public void onSuccess(Object result) {
-						History.newItem(TokenSpace
-								.detailsOf(((Subsample) result).getSample()));
+				new LoggedInServerOp<Subsample>() {
+					@Override
+					public void command() {
+						History.newItem(TokenSpace.createNewSubsample(p_sample
+								.getBean()));
 					}
 				}.begin();
 			}
@@ -216,20 +207,20 @@ public class SampleDetails extends MPagePanel {
 		final FlexTable comments_ft = new FlexTable();
 		Label comments_label = new Label(LocaleHandler.lc_text.comments());
 		comments_ft.setWidget(0, 0, comments_label);
-		
+
 		final FlowPanel fp = new FlowPanel();
-		comments_ft.setWidget(1,0,fp);
-		
-//		new ServerOp<List<SampleComment>>() {
-//			public void begin() {
-//				MpDb.sampleComment_svc.all(sampleId, this);
-//			}
-//
-//			public void onSuccess(List<SampleComment> result) {
-//				for (SampleComment sc : result)
-//					fp.add(new Label(sc.getText()));
-//			}
-//		}.begin();
+		comments_ft.setWidget(1, 0, fp);
+
+		// new ServerOp<List<SampleComment>>() {
+		// public void begin() {
+		// MpDb.sampleComment_svc.all(sampleId, this);
+		// }
+		//
+		// public void onSuccess(List<SampleComment> result) {
+		// for (SampleComment sc : result)
+		// fp.add(new Label(sc.getText()));
+		// }
+		// }.begin();
 
 		// format to look pretty
 		comments_ft.setWidth("100%");
@@ -269,12 +260,12 @@ public class SampleDetails extends MPagePanel {
 
 		map.addOverlay(sampleMarker);
 		map.setCenter(samplePosition);
-		
-		map.addMapTypeChangedHandler(new MapTypeChangedHandler(){
-			public void onTypeChanged(final MapTypeChangedEvent e){
-				map.getEarthInstance(new EarthInstanceHandler(){
-					public void onEarthInstance(final EarthInstanceEvent e){
-						if (!geInit){
+
+		map.addMapTypeChangedHandler(new MapTypeChangedHandler() {
+			public void onTypeChanged(final MapTypeChangedEvent e) {
+				map.getEarthInstance(new EarthInstanceHandler() {
+					public void onEarthInstance(final EarthInstanceEvent e) {
+						if (!geInit) {
 							MGoogleEarth.addControls(e);
 							geInit = true;
 						}
@@ -282,25 +273,26 @@ public class SampleDetails extends MPagePanel {
 				});
 			}
 		});
-		
-		createGEplacemark(samplePosition.getLatitude(),samplePosition.getLongitude());
-		setGEview(samplePosition.getLatitude(),samplePosition.getLongitude());
-		
+
+		createGEplacemark(samplePosition.getLatitude(), samplePosition
+				.getLongitude());
+		setGEview(samplePosition.getLatitude(), samplePosition.getLongitude());
+
 	}
-	
-	private void createGEplacemark(final double x, final double y){
-		map.getEarthInstance(new EarthInstanceHandler(){
-			public void onEarthInstance(final EarthInstanceEvent e){
-				MGoogleEarth.createPlacemark(e,x,y);
-		      }
+
+	private void createGEplacemark(final double x, final double y) {
+		map.getEarthInstance(new EarthInstanceHandler() {
+			public void onEarthInstance(final EarthInstanceEvent e) {
+				MGoogleEarth.createPlacemark(e, x, y);
+			}
 		});
 	}
-	
-	private void setGEview(final double x, final double y){
-		map.getEarthInstance(new EarthInstanceHandler(){
-			public void onEarthInstance(final EarthInstanceEvent e){
-				MGoogleEarth.setView(e,x,y);
-		      }
+
+	private void setGEview(final double x, final double y) {
+		map.getEarthInstance(new EarthInstanceHandler() {
+			public void onEarthInstance(final EarthInstanceEvent e) {
+				MGoogleEarth.setView(e, x, y);
+			}
 		});
 	}
 

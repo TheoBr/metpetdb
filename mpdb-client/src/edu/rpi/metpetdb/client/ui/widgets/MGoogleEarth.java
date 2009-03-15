@@ -11,7 +11,8 @@ public class MGoogleEarth {
 	public static void addControls(final EarthInstanceEvent e){
 		final JavaScriptObject earth = e.getEarthInstance();
 		if (earth == null) {
-          Window.alert(geNotInit);
+	         //I'm not dealing with this message every time I visit a page...
+          //Window.alert(geNotInit);
         } else {
           new Timer() {
             @Override
@@ -33,7 +34,8 @@ public class MGoogleEarth {
 	public static void createPlacemark(final EarthInstanceEvent e, final double x, final double y){
 		final JavaScriptObject earth = e.getEarthInstance();
         if (earth == null) {
-          Window.alert(geNotInit);
+         //I'm not dealing with this message every time I visit a page...
+          //Window.alert(geNotInit);
         } else {
           new Timer() {
             @Override
@@ -292,7 +294,8 @@ public class MGoogleEarth {
 	public static void setView(final EarthInstanceEvent e,final double x, final double y){
 		final JavaScriptObject earth = e.getEarthInstance();
         if (earth == null) {
-          Window.alert(geNotInit);
+            //I'm not dealing with this message every time I visit a page...
+          //Window.alert(geNotInit);
         } else {
           new Timer() {
             @Override

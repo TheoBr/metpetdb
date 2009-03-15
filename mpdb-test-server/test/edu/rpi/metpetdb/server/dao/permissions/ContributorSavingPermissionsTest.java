@@ -14,6 +14,7 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.security.NotOwnerException;
 import edu.rpi.metpetdb.client.error.security.UnableToModifyPublicDataException;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.RockType;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleComment;
@@ -21,6 +22,7 @@ import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.SubsampleType;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleCommentDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
@@ -45,6 +47,7 @@ public class ContributorSavingPermissionsTest extends DatabaseTestCase {
 		req.principals = new ArrayList<Principal>();
 		req.principals.add(new OwnerPrincipal(req.user));
 		MpDbServlet.testReq = req;
+		setupSession(1);
 	}
 
 	/**
@@ -149,6 +152,77 @@ public class ContributorSavingPermissionsTest extends DatabaseTestCase {
 	}
 
 	/**
+	 * Tests saving a chemical analysis to the user's own private sample
+	 * 
+	 * @throws NoSuchObjectException
+	 * @throws MpDbException
+	 */
+	@Test
+	public void saveChemicalAnalysisToPrivateSubsample()
+			throws NoSuchObjectException, MpDbException {
+		final Subsample subsample = super.byId("Subsample", 1);
+		final ChemicalAnalysis ca = new ChemicalAnalysis();
+		ca.setSubsample(subsample);
+		ca.setSpotId("my ca");
+		ca.setOwner(MpDbServlet.testReq.user);
+		ca.setLargeRock(false);
+		final ChemicalAnalysis saved = new ChemicalAnalysisDAO(session)
+				.save(ca);
+		final ChemicalAnalysis loaded = super.byId("ChemicalAnalysis",
+				(int) saved.getId());
+		assertEquals(loaded.getId(), saved.getId());
+		assertEquals("my ca", loaded.getSpotId());
+	}
+
+	/**
+	 * Tests adding a chemical analysis to a public sample (with a different
+	 * owner)
+	 * 
+	 * @throws NoSuchObjectException
+	 * @throws MpDbException
+	 */
+	@Test
+	public void saveChemicalAnalysisToPublicSubsample()
+			throws NoSuchObjectException, MpDbException {
+		final Subsample subsample = super.byId("Subsample",
+				(int) PUBLIC_SUBSAMPLE);
+		final ChemicalAnalysis ca = new ChemicalAnalysis();
+		ca.setSubsample(subsample);
+		ca.setSpotId("my ca");
+		ca.setOwner(MpDbServlet.testReq.user);
+		ca.setLargeRock(false);
+		final ChemicalAnalysis saved = new ChemicalAnalysisDAO(session)
+				.save(ca);
+		final ChemicalAnalysis loaded = super.byId("ChemicalAnalysis",
+				(int) saved.getId());
+		assertEquals(loaded.getId(), saved.getId());
+		assertEquals("my ca", loaded.getSpotId());
+	}
+
+	/**
+	 * Tries to add a chemical analysis to another user's private sample, should
+	 * fail because this is not allowed
+	 * 
+	 * @throws Throwable
+	 */
+	@Test(expected = NotOwnerException.class)
+	public void saveChemicalAnalysisToOthersPrivateSubsample() throws Throwable {
+		final Subsample subsample = new Subsample();
+		subsample.setId(6);
+		final ChemicalAnalysis ca = new ChemicalAnalysis();
+		ca.setSubsample(subsample);
+		ca.setSpotId("my ca");
+		ca.setOwner(MpDbServlet.testReq.user);
+		ca.setLargeRock(false);
+		try {
+			new ChemicalAnalysisDAO(session).save(ca);
+		} catch (CallbackException ce) {
+			session.clear();
+			throw ce.getCause();
+		}
+	}
+
+	/**
 	 * Tests saving a subsample to the user's own private sample
 	 * 
 	 * @throws NoSuchObjectException
@@ -164,8 +238,7 @@ public class ContributorSavingPermissionsTest extends DatabaseTestCase {
 		subsample.setOwner(MpDbServlet.testReq.user);
 		subsample.setName("my subsample");
 		subsample.setSample(sample);
-		final Subsample saved = new SubsampleDAO(session)
-				.save(subsample);
+		final Subsample saved = new SubsampleDAO(session).save(subsample);
 		final Subsample loaded = super.byId("Subsample", (int) saved.getId());
 		assertEquals(loaded.getId(), saved.getId());
 		assertEquals("my subsample", loaded.getName());
@@ -187,8 +260,7 @@ public class ContributorSavingPermissionsTest extends DatabaseTestCase {
 		subsample.setOwner(MpDbServlet.testReq.user);
 		subsample.setName("my subsample");
 		subsample.setSample(sample);
-		final Subsample saved = new SubsampleDAO(session)
-				.save(subsample);
+		final Subsample saved = new SubsampleDAO(session).save(subsample);
 		final Subsample loaded = super.byId("Subsample", (int) saved.getId());
 		assertEquals(loaded.getId(), saved.getId());
 		assertEquals("my subsample", loaded.getName());
@@ -217,5 +289,4 @@ public class ContributorSavingPermissionsTest extends DatabaseTestCase {
 			throw ce.getCause();
 		}
 	}
-
 }

@@ -24,8 +24,8 @@ public class HyperlinkAttribute extends TextAttribute {
 		final MLink link = new MLink();
 		link.setText(get(obj));
 		if (obj instanceof Subsample) {
-			link.setTargetHistoryToken(TokenSpace.detailsOf(((Subsample) obj)
-					.getSample()));
+			link.setTargetHistoryToken(TokenSpace.detailsOfSample(((Subsample) obj)
+					.getSampleId()));
 		} else if (obj instanceof ChemicalAnalysis) {
 			if (this.constraints[0].propertyName.equals("subSampleName")) {
 				link.setTargetHistoryToken(TokenSpace

@@ -41,7 +41,7 @@ import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarthPopUp;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
-import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
 public class UserSamplesList extends MPagePanel implements ClickListener {
 	private static final String cookieString = "UserSamplesList";

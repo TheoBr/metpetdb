@@ -16,7 +16,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
-import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MultipleInputPanel;
 
 public class SearchOwnersAttribute extends SearchGenericAttribute{
 

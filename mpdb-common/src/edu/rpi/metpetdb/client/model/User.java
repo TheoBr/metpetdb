@@ -36,6 +36,7 @@ public class User extends MObject {
 	@ContainedIn
 	private Set<Sample> samples;
 	private Role role;
+	private Integer rank;
 
 	private transient byte[] encryptedPassword;
 
@@ -177,6 +178,14 @@ public class User extends MObject {
 
 	public void setRole(Role role) {
 		this.role = role;
+	}
+
+	public Integer getRank() {
+		return rank;
+	}
+
+	public void setRank(Integer rank) {
+		this.rank = rank;
 	}
 
 	public int hashCode() {

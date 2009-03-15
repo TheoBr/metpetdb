@@ -36,6 +36,7 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 	private final SimplePanel container;
 	private TreeAttribute<Mineral> tree;
 	private WizardDialog dialog;
+	private boolean choseMinerals = false;
 
 	private DetailsPanel p_mineral;
 
@@ -134,6 +135,7 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 					newSelectedItems.add(sampleMineral);
 				}
 				p_amounts.edit(merge(tree.getSelectedItems(), ((Sample)obj).getMinerals()));
+				choseMinerals = true;
 			}
 		};
 		wd.addStep(p_mineral, 0, "Select Minerals");
@@ -175,7 +177,10 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 	protected Object get(final Widget editWidget) {
 		if (this.getConstraint().equals(MpDb.doc.Sample_minerals)) {
 			// return the sample minerals
-			return p_amounts.getBeans();
+			if (choseMinerals)
+				return p_amounts.getBeans();
+			else
+				return ((Sample)obj).getMinerals();
 		} else {
 			// return the minerals in the tree
 			return tree.get(editWidget);
@@ -227,7 +232,6 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 							.remakeContainer(MineralAttribute.this.obj);
 				}
 			};
-			p_mineral.setBean(this.obj);
 			dialog.clearDialogFinishListeners();
 			dialog.addDialogFinishListener(dialog_finish);
 			dialog.show();

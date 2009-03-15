@@ -43,7 +43,8 @@ public class ChemicalAnalysisTest extends DatabaseTestCase {
 	 */
 	@Test
 	public void publicAll() {
-		session.enableFilter("chemicalAnalysisPublicOrUser").setParameter("userId", 0l);
+		session.enableFilter("chemicalAnalysisPublicOrUser").setParameter(
+				"userId", 0);
 		final List<ChemicalAnalysis> cas = session.getNamedQuery(
 				"ChemicalAnalysis.bySubsampleId").setParameter("id",
 				PUBLIC_SUBSAMPLE).list();
@@ -61,10 +62,17 @@ public class ChemicalAnalysisTest extends DatabaseTestCase {
 		MpDbServlet.currentReq().user = super.byId("User", 1);
 		MpDbServlet.currentReq().principals.add(new OwnerPrincipal(MpDbServlet
 				.currentReq().user));
-		session.enableFilter("chemicalAnalysisPublicOrUser").setParameter("userId", 1l);
+		session.enableFilter("chemicalAnalysisPublicOrUser").setParameter(
+				"userId", 1);
 		final List<ChemicalAnalysis> cas = session.getNamedQuery(
 				"ChemicalAnalysis.bySubsampleId").setParameter("id",
 				PUBLIC_SUBSAMPLE).list();
 		assertEquals(3, cas.size());
+	}
+
+	@Test
+	public void loadChemicalAnalysis() throws NoSuchObjectException {
+		final ChemicalAnalysis ca = super.byId("ChemicalAnalysis",
+				PUBLIC_CHEMICAL_ANALYSIS);
 	}
 }

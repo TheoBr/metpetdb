@@ -44,7 +44,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabRock
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarthPopUp;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
-import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
 public class Search extends MPagePanel implements PageChangeListener {
 

@@ -34,9 +34,9 @@ import edu.rpi.metpetdb.client.ui.dialogs.UnknownErrorDialog;
 import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
-import edu.rpi.metpetdb.client.ui.widgets.MMenuBar;
-import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel;
-import edu.rpi.metpetdb.client.ui.widgets.MNoticePanel.NoticeType;
+import edu.rpi.metpetdb.client.ui.widgets.menu.MMenuBar;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MNoticePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MNoticePanel.NoticeType;
 
 /** Main application entry point. */
 public class MetPetDBApplication implements EntryPoint {

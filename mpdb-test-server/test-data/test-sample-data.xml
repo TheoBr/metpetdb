@@ -28,6 +28,7 @@
   <subsamples subsample_id="3" version="1" public_data="N" sample_id="1" user_id="1" name="temp3" subsample_type_id="1"/>
   <subsamples subsample_id="4" version="1" public_data="Y" sample_id="6" user_id="1" name="temp4" subsample_type_id="1"/>
   <subsamples subsample_id="5" version="1" public_data="N" sample_id="6" user_id="1" name="temp5" subsample_type_id="1"/>
+  <subsamples subsample_id="6" version="1" public_data="N" sample_id="6" user_id="2" name="temp6" subsample_type_id="1"/>
   <image_format image_format_id="1" name="image/tiff"/>
   <image_type image_type_id="1" image_type="Map" abbreviation="MAP"/>
   <image_type image_type_id="2" image_type="Cross Section" abbreviation="XC"/>
@@ -91,7 +92,8 @@
   <sample_comments comment_id="2" sample_id="6" user_id="1" comment_text="wowo" version="1"/>
   <sample_metamorphic_grades sample_id="5" metamorphic_grade_id="1"/>
   <sample_metamorphic_grades_archive/>
-  <sample_minerals/>
+  <sample_minerals sample_id="6" mineral_id="1" amount="1" />
+  <sample_minerals sample_id="6" mineral_id="2" amount="2" />
   <sample_minerals_archive/>
   <sample_reference/>
   <sample_reference_archive/>

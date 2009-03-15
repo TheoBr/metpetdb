@@ -18,10 +18,12 @@ import edu.rpi.metpetdb.client.ui.input.attributes.TextAreaAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.AnalysisMaterialAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.ChemistryAttribute;
-import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
 public class ChemicalAnalysisDetails extends MPagePanel {
 	private static GenericAttribute[] chemicalAnalysisAtts = {
+			new TextAttribute(MpDb.doc.ChemicalAnalysis_owner)
+					.setReadOnly(true),
 			new TextAttribute(MpDb.doc.ChemicalAnalysis_spotId),
 			new RadioButtonAttribute(MpDb.doc.ChemicalAnalysis_publicData,
 					LocaleHandler.lc_text.publicDataWarning()),
@@ -37,11 +39,11 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 			new TextAreaAttribute(MpDb.doc.ChemicalAnalysis_description),
 			new AnalysisMaterialAttribute(MpDb.doc.ChemicalAnalysis_mineral,
 					MpDb.doc.ChemicalAnalysis_largeRock),
-			new ChemistryAttribute(MpDb.doc.ChemicalAnalysis_elements,
-					MpDb.doc.ChemicalAnalysis_oxides),
 			new TextAttribute(MpDb.doc.ChemicalAnalysis_total),
 			new TextAttribute(MpDb.doc.ChemicalAnalysis_stageX),
 			new TextAttribute(MpDb.doc.ChemicalAnalysis_stageY),
+			new ChemistryAttribute(MpDb.doc.ChemicalAnalysis_elements,
+					MpDb.doc.ChemicalAnalysis_oxides),
 	};
 
 	private final ObjectEditorPanel<ChemicalAnalysis> p_chemicalAnalysis;
@@ -71,14 +73,15 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 			}
 
 			protected boolean canEdit() {
-				//TODO temporary while testing permissions
-//				final Sample s = ((ChemicalAnalysis) getBean()).getSubsample()
-//						.getSample();
-//				if (s.isPublicData())
-//					return false;
-//				if (MpDb.isCurrentUser(s.getOwner()))
-//					return true;
-//				return false;
+				// TODO temporary while testing permissions
+				// final Sample s = ((ChemicalAnalysis)
+				// getBean()).getSubsample()
+				// .getSample();
+				// if (s.isPublicData())
+				// return false;
+				// if (MpDb.isCurrentUser(s.getOwner()))
+				// return true;
+				// return false;
 				return true;
 			}
 
@@ -95,7 +98,8 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 
 			protected void onLoadCompletion(final ChemicalAnalysis result) {
 				super.onLoadCompletion(result);
-				setPageTitle(result.getSubsampleName(), "Chemical Analysis Spot");
+				setPageTitle(result.getSubsampleName(),
+						"Chemical Analysis Spot");
 			}
 
 			protected void onDeleteCompletion(final Object result) {

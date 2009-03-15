@@ -133,7 +133,7 @@ public class SampleParser extends Parser<Sample> {
 						for (Mineral mineral : minerals) {
 							if (mineral.getName().equalsIgnoreCase(cell.toString())) {
 								currentObject.addMineral(getRealMineral(mineral));
-								break;
+								return true;
 							}
 						}
 						//if we got here the cell name doesn't equal a mineral so take the one formed

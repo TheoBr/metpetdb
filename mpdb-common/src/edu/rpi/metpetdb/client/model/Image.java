@@ -249,4 +249,9 @@ public class Image extends MObject implements HasSubsample, HasSample, PublicDat
 	public Boolean isPublicData() {
 		return publicData;
 	}
+	
+	@Override
+	public String toString() {
+		return filename;
+	}
 }

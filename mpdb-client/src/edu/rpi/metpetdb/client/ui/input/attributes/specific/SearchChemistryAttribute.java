@@ -35,7 +35,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MMultiWordSuggestOracle;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
-import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MultipleInputPanel;
 
 public class SearchChemistryAttribute extends SearchGenericAttribute {
 	private Map<RowContainer,String> currentCriteria = new HashMap<RowContainer,String>();
@@ -93,7 +93,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			}
 			
 			for (Oxide o : oxides){
-				options.add(o.getDisplayName() + "&nbsp;<span>" + o.getElement().getName() +"<span>");
+				options.add(o.getDisplayName());
 			}
 			
 			st = new ChemMSuggestText(options, true){

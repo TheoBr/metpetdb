@@ -36,7 +36,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
-import edu.rpi.metpetdb.client.ui.widgets.MTwoColPanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
 
 public class ChemistryAttribute extends GenericAttribute implements
 		ClickListener, ChangeListener {

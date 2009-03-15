@@ -37,10 +37,10 @@ public class DatabaseTestCase {
 	private static IDatabaseConnection conn;
 
 	private static Connection hiberateConnection;
-	
-	public static final int PUBLIC_SAMPLE=6;
-	public static final long PUBLIC_SUBSAMPLE=4;
-	public static final int PUBLIC_CHEMICAL_ANALYSIS=3;
+
+	public static final int PUBLIC_SAMPLE = 6;
+	public static final long PUBLIC_SUBSAMPLE = 4;
+	public static final int PUBLIC_CHEMICAL_ANALYSIS = 3;
 
 	/**
 	 * Tables excluded from the database backup
@@ -97,6 +97,15 @@ public class DatabaseTestCase {
 		}
 	}
 
+	protected void setupSession(final int userId) {
+		session.enableFilter("samplePublicOrUser").setParameter("userId",
+				userId);
+		session.enableFilter("subsamplePublicOrUser").setParameter("userId",
+				userId);
+		session.enableFilter("chemicalAnalysisPublicOrUser").setParameter(
+				"userId", userId);
+	}
+
 	@Before
 	public void setUp() {
 		session = DataStore.open();
@@ -106,6 +115,7 @@ public class DatabaseTestCase {
 		req.user = null;
 		req.principals = new ArrayList<Principal>();
 		MpDbServlet.testReq = req;
+		setupSession(0);
 	}
 
 	@After

@@ -8,7 +8,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
-import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MAbsolutePanel;
 
 public class ResizableWidget extends Composite {
 

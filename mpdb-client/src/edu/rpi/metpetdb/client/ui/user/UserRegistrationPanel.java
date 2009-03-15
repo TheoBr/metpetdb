@@ -20,7 +20,7 @@ import edu.rpi.metpetdb.client.ui.input.Submit;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.PasswordAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
-import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
 public class UserRegistrationPanel extends MPagePanel implements ClickListener { 
 	private static final GenericAttribute[] mainAttributes = {

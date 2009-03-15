@@ -22,24 +22,23 @@
     <property name="referenceEmail" column="reference_email" />
 	<property name="enabled" type="yes_no" />
 	<property name="confirmationCode" column="confirmation_code" />    
+	<property name="rank" formula="(select r.rank from roles r where r.role_id=role_id)" />
 
     <set name="projects" table="project_members" inverse="true">
       <key column="user_id" />
       <many-to-many class="Project" column="project_id" />
     </set>
     
-    <many-to-one name="role" column="role_id" lazy="false" />
+    <many-to-one name="role" column="role_id"/>
   </class>
 
   <query name="User.byId">
     from User u
-    inner join fetch u.role
     where u.id = :id
   </query>
 
   <query name="User.byEmailAddress">
     from User u
-    inner join fetch u.role
     where u.emailAddress = :emailAddress
   </query>
   <query name="User.all/name">
@@ -49,8 +48,7 @@
    </query>
    <query name="User.eligableSponsors">
      from User u
-     inner join fetch u.role
-     where u.role.rank >= :rank
+     where u.rank >= :rank
      order by lower(u.name)
    </query>
 </hibernate-mapping>

@@ -35,7 +35,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	private int referenceX;
 	private int referenceY;
 	private Image image;
-	@ContainedIn
+	//@ContainedIn
 	private Subsample subsample;
 	private String analysisMethod;
 	private String location;
@@ -414,5 +414,10 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 			return measurementUnits.get("wt%");
 		else
 			return measurementUnits.get("ppm");
+	}
+	
+	@Override
+	public String toString() {
+		return spotId;
 	}
 }

@@ -43,12 +43,12 @@ import edu.rpi.metpetdb.client.ui.image.browser.dialogs.PopupMenu;
 import edu.rpi.metpetdb.client.ui.image.browser.widgets.DCFlowPanel;
 import edu.rpi.metpetdb.client.ui.image.browser.widgets.ResizableWidget;
 import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
-import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MLinkandText;
-import edu.rpi.metpetdb.client.ui.widgets.MPagePanel;
-import edu.rpi.metpetdb.client.ui.widgets.MAbsolutePanel.ZMode;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MAbsolutePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MAbsolutePanel.ZMode;
 
 public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 
@@ -186,8 +186,8 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 				.getSubsample().getName(), "'s Map", TokenSpace
 				.detailsOf(this.g.getSubsample()));
 		final MLinkandText sampleHeader = new MLinkandText("Sample ", this.g
-				.getSubsample().getSample().getName(), "", TokenSpace
-				.detailsOf(this.g.getSubsample().getSample()));
+				.getSubsample().getSampleName(), "", TokenSpace
+				.detailsOfSample(this.g.getSubsample().getSampleId()));
 		header.addStyleName("h3");
 		sampleHeader.addStyleName("h2");
 		this.add(sampleHeader);

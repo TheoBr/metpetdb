@@ -18,7 +18,7 @@ import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
-import edu.rpi.metpetdb.client.ui.widgets.MultipleInputPanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MultipleInputPanel;
 
 public abstract class MultipleSuggestTextAttribute extends GenericAttribute implements ChangeListener, SuggestionHandler{
 	private final boolean addShow;

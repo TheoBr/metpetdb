@@ -52,7 +52,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner,
 	@IndexedEmbedded(prefix = "rockType_")
 	private RockType rockType;
 
-	@IndexedEmbedded(prefix = "subsample_")
+	//@IndexedEmbedded(prefix = "subsample_")
 	private Set<Subsample> subsamples;
 
 	private Set<Project> projects;
