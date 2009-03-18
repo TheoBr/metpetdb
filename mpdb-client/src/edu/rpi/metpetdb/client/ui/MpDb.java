@@ -26,6 +26,8 @@ import edu.rpi.metpetdb.client.service.ReferenceService;
 import edu.rpi.metpetdb.client.service.ReferenceServiceAsync;
 import edu.rpi.metpetdb.client.service.RegionService;
 import edu.rpi.metpetdb.client.service.RegionServiceAsync;
+import edu.rpi.metpetdb.client.service.SampleCommentService;
+import edu.rpi.metpetdb.client.service.SampleCommentServiceAsync;
 import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.client.service.SampleServiceAsync;
 import edu.rpi.metpetdb.client.service.SearchService;
@@ -86,6 +88,8 @@ public class MpDb {
 	public static final ReferenceServiceAsync reference_svc;
 
 	public static final MetamorphicGradeServiceAsync metamorphicGrade_svc;
+	
+	public static final SampleCommentServiceAsync sampleComment_svc;
 
 	public static DatabaseObjectConstraints doc;
 
@@ -152,6 +156,9 @@ public class MpDb {
 
 		metamorphicGrade_svc = (MetamorphicGradeServiceAsync) bindService(GWT
 				.create(MetamorphicGradeService.class), "metamorphicGrade");
+		
+		sampleComment_svc = (SampleCommentServiceAsync) bindService(GWT
+				.create(SampleCommentService.class), "sampleComment");
 
 		// factory = (HtmlFactory) GWT.create(HtmlFactory.class);
 	}

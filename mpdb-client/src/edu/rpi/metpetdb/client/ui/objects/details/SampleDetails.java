@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
+import java.util.List;
+
 import org.postgis.Point;
 
 import com.google.gwt.maps.client.InfoWindowContent;
@@ -15,16 +17,19 @@ import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -32,6 +37,7 @@ import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.LoggedInServerOp;
+import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
@@ -56,6 +62,7 @@ public class SampleDetails extends MPagePanel {
 	private MapWidget map;
 	private MTwoColPanel panel = new MTwoColPanel();
 	private boolean geInit = false;
+	private FlowPanel commentsContainer = new FlowPanel();
 
 	private static GenericAttribute[] sampleAtts = {
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
@@ -82,6 +89,7 @@ public class SampleDetails extends MPagePanel {
 
 	private final ObjectEditorPanel<Sample> p_sample;
 	private long sampleId;
+	private Sample sample;
 
 	public SampleDetails() {
 		p_sample = new ObjectEditorPanel<Sample>(sampleAtts,
@@ -123,6 +131,7 @@ public class SampleDetails extends MPagePanel {
 
 			protected void onLoadCompletion(final Sample result) {
 				super.onLoadCompletion(result);
+				sample = result;
 				final String title;
 				if (result.getNumber() != null
 						|| !result.getNumber().equals(""))
@@ -204,36 +213,114 @@ public class SampleDetails extends MPagePanel {
 	}
 
 	public void addComments() {
-		final FlexTable comments_ft = new FlexTable();
-		Label comments_label = new Label(LocaleHandler.lc_text.comments());
-		comments_ft.setWidget(0, 0, comments_label);
+		final Label commentsHeader = new Label(LocaleHandler.lc_text.comments());
+		final TextArea newComment = new TextArea();
+		final Button submit = new Button(LocaleHandler.lc_text.buttonSubmit());
+		final MLink cancel = new MLink("Clear", new ClickListener(){
+			public void onClick(final Widget sender){
+				newComment.setText("");
+			}
+		});
+		final SampleComment comment = new SampleComment();
+		submit.addClickListener(new ClickListener(){
+			public void onClick(final Widget sender){
+				new ServerOp<SampleComment>() {
+					public void begin() {				
+						comment.setOwner(MpDb.currentUser());
+						comment.setText(newComment.getText());
+						comment.setSample(sample);
+						MpDb.sampleComment_svc.save(comment, this);
+					}
 
-		final FlowPanel fp = new FlowPanel();
-		comments_ft.setWidget(1, 0, fp);
+					public void onSuccess(SampleComment result) {
+						commentsContainer.clear();
+						addComments();
+					}
+				}.begin();
+			}
+		});
 
-		// new ServerOp<List<SampleComment>>() {
-		// public void begin() {
-		// MpDb.sampleComment_svc.all(sampleId, this);
-		// }
-		//
-		// public void onSuccess(List<SampleComment> result) {
-		// for (SampleComment sc : result)
-		// fp.add(new Label(sc.getText()));
-		// }
-		// }.begin();
+		commentsContainer.add(commentsHeader);
+		commentsContainer.add(newComment);
+		commentsContainer.add(submit);
+		commentsContainer.add(cancel);
+		
+		new ServerOp<List<SampleComment>>() {
+			public void begin() {
+				MpDb.sampleComment_svc.all(sampleId, this);
+			}
 
-		// format to look pretty
-		comments_ft.setWidth("100%");
-		comments_label.addStyleName("bold");
-		comments_ft.getFlexCellFormatter().setWidth(0, 0, "100%");
-		comments_ft.getFlexCellFormatter().setHeight(0, 0, "35px");
-		comments_ft.getRowFormatter()
-				.setStyleName(0, "mpdb-dataTableLightBlue");
-		comments_ft.getFlexCellFormatter().setAlignment(0, 0,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
+			public void onSuccess(List<SampleComment> result) {
+				for (SampleComment sc : result)					
+					commentsContainer.insert(createCommentContainer(sc),1);
+			}
+		}.begin();
+	}
+	
+	private Widget createCommentContainer(final SampleComment sc){
+		final FlowPanel individualContainer = new FlowPanel();
+		final Label ownerName = new Label(sc.getOwner().getName());
+		final Label commentText = new Label(sc.getText());
+		
+		final MLink deleteComment = new MLink("Delete", new ClickListener(){
+			public void onClick(final Widget sender){
+				new ServerOp<Object>() {
+					public void begin() {
+						MpDb.sampleComment_svc.delete(sc.getId(), this);
+					}
 
-		this.add(comments_ft);
+					public void onSuccess(Object result) {
+						commentsContainer.remove(individualContainer);
+					}
+				}.begin();
+			}
+		});
+		final MLink editComment = new MLink();
+		editComment.setText("Edit");
+		editComment.addClickListener(new ClickListener(){
+			public void onClick(final Widget sender){
+				final TextArea editText = new TextArea();
+				editText.setText(commentText.getText());
+				final Button submit = new Button(LocaleHandler.lc_text.buttonSubmit());
+				final MLink cancel = new MLink("Cancel", new ClickListener(){
+					public void onClick(final Widget sender){
+						commentsContainer.clear();
+						addComments();		
+					}
+				});
+				submit.addClickListener(new ClickListener(){
+					public void onClick(final Widget sender){
+						new ServerOp<SampleComment>() {
+							public void begin() {
+								sc.setText(editText.getText());
+								MpDb.sampleComment_svc.save(sc, this);
+							}
+
+							public void onSuccess(SampleComment result) {
+								commentsContainer.clear();
+								addComments();	
+							}
+						}.begin();
+					}
+				});
+				individualContainer.clear();
+				individualContainer.add(ownerName);
+				individualContainer.add(editText);
+				individualContainer.add(submit);
+				individualContainer.add(cancel);
+			}
+		});
+		
+		individualContainer.add(ownerName);
+		individualContainer.add(commentText);
+		if (MpDb.currentUser().getId() == sc.getOwner().getId()){
+			individualContainer.add(editComment);
+			individualContainer.add(deleteComment);
+		}
+		if (MpDb.currentUser().getId() == sample.getOwner().getId()){
+			individualContainer.add(deleteComment);
+		}
+		return individualContainer;
 	}
 
 	private void addGoogleMaps() {
@@ -300,6 +387,7 @@ public class SampleDetails extends MPagePanel {
 		sampleId = id;
 		p_sample.load();
 		addExtraElements();
+		add(commentsContainer);
 		addComments();
 		addGoogleMaps();
 		return this;

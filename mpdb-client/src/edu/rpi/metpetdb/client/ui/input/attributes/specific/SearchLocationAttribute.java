@@ -7,15 +7,22 @@ import java.util.ArrayList;
 import org.postgis.LinearRing;
 import org.postgis.Point;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.maps.client.MapType;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.control.LargeMapControl;
 import com.google.gwt.maps.client.control.MapTypeControl;
 import com.google.gwt.maps.client.control.ScaleControl;
+import com.google.gwt.maps.client.event.EarthInstanceHandler;
 import com.google.gwt.maps.client.event.MapClickHandler;
+import com.google.gwt.maps.client.event.MapTypeChangedHandler;
+import com.google.gwt.maps.client.event.EarthInstanceHandler.EarthInstanceEvent;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.Overlay;
 import com.google.gwt.maps.client.overlay.Polygon;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Label;
@@ -27,6 +34,7 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarth;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
 
@@ -49,6 +57,9 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 	private final Label southLabel = new Label("South Latitude");
 	private final Label eastLabel = new Label("East Longitude");
 	private final Label westLabel = new Label("West Longitude");
+	
+	private double downX;
+	private double downY;
 
 	public SearchLocationAttribute(final PropertyConstraint sc) {
 		super(sc);
@@ -79,8 +90,9 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 		map = new MapWidget(LatLng.newInstance(43.8, -5.6),1);
 		map.addControl(new LargeMapControl());
 		map.addControl(new MapTypeControl());
-		map.addControl(new ScaleControl());
-		map.setSize("100%", "350px");
+		map.addControl(new ScaleControl());	
+		map.addMapType(MapType.getEarthMap());
+		map.setSize("100%", "400px");
 		
 		panel.getLeftCol().add(map);
 		panel.getRightCol().add(northLabel);
@@ -112,13 +124,108 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 			map.addOverlay(markerPoint2);
 			createBox();
 		}
-
 		return new Widget[] {
 			panel
 		};
 	}
+
+	public void createMarkerPoint(double x, double y) {
+		if (markerPoint1 == null) {
+			markerPoint1 = new Marker(LatLng.newInstance(y, x));
+			map.addOverlay(markerPoint1);
+			if (markerPoint2 != null) {
+				final Marker temp = markerPoint1;
+				markerPoint1 = markerPoint2;
+				markerPoint2 = temp;
+			}
+			createBox();
+		} else {
+			if (markerPoint2 != null) {
+				map.removeOverlay(markerPoint2);
+			}
+			markerPoint2 = new Marker(LatLng.newInstance(y, x));
+			map.addOverlay(markerPoint2);
+			createBox();
+		}
+		getSearchInterface().createCritera();
+	}
+	
+	public void onGEDown(double x, double y){
+		downX = x;
+		downY= y;
+	}
+	
+	public void onGEClick(double x, double y, double lng, double lat){
+		if (downX == x && downY == y)
+		{
+			createMarkerPoint(lng, lat);
+		}
+	}
+	
+	public void clearPolygon(double x, double y){
+		if (markerPoint1 != null && markerPoint2 != null && downX == x && downY == y) {
+			clearSpecificOverlays(new Overlay[] {
+					box, markerPoint2 
+			});
+		}
+	}
+	
+	private void addClickListener(final EarthInstanceEvent e){
+		final JavaScriptObject earth = e.getEarthInstance();
+        if (earth == null) {
+
+        } else {
+          new Timer() {
+            @Override
+            public void run() {
+            	addClickListener(earth, SearchLocationAttribute.this);
+            }
+          }.schedule(1000);
+        }
+	}
+	
+	private native void addClickListener(JavaScriptObject ge, SearchLocationAttribute me) /*-{	
+		if (!window.globeDownEventListener) {
+	  		window.globeDownEventListener = function(event) {
+	  			me.@edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttribute::onGEDown(DD)(event.getScreenX(), event.getScreenY());	
+		  	}
+		}	
+		if (!window.globeClickEventListener) {
+	  		window.globeClickEventListener = function(event) {
+		  		if (event.getTarget().getType() != "KmlPlacemark"){
+					me.@edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttribute::onGEClick(DDDD)(event.getScreenX(), event.getScreenY(),event.getLongitude(), event.getLatitude());
+		  		} else {
+		  			me.@edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttribute::clearPolygon(DD)(event.getScreenX(), event.getScreenY());
+		  		}
+		  	}
+		}	
+		$wnd.google.earth.addEventListener(ge.getGlobe(), "click",
+		                              window.globeClickEventListener);
+		$wnd.google.earth.addEventListener(ge.getGlobe(), "mousedown",
+		                              window.globeDownEventListener);
+	}-*/;
 	
 	private void setClickHandler() {
+		map.addMapTypeChangedHandler(new MapTypeChangedHandler(){
+			public void onTypeChanged(final MapTypeChangedEvent e){
+				map.getEarthInstance(new EarthInstanceHandler(){
+					public void onEarthInstance(final EarthInstanceEvent e){
+						MGoogleEarth.addControls(e);
+						addClickListener(e);
+						final double x;
+						final double y;
+						if (markerPoint1 != null && markerPoint2 != null){
+							x = (markerPoint1.getLatLng().getLatitude() + markerPoint2.getLatLng().getLatitude())/2;
+							y = (markerPoint1.getLatLng().getLongitude() + markerPoint2.getLatLng().getLongitude())/2;
+						} else {
+							x = map.getCenter().getLatitude();
+							y = map.getCenter().getLongitude();
+						}
+						MGoogleEarth.setView(e,x,y);
+				      }
+				});
+			}
+		});
 		map.addMapClickHandler(new MapClickHandler() {
 			public void onClick(MapClickHandler.MapClickEvent sender) {
 				if (sender.getOverlay() != null) {
@@ -130,34 +237,25 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 						clearSpecificOverlays(new Overlay[] {
 								box, markerPoint1
 						});
-					} else if (sender.getOverlay() == markerPoint2)
+					} else if (sender.getOverlay() == markerPoint2) {
 						clearSpecificOverlays(new Overlay[] {
 								box, markerPoint2
 						});
-					{
 					}
 					clearBounds();
 				} else {
-					if (markerPoint1 == null) {
-						markerPoint1 = new Marker(sender.getLatLng());
-						map.addOverlay(markerPoint1);
-						if (markerPoint2 != null) {
-							final Marker temp = markerPoint1;
-							markerPoint1 = markerPoint2;
-							markerPoint2 = temp;
-						}
-						createBox();
-					} else {
-						if (markerPoint2 != null) {
-							map.removeOverlay(markerPoint2);
-						}
-						markerPoint2 = new Marker(sender.getLatLng());
-						map.addOverlay(markerPoint2);
-						createBox();
-					}
+					createMarkerPoint(sender.getLatLng().getLongitude(),sender.getLatLng().getLatitude());
 				}
 				getSearchInterface().createCritera();
 			}
+		});
+	}
+	
+	private void clearGEpolygon(){
+		map.getEarthInstance(new EarthInstanceHandler(){
+			public void onEarthInstance(final EarthInstanceEvent e){
+				MGoogleEarth.clearPolygon(e);
+		      }
 		});
 	}
 
@@ -202,6 +300,11 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 				map.removeOverlay(box);
 			box = new Polygon(points, "#0f2e3c", 1, .60, "#000000", .33);
 			map.addOverlay(box);
+			map.getEarthInstance(new EarthInstanceHandler(){
+				public void onEarthInstance(final EarthInstanceEvent e){
+					MGoogleEarth.createPolygon(e,W,S,E,N);
+			      }
+			});
 			
 			fillBounds(N, S, E, W);
 			
@@ -227,18 +330,23 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 		for (int i = 0; i < overlays.length; i++) {
 			if (overlays[i] != null) {
 				map.removeOverlay(overlays[i]);
-				if (overlays[i] == box)
+				if (overlays[i] == box){
 					box = null;
-				else if (overlays[i] == markerPoint1)
+					clearGEpolygon();
+				}
+				else if (overlays[i] == markerPoint1) {
 					markerPoint1 = null;
-				else if (overlays[i] == markerPoint2)
+				}
+				else if (overlays[i] == markerPoint2) {
 					markerPoint2 = null;
+				}
 			}
 		}
 	}
 
 	public void clearMap() {
 		map.clearOverlays();
+		clearGEpolygon();
 		markerPoint1 = null;
 		markerPoint2 = null;
 		boundingBox = null;

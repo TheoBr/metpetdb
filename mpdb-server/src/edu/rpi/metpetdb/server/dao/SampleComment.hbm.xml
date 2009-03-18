@@ -11,7 +11,7 @@
     </id>
     <version name="version" />
     <property name="text" column="comment_text" />
-    <many-to-one name="owner" column="user_id" />
+    <many-to-one name="owner" column="user_id" lazy="false" />
     <many-to-one name="sample" column="sample_id" class="Sample" not-null="true"/>
     
     </class>
@@ -26,6 +26,7 @@
   <query name="SampleComment.bySampleId">
     from SampleComment sc
     where sc.sample.id = :sampleId
+    order by sc.id
   </query>
   
   
