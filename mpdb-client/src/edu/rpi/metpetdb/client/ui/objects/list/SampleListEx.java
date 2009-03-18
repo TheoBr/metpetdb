@@ -109,7 +109,14 @@ public abstract class SampleListEx extends ListEx<Sample> {
 			},
 			new Column(true,enttxt.Sample_regions(), SampleProperty.regions, false, true) {
 				protected Object getWidget(final MObject data,
+						final int currentRow) {					
+					return new MCollapsedText(getText(data));
+				}
+				public Object getTooltipRepresentation(final MObject data,
 						final int currentRow) {
+					return getText(data);
+				}
+				private String getText(final MObject data) {
 					Set<Region> regions = ((Set<Region>) data.mGet(SampleProperty.regions));
 					String text = "";
 					for (Region r : regions){
@@ -119,8 +126,7 @@ public abstract class SampleListEx extends ListEx<Sample> {
 						text = "------";
 					} else
 						text = text.substring(0,text.length()-2);
-					return new MText(text);
-
+					return text;
 				}
 			},
 			new Column(true,enttxt.Sample_country(), SampleProperty.country, true) {
