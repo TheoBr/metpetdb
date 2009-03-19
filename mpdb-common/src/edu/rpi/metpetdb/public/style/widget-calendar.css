@@ -54,6 +54,7 @@
 	cursor: pointer;
 }
 .gwt-DatePicker .month-forward {
+	background-image: url(../images/calendar-month-next.png);
 }
 	background-image: url(../images/calendar-month-next.png);
 .gwt-DatePicker .month-backward:hover,
