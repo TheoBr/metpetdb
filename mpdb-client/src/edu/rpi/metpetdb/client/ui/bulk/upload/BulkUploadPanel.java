@@ -260,7 +260,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 
 	private void doCommit() {
 		resultStatus.sendNotice(NoticeType.WORKING, "Submitting " + contentType
-				+ " to MetPetDB. Please wait...");
+				+ " to MetPetDB. This may take a few moments...");
 		commitButton.setText("Submitting data...");
 		commitButton.setEnabled(false);
 		new ServerOp<BulkUploadResult>() {
@@ -276,7 +276,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				hide(progressContainer);
 				// TODO better error handling
 				resultStatus.sendNotice(NoticeType.ERROR, "There was an error submitting the data.");
-				nextStepText.setText("Please submit a bug report to the developers. We are very sorry for the inconvenience. ");
+				nextStepText.setText("Please submit a bug report to the developers. We are very sorry for the inconvenience.");
 				resetLink.setText("Reset the form");
 				commitButton.setText("Submit Data");
 				commitButton.setEnabled(true);
@@ -313,7 +313,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 					uploadButton.setEnabled(true);
 					// TODO better error handling
 					resultStatus.sendNotice(NoticeType.ERROR, "There was an error parsing.");
-					nextStepText.setText("Please submit a bug report to the developers. We are very sorry for the inconvenience. ");
+					nextStepText.setText("Please submit a bug report to the developers. We are very sorry for the inconvenience.");
 					show(nextStepPanel);
 				}
 			}
