@@ -3,7 +3,7 @@ package edu.rpi.metpetdb.client.model;
 import java.sql.Timestamp;
 import java.util.Date;
 
-public class PendingRole extends MObject {
+public class RoleChange extends MObject {
 
 	/**
 	 * 
@@ -12,6 +12,10 @@ public class PendingRole extends MObject {
 
 	private int id;
 	private Timestamp requestDate;
+	private Timestamp finalizeDate;
+	private Boolean granted;
+	private String grantReason;
+	private String requestReason;
 	private User user;
 	private User sponsor;
 	private Role role;
@@ -59,9 +63,49 @@ public class PendingRole extends MObject {
 		this.role = role;
 	}
 
+	public Timestamp getFinalizeDate() {
+		return finalizeDate;
+	}
+
+	public void setFinalizeDate(Timestamp finalizeDate) {
+		this.finalizeDate = finalizeDate;
+	}
+
+	public Boolean getGranted() {
+		return granted;
+	}
+
+	public void setGranted(Boolean granted) {
+		this.granted = granted;
+	}
+
+	public String getGrantReason() {
+		return grantReason;
+	}
+
+	public void setGrantReason(String grantReason) {
+		this.grantReason = grantReason;
+	}
+
+	public String getRequestReason() {
+		return requestReason;
+	}
+
+	public void setRequestReason(String requestReason) {
+		this.requestReason = requestReason;
+	}
+
 	@Override
 	public boolean mIsNew() {
-		return false;
+		return id == 0;
+	}
+	
+	public boolean equals(Object other) {
+		return other instanceof RoleChange && ((RoleChange)other).getId() == id;
+	}
+	
+	public int hashCode() {
+		return id;
 	}
 
 }

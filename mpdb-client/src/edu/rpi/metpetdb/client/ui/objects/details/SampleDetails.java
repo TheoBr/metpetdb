@@ -259,7 +259,7 @@ public class SampleDetails extends MPagePanel {
 	
 	private Widget createCommentContainer(final SampleComment sc){
 		final FlowPanel individualContainer = new FlowPanel();
-		final Label ownerName = new Label(sc.getOwner().getName());
+		final Label ownerName = new Label(sc.getOwnerName());
 		final Label commentText = new Label(sc.getText());
 		
 		final MLink deleteComment = new MLink("Delete", new ClickListener(){

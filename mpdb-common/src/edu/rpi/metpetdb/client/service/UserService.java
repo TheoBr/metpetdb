@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.Collection;
 import java.util.Set;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -10,6 +11,8 @@ import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.LoginFailureException;
 import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
+import edu.rpi.metpetdb.client.model.Role;
+import edu.rpi.metpetdb.client.model.RoleChange;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
@@ -135,4 +138,18 @@ public interface UserService extends RemoteService {
 	
 	public void sendConfirmationCode(User u) throws ValidationException,
 	MpDbException, UnableToSendEmailException;
+	
+	Collection<User> getEligableSponsors(Role e) throws MpDbException;
+	
+	RoleChange getRoleChange(int id) throws MpDbException;
+	
+	public RoleChange saveRoleChange(RoleChange rc) throws MpDbException, UnableToSendEmailException;
+	
+	Collection<Role> getEligableRoles(int currentRank) throws MpDbException;
+	
+	public Collection<RoleChange> getSponsorRoleChanges(int sponsorId) throws MpDbException;
+	
+	public void approveRoleChange(RoleChange rc) throws MpDbException;
+	public void denyRoleChange(RoleChange rc) throws MpDbException;
 }
+

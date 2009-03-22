@@ -2,7 +2,7 @@ package edu.rpi.metpetdb.client.error.dao;
 
 import edu.rpi.metpetdb.client.error.DAOException;
 
-public class PendingRoleNotFoundException extends DAOException {
+public class RoleChangeNotFoundException extends DAOException {
 
 	/**
 	 * 

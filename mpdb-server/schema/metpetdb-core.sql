@@ -89,7 +89,7 @@ CREATE TABLE sample_comments
 	sample_id INT8 NOT NULL,
 	user_id INT8 NOT NULL,
 	comment_text TEXT NOT NULL,
-	version INT4 NOT NULL,
+	date_added TIMESTAMP,
 	CONSTRAINT sample_comments_sk PRIMARY KEY (comment_id),
 	CONSTRAINT sample_comments_fk_sample FOREIGN KEY (sample_id)
     REFERENCES samples (sample_id),

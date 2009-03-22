@@ -41,6 +41,8 @@ import edu.rpi.metpetdb.client.ui.objects.list.UserSamplesList;
 import edu.rpi.metpetdb.client.ui.search.Search;
 import edu.rpi.metpetdb.client.ui.user.Confirmation;
 import edu.rpi.metpetdb.client.ui.user.EditUserProfile;
+import edu.rpi.metpetdb.client.ui.user.RequestRoleChange;
+import edu.rpi.metpetdb.client.ui.user.ReviewRoleChanges;
 import edu.rpi.metpetdb.client.ui.user.UserDetails;
 import edu.rpi.metpetdb.client.ui.user.UserRegistrationPanel;
 
@@ -326,6 +328,28 @@ public class TokenSpace implements HistoryListener {
 			}.execute();
 		}
 	};
+	public static final Screen requestRoleChange = new Screen(
+			"RequestRoleChange") {
+		public void executeToken(final String args) {
+			new VoidLoggedInOp() {
+				@Override
+				public void command() {
+					show(new RequestRoleChange().createNew());
+				}
+			}.execute();
+		}
+	};
+	public static final Screen reviewRoleChanges = new Screen(
+			"ConfirmRoleChange") {
+		public void executeToken(final String args) {
+			new VoidLoggedInOp() {
+				@Override
+				public void command() {
+					show(new ReviewRoleChanges());
+				}
+			}.execute();
+		}
+	};
 	public static final Screen rebuildSearchIndex = new Screen(
 			"RebuildSearchIndex") {
 		public void executeToken(final String args) {
@@ -371,6 +395,8 @@ public class TokenSpace implements HistoryListener {
 		register(createImageMap);
 		register(confirmation);
 		register(rebuildSearchIndex);
+		register(requestRoleChange);
+		register(reviewRoleChanges);
 
 		// DefaultPaginationBehavior
 		register(new TokenHandler.NoOp("previousPage"));

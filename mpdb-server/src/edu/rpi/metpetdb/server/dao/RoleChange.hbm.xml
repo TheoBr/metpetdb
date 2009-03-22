@@ -1,0 +1,39 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="RoleChange" table="role_changes">
+    <id name="id" column="role_changes_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">role_changes_seq</param>
+      </generator>
+    </id>
+    
+    <property name="requestDate" column="request_date" />
+	<property name="finalizeDate" column="finalize_date" />
+	<property name="granted" column="granted" type="yes_no"  />
+	<property name="grantReason" column="grant_reason" />
+	<property name="requestReason" column="request_reason" />
+    
+    <many-to-one name="user" column="user_id" lazy="false"/>
+    <many-to-one name="sponsor" column="sponsor_id" lazy="false"/>
+    <many-to-one name="role" column="role_id" lazy="false"/>
+
+  </class>
+  
+  <query name="RoleChange.byId">
+    from RoleChange rc
+    where rc.id = :id
+  </query>
+  <query name="RoleChange.byUserId">
+    from RoleChange rc
+    where rc.user.id = :id
+    	and rc.granted is null
+  </query>
+  <query name="RoleChange.bySponsorId">
+    from RoleChange rc
+    where rc.sponsor.id = :id
+    	and rc.granted is null
+  </query>
+</hibernate-mapping>

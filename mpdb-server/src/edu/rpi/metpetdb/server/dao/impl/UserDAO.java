@@ -10,6 +10,7 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.UserNotFoundException;
 import edu.rpi.metpetdb.client.model.Role;
+import edu.rpi.metpetdb.client.model.RoleChange;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 
@@ -50,6 +51,18 @@ public class UserDAO extends MpDbDAO<User> {
 	public Collection<User> getEligableSponsors(Role role) throws MpDbException{
 		final Query q = namedQuery("User.eligableSponsors");
 		q.setParameter("rank", role.getRank());
+		return getResults(q);
+	}
+	
+	public Collection<Role> getEligableRoles(int currentRank) throws MpDbException {
+		final Query q = namedQuery("Role.eligableRoles");
+		q.setParameter("rank", currentRank);
+		return getResults(q);
+	}
+	
+	public Collection<RoleChange> getSponsorRoleChanges(int sponsorId) throws MpDbException {
+		final Query q = namedQuery("RoleChange.bySponsorId");
+		q.setParameter("id", sponsorId);
 		return getResults(q);
 	}
 

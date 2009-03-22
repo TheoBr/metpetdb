@@ -16,6 +16,8 @@ import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.Region;
 import edu.rpi.metpetdb.client.model.RockType;
+import edu.rpi.metpetdb.client.model.Role;
+import edu.rpi.metpetdb.client.model.RoleChange;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.SampleMineral;
@@ -253,6 +255,17 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 	public void validate(final User u) throws ValidationException {
 		validate(u, User__all);
+	}
+	
+	// ------ RoleChange ------
+	public PropertyConstraint[] RoleChange__all;
+	public StringConstraint RoleChange_requestReason;
+	public ObjectConstraint<User> RoleChange_user;
+	public ObjectConstraint<User> RoleChange_sponsor;
+	public ObjectConstraint<Role> RoleChange_role;
+
+	public void validate(final RoleChange u) throws ValidationException {
+		validate(u, RoleChange__all);
 	}
 	/**
 	 * Called just before this instance is first used.

@@ -11,13 +11,14 @@ import org.hibernate.Session;
 import org.hibernate.type.Type;
 
 import edu.rpi.metpetdb.client.error.security.AccountNotEnabledException;
-import edu.rpi.metpetdb.client.error.security.CannotLoadPendingRoleException;
+import edu.rpi.metpetdb.client.error.security.CannotCreateRoleChangeException;
+import edu.rpi.metpetdb.client.error.security.CannotLoadRoleChangeException;
 import edu.rpi.metpetdb.client.error.security.CannotLoadPrivateDataException;
 import edu.rpi.metpetdb.client.error.security.CannotLoadPublicDataException;
 import edu.rpi.metpetdb.client.error.security.CannotSaveDataException;
 import edu.rpi.metpetdb.client.error.security.NotOwnerException;
 import edu.rpi.metpetdb.client.error.security.UnableToModifyPublicDataException;
-import edu.rpi.metpetdb.client.model.PendingRole;
+import edu.rpi.metpetdb.client.model.RoleChange;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
@@ -187,7 +188,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 						// Mineral, etc.
 						checkOwningObject(entity, state, propertyNames);
 						checkOwner(entity, state, propertyNames, principals);
-						if (entity instanceof PendingRole) {
+						if (entity instanceof RoleChange) {
 							// since pending roles don't really have owners we
 							// put them in their
 							// own category and make it so only the sponsor and
@@ -198,7 +199,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 									.contains(new OwnerPrincipal(getIdOfUser(
 											"user", propertyNames, state))))) {
 								throw new CallbackException(
-										new CannotLoadPendingRoleException());
+										new CannotLoadRoleChangeException());
 							}
 						} else {
 							// this is the case when we are loading stuff like
@@ -287,11 +288,15 @@ public class PermissionInterceptor extends EmptyInterceptor {
 			if (!principals.contains(new AdminPrincipal())) {
 				final int usersRank;
 				boolean enabled = false;
+				final User currentUser;
 				if (MpDbServlet.currentReq().user != null) {
 					usersRank = MpDbServlet.currentReq().user.getRank();
 					enabled = MpDbServlet.currentReq().user.getEnabled();
-				} else
+					currentUser = MpDbServlet.currentReq().user;
+				} else {
 					usersRank = -1;
+					currentUser = new User();
+				}
 				boolean isPublic = false;
 				if (entity instanceof PublicData) {
 					isPublic = isPublic(propertyNames, state);
@@ -305,22 +310,34 @@ public class PermissionInterceptor extends EmptyInterceptor {
 						throw new CallbackException(
 								new UnableToModifyPublicDataException());
 					} else {
-						if (RoleDefinitions.roleDefinitions.get(usersRank)
-								.contains(Privilages.SAVE_PRIVATE_DATA)) {
-							checkOwner(entity, state, propertyNames, principals);
-							checkOwningObject(entity, state, propertyNames);
-						} else {
-							// let email password save the user instance
-							if (Action.EMAIL_PASSWORD.equals(MpDbServlet
-									.currentReq().action)
-									&& entity instanceof User)
-								return;
-							else if (entity instanceof User && creating)
-								// let them register
-								return;
-							else
+						if (entity instanceof RoleChange) {
+							// we handle role changes specially
+							if (!(((RoleChange) entity).getUser() != null && (((RoleChange) entity)
+									.getUser().getId() == currentUser.getId()) ||
+									((RoleChange)entity).getSponsor().getId() == currentUser.getId())) {
+								//cannot create role changes for other users
 								throw new CallbackException(
-										new CannotSaveDataException());
+										new CannotCreateRoleChangeException());
+							}
+						} else {
+							if (RoleDefinitions.roleDefinitions.get(usersRank)
+									.contains(Privilages.SAVE_PRIVATE_DATA)) {
+								checkOwner(entity, state, propertyNames,
+										principals);
+								checkOwningObject(entity, state, propertyNames);
+							} else {
+								// let email password save the user instance
+								if (Action.EMAIL_PASSWORD.equals(MpDbServlet
+										.currentReq().action)
+										&& entity instanceof User)
+									return;
+								else if (entity instanceof User && creating)
+									// let them register
+									return;
+								else
+									throw new CallbackException(
+											new CannotSaveDataException());
+							}
 						}
 					}
 				} else {
@@ -333,9 +350,8 @@ public class PermissionInterceptor extends EmptyInterceptor {
 								&& ((User) entity).getId() == MpDbServlet
 										.currentReq().user.getId())
 							return;
-						else
-							if (!creating) //let accounts be created
-								throw new CallbackException(new NotOwnerException());
+						else if (!creating) // let accounts be created
+							throw new CallbackException(new NotOwnerException());
 					} else {
 						throw new CallbackException(
 								new AccountNotEnabledException());
@@ -344,7 +360,6 @@ public class PermissionInterceptor extends EmptyInterceptor {
 			}
 		}
 	}
-
 	/**
 	 * Method called when an object is detected to be dirty, during a flush.
 	 * This method is called by "modify" actions.
@@ -371,15 +386,19 @@ public class PermissionInterceptor extends EmptyInterceptor {
 		// we only check permissions if the object is different from it's
 		// previous state
 		boolean equals = true;
-		for (int i = 0; i < previousState.length; ++i)
-			if (previousState[i] == null && currentState[i] != null) {
-				equals = false;
-				break;
-			} else if (previousState[i] != null
-					&& !previousState[i].equals(currentState[i])) {
-				equals = false;
-				break;
-			}
+		if (previousState != null) {
+			for (int i = 0; i < previousState.length; ++i)
+				if (previousState[i] == null && currentState[i] != null) {
+					equals = false;
+					break;
+				} else if (previousState[i] != null
+						&& !previousState[i].equals(currentState[i])) {
+					equals = false;
+					break;
+				}
+		} else {
+			equals = false;
+		}
 		if (!equals)
 			checkSavePermissions(entity, previousState, propertyNames, types,
 					false);

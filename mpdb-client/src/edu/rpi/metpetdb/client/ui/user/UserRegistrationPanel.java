@@ -86,10 +86,7 @@ public class UserRegistrationPanel extends MPagePanel implements ClickListener {
 			public void onEnter() {
 				doRegister();
 			}
-		});
-		
-		//add(new MText("Automatic registration temporarily disabled. Please contact Frank Spear for an account."));
-		
+		});	
 	}
 
 	protected void onLoad() {

@@ -6,6 +6,7 @@ import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageType;
 import edu.rpi.metpetdb.client.model.XrayImage;
 import edu.rpi.metpetdb.client.ui.MpDb;
+import edu.rpi.metpetdb.client.ui.commands.MCommand;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 import edu.rpi.metpetdb.client.ui.input.WizardDialog;
@@ -28,10 +29,8 @@ public class AddImageWizard extends WizardDialog {
 
 		final DetailsPanel p_xray = new DetailsPanel(xray_attributes,
 				new Button[] {});
-		final ServerOp notifier = new ServerOp() {
-			public void begin() {
-			}
-			public void onSuccess(final Object result) {
+		final MCommand<Object> notifier = new MCommand<Object>() {
+			public void execute(final Object result) {
 				if (result instanceof ImageType) {
 					if (((ImageType) result).getImageType().contains("X-ray")) {
 						p_xray.edit(xray);

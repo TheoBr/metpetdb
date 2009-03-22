@@ -13,20 +13,20 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
-import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.MCommand;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class ListboxAttribute extends GenericAttribute {
 
-	private ServerOp notifier;
+	private MCommand<Object> notifier;
 
-	private Map<String, Object> objects = new HashMap<String, Object>();
+	protected Map<String, Object> objects = new HashMap<String, Object>();
 
 	public ListboxAttribute(final PropertyConstraint pc) {
 		super(pc);
 	}
 
-	public ListboxAttribute(final PropertyConstraint pc, final ServerOp r) {
+	public ListboxAttribute(final PropertyConstraint pc, final MCommand<Object> r) {
 		super(pc);
 		notifier = r;
 	}
@@ -49,12 +49,19 @@ public class ListboxAttribute extends GenericAttribute {
 			throw new RuntimeException("Wrong Attribute for a list box");
 		}
 	}
-	private Widget createListBox(final Collection<?> items, final String id,
+	protected Widget createListBox(final Collection<?> items, final String id,
 			final String selected) {
 		final ListBox lb = new ListBox();
 		DOM.setElementAttribute(lb.getElement(), "id", id);
 
 		lb.setVisibleItemCount(1);
+		
+		lb.addChangeListener(new ChangeListener() {
+			public void onChange(final Widget w) {
+				if (notifier != null)
+					notifier.execute(get(lb));
+			}
+		});
 
 		final Iterator<?> itr = items.iterator();
 		int index = 0;
@@ -70,14 +77,9 @@ public class ListboxAttribute extends GenericAttribute {
 
 		if (lb.getItemCount() > 0)
 			lb.setItemSelected(lb.getSelectedIndex(), true);
-
-		lb.addChangeListener(new ChangeListener() {
-			public void onChange(final Widget w) {
-				if (notifier != null)
-					notifier.onSuccess(get(lb));
-			}
-		});
-
+		
+		if (notifier != null)
+			notifier.execute(get(lb));
 		applyStyle(lb, true);
 		return lb;
 	}

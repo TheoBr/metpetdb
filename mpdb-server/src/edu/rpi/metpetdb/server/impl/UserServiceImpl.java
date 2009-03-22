@@ -18,12 +18,14 @@ import edu.rpi.metpetdb.client.error.validation.DuplicateValueException;
 import edu.rpi.metpetdb.client.error.validation.LoginFailureException;
 import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
 import edu.rpi.metpetdb.client.model.Role;
+import edu.rpi.metpetdb.client.model.RoleChange;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
 import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.RoleChangeDAO;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 import edu.rpi.metpetdb.server.security.Action;
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
@@ -99,12 +101,6 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		}
 	}
 
-	private void addPrincipal(final Principal newOne) {
-		currentReq().principals.add(newOne);
-		getThreadLocalRequest().getSession().setAttribute("principals",
-				currentReq().principals);
-	}
-
 	public ResumeSessionResponse resumeSession() {
 		final ResumeSessionResponse r = new ResumeSessionResponse();
 		r.databaseObjectConstraints = doc;
@@ -152,7 +148,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		User u = newUser;
 		u.setEnabled(false);
 		u.setRole((Role) currentSession().createQuery(
-				"from Role r where r.rank=1").uniqueResult());
+				"from Role r where r.rank=0").uniqueResult());
 		u.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-", ""));
 		try {
 			u = (new UserDAO(this.currentSession())).save(u);
@@ -226,8 +222,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		User u = new User();
 		u.setId(currentUserId());
 		u = uDAO.fill(u);
-		u.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-",
-		""));
+		u.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-", ""));
 		u = uDAO.save(u);
 		commit();
 		EmailSupport.sendMessage(this, u.getEmailAddress(),
@@ -256,7 +251,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 				principals = currentReq().principals;
 			else
 				principals = new HashSet<Principal>();
-			//remove any old enabled principals
+			// remove any old enabled principals
 			principals.remove(new EnabledPrincipal(false));
 			principals.add(new EnabledPrincipal(u));
 			setCurrentUser(u, principals);
@@ -264,5 +259,55 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		} else {
 			throw new GenericDAOException("Confirmation code does not equal");
 		}
+	}
+
+	public Collection<User> getEligableSponsors(Role e) throws MpDbException {
+		return new UserDAO(currentSession()).getEligableSponsors(e);
+	}
+
+	public RoleChange getRoleChange(int id) throws MpDbException {
+		RoleChange rc = new RoleChange();
+		rc.setId(id);
+		rc = (new RoleChangeDAO(this.currentSession())).fill(rc);
+		return rc;
+	}
+
+	public RoleChange saveRoleChange(RoleChange rc) throws MpDbException, UnableToSendEmailException {
+		rc = new RoleChangeDAO(this.currentSession()).save(rc);
+		commit();
+		//if we get here the role change saved successfully so now
+		//we should send an email to the sponsor
+		EmailSupport.sendMessage(this, rc.getSponsor().getEmailAddress(),
+				"sendRoleRequest", new Object[] {
+						rc.getSponsor().toString(),
+						rc.getUser().toString(),
+						getModuleBaseURL() + "#ConfirmRoleChange/"
+								+ rc.getId()
+				});
+		return rc;
+	}
+
+	public Collection<Role> getEligableRoles(int currentRank) throws MpDbException {
+		return new UserDAO(currentSession()).getEligableRoles(currentRank);
+	}
+	
+	public Collection<RoleChange> getSponsorRoleChanges(int sponsorId) throws MpDbException {
+		return new UserDAO(currentSession()).getSponsorRoleChanges(sponsorId);
+	}
+
+	public void approveRoleChange(RoleChange rc) throws MpDbException {
+		rc.setGranted(true);
+		final UserDAO uDAO = new UserDAO(currentSession());
+		rc.setUser(uDAO.fill(rc.getUser()));
+		rc.getUser().setRole(rc.getRole());
+		new UserDAO(currentSession()).save(rc.getUser());
+		new RoleChangeDAO(currentSession()).save(rc);
+		commit();
+	}
+
+	public void denyRoleChange(RoleChange rc) throws MpDbException {
+		rc.setGranted(false);
+		new RoleChangeDAO(currentSession()).save(rc);
+		commit();
 	}
 }

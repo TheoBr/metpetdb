@@ -9,9 +9,10 @@
         <param name="sequence">sample_comments_seq</param>
       </generator>
     </id>
-    <version name="version" />
     <property name="text" column="comment_text" />
-    <many-to-one name="owner" column="user_id" lazy="false" />
+    <property name="ownerName" formula="(select u.name from users u where u.user_id=user_id)" />
+    <property name="dateAdded" column="date_added" />
+    <many-to-one name="owner" column="user_id" lazy="false"/>
     <many-to-one name="sample" column="sample_id" class="Sample" not-null="true"/>
     
     </class>

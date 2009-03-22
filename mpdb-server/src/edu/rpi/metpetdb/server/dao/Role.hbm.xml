@@ -19,8 +19,19 @@
     from Role r
     where r.id = :id
   </query>
-      <query name="Role.byRank">
+  <query name="Role.byRank">
     from Role r
     where r.rank = :rank
   </query>
+  <query name="Role.all">
+    from Role r
+    order by r.rank
+  </query>
+  <query name="Role.eligableRoles">
+    from Role r
+    where r.rank > :rank
+    order by r.rank
+  </query>
+  
+  
 </hibernate-mapping>

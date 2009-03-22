@@ -1,5 +1,8 @@
 package edu.rpi.metpetdb.client.model;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
 import edu.rpi.metpetdb.client.model.interfaces.HasSample;
 
@@ -8,6 +11,8 @@ public class SampleComment extends Comment implements HasSample, HasOwner {
 	private static final long serialVersionUID = 1L;
 	private Sample sample;
 	private User owner;
+	private String ownerName;
+	private Timestamp dateAdded;
 	
 	public SampleComment() {
 		
@@ -31,5 +36,23 @@ public class SampleComment extends Comment implements HasSample, HasOwner {
 	
 	public void setOwner(final User u) {
 		owner = u;
+	}
+
+	public String getOwnerName() {
+		return ownerName;
+	}
+
+	public void setOwnerName(String ownerName) {
+		this.ownerName = ownerName;
+	}
+
+	public Timestamp getDateAdded() {
+		if (dateAdded == null)
+			return new Timestamp((new Date()).getTime());
+		return dateAdded;
+	}
+
+	public void setDateAdded(Timestamp dateAdded) {
+		this.dateAdded = dateAdded;
 	}
 }

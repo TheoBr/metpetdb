@@ -38,7 +38,6 @@ public abstract class Comment extends MObject {
 
 	@Override
 	public boolean mIsNew() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 

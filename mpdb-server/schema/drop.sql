@@ -70,9 +70,8 @@ DROP TABLE image_reference CASCADE;
 DROP TABLE image_type CASCADE;
 DROP TABLE rock_type CASCADE;
 DROP TABLE subsample_type CASCADE;
-DROP TABLE pending_roles CASCADE;
 --DROP TABLE roles CASCADE;
-DROP TABLE roles_changed CASCADE;
+DROP TABLE role_changes CASCADE;
 
 --triggers
 drop function archive_sample() cascade;

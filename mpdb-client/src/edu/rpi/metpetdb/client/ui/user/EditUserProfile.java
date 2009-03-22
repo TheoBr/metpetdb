@@ -11,6 +11,7 @@ import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
+import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.FormOp;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
@@ -18,6 +19,7 @@ import edu.rpi.metpetdb.client.ui.input.Submit;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.PasswordAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
@@ -28,6 +30,8 @@ public class EditUserProfile extends MPagePanel implements UsesCurrentUser {
 		setPageTitle("Edit Profile");
 		user = whoToEdit;
 		if (MpDb.isCurrentUser(user)){
+			add(new MLink("Request Role Change", TokenSpace.requestRoleChange));
+			add(new MLink("Review my pending role changes", TokenSpace.reviewRoleChanges));
 			add(new PasswordChanger(user));
 			add(new InfoChanger(user));
 		}
@@ -123,10 +127,7 @@ public class EditUserProfile extends MPagePanel implements UsesCurrentUser {
 			changePassword = new Submit(LocaleHandler.lc_text
 					.buttonChangePassword());
 			changePassword.addClickListener(this);
-			
-			
 
-			final String n = uwp.getUser().getEmailAddress();
 			p_password = new DetailsPanel<UserWithPassword>(passwordAttributes,
 					new Button[] {
 						changePassword

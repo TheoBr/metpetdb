@@ -47,6 +47,10 @@ public class Role extends MObject {
 		this.roleName = roleName;
 	}
 
+	@Override
+	public String toString() {
+		return roleName;
+	}
 
 
 	@Override

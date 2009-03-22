@@ -45,6 +45,9 @@ alter table chemical_analyses_archive  owner to metpetdb_dev;
 alter table chemical_analysis_elements_archive  owner to metpetdb_dev;
 alter table chemical_analysis_oxides_archive  owner to metpetdb_dev;
 alter table subsamples_archive owner to metpetdb_dev;
+alter table roles owner to metpetdb_dev;
+alter table pending_roles owner to metpetdb_dev;
+alter table roles_changed owner to metpetdb_dev;
 
 --triggers
 alter function archive_sample() owner to metpetdb_dev;
