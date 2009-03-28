@@ -83,6 +83,22 @@
 		<javadoc sourcepath="src:../mpdb-server/src:../mpdb-client/src:../mpdb-common/src" splitindex="true" use="true" version="true" destdir="${mpdb-common-dir}/docs/api" packagenames="*" access="private" author="true">
 		</javadoc >
 	</target>
+	
+	<target name="apikey-tst" description="Fills in the API key for the test version">
+		<replace file="${mpdb-client-dir}/build/edu.rpi.metpetdb.MetPetDBApplication/MetPetDBApplication.html"
+			token="APIKEY" value="ABQIAAAAd6RO7Qjb-wnsTbfIzDnHZBS-8RDNAizekQ79RycdnZ4UcHnDQBSt3BMys-Z_urqTDkJRuLoE3KVzlQ" />
+	</target>
+	
+	<target name="apikey-stage" description="Fills in the API key for the stage version">
+			<replace file="${mpdb-client-dir}/build/edu.rpi.metpetdb.MetPetDBApplication/MetPetDBApplication.html"
+				token="APIKEY" value="ABQIAAAAd6RO7Qjb-wnsTbfIzDnHZBRLo-_8niO788S7A11smGkedaaJbRShooNr_FiB7GtrLUU_3EvkBiI6Rwlo" />
+		</target>
+	
+	<target name="tst-war" depends="compile, apikey-tst, war-only" description="Generates a .war file for use with a servlet container(Apache Tomcat) (Test version)">
+	</target>
+	
+	<target name="stage-war" depends="compile, apikey-stage, war-only" description="Generates a .war file for use with a servlet container(Apache Tomcat) (Stage version)">
+	</target>
 
 	<target name="war" depends="compile" description="Generates a .war file for use with a servlet container(Apache Tomcat)">
 		<mkdir dir="${build}" />
@@ -186,7 +202,7 @@
 		</exec>
 	</target>
 	
-	<target name="tomcat-anthony" depends="war">
+	<target name="tomcat-anthony" depends="tst-war">
 		<delete failonerror="true"  dir="/usr/share/tomcat-6/webapps/MetPetDB/" />	
 		<copy failonerror="true"  file="${war}" tofile="/usr/share/tomcat-6/webapps/MetPetDB.war" />
 		</target>
