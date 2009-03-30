@@ -1,9 +1,11 @@
 package edu.rpi.metpetdb.server;
 
+import java.util.Date;
 import java.util.List;
 
 import org.postgis.Point;
 
+import edu.rpi.metpetdb.client.model.MetamorphicGrade;
 import edu.rpi.metpetdb.client.model.Sample;
 
 public class KMLCreater {
@@ -13,6 +15,7 @@ public class KMLCreater {
 	private static Double lngErr;
 	
 	static public String createKML(final List<Sample> samples, final String baseURL){
+		
 		String KML = "";
 		KML += "<Document id='doc0'>\n";
 		KML += "<Style id='RedPerimeter'>\n" + "<LineStyle>\n"
@@ -44,15 +47,22 @@ public class KMLCreater {
 			/* Add Sample info that isn't null */
 			if (theSample.getDescription() != null) {
 				KML += "Description: " + theSample.getDescription();
-			}
+			} 
 			if (theSample.getCollector() != null) {
 				KML += "&lt;br&gt; Collector: " + theSample.getCollector();
 			}
 			if (theSample.getCollectionDate() != null) {
-				KML += "&lt;br&gt; Collection Date: " + theSample.getCollectionDate();
+				KML += "&lt;br&gt; Collection Date: " + Sample.dateToString((Date)theSample.getCollectionDate(), theSample.getDatePrecision());
 			}
 			if (theSample.getRockType() != null) {
 				KML += "&lt;br&gt; Rock Type: " + theSample.getRockType();
+			}
+			if (theSample.getMetamorphicGrades() != null) {
+				KML += "&lt;br&gt; Metamorphic Grade: ";
+				for (MetamorphicGrade m : theSample.getMetamorphicGrades()){
+					KML += m.getName() + ", ";
+				}
+				KML = KML.substring(0, KML.length()-2);
 			}
 			if (theSample.getSesarNumber() != null) {
 				KML += "&lt;br&gt; IGSN: " + theSample.getSesarNumber();

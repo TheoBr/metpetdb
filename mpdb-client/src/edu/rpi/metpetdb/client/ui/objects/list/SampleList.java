@@ -14,7 +14,6 @@ import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.paging.CollapsedColumn;
@@ -125,7 +124,7 @@ public abstract class SampleList extends List<Sample> {
 				SampleProperty.collectionDate) {
 			@Override
 			public String getCellValue(Sample rowValue) {
-				return DateAttribute.dateToString(rowValue.getCollectionDate(),
+				return Sample.dateToString(rowValue.getCollectionDate(),
 						rowValue.getDatePrecision());
 			}
 		});

@@ -17,6 +17,7 @@ import com.google.gwt.widgetideas.client.event.ChangeHandler;
 import com.google.gwt.widgetideas.datepicker.client.CalendarModel;
 import com.google.gwt.widgetideas.datepicker.client.DatePicker;
 
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
@@ -24,10 +25,7 @@ import edu.rpi.metpetdb.client.model.validation.primitive.ShortConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public class DateAttribute extends GenericAttribute implements ChangeListener {
-	private static final String[] months = {
-			"January", "February", "March", "April", "May", "June", "July",
-			"August", "September", "October", "November", "December",
-	};
+	
 	private Timestamp newDate;
 	private final TextBox month = new TextBox();
 	private final TextBox day = new TextBox();
@@ -42,7 +40,7 @@ public class DateAttribute extends GenericAttribute implements ChangeListener {
 	}
 	public Widget[] createDisplayWidget(final MObject obj) {
 		return new Widget[] {
-			new MText(dateToString(get(obj), getPrecision(obj)))
+			new MText(Sample.dateToString(get(obj), getPrecision(obj)))
 		};
 	}
 
@@ -154,24 +152,7 @@ public class DateAttribute extends GenericAttribute implements ChangeListener {
 
 	}
 
-	public final static String dateToString(final Date dt, final Short precision) {
-		if (dt == null)
-			return "";
-
-		final int year = dt.getYear() + 1900;
-		final int month = dt.getMonth();
-		final int day = dt.getDate();
-
-		final String m = months[month];
-		final String d = day < 10 ? "0" + day : String.valueOf(day);
-
-		if (precision == 0)
-			return m + " " + d + ", " + String.valueOf(year);
-		if (precision >= 365)
-			return year + "";
-		else
-			return m + " " + year;
-	}
+	
 
 	private void createDateFromInput() {
 		if (newDate == null && month.getText().length() != 0

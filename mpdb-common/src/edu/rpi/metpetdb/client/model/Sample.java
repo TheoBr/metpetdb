@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.model;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -91,6 +92,11 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner,
 	private int imageCount;
 
 	private int analysisCount;
+	
+	private static final String[] months = {
+		"January", "February", "March", "April", "May", "June", "July",
+		"August", "September", "October", "November", "December",
+	};
 
 	public long getId() {
 		return id;
@@ -432,5 +438,24 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner,
 			return number;
 		else
 			return String.valueOf(id);
+	}
+	
+	public final static String dateToString(final Date dt, final Short precision) {
+		if (dt == null)
+			return "";
+
+		final int year = dt.getYear() + 1900;
+		final int month = dt.getMonth();
+		final int day = dt.getDate();
+
+		final String m = months[month];
+		final String d = day < 10 ? "0" + day : String.valueOf(day);
+
+		if (precision == 0)
+			return m + " " + d + ", " + String.valueOf(year);
+		if (precision >= 365)
+			return year + "";
+		else
+			return m + " " + year;
 	}
 }

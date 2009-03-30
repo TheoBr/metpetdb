@@ -38,6 +38,7 @@ import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
+import edu.rpi.metpetdb.client.ui.dialogs.MakePublicDialog;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarthPopUp;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -300,16 +301,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 			public void onClick(Widget sender) {
 				final List<Sample> CheckedSamples = getCheckedSamples();
 				if (CheckedSamples.size() > 0){
-					new ServerOp<Boolean>(){
-						public void begin() {
-							new ConfirmationDialogBox(LocaleHandler.lc_text.confirmation_MakePublic(), true, this);
-						}
-	
-						public void onSuccess(final Boolean result) {
-							if (result)
-								UserSamplesList.this.MakePublicSelected(CheckedSamples);
-						}
-					}.begin();
+					UserSamplesList.this.MakePublicSelected(CheckedSamples);
 				} else {
 					errMsg.setText(LocaleHandler.lc_text
 							.message_ChooseSamples());
@@ -496,22 +488,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	}
 
 	private void MakePublicSelected(final List<Sample> CheckedSamples) {
-		new ServerOp() {
-			@Override
-			public void begin() {
-				Iterator<Sample> itr = CheckedSamples.iterator();
-				while (itr.hasNext()) {
-					Sample current = itr.next();
-					current.setPublicData(true);
-					MpDb.sample_svc.save(current, this);
-				}
-			}
-			public void onSuccess(Object result) {
-				UserSamplesList.this.remove(errMsg);
-				selectListBox.setSelectedIndex(0);
-				list.getScrollTable().reloadPage();
-			}
-		}.begin();
+		MakePublicDialog m = new MakePublicDialog(new ArrayList(CheckedSamples));
 	}
 
 	private void AdProjectSelected(final List<Sample> CheckedSamples) {

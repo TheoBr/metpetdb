@@ -233,11 +233,7 @@ public abstract class SampleListEx extends ListEx<Sample> {
 					SampleProperty.collectionDate, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
-					DateAttribute dateTemp = new DateAttribute(
-							MpDb.doc.Sample_collectionDate,
-							MpDb.doc.Sample_datePrecision);
-					return ((MText) dateTemp.createDisplayWidget(data)[0])
-							.getText();
+					return Sample.dateToString(((Sample) data).getCollectionDate(),((Sample) data).getDatePrecision());
 				}
 			},
 			new Column(false, enttxt.Sample_locationText(), SampleProperty.locationText,
@@ -264,21 +260,21 @@ public abstract class SampleListEx extends ListEx<Sample> {
 	private static String processTooltipData(MObject data){
 		String tooltipData = "<table class=\"info\" cellspacing=\"0\"><tbody>";
 		
-		for(Column c: columns){	
-			
-			if(c.getTitle() == "Check") {
-				continue;
-			} else {
-				String value = c.getTooltipRepresentation(data, 0).toString();
-				tooltipData += "<tr><th>"+ c.getTitle() + "</th><td>";
-				//null values or special case for IGSN
-				if (value == "" || (value.length() == 40 && c.getTitle() == "IGSN"))
-					tooltipData += "&#8211;";
-				else
-					tooltipData += value;
-				tooltipData += "</td></tr>";
-			}				
-		}
+//		for(Column c: columns){	
+//			
+//			if(c.getTitle() == "Check") {
+//				continue;
+//			} else {
+//				String value = c.getTooltipRepresentation(data, 0).toString();
+//				tooltipData += "<tr><th>"+ c.getTitle() + "</th><td>";
+//				//null values or special case for IGSN
+//				if (value == "" || (value.length() == 40 && c.getTitle() == "IGSN"))
+//					tooltipData += "&#8211;";
+//				else
+//					tooltipData += value;
+//				tooltipData += "</td></tr>";
+//			}				
+//		}
 		tooltipData += "</tbody></table>";
 		return tooltipData;
 	}
