@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -7,11 +8,13 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.ChemicalAnalysisService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
+import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
 public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		ChemicalAnalysisService {
@@ -34,6 +37,15 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		List<ChemicalAnalysis> l = (new ChemicalAnalysisDAO(this
 				.currentSession())).getAll(subsampleId);
 		return l;
+	}
+	
+	public List<ChemicalAnalysis> allFromManySubsamples(final Collection<Long> subsampleIds) throws MpDbException {
+		final List<ChemicalAnalysis> l = new ArrayList<ChemicalAnalysis>();
+		for (Long id : subsampleIds){
+			l.addAll((new ChemicalAnalysisDAO(this
+					.currentSession())).getAll(id));
+		}
+		return (l);
 	}
 
 	public ChemicalAnalysis save(ChemicalAnalysis ca)

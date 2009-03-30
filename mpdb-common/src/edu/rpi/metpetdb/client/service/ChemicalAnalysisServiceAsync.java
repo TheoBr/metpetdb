@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -23,4 +24,6 @@ public interface ChemicalAnalysisServiceAsync {
 	void saveAll(Collection<ChemicalAnalysis> chemicalAnalyses, AsyncCallback<Void> ac);
 
 	void delete(long id, AsyncCallback<Object> ac);
+	
+	void allFromManySubsamples(final Collection<Long> subsampleIds, AsyncCallback<List<ChemicalAnalysis>> ac);
 }

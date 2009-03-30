@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -19,6 +21,15 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 	public List<Subsample> all(final long sampleId) throws MpDbException {
 		final List<Subsample> l = (new SubsampleDAO(this.currentSession())
 				.getAllBySampleID(sampleId, currentUserIdIfExists()));
+		return (l);
+	}
+	
+	public List<Subsample> allFromManySamples(final Collection<Long> sampleIds) throws MpDbException {
+		final List<Subsample> l = new ArrayList<Subsample>();
+		for (Long id : sampleIds){
+			l.addAll((new SubsampleDAO(this.currentSession())
+			.getAllBySampleID(id, currentUserIdIfExists())));
+		}
 		return (l);
 	}
 
@@ -47,6 +58,15 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 
 		commit();
 		return (subsample);
+	}
+	public void saveAll(Collection<Subsample> subsamples)
+		throws ValidationException, LoginRequiredException, MpDbException {
+			final SubsampleDAO dao = new SubsampleDAO(this.currentSession());
+			for(Subsample s : subsamples) {
+				doc.validate(s);
+				dao.save(s);
+			}
+			commit();
 	}
 
 	public void delete(long id) throws MpDbException, LoginRequiredException {

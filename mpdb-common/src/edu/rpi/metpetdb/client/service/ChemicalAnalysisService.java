@@ -27,4 +27,6 @@ public interface ChemicalAnalysisService extends RemoteService {
 			throws ValidationException, LoginRequiredException, MpDbException;
 
 	void delete(long id) throws MpDbException, LoginRequiredException;
+	
+	List<ChemicalAnalysis> allFromManySubsamples(final Collection<Long> subsampleIds) throws MpDbException;
 }

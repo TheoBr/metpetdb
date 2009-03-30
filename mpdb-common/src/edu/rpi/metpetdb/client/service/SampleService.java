@@ -9,6 +9,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -26,6 +27,9 @@ public interface SampleService extends RemoteService {
 
 	Sample save(Sample sample) throws MpDbException, ValidationException,
 			LoginRequiredException;
+	
+	void saveAll(Collection<Sample> samples)
+		throws ValidationException, LoginRequiredException, MpDbException;
 	
 	Set<String> allCollectors() throws MpDbException;
 	

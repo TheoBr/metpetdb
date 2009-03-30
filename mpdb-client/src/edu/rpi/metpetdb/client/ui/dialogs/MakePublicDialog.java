@@ -1,22 +1,22 @@
 package edu.rpi.metpetdb.client.ui.dialogs;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Grid;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
 
 public class MakePublicDialog extends MDialogBox{
 	private ArrayList<Sample> samples;
@@ -139,66 +139,52 @@ public class MakePublicDialog extends MDialogBox{
 	private void getAllData(final ArrayList<Sample> allSamples){
 		// get subsamples
 		new ServerOp<List<Subsample>>() {
-			int succeeded;
 			@Override
 			public void begin() {
 				Iterator<Sample> itr = allSamples.iterator();
+				Collection<Long> sampleIds = new ArrayList();
 				while (itr.hasNext()) {
 					Sample current = itr.next();
-					MpDb.subsample_svc.all(current.getId(), this);
+					sampleIds.add(current.getId());
 				}
+				MpDb.subsample_svc.allFromManySamples(sampleIds, this);
 			}
 			public void onSuccess(List<Subsample> result) {
 				subsamples.addAll(result);
-				succeeded++;
-				if (succeeded == allSamples.size()){
 					// get chemical analyses
-					new ServerOp<List<ChemicalAnalysis>>() {
-						int succeeded;
-						@Override
-						public void begin() {
-							Iterator<Subsample> itr = subsamples.iterator();
-							while (itr.hasNext()) {
-								Subsample current = itr.next();
-								MpDb.chemicalAnalysis_svc.all(current.getId(), this);
-							}
-							if (subsamples.size() == 0){
-								onSuccess(new ArrayList<ChemicalAnalysis>());
-							}
+				new ServerOp<List<ChemicalAnalysis>>() {
+					@Override
+					public void begin() {
+						Iterator<Subsample> itr = subsamples.iterator();
+						Collection<Long> subsampleIds = new ArrayList();
+						while (itr.hasNext()) {
+							Subsample current = itr.next();
+							subsampleIds.add(current.getId());
 						}
-						public void onSuccess(List<ChemicalAnalysis> result) {
-							chemicalAnalyses.addAll(result);
-							succeeded++;
-							if (succeeded >= subsamples.size()){
-								// get image maps
-								new ServerOp<Grid>() {
-									int succeeded;
-									@Override
-									public void begin() {
-										Iterator<Subsample> itr = subsamples.iterator();
-										while (itr.hasNext()) {
-											Subsample current = itr.next();
-											MpDb.imageBrowser_svc.details(current.getId(), this);
-										}
-										if (subsamples.size() == 0){
-											onSuccess(null);
-										}
-									}
-									public void onSuccess(Grid result) {
-										if (result != null) {
-											imageMaps.add(result);
-										}
-										succeeded++;
-										if (succeeded >= subsamples.size()){
-											// all data retrieved, we're ready to display the dialog
-											MakePublicDialog.this.show();
-										}
-									}
-								}.begin();
+						MpDb.chemicalAnalysis_svc.allFromManySubsamples(subsampleIds, this);
+					}
+					public void onSuccess(List<ChemicalAnalysis> result) {
+						chemicalAnalyses.addAll(result);
+						// get image maps
+						new ServerOp<List<Grid>>() {
+							@Override
+							public void begin() {
+								Iterator<Subsample> itr = subsamples.iterator();
+								Collection<Long> subsampleIds = new ArrayList();
+								while (itr.hasNext()) {
+									Subsample current = itr.next();
+									subsampleIds.add(current.getId());
+								}
+								MpDb.imageBrowser_svc.allFromManySubsamples(subsampleIds, this);
 							}
-						}
-					}.begin();
-				}
+							public void onSuccess(List<Grid> result) {
+								imageMaps.addAll(result);
+								// all data retrieved, we're ready to display the dialog
+								MakePublicDialog.this.show();
+							}
+						}.begin();
+					}
+				}.begin();
 			}
 		}.begin();
 	}
@@ -218,8 +204,9 @@ public class MakePublicDialog extends MDialogBox{
 				while (itr.hasNext()) {
 					Sample current = itr.next();
 					current.setPublicData(true);
-					MpDb.sample_svc.save(current, this);
+					
 				}
+				MpDb.sample_svc.saveAll(samples, this);
 			}
 			public void onSuccess(Object result) {
 
@@ -228,51 +215,51 @@ public class MakePublicDialog extends MDialogBox{
 	}
 	
 	private void makeChemicalAnalysesPublic(){
-		new ServerOp() {
+		new VoidServerOp() {
 			@Override
 			public void begin() {
 				Iterator<ChemicalAnalysis> itr = selectedChemicalAnalyses.iterator();
 				while (itr.hasNext()) {
 					ChemicalAnalysis current = itr.next();
 					current.setPublicData(true);
-					MpDb.chemicalAnalysis_svc.save(current, this);
 				}
+				MpDb.chemicalAnalysis_svc.saveAll(selectedChemicalAnalyses, this);
 			}
-			public void onSuccess(Object result) {
+			public void onSuccess() {
 
 			}
 		}.begin();
 	}
 
 	private void makeSubsamplesPublic(){
-		new ServerOp() {
+		new VoidServerOp() {
 			@Override
 			public void begin() {
 				Iterator<Subsample> itr = selectedSubsamples.iterator();
 				while (itr.hasNext()) {
 					Subsample current = itr.next();
 					current.setPublicData(true);
-					MpDb.subsample_svc.save(current, this);
 				}
+				MpDb.subsample_svc.saveAll(selectedSubsamples, this);
 			}
-			public void onSuccess(Object result) {
+			public void onSuccess() {
 
 			}
 		}.begin();
 	}
 	
 	private void makeImageMapsPublic(){
-		new ServerOp() {
+		new VoidServerOp() {
 			@Override
 			public void begin() {
 				Iterator<Grid> itr = selectedImageMaps.iterator();
 				while (itr.hasNext()) {
 					Grid current = itr.next();
 					current.setPublicData(true);
-					MpDb.imageBrowser_svc.saveGrid(current, this);
 				}
+				MpDb.imageBrowser_svc.saveAll(selectedImageMaps, this);
 			}
-			public void onSuccess(Object result) {
+			public void onSuccess() {
 
 			}
 		}.begin();

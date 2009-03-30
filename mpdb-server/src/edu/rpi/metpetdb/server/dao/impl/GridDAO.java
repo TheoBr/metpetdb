@@ -1,11 +1,14 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
+import java.util.List;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.GridNotFoundException;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Grid;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 
@@ -41,6 +44,15 @@ public class GridDAO extends MpDbDAO<Grid> {
 		}
 
 		throw new GridNotFoundException();
+	}
+	
+	public Grid get(final long subsampleId)
+			throws MpDbException {
+		final Query q = namedQuery("Grid.bySubsampleId");
+		q.setParameter("id", subsampleId);
+		if (getResult(q) != null)
+			return (Grid) getResult(q);
+		return null;
 	}
 
 	@Override
