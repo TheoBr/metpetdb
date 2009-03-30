@@ -14,12 +14,10 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.Grid;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.paging.Column;
@@ -33,6 +31,7 @@ import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.FormOp;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
+import edu.rpi.metpetdb.client.ui.excel.ExcelUtil;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchInterface;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabAttribute;
@@ -151,35 +150,32 @@ public class Search extends MPagePanel implements PageChangeListener {
 		final FormPanel fp = new FormPanel();
 		fp.setMethod(FormPanel.METHOD_GET);
 		fp.setEncoding(FormPanel.ENCODING_URLENCODED);
-		String values = "";
+		final HorizontalPanel hp = new HorizontalPanel();
 		
-		for (int i = 1; i < sampleList.getDisplayColumns().size(); i++){
-			values+=sampleList.getDisplayColumns().get(i).getTitle() +"\t";
-		}
-		values+="\n";
-		
-		int currentpage = sampleList.getScrollTable().getCurrentPage();
-		for (int page = 0; page < sampleList.getScrollTable().getNumPages(); page++) {
-			sampleList.getScrollTable().gotoPage(page, false);
-			for(int i = 0; i <sampleList.getScrollTable().getDataTable().getRowCount(); i++) {
-				for (int j = 1; j < sampleList.getScrollTable().getDataTable().getColumnCount(); j++){
-					if (sampleList.getScrollTable().getDataTable().getWidget(i, j) instanceof Image){
-						values+=sampleList.getScrollTable().getDataTable().getWidget(i, j).toString() +"\t";
-					} else {
-						values+=sampleList.getScrollTable().getDataTable().getText(i, j) +"\t";
-					}
-				}
-				values+="\n";
+		new ServerOp<Results<Sample>>() {
+			@Override
+			public void begin() {
+				MpDb.search_svc.search(null,ss, MpDb.currentUser(), this);
 			}
-		}
-		
-		sampleList.getScrollTable().gotoPage(currentpage, false);
-		Hidden data = new Hidden("excel",values);
-		fp.add(data);
-		fp.setAction(GWT.getModuleBaseURL() + "excel.svc?");
-		fp.setVisible(false);
-		add(fp);
-		fp.submit();
+			public void onSuccess(Results<Sample> result) {
+				for (String columnHeader : ExcelUtil.columnHeaders){
+					hp.add(new Hidden(ExcelUtil.columnHeaderParameter, columnHeader));
+				}
+				for (int i = 0; i < result.getList().size(); i++) {
+					Hidden sample = new Hidden(samplesParameter, String
+							.valueOf(result.getList().get(i).getId()));
+					hp.add(sample);
+				}
+				Hidden url = new Hidden(urlParameter,GWT.getModuleBaseURL() + "#" + 
+						LocaleHandler.lc_entity.TokenSpace_Sample_Details() + LocaleHandler.lc_text.tokenSeparater());
+				hp.add(url);
+				fp.add(hp);
+				fp.setAction(GWT.getModuleBaseURL() + "excel.svc?");
+				fp.setVisible(false);
+				add(fp);
+				fp.submit();
+			}
+		}.begin();
 	}
 	
 	public void exportGoogleEarth() {

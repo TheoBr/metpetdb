@@ -39,6 +39,7 @@ import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.dialogs.MakePublicDialog;
+import edu.rpi.metpetdb.client.ui.excel.ExcelUtil;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarthPopUp;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -85,8 +86,23 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	}
 
 	private void doViewGoogleEarth() {
-		earthPopup.createUI((ArrayList<Sample>) list.data);
-		earthPopup.show();
+		new ServerOp<List<Sample>>() {
+			@Override
+			public void begin() {
+				int id = (int) (MpDb.currentUser().getId());
+				List<Sample> checked = getCheckedSamples();
+				if (checked.size() == 0)
+					MpDb.sample_svc.allSamplesForUser(id, this);
+				else {
+					onSuccess(checked);
+				}
+			}
+			public void onSuccess(List<Sample> result) {
+				earthPopup.createUI(new ArrayList(result));
+				earthPopup.show();
+			}
+		}.begin();	
+		
 	}
 	
 	private void doExportGoogleEarth() {
@@ -94,7 +110,12 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 			@Override
 			public void begin() {
 				int id = (int) (MpDb.currentUser().getId());
-				MpDb.sample_svc.allSamplesForUser(id, this);
+				List<Sample> checked = getCheckedSamples();
+				if (checked.size() == 0)
+					MpDb.sample_svc.allSamplesForUser(id, this);
+				else {
+					onSuccess(checked);
+				}
 			}
 			public void onSuccess(List<Sample> result) {
 				final FormPanel fp = new FormPanel();
@@ -118,49 +139,36 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	}
 	
 	private void doExportExcel(){
+		final FormPanel fp = new FormPanel();
+		fp.setMethod(FormPanel.METHOD_GET);
+		fp.setEncoding(FormPanel.ENCODING_URLENCODED);
+		final HorizontalPanel hp = new HorizontalPanel();
 		
-		final SampleListEx listEx = new SampleListEx(LocaleHandler.lc_text.noSamplesFound()) {
-			public void update(final PaginationParameters p,
-					final AsyncCallback<Results<Sample>> ac) {
-				long id = (long) (MpDb.currentUser().getId());
-				MpDb.sample_svc.allSamplesForUser(p, id, ac);
-			}
-		};	
-		listEx.setPageSize(list.getScrollTable().getNumPages()*list.getPageSize());
-		listEx.newView(list.getDisplayColumns());
-		new ServerOp() {
+		new ServerOp<List<Sample>>() {
 			@Override
 			public void begin() {
-				final PaginationParameters p = new PaginationParameters();
-				p.setAscending(true);
-				p.setParameter(list.getDefaultSortParameter());
-				listEx.update(p, this);
+				long id = (long) (MpDb.currentUser().getId());
+				List<Sample> checked = getCheckedSamples();
+				if (checked.size() == 0)
+					MpDb.sample_svc.allSamplesForUser(id, this);
+				else {
+					onSuccess(checked);
+				}
 			}
-
-			public void onSuccess(final Object result) {
-				final FormPanel fp = new FormPanel();
-				fp.setMethod(FormPanel.METHOD_GET);
-				fp.setEncoding(FormPanel.ENCODING_URLENCODED);
-				String values = "";
-				
-				for (int i = 1; i < listEx.getDisplayColumns().size(); i++){
-					values+=listEx.getDisplayColumns().get(i).getTitle() +"\t";
+			public void onSuccess(List<Sample> result) {
+				for (String columnHeader : ExcelUtil.columnHeaders){
+					hp.add(new Hidden(ExcelUtil.columnHeaderParameter, columnHeader));
 				}
-				values+="\n";
-				for(int i = 0; i <listEx.getScrollTable().getDataTable().getRowCount(); i++) {
-					for (int j = 1; j < list.getScrollTable().getDataTable().getColumnCount(); j++){
-						if (listEx.getScrollTable().getDataTable().getWidget(i, j) instanceof Image){
-							values+=listEx.getScrollTable().getDataTable().getWidget(i, j).toString() +"\t";
-						} else {
-							values+=listEx.getScrollTable().getDataTable().getText(i, j) +"\t";
-						}
-					}
-					values+="\n";
+				for (int i = 0; i < result.size(); i++) {
+					Hidden sample = new Hidden(samplesParameter, String
+							.valueOf(result.get(i).getId()));
+					hp.add(sample);
 				}
-				
-				Hidden data = new Hidden("excel",values);
-				fp.add(data);
-				fp.setAction(GWT.getModuleBaseURL() + "excel.svc");
+				Hidden url = new Hidden(urlParameter,GWT.getModuleBaseURL() + "#" + 
+						LocaleHandler.lc_entity.TokenSpace_Sample_Details() + LocaleHandler.lc_text.tokenSeparater());
+				hp.add(url);
+				fp.add(hp);
+				fp.setAction(GWT.getModuleBaseURL() + "excel.svc?");
 				fp.setVisible(false);
 				add(fp);
 				fp.submit();
