@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.model.Grid;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.paging.Column;
@@ -186,24 +187,41 @@ public class Search extends MPagePanel implements PageChangeListener {
 		fp.setMethod(FormPanel.METHOD_GET);
 		fp.setEncoding(FormPanel.ENCODING_URLENCODED);
 		final HorizontalPanel hp = new HorizontalPanel();
-		for (int i = 0; i < results.size(); i++) {
-			Hidden sample = new Hidden(samplesParameter, String
-					.valueOf(results.get(i).getId()));
-			hp.add(sample);
-		}
-		Hidden url = new Hidden(urlParameter,GWT.getModuleBaseURL() + "#" + 
-				LocaleHandler.lc_entity.TokenSpace_Sample_Details() + LocaleHandler.lc_text.tokenSeparater());
-		hp.add(url);
-		fp.add(hp);
-		fp.setAction(GWT.getModuleBaseURL() + "BasicKML.kml?");
-		fp.setVisible(false);
-		add(fp);
-		fp.submit();
+		
+		new ServerOp<Results<Sample>>() {
+			@Override
+			public void begin() {
+				MpDb.search_svc.search(null,ss, MpDb.currentUser(), this);
+			}
+			public void onSuccess(Results<Sample> result) {
+				for (int i = 0; i < result.getList().size(); i++) {
+					Hidden sample = new Hidden(samplesParameter, String
+							.valueOf(result.getList().get(i).getId()));
+					hp.add(sample);
+				}
+				Hidden url = new Hidden(urlParameter,GWT.getModuleBaseURL() + "#" + 
+						LocaleHandler.lc_entity.TokenSpace_Sample_Details() + LocaleHandler.lc_text.tokenSeparater());
+				hp.add(url);
+				fp.add(hp);
+				fp.setAction(GWT.getModuleBaseURL() + "BasicKML.kml?");
+				fp.setVisible(false);
+				add(fp);
+				fp.submit();
+			}
+		}.begin();
 	}
 	
 	public void viewGoogleEarth() {
-		earthPopup.createUI((ArrayList<Sample>) sampleList.data);
-		earthPopup.show();
+		new ServerOp<Results<Sample>>() {
+			@Override
+			public void begin() {
+				MpDb.search_svc.search(null,ss, MpDb.currentUser(), this);
+			}
+			public void onSuccess(Results<Sample> result) {
+				earthPopup.createUI(new ArrayList(result.getList()));
+				earthPopup.show();
+			}
+		}.begin();		
 	}
 	
 	
