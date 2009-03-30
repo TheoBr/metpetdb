@@ -22,7 +22,7 @@ public class AddExistingImagePopup extends PopupPanel {
 	public AddExistingImagePopup(final Widget sender, final ServerOp<Collection<Image>> r,
 			final Subsample subsample,
 			final Map<Image, ImageOnGridContainer> imagesOnGrid) {
-		super(false);
+		super(true);
 		final VerticalPanel vp = new VerticalPanel();
 		this.setPopupPosition(sender.getAbsoluteLeft(),
 				sender.getAbsoluteTop() + 20);

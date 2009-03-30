@@ -1,5 +1,6 @@
-package edu.rpi.metpetdb.client.ui.input.attributes.specific;
+package edu.rpi.metpetdb.client.ui.input.attributes.specific.image;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
 
 import edu.rpi.metpetdb.client.model.Image;
@@ -7,7 +8,6 @@ import edu.rpi.metpetdb.client.model.ImageType;
 import edu.rpi.metpetdb.client.model.XrayImage;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.MCommand;
-import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 import edu.rpi.metpetdb.client.ui.input.WizardDialog;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
@@ -16,7 +16,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 
 public class AddImageWizard extends WizardDialog {
 
-	public AddImageWizard(final ServerOp r) {
+	public AddImageWizard(final MCommand<Image> r) {
 		final XrayImage xray = new XrayImage();
 		final UploadImageAttribute uploadImage = new UploadImageAttribute(
 				MpDb.doc.Subsample_images);
@@ -27,8 +27,8 @@ public class AddImageWizard extends WizardDialog {
 				new TextAttribute(MpDb.doc.XrayImage_element),
 		};
 
-		final DetailsPanel p_xray = new DetailsPanel(xray_attributes,
-				new Button[] {});
+		final DetailsPanel<XrayImage> p_xray = new DetailsPanel<XrayImage>(
+				xray_attributes, new Button[] {});
 		final MCommand<Object> notifier = new MCommand<Object>() {
 			public void execute(final Object result) {
 				if (result instanceof ImageType) {
@@ -49,27 +49,19 @@ public class AddImageWizard extends WizardDialog {
 		final ListboxAttribute imageType = new ListboxAttribute(
 				MpDb.doc.Image_imageType, notifier);
 		final GenericAttribute image[] = {
-				uploadImage, imageType, new TextAttribute(MpDb.doc.Image_collector),
+				uploadImage, imageType,
+				new TextAttribute(MpDb.doc.Image_collector),
 		};
-		final DetailsPanel p_image = new DetailsPanel(image, new Button[] {});
+		final DetailsPanel<Image> p_image = new DetailsPanel<Image>(image,
+				new Button[] {});
 		p_image.edit(xray);
 
-		final ServerOp dialog_finish = new ServerOp() {
-			public void begin() {
-				uploadImage.getStatus(this);
-			}
-			public void onSuccess(final Object result) {
-				if (((Image) result).getImageType().getImageType().contains("X-ray ")) {
-					r.onSuccess(result);
-				} else {
-					r.onSuccess(((XrayImage) result).getImage());
-				}
-			}
-			public void onFailure(final Throwable e) {
-				r.onFailure(e);
+		final Command dialog_finish = new Command() {
+			public void execute() {
+				r.execute(uploadImage.getImage());
 			}
 		};
-		
+
 		this.addDialogFinishListener(dialog_finish);
 		this.addStep(p_image, 0, "Upload Image");
 	}

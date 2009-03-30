@@ -13,7 +13,9 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.commands.MCommand;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.VoidMCommand;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
 public class DetailsPanel<T extends MObject> extends ComplexPanel {
@@ -41,8 +43,7 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 		init(atts, actions, showHeaders, true);
 	}
 
-	protected DetailsPanel() {
-	}
+	protected DetailsPanel() {}
 
 	protected void init(final GenericAttribute[] atts, final Widget[] actions) {
 		init(atts, actions, false, true);
@@ -53,10 +54,10 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 	 * @param atts
 	 * @param actions
 	 * @param showHeaders
-	 * 		whether we show the view/edit headers
+	 *            whether we show the view/edit headers
 	 * @param showInitial
-	 * 		whether we initially show the attributes (for
-	 * 		MultipleObjectDetailsPanel)
+	 *            whether we initially show the attributes (for
+	 *            MultipleObjectDetailsPanel)
 	 */
 	protected void init(final GenericAttribute[] atts, final Widget[] actions,
 			final boolean showHeaders, final boolean showInitial) {
@@ -127,7 +128,8 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 		DOM.appendChild(tr, valueTD);
 
 		attr.setMyPanel(this);
-		return new DetailsPanelRow(tr, labelTD, valueTD, label, attr.getConstraint().required);
+		return new DetailsPanelRow(tr, labelTD, valueTD, label, attr
+				.getConstraint().required);
 	}
 
 	public T getBean() {
@@ -231,53 +233,35 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 		isEditMode = true;
 	}
 
-	public void startValidation(final ServerOp<?> r) {
-		new ServerOp<Object>() {
-			int succeeded;
-
-			public void begin() {
-				validateEdit(this);
-			}
-
-			public void onSuccess(final Object result) {
+	public void startValidation(final VoidMCommand r) {
+		validateEdit(new VoidMCommand() {
+			int succeeded = 0;
+			@Override
+			public void execute() {
 				succeeded++;
 				if (succeeded == attributes.size()) {
-					r.onSuccess(null);
+					r.execute();
 				}
 			}
-
-			public void onFailure(final Throwable e) {
-				r.onFailure(e);
-				// super.onFailure(e);
-			}
-		}.begin();
+		});
 	}
 
 	public boolean validateEdit() {
 		return validateEdit(null);
 	}
 
-	public boolean validateEdit(final ServerOp<?> r) {
+	public boolean validateEdit(final VoidMCommand r) {
 		if (!isEditMode())
 			return true;
 		int failed = 0;
 		for (int row = 0; row < attributes.size(); row++) {
-			final GenericAttribute attr = (GenericAttribute) attributes
-					.get(row);
-			// Window.alert("validing attribute " + attr.getLabel());
+			final GenericAttribute attr = attributes.get(row);
 			final CurrentError err = getCurrentError(attr);
-			// Window.alert("attr readonly?" + attr.getReadOnly());
-			// Window.alert("attr immutable?" + attr.getImmutable());
-			// Window.alert("bean new?" + bean.mIsNew());
 			if (!attr.getReadOnly()) {
-				// Window.alert("we not read only");
 				if ((attr.getImmutable() && bean.mIsNew())
 						|| !attr.getImmutable()) {
-					// Window.alert("committing edit");
 					attr.commitEdit(bean, getEditWidgets(attr), err, r);
 				}
-			} else if (r != null) {
-				r.onSuccess(null);
 			}
 			if (attr.getReadOnly())
 				err.setText("");

@@ -67,6 +67,8 @@ public class AddPointDialog extends DialogBox implements ClickListener,
 
 		DOM.setStyleAttribute(this.getElement(), "zIndex", "1000");
 
+		this.setStyleName("mpdb-pointPopup");
+		this.addStyleName("dialogBox-caption-msg");
 		this.setWidget(f);
 	}
 

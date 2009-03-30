@@ -1,11 +1,10 @@
+<?xml version="1.0" encoding="US-ASCII"?>
 <!-- Used to create a tree representing the hierarchy of the website. -->
 <!-- <name> is the name we want to give the page. -->
 <!-- If the name needs to be dynamic (V6-B instead of 'Sample Details') 
 	 then <screen>false<screen> is added and Specific code will need to be added to Breadcrumbs.java. -->
 <!-- <token> is the name the page is given in the TokenSpace class, 
 	 these should all be strings found in LocaleEntity.properties -->
-	  
-<?xml version="1.0" encoding="US-ASCII"?>
 <SiteMap>
 <page>
 	<name>Home</name>

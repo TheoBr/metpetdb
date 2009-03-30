@@ -75,7 +75,6 @@ public class ImageBrowserMouseListener implements MouseListener {
 	}
 
 	public void onMouseEnter(final Widget sender) {
-
 	}
 
 	public void onMouseLeave(final Widget sender) {
@@ -105,7 +104,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 			}
 			public void cancel() {
 				mode = MouseMode.NONE;
-				//remove the arrow for the spot
+				// remove the arrow for the spot
 				pointer.removeFromParent();
 			}
 		}.begin();
@@ -425,18 +424,18 @@ public class ImageBrowserMouseListener implements MouseListener {
 			// if we are being dragged we can either pan grid, resize image, or
 			// move a point
 			switch (mode) {
-			case MOVE_IMAGE:
-				handleMoveImage(x, y);
-				break;
-			case PAN_GRID:
-				handlePan(x, y);
-				break;
-			case RESIZE_IMAGE:
-				handleResize(x, y);
-				break;
-			case MOVING_POINT:
-				handleMovePoint(x, y);
-				break;
+				case MOVE_IMAGE:
+					handleMoveImage(x, y);
+					break;
+				case PAN_GRID:
+					handlePan(x, y);
+					break;
+				case RESIZE_IMAGE:
+					handleResize(x, y);
+					break;
+				case MOVING_POINT:
+					handleMovePoint(x, y);
+					break;
 			};
 		}
 		// or we can be moving a point we want to place
@@ -553,27 +552,26 @@ public class ImageBrowserMouseListener implements MouseListener {
 	}
 
 	public void onMouseUp(final Widget sender, final int x, final int y) {
-		// DOM.removeEventPreview(eventPreview);
 		DOM.releaseCapture(sender.getElement());
 		if (isBeingDragged) {
 			isBeingDragged = false;
 
 			grid.setCanDrag(true);
 			switch (mode) {
-			case MOVE_IMAGE:
-				handleMoveImage(x, y);
-				currentImage.getImageContainer()
-						.removeStyleName("image-moving");
-				break;
-			case PAN_GRID:
-				handleEndPan(x, y);
-				break;
-			case RESIZE_IMAGE:
-				handleEndResize(x, y);
-				break;
-			case MOVING_POINT:
-				handleEndMovePoint(x, y);
-				break;
+				case MOVE_IMAGE:
+					handleMoveImage(x, y);
+					currentImage.getImageContainer().removeStyleName(
+							"image-moving");
+					break;
+				case PAN_GRID:
+					handleEndPan(x, y);
+					break;
+				case RESIZE_IMAGE:
+					handleEndResize(x, y);
+					break;
+				case MOVING_POINT:
+					handleEndMovePoint(x, y);
+					break;
 			}
 		}
 	}

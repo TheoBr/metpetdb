@@ -139,7 +139,9 @@ public class TokenSpace implements HistoryListener {
 		}
 
 		public void execute(final long id) {
-			show(new ImageListViewer(id, true));
+			final Subsample s = new Subsample();
+			s.setId(id);
+			show(new ImageListViewer(s, true));
 		}
 	};
 	public static final Screen register = new Screen(LocaleHandler.lc_entity

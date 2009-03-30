@@ -30,8 +30,8 @@ public class ElementDaoTest {
 	@Test
 	public void loadElement() {
 		final Query q = s.getNamedQuery("Element.byName").setParameter("name",
-				"Hydrogen");
+				"Aluminium");
 		final Element element = (Element) q.uniqueResult();
-		assertEquals("Hydrogen", element.getName());
+		assertEquals("Aluminium", element.getName());
 	}
 }

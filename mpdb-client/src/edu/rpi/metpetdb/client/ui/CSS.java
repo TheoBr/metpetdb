@@ -135,6 +135,7 @@ public class CSS {
 	public static final String BULK_RESULTS_MPDBCOL = "parsed-mpdbcol";
 	public static final String BULK_RESULTS_SUMMARY = "summary";
 	public static final String BULK_RESULTS_ERRORS = "errors";
+	public static final String BULK_RESULTS_WARNINGS = "warnings";
 	
 	public static final String PROGRESSBAR_CONTAINER = "progressbar-container";
 	

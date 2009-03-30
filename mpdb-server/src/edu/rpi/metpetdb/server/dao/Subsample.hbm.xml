@@ -16,12 +16,12 @@
     									where i.subsample_id=subsample_id 
     									AND (i.public_data='Y'))" />
 	<property name="analysisCount" formula="(select count(*) from chemical_analyses ca
-    																		where ca.subsample_id=subsample_id)" />
+    										where ca.subsample_id=subsample_id AND (ca.public_data='Y'))" />
     <property name="sampleName" formula="(select s.number from samples s
     																		where s.sample_id=sample_id)" />
 	<property name="sampleId" column="sample_id" update="false" insert="false"/>
-    <many-to-one name="owner" column="user_id"  lazy="false"/>
-    <many-to-one name="sample" column="sample_id" class="Sample"  not-null="true"  />
+    <many-to-one name="owner" column="user_id"  lazy="false" update="false"/>
+    <many-to-one name="sample" column="sample_id" class="Sample"  not-null="true" update="false" />
     <many-to-one name="subsampleType" column="subsample_type_id" class="SubsampleType" lazy="false" fetch="join" />
     
     <one-to-one name="grid" property-ref="subsample" cascade="delete"/>
@@ -34,7 +34,7 @@
      		condition="( user_id=:userId OR public_data='Y')" />
     </set>
     
-    <set name="chemicalAnalyses" inverse="true" table="chemical_analyses" cascade="delete-orphan"
+    <set name="chemicalAnalyses" inverse="true" table="chemical_analyses" cascade="delete"
     	order-by="spot_id DESC"> 
       <key column="subsample_id" />
       <one-to-many class="ChemicalAnalysis" />

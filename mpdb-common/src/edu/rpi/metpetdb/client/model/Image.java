@@ -90,6 +90,8 @@ public class Image extends MObject implements HasSubsample, HasSample, PublicDat
 	}
 
 	public Set<ImageComment> getComments() {
+		if (comments == null)
+			comments = new HashSet<ImageComment>();
 		return comments;
 	}
 

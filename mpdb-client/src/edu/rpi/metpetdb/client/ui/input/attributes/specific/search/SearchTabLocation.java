@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttribute;
 
 public class SearchTabLocation extends SearchTabAttribute{
 	private static SearchGenericAttribute[] atts = {new SearchLocationAttribute(MpDb.oc.SearchSample_boundingBox),

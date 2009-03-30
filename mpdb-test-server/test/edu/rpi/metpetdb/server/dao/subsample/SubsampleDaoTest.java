@@ -76,7 +76,20 @@ public class SubsampleDaoTest extends DatabaseTestCase {
 	public void analysisCount() throws NoSuchObjectException {
 		final Subsample s = (Subsample) super.byId(typeName,
 				(int) PUBLIC_SUBSAMPLE);
-		assertEquals(2, s.getAnalysisCount());
+		assertEquals(1, s.getAnalysisCount());
+	}
+	
+	/**
+	 * Since the user is logged in it should return their private analyses as well
+	 * 
+	 * @throws NoSuchObjectException
+	 */
+	@Test
+	public void privateAnalysisCount() throws NoSuchObjectException {
+		MpDbServlet.currentReq().user = super.byId("User", 1);
+		final Subsample s = (Subsample) super.byId(typeName,
+				(int) PUBLIC_SUBSAMPLE);
+		assertEquals(3, s.getAnalysisCount());
 	}
 
 	/**

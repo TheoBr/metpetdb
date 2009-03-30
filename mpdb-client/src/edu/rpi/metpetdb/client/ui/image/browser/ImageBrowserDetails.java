@@ -12,6 +12,7 @@ import java.util.Set;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -118,6 +119,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 		this.imagesOnGrid = new HashMap<Image, ImageOnGridContainer>();
 		panHandler = new PanHandler(grid);
 		chemicalAnalyses = new ArrayList<ChemicalAnalysis>();
+		sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEMOVE);
 	}
 
 	public ImageBrowserDetails createNew(final long subsampleId) {
@@ -241,6 +243,27 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 	@Override
 	public void onLoad() {
 		super.onLoad();
+	}
+	
+	@Override
+	public void onBrowserEvent(Event event) {
+		switch (DOM.eventGetType(event)) {
+			case Event.ONMOUSEDOWN:
+			case Event.ONMOUSEMOVE:
+				// before we prevent default make sure the action is within
+				// our widget
+				final int eventX = DOM.eventGetClientX(event);
+				final int eventY = DOM.eventGetClientY(event);
+				final int x = grid.getAbsoluteLeft();
+				final int y = grid.getAbsoluteTop();
+				final int width = grid.getOffsetWidth();
+				final int height = grid.getOffsetHeight();
+				if (eventX > x && eventX < x + width) {
+					if (eventY > y && eventY < y + height) {
+						DOM.eventPreventDefault(event);
+					}
+				}
+			}
 	}
 
 	private void addImagesOnGrid(final boolean firstTime) {

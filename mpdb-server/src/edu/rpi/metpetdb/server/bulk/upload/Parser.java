@@ -389,7 +389,7 @@ public abstract class Parser<T extends MObject> {
 		// First non-empty row is the header, want to associate what
 		// we know how to parse with what is observed
 		HSSFRow header = sheet.getRow(rownum);
-		for (int i = 0; i < header.getLastCellNum(); ++i) {
+		for (int i = header.getFirstCellNum(); i < header.getLastCellNum(); ++i) {
 			// Convert header title to String
 			final HSSFCell cell = header.getCell(i);
 			final String text;

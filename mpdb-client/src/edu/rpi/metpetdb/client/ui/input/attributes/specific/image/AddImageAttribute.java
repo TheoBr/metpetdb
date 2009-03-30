@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.input.attributes.specific;
+package edu.rpi.metpetdb.client.ui.input.attributes.specific.image;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,29 +13,30 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.XrayImage;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.interfaces.HasImages;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
-import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.MCommand;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
-public class AddImageAttribute extends GenericAttribute implements
-		ClickListener {
+public class AddImageAttribute<DataType extends HasImages> extends
+		GenericAttribute<DataType> implements ClickListener {
 
 	private final Button addImage;
 	private Set<Image> images;
 	private MHtmlList list;
 	private final VerticalPanel vp;
 
-	public AddImageAttribute(final ObjectConstraint ic) {
+	public AddImageAttribute(final ObjectConstraint<Image> ic) {
 		super(ic);
 		addImage = new Button("Add Image", this);
 		vp = new VerticalPanel();
 		vp.add(addImage);
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id,
-			final GenericAttribute ga) {
+	@Override
+	public Widget[] createEditWidget(final DataType obj, final String id,
+			final GenericAttribute<DataType> ga) {
 		if (list != null)
 			vp.remove(list);
 		list = new MHtmlList();
@@ -45,27 +46,26 @@ public class AddImageAttribute extends GenericAttribute implements
 			list.add(widgets[i]);
 		vp.add(list);
 		if (get(obj) != null)
-			images = new HashSet(get(obj));
+			images = new HashSet<Image>(get(obj));
 		else
-			images = new HashSet();
+			images = new HashSet<Image>();
 		return new Widget[] {
 			vp
 		};
 	}
 
-	public Widget[] createDisplayWidget(final MObject obj) {
+	public Widget[] createDisplayWidget(final HasImages obj) {
 		return createDisplayWidget(obj, false);
 	}
 
-	public Widget[] createDisplayWidget(final MObject obj,
+	public Widget[] createDisplayWidget(final HasImages obj,
 			final boolean editMode) {
 		final VerticalPanel vp = new VerticalPanel();
 		if (get(obj) != null) {
-			final Collection images = (Collection) get(obj);
-			Iterator itr = images.iterator();
+			final Collection<Image> images = (Collection<Image>) get(obj);
+			Iterator<Image> itr = images.iterator();
 			while (itr.hasNext()) {
-				final edu.rpi.metpetdb.client.model.Image image = (edu.rpi.metpetdb.client.model.Image) itr
-						.next();
+				final Image image = itr.next();
 				vp.add(makeImageContainer(image, editMode));
 			}
 		}
@@ -88,7 +88,8 @@ public class AddImageAttribute extends GenericAttribute implements
 			if (xray.getVoltage() != null)
 				imageContainer.add(new Label("Voltage: " + xray.getVoltage()));
 			if (xray.getDwelltime() != null)
-				imageContainer.add(new Label("Dwelltime: " + xray.getDwelltime()));
+				imageContainer.add(new Label("Dwelltime: "
+						+ xray.getDwelltime()));
 			if (xray.getElement() != null && xray.getElement().length() > 0)
 				imageContainer.add(new Label("Element: " + xray.getElement()));
 		}
@@ -103,40 +104,26 @@ public class AddImageAttribute extends GenericAttribute implements
 		return imageContainer;
 	}
 
-	public void set(final MObject obj, final Object images) {
+	public void set(final HasImages obj, final Object images) {
 		mSet(obj, images);
 	}
 
-	protected Set get(final MObject obj) {
-		return (Set) mGet(obj);
+	protected Set<Image> get(final HasImages obj) {
+		return obj.getImages();
 	}
 
 	public void onClick(final Widget sender) {
 		if (sender == addImage) {
-			new ServerOp<Image>() {
-				public void begin() {
-					new AddImageWizard(this).show();
+			new AddImageWizard(new MCommand<Image>() {
+				@Override
+				public void execute(Image result) {
+					images.add(result);
+					list.add(makeImageContainer(result, true));
 				}
-				public void onSuccess(final Image result) {
-					if (((Image) result).getImageType().getImageType().contains("X-ray")) {
-						AddImageAttribute.this.images.add(result);
-					} else {
-						AddImageAttribute.this.images.add(result);
-					}
-					AddImageAttribute.this.list
-							.add(makeImageContainer(
-									(edu.rpi.metpetdb.client.model.Image) result,
-									true));
-				}
-				public void onFailure(final Throwable e) {
-					// uploadImage.getMyPanel().forceFailure(AddImageAttribute.
-					// this,
-					// (ValidationException) e);
-				}
-			}.begin();
+			}).show();
 		}
 	}
-	protected Object get(final Widget editWidget) {
+	protected Set<Image> get(final Widget editWidget) {
 		return images;
 	}
 

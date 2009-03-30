@@ -14,9 +14,9 @@ import edu.rpi.metpetdb.server.DatabaseTestCase;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.security.permissions.principals.OwnerPrincipal;
 
-public class ChemicalAnalysisTest extends DatabaseTestCase {
+public class ChemicalAnalysisDaoTest extends DatabaseTestCase {
 
-	public ChemicalAnalysisTest() {
+	public ChemicalAnalysisDaoTest() {
 		super("test-data/test-sample-data.xml");
 	}
 

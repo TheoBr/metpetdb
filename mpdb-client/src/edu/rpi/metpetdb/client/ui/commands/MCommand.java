@@ -6,6 +6,10 @@ public abstract class MCommand<DataType> implements Command {
 
 	public abstract void execute(DataType object);
 	
+	public void onFailure(final Throwable e) {
+		
+	}
+	
 	public void execute() {
 		
 	}

@@ -4,6 +4,7 @@ package edu.rpi.metpetdb.client.ui.input;
 
 import java.util.ArrayList;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -13,6 +14,7 @@ import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.commands.FormOp;
+import edu.rpi.metpetdb.client.ui.commands.MCommand;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchInterface;
@@ -24,16 +26,16 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 	protected ArrayList<Widget[]> currentEditWidgets;
 	private final MButton searchBtn = new MButton("Search");
 	private final SearchInterface atts;
-	
-//	final Element resultsTd;
+
+	// final Element resultsTd;
 
 	protected ObjectSearchPanel(final SearchInterface atts) {
 		this.setStyleName("criteria");
-		
+
 		bean = (T) new SearchSample();
 		this.atts = atts;
 		attributes = atts.getAttributes();
-		
+
 		searchBtn.setStyleName(CSS.SEARCH_BUTTON);
 		searchBtn.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
@@ -42,21 +44,20 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 		});
 		atts.passActionWidget(searchBtn);
 	}
-	
-	
-	public T getBean(){
+
+	public T getBean() {
 		return bean;
 	}
 
 	public void setBean(final T o) {
 		bean = o;
 	}
-	
+
 	public synchronized void edit(final SearchSample obj) {
 		clear();
 		Widget[] w = atts.createEditWidget(obj, "TEMP");
 		currentEditWidgets = atts.getCurrentEditWidgets();
-		for (int i = 0; i < w.length; i++){
+		for (int i = 0; i < w.length; i++) {
 			add(w[i]);
 		}
 	}
@@ -79,42 +80,33 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 			}
 		}.begin();
 	}
-	
+
 	public void startValidation(final ServerOp<?> r) {
-		new ServerOp<Object>() {
+		validateEdit(new Command() {
 			int succeeded;
 
-			public void begin() {
-				validateEdit(this);
-			}
-
-			public void onSuccess(final Object result) {
+			public void execute() {
 				succeeded++;
 				if (succeeded == getConstraintCount()) {
 					r.onSuccess(null);
 				}
 			}
-
-			public void onFailure(final Throwable e) {
-				r.onFailure(e);
-				// super.onFailure(e);
-			}
-		}.begin();
+		});
 	}
-	
-	public int getConstraintCount(){
+
+	public int getConstraintCount() {
 		int count = 0;
-		for (SearchGenericAttribute s : attributes){
+		for (SearchGenericAttribute s : attributes) {
 			count += s.getConstraints().length;
 		}
 		return count;
 	}
-	
+
 	public boolean validateEdit() {
 		return validateEdit(null);
 	}
 
-	public boolean validateEdit(final ServerOp<?> r) {
+	public boolean validateEdit(final Command r) {
 		int failed = 0;
 		for (int row = 0; row < attributes.size(); row++) {
 			final SearchGenericAttribute attr = (SearchGenericAttribute) attributes
@@ -126,7 +118,7 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 					attr.commitEdit(bean, getEditWidgets(attr), err, r);
 				}
 			} else if (r != null) {
-				r.onSuccess(null);
+				r.execute();
 			}
 			if (attr.getReadOnly())
 				err.setText("");
@@ -135,15 +127,15 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 		}
 		return failed == 0;
 	}
-	
+
 	private Widget[] getEditWidgets(final SearchGenericAttribute attr) {
 		return currentEditWidgets.get(attributes.indexOf(attr));
 	}
-	
+
 	protected void searchBean(final AsyncCallback<T> ac) {
 		throw new UnsupportedOperationException();
 	}
 	protected void onSearchCompletion(final FormOp<T> ac) {
-		
+
 	}
 }

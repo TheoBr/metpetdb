@@ -193,7 +193,18 @@ public interface LocaleText extends Messages {
 	String confirmation_Delete();
 	String confirmation_AddToProject();
 	String message_ChooseSamples();
+	String message_resetForm();
 	
 	/* Misc */
 	String tokenSeparater();
+	
+	/* Bulk Upload */
+	String bulkUpload_Upload();
+	String bulkUpload_SubmitData();
+	String bulkUpload_Desc();
+	String bulkUpload_Help();
+	String bulkUpload_Samples();
+	String bulkUpload_ChemicalAnalyses();
+	String bulkUpload_Images();
+	String bulkUpload_LooksGoodSoCommit();
 }

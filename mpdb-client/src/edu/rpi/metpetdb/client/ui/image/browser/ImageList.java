@@ -1,7 +1,7 @@
 package edu.rpi.metpetdb.client.ui.image.browser;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 	private int currentIndex = 0;
 	private Image currentImage;
 	// Set<Image>
-	private final Collection<edu.rpi.metpetdb.client.model.Image> selectedImages;
+	private final ArrayList<edu.rpi.metpetdb.client.model.Image> selectedImages;
 	private Widget lastImage;
 	boolean selected = false;
 	private boolean onlySelectOne;
@@ -68,21 +68,16 @@ public class ImageList extends HorizontalPanel implements ClickListener {
 					if (images == null || images.size() <= 0) {
 						add(new Label("No Image"));
 					} else {
-						((edu.rpi.metpetdb.client.model.Image) images.get(0))
-								.getSubsample()
-								.setImages(
-										new HashSet<edu.rpi.metpetdb.client.model.Image>(
-												images));
 						buildInterface(showAll);
 					}
 				}
 			}
 		}.begin();
 		this.onlySelectOne = onlySelectOne;
-		selectedImages = new HashSet<edu.rpi.metpetdb.client.model.Image>();
+		selectedImages = new ArrayList<edu.rpi.metpetdb.client.model.Image>();
 	}
 
-	public Collection<edu.rpi.metpetdb.client.model.Image> getSelectedImages() {
+	public ArrayList<edu.rpi.metpetdb.client.model.Image> getSelectedImages() {
 		return selectedImages;
 	}
 

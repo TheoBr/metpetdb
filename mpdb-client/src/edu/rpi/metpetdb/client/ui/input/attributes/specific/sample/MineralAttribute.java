@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.input.attributes.specific;
+package edu.rpi.metpetdb.client.ui.input.attributes.specific.sample;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +22,7 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.VoidMCommand;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 import edu.rpi.metpetdb.client.ui.input.MultipleObjectDetailsPanel;
 import edu.rpi.metpetdb.client.ui.input.WizardDialog;
@@ -109,9 +110,9 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 
 		p_mineral = new DetailsPanel(mineral_attributes, null, false) {
 			@Override
-			public boolean validateEdit(final ServerOp r) {
+			public boolean validateEdit(final VoidMCommand r) {
 				if (r != null)
-					r.onSuccess(null);
+					r.execute();
 				// don't worry about validating this, they are just selecting
 				// minerals
 				return true;
@@ -174,7 +175,7 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 		tree.set(obj, v);
 	}
 
-	protected Object get(final Widget editWidget) {
+	public Object get(final Widget editWidget) {
 		if (this.getConstraint().equals(MpDb.doc.Sample_minerals)) {
 			// return the sample minerals
 			if (choseMinerals)

@@ -11,7 +11,6 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateRangeAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchOwnersAttribute;
 
 public class SearchTabProvenance extends SearchTabAttribute{
 	private static SearchGenericAttribute[] atts = {new SearchOwnersAttribute(MpDb.oc.SearchSample_owner),

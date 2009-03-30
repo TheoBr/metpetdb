@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
@@ -19,6 +20,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.XrayImage;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
@@ -27,42 +29,42 @@ import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class ImageListViewer extends FlowPanel implements ClickListener {
-	private ArrayList<Image> images;
+	private List<Image> images;
 	private final long id;
 	private FlowPanel fp;
 	private ListBox lb;
 	private Label imagesLabel;
 	private FlexTable noImagesContainer = new FlexTable();
-
-	public ImageListViewer(final long subsampleId, final boolean isScreen) {
-		this(subsampleId, isScreen, null);
+	private Subsample ss;
+	
+	public ImageListViewer(final Subsample subsample, final boolean isScreen) {
+		this(subsample, isScreen, null);
 	}
 
-	public ImageListViewer(final long subsampleId, final String type) {
-		this(subsampleId, true, type);
+	public ImageListViewer(final Subsample subsample, final String type) {
+		this(subsample, true, type);
 	}
 
-	private ImageListViewer(final long subsampleId, final boolean isScreen,
+	private ImageListViewer(final Subsample subsample, final boolean isScreen,
 			final String type) {
-		id = subsampleId;
+		id = subsample.getId();
 		fp = new FlowPanel();
-		new ServerOp() {
+		new ServerOp<List<Image>>() {
 			public void begin() {
 				MpDb.image_svc.allImages(id, this);
 			}
-			public void onSuccess(final Object result) {
+			public void onSuccess(final List<Image> result) {
 				if (result == null) {
 					return;
 				} else {
-					images = (ArrayList<Image>) ((ArrayList<Image>) result).clone();
+					images = result;
 					if (images == null || images.size() <= 0) {
 						add(new Label(
 								"There are no images associated with this subsample"));
 					} else {
-						images.get(0).getSubsample().setImages(
-								new HashSet<Image>(images));
 						buildInterface(isScreen, type);
 					}
+					subsample.setImages(new HashSet<Image>(images));
 				}
 			}
 		}.begin();
@@ -72,18 +74,18 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 	private void buildInterface(final boolean isScreen, final String type) {
 		if (isScreen) {
 			final FlexTable header2 = new FlexTable();
-			final Label title = new Label(images.get(0)
-					.getSubsample().getName()
+			final Label title = new Label(images.get(0).getSubsample()
+					.getName()
 					+ " Images");
 			final Label title2 = new Label("Images attached to");
-			final MLink subsampleLink = new MLink(images.get(0)
-					.getSubsample().getName(), TokenSpace
-					.detailsOf(images.get(0).getSubsample()));
+			final MLink subsampleLink = new MLink(images.get(0).getSubsample()
+					.getName(), TokenSpace.detailsOf(images.get(0)
+					.getSubsample()));
 			final Button addImage = new Button("Add Image",
 					new ClickListener() {
 						public void onClick(Widget sender) {
-							History.newItem(TokenSpace.edit(images
-									.get(0).getSubsample()));
+							History.newItem(TokenSpace.edit(images.get(0)
+									.getSubsample()));
 						}
 					});
 			title.addStyleName("big");
@@ -210,6 +212,17 @@ public class ImageListViewer extends FlowPanel implements ClickListener {
 			imageType.addStyleName("white");
 			cell.setWidget(0, 1, imageTitle);
 			cell.setWidget(1, 0, imageType);
+			if (currentImage instanceof XrayImage) {
+				final XrayImage img = (XrayImage) currentImage;
+				if (img.getElement() != null)
+					cell.setText(2, 0, "Element:" + img.getElement());
+				if (img.getDwelltime() != null)
+					cell.setText(3, 0, "Dwell Time:" + img.getDwelltime().toString());
+				if (img.getCurrent() != null)
+					cell.setText(4, 0, "Current:" + img.getCurrent().toString());
+				if (img.getVoltage() != null)
+					cell.setText(5, 0, "Voltage:" + img.getVoltage().toString());
+			}
 			cell.setCellSpacing(5);
 			cell.getFlexCellFormatter().setAlignment(0, 0,
 					HasHorizontalAlignment.ALIGN_CENTER,

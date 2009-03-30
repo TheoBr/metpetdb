@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
@@ -17,6 +16,7 @@ import org.hibernate.search.annotations.Store;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.interfaces.HasDate;
+import edu.rpi.metpetdb.client.model.interfaces.HasImage;
 import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
 import edu.rpi.metpetdb.client.model.interfaces.HasSample;
 import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
@@ -24,7 +24,7 @@ import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 
 @Indexed
 public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
-		HasOwner, PublicData, HasSample {
+		HasOwner, PublicData, HasSample, HasImage {
 	private static final long serialVersionUID = 1L;
 
 	@DocumentId
@@ -232,6 +232,8 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	}
 
 	public Boolean getLargeRock() {
+		if (largeRock == null)
+			largeRock = false;
 		return largeRock;
 	}
 
@@ -383,10 +385,9 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	}
 
 	public Boolean isPublicData() {
-		if (publicData != null)
-			return publicData.booleanValue();
-		else
-			return false;
+		if (publicData == null)
+			publicData = false;
+		return publicData;
 	}
 
 	public void setPublicData(final Boolean p) {

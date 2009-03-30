@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.MissingResourceException;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasFocus;
 import com.google.gwt.user.client.ui.HasText;
@@ -14,27 +15,26 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.CSS;
-import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.CurrentError;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 
 /**
  * Every attribute that goes on a DetailsPanel will extend this class
  */
-public abstract class GenericAttribute {
+public abstract class GenericAttribute<DataType extends MObject> {
 	protected PropertyConstraint[] constraints;
 	protected String[] labels;
 	private boolean readOnly; // Cannot be modified or created
 	private boolean immutable; // Cannot be modified, but can be created
-	private DetailsPanel myPanel;
+	private DetailsPanel<DataType> myPanel;
 
 	/**
 	 * Creates a new generic attribute and fetches the labels from the locale
 	 * 
 	 * @param pcs
-	 * 		the constraints {@link
-	 * 		edu.rpi.metpetdb.client.model.validation.PropertyConstraint} that
-	 * 		are a part of this attribute
+	 *            the constraints
+	 *            {@link edu.rpi.metpetdb.client.model.validation.PropertyConstraint}
+	 *            that are a part of this attribute
 	 */
 	protected GenericAttribute(final PropertyConstraint[] pcs) {
 		if (pcs.length == 1) {
@@ -76,14 +76,14 @@ public abstract class GenericAttribute {
 	}
 
 	/**
-	 * Wrapper for {@link
-	 * GenericAttribute#GenericAttribute(PropertyConstraint[])} that allows the
-	 * developer to just specify one constraint
+	 * Wrapper for
+	 * {@link GenericAttribute#GenericAttribute(PropertyConstraint[])} that
+	 * allows the developer to just specify one constraint
 	 * 
 	 * @param pc
-	 * 		the constraint {@link
-	 * 		edu.rpi.metpetdb.client.model.validation.PropertyConstraint} for
-	 * 		this attribute
+	 *            the constraint
+	 *            {@link edu.rpi.metpetdb.client.model.validation.PropertyConstraint}
+	 *            for this attribute
 	 */
 	protected GenericAttribute(final PropertyConstraint pc) {
 		this(new PropertyConstraint[] {
@@ -96,16 +96,16 @@ public abstract class GenericAttribute {
 	 * 
 	 * @return the panel
 	 */
-	public DetailsPanel getMyPanel() {
+	public DetailsPanel<DataType> getMyPanel() {
 		return myPanel;
 	}
 	/**
 	 * Sets the panel that this attribute is contained on.
 	 * 
 	 * @param dp
-	 * 		the details panel
+	 *            the details panel
 	 */
-	public void setMyPanel(final DetailsPanel dp) {
+	public void setMyPanel(final DetailsPanel<DataType> dp) {
 		myPanel = dp;
 	}
 
@@ -126,7 +126,7 @@ public abstract class GenericAttribute {
 	 * than one label.
 	 * 
 	 * @param row
-	 * 		Which label you want
+	 *            Which label you want
 	 * @return the label
 	 */
 	public String getLabel(final int row) {
@@ -139,9 +139,9 @@ public abstract class GenericAttribute {
 	 * Sets the label for a specified row
 	 * 
 	 * @param s
-	 * 		the label
+	 *            the label
 	 * @param row
-	 * 		the row
+	 *            the row
 	 */
 	public void setLabel(final String s, final int row) {
 		if (labels != null && row < labels.length) {
@@ -160,8 +160,8 @@ public abstract class GenericAttribute {
 	/**
 	 * Gets the whole array of property constraints for this attribute
 	 * 
-	 * @return array of {@link
-	 * 	edu.rpi.metpetdb.client.model.validation.PropertyConstraint}
+	 * @return array of
+	 *         {@link edu.rpi.metpetdb.client.model.validation.PropertyConstraint}
 	 */
 	public PropertyConstraint[] getConstraints() {
 		return constraints;
@@ -170,7 +170,7 @@ public abstract class GenericAttribute {
 	public boolean getReadOnly() {
 		return readOnly;
 	}
-	public GenericAttribute setReadOnly(final boolean b) {
+	public GenericAttribute<DataType> setReadOnly(final boolean b) {
 		readOnly = b;
 		return this;
 	}
@@ -178,7 +178,7 @@ public abstract class GenericAttribute {
 	public boolean getImmutable() {
 		return immutable;
 	}
-	public GenericAttribute setImmutable(final boolean b) {
+	public GenericAttribute<DataType> setImmutable(final boolean b) {
 		immutable = b;
 		return this;
 	}
@@ -189,8 +189,8 @@ public abstract class GenericAttribute {
 	protected Object mGet(final MObject obj) {
 		return resolve(obj).mGet(constraints[0].property);
 	}
-	protected HashMap mGetAll(final MObject obj) {
-		final HashMap map = new HashMap();
+	protected HashMap<PropertyConstraint, Object> mGetAll(final DataType obj) {
+		final HashMap<PropertyConstraint, Object> map = new HashMap<PropertyConstraint, Object>();
 		for (int i = 0; i < constraints.length; ++i) {
 			map.put(constraints[i], resolve(obj).mGet(constraints[i].property));
 		}
@@ -204,23 +204,23 @@ public abstract class GenericAttribute {
 		resolve(obj).mSet(constraint.property, val);
 	}
 
-	public abstract Widget[] createDisplayWidget(MObject obj);
+	public abstract Widget[] createDisplayWidget(DataType obj);
 
-	public Widget[] createEditWidget(final MObject obj, final String id) {
+	public Widget[] createEditWidget(final DataType obj, final String id) {
 		return createDisplayWidget(obj);
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id,
-			final GenericAttribute ga) {
+	public Widget[] createEditWidget(final DataType obj, final String id,
+			final GenericAttribute<DataType> ga) {
 		return createEditWidget(obj, id);
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id,
-			final GenericAttribute ga, final int row) {
+	public Widget[] createEditWidget(final DataType obj, final String id,
+			final GenericAttribute<DataType> ga, final int row) {
 		return createEditWidget(obj, id, ga);
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id,
+	public Widget[] createEditWidget(final DataType obj, final String id,
 			final int row) {
 		return createEditWidget(obj, id);
 	}
@@ -232,14 +232,18 @@ public abstract class GenericAttribute {
 	}
 
 	protected void applyStyle(final Widget editWidget, final boolean valid) {
-		if (constraints[0].required) editWidget.addStyleName(CSS.REQUIRED);
-		else editWidget.removeStyleName(CSS.REQUIRED);
-		if (valid) editWidget.removeStyleName(CSS.INVALID);
-		else editWidget.addStyleName(CSS.INVALID);
+		if (constraints[0].required)
+			editWidget.addStyleName(CSS.REQUIRED);
+		else
+			editWidget.removeStyleName(CSS.REQUIRED);
+		if (valid)
+			editWidget.removeStyleName(CSS.INVALID);
+		else
+			editWidget.addStyleName(CSS.INVALID);
 	}
 
-	public void commitEdit(final MObject obj, final Widget[] editWidget,
-			final CurrentError err, final ServerOp r) {
+	public void commitEdit(final DataType obj, final Widget[] editWidget,
+			final CurrentError err, final Command r) {
 		for (int i = 0; i < constraints.length; ++i) {
 			try {
 				constraints[i]
@@ -248,7 +252,7 @@ public abstract class GenericAttribute {
 				applyStyle(editWidget, true);
 				err.setText("");
 				if (r != null) {
-					r.onSuccess(null);
+					r.execute();
 				}
 			} catch (ValidationException whybad) {
 				showError(editWidget, err, whybad);
@@ -279,12 +283,12 @@ public abstract class GenericAttribute {
 
 	}
 
-	protected void set(final MObject obj, final Object value,
+	protected void set(final DataType obj, final Object value,
 			final PropertyConstraint constraint) {
 		set(obj, value);
 	}
 
-	protected abstract void set(final MObject obj, final Object value);
+	protected abstract void set(final DataType obj, final Object value);
 
 	public void setFocus(final Widget editWidget, final boolean focus) {
 		if (editWidget instanceof HasFocus)

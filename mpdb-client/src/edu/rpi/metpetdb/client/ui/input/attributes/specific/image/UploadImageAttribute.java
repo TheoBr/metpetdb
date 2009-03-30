@@ -1,6 +1,7 @@
-package edu.rpi.metpetdb.client.ui.input.attributes.specific;
+package edu.rpi.metpetdb.client.ui.input.attributes.specific.image;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.FormHandler;
 import com.google.gwt.user.client.ui.FormPanel;
@@ -10,29 +11,30 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.error.UnableToUploadImageException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.InvalidImageException;
 import edu.rpi.metpetdb.client.model.Image;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
-import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.MCommand;
+import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.input.CurrentError;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
-public class UploadImageAttribute extends GenericAttribute {
+public class UploadImageAttribute extends GenericAttribute<Image> {
 
 	private final FormPanel fp;
 	private final FileUpload fu;
 	private final Label error;
-	private MObject obj;
-	private ServerOp continuation;
+	private Image obj;
+	private MCommand<Image> continuation;
 	private boolean hasBeenUploaded = false;
 	private boolean hasBeenErrored = false;
 	private String previousFilename;
 
-	public UploadImageAttribute(final ObjectConstraint ic) {
+	public UploadImageAttribute(final ObjectConstraint<Image> ic) {
 		super(ic);
 		final VerticalPanel vp = new VerticalPanel();
 
@@ -74,12 +76,12 @@ public class UploadImageAttribute extends GenericAttribute {
 					hasBeenUploaded = true;
 					hasBeenErrored = false;
 					if (continuation != null) {
-						continuation.onSuccess(image);
+						continuation.execute(image);
 					}
 				} else {
+					continuation.onFailure(new UnableToUploadImageException(results));
 					hasBeenUploaded = false;
 					hasBeenErrored = true;
-					continuation.onFailure(new InvalidImageException(results));
 				}
 			}
 
@@ -89,17 +91,15 @@ public class UploadImageAttribute extends GenericAttribute {
 						&& obj != null && !previousFilename.equals("")
 						&& !hasBeenErrored) {
 					// User uploaded a different image, so delete the old one
-					new ServerOp() {
+					new VoidServerOp() {
 						public void begin() {
-							MpDb.image_svc.delete((Image) obj, this);
+							MpDb.image_svc.delete(obj, this);
 						}
-						public void onSuccess(final Object result) {
-
-						}
+						@Override
+						public void onSuccess() {}
 					}.begin();
 				} else if (hasBeenUploaded) {
-					if (continuation != null)
-						continuation.onSuccess(obj);
+					continuation.execute(obj);
 					event.setCancelled(true);
 				} else {
 
@@ -115,65 +115,47 @@ public class UploadImageAttribute extends GenericAttribute {
 			}
 		});
 	}
-	public void submitForm(final ServerOp r) {
-		continuation = r;
-		fp.submit();
+
+	/**
+	 * Upload image attribute doesn't display anything so we don't implement
+	 * this method
+	 */
+	public Widget[] createDisplayWidget(final Image obj) {
+		return new Widget[] {};
 	}
 
-	public Widget[] createDisplayWidget(final MObject obj) {
-		final Object image = get(obj);
-		if (image != null) {
-			return new Widget[] {
-				new com.google.gwt.user.client.ui.Image(((Image) image)
-						.get64x64ServerPath())
-			};
-		} else
-			return new Widget[] {
-				new Label("No Images")
-			};
-	}
-
-	public Widget[] createEditWidget(final MObject obj, final String id) {
+	public Widget[] createEditWidget(final Image obj, final String id) {
 		this.obj = obj;
 		return new Widget[] {
 			fp
 		};
 	}
 
-	public void commitEdit(final MObject obj, final Widget[] editWidget,
-			final CurrentError err, final ServerOp r) {
-		new ServerOp() {
-			public void begin() {
-				UploadImageAttribute.this.submitForm(this);
-			}
-			public void onSuccess(final Object result) {
-				applyStyle(editWidget, true);
-				err.setText("");
-				r.onSuccess(null);
-			}
+	@Override
+	public void commitEdit(final Image obj, final Widget[] editWidget,
+			final CurrentError err, final Command r) {
+		continuation = new MCommand<Image>() {
 			public void onFailure(final Throwable whybad) {
-				r.onFailure((ValidationException) whybad);
 				showError(editWidget, err, (ValidationException) whybad);
 			}
-		}.begin();
-
+			@Override
+			public void execute(Image object) {
+				applyStyle(editWidget, true);
+				err.setText("");
+				r.execute();
+			}
+		};
+		fp.submit();
 	}
 
-	public void getStatus(final ServerOp r) {
-		if (r != null) {
-			if (obj != null)
-				r.onSuccess(obj);
-		}
-
+	public Image getImage() {
+		return obj;
 	}
 
 	protected Object get(final Widget editWidget) {
-		return get(obj);
+		return obj;
 	}
-	protected String get(final MObject obj) {
-		return null;
-	}
-	protected void set(final MObject obj, final Object images) {
+	protected void set(final Image obj, final Object images) {
 
 	}
 }

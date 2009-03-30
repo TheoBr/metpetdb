@@ -74,6 +74,8 @@ public class Grid extends MObject implements PublicData {
 	}
 
 	public Boolean getPublicData() {
+		if (publicData == null)
+			publicData = false;
 		return publicData;
 	}
 

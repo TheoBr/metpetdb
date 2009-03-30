@@ -24,21 +24,22 @@
     <property name="locationError" column="location_error" />
     
     <property name="subsampleCount" formula="(select count(*) from subsamples s
-    																		where s.sample_id=sample_id
-    																		AND (s.public_data='Y' OR s.user_id=user_id))" />
+    										where s.sample_id=sample_id
+    										AND s.public_data='Y')" />
 	<property name="imageCount" formula="(select count(*) from images i
-										where (i.sample_id=sample_id AND (i.public_data='Y'
-										OR i.user_id=user_id)) OR (i.subsample_id IN (select ss.subsample_id
-										from subsamples ss where ss.sample_id=sample_id AND (ss.user_id=user_id 
-											OR ss.public_data='Y'))))" />
-    <property name="analysisCount" formula="(select count(*) from subsamples s
-							inner join chemical_analyses ca on ca.subsample_id = s.subsample_id
-							where s.sample_id = sample_id)" />																		
+										where (i.sample_id=sample_id AND i.public_data='Y' AND i.subsample_id is null) OR 
+										(i.subsample_id IN (select ss.subsample_id
+										from subsamples ss where ss.sample_id=sample_id AND ss.public_data='Y')
+										AND i.public_data='Y'))" />
+    <property name="analysisCount" formula="(select count(*) from chemical_analyses ca where
+    										(ca.public_data='Y' AND ca.subsample_id IN (select ss.subsample_id
+    										from subsamples ss where ss.sample_id=sample_id AND ss.public_data='Y')))" />																		
     
-    <many-to-one name="owner" column="user_id" lazy="false"/>
+    <many-to-one name="owner" column="user_id" lazy="false" update="false"/>
     <many-to-one name="rockType" column="rock_type_id" lazy="false" />
 
-	<set name="subsamples" inverse="true" cascade="delete-orphan" >
+	<!-- delete-orphan causes the subsamples to get deleted when saving a sample -->
+	<set name="subsamples" inverse="true" cascade="delete" >
       <key column="sample_id" not-null="true"/>
       <one-to-many class="Subsample" />
       <filter name="samplePublicOrUser"

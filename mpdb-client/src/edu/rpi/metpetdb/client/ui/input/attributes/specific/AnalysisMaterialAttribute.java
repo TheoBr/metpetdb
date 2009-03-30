@@ -12,6 +12,7 @@ import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.BooleanConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.MineralAttribute;
 
 /**
  * Basically a mineral attribute but the user can choose if it is not a mineral

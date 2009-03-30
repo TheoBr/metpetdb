@@ -7,7 +7,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.MpDb;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchChemistryAttribute;
 
 public class SearchTabChemicalAnalysis extends SearchTabAttribute{
 	private static SearchGenericAttribute[] atts = {new SearchChemistryAttribute(MpDb.doc.SearchSample_elements,MpDb.doc.SearchSample_oxides)};

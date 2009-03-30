@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.VoidMCommand;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 
 /**
@@ -25,7 +26,7 @@ import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 public class WizardDialog extends MDialogBox implements ClickListener {
 
 	// Hold the DetailPanel (basically the wizard pages)
-	private ArrayList panels;
+	private ArrayList<DetailsPanel<?>> panels;
 	private int currentTab = 0;
 	private final TabPanel tabPanel;
 	private final Button cancel;
@@ -36,7 +37,7 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 	private HashSet<Command> dialogFinishListeners;
 
 	public WizardDialog() {
-		panels = new ArrayList();
+		panels = new ArrayList<DetailsPanel<?>>();
 		tabPanel = new TabPanel();
 
 		cancel = new Button(LocaleHandler.lc_text.buttonCancel(), this);
@@ -82,7 +83,7 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 		this.setWidget(fp);
 	}
 
-	public void addStep(final DetailsPanel stepPanel, final int stepNumber,
+	public void addStep(final DetailsPanel<?> stepPanel, final int stepNumber,
 			final String stepText) {
 		// TODO update next/back/finish
 		panels.add(stepNumber, stepPanel);
@@ -116,17 +117,10 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 			}
 		} else if (sender == finish) {
 			setActionsEnabled(false);
-			final Iterator itr = panels.iterator();
-			new ServerOp() {
+			final VoidMCommand tracker = new VoidMCommand() {
 				int success = 0;
 
-				public void begin() {
-					while (itr.hasNext()) {
-						final DetailsPanel dp = (DetailsPanel) itr.next();
-						dp.startValidation(this);
-					}
-				}
-				public void onSuccess(final Object result) {
+				public void execute() {
 					success++;
 					if (success == panels.size()) {
 						final Iterator<Command> dfItr = dialogFinishListeners
@@ -139,15 +133,13 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 					}
 					setActionsEnabled(true);
 				}
-				public void onFailure(final Throwable e) {
-					setActionsEnabled(true);
-					// super.onFailure(e);
-				}
-			}.begin();
-
+			};
+			final Iterator<DetailsPanel<?>> itr = panels.iterator();
+			while (itr.hasNext()) {
+				itr.next().startValidation(tracker);
+			}
 		}
 	}
-
 	public void show() {
 		super.show();
 		tabPanel.selectTab(0);
@@ -170,12 +162,12 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 		if (dialogFinishListeners != null)
 			dialogFinishListeners.clear();
 	}
-	
-	public void enableNextButton(final boolean enabled){
+
+	public void enableNextButton(final boolean enabled) {
 		next.setEnabled(enabled);
 	}
-	
-	public void enableFinishButton(final boolean enabled){
+
+	public void enableFinishButton(final boolean enabled) {
 		finish.setEnabled(enabled);
 	}
 

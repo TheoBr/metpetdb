@@ -9,6 +9,7 @@ import org.postgis.Point;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
+import edu.rpi.metpetdb.client.error.security.UnableToModifyPublicDataException;
 import edu.rpi.metpetdb.client.model.RockType;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.server.DatabaseTestCase;
@@ -30,10 +31,44 @@ public class SampleDaoTest extends DatabaseTestCase {
 	public SampleDaoTest() {
 		super("test-data/test-sample-data.xml");
 	}
+	
 	@Test
 	public void imageCount() throws NoSuchObjectException {
 		final Sample s = super.byId(typeName, PUBLIC_SAMPLE);
 		assertEquals(2, s.getImageCount());
+	}
+	
+	/**
+	 * Since the user is logged in it should return their private images as well
+	 * 
+	 * @throws NoSuchObjectException
+	 */
+	@Test
+	public void privateImageCount() throws NoSuchObjectException {
+		MpDbServlet.currentReq().user = super.byId("User", 1);
+		final Sample s = (Sample) super.byId(typeName,
+				(int) PUBLIC_SAMPLE);
+		assertEquals(4, s.getImageCount());
+	}
+
+	@Test
+	public void analysisCount() throws NoSuchObjectException {
+		final Sample s = (Sample) super.byId(typeName,
+				(int) PUBLIC_SAMPLE);
+		assertEquals(1, s.getAnalysisCount());
+	}
+	
+	/**
+	 * Since the user is logged in it should return their private analyses as well
+	 * 
+	 * @throws NoSuchObjectException
+	 */
+	@Test
+	public void privateAnalysisCount() throws NoSuchObjectException {
+		MpDbServlet.currentReq().user = super.byId("User", 1);
+		final Sample s = (Sample) super.byId(typeName,
+				(int) PUBLIC_SAMPLE);
+		assertEquals(3, s.getAnalysisCount());
 	}
 
 	/**
@@ -70,7 +105,12 @@ public class SampleDaoTest extends DatabaseTestCase {
 		assertEquals(PUBLIC_SAMPLE, s.getId());
 	}
 
-	@Test
+	/**
+	 * Fails because the sample has a public Image
+	 * @throws NoSuchObjectException
+	 * @throws MpDbException
+	 */
+	@Test(expected = UnableToModifyPublicDataException.class)
 	public void deleteSample() throws NoSuchObjectException, MpDbException {
 		MpDbServlet.currentReq().user = super.byId("User", 1);
 		MpDbServlet.currentReq().principals.add(new OwnerPrincipal(MpDbServlet

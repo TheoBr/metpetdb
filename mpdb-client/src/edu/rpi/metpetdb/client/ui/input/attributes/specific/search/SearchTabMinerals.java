@@ -7,7 +7,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.MpDb;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchMineralsAttribute;
 
 public class SearchTabMinerals extends SearchTabAttribute{
 	private static SearchGenericAttribute[] atts = {new SearchMineralsAttribute(MpDb.doc.SearchSample_minerals)};

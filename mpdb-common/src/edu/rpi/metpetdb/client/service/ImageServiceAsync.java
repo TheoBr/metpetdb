@@ -19,7 +19,7 @@ public interface ImageServiceAsync {
 
 	void saveImage(XrayImage img, AsyncCallback<XrayImage> ac);
 
-	void delete(Image i, AsyncCallback<Object> ac);
+	void delete(Image i, AsyncCallback<Void> ac);
 
 	void rotate(ImageOnGrid iog, int degrees, AsyncCallback<ImageOnGrid> ac);
 }

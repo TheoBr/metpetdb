@@ -10,12 +10,13 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
+import edu.rpi.metpetdb.client.model.interfaces.HasImages;
 import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
 import edu.rpi.metpetdb.client.model.interfaces.HasSample;
 import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 
 @Indexed
-public class Subsample extends MObject implements HasOwner, PublicData, HasSample {
+public class Subsample extends MObject implements HasOwner, PublicData, HasSample, HasImages {
 	private static final long serialVersionUID = 1L;
 
 	@DocumentId

@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.input.attributes.specific;
+package edu.rpi.metpetdb.client.ui.input.attributes.specific.sample;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -14,6 +14,7 @@ import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.MultipleSuggestTextAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 
 public class RegionAttribute extends MultipleSuggestTextAttribute {

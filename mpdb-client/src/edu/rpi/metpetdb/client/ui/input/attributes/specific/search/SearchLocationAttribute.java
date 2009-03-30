@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.input.attributes.specific;
+package edu.rpi.metpetdb.client.ui.input.attributes.specific.search;
 
 //import java.math.BigDecimal;
 
@@ -33,7 +33,6 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarth;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
@@ -187,15 +186,15 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 	private native void addClickListener(JavaScriptObject ge, SearchLocationAttribute me) /*-{	
 		if (!window.globeDownEventListener) {
 	  		window.globeDownEventListener = function(event) {
-	  			me.@edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttribute::onGEDown(DD)(event.getScreenX(), event.getScreenY());	
+	  			me.@edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchLocationAttribute::onGEDown(DD)(event.getScreenX(), event.getScreenY());	
 		  	}
 		}	
 		if (!window.globeClickEventListener) {
 	  		window.globeClickEventListener = function(event) {
 		  		if (event.getTarget().getType() != "KmlPlacemark"){
-					me.@edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttribute::onGEClick(DDDD)(event.getScreenX(), event.getScreenY(),event.getLongitude(), event.getLatitude());
+					me.@edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchLocationAttribute::onGEClick(DDDD)(event.getScreenX(), event.getScreenY(),event.getLongitude(), event.getLatitude());
 		  		} else {
-		  			me.@edu.rpi.metpetdb.client.ui.input.attributes.specific.SearchLocationAttribute::clearPolygon(DD)(event.getScreenX(), event.getScreenY());
+		  			me.@edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchLocationAttribute::clearPolygon(DD)(event.getScreenX(), event.getScreenY());
 		  		}
 		  	}
 		}	

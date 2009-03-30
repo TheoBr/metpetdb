@@ -92,7 +92,8 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				// the session
 				final Session s = DataStore.open();
 				try {
-					s.getNamedQuery("Sample.byId").setParameter("id", sampleId)
+					s.createQuery(
+							"select s.id from Sample s where s.id=" + sampleId)
 							.uniqueResult();
 				} catch (CallbackException ce) {
 					throw ce;
@@ -108,8 +109,9 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				// the session
 				final Session s = DataStore.open();
 				try {
-					s.getNamedQuery("Subsample.byId").setParameter("id",
-							subsampleId).uniqueResult();
+					s.createQuery(
+							"select ss.id from Subsample ss where ss.id="
+									+ subsampleId).uniqueResult();
 				} catch (CallbackException ce) {
 					throw ce;
 				} finally {
@@ -212,7 +214,100 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				}
 			}
 		}
+		updateObjectCounts(id, entity, propertyNames, state);
 		return super.onLoad(entity, id, state, propertyNames, types);
+	}
+
+	/**
+	 * Since hibernate formulas can't contain query parameters we have to
+	 * manually update the image/subsample/analysis counts to take into account
+	 * when users are logged in. So this function will correctly update those
+	 * amounts for logged in users, while the formula for non-logged in users
+	 * will work fine
+	 * 
+	 * @param id
+	 * @param entity
+	 * @param propertyNames
+	 * @param state
+	 */
+	private void updateObjectCounts(Serializable id, Object entity,
+			String[] propertyNames, Object[] state) {
+		// check object counts, i.e. subsamples, images, chemical analyses
+		long userId = 0;
+		if (MpDbServlet.currentReq() != null && MpDbServlet.currentReq().user != null)
+			userId = MpDbServlet.currentReq().user.getId();
+		if (userId <= 0)
+			return; // we don't need to do anything special for non logged in
+					// users
+		long entityId = Long.parseLong(id.toString());
+		final Session s = DataStore.open();
+		try {
+			for (int i = 0; i < propertyNames.length; ++i) {
+				if ("imageCount".equals(propertyNames[i])) {
+					// update image count
+					if (entity instanceof Subsample) {
+						state[i] = Integer.parseInt(s.createQuery(
+								"select count(*) from Image i where i.subsample.id="
+										+ entityId + " and "
+										+ "(i.publicData=true or i.owner.id="
+										+ userId + ")").uniqueResult()
+								.toString());
+					} else if (entity instanceof Sample) {
+						state[i] = Integer
+								.parseInt(s
+										.createQuery(
+												"select count(*) from Image i where "
+														+ "((i.sample.id="
+														+ entityId
+														+ " and i.subsample is null) OR (i.subsample.id IN (select ss.id from Subsample ss"
+														+ " where ss.sample.id="
+														+ entityId
+														+ "AND (ss.publicData=true or "
+														+ "ss.owner.id="
+														+ userId
+														+ ")))) AND (i.publicData=true or i.owner.id="
+														+ userId + ")")
+										.uniqueResult().toString());
+					}
+				} else if ("analysisCount".equals(propertyNames[i])) {
+					if (entity instanceof Subsample) {
+						state[i] = Integer.parseInt(s.createQuery(
+								"select count(*) from ChemicalAnalysis ca where ca.subsample.id="
+										+ entityId + " and "
+										+ "(ca.publicData=true or ca.owner.id="
+										+ userId + ")").uniqueResult()
+								.toString());
+					} else if (entity instanceof Sample) {
+						state[i] = Integer
+						.parseInt(s
+								.createQuery(
+										"select count(*) from ChemicalAnalysis ca where "
+												+ "(ca.subsample.id IN (select ss.id from Subsample ss"
+												+ " where ss.sample.id="
+												+ entityId
+												+ "AND (ss.publicData=true or "
+												+ "ss.owner.id="
+												+ userId
+												+ "))) AND (ca.publicData=true or ca.owner.id="
+												+ userId + ")")
+								.uniqueResult().toString());
+					}
+				} else if ("subsampleCount".equals(propertyNames[i])) {
+					state[i] = Integer.parseInt(s.createQuery(
+							"select count(*) from Subsample ss where ss.sample.id="
+									+ entityId + " and "
+									+ "(ss.publicData=true or ss.owner.id="
+									+ userId + ")").uniqueResult().toString());
+				}
+			}
+		} catch (CallbackException ce) {
+			// we catch the exception in order
+			// to reach the finally clause and close
+			// the session
+			throw ce;
+		} finally {
+			s.close();
+		}
 	}
 
 	private boolean isPublic(String[] propertyNames, Object[] state) {
@@ -312,10 +407,12 @@ public class PermissionInterceptor extends EmptyInterceptor {
 					} else {
 						if (entity instanceof RoleChange) {
 							// we handle role changes specially
-							if (!(((RoleChange) entity).getUser() != null && (((RoleChange) entity)
-									.getUser().getId() == currentUser.getId()) ||
-									((RoleChange)entity).getSponsor().getId() == currentUser.getId())) {
-								//cannot create role changes for other users
+							if (!(((RoleChange) entity).getUser() != null
+									&& (((RoleChange) entity).getUser().getId() == currentUser
+											.getId()) || ((RoleChange) entity)
+									.getSponsor().getId() == currentUser
+									.getId())) {
+								// cannot create role changes for other users
 								throw new CallbackException(
 										new CannotCreateRoleChangeException());
 							}

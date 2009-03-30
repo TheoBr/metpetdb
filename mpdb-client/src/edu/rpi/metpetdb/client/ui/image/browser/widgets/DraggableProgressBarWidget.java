@@ -91,6 +91,7 @@ public class DraggableProgressBarWidget extends VerticalPanel implements
 		this.add(hp);
 		min = minOpacity;
 		max = maxOpacity;
+		dpb.setWidth("250px");
 	}
 	public DraggableProgressBarWidget(final int elements, final int minOpacity,
 			final int maxOpacity, int start, final ServerOp<String> r) {
@@ -120,7 +121,6 @@ public class DraggableProgressBarWidget extends VerticalPanel implements
 		changeProgress(-1);
 	}
 
-	// FIXME verify this works with gwt progress bar
 	public void changeProgress(final int multiplier) {
 		int newValue = (int) dpb.getProgress() + 1 * multiplier;
 		if (newValue < min)
@@ -131,7 +131,6 @@ public class DraggableProgressBarWidget extends VerticalPanel implements
 		value.setText(String.valueOf(newValue));
 	}
 
-	// FIXME verify this works with gwt progress bar
 	public int getProgress() {
 		return (int) dpb.getProgress();
 	}

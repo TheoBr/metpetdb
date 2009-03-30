@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.model.bulk.upload;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,8 @@ public class BulkUploadResult implements IsSerializable {
 	private Map<Integer, BulkUploadHeader> headers;
 	//maps row numbers to a list of exceptions
 	private Map<Integer, List<BulkUploadError>> errors = new HashMap<Integer, List<BulkUploadError>>();
+	/** just a list of warnings, this can be expanded in the future to support rows/columns */
+	private Collection<String> warnings;
 	/**
 	 * the key is the name of the object, i.e. Sample, the value is a
 	 * ResultCount class that contains the counts of fresh, invalid, and old
@@ -72,5 +75,13 @@ public class BulkUploadResult implements IsSerializable {
 		this.timeTaken = timeTaken;
 	}
 
+	public Collection<String> getWarnings() {
+		if (warnings == null)
+			warnings = new ArrayList<String>();
+		return warnings;
+	}
 	
+	public void setWarnings(final Collection<String> c) {
+		warnings = c;
+	}
 }

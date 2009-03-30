@@ -4,7 +4,7 @@ import java.util.Set;
 
 import edu.rpi.metpetdb.client.model.Image;
 
-public interface IHasImages {
+public interface HasImages extends MObject {
 
 	public Set<Image> getImages();
 

@@ -28,7 +28,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.AddImageAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.image.AddImageAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
@@ -42,7 +42,7 @@ public class SubsampleDetails extends MPagePanel {
 			new RadioButtonAttribute(MpDb.doc.Subsample_publicData,
 					LocaleHandler.lc_text.publicDataWarning()),
 			new ListboxAttribute(MpDb.doc.Subsample_subsampleType),
-			new AddImageAttribute(MpDb.doc.Subsample_images),
+			new AddImageAttribute<Subsample>(MpDb.doc.Subsample_images),
 			new TextAttribute(MpDb.doc.Subsample_imageCount).setReadOnly(true),
 			new TextAttribute(MpDb.doc.Subsample_analysisCount)
 					.setReadOnly(true),
@@ -110,6 +110,8 @@ public class SubsampleDetails extends MPagePanel {
 				}
 				setPageTitle(s.getName(), "Subsample");
 				addPageActionItem(map);
+				images = new ImageListViewer(result, false);
+				panel.getRightCol().add(images);
 
 			}
 			protected void onDeleteCompletion(final Object result) {
@@ -163,8 +165,6 @@ public class SubsampleDetails extends MPagePanel {
 	public SubsampleDetails showById(final long id) {
 		subsampleId = id;
 		p_subsample.load();
-		images = new ImageListViewer(subsampleId, false);
-		panel.getRightCol().add(images);
 		showChemicalAnalysis();
 		return this;
 	}

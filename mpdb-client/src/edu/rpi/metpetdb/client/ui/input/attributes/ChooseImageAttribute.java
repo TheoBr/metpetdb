@@ -10,19 +10,19 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Image;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.model.interfaces.HasImage;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
-import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.MCommand;
 
-public class ChooseImageAttribute extends GenericAttribute {
+public class ChooseImageAttribute<DataType extends HasImage> extends GenericAttribute<DataType> {
 
 	private Image image;
 	private TextAttribute pointX;
 	private TextAttribute pointY;
 
-	public ChooseImageAttribute(final ObjectConstraint ic,
+	public ChooseImageAttribute(final ObjectConstraint<Image> ic,
 			final IntegerConstraint x, final IntegerConstraint y) {
 		super(new PropertyConstraint[] {
 				ic, x, y
@@ -32,7 +32,7 @@ public class ChooseImageAttribute extends GenericAttribute {
 		pointY = new TextAttribute(y);
 	}
 
-	public Widget[] createDisplayWidget(final MObject obj) {
+	public Widget[] createDisplayWidget(final HasImage obj) {
 		if (get(obj) != null) {
 			final Image image = (Image) get(obj);
 			final int x = Integer.parseInt(pointX.get(obj));
@@ -57,24 +57,19 @@ public class ChooseImageAttribute extends GenericAttribute {
 		}
 	}
 
-	public Widget[] createEditWidget(final MObject obj, final String id) {
+	public Widget[] createEditWidget(final HasImage obj, final String id) {
 		image = get(obj);
 		final VerticalPanel vp = new VerticalPanel();
 		final Button b = new Button("Choose Image...", new ClickListener() {
 			public void onClick(final Widget sender) {
-				new ServerOp() {
-					public void begin() {
-						new ChooseImageDialog(this, ((ChemicalAnalysis) obj)
-								.getSubsample()).show();
-					}
-					public void onSuccess(final Object result) {
-						if (result != null)
-							image = (Image) result;
+				new ChooseImageDialog(new MCommand<Image>() {
+					@Override
+					public void execute(Image image) {
 						vp.remove(1);
-						vp.add(new com.google.gwt.user.client.ui.Image(
-								((Image) image).get64x64ServerPath()));
+						vp.add(new com.google.gwt.user.client.ui.Image(image
+								.get64x64ServerPath()));
 					}
-				}.begin();
+				}, ((ChemicalAnalysis) obj).getSubsample()).show();
 			}
 		});
 		vp.add(b);
@@ -98,13 +93,13 @@ public class ChooseImageAttribute extends GenericAttribute {
 	protected Object get(final Widget editWidget) {
 		return image;
 	}
-	protected Image get(final MObject obj) {
-		return (Image) mGet(obj);
+	protected Image get(final HasImage obj) {
+		return obj.getImage();
 	}
-	protected void set(final MObject obj, final Object v) {
+	protected void set(final HasImage obj, final Object v) {
 		mSet(obj, v);
 	}
-	protected void set(final MObject obj, final Object v,
+	protected void set(final HasImage obj, final Object v,
 			final PropertyConstraint pc) {
 		mSet(obj, v, pc);
 	}
