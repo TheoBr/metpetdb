@@ -59,11 +59,11 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 		
 		private class ChemMSuggestText extends MSuggestText{
 			public ChemMSuggestText(){
-				super(new HashSet<String>(), false);
+				super(new HashSet<String>(), false, true);
 			}
 			
 			public ChemMSuggestText(final Set<String> suggestions, final boolean addShowAll){
-				super(suggestions,addShowAll);
+				super(suggestions,addShowAll, true);
 			}
 			protected String getValue(String input) {
 				return removeHTML(input);

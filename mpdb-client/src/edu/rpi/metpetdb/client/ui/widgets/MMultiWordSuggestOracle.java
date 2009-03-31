@@ -64,6 +64,7 @@ import com.google.gwt.user.client.ui.SuggestOracle;
  * </p>
  */
 public final class MMultiWordSuggestOracle extends SuggestOracle {
+	private boolean isChemistry = false;
 
   /**
    * Suggestion class for {@link MultiWordSuggestOracle}.
@@ -139,6 +140,11 @@ public final class MMultiWordSuggestOracle extends SuggestOracle {
   public MMultiWordSuggestOracle() {
     this(" ");
   }
+  
+  public MMultiWordSuggestOracle(final boolean isChemistry) {
+	    this(" ");
+	    this.isChemistry = isChemistry;
+	  }
 
   /**
    * Constructor for <code>MultiWordSuggestOracle</code> which takes in a set
@@ -222,6 +228,19 @@ public final class MMultiWordSuggestOracle extends SuggestOracle {
     String escaped = convertMe.getHTML();
     return escaped;
   }
+  
+  private String createChemistryHTML(final String query){
+	  String output = "";
+	  for (int i = 0; i < query.length(); i++){
+		  try{
+			  Integer.parseInt(query.substring(i, i+1));
+			  output+="<sub>"+query.charAt(i)+"</sub>";
+		  } catch (Exception e){
+			  output+=query.charAt(i);
+		  }
+	  }
+	  return output;
+  }
 
   /**
    * Compute the suggestions that are matches for a given query.
@@ -232,6 +251,9 @@ public final class MMultiWordSuggestOracle extends SuggestOracle {
    */
   private List<MultiWordSuggestion> computeItemsFor(String query, int limit) {
     query = normalizeSearch(query);
+    if (isChemistry){
+    	query = createChemistryHTML(query);
+    }
 
     // Get candidates from search words.
     List<String> candidates = createCandidatesFromSearch(query, limit);
