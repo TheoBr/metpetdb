@@ -44,6 +44,9 @@ public class SearchSample implements IsSerializable, MObject {
 	
 	private Set<MetamorphicGrade> metamorphicGrades  = new HashSet<MetamorphicGrade>();
 	
+	// 0 = public and private, 1 = public only, 2 = private only
+	private int getPublic;
+	
 	public SearchSample() {
 		
 	}
@@ -276,6 +279,16 @@ public class SearchSample implements IsSerializable, MObject {
 		final MetamorphicGrade mg = new MetamorphicGrade(name);
 		metamorphicGrades.add(mg);
 	}
+	
+	public int getGetPublic(){
+		return getPublic;
+	}
+	
+	public void setGetPublic(final int getPublic){
+		if (getPublic > -1 && getPublic < 3)
+			this.getPublic = getPublic;
+	}
+
 
 	public Object mGet(Property property) {
 		return property.get(this);

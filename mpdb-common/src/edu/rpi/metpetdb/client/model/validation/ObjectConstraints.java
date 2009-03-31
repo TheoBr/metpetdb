@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.model.validation;
 import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
 import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 
 /**
@@ -21,6 +22,7 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 	public ObjectConstraint SearchSample_region;
 	public ObjectConstraint SearchSample_references;
 	public ObjectConstraint SearchSample_metamorphicGrades;
+	public IntegerConstraint SearchSample_getPublic;
 
 	public FloatConstraint Sample_longitude;
 	public FloatConstraint Sample_latitude;
@@ -30,6 +32,11 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 	public void finishInitialization(DatabaseObjectConstraints doc) {
 
 		try {
+			SearchSample_getPublic.entityName = "SearchSample";
+			SearchSample_getPublic.property = SearchSampleProperty.getPublic;
+			SearchSample_getPublic.propertyName = "getPublic";
+			SearchSample_getPublic.required = true;
+			
 			SearchSample_collector.entityName = "SearchSample";
 			SearchSample_collector.property = SearchSampleProperty.collector;
 			SearchSample_collector.propertyName = "Collector";

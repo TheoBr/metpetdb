@@ -177,6 +177,7 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String SearchSample_elements();
 	String SearchSample_oxides();
 	String SearchSample_minerals();
+	String SearchSample_getPublic();
 	/* Sample Comment */
 	String SampleComment_text();
 }

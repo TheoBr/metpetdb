@@ -197,6 +197,20 @@ public enum SearchSampleProperty implements SearchProperty {
 			return "metamorphicGrade_name";
 		}
 	},
+	getPublic {
+		public Integer get(final SearchSample sample) {
+			return ((SearchSample) sample).getGetPublic();
+		}
+
+		public void set(final SearchSample sample,
+				final Object getPublic) {
+			((SearchSample) sample)
+					.setGetPublic((Integer)getPublic);
+		}
+		public String columnName() {
+			return "public_data";
+		}
+	},
 	tabs {
 		public String get(final SearchSample sample) {
 			return "";

@@ -13,12 +13,14 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateRangeAttribute;
 
 public class SearchTabProvenance extends SearchTabAttribute{
-	private static SearchGenericAttribute[] atts = {new SearchOwnersAttribute(MpDb.oc.SearchSample_owner),
+	private static SearchGenericAttribute[] atts = {
+		new SearchOwnersAttribute(MpDb.oc.SearchSample_owner),
 		new SearchCollectorsAttribute(MpDb.oc.SearchSample_collector),
 		new SearchAliasAttribute(MpDb.oc.SearchSample_number),
 		new SearchSesarAttribute(MpDb.oc.SearchSample_sesarNumber),
 		new SearchReferenceAttribute(MpDb.oc.SearchSample_references),
-		new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange)
+		new DateRangeAttribute(MpDb.oc.SearchSample_collectionDateRange),
+		new SearchPublicAttribute(MpDb.oc.SearchSample_getPublic)
 	};
 	
 	private ArrayList<Widget[]> currentEditWidgets;
