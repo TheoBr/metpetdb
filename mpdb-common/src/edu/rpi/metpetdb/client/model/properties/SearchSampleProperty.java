@@ -208,7 +208,7 @@ public enum SearchSampleProperty implements SearchProperty {
 					.setGetPublic((Integer)getPublic);
 		}
 		public String columnName() {
-			return "public_data";
+			return "publicData";
 		}
 	},
 	tabs {
