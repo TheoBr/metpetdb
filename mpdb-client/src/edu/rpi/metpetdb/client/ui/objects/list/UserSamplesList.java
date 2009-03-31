@@ -220,19 +220,23 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		selectListBox.addChangeListener(new ChangeListener() {
 			public void onChange(Widget sender) {
 				if (selectListBox.getSelectedIndex() == 1) {
-					for (int i = 0; i < list.getScrollTable().getDataTable()
-							.getRowCount(); i++)
-						((MCheckBox) list.getScrollTable().getDataTable()
-								.getWidget(i, 0)).setChecked(false);
+					//None
+					for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++)
+						((MCheckBox) list.getScrollTable().getDataTable().getWidget(i, 0)).setChecked(false);
 				} else if (selectListBox.getSelectedIndex() == 2) {
-					// TODO select only private samples
+					//Private
+					for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++)
+						((MCheckBox) list.getScrollTable().getDataTable().getWidget(i, 0))
+						.setChecked(!((Sample)list.data.get(i)).isPublicData());
 				} else if (selectListBox.getSelectedIndex() == 3) {
-					// TODO select only public samples
+					//Public
+					for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++)
+						((MCheckBox) list.getScrollTable().getDataTable().getWidget(i, 0))
+						.setChecked(((Sample)list.data.get(i)).isPublicData());
 				} else if (selectListBox.getSelectedIndex() == 4) {
-					for (int i = 0; i < list.getScrollTable().getDataTable()
-							.getRowCount(); i++)
-						((MCheckBox) list.getScrollTable().getDataTable()
-								.getWidget(i, 0)).setChecked(true);
+					//All
+					for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++)
+						((MCheckBox) list.getScrollTable().getDataTable().getWidget(i, 0)).setChecked(true);
 				}
 				new Timer() {
 					public void run() {
