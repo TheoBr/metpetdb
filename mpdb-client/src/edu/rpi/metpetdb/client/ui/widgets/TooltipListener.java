@@ -46,6 +46,18 @@ public class TooltipListener extends MouseListenerAdapter {
 
 			setStyleName(styleName);
 		}
+		
+		public Tooltip(String text, int delay, String styleName, boolean clickable) {
+			super(true);
+			this.delay = delay;
+
+			contents.setHTML(text);
+			//contents.addClickListener(showClickListener);
+			contents.addStyleName("tooltip-content");
+			add(contents);
+
+			setStyleName(styleName);
+		}
 
 		private ClickListener hideClickListener = new ClickListener(){
 			public void onClick(Widget sender) {
@@ -76,6 +88,7 @@ public class TooltipListener extends MouseListenerAdapter {
 	}
 
 	private final Tooltip tooltip;
+	private final boolean clickable;
 	private int offsetX = DEFAULT_OFFSET_X;
 	private int offsetY = DEFAULT_OFFSET_Y;
 
@@ -84,16 +97,40 @@ public class TooltipListener extends MouseListenerAdapter {
 	}
 
 	public TooltipListener(String text, int delay, String styleName) {
+		clickable = false;
 		tooltip = new Tooltip(text, delay, styleName);
+	}
+	
+	public TooltipListener(String text, int delay, String styleName, boolean clickable) {
+		this.clickable = clickable;
+		if(clickable == true){
+			tooltip = new Tooltip(text, delay, styleName, clickable);
+		}
+		else{
+			tooltip = new Tooltip(text, delay, styleName);
+		}
 	}
 
 	public void onMouseEnter(Widget sender) {
+		if(clickable == false){
+			widgetLaunching = sender;
+			setTooltipContents(getTooltipContents());
+			tooltip.show();
+		}
+	}
+
+	public void onMouseLeave(Widget sender) {
+		if(clickable == false) tooltip.hide();
+	
+	}
+	
+	public void onMouseUp(Widget sender, int x, int y) {
 		widgetLaunching = sender;
 		setTooltipContents(getTooltipContents());
 		tooltip.show();
 	}
-
-	public void onMouseLeave(Widget sender) {
+	
+	public void onMouseDown(Widget sender, int x, int y) {
 		tooltip.hide();
 	}
 

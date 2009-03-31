@@ -42,6 +42,11 @@ public abstract class SampleList extends List<Sample> {
 						TokenSpace.detailsOf(rowValue));
 			}
 		});
+		columns.add(new Column<Sample, Image>("", null){
+			public Image getCellValue(Sample rowValue) {
+				return new Image("images/icon-info-small.png");
+			}
+		});
 
 		columns.add(new Column<Sample, Image>(enttxt.Sample_publicData(),
 				SampleProperty.publicData) {

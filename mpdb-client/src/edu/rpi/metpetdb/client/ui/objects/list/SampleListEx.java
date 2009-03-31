@@ -61,18 +61,28 @@ public abstract class SampleListEx extends ListEx<Sample> {
 						final int currentRow) {
 					MLink sampleNumber = new MLink((String) data.mGet(SampleProperty.number),
 							TokenSpace.detailsOf((Sample) data));
-					sampleNumber.addMouseListener(new TooltipListener("Loading...", 0, "sample-infobox"){
-						public String getTooltipContents() {
-							return processTooltipData(data);
-						}
-					});
-					sampleNumber.addStyleName("sample-number");
 					return sampleNumber;
 				}
 				public Object getTooltipRepresentation(final MObject data,
 						final int currentRow) {
 					return new MLink((String) data.mGet(SampleProperty.number),
 							TokenSpace.detailsOf((Sample) data));
+				}
+			},
+			new Column(true,"Info", false, true) {
+				protected Object getWidget(final MObject data,
+						final int currentRow) {
+					Image infoImage = new Image("images/icon-info-small.png"){
+						public String toString(){
+							return "";
+						}
+					};
+					infoImage.addMouseListener(new TooltipListener("Loading...", 0, "sample-infobox", true){
+						public String getTooltipContents() {
+							return processTooltipData(data);
+						}
+					});
+					return infoImage;
 				}
 			},
 			new Column(true,enttxt.Sample_publicData(), SampleProperty.publicData,
@@ -199,7 +209,7 @@ public abstract class SampleListEx extends ListEx<Sample> {
 
 				}
 			},
-			new Column(false, "Location", SampleProperty.location, false, true) {
+			new Column(false, "Longitude, Latitude", SampleProperty.location, false, true) {
 				protected Object getText(final MObject data,
 						final int currentRow) {
 					final Point location = (Point) data
@@ -257,12 +267,13 @@ public abstract class SampleListEx extends ListEx<Sample> {
 		return SampleProperty.number.name();
 	}
 	
+	
 	private static String processTooltipData(MObject data){
 		String tooltipData = "<table class=\"info\" cellspacing=\"0\"><tbody>";
 		
 		for(Column c: columns){	
 			
-			if(c.getTitle() == "Check") {
+			if(c.getTitle() == "Check" || c.getTitle() == "") {
 				continue;
 			} else {
 				String value = c.getTooltipRepresentation(data, 0).toString();
