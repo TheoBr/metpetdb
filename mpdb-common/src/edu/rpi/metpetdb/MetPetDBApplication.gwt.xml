@@ -22,7 +22,7 @@
 	<source path="client" />
     <source path="test" /> 
     
-    <set-property name="user.agent" value="gecko1_8"/>
+    <!--<set-property name="user.agent" value="gecko1_8"/>-->
 
 	<servlet path="/constants.svc" class="edu.rpi.metpetdb.server.impl.ConstantsServiceImpl"/>
 	<servlet path="/project.svc" class="edu.rpi.metpetdb.server.impl.ProjectServiceImpl"/>
