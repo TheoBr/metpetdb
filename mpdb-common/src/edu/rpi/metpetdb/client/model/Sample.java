@@ -54,14 +54,14 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner,
 	private RockType rockType;
 
 	//@IndexedEmbedded(prefix = "subsample_")
-	private Set<Subsample> subsamples;
+	private Set<Subsample> subsamples = new HashSet<Subsample>();
 
-	private Set<Project> projects;
+	private Set<Project> projects = new HashSet<Project>();
 
 	@IndexedEmbedded(prefix = "sampleMineral_")
-	private Set<SampleMineral> minerals;
+	private Set<SampleMineral> minerals = new HashSet<SampleMineral>();
 
-	private Set<Image> images;
+	private Set<Image> images = new HashSet<Image>();
 
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String description;
@@ -78,14 +78,14 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner,
 	private Float locationError;
 
 	@IndexedEmbedded(prefix = "region_")
-	private Set<Region> regions;
+	private Set<Region> regions = new HashSet<Region>();
 
 	@IndexedEmbedded(depth = 1, prefix = "metamorphicGrade_")
-	private Set<MetamorphicGrade> metamorphicGrades;
+	private Set<MetamorphicGrade> metamorphicGrades = new HashSet<MetamorphicGrade>();
 
-	private Set<Reference> references;
+	private Set<Reference> references = new HashSet<Reference>();
 
-	private Set<SampleComment> comments;
+	private Set<SampleComment> comments = new HashSet<SampleComment>();
 
 	private int subsampleCount;
 

@@ -46,7 +46,7 @@
      		condition="( user_id=:userId OR public_data='Y')" />
     </set>
     
-    <set name="comments" inverse="true" table="sample_comments" cascade="delete-orphan" >
+    <set name="comments" inverse="true" table="sample_comments" cascade="delete" >
       <key column="sample_id" not-null="true" />
       <one-to-many class="SampleComment"/>
     </set>

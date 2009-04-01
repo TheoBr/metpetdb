@@ -12,12 +12,9 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 
-import net.sf.beanlib.spi.CustomBeanTransformerSpi;
-import net.sf.gilead.core.PersistentBeanManager;
-import net.sf.gilead.core.beanlib.transformer.CustomTransformersFactory;
-import net.sf.gilead.core.hibernate.HibernateUtil;
-import net.sf.gilead.core.store.stateless.StatelessProxyStore;
-import net.sf.gilead.gwt.PersistentRemoteService;
+import net.sf.hibernate4gwt.core.HibernateBeanManager;
+import net.sf.hibernate4gwt.core.hibernate.HibernateUtil;
+import net.sf.hibernate4gwt.gwt.HibernateRemoteService;
 
 import org.hibernate.CallbackException;
 import org.hibernate.HibernateException;
@@ -74,11 +71,11 @@ import edu.rpi.metpetdb.server.security.permissions.principals.AdminPrincipal;
  * recycled) at the end of the request.
  * </p>
  */
-public abstract class MpDbServlet extends PersistentRemoteService {
+public abstract class MpDbServlet extends HibernateRemoteService {
 	private static final long serialVersionUID = 1L;
 
 	/** The current thread's {@link Req}. */
-	public static final ThreadLocal<Req> perThreadReq = new ThreadLocal<Req>();
+	private static final ThreadLocal<Req> perThreadReq = new ThreadLocal<Req>();
 	// req used for unit tests
 	public static Req testReq = null;
 
@@ -130,7 +127,7 @@ public abstract class MpDbServlet extends PersistentRemoteService {
 		// cloneMapper.setCloneSuffix("");
 		// //
 		// HibernateBeanManager.getInstance().setClassMapper(cloneMapper);
-		PersistentBeanManager.getInstance().setPersistenceUtil(
+		HibernateBeanManager.getInstance().setPersistenceUtil(
 				new HibernateUtil() {
 					@Override
 					public boolean isPersistentClass(Class<?> clazz) {
@@ -141,14 +138,9 @@ public abstract class MpDbServlet extends PersistentRemoteService {
 						}
 					}
 				});
-		final HibernateUtil hibernateUtil = new HibernateUtil();
-		hibernateUtil.setSessionFactory(DataStore.getFactory());
-		CustomTransformersFactory.getInstance().addCustomBeanTransformer(
-				GeometryCustomTransformer.class);
-		PersistentBeanManager.getInstance().setPersistenceUtil(hibernateUtil);
-		PersistentBeanManager.getInstance().setProxyStore(
-				new StatelessProxyStore());
-		DataStore.setBeanManager(PersistentBeanManager.getInstance());
+		HibernateBeanManager.getInstance().setSessionFactory(
+				DataStore.getFactory());
+		DataStore.setBeanManager(HibernateBeanManager.getInstance());
 		DataStore.initFactory();
 		doc = DataStore.getInstance().getDatabaseObjectConstraints();
 		if (doc == null) {
@@ -329,7 +321,10 @@ public abstract class MpDbServlet extends PersistentRemoteService {
 	 *         object within a single service request.
 	 */
 	protected Session currentSession() {
-		return currentReq().currentSession();
+		if (currentReq() != null)
+			return currentReq().currentSession();
+		else
+			return DataStore.open();
 	}
 
 	/**
@@ -501,7 +496,12 @@ public abstract class MpDbServlet extends PersistentRemoteService {
 				// load the private
 				// data unless the current user is the owner of the private data
 				int userIdToUser = userId == null ? 0 : userId;
-				DataStore.enableSecurityFilters(session, userIdToUser);
+				session.enableFilter("samplePublicOrUser").setParameter(
+						"userId", userIdToUser);
+				session.enableFilter("subsamplePublicOrUser").setParameter(
+						"userId", userIdToUser);
+				session.enableFilter("chemicalAnalysisPublicOrUser")
+						.setParameter("userId", userIdToUser);
 				session.beginTransaction();
 			}
 			return session;
