@@ -84,15 +84,19 @@
 	-webkit-border-bottom-right-radius: 2px;
 	-webkit-border-bottom-left-radius: 2px;
 }
-.search-taboptions .gwt-RadioButton {
+.search-taboptions .gwt-RadioButton,
+.search-prov .gwt-RadioButton {
 	display: table-row;
 }
-.search-taboptions .gwt-RadioButton input {
+.search-taboptions .gwt-RadioButton input,
+.search-prov .gwt-RadioButton input {
 	border: 0 !important;
 	margin: 0 4px 0 0;
 }
 .search-taboptions .gwt-RadioButton label,
-.search-taboptions .gwt-RadioButton input {
+.search-taboptions .gwt-RadioButton input,
+.search-prov .gwt-RadioButton label,
+.search-prov .gwt-RadioButton input {
 	display: table-cell;
 	line-height: 1;
 	vertical-align: middle;
@@ -252,7 +256,7 @@
 	float: left;
 	height: 3.35em;
 	margin-top: -0.35em;
-	width: 36.6em;
+	width: 38.6em;
 }
 .search-chem .suggest-box {
 	width: 6em;
@@ -266,15 +270,20 @@
 .search-chem .chem-item > *+* {
 	margin-left: 5px;
 }
-.chem-suggest-popup .item span {
+.chem-suggest-popup .item span,
+.all-suggest-popup-chem .item span {
 	margin-left: 3px;
 	font-size: 0.9em;
 	color: #6e7e91;
 }
-.chem-suggest-popup .item-selected span {
+.chem-suggest-popup .item-selected span,
+.chem-suggest-popup .item:hover span,
+.all-suggest-popup-chem .item-selected span,
+.all-suggest-popup-chem .item:hover span {
 	color: #b8c8da;
 }
-.chem-suggest-popup .item sub {
+.chem-suggest-popup .item sub,
+.all-suggest-popup-all .item sub {
 	text-align: bottom;
 }
 
@@ -291,4 +300,8 @@
 .search-prov .label {
 	padding-right: 7px;
 	text-align: right;
+}
+.search-prov li {
+	display: inline;
+	margin-right: 10px;
 }

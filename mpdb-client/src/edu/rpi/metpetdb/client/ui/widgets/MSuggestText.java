@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.ui.widgets;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -9,11 +10,13 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupListener;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
 
@@ -22,7 +25,8 @@ public class MSuggestText extends FlowPanel implements ClickListener {
 	private final String STYLENAME = "suggest";
 	private String popupStyleName;
 	private Set<String> MySuggestions;
-	private final Button showAll = new Button("+");
+	private final ToggleButton showAll = new ToggleButton(
+			new Image("images/btn-all-suggest-up.png"),new Image("images/btn-all-suggest-down.png"));
 	private final PopupPanel db = new PopupPanel(true);
 	private final static String[] alphabet = {"0-9","@#$","A","B","C","D","E","F","G","H","I",
 		"J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
@@ -48,11 +52,13 @@ public class MSuggestText extends FlowPanel implements ClickListener {
 		add(suggestBox);
 		
 		if (addShowAll){
+			setAllSuggestPopupStyleName("all-" + STYLENAME + "-popup");
 			showAll.addClickListener(this);
+			showAll.setStylePrimaryName("all-suggest");
 			add(showAll);
 			db.addPopupListener(new PopupListener(){
 				public void onPopupClosed(final PopupPanel sender, final boolean autoClosed){
-					showAll.setText("+");
+					showAll.setDown(false);
 				}
 			});
 		}
@@ -69,6 +75,14 @@ public class MSuggestText extends FlowPanel implements ClickListener {
 		popupStyleName = stylename;
 	}
 	
+	public void setAllSuggestPopupStyleName(String name) {
+		db.setStylePrimaryName(name);
+	}
+	
+	public void addAllSuggestPopupStyleName(String name) {
+		db.addStyleName(name);
+	}
+	
 	public String getText(){
 		return suggestBox.getText();
 	}
@@ -82,11 +96,23 @@ public class MSuggestText extends FlowPanel implements ClickListener {
 		final ScrollPanel sp = new ScrollPanel();
 		final FlowPanel fp = new FlowPanel();
 		final FlowPanel linker = new FlowPanel();
+		linker.setStyleName("header");
 		final ArrayList<String> values = new ArrayList<String>(MySuggestions);
+		
+		ArrayList<String> existingAlpha = new ArrayList<String>();
+		for (String s : alphabet) {
+			for (String v : values) {
+				if (v.startsWith(s)) {
+					existingAlpha.add(s);
+					break;
+				}
+			}
+		}
+		values.addAll(existingAlpha);
+		Collections.sort(values);
 		
 		for (String s : linkOptions){
 			final HTML link = new HTML(s);
-			link.addStyleName("inline");
 			link.addClickListener(new ClickListener(){
 				public void onClick(final Widget sender){
 					// find first match of letter
@@ -95,17 +121,17 @@ public class MSuggestText extends FlowPanel implements ClickListener {
 				}
 			});
 			linker.add(link);
-		}
-		for (String s : alphabet)
-			values.add(s);
-				
-		Collections.sort(values);
+		}	
+		
 		sp.setHeight("350px");
 		for (String s : values){
 			if (isHeader(s)){
-				fp.add(new Label(s));
+				Label header = new Label(s);
+				header.setStyleName("section-header");
+				fp.add(header);
 			} else {
 				final HTML value = new HTML(s);
+				value.setStylePrimaryName("item");
 				value.addClickListener(new ClickListener(){
 					public void onClick(final Widget sender){
 						setText(getValue(value.getHTML()));

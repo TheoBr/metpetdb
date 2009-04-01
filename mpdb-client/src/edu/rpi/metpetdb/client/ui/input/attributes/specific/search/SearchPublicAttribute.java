@@ -12,6 +12,7 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 public class SearchPublicAttribute extends SearchGenericAttribute implements ClickListener{
 	private static final String groupString = "public_attribute";
@@ -30,7 +31,7 @@ public class SearchPublicAttribute extends SearchGenericAttribute implements Cli
 	}
 	
 	public Widget[] createEditWidget(final MObject obj, final String id){
-		final FlowPanel container = new FlowPanel();
+		final MHtmlList container = new MHtmlList();
 		getPrivate = new RadioButton(groupString, "Private");
 		getPublic = new RadioButton(groupString, "Public");
 		getBoth = new RadioButton(groupString, "No Preference");
