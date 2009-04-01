@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sf.hibernate4gwt.core.HibernateBeanManager;
+import net.sf.gilead.core.PersistentBeanManager;
 
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
@@ -66,13 +66,13 @@ public class DataStore {
 
 	private final static DataStore instance = new DataStore();
 
-	private static HibernateBeanManager hbm;
+	private static PersistentBeanManager hbm;
 
 	public static DataStore getInstance() {
 		return instance;
 	}
 
-	public static void setBeanManager(HibernateBeanManager hbm) {
+	public static void setBeanManager(PersistentBeanManager hbm) {
 		DataStore.hbm = hbm;
 	}
 
@@ -536,6 +536,22 @@ public class DataStore {
 	 */
 	public static Session open() {
 		return getFactory().openSession();
+	}
+
+	/**
+	 * Enables the security filters on a session so that when loading public
+	 * data, private data belonging to other users is not loaded
+	 * 
+	 * @param session
+	 * @param userId
+	 */
+	public static void enableSecurityFilters(final Session session, final int userId) {
+		session.enableFilter("samplePublicOrUser").setParameter(
+				"userId", userId);
+		session.enableFilter("subsamplePublicOrUser").setParameter(
+				"userId", userId);
+		session.enableFilter("chemicalAnalysisPublicOrUser")
+				.setParameter("userId", userId);
 	}
 
 	protected DataStore() {

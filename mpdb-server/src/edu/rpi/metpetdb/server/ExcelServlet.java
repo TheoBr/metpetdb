@@ -17,6 +17,7 @@ import org.postgis.Point;
 import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleMineral;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.properties.MetamorphicGradeProperty;
 import edu.rpi.metpetdb.client.model.properties.Property;
 import edu.rpi.metpetdb.client.model.properties.ReferenceProperty;
@@ -33,7 +34,15 @@ public class ExcelServlet extends HttpServlet{
 		response.setContentType("text/tab-separated-values");
 		response.addHeader("Content-Disposition", "inline;filename=results.tsv");
 
+		final User u = (User) request.getSession().getAttribute("user");
+		final int userId;
+		if (u == null)
+			userId = 0;
+		else
+			userId = u.getId();
+
 		Session session = DataStore.open();
+		DataStore.enableSecurityFilters(session, userId);
 		session.beginTransaction();
 		
 		List<Sample> samples = new LinkedList<Sample>();
@@ -73,7 +82,7 @@ public class ExcelServlet extends HttpServlet{
 				response.getWriter().write(setToString(s.getReferences(),ReferenceProperty.name) + "\t");
 				response.getWriter().write(formatlatlng(((Point)s.getLocation()).y) +"\t");
 				response.getWriter().write(formatlatlng(((Point)s.getLocation()).x) +"\t");
-				response.getWriter().write(s.getSesarNumber().toString() + "\t");
+				response.getWriter().write(s.getSesarNumber() + "\t");
 				response.getWriter().write(s.getCollector() + "\t");
 				response.getWriter().write(Sample.dateToString(s.getCollectionDate(), s.getDatePrecision()) + "\t");
 				response.getWriter().write(s.getLocationText() + "\t");

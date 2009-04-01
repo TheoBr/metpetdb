@@ -20,7 +20,7 @@ public class SearchServiceImpl extends SampleServiceImpl implements
 
 	public Results<Sample> search(final PaginationParameters p,
 			SearchSample searchSamp, User userSearching) throws MpDbException {
-		return (SearchDb.sampleSearch(p, searchSamp, userSearching));
+		return (Results<Sample>) clone(SearchDb.sampleSearch(p, searchSamp, userSearching));
 	}
 
 	public void rebuildSearchIndex() throws NoPermissionsException {

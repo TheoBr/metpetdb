@@ -1,6 +1,8 @@
 package edu.rpi.metpetdb.server;
 
 import java.io.IOException;
+import java.security.Principal;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,18 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.postgis.Point;
 
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.server.MpDbServlet.Req;
 public class BasicKML extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	// private static final Double metersInLatDegree = 110874.40;
 	private static final String samplesParameter = "Samples";
 	private static final String urlParameter = "url";
-	private Double lat;
-	private Double lng;
-	private Double latErr;
-	private Double lngErr;
 	
 	
 
@@ -35,8 +34,16 @@ public class BasicKML extends HttpServlet {
 		
 		// response.setContentType("text/plain"); // Useful for testing
 		response.setContentType("application/vnd.google-earth.kml+xml");
+		
+		final User u = (User) request.getSession().getAttribute("user");
+		final int userId;
+		if (u == null)
+			userId = 0;
+		else
+			userId = u.getId();
 
 		Session session = DataStore.open();
+		DataStore.enableSecurityFilters(session, userId);
 		session.beginTransaction();
 
 		List<Sample> samples = new LinkedList<Sample>();

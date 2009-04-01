@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.server.search;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,7 +45,16 @@ public class SearchDb {
 	public static Results<Sample> sampleSearch(final PaginationParameters p, SearchSample searchSamp,
 			User userSearching) throws MpDbException {
 
-		final Session session = DataStore.open();
+		final User u = (User) userSearching;
+		final int userId;
+		if (u == null || u.getId() == 0)
+			userId = -1;
+		else
+			userId = u.getId();
+
+		Session session = DataStore.open();
+		DataStore.enableSecurityFilters(session, userId);
+		
 		FullTextSession fullTextSession = Search.createFullTextSession(session);
 
 		List<String> queries = new LinkedList<String>();
@@ -250,9 +260,15 @@ public class SearchDb {
 		if (p != null){
 		    hibQuery.setFirstResult(p.getFirstResult());
 		    hibQuery.setMaxResults(p.getMaxResults());
+		} else {
+			hibQuery.setFirstResult(0);
+			hibQuery.setMaxResults(200);
 		}
 		try {
-			final Results<Sample> results = new Results<Sample>(hibQuery.getResultSize(), hibQuery.list());
+			List<Sample> list = hibQuery.list();
+			if (list.size() == 0)
+				list = new ArrayList<Sample>();
+			final Results<Sample> results = new Results<Sample>(hibQuery.getResultSize(), list);
 			return results;
 		} catch (CallbackException e) {
 			session.clear();

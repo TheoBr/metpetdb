@@ -11,8 +11,6 @@ import java.util.Map.Entry;
 import javax.servlet.ServletException;
 
 import junit.framework.TestCase;
-import net.sf.hibernate4gwt.core.HibernateBeanManager;
-import net.sf.hibernate4gwt.core.hibernate.HibernateUtil;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -29,7 +27,6 @@ import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.User;
-import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
@@ -75,20 +72,6 @@ public class BulkUploadTest extends TestCase {
 		}
 
 		s.close();
-		HibernateBeanManager.getInstance().setPersistenceUtil(
-				new HibernateUtil() {
-					@Override
-					public boolean isPersistentClass(Class<?> clazz) {
-						if (clazz.equals(Results.class)) {
-							return true;
-						} else {
-							return super.isPersistentClass(clazz);
-						}
-					}
-				});
-		HibernateBeanManager.getInstance().setSessionFactory(
-				DataStore.getFactory());
-		DataStore.setBeanManager(HibernateBeanManager.getInstance());
 	}
 
 

@@ -7,15 +7,11 @@ import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
-import net.sf.hibernate4gwt.core.HibernateBeanManager;
-import net.sf.hibernate4gwt.core.hibernate.HibernateUtil;
-
 import junit.framework.TestCase;
 import edu.rpi.metpetdb.client.error.DAOException;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
-import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.BulkUploadImage;
@@ -30,20 +26,6 @@ public class BulkUploadTest extends TestCase {
 	}
 	
 	public void setUp() {
-		HibernateBeanManager.getInstance().setPersistenceUtil(
-				new HibernateUtil() {
-					@Override
-					public boolean isPersistentClass(Class<?> clazz) {
-						if (clazz.equals(Results.class)) {
-							return true;
-						} else {
-							return super.isPersistentClass(clazz);
-						}
-					}
-				});
-		HibernateBeanManager.getInstance().setSessionFactory(
-				DataStore.getFactory());
-		DataStore.setBeanManager(HibernateBeanManager.getInstance());
 		try {
 			Parser.setImageTypes(new ImageTypeDAO(DataStore.open()).getAll());
 		} catch (DAOException e) {
