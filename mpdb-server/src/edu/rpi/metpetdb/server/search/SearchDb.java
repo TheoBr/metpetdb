@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.server.search;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -252,7 +253,12 @@ public class SearchDb {
 		    hibQuery.setMaxResults(p.getMaxResults());
 		}
 		try {
-			final Results<Sample> results = new Results<Sample>(hibQuery.getResultSize(), hibQuery.list());
+			//this is here in order to convert java.util.Collection$EmptyList into
+			//the correct representation so it can be serialized by GWT
+			List<Sample> list = hibQuery.list();
+			if (list.size() == 0)
+				list = new ArrayList<Sample>();
+			final Results<Sample> results = new Results<Sample>(hibQuery.getResultSize(), list);
 			return results;
 		} catch (CallbackException e) {
 			session.clear();
