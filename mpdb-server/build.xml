@@ -86,12 +86,12 @@
 	
 	<target name="apikey-tst" description="Fills in the API key for the test version">
 		<replace file="${mpdb-client-dir}/build/edu.rpi.metpetdb.MetPetDBApplication/MetPetDBApplication.html"
-			token="APIKEY" value="ABQIAAAAd6RO7Qjb-wnsTbfIzDnHZBRLo-_8niO788S7A11smGkedaaJbRShooNr_FiB7GtrLUU_3EvkBiI6Rwlo" />
+			token="APIKEY" value="ABQIAAAALpV_9VK8HGf6x3ThZh8BVRTibFh1Wk25q9WePsGZnvYMEMvDOhQaDZEVApKAr6JO_X7S8ir2zMNpag" />
 	</target>
 	
 	<target name="apikey-stage" description="Fills in the API key for the stage version">
 			<replace file="${mpdb-client-dir}/build/edu.rpi.metpetdb.MetPetDBApplication/MetPetDBApplication.html"
-				token="APIKEY" value="ABQIAAAAd6RO7Qjb-wnsTbfIzDnHZBS-8RDNAizekQ79RycdnZ4UcHnDQBSt3BMys-Z_urqTDkJRuLoE3KVzlQ" />
+				token="APIKEY" value="ABQIAAAALpV_9VK8HGf6x3ThZh8BVRQ4VwJ8OAJiFKz00rLbR8TvXezRQhTrqir6CXQt9WI_DZrexB5aMSCsHw" />
 		</target>
 	
 	<target name="tst-war" depends="compile, apikey-tst, war-only" description="Generates a .war file for use with a servlet container(Apache Tomcat) (Test version)">
