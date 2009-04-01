@@ -12,6 +12,7 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 public class SearchPublicAttribute extends SearchGenericAttribute implements ClickListener{
@@ -50,6 +51,7 @@ public class SearchPublicAttribute extends SearchGenericAttribute implements Cli
 		container.add(getBoth);
 		container.add(getPublic);
 		container.add(getPrivate);
+		container.addStyleName(CSS.BETA);
 
 		return new Widget[]{container};
 	}
