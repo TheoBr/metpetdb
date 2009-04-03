@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -13,9 +14,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
-import edu.rpi.metpetdb.client.ui.image.browser.ImageList;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
+import edu.rpi.metpetdb.client.ui.objects.list.ImageList;
 
 public class AddExistingImagePopup extends PopupPanel {
 
@@ -26,11 +30,16 @@ public class AddExistingImagePopup extends PopupPanel {
 		final VerticalPanel vp = new VerticalPanel();
 		this.setPopupPosition(sender.getAbsoluteLeft(),
 				sender.getAbsoluteTop() + 20);
-		final ImageList list = new ImageList(subsample.getId(), true,
-				imagesOnGrid.values());
+		final ImageList list = new ImageList() {
+			@Override
+			public void update(PaginationParameters p,
+					AsyncCallback<Results<Image>> ac) {
+				MpDb.image_svc.allForImageMap(subsample.getId(), p, ac);
+			}
+		};
 		vp.add(new Button("Add Selected", new ClickListener() {
 			public void onClick(final Widget sender) {
-				r.onSuccess(list.getSelectedImages());
+				r.onSuccess(list.getSelectedValues());
 				((PopupPanel) sender.getParent().getParent()).hide();
 			}
 		}));

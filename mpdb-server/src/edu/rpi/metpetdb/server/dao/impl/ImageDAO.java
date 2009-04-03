@@ -9,6 +9,9 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.ImageNotFoundException;
 import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 
 public class ImageDAO extends MpDbDAO<Image> {
@@ -64,5 +67,17 @@ public class ImageDAO extends MpDbDAO<Image> {
 		Query q = namedQuery("Image.bySubsampleId");
 		q.setLong("subsampleId", subsampleId);
 		return (List<Image>) getResults(q);
+	}
+	public Results<Image> getAllBySubsampleId(final PaginationParameters p,
+			final long subsampleId) throws MpDbException {
+		final Query sizeQ = sizeQuery("Image.bySubsampleId", subsampleId);
+		final Query pageQ = pageQuery("Image.bySubsampleId", p, subsampleId);
+		return getImages(sizeQ, pageQ);
+	}
+	
+	private Results<Image> getImages(Query sizeQuery, Query pageQuery) throws MpDbException {
+		final List<Image> l = (List<Image>) getResults(pageQuery);
+		final int size = ((Number) getResult(sizeQuery)).intValue();
+		return new Results<Image>(size, l);
 	}
 }

@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import com.google.gwt.gen2.table.client.DefaultTableDefinition;
@@ -15,6 +16,13 @@ import com.google.gwt.gen2.table.client.TableModelHelper.ColumnSortInfo;
 import com.google.gwt.gen2.table.client.TableModelHelper.ColumnSortList;
 import com.google.gwt.gen2.table.client.TableModelHelper.Request;
 import com.google.gwt.gen2.table.client.TableModelHelper.SerializableResponse;
+import com.google.gwt.gen2.table.event.client.RowHighlightEvent;
+import com.google.gwt.gen2.table.event.client.RowHighlightHandler;
+import com.google.gwt.gen2.table.event.client.RowSelectionEvent;
+import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
+import com.google.gwt.gen2.table.event.client.RowUnhighlightEvent;
+import com.google.gwt.gen2.table.event.client.RowUnhighlightHandler;
+import com.google.gwt.gen2.table.event.client.TableEvent.Row;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -40,7 +48,8 @@ import edu.rpi.metpetdb.client.ui.widgets.paging.Column;
  * 
  * @author anthony
  * 
- * @param < T> the types of objects that will be paginated in this table
+ * @param < T>
+ *            the types of objects that will be paginated in this table
  */
 public abstract class List<RowType extends MObject> extends FlowPanel {
 	private int pageSize = 10;
@@ -118,7 +127,7 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 						setRowCount(result.getCount());
 						final SerializableResponse<RowType> response = new SerializableResponse<RowType>(
 								result.getList());
-							callback.onRowsReady(request, response);
+						callback.onRowsReady(request, response);
 					}
 				}.begin();
 			}
@@ -126,7 +135,7 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 
 		public void updateWithPagination(final PaginationParameters p,
 				final Callback<RowType> callback, final Request request) {
-			
+
 		}
 
 	}
@@ -159,6 +168,18 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 		return displayColumns;
 	}
 
+	public void addRowSelectionHandler(RowSelectionHandler handler) {
+		dataTable.addRowSelectionHandler(handler);
+	}
+	
+	public ArrayList<RowType> getSelectedValues() {
+		final ArrayList<RowType> selectedRows = new ArrayList<RowType>();
+		for(Integer i : dataTable.getSelectedRows()) {
+			selectedRows.add(scrollTable.getRowValue(i));
+		}
+		return selectedRows;
+	}
+
 	/**
 	 * Creates a new paginated table from an array of columns
 	 * 
@@ -168,12 +189,12 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 	public List(final ArrayList<Column<RowType, ?>> columns) {
 		this.originalColumns = columns;
 		this.displayColumns = columns;
-		
+
 		tableModel = new MpDbTableModel();
 		dataTable = new FixedWidthGrid();
 		headerTable = new FixedWidthFlexTable();
 		final DefaultTableDefinition<RowType> tableDefinition = new DefaultTableDefinition<RowType>();
-		for(Column<RowType, ?> c : columns) {
+		for (Column<RowType, ?> c : columns) {
 			tableDefinition.addColumnDefinition(c);
 		}
 		scrollTable = new PagingScrollTable<RowType>(tableModel, dataTable,
@@ -186,14 +207,16 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 				super.reloadPage();
 			}
 		};
-		final FixedWidthGridBulkRenderer<RowType> bulkRenderer = new FixedWidthGridBulkRenderer<RowType>(dataTable, scrollTable);
+
+		final FixedWidthGridBulkRenderer<RowType> bulkRenderer = new FixedWidthGridBulkRenderer<RowType>(
+				dataTable, scrollTable);
 		dataTable.resize(pageSize, columns.size());
 		scrollTable.setBulkRenderer(bulkRenderer);
 		scrollTable.setHeight("400px");
 		dataTable.setHeight("400px");
 		dataTable.setWidth("100%");
 		scrollTable.setWidth("100%");
-		
+
 		scrollTable.setEmptyTableWidget(getNoResultsWidget());
 		PagingOptions options = new PagingOptions(scrollTable);
 
@@ -224,6 +247,53 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 		//
 		// });
 
+		// TODO special row highlight/unlight events and row select/unselect
+		// events
+		dataTable.addRowHighlightHandler(new RowHighlightHandler() {
+
+			public void onRowHighlight(RowHighlightEvent event) {
+				// TODO zak: this is called when the user hovers over a row
+				dataTable.getRowFormatter().getElement(
+						event.getValue().getRowIndex()).getStyle().setProperty(
+						"backgroundColor", "orange");
+			}
+
+		});
+		
+		dataTable.addRowUnhighlightHandler(new RowUnhighlightHandler() {
+
+			public void onRowUnhighlight(RowUnhighlightEvent event) {
+				if (!dataTable.getSelectedRows().contains(event.getValue().getRowIndex()))
+					dataTable.getRowFormatter().getElement(
+							event.getValue().getRowIndex()).getStyle().setProperty(
+									"backgroundColor", "white");
+				else {
+					dataTable.getRowFormatter().getElement(
+							event.getValue().getRowIndex()).getStyle().setProperty(
+									"backgroundColor", "pink");
+				}
+			}
+			
+		});
+
+		dataTable.addRowSelectionHandler(new RowSelectionHandler() {
+
+			public void onRowSelection(RowSelectionEvent event) {
+				// TODO zak: called when a row is selected (multiple can be
+				// selected)
+				for (Row r : event.getSelectedRows()) {
+					dataTable.getRowFormatter().getElement(r.getRowIndex())
+							.getStyle().setProperty("backgroundColor", "pink");
+				}
+
+				for (Row r : event.getDeselectedRows()) {
+					dataTable.getRowFormatter().getElement(r.getRowIndex())
+							.getStyle().setProperty("backgroundColor", "white");
+				}
+			}
+
+		});
+
 		final Label pageSizeLabel = new Label("Results Per Page:");
 		final TextBox pageSizeTxt = new TextBox();
 		pageSizeTxt.setWidth("30px");
@@ -241,10 +311,8 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 
 					}
 			}
-			public void onKeyDown(Widget sender, char keyCode, int modifiers) {
-			}
-			public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-			}
+			public void onKeyDown(Widget sender, char keyCode, int modifiers) {}
+			public void onKeyUp(Widget sender, char keyCode, int modifiers) {}
 		});
 		pageSizeBtn.addClickListener(new ClickListener() {
 			public void onClick(final Widget sender) {
@@ -282,40 +350,40 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 		// this.setWidth("100%");
 	}
 	public void newView(ArrayList<Column> columns) {
-		// this.displayColumns = columns;
-		//
-		// headerTable.removeRow(0);
-		// for (int i = 0; i < displayColumns.size(); ++i) {
-		// headerTable.setText(0, i, displayColumns.get(i).getTitle());
-		// headerTable.getCellFormatter().addStyleName(0, i, "bold");
-		// headerTable.getCellFormatter().addStyleName(0, i, "brown");
-		// headerTable.getCellFormatter().setAlignment(0, i,
-		// HasHorizontalAlignment.ALIGN_LEFT,
-		// HasVerticalAlignment.ALIGN_MIDDLE);
-		// }
-		//
-		// dataTable.addTableListener(new TableListener() {
-		//
-		// public void onCellClicked(SourcesTableEvents sender, int row,
-		// int cell) {
-		// displayColumns.get(cell).handleClickEvent(
-		// (MObject) scrollTable.getRowValue(row), row);
-		//
-		// }
-		//
-		// });
-		// headerTable.getRowFormatter().addStyleName(0, "mpdb-dataTablePink");
-		// scrollTable.reloadPage();
+	// this.displayColumns = columns;
+	//
+	// headerTable.removeRow(0);
+	// for (int i = 0; i < displayColumns.size(); ++i) {
+	// headerTable.setText(0, i, displayColumns.get(i).getTitle());
+	// headerTable.getCellFormatter().addStyleName(0, i, "bold");
+	// headerTable.getCellFormatter().addStyleName(0, i, "brown");
+	// headerTable.getCellFormatter().setAlignment(0, i,
+	// HasHorizontalAlignment.ALIGN_LEFT,
+	// HasVerticalAlignment.ALIGN_MIDDLE);
+	// }
+	//
+	// dataTable.addTableListener(new TableListener() {
+	//
+	// public void onCellClicked(SourcesTableEvents sender, int row,
+	// int cell) {
+	// displayColumns.get(cell).handleClickEvent(
+	// (MObject) scrollTable.getRowValue(row), row);
+	//
+	// }
+	//
+	// });
+	// headerTable.getRowFormatter().addStyleName(0, "mpdb-dataTablePink");
+	// scrollTable.reloadPage();
 	}
 
 	public void simpleView() {
-		// ArrayList<Column> simple = new ArrayList<Column>();
-		// for (Column c : originalColumns){
-		// if (c.isSimpleView()){
-		// simple.add(c);
-		// }
-		// }
-		// newView(simple);
+	// ArrayList<Column> simple = new ArrayList<Column>();
+	// for (Column c : originalColumns){
+	// if (c.isSimpleView()){
+	// simple.add(c);
+	// }
+	// }
+	// newView(simple);
 	}
 
 	/**

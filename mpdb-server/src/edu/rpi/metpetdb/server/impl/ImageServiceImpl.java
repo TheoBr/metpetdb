@@ -26,6 +26,8 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
 import edu.rpi.metpetdb.client.model.XrayImage;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.ImageService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.MpDbServlet;
@@ -205,5 +207,10 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 
 	public static void setBaseFolder(String baseFolder) {
 		ImageServiceImpl.baseFolder = baseFolder;
+	}
+
+	public Results<Image> allForImageMap(long subsampleId,
+			PaginationParameters p) throws MpDbException {
+		return new ImageDAO(currentSession()).getAllBySubsampleId(p, subsampleId);
 	}
 }

@@ -10,9 +10,13 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
 import edu.rpi.metpetdb.client.model.XrayImage;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 
 public interface ImageService extends RemoteService {
-	List<Image> allImages(final long subsampleId) throws MpDbException;
+	List<Image> allImages(long subsampleId) throws MpDbException;
+	Results<Image> allForImageMap(long subsampleId, PaginationParameters p)
+			throws MpDbException;
 	Image details(long id) throws MpDbException;
 	Image saveImage(Image image) throws ValidationException,
 			LoginRequiredException, MpDbException;

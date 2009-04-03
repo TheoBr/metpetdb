@@ -17,6 +17,12 @@ import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
+/**
+ * 
+ * @author anthony
+ * @deprecated replaced with other ImageList
+ */
+@Deprecated
 public class ImageList extends HorizontalPanel implements ClickListener {
 	private List<edu.rpi.metpetdb.client.model.Image> images;
 	private int currentIndex = 0;
