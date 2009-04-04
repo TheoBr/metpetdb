@@ -52,7 +52,14 @@ public class SearchDb {
 		// have chem anal restrictions
 		// Or just Sample search if no chem anal restrictions
 
-		final Session session = DataStore.open();
+		final User u = userSearching;
+		final int userId;
+		if (u == null)
+			userId = 0;
+		else
+			userId = u.getId();
+		Session session = DataStore.open();
+		DataStore.enableSecurityFilters(session, userId);
 		FullTextSession fullTextSession = Search.createFullTextSession(session);
 
 		boolean haveChemicalProperties = checkForChemicalProperties(searchSamp);
@@ -116,7 +123,14 @@ public class SearchDb {
 			final PaginationParameters p, SearchSample searchSamp,
 			User userSearching) throws MpDbException {
 		List<Filter> filters = new LinkedList<Filter>();
-		final Session session = DataStore.open();
+		final User u = userSearching;
+		final int userId;
+		if (u == null)
+			userId = 0;
+		else
+			userId = u.getId();
+		Session session = DataStore.open();
+		DataStore.enableSecurityFilters(session, userId);
 		FullTextSession fullTextSession = Search.createFullTextSession(session);
 
 		boolean haveSampleProperties = checkForSampleProperties(searchSamp);
