@@ -27,7 +27,7 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 			new TextAttribute(MpDb.doc.ChemicalAnalysis_spotId),
 			new RadioButtonAttribute(MpDb.doc.ChemicalAnalysis_publicData,
 					LocaleHandler.lc_text.publicDataWarning()),
-			new ChooseImageAttribute(MpDb.doc.ChemicalAnalysis_image,
+			new ChooseImageAttribute<ChemicalAnalysis>(MpDb.doc.ChemicalAnalysis_image,
 					MpDb.doc.ChemicalAnalysis_referenceX,
 					MpDb.doc.ChemicalAnalysis_referenceY),
 			new TextAttribute(MpDb.doc.ChemicalAnalysis_analysisMethod),

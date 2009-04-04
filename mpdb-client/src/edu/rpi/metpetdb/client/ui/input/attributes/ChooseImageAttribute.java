@@ -64,10 +64,11 @@ public class ChooseImageAttribute<DataType extends HasImage> extends GenericAttr
 			public void onClick(final Widget sender) {
 				new ChooseImageDialog(new MCommand<Image>() {
 					@Override
-					public void execute(Image image) {
+					public void execute(Image selectedImage) {
 						vp.remove(1);
-						vp.add(new com.google.gwt.user.client.ui.Image(image
+						vp.add(new com.google.gwt.user.client.ui.Image(selectedImage
 								.get64x64ServerPath()));
+						image = selectedImage;
 					}
 				}, ((ChemicalAnalysis) obj).getSubsample()).show();
 			}
