@@ -154,27 +154,27 @@
 
 
 /*-------------------------------------
-	         Errors
+	         Errors/Warnings
 ---------------------------------------*/
-.bulk-results .errors td {
+.bulk-results .errors .warnings td {
 	padding: 2px 0;
 }
-.bulk-results .errors td:first-child {
+.bulk-results .errors .warnings td:first-child {
 	text-align: right;
 	padding-right: 10px;
 }
-.bulk-results .errors tr+tr td {
+.bulk-results .errors .warnings tr+tr td {
 	border-bottom: 1px solid #ddd;
 }
-.bulk-results .errors tr+tr td:first-child,
+.bulk-results .errors .warnings tr+tr td:first-child,
 .bulk-results .has-errors {
 	color: #992c1a;
 }
-.bulk-results .errors tr:last-child td {
+.bulk-results .errors .warnings tr:last-child td {
 	padding-bottom: 0;
 	border-bottom: none;
 }
-.bulk-results .errors td span {
+.bulk-results .errors .warnings td span {
 	display: block;
 }
 

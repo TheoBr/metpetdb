@@ -18,8 +18,8 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserImageList;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
-import edu.rpi.metpetdb.client.ui.objects.list.ImageList;
 
 public class AddExistingImagePopup extends PopupPanel {
 
@@ -30,7 +30,7 @@ public class AddExistingImagePopup extends PopupPanel {
 		final VerticalPanel vp = new VerticalPanel();
 		this.setPopupPosition(sender.getAbsoluteLeft(),
 				sender.getAbsoluteTop() + 20);
-		final ImageList list = new ImageList() {
+		final ImageBrowserImageList list = new ImageBrowserImageList() {
 			@Override
 			public void update(PaginationParameters p,
 					AsyncCallback<Results<Image>> ac) {
@@ -45,7 +45,6 @@ public class AddExistingImagePopup extends PopupPanel {
 		}));
 		final ScrollPanel scrollPanel = new ScrollPanel(list);
 		scrollPanel.setStyleName("mpdb-SubsampleScrollPanel");
-		scrollPanel.setWidth("225px");
 		vp.add(scrollPanel);
 		vp.add(new Button("Hide", new ClickListener() {
 			public void onClick(final Widget sender) {
@@ -54,8 +53,6 @@ public class AddExistingImagePopup extends PopupPanel {
 		}));
 		this.setStyleName("mpdb-AddExistingSubsamplePopup");
 		DOM.setStyleAttribute(this.getElement(), "zIndex", "1000");
-		vp.setWidth("225px");
 		setWidget(vp);
-		this.setWidth("225px");
 	}
 }

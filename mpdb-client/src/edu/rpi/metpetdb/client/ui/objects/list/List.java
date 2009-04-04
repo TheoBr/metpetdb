@@ -11,7 +11,11 @@ import com.google.gwt.gen2.table.client.FixedWidthGridBulkRenderer;
 import com.google.gwt.gen2.table.client.PagingOptions;
 import com.google.gwt.gen2.table.client.PagingScrollTable;
 import com.google.gwt.gen2.table.client.TableModel;
+import com.google.gwt.gen2.table.client.AbstractScrollTable.ColumnResizePolicy;
+import com.google.gwt.gen2.table.client.AbstractScrollTable.ResizePolicy;
+import com.google.gwt.gen2.table.client.AbstractScrollTable.ScrollPolicy;
 import com.google.gwt.gen2.table.client.AbstractScrollTable.SortPolicy;
+import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
 import com.google.gwt.gen2.table.client.TableModelHelper.ColumnSortInfo;
 import com.google.gwt.gen2.table.client.TableModelHelper.ColumnSortList;
 import com.google.gwt.gen2.table.client.TableModelHelper.Request;
@@ -171,10 +175,10 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 	public void addRowSelectionHandler(RowSelectionHandler handler) {
 		dataTable.addRowSelectionHandler(handler);
 	}
-	
+
 	public ArrayList<RowType> getSelectedValues() {
 		final ArrayList<RowType> selectedRows = new ArrayList<RowType>();
-		for(Integer i : dataTable.getSelectedRows()) {
+		for (Integer i : dataTable.getSelectedRows()) {
 			selectedRows.add(scrollTable.getRowValue(i));
 		}
 		return selectedRows;
@@ -213,9 +217,6 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 		dataTable.resize(pageSize, columns.size());
 		scrollTable.setBulkRenderer(bulkRenderer);
 		scrollTable.setHeight("400px");
-		dataTable.setHeight("400px");
-		dataTable.setWidth("100%");
-		scrollTable.setWidth("100%");
 
 		scrollTable.setEmptyTableWidget(getNoResultsWidget());
 		PagingOptions options = new PagingOptions(scrollTable);
@@ -234,6 +235,11 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 
 		// Setup sortable/unsortable columns
 		scrollTable.setSortPolicy(SortPolicy.MULTI_CELL);
+		scrollTable.setColumnResizePolicy(ColumnResizePolicy.SINGLE_CELL);
+		scrollTable.setResizePolicy(ResizePolicy.FILL_WIDTH);
+		scrollTable.setScrollPolicy(ScrollPolicy.BOTH);
+		
+		dataTable.setSelectionPolicy(SelectionPolicy.MULTI_ROW);
 
 		// dataTable.addTableListener(new TableListener() {
 		//
@@ -253,27 +259,31 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 
 			public void onRowHighlight(RowHighlightEvent event) {
 				// TODO zak: this is called when the user hovers over a row
-				dataTable.getRowFormatter().getElement(
-						event.getValue().getRowIndex()).getStyle().setProperty(
-						"backgroundColor", "orange");
+				if (event.getValue().getRowIndex() < dataTable.getRowCount())
+					dataTable.getRowFormatter().getElement(
+							event.getValue().getRowIndex()).getStyle()
+							.setProperty("backgroundColor", "orange");
 			}
 
 		});
-		
+
 		dataTable.addRowUnhighlightHandler(new RowUnhighlightHandler() {
 
 			public void onRowUnhighlight(RowUnhighlightEvent event) {
-				if (!dataTable.getSelectedRows().contains(event.getValue().getRowIndex()))
-					dataTable.getRowFormatter().getElement(
-							event.getValue().getRowIndex()).getStyle().setProperty(
-									"backgroundColor", "white");
-				else {
-					dataTable.getRowFormatter().getElement(
-							event.getValue().getRowIndex()).getStyle().setProperty(
-									"backgroundColor", "pink");
+				if (event.getValue().getRowIndex() < dataTable.getRowCount()) {
+					if (!dataTable.getSelectedRows().contains(
+							event.getValue().getRowIndex()))
+						dataTable.getRowFormatter().getElement(
+								event.getValue().getRowIndex()).getStyle()
+								.setProperty("backgroundColor", "white");
+					else {
+						dataTable.getRowFormatter().getElement(
+								event.getValue().getRowIndex()).getStyle()
+								.setProperty("backgroundColor", "pink");
+					}
 				}
 			}
-			
+
 		});
 
 		dataTable.addRowSelectionHandler(new RowSelectionHandler() {
@@ -329,14 +339,6 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 		hp.add(pageSizeLabel);
 		hp.add(pageSizeTxt);
 		hp.add(pageSizeBtn);
-		// scrollTable.getFooterTable().add(new );
-
-		// TODO: can you say we need CSS
-		// "We need CSS" -anthony
-		// scrollTable.setWidth("100%");
-		// dataTable.setWidth("100%");
-		// headerTable.setWidth("100%");
-		// headerTable.setHeight("30px");
 		headerTable.getRowFormatter().addStyleName(0, "mpdb-dataTablePink");
 		dataTable.addStyleName("mpdb-dataTable");
 
@@ -347,7 +349,6 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 		add(options);
 		add(hp);
 		scrollTable.reloadPage();
-		// this.setWidth("100%");
 	}
 	public void newView(ArrayList<Column> columns) {
 	// this.displayColumns = columns;

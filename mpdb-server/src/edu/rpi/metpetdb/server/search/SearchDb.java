@@ -45,7 +45,15 @@ public class SearchDb {
 	public static Results<Sample> sampleSearch(final PaginationParameters p, SearchSample searchSamp,
 			User userSearching) throws MpDbException {
 
-		final Session session = DataStore.open();
+		final User u = userSearching;
+		final int userId;
+		if (u == null)
+			userId = 0;
+		else
+			userId = u.getId();
+
+		Session session = DataStore.open();
+		DataStore.enableSecurityFilters(session, userId);
 		FullTextSession fullTextSession = Search.createFullTextSession(session);
 
 		List<String> queries = new LinkedList<String>();

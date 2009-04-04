@@ -12,9 +12,11 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 
-import net.sf.hibernate4gwt.core.HibernateBeanManager;
-import net.sf.hibernate4gwt.core.hibernate.HibernateUtil;
-import net.sf.hibernate4gwt.gwt.HibernateRemoteService;
+import net.sf.gilead.core.PersistentBeanManager;
+import net.sf.gilead.core.beanlib.transformer.CustomTransformersFactory;
+import net.sf.gilead.core.hibernate.HibernateUtil;
+import net.sf.gilead.core.store.stateless.StatelessProxyStore;
+import net.sf.gilead.gwt.PersistentRemoteService;
 
 import org.hibernate.CallbackException;
 import org.hibernate.HibernateException;
@@ -71,7 +73,7 @@ import edu.rpi.metpetdb.server.security.permissions.principals.AdminPrincipal;
  * recycled) at the end of the request.
  * </p>
  */
-public abstract class MpDbServlet extends HibernateRemoteService {
+public abstract class MpDbServlet extends PersistentRemoteService {
 	private static final long serialVersionUID = 1L;
 
 	/** The current thread's {@link Req}. */
@@ -119,29 +121,24 @@ public abstract class MpDbServlet extends HibernateRemoteService {
 	public void init(final ServletConfig sc) throws ServletException {
 		super.init(sc);
 		// Setup hibernate4gwt
-
-		// Setup copying of java beans
-		// DirectoryClassMapper cloneMapper = new DirectoryClassMapper();
-		// cloneMapper.setRootDomainPackage("edu.rpi.metpetdb.client.model");
-		// cloneMapper.setRootClonePackage("edu.rpi.metpetdb.client.model");
-		// cloneMapper.setCloneSuffix("");
-		// //
-		// HibernateBeanManager.getInstance().setClassMapper(cloneMapper);
-		HibernateBeanManager.getInstance().setPersistenceUtil(
-				new HibernateUtil() {
-					@Override
-					public boolean isPersistentClass(Class<?> clazz) {
-						if (clazz.equals(Results.class)) {
-							return true;
-						} else {
-							return super.isPersistentClass(clazz);
-						}
-					}
-				});
-		HibernateBeanManager.getInstance().setSessionFactory(
-				DataStore.getFactory());
-		DataStore.setBeanManager(HibernateBeanManager.getInstance());
 		DataStore.initFactory();
+		final HibernateUtil hu = new HibernateUtil() {
+			@Override
+			public boolean isPersistentClass(Class<?> clazz) {
+				if (clazz.equals(Results.class)) {
+					return true;
+				} else {
+					return super.isPersistentClass(clazz);
+				}
+			}
+		};
+		hu.setSessionFactory(DataStore.getFactory());
+		PersistentBeanManager.getInstance().setPersistenceUtil(hu);
+		final StatelessProxyStore sps = new StatelessProxyStore();
+		PersistentBeanManager.getInstance().setProxyStore(sps);
+		CustomTransformersFactory.getInstance().addCustomBeanTransformer(
+				GeometryCustomTransformer.class);
+		DataStore.setBeanManager(PersistentBeanManager.getInstance());
 		doc = DataStore.getInstance().getDatabaseObjectConstraints();
 		if (doc == null) {
 			throw new RuntimeException(

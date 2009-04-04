@@ -10,13 +10,11 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
-import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
 public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	private static final long serialVersionUID = 1L;
@@ -77,9 +75,9 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	public Sample save(Sample sample) throws MpDbException, ValidationException,
 			LoginRequiredException {
 		doc.validate(sample);
-		sample = (new SampleDAO(this.currentSession())).save(sample);
+		final Sample s = (new SampleDAO(this.currentSession())).save(sample);
 		commit();
-		return sample;
+		return s;
 	}
 	
 	public void saveAll(Collection<Sample> samples)

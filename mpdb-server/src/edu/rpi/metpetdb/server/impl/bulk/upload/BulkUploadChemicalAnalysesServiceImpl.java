@@ -40,6 +40,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 				.getChemicalAnalyses();
 		// Handle any existing errors found
 		addErrors(ap, results);
+		addWarnings(ap, results);
 		final BulkUploadResultCount caResultCount = new BulkUploadResultCount();
 		final BulkUploadResultCount ssResultCount = new BulkUploadResultCount();
 		final Iterator<Integer> rows = analyses.keySet().iterator();

@@ -113,6 +113,19 @@ public abstract class BulkUploadService extends MpDbServlet {
 					getNiceException(existingErrors.get(i).getException()));
 		}
 	}
+	
+	protected void addWarnings(final Parser<?> parser,
+			final BulkUploadResult results) {
+		final Map<Integer, BulkUploadError> existingWarnings = parser.getWarnings();
+		final Set<Integer> keys = existingWarnings.keySet();
+		final Iterator<Integer> itr = keys.iterator();
+		while (itr.hasNext()) {
+			final Integer i = itr.next();
+			results.addWarning(i.intValue(), existingWarnings.get(i).getColumn(),
+					existingWarnings.get(i).getCellData(),
+					getNiceException(existingWarnings.get(i).getException()));
+		}
+	}
 
 	protected MpDbException getNiceException(final Exception e) {
 		return getNiceException(e, null);

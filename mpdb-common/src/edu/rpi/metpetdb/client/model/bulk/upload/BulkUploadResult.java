@@ -2,7 +2,6 @@ package edu.rpi.metpetdb.client.model.bulk.upload;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +16,7 @@ public class BulkUploadResult implements IsSerializable {
 	private Map<Integer, BulkUploadHeader> headers;
 	//maps row numbers to a list of exceptions
 	private Map<Integer, List<BulkUploadError>> errors = new HashMap<Integer, List<BulkUploadError>>();
-	/** just a list of warnings, this can be expanded in the future to support rows/columns */
-	private Collection<String> warnings;
+	private Map<Integer, List<BulkUploadError>> warnings = new HashMap<Integer, List<BulkUploadError>>();
 	/**
 	 * the key is the name of the object, i.e. Sample, the value is a
 	 * ResultCount class that contains the counts of fresh, invalid, and old
@@ -42,6 +40,17 @@ public class BulkUploadResult implements IsSerializable {
 		if (!errors.containsKey(rowNumber))
 			errors.put(rowNumber, new ArrayList<BulkUploadError>());
 		errors.get(rowNumber).add(buError);
+	}
+	
+	public void addWarning(final int rowNumber, final int colNumber, final String cellData, final MpDbException e) {
+		final BulkUploadError buError = new BulkUploadError();
+		buError.setRow(rowNumber);
+		buError.setColumn(colNumber);
+		buError.setException(e);
+		buError.setCellData(cellData);
+		if (!warnings.containsKey(rowNumber))
+			warnings.put(rowNumber, new ArrayList<BulkUploadError>());
+		warnings.get(rowNumber).add(buError);
 	}
 
 	public Map<Integer,BulkUploadHeader> getHeaders() {
@@ -75,13 +84,11 @@ public class BulkUploadResult implements IsSerializable {
 		this.timeTaken = timeTaken;
 	}
 
-	public Collection<String> getWarnings() {
-		if (warnings == null)
-			warnings = new ArrayList<String>();
+	public Map<Integer, List<BulkUploadError>> getWarnings() {
 		return warnings;
 	}
 	
-	public void setWarnings(final Collection<String> c) {
+	public void setWarnings(final Map<Integer, List<BulkUploadError>> c) {
 		warnings = c;
 	}
 }

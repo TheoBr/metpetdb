@@ -31,6 +31,9 @@ public class PropertyConstraint implements IsSerializable {
 	
 	/** Is this propery a hibernate formula? */
 	public boolean formula;
+	
+	/** if this property is lazy or not, if it is we don't validate it */
+	public boolean lazy;
 
 	public void validateEntity(final MObject obj) throws ValidationException {
 		if (!formula)

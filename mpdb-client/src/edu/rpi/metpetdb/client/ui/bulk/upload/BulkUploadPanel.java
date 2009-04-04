@@ -99,6 +99,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 
 	private final FlowPanel warningsPanel = new FlowPanel();
 	private final HTML warningTab = new HTML("Warnings <span>0</span>");
+	private final Grid warningGrid = new Grid();
 
 	private final FlowPanel summaryPanel = new FlowPanel();
 	private String contentType;
@@ -341,6 +342,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 	private void handleParseErrors(final BulkUploadResult results) {
 		final Map<Integer, List<BulkUploadError>> errors = results.getErrors();
 		populateErrorPanel(errors);
+		populateWarningPanel(results.getWarnings());
 		if (!errors.isEmpty()) {
 			resultStatus.sendNotice(NoticeType.WARNING,
 					"Upload complete, but the file contains errors.");
@@ -359,6 +361,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 	private void handleCommitErrors(final BulkUploadResult results) {
 		final Map<Integer, List<BulkUploadError>> errors = results.getErrors();
 		populateErrorPanel(errors);
+		populateWarningPanel(results.getWarnings());
 		if (!errors.isEmpty()) {
 			resultStatus.sendNotice(NoticeType.WARNING, "Could not add "
 					+ getPlural(contentType) + " to MetPetDB.");
@@ -378,6 +381,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 
 	public void clearResults() {
 		errorGrid.resize(0, 0);
+		warningGrid.resize(0, 0);
 		matchedColsGrid.resize(0, 0);
 		summaryPanel.clear();
 		uploadProgress.setProgress(0.0d);
@@ -458,34 +462,46 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 							+ getPlural(objType, invalid) + ".", "p"));
 			}
 		}
-		// TODO provide some summary of matched columns here
 	}
 
 	private void populateErrorPanel(Map<Integer, List<BulkUploadError>> errors) {
+		populatePanel(errors, errorPanel, errorGrid, "error", "errors");
 		if (errors != null) {
-			errorPanel.clear();
-			String msg = "There were " + errors.size() + " errors:";
-			if (errors.size() == 1)
-				msg = "There was one error:";
-			if (errors.size() == 0)
-				msg = "No errors. Congratulations!";
-			errorPanel.add(new MText(msg, "p"));
 			setErrorTabStyle(errors.size());
-			if (!errors.isEmpty()) {
-				errorPanel.add(errorGrid);
-				errorGrid.resize(errors.size() + 1, 2);
-				errorGrid.getRowFormatter()
-						.setStyleName(0, CSS.TYPE_SMALL_CAPS);
+		}
+	}
+	
+	private void populateWarningPanel(Map<Integer, List<BulkUploadError>> warnings) {
+		populatePanel(warnings, warningsPanel, warningGrid, "warning", "warnings");
+		if (warnings != null) {
+			setWarningTabStyle(warnings.size());
+		}
+	}
+
+	private void populatePanel(Map<Integer, List<BulkUploadError>> messages,
+			FlowPanel panel, Grid grid, String singular, String plural) {
+		if (messages != null) {
+			panel.clear();
+			String msg = "There were " + messages.size() + " " +  plural + ":";
+			if (messages.size() == 1)
+				msg = "There was one " + singular + ":";
+			if (messages.size() == 0)
+				msg = "No " + plural + ". Congratulations!";
+			panel.add(new MText(msg, "p"));
+			if (!messages.isEmpty()) {
+				panel.add(grid);
+				grid.resize(messages.size() + 1, 2);
+				grid.getRowFormatter().setStyleName(0, CSS.TYPE_SMALL_CAPS);
 
 				int i = 0;
-				errorGrid.setText(0, 0, "Row");
-				errorGrid.setText(0, 1, "Error Message");
+				grid.setText(0, 0, "Row");
+				grid.setText(0, 1, singular + " Message");
 				final List<Integer> rowNumbers = new ArrayList<Integer>();
-				rowNumbers.addAll(errors.keySet());
+				rowNumbers.addAll(messages.keySet());
 				Collections.sort(rowNumbers);
 				for (Integer row : rowNumbers) {
-					errorGrid.setText(++i, 0, row.toString());
-					errorGrid.setHTML(i, 1, explode(errors.get(row)));
+					grid.setText(++i, 0, row.toString());
+					grid.setHTML(i, 1, explode(messages.get(row)));
 				}
 			}
 		}
@@ -517,6 +533,17 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		} else {
 			errorTab.removeStyleName("has-errors");
 			errorTab.addStyleName(CSS.EMPTY);
+		}
+	}
+	
+	private void setWarningTabStyle(int numErrors) {
+		warningTab.setHTML("Warnings <span>" + numErrors + "</span>");
+		if (numErrors > 0) {
+			warningTab.addStyleName("has-errors");
+			warningTab.removeStyleName(CSS.EMPTY);
+		} else {
+			warningTab.removeStyleName("has-errors");
+			warningTab.addStyleName(CSS.EMPTY);
 		}
 	}
 

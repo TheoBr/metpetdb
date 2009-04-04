@@ -159,6 +159,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 		final Iterator<Integer> imgRows = images.keySet().iterator();
 		// Handle any existing errors found
 		addErrors(ip, results);
+		addWarnings(ip, results);
 		final ImageDAO imgDao = new ImageDAO(currentSession());
 		final XrayImageDAO xrayDao = new XrayImageDAO(currentSession());
 		while (imgRows.hasNext()) {

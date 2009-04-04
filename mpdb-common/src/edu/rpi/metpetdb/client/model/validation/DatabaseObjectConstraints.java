@@ -36,7 +36,30 @@ import edu.rpi.metpetdb.client.model.validation.primitive.ShortConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 
 /**
- * Constraints for objects in the database
+ * Constraints for objects in the database. They are named like so
+ * HibernateClass_hibernateProperty, so in order to represent that a Sample had
+ * a property name Number the name would be Sample_number. There is an exception
+ * to this rule, if the Hibernate Class is a part of a composite element it has
+ * to be named like so
+ * CompositeClass_HibernateClass_hibernateProperty_compositeProperty. An example
+ * of where this is used is for Minerals of a Sample, since a Sample's minerals
+ * have an extra attribute, amount, there is a composite class made for it,
+ * SampleMineral. In order to represent this constraint we use
+ * SampleMineral_Sample_minerals_mineral for the Mineral and
+ * SampleMineral_Sample_minerals_amount for the mineral amount.
+ * 
+ * The reason we need a SampleMineral constraint at all is because of the
+ * ObjectConstraint data type. When an ObjectConstraint is detected we retrieve
+ * the hibernate propery from it, and then we use that to look up the
+ * constraints for that object. As an example a Sample has an
+ * ObjectConstraint<Mineral> Sample_minerals. Hibernate knows that the minerals
+ * of a sample are of type SampleMineral, we use this to look up the set of
+ * constraints for SampleMinerals, i.e. we find SampleMineral__all. Therefore
+ * when we validate a Sample's minerals we actually validate each SampleMineral
+ * in the collection, allowing us to validate both the Mineral are valid and the
+ * amount for that mineral.
+ * 
+ * @see "DataStore.java in mpdb-server"
  * 
  */
 public class DatabaseObjectConstraints implements IsSerializable {
@@ -45,7 +68,9 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		if (pc == null || o == null)
 			return;
 		for (int k = 0; k < pc.length; k++) {
-			pc[k].validateEntity(o);
+			//don't valid lazy entities (so they don't get loaded by hibernate)
+			if (!pc[k].lazy)
+				pc[k].validateEntity(o);
 		}
 	}
 
@@ -256,7 +281,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public void validate(final User u) throws ValidationException {
 		validate(u, User__all);
 	}
-	
+
 	// ------ RoleChange ------
 	public PropertyConstraint[] RoleChange__all;
 	public StringConstraint RoleChange_requestReason;
@@ -342,14 +367,14 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		// SearchSample_region.propertyName = "Region";
 		// SearchSample_region.required = false;
 		//		
-		//SearchSample_references.setConstraints(Sample_references.getConstraints
+		// SearchSample_references.setConstraints(Sample_references.getConstraints
 		// ());
 		// SearchSample_references.entityName = "SearchSample";
 		// SearchSample_references.property = SearchSampleProperty.references;
 		// SearchSample_references.propertyName = "Reference";
 		// SearchSample_references.required = false;
 		//		
-		//SearchSample_metamorphicGrades.setConstraints(Sample_metamorphicGrades
+		// SearchSample_metamorphicGrades.setConstraints(Sample_metamorphicGrades
 		// .getConstraints());
 		// SearchSample_references.entityName = "SearchSample";
 		// SearchSample_references.property =

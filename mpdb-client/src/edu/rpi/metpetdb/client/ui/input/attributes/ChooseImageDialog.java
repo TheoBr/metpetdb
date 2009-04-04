@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.ui.input.attributes;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -8,9 +9,12 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.MCommand;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
-import edu.rpi.metpetdb.client.ui.image.browser.ImageList;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserImageList;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.image.AddImageWizard;
 
 public class ChooseImageDialog extends MDialogBox implements ClickListener {
@@ -19,14 +23,20 @@ public class ChooseImageDialog extends MDialogBox implements ClickListener {
 	private Button cancel;
 	private Button ok;
 	private Button newImage;
-	private ImageList list;
+	private ImageBrowserImageList list;
 	private Subsample s;
 
 	public ChooseImageDialog(final MCommand<Image> r, final Subsample s) {
 		final FlowPanel fp = new FlowPanel();
 		continuation = r;
 
-		list = new ImageList(s.getId(), true, true);
+		list = new ImageBrowserImageList() {
+			@Override
+			public void update(PaginationParameters p,
+					AsyncCallback<Results<Image>> ac) {
+				MpDb.image_svc.allForImageMap(s.getId(), p, ac);
+			}
+		};
 
 		fp.add(list);
 
@@ -46,8 +56,8 @@ public class ChooseImageDialog extends MDialogBox implements ClickListener {
 		if (sender == cancel) {
 			this.hide();
 		} else if (sender == ok) {
-			if (continuation != null && list.getSelectedImages().size() > 0)
-				continuation.execute(list.getSelectedImages().get(0));
+			if (continuation != null && list.getSelectedValues().size() > 0)
+				continuation.execute(list.getSelectedValues().get(0));
 			this.hide();
 		} else if (sender == newImage) {
 			new AddImageWizard(new MCommand<Image>() {

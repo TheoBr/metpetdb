@@ -20,7 +20,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MLink;
 /**
  * 
  * @author anthony
- * @deprecated replaced with other ImageList
+ * @deprecated replaced with ImageBrowserImageList
  */
 @Deprecated
 public class ImageList extends HorizontalPanel implements ClickListener {

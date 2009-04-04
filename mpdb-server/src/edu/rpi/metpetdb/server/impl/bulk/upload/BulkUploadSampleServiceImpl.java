@@ -35,6 +35,7 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 		results.setHeaders(sp.getHeaders());
 		final Map<Integer, Sample> samples = sp.getSamples();
 		addErrors(sp, results);
+		addWarnings(sp, results);
 		final BulkUploadResultCount resultCount = new BulkUploadResultCount();
 		final Iterator<Integer> rows = samples.keySet().iterator();
 		while (rows.hasNext()) {

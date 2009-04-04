@@ -1,6 +1,6 @@
 package edu.rpi.metpetdb.client.model;
 
-import net.sf.hibernate4gwt.pojo.java5.LazyPojo;
+import net.sf.gilead.pojo.java5.LightEntity;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -16,7 +16,7 @@ import edu.rpi.metpetdb.client.model.properties.Property;
  * bother with writing our own GWT class generator implementations.
  * </p>
  */
-public abstract class MObject extends LazyPojo implements IsSerializable, edu.rpi.metpetdb.client.model.interfaces.MObject {
+public abstract class MObject extends LightEntity implements IsSerializable, edu.rpi.metpetdb.client.model.interfaces.MObject {
 
 	/**
      * 

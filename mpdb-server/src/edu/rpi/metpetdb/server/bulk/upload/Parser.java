@@ -20,6 +20,7 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.bulk.upload.ExpectedStringColumnTypeException;
 import edu.rpi.metpetdb.client.error.bulk.upload.InvalidSpreadSheetException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.validation.InvalidDateStringException;
@@ -48,6 +49,8 @@ public abstract class Parser<T extends MObject> {
 	protected final static String DATA_SEPARATOR = ";";
 	protected HSSFSheet sheet;
 	protected final Map<Integer, BulkUploadError> errors = new HashMap<Integer, BulkUploadError>();
+	/** even though it it says bulk upload error, these are for warnings */
+	protected final Map<Integer, BulkUploadError> warnings = new HashMap<Integer, BulkUploadError>();
 	protected static Collection<Mineral> minerals;
 	protected static Collection<Element> elements;
 	protected static Collection<Oxide> oxides;
@@ -170,6 +173,16 @@ public abstract class Parser<T extends MObject> {
 	}
 
 	/**
+	 * Returns any warnings encounterd during processing, i.e. of the cell type
+	 * is wrong
+	 * 
+	 * @return
+	 */
+	public Map<Integer, BulkUploadError> getWarnings() {
+		return warnings;
+	}
+
+	/**
 	 * Replaces the alternate minerals with their correct counterparts
 	 * 
 	 * @param alternate
@@ -234,6 +247,22 @@ public abstract class Parser<T extends MObject> {
 				// get the constraint for this cell
 				final PropertyConstraint pc = spreadSheetColumnMapping.get(i);
 
+				if (pc != null) {
+					// verify cell type
+					if (pc == doc.Sample_number
+							|| pc == doc.ChemicalAnalysis_spotId
+							|| pc == doc.ChemicalAnalysis_sampleName
+							|| pc == doc.ChemicalAnalysis_subsampleName
+							|| pc == doc.Subsample_name
+							|| pc == doc.Subsample_sampleName)
+						if (cell.getCellType() != HSSFCell.CELL_TYPE_STRING) {
+							warnings.put(rowindex + 1, new BulkUploadError(
+									rowindex + 1, i + 1,
+									new ExpectedStringColumnTypeException(),
+									cell.toString()));
+						}
+				}
+
 				if (pc != null && cell != null && !cell.toString().equals("")
 						&& !parseColumnSpecialCase(row, cell, pc, newObject, i)) {
 
@@ -272,10 +301,11 @@ public abstract class Parser<T extends MObject> {
 						}
 					} else if (pc.entityName.equals(newObject.getClass()
 							.getSimpleName())
-							|| ((pc.entityName.equals("Image") || pc.entityName
-									.equals("ImageOnGrid") || pc.entityName.equals("XrayImage"))
-									&& newObject.getClass().getSimpleName()
-											.equals(("BulkUploadImage")))) {
+							|| ((pc.entityName.equals("Image")
+									|| pc.entityName.equals("ImageOnGrid") || pc.entityName
+									.equals("XrayImage")) && newObject
+									.getClass().getSimpleName().equals(
+											("BulkUploadImage")))) {
 						if (pc instanceof NumberConstraint<?>) {
 							newObject.mSet(pc.property, getDoubleValue(cell));
 						} else if (pc instanceof TimestampConstraint) {
@@ -353,16 +383,18 @@ public abstract class Parser<T extends MObject> {
 	protected abstract void addObject(final int index, T object);
 
 	protected abstract T getNewObject();
-	
+
 	protected Double getDoubleValue(final HSSFCell cell) {
-		//first try to get the numeric value, if that fails try to parse it out of a string
+		// first try to get the numeric value, if that fails try to parse it out
+		// of a string
 		try {
 			return new Double(cell.getNumericCellValue());
 		} catch (Exception e) {
 			final String number = cell.toString();
 			final String data = sanitizeNumber(number);
 			if (data.equals("")) {
-				throw new NumberFormatException("Unable to convert '" + number +  "' to a number");
+				throw new NumberFormatException("Unable to convert '" + number
+						+ "' to a number");
 			}
 			return Double.parseDouble(data);
 		}
@@ -381,8 +413,8 @@ public abstract class Parser<T extends MObject> {
 	 * @throws InvocationTargetException
 	 */
 	protected abstract boolean parseColumnSpecialCase(HSSFRow row,
-			HSSFCell cell, final PropertyConstraint pc,
-			final T currentObject, Integer cellNum) throws IllegalArgumentException,
+			HSSFCell cell, final PropertyConstraint pc, final T currentObject,
+			Integer cellNum) throws IllegalArgumentException,
 			IllegalAccessException, InvocationTargetException;
 
 	protected void parseHeader(final int rownum) {
@@ -405,14 +437,16 @@ public abstract class Parser<T extends MObject> {
 				if (cm.matches(text)) {
 					spreadSheetColumnMapping.put(i, cm.getProperty());
 					headers.put(i, new BulkUploadHeader(text,
-							cm.getProperty().entityName + "_" + cm.getProperty().propertyName));
+							cm.getProperty().entityName + "_"
+									+ cm.getProperty().propertyName));
 					break;
 				}
 			}
 			if (!parseHeaderSpecialCase(header, i, text)) {
-				//unmatched column
+				// unmatched column
 				if (!headers.containsKey(i))
-					headers.put(i, new BulkUploadHeader(text, "Not matched by MetPetDB"));
+					headers.put(i, new BulkUploadHeader(text,
+							"Not matched by MetPetDB"));
 			}
 		}
 	}
