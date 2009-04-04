@@ -14,4 +14,8 @@ public interface SearchProperty extends Property<SearchSample> {
 	 * @return
 	 */
 	abstract String columnName();
+	
+	abstract boolean isSampleAttr();
+	
+	abstract boolean isChemicalAnalysisAttr();
 }

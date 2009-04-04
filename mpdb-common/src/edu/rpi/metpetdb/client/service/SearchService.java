@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.User;
@@ -13,7 +14,9 @@ import edu.rpi.metpetdb.client.paging.Results;
 
 public interface SearchService extends RemoteService {
 	
-	Results<Sample> search(final PaginationParameters p, final SearchSample searchSamp, User userSearching) throws MpDbException;
+	Results<ChemicalAnalysis> chemicalAnalysisSearch(final PaginationParameters p, final SearchSample searchSamp, User userSearching) throws MpDbException;
+	
+	Results<Sample> sampleSearch(final PaginationParameters p, final SearchSample searchSamp, User userSearching) throws MpDbException;
 
 	void rebuildSearchIndex() throws MpDbException;
 	

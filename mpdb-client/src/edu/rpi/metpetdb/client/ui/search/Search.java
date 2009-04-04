@@ -76,7 +76,7 @@ public class Search extends MPagePanel implements PageChangeListener {
 		public void update(PaginationParameters p,
 				AsyncCallback<Results<Sample>> ac) {
 			if (ss != null)
-				MpDb.search_svc.search(p,ss, MpDb.currentUser(), ac);
+				MpDb.search_svc.sampleSearch(p,ss, MpDb.currentUser(), ac);
 			else
 				ac.onSuccess(new Results<Sample>(0, new ArrayList<Sample>()));
 		}
@@ -155,7 +155,7 @@ public class Search extends MPagePanel implements PageChangeListener {
 		new ServerOp<Results<Sample>>() {
 			@Override
 			public void begin() {
-				MpDb.search_svc.search(null,ss, MpDb.currentUser(), this);
+				MpDb.search_svc.sampleSearch(null,ss, MpDb.currentUser(), this);
 			}
 			public void onSuccess(Results<Sample> result) {
 				for (String columnHeader : ExcelUtil.columnHeaders){
@@ -187,7 +187,7 @@ public class Search extends MPagePanel implements PageChangeListener {
 		new ServerOp<Results<Sample>>() {
 			@Override
 			public void begin() {
-				MpDb.search_svc.search(null,ss, MpDb.currentUser(), this);
+				MpDb.search_svc.sampleSearch(null,ss, MpDb.currentUser(), this);
 			}
 			public void onSuccess(Results<Sample> result) {
 				for (int i = 0; i < result.getList().size(); i++) {
@@ -211,7 +211,7 @@ public class Search extends MPagePanel implements PageChangeListener {
 		new ServerOp<Results<Sample>>() {
 			@Override
 			public void begin() {
-				MpDb.search_svc.search(null,ss, MpDb.currentUser(), this);
+				MpDb.search_svc.sampleSearch(null,ss, MpDb.currentUser(), this);
 			}
 			public void onSuccess(Results<Sample> result) {
 				earthPopup.createUI(new ArrayList(result.getList()));
@@ -331,6 +331,9 @@ public class Search extends MPagePanel implements PageChangeListener {
 				} else {
 					searchPanel.edit(new SearchSample());
 				}
+			}
+			public void onFailure(final Throwable e){
+				searchPanel.edit(new SearchSample());
 			}
 		}.begin();
 	}

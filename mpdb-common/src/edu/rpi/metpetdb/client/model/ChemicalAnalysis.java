@@ -60,7 +60,10 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 
 	private String subsampleName;
 	private String sampleName;
-
+	
+	@Field(index = Index.UN_TOKENIZED, store = Store.YES)
+	private Long subsampleId;
+	
 	private Double stageX;
 	private Double stageY;
 
@@ -151,6 +154,14 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		referenceY = i;
 	}
 
+	public Long getSubsampleId() {
+		return subsampleId;
+	}
+
+	public void setSubsampleId(Long subsampleId) {
+		this.subsampleId = subsampleId;
+	}
+	
 	public Double getStageX() {
 		return stageX;
 	}

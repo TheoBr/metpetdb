@@ -28,6 +28,14 @@ public enum SearchSampleProperty implements SearchProperty {
 		public String columnName() {
 			return "sesarNumber";
 		}
+		
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return false;
+		}
 	},
 	boundingBox {
 		public Geometry get(final SearchSample sample) {
@@ -41,6 +49,14 @@ public enum SearchSampleProperty implements SearchProperty {
 		public String columnName() {
 			return "location";
 		}
+		
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return false;
+		}
 	},
 	region {
 		public Set<Region> get(final SearchSample sample) {
@@ -52,6 +68,14 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 		public String columnName() {
 			return "region_name";
+		}
+		
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return false;
 		}
 	},
 	owner {
@@ -66,6 +90,14 @@ public enum SearchSampleProperty implements SearchProperty {
 		public String columnName() {
 			return "user_name";
 		}
+		
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return false;
+		}
 	},
 	minerals {
 		public Set<Mineral> get(final SearchSample sample) {
@@ -77,6 +109,14 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 		public String columnName() {
 			return "sampleMineral_mineral_name";
+		}
+		
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return false;
 		}
 	},
 	number {
@@ -90,6 +130,14 @@ public enum SearchSampleProperty implements SearchProperty {
 
 		public String columnName() {
 			return "number";
+		}
+		
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return false;
 		}
 	},
 	collectionDateRange {
@@ -106,6 +154,14 @@ public enum SearchSampleProperty implements SearchProperty {
 		public String columnName() {
 			return "collectionDate";
 		}
+		
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return false;
+		}
 	},
 	possibleRockTypes {
 		public Object get(final SearchSample sample) {
@@ -120,6 +176,56 @@ public enum SearchSampleProperty implements SearchProperty {
 		public String columnName() {
 			return "rockType_rockType";
 		}
+		
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return false;
+		}
+	},
+	possibleSampleIds {
+		public Object get(final SearchSample sample) {
+			return ((SearchSample) sample).getPossibleSampleIds();
+		}
+
+		public void set(final SearchSample sample, final Object id) {
+			((SearchSample) sample).setPossibleSampleIds((Set<Long>)id);
+		}
+
+		public String columnName() {
+			return "id";
+		}
+		
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return false;
+		}
+	},
+	possibleSubsampleIds {
+		public Object get(final SearchSample sample) {
+			return ((SearchSample) sample).getPossibleSubsampleIds();
+		}
+
+		public void set(final SearchSample sample, final Object id) {
+			((SearchSample) sample).setPossibleSubsampleIds((Set<Long>)id);
+		}
+
+		public String columnName() {
+			return "subsample_id";
+		}
+		
+		public boolean isSampleAttr(){
+			return false;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return true;
+		}
 	},
 	elements {
 		public Set<SearchElement> get(final SearchSample sample) {
@@ -130,7 +236,15 @@ public enum SearchSampleProperty implements SearchProperty {
 			((SearchSample) sample).setElements((Set<SearchElement>) elements);
 		}
 		public String columnName() {
-			return "subsample_chemicalAnalysis_elements";
+			return "elements";
+		}
+		
+		public boolean isSampleAttr(){
+			return false;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return true;
 		}
 	},
 	oxides {
@@ -142,7 +256,15 @@ public enum SearchSampleProperty implements SearchProperty {
 			((SearchSample) sample).setOxides((Set<SearchOxide>) oxides);
 		}
 		public String columnName() {
-			return "subsample_chemicalAnalysis_oxides";
+			return "oxides";
+		}
+		
+		public boolean isSampleAttr(){
+			return false;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return true;
 		}
 	},
 	collector {
@@ -157,6 +279,14 @@ public enum SearchSampleProperty implements SearchProperty {
 		public String columnName() {
 			return "collector";
 		}
+		
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return false;
+		}
 	},
 	country {
 		public Set<String> get(final SearchSample sample) {
@@ -170,6 +300,14 @@ public enum SearchSampleProperty implements SearchProperty {
 		public String columnName() {
 			return "country";
 		}
+		
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return false;
+		}
 	},
 	references {
 		public Set<Reference> get(final SearchSample sample) {
@@ -181,6 +319,14 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 		public String columnName() {
 			return "reference_name";
+		}
+		
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return false;
 		}
 	},
 	metamorphicGrades {
@@ -196,8 +342,16 @@ public enum SearchSampleProperty implements SearchProperty {
 		public String columnName() {
 			return "metamorphicGrade_name";
 		}
+		
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return false;
+		}
 	},
-	getPublic {
+	getPublic {  // 0 = both, 1 = public only, 2 = private only
 		public Integer get(final SearchSample sample) {
 			return ((SearchSample) sample).getGetPublic();
 		}
@@ -210,6 +364,14 @@ public enum SearchSampleProperty implements SearchProperty {
 		public String columnName() {
 			return "publicData";
 		}
+
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return true;
+		}
 	},
 	tabs {
 		public String get(final SearchSample sample) {
@@ -221,6 +383,14 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 		public String columnName() {
 			return "";
+		}
+		
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return false;
 		}
 	};
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.security.NoPermissionsException;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.User;
@@ -18,7 +19,13 @@ public class SearchServiceImpl extends SampleServiceImpl implements
 		SearchService {
 	private static final long serialVersionUID = 1L;
 
-	public Results<Sample> search(final PaginationParameters p,
+	public Results<ChemicalAnalysis> chemicalAnalysisSearch(
+			final PaginationParameters p, SearchSample searchSamp,
+			User userSearching) throws MpDbException {
+		return (SearchDb.chemicalAnalysisSearch(p, searchSamp, userSearching));
+	}
+
+	public Results<Sample> sampleSearch(final PaginationParameters p,
 			SearchSample searchSamp, User userSearching) throws MpDbException {
 		return (SearchDb.sampleSearch(p, searchSamp, userSearching));
 	}
@@ -50,11 +57,9 @@ public class SearchServiceImpl extends SampleServiceImpl implements
 	public PaginationParameters getSessionLastSearchPagination() {
 		return getLastSearchPagination();
 	}
-	
-	public String createKML(final List<Sample> samples, final String baseURL){
+
+	public String createKML(final List<Sample> samples, final String baseURL) {
 		return KMLCreater.createKML(samples, baseURL);
 	}
-	
-	
 
 }
