@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.server.search;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -106,10 +107,18 @@ public class SearchDb {
 		if (p != null) {
 			hibQuery.setFirstResult(p.getFirstResult());
 			hibQuery.setMaxResults(p.getMaxResults());
+		} else {
+			//place an upper limit of 100 search results
+			hibQuery.setFirstResult(0);
+			hibQuery.setMaxResults(100);
 		}
 		try {
-			final Results<Sample> results = new Results<Sample>(hibQuery
-					.getResultSize(), hibQuery.list());
+			//this is here in order to convert java.util.Collection$EmptyList into
+			//the correct representation so it can be serialized by GWT
+			List<Sample> list = hibQuery.list();
+			if (list.size() == 0)
+				list = new ArrayList<Sample>();
+			final Results<Sample> results = new Results<Sample>(hibQuery.getResultSize(), list);
 			return results;
 		} catch (CallbackException e) {
 			session.clear();
@@ -178,10 +187,18 @@ public class SearchDb {
 		if (p != null) {
 			hibQuery.setFirstResult(p.getFirstResult());
 			hibQuery.setMaxResults(p.getMaxResults());
+		} else {
+			//place an upper limit of 100 search results
+			hibQuery.setFirstResult(0);
+			hibQuery.setMaxResults(100);
 		}
 		try {
-			final Results<ChemicalAnalysis> results = new Results<ChemicalAnalysis>(
-					hibQuery.getResultSize(), hibQuery.list());
+			//this is here in order to convert java.util.Collection$EmptyList into
+			//the correct representation so it can be serialized by GWT
+			List<ChemicalAnalysis> list = hibQuery.list();
+			if (list.size() == 0)
+				list = new ArrayList<ChemicalAnalysis>();
+			final Results<ChemicalAnalysis> results = new Results<ChemicalAnalysis>(hibQuery.getResultSize(), list);
 			return results;
 		} catch (CallbackException e) {
 			session.clear();
