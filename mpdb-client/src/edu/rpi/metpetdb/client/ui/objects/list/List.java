@@ -20,6 +20,8 @@ import com.google.gwt.gen2.table.client.TableModelHelper.ColumnSortInfo;
 import com.google.gwt.gen2.table.client.TableModelHelper.ColumnSortList;
 import com.google.gwt.gen2.table.client.TableModelHelper.Request;
 import com.google.gwt.gen2.table.client.TableModelHelper.SerializableResponse;
+import com.google.gwt.gen2.table.event.client.PageLoadEvent;
+import com.google.gwt.gen2.table.event.client.PageLoadHandler;
 import com.google.gwt.gen2.table.event.client.RowHighlightEvent;
 import com.google.gwt.gen2.table.event.client.RowHighlightHandler;
 import com.google.gwt.gen2.table.event.client.RowSelectionEvent;
@@ -27,6 +29,7 @@ import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
 import com.google.gwt.gen2.table.event.client.RowUnhighlightEvent;
 import com.google.gwt.gen2.table.event.client.RowUnhighlightHandler;
 import com.google.gwt.gen2.table.event.client.TableEvent.Row;
+import com.google.gwt.gen2.table.override.client.HTMLTable.RowFormatter;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -37,6 +40,8 @@ import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SourcesTableEvents;
+import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -79,7 +84,7 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 	private ArrayList<Column<RowType, ?>> displayColumns;
 
 	private MpDbTableModel tableModel;
-	private FixedWidthGrid dataTable;
+	protected FixedWidthGrid dataTable;
 	private FixedWidthFlexTable headerTable;
 
 	/**
@@ -183,6 +188,23 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 		}
 		return selectedRows;
 	}
+	
+	public RowType getRowValue(int row) {
+		return scrollTable.getRowValue(row);
+	}
+	
+	public int getRowCount() {
+		return dataTable.getRowCount();
+	}
+	
+	public RowFormatter getRowFormatter() {
+		return dataTable.getRowFormatter();
+	}
+	
+	public void addPageLoadHandler(PageLoadHandler handler) {
+		scrollTable.addPageLoadHandler(handler);
+	}
+	
 
 	/**
 	 * Creates a new paginated table from an array of columns
@@ -239,7 +261,7 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 		scrollTable.setResizePolicy(ResizePolicy.FILL_WIDTH);
 		scrollTable.setScrollPolicy(ScrollPolicy.BOTH);
 		
-		dataTable.setSelectionPolicy(SelectionPolicy.MULTI_ROW);
+		dataTable.setSelectionPolicy(SelectionPolicy.CHECKBOX);
 
 		// dataTable.addTableListener(new TableListener() {
 		//

@@ -3,6 +3,8 @@ package edu.rpi.metpetdb.client.ui.image.browser.dialogs;
 import java.util.Collection;
 import java.util.Map;
 
+import com.google.gwt.gen2.table.event.client.PageLoadEvent;
+import com.google.gwt.gen2.table.event.client.PageLoadHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -23,8 +25,8 @@ import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
 
 public class AddExistingImagePopup extends PopupPanel {
 
-	public AddExistingImagePopup(final Widget sender, final ServerOp<Collection<Image>> r,
-			final Subsample subsample,
+	public AddExistingImagePopup(final Widget sender,
+			final ServerOp<Collection<Image>> r, final Subsample subsample,
 			final Map<Image, ImageOnGridContainer> imagesOnGrid) {
 		super(true);
 		final VerticalPanel vp = new VerticalPanel();
@@ -32,11 +34,22 @@ public class AddExistingImagePopup extends PopupPanel {
 				sender.getAbsoluteTop() + 20);
 		final ImageBrowserImageList list = new ImageBrowserImageList() {
 			@Override
-			public void update(PaginationParameters p,
-					AsyncCallback<Results<Image>> ac) {
+			public void update(final PaginationParameters p,
+					final AsyncCallback<Results<Image>> ac) {
 				MpDb.image_svc.allForImageMap(subsample.getId(), p, ac);
 			}
 		};
+		list.addPageLoadHandler(new PageLoadHandler() {
+			public void onPageLoad(PageLoadEvent event) {
+				// Color images already on the image map gray
+				for (int i = 0; i < list.getRowCount(); ++i) {
+					final Image image = list.getRowValue(i);
+					if (imagesOnGrid.containsKey(image)) {
+						list.getRowFormatter().setVisible(i, false);
+					}
+				}
+			}
+		});
 		vp.add(new Button("Add Selected", new ClickListener() {
 			public void onClick(final Widget sender) {
 				r.onSuccess(list.getSelectedValues());

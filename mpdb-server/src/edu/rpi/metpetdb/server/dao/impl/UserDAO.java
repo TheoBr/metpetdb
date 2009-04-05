@@ -12,6 +12,8 @@ import edu.rpi.metpetdb.client.error.dao.UserNotFoundException;
 import edu.rpi.metpetdb.client.model.Role;
 import edu.rpi.metpetdb.client.model.RoleChange;
 import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 
 public class UserDAO extends MpDbDAO<User> {
@@ -60,10 +62,13 @@ public class UserDAO extends MpDbDAO<User> {
 		return getResults(q);
 	}
 	
-	public Collection<RoleChange> getSponsorRoleChanges(int sponsorId) throws MpDbException {
+	public Results<RoleChange> getSponsorRoleChanges(int sponsorId, PaginationParameters p) throws MpDbException {
 		final Query q = namedQuery("RoleChange.bySponsorId");
-		q.setParameter("id", sponsorId);
-		return getResults(q);
+		final Query sizeQuery = sizeQuery("RoleChange.bySponsorId", sponsorId);
+		final Query pageQuery = pageQuery("RoleChange.bySponsorId", p, sponsorId);
+		final List<RoleChange> l = (List<RoleChange>) getResults(pageQuery);
+		final int size = ((Number) getResult(sizeQuery)).intValue();
+		return new Results<RoleChange>(size, l);
 	}
 
 	public Object[] allNames() throws MpDbException{

@@ -180,4 +180,12 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String SearchSample_getPublic();
 	/* Sample Comment */
 	String SampleComment_text();
+	
+	/*Role Changes */
+	String RoleChange_requestReason();
+	String RoleChange_requestDate();
+	String RoleChange_role();
+	String RoleChange_sponsor();
+	String RoleChange_user();
+	String RoleChange_grant();
 }

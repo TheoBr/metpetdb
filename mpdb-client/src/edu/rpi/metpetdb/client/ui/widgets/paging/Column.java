@@ -83,7 +83,7 @@ public abstract class Column<RowType extends MObject, ColType> extends AbstractC
 	}
 
 	@Override
-	public abstract ColType getCellValue(RowType rowValue);
+	public abstract ColType getCellValue(final RowType rowValue);
 
 
 	@Override

@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.model.properties;
 
+import java.sql.Timestamp;
+
 import edu.rpi.metpetdb.client.model.Role;
 import edu.rpi.metpetdb.client.model.RoleChange;
 import edu.rpi.metpetdb.client.model.User;
@@ -13,6 +15,16 @@ public enum RoleChangeProperty implements Property<RoleChange> {
 
 		public void set(final RoleChange roleChange, final Object text) {
 			roleChange.setRequestReason((String) text);
+		}
+	},
+	
+	requestDate {
+		public Object get(final RoleChange roleChange) {
+			return roleChange.getRequestDate();
+		}
+
+		public void set(final RoleChange roleChange, final Object text) {
+			roleChange.setRequestDate((Timestamp) text);
 		}
 	},
 	

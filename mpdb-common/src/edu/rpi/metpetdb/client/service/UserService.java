@@ -16,6 +16,8 @@ import edu.rpi.metpetdb.client.model.RoleChange;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 
 /**
  * Server operations to fetch and manipulate {@link User}s.
@@ -147,7 +149,7 @@ public interface UserService extends RemoteService {
 	
 	Collection<Role> getEligableRoles(int currentRank) throws MpDbException;
 	
-	public Collection<RoleChange> getSponsorRoleChanges(int sponsorId) throws MpDbException;
+	public Results<RoleChange> getSponsorRoleChanges(int sponsorId,PaginationParameters p) throws MpDbException;
 	
 	public void approveRoleChange(RoleChange rc) throws MpDbException;
 	public void denyRoleChange(RoleChange rc) throws MpDbException;

@@ -36,4 +36,40 @@
     where rc.sponsor.id = :id
     	and rc.granted is null
   </query>
+  <query name="RoleChange.bySponsorId/requestDate">
+    from RoleChange rc
+    where rc.sponsor.id = :id
+    	and rc.granted is null
+   	order  by rc.requestDate
+  </query>
+  <query name="RoleChange.bySponsorId/requestReason">
+    from RoleChange rc
+    where rc.sponsor.id = :id
+    	and rc.granted is null
+   	order  by rc.requestReason
+  </query>
+  <query name="RoleChange.bySponsorId/user">
+    from RoleChange rc
+    where rc.sponsor.id = :id
+    	and rc.granted is null
+   	order  by rc.user.name
+  </query>
+  <query name="RoleChange.bySponsorId/sponsor">
+    from RoleChange rc
+    where rc.sponsor.id = :id
+    	and rc.granted is null
+   	order  by rc.sponsor.name
+  </query>
+  <query name="RoleChange.bySponsorId/role">
+    from RoleChange rc
+    where rc.sponsor.id = :id
+    	and rc.granted is null
+   	order  by rc.role.roleName
+  </query>
+  <query name="RoleChange.bySponsorId,size">
+    select count(*)
+    from RoleChange rc
+    where rc.sponsor.id = :id
+    	and rc.granted is null
+  </query>
 </hibernate-mapping>

@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.image.browser;
+package edu.rpi.metpetdb.client.ui.objects.list;
 
 import java.util.ArrayList;
 import java.util.Collection;

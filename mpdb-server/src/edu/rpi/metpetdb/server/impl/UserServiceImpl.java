@@ -22,6 +22,8 @@ import edu.rpi.metpetdb.client.model.RoleChange;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
@@ -291,8 +293,8 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return new UserDAO(currentSession()).getEligableRoles(currentRank);
 	}
 	
-	public Collection<RoleChange> getSponsorRoleChanges(int sponsorId) throws MpDbException {
-		return new UserDAO(currentSession()).getSponsorRoleChanges(sponsorId);
+	public Results<RoleChange> getSponsorRoleChanges(int sponsorId, PaginationParameters p) throws MpDbException {
+		return new UserDAO(currentSession()).getSponsorRoleChanges(sponsorId, p);
 	}
 
 	public void approveRoleChange(RoleChange rc) throws MpDbException {
