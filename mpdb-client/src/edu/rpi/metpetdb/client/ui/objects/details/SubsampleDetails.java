@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
@@ -110,7 +111,16 @@ public class SubsampleDetails extends MPagePanel {
 				}
 				setPageTitle(s.getName(), "Subsample");
 				addPageActionItem(map);
-				images = new ImageListViewer(result, false);
+				images = new ImageListViewer() {
+
+					@Override
+					public void update(PaginationParameters p,
+							AsyncCallback<Results<Image>> ac) {
+						MpDb.image_svc.allImages(result.getId(), p, ac);
+					}
+
+				};
+				panel.getRightCol().clear();
 				panel.getRightCol().add(images);
 
 			}

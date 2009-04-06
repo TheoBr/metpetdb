@@ -205,6 +205,10 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 		scrollTable.addPageLoadHandler(handler);
 	}
 	
+	public FixedWidthGrid getDataTable() {
+		return dataTable;
+	}
+	
 
 	/**
 	 * Creates a new paginated table from an array of columns
@@ -259,7 +263,7 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 		scrollTable.setSortPolicy(SortPolicy.MULTI_CELL);
 		scrollTable.setColumnResizePolicy(ColumnResizePolicy.SINGLE_CELL);
 		scrollTable.setResizePolicy(ResizePolicy.FILL_WIDTH);
-		scrollTable.setScrollPolicy(ScrollPolicy.BOTH);
+		scrollTable.setScrollPolicy(ScrollPolicy.DISABLED);
 		
 		dataTable.setSelectionPolicy(SelectionPolicy.CHECKBOX);
 
@@ -325,6 +329,8 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 			}
 
 		});
+		dataTable.setSelectionPolicy(SelectionPolicy.ONE_ROW);
+		dataTable.setSelectionEnabled(false);
 
 		final Label pageSizeLabel = new Label("Results Per Page:");
 		final TextBox pageSizeTxt = new TextBox();
@@ -370,7 +376,6 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 		add(scrollTable);
 		add(options);
 		add(hp);
-		scrollTable.reloadPage();
 	}
 	public void newView(ArrayList<Column> columns) {
 	// this.displayColumns = columns;

@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.ui.input.attributes;
 
+import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -34,10 +35,10 @@ public class ChooseImageDialog extends MDialogBox implements ClickListener {
 			@Override
 			public void update(PaginationParameters p,
 					AsyncCallback<Results<Image>> ac) {
-				MpDb.image_svc.allForImageMap(s.getId(), p, ac);
+				MpDb.image_svc.allImages(s.getId(), p, ac);
 			}
 		};
-
+		list.getDataTable().setSelectionPolicy(SelectionPolicy.RADIO);
 		fp.add(list);
 
 		cancel = new Button(LocaleHandler.lc_text.buttonCancel(), this);

@@ -55,9 +55,11 @@ public class AddImageAttribute<DataType extends HasImages> extends
 	}
 
 	public Widget[] createDisplayWidget(final HasImages obj) {
-		return createDisplayWidget(obj, false);
+		//FIXME: hack to not show the images when viewing, because they are shown in a list on the right
+		return new Widget[] {
+			new Label("")
+		};
 	}
-
 	public Widget[] createDisplayWidget(final HasImages obj,
 			final boolean editMode) {
 		final VerticalPanel vp = new VerticalPanel();

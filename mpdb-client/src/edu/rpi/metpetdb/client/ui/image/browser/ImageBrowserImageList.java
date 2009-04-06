@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.ui.image.browser;
 
 import java.util.ArrayList;
 
+import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -17,12 +18,12 @@ public abstract class ImageBrowserImageList extends List<Image> {
 
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
-	private static ArrayList<Column<Image, ?>> columns;
+	protected static ArrayList<Column<Image, ?>> columns;
 	static {
 		columns = new ArrayList<Column<Image, ?>>();
 		
 		columns.add(new Column<Image, com.google.gwt.user.client.ui.Image>(
-				enttxt.Image_filename()) {
+				"") {
 			@Override
 			public com.google.gwt.user.client.ui.Image getCellValue(
 					Image rowValue) {
@@ -32,14 +33,14 @@ public abstract class ImageBrowserImageList extends List<Image> {
 		});
 		columns.add(new StringColumn<Image>(enttxt.Image_filename(),
 				ImageProperty.filename));
-		columns.add(new StringColumn<Image>(enttxt.Image_collector(),
-				ImageProperty.collector));
 		columns.add(new StringColumn<Image>(enttxt.Image_imageType(),
 				ImageProperty.imageType));
 	}
 
 	public ImageBrowserImageList() {
 		super(columns);
+		dataTable.setSelectionEnabled(true);
+		dataTable.setSelectionPolicy(SelectionPolicy.CHECKBOX);
 	}
 
 	@Override

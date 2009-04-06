@@ -1,7 +1,5 @@
 package edu.rpi.metpetdb.client.service;
 
-import java.util.List;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.model.Image;
@@ -11,8 +9,6 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 
 public interface ImageServiceAsync {
-	void allImages(long subsampleId, AsyncCallback<List<Image>> ac);
-
 	void details(long id, AsyncCallback<Image> ac);
 
 	void saveImage(Image image, AsyncCallback<Image> ac);
@@ -33,5 +29,5 @@ public interface ImageServiceAsync {
 	 * @param ac
 	 * @return
 	 */
-	void allForImageMap(long subsampleId, PaginationParameters p, AsyncCallback<Results<Image>> ac);
+	void allImages(long subsampleId, PaginationParameters p, AsyncCallback<Results<Image>> ac);
 }

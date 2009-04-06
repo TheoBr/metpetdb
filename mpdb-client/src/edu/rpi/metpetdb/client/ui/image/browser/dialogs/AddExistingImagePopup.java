@@ -36,7 +36,7 @@ public class AddExistingImagePopup extends PopupPanel {
 			@Override
 			public void update(final PaginationParameters p,
 					final AsyncCallback<Results<Image>> ac) {
-				MpDb.image_svc.allForImageMap(subsample.getId(), p, ac);
+				MpDb.image_svc.allImages(subsample.getId(), p, ac);
 			}
 		};
 		list.addPageLoadHandler(new PageLoadHandler() {

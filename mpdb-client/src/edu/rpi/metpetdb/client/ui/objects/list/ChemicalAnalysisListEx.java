@@ -20,7 +20,7 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.image.browser.dialogs.ViewImage;
+import edu.rpi.metpetdb.client.ui.dialogs.ViewImagePopup;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -158,7 +158,7 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 						imagesToDisplay.add(currentImage);
 							return new ImageHyperlink(image, new ClickListener() {
 								public void onClick(final Widget sender) {
-									new ViewImage(imagesToDisplay, bigImage, 0).show();
+									new ViewImagePopup(imagesToDisplay, bigImage, 0).show();
 								}
 							});
 					}

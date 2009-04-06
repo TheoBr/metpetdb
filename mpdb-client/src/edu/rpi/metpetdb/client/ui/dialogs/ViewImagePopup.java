@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.image.browser.dialogs;
+package edu.rpi.metpetdb.client.ui.dialogs;
 
 import java.util.ArrayList;
 
@@ -16,10 +16,9 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.Image;
-import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
-public class ViewImage extends MDialogBox implements ClickListener,
+public class ViewImagePopup extends MDialogBox implements ClickListener,
 		KeyboardListener {
 	private final MLink close;
 	private FlexTable ft;
@@ -32,7 +31,7 @@ public class ViewImage extends MDialogBox implements ClickListener,
 	private PopupPanel left;
 	private PopupPanel right;
 
-	public ViewImage(final ArrayList<Image> images,
+	public ViewImagePopup(final ArrayList<Image> images,
 			final com.google.gwt.user.client.ui.Image image, int indexStart) {
 		close = new MLink("", this);
 		this.images = images;
@@ -109,13 +108,13 @@ public class ViewImage extends MDialogBox implements ClickListener,
 		Image temp = (Image) images.get(index);
 		com.google.gwt.user.client.ui.Image tempImage = new com.google.gwt.user.client.ui.Image();
 		tempImage.setUrl(temp.getServerPath());
-		ViewImage.this.imageTitle = new Label(parseFilename(temp.getFilename()));
-		ViewImage.this.page = new Label("Image " + (index + 1) + " of "
+		ViewImagePopup.this.imageTitle = new Label(parseFilename(temp.getFilename()));
+		ViewImagePopup.this.page = new Label("Image " + (index + 1) + " of "
 				+ images.size());
-		ViewImage.this.displayImage.setUrl(tempImage.getUrl());
-		ft.setWidget(0, 0, ViewImage.this.displayImage);
-		ft.setWidget(1, 0, ViewImage.this.imageTitle);
-		ft.setWidget(2, 0, ViewImage.this.page);
+		ViewImagePopup.this.displayImage.setUrl(tempImage.getUrl());
+		ft.setWidget(0, 0, ViewImagePopup.this.displayImage);
+		ft.setWidget(1, 0, ViewImagePopup.this.imageTitle);
+		ft.setWidget(2, 0, ViewImagePopup.this.page);
 		displayImage.setStyleName("image-title");
 		imageTitle.setStyleName("gray");
 	}
@@ -137,7 +136,7 @@ public class ViewImage extends MDialogBox implements ClickListener,
 
 	public void onKeyPress(final Widget sender, final char kc, final int mod) {
 		if (kc == KEY_ESCAPE) {
-			ViewImage.this.hide();
+			ViewImagePopup.this.hide();
 			left.hide();
 			right.hide();
 		}
@@ -160,10 +159,10 @@ public class ViewImage extends MDialogBox implements ClickListener,
 
 		right = new PopupPanel() {
 			protected void onLoad() {
-				final int topPos = (ViewImage.this.getPopupTop() + ViewImage.this
+				final int topPos = (ViewImagePopup.this.getPopupTop() + ViewImagePopup.this
 						.getOffsetHeight() / 4);
-				final int rightPos = ViewImage.this.getPopupLeft()
-						+ ViewImage.this.getOffsetWidth()
+				final int rightPos = ViewImagePopup.this.getPopupLeft()
+						+ ViewImagePopup.this.getOffsetWidth()
 						- this.getOffsetWidth();
 				setPopupPosition(rightPos, topPos);
 				DOM.setStyleAttribute(right.getElement(), "zIndex", String
@@ -173,9 +172,9 @@ public class ViewImage extends MDialogBox implements ClickListener,
 		};
 		left = new PopupPanel() {
 			protected void onLoad() {
-				final int topPos = (ViewImage.this.getPopupTop() + ViewImage.this
+				final int topPos = (ViewImagePopup.this.getPopupTop() + ViewImagePopup.this
 						.getOffsetHeight() / 4);
-				final int leftPos = ViewImage.this.getPopupLeft();
+				final int leftPos = ViewImagePopup.this.getPopupLeft();
 				setPopupPosition(leftPos, topPos);
 				DOM.setStyleAttribute(left.getElement(), "zIndex", String
 						.valueOf(10000));

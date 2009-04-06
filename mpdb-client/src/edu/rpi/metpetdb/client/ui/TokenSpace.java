@@ -13,6 +13,7 @@ import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Grid;
+import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
@@ -139,9 +140,15 @@ public class TokenSpace implements HistoryListener {
 		}
 
 		public void execute(final long id) {
-			final Subsample s = new Subsample();
-			s.setId(id);
-			show(new ImageListViewer(s, true));
+			show(new ImageListViewer() {
+
+				@Override
+				public void update(PaginationParameters p,
+						AsyncCallback<Results<Image>> ac) {
+					MpDb.image_svc.allImages(id, p, ac);
+				}
+
+			});
 		}
 	};
 	public static final Screen register = new Screen(LocaleHandler.lc_entity
@@ -523,6 +530,5 @@ public class TokenSpace implements HistoryListener {
 		MetPetDBApplication.dispatchCurrentPageChanged();
 	}
 
-	private TokenSpace() {
-	}
+	private TokenSpace() {}
 }

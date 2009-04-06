@@ -47,7 +47,7 @@ public class ReviewRoleChanges extends List<RoleChange> {
 		columns.add(new StringColumn<RoleChange>(enttxt.RoleChange_requestReason(),
 				RoleChangeProperty.requestReason));
 		columns.add(new Column<RoleChange, FlowPanel>(enttxt.RoleChange_grant()) {
-
+			//TODO remove the row when confirmating a grant
 			@Override
 			public FlowPanel getCellValue(final RoleChange rowValue) {
 				//

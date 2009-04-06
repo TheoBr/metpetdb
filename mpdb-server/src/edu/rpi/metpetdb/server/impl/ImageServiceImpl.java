@@ -47,12 +47,6 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		return (i);
 	}
 
-	public List<Image> allImages(final long subsampleId) throws MpDbException {
-		final List<Image> images = (new ImageDAO(this.currentSession()))
-				.getBySubsampleId(subsampleId);
-		return (images);
-	}
-
 	public Image saveImage(Image image) throws ValidationException,
 			LoginRequiredException, MpDbException {
 		doc.validate(image);
@@ -209,7 +203,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		ImageServiceImpl.baseFolder = baseFolder;
 	}
 
-	public Results<Image> allForImageMap(long subsampleId,
+	public Results<Image> allImages(long subsampleId,
 			PaginationParameters p) throws MpDbException {
 		return new ImageDAO(currentSession()).getAllBySubsampleId(p, subsampleId);
 	}

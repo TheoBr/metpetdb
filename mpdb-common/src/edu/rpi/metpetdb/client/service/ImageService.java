@@ -1,7 +1,5 @@
 package edu.rpi.metpetdb.client.service;
 
-import java.util.List;
-
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -14,8 +12,7 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 
 public interface ImageService extends RemoteService {
-	List<Image> allImages(long subsampleId) throws MpDbException;
-	Results<Image> allForImageMap(long subsampleId, PaginationParameters p)
+	Results<Image> allImages(long subsampleId, PaginationParameters p)
 			throws MpDbException;
 	Image details(long id) throws MpDbException;
 	Image saveImage(Image image) throws ValidationException,
