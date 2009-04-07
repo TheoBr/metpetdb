@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific.sample;
 
 import org.postgis.Point;
 
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -30,8 +31,9 @@ public class LocationAttribute extends GenericAttribute {
 		final MText xText = new MText();
 		final MText yText = new MText();
 		if (p != null) {
-			xText.setText(new Double(p.x).toString());
-			yText.setText(new Double(p.y).toString());
+			NumberFormat nFormat = NumberFormat.getFormat("##.#####");			
+			xText.setText(nFormat.format(p.x));
+			yText.setText(nFormat.format(p.y));
 		}
 		return new Widget[] {
 				xText, yText
