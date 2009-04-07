@@ -12,8 +12,8 @@ import edu.rpi.metpetdb.client.model.properties.Property;
  */
 public abstract class MultipleColumn<RowType extends MObject, ColType> extends Column<RowType, ColType> {
 
-	public MultipleColumn(String title, Property<RowType> property) {
-		super(title, property);
+	public MultipleColumn(String header, Property<RowType> property) {
+		super(header, property);
 	}
 	
 	protected String getCellContents(RowType rowValue) {
@@ -33,5 +33,25 @@ public abstract class MultipleColumn<RowType extends MObject, ColType> extends C
 		} else {
 			return "-----";
 		}
+	}
+	
+	protected int getItemsLength(RowType rowValue, int num) {
+		int len = 0;
+		final Object val = property.get(rowValue);
+		if (val instanceof Collection) {
+			final Collection<Object> vals = (Collection<Object>) val;
+			if (vals != null && vals.size() > 0) {
+				int i = 0;
+				for(Object o : vals) {
+					if (i++ < num) {
+						len += o.toString().length() + 2;
+					} else {
+						break;
+					}
+				}
+				len -= 2;
+			}
+		}
+		return len;
 	}
 }

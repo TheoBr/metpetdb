@@ -51,6 +51,7 @@ public class SearchPublicAttribute extends SearchGenericAttribute implements Cli
 		container.add(getBoth);
 		container.add(getPublic);
 		container.add(getPrivate);
+		container.setStyleName("access");
 		container.addStyleName(CSS.BETA);
 
 		return new Widget[]{container};

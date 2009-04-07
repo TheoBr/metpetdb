@@ -50,6 +50,7 @@ public class CSS {
 	public static final String CURRENT = "current";
 	public static final String EMPTY = "empty";
 	public static final String DISABLED = "disabled";
+	public static final String NULLSET = "nullset";
 	
 	/* ---------------- forms ---------------- */
 	public static final String SUBMIT = "submit";
@@ -161,6 +162,7 @@ public class CSS {
 	public static final String REGISTER = "register";
 	public static final String ICON_PLUS = "icon-plus";
 	public static final String ICON_MINUS = "icon-minus";
+	
 	
 	
 	

@@ -251,7 +251,10 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 		tableModel.setRowCount(1);
 
 		for (int i = 0; i < displayColumns.size(); ++i) {
-			headerTable.setText(0, i, displayColumns.get(i).getTitle());
+			if (displayColumns.get(i).getHeader() instanceof String)
+				headerTable.setText(0, i, (String) displayColumns.get(i).getHeader());
+			if (displayColumns.get(i).getHeader() instanceof Widget)
+				headerTable.setWidget(0, i, (Widget) displayColumns.get(i).getHeader());
 			headerTable.getCellFormatter().addStyleName(0, i, "bold");
 			headerTable.getCellFormatter().addStyleName(0, i, "brown");
 			headerTable.getCellFormatter().setAlignment(0, i,

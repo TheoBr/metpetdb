@@ -13,51 +13,33 @@ import edu.rpi.metpetdb.client.model.properties.Property;
  */
 public abstract class Column<RowType extends MObject, ColType> extends AbstractColumnDefinition<RowType, ColType>{
 
-	private String title;
+	private Object header;
 	protected Property<RowType> property;
-	private boolean sortable;
 	
-	public Column(final String title) {
-		this(title, null, true);
-	}
-	
-	public Column(final String title, final Property<RowType> property) {
-		this(title, property, true);
+	public Column(Object header) {
+		this(header, null);
 	}
 
 	/**
 	 * Creates a column for use in a paginated table
 	 * 
-	 * @param title
+	 * @param header
 	 * 		the header
 	 * @param property
 	 * 		the property
-	 * @param sortable
-	 * 		whether it can be sorted
 	 */
-	public Column(final String title, final Property<RowType> property,
-			final boolean sortable) {
-		this.title = title;
-		this.sortable = sortable;
+	public Column(Object header, final Property<RowType> property) {
+		this.header = header;
 		this.property = property;
-	}
-
-	/**
-	 * Whether this column is allowed to be sorted
-	 * 
-	 * @return true if it can be sorted
-	 */
-	public boolean isSortable() {
-		return this.sortable;
 	}
 
 	/**
 	 * The title is the column headers
 	 * 
-	 * @return the title
+	 * @return the header
 	 */
-	public String getTitle() {
-		return this.title;
+	public Object getHeader() {
+		return this.header;
 	}
 
 	/**
@@ -81,10 +63,13 @@ public abstract class Column<RowType extends MObject, ColType> extends AbstractC
 	public void handleClickEvent(final RowType data, final int row) {
 
 	}
+	
+	public ColType getCellTooltipValue(final RowType rowValue) {
+		return getCellValue(rowValue);
+	}
 
 	@Override
 	public abstract ColType getCellValue(final RowType rowValue);
-
 
 	@Override
 	public void setCellValue(RowType rowValue, ColType cellValue) {

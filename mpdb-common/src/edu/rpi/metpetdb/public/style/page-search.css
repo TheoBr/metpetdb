@@ -301,7 +301,7 @@
 	padding-right: 7px;
 	text-align: right;
 }
-.search-prov li {
+.search-prov .access li {
 	display: inline;
 	margin-right: 10px;
 }

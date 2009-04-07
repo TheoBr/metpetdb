@@ -6,8 +6,9 @@ import edu.rpi.metpetdb.client.model.properties.Property;
 public class StringColumn<RowType extends MObject> extends
 		Column<RowType, String> {
 
-	public StringColumn(String title, Property<RowType> property) {
-		super(title, property);
+
+	public StringColumn(Object header, Property<RowType> property) {
+		super(header, property);
 	}
 
 	@Override
