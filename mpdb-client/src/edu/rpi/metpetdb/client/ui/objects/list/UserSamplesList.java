@@ -238,11 +238,6 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 					for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++)
 						((MCheckBox) list.getScrollTable().getDataTable().getWidget(i, 0)).setChecked(true);
 				}
-				new Timer() {
-					public void run() {
-						selectListBox.setSelectedIndex(0);						
-					}
-				}.schedule(500);
 			}
 		});
 
