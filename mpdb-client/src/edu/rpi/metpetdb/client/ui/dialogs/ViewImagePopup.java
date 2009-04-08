@@ -39,6 +39,28 @@ public class ViewImagePopup extends MDialogBox implements ClickListener,
 		close.addStyleName("lbCloseLink");
 		ft = new FlexTable();
 		displayImage = image;
+		
+		//resize the image if it exceeds the size of the browser window
+		int imageHeight = displayImage.getHeight();
+		int imageWidth = displayImage.getWidth();
+		int screenHeight = Window.getClientHeight() - 100; //allow extra room for close button, etc.
+		int screenWidth = Window.getClientWidth() - 50;
+		
+		if(imageHeight > screenHeight || imageWidth > screenWidth){
+			double imageMultiplier;
+			//compare ratios to figure out which one needs to be the multiplier used for scaling
+			//e.g. if imageWidth is much bigger than screenWidth, imageWidth will be resized to fit the screen
+			//     and imageHeight will be multiplied by the same ratio
+			if(((double) imageHeight / (double) screenHeight) > ((double) imageWidth / (double) screenWidth)){
+				imageMultiplier = 1.0 / ((double) imageHeight / (double) screenHeight);
+			}
+			else{ 
+				imageMultiplier = 1.0 / ((double) imageWidth / (double) screenWidth);
+			}
+			displayImage.setSize(((int) (imageWidth * imageMultiplier)) + "px",
+					((int) (imageHeight * imageMultiplier)) + "px");
+		}
+		
 		index = indexStart;
 		Image currentImage = (Image) images.get(index);
 		imageTitle = new Label(parseFilename(currentImage.getFilename()));
