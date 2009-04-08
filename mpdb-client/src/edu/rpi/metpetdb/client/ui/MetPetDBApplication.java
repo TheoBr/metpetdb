@@ -301,10 +301,10 @@ public class MetPetDBApplication implements EntryPoint {
 	private void createHdrNav() {
 		hdrnav.setAutoOpen(true);
 
-		final MMenuBar projects = new MMenuBar(true);
-		projects.addItem("My Projects", TokenSpace.allProjects);
-		projects.addItem(LocaleHandler.lc_text.projectsMenu_NewProject(),
-				TokenSpace.newProject);
+//		final MMenuBar projects = new MMenuBar(true);
+//		projects.addItem("My Projects", TokenSpace.allProjects);
+//		projects.addItem(LocaleHandler.lc_text.projectsMenu_NewProject(),
+//				TokenSpace.newProject);
 
 		final MMenuBar dev = new MMenuBar(true);
 		dev.addItem("Regenerate Constraints", new Command() {
@@ -348,7 +348,7 @@ public class MetPetDBApplication implements EntryPoint {
 		});
 
 		hdrnav.addItem("My Samples", TokenSpace.samplesForUser);
-		hdrnav.addItem(LocaleHandler.lc_text.projectMenu(), projects);
+//		hdrnav.addItem(LocaleHandler.lc_text.projectMenu(), projects);
 		hdrnav.addItem("Search", TokenSpace.search);
 		hdrnav.addItem("Upload Data", TokenSpace.bulkUpload);
 		hdrnav.addItem("Wiki", new Command() {
