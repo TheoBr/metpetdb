@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -32,14 +33,15 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 		public FlyOutItem parent;
 		public FlowPanel fp = new FlowPanel();
 		public MPartialCheckBox cb;
-		public FlyOutItem(final T parent){
-			obj = parent;
+		public FlyOutItem(final FlyOutItem parent, final T value){
+			this.parent = parent;
+			obj = value;
 			final HorizontalPanel hp = new HorizontalPanel();
 			children = new HashSet();
-			cb = new MPartialCheckBox(parent.toString());
+			cb = new MPartialCheckBox(value.toString());
 			hp.add(cb);
-			if (parent.getChildren() != null
-					&& parent.getChildren().size() > 0) {
+			if (value.getChildren() != null
+					&& value.getChildren().size() > 0) {
 				final Label lb = new Label(">>");
 				hp.add(lb);
 			}					
@@ -49,6 +51,20 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 
 				}
 				public void onMouseEnter(final Widget sender){	
+					final int currentIndex = container.getWidgetIndex(sender.getParent());
+					for (int i = container.getWidgetCount()-1; i > currentIndex; i--) {
+						((FlowPanel) container.getWidget(i)).clear();
+						container.remove(i);
+					}
+					//figure out where to add filler box
+					final int height = sender.getAbsoluteTop()-sender.getParent().getAbsoluteTop();
+					final int width = sender.getOffsetWidth();
+					
+					final AbsolutePanel filler = new AbsolutePanel();
+					filler.setSize(width + "px", height + "px");
+					fp.add(filler);
+					
+					//add children to display
 					Iterator<FlyOutItem> itr = children.iterator();
 					while (itr.hasNext()){
 						fp.add(itr.next());
@@ -59,10 +75,10 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 					
 				}
 				public void onMouseLeave(final Widget sender){
-					container.remove(fp);
+
 				}
-				public void onMouseMove(final Widget sender, final int x, final int y){
-					
+				public void onMouseMove(final Widget sender, int x, int y){
+
 				}
 			});
 			this.addClickListener(this);
@@ -81,7 +97,15 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 		}
 		
 		public void onClick(final Widget sender){
+			if (cb.getState() == MPartialCheckBox.checked) {
+				selectedWidgets.add(this);
+				selectedItems.add(obj);
+			} else if (selectedWidgets.contains(this)){
+					selectedWidgets.remove(this);
+					selectedItems.remove(obj);
+			}
 			checkChildren(this, cb.getState());
+			checkParents(this.parent, cb.getState());
 		}
 		
 	}
@@ -153,7 +177,16 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 		Iterator<T> itr = parent.getChildren().iterator();
 		while (itr.hasNext()){
 			final T child = itr.next();
-			final FlyOutItem fo2 = new FlyOutItem(child);
+			final FlyOutItem fo2 = new FlyOutItem(fo,child);
+			if (get(obj) != null && get(obj).contains(child)
+					|| contains(get(obj), child)){
+				fo2.setState(MPartialCheckBox.checked);
+				selectedWidgets.add(fo2);
+				selectedItems.add(fo2.obj);
+				if (fo.getState() == MPartialCheckBox.unchecked){
+					fo.setState(MPartialCheckBox.partiallyChecked);
+				}
+			}
 			if (child.getChildren() != null
 					&& child.getChildren().size() > 0) {
 				makeChildren(fo2, child, obj);
@@ -167,13 +200,13 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 			Iterator<T> itr = parents.iterator();
 			while (itr.hasNext()) {
 				final T parent = itr.next();
-				final FlyOutItem fo= new FlyOutItem(parent);
-//				if (get(obj) != null && get(obj).contains(parent)
-//						|| contains(get(obj), parent)) {
-//					cb.setChecked(true);
-//					selectedItems.add(parent);
-//					selectedWidgets.add(cb);
-//				}
+				final FlyOutItem fo= new FlyOutItem(null,parent);
+				if (get(obj) != null && get(obj).contains(parent)
+						|| contains(get(obj), parent)) {
+					fo.setState(MPartialCheckBox.checked);
+					selectedWidgets.add(fo);
+					selectedItems.add(fo.obj);
+				}
 				if (parent.getChildren() != null && parent.getChildren().size() > 0) {
 					makeChildren(fo,parent, obj);
 				} 
@@ -191,15 +224,60 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 			while(itr.hasNext()){
 				FlyOutItem fo = itr.next();
 				fo.setState(state);
-				if (state == 2){
+				if (state == MPartialCheckBox.checked){
 					selectedWidgets.add(fo);
 					selectedItems.add(fo.obj);
-				} else if (state == 0){
+				} else if (state == MPartialCheckBox.unchecked){
 					selectedWidgets.remove(fo);
 					selectedItems.remove(fo.obj);
 				}
 				checkChildren(fo, state);
 			}
+		}
+	}
+	
+	private void checkParents(final FlyOutItem parent,
+			final int state) {
+		if (parent != null){
+			Iterator<FlyOutItem> itr = parent.children.iterator();
+			if (state == MPartialCheckBox.checked){
+				boolean allSelected = true;
+				while(itr.hasNext()){
+					FlyOutItem fo = itr.next();
+					int childState = fo.getState();
+					if (childState == MPartialCheckBox.partiallyChecked || childState == MPartialCheckBox.unchecked){
+						allSelected = false;
+						parent.cb.setState(MPartialCheckBox.partiallyChecked);
+						if (selectedWidgets.contains(parent)){
+							selectedWidgets.remove(parent);
+							selectedItems.remove(parent.obj);
+						}
+					}
+				}
+				if (allSelected){
+					parent.cb.setState(MPartialCheckBox.checked);
+					selectedWidgets.add(parent);
+					selectedItems.add(parent.obj);
+				}
+			} else if (state == MPartialCheckBox.unchecked){
+				if (selectedWidgets.contains(parent)){
+					selectedWidgets.remove(parent);
+					selectedItems.remove(parent.obj);
+				}
+				boolean anySelected = false;
+				while(itr.hasNext()){
+					FlyOutItem fo = itr.next();
+					int childState = fo.getState();
+					if (childState == MPartialCheckBox.partiallyChecked || childState == MPartialCheckBox.checked){
+						anySelected = true;
+						parent.cb.setState(MPartialCheckBox.partiallyChecked);
+					}
+				}
+				if (!anySelected){
+					parent.cb.setState(MPartialCheckBox.unchecked);
+				}
+			}
+			checkParents(parent.parent, state);
 		}
 	}
 
@@ -266,6 +344,20 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 				mSet(obj, c);
 		} else {
 			mSet(obj, v);
+		}
+	}
+	
+	public void addClickListener(final ClickListener c){
+		for (int i = 0; i < ((FlowPanel)container.getWidget(0)).getWidgetCount(); i++){
+			((FlyOutItem)((FlowPanel)container.getWidget(0)).getWidget(i)).addClickListener(c);
+			addClickListenerRecursive(((FlyOutItem)((FlowPanel)container.getWidget(0)).getWidget(i)),c);
+		}
+	}
+	
+	private void addClickListenerRecursive(final FlyOutItem parent, final ClickListener c){
+		for (FlyOutItem child : parent.children){
+			child.addClickListener(c);
+			addClickListenerRecursive(child,c);
 		}
 	}
 

@@ -19,6 +19,7 @@ import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.HasValues;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 import edu.rpi.metpetdb.client.ui.input.WizardDialog;
+import edu.rpi.metpetdb.client.ui.input.attributes.FlyOutAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TreeAttribute;
 
@@ -26,7 +27,7 @@ public class SearchMineralsAttribute extends SearchGenericAttribute implements C
 
 	private MObject obj;
 	private GenericAttribute ga;
-	private TreeAttribute tree;
+	private FlyOutAttribute tree;
 	private WizardDialog dialog;
 
 	private DetailsPanel p_mineral;
@@ -43,7 +44,7 @@ public class SearchMineralsAttribute extends SearchGenericAttribute implements C
 	}
 	public SearchMineralsAttribute(final PropertyConstraint mc, int maxMinerals) {
 		super(mc);
-		tree = new TreeAttribute(mc, 4, maxMinerals);
+		tree = new FlyOutAttribute(mc, 4, maxMinerals);
 	}
 
 	public Widget[] createDisplayWidget(final MObject obj) {
@@ -55,12 +56,7 @@ public class SearchMineralsAttribute extends SearchGenericAttribute implements C
 	public Widget[] createEditWidget(final MObject obj, final String id,
 			final GenericAttribute ga) {		
 		Widget [] ws = tree.createEditWidget(obj, id, ga);
-		ArrayList<Tree> trees = tree.getTree();
-		for (Tree t: trees){
-			for(Widget w: t){
-				((CheckBox)w).addClickListener(this);
-			}
-		}
+		tree.addClickListener(this);
 		return ws;
 	}
 

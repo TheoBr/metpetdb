@@ -7,6 +7,10 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class MPartialCheckBox extends FocusPanel implements ClickListener{
+	public static final int unchecked = 0;
+	public static final int partiallyChecked = 1;
+	public static final int checked = 2;
+	
 	private int state = 0; // 0 = unchecked, 1 = partial check, 2 = checked
 	private Label statelbl;
 	private Label text;
@@ -21,7 +25,7 @@ public class MPartialCheckBox extends FocusPanel implements ClickListener{
 		hp.add(statelbl);
 		hp.add(this.text);
 		add(hp);
-		setState(0);
+		setState(unchecked);
 		this.setStyleName("inline");
 		this.addClickListener(this);
 	}
@@ -31,13 +35,13 @@ public class MPartialCheckBox extends FocusPanel implements ClickListener{
 	}
 	
 	public void setState(final int state){
-		if (state >= 0 && state < 3){
+		if (state >= unchecked && state <= checked){
 			this.state = state;
-			if (state == 0){
+			if (state == unchecked){
 				statelbl.setText("0");
-			} else if (state == 1){
+			} else if (state == partiallyChecked){
 				statelbl.setText("1");
-			} else if (state == 2){
+			} else if (state == MPartialCheckBox.checked){
 				statelbl.setText("2");
 			} 
 		}
@@ -48,12 +52,12 @@ public class MPartialCheckBox extends FocusPanel implements ClickListener{
 	}
 	
 	public void onClick (final Widget sender){
-		if (state == 0){
-			setState(2);
-		} else if (state == 2){
-			setState(0);
-		} else if (state == 1){
-			setState(1);
+		if (state == unchecked){
+			setState(checked);
+		} else if (state == checked){
+			setState(unchecked);
+		} else if (state == partiallyChecked){
+			setState(unchecked);
 		}
 	}
 }
