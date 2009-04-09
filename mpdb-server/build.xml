@@ -82,8 +82,8 @@
 		<mkdir dir="${mpdb-common-dir}/docs/api" />
 		<javadoc sourcepath="src:../mpdb-server/src:../mpdb-client/src:../mpdb-common/src" 
 			splitindex="true" use="true" version="true" destdir="${mpdb-common-dir}/docs/api" 
-			packagenames="*" access="private" author="true"
-			classpathref="compile-libs">
+			packagenames="*" access="package" author="true"
+			classpathref="compile-libs" windowtitle="MetPetDB Documentation">
 			
 		</javadoc >
 	</target>
