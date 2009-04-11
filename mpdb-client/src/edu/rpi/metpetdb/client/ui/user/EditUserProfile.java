@@ -53,7 +53,7 @@ public class EditUserProfile extends MPagePanel implements UsesCurrentUser {
 			new TextAttribute(MpDb.doc.User_country),
 			new TextAttribute(MpDb.doc.User_postalCode), 
 			new TextAttribute(MpDb.doc.User_institution), 
-			new TextAttribute(MpDb.doc.User_referenceEmail)
+			new TextAttribute(MpDb.doc.User_referenceEmail),
 		};
 		private final User u;
 		private final DetailsPanel<User> p_main;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
@@ -25,11 +26,13 @@ import edu.rpi.metpetdb.client.ui.widgets.paging.XrayColumn;
  * @author anthony
  * 
  */
-public abstract class ImageListViewer extends ImageBrowserImageList {
+public abstract class ImageListViewer extends List<Image> {
 
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
-
+	private static ArrayList<Column<Image, ?>> columns;
 	static {
+		// copy the columns from the image browser
+		columns = new ArrayList<Column<Image, ?>>(ImageBrowserImageList.columns);
 		columns.add(new StringColumn<Image>(enttxt.Image_collector(),
 				ImageProperty.collector));
 		columns.add(new XrayColumn(enttxt.XrayImage_current(),
@@ -61,11 +64,21 @@ public abstract class ImageListViewer extends ImageBrowserImageList {
 	}
 
 	public ImageListViewer() {
-		super();
+		super(columns);
 		// we have to first change the selection policy in order to prevent
 		// an error when their are checkboxes/radio buttons
 		dataTable.setSelectionPolicy(SelectionPolicy.ONE_ROW);
 		dataTable.setSelectionEnabled(false);
+	}
+
+	@Override
+	public String getDefaultSortParameter() {
+		return "filename";
+	}
+
+	@Override
+	protected Widget getNoResultsWidget() {
+		return new Label("No Image Results");
 	}
 
 }

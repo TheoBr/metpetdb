@@ -151,7 +151,11 @@ public class SampleDetails extends MPagePanel {
 		};
 		final OnEnterPanel.ObjectEditor oep = new OnEnterPanel.ObjectEditor(
 				p_sample);
-		map = new MapWidget();
+		try {
+			map = new MapWidget();
+		} catch (Exception e) {
+			//ignore any expections from google about the map
+		}
 		oep.setStylePrimaryName("sd-details");
 		oep.addStyleName("mpdb-dataTable");
 		oep.addStyleName("inline");

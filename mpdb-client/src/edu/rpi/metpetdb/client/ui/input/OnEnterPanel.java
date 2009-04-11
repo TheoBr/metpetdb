@@ -3,7 +3,7 @@ package edu.rpi.metpetdb.client.ui.input;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.ui.widgets.MSimplePanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MSimplePanel;
 
 public abstract class OnEnterPanel extends MSimplePanel implements
 		KeyboardListener {

@@ -26,7 +26,8 @@ public class MCollapsedText extends Label {
 		String textTruncated = textFull;
 		if(textTruncated.length() > truncLength){
 			addMouseListener(new TooltipListener(tooltipData==null?"":tooltipData, timeout, "dialogBox-content"));
-			textTruncated = textTruncated.substring(0, truncLength - 3);
+			if (truncLength - 3 > textTruncated.length())
+				textTruncated = textTruncated.substring(0, truncLength - 3);
 			textTruncated += "...";
 		}
 		setText(textTruncated);

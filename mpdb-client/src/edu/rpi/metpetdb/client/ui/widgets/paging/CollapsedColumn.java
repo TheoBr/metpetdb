@@ -22,7 +22,8 @@ public class CollapsedColumn<RowType extends MObject> extends MultipleColumn<Row
 	public MCollapsedText getCellValue(RowType rowValue) {
 		if (method == TruncateMethod.CHAR_COUNT)
 			return new MCollapsedText(getCellContents(rowValue), truncLength);
-		return new MCollapsedText(getCellContents(rowValue), getItemsLength(rowValue,truncLength));
+		else
+			return new MCollapsedText(getCellContents(rowValue), getItemsLength(rowValue,truncLength));
 	}
 	
 	public void setTruncateOptions(TruncateMethod m, int len) {

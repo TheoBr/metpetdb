@@ -71,7 +71,7 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 	 * How we sort by default (true means ascending, false is descending)
 	 */
 	private static final boolean DEFAULT_SORT_ORDER = true;
-	private PagingScrollTable<RowType> scrollTable;
+	protected PagingScrollTable<RowType> scrollTable;
 
 	public PagingScrollTable<RowType> getScrollTable() {
 		return scrollTable;
@@ -265,8 +265,8 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 		// Setup sortable/unsortable columns
 		scrollTable.setSortPolicy(SortPolicy.MULTI_CELL);
 		scrollTable.setColumnResizePolicy(ColumnResizePolicy.SINGLE_CELL);
-		scrollTable.setResizePolicy(ResizePolicy.FILL_WIDTH);
-		scrollTable.setScrollPolicy(ScrollPolicy.DISABLED);
+		scrollTable.setResizePolicy(ResizePolicy.UNCONSTRAINED);
+		scrollTable.setScrollPolicy(ScrollPolicy.HORIZONTAL);
 		
 		dataTable.setSelectionPolicy(SelectionPolicy.CHECKBOX);
 

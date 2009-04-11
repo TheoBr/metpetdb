@@ -18,12 +18,11 @@ public abstract class ImageBrowserImageList extends List<Image> {
 
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
-	protected static ArrayList<Column<Image, ?>> columns;
+	public static ArrayList<Column<Image, ?>> columns;
 	static {
 		columns = new ArrayList<Column<Image, ?>>();
-		
-		columns.add(new Column<Image, com.google.gwt.user.client.ui.Image>(
-				"") {
+
+		columns.add(new Column<Image, com.google.gwt.user.client.ui.Image>("") {
 			@Override
 			public com.google.gwt.user.client.ui.Image getCellValue(
 					Image rowValue) {

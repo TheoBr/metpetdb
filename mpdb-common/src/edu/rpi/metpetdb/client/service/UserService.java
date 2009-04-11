@@ -151,7 +151,7 @@ public interface UserService extends RemoteService {
 	
 	public Results<RoleChange> getSponsorRoleChanges(int sponsorId,PaginationParameters p) throws MpDbException;
 	
-	public void approveRoleChange(RoleChange rc) throws MpDbException;
-	public void denyRoleChange(RoleChange rc) throws MpDbException;
+	public void approveRoleChange(RoleChange rc) throws MpDbException, UnableToSendEmailException;
+	public void denyRoleChange(RoleChange rc) throws MpDbException, UnableToSendEmailException;
 }
 

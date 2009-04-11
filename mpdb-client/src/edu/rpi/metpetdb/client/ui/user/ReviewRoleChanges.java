@@ -2,7 +2,6 @@ package edu.rpi.metpetdb.client.ui.user;
 
 import java.util.ArrayList;
 
-import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -47,8 +46,8 @@ public class ReviewRoleChanges extends List<RoleChange> {
 		columns.add(new StringColumn<RoleChange>(enttxt.RoleChange_requestReason(),
 				RoleChangeProperty.requestReason));
 		columns.add(new Column<RoleChange, FlowPanel>(enttxt.RoleChange_grant()) {
-			//TODO remove the row when confirmating a grant
 			@Override
+			//TODO grant/deny reasons
 			public FlowPanel getCellValue(final RoleChange rowValue) {
 				//
 				final FlowPanel actions = new FlowPanel();
@@ -60,6 +59,8 @@ public class ReviewRoleChanges extends List<RoleChange> {
 							}
 							@Override
 							public void onSuccess() {
+								actions.clear();
+								actions.add(new Label("Processed"));
 							}
 						}.begin();
 					}
@@ -72,6 +73,8 @@ public class ReviewRoleChanges extends List<RoleChange> {
 							}
 							@Override
 							public void onSuccess() {
+								actions.clear();
+								actions.add(new Label("Processed"));
 							}
 						}.begin();
 					}

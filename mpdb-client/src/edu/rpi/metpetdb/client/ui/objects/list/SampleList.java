@@ -5,9 +5,9 @@ import java.util.Set;
 
 import org.postgis.Point;
 
+import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
@@ -15,16 +15,13 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.User;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.TooltipListener;
 import edu.rpi.metpetdb.client.ui.widgets.paging.CollapsedColumn;
 import edu.rpi.metpetdb.client.ui.widgets.paging.Column;
-import edu.rpi.metpetdb.client.ui.widgets.paging.MultipleStringColumn;
 import edu.rpi.metpetdb.client.ui.widgets.paging.StringColumn;
 import edu.rpi.metpetdb.client.ui.widgets.paging.CollapsedColumn.TruncateMethod;
 
@@ -36,24 +33,9 @@ public abstract class SampleList extends List<Sample> {
 	static {
 		columns = new ArrayList<Column<Sample, ?>>();
 		
-		// checkbox (for row selection)
-		{
-			Column col = new Column<Sample, MCheckBox>(" ") {
-				@Override
-				public MCheckBox getCellValue(Sample rowValue) {
-					return new MCheckBox(rowValue);
-				}
-			};
-			col.setColumnSortable(false);
-			col.setMaximumColumnWidth(20);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(20);
-			columns.add(col);
-		}
-		
 		// sample name (link to sample details)
 		{
-			Column col = new Column<Sample, MLink>(enttxt.Sample_number(),
+			Column<Sample, MLink> col = new Column<Sample, MLink>(enttxt.Sample_number(),
 					SampleProperty.number) {
 				@Override
 				public MLink getCellValue(Sample rowValue) {
@@ -69,7 +51,7 @@ public abstract class SampleList extends List<Sample> {
 		
 		// info icon (click to get sample info popup)
 		{
-			Column col = new Column<Sample, Image>("", null){
+			Column<Sample, Image> col = new Column<Sample, Image>("", null){
 				@Override
 				public Image getCellValue(final Sample rowValue) {
 					Image infoImage = new Image("images/icon-info-small.png"){
@@ -94,7 +76,7 @@ public abstract class SampleList extends List<Sample> {
 		
 		// public or private
 		{
-			Column col = new Column<Sample, Image>(enttxt.Sample_publicData(),
+			Column<Sample, Image> col = new Column<Sample, Image>(enttxt.Sample_publicData(),
 					SampleProperty.publicData) {
 				public Image getCellValue(Sample rowValue) {
 					if ((Boolean) rowValue.mGet(SampleProperty.publicData)) {
@@ -126,7 +108,7 @@ public abstract class SampleList extends List<Sample> {
 		{
 			Image img = new Image("images/icon-subsample.png");
 			img.getElement().setAttribute("alt", "Subsamples");
-			StringColumn col = new StringColumn<Sample>(img, SampleProperty.subsampleCount);
+			StringColumn<Sample> col = new StringColumn<Sample>(img, SampleProperty.subsampleCount);
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(20);
@@ -137,7 +119,7 @@ public abstract class SampleList extends List<Sample> {
 		{
 			Image img = new Image("images/icon-image.png");
 			img.getElement().setAttribute("alt", "Images");
-			StringColumn col = new StringColumn<Sample>(img, SampleProperty.imageCount);
+			StringColumn<Sample> col = new StringColumn<Sample>(img, SampleProperty.imageCount);
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(20);
@@ -148,7 +130,7 @@ public abstract class SampleList extends List<Sample> {
 		{
 			Image img = new Image("images/icon-chemical-analysis.png");
 			img.getElement().setAttribute("alt", "Chemical Analyses");
-			StringColumn col = new StringColumn<Sample>(img, SampleProperty.analysisCount);
+			StringColumn<Sample> col = new StringColumn<Sample>(img, SampleProperty.analysisCount);
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(20);
@@ -157,7 +139,7 @@ public abstract class SampleList extends List<Sample> {
 		
 		// owner (link to owner profile)
 		{
-			Column col = new Column<Sample, MLink>(enttxt.Sample_owner(),
+			Column<Sample, MLink> col = new Column<Sample, MLink>(enttxt.Sample_owner(),
 					SampleProperty.owner) {
 				public MLink getCellValue(final Sample rowValue) {
 					return new MLink(((User) rowValue.mGet(SampleProperty.owner))
@@ -173,7 +155,7 @@ public abstract class SampleList extends List<Sample> {
 		
 		// regions
 		{
-			CollapsedColumn col = new CollapsedColumn<Sample>(enttxt.Sample_regions(),
+			CollapsedColumn<Sample> col = new CollapsedColumn<Sample>(enttxt.Sample_regions(),
 					SampleProperty.regions);
 			col.setTruncateOptions(TruncateMethod.ITEM_COUNT, 3);
 			col.setColumnSortable(true);
@@ -184,7 +166,7 @@ public abstract class SampleList extends List<Sample> {
 		
 		// country
 		{
-			StringColumn col = new StringColumn<Sample>(enttxt.Sample_country(),
+			StringColumn<Sample> col = new StringColumn<Sample>(enttxt.Sample_country(),
 					SampleProperty.country);
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
@@ -194,7 +176,7 @@ public abstract class SampleList extends List<Sample> {
 
 		// rock type
 		{
-			StringColumn col = new StringColumn<Sample>(enttxt.Sample_rockType(),
+			StringColumn<Sample> col = new StringColumn<Sample>(enttxt.Sample_rockType(),
 					SampleProperty.rockType);
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
@@ -204,7 +186,7 @@ public abstract class SampleList extends List<Sample> {
 		
 		// metamorphic grades
 		{
-			CollapsedColumn col = new CollapsedColumn<Sample>(enttxt
+			CollapsedColumn<Sample> col = new CollapsedColumn<Sample>(enttxt
 					.Sample_metamorphicGrades(), SampleProperty.metamorphicGrades);
 			col.setTruncateOptions(TruncateMethod.ITEM_COUNT, 2);
 			col.setColumnSortable(true);
@@ -215,11 +197,11 @@ public abstract class SampleList extends List<Sample> {
 		
 		// minerals
 		{
-			CollapsedColumn col = new CollapsedColumn<Sample>(enttxt.Sample_minerals(),
+			CollapsedColumn<Sample> col = new CollapsedColumn<Sample>(enttxt.Sample_minerals(),
 					SampleProperty.minerals){
 				@Override
 				protected String getCellContents(Sample data) {
-					Set<SampleMineral> minerals = ((Set<SampleMineral>) data.mGet(SampleProperty.minerals));
+					Set<SampleMineral> minerals = data.getMinerals();
 					String text = "";
 					for (SampleMineral m : minerals){
 						if (m.getAmount() > 0) {
@@ -245,7 +227,7 @@ public abstract class SampleList extends List<Sample> {
 		
 		// references
 		{
-			CollapsedColumn col = new CollapsedColumn<Sample>(
+			CollapsedColumn<Sample> col = new CollapsedColumn<Sample>(
 					enttxt.Sample_references(), SampleProperty.references);
 			col.setTruncateOptions(TruncateMethod.ITEM_COUNT, 3);
 			col.setColumnSortable(true);
@@ -256,7 +238,7 @@ public abstract class SampleList extends List<Sample> {
 		
 		// lat/long
 		{
-			StringColumn col = new StringColumn<Sample>("Long/Lat",
+			StringColumn<Sample> col = new StringColumn<Sample>("Long/Lat",
 					SampleProperty.location) {
 				@Override
 				public String getCellValue(Sample rowValue) {
@@ -280,7 +262,7 @@ public abstract class SampleList extends List<Sample> {
 
 		// SESAR number (link to sample details)
 		{
-			Column col = new Column<Sample, MLink>(enttxt.Sample_sesarNumber(),
+			Column<Sample, MLink> col = new Column<Sample, MLink>(enttxt.Sample_sesarNumber(),
 					SampleProperty.sesarNumber) {
 				@Override
 				public MLink getCellValue(final Sample rowValue) {
@@ -297,7 +279,7 @@ public abstract class SampleList extends List<Sample> {
 		
 		// collector
 		{
-			StringColumn col = new StringColumn<Sample>(enttxt.Sample_collector(),
+			StringColumn<Sample> col = new StringColumn<Sample>(enttxt.Sample_collector(),
 					SampleProperty.collector);
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
@@ -307,7 +289,7 @@ public abstract class SampleList extends List<Sample> {
 		
 		// collection date
 		{
-			StringColumn col = new StringColumn<Sample>(enttxt.Sample_collectionDate(),
+			StringColumn<Sample> col = new StringColumn<Sample>(enttxt.Sample_collectionDate(),
 					SampleProperty.collectionDate) {
 				@Override
 				public String getCellValue(Sample rowValue) {
@@ -326,7 +308,7 @@ public abstract class SampleList extends List<Sample> {
 		
 		// current location
 		{
-			StringColumn col = new StringColumn<Sample>(enttxt.Sample_locationText(),
+			StringColumn<Sample> col = new StringColumn<Sample>(enttxt.Sample_locationText(),
 					SampleProperty.locationText);
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
@@ -338,6 +320,8 @@ public abstract class SampleList extends List<Sample> {
 
 	public SampleList() {
 		super(columns);
+		dataTable.setSelectionPolicy(SelectionPolicy.CHECKBOX);
+		dataTable.setSelectionEnabled(true);
 	}
 
 	@Override
@@ -355,7 +339,7 @@ public abstract class SampleList extends List<Sample> {
 	private static String processTooltipData(Sample data){
 		String tooltipData = "<table class=\"info\" cellspacing=\"0\"><tbody>";
 		
-		for(Column c: columns){	
+		for(Column<Sample, ?> c: columns){	
 			
 			if(c.getHeader() == "") {
 				continue;

@@ -284,7 +284,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 						rc.getSponsor().toString(),
 						rc.getUser().toString(),
 						getModuleBaseURL() + "#ConfirmRoleChange/"
-								+ rc.getId()
+								+ rc.getSponsor().getId()
 				});
 		return rc;
 	}
@@ -297,7 +297,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return new UserDAO(currentSession()).getSponsorRoleChanges(sponsorId, p);
 	}
 
-	public void approveRoleChange(RoleChange rc) throws MpDbException {
+	public void approveRoleChange(RoleChange rc) throws MpDbException, UnableToSendEmailException {
 		rc.setGranted(true);
 		final UserDAO uDAO = new UserDAO(currentSession());
 		rc.setUser(uDAO.fill(rc.getUser()));
@@ -305,11 +305,25 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		new UserDAO(currentSession()).save(rc.getUser());
 		new RoleChangeDAO(currentSession()).save(rc);
 		commit();
+		//send approval message
+		EmailSupport.sendMessage(this, rc.getUser().getEmailAddress(),
+				"roleChangeApproved", new Object[] {
+						rc.getUser().toString(),
+						rc.getSponsor().toString(),
+						rc.getGrantReason()
+				});
 	}
 
-	public void denyRoleChange(RoleChange rc) throws MpDbException {
+	public void denyRoleChange(RoleChange rc) throws MpDbException, UnableToSendEmailException {
 		rc.setGranted(false);
 		new RoleChangeDAO(currentSession()).save(rc);
 		commit();
+		//send denial message
+		EmailSupport.sendMessage(this, rc.getUser().getEmailAddress(),
+				"roleChangeDenied", new Object[] {
+						rc.getUser().toString(),
+						rc.getSponsor().toString(),
+						rc.getGrantReason()
+				});
 	}
 }
