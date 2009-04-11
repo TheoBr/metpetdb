@@ -6,13 +6,19 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MouseListener;
+import com.google.gwt.user.client.ui.PushButton;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.interfaces.HasChildren;
@@ -20,84 +26,122 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MPartialCheckBox;
+import edu.rpi.metpetdb.client.ui.widgets.MPartialCheckBox.CheckedState;
 
+/**
+ * 
+ * @author goldfd, lindez
+ * 
+ * The FlyOutAttribute widget is used when the user needs to select items in a 
+ * static tree structure, such as the list of searchable minerals. The widget is 
+ * composed of FlyOutItems, each having a checkbox, value, and a possible "more" 
+ * button which can be clicked to show the children of that item.
+ *
+ * @param <T>
+ */
 public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 		implements ClickListener {
 	private HorizontalPanel container;
 	
-	public class FlyOutItem extends FocusPanel implements ClickListener{
+	public class FlyOutItem extends FlowPanel implements ClickListener {
 		public T obj;
 		public Set<FlyOutItem> children;
 		public FlyOutItem parent;
-		public FlowPanel fp = new FlowPanel();
+		public FlowPanel fp = new FlowPanel(){
+			@Override
+			public void clear() {
+				for (int i=0; i<this.getWidgetCount(); i++) {
+					((FlyOutItem) this.getWidget(i)).setMoreButtonDown(false);
+				}
+				super.clear();
+			}
+		};
 		public MPartialCheckBox cb;
+		private ToggleButton moreBtn;
+		
 		public FlyOutItem(final FlyOutItem parent, final T value){
 			this.parent = parent;
+			setStyleName("flyout-item");
 			obj = value;
-			final HorizontalPanel hp = new HorizontalPanel();
 			children = new HashSet();
 			cb = new MPartialCheckBox(value.toString());
-			hp.add(cb);
-			if (value.getChildren() != null
-					&& value.getChildren().size() > 0) {
-				final Label lb = new Label(">>");
-				hp.add(lb);
-			}					
-			add(hp);
-			this.addMouseListener(new MouseListener(){
-				public void onMouseUp(final Widget sender, final int x, final int y){
-
-				}
-				public void onMouseEnter(final Widget sender){	
-					final int currentIndex = container.getWidgetIndex(sender.getParent());
-					for (int i = container.getWidgetCount()-1; i > currentIndex; i--) {
-						((FlowPanel) container.getWidget(i)).clear();
-						container.remove(i);
+			cb.addClickListener(this);
+			add(cb);
+			if (value.getChildren() != null && value.getChildren().size() > 0) {
+				moreBtn = new ToggleButton(
+						new Image(GWT.getModuleBaseURL() + "/images/icon-flyout-more-up.png"),
+						new Image(GWT.getModuleBaseURL() + "/images/icon-flyout-more-down.png"),
+						new ClickListener() {
+					public void onClick(Widget sender) {
+						Widget item = sender.getParent();
+						
+						// clear flyout lists further down the line
+						final int currentIndex = container.getWidgetIndex(item.getParent());
+						for (int i = container.getWidgetCount()-1; i > currentIndex; i--) {
+							((FlowPanel) container.getWidget(i)).clear();
+							container.remove(i);
+						}
+						
+						if (moreBtn.isDown()) {
+							// reset sibling moreBtns
+							final int siblingCount = ((FlowPanel) item.getParent()).getWidgetCount();
+							final int myIndex = ((FlowPanel) item.getParent()).getWidgetIndex(item);
+							for (int i=0; i<siblingCount; i++) {
+								if (i!=myIndex) {
+									((FlyOutItem) ((FlowPanel) item.getParent()).getWidget(i)).setMoreButtonDown(false);
+								}
+							}
+							
+							//add children to display
+							Iterator<FlyOutItem> itr = children.iterator();
+							while (itr.hasNext()){
+								fp.add(itr.next());
+							}
+							fp.setStyleName("flyout-list");
+							container.add(fp);
+							
+							// position flyout list at correct height
+							final int offset = item.getAbsoluteTop()-container.getAbsoluteTop()-11;
+							DOM.setStyleAttribute(fp.getElement(), "marginTop", offset+"px");
+						}
 					}
-					//figure out where to add filler box
-					final int height = sender.getAbsoluteTop()-sender.getParent().getAbsoluteTop();
-					final int width = sender.getOffsetWidth();
-					
-					final AbsolutePanel filler = new AbsolutePanel();
-					filler.setSize(width + "px", height + "px");
-					fp.add(filler);
-					
-					//add children to display
-					Iterator<FlyOutItem> itr = children.iterator();
-					while (itr.hasNext()){
-						fp.add(itr.next());
-					}
-					container.add(fp);
-				}
-				public void onMouseDown(final Widget sender, final int x, final int y){
-					
-				}
-				public void onMouseLeave(final Widget sender){
-
-				}
-				public void onMouseMove(final Widget sender, int x, int y){
-
-				}
-			});
-			this.addClickListener(this);
+				});
+				moreBtn.setStyleName("morebutton");
+				add(moreBtn);
+			}
 		}
 		
 		public void addChild(final FlyOutItem fo){
 			children.add(fo);
 		}
 		
-		public void setState(final int state){
+		public void setState(final CheckedState state){
 			cb.setState(state);
 		}
 		
-		public int getState(){
+		public CheckedState getState(){
 			return cb.getState();
 		}
 		
+		public MPartialCheckBox getCheckBox() {
+			return cb;
+		}
+		
+		/**
+		 * Set the More button down. Used mostly to reset sibling
+		 * buttons when another button is pressed.
+		 * @param down
+		 */
+		public void setMoreButtonDown(boolean down) {
+			if (moreBtn != null)
+				moreBtn.setDown(down);
+		}
+		
 		public void onClick(final Widget sender){
-			if (cb.getState() == MPartialCheckBox.checked) {
+			if (cb.getState() == CheckedState.CHECKED) {
 				selectedWidgets.add(this);
 				selectedItems.add(obj);
 			} else if (selectedWidgets.contains(this)){
@@ -116,17 +160,30 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 	private final ArrayList<Widget> trees;
 	private final int maxSelectable;
 
+	/**
+	 * Creates a FlyOutAttribute with no children
+	 * @param pc
+	 * @param i
+	 */
 	public FlyOutAttribute(final PropertyConstraint pc, final int i) {
 		this(pc, i, 0);
 	}
 
+	/**
+	 * Creates a FlyOutAttribute
+	 * @param pc
+	 * @param i
+	 * @param maxSelectable
+	 */
 	public FlyOutAttribute(final PropertyConstraint pc, final int i,
 			final int maxSelectable) {
 		super(pc);
 		container = new HorizontalPanel();
+		container.setStyleName("flyout");
 		trees = new ArrayList<Widget>();
 		this.maxSelectable = maxSelectable;
 	}
+	
 	public ArrayList<?> getSelectedWidgets() {
 		return selectedWidgets;
 	}
@@ -180,11 +237,11 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 			final FlyOutItem fo2 = new FlyOutItem(fo,child);
 			if (get(obj) != null && get(obj).contains(child)
 					|| contains(get(obj), child)){
-				fo2.setState(MPartialCheckBox.checked);
+				fo2.setState(CheckedState.CHECKED);
 				selectedWidgets.add(fo2);
 				selectedItems.add(fo2.obj);
-				if (fo.getState() == MPartialCheckBox.unchecked){
-					fo.setState(MPartialCheckBox.partiallyChecked);
+				if (fo.getState() == CheckedState.UNCHECKED){
+					fo.setState(CheckedState.PARTIALLY_CHECKED);
 				}
 			}
 			if (child.getChildren() != null
@@ -203,7 +260,7 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 				final FlyOutItem fo= new FlyOutItem(null,parent);
 				if (get(obj) != null && get(obj).contains(parent)
 						|| contains(get(obj), parent)) {
-					fo.setState(MPartialCheckBox.checked);
+					fo.setState(CheckedState.CHECKED);
 					selectedWidgets.add(fo);
 					selectedItems.add(fo.obj);
 				}
@@ -213,21 +270,21 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 				fp.add(fo);				
 			}
 		}
-		fp.setStyleName("inline");
+		fp.setStyleName("flyout-parents");
 		return fp;
 	}
 
 	private void checkChildren(final FlyOutItem parent,
-			final int state) {
+			final CheckedState state) {
 		if (maxSelectable > 1 || maxSelectable == 0) {
 			Iterator<FlyOutItem> itr = parent.children.iterator();
 			while(itr.hasNext()){
 				FlyOutItem fo = itr.next();
 				fo.setState(state);
-				if (state == MPartialCheckBox.checked){
+				if (state == CheckedState.CHECKED){
 					selectedWidgets.add(fo);
 					selectedItems.add(fo.obj);
-				} else if (state == MPartialCheckBox.unchecked){
+				} else if (state == CheckedState.UNCHECKED){
 					selectedWidgets.remove(fo);
 					selectedItems.remove(fo.obj);
 				}
@@ -237,17 +294,17 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 	}
 	
 	private void checkParents(final FlyOutItem parent,
-			final int state) {
+			final CheckedState state) {
 		if (parent != null){
 			Iterator<FlyOutItem> itr = parent.children.iterator();
-			if (state == MPartialCheckBox.checked){
+			if (state == CheckedState.CHECKED){
 				boolean allSelected = true;
 				while(itr.hasNext()){
 					FlyOutItem fo = itr.next();
-					int childState = fo.getState();
-					if (childState == MPartialCheckBox.partiallyChecked || childState == MPartialCheckBox.unchecked){
+					CheckedState childState = fo.getState();
+					if (childState == CheckedState.PARTIALLY_CHECKED || childState == CheckedState.UNCHECKED){
 						allSelected = false;
-						parent.cb.setState(MPartialCheckBox.partiallyChecked);
+						parent.cb.setState(CheckedState.PARTIALLY_CHECKED);
 						if (selectedWidgets.contains(parent)){
 							selectedWidgets.remove(parent);
 							selectedItems.remove(parent.obj);
@@ -255,11 +312,11 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 					}
 				}
 				if (allSelected){
-					parent.cb.setState(MPartialCheckBox.checked);
+					parent.cb.setState(CheckedState.CHECKED);
 					selectedWidgets.add(parent);
 					selectedItems.add(parent.obj);
 				}
-			} else if (state == MPartialCheckBox.unchecked){
+			} else if (state == CheckedState.UNCHECKED){
 				if (selectedWidgets.contains(parent)){
 					selectedWidgets.remove(parent);
 					selectedItems.remove(parent.obj);
@@ -267,14 +324,14 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 				boolean anySelected = false;
 				while(itr.hasNext()){
 					FlyOutItem fo = itr.next();
-					int childState = fo.getState();
-					if (childState == MPartialCheckBox.partiallyChecked || childState == MPartialCheckBox.checked){
+					CheckedState childState = fo.getState();
+					if (childState == CheckedState.PARTIALLY_CHECKED || childState == CheckedState.CHECKED){
 						anySelected = true;
-						parent.cb.setState(MPartialCheckBox.partiallyChecked);
+						parent.cb.setState(CheckedState.PARTIALLY_CHECKED);
 					}
 				}
 				if (!anySelected){
-					parent.cb.setState(MPartialCheckBox.unchecked);
+					parent.cb.setState(CheckedState.UNCHECKED);
 				}
 			}
 			checkParents(parent.parent, state);
@@ -349,14 +406,14 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 	
 	public void addClickListener(final ClickListener c){
 		for (int i = 0; i < ((FlowPanel)container.getWidget(0)).getWidgetCount(); i++){
-			((FlyOutItem)((FlowPanel)container.getWidget(0)).getWidget(i)).addClickListener(c);
+			((FlyOutItem)((FlowPanel)container.getWidget(0)).getWidget(i)).getCheckBox().addClickListener(c);
 			addClickListenerRecursive(((FlyOutItem)((FlowPanel)container.getWidget(0)).getWidget(i)),c);
 		}
 	}
 	
 	private void addClickListenerRecursive(final FlyOutItem parent, final ClickListener c){
 		for (FlyOutItem child : parent.children){
-			child.addClickListener(c);
+			child.getCheckBox().addClickListener(c);
 			addClickListenerRecursive(child,c);
 		}
 	}

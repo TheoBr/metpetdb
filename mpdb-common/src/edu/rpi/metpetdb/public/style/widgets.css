@@ -225,7 +225,19 @@
 	color: #fff; 
 }
 
-
+/*-------------------------------------
+            partial checkbox
+ --------------------------------------*/
+.mpcheckbox,
+.mpcheckbox .checkbox-img {
+	display: inline;
+} 
+.mpcheckbox .checkbox-img {
+	margin-right: 4px;
+}
+.mpcheckbox .label {
+	cursor: default;
+}
 
 /*-------------------------------------
                  random
