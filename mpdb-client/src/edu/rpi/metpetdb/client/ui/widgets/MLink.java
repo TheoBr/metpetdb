@@ -21,10 +21,14 @@ public class MLink extends Widget implements HasText, SourcesClickEvents, Source
 	private MouseListenerCollection mouseListeners;
 	private boolean usePureHref = false;
 
-	public MLink() {
+	public MLink(String text) {
 		setElement(DOM.createAnchor());
 		sinkEvents(Event.ONCLICK);
 		sinkEvents(Event.MOUSEEVENTS);
+		setText(text);
+	}
+	public MLink() {
+		this("");
 	}
 	
 	public MLink(final String text, final TokenHandler whereTo) {

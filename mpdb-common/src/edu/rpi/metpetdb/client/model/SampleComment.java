@@ -51,6 +51,15 @@ public class SampleComment extends Comment implements HasSample, HasOwner {
 			return new Timestamp((new Date()).getTime());
 		return dateAdded;
 	}
+	
+	public String getDateAddedDisplay() {
+		int day = getDateAdded().getDay();
+		int month = getDateAdded().getMonth();
+		int year = getDateAdded().getYear();
+		int hour = getDateAdded().getHours();
+		int min = getDateAdded().getMinutes();
+		return month + "/" + day + "/" + year + " " + hour + ":" + min;
+	}
 
 	public void setDateAdded(Timestamp dateAdded) {
 		this.dateAdded = dateAdded;

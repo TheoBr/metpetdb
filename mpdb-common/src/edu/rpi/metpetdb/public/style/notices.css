@@ -1,3 +1,46 @@
+
+/*-------------------------------------
+				Notices
+---------------------------------------*/
+
+.notice-panel .notice-message {
+	padding: 6px 9px;
+}
+.notice-panel .notice-hide {
+	float: right;
+	padding: 6px 7px 6px 2px;
+}
+.notice-panel .notice {
+	border: 1px solid #EFEFEF;
+	color: #000;
+}
+.notice-panel .notice-success {
+	border-color: #cbee95;
+	border-bottom-color: #bee0a2;
+	color: #3B5C20;
+}
+.notice-panel .notice-error, 
+.notice-panel .notice-disabled, 
+.notice-panel .notice-urgent {
+	border-color: #ffd2d2;
+	border-bottom-color: #ffb3a1;
+	color: #c41616;
+}
+.notice-panel .notice-working {
+	border-color: #cde3f3;
+	border-bottom-color: #a2c6de;
+	color: #617684;
+}
+.notice-panel .notice-warning {
+	border-color:#FFF1D2;
+	border-bottom-color:#FFC446;
+	color: #BC6600;
+}
+.notice-urgent:hover {
+	color:red;
+}
+
+
 /*-------------------------------------
     confirm account (to enable it)
  --------------------------------------*/

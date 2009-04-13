@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.postgis.Point;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.maps.client.InfoWindowContent;
 import com.google.gwt.maps.client.MapType;
 import com.google.gwt.maps.client.MapWidget;
@@ -21,8 +22,11 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
@@ -54,8 +58,11 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.RegionAttribu
 import edu.rpi.metpetdb.client.ui.objects.list.SubsampleListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarth;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
+import edu.rpi.metpetdb.client.ui.widgets.MNotice;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MNoticePanel;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MNoticePanel.NoticeType;
 
 public class SampleDetails extends MPagePanel {
 	private LatLng samplePosition;
@@ -63,6 +70,8 @@ public class SampleDetails extends MPagePanel {
 	private MTwoColPanel panel = new MTwoColPanel();
 	private boolean geInit = false;
 	private FlowPanel commentsContainer = new FlowPanel();
+	private TextArea commentBox;
+	private MNoticePanel commentNotice;
 
 	private static GenericAttribute[] sampleAtts = {
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
@@ -215,116 +224,188 @@ public class SampleDetails extends MPagePanel {
 		this.add(subsamples_ft);
 
 	}
-
-	public void addComments() {
-		final Label commentsHeader = new Label(LocaleHandler.lc_text.comments());
-		final TextArea newComment = new TextArea();
-		final Button submit = new Button(LocaleHandler.lc_text.buttonSubmit());
-		final MLink cancel = new MLink("Clear", new ClickListener(){
-			public void onClick(final Widget sender){
-				newComment.setText("");
+	
+	private void addCommentsModule() {
+		final HTMLPanel commentPanel = new HTMLPanel(
+				"<h2>"+LocaleHandler.lc_text.comments()+"</h2>" +
+				"<div id=\"comments-notice\"></div>" +
+				"<div id=\"comments-container\"></div>" +
+				"<div class=\"comment-form\">" +
+				"<h4>Add Comment</h4>" +
+				"<span id=\"comment-form-textarea\"></span>" +
+				"<span id=\"comment-form-submit\"></span>" +
+				"<span id=\"comment-form-clear\"></span>" +
+				"</div>"
+		);
+		commentBox = new TextArea();
+		Button submit = new Button(LocaleHandler.lc_text.buttonSubmit());
+		submit.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				final SampleComment comment = new SampleComment();
+				comment.setOwner(MpDb.currentUser());
+				comment.setText(commentBox.getText());
+				comment.setSample(sample);
+				addNewComment(comment);
 			}
 		});
-		final SampleComment comment = new SampleComment();
-		submit.addClickListener(new ClickListener(){
-			public void onClick(final Widget sender){
-				new ServerOp<SampleComment>() {
-					public void begin() {				
-						comment.setOwner(MpDb.currentUser());
-						comment.setText(newComment.getText());
-						comment.setSample(sample);
-						MpDb.sampleComment_svc.save(comment, this);
-					}
-
-					public void onSuccess(SampleComment result) {
-						commentsContainer.clear();
-						addComments();
-					}
-				}.begin();
+		final MLink clear = new MLink("Clear", new ClickListener(){
+			public void onClick(Widget sender){
+				commentBox.setText("");
 			}
 		});
+		commentNotice = new MNoticePanel();
+		commentsContainer.setStyleName("comment-list");
+		commentPanel.addAndReplaceElement(commentNotice, "comments-notice");
+		commentPanel.addAndReplaceElement(commentsContainer, "comments-container");
+		commentPanel.addAndReplaceElement(commentBox, "comment-form-textarea");
+		commentPanel.addAndReplaceElement(submit, "comment-form-submit");
+		commentPanel.addAndReplaceElement(clear, "comment-form-clear");
+		commentPanel.setStyleName("comments");
+		add(commentPanel);
+	}
+	
+	private void addNewComment(final SampleComment comment) {
+		new ServerOp<SampleComment>() {
+			public void begin() {				
+				MpDb.sampleComment_svc.save(comment, this);
+			}
 
-		commentsContainer.add(commentsHeader);
-		commentsContainer.add(newComment);
-		commentsContainer.add(submit);
-		commentsContainer.add(cancel);
-		
+			public void onSuccess(SampleComment result) {
+				commentsContainer.add(new SampleCommentPanel(result));
+				commentBox.setText("");
+				commentNotice.hide();
+			}
+		}.begin();
+	}
+
+	private void populateComments() {
 		new ServerOp<List<SampleComment>>() {
 			public void begin() {
 				MpDb.sampleComment_svc.all(sampleId, this);
 			}
 
 			public void onSuccess(List<SampleComment> result) {
-				for (SampleComment sc : result)					
-					commentsContainer.insert(createCommentContainer(sc),1);
+				commentsContainer.clear();
+				commentNotice.hide();
+				if (result.isEmpty()) {
+					Label empty = new Label("No comments yet.");
+					empty.setStyleName(CSS.NULLSET);
+					commentsContainer.add(empty);
+				} else {
+					for (SampleComment sc : result)
+						commentsContainer.add(new SampleCommentPanel(sc));
+				}
+			}
+			
+			public void onFailure(final Throwable e) {
+				super.onFailure(e);
+				commentNotice.sendNotice(NoticeType.ERROR, "Sorry, could not load comments at this time.");
 			}
 		}.begin();
 	}
 	
-	private Widget createCommentContainer(final SampleComment sc){
-		final FlowPanel individualContainer = new FlowPanel();
-		final Label ownerName = new Label(sc.getOwnerName());
-		final Label commentText = new Label(sc.getText());
+	protected class SampleCommentPanel extends FlowPanel implements ClickListener {
+		private SampleComment comment;
 		
-		final MLink deleteComment = new MLink("Delete", new ClickListener(){
-			public void onClick(final Widget sender){
+		private HTML authorLine = new HTML();
+		private Image trash = new Image(GWT.getModuleBaseURL() + "/images/icon-trash-small.png");
+		private HTML body = new HTML();
+		
+		private MLink editLink = new MLink("Edit");
+		private FlowPanel editPanel = new FlowPanel();
+		private TextArea editTextArea = new TextArea();
+		private Button editSubmit = new Button(LocaleHandler.lc_text.buttonSubmit());
+		private MLink editCancel = new MLink("Cancel");
+		
+		private boolean isCommentOwner;
+		private boolean isSampleOwnerComment;
+		private boolean canDelete;
+		
+		protected SampleCommentPanel(final SampleComment sc) {
+			this.comment = sc;
+			isCommentOwner = MpDb.currentUser().getId() == sc.getOwner().getId();
+			isSampleOwnerComment = sc.getOwner().getId() == sample.getOwner().getId();
+			canDelete = isCommentOwner || MpDb.currentUser().getId() == sample.getOwner().getId();
+			setStyleName("comment");
+			
+			if (isSampleOwnerComment) {
+				authorLine.setHTML("<strong>" + sc.getOwnerName() + "</strong>" +
+						" <span>" + sc.getDateAddedDisplay() + "</span>");
+			} else {
+				authorLine.setHTML(sc.getOwnerName() +
+						" <span>" + sc.getDateAddedDisplay() + "</span>");
+			}
+			authorLine.setStyleName("author");
+			add(authorLine);
+			
+			body.setHTML(sc.getText());
+			body.setStyleName("body");
+			body.setVisible(true);
+			add(body);
+			
+			if (isCommentOwner) {
+				editLink.addClickListener(this);
+				editLink.setVisible(true);
+				editLink.setStyleName("edit");
+				add(editLink);
+				
+				editPanel.add(editTextArea);
+				
+				editSubmit.addClickListener(this);
+				editPanel.add(editSubmit);
+				
+				editCancel.addClickListener(this);
+				editPanel.add(editCancel);
+				
+				editPanel.setStyleName("edit-panel");
+				editPanel.setVisible(false);
+				add(editPanel);
+			}
+			
+			if (canDelete) {
+				trash.setStyleName("trash");
+				trash.addClickListener(this);
+				add(trash);
+			}
+			
+		}
+		
+		private void editMode(boolean edit) {
+			body.setVisible(!edit);
+			editLink.setVisible(!edit);
+			editPanel.setVisible(edit);
+		}
+		
+		public void onClick(Widget sender){
+			if (sender == trash) {
 				new ServerOp<Object>() {
 					public void begin() {
-						MpDb.sampleComment_svc.delete(sc.getId(), this);
+						MpDb.sampleComment_svc.delete(comment.getId(), this);
 					}
-
+	
 					public void onSuccess(Object result) {
-						commentsContainer.remove(individualContainer);
+						commentsContainer.remove(trash.getParent());
 					}
 				}.begin();
-			}
-		});
-		final MLink editComment = new MLink();
-		editComment.setText("Edit");
-		editComment.addClickListener(new ClickListener(){
-			public void onClick(final Widget sender){
-				final TextArea editText = new TextArea();
-				editText.setText(commentText.getText());
-				final Button submit = new Button(LocaleHandler.lc_text.buttonSubmit());
-				final MLink cancel = new MLink("Cancel", new ClickListener(){
-					public void onClick(final Widget sender){
-						commentsContainer.clear();
-						addComments();		
+			} else if (sender == editSubmit) {
+				new ServerOp<SampleComment>() {
+					public void begin() {
+						comment.setText(editTextArea.getText());
+						MpDb.sampleComment_svc.save(comment, this);
 					}
-				});
-				submit.addClickListener(new ClickListener(){
-					public void onClick(final Widget sender){
-						new ServerOp<SampleComment>() {
-							public void begin() {
-								sc.setText(editText.getText());
-								MpDb.sampleComment_svc.save(sc, this);
-							}
 
-							public void onSuccess(SampleComment result) {
-								commentsContainer.clear();
-								addComments();	
-							}
-						}.begin();
+					public void onSuccess(SampleComment result) {
+						body.setHTML(result.getText());
+						editMode(false);
 					}
-				});
-				individualContainer.clear();
-				individualContainer.add(ownerName);
-				individualContainer.add(editText);
-				individualContainer.add(submit);
-				individualContainer.add(cancel);
+				}.begin();
+			} else if (sender == editLink) {
+				editTextArea.setText(comment.getText());
+				editMode(true);
+			} else if (sender == editCancel) {
+				editMode(false);
 			}
-		});
-		
-		individualContainer.add(ownerName);
-		individualContainer.add(commentText);
-		if (MpDb.currentUser().getId() == sc.getOwner().getId()){
-			individualContainer.add(editComment);
-			individualContainer.add(deleteComment);
 		}
-		if (MpDb.currentUser().getId() == sample.getOwner().getId()){
-			individualContainer.add(deleteComment);
-		}
-		return individualContainer;
 	}
 
 	private void addGoogleMaps() {
@@ -391,8 +472,8 @@ public class SampleDetails extends MPagePanel {
 		sampleId = id;
 		p_sample.load();
 		addExtraElements();
-		add(commentsContainer);
-		addComments();
+		addCommentsModule();
+		populateComments();
 		addGoogleMaps();
 		return this;
 	}
