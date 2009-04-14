@@ -1,0 +1,33 @@
+.scrolltable {
+	margin: 10px;
+}
+.scrolltable-topbar {
+	background-color: #d5dcf0;
+	border: 1px solid #b6c2e3;
+	border-bottom: none;
+	padding: 5px;
+	-moz-border-radius-topleft: 7px;
+	-moz-border-radius-topright: 7px;
+}
+.scrolltable-topbar .right-col {
+	text-align: right;
+}
+.scrolltable-topbar .pagination,
+.scrolltable-topbar .perpage {
+	display: inline;
+}
+.scrolltable-topbar .perpage {
+	margin-right: 1em;
+}
+.scrolltable-topbar .pagination img {
+	vertical-align: middle;
+	margin: 0 1px;
+}
+.scrolltable-topbar .pagination input {
+	margin: 0 3px 0 5px;
+	width: 2em;
+	text-align: right;
+}
+.scrolltable-topbar .pagination span {
+	margin-right: 5px;
+}

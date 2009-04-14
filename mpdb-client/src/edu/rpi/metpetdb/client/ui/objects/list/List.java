@@ -33,13 +33,16 @@ import com.google.gwt.gen2.table.override.client.HTMLTable.RowFormatter;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SourcesTableEvents;
 import com.google.gwt.user.client.ui.TableListener;
 import com.google.gwt.user.client.ui.TextBox;
@@ -50,6 +53,8 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.widgets.paging.Column;
+import edu.rpi.metpetdb.client.ui.widgets.paging.MPagingOptions;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
 
 /**
  * An abstract class that pieces together the different parts for creating a
@@ -61,11 +66,12 @@ import edu.rpi.metpetdb.client.ui.widgets.paging.Column;
  *            the types of objects that will be paginated in this table
  */
 public abstract class List<RowType extends MObject> extends FlowPanel {
-	private int pageSize = 10;
+	private int pageSize = 25;
 	private final static long millisecondsIn30Days = 2592000000L;
 	private final static String pageSizeCookie = "pageSize";
 	private PaginationParameters currentPagination;
 	private PaginationParameters oldPagination;
+	private final String STYLENAME = "scrolltable";
 
 	/**
 	 * How we sort by default (true means ascending, false is descending)
@@ -86,11 +92,13 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 	private MpDbTableModel tableModel;
 	protected FixedWidthGrid dataTable;
 	private FixedWidthFlexTable headerTable;
+	private MTwoColPanel topbar;
+	private ListBox pageSizeChoice;
 
 	/**
 	 * The table model that is used to draw the table
 	 * 
-	 * @author anthony
+	 * @author anthony, zakness
 	 * 
 	 */
 	public class MpDbTableModel extends TableModel<RowType> {
@@ -219,37 +227,21 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 	public List(final ArrayList<Column<RowType, ?>> columns) {
 		this.originalColumns = columns;
 		this.displayColumns = columns;
-
+		setStylePrimaryName(STYLENAME);
+		
+		// table model contains the data
 		tableModel = new MpDbTableModel();
-		dataTable = new FixedWidthGrid();
-		headerTable = new FixedWidthFlexTable();
-		final DefaultTableDefinition<RowType> tableDefinition = new DefaultTableDefinition<RowType>();
-		for (Column<RowType, ?> c : columns) {
-			tableDefinition.addColumnDefinition(c);
-		}
-		scrollTable = new PagingScrollTable<RowType>(tableModel, dataTable,
-				headerTable, tableDefinition) {
-			public void reloadPage() {
-				for (int i = 0; i < scrollTable.getDataTable().getRowCount(); i++) {
-					scrollTable.getDataTable().getRowFormatter()
-							.removeStyleName(i, "highlighted-row");
-				}
-				super.reloadPage();
-			}
-		};
-
-		final FixedWidthGridBulkRenderer<RowType> bulkRenderer = new FixedWidthGridBulkRenderer<RowType>(
-				dataTable, scrollTable);
-		dataTable.resize(pageSize, columns.size());
-		scrollTable.setBulkRenderer(bulkRenderer);
-		scrollTable.setHeight("400px");
-
-		scrollTable.setEmptyTableWidget(getNoResultsWidget());
-		PagingOptions options = new PagingOptions(scrollTable);
-
-		scrollTable.setPageSize(loadPageSizeCookie());
 		tableModel.setRowCount(1);
-
+		
+		// data table is the table widget
+		dataTable = new FixedWidthGrid();
+		dataTable.resize(pageSize, columns.size());
+		dataTable.setSelectionPolicy(SelectionPolicy.CHECKBOX);
+		dataTable.setSelectionEnabled(false);
+		dataTable.addStyleName("mpdb-dataTable");
+		
+		// first row of column headers
+		headerTable = new FixedWidthFlexTable();
 		for (int i = 0; i < displayColumns.size(); ++i) {
 			if (displayColumns.get(i).getHeader() instanceof String)
 				headerTable.setText(0, i, (String) displayColumns.get(i).getHeader());
@@ -261,104 +253,40 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 					HasHorizontalAlignment.ALIGN_LEFT,
 					HasVerticalAlignment.ALIGN_MIDDLE);
 		}
-
-		// Setup sortable/unsortable columns
+		headerTable.getRowFormatter().addStyleName(0, "mpdb-dataTablePink");
+		
+		// scroll table brings it all together
+		final DefaultTableDefinition<RowType> tableDefinition = new DefaultTableDefinition<RowType>();
+		for (Column<RowType, ?> c : columns) {
+			tableDefinition.addColumnDefinition(c);
+		}
+		scrollTable = new PagingScrollTable<RowType>(tableModel, dataTable,
+				headerTable, tableDefinition);
+		final FixedWidthGridBulkRenderer<RowType> bulkRenderer = new FixedWidthGridBulkRenderer<RowType>(
+				dataTable, scrollTable);
+		scrollTable.setBulkRenderer(bulkRenderer);
+		scrollTable.setHeight("400px");
+		scrollTable.setEmptyTableWidget(getNoResultsWidget());
+		scrollTable.setPageSize(loadPageSizeCookie());
 		scrollTable.setSortPolicy(SortPolicy.MULTI_CELL);
 		scrollTable.setColumnResizePolicy(ColumnResizePolicy.SINGLE_CELL);
 		scrollTable.setResizePolicy(ResizePolicy.UNCONSTRAINED);
 		scrollTable.setScrollPolicy(ScrollPolicy.HORIZONTAL);
 		
-		dataTable.setSelectionPolicy(SelectionPolicy.CHECKBOX);
-
-		// dataTable.addTableListener(new TableListener() {
-		//
-		// public void onCellClicked(SourcesTableEvents sender, int row,
-		// int cell) {
-		//				
-		// displayColumns.get(cell).handleClickEvent(
-		// (MObject) scrollTable.getRowValue(row), row);
-		//
-		// }
-		//
-		// });
-
-		// TODO special row highlight/unlight events and row select/unselect
-		// events
-		dataTable.addRowHighlightHandler(new RowHighlightHandler() {
-
-			public void onRowHighlight(RowHighlightEvent event) {
-				// TODO zak: this is called when the user hovers over a row
-				if (event.getValue().getRowIndex() < dataTable.getRowCount())
-					dataTable.getRowFormatter().getElement(
-							event.getValue().getRowIndex()).getStyle()
-							.setProperty("backgroundColor", "orange");
-			}
-
-		});
-
-		dataTable.addRowUnhighlightHandler(new RowUnhighlightHandler() {
-
-			public void onRowUnhighlight(RowUnhighlightEvent event) {
-				if (event.getValue().getRowIndex() < dataTable.getRowCount()) {
-					if (!dataTable.getSelectedRows().contains(
-							event.getValue().getRowIndex()))
-						dataTable.getRowFormatter().getElement(
-								event.getValue().getRowIndex()).getStyle()
-								.setProperty("backgroundColor", "white");
-					else {
-						dataTable.getRowFormatter().getElement(
-								event.getValue().getRowIndex()).getStyle()
-								.setProperty("backgroundColor", "pink");
-					}
-				}
-			}
-
-		});
-
-		dataTable.addRowSelectionHandler(new RowSelectionHandler() {
-
-			public void onRowSelection(RowSelectionEvent event) {
-				// TODO zak: called when a row is selected (multiple can be
-				// selected)
-				for (Row r : event.getSelectedRows()) {
-					dataTable.getRowFormatter().getElement(r.getRowIndex())
-							.getStyle().setProperty("backgroundColor", "pink");
-				}
-
-				for (Row r : event.getDeselectedRows()) {
-					dataTable.getRowFormatter().getElement(r.getRowIndex())
-							.getStyle().setProperty("backgroundColor", "white");
-				}
-			}
-
-		});
-		dataTable.setSelectionPolicy(SelectionPolicy.ONE_ROW);
-		dataTable.setSelectionEnabled(false);
-
-		final Label pageSizeLabel = new Label("Results Per Page:");
-		final TextBox pageSizeTxt = new TextBox();
-		pageSizeTxt.setWidth("30px");
-		pageSizeTxt.setText(String.valueOf(pageSize));
-		final Button pageSizeBtn = new Button("Set");
-		pageSizeBtn.setStyleName("smallBtn");
-		pageSizeTxt.addKeyboardListener(new KeyboardListener() {
-			public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-				if (keyCode == KeyboardListener.KEY_ENTER)
-					try {
-						setPageSize(Integer.parseInt(pageSizeTxt.getText()));
-					} catch (Exception e) {
-
-					} finally {
-
-					}
-			}
-			public void onKeyDown(Widget sender, char keyCode, int modifiers) {}
-			public void onKeyUp(Widget sender, char keyCode, int modifiers) {}
-		});
-		pageSizeBtn.addClickListener(new ClickListener() {
-			public void onClick(final Widget sender) {
+		// topbar contains pagination and column options
+		topbar = new MTwoColPanel();
+		topbar.addStyleName(STYLENAME + "-topbar");
+		
+		final HTMLPanel perPagePanel = new HTMLPanel(
+			"Show <span id=\"perpage-choice\"></span> per page."
+		);
+		pageSizeChoice = new ListBox();
+		String[] choices = {"25", "50", "100"};
+		setPageSizeChoices(choices);
+		pageSizeChoice.addChangeListener(new ChangeListener() {
+			public void onChange(Widget sender) {
 				try {
-					setPageSize(Integer.parseInt(pageSizeTxt.getText()));
+					setPageSize(Integer.parseInt(pageSizeChoice.getItemText(pageSizeChoice.getSelectedIndex())));
 				} catch (Exception e) {
 
 				} finally {
@@ -366,19 +294,15 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 				}
 			}
 		});
-		final HorizontalPanel hp = new HorizontalPanel();
-		hp.add(pageSizeLabel);
-		hp.add(pageSizeTxt);
-		hp.add(pageSizeBtn);
-		headerTable.getRowFormatter().addStyleName(0, "mpdb-dataTablePink");
-		dataTable.addStyleName("mpdb-dataTable");
-
-		hp.addStyleName("inline");
-		options.addStyleName("inline");
-
+		perPagePanel.addAndReplaceElement(pageSizeChoice, "perpage-choice");
+		perPagePanel.setStyleName("perpage");
+		topbar.getRightCol().add(perPagePanel);
+		
+		MPagingOptions options = new MPagingOptions(scrollTable);
+		topbar.getRightCol().add(options);
+	
+		add(topbar);
 		add(scrollTable);
-		add(options);
-		add(hp);
 	}
 	public void newView(ArrayList<Column> columns) {
 	// this.displayColumns = columns;
@@ -451,6 +375,13 @@ public abstract class List<RowType extends MObject> extends FlowPanel {
 		final Date expires = new Date();
 		expires.setTime(expires.getTime() + millisecondsIn30Days);
 		Cookies.setCookie(pageSizeCookie, String.valueOf(newPageSize), expires);
+	}
+	
+	public void setPageSizeChoices(String[] choices) {
+		pageSizeChoice.clear();
+		for (String choice : choices) {
+			pageSizeChoice.addItem(choice);
+		}
 	}
 
 	private int loadPageSizeCookie() {
