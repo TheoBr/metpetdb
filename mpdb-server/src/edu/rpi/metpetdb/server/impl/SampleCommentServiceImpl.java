@@ -1,10 +1,12 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.validation.TimeExpiredException;
 import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.service.SampleCommentService;
 import edu.rpi.metpetdb.server.MpDbServlet;
@@ -28,10 +30,13 @@ public class SampleCommentServiceImpl  extends MpDbServlet implements SampleComm
 	}
 	
 	public SampleComment save(SampleComment sampleComment) throws MpDbException,
-			ValidationException, LoginRequiredException {
+			ValidationException, LoginRequiredException, TimeExpiredException {
 		doc.validate(sampleComment);
+		final Date now = new Date();
+		if (now.getTime()>=(sampleComment.getDateAdded().getTime()+SampleComment.EDIT_TIMER)){
+			throw new TimeExpiredException();
+		}
 		sampleComment = (new SampleCommentDAO(this.currentSession())).save(sampleComment);
-
 		commit();
 		return (sampleComment);
 	}

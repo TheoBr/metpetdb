@@ -136,6 +136,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_InvalidLatitude(String field);
 	String errorTitle_UnexpectedError(String throwable);
 	String errorDesc_ValueNotInCollection(String property, String value, String collection);
+	String errorDesc_TimeExpired();
 
 	/* DAO Exceptions */
 	String errorDesc_ChemicalAnalysisAlreadyExists();

@@ -12,5 +12,7 @@ public interface MpDbGenericService extends RemoteService {
 	User getAutomaticLoginUser();
 
 	ResumeSessionResponse regenerateConstraints();
+	
+	long getCurrentTime();
 
 }

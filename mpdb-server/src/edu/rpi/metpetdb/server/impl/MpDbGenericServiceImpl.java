@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.server.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.Properties;
 
 import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
@@ -78,6 +79,11 @@ public class MpDbGenericServiceImpl extends MpDbServlet implements
 		r.databaseObjectConstraints = doc;
 		r.objectConstraints = oc;
 		return r;
+	}
+	
+	public long getCurrentTime(){
+		final Date now = new Date();
+		return now.getTime();
 	}
 
 }

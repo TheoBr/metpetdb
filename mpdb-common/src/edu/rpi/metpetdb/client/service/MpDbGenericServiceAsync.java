@@ -11,4 +11,6 @@ public interface MpDbGenericServiceAsync {
 	void getAutomaticLoginUser(AsyncCallback<User> ac);
 
 	void regenerateConstraints(AsyncCallback<ResumeSessionResponse> ac);
+	
+	void getCurrentTime(AsyncCallback<Long> ac);
 }

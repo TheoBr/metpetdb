@@ -72,6 +72,7 @@ public class SampleDetails extends MPagePanel {
 	private FlowPanel commentsContainer = new FlowPanel();
 	private TextArea commentBox;
 	private MNoticePanel commentNotice;
+	private Label empty = new Label("No comments yet.");
 
 	private static GenericAttribute[] sampleAtts = {
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
@@ -141,6 +142,7 @@ public class SampleDetails extends MPagePanel {
 			protected void onLoadCompletion(final Sample result) {
 				super.onLoadCompletion(result);
 				sample = result;
+				populateComments();
 				final String title;
 				if (result.getNumber() != null
 						|| !result.getNumber().equals(""))
@@ -253,6 +255,13 @@ public class SampleDetails extends MPagePanel {
 				commentBox.setText("");
 			}
 		});
+		if (!MpDb.isLoggedIn()){
+			commentBox.setText("You must be logged in to add comments");
+			commentBox.setEnabled(false);
+			clear.setVisible(false);
+			submit.setEnabled(false);
+		}
+		
 		commentNotice = new MNoticePanel();
 		commentsContainer.setStyleName("comment-list");
 		commentPanel.addAndReplaceElement(commentNotice, "comments-notice");
@@ -271,7 +280,10 @@ public class SampleDetails extends MPagePanel {
 			}
 
 			public void onSuccess(SampleComment result) {
-				commentsContainer.add(new SampleCommentPanel(result));
+				if (empty.getParent() != null){
+					commentsContainer.remove(empty);
+				}
+				commentsContainer.add(new SampleCommentPanel(result,true));
 				commentBox.setText("");
 				commentNotice.hide();
 			}
@@ -284,17 +296,26 @@ public class SampleDetails extends MPagePanel {
 				MpDb.sampleComment_svc.all(sampleId, this);
 			}
 
-			public void onSuccess(List<SampleComment> result) {
-				commentsContainer.clear();
-				commentNotice.hide();
-				if (result.isEmpty()) {
-					Label empty = new Label("No comments yet.");
-					empty.setStyleName(CSS.NULLSET);
-					commentsContainer.add(empty);
-				} else {
-					for (SampleComment sc : result)
-						commentsContainer.add(new SampleCommentPanel(sc));
-				}
+			public void onSuccess(final List<SampleComment> result) {
+				new ServerOp<Long>(){
+					public void begin(){
+						MpDb.mpdbGeneric_svc.getCurrentTime(this);
+					}
+					
+					public void onSuccess(Long now){
+						commentsContainer.clear();
+						commentNotice.hide();
+						if (result.isEmpty()) {				
+							empty.setStyleName(CSS.NULLSET);
+							commentsContainer.add(empty);
+						} else {
+							for (SampleComment sc : result){
+								final boolean isEditable = now<(sc.getDateAdded().getTime()+SampleComment.EDIT_TIMER);
+								commentsContainer.add(new SampleCommentPanel(sc, isEditable));
+							}
+						}
+					}
+				}.begin();
 			}
 			
 			public void onFailure(final Throwable e) {
@@ -321,7 +342,7 @@ public class SampleDetails extends MPagePanel {
 		private boolean isSampleOwnerComment;
 		private boolean canDelete;
 		
-		protected SampleCommentPanel(final SampleComment sc) {
+		protected SampleCommentPanel(final SampleComment sc, final boolean isEditable) {
 			this.comment = sc;
 			isCommentOwner = MpDb.currentUser().getId() == sc.getOwner().getId();
 			isSampleOwnerComment = sc.getOwner().getId() == sample.getOwner().getId();
@@ -351,7 +372,7 @@ public class SampleDetails extends MPagePanel {
 			body.setVisible(true);
 			add(body);
 			
-			if (isCommentOwner) {
+			if (isCommentOwner && isEditable) {
 				editLink.addClickListener(this);
 				editLink.setVisible(true);
 				editLink.setStyleName("edit");
@@ -393,6 +414,9 @@ public class SampleDetails extends MPagePanel {
 	
 					public void onSuccess(Object result) {
 						commentsContainer.remove(trash.getParent());
+						if(sample.getComments().size()==0){
+							commentsContainer.add(empty);
+						}
 					}
 				}.begin();
 			} else if (sender == editSubmit) {
@@ -481,7 +505,6 @@ public class SampleDetails extends MPagePanel {
 		p_sample.load();
 		addExtraElements();
 		addCommentsModule();
-		populateComments();
 		addGoogleMaps();
 		return this;
 	}

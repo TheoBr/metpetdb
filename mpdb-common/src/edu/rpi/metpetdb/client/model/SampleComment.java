@@ -9,10 +9,12 @@ import edu.rpi.metpetdb.client.model.interfaces.HasSample;
 public class SampleComment extends Comment implements HasSample, HasOwner {
 
 	private static final long serialVersionUID = 1L;
+	public static final long EDIT_TIMER = 15*60*1000; // 15 minutes
 	private Sample sample;
 	private User owner;
 	private String ownerName;
 	private Timestamp dateAdded;
+	
 	
 	public SampleComment() {
 		
@@ -58,7 +60,13 @@ public class SampleComment extends Comment implements HasSample, HasOwner {
 		int year = getDateAdded().getYear() + 1900;
 		int hour = getDateAdded().getHours();
 		int min = getDateAdded().getMinutes();
-		return month + "/" + day + "/" + year + " " + hour + ":" + min;
+		String minDisplay = String.valueOf(min);
+		if (min < 10 && min > 0){
+			minDisplay = "0"+min;
+		} else if (min == 0){
+			minDisplay = "00";
+		}
+		return month + "/" + day + "/" + year + " " + hour + ":" + minDisplay;
 	}
 
 	public void setDateAdded(Timestamp dateAdded) {
