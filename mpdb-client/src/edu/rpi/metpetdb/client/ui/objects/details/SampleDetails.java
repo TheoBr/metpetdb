@@ -329,7 +329,15 @@ public class SampleDetails extends MPagePanel {
 			setStyleName("comment");
 			
 			if (isSampleOwnerComment) {
-				authorLine.setHTML("<strong>" + sc.getOwnerName() + "</strong>" +
+				//if the sample comment isn't loaded from the database then
+				//sc.getOwnerName will be null
+				final String ownerName;
+				if (sc.getOwnerName() == null) {
+					ownerName = sc.getOwner() == null ? "" : sc.getOwner().getName();
+				} else {
+					ownerName = sc.getOwnerName();
+				}
+				authorLine.setHTML("<strong>" + ownerName + "</strong>" +
 						" <span>" + sc.getDateAddedDisplay() + "</span>");
 			} else {
 				authorLine.setHTML(sc.getOwnerName() +
