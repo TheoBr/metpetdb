@@ -349,19 +349,19 @@ public class SampleDetails extends MPagePanel {
 			canDelete = isCommentOwner || MpDb.currentUser().getId() == sample.getOwner().getId();
 			setStyleName("comment");
 			
+			//if the sample comment isn't loaded from the database then
+			//sc.getOwnerName will be null
+			final String ownerName;
+			if (sc.getOwnerName() == null) {
+				ownerName = sc.getOwner() == null ? "" : sc.getOwner().getName();
+			} else {
+				ownerName = sc.getOwnerName();
+			}
 			if (isSampleOwnerComment) {
-				//if the sample comment isn't loaded from the database then
-				//sc.getOwnerName will be null
-				final String ownerName;
-				if (sc.getOwnerName() == null) {
-					ownerName = sc.getOwner() == null ? "" : sc.getOwner().getName();
-				} else {
-					ownerName = sc.getOwnerName();
-				}
 				authorLine.setHTML("<strong>" + ownerName + "</strong>" +
 						" <span>" + sc.getDateAddedDisplay() + "</span>");
 			} else {
-				authorLine.setHTML(sc.getOwnerName() +
+				authorLine.setHTML(ownerName +
 						" <span>" + sc.getDateAddedDisplay() + "</span>");
 			}
 			authorLine.setStyleName("author");

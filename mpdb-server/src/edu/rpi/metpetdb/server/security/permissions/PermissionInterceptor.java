@@ -12,14 +12,15 @@ import org.hibernate.type.Type;
 
 import edu.rpi.metpetdb.client.error.security.AccountNotEnabledException;
 import edu.rpi.metpetdb.client.error.security.CannotCreateRoleChangeException;
-import edu.rpi.metpetdb.client.error.security.CannotLoadRoleChangeException;
 import edu.rpi.metpetdb.client.error.security.CannotLoadPrivateDataException;
 import edu.rpi.metpetdb.client.error.security.CannotLoadPublicDataException;
+import edu.rpi.metpetdb.client.error.security.CannotLoadRoleChangeException;
 import edu.rpi.metpetdb.client.error.security.CannotSaveDataException;
 import edu.rpi.metpetdb.client.error.security.NotOwnerException;
 import edu.rpi.metpetdb.client.error.security.UnableToModifyPublicDataException;
 import edu.rpi.metpetdb.client.model.RoleChange;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
@@ -55,7 +56,9 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	 */
 	private void checkOwner(Object entity, Object[] state,
 			String[] propertyNames, Collection<Principal> principals) {
-		if (entity instanceof HasOwner) {
+		//we don't really care about owners of sample comments,
+		//we do care about their owning object (sample) which we check for private/public
+		if (entity instanceof HasOwner && !(entity instanceof SampleComment)) {
 			if (!principals.contains(new OwnerPrincipal(getOwnerId(
 					propertyNames, state)))) {
 				// only let the owner load it
@@ -75,6 +78,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	 */
 	private void checkOwningObject(Object entity, Object[] state,
 			String[] propertyNames) {
+		//TODO implement this better so it doesn't load the whole object graph
 		if (entity instanceof HasSample || entity instanceof HasSubsample) {
 			// means we are trying to load something that is a
 			// child of a sample/subsample
@@ -93,7 +97,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				final Session s = DataStore.open();
 				try {
 					s.createQuery(
-							"select s.id from Sample s where s.id=" + sampleId)
+							"from Sample s where s.id=" + sampleId)
 							.uniqueResult();
 				} catch (CallbackException ce) {
 					throw ce;
@@ -110,7 +114,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				final Session s = DataStore.open();
 				try {
 					s.createQuery(
-							"select ss.id from Subsample ss where ss.id="
+							"from Subsample ss where ss.id="
 									+ subsampleId).uniqueResult();
 				} catch (CallbackException ce) {
 					throw ce;
@@ -306,6 +310,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 			// the session
 			throw ce;
 		} finally {
+			s.clear();
 			s.close();
 		}
 	}

@@ -11,6 +11,7 @@ import org.junit.Test;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.error.security.CannotLoadRoleChangeException;
 import edu.rpi.metpetdb.client.error.security.CannotLoadPrivateDataException;
+import edu.rpi.metpetdb.client.error.security.NotOwnerException;
 import edu.rpi.metpetdb.client.model.Element;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageComment;
@@ -285,7 +286,7 @@ public class AnonymousLoadingPermissionsTest extends DatabaseTestCase {
 	@Test(expected = CannotLoadRoleChangeException.class)
 	public void loadPendingRole() throws Throwable {
 		try {
-			super.byId("PendingRole", 1);
+			super.byId("RoleChange", 1);
 		} catch (CallbackException ce) {
 			session.clear();
 			throw ce.getCause();

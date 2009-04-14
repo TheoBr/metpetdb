@@ -87,8 +87,8 @@
   <project_samples/>
   <regions region_id="1" name="test region"/>
   <role_changes role_changes_id="1" user_id="3" sponsor_id="1" request_date="2009-03-21 15:45:21.674" role_id="2"/>
-  <sample_comments comment_id="1" sample_id="1" user_id="1" comment_text="wowo"/>
-  <sample_comments comment_id="2" sample_id="6" user_id="1" comment_text="wowo"/>
+  <sample_comments comment_id="1" sample_id="1" user_id="1" comment_text="wowo" date_added="2009-03-21 15:45:21.674"/>
+  <sample_comments comment_id="2" sample_id="6" user_id="1" comment_text="wowo" date_added="2009-03-21 15:45:21.674"/>
   <sample_metamorphic_grades sample_id="5" metamorphic_grade_id="1"/>
   <sample_metamorphic_grades_archive/>
   <sample_minerals sample_id="6" mineral_id="1" amount="1" />
