@@ -31,3 +31,21 @@
 .scrolltable-topbar .pagination span {
 	margin-right: 5px;
 }
+
+.scrolltable-actions {
+	color: #42495e;
+	padding: 5px;
+}
+.scrolltable-actions .label {
+	margin-right: 5px;
+}
+.scrolltable-actions select,
+.scrolltable-actions .subitem {
+	margin-left: 5px;
+}
+.scrolltable-actions .item {
+	margin-left: 15px;
+}
+.scrolltable-actions .item:first-child {
+	margin-left: 10px;
+}

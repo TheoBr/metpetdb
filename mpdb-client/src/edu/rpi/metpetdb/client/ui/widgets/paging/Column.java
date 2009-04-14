@@ -15,6 +15,8 @@ public abstract class Column<RowType extends MObject, ColType> extends AbstractC
 
 	private Object header;
 	protected Property<RowType> property;
+	private boolean isDisplayColumn = true;
+	private boolean optional = false;
 	
 	public Column(Object header) {
 		this(header, null);
@@ -74,6 +76,21 @@ public abstract class Column<RowType extends MObject, ColType> extends AbstractC
 	@Override
 	public void setCellValue(RowType rowValue, ColType cellValue) {
 		//not supported by us, yet...
+	}
+
+	public void setIsDisplayColumn(boolean display) {
+		isDisplayColumn = display;
+	}
+	
+	public void setOptional(boolean option) {
+		optional = option;
+	}
+	public boolean isOptional() {
+		return optional;
+	}
+	
+	public boolean isDisplayColumn() {
+		return isDisplayColumn;
 	}
 
 }

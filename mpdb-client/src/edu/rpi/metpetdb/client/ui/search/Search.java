@@ -237,7 +237,7 @@ public class Search extends MPagePanel implements PageChangeListener {
 
 		customCols = new MLink("Custom", new ClickListener() {
 			public void onClick(Widget sender) {
-				CustomTableView myView = new CustomTableView(sampleList, cookieString);
+				//CustomTableView myView = new CustomTableView(sampleList, cookieString);
 			}
 		});
 

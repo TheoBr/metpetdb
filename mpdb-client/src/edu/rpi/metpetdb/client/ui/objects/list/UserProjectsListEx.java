@@ -120,7 +120,7 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 	}
 
 	public void onClick(Widget sender) {
-		CustomTableView myView = new CustomTableView(list, cookieString);
+		//CustomTableView myView = new CustomTableView(list, cookieString);
 	}
 
 	private void addProjects() {

@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -28,7 +29,7 @@ import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.paging.Column;
+import edu.rpi.metpetdb.client.ui.widgets.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
@@ -50,14 +51,11 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	private static final String samplesParameter = "Samples";
 	private static final String urlParameter = "url";
 	private Label errMsg = new Label();
-	private final FlexTable sampleDisplayFilters = new FlexTable();
-	private SampleListEx list;
-	private final FlowPanel footerContainer = new FlowPanel();
-	private final SimplePanel footerWrapper = new SimplePanel();
+	private SampleList list;
+	private final FlowPanel tableActions = new FlowPanel();
 	private Set<Project> projectsList;
 	private final ListBox projectListBox = new ListBox();
 	private final ListBox selectListBox = new ListBox();
-	private FlowPanel samplesContainer = new FlowPanel();
 	private final FlowPanel columnViewPanel = new FlowPanel();
 	private MLink customCols;
 	private MLink exportExcel;
@@ -176,41 +174,37 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 		}.begin();
 	}
 
-	private void projectSamples(final long projectId) {
-		list = new SampleListEx(LocaleHandler.lc_text.noSamplesFound()) {
-			public void update(final PaginationParameters p,
-					final AsyncCallback<Results<Sample>> ac) {
-				MpDb.sample_svc.projectSamples(p, projectId, ac);
-			}
-		};
-	}
+//	private void projectSamples(final long projectId) {
+//		list = new SampleListEx(LocaleHandler.lc_text.noSamplesFound()) {
+//			public void update(final PaginationParameters p,
+//					final AsyncCallback<Results<Sample>> ac) {
+//				MpDb.sample_svc.projectSamples(p, projectId, ac);
+//			}
+//		};
+//	}
 
 	private void userSamples() {
-		list = new SampleListEx(LocaleHandler.lc_text.noSamplesFound()) {
+		list = new SampleList() {
 			public void update(final PaginationParameters p,
 					final AsyncCallback<Results<Sample>> ac) {
 				long id = (long) (MpDb.currentUser().getId());
 				MpDb.sample_svc.allSamplesForUser(p, id, ac);
 			}
 		};
-		list.simpleView();
 	}
 
 	private void addSamples() {
 		createViewFromCookie();
 		buildSampleFilters();
-		samplesContainer.add(columnViewPanel);
-		buildSampleFooter();
-		samplesContainer.add(list);
-		samplesContainer.setStylePrimaryName(CSS.SAMPLES_CONTAINER);
-		this.add(samplesContainer);
+		buildSampleActions();
+		this.add(list);
 	}
 
-	private void buildSampleFooter() {
+	private void buildSampleActions() {
 
-		final Label selectLabel = new Label("Select:");
-		selectLabel.setStylePrimaryName(CSS.DATATABLE_FOOTER_LABEL);
-		selectLabel.addStyleName(CSS.DATATABLE_FOOTER_ITEM);
+		final InlineLabel selectLabel = new InlineLabel("Select:");
+		selectLabel.setStylePrimaryName("label");
+		selectLabel.addStyleName("item");
 
 		selectListBox.addItem("---");
 		selectListBox.addItem("None");
@@ -221,29 +215,31 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 			public void onChange(Widget sender) {
 				if (selectListBox.getSelectedIndex() == 1) {
 					//None
-					for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++)
-						((MCheckBox) list.getScrollTable().getDataTable().getWidget(i, 0)).setChecked(false);
+					list.getDataTable().deselectAllRows();
 				} else if (selectListBox.getSelectedIndex() == 2) {
 					//Private
-					for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++)
-						((MCheckBox) list.getScrollTable().getDataTable().getWidget(i, 0))
-						.setChecked(!((Sample)list.data.get(i)).isPublicData());
+					for (int i = 0; i < list.getDataTable().getRowCount(); i++)
+						if (!list.getRowValue(i).isPublicData())
+							list.getDataTable().selectRow(i, false);
+						else
+							list.getDataTable().deselectRow(i);
 				} else if (selectListBox.getSelectedIndex() == 3) {
 					//Public
-					for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++)
-						((MCheckBox) list.getScrollTable().getDataTable().getWidget(i, 0))
-						.setChecked(((Sample)list.data.get(i)).isPublicData());
+					for (int i = 0; i < list.getDataTable().getRowCount(); i++)
+						if (list.getRowValue(i).isPublicData())
+							list.getDataTable().selectRow(i, false);
+						else
+							list.getDataTable().deselectRow(i);
 				} else if (selectListBox.getSelectedIndex() == 4) {
 					//All
-					for (int i = 0; i < list.getScrollTable().getDataTable().getRowCount(); i++)
-						((MCheckBox) list.getScrollTable().getDataTable().getWidget(i, 0)).setChecked(true);
+					list.getDataTable().selectAllRows();
 				}
 			}
 		});
 
-		final Label adProjectLabel = new Label("Add to:");
-		adProjectLabel.setStylePrimaryName(CSS.DATATABLE_FOOTER_ITEM);
-		adProjectLabel.addStyleName(CSS.DATATABLE_FOOTER_LABEL);
+		final InlineLabel adProjectLabel = new InlineLabel("Add to:");
+		adProjectLabel.setStylePrimaryName("item");
+		adProjectLabel.addStyleName("label");
 
 		projectListBox.addItem("Choose Project...");
 		Iterator<Project> it = projectsList.iterator();
@@ -276,9 +272,9 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 			}
 		});
 
-		final Label exportLabel = new Label("Export:");
-		exportLabel.setStylePrimaryName(CSS.DATATABLE_FOOTER_ITEM);
-		exportLabel.addStyleName(CSS.DATATABLE_FOOTER_LABEL);
+		final InlineLabel exportLabel = new InlineLabel("Export:");
+		exportLabel.setStylePrimaryName("item");
+		exportLabel.addStyleName("label");
 
 		exportExcel = new MLink(LocaleHandler.lc_text.buttonExportExcel(),
 				new ClickListener() {
@@ -286,7 +282,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 						doExportExcel();
 					}
 				});
-		exportExcel.addStyleName(CSS.DATATABLE_FOOTER_SUBITEM);
+		exportExcel.addStyleName("subitem");
 
 		exportGoogleEarth = new MLink(LocaleHandler.lc_text.buttonExportKML(),
 				new ClickListener() {
@@ -294,7 +290,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 						doExportGoogleEarth();
 					}
 				});
-		exportGoogleEarth.addStyleName(CSS.DATATABLE_FOOTER_SUBITEM);
+		exportGoogleEarth.addStyleName("subitem");
 		
 		viewGoogleEarth = new MLink(LocaleHandler.lc_text.search_viewGoogleEarth(),
 				new ClickListener() {
@@ -302,7 +298,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 						doViewGoogleEarth();
 					}
 				});
-		viewGoogleEarth.addStyleName(CSS.DATATABLE_FOOTER_SUBITEM);
+		viewGoogleEarth.addStyleName("subitem");
 
 		final MLink makePublic = new MLink("Make Public", new ClickListener() {
 			public void onClick(Widget sender) {
@@ -316,7 +312,7 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 				}
 			}
 		});
-		makePublic.addStyleName(CSS.DATATABLE_FOOTER_ITEM);
+		makePublic.addStyleName("item");
 
 		final MLink remove = new MLink("Remove", new ClickListener() {
 			public void onClick(Widget sender) {
@@ -339,55 +335,35 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 				}
 			}
 		});
-		remove.addStyleName(CSS.DATATABLE_FOOTER_ITEM);
+		remove.addStyleName("item");
 
-		footerContainer.add(selectLabel);
-		footerContainer.add(selectListBox);
+		tableActions.add(selectLabel);
+		tableActions.add(selectListBox);
 		if (!projectsList.isEmpty()) {
-			footerContainer.add(adProjectLabel);
-			footerContainer.add(projectListBox);
+			tableActions.add(adProjectLabel);
+			tableActions.add(projectListBox);
 		}
-		footerContainer.add(viewGoogleEarth);
-		footerContainer.add(exportLabel);
-		footerContainer.add(exportExcel);
-		footerContainer.add(exportGoogleEarth);
-		footerContainer.add(makePublic);
-		footerContainer.add(remove);
-		footerContainer.setStylePrimaryName(CSS.DATATABLE_FOOTER);
-		footerWrapper.add(footerContainer);
-		footerWrapper.setStylePrimaryName(CSS.DATATABLE_FOOTER_WRAPPER);
+		tableActions.add(viewGoogleEarth);
+		tableActions.add(exportLabel);
+		tableActions.add(exportExcel);
+		tableActions.add(exportGoogleEarth);
+		tableActions.add(makePublic);
+		tableActions.add(remove);
+		tableActions.setStylePrimaryName("scrolltable-actions");
 
-		final FixedWidthFlexTable footerTable = new FixedWidthFlexTable();
-		footerTable.setWidget(0, 0, footerWrapper);
-		footerTable.getFlexCellFormatter().setColSpan(0, 0, 4);
-		footerTable.setWidth("100%");
-		list.getScrollTable().setFooterTable(footerTable);
 	}
 
 	private void buildSampleFilters() {
-		final MLink simple = new MLink("Simple", new ClickListener() {
-			public void onClick(Widget sender) {
-				list.simpleView();
-			}
-		});
-
-		final MLink detailed = new MLink("Detailed", new ClickListener() {
-			public void onClick(Widget sender) {
-				list.newView(list.getOriginalColumns());
-			}
-		});
 
 		customCols = new MLink("Custom", new ClickListener() {
 			public void onClick(Widget sender) {
-				CustomTableView myView = new CustomTableView(list, cookieString);
+				CustomTableView<Sample> myView = new CustomTableView<Sample>(list, cookieString);
 			}
 		});
 
 		final Label columnsLabel = new Label("Columns:");
 
 		columnViewPanel.add(columnsLabel);
-		columnViewPanel.add(simple);
-		columnViewPanel.add(detailed);
 		columnViewPanel.add(customCols);
 
 		columnViewPanel.addStyleName(CSS.DATATABLE_HEADER_FILTERS);
@@ -411,18 +387,18 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	}
 
 	public UserSamplesList display(final long projectId) {
-		new ServerOp() {
-			@Override
-			public void begin() {
-				MpDb.project_svc.all(MpDb.currentUser().getId(), this);
-			}
-			public void onSuccess(Object result) {
-				projectsList = new HashSet<Project>((List<Project>) result);
-				addPageHeader();
-				projectSamples(projectId);
-				addSamples();
-			}
-		}.begin();
+//		new ServerOp() {
+//			@Override
+//			public void begin() {
+//				MpDb.project_svc.all(MpDb.currentUser().getId(), this);
+//			}
+//			public void onSuccess(Object result) {
+//				projectsList = new HashSet<Project>((List<Project>) result);
+//				addPageHeader();
+//				projectSamples(projectId);
+//				addSamples();
+//			}
+//		}.begin();
 		return this;
 	}
 
@@ -528,20 +504,14 @@ public class UserSamplesList extends MPagePanel implements ClickListener {
 	}
 
 	private void createViewFromCookie() {
-		final ArrayList<Column> originalColumns = new ArrayList<Column>(list
-				.getOriginalColumns());
 		final ArrayList<String> cookiedColumns;
-		final ArrayList<Column> displayColumns = new ArrayList<Column>();
 		if (Cookies.getCookie(cookieString) != null) {
 			cookiedColumns = new ArrayList<String>(Arrays.asList(Cookies
 					.getCookie(cookieString).split(",")));
-			Iterator<Column> itr = originalColumns.iterator();
-			while (itr.hasNext()) {
-				final Column col = itr.next();
-				if (cookiedColumns.contains(col.getTitle()))
-					displayColumns.add(col);
+			for (int i=0; i<cookiedColumns.size(); i++) {
+				boolean visible = Integer.parseInt(cookiedColumns.get(i)) > 0;
+				list.getTableDefinition().setColumnVisible(list.getTableDefinition().getColumnDefinition(i), visible);
 			}
-			list.newView(displayColumns);
 		}
 	}
 

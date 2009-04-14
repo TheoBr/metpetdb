@@ -35,7 +35,7 @@ public abstract class SampleList extends List<Sample> {
 		
 		// sample name (link to sample details)
 		{
-			Column<Sample, MLink> col = new Column<Sample, MLink>(enttxt.Sample_number(),
+			Column<Sample, MLink> sampleNameCol = new Column<Sample, MLink>(enttxt.Sample_number(),
 					SampleProperty.number) {
 				@Override
 				public MLink getCellValue(Sample rowValue) {
@@ -43,10 +43,11 @@ public abstract class SampleList extends List<Sample> {
 							TokenSpace.detailsOf(rowValue));
 				}
 			};
-			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(50);
-			columns.add(col);
+			sampleNameCol.setColumnSortable(true);
+			sampleNameCol.setMinimumColumnWidth(20);
+			sampleNameCol.setPreferredColumnWidth(50);
+			sampleNameCol.setOptional(false);
+			columns.add(sampleNameCol);
 		}
 		
 		// info icon (click to get sample info popup)
@@ -71,6 +72,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setMaximumColumnWidth(20);
 			col.setPreferredColumnWidth(20);
+			col.setOptional(false);
 			columns.add(col);
 		}
 		
@@ -101,6 +103,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setMaximumColumnWidth(20);
 			col.setPreferredColumnWidth(20);
+			col.setOptional(true);
 			columns.add(col);
 		}
 		
@@ -112,6 +115,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(20);
+			col.setOptional(true);
 			columns.add(col);
 		}
 		
@@ -123,6 +127,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(20);
+			col.setOptional(true);
 			columns.add(col);
 		}
 		
@@ -134,6 +139,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(20);
+			col.setOptional(true);
 			columns.add(col);
 		}
 		
@@ -150,6 +156,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(50);
+			col.setOptional(true);
 			columns.add(col);
 		}
 		
@@ -161,6 +168,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
+			col.setOptional(true);
 			columns.add(col);
 		}
 		
@@ -171,6 +179,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
+			col.setOptional(true);
 			columns.add(col);
 		}
 
@@ -181,6 +190,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
+			col.setOptional(true);
 			columns.add(col);
 		}
 		
@@ -192,6 +202,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
+			col.setOptional(true);
 			columns.add(col);
 		}
 		
@@ -222,6 +233,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
+			col.setOptional(true);
 			columns.add(col);
 		}
 		
@@ -233,6 +245,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
+			col.setOptional(true);
 			columns.add(col);
 		}
 		
@@ -255,6 +268,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(40);
+			col.setOptional(true);
 			columns.add(col);
 		}
 
@@ -274,6 +288,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
+			col.setOptional(true);
 			columns.add(col);
 		}
 		
@@ -284,6 +299,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
+			col.setOptional(true);
 			columns.add(col);
 		}
 		
@@ -303,6 +319,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setMaximumColumnWidth(30);
 			col.setPreferredColumnWidth(30);
+			col.setOptional(true);
 			columns.add(col);
 		}
 		
@@ -313,6 +330,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
+			col.setOptional(true);
 			columns.add(col);
 		}
 
@@ -322,6 +340,14 @@ public abstract class SampleList extends List<Sample> {
 		super(columns);
 		dataTable.setSelectionPolicy(SelectionPolicy.CHECKBOX);
 		dataTable.setSelectionEnabled(true);
+		// this is terrible i wish we could do this another way
+		for (int i=0; i<tableDefinition.getColumnDefinitionCount(); i++) {
+			if (i <=3 || (i>=7 && i<=12))
+				tableDefinition.setColumnVisible(tableDefinition.getColumnDefinition(i), true);
+			else
+				tableDefinition.setColumnVisible(tableDefinition.getColumnDefinition(i), false);
+		}
+		
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.dialogs;
 import java.util.ArrayList;
 import java.util.Date;
 
+import com.google.gwt.gen2.table.client.DefaultTableDefinition;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -14,24 +15,28 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.paging.Column;
+import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.Submit;
-import edu.rpi.metpetdb.client.ui.objects.list.ListEx;
+import edu.rpi.metpetdb.client.ui.objects.list.List;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
+import edu.rpi.metpetdb.client.ui.widgets.paging.Column;
 
-public class CustomTableView extends MDialogBox implements ClickListener,
+public class CustomTableView<RowType extends MObject> extends MDialogBox implements ClickListener,
 		KeyboardListener {
 	private ArrayList<MCheckBox> cb;
 	private final Button submit;
 	private final Button cancel;
-	private final ListEx list;
+	private final List<RowType> list;
 	private final String table;
 	private final static long millisecondsIn30Days = 2592000000L;
+	private DefaultTableDefinition<RowType> tableDef;
+	private ArrayList<Column<RowType, ?>> columns;
 
-	public CustomTableView(final ListEx myList, final String myTable) {
+	public CustomTableView(final List<RowType> myList, final String myTable) {
 		list = myList;
 		table = myTable;
+		columns = getOptionalColumns(list.getDisplayColumns());
 		setText("Custom View");
 
 		final Label infoPara = new Label(
@@ -47,14 +52,13 @@ public class CustomTableView extends MDialogBox implements ClickListener,
 		final FlowPanel rightPanel = new FlowPanel();
 		final FlowPanel bottomPanel = new FlowPanel();
 
-		final ArrayList<Column> displayColumns = list.getDisplayColumns();
-		for (int i = 1; i < list.getOriginalColumns().size(); i++) {
-			Column original = (Column) list.getOriginalColumns().get(i);
-			MCheckBox tempCB = new MCheckBox(original.getTitle());
-			tempCB.setName(original.getTitle());
-			if (displayColumns.contains(original))
+		for (int i = 0; i < columns.size(); i++) {
+			Column<RowType, ?> original = (Column<RowType, ?>) columns.get(i);
+			MCheckBox tempCB = new MCheckBox(original.getHeader());
+			tempCB.setName(original.getHeader().toString());
+			if (columns.contains(original))
 				tempCB.setChecked(true);
-			if (i > list.getOriginalColumns().size() / 2)
+			if (i > columns.size() / 2)
 				rightPanel.add(tempCB);
 			else
 				leftPanel.add(tempCB);
@@ -84,34 +88,36 @@ public class CustomTableView extends MDialogBox implements ClickListener,
 		if (cancel == sender)
 			cancel();
 		else if (submit == sender) {
-			ArrayList<Column> originalColumns = new ArrayList<Column>(list
-					.getOriginalColumns());
-			ArrayList<Column> displayColumns = new ArrayList<Column>();
-			displayColumns.add(originalColumns.get(0));
-			for (int i = 0; i < cb.size(); i++) {
-				if (cb.get(i).isChecked()) {
-					displayColumns.add(originalColumns.get(i + 1));
+			ArrayList<Column<RowType, ?>> displayColumns = list.getOriginalColumns();
+			for (int i=0; i<displayColumns.size(); i++) {
+				Column<RowType, ?> col = displayColumns.get(i);
+				for (MCheckBox cbox : cb) {
+					if (col.getHeader() == cbox.getValue()) {
+						list.getTableDefinition().setColumnVisible(
+								list.getTableDefinition().getColumnDefinition(i), 
+								cbox.isChecked());
+					}
 				}
 			}
-			createCookie(table, displayColumns);
-			list.newView(displayColumns);
+			createCookie(table);
 			hide();
 		}
 	}
 
-	public void createCookie(final String table,
-			final ArrayList<Column> displayColumns) {
+	public void createCookie(final String table) {
 		String value = "";
-		for (int i = 0; i < displayColumns.size(); i++) {
-			value += displayColumns.get(i).getTitle() + ",";
+		for (int i = 0; i < list.getTableDefinition().getColumnDefinitionCount(); i++) {
+			if (list.getTableDefinition().isColumnVisible(list.getTableDefinition().getColumnDefinition(i)))
+				value += 1 + ",";
+			else
+				value += 0 + ",";
 		}
 		final Date expires = new Date();
 		expires.setTime(expires.getTime() + millisecondsIn30Days);
 		Cookies.setCookie(table, value, expires);
 	}
 
-	public void getCookie(final String table,
-			final ArrayList<Column> displayColumns) {
+	public void getCookie(final String table) {
 
 	}
 
@@ -128,6 +134,16 @@ public class CustomTableView extends MDialogBox implements ClickListener,
 
 	private void cancel() {
 		hide();
+	}
+	
+	private ArrayList<Column<RowType, ?>> getOptionalColumns(ArrayList<Column<RowType, ?>> columns) {
+		final ArrayList<Column<RowType, ?>> cols = new ArrayList<Column<RowType, ?>>();
+		for (Column<RowType, ?> c : columns) {
+			if (c.isOptional()) {
+				cols.add(c);
+			}
+		}
+		return cols;
 	}
 
 }

@@ -56,9 +56,13 @@
 .comment .edit-panel {
 	margin-left: 20px;
 }
+.comment .edit {
+	font-size: 0.9em;
+}
 .comment .author span {
 	font-size: 0.9em;
 	color: #4E5159;
+	margin-left: 0.3em;
 }
 .comment .body {
 	margin: 5px 20px 0;

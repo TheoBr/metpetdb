@@ -315,7 +315,7 @@ public class SampleDetails extends MPagePanel {
 		private FlowPanel editPanel = new FlowPanel();
 		private TextArea editTextArea = new TextArea();
 		private Button editSubmit = new Button(LocaleHandler.lc_text.buttonSubmit());
-		private MLink editCancel = new MLink("Cancel");
+		private MLink editCancel = new MLink(LocaleHandler.lc_text.buttonCancel());
 		
 		private boolean isCommentOwner;
 		private boolean isSampleOwnerComment;
