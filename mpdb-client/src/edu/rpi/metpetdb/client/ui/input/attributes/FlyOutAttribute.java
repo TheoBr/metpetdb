@@ -275,7 +275,7 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 			while(itr.hasNext()){
 				FlyOutItem fo = itr.next();
 				fo.setState(state);
-				if (state == CheckedState.CHECKED){
+				if (state == CheckedState.CHECKED && !selectedWidgets.contains(fo)){
 					selectedWidgets.add(fo);
 					selectedItems.add(fo.obj);
 				} else if (state == CheckedState.UNCHECKED){
