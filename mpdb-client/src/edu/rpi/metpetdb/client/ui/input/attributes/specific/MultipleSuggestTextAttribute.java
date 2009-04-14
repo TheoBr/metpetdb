@@ -84,6 +84,7 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute impl
 		editList.add(t);
 		realEditWidgets.add(t.getInputWidget());
 		setSuggest();
+		setStyles();
 		return new Widget[] {
 			editList
 		};
@@ -135,6 +136,7 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute impl
 			realEditList.remove(w);
 			editList.add(w);
 		}
+		setStyles();
 	}
 	
 	public abstract void setSuggest();
