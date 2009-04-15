@@ -15,9 +15,11 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.paging.Column;
@@ -30,7 +32,6 @@ import edu.rpi.metpetdb.client.ui.PageChangeListener;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.FormOp;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
-import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.excel.ExcelUtil;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchInterface;
@@ -41,6 +42,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabMeta
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabMinerals;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabProvenance;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabRockTypes;
+import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisListEx;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarthPopUp;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -65,8 +67,10 @@ public class Search extends MPagePanel implements PageChangeListener {
 	private MLink customCols;
 	private final FlowPanel columnViewPanel = new FlowPanel();
 	private FlowPanel samplesContainer = new FlowPanel();
+	private FlowPanel chemContainer = new FlowPanel();
 	private final ObjectSearchPanel searchPanel;
 	private MGoogleEarthPopUp earthPopup = new MGoogleEarthPopUp();
+	private boolean outputSamples = true;
 	
 	private SearchSample ss;
 	private final SampleListEx sampleList = new SampleListEx(
@@ -82,7 +86,19 @@ public class Search extends MPagePanel implements PageChangeListener {
 		}
 
 	};
-	private List<Sample> results = new ArrayList<Sample>();
+	private final ChemicalAnalysisListEx chemList = new ChemicalAnalysisListEx(
+			LocaleHandler.lc_text.search_noChemicalAnalysesFound()) {
+
+		@Override
+		public void update(PaginationParameters p,
+				AsyncCallback<Results<ChemicalAnalysis>> ac) {
+			if (ss != null)
+				MpDb.search_svc.chemicalAnalysisSearch(p,ss, MpDb.currentUser(), ac);
+			else
+				ac.onSuccess(new Results<ChemicalAnalysis>(0, new ArrayList<ChemicalAnalysis>()));
+		}
+
+	};
 
 	public Search() {
 		MetPetDBApplication.registerPageWatcher(this);
@@ -99,10 +115,24 @@ public class Search extends MPagePanel implements PageChangeListener {
 			protected void onSearchCompletion(final FormOp ac) {
 				saveSearch();
 				saveSearchPagination();
-				sampleList.refresh();
+				if (outputSamples){
+					if (chemContainer.getParent() != null){
+						chemContainer.removeFromParent();
+						add(samplesContainer);
+					}
+					sampleList.refresh();
+				} else {
+					if (samplesContainer.getParent() != null){
+						samplesContainer.removeFromParent();
+						add(chemContainer);
+					}
+					chemList.refresh();
+				}
 				ac.enable(true);
 			}
 		};
+		
+		sui.passActionWidget(createResultTypeToggle());
 		
 		exportExcel.setText("Export as Spreadsheet (.tsv)");
 		exportExcel.addClickListener(new ClickListener() {
@@ -134,6 +164,9 @@ public class Search extends MPagePanel implements PageChangeListener {
 		buildSampleFilters();
 		samplesContainer.add(columnViewPanel);
 		samplesContainer.add(sampleList);
+		
+		chemContainer.add(chemList);
+		
 		add(samplesContainer);
 	}
 
@@ -270,6 +303,33 @@ public class Search extends MPagePanel implements PageChangeListener {
 		}
 	}
 	
+	private Widget createResultTypeToggle(){
+		final FlowPanel container = new FlowPanel();
+		final String groupString = "resultType_attribute";
+		final RadioButton returnSamples = new RadioButton(groupString, "Samples");
+		final RadioButton returnChemicalAnalyses = new RadioButton(groupString, "Chemical Analyses");
+		
+		returnSamples.addClickListener(new ClickListener(){
+			public void onClick(final Widget sender){
+				outputSamples = true;
+			}
+		});
+		
+		returnChemicalAnalyses.addClickListener(new ClickListener(){
+			public void onClick(final Widget sender){
+				outputSamples = false;
+			}
+		});
+		
+		
+		returnSamples.setChecked(true);
+		
+		container.add(new Label("Result Type:"));
+		container.add(returnSamples);
+		container.add(returnChemicalAnalyses);
+		return container;
+	}
+	
 	public void onPageChanged(){
 		if (!History.getToken().equals(TokenSpace.search.makeToken(null))){
 			MetPetDBApplication.removePageWatcher(this);
@@ -348,6 +408,9 @@ public class Search extends MPagePanel implements PageChangeListener {
 					ss = searchSamp;
 					loadPagination();			
 				}
+			}
+			public void onFailure(final Throwable e){
+				
 			}
 		}.begin();
 	}

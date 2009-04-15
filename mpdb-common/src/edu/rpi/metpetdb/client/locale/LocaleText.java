@@ -62,6 +62,7 @@ public interface LocaleText extends Messages {
 	String search_exportKML();
 	String search_exportResults();
 	String search_noSamplesFound();
+	String search_noChemicalAnalysesFound();
 
 	/* Tools */
 	String tools_EditProfile();
