@@ -31,8 +31,11 @@ public class PropertyUtils {
 			}
 		} else if (o instanceof Float) {
 			return ((Float) o).intValue();
+		} else if (o instanceof Double) {
+			return ((Double) o).intValue();
 		} else
-			return null;
+			return 0; //if we cant convert it just return 0
+		
 	}
 
 }

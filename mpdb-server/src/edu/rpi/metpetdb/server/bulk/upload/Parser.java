@@ -247,7 +247,7 @@ public abstract class Parser<T extends MObject> {
 				// get the constraint for this cell
 				final PropertyConstraint pc = spreadSheetColumnMapping.get(i);
 
-				if (pc != null) {
+				if (pc != null && cell != null) {
 					// verify cell type
 					if (pc == doc.Sample_number
 							|| pc == doc.ChemicalAnalysis_spotId

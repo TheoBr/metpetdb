@@ -500,7 +500,10 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				rowNumbers.addAll(messages.keySet());
 				Collections.sort(rowNumbers);
 				for (Integer row : rowNumbers) {
-					grid.setText(++i, 0, row.toString());
+					if (row == -1)
+						grid.setText(++i, 0, "Unknown");
+					else
+						grid.setText(++i, 0, row.toString());
 					grid.setHTML(i, 1, explode(messages.get(row)));
 				}
 			}
