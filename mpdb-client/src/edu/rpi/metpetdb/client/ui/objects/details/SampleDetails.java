@@ -35,6 +35,7 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
@@ -56,15 +57,15 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.MineralAttrib
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.ReferenceAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.RegionAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.SubsampleListEx;
+import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
 import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarth;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
-import edu.rpi.metpetdb.client.ui.widgets.MNotice;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MNoticePanel;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MNoticePanel.NoticeType;
 
-public class SampleDetails extends MPagePanel {
+public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 	private LatLng samplePosition;
 	private MapWidget map;
 	private MTwoColPanel panel = new MTwoColPanel();
@@ -73,6 +74,7 @@ public class SampleDetails extends MPagePanel {
 	private TextArea commentBox;
 	private MNoticePanel commentNotice;
 	private Label empty = new Label("No comments yet.");
+	private HTMLPanel commentPanel;
 
 	private static GenericAttribute[] sampleAtts = {
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
@@ -227,8 +229,16 @@ public class SampleDetails extends MPagePanel {
 
 	}
 	
+	public void onCurrentUserChanged(final User u){
+		if (commentPanel.getParent() != null){
+			remove(commentPanel);
+		}
+		addCommentsModule();
+		populateComments();
+	}
+	
 	private void addCommentsModule() {
-		final HTMLPanel commentPanel = new HTMLPanel(
+		commentPanel = new HTMLPanel(
 				"<h2>"+LocaleHandler.lc_text.comments()+"</h2>" +
 				"<div id=\"comments-notice\"></div>" +
 				"<div id=\"comments-container\"></div>" +
@@ -257,6 +267,11 @@ public class SampleDetails extends MPagePanel {
 		});
 		if (!MpDb.isLoggedIn()){
 			commentBox.setText("You must be logged in to add comments");
+			commentBox.setEnabled(false);
+			clear.setVisible(false);
+			submit.setEnabled(false);
+		} else if (!MpDb.currentUser().getEnabled()){
+			commentBox.setText("You must activate your account to add comments");
 			commentBox.setEnabled(false);
 			clear.setVisible(false);
 			submit.setEnabled(false);
@@ -344,9 +359,9 @@ public class SampleDetails extends MPagePanel {
 		
 		protected SampleCommentPanel(final SampleComment sc, final boolean isEditable) {
 			this.comment = sc;
-			isCommentOwner = MpDb.currentUser().getId() == sc.getOwner().getId();
+			isCommentOwner = MpDb.isLoggedIn() && MpDb.currentUser().getId() == sc.getOwner().getId();
 			isSampleOwnerComment = sc.getOwner().getId() == sample.getOwner().getId();
-			canDelete = isCommentOwner || MpDb.currentUser().getId() == sample.getOwner().getId();
+			canDelete = MpDb.isLoggedIn() && (isCommentOwner || MpDb.currentUser().getId() == sample.getOwner().getId());
 			setStyleName("comment");
 			
 			//if the sample comment isn't loaded from the database then
