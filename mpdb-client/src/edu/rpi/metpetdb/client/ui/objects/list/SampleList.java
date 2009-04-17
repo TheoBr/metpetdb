@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 import org.postgis.Point;
@@ -20,22 +19,25 @@ import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.TooltipListener;
-import edu.rpi.metpetdb.client.ui.widgets.paging.CollapsedColumn;
-import edu.rpi.metpetdb.client.ui.widgets.paging.Column;
-import edu.rpi.metpetdb.client.ui.widgets.paging.StringColumn;
-import edu.rpi.metpetdb.client.ui.widgets.paging.CollapsedColumn.TruncateMethod;
+import edu.rpi.metpetdb.client.ui.widgets.paging.DataList;
+import edu.rpi.metpetdb.client.ui.widgets.paging.columns.CollapsedColumn;
+import edu.rpi.metpetdb.client.ui.widgets.paging.columns.Column;
+import edu.rpi.metpetdb.client.ui.widgets.paging.columns.ColumnDefinition;
+import edu.rpi.metpetdb.client.ui.widgets.paging.columns.StringColumn;
+import edu.rpi.metpetdb.client.ui.widgets.paging.columns.CollapsedColumn.TruncateMethod;
 
-public abstract class SampleList extends List<Sample> {
+public abstract class SampleList extends DataList<Sample> {
 
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 
-	private static ArrayList<Column<Sample, ?>> columns;
+	private static ColumnDefinition<Sample> columns;
+	private static ColumnDefinition<Sample> defaultColumns;
 	static {
-		columns = new ArrayList<Column<Sample, ?>>();
-		
+		columns = new ColumnDefinition<Sample>();
+		defaultColumns = new ColumnDefinition<Sample>();
 		// sample name (link to sample details)
 		{
-			Column<Sample, MLink> sampleNameCol = new Column<Sample, MLink>(enttxt.Sample_number(),
+			Column<Sample, MLink> col = new Column<Sample, MLink>(enttxt.Sample_number(),
 					SampleProperty.number) {
 				@Override
 				public MLink getCellValue(Sample rowValue) {
@@ -43,16 +45,17 @@ public abstract class SampleList extends List<Sample> {
 							TokenSpace.detailsOf(rowValue));
 				}
 			};
-			sampleNameCol.setColumnSortable(true);
-			sampleNameCol.setMinimumColumnWidth(20);
-			sampleNameCol.setPreferredColumnWidth(50);
-			sampleNameCol.setOptional(false);
-			columns.add(sampleNameCol);
+			col.setColumnSortable(true);
+			col.setMinimumColumnWidth(20);
+			col.setPreferredColumnWidth(50);
+			col.setOptional(false);
+			columns.addColumn(col);
+			defaultColumns.addColumn(col);
 		}
 		
 		// info icon (click to get sample info popup)
 		{
-			Column<Sample, Image> col = new Column<Sample, Image>("", null){
+			Column<Sample, Image> col = new Column<Sample, Image>("Info", null){
 				@Override
 				public Image getCellValue(final Sample rowValue) {
 					Image infoImage = new Image("images/icon-info-small.png"){
@@ -73,7 +76,9 @@ public abstract class SampleList extends List<Sample> {
 			col.setMaximumColumnWidth(20);
 			col.setPreferredColumnWidth(20);
 			col.setOptional(false);
-			columns.add(col);
+			col.setName("info");
+			columns.addColumn(col);
+			defaultColumns.addColumn(col);
 		}
 		
 		// public or private
@@ -104,7 +109,8 @@ public abstract class SampleList extends List<Sample> {
 			col.setMaximumColumnWidth(20);
 			col.setPreferredColumnWidth(20);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
+			defaultColumns.addColumn(col);
 		}
 		
 		// subsample count
@@ -116,7 +122,8 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(20);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
+			defaultColumns.addColumn(col);
 		}
 		
 		// image count
@@ -128,7 +135,8 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(20);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
+			defaultColumns.addColumn(col);
 		}
 		
 		// chemical analysis count
@@ -140,7 +148,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(20);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
 		}
 		
 		// owner (link to owner profile)
@@ -157,7 +165,8 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(50);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
+			defaultColumns.addColumn(col);
 		}
 		
 		// regions
@@ -169,7 +178,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
 		}
 		
 		// country
@@ -180,7 +189,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
 		}
 
 		// rock type
@@ -191,7 +200,8 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
+			defaultColumns.addColumn(col);
 		}
 		
 		// metamorphic grades
@@ -203,7 +213,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
 		}
 		
 		// minerals
@@ -234,7 +244,8 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
+			defaultColumns.addColumn(col);
 		}
 		
 		// references
@@ -246,7 +257,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
 		}
 		
 		// lat/long
@@ -269,10 +280,8 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(40);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
 		}
-
-		// TODO: lat/long error (column?)
 
 		// SESAR number (link to sample details)
 		{
@@ -289,7 +298,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
 		}
 		
 		// collector
@@ -300,7 +309,7 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
 		}
 		
 		// collection date
@@ -320,7 +329,8 @@ public abstract class SampleList extends List<Sample> {
 			col.setMaximumColumnWidth(30);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
+			defaultColumns.addColumn(col);
 		}
 		
 		// current location
@@ -331,23 +341,21 @@ public abstract class SampleList extends List<Sample> {
 			col.setMinimumColumnWidth(20);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
-			columns.add(col);
+			columns.addColumn(col);
 		}
 
+	}
+	
+	@Override
+	public String getListName() {
+		return "sampleList";
 	}
 
 	public SampleList() {
 		super(columns);
-		dataTable.setSelectionPolicy(SelectionPolicy.CHECKBOX);
-		dataTable.setSelectionEnabled(true);
-		// this is terrible i wish we could do this another way
-		for (int i=0; i<tableDefinition.getColumnDefinitionCount(); i++) {
-			if (i <=3 || (i>=7 && i<=12))
-				tableDefinition.setColumnVisible(tableDefinition.getColumnDefinition(i), true);
-			else
-				tableDefinition.setColumnVisible(tableDefinition.getColumnDefinition(i), false);
-		}
-		
+		getDataTable().setSelectionPolicy(SelectionPolicy.CHECKBOX);
+		getDataTable().setSelectionEnabled(true);
+		initialize();
 	}
 
 	@Override
@@ -382,6 +390,10 @@ public abstract class SampleList extends List<Sample> {
 		}
 		tooltipData += "</tbody></table>";
 		return tooltipData;
+	}
+	
+	protected ColumnDefinition<Sample> getDefaultColumns() {
+		return defaultColumns;
 	}
 
 }

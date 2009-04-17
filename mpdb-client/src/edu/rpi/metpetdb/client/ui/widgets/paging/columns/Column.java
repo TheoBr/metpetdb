@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.widgets.paging;
+package edu.rpi.metpetdb.client.ui.widgets.paging.columns;
 
 import com.google.gwt.gen2.table.client.AbstractColumnDefinition;
 
@@ -15,8 +15,9 @@ public abstract class Column<RowType extends MObject, ColType> extends AbstractC
 
 	private Object header;
 	protected Property<RowType> property;
-	private boolean isDisplayColumn = true;
 	private boolean optional = false;
+	/** name of the column in the cookie, be default it is the property name */
+	private String name;
 	
 	public Column(Object header) {
 		this(header, null);
@@ -33,6 +34,8 @@ public abstract class Column<RowType extends MObject, ColType> extends AbstractC
 	public Column(Object header, final Property<RowType> property) {
 		this.header = header;
 		this.property = property;
+		if (property != null)
+			name = property.name();
 	}
 
 	/**
@@ -77,20 +80,22 @@ public abstract class Column<RowType extends MObject, ColType> extends AbstractC
 	public void setCellValue(RowType rowValue, ColType cellValue) {
 		//not supported by us, yet...
 	}
-
-	public void setIsDisplayColumn(boolean display) {
-		isDisplayColumn = display;
-	}
 	
-	public void setOptional(boolean option) {
+	public Column<RowType, ColType> setOptional(boolean option) {
 		optional = option;
+		return this;
 	}
 	public boolean isOptional() {
 		return optional;
 	}
-	
-	public boolean isDisplayColumn() {
-		return isDisplayColumn;
+
+	public String getName() {
+		return name;
+	}
+
+	public Column<RowType, ColType> setName(String name) {
+		this.name = name;
+		return this;
 	}
 
 }

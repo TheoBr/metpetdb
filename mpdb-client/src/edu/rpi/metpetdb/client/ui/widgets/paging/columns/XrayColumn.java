@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.widgets.paging;
+package edu.rpi.metpetdb.client.ui.widgets.paging.columns;
 
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.XrayImage;

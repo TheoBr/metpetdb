@@ -1,10 +1,10 @@
 package edu.rpi.metpetdb.client.ui.dialogs;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
-import com.google.gwt.gen2.table.client.DefaultTableDefinition;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -18,31 +18,26 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.Submit;
-import edu.rpi.metpetdb.client.ui.objects.list.List;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
-import edu.rpi.metpetdb.client.ui.widgets.paging.Column;
+import edu.rpi.metpetdb.client.ui.widgets.paging.columns.Column;
+import edu.rpi.metpetdb.client.ui.widgets.paging.columns.ColumnDefinition;
 
-public class CustomTableView<RowType extends MObject> extends MDialogBox implements ClickListener,
-		KeyboardListener {
-	private ArrayList<MCheckBox> cb;
+public abstract class CustomTableView<RowType extends MObject> extends
+		MDialogBox implements ClickListener, KeyboardListener {
 	private final Button submit;
 	private final Button cancel;
-	private final List<RowType> list;
-	private final String table;
-	private final static long millisecondsIn30Days = 2592000000L;
-	private DefaultTableDefinition<RowType> tableDef;
-	private ArrayList<Column<RowType, ?>> columns;
+	/** maps a column number to a checkbox */
+	private final Map<Integer, MCheckBox> checkBoxes;
+	private final ColumnDefinition<RowType> allColumns;
 
-	public CustomTableView(final List<RowType> myList, final String myTable) {
-		list = myList;
-		table = myTable;
-		columns = getOptionalColumns(list.getDisplayColumns());
+	public CustomTableView(final ColumnDefinition<RowType> allColumns,
+			final ColumnDefinition<RowType> displayColumns) {
+		this.allColumns = allColumns;
 		setText("Custom View");
 
 		final Label infoPara = new Label(
 				"Choose which columns you want displayed.");
 
-		cb = new ArrayList<MCheckBox>();
 		submit = new Submit(LocaleHandler.lc_text.buttonSubmit(), this);
 		cancel = new Button(LocaleHandler.lc_text.buttonCancel(), this);
 
@@ -52,17 +47,22 @@ public class CustomTableView<RowType extends MObject> extends MDialogBox impleme
 		final FlowPanel rightPanel = new FlowPanel();
 		final FlowPanel bottomPanel = new FlowPanel();
 
-		for (int i = 0; i < columns.size(); i++) {
-			Column<RowType, ?> original = (Column<RowType, ?>) columns.get(i);
-			MCheckBox tempCB = new MCheckBox(original.getHeader());
+		checkBoxes = new TreeMap<Integer, MCheckBox>();
+
+		for (int i = 0; i < allColumns.size(); i++) {
+			Column<RowType, ?> original = (Column<RowType, ?>) allColumns
+					.getColumn(i);
+			MCheckBox tempCB = new MCheckBox(original.getHeader().toString(), true);
 			tempCB.setName(original.getHeader().toString());
-			if (columns.contains(original))
+			if (displayColumns.contains(allColumns.getColumnName(i)))
 				tempCB.setChecked(true);
-			if (i > columns.size() / 2)
+			if (i > allColumns.size() / 2)
 				rightPanel.add(tempCB);
 			else
 				leftPanel.add(tempCB);
-			cb.add(tempCB);
+			if (!original.isOptional() && tempCB.isChecked())
+				tempCB.setEnabled(false);
+			checkBoxes.put(i, tempCB);
 		}
 
 		bottomPanel.add(cancel);
@@ -88,62 +88,39 @@ public class CustomTableView<RowType extends MObject> extends MDialogBox impleme
 		if (cancel == sender)
 			cancel();
 		else if (submit == sender) {
-			ArrayList<Column<RowType, ?>> displayColumns = list.getOriginalColumns();
-			for (int i=0; i<displayColumns.size(); i++) {
-				Column<RowType, ?> col = displayColumns.get(i);
-				for (MCheckBox cbox : cb) {
-					if (col.getHeader() == cbox.getValue()) {
-						list.getTableDefinition().setColumnVisible(
-								list.getTableDefinition().getColumnDefinition(i), 
-								cbox.isChecked());
-					}
-				}
+			ok();
+		}
+	}
+
+	private void ok() {
+		final Iterator<Entry<Integer, MCheckBox>> itr = checkBoxes.entrySet()
+				.iterator();
+		final ColumnDefinition<RowType> newCols = new ColumnDefinition<RowType>();
+		while (itr.hasNext()) {
+			final Entry<Integer, MCheckBox> e = itr.next();
+			if (e.getValue().isChecked()) {
+				newCols.addColumn(allColumns.getColumn(e.getKey()));
 			}
-			createCookie(table);
-			hide();
 		}
+		onSetNewColumns(newCols);
+		hide();
 	}
 
-	public void createCookie(final String table) {
-		String value = "";
-		for (int i = 0; i < list.getTableDefinition().getColumnDefinitionCount(); i++) {
-			if (list.getTableDefinition().isColumnVisible(list.getTableDefinition().getColumnDefinition(i)))
-				value += 1 + ",";
-			else
-				value += 0 + ",";
-		}
-		final Date expires = new Date();
-		expires.setTime(expires.getTime() + millisecondsIn30Days);
-		Cookies.setCookie(table, value, expires);
-	}
-
-	public void getCookie(final String table) {
-
-	}
+	public abstract void onSetNewColumns(final ColumnDefinition<RowType> newCols);
 
 	public void onKeyPress(final Widget sender, final char kc, final int mod) {
 		if (kc == KEY_ENTER) {
+			ok();
+		} else if (kc == KEY_ESCAPE) {
+			cancel();
 		}
 	}
 
-	public void onKeyDown(final Widget sender, final char kc, final int mod) {
-	}
+	public void onKeyDown(final Widget sender, final char kc, final int mod) {}
 
-	public void onKeyUp(final Widget sender, final char kc, final int mod) {
-	}
+	public void onKeyUp(final Widget sender, final char kc, final int mod) {}
 
 	private void cancel() {
 		hide();
 	}
-	
-	private ArrayList<Column<RowType, ?>> getOptionalColumns(ArrayList<Column<RowType, ?>> columns) {
-		final ArrayList<Column<RowType, ?>> cols = new ArrayList<Column<RowType, ?>>();
-		for (Column<RowType, ?> c : columns) {
-			if (c.isOptional()) {
-				cols.add(c);
-			}
-		}
-		return cols;
-	}
-
 }

@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.widgets.paging;
+package edu.rpi.metpetdb.client.ui.widgets.paging.columns;
 
 import java.util.Collection;
 
