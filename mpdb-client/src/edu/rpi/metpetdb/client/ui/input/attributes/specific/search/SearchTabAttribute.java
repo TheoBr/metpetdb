@@ -6,6 +6,7 @@ import java.util.Arrays;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
+import edu.rpi.metpetdb.client.ui.search.SearchInterface;
 
 public abstract class SearchTabAttribute {
 	private final ArrayList<SearchGenericAttribute> atts;

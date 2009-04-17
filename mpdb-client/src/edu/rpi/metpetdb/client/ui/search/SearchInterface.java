@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.input.attributes.specific.search;
+package edu.rpi.metpetdb.client.ui.search;
 
 import java.util.ArrayList;
 
@@ -13,6 +13,8 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
@@ -207,7 +209,10 @@ public class SearchInterface implements ClickListener {
 	};
 	
 	private SearchTabAttribute getSelectedTabAtt() {
-		return tabAtts[tabs.getTabBar().getSelectedTab()];
+		if (tabs.getTabBar().getSelectedTab()  >= 0)
+			return tabAtts[tabs.getTabBar().getSelectedTab()];
+		else
+			return tabAtts[0];
 	}
 	
 	public void passActionWidget(Widget w) {

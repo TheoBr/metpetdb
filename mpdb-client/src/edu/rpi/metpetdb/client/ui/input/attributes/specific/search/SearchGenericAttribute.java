@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.search.SearchInterface;
 
 public abstract class SearchGenericAttribute extends GenericAttribute{
 	private ArrayList<Object> objs;

@@ -216,7 +216,7 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 
 		public String columnName() {
-			return "subsample_id";
+			return "subsampleId";
 		}
 		
 		public boolean isSampleAttr(){

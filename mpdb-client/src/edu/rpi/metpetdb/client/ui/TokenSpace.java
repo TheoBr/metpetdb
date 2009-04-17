@@ -173,7 +173,7 @@ public class TokenSpace implements HistoryListener {
 	public static final Screen search = new Screen(LocaleHandler.lc_entity
 			.TokenSpace_Search()) {
 		public void executeToken(final String args) {
-			show(new Search().createNew());
+			show(new Search());
 		}
 	};
 
@@ -240,7 +240,7 @@ public class TokenSpace implements HistoryListener {
 		public void execute(final long id) {
 			new VoidLoggedInOp() {
 				public void command() {
-					show(new UserSamplesList().display(id));
+					show(new UserSamplesList());
 				}
 			}.begin();
 		}
@@ -251,7 +251,7 @@ public class TokenSpace implements HistoryListener {
 		public void executeToken(final String args) {
 			new VoidLoggedInOp() {
 				public void command() {
-					show(new UserSamplesList().display());
+					show(new UserSamplesList());
 				}
 			}.begin();
 

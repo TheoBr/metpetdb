@@ -73,7 +73,7 @@ public class ExcelServlet extends HttpServlet{
 				response.getWriter().write(setToString(s.getReferences(),ReferenceProperty.name) + "\t");
 				response.getWriter().write(formatlatlng(((Point)s.getLocation()).y) +"\t");
 				response.getWriter().write(formatlatlng(((Point)s.getLocation()).x) +"\t");
-				response.getWriter().write(s.getSesarNumber().toString() + "\t");
+				response.getWriter().write(s.getSesarNumber() + "\t");
 				response.getWriter().write(s.getCollector() + "\t");
 				response.getWriter().write(Sample.dateToString(s.getCollectionDate(), s.getDatePrecision()) + "\t");
 				response.getWriter().write(s.getLocationText() + "\t");

@@ -87,7 +87,7 @@ public class SearchDb {
 											// no reason to try finding samples
 											// with "no matches"
 			{
-				return null;
+				return new Results<Sample>(0, new ArrayList<Sample>());
 			}
 			// Get samples third... will need to incorporate top two pieces
 			fullQuery = getSamplesQuery(searchSamp, userSearching, session);
@@ -158,7 +158,7 @@ public class SearchDb {
 					.createFullTextQuery(tempSampleQuery, Sample.class);
 			final Results<Sample> SResults = new Results<Sample>(sampleQuery
 					.getResultSize(), sampleQuery.list());
-			for (int i = 0; i < SResults.getCount(); i++) {
+			for (int i = 0; i < SResults.getList().size(); i++) {
 				Set<Subsample> tempSubsamples = SResults.getList().get(i)
 						.getSubsamples();
 				for (Subsample subsample : tempSubsamples) {
@@ -170,7 +170,7 @@ public class SearchDb {
 											// reason to try finding samples
 											// with "no matches"
 			{
-				return null;
+				return new Results<ChemicalAnalysis>(0, new ArrayList<ChemicalAnalysis>());
 			}
 			// Get samples third... will need to incorporate top two pieces
 

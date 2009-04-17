@@ -23,7 +23,7 @@ public abstract class MpDbPagingScrollTable<RowType extends MObject> extends Pag
 		setSortPolicy(SortPolicy.MULTI_CELL);
 		setColumnResizePolicy(ColumnResizePolicy.SINGLE_CELL);
 		setResizePolicy(ResizePolicy.FLOW);
-		setScrollPolicy(ScrollPolicy.HORIZONTAL);
+		setScrollPolicy(ScrollPolicy.DISABLED);
 	}
 	
 	public abstract Widget getNoResultsWidgetImpl();

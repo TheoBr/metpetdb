@@ -27,11 +27,11 @@ public abstract class MultipleColumn<RowType extends MObject, ColType> extends C
 				}
 				text = text.substring(0,text.length() - 2);
 			} else {
-				text = "-----";
+				text = "";
 			}
 			return text;
 		} else {
-			return "-----";
+			return "";
 		}
 	}
 	

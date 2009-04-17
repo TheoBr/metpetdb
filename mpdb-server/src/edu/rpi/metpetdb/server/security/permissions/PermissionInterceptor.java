@@ -56,8 +56,9 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	 */
 	private void checkOwner(Object entity, Object[] state,
 			String[] propertyNames, Collection<Principal> principals) {
-		//we don't really care about owners of sample comments,
-		//we do care about their owning object (sample) which we check for private/public
+		// we don't really care about owners of sample comments,
+		// we do care about their owning object (sample) which we check for
+		// private/public
 		if (entity instanceof HasOwner && !(entity instanceof SampleComment)) {
 			if (!principals.contains(new OwnerPrincipal(getOwnerId(
 					propertyNames, state)))) {
@@ -90,37 +91,15 @@ public class PermissionInterceptor extends EmptyInterceptor {
 			// are saving is part of another
 			if (entity instanceof HasSample) {
 				// see if we can load the sample id
-				long sampleId = getSampleId(propertyNames, state);
-				// we catch the exception in order
-				// to reach the finally clause and close
-				// the session
-				final Session s = DataStore.open();
-				try {
-					s.createQuery(
-							"from Sample s where s.id=" + sampleId)
-							.uniqueResult();
-				} catch (CallbackException ce) {
-					throw ce;
-				} finally {
-					s.close();
-				}
+				final Sample s = getSample(propertyNames, state);
+				if (s != null)
+					s.getOwner().getId();
 			}
 			if (entity instanceof HasSubsample) {
 				// see if we can load the subsample id
-				long subsampleId = getSubsampleId(propertyNames, state);
-				// we catch the exception in order
-				// to reach the finally clause and close
-				// the session
-				final Session s = DataStore.open();
-				try {
-					s.createQuery(
-							"from Subsample ss where ss.id="
-									+ subsampleId).uniqueResult();
-				} catch (CallbackException ce) {
-					throw ce;
-				} finally {
-					s.close();
-				}
+				final Subsample s = getSubsample(propertyNames, state);
+				if (s != null)
+					s.getOwner().getId();
 			}
 		}
 	}
@@ -238,11 +217,12 @@ public class PermissionInterceptor extends EmptyInterceptor {
 			String[] propertyNames, Object[] state) {
 		// check object counts, i.e. subsamples, images, chemical analyses
 		long userId = 0;
-		if (MpDbServlet.currentReq() != null && MpDbServlet.currentReq().user != null)
+		if (MpDbServlet.currentReq() != null
+				&& MpDbServlet.currentReq().user != null)
 			userId = MpDbServlet.currentReq().user.getId();
 		if (userId <= 0)
 			return; // we don't need to do anything special for non logged in
-					// users
+		// users
 		long entityId = Long.parseLong(id.toString());
 		final Session s = DataStore.open();
 		try {
@@ -283,18 +263,18 @@ public class PermissionInterceptor extends EmptyInterceptor {
 								.toString());
 					} else if (entity instanceof Sample) {
 						state[i] = Integer
-						.parseInt(s
-								.createQuery(
-										"select count(*) from ChemicalAnalysis ca where "
-												+ "(ca.subsample.id IN (select ss.id from Subsample ss"
-												+ " where ss.sample.id="
-												+ entityId
-												+ "AND (ss.publicData=true or "
-												+ "ss.owner.id="
-												+ userId
-												+ "))) AND (ca.publicData=true or ca.owner.id="
-												+ userId + ")")
-								.uniqueResult().toString());
+								.parseInt(s
+										.createQuery(
+												"select count(*) from ChemicalAnalysis ca where "
+														+ "(ca.subsample.id IN (select ss.id from Subsample ss"
+														+ " where ss.sample.id="
+														+ entityId
+														+ "AND (ss.publicData=true or "
+														+ "ss.owner.id="
+														+ userId
+														+ "))) AND (ca.publicData=true or ca.owner.id="
+														+ userId + ")")
+										.uniqueResult().toString());
 					}
 				} else if ("subsampleCount".equals(propertyNames[i])) {
 					state[i] = Integer.parseInt(s.createQuery(
@@ -346,20 +326,19 @@ public class PermissionInterceptor extends EmptyInterceptor {
 		return getIdOfUser("owner", propertyNames, state);
 	}
 
-	private int getProperty(String property, String[] propertyNames,
+	private Object getProperty(String property, String[] propertyNames,
 			Object[] state) {
-		int propertyValue = -1;
 		for (int i = 0; i < propertyNames.length; ++i) {
 			if (propertyNames[i].equals(property)) {
 				if (state != null && state[i] != null) {
 					final Object value = state[i];
 					if (value instanceof Sample && value != null) {
-						propertyValue = (int) ((Sample) value).getId();
+						return ((Sample) value);
 					} else if (value instanceof Subsample && value != null) {
-						propertyValue = (int) ((Subsample) value).getId();
+						return ((Subsample) value);
 					} else {
 						try {
-							propertyValue = Integer.parseInt(value.toString());
+							return Integer.parseInt(value.toString());
 						} catch (Exception e) {
 
 						}
@@ -368,15 +347,15 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				}
 			}
 		}
-		return propertyValue;
+		return null;
 	}
 
-	private int getSampleId(String[] propertyNames, Object[] state) {
-		return getProperty("sample", propertyNames, state);
+	private Sample getSample(String[] propertyNames, Object[] state) {
+		return (Sample) getProperty("sample", propertyNames, state);
 	}
 
-	private int getSubsampleId(String[] propertyNames, Object[] state) {
-		return getProperty("subsample", propertyNames, state);
+	private Subsample getSubsample(String[] propertyNames, Object[] state) {
+		return (Subsample) getProperty("subsample", propertyNames, state);
 	}
 
 	private void checkSavePermissions(Object entity, Object[] state,

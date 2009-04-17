@@ -11,17 +11,15 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.SearchSample;
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.commands.FormOp;
-import edu.rpi.metpetdb.client.ui.commands.MCommand;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchInterface;
+import edu.rpi.metpetdb.client.ui.search.SearchInterface;
 import edu.rpi.metpetdb.client.ui.widgets.MButton;
 
-public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
-	private T bean;
+public abstract class ObjectSearchPanel extends FlowPanel {
+	private SearchSample bean;
 	protected ArrayList<SearchGenericAttribute> attributes;
 	protected ArrayList<Widget[]> currentEditWidgets;
 	private final MButton searchBtn = new MButton("Search");
@@ -32,7 +30,7 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 	protected ObjectSearchPanel(final SearchInterface atts) {
 		this.setStyleName("criteria");
 
-		bean = (T) new SearchSample();
+		bean = new SearchSample();
 		this.atts = atts;
 		attributes = atts.getAttributes();
 
@@ -45,35 +43,35 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 		atts.passActionWidget(searchBtn);
 	}
 
-	public T getBean() {
+	public SearchSample getBean() {
 		return bean;
 	}
 
-	public void setBean(final T o) {
+	public void setBean(final SearchSample o) {
 		bean = o;
 	}
 
-	public synchronized void edit(final SearchSample obj) {
+	public void edit(final SearchSample obj) {
 		clear();
 		Widget[] w = atts.createEditWidget(obj, "TEMP");
 		currentEditWidgets = atts.getCurrentEditWidgets();
 		for (int i = 0; i < w.length; i++) {
 			add(w[i]);
 		}
+		bean = obj;
 	}
 
 	public void doSearch() {
-		new FormOp<T>(this) {
+		new FormOp<SearchSample>(this) {
 			protected void onSubmit() {
 				startValidation(this);
 			}
-			public void onSuccess(final T result) {
-				new FormOp<T>(ObjectSearchPanel.this) {
+			public void onSuccess(final SearchSample result) {
+				new FormOp<SearchSample>(ObjectSearchPanel.this) {
 					protected void onSubmit() {
-						searchBean(this);
-						onSuccess(null);
+						performSearch();
 					}
-					public void onSuccess(final T result) {
+					public void onSuccess(final SearchSample result) {
 						onSearchCompletion(this);
 					}
 				}.begin();
@@ -132,10 +130,10 @@ public abstract class ObjectSearchPanel<T extends MObject> extends FlowPanel {
 		return currentEditWidgets.get(attributes.indexOf(attr));
 	}
 
-	protected void searchBean(final AsyncCallback<T> ac) {
+	protected void performSearch() {
 		throw new UnsupportedOperationException();
 	}
-	protected void onSearchCompletion(final FormOp<T> ac) {
+	protected void onSearchCompletion(final FormOp<SearchSample> ac) {
 
 	}
 }

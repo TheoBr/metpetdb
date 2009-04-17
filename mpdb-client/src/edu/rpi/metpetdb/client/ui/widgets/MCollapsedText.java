@@ -19,14 +19,14 @@ public class MCollapsedText extends Label {
 	}
 
 	public MCollapsedText(String textFull, int timeout, int truncLength) {
-		this(textFull, null, timeout, truncLength);
+		this(textFull, textFull, timeout, truncLength);
 	}
 	
 	public MCollapsedText(String textFull, String tooltipData, int timeout, int truncLength){
 		String textTruncated = textFull;
 		if(textTruncated.length() > truncLength){
 			addMouseListener(new TooltipListener(tooltipData==null?"":tooltipData, timeout, "dialogBox-content"));
-			if (truncLength - 3 > textTruncated.length())
+			if (truncLength - 3 < textTruncated.length())
 				textTruncated = textTruncated.substring(0, truncLength - 3);
 			textTruncated += "...";
 		}

@@ -1,6 +1,6 @@
 package edu.rpi.metpetdb.client.ui.widgets;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.postgis.Point;
 
@@ -9,7 +9,6 @@ import com.google.gwt.maps.client.MapType;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.control.SmallMapControl;
 import com.google.gwt.maps.client.event.EarthInstanceHandler;
-import com.google.gwt.maps.client.event.EarthInstanceHandler.EarthInstanceEvent;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -27,7 +26,7 @@ public class MGoogleEarthPopUp extends MDialogBox{
 		
 	}
 	
-	public void createUI(final ArrayList<Sample> list){
+	public void createUI(final List<Sample> list){
 		final FlowPanel earthContainer = new FlowPanel();
 		final Button close = new Button("Close");
 		close.addClickListener(new ClickListener(){

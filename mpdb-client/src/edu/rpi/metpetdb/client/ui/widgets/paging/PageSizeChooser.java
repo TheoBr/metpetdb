@@ -13,13 +13,13 @@ import com.google.gwt.user.client.ui.Widget;
 public abstract class PageSizeChooser extends HTMLPanel {
 	
 	private ListBox pageSizeChoice;
+	private Integer[] choices = {
+			10, 25, 75
+	};
 	
 	public PageSizeChooser() {
 		super("Show <span id=\"perpage-choice\"></span> per page.");
 		pageSizeChoice = new ListBox();
-		String[] choices = {
-				"10", "25", "75"
-		};
 		setPageSizeChoices(choices);
 		pageSizeChoice.addChangeListener(new ChangeListener() {
 			public void onChange(Widget sender) {
@@ -37,10 +37,20 @@ public abstract class PageSizeChooser extends HTMLPanel {
 		setStyleName("perpage");
 	}
 	
-	public void setPageSizeChoices(String[] choices) {
+	public void setPageSizeChoices(Integer[] choices) {
 		pageSizeChoice.clear();
-		for (String choice : choices) {
-			pageSizeChoice.addItem(choice);
+		for (Integer choice : choices) {
+			pageSizeChoice.addItem(choice.toString());
+		}
+		this.choices = choices;
+	}
+	
+	public void setSelectedPageSize(int pageSize) {
+		for(int i = 0;i<choices.length;++i) {
+			if (pageSize == choices[i]) {
+				pageSizeChoice.setSelectedIndex(i);
+				break;
+			}
 		}
 	}
 	

@@ -1,7 +1,5 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
-import java.util.Set;
-
 import org.postgis.Point;
 
 import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
@@ -12,7 +10,6 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 import edu.rpi.metpetdb.client.ui.CSS;
@@ -219,26 +216,7 @@ public abstract class SampleList extends DataList<Sample> {
 		// minerals
 		{
 			CollapsedColumn<Sample> col = new CollapsedColumn<Sample>(enttxt.Sample_minerals(),
-					SampleProperty.minerals){
-				@Override
-				protected String getCellContents(Sample data) {
-					Set<SampleMineral> minerals = data.getMinerals();
-					String text = "";
-					for (SampleMineral m : minerals){
-						if (m.getAmount() > 0) {
-							text += m.getName() + " " + String.valueOf(
-									ListExUtil.formatDouble(m.getAmount(),ListExUtil.defaultDigits)) + ", ";
-						} else {
-							text += m.getName() + ", "; 
-						}
-					}
-					if (text.equals("")){
-						text = "------";
-					} else
-						text = text.substring(0,text.length()-2);
-					return text;
-				}
-			};
+					SampleProperty.minerals);
 			col.setTruncateOptions(TruncateMethod.ITEM_COUNT, 3);
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(20);
@@ -326,7 +304,6 @@ public abstract class SampleList extends DataList<Sample> {
 			// perhaps a DateColumn is in order
 			col.setColumnSortable(false);
 			col.setMinimumColumnWidth(20);
-			col.setMaximumColumnWidth(30);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
 			columns.addColumn(col);
@@ -349,6 +326,13 @@ public abstract class SampleList extends DataList<Sample> {
 	@Override
 	public String getListName() {
 		return "sampleList";
+	}
+	
+	
+	
+	public void initialize() {
+		super.initialize();
+		setTableActions(new SampleListActions(this));
 	}
 
 	public SampleList() {

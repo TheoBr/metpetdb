@@ -1,7 +1,6 @@
 package edu.rpi.metpetdb.client.ui.widgets.paging;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.gen2.table.client.DefaultTableDefinition;
@@ -14,11 +13,11 @@ import com.google.gwt.gen2.table.event.client.PageLoadHandler;
 import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
 import com.google.gwt.gen2.table.override.client.HTMLTable.RowFormatter;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -42,8 +41,6 @@ import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
  *            the types of objects that will be paginated in this table
  */
 public abstract class DataList<RowType extends MObject> extends FlowPanel {
-	private final static int DEFAULT_PAGE_SIZE = 10;
-	private final static long MILLISECONDS_IN_30_DAYS = 2592000000L;
 	private final static String STORAGE_COOKIE = "mpdb-list";
 	private final static String STYLENAME = "scrolltable";
 	/**
@@ -51,8 +48,8 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 	 */
 	private static final boolean DEFAULT_SORT_ORDER = true;
 
-	private int currentPageSize = DEFAULT_PAGE_SIZE;
 	private final ListCookieJar cookies;
+	private final InlineLabel results;
 
 	/**
 	 * Returns the name of the list for use in the cookie (YUM!)
@@ -169,6 +166,7 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 				}
 
 				public void onSuccess(final Results<RowType> result) {
+					results.setText(result.getCount() + " results discovered!");
 					setRowCount(result.getCount());
 					final SerializableResponse<RowType> response = new SerializableResponse<RowType>(
 							result.getList());
@@ -292,15 +290,18 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 		// topbar contains pagination and column options
 		topbar = new MTwoColPanel();
 		topbar.addStyleName(STYLENAME + "-topbar");
-
-		topbar.getRightCol().add(new PageSizeChooser() {
+		
+		final PageSizeChooser psc = new PageSizeChooser() {
 
 			@Override
 			public void setPageSizeImpl(int newSize) {
 				setPageSize(newSize);
 			}
 
-		});
+		};
+		psc.setSelectedPageSize(cookies.getPageSize());
+
+		topbar.getRightCol().add(psc);
 		MPagingOptions options = new MPagingOptions(getScrollTable());
 		topbar.getRightCol().add(options);
 
@@ -321,17 +322,17 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 				myView.show();
 			}
 		});
+		topbar.getLeftCol().add(results);
 		topbar.getLeftCol().add(customCols);
 
 		// container for widgets used to do stuff with selected rows
 		tableActions = new SimplePanel();
 
-		setPageSize(loadPageSizeCookie());
+		setPageSize(cookies.getPageSize());
 
 		add(topbar);
 		add(tableActions);
 		add(getScrollTable());
-		getScrollTable().fillWidth();
 	}
 
 	/**
@@ -343,59 +344,44 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 	public DataList(final ColumnDefinition<RowType> columns) {
 		this.allColumns = columns;
 		cookies = new ListCookieJar(getCookieName());
+		results = new InlineLabel("");
 		setUpColumns();
-	}
-
-	/**
-	 * Reloads the current page to force a refresh of the data
-	 */
-	public void refresh() {
-		dataTable.resize(currentPageSize, allColumns.size());
-		getScrollTable().gotoFirstPage();
-		getScrollTable().reloadPage();
 	}
 
 	public FlowPanel getTopBar() {
 		return topbar.getLeftCol();
 	}
 
-	public void setPageSize(final int PageSize) {
-		if (PageSize > 0) {
-			currentPageSize = PageSize;
-			getScrollTable().setPageSize(currentPageSize);
-			createPageSizeCookie(currentPageSize);
-			refresh();
+	public void setPageSize(final int pageSize) {
+		if (pageSize > 0) {
+			dataTable.resize(pageSize, allColumns.size());
+			getScrollTable().setPageSize(pageSize);
+			cookies.setPageSize(pageSize);
+			getScrollTable().gotoFirstPage();
+			getScrollTable().reloadPage();
+			
 		}
-	}
-	public int getPageSize() {
-		return currentPageSize;
 	}
 
 	public void setTableActions(Widget w) {
 		tableActions.setWidget(w);
-	}
-
-	public void createPageSizeCookie(final int newPageSize) {
-		final Date expires = new Date();
-		expires.setTime(expires.getTime() + MILLISECONDS_IN_30_DAYS);
-		Cookies.setCookie(STORAGE_COOKIE, String.valueOf(newPageSize), expires);
-	}
-
-	private int loadPageSizeCookie() {
-		if (Cookies.getCookie(STORAGE_COOKIE) != null) {
-			return Integer.parseInt(Cookies.getCookie(STORAGE_COOKIE));
-		} else
-			return 10;
 	}
 	
 	public void onAttach() {
 		super.onAttach();
 		DeferredCommand.addCommand(new Command() {
 			public void execute() {
-				getScrollTable().fillWidth();
+				fillWidth();
 			}
 		});
-		
+	}
+	
+	public void fillWidth() {
+		//HACK: forces the scroll table to resize based on the header column
+		//size as opposed to the data table
+		getDataTable().resizeColumns(0);
+		getScrollTable().fillWidth();
+		getDataTable().resizeColumns(displayColumns.size());
 	}
 
 	protected abstract Widget getNoResultsWidget();
