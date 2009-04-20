@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.objects.list;
+package edu.rpi.metpetdb.client.ui.user;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -8,6 +8,7 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
@@ -24,6 +25,10 @@ public class UserSamplesList extends MPagePanel {
 		};
 		addPageHeader();
 		add(list);
+	}
+	
+	public void reload() {
+		list.getScrollTable().reloadPage();
 	}
 
 	protected void addPageHeader() {

@@ -16,7 +16,6 @@ import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
-import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.FormOp;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
@@ -88,24 +87,25 @@ public class Search extends MPagePanel  {
 		}
 
 	};
-
-	public Search() {
-		searchPanel.edit(ss);
-		MetPetDBApplication.registerPageWatcher(this);
-		setStyleName(CSS.SEARCH);
-		setPageTitle("Search");
-
-		
-		add(searchPanel);
+	
+	static {
 		samplesContainer.add(sampleList);
-
 		chemContainer.add(chemList);
-		
+		searchPanel.edit(ss);
 		chemContainer.setVisible(!outputSamples);
 		samplesContainer.setVisible(outputSamples);
+	}
 
+	public Search() {
+		setStyleName(CSS.SEARCH);
+		setPageTitle("Search");
+		add(searchPanel);
 		add(samplesContainer);
 		add(chemContainer);
+	}
+	
+	public void reload() {
+		sampleList.getScrollTable().reloadPage();
 	}
 
 	private static Widget createResultTypeToggle() {

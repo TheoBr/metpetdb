@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.client.ui.objects.list;
+package edu.rpi.metpetdb.client.ui.user;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,6 +25,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
+import edu.rpi.metpetdb.client.ui.objects.list.ProjectListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 

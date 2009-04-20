@@ -37,15 +37,15 @@ import edu.rpi.metpetdb.client.ui.objects.details.SubsampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.list.ImageListViewer;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
-import edu.rpi.metpetdb.client.ui.objects.list.UserProjectsListEx;
-import edu.rpi.metpetdb.client.ui.objects.list.UserSamplesList;
 import edu.rpi.metpetdb.client.ui.search.Search;
 import edu.rpi.metpetdb.client.ui.user.Confirmation;
 import edu.rpi.metpetdb.client.ui.user.EditUserProfile;
 import edu.rpi.metpetdb.client.ui.user.RequestRoleChange;
 import edu.rpi.metpetdb.client.ui.user.ReviewRoleChanges;
 import edu.rpi.metpetdb.client.ui.user.UserDetails;
+import edu.rpi.metpetdb.client.ui.user.UserProjectsListEx;
 import edu.rpi.metpetdb.client.ui.user.UserRegistrationPanel;
+import edu.rpi.metpetdb.client.ui.user.UserSamplesList;
 
 /**
  * History token handler.
@@ -172,8 +172,12 @@ public class TokenSpace implements HistoryListener {
 	};
 	public static final Screen search = new Screen(LocaleHandler.lc_entity
 			.TokenSpace_Search()) {
+		Search s;
 		public void executeToken(final String args) {
-			show(new Search());
+			if (s == null)
+				s = new Search();
+			s.reload();
+			show(s);
 		}
 	};
 
@@ -248,10 +252,15 @@ public class TokenSpace implements HistoryListener {
 
 	public static final Screen samplesForUser = new Screen(
 			LocaleHandler.lc_entity.TokenSpace_Samples_For_User()) {
+		UserSamplesList list;
 		public void executeToken(final String args) {
+			
 			new VoidLoggedInOp() {
 				public void command() {
-					show(new UserSamplesList());
+					if (list == null)
+						list = new UserSamplesList();
+					list.reload();
+					show(list);
 				}
 			}.begin();
 
