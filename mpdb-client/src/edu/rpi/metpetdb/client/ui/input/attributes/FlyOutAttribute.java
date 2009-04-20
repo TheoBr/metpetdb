@@ -151,7 +151,6 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 
 	private ArrayList<T> selectedItems = new ArrayList<T>();
 	private ArrayList<Widget> selectedWidgets = new ArrayList<Widget>();
-	private final ArrayList<Widget> trees;
 	private final int maxSelectable;
 
 	/**
@@ -174,7 +173,6 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 		super(pc);
 		container = new HorizontalPanel();
 		container.setStyleName("flyout");
-		trees = new ArrayList<Widget>();
 		this.maxSelectable = maxSelectable;
 	}
 	

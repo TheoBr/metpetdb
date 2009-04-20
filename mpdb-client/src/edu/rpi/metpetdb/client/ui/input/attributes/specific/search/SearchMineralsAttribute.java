@@ -20,6 +20,8 @@ import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 import edu.rpi.metpetdb.client.ui.input.WizardDialog;
 import edu.rpi.metpetdb.client.ui.input.attributes.FlyOutAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.FlyOutAttribute.FlyOutItem;
+import edu.rpi.metpetdb.client.ui.widgets.MPartialCheckBox.CheckedState;
 
 public class SearchMineralsAttribute extends SearchGenericAttribute implements ClickListener{
 
@@ -132,11 +134,11 @@ public class SearchMineralsAttribute extends SearchGenericAttribute implements C
 	}
 	
 	public void onClear(){
-		for(CheckBox cb : (ArrayList<CheckBox>) tree.getSelectedWidgets()) {
-			cb.setChecked(false);
+		for(FlyOutItem fo : (ArrayList<FlyOutItem>) tree.getSelectedWidgets()) {
+			fo.cb.setState(CheckedState.UNCHECKED);
 			tree.getSelectedItems().remove(0);
 		}
-		
+		tree.getSelectedWidgets().clear();
 	}
 
 	public void onClick(Widget sender) {
