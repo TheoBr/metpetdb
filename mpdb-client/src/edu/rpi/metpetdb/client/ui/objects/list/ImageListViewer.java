@@ -1,9 +1,6 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
-import java.util.ArrayList;
-
 import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -12,9 +9,7 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.properties.ImageProperty;
 import edu.rpi.metpetdb.client.model.properties.XrayImageProperty;
-import edu.rpi.metpetdb.client.ui.dialogs.ViewImagePopup;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserImageList;
-import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.paging.DataList;
 import edu.rpi.metpetdb.client.ui.widgets.paging.columns.Column;
 import edu.rpi.metpetdb.client.ui.widgets.paging.columns.ColumnDefinition;
@@ -49,24 +44,6 @@ public abstract class ImageListViewer extends DataList<Image> {
 				XrayImageProperty.dwelltime));
 		columns.addColumn(new XrayColumn(enttxt.XrayImage_element(),
 				XrayImageProperty.element));
-		columns.addColumn(new Column<Image, MLink>("") {
-
-			@Override
-			public MLink getCellValue(final Image rowValue) {
-				return new MLink("View Larger", new ClickListener() {
-					public void onClick(final Widget sender) {
-						// FIXME hack to work with view image popup
-						final ArrayList<Image> lol = new ArrayList<Image>();
-						lol.add(rowValue);
-						new ViewImagePopup(lol,
-								new com.google.gwt.user.client.ui.Image(
-										rowValue.getHalfServerPath()), 0)
-								.show();
-					}
-				});
-			}
-
-		}.setName("viewImage"));
 	}
 	
 	@Override

@@ -166,8 +166,11 @@ public class TokenSpace implements HistoryListener {
 	};
 	public static final Screen bulkUpload = new Screen(LocaleHandler.lc_entity
 			.TokenSpace_Bulk_Upload()) {
+		BulkUploadPanel bup;
 		public void executeToken(final String args) {
-			show(new BulkUploadPanel());
+			if (bup == null)
+				bup = new BulkUploadPanel();
+			show(bup);
 		}
 	};
 	public static final Screen search = new Screen(LocaleHandler.lc_entity
