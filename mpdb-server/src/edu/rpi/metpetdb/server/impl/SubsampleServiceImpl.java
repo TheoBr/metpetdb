@@ -1,8 +1,9 @@
 package edu.rpi.metpetdb.server.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
@@ -20,17 +21,17 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 
 	public List<Subsample> all(final long sampleId) throws MpDbException {
 		final List<Subsample> l = (new SubsampleDAO(this.currentSession())
-				.getAllBySampleID(sampleId, currentUserIdIfExists()));
+				.getAllBySampleID(sampleId));
 		return (l);
 	}
 	
-	public List<Subsample> allFromManySamples(final Collection<Long> sampleIds) throws MpDbException {
-		final List<Subsample> l = new ArrayList<Subsample>();
+	public Map<Long, List<Subsample>> allFromManySamples(final Collection<Long> sampleIds) throws MpDbException {
+		Map<Long, List<Subsample>> sas = new HashMap<Long, List<Subsample>>();
 		for (Long id : sampleIds){
-			l.addAll((new SubsampleDAO(this.currentSession())
-			.getAllBySampleID(id, currentUserIdIfExists())));
+			sas.put(id,new SubsampleDAO(this.currentSession())
+			.getAllBySampleID(id));
 		}
-		return (l);
+		return sas;
 	}
 
 	public Results<Subsample> all(final PaginationParameters p,

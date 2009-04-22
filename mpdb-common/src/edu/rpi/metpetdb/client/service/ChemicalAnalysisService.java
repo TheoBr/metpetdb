@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
@@ -28,5 +29,5 @@ public interface ChemicalAnalysisService extends RemoteService {
 
 	void delete(long id) throws MpDbException, LoginRequiredException;
 	
-	List<ChemicalAnalysis> allFromManySubsamples(final Collection<Long> subsampleIds) throws MpDbException;
+	Map<Long, List<ChemicalAnalysis>> allFromManySubsamples(final Collection<Long> subsampleIds) throws MpDbException;
 }

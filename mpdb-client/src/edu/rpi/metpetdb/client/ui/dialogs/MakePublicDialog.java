@@ -2,23 +2,20 @@ package edu.rpi.metpetdb.client.ui.dialogs;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Set;
+import java.util.Map;
 import java.util.Vector;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
@@ -351,7 +348,7 @@ public class MakePublicDialog extends MDialogBox{
 	
 	private void getAllData(final ArrayList<Sample> allSamples){
 		// get subsamples
-		new ServerOp<List<Subsample>>() {
+		new ServerOp<Map<Long, List<Subsample>>>() {
 			@Override
 			public void begin() {
 				Iterator<Sample> itr = allSamples.iterator();
@@ -362,10 +359,10 @@ public class MakePublicDialog extends MDialogBox{
 				}
 				MpDb.subsample_svc.allFromManySamples(sampleIds, this);
 			}
-			public void onSuccess(List<Subsample> result) {
-				subsamples.addAll(result);
+			public void onSuccess(Map<Long, List<Subsample>> result) {
+				//subsamples.addAll(result);
 					// get chemical analyses
-				new ServerOp<List<ChemicalAnalysis>>() {
+				new ServerOp<Map<Long, List<ChemicalAnalysis>>>() {
 					@Override
 					public void begin() {
 						Iterator<Subsample> itr = subsamples.iterator();
@@ -376,8 +373,8 @@ public class MakePublicDialog extends MDialogBox{
 						}
 						MpDb.chemicalAnalysis_svc.allFromManySubsamples(subsampleIds, this);
 					}
-					public void onSuccess(List<ChemicalAnalysis> result) {
-						chemicalAnalyses.addAll(result);
+					public void onSuccess(Map<Long, List<ChemicalAnalysis>> result) {
+						//chemicalAnalyses.addAll(result);
 						// get image maps
 						new ServerOp<List<Grid>>() {
 							@Override

@@ -1,20 +1,19 @@
 package edu.rpi.metpetdb.server.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
-import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.ChemicalAnalysisService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
-import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
 public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		ChemicalAnalysisService {
@@ -38,14 +37,15 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 				.currentSession())).getAll(subsampleId);
 		return l;
 	}
-	
-	public List<ChemicalAnalysis> allFromManySubsamples(final Collection<Long> subsampleIds) throws MpDbException {
-		final List<ChemicalAnalysis> l = new ArrayList<ChemicalAnalysis>();
-		for (Long id : subsampleIds){
-			l.addAll((new ChemicalAnalysisDAO(this
-					.currentSession())).getAll(id));
+
+	public Map<Long, List<ChemicalAnalysis>> allFromManySubsamples(
+			final Collection<Long> subsampleIds) throws MpDbException {
+		final Map<Long, List<ChemicalAnalysis>> cas = new HashMap<Long, List<ChemicalAnalysis>>();
+		for (Long id : subsampleIds) {
+			cas.put(id, (new ChemicalAnalysisDAO(this.currentSession()))
+					.getAll(id));
 		}
-		return (l);
+		return cas;
 	}
 
 	public ChemicalAnalysis save(ChemicalAnalysis ca)
@@ -55,15 +55,16 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		commit();
 		return (ca);
 	}
-	
+
 	public void saveAll(Collection<ChemicalAnalysis> chemicalAnalyses)
-	throws ValidationException, LoginRequiredException, MpDbException {
-			final ChemicalAnalysisDAO dao = new ChemicalAnalysisDAO(this.currentSession());
-			for(ChemicalAnalysis ca : chemicalAnalyses) {
-				doc.validate(ca);
-				dao.save(ca);
-			}
-			commit();
+			throws ValidationException, LoginRequiredException, MpDbException {
+		final ChemicalAnalysisDAO dao = new ChemicalAnalysisDAO(this
+				.currentSession());
+		for (ChemicalAnalysis ca : chemicalAnalyses) {
+			doc.validate(ca);
+			dao.save(ca);
+		}
+		commit();
 	}
 
 	public void delete(long id) throws MpDbException, LoginRequiredException {

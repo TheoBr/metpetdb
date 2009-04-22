@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -29,5 +30,10 @@ public interface SubsampleServiceAsync {
 	
 	void saveAll(Collection<Subsample> subsamples, AsyncCallback<Void> ac);
 	
-	void allFromManySamples(final Collection<Long> sampleIds, AsyncCallback<List<Subsample>> ac);
+	/**
+	 * Maps a sample id to a list of subsamples
+	 * @param sampleIds
+	 * @param ac
+	 */
+	void allFromManySamples(final Collection<Long> sampleIds, AsyncCallback<Map<Long, List<Subsample>>> ac);
 }
