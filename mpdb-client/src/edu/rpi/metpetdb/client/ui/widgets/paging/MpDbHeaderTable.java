@@ -18,12 +18,6 @@ public class MpDbHeaderTable extends FixedWidthFlexTable {
 	public void update(final ColumnDefinition<?> displayColumns,
 			final boolean selectionEnabled) {
 		int offset = selectionEnabled ? 1 : 0;
-		if (getRowCount() > 0) {
-			for (int i = 0; i < getCellCount(0); ++i) {
-				getCellFormatter().removeStyleName(0, i, "bold");
-				getCellFormatter().removeStyleName(0, i, "brown");
-			}
-		}
 		this.clearAll();
 		for (int i = 0; i < displayColumns.size(); ++i) {
 			if (displayColumns.getColumn(i).getHeader() instanceof String)
@@ -32,13 +26,10 @@ public class MpDbHeaderTable extends FixedWidthFlexTable {
 			if (displayColumns.getColumn(i).getHeader() instanceof Widget)
 				setWidget(0, i + offset, (Widget) displayColumns.getColumn(i)
 						.getHeader());
-			getCellFormatter().addStyleName(0, i + offset, "bold");
-			getCellFormatter().addStyleName(0, i + offset, "brown");
 			getCellFormatter().setAlignment(0, i + offset,
 					HasHorizontalAlignment.ALIGN_LEFT,
 					HasVerticalAlignment.ALIGN_MIDDLE);
 		}
-		getRowFormatter().addStyleName(0, "mpdb-dataTablePink");
 	}
 
 }

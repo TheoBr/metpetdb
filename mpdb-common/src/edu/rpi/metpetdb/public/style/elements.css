@@ -121,24 +121,27 @@ input[type="password"].invalid {
                  buttons
  --------------------------------------*/
 button {
-	border: 1px solid #ccc;
-	padding: 0.3em;
-	cursor: pointer;
+	background: #e4e5e9 url(../images/button-bg.png) repeat-x left top;
+	border: 1px solid #bec3cd;
+	border-bottom-color: #88909f;
+	-moz-border-radius: 1em;
+	-webkit-border-radius: 1em;
+	padding: 0.2em 0.75em;
+	color: #394148;
 }
-button:focus, button:hover {
-	border: 1px solid #999;
+button:focus, button:hover, button:active {
+	color: #27292b;
+	border-color: #a0a6b3;
+	background-image: url(../images/button-bg-hover.png);
+	border-bottom-color: #5d6574;
+}
+button:active {
+	background-color: #fff;
+	background-image: url(../images/button-bg-down.png);
 }
 button.btnPrimary,
 button.submit {
 	font-weight: bold;
-}
-button.remove {
- 	background-image: url(../images/icon-remove.gif);
- 	padding-left: 15px;
-	background-repeat: no-repeat;
-	background-position: left center;
-	background-color: #FFFFFF;
-	border: none;
 }
 
 

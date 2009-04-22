@@ -11,6 +11,10 @@
 }
 .scrolltable-topbar .right-col {
 	text-align: right;
+	width: 75%;
+}
+.scrolltable-topbar .left-col {
+	width: 25%;
 }
 .scrolltable-topbar .pagination,
 .scrolltable-topbar .perpage {
@@ -31,10 +35,21 @@
 .scrolltable-topbar .pagination span {
 	margin-right: 5px;
 }
+.scrolltable-topbar .left-col .content {
+	line-height: 2.1;
+}
+.scrolltable-topbar .left-col span {
+	margin-left: 10px;
+}
+.scrolltable-topbar .custom-col-link {
+	margin-right: 1em;
+}
 
 .scrolltable-actions {
 	color: #42495e;
 	padding: 5px;
+	background-color: #c5cfec;
+	border: 1px solid #b6c2e3;
 }
 .scrolltable-actions .label {
 	margin-right: 5px;
@@ -48,4 +63,29 @@
 }
 .scrolltable-actions .item:first-child {
 	margin-left: 10px;
+}
+.gwt-ScrollTable {
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+}
+.gwt-ScrollTable .headerTable {
+	background-color: #e5e5e5;
+}
+.gwt-ScrollTable .headerTable td,
+.gwt-ScrollTable .dataTable td {
+	vertical-align: middle;
+	overflow-x: hidden;
+	white-space: nowrap;
+}
+.gwt-ScrollTable .headerTable td {
+	border: 1px solid #aaa;
+	border-right-color: #cecece;
+	border-left-color: #cecece;
+	padding: 0.5em 0.3em; 
+}
+.gwt-ScrollTable .dataTable td {
+	border: 1px solid #DDD;
+	border-bottom-color: #c5d3fb;
+	color: #333;
+	padding: 0.3em;
 }

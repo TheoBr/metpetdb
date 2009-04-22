@@ -166,7 +166,7 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 				}
 
 				public void onSuccess(final Results<RowType> result) {
-					results.setText(result.getCount() + " results discovered!");
+					results.setText(result.getCount() + " results");
 					setRowCount(result.getCount());
 					final SerializableResponse<RowType> response = new SerializableResponse<RowType>(
 							result.getList());
@@ -291,22 +291,10 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 		topbar = new MTwoColPanel();
 		topbar.addStyleName(STYLENAME + "-topbar");
 		
-		final PageSizeChooser psc = new PageSizeChooser() {
-
-			@Override
-			public void setPageSizeImpl(int newSize) {
-				setPageSize(newSize);
-			}
-
-		};
-		psc.setSelectedPageSize(cookies.getPageSize());
-
-		topbar.getRightCol().add(psc);
-		MPagingOptions options = new MPagingOptions(getScrollTable());
-		topbar.getRightCol().add(options);
-
+		topbar.getLeftCol().add(results);
+		
 		// so the pagination displays correctly even without custom columns
-		final MLink customCols = new MLink("Custom Columnz", new ClickListener() {
+		final MLink customCols = new MLink("Customize Columns", new ClickListener() {
 			public void onClick(Widget sender) {
 				CustomTableView<RowType> myView = new CustomTableView<RowType>(
 						allColumns, displayColumns) {
@@ -322,9 +310,23 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 				myView.show();
 			}
 		});
-		topbar.getLeftCol().add(results);
-		topbar.getLeftCol().add(customCols);
+		customCols.setStyleName("custom-col-link");
+		topbar.getRightCol().add(customCols);
+		
+		final PageSizeChooser psc = new PageSizeChooser() {
 
+			@Override
+			public void setPageSizeImpl(int newSize) {
+				setPageSize(newSize);
+			}
+
+		};
+		psc.setSelectedPageSize(cookies.getPageSize());
+
+		topbar.getRightCol().add(psc);
+		MPagingOptions options = new MPagingOptions(getScrollTable());
+		topbar.getRightCol().add(options);
+		
 		// container for widgets used to do stuff with selected rows
 		tableActions = new SimplePanel();
 

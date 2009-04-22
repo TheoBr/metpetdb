@@ -43,8 +43,8 @@ public abstract class SampleList extends DataList<Sample> {
 				}
 			};
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(50);
+			col.setMinimumColumnWidth(50);
+			col.setPreferredColumnWidth(150);
 			col.setOptional(false);
 			columns.addColumn(col);
 			defaultColumns.addColumn(col);
@@ -69,9 +69,9 @@ public abstract class SampleList extends DataList<Sample> {
 				}
 			};
 			col.setColumnSortable(false);
-			col.setMinimumColumnWidth(20);
-			col.setMaximumColumnWidth(20);
-			col.setPreferredColumnWidth(20);
+			col.setMinimumColumnWidth(30);
+			col.setMaximumColumnWidth(30);
+			col.setPreferredColumnWidth(30);
 			col.setOptional(false);
 			col.setName("info");
 			columns.addColumn(col);
@@ -102,9 +102,9 @@ public abstract class SampleList extends DataList<Sample> {
 				}
 			};
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setMaximumColumnWidth(20);
-			col.setPreferredColumnWidth(20);
+			col.setMinimumColumnWidth(50);
+			col.setMaximumColumnWidth(50);
+			col.setPreferredColumnWidth(50);
 			col.setOptional(true);
 			columns.addColumn(col);
 			defaultColumns.addColumn(col);
@@ -116,8 +116,8 @@ public abstract class SampleList extends DataList<Sample> {
 			img.getElement().setAttribute("alt", "Subsamples");
 			StringColumn<Sample> col = new StringColumn<Sample>(img, SampleProperty.subsampleCount);
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(20);
+			col.setMinimumColumnWidth(30);
+			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
 			columns.addColumn(col);
 			defaultColumns.addColumn(col);
@@ -129,8 +129,8 @@ public abstract class SampleList extends DataList<Sample> {
 			img.getElement().setAttribute("alt", "Images");
 			StringColumn<Sample> col = new StringColumn<Sample>(img, SampleProperty.imageCount);
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(20);
+			col.setMinimumColumnWidth(30);
+			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
 			columns.addColumn(col);
 			defaultColumns.addColumn(col);
@@ -142,8 +142,8 @@ public abstract class SampleList extends DataList<Sample> {
 			img.getElement().setAttribute("alt", "Chemical Analyses");
 			StringColumn<Sample> col = new StringColumn<Sample>(img, SampleProperty.analysisCount);
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(20);
+			col.setMinimumColumnWidth(30);
+			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
 			columns.addColumn(col);
 		}
@@ -159,8 +159,8 @@ public abstract class SampleList extends DataList<Sample> {
 				}
 			};
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(50);
+			col.setMinimumColumnWidth(60);
+			col.setPreferredColumnWidth(120);
 			col.setOptional(true);
 			columns.addColumn(col);
 			defaultColumns.addColumn(col);
@@ -172,8 +172,8 @@ public abstract class SampleList extends DataList<Sample> {
 					SampleProperty.regions);
 			col.setTruncateOptions(TruncateMethod.ITEM_COUNT, 3);
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(30);
+			col.setMinimumColumnWidth(50);
+			col.setPreferredColumnWidth(100);
 			col.setOptional(true);
 			columns.addColumn(col);
 		}
@@ -183,8 +183,8 @@ public abstract class SampleList extends DataList<Sample> {
 			StringColumn<Sample> col = new StringColumn<Sample>(enttxt.Sample_country(),
 					SampleProperty.country);
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(30);
+			col.setMinimumColumnWidth(55);
+			col.setPreferredColumnWidth(100);
 			col.setOptional(true);
 			columns.addColumn(col);
 		}
@@ -194,8 +194,8 @@ public abstract class SampleList extends DataList<Sample> {
 			StringColumn<Sample> col = new StringColumn<Sample>(enttxt.Sample_rockType(),
 					SampleProperty.rockType);
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(30);
+			col.setMinimumColumnWidth(70);
+			col.setPreferredColumnWidth(140);
 			col.setOptional(true);
 			columns.addColumn(col);
 			defaultColumns.addColumn(col);
@@ -207,8 +207,8 @@ public abstract class SampleList extends DataList<Sample> {
 					.Sample_metamorphicGrades(), SampleProperty.metamorphicGrades);
 			col.setTruncateOptions(TruncateMethod.ITEM_COUNT, 2);
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(30);
+			col.setMinimumColumnWidth(120);
+			col.setPreferredColumnWidth(120);
 			col.setOptional(true);
 			columns.addColumn(col);
 		}
@@ -219,8 +219,8 @@ public abstract class SampleList extends DataList<Sample> {
 					SampleProperty.minerals);
 			col.setTruncateOptions(TruncateMethod.ITEM_COUNT, 3);
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(30);
+			col.setMinimumColumnWidth(50);
+			col.setPreferredColumnWidth(100);
 			col.setOptional(true);
 			columns.addColumn(col);
 			defaultColumns.addColumn(col);
@@ -232,8 +232,8 @@ public abstract class SampleList extends DataList<Sample> {
 					enttxt.Sample_references(), SampleProperty.references);
 			col.setTruncateOptions(TruncateMethod.ITEM_COUNT, 3);
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(30);
+			col.setMinimumColumnWidth(130);
+			col.setPreferredColumnWidth(200);
 			col.setOptional(true);
 			columns.addColumn(col);
 		}
@@ -255,8 +255,8 @@ public abstract class SampleList extends DataList<Sample> {
 				}
 			};
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(40);
+			col.setMinimumColumnWidth(60);
+			col.setPreferredColumnWidth(130);
 			col.setOptional(true);
 			columns.addColumn(col);
 		}
@@ -273,8 +273,8 @@ public abstract class SampleList extends DataList<Sample> {
 				}
 			};
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(30);
+			col.setMinimumColumnWidth(40);
+			col.setPreferredColumnWidth(70);
 			col.setOptional(true);
 			columns.addColumn(col);
 		}
@@ -284,8 +284,8 @@ public abstract class SampleList extends DataList<Sample> {
 			StringColumn<Sample> col = new StringColumn<Sample>(enttxt.Sample_collector(),
 					SampleProperty.collector);
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(30);
+			col.setMinimumColumnWidth(55);
+			col.setPreferredColumnWidth(100);
 			col.setOptional(true);
 			columns.addColumn(col);
 		}
@@ -303,8 +303,8 @@ public abstract class SampleList extends DataList<Sample> {
 			// TODO: actually make this sortable in the chronological sense. 
 			// perhaps a DateColumn is in order
 			col.setColumnSortable(false);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(30);
+			col.setMinimumColumnWidth(85);
+			col.setPreferredColumnWidth(110);
 			col.setOptional(true);
 			columns.addColumn(col);
 			defaultColumns.addColumn(col);
@@ -315,8 +315,8 @@ public abstract class SampleList extends DataList<Sample> {
 			StringColumn<Sample> col = new StringColumn<Sample>(enttxt.Sample_locationText(),
 					SampleProperty.locationText);
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(20);
-			col.setPreferredColumnWidth(30);
+			col.setMinimumColumnWidth(140);
+			col.setPreferredColumnWidth(170);
 			col.setOptional(true);
 			columns.addColumn(col);
 		}

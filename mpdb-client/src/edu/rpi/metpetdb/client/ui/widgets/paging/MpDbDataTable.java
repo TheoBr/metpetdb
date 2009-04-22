@@ -8,6 +8,5 @@ public class MpDbDataTable extends FixedWidthGrid {
 		super();
 		setSelectionPolicy(SelectionPolicy.CHECKBOX);
 		setSelectionEnabled(false);
-		addStyleName("mpdb-dataTable");
 	}
 }
