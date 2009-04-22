@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.model.validation;
 
 import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 import edu.rpi.metpetdb.client.model.properties.SearchSampleProperty;
+import edu.rpi.metpetdb.client.model.validation.primitive.BooleanConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.FloatConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
@@ -22,6 +23,7 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 	public ObjectConstraint SearchSample_region;
 	public ObjectConstraint SearchSample_references;
 	public ObjectConstraint SearchSample_metamorphicGrades;
+	public BooleanConstraint SearchSample_wholeRock;
 	public IntegerConstraint SearchSample_getPublic;
 
 	public FloatConstraint Sample_longitude;
@@ -32,6 +34,11 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 	public void finishInitialization(DatabaseObjectConstraints doc) {
 
 		try {
+			SearchSample_wholeRock.entityName = "SearchSample";
+			SearchSample_wholeRock.property = SearchSampleProperty.wholeRock;
+			SearchSample_wholeRock.propertyName = "wholeRock";
+			SearchSample_wholeRock.required = false;
+			
 			SearchSample_getPublic.entityName = "SearchSample";
 			SearchSample_getPublic.property = SearchSampleProperty.getPublic;
 			SearchSample_getPublic.propertyName = "getPublic";

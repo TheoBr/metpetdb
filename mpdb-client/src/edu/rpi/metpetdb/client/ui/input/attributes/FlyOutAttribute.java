@@ -64,7 +64,7 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 			cb = new MPartialCheckBox(value.toString());
 			cb.addClickListener(this);
 			add(cb);
-			if (value.getChildren() != null && value.getChildren().size() > 0) {
+			if (value instanceof HasChildren && value.getChildren() != null && value.getChildren().size() > 0) {
 				moreBtn = new ToggleButton(
 						new Image(GWT.getModuleBaseURL() + "/images/icon-flyout-more-up.png"),
 						new Image(GWT.getModuleBaseURL() + "/images/icon-flyout-more-down.png"),
@@ -138,6 +138,9 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 			if (cb.getState() == CheckedState.CHECKED) {
 				selectedWidgets.add(this);
 				selectedItems.add(obj);
+				if (maxSelectable == 1){
+					uncheckRest(this);
+				}
 			} else if (selectedWidgets.contains(this)){
 					selectedWidgets.remove(this);
 					selectedItems.remove(obj);
@@ -158,8 +161,8 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 	 * @param pc
 	 * @param i
 	 */
-	public FlyOutAttribute(final PropertyConstraint pc, final int i) {
-		this(pc, i, 0);
+	public FlyOutAttribute(final PropertyConstraint pc) {
+		this(pc, 0);
 	}
 
 	/**
@@ -168,13 +171,14 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 	 * @param i
 	 * @param maxSelectable
 	 */
-	public FlyOutAttribute(final PropertyConstraint pc, final int i,
+	public FlyOutAttribute(final PropertyConstraint pc,
 			final int maxSelectable) {
 		super(pc);
 		container = new HorizontalPanel();
 		container.setStyleName("flyout");
 		this.maxSelectable = maxSelectable;
 	}
+	
 	
 	public ArrayList<?> getSelectedWidgets() {
 		return selectedWidgets;
@@ -207,6 +211,17 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 		};
 	}
 
+	public Widget[] createEditWidget(final MObject obj, final String id, final ValueInCollectionConstraint c){
+		Collection<T> treeItems =  c.getValues();
+		if (treeItems != null) {
+			final Widget t = makeWidget(treeItems, obj);
+			container.add(t);
+		}
+		return new Widget[] {
+			container
+		};
+	}
+	
 	public Widget[] createEditWidget(final MObject obj, final String id,
 			final GenericAttribute ga) {
 		selectedItems.clear();
@@ -268,20 +283,22 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 
 	private void checkChildren(final FlyOutItem parent,
 			final CheckedState state) {
-		if (maxSelectable > 1 || maxSelectable == 0) {
-			Iterator<FlyOutItem> itr = parent.children.iterator();
-			while(itr.hasNext()){
-				FlyOutItem fo = itr.next();
+		Iterator<FlyOutItem> itr = parent.children.iterator();
+		while(itr.hasNext()){
+			FlyOutItem fo = itr.next();
+			if (maxSelectable > 1 || maxSelectable == 0 || state == CheckedState.UNCHECKED) {
 				fo.setState(state);
-				if (state == CheckedState.CHECKED && !selectedWidgets.contains(fo)){
-					selectedWidgets.add(fo);
-					selectedItems.add(fo.obj);
-				} else if (state == CheckedState.UNCHECKED){
-					selectedWidgets.remove(fo);
-					selectedItems.remove(fo.obj);
-				}
-				checkChildren(fo, state);
 			}
+			if (state == CheckedState.CHECKED && !selectedWidgets.contains(fo)){
+				if (maxSelectable > 1 || maxSelectable == 0) {
+					selectedWidgets.add(fo);
+				}
+				selectedItems.add(fo.obj);
+			} else if (state == CheckedState.UNCHECKED){
+				selectedWidgets.remove(fo);
+				selectedItems.remove(fo.obj);
+			}
+			checkChildren(fo, state);
 		}
 	}
 	
@@ -297,7 +314,7 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 					if (childState == CheckedState.PARTIALLY_CHECKED || childState == CheckedState.UNCHECKED){
 						allSelected = false;
 						parent.cb.setState(CheckedState.PARTIALLY_CHECKED);
-						if (selectedWidgets.contains(parent)){
+						if (selectedItems.contains(parent.obj)){
 							selectedWidgets.remove(parent);
 							selectedItems.remove(parent.obj);
 						}
@@ -309,7 +326,7 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 					selectedItems.add(parent.obj);
 				}
 			} else if (state == CheckedState.UNCHECKED){
-				if (selectedWidgets.contains(parent)){
+				if (selectedItems.contains(parent.obj)){
 					selectedWidgets.remove(parent);
 					selectedItems.remove(parent.obj);
 				}
@@ -327,6 +344,58 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 				}
 			}
 			checkParents(parent.parent, state);
+		}
+	}
+	
+	public void uncheckRest(final FlyOutItem current) {
+		FlowPanel fp = (FlowPanel) container.getWidget(0);
+		for (int i = 0; i < fp.getWidgetCount(); i++){
+			FlyOutItem fo = (FlyOutItem) fp.getWidget(i);
+			if (fo != current){
+				fo.cb.setState(CheckedState.UNCHECKED);
+				if (selectedItems.contains(fo.obj)){
+					selectedWidgets.remove(fo);
+					selectedItems.remove(fo.obj);
+				}
+			}
+			uncheckRestChildren(current, fo);
+		}
+	}
+	
+	private void uncheckRestChildren(final FlyOutItem current, final FlyOutItem parent) {
+		for (FlyOutItem fo : parent.children){
+			if (fo != current){
+				fo.cb.setState(CheckedState.UNCHECKED);
+				if (selectedItems.contains(fo.obj)){
+					selectedWidgets.remove(fo);
+					selectedItems.remove(fo.obj);
+				}
+			}
+		}
+	}
+	
+	public void checkByString(final String target){
+		FlowPanel fp = (FlowPanel) container.getWidget(0);
+		for (int i = 0; i < fp.getWidgetCount(); i++){
+			FlyOutItem fo = (FlyOutItem) fp.getWidget(i);
+			if (fo.obj.toString().equals(target)){
+				fo.cb.setState(CheckedState.CHECKED);
+				selectedWidgets.add(fo);
+				selectedItems.add(fo.obj);
+				checkChildren(fo,CheckedState.CHECKED);
+			} else
+				checkByStringChildren(target, fo);
+		}
+	}
+	
+	private void checkByStringChildren(final String target, final FlyOutItem parent) {
+		for (FlyOutItem fo : parent.children){
+			if (fo.obj.toString().equals(target)){
+				fo.cb.setState(CheckedState.CHECKED);
+				selectedWidgets.add(fo);
+				selectedItems.add(fo.obj);
+				checkChildren(fo,CheckedState.CHECKED);
+			}
 		}
 	}
 
@@ -352,15 +421,11 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 	}
 
 	public Object get(final Widget editWidget) {
-		if (maxSelectable == 1 && selectedItems.size() > 0)
-			return selectedItems.get(0);
-		else if (selectedItems.size() > 0)
 			return new HashSet<T>(selectedItems);
-		else
-			return null;
 	}
 	public Collection<T> get(final GenericAttribute ga) {
 		final PropertyConstraint pc = ga.getConstraint();
+
 		if (pc instanceof ObjectConstraint) {
 			final ObjectConstraint oc = (ObjectConstraint) ga.getConstraint();
 			return (Collection<T>) oc.getValueInCollectionConstraint()

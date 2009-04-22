@@ -48,6 +48,10 @@ public class SearchSample implements IsSerializable, MObject {
 	// 0 = public and private, 1 = public only, 2 = private only
 	private int getPublic;
 	
+	private Boolean wholeRock;
+	
+	private Set<Mineral> chemMinerals = new HashSet<Mineral>();
+	
 	public SearchSample() {
 		
 	}
@@ -304,6 +308,30 @@ public class SearchSample implements IsSerializable, MObject {
 	public void setGetPublic(final int getPublic){
 		if (getPublic > -1 && getPublic < 3)
 			this.getPublic = getPublic;
+	}
+	
+	public Boolean getWholeRock(){
+		return wholeRock;
+	}
+	
+	public void setWholeRock(final boolean wholeRock){
+			this.wholeRock = wholeRock;
+	}
+	
+	public Set<Mineral> getChemMinerals() {
+		return chemMinerals;
+	}
+
+	public void setChemMinerals(final Set<Mineral> c) {
+		chemMinerals = c;
+	}
+
+	public void addChemMineral(final String name) {
+		if (chemMinerals == null)
+			chemMinerals = new HashSet<Mineral>();
+		final Mineral m = new Mineral();
+		// m.setName(name);
+		chemMinerals.add(m);
 	}
 
 

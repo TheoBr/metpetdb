@@ -9,31 +9,40 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.SuggestBox;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SuggestionEvent;
 import com.google.gwt.user.client.ui.SuggestionHandler;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Element;
+import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.SearchElement;
 import edu.rpi.metpetdb.client.model.SearchOxide;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
+import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.BooleanConstraint;
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.input.attributes.FlyOutAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.FlyOutAttribute.FlyOutItem;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
-import edu.rpi.metpetdb.client.ui.widgets.MMultiWordSuggestOracle;
+import edu.rpi.metpetdb.client.ui.widgets.MPartialCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
+import edu.rpi.metpetdb.client.ui.widgets.MPartialCheckBox.CheckedState;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MultipleInputPanel;
 
 public class SearchChemistryAttribute extends SearchGenericAttribute {
@@ -45,6 +54,10 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 	
 	private static final String[] rangeChoices = {"is between", "is greater than", "is less than", "is equal to" };
 	
+	private ObjectConstraint oxideConstraint;
+	private ObjectConstraint elementConstraint;
+	private ValueInCollectionConstraint mineralConstraint;
+	private BooleanConstraint wholeRockConstraint;
 
 	private class RowContainer extends FlowPanel implements ChangeListener{
 		private ChemMSuggestText st;
@@ -56,6 +69,14 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 		private final MText and = new MText("and","span");
 		private final MText percent = new MText("%", "span");
 		private final HTML plusminus = new HTML("&#177;");
+		private Label mineral;
+		private Button selectMineral;
+		private FlyOutAttribute tree;
+		private MPartialCheckBox cb = new MPartialCheckBox(LocaleHandler.lc_entity.ChemicalAnalysis_largeRock()); 
+		private Boolean wholeRock = false;
+		final PopupPanel pp = new PopupPanel(false){
+		};
+		final FlowPanel container = new FlowPanel();
 		
 		private class ChemMSuggestText extends MSuggestText{
 			public ChemMSuggestText(){
@@ -72,7 +93,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			}
 		}
 		
-		public RowContainer(){
+		public RowContainer(final MObject obj, final String id){
 			final Set<String> measurementUnits = ChemicalAnalysis.getMeasurementUnits();
 			for (String s : measurementUnits)
 				unit.addItem(s);
@@ -121,12 +142,77 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			plusminus.addStyleName("inline");
 			setStyleName("chem-item");
 			
+			mineral = new Label("");
+			tree = new FlyOutAttribute(mineralConstraint, 1);
+				
+			Widget [] ws = tree.createEditWidget(obj, id, mineralConstraint);
+			
+			cb.addClickListener(new ClickListener(){
+				public void onClick(final Widget sender){
+					tree.uncheckRest(null);
+				}
+			});
+			tree.addClickListener(new ClickListener(){
+				public void onClick(final Widget sender){
+					cb.setState(CheckedState.UNCHECKED);
+				}
+			});
+			
+			final Button finish = new Button("Finish");
+			final Button cancel = new Button(LocaleHandler.lc_text.buttonCancel());
+			
+			finish.addClickListener(new ClickListener(){
+				public void onClick(final Widget sender){
+					pp.hide();
+					if (cb.getState() == CheckedState.CHECKED){
+						mineral.setText(cb.getText());
+						selectMineral.setText("Change");
+					} else if (tree.getSelectedWidgets().size() > 0){
+						mineral.setText(((FlyOutItem)tree.getSelectedWidgets().get(0)).obj.toString());
+						selectMineral.setText("Change");
+					} else {
+						mineral.setText("");
+					}
+					onChange(finish);
+				}
+			});
+			
+			cancel.addClickListener(new ClickListener(){
+				public void onClick(final Widget sender){
+					pp.hide();
+					clearTree(false);
+					if (mineral.getText().equals(LocaleHandler.lc_entity.ChemicalAnalysis_largeRock())){
+						cb.setState(CheckedState.CHECKED);
+					} else
+						tree.checkByString(mineral.getText());
+				}
+			});
+			
+			container.add(cb);
+			for(Widget w : ws) 
+				container.add(w);
+			container.add(finish);
+			container.add(cancel);
+			
+			pp.add(container);
+			
+			
+			selectMineral = new Button("Select Mineral...");
+			selectMineral.addClickListener(new ClickListener(){
+				public void onClick(final Widget sender){	
+					pp.setPopupPosition(selectMineral.getAbsoluteLeft(), selectMineral.getAbsoluteTop());
+					pp.show();
+				}
+			});
+			
+			final Label in = new Label("in");
+			
 			add(st);
 			add(range);
 			add(unit);
-//			add(plusminus);
-//			add(precision);
-//			add(percent);
+			add(in);
+			add(mineral);
+			add(selectMineral);
 			
 			
 			reset(range.getItemText(range.getSelectedIndex()));
@@ -135,6 +221,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 		public void onChange(final Widget sender){
 			reset(range.getItemText(range.getSelectedIndex()));
 			String displayString = "";
+			String mineralString = "";
 			if (!st.getText().equals("")){
 				Element e = findByElementSymbol(st.getText());
 				Oxide o = findByOxideSymbol(st.getText());
@@ -147,28 +234,32 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			if (currentCriteria.containsKey(this)){
 				currentCriteria.remove(this);
 			}
+			if (mineral.getText() != ""){
+				mineralString = " in " + mineral.getText();
+			}
 			if (!displayString.equals("")){
 				// between
 				if (range.getItemText(range.getSelectedIndex()).equals(rangeChoices[0]) && 
 						!lessThan.getText().equals("") && !greaterThan.getText().equals("")){
 					currentCriteria.put(this, displayString + " is between " + greaterThan.getText() + " and " +  
-							lessThan.getText() + " " + unit.getValue(unit.getSelectedIndex()));
+							lessThan.getText() + " " + unit.getValue(unit.getSelectedIndex()) + mineralString);
 				// greater than
 				} else if (range.getItemText(range.getSelectedIndex()).equals(rangeChoices[1]) && 
 						!greaterThan.getText().equals("")){
 					currentCriteria.put(this, displayString + " is greater than " + greaterThan.getText() + 
-							" " + unit.getValue(unit.getSelectedIndex()));
+							" " + unit.getValue(unit.getSelectedIndex())+ mineralString);
 				// less than
 				} else if (range.getItemText(range.getSelectedIndex()).equals(rangeChoices[2]) && 
 						!lessThan.getText().equals("")){
 					currentCriteria.put(this, displayString + " is less than " + lessThan.getText() + 
-							" " + unit.getValue(unit.getSelectedIndex()));
+							" " + unit.getValue(unit.getSelectedIndex())+ mineralString);
 				// equal to
 				} else if (range.getItemText(range.getSelectedIndex()).equals(rangeChoices[3]) && 
 						!lessThan.getText().equals("")){
 					currentCriteria.put(this, displayString + 
-							" is " + lessThan.getText() + " " + unit.getValue(unit.getSelectedIndex()));
+							" is " + lessThan.getText() + " " + unit.getValue(unit.getSelectedIndex())+ mineralString);
 				}
+				
 			}
 			SearchChemistryAttribute.this.getSearchInterface().createCritera();
 		}
@@ -180,6 +271,16 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			lessThan.setText("");
 			greaterThan.setText("");
 			precision.setText("");
+			clearTree(true);
+		}
+		
+		public void clearTree(final Boolean clearMineral){
+			cb.setState(CheckedState.UNCHECKED);
+			tree.uncheckRest(null);
+			if (clearMineral){
+				selectMineral.setText("Select Mineral...");
+				mineral.setText("");
+			}
 		}
 		
 		public void reset(final String rangeChoice){
@@ -229,11 +330,15 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 		
 	}
 
-	public SearchChemistryAttribute(final ObjectConstraint elements,
-			final ObjectConstraint oxides) {
+	public SearchChemistryAttribute(final ObjectConstraint elements, final ObjectConstraint oxides, 
+			final ValueInCollectionConstraint minerals, final BooleanConstraint wholeRock) {
 		super(new PropertyConstraint[] {
-				elements, oxides
+				elements, oxides, minerals, wholeRock
 		});
+		elementConstraint = elements;
+		oxideConstraint = oxides;
+		mineralConstraint = minerals;
+		wholeRockConstraint = wholeRock;
 	}
 	public Widget[] createDisplayWidget(final MObject obj) {
 		return new Widget[] {
@@ -249,38 +354,38 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 		
 		final HashMap m = getAll(obj);
 		if (m != null) {
-			Set<SearchElement> s = (Set<SearchElement>) m.get(this.constraints[0]);
+			Set<SearchElement> s = (Set<SearchElement>) m.get(elementConstraint);
 			final Iterator iter = s.iterator();
 			while (iter.hasNext()) {
 				final Object object = iter.next();
-				MultipleInputPanel t = SearchChemistryAttribute.this.createOptionalSuggestBox(object);
+				MultipleInputPanel t = SearchChemistryAttribute.this.createOptionalSuggestBox(obj, object, id);
 				editList.add(t);
 				realEditWidgets.add(t.getInputWidget());
 				((RowContainer)t.getInputWidget()).onChange(t.getInputWidget());
 			}
-			Set<SearchOxide> ss = (Set<SearchOxide>) m.get(this.constraints[1]);
+			Set<SearchOxide> ss = (Set<SearchOxide>) m.get(oxideConstraint);
 			final Iterator iter2 = ss.iterator();
 			while (iter2.hasNext()) {
 				final Object object = iter2.next();
-				MultipleInputPanel t = SearchChemistryAttribute.this.createOptionalSuggestBox(object);
+				MultipleInputPanel t = SearchChemistryAttribute.this.createOptionalSuggestBox(obj, object, id);
 				editList.add(t);
 				realEditWidgets.add(t.getInputWidget());
 				((RowContainer)t.getInputWidget()).onChange(t.getInputWidget());
 			}
 		}
 
-		MultipleInputPanel t = createOptionalSuggestBox(null);
+		MultipleInputPanel t = createOptionalSuggestBox(obj, null, id);
 		editList.add(t);
 		realEditWidgets.add(t.getInputWidget());
 
 		return new Widget[] {
-				editList, editList
+				editList, editList, editList, editList
 		};
 	}
 	
-	public MultipleInputPanel createOptionalSuggestBox(final Object s) {
+	public MultipleInputPanel createOptionalSuggestBox(final MObject obj, final Object s, final String id) {
 		final MultipleInputPanel panel = new MultipleInputPanel();
-		final RowContainer rc = new RowContainer();
+		final RowContainer rc = new RowContainer(obj,id);
 		if (s != null){
 			if (s instanceof SearchElement){
 				SearchElement e = (SearchElement) s;
@@ -296,6 +401,19 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 				}
 				if (e.getUpperBound() == e.getLowerBound()){
 					rc.range.setSelectedIndex(3);
+				}
+				if (e.getWholeRock()){
+					rc.cb.setState(CheckedState.CHECKED);
+					rc.mineral.setText(LocaleHandler.lc_entity.ChemicalAnalysis_largeRock());
+					rc.selectMineral.setText("Change");
+				}
+				if (e.getMinerals() != null){
+					Mineral m = findParentMineral(e.getMinerals());
+					if (m != null){
+						rc.tree.checkByString(m.getName());
+						rc.mineral.setText(m.getName());
+						rc.selectMineral.setText("Change");
+					}
 				}
 				rc.reset(rc.range.getItemText(rc.range.getSelectedIndex()));
 			}
@@ -314,6 +432,19 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 				if (o.getUpperBound() == o.getLowerBound()){
 					rc.range.setSelectedIndex(3);
 				}
+				if (o.getWholeRock()){
+					rc.cb.setState(CheckedState.CHECKED);
+					rc.mineral.setText(LocaleHandler.lc_entity.ChemicalAnalysis_largeRock());
+					rc.selectMineral.setText("Change");
+				}
+				if (o.getMinerals() != null){
+					Mineral m = findParentMineral(o.getMinerals());
+					if (m != null){
+						rc.tree.checkByString(m.getName());
+						rc.mineral.setText(m.getName());
+						rc.selectMineral.setText("Change");
+					}
+				}
 				rc.reset(rc.range.getItemText(rc.range.getSelectedIndex()));
 			}
 		}
@@ -321,7 +452,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 		panel.setInputWidget(rc);
 		panel.addButton.addClickListener(new ClickListener() {
 			public void onClick(final Widget sender) {
-				MultipleInputPanel t = SearchChemistryAttribute.this.createOptionalSuggestBox(null);
+				MultipleInputPanel t = SearchChemistryAttribute.this.createOptionalSuggestBox(obj, null, id);
 				editList.add(t);
 				realEditWidgets.add(t.getInputWidget());
 				setStyles();
@@ -341,6 +472,19 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 		return panel;
 	}
 	
+	private Mineral findParentMineral(final Set<Mineral> minerals){
+		Iterator<Mineral> itr = minerals.iterator();
+		while (itr.hasNext()){
+			Mineral m = itr.next();
+			if (m.getParentId() == null)
+				return m;
+			else if (minerals.containsAll(m.getChildren())){
+				return m;
+			}
+		}
+		return null;
+	}
+	
 	public HashMap getAll(final MObject obj) {
 		return mGetAll(obj);
 	}
@@ -356,7 +500,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 
 	protected Object get(final Widget editWidget,
 			final PropertyConstraint constraint) throws ValidationException {
-		if (constraint == this.constraints[1]) {
+		if (constraint == oxideConstraint) {
 			final HashSet<SearchOxide> Oxides = new HashSet();
 			Iterator<RowContainer> itr = currentCriteria.keySet().iterator();
 			while (itr.hasNext()){
@@ -380,6 +524,8 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 								gt, 
 								lt,
 								temp.unit.getValue(temp.unit.getSelectedIndex()));	
+						o.setWholeRock(temp.wholeRock);
+						o.setMinerals(new HashSet<Mineral>(temp.tree.getSelectedItems()));
 						Oxides.add(o);
 					}
 					catch (Exception e){
@@ -388,7 +534,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 				}
 			}
 			return Oxides;
-		} else {
+		} else if (constraint == elementConstraint){
 			final HashSet<SearchElement> Elements = new HashSet();
 			Iterator<RowContainer> itr = currentCriteria.keySet().iterator();
 			while (itr.hasNext()){
@@ -412,6 +558,8 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 								gt, 
 								lt,
 								temp.unit.getValue(temp.unit.getSelectedIndex()));	
+						e.setWholeRock(temp.wholeRock);
+						e.setMinerals(new HashSet<Mineral>(temp.tree.getSelectedItems()));
 						Elements.add(e);
 						
 					}
@@ -421,8 +569,12 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 				}
 			}
 			return Elements;
+		} else if (constraint == wholeRockConstraint){
+			return new Boolean(false);
+		} else {
+			return null;
 		}
-	}
+ 	}
 
 	public void onClear(){
 		while (realEditWidgets.size()>1){

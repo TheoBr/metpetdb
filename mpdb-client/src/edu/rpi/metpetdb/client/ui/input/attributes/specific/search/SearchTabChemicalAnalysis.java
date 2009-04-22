@@ -9,7 +9,8 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.MpDb;
 
 public class SearchTabChemicalAnalysis extends SearchTabAttribute{
-	private static SearchGenericAttribute[] atts = {new SearchChemistryAttribute(MpDb.doc.SearchSample_elements,MpDb.doc.SearchSample_oxides)};
+	private static SearchGenericAttribute[] atts = {new SearchChemistryAttribute(MpDb.doc.SearchSample_elements,
+			MpDb.doc.SearchSample_oxides, MpDb.doc.SearchSample_chemMinerals, MpDb.oc.SearchSample_wholeRock)};
 	
 	public SearchTabChemicalAnalysis(){
 		super(atts, "Chemistry"); 

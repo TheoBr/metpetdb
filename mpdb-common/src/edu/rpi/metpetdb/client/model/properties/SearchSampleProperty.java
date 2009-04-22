@@ -373,6 +373,48 @@ public enum SearchSampleProperty implements SearchProperty {
 			return true;
 		}
 	},
+	wholeRock {
+		public Boolean get(final SearchSample sample) {
+			return ((SearchSample) sample).getWholeRock();
+		}
+
+		public void set(final SearchSample sample,
+				final Object wholeRock) {
+			((SearchSample) sample)
+					.setWholeRock((Boolean)wholeRock);
+		}
+		public String columnName() {
+			return "largeRock";
+		}
+		
+		public boolean isSampleAttr(){
+			return false;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return true;
+		}
+	},
+	chemMinerals {
+		public Set<Mineral> get(final SearchSample sample) {
+			return ((SearchSample) sample).getChemMinerals();
+		}
+
+		public void set(final SearchSample sample, final Object minerals) {
+			((SearchSample) sample).setChemMinerals((Set<Mineral>) minerals);
+		}
+		public String columnName() {
+			return "Mineral_name";
+		}
+		
+		public boolean isSampleAttr(){
+			return false;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return true;
+		}
+	},
 	tabs {
 		public String get(final SearchSample sample) {
 			return "";

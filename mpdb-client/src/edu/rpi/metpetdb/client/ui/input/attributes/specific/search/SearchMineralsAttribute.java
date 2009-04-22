@@ -44,7 +44,7 @@ public class SearchMineralsAttribute extends SearchGenericAttribute implements C
 	}
 	public SearchMineralsAttribute(final PropertyConstraint mc, int maxMinerals) {
 		super(mc);
-		tree = new FlyOutAttribute(mc, 4, maxMinerals);
+		tree = new FlyOutAttribute(mc, maxMinerals);
 	}
 
 	public Widget[] createDisplayWidget(final MObject obj) {

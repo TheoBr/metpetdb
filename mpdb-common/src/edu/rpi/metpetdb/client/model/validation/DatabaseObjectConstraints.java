@@ -76,6 +76,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 	// ------ SearchMineral ------
 	public ValueInCollectionConstraint<Mineral> SearchSample_minerals;
+	public ValueInCollectionConstraint<Mineral> SearchSample_chemMinerals;
 	public ObjectConstraint<Element> SearchSample_elements;
 	public ObjectConstraint<Oxide> SearchSample_oxides;
 	public ValueInCollectionConstraint<RockType> SearchSample_possibleRockTypes;
@@ -341,6 +342,12 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		SearchSample_minerals.propertyName = "Minerals";
 		SearchSample_minerals.required = false;
 		SearchSample_minerals.entityName = "SearchSample";
+		
+		SearchSample_chemMinerals.setValues(Sample_minerals.getValues());
+		SearchSample_chemMinerals.property = SearchSampleProperty.chemMinerals;
+		SearchSample_chemMinerals.propertyName = "chemMinerals";
+		SearchSample_chemMinerals.required = false;
+		SearchSample_chemMinerals.entityName = "SearchSample";
 
 		SearchSample_elements.setConstraints(ChemicalAnalysisElement__all);
 		SearchSample_elements.property = SearchSampleProperty.elements;
