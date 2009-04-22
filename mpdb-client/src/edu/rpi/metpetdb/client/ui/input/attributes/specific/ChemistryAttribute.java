@@ -372,6 +372,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 							((ListBox) ft.getWidget(i, 5)).getItemText(
 									((ListBox) ft.getWidget(i, 5))
 											.getSelectedIndex()).toUpperCase());
+					r.setMinMax();
 					Oxides.add(r);
 				}
 			}
@@ -395,6 +396,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 							((ListBox) ft.getWidget(i, 5)).getItemText(
 									((ListBox) ft.getWidget(i, 5))
 											.getSelectedIndex()).toUpperCase());
+					r.setMinMax();
 					Elements.add(r);
 				}
 			}
