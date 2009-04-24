@@ -40,7 +40,7 @@ public abstract class ObjectSearchPanel extends FlowPanel {
 				doSearch();
 			}
 		});
-		atts.passActionWidget(searchBtn);
+		atts.addActionWidget(searchBtn);
 	}
 
 	public SearchSample getBean() {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -30,7 +30,7 @@ import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisListEx;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
-public class Search extends MPagePanel  {
+public class Search extends MPagePanel {
 
 	private static SearchTabAttribute[] searchTabs = {
 			new SearchTabRockTypes(), new SearchTabMetamorphicGrade(),
@@ -54,10 +54,9 @@ public class Search extends MPagePanel  {
 					chemList.getScrollTable().gotoPage(0, true);
 				}
 			}
-			protected void onSearchCompletion(final FormOp<SearchSample> ac) {
-			}
+			protected void onSearchCompletion(final FormOp<SearchSample> ac) {}
 		};
-		sui.passActionWidget(createResultTypeToggle());
+		sui.insertActionWidget(createResultTypeToggle(), 0);
 	}
 
 	private final static SampleList sampleList = new SampleList() {
@@ -87,7 +86,7 @@ public class Search extends MPagePanel  {
 		}
 
 	};
-	
+
 	static {
 		samplesContainer.add(sampleList);
 		chemContainer.add(chemList);
@@ -103,13 +102,14 @@ public class Search extends MPagePanel  {
 		add(samplesContainer);
 		add(chemContainer);
 	}
-	
+
 	public void reload() {
 		sampleList.getScrollTable().reloadPage();
 	}
 
 	private static Widget createResultTypeToggle() {
-		final FlowPanel container = new FlowPanel();
+		final HTMLPanel container = new HTMLPanel(
+				"<span>Search for</span> <span id=\"radio-samples\"></span><span id=\"radio-analyses\"></span>");
 		final String groupString = "resultType_attribute";
 		final RadioButton returnSamples = new RadioButton(groupString,
 				"Samples");
@@ -132,12 +132,12 @@ public class Search extends MPagePanel  {
 
 		returnSamples.setChecked(true);
 
-		container.add(new Label("Result Type:"));
-		container.add(returnSamples);
-		container.add(returnChemicalAnalyses);
+		container.addAndReplaceElement(returnSamples, "radio-samples");
+		container.addAndReplaceElement(returnChemicalAnalyses, "radio-analyses");
+		container.setStyleName("return-type");
 		return container;
 	}
-	
+
 	private static void updateResults() {
 		if (outputSamples) {
 			samplesContainer.setVisible(true);

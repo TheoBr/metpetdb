@@ -215,8 +215,12 @@ public class SearchInterface implements ClickListener {
 			return tabAtts[0];
 	}
 	
-	public void passActionWidget(Widget w) {
+	public void addActionWidget(Widget w) {
 		searchActions.add(w);
+	}
+	
+	public void insertActionWidget(Widget w, int pos) {
+		searchActions.add(w, pos);
 	}
 
 	

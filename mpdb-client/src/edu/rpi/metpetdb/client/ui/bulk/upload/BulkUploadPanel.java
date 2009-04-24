@@ -310,7 +310,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			public void onSuccess(final BulkUploadResult results) {
 				hide(progressContainer);
 				resultStatus.hide();
-				uploadButton.setText("Upload");
+				uploadButton.setText("Parse File for Upload");
 				uploadButton.setEnabled(true);
 				if (results.getHeaders() != null)
 					populateMatchedColsPanel(results.getHeaders());
@@ -326,7 +326,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				else {
 					e.printStackTrace();
 					hide(progressContainer);
-					uploadButton.setText("Upload");
+					uploadButton.setText("Parse File for Upload");
 					uploadButton.setEnabled(true);
 					// TODO better error handling
 					resultStatus.sendNotice(NoticeType.ERROR,
@@ -345,12 +345,12 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		populateWarningPanel(results.getWarnings());
 		if (!errors.isEmpty()) {
 			resultStatus.sendNotice(NoticeType.WARNING,
-					"Upload complete, but the file contains errors.");
+					"Parse complete, but the file contains errors.");
 			nextStepText.setText("Please fix the errors and re-upload.");
 			resultsPanel.selectTab(2);
 		} else {
 			resultStatus.sendNotice(NoticeType.SUCCESS,
-					"Upload completed successfully.");
+					"Parsing completed successfully.");
 			nextStepText
 					.setText("Looks good! Remember to double-check the matched columns before submitting.");
 			resultsPanel.selectTab(1);

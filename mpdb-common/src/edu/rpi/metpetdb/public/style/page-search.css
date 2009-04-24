@@ -31,6 +31,23 @@
 	margin: 5px 14px;
 	text-align: center;
 }
+.search-actions .return-type {
+	display: table-row;
+	text-align: center;
+}
+.search-actions .return-type span {
+	display: table-cell;
+	vertical-align: middle;
+	font-weight: bold;
+}
+.search-actions .return-type .gwt-RadioButton input,
+.search-actions .return-type .gwt-RadioButton label {
+	vertical-align: middle;
+	font-weight: normal;
+}
+.search-actions .return-type .gwt-RadioButton label {
+	margin: 0 1em 0 0.2em;
+}
 
 /*-------------------------------------
                 criteria
