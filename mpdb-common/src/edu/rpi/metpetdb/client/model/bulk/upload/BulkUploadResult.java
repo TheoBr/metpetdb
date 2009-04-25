@@ -28,10 +28,10 @@ public class BulkUploadResult implements IsSerializable {
 	}
 	
 	public void addError(final int rowNumber, final MpDbException e) {
-		addError(rowNumber, -1, "", e);
+		addError(rowNumber, "", "", e);
 	}
 	
-	public void addError(final int rowNumber, final int colNumber, final String cellData, final MpDbException e) {
+	public void addError(final int rowNumber, final String colNumber, final String cellData, final MpDbException e) {
 		final BulkUploadError buError = new BulkUploadError();
 		buError.setRow(rowNumber);
 		buError.setColumn(colNumber);
@@ -42,7 +42,7 @@ public class BulkUploadResult implements IsSerializable {
 		errors.get(rowNumber).add(buError);
 	}
 	
-	public void addWarning(final int rowNumber, final int colNumber, final String cellData, final MpDbException e) {
+	public void addWarning(final int rowNumber, final String colNumber, final String cellData, final MpDbException e) {
 		final BulkUploadError buError = new BulkUploadError();
 		buError.setRow(rowNumber);
 		buError.setColumn(colNumber);

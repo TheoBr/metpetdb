@@ -16,6 +16,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
@@ -243,6 +244,8 @@ public abstract class Parser<T extends MObject> {
 
 		for (Integer i = 0; i <= row.getLastCellNum(); ++i) {
 			HSSFCell cell = row.getCell(i.intValue());
+			final String cellName = new CellReference(rowindex, i)
+					.formatAsString();
 			try {
 				// get the constraint for this cell
 				final PropertyConstraint pc = spreadSheetColumnMapping.get(i);
@@ -257,7 +260,7 @@ public abstract class Parser<T extends MObject> {
 							|| pc == doc.Subsample_sampleName)
 						if (cell.getCellType() != HSSFCell.CELL_TYPE_STRING) {
 							warnings.put(rowindex + 1, new BulkUploadError(
-									rowindex + 1, i + 1,
+									rowindex + 1, cellName,
 									new ExpectedStringColumnTypeException(),
 									cell.toString()));
 						}
@@ -326,7 +329,10 @@ public abstract class Parser<T extends MObject> {
 									} catch (final ValidationException ve) {
 										errors.put(rowindex,
 												new BulkUploadError(
-														rowindex + 1, i + 1,
+														rowindex + 1,
+														new CellReference(
+																rowindex, i)
+																.toString(),
 														ve, data));
 									}
 								}
@@ -361,16 +367,16 @@ public abstract class Parser<T extends MObject> {
 				}
 			} catch (MpDbException e) {
 				errors.put(rowindex + 1, new BulkUploadError(rowindex + 1,
-						i + 1, e, cell.toString()));
+						cellName, e, cell.toString()));
 			} catch (NumberFormatException e) {
 				// TODO maybe handle specially?
 				errors.put(rowindex + 1, new BulkUploadError(rowindex + 1,
-						i + 1, new GenericDAOException(e.getMessage()), cell
+						cellName, new GenericDAOException(e.getMessage()), cell
 								.toString()));
 			} catch (Exception e) {
 				e.printStackTrace();
 				errors.put(rowindex + 1, new BulkUploadError(rowindex + 1,
-						i + 1, new GenericDAOException(e.getMessage()), cell
+						cellName, new GenericDAOException(e.getMessage()), cell
 								.toString()));
 			}
 		}

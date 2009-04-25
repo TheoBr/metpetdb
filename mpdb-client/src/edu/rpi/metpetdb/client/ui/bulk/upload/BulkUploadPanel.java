@@ -516,7 +516,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			final Iterator<BulkUploadError> itr = exceptions.iterator();
 			while (itr.hasNext()) {
 				final BulkUploadError err = itr.next();
-				if (err.getColumn() != -1)
+				if (err.getColumn() != "")
 					text += "<span>Column:" + err.getColumn() + "</span>";
 				if (err.getCellData() != null && err.getCellData().length() > 0)
 					text += "<span>Cell Data:" + err.getCellData() + "</span>";
