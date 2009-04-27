@@ -106,12 +106,19 @@
 	color: #000;
 	border-color: #ccc;
 }
-.bulk-results .tabBar .tabBarItem-content span {
-	-moz-border-radius: 4px;
-	background-color: #DE3E24;
-	color: #fff;
+.bulk-results .tabBar .tabBarItem span {
 	font-size: 0.8em;
 	padding: 0 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+.bulk-results .tabBar .tabBarItem .has-errors span,
+.bulk-results .tabBar .tabBarItem .has-warnings span {
+	background-color: #a00;
+	color: #fff;
+}
+.bulk-results .tabBar .tabBarItem .has-warnings span  {
+	background-color: #E97605;
 }
 .bulk-results .tabBar .tabBarItem .empty span {
 	background-color: #bbb;
@@ -156,26 +163,48 @@
 /*-------------------------------------
 	         Errors/Warnings
 ---------------------------------------*/
-.bulk-results .errors  td {
-	padding: 2px 0;
+.bulk-results .errors td,
+.bulk-results .warnings td {
+	padding: 0.7em 0;
 }
-.bulk-results .errors  td:first-child {
-	text-align: right;
-	padding-right: 10px;
+.bulk-results .errors td:first-child,
+.bulk-results .warnings td:first-child {
+	text-align: center;
+	padding-right: 5px;
 }
-.bulk-results .errors  tr+tr td {
-	border-bottom: 1px solid #ddd;
-}
-.bulk-results .errors  tr+tr td:first-child,
-.bulk-results .has-errors {
-	color: #992c1a;
-}
-.bulk-results .errors  tr:last-child td {
+.bulk-results .errors tr:last-child td,
+.bulk-results .warnings tr:last-child td {
 	padding-bottom: 0;
-	border-bottom: none;
 }
-.bulk-results .errors td span {
+.bulk-results .errors td span,
+.bulk-results .warnings td span {
 	display: block;
 }
-
+.bulk-results .errors .error-message,
+.bulk-results .warnings .error-message {
+	margin-bottom: 0.3em;
+}
+.bulk-results .errors .cell-contents,
+.bulk-results .warnings .cell-contents {
+	font-size: 0.9em;
+	color: #444;
+}
+.bulk-results .errors .cell,
+.bulk-results .warnings .cell {
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	background-color: #a00;
+	border-bottom: 1px solid #600;
+	border-right: 1px solid #600;
+	display: inline;
+	color: #fff;
+	padding: 2px 4px;
+	position: relative;
+	top: 5px;
+}
+.bulk-results .warnings .cell {
+	background-color: #E97605;
+	border-bottom-color: #AE5600;
+	border-right-color: #AE5600;
+}
 

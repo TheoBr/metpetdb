@@ -494,16 +494,16 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				grid.getRowFormatter().setStyleName(0, CSS.TYPE_SMALL_CAPS);
 
 				int i = 0;
-				grid.setText(0, 0, "Row");
+				grid.setText(0, 0, "Cell");
 				grid.setText(0, 1, singular + " Message");
 				final List<Integer> rowNumbers = new ArrayList<Integer>();
 				rowNumbers.addAll(messages.keySet());
 				Collections.sort(rowNumbers);
 				for (Integer row : rowNumbers) {
 					if (row == -1)
-						grid.setText(++i, 0, "Unknown");
+						grid.setHTML(++i, 0, "Unknown");
 					else
-						grid.setText(++i, 0, row.toString());
+						grid.setHTML(++i, 0, "<span class=\"cell\">"+((BulkUploadError) messages.get(row).get(0)).getColumn()+"</span>");
 					grid.setHTML(i, 1, explode(messages.get(row)));
 				}
 			}
@@ -516,13 +516,10 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			final Iterator<BulkUploadError> itr = exceptions.iterator();
 			while (itr.hasNext()) {
 				final BulkUploadError err = itr.next();
-				if (err.getColumn() != "")
-					text += "<span>Column:" + err.getColumn() + "</span>";
-				if (err.getCellData() != null && err.getCellData().length() > 0)
-					text += "<span>Cell Data:" + err.getCellData() + "</span>";
 				if (err.getException() != null)
-					text += "<span>Error Message:"
-							+ err.getException().format() + "</span>";
+					text += "<span class=\"error-message\">" + err.getException().format() + "</span>";
+				if (err.getCellData() != null && err.getCellData().length() > 0)
+					text += "<span class=\"cell-contents\">Cell Contents: " + err.getCellData() + "</span>";
 			}
 		}
 		return text;
@@ -542,10 +539,10 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 	private void setWarningTabStyle(int numErrors) {
 		warningTab.setHTML("Warnings <span>" + numErrors + "</span>");
 		if (numErrors > 0) {
-			warningTab.addStyleName("has-errors");
+			warningTab.addStyleName("has-warnings");
 			warningTab.removeStyleName(CSS.EMPTY);
 		} else {
-			warningTab.removeStyleName("has-errors");
+			warningTab.removeStyleName("has-warnings");
 			warningTab.addStyleName(CSS.EMPTY);
 		}
 	}
