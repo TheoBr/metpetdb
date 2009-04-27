@@ -17,6 +17,8 @@
 	height: 24px;
 	vertical-align: top;
 	border: none;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
 }
 .daterange .daterange-btn:hover {
 	background-image: url(../images/icon-calendar-hover.gif);

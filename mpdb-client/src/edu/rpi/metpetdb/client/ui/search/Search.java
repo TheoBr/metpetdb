@@ -109,7 +109,7 @@ public class Search extends MPagePanel {
 
 	private static Widget createResultTypeToggle() {
 		final HTMLPanel container = new HTMLPanel(
-				"<span>Search for</span> <span id=\"radio-samples\"></span><span id=\"radio-analyses\"></span>");
+				"<span>Search for:</span> <span id=\"radio-samples\"></span><span id=\"radio-analyses\"></span>");
 		final String groupString = "resultType_attribute";
 		final RadioButton returnSamples = new RadioButton(groupString,
 				"Samples");

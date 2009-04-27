@@ -76,16 +76,14 @@
 	vertical-align: middle;
 	overflow-x: hidden;
 	white-space: nowrap;
+	padding: 0.3em;
 }
 .gwt-ScrollTable .headerTable td {
-	border: 1px solid #aaa;
-	border-right-color: #cecece;
-	border-left-color: #cecece;
-	padding: 0.5em 0.3em; 
+	border: 1px solid #cecece;
+	border-bottom-color: #aaa;
 }
 .gwt-ScrollTable .dataTable td {
 	border: 1px solid #DDD;
 	border-bottom-color: #c5d3fb;
 	color: #333;
-	padding: 0.3em;
 }

@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -69,13 +70,12 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 		private final MText and = new MText("and","span");
 		private final MText percent = new MText("%", "span");
 		private final HTML plusminus = new HTML("&#177;");
-		private Label mineral;
+		private InlineLabel mineral;
 		private Button selectMineral;
 		private FlyOutAttribute tree;
 		private MPartialCheckBox cb = new MPartialCheckBox(LocaleHandler.lc_entity.ChemicalAnalysis_largeRock()); 
 		private Boolean wholeRock = false;
-		final PopupPanel pp = new PopupPanel(false){
-		};
+		final PopupPanel pp = new PopupPanel(false){};
 		final FlowPanel container = new FlowPanel();
 		
 		private class ChemMSuggestText extends MSuggestText{
@@ -142,7 +142,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			plusminus.addStyleName("inline");
 			setStyleName("chem-item");
 			
-			mineral = new Label("");
+			mineral = new InlineLabel("");
 			tree = new FlyOutAttribute(mineralConstraint, 1);
 				
 			Widget [] ws = tree.createEditWidget(obj, id, mineralConstraint);
@@ -191,21 +191,22 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			container.add(cb);
 			for(Widget w : ws) 
 				container.add(w);
-			container.add(finish);
 			container.add(cancel);
+			finish.addStyleName(CSS.PRIMARY_BUTTON);
+			container.add(finish);
 			
 			pp.add(container);
+			pp.setStyleName("mineral-chooser-popup");
 			
-			
-			selectMineral = new Button("Select Mineral...");
+			selectMineral = new Button("Select Mineral&#8230;");
 			selectMineral.addClickListener(new ClickListener(){
 				public void onClick(final Widget sender){	
-					pp.setPopupPosition(selectMineral.getAbsoluteLeft(), selectMineral.getAbsoluteTop());
+					pp.setPopupPosition(selectMineral.getAbsoluteLeft(), selectMineral.getAbsoluteTop()+20);
 					pp.show();
 				}
 			});
 			
-			final Label in = new Label("in");
+			final InlineLabel in = new InlineLabel("in");
 			
 			add(st);
 			add(range);
@@ -213,7 +214,6 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			add(in);
 			add(mineral);
 			add(selectMineral);
-			
 			
 			reset(range.getItemText(range.getSelectedIndex()));
 		}
@@ -278,7 +278,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			cb.setState(CheckedState.UNCHECKED);
 			tree.uncheckRest(null);
 			if (clearMineral){
-				selectMineral.setText("Select Mineral...");
+				selectMineral.setText("Select Mineral&#8230;");
 				mineral.setText("");
 			}
 		}
