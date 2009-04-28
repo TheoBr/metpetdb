@@ -570,7 +570,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			}
 			return Elements;
 		} else if (constraint == wholeRockConstraint){
-			return new Boolean(false);
+			return null;
 		} else {
 			return null;
 		}

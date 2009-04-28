@@ -314,7 +314,7 @@ public class SearchSample implements IsSerializable, MObject {
 		return wholeRock;
 	}
 	
-	public void setWholeRock(final boolean wholeRock){
+	public void setWholeRock(final Boolean wholeRock){
 			this.wholeRock = wholeRock;
 	}
 	

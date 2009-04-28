@@ -15,7 +15,7 @@ public class BooleanConstraint extends PropertyConstraint {
 	@Override
 	public void validateValue(final Object value) throws ValidationException {
 		super.validateValue(value);
-		if (value instanceof Boolean)
+		if (value instanceof Boolean || value == null)
 			return;
 		else {
 			throw new InvalidBooleanException(this);
