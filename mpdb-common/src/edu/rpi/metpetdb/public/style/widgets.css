@@ -118,7 +118,7 @@
 	color: #4c4c4c;
 }
 .suggest-popup .suggestPopupContent .item-selected,
-.suggest-popup .suggestPopupContent .item:hover {
+.all-suggest-popup .popupContent .item:hover {
 	border-bottom-color: #000;
 	background: #2b2c2b url(../images/suggest-selected-bg.gif) repeat-x 0% 0%;
 	color: #fff; 
@@ -178,11 +178,17 @@
 	color: #4c4c4c;
 	cursor: pointer;
 }
-.all-suggest-popup .popupContent .item:hover {
+
+.all-suggest-popup .popupContent .item-selected {
 	border-bottom-color: #000;
 	background: #2b2c2b url(../images/suggest-selected-bg.gif) repeat-x 0% 0%;
 	color: #fff; 
 }
+/*.all-suggest-popup .popupContent .item:hover {
+	border-bottom-color: #000;
+	background: #2b2c2b url(../images/suggest-selected-bg.gif) repeat-x 0% 0%;
+	color: #fff;
+}*/
 
 /*-------------------------------------
             partial checkbox
