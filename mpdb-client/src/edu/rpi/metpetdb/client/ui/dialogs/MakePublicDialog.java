@@ -32,6 +32,9 @@ public class MakePublicDialog extends MDialogBox{
 	private ArrayList<Subsample> subsamples = new ArrayList();
 	private ArrayList<Grid> imageMaps = new ArrayList();
 	
+	private Map<Long, List<ChemicalAnalysis>> chemicalAnalysesMap;
+	private Map<Long, List<Subsample>> subsamplesMap;
+	
 	private ArrayList<ChemicalAnalysis> selectedChemicalAnalyses = new ArrayList();
 	private ArrayList<Subsample> selectedSubsamples = new ArrayList();
 	private ArrayList<Grid> selectedImageMaps = new ArrayList();
@@ -360,6 +363,13 @@ public class MakePublicDialog extends MDialogBox{
 				MpDb.subsample_svc.allFromManySamples(sampleIds, this);
 			}
 			public void onSuccess(Map<Long, List<Subsample>> result) {
+				subsamplesMap = result;
+				//Populate a subsample list so calls that pass in subsampleIds will work
+				Iterator itr = subsamplesMap.entrySet().iterator();
+				while(itr.hasNext()){
+					Map.Entry pair = (Map.Entry)itr.next();
+					subsamples.addAll((ArrayList<Subsample>)pair.getValue());
+				}
 				//subsamples.addAll(result);
 					// get chemical analyses
 				new ServerOp<Map<Long, List<ChemicalAnalysis>>>() {
@@ -374,6 +384,7 @@ public class MakePublicDialog extends MDialogBox{
 						MpDb.chemicalAnalysis_svc.allFromManySubsamples(subsampleIds, this);
 					}
 					public void onSuccess(Map<Long, List<ChemicalAnalysis>> result) {
+						chemicalAnalysesMap = result;
 						//chemicalAnalyses.addAll(result);
 						// get image maps
 						new ServerOp<List<Grid>>() {
@@ -482,13 +493,20 @@ public class MakePublicDialog extends MDialogBox{
 		//Iterating through the list of all subsamples because
 		//  the get methods for retrieving a sample's subsamples don't work
 		Iterator<Subsample> itr = subsamples.iterator();
+		Iterator analysisItr = chemicalAnalysesMap.entrySet().iterator();
 		while(itr.hasNext()){
-			Subsample current = itr.next();
+			final Subsample current = itr.next();
+			Map.Entry pair = (Map.Entry)analysisItr.next();
 			if(current.getSampleId().equals(sample.getId())){	
-				CheckBox ssBox = new CheckBox(current.getName());
+				final CheckBox ssBox = new CheckBox(current.getName());
 				ssBox.addClickListener(new ClickListener(){
 					public void onClick(final Widget sender){
-
+						if(ssBox.isChecked()){
+							selectedSubsamples.add(current);
+						}
+						else{
+							selectedSubsamples.remove(current);
+						}
 					}
 				});
 				TreeItem subsample = new TreeItem(ssBox);
@@ -498,18 +516,66 @@ public class MakePublicDialog extends MDialogBox{
 					chemAnalyses.addItem("Select: All None");
 					
 					//checkbox for each analysis
-					Iterator<ChemicalAnalysis> chemItr = chemicalAnalyses.iterator();
-					while(chemItr.hasNext()){
-						ChemicalAnalysis chemCurrent = chemItr.next();
-						/* getSample() is always null :( */
-						if(chemCurrent.getSample() != null && chemCurrent.getSample() == sample){
-							chemAnalyses.addItem(new CheckBox(chemCurrent.getMineral().toString()));
-						}
+					ListIterator<ChemicalAnalysis> chemItr = ((ArrayList<ChemicalAnalysis>) pair.getValue()).listIterator();
+					final ChemicalAnalysis chemCurrent;
+					if(!chemItr.hasNext()){
+						if(chemItr.hasPrevious() == false) break; //something went wrong
+						chemCurrent = chemItr.previous();
 					}
+					else{
+						chemCurrent = chemItr.next();
+					}
+					
+					if(chemCurrent == null) break; //something went wrong
+					
+					final CheckBox chemBox = new CheckBox("Spot ID: " + chemCurrent.getSpotId()); 
+					chemBox.addClickListener(new ClickListener(){
+						public void onClick(final Widget sender){
+							if(chemBox.isChecked()){
+								ssBox.setChecked(true);
+								selectedChemicalAnalyses.add(chemCurrent);
+							}
+							else{
+								selectedChemicalAnalyses.remove(chemCurrent);
+							}
+						}
+					});
+					chemAnalyses.addItem(chemBox);
+					
+					while(chemItr.hasNext()){
+						final ChemicalAnalysis chemNext = chemItr.next();
+						final CheckBox chemNextBox = new CheckBox("Spot ID: " + chemNext.getSpotId()); 
+						chemNextBox.addClickListener(new ClickListener(){
+							public void onClick(final Widget sender){
+								if(chemNextBox.isChecked()){
+									ssBox.setChecked(true);
+									selectedChemicalAnalyses.add(chemNext);
+								}
+								else{
+									selectedChemicalAnalyses.remove(chemNext);
+								}
+							}
+						});
+						chemAnalyses.addItem(chemNextBox);
+					} 
 					subsample.addItem(chemAnalyses);
 				}
 				
-				if(current.getGrid() != null) subsample.addItem(new CheckBox("Image Map"));
+				if(current.getGrid() != null){
+					final CheckBox mapBox = new CheckBox("Image Map");
+					mapBox.addClickListener(new ClickListener(){
+						public void onClick(final Widget sender){
+							if(mapBox.isChecked()){
+								ssBox.setChecked(true);
+								selectedImageMaps.add(current.getGrid());
+							}
+							else{
+								selectedImageMaps.remove(current.getGrid());
+							}
+						}
+					});
+					subsample.addItem(mapBox);
+				}
 				subsampleTree.addItem(subsample);
 			}
 		}
