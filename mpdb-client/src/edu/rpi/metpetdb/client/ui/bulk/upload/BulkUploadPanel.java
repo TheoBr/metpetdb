@@ -247,7 +247,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			file.setStyleName(CSS.INVALID);
 			event.setCancelled(true);
 		} else {
-			uploadButton.setText("Uploading...");
+			uploadButton.setText("Parsing...");
 			uploadButton.setEnabled(false);
 			show(progressContainer);
 			progressTimer.scheduleRepeating(3000);
@@ -350,7 +350,8 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			resultsPanel.selectTab(2);
 		} else {
 			resultStatus.sendNotice(NoticeType.SUCCESS,
-					"Parsing completed successfully.");
+					"Parsing completed successfully. <strong>Your data is not in MetPetDB yet</strong>. " +
+					"Please review the results below and click <strong>Submit</strong> if everything is correct.");
 			nextStepText
 					.setText("Looks good! Remember to double-check the matched columns before submitting.");
 			resultsPanel.selectTab(1);
