@@ -1,4 +1,6 @@
 \i users.sql
+\i minerals.sql
+\i mineral-data.sql
 \i metpetdb-core.sql
 \i metpetdb-image.sql
 \i metpetdb-chemical-analysis.sql

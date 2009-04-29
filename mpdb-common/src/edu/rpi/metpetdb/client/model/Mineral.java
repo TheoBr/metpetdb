@@ -20,6 +20,7 @@ public class Mineral extends MObject implements IHasName, HasChildren<Mineral> {
 	private String name;
 
 	private Set<Mineral> children;
+	private Set<Mineral> parents;
 
 	public short getId() {
 		return id;
@@ -51,6 +52,14 @@ public class Mineral extends MObject implements IHasName, HasChildren<Mineral> {
 
 	public Set<Mineral> getChildren() {
 		return children;
+	}
+
+	public Set<Mineral> getParents() {
+		return parents;
+	}
+
+	public void setParents(Set<Mineral> parents) {
+		this.parents = parents;
 	}
 
 	public Short getRealMineralId() {

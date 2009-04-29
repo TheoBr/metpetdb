@@ -58,6 +58,7 @@ DROP TABLE samples CASCADE;
 --DROP TABLE users CASCADE;
 DROP TABLE regions CASCADE;
 DROP TABLE minerals CASCADE;
+DROP TABLE mineral_relationships CASCADE;
 DROP TABLE xray_image CASCADE;
 DROP TABLE uploaded_files CASCADE;
 DROP TABLE sample_comments CASCADE;

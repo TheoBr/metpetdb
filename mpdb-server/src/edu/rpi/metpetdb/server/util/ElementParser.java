@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server.chemical.analysis;
+package edu.rpi.metpetdb.server.util;
 
 import java.io.FileInputStream;
 import java.io.FileWriter;
