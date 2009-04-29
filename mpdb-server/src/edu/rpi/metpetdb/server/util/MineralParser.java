@@ -64,7 +64,7 @@ public class MineralParser {
 					output.write("\n");
 				}
 				// children
-				parents.push(mineralName);
+				parents.addFirst(mineralName);
 				parse(output, sheet, rowIdx + 1, columnIdx + 1, parents);
 				// siblings
 				parents.poll();
