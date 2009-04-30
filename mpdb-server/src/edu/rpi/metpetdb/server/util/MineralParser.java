@@ -24,6 +24,8 @@ public class MineralParser {
 			+ "(parent_mineral_id, child_mineral_id) VALUES"
 			+ "((select mineral_id from minerals where name='%PARENT%'),"
 			+ "(select mineral_id from minerals where name='%CHILD%'));";
+	private static final String alternateMineralSQL = "insert into minerals (mineral_id, real_mineral_id, name) "
+			+ " VALUES (nextval('mineral_seq'),(select mineral_id from minerals where name='%NAME%'), '%ALTNAME%');";
 	/** Stores what minerals we put in already so we don't have duplicates */
 	private final Collection<String> minerals;
 	/** Number of empty rows we need to see before we call it quits */
@@ -43,7 +45,26 @@ public class MineralParser {
 		output.close();
 	}
 
-	private void parse(final FileWriter output, final HSSFSheet sheet,
+	private void parseAlternativeName(final FileWriter output,
+			final HSSFSheet sheet, final Integer rowIdx,
+			final Integer columnIdx, final String original) throws IOException {
+		final HSSFRow row = sheet.getRow(rowIdx);
+		if (row != null) {
+			final HSSFCell cell = row.getCell(columnIdx);
+			if (cell != null) {
+				final String mineralName = cell.toString();
+				if (!minerals.contains(mineralName)) {
+					output.write(alternateMineralSQL
+							.replace("%NAME%", original).replace("%ALTNAME%",
+									mineralName));
+					output.write("\n");
+				}
+				parseAlternativeName(output, sheet, rowIdx, columnIdx + 1, original);
+			}
+		}
+	}
+
+	private boolean parse(final FileWriter output, final HSSFSheet sheet,
 			final Integer rowIdx, final Integer columnIdx,
 			final LinkedList<String> parents) throws IOException {
 		final HSSFRow row = sheet.getRow(rowIdx);
@@ -63,25 +84,37 @@ public class MineralParser {
 							parents.peek()).replace("%CHILD%", mineralName));
 					output.write("\n");
 				}
-				// children
-				parents.addFirst(mineralName);
-				parse(output, sheet, rowIdx + 1, columnIdx + 1, parents);
-				// siblings
-				parents.poll();
-				parse(output, sheet, rowIdx + 1, columnIdx, parents);
-				parents.poll();
+				// handle alternative names
+				parseAlternativeName(output, sheet, rowIdx, columnIdx + 1,
+						mineralName);
 				// back to parent
 				for (int idx = columnIdx - 1; idx >= 0; --idx)
-					parse(output, sheet, rowIdx + 1, idx, parents);
+					if (parse(output, sheet, rowIdx + 1, idx, parents)) {
+						return true;
+					}
+				// siblings
+				if (parse(output, sheet, rowIdx + 1, columnIdx, parents)) {
+					return true;
+				}
+				// children
+				parents.addFirst(mineralName);
+				if (parse(output, sheet, rowIdx + 1, columnIdx + 1, parents)) {										
+					return true;
+				}
+				parents.poll();
+				return true;
+			} else {
+				return false;
 			}
 		} else {
 			++numEmtpyRows;
 			if (numEmtpyRows < EMPTY_ROW_LIMIT) {
 				if (columnIdx == 0) {
 					parents.poll();
-					parse(output, sheet, rowIdx + 1, columnIdx, parents);
+					return parse(output, sheet, rowIdx + 1, columnIdx, parents);
 				}
 			}
+			return false;
 		}
 	}
 
