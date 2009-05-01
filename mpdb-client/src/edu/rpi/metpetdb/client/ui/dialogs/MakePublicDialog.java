@@ -39,9 +39,9 @@ public class MakePublicDialog extends MDialogBox{
 	private ArrayList<Subsample> selectedSubsamples = new ArrayList();
 	private ArrayList<Grid> selectedImageMaps = new ArrayList();
 	
-	private Vector selectedChemicalAnalysesCount = new Vector();
-	private Vector selectedSubsamplesCount = new Vector();
-	private Vector selectedImageMapsCount = new Vector();
+	private Vector<Integer> selectedChemicalAnalysesCount = new Vector();
+	private Vector<Integer> selectedSubsamplesCount = new Vector();
+	private Vector<Integer> selectedImageMapsCount = new Vector();
 	private Vector ChemicalAnalysesTotal = new Vector();
 	private Vector ImageMapsTotal = new Vector();
 	
@@ -149,6 +149,9 @@ public class MakePublicDialog extends MDialogBox{
 					custom = true;
 					for(Sample s: samples){
 						ChemicalAnalysesTotal.add(s.getAnalysisCount());
+						selectedSubsamplesCount.add(0);
+						selectedChemicalAnalysesCount.add(0); //this will be updated using checkboxes
+						selectedImageMapsCount.add(0);
 					}
 					countAllImageMaps(ImageMapsTotal);
 					MakePublicDialog.this.setWidget(createInterfaceMakeSamplesPublicCustom());
@@ -267,12 +270,6 @@ public class MakePublicDialog extends MDialogBox{
 					setSubsampleTree(current);
 				}
 				else{
-					//Temporary until checkboxes work
-					for(Sample s: samples){
-						selectedSubsamplesCount.add(s.getSubsampleCount());
-						selectedImageMapsCount.add(0);
-						selectedChemicalAnalysesCount.add(0);
-					}
 					MakePublicDialog.this.setWidget(createInterfaceMakeDataPublic());
 				}
 			}
@@ -486,79 +483,82 @@ public class MakePublicDialog extends MDialogBox{
 		}.begin();
 	}
 	
+	//keeps track of whether or not a subsample has been counted since selecting
+	//sub-objects can cause a subsample to be selected
+	private boolean isCounted = false; 
+	
 	private void setSubsampleTree(Sample sample){
 		subsampleTree.clear();
 		
 		//create a TreeItem for each subsample
-		//Iterating through the list of all subsamples because
-		//  the get methods for retrieving a sample's subsamples don't work
-		Iterator<Subsample> itr = subsamples.iterator();
-		Iterator analysisItr = chemicalAnalysesMap.entrySet().iterator();
+		final Iterator itr = subsamples.iterator();
 		while(itr.hasNext()){
-			final Subsample current = itr.next();
-			Map.Entry pair = (Map.Entry)analysisItr.next();
+			final Subsample current = (Subsample) itr.next();
+			final int thisSample = current.getSampleId().intValue() - 1;
+			System.out.println(thisSample);
+			isCounted = false;		
 			if(current.getSampleId().equals(sample.getId())){	
 				final CheckBox ssBox = new CheckBox(current.getName());
 				ssBox.addClickListener(new ClickListener(){
 					public void onClick(final Widget sender){
 						if(ssBox.isChecked()){
 							selectedSubsamples.add(current);
+							//update subsample count for summary
+							isCounted = true;
+							int newCount = selectedSubsamplesCount.get(thisSample) + 1;
+							selectedSubsamplesCount.set(thisSample, newCount);
 						}
 						else{
 							selectedSubsamples.remove(current);
+							//update subsample count for summary
+							isCounted = false;
+							int newCount = selectedSubsamplesCount.get(thisSample) - 1;
+							selectedSubsamplesCount.set(thisSample, newCount);
 						}
 					}
 				});
+				//TODO set ssbox to checked if it's in the selected list
+				
+				
 				TreeItem subsample = new TreeItem(ssBox);
 				
 				if(current.getAnalysisCount() > 0){
 					TreeItem chemAnalyses = new TreeItem("Chemical Analyses");
 					chemAnalyses.addItem("Select: All None");
 					
-					//checkbox for each analysis
-					ListIterator<ChemicalAnalysis> chemItr = ((ArrayList<ChemicalAnalysis>) pair.getValue()).listIterator();
-					final ChemicalAnalysis chemCurrent;
-					if(!chemItr.hasNext()){
-						if(chemItr.hasPrevious() == false) break; //something went wrong
-						chemCurrent = chemItr.previous();
-					}
-					else{
-						chemCurrent = chemItr.next();
-					}
-					
-					if(chemCurrent == null) break; //something went wrong
-					
-					final CheckBox chemBox = new CheckBox("Spot ID: " + chemCurrent.getSpotId()); 
-					chemBox.addClickListener(new ClickListener(){
-						public void onClick(final Widget sender){
-							if(chemBox.isChecked()){
-								ssBox.setChecked(true);
-								selectedChemicalAnalyses.add(chemCurrent);
-							}
-							else{
-								selectedChemicalAnalyses.remove(chemCurrent);
-							}
-						}
-					});
-					chemAnalyses.addItem(chemBox);
-					
-					while(chemItr.hasNext()){
-						final ChemicalAnalysis chemNext = chemItr.next();
-						final CheckBox chemNextBox = new CheckBox("Spot ID: " + chemNext.getSpotId()); 
-						chemNextBox.addClickListener(new ClickListener(){
+					long subsampleID = current.getId();
+					List<ChemicalAnalysis> analyses = chemicalAnalysesMap.get(subsampleID);
+					for(final ChemicalAnalysis ca : analyses){
+						final CheckBox chemBox = new CheckBox("Spot ID: " + ca.getSpotId()); 
+						chemBox.addClickListener(new ClickListener(){
 							public void onClick(final Widget sender){
-								if(chemNextBox.isChecked()){
+								if(chemBox.isChecked()){
 									ssBox.setChecked(true);
-									selectedChemicalAnalyses.add(chemNext);
+									selectedChemicalAnalyses.add(ca);
+									//update analyses count for summary
+									int newCount = selectedChemicalAnalysesCount.get(thisSample) + 1;
+									selectedChemicalAnalysesCount.set(thisSample, newCount);
+									
+									//sets subsample count if it wasn't already selected
+									if(!isCounted){
+										isCounted = true;
+										newCount = selectedSubsamplesCount.get(thisSample) + 1;
+										selectedSubsamplesCount.set(thisSample, newCount);
+									}
 								}
 								else{
-									selectedChemicalAnalyses.remove(chemNext);
+									selectedChemicalAnalyses.remove(ca);
+									//update analyses count for summary
+									int newCount = selectedChemicalAnalysesCount.get(thisSample) - 1;
+									selectedChemicalAnalysesCount.set(thisSample, newCount);
 								}
 							}
 						});
-						chemAnalyses.addItem(chemNextBox);
-					} 
-					subsample.addItem(chemAnalyses);
+						//TODO set chemBox to checked if it's in selected list
+						
+						chemAnalyses.addItem(chemBox);
+					}
+					subsample.addItem(chemAnalyses); 
 				}
 				
 				if(current.getGrid() != null){
@@ -568,12 +568,27 @@ public class MakePublicDialog extends MDialogBox{
 							if(mapBox.isChecked()){
 								ssBox.setChecked(true);
 								selectedImageMaps.add(current.getGrid());
+								//update maps count for summary
+								int newCount = selectedImageMapsCount.get(thisSample) + 1;
+								selectedImageMapsCount.set(thisSample, newCount);
+								
+								//sets subsample count if it wasn't already selected
+								if(!isCounted){
+									isCounted = true;
+									newCount = selectedSubsamplesCount.get(thisSample) + 1;
+									selectedSubsamplesCount.set(thisSample, newCount);
+								}
 							}
 							else{
 								selectedImageMaps.remove(current.getGrid());
+								//update maps count for summary
+								int newCount = selectedImageMapsCount.get(thisSample) - 1;
+								selectedImageMapsCount.set(thisSample, newCount);
 							}
 						}
 					});
+					//TODO set mapBox to check if it's in the selected list
+					
 					subsample.addItem(mapBox);
 				}
 				subsampleTree.addItem(subsample);
