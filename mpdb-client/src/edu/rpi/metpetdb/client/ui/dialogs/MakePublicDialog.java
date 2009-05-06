@@ -28,7 +28,6 @@ import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
 
 public class MakePublicDialog extends MDialogBox{
 	private ArrayList<Sample> samples;
-	private ArrayList<ChemicalAnalysis> chemicalAnalyses = new ArrayList();
 	private ArrayList<Subsample> subsamples = new ArrayList();
 	private ArrayList<Grid> imageMaps = new ArrayList();
 	
@@ -39,9 +38,6 @@ public class MakePublicDialog extends MDialogBox{
 	private ArrayList<Subsample> selectedSubsamples = new ArrayList();
 	private ArrayList<Grid> selectedImageMaps = new ArrayList();
 	
-	private Vector<Integer> selectedChemicalAnalysesCount = new Vector();
-	private Vector<Integer> selectedSubsamplesCount = new Vector();
-	private Vector<Integer> selectedImageMapsCount = new Vector();
 	private Vector ChemicalAnalysesTotal = new Vector();
 	private Vector ImageMapsTotal = new Vector();
 	
@@ -91,18 +87,23 @@ public class MakePublicDialog extends MDialogBox{
 		// If multiple samples are selected go to step 1, else go to step 2.
 		if (samples.size() > 1)
 			this.setWidget(createInterfaceMakeSamplesPublicOptions());
-		else 
+		else{ 
+			custom = true;
+			for(Sample s: samples){
+				ChemicalAnalysesTotal.add(s.getAnalysisCount());
+			}
+			countAllImageMaps(ImageMapsTotal);
 			this.setWidget(createInterfaceMakeSamplesPublicCustom());
+		}
 	}
 	
 	// Step 1 in the process, unless only 1 sample is selected, then goes directly to step 2 createInterfaceMakeSamplesPublicCustom
 	private Widget createInterfaceMakeSamplesPublicOptions(){
 		final FlowPanel container = new FlowPanel();
 		
-		//clear counters in case back was hit
-		selectedChemicalAnalysesCount.clear();
-		selectedSubsamplesCount.clear();
-		selectedImageMapsCount.clear();
+		selectedSubsamples.clear();
+		selectedChemicalAnalyses.clear();
+		selectedImageMaps.clear();
 		
 		final RadioButton rb0 = new RadioButton("make-public", "All subsamples, chemical analyses, and image maps");
 		final RadioButton rb1 = new RadioButton("make-public", "All subsamples and chemical analyses only");
@@ -126,80 +127,49 @@ public class MakePublicDialog extends MDialogBox{
 				// clear the dialog box for the next step
 				MakePublicDialog.this.clear();
 				
-				//Call corresponding function based on selection from radio button list and set correct selected data		
-				// if custom selection, then call
-					// MakePublicDialog.this.add(createInterfaceMakeSamplesPublicCustom());
-				// else
-				// every case selects the subsamples
-				// selectedSubsamples = subsamples;
-				// if all subsamples, chemical analysis, image maps then					
-					// selectedChemicalAnalyses = chemicalAnalyses;
-					// selectedImageMaps = imageMaps;
-			
-				// if all subsamples, chemical analysis then 
-					// selectedChemicalAnalyses = chemicalAnalyses;
-				
-				// if all subsamples, image maps then 
-					// selectedImageMaps = imageMaps;
-				
-				// if all subsamples, then nothing, we aleady took care of that
-					
-				// MakePublicDialog.this.createInterfaceMakeDataPublic()
+				//"Custom Selection"
 				if(rb4.isChecked()){
 					custom = true;
 					for(Sample s: samples){
 						ChemicalAnalysesTotal.add(s.getAnalysisCount());
-						selectedSubsamplesCount.add(0);
-						selectedChemicalAnalysesCount.add(0); //this will be updated using checkboxes
-						selectedImageMapsCount.add(0);
 					}
 					countAllImageMaps(ImageMapsTotal);
 					MakePublicDialog.this.setWidget(createInterfaceMakeSamplesPublicCustom());
 				}
 				else {
-					selectedSubsamples = subsamples;
+					selectedSubsamples = (ArrayList<Subsample>) subsamples.clone();
 					//Totals are always the same
 					for(Sample s: samples){
-						selectedSubsamplesCount.add(s.getSubsampleCount());
 						ChemicalAnalysesTotal.add(s.getAnalysisCount());
 					}	
 					countAllImageMaps(ImageMapsTotal);
-					
-					//Count the selected Analyses & maps for the selected option
+					custom = false;
+					//"All subsamples, chemical analyses, and image maps"
 					if(rb0.isChecked()){
-						custom = false;
-						selectedChemicalAnalyses = chemicalAnalyses;
-						selectedImageMaps = imageMaps;
-						for(Sample s: samples){
-							selectedChemicalAnalysesCount.add(s.getAnalysisCount());
+						Iterator itr = chemicalAnalysesMap.entrySet().iterator();
+						while(itr.hasNext()){
+							Map.Entry pair = (Map.Entry)itr.next();
+							selectedChemicalAnalyses.addAll((ArrayList<ChemicalAnalysis>)pair.getValue());
 						}
-						countAllImageMaps(selectedImageMapsCount);
+						selectedImageMaps = (ArrayList<Grid>) imageMaps.clone();
 						MakePublicDialog.this.setWidget(createInterfaceMakeDataPublic());
 					}
+					//"All subsamples and chemical analyses only"
 					else if(rb1.isChecked()){
-						custom = false;
-						selectedChemicalAnalyses = chemicalAnalyses;
-						for(Sample s: samples){
-							selectedChemicalAnalysesCount.add(s.getAnalysisCount());
-							selectedImageMapsCount.add(0);
+						Iterator itr = chemicalAnalysesMap.entrySet().iterator();
+						while(itr.hasNext()){
+							Map.Entry pair = (Map.Entry)itr.next();
+							selectedChemicalAnalyses.addAll((ArrayList<ChemicalAnalysis>)pair.getValue());
 						}
 						MakePublicDialog.this.setWidget(createInterfaceMakeDataPublic());
 					}
+					//"All subsamples and image maps only"
 					else if(rb2.isChecked()){
-						custom = false;
-						selectedImageMaps = imageMaps;
-						for(Sample s: samples){
-							selectedChemicalAnalysesCount.add(0);
-						}
-						countAllImageMaps(selectedImageMapsCount);
+						selectedImageMaps = (ArrayList<Grid>) imageMaps.clone();
 						MakePublicDialog.this.setWidget(createInterfaceMakeDataPublic());
 					}
+					//"All subsamples only"
 					else if(rb3.isChecked()){
-						custom = false;
-						for(Sample s: samples){
-							selectedImageMapsCount.add(0);
-							selectedChemicalAnalysesCount.add(0);
-						}
 						MakePublicDialog.this.setWidget(createInterfaceMakeDataPublic());
 					}
 				}
@@ -220,6 +190,19 @@ public class MakePublicDialog extends MDialogBox{
 	private Widget createInterfaceMakeSamplesPublicCustom(){
 		final FlowPanel container = new FlowPanel();
 		
+		//no samples were selected
+		if(samples.isEmpty()){
+			container.add(new Label("No Samples are selected"));
+			Button close = new Button("Close");
+			close.addClickListener(new ClickListener(){
+				public void onClick(final Widget sender){
+					MakePublicDialog.this.hide();			
+				}
+			});
+			container.add(close);
+			return container;
+		}
+		
 		final Button next = new Button("Next");
 		final Button back = new Button("Back");
 		final ListIterator<Sample> itr = samples.listIterator();
@@ -230,7 +213,7 @@ public class MakePublicDialog extends MDialogBox{
 		if(fromSummary){
 			fromSummary = false;
 			while(itr.hasNext()){
-				itr.next();
+				current = itr.next();
 			}
 		}
 	
@@ -297,24 +280,39 @@ public class MakePublicDialog extends MDialogBox{
 		final Button makePublic = new Button("Make Public");
 		
 		int id = 0;
+		//count selected objects
 		for(Sample s: samples){
+			int selectedSubsamplesCount = 0, selectedChemicalAnalysesCount = 0, selectedImageMapsCount = 0;
+			long sampleID = s.getId();
+			
+			List<Subsample> ssList = subsamplesMap.get(sampleID);
+			if(!(ssList == null) && !ssList.isEmpty()){
+				Iterator<Subsample> ssItr = ssList.iterator();
+				while(ssItr.hasNext()){
+					Subsample current = (Subsample) ssItr.next();
+					//increment selectedSubsampleCount if this subsample is selected
+					if(selectedSubsamples.contains(current)) selectedSubsamplesCount++;
+					//increment imageMapCount if a grid is found for this subsample and it's selected
+					if(current.getGrid() != null && selectedImageMaps.contains(current.getGrid())) selectedImageMapsCount++;
+					
+					//get the list of analyses for this subsample and increment if it's selected
+					List<ChemicalAnalysis> caList = chemicalAnalysesMap.get(current.getId());
+					if(!(caList == null) && !caList.isEmpty()){
+						Iterator<ChemicalAnalysis> caItr = caList.iterator();
+						while(caItr.hasNext()){
+							ChemicalAnalysis ca = (ChemicalAnalysis) caItr.next();
+							if(selectedChemicalAnalyses.contains(ca)) selectedChemicalAnalysesCount++;
+						}
+					}
+				}
+			}
+			
 			container.add(new Label("Sample " + s.getNumber() + ": " +
-					selectedSubsamplesCount.get(id) + "/" + s.getSubsampleCount() + " subsamples, " + 
-					"Chem: " + selectedChemicalAnalysesCount.get(id) + "/" + ChemicalAnalysesTotal.get(id) + " " + 
-					"Img map: " + selectedImageMapsCount.get(id) + "/" + ImageMapsTotal.get(id)));
+					selectedSubsamplesCount + "/" + s.getSubsampleCount() + " subsamples, " + 
+					"Chem: " + selectedChemicalAnalysesCount + "/" + ChemicalAnalysesTotal.get(id) + " " + 
+					"Img map: " + selectedImageMapsCount + "/" + ImageMapsTotal.get(id)));
 			id++;
 		}
-		
-		//Not using the images yet
-		/*for(Sample s: samples){
-			container.add(new Label("Sample " + s.getNumber() + ": " +
-					selectedSubsamplesCount.get(id) + "/" + s.getSubsampleCount() + " subsamples, ")); 
-			container.add(new Image("icon-chemical-analysis.png"));
-			container.add(new Label(selectedChemicalAnalysesCount.get(id) + "/" + ChemicalAnalysesTotal.get(id) + " "));
-			container.add(new Image("icon-image-map.png"));
-			container.add(new Label(selectedImageMapsCount.get(id) + "/" + ImageMapsTotal.get(id)));
-			id++;
-		}*/
 		
 		//container.add(closeX);
 		container.add(back);
@@ -362,6 +360,7 @@ public class MakePublicDialog extends MDialogBox{
 			public void onSuccess(Map<Long, List<Subsample>> result) {
 				subsamplesMap = result;
 				//Populate a subsample list so calls that pass in subsampleIds will work
+				//final ListIterator<Sample> itr = samples.listIterator();
 				Iterator itr = subsamplesMap.entrySet().iterator();
 				while(itr.hasNext()){
 					Map.Entry pair = (Map.Entry)itr.next();
@@ -405,6 +404,7 @@ public class MakePublicDialog extends MDialogBox{
 				}.begin();
 			}
 		}.begin();
+		
 	}
 	
 	private void makeDataPublic(){
@@ -483,10 +483,6 @@ public class MakePublicDialog extends MDialogBox{
 		}.begin();
 	}
 	
-	//keeps track of whether or not a subsample has been counted since selecting
-	//sub-objects can cause a subsample to be selected
-	private boolean isCounted = false; 
-	
 	private void setSubsampleTree(Sample sample){
 		subsampleTree.clear();
 		
@@ -494,31 +490,21 @@ public class MakePublicDialog extends MDialogBox{
 		final Iterator itr = subsamples.iterator();
 		while(itr.hasNext()){
 			final Subsample current = (Subsample) itr.next();
-			final int thisSample = current.getSampleId().intValue() - 1;
-			System.out.println(thisSample);
-			isCounted = false;		
+			final int thisSample = current.getSampleId().intValue() - 1;		
 			if(current.getSampleId().equals(sample.getId())){	
 				final CheckBox ssBox = new CheckBox(current.getName());
 				ssBox.addClickListener(new ClickListener(){
 					public void onClick(final Widget sender){
 						if(ssBox.isChecked()){
 							selectedSubsamples.add(current);
-							//update subsample count for summary
-							isCounted = true;
-							int newCount = selectedSubsamplesCount.get(thisSample) + 1;
-							selectedSubsamplesCount.set(thisSample, newCount);
 						}
 						else{
 							selectedSubsamples.remove(current);
-							//update subsample count for summary
-							isCounted = false;
-							int newCount = selectedSubsamplesCount.get(thisSample) - 1;
-							selectedSubsamplesCount.set(thisSample, newCount);
 						}
 					}
 				});
-				//TODO set ssbox to checked if it's in the selected list
-				
+				//set ssbox to checked if it's in the selected list
+				if(selectedSubsamples.contains(current)) ssBox.setChecked(true);
 				
 				TreeItem subsample = new TreeItem(ssBox);
 				
@@ -533,29 +519,20 @@ public class MakePublicDialog extends MDialogBox{
 						chemBox.addClickListener(new ClickListener(){
 							public void onClick(final Widget sender){
 								if(chemBox.isChecked()){
-									ssBox.setChecked(true);
-									selectedChemicalAnalyses.add(ca);
-									//update analyses count for summary
-									int newCount = selectedChemicalAnalysesCount.get(thisSample) + 1;
-									selectedChemicalAnalysesCount.set(thisSample, newCount);
-									
-									//sets subsample count if it wasn't already selected
-									if(!isCounted){
-										isCounted = true;
-										newCount = selectedSubsamplesCount.get(thisSample) + 1;
-										selectedSubsamplesCount.set(thisSample, newCount);
+									//if this subsample is not in the selected list, it must now be added
+									if(!ssBox.isChecked()){
+										ssBox.setChecked(true);
+										selectedSubsamples.add(current);
 									}
+									selectedChemicalAnalyses.add(ca);
 								}
 								else{
 									selectedChemicalAnalyses.remove(ca);
-									//update analyses count for summary
-									int newCount = selectedChemicalAnalysesCount.get(thisSample) - 1;
-									selectedChemicalAnalysesCount.set(thisSample, newCount);
 								}
 							}
 						});
-						//TODO set chemBox to checked if it's in selected list
-						
+						//set chemBox to checked if it's in selected list
+						if(selectedChemicalAnalyses.contains(ca)) chemBox.setChecked(true);
 						chemAnalyses.addItem(chemBox);
 					}
 					subsample.addItem(chemAnalyses); 
@@ -566,29 +543,20 @@ public class MakePublicDialog extends MDialogBox{
 					mapBox.addClickListener(new ClickListener(){
 						public void onClick(final Widget sender){
 							if(mapBox.isChecked()){
-								ssBox.setChecked(true);
-								selectedImageMaps.add(current.getGrid());
-								//update maps count for summary
-								int newCount = selectedImageMapsCount.get(thisSample) + 1;
-								selectedImageMapsCount.set(thisSample, newCount);
-								
-								//sets subsample count if it wasn't already selected
-								if(!isCounted){
-									isCounted = true;
-									newCount = selectedSubsamplesCount.get(thisSample) + 1;
-									selectedSubsamplesCount.set(thisSample, newCount);
+								//if this subsample is not in the selected list, it must now be added
+								if(!ssBox.isChecked()){
+									ssBox.setChecked(true);
+									selectedSubsamples.add(current);
 								}
+								selectedImageMaps.add(current.getGrid());
 							}
 							else{
 								selectedImageMaps.remove(current.getGrid());
-								//update maps count for summary
-								int newCount = selectedImageMapsCount.get(thisSample) - 1;
-								selectedImageMapsCount.set(thisSample, newCount);
 							}
 						}
 					});
-					//TODO set mapBox to check if it's in the selected list
-					
+					//set mapBox to check if it's in the selected list
+					if(selectedImageMaps.contains(current.getGrid())) mapBox.setChecked(true);
 					subsample.addItem(mapBox);
 				}
 				subsampleTree.addItem(subsample);
@@ -601,7 +569,7 @@ public class MakePublicDialog extends MDialogBox{
 		for(Sample s: samples){
 			int count = 0;
 			long sampleID = s.getId();
-			Iterator<Subsample> itr = selectedSubsamples.iterator();
+			Iterator<Subsample> itr = subsamples.iterator();
 			while (itr.hasNext()) {
 				Subsample current = itr.next();
 				if(current.getSampleId().equals(sampleID) && current.getGrid() != null) count++;
