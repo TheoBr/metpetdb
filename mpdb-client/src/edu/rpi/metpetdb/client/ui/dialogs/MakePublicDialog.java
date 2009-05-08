@@ -50,6 +50,7 @@ public class MakePublicDialog extends MDialogBox{
 	
 	public MakePublicDialog(final ArrayList<Sample> samples){
 		super();
+		//TODO loading screen while getAllData is running
 		getAllData(samples);
 		this.samples = samples;
 		
@@ -84,17 +85,13 @@ public class MakePublicDialog extends MDialogBox{
 			}
 		});
 		
-		// If multiple samples are selected go to step 1, else go to step 2.
-		if (samples.size() > 1)
-			this.setWidget(createInterfaceMakeSamplesPublicOptions());
-		else{ 
-			custom = true;
-			for(Sample s: samples){
-				ChemicalAnalysesTotal.add(s.getAnalysisCount());
-			}
-			countAllImageMaps(ImageMapsTotal);
-			this.setWidget(createInterfaceMakeSamplesPublicCustom());
-		}
+	}
+	
+	private Widget loading(){
+		final FlowPanel container = new FlowPanel();
+		container.add(new Label("Loading..."));
+		
+		return container;
 	}
 	
 	// Step 1 in the process, unless only 1 sample is selected, then goes directly to step 2 createInterfaceMakeSamplesPublicCustom
@@ -190,6 +187,13 @@ public class MakePublicDialog extends MDialogBox{
 	private Widget createInterfaceMakeSamplesPublicCustom(){
 		final FlowPanel container = new FlowPanel();
 		
+		custom = true;
+		//calculate totals
+		for(Sample s: samples){
+			ChemicalAnalysesTotal.add(s.getAnalysisCount());
+		}
+		countAllImageMaps(ImageMapsTotal);
+		
 		//no samples were selected
 		if(samples.isEmpty()){
 			container.add(new Label("No Samples are selected"));
@@ -229,10 +233,15 @@ public class MakePublicDialog extends MDialogBox{
 						forward = false;
 						itr.previous();
 					}
-					Sample current = itr.previous();
-					header.setText("Make " + current.getNumber() + " Public");
-					counter.setText((itr.previousIndex() + 2) + " of " + samples.size() + " Samples");
-					setSubsampleTree(current);
+					if(itr.hasPrevious()){
+						Sample current = itr.previous();
+						header.setText("Make " + current.getNumber() + " Public");
+						counter.setText((itr.previousIndex() + 2) + " of " + samples.size() + " Samples");
+						setSubsampleTree(current);
+					}
+					else{
+						MakePublicDialog.this.setWidget(createInterfaceMakeSamplesPublicOptions());
+					}
 				}
 				else{
 					MakePublicDialog.this.setWidget(createInterfaceMakeSamplesPublicOptions());
@@ -349,6 +358,7 @@ public class MakePublicDialog extends MDialogBox{
 		new ServerOp<Map<Long, List<Subsample>>>() {
 			@Override
 			public void begin() {
+				MakePublicDialog.this.setWidget(loading());
 				Iterator<Sample> itr = allSamples.iterator();
 				Collection<Long> sampleIds = new ArrayList();
 				while (itr.hasNext()) {
@@ -397,7 +407,12 @@ public class MakePublicDialog extends MDialogBox{
 							public void onSuccess(List<Grid> result) {
 								imageMaps.addAll(result);
 								// all data retrieved, we're ready to display the dialog
-								MakePublicDialog.this.show();
+								if(samples.size() == 1){
+									MakePublicDialog.this.setWidget(createInterfaceMakeSamplesPublicCustom());
+								}
+								else if(samples.size() > 1){
+									MakePublicDialog.this.setWidget(createInterfaceMakeSamplesPublicOptions());
+								}
 							}
 						}.begin();
 					}
@@ -500,6 +515,7 @@ public class MakePublicDialog extends MDialogBox{
 						}
 						else{
 							selectedSubsamples.remove(current);
+							//TODO uncheck and unselect all subsamples
 						}
 					}
 				});
