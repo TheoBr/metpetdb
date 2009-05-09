@@ -235,6 +235,16 @@
     <servlet-name>sampleComment</servlet-name>
     <url-pattern>/sampleComment.svc</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>searchIPhone</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.search.SearchIPhone</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>sampleIPhone</servlet-name>
+    <url-pattern>/sampleIPhone.svc</url-pattern>
+  </servlet-mapping>
 
   <!--
   * Our static data caching and compression servlet.
