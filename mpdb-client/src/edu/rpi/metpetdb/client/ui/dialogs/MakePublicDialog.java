@@ -50,7 +50,6 @@ public class MakePublicDialog extends MDialogBox{
 	
 	public MakePublicDialog(final ArrayList<Sample> samples){
 		super();
-		//TODO loading screen while getAllData is running
 		getAllData(samples);
 		this.samples = samples;
 		
@@ -498,7 +497,7 @@ public class MakePublicDialog extends MDialogBox{
 		}.begin();
 	}
 	
-	private void setSubsampleTree(Sample sample){
+	private void setSubsampleTree(final Sample sample){
 		subsampleTree.clear();
 		
 		//create a TreeItem for each subsample
@@ -515,7 +514,17 @@ public class MakePublicDialog extends MDialogBox{
 						}
 						else{
 							selectedSubsamples.remove(current);
-							//TODO uncheck and unselect all subsamples
+							//unselect all ca's
+							long subsampleID = current.getId();
+							List<ChemicalAnalysis> analyses = chemicalAnalysesMap.get(subsampleID);
+							for(final ChemicalAnalysis ca : analyses){
+								selectedChemicalAnalyses.remove(ca);
+							}
+							
+							//unselect the image map
+							selectedImageMaps.remove(current.getGrid());
+							
+							setSubsampleTree(sample);
 						}
 					}
 				});
