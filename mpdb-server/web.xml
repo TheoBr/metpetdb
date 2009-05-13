@@ -242,8 +242,8 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-    <servlet-name>sampleIPhone</servlet-name>
-    <url-pattern>/sampleIPhone.svc</url-pattern>
+    <servlet-name>searchIPhone</servlet-name>
+    <url-pattern>/searchIPhone.svc</url-pattern>
   </servlet-mapping>
 
   <!--
