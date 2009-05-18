@@ -195,6 +195,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public ObjectConstraint<User> Sample_owner;
 	public ValueInCollectionConstraint<MetamorphicGrade> Sample_metamorphicGrades;
 	public ObjectConstraint<Reference> Sample_references;
+	public ObjectConstraint<Image> Sample_images;
 
 	public void validate(final Sample s) throws ValidationException {
 		validate(s, Sample__all);

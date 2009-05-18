@@ -71,12 +71,13 @@
       <many-to-many class="Reference" column="reference_id" order-by="lower(name)"/>
     </set>
 
-    <set name="images" inverse="true">
+	<set name="images" table="images" cascade="all,delete-orphan" order-by="filename DESC"> 
       <key column="sample_id" />
       <one-to-many class="Image" />
       <filter name="samplePublicOrUser"
      		condition="( user_id=:userId OR public_data='Y')" />
     </set>
+
     
     <!-- Hibernate updates sets by using insert/delete, not update -->
     <set name="minerals" table="sample_minerals" cascade="save-update" lazy="false">

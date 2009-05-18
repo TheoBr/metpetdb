@@ -50,6 +50,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.image.AddImageAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.CountryAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.LocationAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.MetamorphicGradeAttribute;
@@ -77,6 +78,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 	private HTMLPanel commentPanel;
 
 	private static GenericAttribute[] sampleAtts = {
+			new AddImageAttribute<Sample>(MpDb.doc.Sample_images),
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
 			new TextAttribute(MpDb.doc.Sample_sesarNumber).setImmutable(true),
 			new TextAttribute(MpDb.doc.Sample_number),

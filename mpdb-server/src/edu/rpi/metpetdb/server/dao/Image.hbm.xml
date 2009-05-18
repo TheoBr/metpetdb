@@ -47,8 +47,7 @@
      
   <filter name="imagePublicOrUser"
      		condition="( user_id=:userId OR public_data='Y')" />
-  </class>
-
+</class>
   <query name="Image.byId">
     from Image i
     where i.id = :id
@@ -58,6 +57,7 @@
     from Image i
     where i.subsample.id = :subsampleId
   </query>
+  <query name="Image.bySampleID">from Image i    where i.sample.id = :sampleId</query>
   <query name="Image.bySubsampleId,size">
     select count(*) from Image i
     where i.subsample.id = :id

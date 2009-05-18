@@ -63,6 +63,11 @@ public class ImageDAO extends MpDbDAO<Image> {
 		return inst;
 	}
 
+	public List<Image> getBySampleId(long sampleId) throws MpDbException{
+		Query q = namedQuery("Image.bySampleId");
+		q.setLong("sampleId", sampleId);
+		return (List<Image>) getResults(q);
+	}
 	public List<Image> getBySubsampleId(long subsampleId) throws MpDbException{
 		Query q = namedQuery("Image.bySubsampleId");
 		q.setLong("subsampleId", subsampleId);

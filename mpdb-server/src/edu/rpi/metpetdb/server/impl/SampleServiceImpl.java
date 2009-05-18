@@ -67,6 +67,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		Sample s = new Sample();
 		s.setId(id);
 		s = (new SampleDAO(this.currentSession())).fill(s);
+		s.getImages().size();
 		return s;
 	}
 
