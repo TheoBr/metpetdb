@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -273,8 +273,11 @@ public class MSuggestText extends FlowPanel implements ClickListener, KeyboardLi
 	
 	private void selectionComplete(final HTML selection){
 		setText(getValue(selection.getHTML()));
+		notifyCompletion();
 		hide();
 	}
+	
+	public void notifyCompletion(){}
 	
 	private void removeSelected(final int index){
 		fp.getWidget(index).removeStyleDependentName("selected");
@@ -309,4 +312,6 @@ public class MSuggestText extends FlowPanel implements ClickListener, KeyboardLi
 	private void hide(){
 		db.hide();
 	}
+	
+	
 }

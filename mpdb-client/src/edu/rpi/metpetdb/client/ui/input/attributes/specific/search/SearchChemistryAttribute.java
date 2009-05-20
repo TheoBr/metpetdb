@@ -91,6 +91,10 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			protected String getValue(String input) {
 				return removeHTML(input);
 			}
+			@Override
+			public void notifyCompletion(){
+				RowContainer.this.onChange(this);
+			}
 		}
 		
 		public RowContainer(final MObject obj, final String id){
