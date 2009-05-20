@@ -50,8 +50,6 @@ public class MakePublicDialog extends MDialogBox{
 	
 	public MakePublicDialog(final ArrayList<Sample> samples){
 		super();
-		getAllData(samples);
-		this.samples = samples;
 		
 		// These two buttons are in every dialog so we create them once here
 		closeX = new Button("X");
@@ -84,12 +82,34 @@ public class MakePublicDialog extends MDialogBox{
 			}
 		});
 		
+		//If no samples were selected
+		if(samples.size() == 0){
+			MakePublicDialog.this.setWidget(noSamplesWidget());
+			return;
+		}
+		
+		getAllData(samples);
+		this.samples = samples;
+		
 	}
 	
 	private Widget loading(){
 		final FlowPanel container = new FlowPanel();
 		container.add(new Label("Loading..."));
 		
+		return container;
+	}
+	
+	private Widget noSamplesWidget(){
+		final FlowPanel container = new FlowPanel();
+		container.add(new Label("No Samples selected"));
+		Button ok = new Button("Ok");
+		ok.addClickListener(new ClickListener(){
+			public void onClick(final Widget sender){
+				MakePublicDialog.this.hide();
+			}
+		});
+		container.add(ok);
 		return container;
 	}
 	
@@ -418,7 +438,6 @@ public class MakePublicDialog extends MDialogBox{
 				}.begin();
 			}
 		}.begin();
-		
 	}
 	
 	private void makeDataPublic(){
@@ -426,6 +445,7 @@ public class MakePublicDialog extends MDialogBox{
 		makeSubsamplesPublic();
 		makeChemicalAnalysesPublic();
 		makeImageMapsPublic();
+		
 	}
 	
 	private void makeSamplesPublic(){

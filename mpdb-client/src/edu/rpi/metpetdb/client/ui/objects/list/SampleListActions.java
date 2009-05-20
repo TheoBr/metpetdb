@@ -48,12 +48,12 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 			// do nothing for empty
 			}
 		},
-		NONE("nONE") {
+		NONE("None") {
 			public void doAction(final DataList<Sample> list) {
 				list.getDataTable().deselectAllRows();
 			}
 		},
-		PRIVATE("pRIVATE") {
+		PRIVATE("Private") {
 			public void doAction(final DataList<Sample> list) {
 				for (int i = 0; i < list.getDataTable().getRowCount(); i++)
 					if (!list.getRowValue(i).isPublicData())
@@ -62,7 +62,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 						list.getDataTable().deselectRow(i);
 			}
 		},
-		PUBLIC("pUBLIC") {
+		PUBLIC("Public") {
 			public void doAction(final DataList<Sample> list) {
 				for (int i = 0; i < list.getDataTable().getRowCount(); i++)
 					if (list.getRowValue(i).isPublicData())
@@ -71,7 +71,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 						list.getDataTable().deselectRow(i);
 			}
 		},
-		ALL("aLL") {
+		ALL("All") {
 			public void doAction(final DataList<Sample> list) {
 				list.getDataTable().selectAllRows();
 			}
