@@ -71,7 +71,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 						list.getDataTable().deselectRow(i);
 			}
 		},
-		ALL("All") {
+		ALL("All on this page") {
 			public void doAction(final DataList<Sample> list) {
 				list.getDataTable().selectAllRows();
 			}
@@ -111,6 +111,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 				final SelectOption opt = SelectOption.get(selectListBox
 						.getItemText(selectListBox.getSelectedIndex()));
 				opt.doAction(list);
+				selectListBox.setItemSelected(0, true);
 			}
 		});
 
