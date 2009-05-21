@@ -8,6 +8,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Vector;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -22,9 +23,13 @@ import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Grid;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
+import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
+import edu.rpi.metpetdb.client.ui.widgets.paging.DataList;
 
 public class MakePublicDialog extends MDialogBox{
 	private ArrayList<Sample> samples;
@@ -48,7 +53,9 @@ public class MakePublicDialog extends MDialogBox{
 	private Button closeX;
 	private Button cancel;
 	
-	public MakePublicDialog(final ArrayList<Sample> samples){
+	DataList<Sample> list;
+	
+	public MakePublicDialog(final ArrayList<Sample> samples, DataList<Sample> list){
 		super();
 		
 		// These two buttons are in every dialog so we create them once here
@@ -90,7 +97,7 @@ public class MakePublicDialog extends MDialogBox{
 		
 		getAllData(samples);
 		this.samples = samples;
-		
+		this.list = list;
 	}
 	
 	private Widget loading(){
@@ -445,7 +452,8 @@ public class MakePublicDialog extends MDialogBox{
 		makeSubsamplesPublic();
 		makeChemicalAnalysesPublic();
 		makeImageMapsPublic();
-		
+		//refresh the data list
+		list.getScrollTable().reloadPage();
 	}
 	
 	private void makeSamplesPublic(){

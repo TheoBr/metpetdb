@@ -394,7 +394,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 		} else if (sender == exportGoogleEarth) {
 			doExportGoogleEarth();
 		} else if (sender == makePublic) {
-			MakePublicDialog m = new MakePublicDialog(list.getSelectedValues());
+			MakePublicDialog m = new MakePublicDialog(list.getSelectedValues(), list);
 			m.show();
 		} else if (sender == remove) {
 			final List<Sample> checkedSamples = list.getSelectedValues();
