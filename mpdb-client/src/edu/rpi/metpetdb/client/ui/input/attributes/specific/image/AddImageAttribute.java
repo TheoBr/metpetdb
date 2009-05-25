@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.ui.input.attributes.specific.image;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -16,6 +17,7 @@ import edu.rpi.metpetdb.client.model.XrayImage;
 import edu.rpi.metpetdb.client.model.interfaces.HasImages;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.ui.commands.MCommand;
+import edu.rpi.metpetdb.client.ui.dialogs.ViewImagePopup;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
@@ -84,8 +86,20 @@ public class AddImageAttribute<DataType extends HasImages> extends
 			final edu.rpi.metpetdb.client.model.Image image,
 			final boolean editMode) {
 		final VerticalPanel imageContainer = new VerticalPanel();
-		imageContainer.add(new com.google.gwt.user.client.ui.Image(image
-				.get64x64ServerPath()));
+		final com.google.gwt.user.client.ui.Image img = new com.google.gwt.user.client.ui.Image(image
+				.get64x64ServerPath());
+		img.addClickListener(new ClickListener() {
+			public void onClick(final Widget sender) {
+				final ArrayList<Image> lol = new ArrayList<Image>();
+				lol.add(image);
+				new ViewImagePopup(
+						lol,
+						new com.google.gwt.user.client.ui.Image(
+								image.getHalfServerPath()),
+						0).show();
+			}
+		});
+		imageContainer.add(img);
 		imageContainer.add(new Label("Image Type: " + image.getImageType()));
 		if (image.getImageType().getImageType().contains("X-ray")) {
 			final XrayImage xray = (XrayImage) image;
