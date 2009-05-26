@@ -128,8 +128,15 @@ public class SearchIPhone extends HttpServlet{
 			final XStream x = new XStream();
 			
 			for (Sample sample : results.getList()){			
+				response.getWriter().write("<sample>");
+				response.getWriter().write("<name>");
 				x.toXML(sample.getName(),response.getWriter());
+				response.getWriter().write("</name>");
+				response.getWriter().write("<id>");
+				x.toXML(sample.getId(),response.getWriter());
+				response.getWriter().write("</id>");
 				x.toXML(sample.getLocation(),response.getWriter());
+				response.getWriter().write("</sample>");
 			}
 		} catch (final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
