@@ -4,7 +4,6 @@ insert into image_format values(nextval('image_format_seq'),'image/jpeg');
 insert into image_format values(nextval('image_format_seq'),'image/bmp');
 insert into image_format values(nextval('image_format_seq'),'image/png');
 --Rock Types
---insert into rock_type values(nextval('rock_type_seq'), 'Gentoo');
 insert into rock_type values(nextval('rock_type_seq'), 'Slate');
 insert into rock_type values(nextval('rock_type_seq'), 'Phyllite');
 insert into rock_type values(nextval('rock_type_seq'), 'Schist');
@@ -36,6 +35,7 @@ insert into rock_type values(nextval('rock_type_seq'), 'Metabasite');
 insert into rock_type values(nextval('rock_type_seq'), 'Metacarbonate');
 insert into rock_type values(nextval('rock_type_seq'), 'Metagranite');
 insert into rock_type values(nextval('rock_type_seq'), 'Cordierite-Anthophyllite');
+insert into rock_type values(nextval('rock_type_seq'), 'Metavolcanic');
 --Image Types
 --insert into image_type values(nextval('image_type_seq'), 'Xfce');
 insert into image_type values(nextval('image_type_seq'), 'Map', 'MAP');
