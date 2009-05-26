@@ -31,6 +31,22 @@
     
     <many-to-one name="role" column="role_id"/>
   </class>
+  
+  <query name="User.byProjectId">
+  	from User u
+  	inner join u.projects as project with project.id = :id
+  </query>
+  <query name="User.byProjectId/name">
+    select u
+  	from User u
+  	inner join u.projects as project with project.id = :id
+  	order by u.name
+  </query>
+  <query name="User.byProjectId,size">
+    select count(*)
+  	from User u
+  	inner join u.projects as project with project.id = :id
+  </query>
 
   <query name="User.byId">
     from User u

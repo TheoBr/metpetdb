@@ -219,6 +219,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ Project ------
 	public PropertyConstraint[] Project__all;
 	public StringConstraint Project_name;
+	public StringConstraint Project_description;
 
 	public void validate(Project u) throws ValidationException {
 		validate(u, Project__all);

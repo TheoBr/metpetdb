@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 
@@ -23,4 +24,7 @@ public interface ProjectServiceAsync {
 			AsyncCallback<Results<Sample>> ac);
 
 	void all(long userId, AsyncCallback<List<Project>> ac);
+
+	void allProjectMembers(PaginationParameters p, int id,
+			AsyncCallback<Results<User>> ac);
 }

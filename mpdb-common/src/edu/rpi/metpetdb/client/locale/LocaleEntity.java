@@ -7,10 +7,12 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	/* Project */
 	String Project();
 	String Project_name();
+	String Project_description();
 	String Project_Owner();
 	String Project_MemberCount();
 	String Project_LastSampleAddded();
-	String Project_Actions();
+	String Project_ViewSamples();
+	String Project_ViewMembers();
 	/* Sample */
 	String Sample();
 	String Sample_sesarNumber();
@@ -152,6 +154,8 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String TokenSpace_All_Public_Samples();
 	String TokenSpace_All_Projects();
 	String TokenSpace_Project_Samples();
+	String TokenSpace_Project_Members();
+	String TokenSpace_Project_Description();
 	String TokenSpace_Samples_For_User();
 	String TokenSpace_Enter_Sample();
 	String TokenSpace_New_Project();

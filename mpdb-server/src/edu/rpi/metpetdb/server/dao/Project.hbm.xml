@@ -11,6 +11,7 @@
     </id>
     <version name="version" />
     <property name="name" column="name" />
+    <property name="description" column="description" />
 
     <many-to-one name="owner" column="user_id" lazy="false" />
 
@@ -123,5 +124,4 @@
   	inner join p.samples as sample with sample.id = :id
   	order by sample.locationText
   </query>
-  
 </hibernate-mapping>

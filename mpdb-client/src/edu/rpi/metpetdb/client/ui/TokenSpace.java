@@ -37,6 +37,7 @@ import edu.rpi.metpetdb.client.ui.objects.details.SubsampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.list.ImageListViewer;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
+import edu.rpi.metpetdb.client.ui.project.ProjectDescription;
 import edu.rpi.metpetdb.client.ui.search.Search;
 import edu.rpi.metpetdb.client.ui.user.Confirmation;
 import edu.rpi.metpetdb.client.ui.user.EditUserProfile;
@@ -81,16 +82,6 @@ public class TokenSpace implements HistoryListener {
 
 		public void execute(final String emailAddress) {
 			show(new UserDetails(emailAddress));
-		}
-	};
-	private static final TokenHandler projectDetails = new IKey(
-			LocaleHandler.lc_entity.TokenSpace_Project_Details()) {
-		public int get(final Object obj) {
-			return ((Project) obj).getId();
-		}
-
-		public void execute(final int id) {
-			show(new ProjectDetails().showById(id));
 		}
 	};
 	private static final TokenHandler subsampleDetails = new LKey(
@@ -226,7 +217,16 @@ public class TokenSpace implements HistoryListener {
 			});
 		}
 	};
+	private static final TokenHandler projectDetails = new IKey(
+			LocaleHandler.lc_entity.TokenSpace_Project_Details()) {
+		public int get(final Object obj) {
+			return ((Project) obj).getId();
+		}
 
+		public void execute(final int id) {
+			show(new ProjectDetails().showById(id));
+		}
+	};
 	public static final Screen allProjects = new Screen(LocaleHandler.lc_entity
 			.TokenSpace_All_Projects()) {
 		public void executeToken(final String args) {
@@ -248,6 +248,22 @@ public class TokenSpace implements HistoryListener {
 			new VoidLoggedInOp() {
 				public void command() {
 					show(new UserSamplesList());
+				}
+			}.begin();
+		}
+	};
+	
+	private static final TokenHandler projectDescription = new IKey(
+			LocaleHandler.lc_entity.TokenSpace_Project_Description()) {
+
+		public int get(Object obj) {
+			return ((Project) obj).getId();
+		}
+		
+		public void execute(final int id) {
+			new VoidLoggedInOp() {
+				public void command() {
+					show(new ProjectDescription().showById(id));
 				}
 			}.begin();
 		}
@@ -401,6 +417,7 @@ public class TokenSpace implements HistoryListener {
 		register(allSamples);
 		register(allPublicSamples);
 		register(samplesForUser);
+		register(projectDescription);
 		register(projectSamples);
 		register(editProfile);
 		register(imageBrowserDetails);
@@ -494,6 +511,10 @@ public class TokenSpace implements HistoryListener {
 
 	public static String samplesOf(final Project p) {
 		return projectSamples.makeToken(p);
+	}
+	
+	public static String descriptionOf(Project p) {
+		return projectDescription.makeToken(p);
 	}
 
 	public static void dispatch(final String historyToken) {

@@ -111,6 +111,7 @@ CREATE TABLE projects
   version INT4 NOT NULL,
   user_id INT4 NOT NULL,
   name VARCHAR(50) NOT NULL,
+  description VARCHAR(300),
   CONSTRAINT projects_sk PRIMARY KEY (project_id),
   CONSTRAINT projects_nk UNIQUE (user_id, name),
   CONSTRAINT projects_fk_user FOREIGN KEY (user_id)

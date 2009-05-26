@@ -10,10 +10,12 @@ import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.TextAreaAttribute;
 
 public class ProjectDetails extends FlowPanel {
 	private static GenericAttribute[] projectAtts = {
-		new TextAttribute(MpDb.doc.Project_name)
+		new TextAttribute(MpDb.doc.Project_name),
+		new TextAreaAttribute(MpDb.doc.Project_description)
 	};
 
 	private final ObjectEditorPanel<Project> p_project;

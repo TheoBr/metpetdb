@@ -10,6 +10,8 @@ public class Project extends MObject {
 	private int version;
 
 	private String name;
+	
+	private String description;
 
 	private User owner;
 
@@ -39,6 +41,14 @@ public class Project extends MObject {
 
 	public void setName(final String s) {
 		name = s;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(final String d) {
+		description = d;
 	}
 
 	public User getOwner() {

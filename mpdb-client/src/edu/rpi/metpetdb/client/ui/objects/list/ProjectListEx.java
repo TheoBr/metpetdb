@@ -41,13 +41,22 @@ public abstract class ProjectListEx extends ListEx<Project> {
 					return new MCheckBox(data);
 				}
 			},
-			new Column(true,enttxt.Project_name(), ProjectProperty.name),
+			new Column(true,enttxt.Project_name(), true) {
+				protected Object getWidget(final MObject data,
+						final int currentRow) {
+					return new MLink((String) data.mGet(ProjectProperty.name), 
+						new ClickListener() {
+						public void onClick(Widget sender) {
+							History.newItem(TokenSpace.descriptionOf((Project) data));
+						}
+					});
+				}
+			},
 			new Column(true,enttxt.Project_Owner(), ProjectProperty.owner, true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
-					return new MLink(((User) data.mGet(ProjectProperty.owner))
-							.getEmailAddress(), TokenSpace
-							.detailsOf((User) data.mGet(ProjectProperty.owner)));
+					User owner = ((User) data.mGet(ProjectProperty.owner));
+					return new MLink(owner.getName(), TokenSpace.detailsOf(owner));
 				}
 			},
 			new Column(true,enttxt.Project_MemberCount(),
@@ -55,20 +64,19 @@ public abstract class ProjectListEx extends ListEx<Project> {
 			new Column(true,enttxt.Project_LastSampleAddded(), true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
-					return new Label("Coming Soon");
+					//return new Label(data.mGet(ProjectProperty.memberCount).toString());
+					return new Label("Coming soon");
 				}
-			}, new Column(true,enttxt.Project_Actions(), true) {
+			}, new Column(true,enttxt.Project_ViewSamples(), true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
-					return new MLink("Go to project", new ClickListener() {
+					return new MLink("View Samples", new ClickListener() {
 						public void onClick(Widget sender) {
-							History.newItem(TokenSpace
-									.samplesOf((Project) data));
+							History.newItem(TokenSpace.samplesOf((Project) data));
 						}
 					});
 				}
 			}
-
 	};
 
 	public String getDefaultSortParameter() {

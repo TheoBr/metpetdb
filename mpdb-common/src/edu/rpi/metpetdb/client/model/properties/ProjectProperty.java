@@ -13,6 +13,14 @@ public enum ProjectProperty implements Property<Project> {
 			((Project) project).setName((String) name);
 		}
 	},
+	description {
+		public String get(final Project project) {
+			return ((Project) project).getDescription();
+		}
+		public void set(final Project project, final Object description) {
+			((Project) project).setDescription((String) description);
+		}
+	},
 	owner {
 		public User get(final Project project) {
 			return ((Project) project).getOwner();

@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.service;
 
 import java.util.List;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -9,6 +10,7 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 
@@ -48,4 +50,6 @@ public interface ProjectService extends RemoteService {
 			ValidationException, MpDbException;
 
 	Results<Sample> samplesFromProject(PaginationParameters parameters, long id)  throws MpDbException;
+	
+	Results<User> allProjectMembers(PaginationParameters p, int id) throws MpDbException;
 }

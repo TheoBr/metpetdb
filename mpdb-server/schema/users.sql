@@ -78,3 +78,4 @@ INSERT INTO users VALUES (nextval('user_seq'), 1, 'Benjamin Hallett', 'halleb3@r
 INSERT INTO users VALUES (nextval('user_seq'), 1, 'Matt Fyffe', 'fyffem@rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=1));
 INSERT INTO users VALUES (nextval('user_seq'), 1, 'Dennis Goldfarb', 'goldfd@rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=1));
 INSERT INTO users VALUES (nextval('user_seq'), 1, 'Zak Linder', 'lindez@rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=1));
+INSERT INTO users VALUES (nextval('user_seq'), 1, 'Nick Glickenhouse', 'glickn@rpi.edu','','','','','','','','','','Y',(select role_id from roles where rank=1));

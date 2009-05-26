@@ -9,6 +9,7 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.ProjectNotFoundException;
 import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
@@ -65,5 +66,21 @@ public class ProjectDAO extends MpDbDAO<Project> {
 		final int size = ((Number) getResult(sizeQuery)).intValue();
 
 		return new Results<Project>(size, l);
+	}
+
+	public Results<User> getMembersForProject(final PaginationParameters p,
+			int id) throws MpDbException {
+		final Query sizeQ = sizeQuery("User.byProjectId");
+		final Query pageQ = pageQuery("User.byProjectId", p);
+		sizeQ.setLong("id", id);
+		pageQ.setLong("id", id);
+		return getMembers(sizeQ, pageQ);
+	}
+	
+	private Results<User> getMembers(Query sizeQuery, Query pageQuery) throws MpDbException {
+		final List<User> l = (List<User>) getResults(pageQuery);
+		final int size = ((Number) getResult(sizeQuery)).intValue();
+		
+		return new Results<User>(size, l);
 	}
 }
