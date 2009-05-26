@@ -22,4 +22,9 @@
     from RockType rt
     where lower(rt.rockType)=lower(:rockType)
   </query>
+  <query name="RockType.RockTypes/RockType">
+  	select rt.rockType
+  	from RockType rt
+  	order by rockType
+  </query>
 </hibernate-mapping>
