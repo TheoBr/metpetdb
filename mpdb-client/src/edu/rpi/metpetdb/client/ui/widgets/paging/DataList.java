@@ -207,6 +207,15 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 		}
 		return selectedRows;
 	}
+	
+	public ArrayList<RowType> getAllValuesForPage() {
+		final ArrayList<RowType> selectedRows = new ArrayList<RowType>();
+		for (int i = 0; i < dataTable.getRowCount(); i++) {
+			if (getScrollTable().getRowValue(i) != null)
+				selectedRows.add(getScrollTable().getRowValue(i));
+		}
+		return selectedRows;
+	}
 
 	public RowType getRowValue(int row) {
 		return getScrollTable().getRowValue(row);

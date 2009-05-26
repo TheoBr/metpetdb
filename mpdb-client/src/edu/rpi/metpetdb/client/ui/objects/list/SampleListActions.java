@@ -243,17 +243,20 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 		new ServerOp<List<Sample>>() {
 			@Override
 			public void begin() {
-				int id = (int) (MpDb.currentUser().getId());
 				List<Sample> checked = list.getSelectedValues();
 				if (checked.size() == 0)
-					MpDb.sample_svc.allSamplesForUser(id, this);
+					onSuccess(list.getAllValuesForPage());
 				else {
 					onSuccess(checked);
 				}
 			}
 			public void onSuccess(List<Sample> result) {
-				earthPopup.createUI(result);
-				earthPopup.show();
+				if (result != null && result.size() > 0) {
+					earthPopup.createUI(result);
+					earthPopup.show();
+				} else {
+					new ConfirmationDialogBox("There are no samples to view",false,null);
+				}
 			}
 		}.begin();
 	}

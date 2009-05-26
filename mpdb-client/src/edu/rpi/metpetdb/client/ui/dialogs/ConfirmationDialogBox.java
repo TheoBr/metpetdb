@@ -68,12 +68,14 @@ public class ConfirmationDialogBox extends MDialogBox implements ClickListener,
 	}
 
 	private void cancel() {
-		s.onSuccess(false);
+		if (s != null)
+			s.onSuccess(false);
 		hide();
 	}
 
 	private void submit() {
-		s.onSuccess(true);
+		if (s != null)
+			s.onSuccess(true);
 		hide();
 	}
 
