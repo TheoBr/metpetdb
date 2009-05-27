@@ -111,9 +111,4 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		final Query q = namedQuery("Sample.Countries/Countries");
 		return	((List<String>)getResults(q)).toArray();
 	}
-	
-	public Object[] allRockTypes() throws MpDbException {
-		final Query q = namedQuery("RockType.RockTypes/RockType");
-		return	((List<String>)getResults(q)).toArray();
-	}
 }

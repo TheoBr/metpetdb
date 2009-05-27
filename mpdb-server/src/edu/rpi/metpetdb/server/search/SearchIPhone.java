@@ -17,8 +17,10 @@ import com.thoughtworks.xstream.XStream;
 
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchSample;
+import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
+import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.impl.RegionServiceImpl;
 import edu.rpi.metpetdb.server.impl.SampleServiceImpl;
 
@@ -62,9 +64,9 @@ public class SearchIPhone extends HttpServlet{
 		
 	private void rockTypes(HttpServletResponse response){
 		try {
-			SampleServiceImpl service = new SampleServiceImpl();
+			DatabaseObjectConstraints doc = DataStore.getInstance().getDatabaseObjectConstraints();		
 			final XStream x = new XStream();
-			x.toXML(service.allRockTypes(),response.getWriter());
+			x.toXML(doc.Sample_rockType.getValues(),response.getWriter());
 		} catch(final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
 		}
@@ -84,9 +86,11 @@ public class SearchIPhone extends HttpServlet{
 		try {
 			SampleServiceImpl s = new SampleServiceImpl();
 			final XStream x = new XStream();
+			response.getWriter().write("<set>");
 			for (Long id : sampleIds){
 				x.toXML(s.details(id),response.getWriter());
 			}
+			response.getWriter().write("</set>");
 		} catch (final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
 		}
@@ -126,18 +130,19 @@ public class SearchIPhone extends HttpServlet{
 			s.setBoundingBox(boundingBox);
 			Results<Sample> results = SearchDb.sampleSearch(null, s, null);
 			final XStream x = new XStream();
-			
+			response.getWriter().write("<set>");
 			for (Sample sample : results.getList()){			
 				response.getWriter().write("<sample>");
-				response.getWriter().write("<name>");
-				x.toXML(sample.getName(),response.getWriter());
-				response.getWriter().write("</name>");
+				response.getWriter().write("<number>");
+				x.toXML(sample.getNumber(),response.getWriter());
+				response.getWriter().write("</number>");
 				response.getWriter().write("<id>");
 				x.toXML(sample.getId(),response.getWriter());
 				response.getWriter().write("</id>");
 				x.toXML(sample.getLocation(),response.getWriter());
 				response.getWriter().write("</sample>");
 			}
+			response.getWriter().write("</set>");
 		} catch (final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
 		}

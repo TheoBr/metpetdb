@@ -62,16 +62,6 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		}
 		return options;
 	}
-	
-	public Set<String> allRockTypes() throws MpDbException {
-		final Object[] l =  (new SampleDAO(this.currentSession())).allRockTypes();
-		final Set<String> options = new HashSet<String>();
-		for (int i = 0; i < l.length; i++){
-			if (l[i] != null)
-				options.add(l[i].toString());
-		}
-		return options;
-	}
 
 	public Sample details(final long id) throws MpDbException {
 		Sample s = new Sample();
