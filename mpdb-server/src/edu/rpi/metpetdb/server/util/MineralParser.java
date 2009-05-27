@@ -88,10 +88,16 @@ public class MineralParser {
 				parseAlternativeName(output, sheet, rowIdx, columnIdx + 1,
 						mineralName);
 				// back to parent
-				for (int idx = columnIdx - 1; idx >= 0; --idx)
+				final LinkedList<String> removedParents = new LinkedList<String>();
+				for (int idx = columnIdx - 1; idx >= 0; --idx) {
+					removedParents.addFirst(parents.poll());
 					if (parse(output, sheet, rowIdx + 1, idx, parents)) {
 						return true;
 					}
+				}
+				for(int i = 0;i<removedParents.size(); ++i) {
+					parents.addFirst(removedParents.get(i));
+				}
 				// siblings
 				if (parse(output, sheet, rowIdx + 1, columnIdx, parents)) {
 					return true;
