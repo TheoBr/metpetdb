@@ -90,7 +90,7 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 		map.addControl(new LargeMapControl());
 		map.addControl(new MapTypeControl());
 		map.addControl(new ScaleControl());	
-		map.addMapType(MapType.getEarthMap());
+//		map.addMapType(MapType.getEarthMap());
 		map.setSize("100%", "400px");
 		
 		panel.getLeftCol().add(map);
@@ -205,26 +205,26 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 	}-*/;
 	
 	private void setClickHandler() {
-		map.addMapTypeChangedHandler(new MapTypeChangedHandler(){
-			public void onTypeChanged(final MapTypeChangedEvent e){
-				map.getEarthInstance(new EarthInstanceHandler(){
-					public void onEarthInstance(final EarthInstanceEvent e){
-						MGoogleEarth.addControls(e);
-						addClickListener(e);
-						final double x;
-						final double y;
-						if (markerPoint1 != null && markerPoint2 != null){
-							x = (markerPoint1.getLatLng().getLatitude() + markerPoint2.getLatLng().getLatitude())/2;
-							y = (markerPoint1.getLatLng().getLongitude() + markerPoint2.getLatLng().getLongitude())/2;
-						} else {
-							x = map.getCenter().getLatitude();
-							y = map.getCenter().getLongitude();
-						}
-						MGoogleEarth.setView(e,x,y);
-				      }
-				});
-			}
-		});
+//		map.addMapTypeChangedHandler(new MapTypeChangedHandler(){
+//			public void onTypeChanged(final MapTypeChangedEvent e){
+//				map.getEarthInstance(new EarthInstanceHandler(){
+//					public void onEarthInstance(final EarthInstanceEvent e){
+//						MGoogleEarth.addControls(e);
+//						addClickListener(e);
+//						final double x;
+//						final double y;
+//						if (markerPoint1 != null && markerPoint2 != null){
+//							x = (markerPoint1.getLatLng().getLatitude() + markerPoint2.getLatLng().getLatitude())/2;
+//							y = (markerPoint1.getLatLng().getLongitude() + markerPoint2.getLatLng().getLongitude())/2;
+//						} else {
+//							x = map.getCenter().getLatitude();
+//							y = map.getCenter().getLongitude();
+//						}
+//						MGoogleEarth.setView(e,x,y);
+//				      }
+//				});
+//			}
+//		});
 		map.addMapClickHandler(new MapClickHandler() {
 			public void onClick(MapClickHandler.MapClickEvent sender) {
 				if (sender.getOverlay() != null) {
@@ -299,11 +299,11 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 				map.removeOverlay(box);
 			box = new Polygon(points, "#0f2e3c", 1, .60, "#000000", .33);
 			map.addOverlay(box);
-			map.getEarthInstance(new EarthInstanceHandler(){
-				public void onEarthInstance(final EarthInstanceEvent e){
-					MGoogleEarth.createPolygon(e,W,S,E,N);
-			      }
-			});
+//			map.getEarthInstance(new EarthInstanceHandler(){
+//				public void onEarthInstance(final EarthInstanceEvent e){
+//					MGoogleEarth.createPolygon(e,W,S,E,N);
+//			      }
+//			});
 			
 			fillBounds(N, S, E, W);
 			
@@ -331,7 +331,7 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 				map.removeOverlay(overlays[i]);
 				if (overlays[i] == box){
 					box = null;
-					clearGEpolygon();
+//					clearGEpolygon();
 				}
 				else if (overlays[i] == markerPoint1) {
 					markerPoint1 = null;
@@ -345,7 +345,7 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 
 	public void clearMap() {
 		map.clearOverlays();
-		clearGEpolygon();
+//		clearGEpolygon();
 		markerPoint1 = null;
 		markerPoint2 = null;
 		boundingBox = null;
