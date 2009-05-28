@@ -136,12 +136,14 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 		}
 		
 		public void onClick(final Widget sender){
+			if (maxSelectable == 1){
+				CheckedState tempState = cb.getState();
+				uncheckRest(null);
+				cb.setState(tempState);
+			}
 			if (cb.getState() == CheckedState.CHECKED) {
 				selectedWidgets.add(this);
 				selectedItems.add(obj);
-				if (maxSelectable == 1){
-					uncheckRest(this);
-				}
 			} else if (selectedWidgets.contains(this)){
 					selectedWidgets.remove(this);
 					selectedItems.remove(obj);
@@ -289,13 +291,9 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 		Iterator<FlyOutItem> itr = parent.children.iterator();
 		while(itr.hasNext()){
 			FlyOutItem fo = itr.next();
-			if (maxSelectable > 1 || maxSelectable == 0 || state == CheckedState.UNCHECKED) {
-				fo.setState(state);
-			}
+			fo.setState(state);
 			if (state == CheckedState.CHECKED && !selectedWidgets.contains(fo)){
-				if (maxSelectable > 1 || maxSelectable == 0) {
-					selectedWidgets.add(fo);
-				}
+				selectedWidgets.add(fo);
 				selectedItems.add(fo.obj);
 			} else if (state == CheckedState.UNCHECKED){
 				selectedWidgets.remove(fo);
@@ -373,6 +371,7 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 					selectedWidgets.remove(fo);
 					selectedItems.remove(fo.obj);
 				}
+				uncheckRestChildren(current,fo);
 			}
 		}
 	}
