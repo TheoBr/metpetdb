@@ -372,3 +372,9 @@ insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((
 insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Fe-Ti oxide'),(select mineral_id from minerals where name='Hematite'));
 insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Fe-Ti oxide'),(select mineral_id from minerals where name='Rutile'));
 insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Fe-Ti oxide'),(select mineral_id from minerals where name='Magnetite'));
+insert into minerals (mineral_id, real_mineral_id, name)  VALUES (nextval('mineral_seq'), currval('mineral_seq'), 'Chalcocite');
+insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Sulphides'),(select mineral_id from minerals where name='Chalcocite'));
+insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Opaque'),(select mineral_id from minerals where name='Chalcocite'));
+insert into minerals (mineral_id, real_mineral_id, name)  VALUES (nextval('mineral_seq'), currval('mineral_seq'), 'Biopyribole');
+insert into minerals (mineral_id, real_mineral_id, name)  VALUES (nextval('mineral_seq'),(select mineral_id from minerals where name='Biopyribole'), 'Biopyrobole');
+insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Other'),(select mineral_id from minerals where name='Biopyribole'));

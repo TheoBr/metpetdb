@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.interfaces.HasChildren;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
@@ -127,8 +128,11 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 				// Find out how many items go in this tree
 				final Collection<T> treeItemSubset = new ArrayList<T>();
 				while (itr.hasNext() && count < numMinerals) {
-					treeItemSubset.add(itr.next());
-					count++;
+					final T parent = itr.next();
+					if (parent instanceof Mineral && ((Mineral) parent).getRealMineralId() == ((Mineral) parent).getId()) {
+						treeItemSubset.add(parent);
+						count++;
+					}
 				}
 				final Tree t = makeTree(treeItemSubset, obj);
 				applyStyle(t, true);

@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.interfaces.HasChildren;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
@@ -264,17 +265,19 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 			Iterator<T> itr = parents.iterator();
 			while (itr.hasNext()) {
 				final T parent = itr.next();
-				final FlyOutItem fo= new FlyOutItem(null,parent);
-				if (get(obj) != null && get(obj).contains(parent)
-						|| contains(get(obj), parent)) {
-					fo.setState(CheckedState.CHECKED);
-					selectedWidgets.add(fo);
-					selectedItems.add(fo.obj);
+				if (parent instanceof Mineral && ((Mineral) parent).getRealMineralId() == ((Mineral) parent).getId()) {
+					final FlyOutItem fo= new FlyOutItem(null,parent);
+					if (get(obj) != null && get(obj).contains(parent)
+							|| contains(get(obj), parent)) {
+						fo.setState(CheckedState.CHECKED);
+						selectedWidgets.add(fo);
+						selectedItems.add(fo.obj);
+					}
+					if (parent.getChildren() != null && parent.getChildren().size() > 0) {
+						makeChildren(fo,parent, obj);
+					} 
+					fp.add(fo);		
 				}
-				if (parent.getChildren() != null && parent.getChildren().size() > 0) {
-					makeChildren(fo,parent, obj);
-				} 
-				fp.add(fo);				
 			}
 		}
 		fp.setStyleName("flyout-parents");
