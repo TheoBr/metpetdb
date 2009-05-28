@@ -282,7 +282,7 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			cb.setState(CheckedState.UNCHECKED);
 			tree.uncheckRest(null);
 			if (clearMineral){
-				selectMineral.setText("Select Mineral&#8230;");
+				selectMineral.setHTML("Select Mineral&#8230;");
 				mineral.setText("");
 			}
 		}
