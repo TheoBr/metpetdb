@@ -270,34 +270,37 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 		new ServerOp<List<Sample>>() {
 			@Override
 			public void begin() {
-				long id = (long) (MpDb.currentUser().getId());
 				List<Sample> checked = list.getSelectedValues();
 				if (checked.size() == 0)
-					MpDb.sample_svc.allSamplesForUser(id, this);
+					onSuccess(list.getAllValuesForPage());
 				else {
 					onSuccess(checked);
 				}
 			}
 			public void onSuccess(List<Sample> result) {
-				for (String columnHeader : ExcelUtil.columnHeaders) {
-					hp.add(new Hidden(ExcelUtil.columnHeaderParameter,
-							columnHeader));
+				if (result != null && result.size() > 0) {
+					for (String columnHeader : ExcelUtil.columnHeaders) {
+						hp.add(new Hidden(ExcelUtil.columnHeaderParameter,
+								columnHeader));
+					}
+					for (int i = 0; i < result.size(); i++) {
+						Hidden sample = new Hidden(samplesParameter, String
+								.valueOf(result.get(i).getId()));
+						hp.add(sample);
+					}
+					Hidden url = new Hidden(urlParameter, GWT.getModuleBaseURL()
+							+ "#"
+							+ LocaleHandler.lc_entity.TokenSpace_Sample_Details()
+							+ LocaleHandler.lc_text.tokenSeparater());
+					hp.add(url);
+					fp.add(hp);
+					fp.setAction(GWT.getModuleBaseURL() + "excel.svc?");
+					fp.setVisible(false);
+					add(fp);
+					fp.submit();
+				} else {
+					new ConfirmationDialogBox("There are no samples to export",false,null);
 				}
-				for (int i = 0; i < result.size(); i++) {
-					Hidden sample = new Hidden(samplesParameter, String
-							.valueOf(result.get(i).getId()));
-					hp.add(sample);
-				}
-				Hidden url = new Hidden(urlParameter, GWT.getModuleBaseURL()
-						+ "#"
-						+ LocaleHandler.lc_entity.TokenSpace_Sample_Details()
-						+ LocaleHandler.lc_text.tokenSeparater());
-				hp.add(url);
-				fp.add(hp);
-				fp.setAction(GWT.getModuleBaseURL() + "excel.svc?");
-				fp.setVisible(false);
-				add(fp);
-				fp.submit();
 			}
 		}.begin();
 	}
@@ -306,34 +309,37 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 		new ServerOp<List<Sample>>() {
 			@Override
 			public void begin() {
-				int id = (int) (MpDb.currentUser().getId());
 				List<Sample> checked = list.getSelectedValues();
 				if (checked.size() == 0)
-					MpDb.sample_svc.allSamplesForUser(id, this);
+					onSuccess(list.getAllValuesForPage());
 				else {
 					onSuccess(checked);
 				}
 			}
 			public void onSuccess(List<Sample> result) {
-				final FormPanel fp = new FormPanel();
-				fp.setMethod(FormPanel.METHOD_GET);
-				fp.setEncoding(FormPanel.ENCODING_URLENCODED);
-				final HorizontalPanel hp = new HorizontalPanel();
-				for (Sample s : result) {
-					Hidden sample = new Hidden(samplesParameter, String
-							.valueOf(s.getId()));
-					hp.add(sample);
+				if (result != null && result.size() > 0) {
+					final FormPanel fp = new FormPanel();
+					fp.setMethod(FormPanel.METHOD_GET);
+					fp.setEncoding(FormPanel.ENCODING_URLENCODED);
+					final HorizontalPanel hp = new HorizontalPanel();
+					for (Sample s : result) {
+						Hidden sample = new Hidden(samplesParameter, String
+								.valueOf(s.getId()));
+						hp.add(sample);
+					}
+					Hidden url = new Hidden(urlParameter, GWT.getModuleBaseURL()
+							+ "#"
+							+ LocaleHandler.lc_entity.TokenSpace_Sample_Details()
+							+ LocaleHandler.lc_text.tokenSeparater());
+					hp.add(url);
+					fp.add(hp);
+					fp.setAction(GWT.getModuleBaseURL() + "BasicKML.kml?");
+					fp.setVisible(false);
+					add(fp);
+					fp.submit();
+				} else {
+					new ConfirmationDialogBox("There are no samples to export",false,null);
 				}
-				Hidden url = new Hidden(urlParameter, GWT.getModuleBaseURL()
-						+ "#"
-						+ LocaleHandler.lc_entity.TokenSpace_Sample_Details()
-						+ LocaleHandler.lc_text.tokenSeparater());
-				hp.add(url);
-				fp.add(hp);
-				fp.setAction(GWT.getModuleBaseURL() + "BasicKML.kml?");
-				fp.setVisible(false);
-				add(fp);
-				fp.submit();
 			}
 		}.begin();
 	}
