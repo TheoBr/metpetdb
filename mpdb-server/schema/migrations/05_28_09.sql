@@ -1,0 +1,4 @@
+-- adds 3 child relationships to biopyribole
+insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Biopyribole'),(select mineral_id from minerals where name='Mica'));
+insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Biopyribole'),(select mineral_id from minerals where name='Amphibole'));
+insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Biopyribole'),(select mineral_id from minerals where name='Pyroxene'));

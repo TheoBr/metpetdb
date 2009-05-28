@@ -378,3 +378,6 @@ insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((
 insert into minerals (mineral_id, real_mineral_id, name)  VALUES (nextval('mineral_seq'), currval('mineral_seq'), 'Biopyribole');
 insert into minerals (mineral_id, real_mineral_id, name)  VALUES (nextval('mineral_seq'),(select mineral_id from minerals where name='Biopyribole'), 'Biopyrobole');
 insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Other'),(select mineral_id from minerals where name='Biopyribole'));
+insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Biopyribole'),(select mineral_id from minerals where name='Mica'));
+insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Biopyribole'),(select mineral_id from minerals where name='Amphibole'));
+insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Biopyribole'),(select mineral_id from minerals where name='Pyroxene'));
