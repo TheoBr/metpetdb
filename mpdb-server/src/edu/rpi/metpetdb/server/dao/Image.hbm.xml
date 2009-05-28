@@ -62,6 +62,11 @@
     select count(*) from Image i
     where i.subsample.id = :id
   </query>
+  <query name="Image.bySubsampleId/image">
+    from Image i
+    where i.subsample.id = :id
+    order by i.filename
+  </query>
   <query name="Image.bySubsampleId/filename">
 	from Image i
     where i.subsample.id = :id
