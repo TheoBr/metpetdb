@@ -357,7 +357,7 @@ public class MetPetDBApplication implements EntryPoint {
 				Window.open(MpDb.WIKI_URL, "mpdb_wiki", "");
 			}
 		});
-		if (!GWT.getHostPageBaseURL().contains("metpetweb") || MpDb.currentUser.getEmailAddress().equalsIgnoreCase("goldfd@rpi.edu"));
+		if (!GWT.getHostPageBaseURL().contains("metpetweb") || (MpDb.isLoggedIn() && MpDb.currentUser.getEmailAddress().equalsIgnoreCase("goldfd@rpi.edu")));
 			hdrnav.addItem("Developers", dev);
 
 	}
