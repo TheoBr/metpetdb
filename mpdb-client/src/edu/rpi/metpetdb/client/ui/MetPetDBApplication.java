@@ -351,12 +351,13 @@ public class MetPetDBApplication implements EntryPoint {
 		hdrnav.addItem(LocaleHandler.lc_text.projectMenu(), TokenSpace.allProjects);
 		hdrnav.addItem("Search", TokenSpace.search);
 		hdrnav.addItem("Upload Data", TokenSpace.bulkUpload);
+	//	hdrnav.addItem("Plot", TokenSpace.plotSample);
 		hdrnav.addItem("Wiki", new Command() {
 			public void execute() {
 				Window.open(MpDb.WIKI_URL, "mpdb_wiki", "");
 			}
 		});
-		if (!GWT.getHostPageBaseURL().contains("metpetweb"))
+		if (!GWT.getHostPageBaseURL().contains("metpetweb") || MpDb.currentUser.getEmailAddress().equalsIgnoreCase("goldfd@rpi.edu"));
 			hdrnav.addItem("Developers", dev);
 
 	}

@@ -1,9 +1,7 @@
 package edu.rpi.metpetdb.server.search;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +13,9 @@ import org.postgis.Point;
 
 import com.thoughtworks.xstream.XStream;
 
+import edu.rpi.metpetdb.client.model.MetamorphicGrade;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -36,7 +36,7 @@ public class SearchIPhone extends HttpServlet{
 	@Override
 	protected void doGet(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException {
-		response.setContentType("text/plain");
+		response.setContentType("text/xml");
 		
 		List<Long> sampleIds = new ArrayList<Long>();
 		
@@ -133,12 +133,18 @@ public class SearchIPhone extends HttpServlet{
 			response.getWriter().write("<set>");
 			for (Sample sample : results.getList()){			
 				response.getWriter().write("<sample>");
-				response.getWriter().write("<number>");
-				x.toXML(sample.getNumber(),response.getWriter());
-				response.getWriter().write("</number>");
-				response.getWriter().write("<id>");
-				x.toXML(sample.getId(),response.getWriter());
-				response.getWriter().write("</id>");
+				response.getWriter().write(createXMLElement("number",x.toXML(sample.getNumber())));
+				response.getWriter().write(createXMLElement("id",x.toXML(sample.getId())));
+				response.getWriter().write(createXMLElement("rockType",x.toXML(sample.getRockType())));
+				response.getWriter().write("<minerals>");
+				for (SampleMineral m : sample.getMinerals())
+					x.toXML(m.getName(),response.getWriter());
+				response.getWriter().write("</minerals>");
+				response.getWriter().write("<metamorphicGrades>");
+				for (MetamorphicGrade m : sample.getMetamorphicGrades())
+					x.toXML(m.getName(),response.getWriter());
+				response.getWriter().write("</metamorphicGrades>");
+				response.getWriter().write(createXMLElement("publicData",x.toXML(sample.isPublicData())));
 				x.toXML(sample.getLocation(),response.getWriter());
 				response.getWriter().write("</sample>");
 			}
@@ -146,5 +152,8 @@ public class SearchIPhone extends HttpServlet{
 		} catch (final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
 		}
+	}
+	private String createXMLElement(final String tag, final String value){
+		return "<"+ tag + ">" + value + "</" + tag + ">";
 	}
 }
