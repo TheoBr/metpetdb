@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.media.jai.ImageLayout;
@@ -25,6 +26,8 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.XrayImage;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -206,5 +209,33 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 	public Results<Image> allImages(long subsampleId,
 			PaginationParameters p) throws MpDbException {
 		return new ImageDAO(currentSession()).getAllBySubsampleId(p, subsampleId);
+	}
+	
+	public void makePublicBySubsampleId(ArrayList<Subsample> subsamples) throws ValidationException, MpDbException {
+		final ImageDAO dao = new ImageDAO(this.currentSession());
+		List<Image> imageList = new ArrayList<Image>();
+		for(Subsample ss: subsamples){
+			imageList = dao.getBySubsampleId(ss.getId());
+			for(Image i: imageList){
+				i.setPublicData(true);
+				doc.validate(i);
+				dao.save(i);
+			}
+			commit();
+		}
+	}
+	
+	public void makePublicBySampleId(ArrayList<Sample> samples) throws ValidationException, MpDbException {
+		final ImageDAO dao = new ImageDAO(this.currentSession());
+		List<Image> imageList = new ArrayList<Image>();
+		for(Sample s: samples){
+			imageList = dao.getBySampleId(s.getId());
+			for(Image i: imageList){
+				i.setPublicData(true);
+				doc.validate(i);
+				dao.save(i);
+			}
+			commit();
+		}
 	}
 }

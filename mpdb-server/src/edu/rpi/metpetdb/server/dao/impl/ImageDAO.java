@@ -1,6 +1,10 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -57,7 +61,8 @@ public class ImageDAO extends MpDbDAO<Image> {
 	public Image save(Image inst) throws MpDbException {
 		if (inst.getSample() != null)
 			inst.setSample((new SampleDAO(sess)).fill(inst.getSample()));
-		inst.setSubsample((new SubsampleDAO(sess)).fill(inst.getSubsample()));
+		if (inst.getSubsample() != null)
+			inst.setSubsample((new SubsampleDAO(sess)).fill(inst.getSubsample()));
 		inst.setImageType(new ImageTypeDAO(sess).fill(inst.getImageType()));
 		inst = _save(inst);
 		return inst;

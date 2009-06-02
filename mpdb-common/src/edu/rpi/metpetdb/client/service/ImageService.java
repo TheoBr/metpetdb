@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.ArrayList;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -7,6 +9,8 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.XrayImage;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -23,4 +27,6 @@ public interface ImageService extends RemoteService {
 			LoginRequiredException, MpDbException;
 	void delete(Image i);
 	ImageOnGrid rotate(ImageOnGrid iog, int degrees);
+	void makePublicBySubsampleId(ArrayList<Subsample> subsamples) throws ValidationException, MpDbException;
+	void makePublicBySampleId(ArrayList<Sample> samples) throws ValidationException, MpDbException;
 }

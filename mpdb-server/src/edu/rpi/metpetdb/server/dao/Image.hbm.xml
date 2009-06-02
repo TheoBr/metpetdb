@@ -57,7 +57,10 @@
     from Image i
     where i.subsample.id = :subsampleId
   </query>
-  <query name="Image.bySampleID">from Image i    where i.sample.id = :sampleId</query>
+  <query name="Image.bySampleId">
+    from Image i 
+    where i.sample.id = :sampleId
+  </query>
   <query name="Image.bySubsampleId,size">
     select count(*) from Image i
     where i.subsample.id = :id

@@ -450,6 +450,7 @@ public class MakePublicDialog extends MDialogBox{
 	private void makeDataPublic(){
 		makeSamplesPublic();
 		makeSubsamplesPublic();
+		makeImagesPublic();
 		makeChemicalAnalysesPublic();
 		makeImageMapsPublic();
 		//refresh the data list
@@ -504,6 +505,28 @@ public class MakePublicDialog extends MDialogBox{
 			}
 			public void onSuccess() {
 
+			}
+		}.begin();
+	}
+	
+	private void makeImagesPublic(){
+		new VoidServerOp() {
+			@Override
+			public void begin() {
+				MpDb.image_svc.makePublicBySubsampleId(selectedSubsamples, this);
+			}
+			public void onSuccess() {
+				
+			}
+		}.begin();
+		
+		new VoidServerOp() {
+			@Override
+			public void begin() {
+				MpDb.image_svc.makePublicBySampleId(samples, this);
+			}
+			public void onSuccess() {
+				
 			}
 		}.begin();
 	}
