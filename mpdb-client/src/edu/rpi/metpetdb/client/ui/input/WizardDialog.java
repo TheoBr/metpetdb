@@ -35,6 +35,7 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 	private final Button back;
 	private HashSet<Command> tabChangeListeners;
 	private HashSet<Command> dialogFinishListeners;
+	private boolean validateMe = true;
 
 	public WizardDialog() {
 		panels = new ArrayList<DetailsPanel<?>>();
@@ -118,25 +119,25 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 		} else if (sender == finish) {
 			setActionsEnabled(false);
 			final VoidMCommand tracker = new VoidMCommand() {
-				int success = 0;
-
 				public void execute() {
-					success++;
-					if (success == panels.size()) {
-						final Iterator<Command> dfItr = dialogFinishListeners
-								.iterator();
-						while (dfItr.hasNext()) {
-							dfItr.next().execute();
-						}
-						WizardDialog.this.hide();
-
+					final Iterator<Command> dfItr = dialogFinishListeners
+						.iterator();
+					while (dfItr.hasNext()) {
+						dfItr.next().execute();
 					}
+					WizardDialog.this.hide();
 					setActionsEnabled(true);
 				}
 			};
-			final Iterator<DetailsPanel<?>> itr = panels.iterator();
-			while (itr.hasNext()) {
-				itr.next().startValidation(tracker);
+			
+			if(validateMe){
+				final Iterator<DetailsPanel<?>> itr = panels.iterator();
+				while (itr.hasNext()) {
+					itr.next().startValidation(tracker);
+				}
+			}
+			else{
+				tracker.execute();
 			}
 		}
 	}
@@ -176,6 +177,11 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 		back.setEnabled(enabled);
 		finish.setEnabled(enabled);
 		next.setEnabled(enabled);
+	}
+	
+	//Mineral Dialog does not need validation before closing
+	public void turnOffValidation(){
+		this.validateMe = false;
 	}
 
 }

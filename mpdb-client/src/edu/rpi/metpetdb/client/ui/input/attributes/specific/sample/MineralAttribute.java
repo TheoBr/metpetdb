@@ -118,6 +118,8 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 				return true;
 			}
 		};
+		
+		wd.turnOffValidation();
 
 		p_mineral.edit(this.obj);
 
