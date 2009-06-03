@@ -494,27 +494,6 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 				});
 			}
 		});
-
-		createGEplacemark(samplePosition.getLatitude(), samplePosition
-				.getLongitude());
-		setGEview(samplePosition.getLatitude(), samplePosition.getLongitude());
-
-	}
-
-	private void createGEplacemark(final double x, final double y) {
-		map.getEarthInstance(new EarthInstanceHandler() {
-			public void onEarthInstance(final EarthInstanceEvent e) {
-				MGoogleEarth.createPlacemark(e, x, y);
-			}
-		});
-	}
-
-	private void setGEview(final double x, final double y) {
-		map.getEarthInstance(new EarthInstanceHandler() {
-			public void onEarthInstance(final EarthInstanceEvent e) {
-				MGoogleEarth.setView(e, x, y);
-			}
-		});
 	}
 
 	public SampleDetails showById(final long id) {
