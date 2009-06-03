@@ -68,6 +68,9 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 				// automatically added by hibernate
 			}
 		}
+		if (ca.getSubsample() != null){
+			ca.setSubsampleId(ca.getSubsample().getId());
+		}
 		ca.setMineral((new MineralDAO(sess)).fill(ca.getMineral()));
 		// ca.setSubsample((new SubsampleDAO(sess)).fill(ca.getSubsample()));
 		ca = _save(ca);
@@ -77,6 +80,14 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 	public List<ChemicalAnalysis> getAll(final long subsampleId)
 			throws MpDbException {
 		final Query q = namedQuery("ChemicalAnalysis.bySubsampleId");
+		q.setParameter("id", subsampleId);
+		final List<ChemicalAnalysis> l = (List<ChemicalAnalysis>) getResults(q);
+		return l;
+	}
+	
+	public List<ChemicalAnalysis> getAllSimple(final long subsampleId)
+		throws MpDbException {
+		final Query q = namedQuery("ChemicalAnalysis.bySubsampleId/simple");
 		q.setParameter("id", subsampleId);
 		final List<ChemicalAnalysis> l = (List<ChemicalAnalysis>) getResults(q);
 		return l;

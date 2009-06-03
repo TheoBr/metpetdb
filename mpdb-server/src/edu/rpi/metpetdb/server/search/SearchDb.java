@@ -28,6 +28,7 @@ import org.hibernate.search.Search;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.DateSpan;
+import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchElement;
 import edu.rpi.metpetdb.client.model.SearchOxide;
@@ -355,53 +356,75 @@ public class SearchDb {
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
 						for (SearchOxide o : (Set<SearchOxide>) methodResult) {
-							final RangeFilter rangeFilterOnMin = new RangeFilter(
-									"oxides_minAmount", NumberUtils
-											.double2sortableStr(-99999999f),
-									NumberUtils.double2sortableStr(o
-											.getUpperBound()), true, true);
-							final RangeFilter rangeFilterOnMax = new RangeFilter(
-									"oxides_maxAmount", NumberUtils
-											.double2sortableStr(o
-													.getLowerBound()),
-									NumberUtils.double2sortableStr(99999999f),
-									true, true);
-							final TermQuery oxideQuery = new TermQuery(
-									new Term("oxides_oxide_species", o
-											.getSpecies()));
-							final FilteredQuery filterOnMinQuery = new FilteredQuery(
-									oxideQuery, rangeFilterOnMin);
-							final FilteredQuery filterOnBothQuery = new FilteredQuery(
-									filterOnMinQuery, rangeFilterOnMax);
-							setQuery.add(filterOnBothQuery,
-									BooleanClause.Occur.SHOULD);
-							fullQuery.add(setQuery, BooleanClause.Occur.MUST);
+							final Term minLower = new Term("oxides_minAmount",NumberUtils.double2sortableStr(o.getLowerBound()));
+							final Term minUpper = new Term("oxides_minAmount",NumberUtils.double2sortableStr(o.getUpperBound()));
+							final RangeQuery rangeQueryOnMin = new RangeQuery(minLower,minUpper,true);
+							
+							final Term maxLower = new Term("oxides_maxAmount",NumberUtils.double2sortableStr(o.getLowerBound()));
+							final Term maxUpper = new Term("oxides_maxAmount",NumberUtils.double2sortableStr(o.getUpperBound()));
+							final RangeQuery rangeQueryOnMax = new RangeQuery(maxLower,maxUpper,true);
+							
+							final Term centerLower = new Term("oxides_minAmount",NumberUtils.double2sortableStr(-99999999f));
+							final Term centerUpper = new Term("oxides_maxAmount",NumberUtils.double2sortableStr(99999999f));
+							final RangeQuery rangeQueryCenterMin = new RangeQuery(centerLower,minLower,true);
+							final RangeQuery rangeQueryCenterMax = new RangeQuery(maxUpper,centerUpper,true);
+							
+							final TermQuery oxideQuery = new TermQuery(new Term("oxides_oxide_species", o.getSpecies()));
+							
+							final BooleanQuery centerRange = new BooleanQuery();
+							centerRange.add(rangeQueryCenterMin, BooleanClause.Occur.MUST);
+							centerRange.add(rangeQueryCenterMax, BooleanClause.Occur.MUST);
+							
+							final BooleanQuery rangeFound = new BooleanQuery();
+							rangeFound.add(centerRange, BooleanClause.Occur.SHOULD);
+							rangeFound.add(rangeQueryOnMin, BooleanClause.Occur.SHOULD);
+							rangeFound.add(rangeQueryOnMax, BooleanClause.Occur.SHOULD);
+							
+							final BooleanQuery oxideFull = new BooleanQuery();
+							oxideFull.add(rangeFound, BooleanClause.Occur.MUST);
+							oxideFull.add(oxideQuery, BooleanClause.Occur.MUST);
+
+							addChemistryMineralQuery(o.getMinerals(),oxideFull);
+							
+							setQuery.add(oxideFull,BooleanClause.Occur.SHOULD);
 						}
+						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
 					}
 				} else if (columnName.equals("elements")) {
 					if (((Set) methodResult).size() > 0) {
 						final BooleanQuery setQuery = new BooleanQuery();
 						for (SearchElement o : (Set<SearchElement>) methodResult) {
-							final RangeFilter rangeFilterOnMin = new RangeFilter(
-									"elements_minAmount", NumberUtils
-											.double2sortableStr(-99999999f),
-									NumberUtils.double2sortableStr(o
-											.getUpperBound()), true, true);
-							final RangeFilter rangeFilterOnMax = new RangeFilter(
-									"elements_maxAmount", NumberUtils
-											.double2sortableStr(o
-													.getLowerBound()),
-									NumberUtils.double2sortableStr(99999999f),
-									true, true);
-							final TermQuery elementQuery = new TermQuery(
-									new Term("elements_element_symbol", o
-											.getElementSymbol()));
-							final FilteredQuery filterOnMinQuery = new FilteredQuery(
-									elementQuery, rangeFilterOnMin);
-							final FilteredQuery filterOnBothQuery = new FilteredQuery(
-									filterOnMinQuery, rangeFilterOnMax);
-							setQuery.add(filterOnBothQuery,
-									BooleanClause.Occur.SHOULD);
+							final Term minLower = new Term("elements_minAmount",NumberUtils.double2sortableStr(o.getLowerBound()));
+							final Term minUpper = new Term("elements_minAmount",NumberUtils.double2sortableStr(o.getUpperBound()));
+							final RangeQuery rangeQueryOnMin = new RangeQuery(minLower,minUpper,true);
+							
+							final Term maxLower = new Term("elements_maxAmount",NumberUtils.double2sortableStr(o.getLowerBound()));
+							final Term maxUpper = new Term("elements_maxAmount",NumberUtils.double2sortableStr(o.getUpperBound()));
+							final RangeQuery rangeQueryOnMax = new RangeQuery(maxLower,maxUpper,true);
+							
+							final Term centerLower = new Term("elements_minAmount",NumberUtils.double2sortableStr(-99999999f));
+							final Term centerUpper = new Term("elements_maxAmount",NumberUtils.double2sortableStr(99999999f));
+							final RangeQuery rangeQueryCenterMin = new RangeQuery(centerLower,minLower,true);
+							final RangeQuery rangeQueryCenterMax = new RangeQuery(maxUpper,centerUpper,true);
+							
+							final TermQuery oxideQuery = new TermQuery(new Term("elements_element_symbol", o.getElementSymbol()));
+							
+							final BooleanQuery centerRange = new BooleanQuery();
+							centerRange.add(rangeQueryCenterMin, BooleanClause.Occur.MUST);
+							centerRange.add(rangeQueryCenterMax, BooleanClause.Occur.MUST);
+							
+							final BooleanQuery rangeFound = new BooleanQuery();
+							rangeFound.add(centerRange, BooleanClause.Occur.SHOULD);
+							rangeFound.add(rangeQueryOnMin, BooleanClause.Occur.SHOULD);
+							rangeFound.add(rangeQueryOnMax, BooleanClause.Occur.SHOULD);
+							
+							final BooleanQuery elementFull = new BooleanQuery();
+							elementFull.add(rangeFound, BooleanClause.Occur.MUST);
+							elementFull.add(oxideQuery, BooleanClause.Occur.MUST);
+
+							addChemistryMineralQuery(o.getMinerals(),elementFull);
+							
+							setQuery.add(elementFull,BooleanClause.Occur.SHOULD);
 						}
 						// require that one of these results be found in the
 						// full query
@@ -450,6 +473,24 @@ public class SearchDb {
 		}
 
 		return fullQuery;
+	}
+	
+	public static void addChemistryMineralQuery(Set<Mineral> minerals, BooleanQuery fullQuery){
+		List<String> setQueries = new LinkedList<String>();
+		List<String> setColumnsIn = new LinkedList<String>();
+		List<BooleanClause.Occur> setFlags = new LinkedList<BooleanClause.Occur>();
+		for (Mineral m : minerals){
+			final TermQuery objectQuery = new TermQuery(
+					new Term("mineral_name", m.toString()));
+			setQueries.add(objectQuery.toString());
+			setColumnsIn.add("mineral_name");
+			setFlags.add(BooleanClause.Occur.SHOULD);
+		}
+		if (setQueries.size() > 0) {
+			fullQuery.add(getQuery(setQueries,
+					setColumnsIn, setFlags),
+					BooleanClause.Occur.MUST);
+		}
 	}
 
 	// currently just at highest level, can incorporate
