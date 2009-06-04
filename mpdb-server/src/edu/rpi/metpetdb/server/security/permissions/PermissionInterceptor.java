@@ -384,10 +384,13 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				// account let it go
 				if (enabled) {
 					if (isPublic && !creating) {
-						// public data cannot be saved (except when creating it
-						// initially)
-						throw new CallbackException(
-								new UnableToModifyPublicDataException());
+						// public data can only be saved by its owner
+						if (RoleDefinitions.roleDefinitions.get(usersRank)
+								.contains(Privilages.SAVE_OWN_PUBLIC_DATA)) {
+							checkOwner(entity, state, propertyNames, 
+									principals);
+							checkOwningObject(entity, state, propertyNames);
+						}
 					} else {
 						if (entity instanceof RoleChange) {
 							// we handle role changes specially

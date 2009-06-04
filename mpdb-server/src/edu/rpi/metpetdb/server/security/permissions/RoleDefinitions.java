@@ -23,6 +23,7 @@ public class RoleDefinitions {
 		//Contributor
 		roleDefinitions.get(1).add(Privilages.LOAD_PRIVATE_DATA);
 		roleDefinitions.get(1).add(Privilages.SAVE_PRIVATE_DATA);
+		roleDefinitions.get(1).add(Privilages.SAVE_OWN_PUBLIC_DATA);
 		roleDefinitions.get(1).addAll(roleDefinitions.get(0));
 	}
 
