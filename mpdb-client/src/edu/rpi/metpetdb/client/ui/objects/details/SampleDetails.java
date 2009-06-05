@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
 import java.util.List;
+import java.util.Set;
 
 import org.postgis.Point;
 
@@ -116,6 +117,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			}
 
 			protected void saveBean(final AsyncCallback<Sample> ac) {
+				makeImagesPublicIfPublic((Sample) getBean());
 				MpDb.sample_svc.save((Sample) getBean(), ac);
 			}
 
@@ -510,5 +512,16 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 		s.setOwner(MpDb.currentUser());
 		p_sample.edit(s);
 		return this;
+	}
+	
+	private void makeImagesPublicIfPublic(Sample sample) {
+		//If it's private, just return, images default to private
+		if(!sample.isPublicData()) return;
+		
+		Set<edu.rpi.metpetdb.client.model.Image> images = sample.getImages();
+		for(edu.rpi.metpetdb.client.model.Image i: images){
+			i.setPublicData(true);
+		}
+		return;
 	}
 }

@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
+import java.util.Set;
+
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -68,6 +70,7 @@ public class SubsampleDetails extends MPagePanel {
 			}
 
 			protected void saveBean(final AsyncCallback<Subsample> ac) {
+				makeImagesPublicIfPublic((Subsample) getBean());
 				MpDb.subsample_svc.save((Subsample) getBean(), ac);
 			}
 
@@ -212,5 +215,16 @@ public class SubsampleDetails extends MPagePanel {
 			}
 		}.begin();
 		return this;
+	}
+	
+	private void makeImagesPublicIfPublic(Subsample subsample){
+		//If it's private, just return, images default to private
+		if(!subsample.isPublicData()) return;
+		
+		Set<edu.rpi.metpetdb.client.model.Image> images = subsample.getImages();
+		for(edu.rpi.metpetdb.client.model.Image i: images){
+			i.setPublicData(true);
+		}
+		return;
 	}
 }
