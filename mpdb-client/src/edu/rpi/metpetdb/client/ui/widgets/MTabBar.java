@@ -227,19 +227,19 @@ public class MTabBar extends Composite implements SourcesTabEvents,
 	 * 	is denied by the {@link TabListener}.
 	 */
 	public boolean selectTab(int index) {
+		// Check for -1.
+		setSelectionStyle(selectedTab, false);
+		if (index == -1) {
+			selectedTab = null;
+			return true;
+		}
+		
 		checkTabIndex(index);
 
 		if (tabListeners != null) {
 			if (!tabListeners.fireBeforeTabSelected(this, index)) {
 				return false;
 			}
-		}
-
-		// Check for -1.
-		setSelectionStyle(selectedTab, false);
-		if (index == -1) {
-			selectedTab = null;
-			return true;
 		}
 
 		selectedTab = panel.getWidget(index);
