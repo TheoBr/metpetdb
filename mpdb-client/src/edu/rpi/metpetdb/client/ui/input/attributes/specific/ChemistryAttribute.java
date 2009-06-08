@@ -427,10 +427,12 @@ public class ChemistryAttribute extends GenericAttribute implements
 		if (ft.getWidget(2, 0) == no_chemistry_label)
 			i = 3;
 		for (; i < rows; i++) {
-			MText tempMText = new MText();
-			tempMText = (MText) ft.getWidget(i, 3);
-			if (tempMText.getText().equals(
-					choice.getItemText(choice.getSelectedIndex())))
+			//Stripping html tags to get the symbol
+			String noHTMLString = ft.getWidget(i, 3).toString().replaceAll("\\<.*?\\>", "");
+			int index = noHTMLString.lastIndexOf("\n") + 1;
+			String tempString = noHTMLString.substring(index);
+			
+			if (tempString.equals(choice.getItemText(choice.getSelectedIndex())))
 				return true;
 		}
 		return false;
