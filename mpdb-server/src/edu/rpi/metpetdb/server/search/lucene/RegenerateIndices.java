@@ -40,9 +40,7 @@ public class RegenerateIndices {
 			fullTextSession.purgeAll(Sample.class);
 			fullTextSession.purgeAll(User.class);
 			fullTextSession.purgeAll(Subsample.class);
-			fullTextSession.purgeAll(ChemicalAnalysis.class);
-			fullTextSession.purgeAll(ChemicalAnalysisElement.class);
-			fullTextSession.purgeAll(ChemicalAnalysisOxide.class);
+//			fullTextSession.purgeAll(ChemicalAnalysis.class);
 			Transaction tx = fullTextSession.beginTransaction();
 			List<Sample> samples = session.createQuery("from Sample as sample")
 					.list();
