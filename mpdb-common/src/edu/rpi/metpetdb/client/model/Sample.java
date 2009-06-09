@@ -85,6 +85,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	@IndexedEmbedded(depth = 1, prefix = "metamorphicGrade_")
 	private Set<MetamorphicGrade> metamorphicGrades = new HashSet<MetamorphicGrade>();
 
+	@IndexedEmbedded(depth = 1, prefix = "reference_")
 	private Set<Reference> references = new HashSet<Reference>();
 
 	private Set<SampleComment> comments = new HashSet<SampleComment>();

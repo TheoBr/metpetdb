@@ -1,5 +1,9 @@
 package edu.rpi.metpetdb.client.model;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Store;
+
 //import java.util.Set;
 
 public class Reference extends MObject {
@@ -7,6 +11,7 @@ public class Reference extends MObject {
 
 	private short id;
 
+	@Field(index = Index.UN_TOKENIZED, store = Store.NO)
 	private String name;
 	
 	public Reference() {
