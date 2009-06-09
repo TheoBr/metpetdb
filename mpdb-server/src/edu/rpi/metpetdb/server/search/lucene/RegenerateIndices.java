@@ -10,6 +10,8 @@ import org.hibernate.search.FullTextSession;
 import org.hibernate.search.Search;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisElement;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxide;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
@@ -39,6 +41,8 @@ public class RegenerateIndices {
 			fullTextSession.purgeAll(User.class);
 			fullTextSession.purgeAll(Subsample.class);
 			fullTextSession.purgeAll(ChemicalAnalysis.class);
+			fullTextSession.purgeAll(ChemicalAnalysisElement.class);
+			fullTextSession.purgeAll(ChemicalAnalysisOxide.class);
 			Transaction tx = fullTextSession.beginTransaction();
 			List<Sample> samples = session.createQuery("from Sample as sample")
 					.list();
@@ -50,16 +54,17 @@ public class RegenerateIndices {
 			for (Subsample subsample : subsamples) {
 				fullTextSession.index(subsample);
 			}
-			List<ChemicalAnalysis> chemicalAnalyses = session.createQuery(
-					"from ChemicalAnalysis as ca").list();
-			for (ChemicalAnalysis ca : chemicalAnalyses) {
-				fullTextSession.index(ca);
-			}
+//			List<ChemicalAnalysis> chemicalAnalyses = session.createQuery(
+//					"from ChemicalAnalysis as ca").list();
+//			for (ChemicalAnalysis ca : chemicalAnalyses) {
+//				fullTextSession.index(ca);
+//			}
 			List<User> users = session.createQuery(
 					"from User as u").list();
 			for (User u : users) {
 				fullTextSession.index(u);
 			}
+				
 			tx.commit(); // index are written at commit time
 		} catch (Exception e) {
 			e.printStackTrace();

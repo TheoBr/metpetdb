@@ -15,8 +15,6 @@ public class SearchSample implements IsSerializable, MObject {
 	private static final long serialVersionUID = 1L;
 	private Set<RockType> possibleRockTypes = new HashSet<RockType>();
 
-	private Set<Long> possibleSampleIds = new HashSet<Long>();
-	private Set<Long> possibleSubsampleIds = new HashSet<Long>();
 	private int version;
 
 	private String sesarNumber;
@@ -68,30 +66,6 @@ public class SearchSample implements IsSerializable, MObject {
 		possibleRockTypes = rt;
 	}
 	
-	public Set<Long> getPossibleSampleIds() {
-		return possibleSampleIds;
-	}
-
-	public void addPossibleSampleIds(final Long id) {
-		possibleSampleIds.add(id);
-	}
-
-	public void setPossibleSampleIds(final Set<Long> ids) {
-		possibleSampleIds = ids;
-	}
-	
-	public Set<Long> getPossibleSubsampleIds() {
-		return possibleSubsampleIds;
-	}
-
-	public void addPossibleSubsampleIds(final Long id) {
-		possibleSubsampleIds.add(id);
-	}
-
-	public void setPossibleSubsampleIds(final Set<Long> ids) {
-		possibleSubsampleIds = ids;
-	}
-
 	public int getVersion() {
 		return version;
 	}
@@ -258,6 +232,13 @@ public class SearchSample implements IsSerializable, MObject {
 
 	public void setRegions(final Set<Region> r) {
 		regions = r;
+	}
+	
+	public void addRegion(final String name) {
+		if (regions == null)
+			regions = new HashSet<Region>();
+		final Region r = new Region(name);
+		regions.add(r);
 	}
 
 	public void addOxide(final Oxide e, final Double lowerBound,

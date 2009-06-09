@@ -6,6 +6,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.persistence.ManyToOne;
+
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
@@ -22,12 +25,12 @@ import edu.rpi.metpetdb.client.model.interfaces.HasSample;
 import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
 import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 
-@Indexed
+//@Indexed
 public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		HasOwner, PublicData, HasSample, HasImage {
 	private static final long serialVersionUID = 1L;
 
-	@DocumentId
+//	@DocumentId
 	private int id;
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String spotId;
@@ -35,7 +38,6 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	private int referenceX;
 	private int referenceY;
 	private Image image;
-	// @ContainedIn
 	private Subsample subsample;
 	private String analysisMethod;
 	private String location;
@@ -44,7 +46,9 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	private Short datePrecision;
 	private String description;
 	private Reference reference;
+	@IndexedEmbedded(prefix = "mineral_")
 	private Mineral mineral;
+	@Field(index = Index.UN_TOKENIZED)
 	private Boolean largeRock;
 	private Double total;
 	@IndexedEmbedded(prefix = "elements_")
@@ -55,6 +59,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	@Field(index = Index.UN_TOKENIZED)
 	private Boolean publicData;
 
+	@ManyToOne
 	@IndexedEmbedded(depth = 1, prefix = "user_")
 	private User owner;
 
@@ -88,6 +93,13 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	public ChemicalAnalysis(int id, String spotId) {
 		this.id = id;
 		this.spotId = spotId;
+	}
+	
+	public ChemicalAnalysis(int id, String spotId, Set<ChemicalAnalysisElement> elements, Set<ChemicalAnalysisOxide> oxides ) {
+		this.id = id;
+		this.spotId = spotId;
+		this.elements = elements;
+		this.oxides = oxides;
 	}
 
 	public int getId() {
@@ -436,6 +448,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		else
 			return measurementUnits.get("ppm");
 	}
+	
 
 	@Override
 	public String toString() {

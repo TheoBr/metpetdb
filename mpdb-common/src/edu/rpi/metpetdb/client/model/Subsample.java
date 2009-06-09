@@ -23,6 +23,7 @@ public class Subsample extends MObject implements HasOwner, PublicData, HasSampl
 	private long id;
 
 	//@ContainedIn
+	@IndexedEmbedded(prefix = "sample_")
 	private Sample sample;
 
 	private int version;

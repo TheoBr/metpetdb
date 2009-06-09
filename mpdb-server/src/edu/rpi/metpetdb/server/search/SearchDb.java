@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.server.search;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -14,10 +15,8 @@ import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FilteredQuery;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.RangeFilter;
 import org.apache.lucene.search.RangeQuery;
 import org.apache.lucene.search.TermQuery;
-import org.apache.solr.util.NumberUtils;
 import org.hibernate.CallbackException;
 import org.hibernate.Filter;
 import org.hibernate.Session;
@@ -43,13 +42,17 @@ import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.security.ConvertSecurityException;
 
 public class SearchDb {
+	private static String RETURN_CHEMICAL_ANALYSIS = "";
+	private static String RETURN_CHEMICAL_ANALYSIS_SUBSAMPLE_ID = "select ca.subsampleId";
+	private static String RETURN_CHEMICAL_ANALYSIS_COUNT = "select count(*)";
+	private static String RETURN_CHEMICAL_ANALYSIS_ID = "select ca.id";
+	
 	public SearchDb() {
 	}
 
 	public static Results<Sample> sampleSearch(final PaginationParameters p,
 			SearchSample searchSamp, User userSearching) throws MpDbException {
 
-		List<Filter> filters = new LinkedList<Filter>();
 		// Either do chemical analysis -> subsample -> Sample search if they
 		// have chem anal restrictions
 		// Or just Sample search if no chem anal restrictions
@@ -71,34 +74,67 @@ public class SearchDb {
 			fullQuery = getSamplesQuery(searchSamp, userSearching, session);
 		} else {
 			// Get chemical analyses first
-			Query tempChemQuery = getChemicalsQuery(searchSamp, userSearching,
-					session);
+			org.hibernate.Query chemQuery = getChemicalsQuery(searchSamp, userSearching,
+					session, RETURN_CHEMICAL_ANALYSIS_SUBSAMPLE_ID);
 
-			// Get the sample ids that correspond to the chemical analyses.
-			final FullTextQuery chemQuery = fullTextSession
-					.createFullTextQuery(tempChemQuery, ChemicalAnalysis.class);
-			final Results<ChemicalAnalysis> CAResults = new Results<ChemicalAnalysis>(
-					chemQuery.getResultSize(), chemQuery.list());
-			for (int i = 0; i < CAResults.getCount(); i++) {
-				searchSamp.addPossibleSampleIds(CAResults.getList().get(i)
-						.getSample().getId());
-			}
-
-			if (CAResults.getCount() == 0) // no chemical analysis fit search,
-											// no reason to try finding samples
-											// with "no matches"
-			{
+			// Get the subsample ids that correspond to the chemical analyses.
+			System.out.println("Search Query Project Subsample Ids:" + chemQuery.getQueryString());
+			final List<Long> projectedSubsampleIds = chemQuery.list();
+			// no chemical analysis fit search, no reason to try finding samples with "no matches"
+			if (projectedSubsampleIds.size() == 0) {
 				return new Results<Sample>(0, new ArrayList<Sample>());
+			}
+			String subsampleIds = "";
+			for (Long id : projectedSubsampleIds){
+				subsampleIds += ((Long)id).toString() + ",";
+			}	
+			if (subsampleIds != ""){
+				subsampleIds = subsampleIds.substring(0, subsampleIds.length()-1);
 			}
 			// Get samples third... will need to incorporate top two pieces
 			fullQuery = getSamplesQuery(searchSamp, userSearching, session);
+			FullTextQuery sampleQuery = fullTextSession.createFullTextQuery(fullQuery, Sample.class);
+			System.out.println("Search Query Project Sample Ids:" + fullQuery.toString());
+			final List<Object[]> projectedSampleIds = sampleQuery.setProjection("id").list();
+			if (projectedSampleIds.size() == 0) {
+				return new Results<Sample>(0, new ArrayList<Sample>());
+			}
+			String  sampleIds = "";
+			for (Object[] o : projectedSampleIds){
+				for (Object id : o){
+					sampleIds += ((Long)id).toString() + ",";
+				}
+			}
+			if (sampleIds != ""){
+				sampleIds = sampleIds.substring(0, sampleIds.length()-1);
+			}
+			org.hibernate.Query hql = session.createQuery("from Sample s where s.id in (" + sampleIds +
+					") and exists (select 1 from Subsample ss where ss.sampleId = s.id and ss.id in (" + 
+					subsampleIds + "))");
+			org.hibernate.Query sizeQuery = session.createQuery("select count(*) " + hql.getQueryString());
+			System.out.println("Search Query Find Samples by Id and SubsampleId:" + hql.getQueryString());
+			if (p != null) {
+				hql.setFirstResult(p.getFirstResult());
+				hql.setMaxResults(p.getMaxResults());
+			} else {
+				hql.setFirstResult(0);
+				hql.setMaxResults(100);
+			}
+			try {
+				//this is here in order to convert java.util.Collection$EmptyList into
+				//the correct representation so it can be serialized by GWT
+				List<Sample> list = hql.list();
+				if (list.size() == 0)
+					list = new ArrayList<Sample>();
+				final Results<Sample> results = new Results<Sample>(((Long)sizeQuery.uniqueResult()).intValue(), list);
+				return results;
+			} catch (CallbackException e) {
+				session.clear();
+				throw ConvertSecurityException.convertToException(e);
+			} finally {
+				session.close();
+			}
 		}
-
-		// Actual Search
-
-		// Do in for when have ids
-		// session.createCriteria(Sample.class).add(Restrictions.in(propertyName,
-		// values))
 
 		System.out.println("Search Query:" + fullQuery.toString());
 
@@ -132,7 +168,6 @@ public class SearchDb {
 	public static Results<ChemicalAnalysis> chemicalAnalysisSearch(
 			final PaginationParameters p, SearchSample searchSamp,
 			User userSearching) throws MpDbException {
-		List<Filter> filters = new LinkedList<Filter>();
 		final User u = userSearching;
 		final int userId;
 		if (u == null)
@@ -144,73 +179,108 @@ public class SearchDb {
 		FullTextSession fullTextSession = Search.createFullTextSession(session);
 
 		boolean haveSampleProperties = checkForSampleProperties(searchSamp);
-		Query fullQuery;
+		
 
 		if (!haveSampleProperties) {
-			fullQuery = getChemicalsQuery(searchSamp, userSearching, session);
-		} else {
+			org.hibernate.Query fullQuery = getChemicalsQuery(searchSamp, userSearching, session, RETURN_CHEMICAL_ANALYSIS);
+			org.hibernate.Query sizeQuery = getChemicalsQuery(searchSamp, userSearching, session, RETURN_CHEMICAL_ANALYSIS_COUNT);
+			System.out.println("Search Query:" + fullQuery.toString());			
 
+			if (p != null) {
+				fullQuery.setFirstResult(p.getFirstResult());
+				fullQuery.setMaxResults(p.getMaxResults());
+			} else {
+				//place an upper limit of 100 search results
+				fullQuery.setFirstResult(0);
+				fullQuery.setMaxResults(100);
+			}
+			try {
+				//this is here in order to convert java.util.Collection$EmptyList into
+				//the correct representation so it can be serialized by GWT
+				List<ChemicalAnalysis> list = fullQuery.list();
+				if (list.size() == 0)
+					list = new ArrayList<ChemicalAnalysis>();
+				final Results<ChemicalAnalysis> results = new Results<ChemicalAnalysis>(((Long)sizeQuery.uniqueResult()).intValue(), list);
+				return results;
+			} catch (CallbackException e) {
+				session.clear();
+				throw ConvertSecurityException.convertToException(e);
+			} finally {
+				session.close();
+			}
+		} else {
+			Query fullQuery;
 			// Get samples first
 			Query tempSampleQuery = getSamplesQuery(searchSamp, userSearching,
-					session);
-
-			// // Get the sample ids that correspond to the chemical analyses.
+					session,true);
+			// // Get the subsample ids that correspond to the samples.
 			final FullTextQuery sampleQuery = fullTextSession
-					.createFullTextQuery(tempSampleQuery, Sample.class);
-			final Results<Sample> SResults = new Results<Sample>(sampleQuery
-					.getResultSize(), sampleQuery.list());
-			for (int i = 0; i < SResults.getList().size(); i++) {
-				Set<Subsample> tempSubsamples = SResults.getList().get(i)
-						.getSubsamples();
-				for (Subsample subsample : tempSubsamples) {
-					searchSamp.addPossibleSubsampleIds(subsample.getId());
-				}
-			}
-
-			if (SResults.getCount() == 0) // no chemical analysis fit search, no
-											// reason to try finding samples
-											// with "no matches"
-			{
+					.createFullTextQuery(tempSampleQuery, Subsample.class);
+			System.out.println("Search Query Project Subsample Ids:" + sampleQuery.toString());	
+			final List<Object[]> projectedSubsampleIds = sampleQuery.setProjection("id").list();
+			// no samples fit search, no reason to try finding chemical analyses with "no matches"
+			if (projectedSubsampleIds.size() == 0) {
 				return new Results<ChemicalAnalysis>(0, new ArrayList<ChemicalAnalysis>());
 			}
-			// Get samples third... will need to incorporate top two pieces
-
-			// Get chemical analyses third... will need to incorporate top two
-			// pieces
-			fullQuery = getChemicalsQuery(searchSamp, userSearching, session);
-		}
-
-		System.out.println("Search Query:" + fullQuery.toString());
-
-		final FullTextQuery hibQuery = fullTextSession.createFullTextQuery(
-				fullQuery, ChemicalAnalysis.class);
-
-		if (p != null) {
-			hibQuery.setFirstResult(p.getFirstResult());
-			hibQuery.setMaxResults(p.getMaxResults());
-		} else {
-			//place an upper limit of 100 search results
-			hibQuery.setFirstResult(0);
-			hibQuery.setMaxResults(100);
-		}
-		try {
-			//this is here in order to convert java.util.Collection$EmptyList into
-			//the correct representation so it can be serialized by GWT
-			List<ChemicalAnalysis> list = hibQuery.list();
-			if (list.size() == 0)
-				list = new ArrayList<ChemicalAnalysis>();
-			final Results<ChemicalAnalysis> results = new Results<ChemicalAnalysis>(hibQuery.getResultSize(), list);
-			return results;
-		} catch (CallbackException e) {
-			session.clear();
-			throw ConvertSecurityException.convertToException(e);
-		} finally {
-			session.close();
+			String subsampleIds = "";
+			for (Object[] o : projectedSubsampleIds){
+				for (Object id : o){
+					subsampleIds += ((Long)id).toString() + ",";
+				}
+			}	
+			if (subsampleIds != ""){
+				subsampleIds = subsampleIds.substring(0, subsampleIds.length()-1);
+			}
+			// Get chemical analyses third... will need to incorporate top two pieces
+			org.hibernate.Query chemQuery = getChemicalsQuery(searchSamp, userSearching, session, RETURN_CHEMICAL_ANALYSIS_ID);
+			System.out.println("Search Query Project Chemical Analysis Ids:" + chemQuery.getQueryString());	
+			final List<Integer> projectedChemIds = chemQuery.list();
+			if (projectedChemIds.size() == 0){
+				return new Results<ChemicalAnalysis>(0, new ArrayList<ChemicalAnalysis>());
+			}
+			String  chemIds = "";
+			for (Integer id : projectedChemIds){
+				chemIds += ((Integer)id).toString() + ",";
+			}
+			if (chemIds != ""){
+				chemIds = chemIds.substring(0, chemIds.length()-1);
+			}
+			org.hibernate.Query hql = session.createQuery("from ChemicalAnalysis ca where ca.id in (" + chemIds +
+					") and ca.subsampleId in (" + 
+					subsampleIds + ")");
+			org.hibernate.Query sizeQuery = session.createQuery("select count(*) " + hql.getQueryString());
+			System.out.println("Search Query Find Chemical Analyses by Id and SubsampleId:" + hql.getQueryString());
+			
+			if (p != null) {
+				hql.setFirstResult(p.getFirstResult());
+				hql.setMaxResults(p.getMaxResults());
+			} else {
+				hql.setFirstResult(0);
+				hql.setMaxResults(100);
+			}
+			try {
+				//this is here in order to convert java.util.Collection$EmptyList into
+				//the correct representation so it can be serialized by GWT
+				List<ChemicalAnalysis> list = hql.list();
+				if (list.size() == 0)
+					list = new ArrayList<ChemicalAnalysis>();
+				final Results<ChemicalAnalysis> results = new Results<ChemicalAnalysis>(((Long)sizeQuery.uniqueResult()).intValue(), list);
+				return results;
+			} catch (CallbackException e) {
+				session.clear();
+				throw ConvertSecurityException.convertToException(e);
+			} finally {
+				session.close();
+			}
 		}
 	}
 
+	public static Query getSamplesQuery(SearchSample searchSamp, User userSearching, Session session){
+		return getSamplesQuery(searchSamp,userSearching,session,false);
+	}
+
 	public static Query getSamplesQuery(SearchSample searchSamp,
-			User userSearching, Session session) {
+			User userSearching, Session session, Boolean onSubsample) {
 		List<String> queries = new LinkedList<String>();
 		List<String> columnsIn = new LinkedList<String>();
 		List<BooleanClause.Occur> flags = new LinkedList<BooleanClause.Occur>();
@@ -220,11 +290,18 @@ public class SearchDb {
 
 		String columnName;
 		Object methodResult = null;
+		final String SAMPLE_PREFIX = "sample_";
+		final String LOCATION_COLUMN = (onSubsample) ? SAMPLE_PREFIX + "location" : "location";
+		final String BOUNDINGBOX_COLUMN =  "boundingBox";
+		final String POLYGON_COLUMN = "polygon";
+		final String PUBLICDATA_COLUMN = (onSubsample) ? SAMPLE_PREFIX + "publicData" : "publicData";
+
 		SearchProperty[] enums = SearchSampleProperty.class.getEnumConstants();
 		for (SearchProperty i : enums) {
 
 			// column to search on
-			columnName = i.columnName();
+
+			columnName = (!onSubsample || i.columnName() == "") ? i.columnName() : "sample_" + i.columnName();
 
 			// return type of the method
 			methodResult = i.get(searchSamp);
@@ -234,7 +311,7 @@ public class SearchDb {
 				// ignore it
 			} else { // otherwise, what type of returned data is it?
 				if (i.isSampleAttr()) {
-					if (columnName.equals("location")) { // if the column
+					if (columnName.equals(LOCATION_COLUMN)) { // if the column
 						// being searched on
 						// is location
 						if (searchSamp.getBoundingBox() != null) { // if there
@@ -242,15 +319,15 @@ public class SearchDb {
 							// bounding box
 							// for this
 							// sample
-							session.enableFilter("boundingBox").setParameter(
-									"polygon", searchSamp.getBoundingBox()); // filter
+							session.enableFilter(BOUNDINGBOX_COLUMN).setParameter(
+									POLYGON_COLUMN, searchSamp.getBoundingBox()); // filter
 							// results
 							// based
 							// on
 							// the
 							// box
 						}
-					} else if (columnName.equals("publicData")) {
+					} else if (columnName.equals(PUBLICDATA_COLUMN)) {
 						// incorporate privacy stuff
 						fullQuery.add(getPrivacyQuery(Integer
 								.parseInt(methodResult.toString()),
@@ -288,13 +365,13 @@ public class SearchDb {
 						// a DateSpan
 						// Get the start date of the span
 						final Date startDate = ((DateSpan) methodResult)
-								.getStartAsDate();
+						.getStartAsDate();
 						final Date realStartDate = new Date(
 								startDate.getYear(), startDate.getMonth(),
 								startDate.getDate());
 						// Get the end date of the span
 						final Date endDate = ((DateSpan) methodResult)
-								.getEndAsDate();
+						.getEndAsDate();
 						final Date realEndDate = new Date(endDate.getYear(),
 								endDate.getMonth(), endDate.getDate());
 
@@ -302,8 +379,8 @@ public class SearchDb {
 						RangeQuery rq = new RangeQuery(new Term(columnName,
 								DateTools.dateToString(realStartDate,
 										DateTools.Resolution.DAY)), new Term(
-								columnName, DateTools.dateToString(realEndDate,
-										DateTools.Resolution.DAY)), true);
+												columnName, DateTools.dateToString(realEndDate,
+														DateTools.Resolution.DAY)), true);
 						queries.add(rq.toString());
 						columnsIn.add(columnName);
 						flags.add(BooleanClause.Occur.MUST);
@@ -330,18 +407,15 @@ public class SearchDb {
 		return fullQuery;
 	}
 
-	public static Query getChemicalsQuery(SearchSample searchSamp,
-			User userSearching, Session session) {
-		List<String> queries = new LinkedList<String>();
-		List<String> columnsIn = new LinkedList<String>();
-		List<BooleanClause.Occur> flags = new LinkedList<BooleanClause.Occur>();
-
-		// The full scope of the query we want to make
-		BooleanQuery fullQuery = new BooleanQuery();
+	public static org.hibernate.Query getChemicalsQuery(SearchSample searchSamp,
+			User userSearching, Session session, String selectQuery) {
+		Set<String> queries = new HashSet<String>();
 
 		String columnName;
 		Object methodResult = null;
 		SearchProperty[] enums = SearchSampleProperty.class.getEnumConstants();
+		String query = "";
+		String fromQuery = "from ChemicalAnalysis ca";
 		for (SearchProperty i : enums) {
 
 			// column to search on
@@ -354,166 +428,112 @@ public class SearchDb {
 				// if there is no value returned in this field...
 				if (columnName.equals("oxides")) {
 					if (((Set) methodResult).size() > 0) {
-						final BooleanQuery setQuery = new BooleanQuery();
+						fromQuery += " join ca.oxides o";
+						String oxideQuery = "";
 						for (SearchOxide o : (Set<SearchOxide>) methodResult) {
-							final Term minLower = new Term("oxides_minAmount",NumberUtils.double2sortableStr(o.getLowerBound()));
-							final Term minUpper = new Term("oxides_minAmount",NumberUtils.double2sortableStr(o.getUpperBound()));
-							final RangeQuery rangeQueryOnMin = new RangeQuery(minLower,minUpper,true);
-							
-							final Term maxLower = new Term("oxides_maxAmount",NumberUtils.double2sortableStr(o.getLowerBound()));
-							final Term maxUpper = new Term("oxides_maxAmount",NumberUtils.double2sortableStr(o.getUpperBound()));
-							final RangeQuery rangeQueryOnMax = new RangeQuery(maxLower,maxUpper,true);
-							
-							final Term centerLower = new Term("oxides_minAmount",NumberUtils.double2sortableStr(-99999999f));
-							final Term centerUpper = new Term("oxides_maxAmount",NumberUtils.double2sortableStr(99999999f));
-							final RangeQuery rangeQueryCenterMin = new RangeQuery(centerLower,minLower,true);
-							final RangeQuery rangeQueryCenterMax = new RangeQuery(maxUpper,centerUpper,true);
-							
-							final TermQuery oxideQuery = new TermQuery(new Term("oxides_oxide_species", o.getSpecies()));
-							
-							final BooleanQuery centerRange = new BooleanQuery();
-							centerRange.add(rangeQueryCenterMin, BooleanClause.Occur.MUST);
-							centerRange.add(rangeQueryCenterMax, BooleanClause.Occur.MUST);
-							
-							final BooleanQuery rangeFound = new BooleanQuery();
-							rangeFound.add(centerRange, BooleanClause.Occur.SHOULD);
-							rangeFound.add(rangeQueryOnMin, BooleanClause.Occur.SHOULD);
-							rangeFound.add(rangeQueryOnMax, BooleanClause.Occur.SHOULD);
-							
-							final BooleanQuery oxideFull = new BooleanQuery();
-							oxideFull.add(rangeFound, BooleanClause.Occur.MUST);
-							oxideFull.add(oxideQuery, BooleanClause.Occur.MUST);
-
-							addChemistryMineralQuery(o.getMinerals(),oxideFull);
-							
-							setQuery.add(oxideFull,BooleanClause.Occur.SHOULD);
-						}
-						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
+							String q = "(o.minAmount <= " + o.getUpperBound() + 
+							" and o.maxAmount >= " + o.getLowerBound() + " and lower(o.oxide.species) = lower('" + o.getSpecies() + "')";
+							if (o.getMinerals().size() > 0){
+								q+= " and (lower(ca.mineral.name) in (" ;
+								for (Mineral m : o.getMinerals()){
+									q+= "lower('" +m.getName() +"'),";
+								}
+								q = q.substring(0,q.length()-1);
+								q+= "))";
+							} else if (o.getWholeRock()){
+								q+= " and ca.largeRock = 'Y'";
+							}
+							q+= ")";
+							oxideQuery += q + " or ";
+						}	
+						queries.add("(" + oxideQuery.substring(0,oxideQuery.length()-4) + ")");
+						
 					}
 				} else if (columnName.equals("elements")) {
 					if (((Set) methodResult).size() > 0) {
-						final BooleanQuery setQuery = new BooleanQuery();
+						fromQuery += " join ca.elements e";
+						String elementQuery = "";
 						for (SearchElement o : (Set<SearchElement>) methodResult) {
-							final Term minLower = new Term("elements_minAmount",NumberUtils.double2sortableStr(o.getLowerBound()));
-							final Term minUpper = new Term("elements_minAmount",NumberUtils.double2sortableStr(o.getUpperBound()));
-							final RangeQuery rangeQueryOnMin = new RangeQuery(minLower,minUpper,true);
-							
-							final Term maxLower = new Term("elements_maxAmount",NumberUtils.double2sortableStr(o.getLowerBound()));
-							final Term maxUpper = new Term("elements_maxAmount",NumberUtils.double2sortableStr(o.getUpperBound()));
-							final RangeQuery rangeQueryOnMax = new RangeQuery(maxLower,maxUpper,true);
-							
-							final Term centerLower = new Term("elements_minAmount",NumberUtils.double2sortableStr(-99999999f));
-							final Term centerUpper = new Term("elements_maxAmount",NumberUtils.double2sortableStr(99999999f));
-							final RangeQuery rangeQueryCenterMin = new RangeQuery(centerLower,minLower,true);
-							final RangeQuery rangeQueryCenterMax = new RangeQuery(maxUpper,centerUpper,true);
-							
-							final TermQuery oxideQuery = new TermQuery(new Term("elements_element_symbol", o.getElementSymbol()));
-							
-							final BooleanQuery centerRange = new BooleanQuery();
-							centerRange.add(rangeQueryCenterMin, BooleanClause.Occur.MUST);
-							centerRange.add(rangeQueryCenterMax, BooleanClause.Occur.MUST);
-							
-							final BooleanQuery rangeFound = new BooleanQuery();
-							rangeFound.add(centerRange, BooleanClause.Occur.SHOULD);
-							rangeFound.add(rangeQueryOnMin, BooleanClause.Occur.SHOULD);
-							rangeFound.add(rangeQueryOnMax, BooleanClause.Occur.SHOULD);
-							
-							final BooleanQuery elementFull = new BooleanQuery();
-							elementFull.add(rangeFound, BooleanClause.Occur.MUST);
-							elementFull.add(oxideQuery, BooleanClause.Occur.MUST);
-
-							addChemistryMineralQuery(o.getMinerals(),elementFull);
-							
-							setQuery.add(elementFull,BooleanClause.Occur.SHOULD);
+							String q = "(e.minAmount <= " + o.getUpperBound().toString() + 
+							" and e.maxAmount >= " + o.getLowerBound() + " and lower(e.element.symbol) = lower('" + o.getElementSymbol() + "')";
+							if (o.getMinerals().size() > 0){
+								q+= " and (lower(ca.mineral.name) in (" ;
+								for (Mineral m : o.getMinerals()){
+									q+="lower('" + m.getName() +"'),";
+								}
+								q = q.substring(0,q.length()-1);
+								q+= "))";
+							} else if (o.getWholeRock()){
+								q+= " and ca.largeRock = 'Y'";
+							}
+							q+= ")";	
+							elementQuery += q + " or ";
 						}
-						// require that one of these results be found in the
-						// full query
-						fullQuery.add(setQuery, BooleanClause.Occur.MUST);
+						queries.add("(" + elementQuery.substring(0, elementQuery.length()-4) + ")");
 					}
 				} else if (columnName.equals("publicData")) {
 					// incorporate privacy stuff
-					fullQuery.add(getPrivacyQuery(Integer.parseInt(methodResult
-							.toString()), userSearching),
-							BooleanClause.Occur.MUST);
-				} else if (methodResult instanceof Set) { // if a set of
-					// data is
-					// returned, it should be an
-					// OR query
-
-					List<String> setQueries = new LinkedList<String>();
-					List<String> setColumnsIn = new LinkedList<String>();
-					List<BooleanClause.Occur> setFlags = new LinkedList<BooleanClause.Occur>();
-
-					if (((Set) methodResult).size() > 0) {
-						for (Object o : (Set) methodResult) {
-							// iterate through each item and add it to the
-							// query
-							final TermQuery objectQuery = new TermQuery(
-									new Term(columnName, o.toString()));
-							setQueries.add(objectQuery.toString());
-							setColumnsIn.add(columnName);
-							setFlags.add(BooleanClause.Occur.SHOULD);
-						}
-
-						// require that one of these results be found in the
-						// full query
-						if (setQueries.size() > 0) {
-							fullQuery.add(getQuery(setQueries, setColumnsIn,
-									setFlags), BooleanClause.Occur.MUST);
-						}
-					}
-				}
+					queries.add(getAnalysisPrivacyHQLQuery((Integer)methodResult,userSearching));
+				} 
 			}
 		}
 
 		// Run the query and get the actual results
 		if (queries.size() > 0) {
-			fullQuery.add(getQuery(queries, columnsIn, flags),
-					BooleanClause.Occur.MUST);
+			query = selectQuery + " " + fromQuery + " where ";
+			for (String q : queries){
+				query += q + " and ";
+			}
+			query = query.substring(0,query.length()-5);
 		}
-
-		return fullQuery;
+		
+		return session.createQuery(query);
 	}
 	
-	public static void addChemistryMineralQuery(Set<Mineral> minerals, BooleanQuery fullQuery){
-		List<String> setQueries = new LinkedList<String>();
-		List<String> setColumnsIn = new LinkedList<String>();
-		List<BooleanClause.Occur> setFlags = new LinkedList<BooleanClause.Occur>();
-		for (Mineral m : minerals){
-			final TermQuery objectQuery = new TermQuery(
-					new Term("mineral_name", m.toString()));
-			setQueries.add(objectQuery.toString());
-			setColumnsIn.add("mineral_name");
-			setFlags.add(BooleanClause.Occur.SHOULD);
+	
+	public static String getAnalysisPrivacyHQLQuery(int typeOfDataDesired, User userSearching){
+		String q = "";
+		if (userSearching != null
+				&& (typeOfDataDesired == 0 || typeOfDataDesired == 2)) // private data
+		{
+			q+="(ca.publicData = 'N' and ca.owner.id = " + userSearching.getId() + ")";
 		}
-		if (setQueries.size() > 0) {
-			fullQuery.add(getQuery(setQueries,
-					setColumnsIn, setFlags),
-					BooleanClause.Occur.MUST);
+		if (typeOfDataDesired == 0 || typeOfDataDesired == 1) // public data
+		{
+			// find public samples
+			if (!q.equalsIgnoreCase("")){
+				q = "(" + q;
+				q+=" or (ca.publicData = 'Y'))";
+			} else
+				q+="(ca.publicData = 'Y')";
 		}
+		return q;
 	}
 
+	public static Query getPrivacyQuery(int typeOfDataDesired, User userSearching){
+		return getPrivacyQuery(typeOfDataDesired, userSearching,"");
+	}
 	// currently just at highest level, can incorporate
 	// sample/subsample/chemical analysis info by adding a parameter
 	public static Query getPrivacyQuery(int typeOfDataDesired,
-			User userSearching) {
+			User userSearching, String prefix) {
 		TermQuery fieldForPrivacy;
 		// The full scope of the query we want to make
 		BooleanQuery fullQuery = new BooleanQuery();
 
 		if (userSearching != null
 				&& (typeOfDataDesired == 0 || typeOfDataDesired == 2)) // private
-		// data
+			// data
 		{
 			BooleanQuery privateQuery = new BooleanQuery();
 
 			// Private Samples
-			TermQuery termQuery = new TermQuery(new Term("publicData",
+			TermQuery termQuery = new TermQuery(new Term(prefix + "publicData",
 					Boolean.FALSE.toString()));
 			privateQuery.add(termQuery, BooleanClause.Occur.MUST);
 
 			// Data owned by the user
-			fieldForPrivacy = new TermQuery(new Term("user_id", (new Integer(
+			fieldForPrivacy = new TermQuery(new Term(prefix + "user_id", (new Integer(
 					userSearching.getId())).toString()));
 			privateQuery.add(fieldForPrivacy, BooleanClause.Occur.MUST);
 
@@ -528,7 +548,7 @@ public class SearchDb {
 		if (typeOfDataDesired == 0 || typeOfDataDesired == 1) // public data
 		{
 			// find public samples
-			TermQuery termQuery = new TermQuery(new Term("publicData",
+			TermQuery termQuery = new TermQuery(new Term(prefix + "publicData",
 					Boolean.TRUE.toString()));
 
 			if (typeOfDataDesired == 1) // just want public data
@@ -555,8 +575,8 @@ public class SearchDb {
 
 		try {
 			Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
-					.parse(queryArray, columnsArray, flagsArray,
-							new StandardAnalyzer());
+			.parse(queryArray, columnsArray, flagsArray,
+					new StandardAnalyzer());
 			return query;
 		} catch (ParseException e) {
 			return null;
@@ -586,7 +606,7 @@ public class SearchDb {
 
 			// return type of the method
 			methodResult = i.get(searchSamp);
-			
+
 			if(i.isChemicalAnalysisAttr() && !i.isSampleAttr())
 			{
 				if(methodResult instanceof Set)
@@ -614,7 +634,7 @@ public class SearchDb {
 
 			// return type of the method
 			methodResult = i.get(searchSamp);
-			
+
 			if(!i.isChemicalAnalysisAttr() && i.isSampleAttr())
 			{
 				if(methodResult instanceof Set)

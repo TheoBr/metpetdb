@@ -185,48 +185,6 @@ public enum SearchSampleProperty implements SearchProperty {
 			return false;
 		}
 	},
-	possibleSampleIds {
-		public Object get(final SearchSample sample) {
-			return ((SearchSample) sample).getPossibleSampleIds();
-		}
-
-		public void set(final SearchSample sample, final Object id) {
-			((SearchSample) sample).setPossibleSampleIds((Set<Long>)id);
-		}
-
-		public String columnName() {
-			return "id";
-		}
-		
-		public boolean isSampleAttr(){
-			return true;
-		}
-		
-		public boolean isChemicalAnalysisAttr(){
-			return false;
-		}
-	},
-	possibleSubsampleIds {
-		public Object get(final SearchSample sample) {
-			return ((SearchSample) sample).getPossibleSubsampleIds();
-		}
-
-		public void set(final SearchSample sample, final Object id) {
-			((SearchSample) sample).setPossibleSubsampleIds((Set<Long>)id);
-		}
-
-		public String columnName() {
-			return "subsampleId";
-		}
-		
-		public boolean isSampleAttr(){
-			return false;
-		}
-		
-		public boolean isChemicalAnalysisAttr(){
-			return true;
-		}
-	},
 	elements {
 		public Set<SearchElement> get(final SearchSample sample) {
 			return ((SearchSample) sample).getElements();

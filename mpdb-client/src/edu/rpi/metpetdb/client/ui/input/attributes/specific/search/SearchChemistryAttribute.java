@@ -154,11 +154,13 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			cb.addClickListener(new ClickListener(){
 				public void onClick(final Widget sender){
 					tree.uncheckRest(null);
+					wholeRock = cb.getState().equals(CheckedState.CHECKED) ? true : false;
 				}
 			});
 			tree.addClickListener(new ClickListener(){
 				public void onClick(final Widget sender){
 					cb.setState(CheckedState.UNCHECKED);
+					wholeRock = false;
 				}
 			});
 			

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
@@ -54,7 +55,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	@IndexedEmbedded(prefix = "rockType_")
 	private RockType rockType;
 
-	//@IndexedEmbedded(prefix = "subsample_")
+	@ContainedIn
 	private Set<Subsample> subsamples = new HashSet<Subsample>();
 
 	private Set<Project> projects = new HashSet<Project>();

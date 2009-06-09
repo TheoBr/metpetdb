@@ -1,7 +1,10 @@
 package edu.rpi.metpetdb.server.search;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,6 +35,7 @@ public class SearchIPhone extends HttpServlet{
 	private static final String SAMPLE_ID = "sampleId";
 	private static final String REGIONS = "regions";
 	private static final String ROCK_TYPES = "rockTypes";
+	private static final String SEARCH_REGIONS = "searchRegion";
 
 	@Override
 	protected void doGet(final HttpServletRequest request,
@@ -45,7 +49,15 @@ public class SearchIPhone extends HttpServlet{
 			double lat = Double.parseDouble(request.getParameterValues(LAT_PARAMETER)[0]);
 			double lng = Double.parseDouble(request.getParameterValues(LONG_PARAMETER)[0]);
 			System.out.println("iPhone query: lat = " + lat + "long = " + lng);
-			search(lat,lng,response);
+			outputSearchXML(search(lat,lng),response);
+		} else if (request.getParameter(SEARCH_REGIONS) != null){
+			Set<String> regions = new HashSet<String>();
+			for (String s : request.getParameterValues(SEARCH_REGIONS)){
+				if (s.length() > 2 && s.substring(0, 1).equals("'") && s.substring(s.length()-1, s.length()).equals("'")){
+					regions.add(s.substring(1, s.length()-1));
+				}
+			}
+			outputSearchXML(search(regions),response);
 		} else if (request.getParameter(SAMPLE_ID) != null){
 			for (String id : request.getParameterValues(SAMPLE_ID))
 				sampleIds.add(Long.parseLong(id));
@@ -96,9 +108,50 @@ public class SearchIPhone extends HttpServlet{
 		}
 	}
 	
-	private void search(final Double lat, final Double lng, final HttpServletResponse response){
+	private void outputSearchXML(final Results<Sample> results, final HttpServletResponse response){
 		try{
-			SearchSample s = new SearchSample();	
+			final XStream x = new XStream();
+			response.getWriter().write("<set>");
+			for (Sample sample : results.getList()){			
+				response.getWriter().write("<sample>");
+				response.getWriter().write(createXMLElement("number",x.toXML(sample.getNumber())));
+				response.getWriter().write(createXMLElement("id",x.toXML(sample.getId())));
+				response.getWriter().write(createXMLElement("rockType",x.toXML(sample.getRockType())));
+				response.getWriter().write("<minerals>");
+				for (SampleMineral m : sample.getMinerals())
+					x.toXML(m.getName(),response.getWriter());
+				response.getWriter().write("</minerals>");
+				response.getWriter().write("<metamorphicGrades>");
+				for (MetamorphicGrade m : sample.getMetamorphicGrades())
+					x.toXML(m.getName(),response.getWriter());
+				response.getWriter().write("</metamorphicGrades>");
+				response.getWriter().write(createXMLElement("publicData",x.toXML(sample.isPublicData())));
+				x.toXML(sample.getLocation(),response.getWriter());
+				response.getWriter().write(createXMLElement("owner",x.toXML(sample.getOwner().getName())));
+				response.getWriter().write("</sample>");
+			}
+			response.getWriter().write("</set>");
+		} catch (final Exception ioe){
+			throw new IllegalStateException(ioe.getMessage());
+		}
+	}
+	
+	private Results<Sample> search(final Collection<String> regions){
+		try{
+			SearchSample s = new SearchSample();
+			for (String r : regions){
+				s.addRegion(r);
+			}
+			return SearchDb.sampleSearch(null, s, null);
+		}
+		catch (Exception e){
+			throw new IllegalStateException(e.getMessage());
+		}
+	}
+
+	private Results<Sample> search(final Double lat, final Double lng){
+		try{
+			SearchSample s = new SearchSample();
 			final LinearRing[] ringArray = new LinearRing[1];
 			final Point[] points = new Point[5];
 			final Point p1 = new Point();
@@ -128,27 +181,8 @@ public class SearchIPhone extends HttpServlet{
 			boundingBox.srid = MpDbConstants.WGS84;
 			boundingBox.dimension = 2;
 			s.setBoundingBox(boundingBox);
-			Results<Sample> results = SearchDb.sampleSearch(null, s, null);
-			final XStream x = new XStream();
-			response.getWriter().write("<set>");
-			for (Sample sample : results.getList()){			
-				response.getWriter().write("<sample>");
-				response.getWriter().write(createXMLElement("number",x.toXML(sample.getNumber())));
-				response.getWriter().write(createXMLElement("id",x.toXML(sample.getId())));
-				response.getWriter().write(createXMLElement("rockType",x.toXML(sample.getRockType())));
-				response.getWriter().write("<minerals>");
-				for (SampleMineral m : sample.getMinerals())
-					x.toXML(m.getName(),response.getWriter());
-				response.getWriter().write("</minerals>");
-				response.getWriter().write("<metamorphicGrades>");
-				for (MetamorphicGrade m : sample.getMetamorphicGrades())
-					x.toXML(m.getName(),response.getWriter());
-				response.getWriter().write("</metamorphicGrades>");
-				response.getWriter().write(createXMLElement("publicData",x.toXML(sample.isPublicData())));
-				x.toXML(sample.getLocation(),response.getWriter());
-				response.getWriter().write("</sample>");
-			}
-			response.getWriter().write("</set>");
+			return SearchDb.sampleSearch(null, s, null);
+
 		} catch (final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
 		}

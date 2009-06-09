@@ -464,7 +464,6 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 		map.addControl(new LargeMapControl());
 		map.addControl(new MapTypeControl());
 		map.addControl(new ScaleControl());
-		map.addMapType(MapType.getEarthMap());
 		map.setStyleName(CSS.SD_GOOGLE_MAP);
 		panel.getRightCol().add(map);
 	}
@@ -483,19 +482,6 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 
 		map.addOverlay(sampleMarker);
 		map.setCenter(samplePosition);
-
-		map.addMapTypeChangedHandler(new MapTypeChangedHandler() {
-			public void onTypeChanged(final MapTypeChangedEvent e) {
-				map.getEarthInstance(new EarthInstanceHandler() {
-					public void onEarthInstance(final EarthInstanceEvent e) {
-						if (!geInit) {
-							MGoogleEarth.addControls(e);
-							geInit = true;
-						}
-					}
-				});
-			}
-		});
 	}
 
 	public SampleDetails showById(final long id) {

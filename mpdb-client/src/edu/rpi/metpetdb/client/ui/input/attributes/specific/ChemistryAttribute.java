@@ -428,11 +428,10 @@ public class ChemistryAttribute extends GenericAttribute implements
 			i = 3;
 		for (; i < rows; i++) {
 			//Stripping html tags to get the symbol
-			String noHTMLString = ft.getWidget(i, 3).toString().replaceAll("\\<.*?\\>", "");
-			int index = noHTMLString.lastIndexOf("\n") + 1;
-			String tempString = noHTMLString.substring(index);
-			
-			if (tempString.equals(choice.getItemText(choice.getSelectedIndex())))
+			HTML tempMText = new HTML();
+			tempMText = (HTML) ft.getWidget(i, 3);
+			if (tempMText.getText().equals(
+					choice.getItemText(choice.getSelectedIndex())))
 				return true;
 		}
 		return false;

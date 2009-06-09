@@ -11,8 +11,6 @@ import edu.rpi.metpetdb.server.search.bridges.DoubleBridge;
 public class ChemicalAnalysisElement extends MObject {
 	private static final long serialVersionUID = 1L;
 
-	@Field(index = Index.UN_TOKENIZED)
-	@FieldBridge(impl = DoubleBridge.class)
 	private Double amount;
 	private Double precision;
 	private String precisionUnit;
@@ -22,7 +20,6 @@ public class ChemicalAnalysisElement extends MObject {
 	@Field(index = Index.UN_TOKENIZED)
 	@FieldBridge(impl = DoubleBridge.class)
 	private Double maxAmount;
-	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String measurementUnit;
 	
 	@IndexedEmbedded(prefix = "element_")
