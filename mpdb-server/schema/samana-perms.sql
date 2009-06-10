@@ -48,6 +48,7 @@ alter table subsamples_archive owner to metpetdb_dev;
 alter table roles owner to metpetdb_dev;
 alter table role_changes owner to metpetdb_dev;
 alter table mineral_relationships owner to metpetdb_dev;
+alter table project_invites to owner metpetdb_dev;
 
 --triggers
 alter function archive_sample() owner to metpetdb_dev;

@@ -38,11 +38,11 @@ insert into rock_type values(nextval('rock_type_seq'), 'Cordierite-Anthophyllite
 insert into rock_type values(nextval('rock_type_seq'), 'Metavolcanic');
 --Image Types
 --insert into image_type values(nextval('image_type_seq'), 'Xfce');
-insert into image_type values(nextval('image_type_seq'), 'Map', 'MAP');
-insert into image_type values(nextval('image_type_seq'), 'Cross Section', 'XC');
-insert into image_type values(nextval('image_type_seq'), 'Field Photo', 'FP');
-insert into image_type values(nextval('image_type_seq'), 'Photograph', 'PHOTO');
-insert into image_type values(nextval('image_type_seq'), 'Thin Section Scan', 'TSS');
+insert into image_type values(nextval('image_type_seq'), 'Map', 'MAP','Map (geologic or otherwise) with sample locations');
+insert into image_type values(nextval('image_type_seq'), 'Cross Section', 'XC', 'Geologic cross section with sample locations');
+insert into image_type values(nextval('image_type_seq'), 'Field Photo', 'FIELDPHOTO', 'Field photo of outcrop or sample location');
+insert into image_type values(nextval('image_type_seq'), 'Photograph', 'PHOTO', 'General sample imagery');
+insert into image_type values(nextval('image_type_seq'), 'Thin Section Scan', 'TSS', 'Special image of entire thin section');
 insert into image_type values(nextval('image_type_seq'), 'Photomicrograph-Transmitted Plane Polarized', 'TPPL');
 insert into image_type values(nextval('image_type_seq'), 'Photomicrograph-Transmitted Crossed Polars', 'TXPL');
 insert into image_type values(nextval('image_type_seq'), 'Photomicrograph-Reflected Plane Polarized', 'RPPL');
@@ -50,8 +50,10 @@ insert into image_type values(nextval('image_type_seq'), 'Photomicrograph-Reflec
 insert into image_type values(nextval('image_type_seq'), 'Secondary Electron Image', 'SE');
 insert into image_type values(nextval('image_type_seq'), 'Back-Scattered Electron Image', 'BSE');
 insert into image_type values(nextval('image_type_seq'), 'Cathodoluminescence Image', 'CL');
-insert into image_type values(nextval('image_type_seq'), 'X-ray Map', 'XRM');
-insert into image_type values(nextval('image_type_seq'), 'Drawing', 'Drawing');
+insert into image_type values(nextval('image_type_seq'), 'X-ray Map', 'XRM','Element name (or combo) is required for X-ray maps');
+insert into image_type values(nextval('image_type_seq'), 'Drawing', 'DRAWING','Hand sketch or drawing');
+insert into image_type values(nextval('image_type_seq'), 'Figure', 'FIG','Miscellaneous figure, may be composite');
+insert into image_type values(nextval('image_type_seq'), 'Field Notes', 'FIELDNOTES','Scanned/digital field notes');
 --Subsample Types
 insert into subsample_type values(nextval('subsample_type_seq'), 'Thin Section');
 insert into subsample_type values(nextval('subsample_type_seq'), 'Polished Thin Section');
