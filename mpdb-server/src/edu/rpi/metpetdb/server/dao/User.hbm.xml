@@ -29,6 +29,11 @@
       <many-to-many class="Project" column="project_id" />
     </set>
     
+    <set name="invites" table="project_invites" inverse="true">
+      <key column="user_id" />
+      <many-to-many class="Project" column="project_id" />
+    </set>
+    
     <many-to-one name="role" column="role_id"/>
   </class>
   

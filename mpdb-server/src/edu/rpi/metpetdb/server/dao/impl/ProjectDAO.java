@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.ProjectNotFoundException;
+import edu.rpi.metpetdb.client.model.Invite;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;

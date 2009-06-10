@@ -48,6 +48,8 @@ public interface LocaleText extends Messages {
 	String addProject();
 	String addProjectDescription();
 	String noProjectsFound();
+	String inviteMember();
+	String inviteMemberDescription();
 
 	/* Comments */
 	String comments();

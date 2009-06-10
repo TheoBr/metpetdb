@@ -19,6 +19,11 @@
       <key column="project_id" />
       <many-to-many class="User" column="user_id" />
     </set>
+    
+    <set name="invites" table="project_invites">
+      <key column="project_id" />
+      <many-to-many class="User" column="user_id" />
+    </set>
 
     <set name="samples" table="project_samples">
       <key column="project_id" />

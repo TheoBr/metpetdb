@@ -8,6 +8,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.Invite;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.User;
@@ -52,4 +53,6 @@ public interface ProjectService extends RemoteService {
 	Results<Sample> samplesFromProject(PaginationParameters parameters, long id)  throws MpDbException;
 	
 	Results<User> allProjectMembers(PaginationParameters p, int id) throws MpDbException;
+	
+	Invite saveInvite(Invite i) throws MpDbException;
 }

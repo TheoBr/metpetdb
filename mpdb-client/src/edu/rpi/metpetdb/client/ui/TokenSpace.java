@@ -38,6 +38,7 @@ import edu.rpi.metpetdb.client.ui.objects.list.ImageListViewer;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
 import edu.rpi.metpetdb.client.ui.project.ProjectDescription;
+import edu.rpi.metpetdb.client.ui.project.ProjectInvite;
 import edu.rpi.metpetdb.client.ui.search.Search;
 import edu.rpi.metpetdb.client.ui.user.Confirmation;
 import edu.rpi.metpetdb.client.ui.user.EditUserProfile;
@@ -307,7 +308,36 @@ public class TokenSpace implements HistoryListener {
 			}.begin();
 		}
 	};
-
+	
+/*	public static final Screen projectInvite = new Screen(LocaleHandler.lc_entity
+			.TokenSpace_Project_Invite()) {
+				public void executeToken(String args) {
+					new VoidLoggedInOp() {
+						public void command() {
+							show(new ProjectInvite().newInvite());
+						}
+					}.begin();
+				}
+		
+	};*/
+	public static final TokenHandler projectInvite = new IKey(
+			LocaleHandler.lc_entity.TokenSpace_Project_Invite()) {
+		public int get(final Object obj) {
+			return ((Project) obj).getId();
+		}
+		public void execute(final int id) {
+			new ServerOp<Project>() {
+				public void begin() {
+					MpDb.project_svc.details(id, this);
+				}
+				public void onSuccess(final Project result) {
+					show(new ProjectInvite().newInvite(result));
+				}
+			}.begin();
+		}
+	};
+	
+	
 	private static final TokenHandler newSubsample = new LKey(
 			LocaleHandler.lc_entity.TokenSpace_Enter_Subsample()) {
 		public long get(final Object obj) {
@@ -424,6 +454,7 @@ public class TokenSpace implements HistoryListener {
 		register(chemicalAnalysisDetails);
 		register(enterSample);
 		register(newProject);
+		register(projectInvite);
 		register(bulkUpload);
 		register(search);
 		register(ImageListViewer);
@@ -491,6 +522,10 @@ public class TokenSpace implements HistoryListener {
 
 	public static String listOf(final Project p) {
 		return projectSamples.makeToken(p);
+	}
+	
+	public static String sendNewInvite(final Project p) {
+		return projectInvite.makeToken(p);
 	}
 
 	public static String ViewOf(final Subsample p) {

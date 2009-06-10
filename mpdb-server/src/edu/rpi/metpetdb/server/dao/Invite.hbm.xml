@@ -1,0 +1,17 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="Invites" table="project_invites">
+    <id name="id" column="project_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">project_invites_seq</param>
+      </generator>
+    </id>
+    <version name="version" />
+    <property name="project_id" column="project_id" />
+    <property name="member_id" column="member_id" />
+
+  </class>
+</hibernate-mapping>

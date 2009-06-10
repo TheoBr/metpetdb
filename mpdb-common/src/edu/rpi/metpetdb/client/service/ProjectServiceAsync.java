@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import edu.rpi.metpetdb.client.model.Invite;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.User;
@@ -27,4 +28,6 @@ public interface ProjectServiceAsync {
 
 	void allProjectMembers(PaginationParameters p, int id,
 			AsyncCallback<Results<User>> ac);
+
+	void saveInvite(Invite i, AsyncCallback<User> ac);
 }

@@ -8,6 +8,7 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.Invite;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.ProjectService;
@@ -15,6 +16,7 @@ import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.ProjectDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
+import edu.rpi.metpetdb.server.dao.impl.InviteDAO;
 
 public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	private static final long serialVersionUID = 1L;
@@ -56,5 +58,9 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	public Results<User> allProjectMembers(PaginationParameters p, int id)
 			throws MpDbException {
 		return (new ProjectDAO(this.currentSession())).getMembersForProject(p, id);
+	}
+	
+	public Invite saveInvite(Invite i) throws MpDbException {
+		return (new InviteDAO(this.currentSession()).save(i));
 	}
 }

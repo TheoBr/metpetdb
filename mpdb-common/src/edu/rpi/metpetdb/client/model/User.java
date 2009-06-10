@@ -35,6 +35,7 @@ public class User extends MObject {
 	private Set<Project> projects;
 	@ContainedIn
 	private Set<Sample> samples;
+	private Set<Invite> invites;
 	private Role role;
 	private Integer rank;
 
@@ -154,6 +155,16 @@ public class User extends MObject {
 
 	public void setSamples(final Set<Sample> s) {
 		samples = s;
+	}
+	
+		public Set<Invite> getInvites() {
+		if(invites == null)
+			invites = new HashSet<Invite>();
+		return invites;
+	}
+	
+	public void setInvites(final Set<Invite> i) {
+		invites = i;
 	}
 
 	public Boolean getEnabled() {
