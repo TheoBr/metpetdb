@@ -158,10 +158,13 @@ public abstract class BulkUploadService extends MpDbServlet {
 		if (obj instanceof PublicData)
 			((PublicData) obj).setPublicData(false);
 		if (obj instanceof HasSubsample) {
-			((HasSubsample) obj).getSubsample().setOwner(currentUser());
-			((HasSubsample) obj).getSubsample().setPublicData(false);
+			if (((HasSubsample) obj).getSubsample() != null) {
+				((HasSubsample) obj).getSubsample().setOwner(currentUser());
+				((HasSubsample) obj).getSubsample().setPublicData(false);
+			}
 		}
 		if (obj instanceof HasSample) {
+			if (((HasSample) obj).getSample() != null)
 			((HasSample) obj).getSample().setOwner(currentUser());
 		}
 	}
