@@ -347,47 +347,13 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 	private void deleteSelected(final List<Sample> CheckedSamples) {
 		new VoidServerOp() {
 			@Override
-			public void begin() {
-				ArrayList<Sample> publicSamples = new ArrayList<Sample>();
+			public void begin() {			
 				Iterator<Sample> itr = CheckedSamples.iterator();
-				/* Check if we are trying to delete any public samples */
+				final ArrayList<Long> ids = new ArrayList<Long>();
 				while (itr.hasNext()) {
-					final Sample s = itr.next();
-					if (s.isPublicData()) {
-						publicSamples.add(s);
-					}
+					ids.add(itr.next().getId());
 				}
-				/* unhighlight everything */
-				for (int i = 0; i < list.getScrollTable().getDataTable()
-						.getRowCount(); i++) {
-					list.getScrollTable().getDataTable().getRowFormatter()
-							.removeStyleName(i, "highlighted-row");
-				}
-				/* if there are public samples, highlight them in the table */
-				if (publicSamples.size() > 0) {
-					for (int i = 0; i < list.getScrollTable().getDataTable()
-							.getRowCount(); i++) {
-						final Sample s = (Sample) ((MCheckBox) list
-								.getScrollTable().getDataTable()
-								.getWidget(i, 0)).getValue();
-						for (int j = 0; j < publicSamples.size(); j++) {
-							if (publicSamples.get(j).getId() == s.getId()) {
-								list.getScrollTable().getDataTable()
-										.getRowFormatter().addStyleName(i,
-												"highlighted-row");
-							}
-						}
-					}
-				}
-				/* If they're all private, delete them */
-				else if (publicSamples.size() == 0) {
-					Iterator<Sample> itr2 = CheckedSamples.iterator();
-					final ArrayList<Long> ids = new ArrayList<Long>();
-					while (itr2.hasNext()) {
-						ids.add(itr2.next().getId());
-					}
-					MpDb.sample_svc.deleteAll(ids, this);
-				}
+				MpDb.sample_svc.deleteAll(ids, this);
 
 			}
 			public void onSuccess() {
