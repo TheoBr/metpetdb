@@ -27,6 +27,7 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.RegionDAO;
 import edu.rpi.metpetdb.server.dao.impl.RoleChangeDAO;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 import edu.rpi.metpetdb.server.security.Action;
@@ -65,13 +66,21 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		user.setEncryptedPassword(null);
 		return (user);
 	}
-
+	
 	public Set<String> allNames() throws MpDbException {
-		final Object[] l = (new UserDAO(this.currentSession())).allNames();
-		final Set<String> options = new HashSet<String>();
-		for (int i = 0; i < l.length; i++) {
-			if (l[i] != null)
-				options.add(l[i].toString());
+		return objectArrayToStringSet((new UserDAO(this.currentSession())).allNames());
+	}
+	
+	public Set<String> viewableNamesForUser(final int userId) throws MpDbException {
+		this.currentSession().enableFilter("hasSamplePublicOrUser").setParameter("userId", userId);
+		return objectArrayToStringSet((new UserDAO(this.currentSession())).allNames());
+	}
+	
+	private Set<String> objectArrayToStringSet(final Object[] o){
+		final Set<String> options = new HashSet();
+		for (int i = 0; i < o.length; i++){
+			if (o[i] != null)
+				options.add(o[i].toString());
 		}
 		return options;
 	}

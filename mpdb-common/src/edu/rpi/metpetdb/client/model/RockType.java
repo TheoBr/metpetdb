@@ -8,7 +8,7 @@ public class RockType extends MObject {
 	private static final long serialVersionUID = 1L;
 
 	private short id;
-	@Field(index = Index.TOKENIZED, store = Store.NO)
+	@Field(index = Index.UN_TOKENIZED, store = Store.NO)
 	private String rockType;
 	
 	public RockType() {

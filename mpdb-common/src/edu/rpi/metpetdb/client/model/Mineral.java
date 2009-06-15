@@ -16,7 +16,7 @@ public class Mineral extends MObject implements IHasName, HasChildren<Mineral> {
 	private short id;
 	private Short parentId;
 	private Short realMineralId;
-	@Field(index = Index.TOKENIZED, store = Store.NO)
+	@Field(index = Index.UN_TOKENIZED, store = Store.NO)
 	private String name;
 
 	private Set<Mineral> children;

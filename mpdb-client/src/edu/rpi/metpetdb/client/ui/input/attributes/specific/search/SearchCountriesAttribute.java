@@ -28,7 +28,10 @@ public class SearchCountriesAttribute extends SearchGenericAttribute {
 				new ServerOp() {
 					@Override
 					public void begin() {
-						MpDb.sample_svc.allCountries(this);
+						int userId = 0;
+						if (MpDb.isLoggedIn())
+							userId = MpDb.currentUser().getId();
+						MpDb.sample_svc.viewableCountriesForUser(userId, this);
 					}
 					public void onSuccess(final Object result) {
 						createSuggest((Set<String>) result);

@@ -35,6 +35,10 @@ public interface SampleService extends RemoteService {
 	
 	Set<String> allCountries() throws MpDbException;
 	
+	Set<String> viewableCollectorsForUser(final int userId) throws MpDbException;
+	
+	Set<String> viewableCountriesForUser(final int userId) throws MpDbException;
+	
 	List<Sample> allSamplesForUser(final long id) throws MpDbException;
 
 	void delete(long id) throws MpDbException, LoginRequiredException;

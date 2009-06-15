@@ -28,7 +28,10 @@ public class SearchReferenceAttribute extends SearchGenericAttribute {
 				new ServerOp() {
 					@Override
 					public void begin() {
-						MpDb.reference_svc.allReferences(this);
+						int userId = 0;
+						if (MpDb.isLoggedIn())
+							userId = MpDb.currentUser().getId();
+						MpDb.reference_svc.viewableReferencesForUser(userId, this);
 					}
 					public void onSuccess(final Object result) {
 						createSuggest((Set<String>) result);

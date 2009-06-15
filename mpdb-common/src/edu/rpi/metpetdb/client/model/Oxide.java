@@ -12,7 +12,7 @@ public class Oxide extends MObject {
 	private Element element;
 	private short oxideId;
 	private short oxidationState;
-	@Field(index = Index.TOKENIZED, store = Store.NO)
+	@Field(index = Index.UN_TOKENIZED, store = Store.NO)
 	private String species;
 	private Float weight;
 	private short cationsPerOxide;

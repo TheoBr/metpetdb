@@ -51,7 +51,7 @@ public class SearchDb {
 	}
 
 	public static Results<Sample> sampleSearch(final PaginationParameters p,
-			SearchSample searchSamp, User userSearching) throws MpDbException {
+			SearchSample searchSamp, User userSearching, Session session) throws MpDbException {
 
 		// Either do chemical analysis -> subsample -> Sample search if they
 		// have chem anal restrictions
@@ -63,7 +63,6 @@ public class SearchDb {
 			userId = 0;
 		else
 			userId = u.getId();
-		Session session = DataStore.open();
 		DataStore.enableSecurityFilters(session, userId);
 		FullTextSession fullTextSession = Search.createFullTextSession(session);
 
@@ -129,10 +128,7 @@ public class SearchDb {
 				final Results<Sample> results = new Results<Sample>(((Long)sizeQuery.uniqueResult()).intValue(), list);
 				return results;
 			} catch (CallbackException e) {
-				session.clear();
 				throw ConvertSecurityException.convertToException(e);
-			} finally {
-				session.close();
 			}
 		}
 
@@ -158,10 +154,7 @@ public class SearchDb {
 			final Results<Sample> results = new Results<Sample>(hibQuery.getResultSize(), list);
 			return results;
 		} catch (CallbackException e) {
-			session.clear();
 			throw ConvertSecurityException.convertToException(e);
-		} finally {
-			session.close();
 		}
 	}
 
@@ -203,11 +196,8 @@ public class SearchDb {
 				final Results<ChemicalAnalysis> results = new Results<ChemicalAnalysis>(((Long)sizeQuery.uniqueResult()).intValue(), list);
 				return results;
 			} catch (CallbackException e) {
-				session.clear();
 				throw ConvertSecurityException.convertToException(e);
-			} finally {
-				session.close();
-			}
+			} 
 		} else {
 			Query fullQuery;
 			// Get samples first
@@ -267,11 +257,8 @@ public class SearchDb {
 				final Results<ChemicalAnalysis> results = new Results<ChemicalAnalysis>(((Long)sizeQuery.uniqueResult()).intValue(), list);
 				return results;
 			} catch (CallbackException e) {
-				session.clear();
 				throw ConvertSecurityException.convertToException(e);
-			} finally {
-				session.close();
-			}
+			} 
 		}
 	}
 

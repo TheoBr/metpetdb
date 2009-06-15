@@ -10,7 +10,7 @@ public class Region extends MObject {
 
 	private short id;
 
-	@Field(index = Index.TOKENIZED)
+	@Field(index = Index.UN_TOKENIZED)
 	private String name;
 	
 	public Region() {

@@ -10,6 +10,12 @@
       </generator>
     </id>
     <property name="name" column="name"/>
+    
+    		
+     <filter name="hasSamplePublicOrUser"
+     		condition="(exists (select 1 from sample_regions sr where sr.region_id = region_id  
+								and exists ( select 1 from samples s where s.sample_id = sr.sample_id 
+											and (s.public_data = 'Y' or s.user_id = :userId))))" />
   </class>
   
   <query name="Region.byName">
@@ -26,4 +32,8 @@
   	from Region r
     order by r.name
    </query>
+   
+   <filter-def name="hasSamplePublicOrUser">
+  	<filter-param name="userId" type="int" />
+  </filter-def>
 </hibernate-mapping>

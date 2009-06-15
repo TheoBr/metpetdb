@@ -35,6 +35,10 @@
     </set>
     
     <many-to-one name="role" column="role_id"/>
+    
+    <filter name="hasSamplePublicOrUser"
+     		condition="(exists (select 1 from samples s where s.user_id = user_id and s.public_data = 'Y') 
+     			or user_id = :userId)" />
   </class>
   
   <query name="User.byProjectId">
@@ -72,4 +76,8 @@
      where u.rank >= :rank
      order by lower(u.name)
    </query>
+     
+   <filter-def name="hasSamplePublicOrUser">
+  	<filter-param name="userId" type="int" />
+  </filter-def>
 </hibernate-mapping>

@@ -33,6 +33,8 @@ public interface UserServiceAsync {
 	void confirmUser(String confirmationCode, AsyncCallback<User> ac);
 
 	void allNames(AsyncCallback<Set<String>> ac);
+	
+	void viewableNamesForUser(int userId, AsyncCallback<Set<String>> ac);
 
 	void save(User u, AsyncCallback<User> ac);
 

@@ -131,6 +131,8 @@ public interface UserService extends RemoteService {
 	
 	Set<String> allNames() throws MpDbException;
 	
+	Set<String> viewableNamesForUser(final int userId) throws MpDbException;
+	
 	User confirmUser(String confirmationCode) throws MpDbException,
 			LoginRequiredException;
 	

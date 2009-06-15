@@ -28,7 +28,10 @@ public class SearchOwnersAttribute extends SearchGenericAttribute{
 				new ServerOp() {
 					@Override
 					public void begin() {
-						MpDb.user_svc.allNames(this);
+						int userId = 0;
+						if (MpDb.isLoggedIn())
+							userId = MpDb.currentUser().getId();
+						MpDb.user_svc.viewableNamesForUser(userId, this);
 					}
 					public void onSuccess(final Object result) {
 						createSuggest((Set<String>) result);

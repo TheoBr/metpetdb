@@ -38,5 +38,9 @@ public interface SampleServiceAsync {
 	
 	void allCountries(AsyncCallback<Set<String>> ac);
 	
+	void viewableCountriesForUser(int userId, AsyncCallback<Set<String>> ac);
+	
+	void viewableCollectorsForUser(int userId, AsyncCallback<Set<String>> ac);
+	
 	void allSamplesForUser(long id, AsyncCallback<List<Sample>> ac);
 }

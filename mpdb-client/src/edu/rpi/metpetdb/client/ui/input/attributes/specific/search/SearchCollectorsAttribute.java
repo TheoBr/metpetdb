@@ -28,7 +28,10 @@ public class SearchCollectorsAttribute extends SearchGenericAttribute {
 				new ServerOp() {
 					@Override
 					public void begin() {
-						MpDb.sample_svc.allCollectors(this);
+						int userId = 0;
+						if (MpDb.isLoggedIn())
+							userId = MpDb.currentUser().getId();
+						MpDb.sample_svc.viewableCollectorsForUser(userId, this);
 					}
 					public void onSuccess(final Object result) {
 						createSuggest((Set<String>) result);

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
 import org.postgis.LinearRing;
 import org.postgis.Point;
 
@@ -137,19 +138,34 @@ public class SearchIPhone extends HttpServlet{
 	}
 	
 	private Results<Sample> search(final Collection<String> regions){
+		Session session = DataStore.open();
 		try{
 			SearchSample s = new SearchSample();
 			for (String r : regions){
 				s.addRegion(r);
-			}
-			return SearchDb.sampleSearch(null, s, null);
+			}	
+			return search(s);
 		}
 		catch (Exception e){
 			throw new IllegalStateException(e.getMessage());
+		} finally{
+			session.close();
+		}
+	}
+	
+	private Results<Sample> search(final SearchSample s){
+		Session session = DataStore.open();
+		try{
+			return SearchDb.sampleSearch(null, s, null, session);
+		}
+		catch(Exception e){
+			throw new IllegalStateException(e.getMessage());
+		} finally {
+			session.close();
 		}
 	}
 
-	private Results<Sample> search(final Double lat, final Double lng){
+	private Results<Sample> search(final Double lat, final Double lng){		
 		try{
 			SearchSample s = new SearchSample();
 			final LinearRing[] ringArray = new LinearRing[1];
@@ -181,7 +197,7 @@ public class SearchIPhone extends HttpServlet{
 			boundingBox.srid = MpDbConstants.WGS84;
 			boundingBox.dimension = 2;
 			s.setBoundingBox(boundingBox);
-			return SearchDb.sampleSearch(null, s, null);
+			return search(s);
 
 		} catch (final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());

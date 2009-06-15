@@ -14,6 +14,7 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.RegionDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 
 public class SampleServiceImpl extends MpDbServlet implements SampleService {
@@ -44,24 +45,23 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	}
 	
 	public Set<String> allCollectors() throws MpDbException {
-		final Object[] l =  (new SampleDAO(this.currentSession())).allCollectors();
-		final Set<String> options = new HashSet<String>();
-		for (int i = 0; i < l.length; i++){
-			if (l[i] != null)
-				options.add(l[i].toString());
-		}
-		return options;
+		return objectArrayToStringSet((new SampleDAO(this.currentSession())).allCollectors());
+	}
+	
+	public Set<String> viewableCollectorsForUser(final int userId) throws MpDbException {
+		this.currentSession().enableFilter("samplePublicOrUser").setParameter("userId", userId);
+		return objectArrayToStringSet((new SampleDAO(this.currentSession())).allCollectors());
 	}
 	
 	public Set<String> allCountries() throws MpDbException {
-		final Object[] l =  (new SampleDAO(this.currentSession())).allCountries();
-		final Set<String> options = new HashSet<String>();
-		for (int i = 0; i < l.length; i++){
-			if (l[i] != null)
-				options.add(l[i].toString());
-		}
-		return options;
+		return objectArrayToStringSet((new SampleDAO(this.currentSession())).allCountries());
 	}
+	
+	public Set<String> viewableCountriesForUser(final int userId) throws MpDbException {
+		this.currentSession().enableFilter("samplePublicOrUser").setParameter("userId", userId);
+		return objectArrayToStringSet((new SampleDAO(this.currentSession())).allCountries());
+	}
+	
 
 	public Sample details(final long id) throws MpDbException {
 		Sample s = new Sample();
@@ -111,5 +111,14 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		s.setId(id);
 		s = dao.fill(s);
 		dao.delete(s);
+	}
+	
+	private Set<String> objectArrayToStringSet(final Object[] o){
+		final Set<String> options = new HashSet();
+		for (int i = 0; i < o.length; i++){
+			if (o[i] != null)
+				options.add(o[i].toString());
+		}
+		return options;
 	}
 }

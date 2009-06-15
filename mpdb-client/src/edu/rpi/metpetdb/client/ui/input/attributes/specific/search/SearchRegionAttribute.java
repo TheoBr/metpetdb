@@ -28,7 +28,10 @@ public class SearchRegionAttribute extends SearchGenericAttribute{
 				new ServerOp() {
 					@Override
 					public void begin() {
-						MpDb.region_svc.allNames(this);
+						int userId = 0;
+						if (MpDb.isLoggedIn())
+							userId = MpDb.currentUser().getId();
+						MpDb.region_svc.viewableNamesForUser(userId, this);
 					}
 					public void onSuccess(final Object result) {
 						createSuggest((Set<String>) result);
