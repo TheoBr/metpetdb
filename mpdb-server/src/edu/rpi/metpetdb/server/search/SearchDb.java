@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.DateTools;
 import org.apache.lucene.index.Term;
@@ -17,6 +18,7 @@ import org.apache.lucene.search.FilteredQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.RangeQuery;
 import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.WildcardQuery;
 import org.hibernate.CallbackException;
 import org.hibernate.Filter;
 import org.hibernate.Session;
@@ -277,6 +279,7 @@ public class SearchDb {
 
 		String columnName;
 		Object methodResult = null;
+		Boolean andTokenization = null;
 		final String SAMPLE_PREFIX = "sample_";
 		final String LOCATION_COLUMN = (onSubsample) ? SAMPLE_PREFIX + "location" : "location";
 		final String BOUNDINGBOX_COLUMN =  "boundingBox";
@@ -292,6 +295,9 @@ public class SearchDb {
 
 			// return type of the method
 			methodResult = i.get(searchSamp);
+			
+			// should we and the tokenized field values?
+			andTokenization = i.isTokenizationAnded();
 
 			// if there is no value returned in this field...
 			if (methodResult == null) {
@@ -323,28 +329,24 @@ public class SearchDb {
 						// data is
 						// returned, it should be an
 						// OR query
-
-						List<String> setQueries = new LinkedList<String>();
-						List<String> setColumnsIn = new LinkedList<String>();
-						List<BooleanClause.Occur> setFlags = new LinkedList<BooleanClause.Occur>();
-
 						if (((Set) methodResult).size() > 0) {
-							for (Object o : (Set) methodResult) {
-								// iterate through each item and add it to the
-								// query
-								final TermQuery objectQuery = new TermQuery(
-										new Term(columnName, o.toString()));
-								setQueries.add(objectQuery.toString());
-								setColumnsIn.add(columnName);
-								setFlags.add(BooleanClause.Occur.SHOULD);
-							}
+								List<String> setQueries = new LinkedList<String>();
+								List<String> setColumnsIn = new LinkedList<String>();
+								List<BooleanClause.Occur> setFlags = new LinkedList<BooleanClause.Occur>();
 
-							// require that one of these results be found in the
-							// full query
-							if (setQueries.size() > 0) {
-								fullQuery.add(getQuery(setQueries,
-										setColumnsIn, setFlags),
-										BooleanClause.Occur.MUST);
+								for (Object o : (Set) methodResult) {
+									// iterate through each item and add it to the
+									// query
+									final TermQuery objectQuery = new TermQuery(
+											new Term(columnName, o.toString()));
+									setQueries.add(objectQuery.toString());
+									setColumnsIn.add(columnName);
+									setFlags.add(BooleanClause.Occur.SHOULD);
+								}	
+								if (setQueries.size() > 0) {
+									fullQuery.add(getQuery(setQueries,
+											setColumnsIn, setFlags, andTokenization),
+											BooleanClause.Occur.MUST);
 							}
 						}
 					} else if (methodResult instanceof DateSpan) { // if the
@@ -550,21 +552,38 @@ public class SearchDb {
 
 		return fullQuery;
 	}
-
 	public static Query getQuery(List<String> queries, List<String> fields,
 			List<BooleanClause.Occur> flags) {
+		return getQuery(queries,fields,flags,false);
+	}
+
+	public static Query getQuery(List<String> queries, List<String> fields,
+			List<BooleanClause.Occur> flags, boolean andedTokenization) {
 		String queryArray[] = new String[queries.size()];
 		queries.toArray(queryArray);
 		String columnsArray[] = new String[fields.size()];
 		fields.toArray(columnsArray);
 		BooleanClause.Occur flagsArray[] = new BooleanClause.Occur[flags.size()];
 		flags.toArray(flagsArray);
-
 		try {
-			Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
-			.parse(queryArray, columnsArray, flagsArray,
-					new StandardAnalyzer());
-			return query;
+			if (andedTokenization){
+				BooleanQuery query = new BooleanQuery();
+				for (int i = 0; i < queryArray.length; i++){
+					BooleanQuery tokenizedQuery = new BooleanQuery();
+					String searchTerm = queryArray[i].split(":",2)[1];
+					for (String s : searchTerm.split(" ")){
+						TermQuery term = new TermQuery(new Term(columnsArray[i],s));
+						tokenizedQuery.add(term,BooleanClause.Occur.MUST);
+					}	
+					query.add(tokenizedQuery, flagsArray[i]);
+				} 
+				return query;
+			} else {
+				
+					Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
+					.parse(queryArray, columnsArray, flagsArray, new StandardAnalyzer());
+					return query;
+			}
 		} catch (ParseException e) {
 			return null;
 		}

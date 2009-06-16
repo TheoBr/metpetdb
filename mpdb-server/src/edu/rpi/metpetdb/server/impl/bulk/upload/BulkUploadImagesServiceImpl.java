@@ -180,10 +180,12 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 						continue;
 					}
 					Sample s = img.getSample();
-					if (!checkForSample(s, samples, sampleDao, results,
-							subsampleNames, row))
+					img.setSample(checkForSample(s, samples, sampleDao, results,
+							subsampleNames, row));
+					if (img.getSample().getId() == 0)
 						continue;
 					if (img.getSample() != null && img.getSubsample() == null) {
+						img.setPublicData(img.getSample().isPublicData());
 						// we are adding a sample image
 					} else {
 						// we are adding an image to a subsample
@@ -197,6 +199,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 							img.setSubsample(checkForSubsample(s, ss, samples,
 									ssDao, results, subsampleNames, row,
 									subsamples, ssResultCount, save));
+							img.setPublicData(img.getSubsample().isPublicData());
 						} else {
 							// Every Image needs a subsample so add an error
 							results.addError(row,

@@ -36,6 +36,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		public boolean isChemicalAnalysisAttr(){
 			return false;
 		}
+		
+		public boolean isTokenizationAnded(){
+			return false;
+		}
 	},
 	boundingBox {
 		public Geometry get(final SearchSample sample) {
@@ -55,6 +59,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 		
 		public boolean isChemicalAnalysisAttr(){
+			return false;
+		}
+		
+		public boolean isTokenizationAnded(){
 			return false;
 		}
 	},
@@ -77,6 +85,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		public boolean isChemicalAnalysisAttr(){
 			return false;
 		}
+		
+		public boolean isTokenizationAnded(){
+			return true;
+		}
 	},
 	owner {
 		public Set<String> get(final SearchSample sample) {
@@ -98,6 +110,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		public boolean isChemicalAnalysisAttr(){
 			return false;
 		}
+		
+		public boolean isTokenizationAnded(){
+			return true;
+		}
 	},
 	minerals {
 		public Set<Mineral> get(final SearchSample sample) {
@@ -116,6 +132,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 		
 		public boolean isChemicalAnalysisAttr(){
+			return false;
+		}
+		
+		public boolean isTokenizationAnded(){
 			return false;
 		}
 	},
@@ -138,6 +158,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		
 		public boolean isChemicalAnalysisAttr(){
 			return false;
+		}
+		
+		public boolean isTokenizationAnded(){
+			return true;
 		}
 	},
 	collectionDateRange {
@@ -162,6 +186,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		public boolean isChemicalAnalysisAttr(){
 			return false;
 		}
+		
+		public boolean isTokenizationAnded(){
+			return false;
+		}
 	},
 	possibleRockTypes {
 		public Object get(final SearchSample sample) {
@@ -184,6 +212,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		public boolean isChemicalAnalysisAttr(){
 			return false;
 		}
+		
+		public boolean isTokenizationAnded(){
+			return true;
+		}
 	},
 	elements {
 		public Set<SearchElement> get(final SearchSample sample) {
@@ -204,6 +236,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		public boolean isChemicalAnalysisAttr(){
 			return true;
 		}
+		
+		public boolean isTokenizationAnded(){
+			return true;
+		}
 	},
 	oxides {
 		public Set<SearchOxide> get(final SearchSample sample) {
@@ -222,6 +258,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 		
 		public boolean isChemicalAnalysisAttr(){
+			return true;
+		}
+		
+		public boolean isTokenizationAnded(){
 			return true;
 		}
 	},
@@ -245,6 +285,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		public boolean isChemicalAnalysisAttr(){
 			return false;
 		}
+		
+		public boolean isTokenizationAnded(){
+			return true;
+		}
 	},
 	country {
 		public Set<String> get(final SearchSample sample) {
@@ -266,6 +310,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		public boolean isChemicalAnalysisAttr(){
 			return false;
 		}
+		
+		public boolean isTokenizationAnded(){
+			return true;
+		}
 	},
 	references {
 		public Set<Reference> get(final SearchSample sample) {
@@ -285,6 +333,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		
 		public boolean isChemicalAnalysisAttr(){
 			return false;
+		}
+		
+		public boolean isTokenizationAnded(){
+			return true;
 		}
 	},
 	metamorphicGrades {
@@ -308,6 +360,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		public boolean isChemicalAnalysisAttr(){
 			return false;
 		}
+		
+		public boolean isTokenizationAnded(){
+			return true;
+		}
 	},
 	getPublic {  // 0 = both, 1 = public only, 2 = private only
 		public Integer get(final SearchSample sample) {
@@ -329,6 +385,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		
 		public boolean isChemicalAnalysisAttr(){
 			return true;
+		}
+		
+		public boolean isTokenizationAnded(){
+			return false;
 		}
 	},
 	wholeRock {
@@ -352,6 +412,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		public boolean isChemicalAnalysisAttr(){
 			return true;
 		}
+		
+		public boolean isTokenizationAnded(){
+			return false;
+		}
 	},
 	chemMinerals {
 		public Set<Mineral> get(final SearchSample sample) {
@@ -372,6 +436,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		public boolean isChemicalAnalysisAttr(){
 			return true;
 		}
+		
+		public boolean isTokenizationAnded(){
+			return true;
+		}
 	},
 	tabs {
 		public String get(final SearchSample sample) {
@@ -390,6 +458,10 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 		
 		public boolean isChemicalAnalysisAttr(){
+			return false;
+		}
+		
+		public boolean isTokenizationAnded(){
 			return false;
 		}
 	};

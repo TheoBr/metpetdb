@@ -14,7 +14,7 @@ public class Element extends MObject implements IHasName {
 	private short id;
 	private String name;
 	private String alternateName;
-	@Field(index = Index.UN_TOKENIZED, store = Store.NO)
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String symbol;
 	private int atomicNumber;
 	private Float weight;

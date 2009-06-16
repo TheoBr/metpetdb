@@ -68,10 +68,10 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String description;
 
-	@Field(index = Index.UN_TOKENIZED, store = Store.NO)
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String country;
 
-	@Field(index = Index.UN_TOKENIZED, store = Store.NO)
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String collector;
 
 	@Field(index = Index.TOKENIZED, store = Store.NO)

@@ -18,4 +18,6 @@ public interface SearchProperty extends Property<SearchSample> {
 	abstract boolean isSampleAttr();
 	
 	abstract boolean isChemicalAnalysisAttr();
+	
+	abstract boolean isTokenizationAnded();
 }

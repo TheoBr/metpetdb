@@ -11,7 +11,7 @@ public class Reference extends MObject {
 
 	private short id;
 
-	@Field(index = Index.UN_TOKENIZED, store = Store.NO)
+	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String name;
 	
 	public Reference() {

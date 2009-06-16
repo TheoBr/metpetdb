@@ -169,7 +169,7 @@ public abstract class BulkUploadService extends MpDbServlet {
 		}
 	}
 
-	protected boolean checkForSample(Sample s,
+	protected Sample checkForSample(Sample s,
 			final Map<String, Sample> samples, final SampleDAO sampleDao,
 			final BulkUploadResult results,
 			final Map<String, Collection<String>> subsampleNames, int row) {
@@ -181,16 +181,17 @@ public abstract class BulkUploadService extends MpDbServlet {
 				samples.put(s.getNumber().toLowerCase(), s);
 				subsampleNames.put(s.getNumber().toLowerCase(),
 						new HashSet<String>());
+				for (Subsample subsample : s.getSubsamples())
+					subsampleNames.get(s.getNumber().toLowerCase()).add(subsample.getName());
 			} else {
 				s = samples.get(s.getNumber().toLowerCase());
 			}
-			return true;
 		} catch (MpDbException e) {
 			// There is no sample we have to add an error
 			// Every Image needs a sample so add an error
 			results.addError(row, e);
-			return false;
 		}
+		return s;
 	}
 
 	protected Subsample checkForSubsample(Sample s, Subsample ss,
@@ -204,7 +205,6 @@ public abstract class BulkUploadService extends MpDbServlet {
 				&& !subsampleNames.get(s.getNumber().toLowerCase()).contains(
 						ss.getName().toLowerCase())) {
 			try {
-				doc.validate(ss);
 				ss = ssDao.fill(ss);
 				subsamples.put(s.getNumber().toLowerCase()
 						+ ss.getName().toLowerCase(), ss);
@@ -212,6 +212,7 @@ public abstract class BulkUploadService extends MpDbServlet {
 			} catch (MpDbException e) {
 				// Means it is new because we could not find
 				// it
+				doc.validate(ss);
 				ssResultCount.incrementFresh();
 				if (save) {
 					try {
