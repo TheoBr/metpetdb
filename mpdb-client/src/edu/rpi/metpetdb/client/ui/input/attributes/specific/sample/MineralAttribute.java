@@ -2,7 +2,9 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific.sample;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.user.client.Command;
@@ -24,6 +26,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidMCommand;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
+import edu.rpi.metpetdb.client.ui.input.DetailsPanelEntry;
 import edu.rpi.metpetdb.client.ui.input.MultipleObjectDetailsPanel;
 import edu.rpi.metpetdb.client.ui.input.WizardDialog;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
@@ -226,8 +229,51 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 				dialog = makeWizardDialog();
 			final Command dialog_finish = new Command() {
 				public void execute() {
-					if (getConstraint().equals(MpDb.doc.Sample_minerals))
+					if (getConstraint().equals(MpDb.doc.Sample_minerals)){
+						
+						//hack to grab values from the form
+						HashMap<GenericAttribute, DetailsPanelEntry> entries = dialog.getPanelEntries(1);
+						Iterator entryItr = entries.entrySet().iterator();
+						String htmlString = "";
+						while (entryItr.hasNext()){
+							Map.Entry<GenericAttribute, DetailsPanelEntry> pairs = (Map.Entry)entryItr.next();
+							htmlString = pairs.getValue().getAttr().getMyPanel().toString();
+						}
+
+						Map<String, Float> enteredValues = new HashMap();;
+						
+						Set<SampleMineral> amounts = p_amounts.getBeans();
+						
+						//set the sample amounts to the floats entered in the dialog
+						//extra label at the beginning
+						int index = htmlString.indexOf("/LABEL") + 6;
+						htmlString = htmlString.substring(index);
+						for(SampleMineral sm : amounts){
+ 							//get Mineral
+							index = htmlString.indexOf("LABEL>") + 6;
+							htmlString = htmlString.substring(index);
+							int end = htmlString.indexOf("<");
+							int endSpace = htmlString.indexOf(" ");
+							String mineralString = htmlString.substring(0,Math.min(end, endSpace));
+							
+							//get value
+							index = htmlString.indexOf("value=") + 6;
+							htmlString = htmlString.substring(index);
+							end = htmlString.indexOf(">");
+							String floatString = htmlString.substring(0,end);
+							
+							enteredValues.put(mineralString, new Float(floatString));
+						}
+						
+						//set each entered amount to its SampleMineral
+						Iterator itr = amounts.iterator();
+						while (itr.hasNext()){
+							SampleMineral thisMineral = (SampleMineral) itr.next();
+							thisMineral.setAmount(enteredValues.get(thisMineral.getMineral().toString()));
+						}
+						
 						tree.set(obj, get(obj));
+					}
 					else
 						//this is a hack to make it set the value the the user selected
 						tree.set(obj, get(new Label()));
