@@ -572,7 +572,7 @@ public class SearchDb {
 					BooleanQuery tokenizedQuery = new BooleanQuery();
 					String searchTerm = queryArray[i].split(":",2)[1];
 					for (String s : searchTerm.split(" ")){
-						TermQuery term = new TermQuery(new Term(columnsArray[i],s));
+						TermQuery term = new TermQuery(new Term(columnsArray[i],s.toLowerCase()));
 						tokenizedQuery.add(term,BooleanClause.Occur.MUST);
 					}	
 					query.add(tokenizedQuery, flagsArray[i]);
