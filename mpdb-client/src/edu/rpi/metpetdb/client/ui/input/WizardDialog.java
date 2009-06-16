@@ -1,8 +1,10 @@
 package edu.rpi.metpetdb.client.ui.input;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
@@ -17,6 +19,8 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidMCommand;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
+import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 
 /**
  * Basically accepts multple ObjectEditorPanels, and creates a wizard out of
@@ -129,6 +133,7 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 					setActionsEnabled(true);
 				}
 			};
+
 			
 			if(validateMe){
 				final Iterator<DetailsPanel<?>> itr = panels.iterator();
@@ -182,6 +187,10 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 	//Mineral Dialog does not need validation before closing
 	public void turnOffValidation(){
 		this.validateMe = false;
+	}
+	
+	public HashMap<GenericAttribute, DetailsPanelEntry> getPanelEntries(int id){
+		return panels.get(id).dpEntries;
 	}
 
 }
