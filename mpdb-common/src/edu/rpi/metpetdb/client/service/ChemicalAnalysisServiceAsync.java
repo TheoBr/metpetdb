@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -31,4 +32,6 @@ public interface ChemicalAnalysisServiceAsync {
 	 * @param ac
 	 */
 	void allFromManySubsamples(final Collection<Long> subsampleIds, AsyncCallback<Map<Long, List<ChemicalAnalysis>>> ac);
+
+	void makePublic(ArrayList<ChemicalAnalysis> selectedChemicalAnalyses, AsyncCallback<Void> ac);
 }

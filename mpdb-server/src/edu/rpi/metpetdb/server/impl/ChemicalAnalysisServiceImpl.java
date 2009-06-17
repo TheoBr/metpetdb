@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -75,6 +76,17 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		ca = dao.fill(ca);
 
 		dao.delete(ca);
+		commit();
+	}
+
+	public void makePublic(ArrayList<ChemicalAnalysis> chemicalAnalyses)
+			throws ValidationException, LoginRequiredException, MpDbException {
+		final ChemicalAnalysisDAO dao = new ChemicalAnalysisDAO(this
+				.currentSession());
+		for(ChemicalAnalysis ca : chemicalAnalyses) {
+			doc.validate(ca);
+			dao.makePublic(ca);
+		}
 		commit();
 	}
 }

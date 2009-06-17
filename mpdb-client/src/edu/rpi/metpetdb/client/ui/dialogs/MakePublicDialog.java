@@ -484,7 +484,7 @@ public class MakePublicDialog extends MDialogBox{
 					ChemicalAnalysis current = itr.next();
 					current.setPublicData(true);
 				}
-				MpDb.chemicalAnalysis_svc.saveAll(selectedChemicalAnalyses, this);
+				MpDb.chemicalAnalysis_svc.makePublic(selectedChemicalAnalyses, this);
 			}
 			public void onSuccess() {
 
