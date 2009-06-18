@@ -54,6 +54,8 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 
 	@IndexedEmbedded(prefix = "rockType_")
 	private RockType rockType;
+	
+	private String rockTypeName;
 
 	@ContainedIn
 	private Set<Subsample> subsamples = new HashSet<Subsample>();
@@ -205,6 +207,14 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 
 	public void setRockType(final RockType rt) {
 		rockType = rt;
+	}
+	
+	public String getRockTypeName() {
+		return rockTypeName;
+	}
+
+	public void setRockTypeName(final String s) {
+		rockTypeName = s;
 	}
 
 	public void addRockType(final String s) {
