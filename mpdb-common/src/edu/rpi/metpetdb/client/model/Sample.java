@@ -274,7 +274,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	}
 
 	public void addMineral(final Mineral min) {
-		this.addMineral(min, new Float(0));
+		this.addMineral(min, "");
 	}
 
 	/**
@@ -288,7 +288,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 		addMineral(mineral);
 	}
 
-	public void addMineral(final Mineral min, final Float amount) {
+	public void addMineral(final Mineral min, final String amount) {
 		if (minerals == null)
 			minerals = new HashSet<SampleMineral>();
 		final SampleMineral m = new SampleMineral();

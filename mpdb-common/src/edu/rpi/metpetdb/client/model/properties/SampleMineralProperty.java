@@ -5,13 +5,12 @@ import edu.rpi.metpetdb.client.model.SampleMineral;
 
 public enum SampleMineralProperty implements Property<SampleMineral> {
 	amount {
-		public Float get(final SampleMineral sampleMineral) {
+		public String get(final SampleMineral sampleMineral) {
 			return ((SampleMineral) sampleMineral).getAmount();
 		}
 
 		public void set(final SampleMineral sampleMineral, final Object amount) {
-			((SampleMineral) sampleMineral).setAmount(Float
-					.valueOf((String) amount));
+			((SampleMineral) sampleMineral).setAmount((String) amount);
 		}
 	},
 	mineral {

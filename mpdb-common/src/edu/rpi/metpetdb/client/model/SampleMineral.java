@@ -9,20 +9,20 @@ public class SampleMineral extends MObject {
 	private static final long serialVersionUID = 1L;
 
 	@Field(index = Index.TOKENIZED, store = Store.NO)
-	private Float amount;
+	private String amount;
 
 	@IndexedEmbedded(depth = 1, prefix = "mineral_")
 	private Mineral mineral;
 
 	private Sample sample;
 
-	public void setAmount(final Float f) {
+	public void setAmount(final String f) {
 		amount = f;
 	}
 
-	public Float getAmount() {
+	public String getAmount() {
 		if (amount == null)
-			return new Float(0);
+			return "";
 		else
 			return amount;
 	}
@@ -49,7 +49,7 @@ public class SampleMineral extends MObject {
 
 	public String toString() {
 		if (mineral != null) {
-			if (amount != null && amount != 0)
+			if (amount != null && !amount.equals(""))
 				return mineral.getName() + " (" + amount + ")";
 			else
 				return mineral.getName();
@@ -63,7 +63,7 @@ public class SampleMineral extends MObject {
 			final boolean one = ((SampleMineral) o).getMineral()
 					.equals(mineral);
 			final boolean two = ((SampleMineral) o).getAmount() == null ? ((SampleMineral) o)
-					.getAmount() == amount
+					.getAmount().equals(amount)
 					: ((SampleMineral) o).getAmount().equals(amount);
 			return one && two;
 		} else if (o instanceof Mineral) {

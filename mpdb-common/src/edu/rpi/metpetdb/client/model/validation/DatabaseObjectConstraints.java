@@ -84,7 +84,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ SampleMineral ------
 	public PropertyConstraint[] SampleMineral__all;
 	public ValueInCollectionConstraint<Mineral> SampleMineral_Sample_minerals_mineral;
-	public FloatConstraint SampleMineral_Sample_minerals_amount;
+	public StringConstraint SampleMineral_Sample_minerals_amount;
 
 	public void validate(final SampleMineral sc) throws ValidationException {
 		validate(sc, SampleMineral__all);

@@ -180,8 +180,8 @@ public abstract class SampleListEx extends ListEx<Sample> {
 					Set<SampleMineral> minerals = ((Set<SampleMineral>) data.mGet(SampleProperty.minerals));
 					String text = "";
 					for (SampleMineral m : minerals){
-						if (m.getAmount() > 0) {
-							text += m.getName() + " " + String.valueOf(ListExUtil.formatDouble(m.getAmount(),ListExUtil.defaultDigits)) + ", ";
+						if (!m.getAmount().equals("")) {
+							text += m.getName() + " " + m.getAmount()+ ", ";
 						} else {
 							text += m.getName() + ", "; 
 						}

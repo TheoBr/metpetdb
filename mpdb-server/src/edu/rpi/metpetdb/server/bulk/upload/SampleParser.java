@@ -122,9 +122,7 @@ public class SampleParser extends Parser<Sample> {
 				final Mineral m = new Mineral();
 				m.setName(headers.get(cell.getColumnIndex()).getHeaderText());
 				try {
-					final Float data = Float.parseFloat(sanitizeNumber(cell
-							.toString()));
-					currentObject.addMineral(m, data);
+					currentObject.addMineral(m, cell.toString());
 				} catch (NumberFormatException e) {
 					// check if the actual column is a column of minerals
 					// search for the correct mineral (so alternate minerals

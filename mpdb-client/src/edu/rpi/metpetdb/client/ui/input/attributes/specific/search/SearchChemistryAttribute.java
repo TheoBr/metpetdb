@@ -174,7 +174,11 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 						mineral.setText(cb.getText());
 						selectMineral.setText("Change");
 					} else if (tree.getSelectedWidgets().size() > 0){
-						mineral.setText(((FlyOutItem)tree.getSelectedWidgets().get(0)).obj.toString());
+						FlyOutItem selectedMineral = (FlyOutItem) tree.getSelectedWidgets().get(0);
+						while (selectedMineral.parent != null && tree.getSelectedWidgets().contains(selectedMineral.parent)){
+							selectedMineral = selectedMineral.parent;
+						}
+						mineral.setText(selectedMineral.obj.toString());
 						selectMineral.setText("Change");
 					} else {
 						mineral.setText("");

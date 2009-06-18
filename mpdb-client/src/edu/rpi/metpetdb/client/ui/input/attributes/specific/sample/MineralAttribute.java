@@ -240,7 +240,7 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 							htmlString = pairs.getValue().getAttr().getMyPanel().toString();
 						}
 
-						Map<String, Float> enteredValues = new HashMap();;
+						Map<String, String> enteredValues = new HashMap();;
 						
 						Set<SampleMineral> amounts = p_amounts.getBeans();
 						
@@ -262,7 +262,7 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 							end = htmlString.indexOf(">");
 							String floatString = htmlString.substring(0,end);
 							
-							enteredValues.put(mineralString, new Float(floatString));
+							enteredValues.put(mineralString, floatString);
 						}
 						
 						//set each entered amount to its SampleMineral
