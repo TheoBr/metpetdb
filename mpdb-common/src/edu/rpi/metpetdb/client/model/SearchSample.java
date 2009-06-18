@@ -7,10 +7,10 @@ import org.postgis.Geometry;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-import edu.rpi.metpetdb.client.model.interfaces.MObject;
+
 import edu.rpi.metpetdb.client.model.properties.Property;
 
-public class SearchSample implements IsSerializable, MObject {
+public class SearchSample extends MObject implements IsSerializable{
 
 	private static final long serialVersionUID = 1L;
 	private Set<RockType> possibleRockTypes = new HashSet<RockType>();
@@ -18,6 +18,7 @@ public class SearchSample implements IsSerializable, MObject {
 	private int version;
 
 	private String sesarNumber;
+	
 	private Geometry boundingBox;
 	
 	private Set<String> collectors  = new HashSet<String>();

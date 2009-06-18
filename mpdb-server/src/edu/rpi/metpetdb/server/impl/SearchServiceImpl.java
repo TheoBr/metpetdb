@@ -12,10 +12,11 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SearchService;
 import edu.rpi.metpetdb.server.KMLCreater;
+import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.search.SearchDb;
 import edu.rpi.metpetdb.server.search.lucene.RegenerateIndices;
 
-public class SearchServiceImpl extends SampleServiceImpl implements
+public class SearchServiceImpl extends MpDbServlet implements
 		SearchService {
 	private static final long serialVersionUID = 1L;
 

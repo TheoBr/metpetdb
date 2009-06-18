@@ -153,7 +153,24 @@ public class SearchDb {
 			List<Sample> list = hibQuery.list();
 			if (list.size() == 0)
 				list = new ArrayList<Sample>();
-			final Results<Sample> results = new Results<Sample>(hibQuery.getResultSize(), list);
+			int resultSize = 0;
+			if (session.getEnabledFilter("boundingBox")!=null){
+				final List<Object[]> projectedSampleIds = hibQuery.setProjection("id").list();
+				String  sampleIds = "";
+				for (Object[] o : projectedSampleIds){
+					for (Object id : o){
+						sampleIds += ((Long)id).toString() + ",";
+					}
+				}
+				if (sampleIds != ""){
+					sampleIds = sampleIds.substring(0, sampleIds.length()-1);
+				}
+				org.hibernate.Query sizeQuery = session.createQuery("select count(*) from Sample s where s.id in (" + sampleIds + ")");
+				resultSize = ((Long)sizeQuery.uniqueResult()).intValue();
+			} else {
+				resultSize = hibQuery.getResultSize();
+			}
+			final Results<Sample> results = new Results<Sample>(resultSize, list);
 			return results;
 		} catch (CallbackException e) {
 			throw ConvertSecurityException.convertToException(e);
