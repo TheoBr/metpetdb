@@ -302,7 +302,7 @@ public abstract class SampleList extends DataList<Sample> {
 			};
 			// TODO: actually make this sortable in the chronological sense. 
 			// perhaps a DateColumn is in order
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(85);
 			col.setPreferredColumnWidth(110);
 			col.setOptional(true);
