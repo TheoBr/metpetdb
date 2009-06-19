@@ -80,47 +80,28 @@ public class SearchDb {
 
 			// Get the subsample ids that correspond to the chemical analyses.
 			System.out.println("Search Query Project Subsample Ids:" + chemQuery.getQueryString());
-			final List<Long> projectedSubsampleIds = chemQuery.list();
+
 			// no chemical analysis fit search, no reason to try finding samples with "no matches"
-			if (projectedSubsampleIds.size() == 0) {
+			String  subsampleIds = getLongIdStringForList(chemQuery.list());
+			if (subsampleIds == null) {
 				return new Results<Sample>(0, new ArrayList<Sample>());
 			}
-			String subsampleIds = "";
-			for (Long id : projectedSubsampleIds){
-				subsampleIds += ((Long)id).toString() + ",";
-			}	
-			if (subsampleIds != ""){
-				subsampleIds = subsampleIds.substring(0, subsampleIds.length()-1);
-			}
+
 			// Get samples third... will need to incorporate top two pieces
 			fullQuery = getSamplesQuery(searchSamp, userSearching, session);
 			FullTextQuery sampleQuery = fullTextSession.createFullTextQuery(fullQuery, Sample.class);
 			System.out.println("Search Query Project Sample Ids:" + fullQuery.toString());
-			final List<Object[]> projectedSampleIds = sampleQuery.setProjection("id").list();
-			if (projectedSampleIds.size() == 0) {
+			String  sampleIds = getLongIdString(sampleQuery.setProjection("id").list());
+			if (sampleIds == null) {
 				return new Results<Sample>(0, new ArrayList<Sample>());
 			}
-			String  sampleIds = "";
-			for (Object[] o : projectedSampleIds){
-				for (Object id : o){
-					sampleIds += ((Long)id).toString() + ",";
-				}
-			}
-			if (sampleIds != ""){
-				sampleIds = sampleIds.substring(0, sampleIds.length()-1);
-			}
+
 			org.hibernate.Query hql = session.createQuery("from Sample s where s.id in (" + sampleIds +
 					") and exists (select 1 from Subsample ss where ss.sampleId = s.id and ss.id in (" + 
 					subsampleIds + "))");
 			org.hibernate.Query sizeQuery = session.createQuery("select count(*) " + hql.getQueryString());
 			System.out.println("Search Query Find Samples by Id and SubsampleId:" + hql.getQueryString());
-			if (p != null) {
-				hql.setFirstResult(p.getFirstResult());
-				hql.setMaxResults(p.getMaxResults());
-			} else {
-				hql.setFirstResult(0);
-				hql.setMaxResults(100);
-			}
+			hql = setPagination(p,hql);
 			try {
 				//this is here in order to convert java.util.Collection$EmptyList into
 				//the correct representation so it can be serialized by GWT
@@ -136,44 +117,34 @@ public class SearchDb {
 
 		System.out.println("Search Query:" + fullQuery.toString());
 
-		final FullTextQuery hibQuery = fullTextSession.createFullTextQuery(
-				fullQuery, Sample.class);
-
-		if (p != null) {
-			hibQuery.setFirstResult(p.getFirstResult());
-			hibQuery.setMaxResults(p.getMaxResults());
-		} else {
-			//place an upper limit of 100 search results
-			hibQuery.setFirstResult(0);
-			hibQuery.setMaxResults(100);
-		}
-		try {
-			//this is here in order to convert java.util.Collection$EmptyList into
-			//the correct representation so it can be serialized by GWT
-			List<Sample> list = hibQuery.list();
-			if (list.size() == 0)
-				list = new ArrayList<Sample>();
-			int resultSize = 0;
+		try {			
 			if (session.getEnabledFilter("boundingBox")!=null){
 				FullTextQuery sizeHibQuery = fullTextSession.createFullTextQuery(
 						fullQuery, Sample.class);
-				final List<Object[]> projectedSampleIds = sizeHibQuery.setProjection("id").list();
-				String  sampleIds = "";
-				for (Object[] o : projectedSampleIds){
-					for (Object id : o){
-						sampleIds += ((Long)id).toString() + ",";
-					}
+				String  sampleIds = getLongIdString(sizeHibQuery.setProjection("id").list());
+				if (sampleIds == null) {
+					return new Results<Sample>(0, new ArrayList<Sample>());
 				}
-				if (sampleIds != ""){
-					sampleIds = sampleIds.substring(0, sampleIds.length()-1);
-				}
-				org.hibernate.Query sizeQuery = session.createQuery("select count(*) from Sample s where s.id in (" + sampleIds + ")");
-				resultSize = ((Long)sizeQuery.uniqueResult()).intValue();
+				org.hibernate.Query resultQuery = session.createQuery("from Sample s where s.id in (" + sampleIds + ")");
+				org.hibernate.Query sizeQuery = session.createQuery("select count(*) " + resultQuery.getQueryString());
+				resultQuery = setPagination(p,resultQuery);
+				List<Sample> list = resultQuery.list();
+				if (list.size() == 0)
+					list = new ArrayList<Sample>();
+				final Results<Sample> results = new Results<Sample>(((Long)sizeQuery.uniqueResult()).intValue(),list);
+				return results;
 			} else {
-				resultSize = hibQuery.getResultSize();
+				FullTextQuery hibQuery = fullTextSession.createFullTextQuery(
+						fullQuery, Sample.class);
+				hibQuery = setPagination(p,hibQuery);
+				//this is here in order to convert java.util.Collection$EmptyList into
+				//the correct representation so it can be serialized by GWT
+				List<Sample> list = hibQuery.list();
+				if (list.size() == 0)
+					list = new ArrayList<Sample>();
+				final Results<Sample> results = new Results<Sample>(hibQuery.getResultSize(), list);
+				return results;
 			}
-			final Results<Sample> results = new Results<Sample>(resultSize, list);
-			return results;
 		} catch (CallbackException e) {
 			throw ConvertSecurityException.convertToException(e);
 		}
@@ -200,14 +171,7 @@ public class SearchDb {
 			org.hibernate.Query sizeQuery = getChemicalsQuery(searchSamp, userSearching, session, RETURN_CHEMICAL_ANALYSIS_COUNT);
 			System.out.println("Search Query:" + fullQuery.toString());			
 
-			if (p != null) {
-				fullQuery.setFirstResult(p.getFirstResult());
-				fullQuery.setMaxResults(p.getMaxResults());
-			} else {
-				//place an upper limit of 100 search results
-				fullQuery.setFirstResult(0);
-				fullQuery.setMaxResults(100);
-			}
+			fullQuery = setPagination(p,fullQuery);
 			try {
 				//this is here in order to convert java.util.Collection$EmptyList into
 				//the correct representation so it can be serialized by GWT
@@ -228,47 +192,25 @@ public class SearchDb {
 			final FullTextQuery sampleQuery = fullTextSession
 					.createFullTextQuery(tempSampleQuery, Subsample.class);
 			System.out.println("Search Query Project Subsample Ids:" + sampleQuery.toString());	
-			final List<Object[]> projectedSubsampleIds = sampleQuery.setProjection("id").list();
-			// no samples fit search, no reason to try finding chemical analyses with "no matches"
-			if (projectedSubsampleIds.size() == 0) {
+			String  subsampleIds = getLongIdString(sampleQuery.setProjection("id").list());
+			if (subsampleIds == null) {
 				return new Results<ChemicalAnalysis>(0, new ArrayList<ChemicalAnalysis>());
-			}
-			String subsampleIds = "";
-			for (Object[] o : projectedSubsampleIds){
-				for (Object id : o){
-					subsampleIds += ((Long)id).toString() + ",";
-				}
-			}	
-			if (subsampleIds != ""){
-				subsampleIds = subsampleIds.substring(0, subsampleIds.length()-1);
 			}
 			// Get chemical analyses third... will need to incorporate top two pieces
 			org.hibernate.Query chemQuery = getChemicalsQuery(searchSamp, userSearching, session, RETURN_CHEMICAL_ANALYSIS_ID);
 			System.out.println("Search Query Project Chemical Analysis Ids:" + chemQuery.getQueryString());	
-			final List<Integer> projectedChemIds = chemQuery.list();
-			if (projectedChemIds.size() == 0){
+
+			String  chemIds = getIntIdStringForList(chemQuery.list());
+			if (chemIds == null) {
 				return new Results<ChemicalAnalysis>(0, new ArrayList<ChemicalAnalysis>());
-			}
-			String  chemIds = "";
-			for (Integer id : projectedChemIds){
-				chemIds += ((Integer)id).toString() + ",";
-			}
-			if (chemIds != ""){
-				chemIds = chemIds.substring(0, chemIds.length()-1);
 			}
 			org.hibernate.Query hql = session.createQuery("from ChemicalAnalysis ca where ca.id in (" + chemIds +
 					") and ca.subsampleId in (" + 
 					subsampleIds + ")");
 			org.hibernate.Query sizeQuery = session.createQuery("select count(*) " + hql.getQueryString());
 			System.out.println("Search Query Find Chemical Analyses by Id and SubsampleId:" + hql.getQueryString());
-			
-			if (p != null) {
-				hql.setFirstResult(p.getFirstResult());
-				hql.setMaxResults(p.getMaxResults());
-			} else {
-				hql.setFirstResult(0);
-				hql.setMaxResults(100);
-			}
+
+			hql = setPagination(p,hql);
 			try {
 				//this is here in order to convert java.util.Collection$EmptyList into
 				//the correct representation so it can be serialized by GWT
@@ -678,5 +620,71 @@ public class SearchDb {
 			}
 		}
 		return false;
+	}
+	
+	private static org.hibernate.Query setPagination(PaginationParameters p, org.hibernate.Query q){
+		if (p != null){
+			q.setFirstResult(p.getFirstResult());
+			q.setMaxResults(p.getMaxResults());
+		} else {
+			q.setFirstResult(0);
+			q.setMaxResults(100);
+		}
+		return q;
+	}
+	
+	private static FullTextQuery setPagination(PaginationParameters p, FullTextQuery q){
+		if (p != null){
+			q.setFirstResult(p.getFirstResult());
+			q.setMaxResults(p.getMaxResults());
+		} else {
+			q.setFirstResult(0);
+			q.setMaxResults(100);
+		}
+		return q;
+	}
+	
+	private static String getLongIdStringForList(final List<Long> projectedIds){
+		if (projectedIds.size() == 0) {
+			return null;
+		}
+		String  ids = "";
+		for (Long o : projectedIds){
+			ids += o.toString() + ",";
+		}
+		if (ids != ""){
+			ids = ids.substring(0, ids.length()-1);
+		}
+		return ids;
+	}
+	
+	private static String getIntIdStringForList(final List<Integer> projectedIds){
+		if (projectedIds.size() == 0) {
+			return null;
+		}
+		String  ids = "";
+		for (Integer o : projectedIds){
+			ids += o.toString() + ",";
+		}
+		if (ids != ""){
+			ids = ids.substring(0, ids.length()-1);
+		}
+		return ids;
+	}
+	
+	private static String getLongIdString(final List<Object[]> projectedIds){
+		if (projectedIds.size() == 0) {
+			return null;
+		}
+		String  ids = "";
+		for (Object[] o : projectedIds){
+			for (Object id : o){
+				ids += ((Long)id).toString() + ",";
+			}
+		}
+		if (ids != ""){
+			ids = ids.substring(0, ids.length()-1);
+		}
+		return ids;
 	}
 }

@@ -59,24 +59,24 @@ public class ExcelServlet extends HttpServlet{
 			}
 			response.getWriter().write("\n");
 			for (Sample s : samples){
-				response.getWriter().write(s.getNumber() + "\t");
-				response.getWriter().write(s.isPublicData() + "\t");
+				response.getWriter().write(nullToEmptyString(s.getNumber()) + "\t");
+				response.getWriter().write(boolToString(s.isPublicData()) + "\t");
 				response.getWriter().write(s.getSubsampleCount() + "\t");
 				response.getWriter().write(s.getImageCount() + "\t");
 				response.getWriter().write(s.getAnalysisCount() + "\t");
 				response.getWriter().write(s.getOwner().getName() + "\t");
 				response.getWriter().write(setToString(s.getRegions(),RegionProperty.name) + "\t");			
-				response.getWriter().write(s.getCountry() + "\t");
-				response.getWriter().write(s.getRockType() + "\t");
+				response.getWriter().write(nullToEmptyString(s.getCountry()) + "\t");
+				response.getWriter().write(nullToEmptyString(s.getRockType()) + "\t");
 				response.getWriter().write(setToString(s.getMetamorphicGrades(),MetamorphicGradeProperty.name) + "\t");
 				response.getWriter().write(setSampleMineralsToString(s.getMinerals()) + "\t");
 				response.getWriter().write(setToString(s.getReferences(),ReferenceProperty.name) + "\t");
 				response.getWriter().write(formatlatlng(((Point)s.getLocation()).y) +"\t");
 				response.getWriter().write(formatlatlng(((Point)s.getLocation()).x) +"\t");
-				response.getWriter().write(s.getSesarNumber() + "\t");
-				response.getWriter().write(s.getCollector() + "\t");
+				response.getWriter().write(nullToEmptyString(s.getSesarNumber()) + "\t");
+				response.getWriter().write(nullToEmptyString(s.getCollector()) + "\t");
 				response.getWriter().write(Sample.dateToString(s.getCollectionDate(), s.getDatePrecision()) + "\t");
-				response.getWriter().write(s.getLocationText() + "\t");
+				response.getWriter().write(nullToEmptyString(s.getLocationText()) + "\t");
 				response.getWriter().write("\n");
 			}
 		} catch (final IOException ioe) {
@@ -84,6 +84,14 @@ public class ExcelServlet extends HttpServlet{
 		}
 		
 		return;
+	}
+	
+	private String boolToString(final Boolean b){
+		return (b) ? "yes" : "no";
+	}
+	
+	private String nullToEmptyString(final Object o){
+		return (o == null) ? "" : o.toString();
 	}
 
 	private String setToString(final Set<?> values, final Property property){
@@ -100,7 +108,7 @@ public class ExcelServlet extends HttpServlet{
 	private String setSampleMineralsToString(final Set<SampleMineral> minerals){
 		String text = "";
 		for (SampleMineral sm : minerals){
-			text += sm.getName() + " (" + sm.getAmount()+ "), ";
+			text += sm.toString() + ", ";		
 		}
 		if (!text.equals("")){
 			text = text.substring(0,text.length()-2);
