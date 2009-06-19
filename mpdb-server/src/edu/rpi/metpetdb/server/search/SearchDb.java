@@ -155,7 +155,9 @@ public class SearchDb {
 				list = new ArrayList<Sample>();
 			int resultSize = 0;
 			if (session.getEnabledFilter("boundingBox")!=null){
-				final List<Object[]> projectedSampleIds = hibQuery.setProjection("id").list();
+				FullTextQuery sizeHibQuery = fullTextSession.createFullTextQuery(
+						fullQuery, Sample.class);
+				final List<Object[]> projectedSampleIds = sizeHibQuery.setProjection("id").list();
 				String  sampleIds = "";
 				for (Object[] o : projectedSampleIds){
 					for (Object id : o){
