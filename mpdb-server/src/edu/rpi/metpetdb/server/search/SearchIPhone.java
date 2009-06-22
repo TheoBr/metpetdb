@@ -25,6 +25,7 @@ import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
+import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.impl.RegionServiceImpl;
 import edu.rpi.metpetdb.server.impl.SampleServiceImpl;
@@ -38,6 +39,7 @@ public class SearchIPhone extends HttpServlet{
 	private static final String REGIONS = "regions";
 	private static final String ROCK_TYPES = "rockTypes";
 	private static final String SEARCH_REGIONS = "searchRegion";
+	private static final String COMMENTS = "comments";
 
 	@Override
 	protected void doGet(final HttpServletRequest request,
@@ -74,6 +76,10 @@ public class SearchIPhone extends HttpServlet{
 			if (request.getParameterValues(ROCK_TYPES)[0].equalsIgnoreCase("t")){
 				rockTypes(response);
 			}
+		}else if (request.getParameter(COMMENTS) != null){
+		
+			long id= Long.parseLong(request.getParameterValues(COMMENTS)[0]);
+			comments(response, id);
 		}
 		return;
 		}
@@ -93,7 +99,21 @@ public class SearchIPhone extends HttpServlet{
 			throw new IllegalStateException(ioe.getMessage());
 		} 
 	}
-	
+	private void comments(HttpServletResponse response, long id){
+		try{
+			final XStream x = new XStream();
+			SampleServiceImpl s= new SampleServiceImpl();
+			Sample sample= new Sample();
+			sample= s.details(id);
+			response.getWriter().write("<comments>");
+			
+			for (SampleComment sc : sample.getComments())
+			 	x.toXML(sc.getText() , response.getWriter());
+			response.getWriter().write("</comments>");
+		} catch(final Exception ioe){
+			throw new IllegalStateException(ioe.getMessage());
+		}
+	}
 	private void regions(HttpServletResponse response){
 		try {
 			RegionServiceImpl service = new RegionServiceImpl();
@@ -138,11 +158,7 @@ public class SearchIPhone extends HttpServlet{
 				response.getWriter().write(createXMLElement("publicData",x.toXML(sample.isPublicData())));
 				x.toXML(sample.getLocation(),response.getWriter());
 				response.getWriter().write(createXMLElement("owner",x.toXML(sample.getOwner().getName())));
-				response.getWriter().write("<comments>");
 				
-				for (SampleComment sc : sample.getComments())
-				 	x.toXML(sc.getText() , response.getWriter());
-				response.getWriter().write("</comments>");
 				response.getWriter().write("</sample>");
 			}
 			response.getWriter().write("</set>");
