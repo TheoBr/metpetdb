@@ -220,10 +220,10 @@ public abstract class BulkUploadService extends MpDbServlet {
 					} catch (MpDbException e1) {
 						results.addError(row, e1);
 					}
-					subsamples.put(s.getNumber().toLowerCase()
-							+ ss.getName().toLowerCase(), ss);
 				}
 			}
+			subsamples.put(s.getNumber().toLowerCase()
+					+ ss.getName().toLowerCase(), ss);
 			subsampleNames.get(s.getNumber().toLowerCase()).add(
 					ss.getName().toLowerCase());
 			return ss;
