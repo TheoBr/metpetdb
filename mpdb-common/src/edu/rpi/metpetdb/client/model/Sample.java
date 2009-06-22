@@ -259,8 +259,6 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	}
 
 	public void setImages(final Set<Image> s) {
-		if (images == null)
-			images = new HashSet<Image>();
 		images = s;
 	}
 
