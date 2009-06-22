@@ -19,6 +19,7 @@ import com.thoughtworks.xstream.XStream;
 
 import edu.rpi.metpetdb.client.model.MetamorphicGrade;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
@@ -44,13 +45,15 @@ public class SearchIPhone extends HttpServlet{
 		response.setContentType("text/xml");
 		
 		List<Long> sampleIds = new ArrayList<Long>();
+		Session session = DataStore.open();
+		try{
 		
 		// If there is a GET string for latitude and longitude then it is a search
 		if (request.getParameter(LAT_PARAMETER) != null && request.getParameter(LONG_PARAMETER) != null) {
 			double lat = Double.parseDouble(request.getParameterValues(LAT_PARAMETER)[0]);
 			double lng = Double.parseDouble(request.getParameterValues(LONG_PARAMETER)[0]);
 			System.out.println("iPhone query: lat = " + lat + "long = " + lng);
-			outputSearchXML(search(lat,lng),response);
+			outputSearchXML(search(lat,lng, session),response);
 		} else if (request.getParameter(SEARCH_REGIONS) != null){
 			Set<String> regions = new HashSet<String>();
 			for (String s : request.getParameterValues(SEARCH_REGIONS)){
@@ -58,7 +61,7 @@ public class SearchIPhone extends HttpServlet{
 					regions.add(s.substring(1, s.length()-1));
 				}
 			}
-			outputSearchXML(search(regions),response);
+			outputSearchXML(search(regions, session),response);
 		} else if (request.getParameter(SAMPLE_ID) != null){
 			for (String id : request.getParameterValues(SAMPLE_ID))
 				sampleIds.add(Long.parseLong(id));
@@ -73,6 +76,12 @@ public class SearchIPhone extends HttpServlet{
 			}
 		}
 		return;
+		}
+		catch(Exception e){
+			throw new IllegalStateException(e.getMessage());
+		} finally {
+			session.close();
+		}
 	}
 		
 	private void rockTypes(HttpServletResponse response){
@@ -82,7 +91,7 @@ public class SearchIPhone extends HttpServlet{
 			x.toXML(doc.Sample_rockType.getValues(),response.getWriter());
 		} catch(final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
-		}
+		} 
 	}
 	
 	private void regions(HttpServletResponse response){
@@ -129,6 +138,11 @@ public class SearchIPhone extends HttpServlet{
 				response.getWriter().write(createXMLElement("publicData",x.toXML(sample.isPublicData())));
 				x.toXML(sample.getLocation(),response.getWriter());
 				response.getWriter().write(createXMLElement("owner",x.toXML(sample.getOwner().getName())));
+				response.getWriter().write("<comments>");
+				
+				for (SampleComment sc : sample.getComments())
+				 	x.toXML(sc.getText() , response.getWriter());
+				response.getWriter().write("</comments>");
 				response.getWriter().write("</sample>");
 			}
 			response.getWriter().write("</set>");
@@ -137,35 +151,31 @@ public class SearchIPhone extends HttpServlet{
 		}
 	}
 	
-	private Results<Sample> search(final Collection<String> regions){
-		Session session = DataStore.open();
+	private Results<Sample> search(final Collection<String> regions, Session session){
 		try{
 			SearchSample s = new SearchSample();
 			for (String r : regions){
 				s.addRegion(r);
 			}	
-			return search(s);
+			return search(s, session);
 		}
-		catch (Exception e){
+		catch(Exception e){
 			throw new IllegalStateException(e.getMessage());
-		} finally{
-			session.close();
 		}
+			
+		
 	}
 	
-	private Results<Sample> search(final SearchSample s){
-		Session session = DataStore.open();
+	private Results<Sample> search(final SearchSample s, Session session){
 		try{
 			return SearchDb.sampleSearch(null, s, null, session);
 		}
 		catch(Exception e){
 			throw new IllegalStateException(e.getMessage());
-		} finally {
-			session.close();
 		}
 	}
 
-	private Results<Sample> search(final Double lat, final Double lng){		
+	private Results<Sample> search(final Double lat, final Double lng, Session session){		
 		try{
 			SearchSample s = new SearchSample();
 			final LinearRing[] ringArray = new LinearRing[1];
@@ -197,7 +207,7 @@ public class SearchIPhone extends HttpServlet{
 			boundingBox.srid = MpDbConstants.WGS84;
 			boundingBox.dimension = 2;
 			s.setBoundingBox(boundingBox);
-			return search(s);
+			return search(s, session);
 
 		} catch (final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
