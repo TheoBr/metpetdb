@@ -17,15 +17,17 @@ import org.postgis.Point;
 
 import com.thoughtworks.xstream.XStream;
 
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.MetamorphicGrade;
+import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.SearchSample;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
-import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.impl.RegionServiceImpl;
 import edu.rpi.metpetdb.server.impl.SampleServiceImpl;
@@ -40,6 +42,7 @@ public class SearchIPhone extends HttpServlet{
 	private static final String ROCK_TYPES = "rockTypes";
 	private static final String SEARCH_REGIONS = "searchRegion";
 	private static final String COMMENTS = "comments";
+	private static final String SUBSAMPLE_INFO="subsampleInfo";
 
 	@Override
 	protected void doGet(final HttpServletRequest request,
@@ -81,6 +84,12 @@ public class SearchIPhone extends HttpServlet{
 			long id= Long.parseLong(request.getParameterValues(COMMENTS)[0]);
 			comments(response, id);
 		}
+		else if (request.getParameter(SUBSAMPLE_INFO)!= null)
+		{
+			//using the sample id, get a summary of the subsample and analysis information
+			long id= Long.parseLong(request.getParameterValues(SUBSAMPLE_INFO)[0]);
+			subsampleInfo(response, id);
+		}
 		return;
 		}
 		catch(Exception e){
@@ -103,8 +112,7 @@ public class SearchIPhone extends HttpServlet{
 		try{
 			final XStream x = new XStream();
 			SampleServiceImpl s= new SampleServiceImpl();
-			Sample sample= new Sample();
-			sample= s.details(id);
+			Sample sample= s.details(id);
 			response.getWriter().write("<comments>");
 			
 			for (SampleComment sc : sample.getComments())
@@ -114,6 +122,67 @@ public class SearchIPhone extends HttpServlet{
 			throw new IllegalStateException(ioe.getMessage());
 		}
 	}
+	private void subsampleInfo(HttpServletResponse response, long id ){
+		try{
+			final XStream x= new XStream();
+			SampleServiceImpl s= new SampleServiceImpl();
+			Sample sample= s.details(id);
+			//get the count of the subsamples for the sample
+			Set<Subsample> subsamples= sample.getSubsamples();
+			int count= subsamples.size();
+				//new HashSet<Subsample>();
+			response.getWriter().write("<subsamples>");
+			x.toXML(count, response.getWriter()); //number of subsamples for the sample
+			int totalImageCount=0;
+			int totalAnalysisCount=0;
+			for(Subsample sub : sample.getSubsamples())
+			{
+				totalImageCount+= sub.getImageCount();
+				totalAnalysisCount+= sub.getAnalysisCount();
+			}
+			response.getWriter().write("<imageCount>");
+			x.toXML(totalImageCount, response.getWriter());
+			response.getWriter().write("</imageCount>");
+			response.getWriter().write("<analysisCount>");
+			x.toXML(totalAnalysisCount, response.getWriter());
+			response.getWriter().write("</analysisCount>");
+			Set<String> materials= new HashSet<String>(); //a set of the string names of all the minerals that have been analyzed
+			Boolean bulkRock= false;
+			for(Subsample sub: sample.getSubsamples())
+			{
+			Set<ChemicalAnalysis> chem= sub.getChemicalAnalyses();
+				for(ChemicalAnalysis chemAnalysis : chem)
+				{
+					Mineral min= chemAnalysis.getMineral();
+					
+					if(chemAnalysis.getMineral()!=null) //this analysis was done on a mineral
+					{
+						materials.add(min.getName());
+					}
+					else //a bulk rock analysis was done
+					{
+						bulkRock=true;
+					}
+				}
+			}
+			//convert the array of analysis materials to xml
+			response.getWriter().write("<materials>");
+			for(String materialName : materials) 
+			{
+				x.toXML(materialName, response.getWriter());
+			}
+			response.getWriter().write("</materials>");
+			//convert the bulk rock value to xml
+			response.getWriter().write("<bulkRock>");
+			x.toXML(bulkRock, response.getWriter());
+			response.getWriter().write("</bulkRock>");
+			response.getWriter().write("</subsamples>");
+
+		}
+		catch(final Exception ioe){
+			throw new IllegalStateException(ioe.getMessage());
+		}
+	} 
 	private void regions(HttpServletResponse response){
 		try {
 			RegionServiceImpl service = new RegionServiceImpl();
