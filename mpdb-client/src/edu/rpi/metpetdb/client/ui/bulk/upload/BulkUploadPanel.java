@@ -206,6 +206,12 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				doCommit();
 			}
 		});
+		
+		resetLink.addClickListener(new ClickListener() {
+			public void onClick(Widget sender){
+				clearResults();
+			}
+		});
 
 		nextStepPanel.add(resetLink);
 	}
