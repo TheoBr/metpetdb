@@ -10,7 +10,7 @@ public class Invite extends MObject {
 	private int member_id;
 
 	public boolean mIsNew() {
-		return project_id == 0;
+		return true;
 	}
 
 	public void setProject_id(int id){

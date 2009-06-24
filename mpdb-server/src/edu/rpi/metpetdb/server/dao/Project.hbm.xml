@@ -63,7 +63,6 @@
     order by p.owner.emailAddress
   </query>
   
-  
   <query name="Project.samples,size">
   	select count(*) from Project p
   	inner join p.samples

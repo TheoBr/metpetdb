@@ -55,4 +55,6 @@ public interface ProjectService extends RemoteService {
 	Results<User> allProjectMembers(PaginationParameters p, int id) throws MpDbException;
 	
 	Invite saveInvite(Invite i) throws MpDbException;
+	
+	List<Project> getInvitesForUser(int id) throws MpDbException;
 }

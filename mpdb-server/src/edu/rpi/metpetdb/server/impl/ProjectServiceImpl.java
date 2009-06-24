@@ -16,7 +16,6 @@ import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.ProjectDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
-import edu.rpi.metpetdb.server.dao.impl.InviteDAO;
 
 public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	private static final long serialVersionUID = 1L;
@@ -61,6 +60,15 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	}
 	
 	public Invite saveInvite(Invite i) throws MpDbException {
-		return (new InviteDAO(this.currentSession()).save(i));
+		User u = new User();
+		u.setId(i.getMember_id());
+		u = (new UserDAO(this.currentSession())).fill(u);
+		new ProjectDAO(this.currentSession()).saveInvite(i, u);
+		commit();
+		return i;
+	}
+	
+	public List<Project> getInvitesForUser(int id) throws MpDbException {
+		return new ProjectDAO(currentSession()).getInvitesForUser(id);
 	}
 }

@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.ui.project;
 
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -10,6 +11,7 @@ import edu.rpi.metpetdb.client.model.Invite;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.ui.MpDb;
+import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
@@ -45,22 +47,29 @@ public class ProjectInvite extends FlowPanel {
 					public void onSuccess(final User result) {
 						if(result != null){
 							i.setMember_id(result.getId());
-							MpDb.project_svc.saveInvite(i, ac);
-						}
-						else{
-							//TODO throw an error about the user not existing
+							new ServerOp<Invite>() {
+								public void begin() {	
+									MpDb.project_svc.saveInvite(i, this);
+								}
+								public void onSuccess(final Invite result){
+									new ServerOp<Project> () {
+										public void begin() {
+											AsyncCallback<Project> ac;
+											MpDb.project_svc.details(result.getProject_id(), this);
+										}
+										public void onSuccess(final Project result){
+											History.newItem(TokenSpace.descriptionOf((Project) result));
+										}
+									}.begin();
+								}
+							}.begin();
+							
 						}
 					}
 				}.begin();
 			}
 			
 			protected void deleteBean(final AsyncCallback<Object> ac) {}
-			
-			protected void onSaveCompletion(final Project result) {
-				/*if (savedNew)
-					MpDb.currentUser().getProjects().add((Project) result);
-				this.show(result);*/
-			}
 		};
 		Button save = p_user.getSaveButton();
 		save.setText("Send Invite");

@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -34,8 +35,9 @@ public class ProjectDAO extends MpDbDAO<Project> {
 		if (inst.getId() > 0) {
 			final Query q = namedQuery("Project.byId");
 			q.setLong("id", inst.getId());
-			if (getResult(q) != null)
-				return (Project) getResult(q);
+			Project p = (Project) getResult(q);
+			if (p != null)
+				return p;
 		}
 
 		throw new ProjectNotFoundException();
@@ -83,5 +85,21 @@ public class ProjectDAO extends MpDbDAO<Project> {
 		final int size = ((Number) getResult(sizeQuery)).intValue();
 		
 		return new Results<User>(size, l);
+	}
+
+	public Invite saveInvite(Invite i, User u) throws MpDbException {
+		Project p = new Project();
+		p.setId(i.getProject_id());
+		p = fill(p);
+		p.getInvites().add(u);
+		save(p);
+		return i;
+	}
+	
+	public List<Project> getInvitesForUser(int id) throws MpDbException {
+		final Query q = namedQuery("User.invites");
+		q.setInteger("id", id);
+		final List<Project> l = (List<Project>) getResults(q);
+		return l;
 	}
 }

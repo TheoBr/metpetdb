@@ -19,7 +19,7 @@ public class Project extends MObject {
 
 	private Set<Sample> samples;
 	
-	private Set<Invite> invites;
+	private Set<User> invites;
 
 	public int getId() {
 		return id;
@@ -81,13 +81,13 @@ public class Project extends MObject {
 		samples = c;
 	}
 	
-	public Set<Invite> getInvites() {
+	public Set<User> getInvites() {
 		if(invites == null)
-			invites = new HashSet<Invite>();
+			invites = new HashSet<User>();
 		return invites;
 	}
 	
-	public void setInvites(final Set<Invite> i) {
+	public void setInvites(final Set<User> i) {
 		invites = i;
 	}
 

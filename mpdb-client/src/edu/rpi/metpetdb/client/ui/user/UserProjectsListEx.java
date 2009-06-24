@@ -52,6 +52,27 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 					public void onClick(Widget sender) {
 					}
 				});
+		
+		//Look for invites and display a link only if invites exist
+		new ServerOp() {
+			public void begin(){
+				MpDb.project_svc.getInvitesForUser(MpDb.currentUser().getId(), this);
+			}
+			public void onSuccess(final Object result){
+				List<Project> invites = (List<Project>) result;
+				if(invites != null && invites.size() > 0){
+					final MLink newInvites = new MLink("You have " + invites.size() + " project invite" +
+							(invites.size() > 1 ? "s!" : "!"), 
+							new ClickListener(){
+								public void onClick(Widget sender) {
+									//TODO: go to my invites page
+								}	
+					});
+					newInvites.addStyleName("beta");
+					header1.setWidget(0, 1, newInvites);
+				}
+			}
+		}.begin();
 
 		final MLink simple = new MLink("Simple", new ClickListener() {
 			public void onClick(Widget sender) {

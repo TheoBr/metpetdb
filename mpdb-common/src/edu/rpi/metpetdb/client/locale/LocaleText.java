@@ -39,6 +39,7 @@ public interface LocaleText extends Messages {
 	String addSubsample();
 	String addSubsampleDescription(String sampleNumber);
 	String noSubsamplesFound();
+	String makeSubsamplePublic();
 
 	/* Mineral Analyses */
 	String addChemicalAnalysis();

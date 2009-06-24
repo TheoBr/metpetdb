@@ -61,6 +61,13 @@
     from User u
     where u.id = :id
   </query>
+  
+  <query name="User.invites">
+    select invite
+    from User u
+    inner join u.invites as invite
+    where u.id = :id
+  </query>
 
   <query name="User.byEmailAddress">
     from User u

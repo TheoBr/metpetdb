@@ -35,7 +35,7 @@ public class User extends MObject {
 	private Set<Project> projects;
 	@ContainedIn
 	private Set<Sample> samples;
-	private Set<Invite> invites;
+	private Set<Project> invites;
 	private Role role;
 	private Integer rank;
 
@@ -157,13 +157,13 @@ public class User extends MObject {
 		samples = s;
 	}
 	
-		public Set<Invite> getInvites() {
+		public Set<Project> getInvites() {
 		if(invites == null)
-			invites = new HashSet<Invite>();
+			invites = new HashSet<Project>();
 		return invites;
 	}
 	
-	public void setInvites(final Set<Invite> i) {
+	public void setInvites(final Set<Project> i) {
 		invites = i;
 	}
 

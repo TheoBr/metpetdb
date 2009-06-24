@@ -29,5 +29,7 @@ public interface ProjectServiceAsync {
 	void allProjectMembers(PaginationParameters p, int id,
 			AsyncCallback<Results<User>> ac);
 
-	void saveInvite(Invite i, AsyncCallback<User> ac);
+	void saveInvite(Invite i, AsyncCallback<Invite> ac);
+	
+	void getInvitesForUser(int id, AsyncCallback<List<Project>> ac);
 }

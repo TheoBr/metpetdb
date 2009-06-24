@@ -1,5 +1,6 @@
 GRANT select,insert       ,delete ON minerals        TO @APPUSER@;
 GRANT select,insert       ,delete ON mineral_relationships        TO @APPUSER@;
+GRANT select,insert,update,delete ON project_invites TO @APPUSER@;
 GRANT select,insert,update,delete        ON projects        TO @APPUSER@;
 GRANT select,insert       ,delete ON project_members TO @APPUSER@;
 GRANT select,insert       ,delete ON project_samples TO @APPUSER@;
