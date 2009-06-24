@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.server.search;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +27,7 @@ import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.server.DataStore;
@@ -35,8 +37,10 @@ import edu.rpi.metpetdb.server.impl.SampleServiceImpl;
 
 public class SearchIPhone extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private static final String LAT_PARAMETER = "lat";
-	private static final String LONG_PARAMETER = "long";
+	private static final String NORTH_PARAMETER = "north";
+	private static final String SOUTH_PARAMETER = "south";
+	private static final String WEST_PARAMETER=  "west";
+	private static final String EAST_PARAMETER= "east";
 	private static final String SAMPLE_ID = "sampleId";
 	private static final String REGIONS = "regions";
 	private static final String ROCK_TYPES = "rockTypes";
@@ -54,11 +58,14 @@ public class SearchIPhone extends HttpServlet{
 		try{
 		
 		// If there is a GET string for latitude and longitude then it is a search
-		if (request.getParameter(LAT_PARAMETER) != null && request.getParameter(LONG_PARAMETER) != null) {
-			double lat = Double.parseDouble(request.getParameterValues(LAT_PARAMETER)[0]);
-			double lng = Double.parseDouble(request.getParameterValues(LONG_PARAMETER)[0]);
-			System.out.println("iPhone query: lat = " + lat + "long = " + lng);
-			outputSearchXML(search(lat,lng, session),response);
+		if (request.getParameter(NORTH_PARAMETER) != null && request.getParameter(SOUTH_PARAMETER) != null && request.getParameter(WEST_PARAMETER)!= null && request.getParameter(EAST_PARAMETER) != null) {
+			double north = Double.parseDouble(request.getParameterValues (NORTH_PARAMETER)[0]);
+			double south = Double.parseDouble(request.getParameterValues(SOUTH_PARAMETER)[0]);
+			double west = Double.parseDouble(request.getParameterValues(WEST_PARAMETER)[0]);
+			double east= Double.parseDouble(request.getParameterValues(EAST_PARAMETER)[0]);
+			
+			System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
+			outputSearchXML(search(north,south, east, west, session),response);
 		} else if (request.getParameter(SEARCH_REGIONS) != null){
 			Set<String> regions = new HashSet<String>();
 			for (String s : request.getParameterValues(SEARCH_REGIONS)){
@@ -146,7 +153,7 @@ public class SearchIPhone extends HttpServlet{
 			response.getWriter().write("<analysisCount>");
 			x.toXML(totalAnalysisCount, response.getWriter());
 			response.getWriter().write("</analysisCount>");
-			Set<String> materials= new HashSet<String>(); //a set of the string names of all the minerals that have been analyzed
+			Set<String> minerals= new HashSet<String>(); //a set of the string names of all the minerals that have been analyzed
 			Boolean bulkRock= false;
 			for(Subsample sub: sample.getSubsamples())
 			{
@@ -157,7 +164,7 @@ public class SearchIPhone extends HttpServlet{
 					
 					if(chemAnalysis.getMineral()!=null) //this analysis was done on a mineral
 					{
-						materials.add(min.getName());
+						minerals.add(min.getName());
 					}
 					else //a bulk rock analysis was done
 					{
@@ -167,7 +174,7 @@ public class SearchIPhone extends HttpServlet{
 			}
 			//convert the array of analysis materials to xml
 			response.getWriter().write("<materials>");
-			for(String materialName : materials) 
+			for(String materialName : minerals) 
 			{
 				x.toXML(materialName, response.getWriter());
 			}
@@ -187,6 +194,7 @@ public class SearchIPhone extends HttpServlet{
 		try {
 			RegionServiceImpl service = new RegionServiceImpl();
 			final XStream x = new XStream();
+			
 			x.toXML(service.allNames(),response.getWriter());
 		} catch(final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
@@ -260,26 +268,27 @@ public class SearchIPhone extends HttpServlet{
 		}
 	}
 
-	private Results<Sample> search(final Double lat, final Double lng, Session session){		
+	private Results<Sample> search(final Double north, final Double south, final Double east, final Double west, Session session){		
 		try{
 			SearchSample s = new SearchSample();
 			final LinearRing[] ringArray = new LinearRing[1];
 			final Point[] points = new Point[5];
 			final Point p1 = new Point();
-			p1.x = lng;
-			p1.y = lat;
-	
+			p1.x = west;
+			p1.y = south;
+
 			final Point p2 = new Point();
-			p2.x = lng;
-			p2.y = lat+30;
-	
+			p2.x = west;
+			p2.y = north;
+
 			final Point p3 = new Point();
-			p3.x = lng+30;
-			p3.y = lat+30;
-	
+			p3.x = east;
+			p3.y = north;
+
 			final Point p4 = new Point();
-			p4.x = lng+30;
-			p4.y = lat;
+			p4.x = east;
+			p4.y = south;
+
 			
 			points[0] = p1;
 			points[1] = p2;
@@ -291,6 +300,7 @@ public class SearchIPhone extends HttpServlet{
 			org.postgis.Polygon boundingBox = new org.postgis.Polygon(ringArray);
 			boundingBox.srid = MpDbConstants.WGS84;
 			boundingBox.dimension = 2;
+			
 			s.setBoundingBox(boundingBox);
 			return search(s, session);
 
