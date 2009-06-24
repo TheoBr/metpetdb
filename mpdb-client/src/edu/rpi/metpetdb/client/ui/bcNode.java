@@ -7,6 +7,7 @@ import java.util.ArrayList;
  */
 public class bcNode {
 	private bcNode parent;
+	private bcNode alternateParent;
 	private ArrayList<bcNode> children;
 	private String name;
 	private String token;
@@ -48,6 +49,14 @@ public class bcNode {
 
 	public bcNode getParent() {
 		return parent;
+	}
+	
+	public void setAltParent(final bcNode alternateParent) {
+		this.alternateParent = alternateParent;
+	}
+
+	public bcNode getAltParent() {
+		return alternateParent;
 	}
 
 	public void setName(final String name) {

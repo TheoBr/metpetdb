@@ -284,6 +284,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 
 			public void onSuccess(BulkUploadResult result) {
 				hide(progressContainer);
+				commitButton.setText(lc_text.bulkUpload_SubmitData());
 				handleCommitErrors(result);
 			}
 			public void onFailure(final Throwable e) {
@@ -294,7 +295,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				nextStepText
 						.setText("Please submit a bug report to the developers. We are very sorry for the inconvenience.");
 				resetLink.setText("Reset the form");
-				commitButton.setText("Submit Data");
+				commitButton.setText(lc_text.bulkUpload_SubmitData());
 				commitButton.setEnabled(true);
 				show(nextStepPanel);
 			}
@@ -367,7 +368,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			resultStatus.sendNotice(NoticeType.WARNING, "Could not add "
 					+ getPlural(contentType) + " to MetPetDB.");
 			nextStepText.setText("Please fix the errors and re-upload.");
-			commitButton.setText("Submit Data");
+			commitButton.setText(lc_text.bulkUpload_SubmitData());
 			commitButton.setEnabled(true);
 			resetLink.setText("Reset the form");
 			resultsPanel.selectTab(2);

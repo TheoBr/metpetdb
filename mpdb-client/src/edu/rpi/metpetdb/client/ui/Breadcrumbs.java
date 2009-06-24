@@ -95,6 +95,13 @@ public class Breadcrumbs extends FlowPanel {
 				Root.setName(tempXML.getFirstChild().getNodeValue());
 			} else if (tempXML.getNodeName().equals("token")) {
 				Root.setToken(tempXML.getFirstChild().getNodeValue());
+				// Sample details has an alternate parent - Search
+				if (Root.getToken().equals(LocaleHandler.lc_entity.TokenSpace_Sample_Details()) 
+						&& Root.getParent().getToken().equals(LocaleHandler.lc_entity.TokenSpace_Search())){
+					Root.getParent().getChildren().remove(Root);
+					bcNode node = getNode(Root.getToken());
+					if (node != null) node.setAltParent(Root.getParent());
+				}
 			} else if (tempXML.getNodeName().equals("screen")) {
 				Root.setScreen(false);
 			} else if (tempXML.getNodeName().equals("page")) {
@@ -103,6 +110,26 @@ public class Breadcrumbs extends FlowPanel {
 				createTreeRecursive(RootXML.getChildNodes().item(i), temp);
 			}
 		}
+	}
+	
+	private bcNode getNode(final String target){
+		if (root.getToken().equals(target)){
+			return root;
+		}
+		return getNodeRecursive(root,target);
+	}
+	
+	private bcNode getNodeRecursive(final bcNode root, final String target){
+		for (bcNode child : root.getChildren()) {
+			if (child.getToken().equals(target)) {
+				return child;
+			}
+			if (child.getChildren() != null) {
+				bcNode found = getNodeRecursive(child, target);
+				if (found != null) return found;
+			}
+		}
+		return null;
 	}
 
 	/*
@@ -215,9 +242,14 @@ public class Breadcrumbs extends FlowPanel {
 								MLink l = (MLink) ((SimplePanel) w).getWidget();
 								if (l.getText().equals(name)) {
 									l.setText(result.getNumber());
-									Breadcrumbs.this
-											.onFindSuccessRecursive(Node
-													.getParent());
+									if (MpDb.isLoggedIn() && result.getOwner().getId() == MpDb.currentUser().getId())
+										Breadcrumbs.this
+												.onFindSuccessRecursive(Node
+														.getParent());
+									else 
+										Breadcrumbs.this
+												.onFindSuccessRecursive(Node
+														.getAltParent());
 									return;
 								}
 							}

@@ -20,6 +20,7 @@ import javax.media.jai.RenderedOp;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.bulk.upload.InvalidSpreadSheetException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.validation.InvalidImageException;
 import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
@@ -77,16 +78,23 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 		img.setWidth(ro.getWidth());
 		img.setHeight(ro.getHeight());
 	}
-	private ZipEntry getSpreadsheetName(InputStream is) throws IOException {
+	private ZipEntry getSpreadsheetName(InputStream is) throws IOException, InvalidSpreadSheetException {
 		ZipInputStream zis = new ZipInputStream(is);
 		ZipEntry ent;
 		final ArrayList<ZipEntry> discoveredSpreadsheets = new ArrayList<ZipEntry>();
 		while ((ent = zis.getNextEntry()) != null) {
 			String entryName = ent.getName();
+			String[] entryNameSplit = entryName.split(File.separator);
+			// Ignore any subdirectories
+			if (entryNameSplit.length > 2){
+				continue;
+			}
 
 			// Ignore anything that is in a' hidden' directory
-			if (entryName.startsWith("__") || entryName.startsWith("."))
-				continue;
+			for (String s : entryNameSplit) {
+				if (s.startsWith("__") || entryName.startsWith("."))
+					continue;
+			}
 
 			// Implicit assumption that there will only be _one_ xls spreadsheet
 			if (entryName.toLowerCase().contains(".xls")) {
@@ -96,15 +104,12 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 		// if there is only one spreadsheet then use that one
 		if (discoveredSpreadsheets.size() == 1)
 			return discoveredSpreadsheets.get(0);
-		else {
-			// otherwise find the one that matches the name' image_upload.xls'
-			for (ZipEntry ze : discoveredSpreadsheets) {
-				if (ze.getName().toLowerCase().contains("image_upload.xls")) {
-					return ze;
-				}
-			}
-		}
-		return null;
+		else if (discoveredSpreadsheets.size() > 1){
+			throw new InvalidSpreadSheetException(discoveredSpreadsheets.size() + " spreadsheets were found " +
+					"in the root directory. There must be one and only one.");
+		} else
+			throw new InvalidSpreadSheetException("No spreadsheet was found in the root directory. " +
+					"There must be one and only one.");
 	}
 
 	private byte[] getBytesFromInputStream(InputStream is) throws IOException {
@@ -135,8 +140,6 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 		} catch (IOException ioe) {
 			throw new GenericDAOException(ioe.getMessage());
 		}
-		if (spreadsheet == null)
-			throw new IllegalStateException("No Excel Spreasheet found");
 		String spreadsheetPrefix = (new File(spreadsheet.getName()))
 				.getParent();
 		if (spreadsheetPrefix == null)

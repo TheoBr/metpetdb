@@ -85,6 +85,11 @@
 			<name>All Public Samples</name>
 			<token>AllPublicSamples</token>
 		</page>
+		<page>
+			<name>Specific Sample</name>
+			<token>sample</token>
+			<screen>false</screen>
+		</page>
 	</page>
 	<page>
 		<name>Register</name>
