@@ -171,7 +171,7 @@ public abstract class SampleList extends DataList<Sample> {
 			CollapsedColumn<Sample> col = new CollapsedColumn<Sample>(enttxt.Sample_regions(),
 					SampleProperty.regions);
 			col.setTruncateOptions(TruncateMethod.ITEM_COUNT, 3);
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(50);
 			col.setPreferredColumnWidth(100);
 			col.setOptional(true);
@@ -206,7 +206,7 @@ public abstract class SampleList extends DataList<Sample> {
 			CollapsedColumn<Sample> col = new CollapsedColumn<Sample>(enttxt
 					.Sample_metamorphicGrades(), SampleProperty.metamorphicGrades);
 			col.setTruncateOptions(TruncateMethod.ITEM_COUNT, 2);
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(120);
 			col.setPreferredColumnWidth(120);
 			col.setOptional(true);
@@ -218,7 +218,7 @@ public abstract class SampleList extends DataList<Sample> {
 			CollapsedColumn<Sample> col = new CollapsedColumn<Sample>(enttxt.Sample_minerals(),
 					SampleProperty.minerals);
 			col.setTruncateOptions(TruncateMethod.ITEM_COUNT, 3);
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(50);
 			col.setPreferredColumnWidth(100);
 			col.setOptional(true);
@@ -231,7 +231,7 @@ public abstract class SampleList extends DataList<Sample> {
 			CollapsedColumn<Sample> col = new CollapsedColumn<Sample>(
 					enttxt.Sample_references(), SampleProperty.references);
 			col.setTruncateOptions(TruncateMethod.ITEM_COUNT, 3);
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(130);
 			col.setPreferredColumnWidth(200);
 			col.setOptional(true);

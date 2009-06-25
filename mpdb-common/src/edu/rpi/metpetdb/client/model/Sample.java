@@ -64,6 +64,8 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 
 	@IndexedEmbedded(prefix = "sampleMineral_")
 	private Set<SampleMineral> minerals = new HashSet<SampleMineral>();
+	
+	private String firstMineral;
 
 	private Set<Image> images = new HashSet<Image>();
 
@@ -83,12 +85,18 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 
 	@IndexedEmbedded(prefix = "region_")
 	private Set<Region> regions = new HashSet<Region>();
+	
+	private String firstRegion;
 
 	@IndexedEmbedded(depth = 1, prefix = "metamorphicGrade_")
 	private Set<MetamorphicGrade> metamorphicGrades = new HashSet<MetamorphicGrade>();
+	
+	private String firstMetamorphicGrade;
 
 	@IndexedEmbedded(depth = 1, prefix = "reference_")
 	private Set<Reference> references = new HashSet<Reference>();
+	
+	private String firstReference;
 
 	private Set<SampleComment> comments = new HashSet<SampleComment>();
 
@@ -284,6 +292,14 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	public void addMineral(final Mineral min) {
 		this.addMineral(min, "");
 	}
+	
+	public void setFirstMineral(final String s) {
+		this.firstMineral = s;
+	}
+	
+	public String getFirstMineral() {
+		return firstMineral;
+	}
 
 	/**
 	 * 
@@ -359,6 +375,14 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 		final Region r = new Region(name);
 		regions.add(r);
 	}
+	
+	public String getFirstRegion() {
+		return firstRegion;
+	}
+	
+	public void setFirstRegion(final String region) {
+		firstRegion = region;
+	}
 
 	public Set<MetamorphicGrade> getMetamorphicGrades() {
 		return metamorphicGrades;
@@ -374,6 +398,14 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 			metamorphicGrades = new HashSet<MetamorphicGrade>();
 		metamorphicGrades.add(mg);
 	}
+	
+	public String getFirstMetamorphicGrade() {
+		return firstMetamorphicGrade;
+	}
+	
+	public void setFirstMetamorphicGrade(final String s) {
+		firstMetamorphicGrade = s;
+	}
 
 	public Set<Reference> getReferences() {
 		return references;
@@ -381,6 +413,14 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 
 	public void setReferences(final Set<Reference> r) {
 		references = r;
+	}
+	
+	public String getFirstReference() {
+		return firstReference;
+	}
+	
+	public void setFirstReference(final String s) {
+		firstReference = s;
 	}
 
 	public Set<SampleComment> getComments() {

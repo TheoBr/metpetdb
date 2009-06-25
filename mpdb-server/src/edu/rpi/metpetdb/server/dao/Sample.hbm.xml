@@ -61,16 +61,31 @@
       <key column="sample_id" />
       <many-to-many class="Region" column="region_id" order-by="lower(name)"/>
     </set>
+    
+    <property name="firstRegion" formula="(SELECT min(r.name) FROM samples s, regions r, sample_regions sr
+    										WHERE s.sample_id = sample_id AND
+    										sr.sample_id = s.sample_id AND
+    										sr.region_id = r.region_id)" />
 
     <set name="metamorphicGrades" table="sample_metamorphic_grades" cascade="none" lazy="false">
       <key column="sample_id" />
       <many-to-many class="MetamorphicGrade" column="metamorphic_grade_id" order-by="lower(name)"/>
     </set>
+    
+    <property name="firstMetamorphicGrade" formula="(SELECT min(mg.name) FROM samples s, sample_metamorphic_grades smg, metamorphic_grades mg
+    										WHERE s.sample_id = sample_id AND
+    										smg.sample_id = s.sample_id AND
+    										mg.metamorphic_grade_id = smg.metamorphic_grade_id)" />
 
     <set name="references" table="sample_reference" cascade="persist,merge" lazy="false">
       <key column="sample_id" />
       <many-to-many class="Reference" column="reference_id" order-by="lower(name)"/>
     </set>
+    
+    <property name="firstReference" formula="(SELECT min(r.name) FROM samples s, sample_reference sr, reference r
+    										WHERE s.sample_id = sample_id AND
+    										sr.sample_id = s.sample_id AND
+    										r.reference_id = sr.reference_id)" />
 
 	<set name="images" table="images" cascade="all,delete-orphan" order-by="filename DESC"> 
       <key column="sample_id" />
@@ -88,6 +103,11 @@
 	    <many-to-one name="mineral" class="Mineral" column="mineral_id" lazy="false" />
 	  </composite-element>
     </set>
+    
+    <property name="firstMineral" formula="(SELECT min(m.name) FROM samples s, sample_minerals sm, minerals m
+    										WHERE s.sample_id = sample_id AND
+    										sm.sample_id = s.sample_id AND
+    										m.mineral_id = sm.mineral_id)" />
     
     <filter name="boundingBox"
             condition="ST_Intersects(location, :polygon)" 
@@ -188,6 +208,27 @@
     inner join fetch s.owner
     order by (lower(s.locationText))
   </query>
+  <query name="Sample.all/regions">
+    from Sample s
+    inner join fetch s.owner
+    order by (s.firstRegion)
+  </query>
+  <query name="Sample.all/metamorphicGrades">
+    from Sample s
+    inner join fetch s.owner
+    order by (s.firstMetamorphicGrade)
+  </query>
+  <query name="Sample.all/references">
+    from Sample s
+    inner join fetch s.owner
+    order by (s.firstReference)
+  </query>
+  <query name="Sample.all/minerals">
+    from Sample s
+    inner join fetch s.owner
+    order by(s.firstMineral)
+  </query>
+  
   <query name="Sample.byUser.byNumber">
     from Sample s
     inner join fetch s.owner
