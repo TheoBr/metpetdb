@@ -1,7 +1,9 @@
 package edu.rpi.metpetdb.server.search;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -27,7 +29,6 @@ import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
-import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.server.DataStore;
@@ -47,6 +48,7 @@ public class SearchIPhone extends HttpServlet{
 	private static final String SEARCH_REGIONS = "searchRegion";
 	private static final String COMMENTS = "comments";
 	private static final String SUBSAMPLE_INFO="subsampleInfo";
+	private static final String THUMBNAILS="thumbnails";
 
 	@Override
 	protected void doGet(final HttpServletRequest request,
@@ -97,6 +99,11 @@ public class SearchIPhone extends HttpServlet{
 			long id= Long.parseLong(request.getParameterValues(SUBSAMPLE_INFO)[0]);
 			subsampleInfo(response, id);
 		}
+		else if (request.getParameter(THUMBNAILS)!=null)
+		{
+			long id= Long.parseLong(request.getParameterValues(THUMBNAILS)[0]);
+			get_thumbnails(response, id);
+		}
 		return;
 		}
 		catch(Exception e){
@@ -115,6 +122,32 @@ public class SearchIPhone extends HttpServlet{
 			throw new IllegalStateException(ioe.getMessage());
 		} 
 	}
+	private void get_thumbnails(HttpServletResponse response, long id)
+	{
+		try{
+			SampleServiceImpl s= new SampleServiceImpl();
+			Sample sample= s.details(id);
+			Set<edu.rpi.metpetdb.client.model.Image> images= sample.getImages();
+			final XStream x = new XStream();
+			response.getWriter().write("<images>");
+			for(edu.rpi.metpetdb.client.model.Image i : images)
+			{
+				response.getWriter().write("<thumbnail>");
+				//FileInputStream input= new FileInputStream(i.get64x64ServerPath());
+				DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(i.get64x64ServerPath())));
+				    while (in.available() != 0)
+				    {
+				    	response.getWriter().write(in.read());
+				    }
+				    response.getWriter().write("</thumbnail>");
+				//x.toXML(i.get64x64ServerPath() ,response.getWriter());
+			}
+			response.getWriter().write("</images>");
+		} catch(final Exception ioe){
+			throw new IllegalStateException(ioe.getMessage());
+		}
+	}
+	
 	private void comments(HttpServletResponse response, long id){
 		try{
 			final XStream x = new XStream();
@@ -194,8 +227,11 @@ public class SearchIPhone extends HttpServlet{
 		try {
 			RegionServiceImpl service = new RegionServiceImpl();
 			final XStream x = new XStream();
-			
-			x.toXML(service.allNames(),response.getWriter());
+			Set<String> regionNames=service.viewableNamesForUser(0);
+			List<String>regionList= new ArrayList<String>(regionNames);
+			java.util.Collections.sort(regionList);
+			//x.toXML(service.viewableNamesForUser(0),response.getWriter());
+			x.toXML(regionList, response.getWriter());
 		} catch(final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
 		}
