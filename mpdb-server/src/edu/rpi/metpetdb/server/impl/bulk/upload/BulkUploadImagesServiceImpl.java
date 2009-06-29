@@ -17,6 +17,7 @@ import java.util.zip.ZipInputStream;
 
 import javax.media.jai.RenderedOp;
 
+import edu.rpi.metpetdb.client.error.ImageRuntimeException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -66,17 +67,22 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 	}
 
 	private void setRealImage(ZipFile zp, Image img, String prefix)
-			throws IOException {
+			throws IOException, ImageRuntimeException {
 		
 		final byte[] imgData = getBytesFromInputStream(zp.getInputStream(getZipEntry(zp, img, prefix)));
 
 		// Save Image Data, in various forms, to the server
-		RenderedOp ro = ImageUploadServlet.loadImage(imgData);
-		img.setChecksum(ImageUploadServlet.generateFullsize(ro, false));
-		img.setChecksum64x64(ImageUploadServlet.generate64x64(ro, false));
-		img.setChecksumHalf(ImageUploadServlet.generateHalf(ro, false));
-		img.setWidth(ro.getWidth());
-		img.setHeight(ro.getHeight());
+		try {
+			RenderedOp ro = ImageUploadServlet.loadImage(imgData);
+			img.setChecksum(ImageUploadServlet.generateFullsize(ro, false));
+			img.setChecksum64x64(ImageUploadServlet.generate64x64(ro, false));
+			img.setChecksumHalf(ImageUploadServlet.generateHalf(ro, false));
+			img.setWidth(ro.getWidth());
+			img.setHeight(ro.getHeight());
+		}
+		catch (RuntimeException e){
+			throw new ImageRuntimeException();
+		}
 	}
 	private ZipEntry getSpreadsheetName(InputStream is) throws IOException, InvalidSpreadSheetException {
 		ZipInputStream zis = new ZipInputStream(is);
@@ -86,7 +92,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 			String entryName = ent.getName();
 			String[] entryNameSplit = entryName.split(File.separator);
 			// Ignore any subdirectories
-			if (entryNameSplit.length > 2){
+			if (entryNameSplit.length > 1){
 				continue;
 			}
 

@@ -128,7 +128,7 @@ public class MSuggestText extends FlowPanel implements ClickListener, KeyboardLi
 	}
 	
 	public void onMouseMove(final Widget sender, final int x, int y){
-		removeSelected(selected);
+		if (selected >= 0) removeSelected(selected);
 		int low = 0;
 		int high = fp.getWidgetCount()-1;
 		int middle;
@@ -184,7 +184,8 @@ public class MSuggestText extends FlowPanel implements ClickListener, KeyboardLi
 				public void onClick(final Widget sender){
 					// find first match of letter
 					final int index = findFirstMatch(((HTML)sender).getText(),values);
-					sp.setScrollPosition(fp.getWidget(index).getAbsoluteTop()-fp.getWidget(0).getAbsoluteTop());
+					if (fp.getWidgetCount() > index)
+						sp.setScrollPosition(fp.getWidget(index).getAbsoluteTop()-fp.getWidget(0).getAbsoluteTop());
 				}
 			});
 			linker.add(link);
@@ -242,7 +243,7 @@ public class MSuggestText extends FlowPanel implements ClickListener, KeyboardLi
 				}
 			}
 		}
-		return 1;
+		return -1;
 	}
 	
 	private void selectedDown(final Widget sender){

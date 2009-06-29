@@ -12,6 +12,10 @@ public class UnableToUploadImageException extends ValidationException implements
 	
 	private String msg;
 	
+	public UnableToUploadImageException(){
+		msg = "";
+	}
+	
 	public UnableToUploadImageException(final String msg) {
 		this.msg = msg;
 	}
