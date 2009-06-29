@@ -7,6 +7,6 @@ public class MpDbDataTable extends FixedWidthGrid {
 	public MpDbDataTable() {
 		super();
 		setSelectionPolicy(SelectionPolicy.CHECKBOX);
-		setSelectionEnabled(false);
+		setSelectionEnabled(true);
 	}
 }
