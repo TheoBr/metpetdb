@@ -6,7 +6,7 @@ import org.hibernate.search.annotations.Store;
 
 //import java.util.Set;
 
-public class Region extends MObject {
+public class Region extends MObject implements Comparable {
 	private static final long serialVersionUID = 1L;
 
 	private short id;
@@ -53,5 +53,11 @@ public class Region extends MObject {
 
 	public boolean mIsNew() {
 		return id == 0;
+	}
+	
+	public int compareTo(Object r) {
+		if(!(r instanceof Region))
+			throw new ClassCastException("Region object expected");
+		return this.getName().compareTo(((Region) r).getName());
 	}
 }

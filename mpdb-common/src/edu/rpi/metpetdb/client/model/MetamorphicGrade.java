@@ -4,9 +4,11 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Store;
 
+import edu.rpi.metpetdb.client.model.properties.Property;
+
 //import java.util.Set;
 
-public class MetamorphicGrade extends MObject {
+public class MetamorphicGrade extends MObject implements Comparable {
 	private static final long serialVersionUID = 1L;
 
 	private short id;
@@ -55,5 +57,11 @@ public class MetamorphicGrade extends MObject {
 
 	public boolean mIsNew() {
 		return id == 0;
+	}
+
+	public int compareTo(Object mg) {
+		if(!(mg instanceof MetamorphicGrade))
+			throw new ClassCastException("Metamorphic Grade object expected");
+		return this.getName().compareTo(((MetamorphicGrade) mg).getName());
 	}
 }

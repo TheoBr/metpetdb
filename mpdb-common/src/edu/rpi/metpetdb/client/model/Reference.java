@@ -6,7 +6,7 @@ import org.hibernate.search.annotations.Store;
 
 //import java.util.Set;
 
-public class Reference extends MObject {
+public class Reference extends MObject implements Comparable {
 	private static final long serialVersionUID = 1L;
 
 	private short id;
@@ -54,5 +54,11 @@ public class Reference extends MObject {
 
 	public boolean mIsNew() {
 		return id == 0;
+	}
+	
+	public int compareTo(Object r) {
+		if(!(r instanceof Reference))
+			throw new ClassCastException("Reference object expected");
+		return this.getName().compareTo(((Reference) r).getName());
 	}
 }

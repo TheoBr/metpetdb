@@ -1,6 +1,8 @@
 package edu.rpi.metpetdb.client.ui.widgets.paging.columns;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.TreeSet;
 
 import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.model.properties.Property;
@@ -22,7 +24,10 @@ public abstract class MultipleColumn<RowType extends MObject, ColType> extends C
 			final Collection<Object> vals = (Collection<Object>) val;
 			String text = "";
 			if (vals != null && vals.size() > 0) {
-				for(Object o : vals) {
+				//sort collection first
+				Set sortedSet = new TreeSet(vals);
+				
+				for(Object o : sortedSet) {
 					text += o.toString() + ", ";
 				}
 				text = text.substring(0,text.length() - 2);

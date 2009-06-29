@@ -5,7 +5,9 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
-public class SampleMineral extends MObject {
+import edu.rpi.metpetdb.client.model.properties.Property;
+
+public class SampleMineral extends MObject implements Comparable {
 	private static final long serialVersionUID = 1L;
 
 	@Field(index = Index.TOKENIZED, store = Store.NO)
@@ -81,5 +83,12 @@ public class SampleMineral extends MObject {
 	@Override
 	public boolean mIsNew() {
 		return false;
+	}
+
+	public int compareTo(Object sm) {
+		if(!(sm instanceof SampleMineral))
+			throw new ClassCastException("Sample Mineral object expected");
+		Mineral anotherMineral = ((SampleMineral) sm).getMineral();
+		return this.mineral.getName().compareTo(anotherMineral.getName());
 	}
 }
