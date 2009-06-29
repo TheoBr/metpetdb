@@ -32,4 +32,11 @@ public class MpDbHeaderTable extends FixedWidthFlexTable {
 		}
 	}
 
+	@Override
+	protected void checkRowBounds(int row) {
+	    int rowSize = getRowCount();
+	    if ((row >= rowSize) || (row < 0) && row != -1) {
+	      throw new IndexOutOfBoundsException("Row index: " + row + ", Row size: " + rowSize);
+	    }
+	  }
 }
