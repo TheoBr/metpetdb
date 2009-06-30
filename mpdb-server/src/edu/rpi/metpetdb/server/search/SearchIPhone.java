@@ -154,7 +154,7 @@ public class SearchIPhone extends HttpServlet{
 				Set<edu.rpi.metpetdb.client.model.Image> subImages= sub.getImages();
 				for(edu.rpi.metpetdb.client.model.Image im : subImages)
 				{
-					final String subImagePath= "http://samana.cs.rpi.edu:8080/metpetwebst//image/?checksum=" + im.getChecksum64x64();
+					final String subImagePath= "http://samana.cs.rpi.edu:8080/metpetwebtst//image/?checksum=" + im.getChecksum64x64();
 				
 					response.getWriter().write("<image>");
 					x.toXML(subImagePath, response.getWriter());
@@ -186,7 +186,7 @@ public class SearchIPhone extends HttpServlet{
 			final String folder = checksum.substring(0, 2);
 			final String subfolder = checksum.substring(2, 4);
 			final String filename = checksum.substring(4, checksum.length());
-			final String imagePath = "http://samana.cs.rpi.edu:8080/metpetwebst//image/?checksum=" + image.getChecksumHalf();
+			final String imagePath = "http://samana.cs.rpi.edu:8080/metpetwebtst//image/?checksum=" + image.getChecksumHalf();
 			
 			x.toXML(imagePath, response.getWriter());
 			response.getWriter().write("</image>");
