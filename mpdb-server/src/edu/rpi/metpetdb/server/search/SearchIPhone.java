@@ -1,8 +1,5 @@
 package edu.rpi.metpetdb.server.search;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -32,6 +29,7 @@ import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.server.DataStore;
+import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
 import edu.rpi.metpetdb.server.impl.RegionServiceImpl;
 import edu.rpi.metpetdb.server.impl.SampleServiceImpl;
 
@@ -49,6 +47,7 @@ public class SearchIPhone extends HttpServlet{
 	private static final String COMMENTS = "comments";
 	private static final String SUBSAMPLE_INFO="subsampleInfo";
 	private static final String THUMBNAILS="thumbnails";
+	private static final String LARGE_IMAGE="large_image";
 
 	@Override
 	protected void doGet(final HttpServletRequest request,
@@ -104,6 +103,12 @@ public class SearchIPhone extends HttpServlet{
 			long id= Long.parseLong(request.getParameterValues(THUMBNAILS)[0]);
 			get_thumbnails(response, id);
 		}
+		else if (request.getParameter(LARGE_IMAGE)!=null)
+		{
+			//the id that is passed into the url here is the id of the image, not the sample
+			long imageID= Long.parseLong(request.getParameterValues(LARGE_IMAGE)[0]);
+			get_large_image(response, imageID);
+		}
 		return;
 		}
 		catch(Exception e){
@@ -129,24 +134,85 @@ public class SearchIPhone extends HttpServlet{
 			Sample sample= s.details(id);
 			Set<edu.rpi.metpetdb.client.model.Image> images= sample.getImages();
 			final XStream x = new XStream();
-			response.getWriter().write("<images>");
+			response.getWriter().write("<thumbnails>");
+			response.getWriter().write("<count>");
+			x.toXML(sample.getImageCount(), response.getWriter());
+			response.getWriter().write("</count>");
 			for(edu.rpi.metpetdb.client.model.Image i : images)
 			{
-				response.getWriter().write("<thumbnail>");
-				//FileInputStream input= new FileInputStream(i.get64x64ServerPath());
-				DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(i.get64x64ServerPath())));
-				    while (in.available() != 0)
-				    {
-				    	response.getWriter().write(in.read());
-				    }
-				    response.getWriter().write("</thumbnail>");
+				
+				final String checksum = i.getChecksum64x64();
+				final String folder = checksum.substring(0, 2);
+				final String subfolder = checksum.substring(2, 4);
+				final String filename = checksum.substring(4, checksum.length());
+				final String imagePath = "http://samana.cs.rpi.edu:8080/metpetwebtst/" + folder + "/" + subfolder + "/" + filename;
+				/*FileInputStream input= new FileInputStream(imagePath);
+				BufferedInputStream buff= new BufferedInputStream(input);
+				DataInputStream in = new DataInputStream(buff);
+				response.getWriter().write("<image>");
+				byte[] buffer= new byte[1024];
+				StringBuffer hexData = new StringBuffer();
+				while (in.available() != 0)
+			    {
+					input.read(buffer);
+					int readBytes = buffer.length;
+					for (int y=0; y< readBytes; y++) {
+						hexData.append(padHexString(Integer.toHexString(0xff & buffer[y])));
+					}
+					response.getWriter().write(hexData.toString());
+					hexData.delete(0, hexData.length());
+			    }
+			    response.getWriter().write("</image>");
+			    response.getWriter().write("<id>");
+			    x.toXML(i.getId(), response.getWriter());
+			    response.getWriter().write("</id>");
+				  
 				//x.toXML(i.get64x64ServerPath() ,response.getWriter());
+			
+			response.getWriter().write("</thumbnails>");*/
+
+
+				
+			response.getWriter().write("<image>");
+			x.toXML(imagePath, response.getWriter());
+			response.getWriter().write("</image>");
+			  response.getWriter().write("<imageID>");
+		    x.toXML(i.getId(), response.getWriter());
+		    response.getWriter().write("</imageID>");
+			
 			}
-			response.getWriter().write("</images>");
+			response.getWriter().write("</thumbnails>");
 		} catch(final Exception ioe){
+			try {
+				response.getWriter().flush();
+				response.getWriter().write(ioe.getMessage());
+			} catch (Exception e){
+				
+			}
 			throw new IllegalStateException(ioe.getMessage());
 		}
 	}
+	private void get_large_image(HttpServletResponse response, long imageID)
+	{
+		try{
+			final XStream x = new XStream();
+			response.getWriter().write("<image>");
+			ImageServiceImpl i= new ImageServiceImpl();
+			edu.rpi.metpetdb.client.model.Image image= i.details(imageID);
+			final String checksum = image.getChecksumHalf();
+			final String folder = checksum.substring(0, 2);
+			final String subfolder = checksum.substring(2, 4);
+			final String filename = checksum.substring(4, checksum.length());
+			final String imagePath = "c:/MetPetDB/" + folder + "/" + subfolder + "/" + filename;
+			
+			x.toXML(imagePath, response.getWriter());
+			response.getWriter().write("</image>");
+		}	
+		catch(final Exception ioe){
+			throw new IllegalStateException(ioe.getMessage());
+		}
+	}
+	
 	
 	private void comments(HttpServletResponse response, long id){
 		try{
@@ -162,6 +228,19 @@ public class SearchIPhone extends HttpServlet{
 			throw new IllegalStateException(ioe.getMessage());
 		}
 	}
+	private String padHexString(String input) {
+        int length = input.length();
+        if (length >= 2) {
+            return input;
+        }
+        StringBuffer returnString = new StringBuffer();
+        for (int i = 1; i <= 2 - length; i++) {
+            returnString.append("0");
+        }
+        returnString.append(input);
+        return returnString.toString();
+    }
+
 	private void subsampleInfo(HttpServletResponse response, long id ){
 		try{
 			final XStream x= new XStream();
