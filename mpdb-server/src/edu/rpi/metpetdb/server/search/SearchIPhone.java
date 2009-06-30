@@ -186,7 +186,7 @@ public class SearchIPhone extends HttpServlet{
 			final String folder = checksum.substring(0, 2);
 			final String subfolder = checksum.substring(2, 4);
 			final String filename = checksum.substring(4, checksum.length());
-			final String imagePath = "c:/MetPetDB/" + folder + "/" + subfolder + "/" + filename;
+			final String imagePath = "http://samana.cs.rpi.edu:8080/metpetwebst//image/?checksum=" + image.getChecksumHalf();
 			
 			x.toXML(imagePath, response.getWriter());
 			response.getWriter().write("</image>");
