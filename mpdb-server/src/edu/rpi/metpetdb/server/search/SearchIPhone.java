@@ -135,51 +135,34 @@ public class SearchIPhone extends HttpServlet{
 			Set<edu.rpi.metpetdb.client.model.Image> images= sample.getImages();
 			final XStream x = new XStream();
 			response.getWriter().write("<thumbnails>");
-			response.getWriter().write("<count>");
-			x.toXML(sample.getImageCount(), response.getWriter());
-			response.getWriter().write("</count>");
 			for(edu.rpi.metpetdb.client.model.Image i : images)
 			{
-				
-				final String checksum = i.getChecksum64x64();
-				final String folder = checksum.substring(0, 2);
-				final String subfolder = checksum.substring(2, 4);
-				final String filename = checksum.substring(4, checksum.length());
-				final String imagePath = "http://samana.cs.rpi.edu:8080/metpetwebtst/" + folder + "/" + subfolder + "/" + filename;
-				/*FileInputStream input= new FileInputStream(imagePath);
-				BufferedInputStream buff= new BufferedInputStream(input);
-				DataInputStream in = new DataInputStream(buff);
+				final String imagePath = "http://samana.cs.rpi.edu:8080/metpetwebtst//image/?checksum=" + i.getChecksum64x64();
+	
 				response.getWriter().write("<image>");
-				byte[] buffer= new byte[1024];
-				StringBuffer hexData = new StringBuffer();
-				while (in.available() != 0)
-			    {
-					input.read(buffer);
-					int readBytes = buffer.length;
-					for (int y=0; y< readBytes; y++) {
-						hexData.append(padHexString(Integer.toHexString(0xff & buffer[y])));
-					}
-					response.getWriter().write(hexData.toString());
-					hexData.delete(0, hexData.length());
-			    }
-			    response.getWriter().write("</image>");
-			    response.getWriter().write("<id>");
+				x.toXML(imagePath, response.getWriter());
+				response.getWriter().write("</image>");
+				  response.getWriter().write("<imageID>");
 			    x.toXML(i.getId(), response.getWriter());
-			    response.getWriter().write("</id>");
-				  
-				//x.toXML(i.get64x64ServerPath() ,response.getWriter());
+			    response.getWriter().write("</imageID>");
 			
-			response.getWriter().write("</thumbnails>");*/
-
-
+			}
+			//after all the samples images have bee output, display subsample images
+			Set<Subsample> subsamples= sample.getSubsamples();
+			for(Subsample sub : subsamples)
+			{
+				Set<edu.rpi.metpetdb.client.model.Image> subImages= sub.getImages();
+				for(edu.rpi.metpetdb.client.model.Image im : subImages)
+				{
+					final String subImagePath= "http://samana.cs.rpi.edu:8080/metpetwebst//image/?checksum=" + im.getChecksum64x64();
 				
-			response.getWriter().write("<image>");
-			x.toXML(imagePath, response.getWriter());
-			response.getWriter().write("</image>");
-			  response.getWriter().write("<imageID>");
-		    x.toXML(i.getId(), response.getWriter());
-		    response.getWriter().write("</imageID>");
-			
+					response.getWriter().write("<image>");
+					x.toXML(subImagePath, response.getWriter());
+					response.getWriter().write("</image>");
+					  response.getWriter().write("<imageID>");
+				    x.toXML(im.getId(), response.getWriter());
+				    response.getWriter().write("</imageID>");
+				}
 			}
 			response.getWriter().write("</thumbnails>");
 		} catch(final Exception ioe){
