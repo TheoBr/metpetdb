@@ -46,9 +46,6 @@ public abstract class BulkUploadService extends MpDbServlet {
 			throws LoginRequiredException, MpDbException {
 		final BulkUploadResult results = new BulkUploadResult();
 		try {
-			if (save) {
-				updateFile(fileOnServer);
-			}
 			final SampleDAO sampleDao = new SampleDAO(this.currentSession());
 			final SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
 
@@ -65,6 +62,7 @@ public abstract class BulkUploadService extends MpDbServlet {
 			if (save && results.getErrors().isEmpty()) {
 				try {
 					commit();
+					updateFile(fileOnServer);
 				} catch (Exception e) {
 					results.addError(0, getNiceException(e));
 				}
