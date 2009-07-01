@@ -13,10 +13,9 @@
     <property name="name" column="name" />
     <property name="publicData" column="public_data" type="yes_no" />    
     <property name="imageCount" formula="(select count(*) from images i
-    									where i.subsample_id=subsample_id 
-    									AND (i.public_data='Y'))" />
+    									where i.subsample_id=subsample_id)" />
 	<property name="analysisCount" formula="(select count(*) from chemical_analyses ca
-    										where ca.subsample_id=subsample_id AND (ca.public_data='Y'))" />
+    										where ca.subsample_id=subsample_id)" />
     <property name="sampleName" formula="(select s.number from samples s
     																		where s.sample_id=sample_id)" />
 	<property name="sampleId" column="sample_id" update="false" insert="false"/>
@@ -90,6 +89,36 @@
     inner join fetch s.subsampleType
     where s.sample.id = :id
     order by (lower(s.name))
+  </query>
+  <query name="Subsample.all/publicData">
+    from Subsample s
+    inner join fetch s.subsampleType
+    where s.sample.id = :id
+    order by (lower(s.publicData))
+  </query>
+  <query name="Subsample.all/subsampleType">
+    from Subsample s
+    inner join fetch s.subsampleType
+    where s.sample.id = :id
+    order by (lower(s.subsampleType))
+  </query>
+  <query name="Subsample.all/imageCount">
+    from Subsample s
+    inner join fetch s.subsampleType
+    where s.sample.id = :id
+    order by s.imageCount
+  </query>
+  <query name="Subsample.all/analysisCount">
+    from Subsample s
+    inner join fetch s.subsampleType
+    where s.sample.id = :id
+    order by s.analysisCount
+  </query>
+  <query name="Subsample.all/owner">
+    from Subsample s
+    inner join fetch s.subsampleType
+    where s.sample.id = :id
+    order by (lower(s.owner))
   </query>
   
    <!-- only returns data that is either public or owned by the current user

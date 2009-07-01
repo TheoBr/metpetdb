@@ -70,7 +70,7 @@ public abstract class SubsampleList extends DataList<Subsample> {
 					return img;
 				}
 			};
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(50);
 			col.setMaximumColumnWidth(50);
 			col.setPreferredColumnWidth(50);
@@ -83,7 +83,7 @@ public abstract class SubsampleList extends DataList<Subsample> {
 		{
 			StringColumn<Subsample> col = new StringColumn<Subsample>(enttxt.Subsample_subsampleType(),
 					SubsampleProperty.subsampleType);
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(30);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
@@ -96,7 +96,7 @@ public abstract class SubsampleList extends DataList<Subsample> {
 			Image img = new Image("images/icon-image.png");
 			img.getElement().setAttribute("alt", "Images");
 			StringColumn<Subsample> col = new StringColumn<Subsample>(img, SubsampleProperty.imageCount);
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(30);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
@@ -109,7 +109,7 @@ public abstract class SubsampleList extends DataList<Subsample> {
 			Image img = new Image("images/icon-chemical-analysis.png");
 			img.getElement().setAttribute("alt", "Chemical Analyses");
 			StringColumn<Subsample> col = new StringColumn<Subsample>(img, SubsampleProperty.analysisCount);
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(30);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
@@ -127,7 +127,7 @@ public abstract class SubsampleList extends DataList<Subsample> {
 							.mGet(SubsampleProperty.owner)));
 				}
 			};
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(60);
 			col.setPreferredColumnWidth(120);
 			col.setOptional(true);
