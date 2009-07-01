@@ -28,7 +28,7 @@ public class BulkUploadResult implements IsSerializable {
 	}
 	
 	public void addError(final int rowNumber, final MpDbException e) {
-		addError(rowNumber, "", "", e);
+		addError(rowNumber, "row " + rowNumber, "", e);
 	}
 	
 	public void addError(final int rowNumber, final String colNumber, final String cellData, final MpDbException e) {
