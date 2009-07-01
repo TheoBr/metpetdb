@@ -98,15 +98,25 @@
     where ma.subsample.id = :id
     order by (lower(ma.spotId))
   </query>
+  <query name="ChemicalAnalysis.bySubsampleId/publicData">
+    from ChemicalAnalysis ma
+    where ma.subsample.id = :id
+    order by ma.publicData
+  </query>
   <query name="ChemicalAnalysis.bySubsampleId/analysisMethod">
     from ChemicalAnalysis ma
     where ma.subsample.id = :id
     order by (lower(ma.analysisMethod))
   </query>
+  <query name="ChemicalAnalysis.bySubsampleId/mineral">
+    from ChemicalAnalysis ma
+    where ma.subsample.id = :id
+    order by (lower(ma.mineral))
+  </query>
   <query name="ChemicalAnalysis.bySubsampleId/location">
     from ChemicalAnalysis ma
     where ma.subsample.id = :id
-    order by (lower(location))
+    order by (lower(ma.location))
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/analyst">
     from ChemicalAnalysis ma
@@ -116,7 +126,17 @@
   <query name="ChemicalAnalysis.bySubsampleId/analysisDate">
     from ChemicalAnalysis ma
     where ma.subsample.id = :id
-    order by (lower(ma.analysisDate))
+    order by ma.analysisDate
+  </query>
+  <query name="ChemicalAnalysis.bySubsampleId/reference">
+    from ChemicalAnalysis ma
+    where ma.subsample.id = :id
+    order by (lower(ma.reference))
+  </query>
+  <query name="ChemicalAnalysis.bySubsampleId/total">
+    from ChemicalAnalysis ma
+    where ma.subsample.id = :id
+    order by ma.total
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/description">
     from ChemicalAnalysis ma

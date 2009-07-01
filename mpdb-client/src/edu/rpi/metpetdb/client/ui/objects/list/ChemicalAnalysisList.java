@@ -80,7 +80,7 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 					return img;
 				}
 			};
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(50);
 			col.setMaximumColumnWidth(50);
 			col.setPreferredColumnWidth(50);
@@ -93,7 +93,7 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 		{
 			StringColumn<ChemicalAnalysis> col = new StringColumn<ChemicalAnalysis>(enttxt.ChemicalAnalysis_analysisMethod(),
 					ChemicalAnalysisProperty.analysisMethod);
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(30);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
@@ -105,7 +105,7 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 		{
 			StringColumn<ChemicalAnalysis> col = new StringColumn<ChemicalAnalysis>(enttxt.ChemicalAnalysis_mineral(),
 					ChemicalAnalysisProperty.mineral);
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(30);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
@@ -117,7 +117,7 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 		{
 			StringColumn<ChemicalAnalysis> col = new StringColumn<ChemicalAnalysis>(enttxt.ChemicalAnalysis_location(),
 					ChemicalAnalysisProperty.location);
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(30);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
@@ -129,7 +129,7 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 		{
 			StringColumn<ChemicalAnalysis> col = new StringColumn<ChemicalAnalysis>(enttxt.ChemicalAnalysis_analyst(),
 					ChemicalAnalysisProperty.analyst);
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(30);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
@@ -141,7 +141,7 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 		{
 			StringColumn<ChemicalAnalysis> col = new StringColumn<ChemicalAnalysis>(enttxt.ChemicalAnalysis_analysisDate(),
 					ChemicalAnalysisProperty.analysisDate);
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(30);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
@@ -153,7 +153,7 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 		{
 			StringColumn<ChemicalAnalysis> col = new StringColumn<ChemicalAnalysis>(enttxt.ChemicalAnalysis_reference(),
 					ChemicalAnalysisProperty.reference);
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(30);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
@@ -192,7 +192,7 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 		{
 			StringColumn<ChemicalAnalysis> col = new StringColumn<ChemicalAnalysis>(enttxt.ChemicalAnalysis_total(),
 					ChemicalAnalysisProperty.total);
-			col.setColumnSortable(false);
+			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(30);
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
