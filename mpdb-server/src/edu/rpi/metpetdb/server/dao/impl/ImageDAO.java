@@ -33,7 +33,7 @@ public class ImageDAO extends MpDbDAO<Image> {
 	@Override
 	public Image fill(Image inst) throws MpDbException {
 		if (inst.getId() > 0) {
-			final Query q = namedQuery("Image.id");
+			final Query q = namedQuery("Image.byId");
 			q.setLong("id", inst.getId());
 			if (getResult(q) != null)
 				return (Image) getResult(q);
