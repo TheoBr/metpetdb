@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.lucene.analysis.KeywordAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.DateTools;
 import org.apache.lucene.index.Term;
@@ -17,8 +16,8 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FilteredQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.RangeQuery;
+import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TermQuery;
-import org.apache.lucene.search.WildcardQuery;
 import org.hibernate.CallbackException;
 import org.hibernate.Filter;
 import org.hibernate.Session;
@@ -66,7 +65,7 @@ public class SearchDb {
 		else
 			userId = u.getId();
 		DataStore.enableSecurityFilters(session, userId);
-		FullTextSession fullTextSession = Search.createFullTextSession(session);
+		FullTextSession fullTextSession = Search.getFullTextSession(session);
 
 		boolean haveChemicalProperties = checkForChemicalProperties(searchSamp);
 		Query fullQuery;
@@ -101,7 +100,7 @@ public class SearchDb {
 					subsampleIds + "))");
 			org.hibernate.Query sizeQuery = session.createQuery("select count(*) " + hql.getQueryString());
 			System.out.println("Search Query Find Samples by Id and SubsampleId:" + hql.getQueryString());
-			hql = setPagination(p,hql);
+			hql = setPagination(p,hql,session,true);
 			try {
 				//this is here in order to convert java.util.Collection$EmptyList into
 				//the correct representation so it can be serialized by GWT
@@ -118,33 +117,20 @@ public class SearchDb {
 		System.out.println("Search Query:" + fullQuery.toString());
 
 		try {			
-			if (session.getEnabledFilter("boundingBox")!=null){
-				FullTextQuery sizeHibQuery = fullTextSession.createFullTextQuery(
-						fullQuery, Sample.class);
-				String  sampleIds = getLongIdString(sizeHibQuery.setProjection("id").list());
-				if (sampleIds == null) {
-					return new Results<Sample>(0, new ArrayList<Sample>());
-				}
-				org.hibernate.Query resultQuery = session.createQuery("from Sample s where s.id in (" + sampleIds + ")");
-				org.hibernate.Query sizeQuery = session.createQuery("select count(*) " + resultQuery.getQueryString());
-				resultQuery = setPagination(p,resultQuery);
-				List<Sample> list = resultQuery.list();
-				if (list.size() == 0)
-					list = new ArrayList<Sample>();
-				final Results<Sample> results = new Results<Sample>(((Long)sizeQuery.uniqueResult()).intValue(),list);
-				return results;
-			} else {
-				FullTextQuery hibQuery = fullTextSession.createFullTextQuery(
-						fullQuery, Sample.class);
-				hibQuery = setPagination(p,hibQuery);
-				//this is here in order to convert java.util.Collection$EmptyList into
-				//the correct representation so it can be serialized by GWT
-				List<Sample> list = hibQuery.list();
-				if (list.size() == 0)
-					list = new ArrayList<Sample>();
-				final Results<Sample> results = new Results<Sample>(hibQuery.getResultSize(), list);
-				return results;
+			FullTextQuery sizeHibQuery = fullTextSession.createFullTextQuery(
+					fullQuery, Sample.class);
+			String  sampleIds = getLongIdString(sizeHibQuery.setProjection("id").list());
+			if (sampleIds == null) {
+				return new Results<Sample>(0, new ArrayList<Sample>());
 			}
+			org.hibernate.Query resultQuery = session.createQuery("from Sample s where s.id in (" + sampleIds + ")");
+			org.hibernate.Query sizeQuery = session.createQuery("select count(*) " + resultQuery.getQueryString());
+			resultQuery = setPagination(p,resultQuery,session,true);
+			List<Sample> list = resultQuery.list();
+			if (list.size() == 0)
+				list = new ArrayList<Sample>();
+			final Results<Sample> results = new Results<Sample>(((Long)sizeQuery.uniqueResult()).intValue(),list);
+			return results;
 		} catch (CallbackException e) {
 			throw ConvertSecurityException.convertToException(e);
 		}
@@ -161,7 +147,7 @@ public class SearchDb {
 			userId = u.getId();
 		Session session = DataStore.open();
 		DataStore.enableSecurityFilters(session, userId);
-		FullTextSession fullTextSession = Search.createFullTextSession(session);
+		FullTextSession fullTextSession = Search.getFullTextSession(session);
 
 		boolean haveSampleProperties = checkForSampleProperties(searchSamp);
 		
@@ -171,7 +157,7 @@ public class SearchDb {
 			org.hibernate.Query sizeQuery = getChemicalsQuery(searchSamp, userSearching, session, RETURN_CHEMICAL_ANALYSIS_COUNT);
 			System.out.println("Search Query:" + fullQuery.toString());			
 
-			fullQuery = setPagination(p,fullQuery);
+			fullQuery = setPagination(p,fullQuery,session,false);
 			try {
 				//this is here in order to convert java.util.Collection$EmptyList into
 				//the correct representation so it can be serialized by GWT
@@ -210,7 +196,7 @@ public class SearchDb {
 			org.hibernate.Query sizeQuery = session.createQuery("select count(*) " + hql.getQueryString());
 			System.out.println("Search Query Find Chemical Analyses by Id and SubsampleId:" + hql.getQueryString());
 
-			hql = setPagination(p,hql);
+			hql = setPagination(p,hql,session,false);
 			try {
 				//this is here in order to convert java.util.Collection$EmptyList into
 				//the correct representation so it can be serialized by GWT
@@ -622,8 +608,33 @@ public class SearchDb {
 		return false;
 	}
 	
-	private static org.hibernate.Query setPagination(PaginationParameters p, org.hibernate.Query q){
+	private static org.hibernate.Query setPagination(PaginationParameters p, org.hibernate.Query q, Session session, Boolean isSample){
 		if (p != null){
+			if (!p.getParameter().equals("")){
+				String queryString = q.getQueryString();
+				String parameter = p.getParameter();
+				if (parameter.equals("owner"))
+					parameter += ".name";
+				else if (parameter.equals("rockType"))
+					parameter += ".rockType";
+				else if (parameter.equals("regions"))
+					parameter = "firstRegion";
+				else if (parameter.equals("references"))
+					parameter = "firstReference";
+				else if (parameter.equals("metamorphicGrades"))
+					parameter = "firstMetamorphicGrade";
+				else if (parameter.equals("minerals"))
+					parameter = "firstMineral";
+				else if (parameter.equals("mineral")){
+					parameter = "largeRock, ca.mineral.name";
+				}
+				queryString += " order by " + ((isSample) ? "s." : "ca.") + parameter;
+				queryString += (p.isAscending()) ? "" : " DESC";
+				org.hibernate.Query q2 = session.createQuery(queryString);
+				q2.setFirstResult(p.getFirstResult());
+				q2.setMaxResults(p.getMaxResults());
+				return q2;
+			}
 			q.setFirstResult(p.getFirstResult());
 			q.setMaxResults(p.getMaxResults());
 		} else {
@@ -637,6 +648,7 @@ public class SearchDb {
 		if (p != null){
 			q.setFirstResult(p.getFirstResult());
 			q.setMaxResults(p.getMaxResults());
+//			q.setSort(new Sort(p.getParameter(),p.isAscending()));
 		} else {
 			q.setFirstResult(0);
 			q.setMaxResults(100);
