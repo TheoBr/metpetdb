@@ -346,17 +346,57 @@ public class MetPetDBApplication implements EntryPoint {
 				Window.open(MpDb.JUNIT_URL, "mpdb_junit", "");
 			}
 		});
+		
+		final MMenuBar help = new MMenuBar(true);
+		help.addItem("MetPetDB Help", new Command() {
+			public void execute() {
+				Window.open(MpDb.METPETDB_HELP_URL, "mpdb_help", "");
+			}
+		});
+		help.addItem("How to Bulk Upload", new Command() {
+			public void execute() {
+				Window.open(MpDb.HOW_TO_BULK_UPLOAD_URL, "mpdb_bulkUpload", "");
+			}
+		});
+		help.addItem("How to View Data", new Command() {
+			public void execute() {
+				Window.open(MpDb.HOW_TO_VIEW_DATA_URL, "mpdb_howToViewData", "");
+			}
+		});
+		help.addItem("How to Search MetPetDB", new Command() {
+			public void execute() {
+				Window.open(MpDb.HOW_TO_SEARCH_METPETDB_URL, "mpdb_howToSearch", "");
+			}
+		});
+		help.addItem("Video Tutorials", new Command() {
+			public void execute() {
+				Window.open(MpDb.VIDEO_TUTORIALS_URL, "mpdb_videoTutorials", "");
+			}
+		});
+		help.addItem("Lists of Data Types and Attributes", new Command() {
+			public void execute() {
+				Window.open(MpDb.LISTS_OF_DATA_TYPES_URL, "mpdb_lists", "");
+			}
+		});
+		help.addItem("About MetPetDB", new Command() {
+			public void execute() {
+				Window.open(MpDb.ABOUT_METPETDB_URL, "mpdb_about", "");
+			}
+		});
 
 		hdrnav.addItem("My Samples", TokenSpace.samplesForUser);
 		hdrnav.addItem(LocaleHandler.lc_text.projectMenu(), TokenSpace.allProjects);
 		hdrnav.addItem("Search", TokenSpace.search);
 		hdrnav.addItem("Upload Data", TokenSpace.bulkUpload);
-	//	hdrnav.addItem("Plot", TokenSpace.plotSample);
+		//hdrnav.addItem("Plot", TokenSpace.plotSample);
 		hdrnav.addItem("Wiki", new Command() {
 			public void execute() {
 				Window.open(MpDb.WIKI_URL, "mpdb_wiki", "");
 			}
 		});
+		hdrnav.addItem("Help", help);
+		
+		
 		if (!GWT.getHostPageBaseURL().contains("metpetweb") || (MpDb.isLoggedIn() && MpDb.currentUser.getEmailAddress().equalsIgnoreCase("goldfd@rpi.edu")));
 			hdrnav.addItem("Developers", dev);
 
