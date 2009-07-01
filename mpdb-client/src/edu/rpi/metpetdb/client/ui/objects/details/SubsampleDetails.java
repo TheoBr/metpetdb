@@ -31,6 +31,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.image.AddImageAttribute;
+import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisList;
 import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisListEx;
 import edu.rpi.metpetdb.client.ui.objects.list.ImageListViewer;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -140,13 +141,14 @@ public class SubsampleDetails extends MPagePanel {
 
 	public void showChemicalAnalysis() {
 		FlexTable chemft = new FlexTable();
-		final ChemicalAnalysisListEx list = new ChemicalAnalysisListEx(
-				LocaleHandler.lc_text.noChemicalAnalysesFound()) {
+
+		final ChemicalAnalysisList list = new ChemicalAnalysisList() {
 			public void update(final PaginationParameters p,
 					final AsyncCallback<Results<ChemicalAnalysis>> ac) {
 				MpDb.chemicalAnalysis_svc.all(p, subsampleId, ac);
 			}
 		};
+		
 		chemft.setWidget(1, 0, list);
 		chemft.getFlexCellFormatter().setColSpan(1, 0, 10);
 
