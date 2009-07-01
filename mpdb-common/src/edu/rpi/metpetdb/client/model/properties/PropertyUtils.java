@@ -7,6 +7,10 @@ public class PropertyUtils {
 			return (Float) o;
 		} else if (o instanceof String) {
 			return Float.parseFloat(o.toString());
+		} else if (o instanceof Double){
+			return ((Double) o).floatValue();
+		} else if (o instanceof Integer){
+			return ((Integer) o).floatValue();
 		} else
 			return null;
 	}
@@ -16,7 +20,11 @@ public class PropertyUtils {
 			return (Double) o;
 		} else if (o instanceof String) {
 			return Double.parseDouble(o.toString());
-		} else
+		} else if (o instanceof Float) {
+			return ((Float) o).doubleValue();
+		} else if (o instanceof Integer) {
+			return ((Integer) o).doubleValue();
+		}  else
 			return null;
 	}
 
