@@ -9,7 +9,6 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchSample;
@@ -26,7 +25,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabMeta
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabMinerals;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabProvenance;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabRockTypes;
-import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisListEx;
+import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisList;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
@@ -54,7 +53,9 @@ public class Search extends MPagePanel {
 					chemList.getScrollTable().gotoPage(0, true);
 				}
 			}
-			protected void onSearchCompletion(final FormOp<SearchSample> ac) {}
+			protected void onSearchCompletion(final FormOp<SearchSample> ac) {
+				
+			}
 		};
 		sui.insertActionWidget(createResultTypeToggle(), 0);
 	}
@@ -71,8 +72,7 @@ public class Search extends MPagePanel {
 		}
 
 	};
-	private final static ChemicalAnalysisListEx chemList = new ChemicalAnalysisListEx(
-			LocaleHandler.lc_text.search_noChemicalAnalysesFound()) {
+	private final static ChemicalAnalysisList chemList = new ChemicalAnalysisList() {
 
 		@Override
 		public void update(PaginationParameters p,

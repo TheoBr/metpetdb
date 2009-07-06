@@ -1,10 +1,6 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -13,10 +9,10 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.ImageNotFoundException;
 import edu.rpi.metpetdb.client.model.Image;
-import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
+import edu.rpi.metpetdb.server.util.ImageUtil;
 
 public class ImageDAO extends MpDbDAO<Image> {
 
@@ -47,7 +43,7 @@ public class ImageDAO extends MpDbDAO<Image> {
 				return (Image) getResult(q);
 		}
 		if (inst.getSubsample() != null && inst.getSubsample().getId() > 0) {
-			final Query q = namedQuery("Image.bySubsampleIddbyFilename");
+			final Query q = namedQuery("Image.bySubsampleIdbyFilename");
 			q.setLong("id", inst.getSubsample().getId());
 			q.setString("filename", inst.getFilename());
 			if (getResult(q) != null)
@@ -64,9 +60,11 @@ public class ImageDAO extends MpDbDAO<Image> {
 		if (inst.getSubsample() != null)
 			inst.setSubsample((new SubsampleDAO(sess)).fill(inst.getSubsample()));
 		inst.setImageType(new ImageTypeDAO(sess).fill(inst.getImageType()));
+		inst.setFilename(ImageUtil.stripFilename(inst.getFilename()));
 		inst = _save(inst);
 		return inst;
 	}
+	
 
 	public List<Image> getBySampleId(long sampleId) throws MpDbException{
 		Query q = namedQuery("Image.bySampleId");

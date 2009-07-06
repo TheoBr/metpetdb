@@ -1,10 +1,6 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
-import java.util.ArrayList;
-
 import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -12,16 +8,10 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
-import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.properties.ChemicalAnalysisProperty;
-import edu.rpi.metpetdb.client.model.properties.SubsampleProperty;
-import edu.rpi.metpetdb.client.paging.PaginationParameters;
-import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.dialogs.ViewImagePopup;
-import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.paging.DataList;
 import edu.rpi.metpetdb.client.ui.widgets.paging.columns.Column;
@@ -101,10 +91,10 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 			defaultColumns.addColumn(col);
 		}
 		
-		// Mineral
+		// AnalysisMaterial (Mineral/Bulk Rock)
 		{
 			StringColumn<ChemicalAnalysis> col = new StringColumn<ChemicalAnalysis>(enttxt.ChemicalAnalysis_mineral(),
-					ChemicalAnalysisProperty.mineral);
+					ChemicalAnalysisProperty.analysisMaterial);
 			col.setColumnSortable(true);
 			col.setMinimumColumnWidth(30);
 			col.setPreferredColumnWidth(30);

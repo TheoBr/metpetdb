@@ -160,6 +160,15 @@ public enum ChemicalAnalysisProperty implements Property<ChemicalAnalysis> {
 			}
 		}
 	},
+	analysisMaterial {
+		public String get(final ChemicalAnalysis chemicalAnalysis){
+			return ((ChemicalAnalysis) chemicalAnalysis).getAnalysisMaterial();
+		}
+		
+		public void set(final ChemicalAnalysis chemicalAnalysis, final Object analysisMaterial){
+			((ChemicalAnalysis) chemicalAnalysis).setAnalysisMaterial(analysisMaterial.toString());
+		}
+	},
 	subsampleName {
 		public String get(final ChemicalAnalysis chemicalAnalysis) {
 			return ((ChemicalAnalysis) chemicalAnalysis).getSubsampleName();

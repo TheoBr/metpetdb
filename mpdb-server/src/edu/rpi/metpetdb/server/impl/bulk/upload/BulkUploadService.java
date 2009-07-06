@@ -14,7 +14,9 @@ import org.hibernate.exception.GenericJDBCException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.bulk.upload.ImageForAnalysisNotFound;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
+import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
@@ -29,6 +31,7 @@ import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.Parser;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
+import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
@@ -229,6 +232,22 @@ public abstract class BulkUploadService extends MpDbServlet {
 			return subsamples.get(s.getNumber().toLowerCase()
 					+ ss.getName().toLowerCase());
 		}
+	}
+	protected Image checkForImage(Sample s, Subsample ss,Image i, final ImageDAO imageDao,
+			final BulkUploadResult results, int row) {
+		try {
+			// if we don't have this sample already loaded check
+			// for it in the database
+			i.setSample(s);
+			i.setSubsample(ss);
+			i = imageDao.fill(i);
+		} catch (MpDbException e) {
+			// There is no sample we have to add an error
+			// Every Image needs a sample so add an error
+			results.addError(row, new ImageForAnalysisNotFound("Image " + i.getFilename() + " is not associated with sample " +
+					s.getNumber() + " or subsample " + ss.getName()));
+		}
+		return i;
 	}
 	protected <T extends MObject> void analyzeResults(
 			final Map<Integer, T> results,

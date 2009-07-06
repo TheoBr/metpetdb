@@ -11,6 +11,7 @@ import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
+import edu.rpi.metpetdb.server.util.ImageUtil;
 
 public class SubsampleDAO extends MpDbDAO<Subsample> {
 
@@ -51,6 +52,7 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 	public Subsample save(Subsample inst) throws MpDbException {
 		inst.setSubsampleType(new SubsampleTypeDAO(sess).fill(inst
 				.getSubsampleType()));
+		inst.setImages(ImageUtil.stripFilename(inst.getImages()));
 		return _save(inst);
 	}
 

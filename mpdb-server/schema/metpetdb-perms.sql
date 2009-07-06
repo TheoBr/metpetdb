@@ -46,6 +46,7 @@ GRANT select,insert,update,delete ON chemical_analyses_archive to @APPUSER@;
 GRANT select,insert,update,delete ON chemical_analysis_elements_archive to @APPUSER@;
 GRANT select,insert,update,delete ON chemical_analysis_oxides_archive to @APPUSER@;
 GRANT select,insert,update,delete ON role_changes to @APPUSER@;
+GRANT select,insert,update,delete ON project_invites to @APPUSER@;
 
 GRANT update ON mineral_seq   TO @APPUSER@;
 GRANT update ON project_seq   TO @APPUSER@;

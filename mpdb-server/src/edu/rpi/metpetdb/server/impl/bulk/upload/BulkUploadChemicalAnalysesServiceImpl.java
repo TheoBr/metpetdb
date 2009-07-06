@@ -18,6 +18,7 @@ import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadChemicalAnalysesSer
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
 import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
+import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
@@ -46,6 +47,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 		final Iterator<Integer> rows = analyses.keySet().iterator();
 		final ChemicalAnalysisDAO caDao = new ChemicalAnalysisDAO(
 				currentSession());
+		final ImageDAO imageDao = new ImageDAO(currentSession());
 		results.setHeaders(ap.getHeaders());
 		while (rows.hasNext()) {
 			int row = rows.next();
@@ -76,9 +78,12 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 							results, subsampleNames, row, subsamples,
 							ssResultCount, save));
 				} else {
-					// Every Image needs a subsample so add an error
+					// Every ChemicalAnalysis needs a subsample so add an error
 					results.addError(row, new PropertyRequiredException(
 							"Subsample"));
+				}
+				if (ca.getImage() != null){
+					ca.setImage(checkForImage(ss.getSample(),ca.getSubsample(),ca.getImage(),imageDao,results,row));
 				}
 				doc.validate(ca);
 				if (caDao.isNew(ca))

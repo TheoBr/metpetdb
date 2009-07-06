@@ -615,6 +615,8 @@ public class SearchDb {
 				String parameter = p.getParameter();
 				if (parameter.equals("owner"))
 					parameter += ".name";
+				else if (parameter.equals("reference"))
+					parameter = "referenceName";
 				else if (parameter.equals("rockType"))
 					parameter += ".rockType";
 				else if (parameter.equals("regions"))
@@ -626,7 +628,7 @@ public class SearchDb {
 				else if (parameter.equals("minerals"))
 					parameter = "firstMineral";
 				else if (parameter.equals("mineral")){
-					parameter = "largeRock, ca.mineral.name";
+					parameter = "analysisMaterial";
 				}
 				queryString += " order by " + ((isSample) ? "s." : "ca.") + parameter;
 				queryString += (p.isAscending()) ? "" : " DESC";

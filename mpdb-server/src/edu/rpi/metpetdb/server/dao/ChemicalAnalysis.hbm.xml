@@ -37,6 +37,14 @@
 	<property name="largeRock" column="large_rock" type="yes_no" />
 	<property name="total" column="total" />
 	<many-to-one name="mineral" column="mineral_id" class="Mineral" lazy="false" cascade="none"/>
+	
+	<property name="referenceName" formula="(select r.name from reference r where
+    										reference_id = r.reference_id)" />
+    <property name="analysisMaterial" formula="(case 
+    													when exists (select 1 from minerals m where mineral_id = m.mineral_id)
+    														 then (select m.name from minerals m where mineral_id = m.mineral_id)
+    													else 'Bulk Rock' 
+    											end)" />
 
     <set name="elements" table="chemical_analysis_elements" lazy="false" cascade="save-update">
       <key column="chemical_analysis_id" />
@@ -108,11 +116,6 @@
     where ma.subsample.id = :id
     order by (lower(ma.analysisMethod))
   </query>
-  <query name="ChemicalAnalysis.bySubsampleId/mineral">
-    from ChemicalAnalysis ma
-    where ma.subsample.id = :id
-    order by (lower(ma.mineral))
-  </query>
   <query name="ChemicalAnalysis.bySubsampleId/location">
     from ChemicalAnalysis ma
     where ma.subsample.id = :id
@@ -131,7 +134,7 @@
   <query name="ChemicalAnalysis.bySubsampleId/reference">
     from ChemicalAnalysis ma
     where ma.subsample.id = :id
-    order by (lower(ma.reference))
+    order by (lower(ma.referenceName))
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/total">
     from ChemicalAnalysis ma
@@ -142,6 +145,11 @@
     from ChemicalAnalysis ma
     where ma.subsample.id = :id
     order by (lower(ma.description))
+  </query>
+  <query name="ChemicalAnalysis.bySubsampleId/mineral">
+    from ChemicalAnalysis ma
+    where ma.subsample.id = :id
+    order by (lower(ma.analysisMaterial))
   </query>
   
 <!-- only returns data that is either public or owned by the current user

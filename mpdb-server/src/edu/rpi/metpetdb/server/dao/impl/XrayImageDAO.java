@@ -6,6 +6,7 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.model.XrayImage;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
+import edu.rpi.metpetdb.server.util.ImageUtil;
 
 public class XrayImageDAO extends MpDbDAO<XrayImage> {
 
@@ -33,8 +34,10 @@ public class XrayImageDAO extends MpDbDAO<XrayImage> {
 		if (inst.getSubsample() != null)
 			inst.setSubsample((new SubsampleDAO(sess)).fill(inst.getSubsample()));
 		inst.setImageType(new ImageTypeDAO(sess).fill(inst.getImageType()));
+		inst.setFilename(ImageUtil.stripFilename(inst.getFilename()));
 		inst = _save(inst);
 		return inst;
 	}
-
+	
+	
 }

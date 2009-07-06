@@ -34,6 +34,7 @@ public class RegularExpressions {
 	public static final String PRECISION_UNIT = "precision unit";
 	public static final String PRECISION = "precision";
 	public static final String WHOLE_ROCK = "whole rock";
+	public static final String IMAGE_REFERENCE = "(image reference)|(reference image)";
 	
 	/** Image */
 	public static final String FILENAME = "(file)|(path)";
@@ -50,7 +51,7 @@ public class RegularExpressions {
 	public static final String MINERALS = "(minerals)|(mineral)";
 	public static final String LOCATION = "(present.+location)|(current.+location)|(analytical facility)|(analysis location)|(where done)|(wheredone)";
 	public static final String REFERENCES = "(^reference$)|(publication reference)";
-	public static final String COLLECTION_DATE = "(date of collection)|(collected)|(collection.+date)|(analysis Date)";
+	public static final String COLLECTION_DATE = "(date of collection)|(collected)|(collection.+date)|(analysis Date)|(date)";
 	public static final String COMMENTS = "(comment)|(note)|(description)";
 	public static final String SAMPLE = "(^sample[ number| name|])|(^sample$)";
 	public static final String COLLECTOR = "(collector)|(collected by)";

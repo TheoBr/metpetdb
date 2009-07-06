@@ -85,7 +85,7 @@
     where i.sample.id = :id 
     and lower(i.filename) = lower(:filename)
   </query>
-  <query name="Image.bySubsampleIddbyFilename">
+  <query name="Image.bySubsampleIdbyFilename">
     from Image i
     where i.subsample.id = :id 
     and lower(i.filename) = lower(:filename)

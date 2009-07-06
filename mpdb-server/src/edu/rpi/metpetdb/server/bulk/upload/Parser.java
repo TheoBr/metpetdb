@@ -26,6 +26,7 @@ import edu.rpi.metpetdb.client.error.bulk.upload.InvalidSpreadSheetException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.validation.InvalidDateStringException;
 import edu.rpi.metpetdb.client.model.Element;
+import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageType;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Oxide;
@@ -34,6 +35,7 @@ import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadError;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadHeader;
 import edu.rpi.metpetdb.client.model.interfaces.HasDate;
+import edu.rpi.metpetdb.client.model.interfaces.HasImage;
 import edu.rpi.metpetdb.client.model.interfaces.HasSample;
 import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
@@ -257,7 +259,8 @@ public abstract class Parser<T extends MObject> {
 							|| pc == doc.ChemicalAnalysis_sampleName
 							|| pc == doc.ChemicalAnalysis_subsampleName
 							|| pc == doc.Subsample_name
-							|| pc == doc.Subsample_sampleName)
+							|| pc == doc.Subsample_sampleName
+							|| pc == doc.Image_filename)
 						if (cell.getCellType() != HSSFCell.CELL_TYPE_STRING) {
 							warnings.put(rowindex + 1, new BulkUploadError(
 									rowindex + 1, cellName,
@@ -300,6 +303,15 @@ public abstract class Parser<T extends MObject> {
 								((HasSample) newObject).setSample(s);
 							}
 							((HasSample) newObject).getSample().mSet(
+									pc.property, cell.toString());
+						}
+					} else if (pc == doc.Image_filename) {
+						if (newObject instanceof HasImage) {
+							if (((HasImage) newObject).getImage() == null) {
+								final Image im = new Image();
+								((HasImage) newObject).setImage(im);
+							}
+							((HasImage) newObject).getImage().mSet(
 									pc.property, cell.toString());
 						}
 					} else if (pc.entityName.equals(newObject.getClass()
@@ -348,7 +360,7 @@ public abstract class Parser<T extends MObject> {
 										+ cell.toString());
 							else
 								newObject.mSet(pc.property, cell.toString());
-						} else {
+						}  else {
 							final String data = cell.toString();
 							final String[] mulitpartData = data.split("\\s*"
 									+ DATA_SEPARATOR + "\\s*");

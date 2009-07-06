@@ -13,6 +13,7 @@ import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
+import edu.rpi.metpetdb.server.util.ImageUtil;
 
 public class SampleDAO extends MpDbDAO<Sample> {
 
@@ -67,7 +68,7 @@ public class SampleDAO extends MpDbDAO<Sample> {
 	@Override
 	public Sample save(Sample s) throws MpDbException {
 		replaceTransientObjects(s);
-
+		s.setImages(ImageUtil.stripFilename(s.getImages()));
 		s = _save(s);
 		return s;
 	}

@@ -73,6 +73,8 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 				doc.ChemicalAnalysis_stageX));
 		columns.add(new ColumnMapping(RegularExpressions.Y_STAGE,
 				doc.ChemicalAnalysis_stageY));
+		columns.add(new ColumnMapping(RegularExpressions.IMAGE_REFERENCE,
+				doc.Image_filename));
 	}
 
 	public List<ColumnMapping> getColumMappings() {
