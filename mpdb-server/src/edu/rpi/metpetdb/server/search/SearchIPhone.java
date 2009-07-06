@@ -164,6 +164,9 @@ public class SearchIPhone extends HttpServlet{
 				    response.getWriter().write("</imageID>");
 				}
 			}
+			 response.getWriter().write("<imageCount>");
+			x.toXML(sample.getImageCount(), response.getWriter());
+			 response.getWriter().write("</imageCount>");
 			response.getWriter().write("</thumbnails>");
 		} catch(final Exception ioe){
 			try {
@@ -211,18 +214,6 @@ public class SearchIPhone extends HttpServlet{
 			throw new IllegalStateException(ioe.getMessage());
 		}
 	}
-	private String padHexString(String input) {
-        int length = input.length();
-        if (length >= 2) {
-            return input;
-        }
-        StringBuffer returnString = new StringBuffer();
-        for (int i = 1; i <= 2 - length; i++) {
-            returnString.append("0");
-        }
-        returnString.append(input);
-        return returnString.toString();
-    }
 
 	private void subsampleInfo(HttpServletResponse response, long id ){
 		try{
@@ -292,8 +283,8 @@ public class SearchIPhone extends HttpServlet{
 			Set<String> regionNames=service.viewableNamesForUser(0);
 			List<String>regionList= new ArrayList<String>(regionNames);
 			java.util.Collections.sort(regionList);
-			//x.toXML(service.viewableNamesForUser(0),response.getWriter());
-			x.toXML(regionList, response.getWriter());
+			x.toXML(service.viewableNamesForUser(0),response.getWriter());
+			//x.toXML(regionList, response.getWriter());
 		} catch(final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
 		}
