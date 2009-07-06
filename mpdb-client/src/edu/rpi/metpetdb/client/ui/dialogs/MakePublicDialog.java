@@ -32,7 +32,7 @@ import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
 import edu.rpi.metpetdb.client.ui.widgets.paging.DataList;
 
 public class MakePublicDialog extends MDialogBox{
-	private ArrayList<Sample> samples;
+	private ArrayList<Sample> samples = new ArrayList();
 	private ArrayList<Subsample> subsamples = new ArrayList();
 	private ArrayList<Grid> imageMaps = new ArrayList();
 	
@@ -53,10 +53,30 @@ public class MakePublicDialog extends MDialogBox{
 	private Button closeX;
 	private Button cancel;
 	
-	DataList<Sample> list;
+	private DataList list;
 	
-	public MakePublicDialog(final ArrayList<Sample> samples, DataList<Sample> list){
+	private boolean isSamples;
+	
+	public MakePublicDialog(final ArrayList selected, DataList list, 
+			boolean isSamples, Sample parent){
 		super();
+		this.isSamples = isSamples;
+		this.list = list;
+		
+		//If no boxes were selected
+		if(selected.size() == 0){
+			MakePublicDialog.this.setWidget(noSamplesWidget());
+			return;
+		}
+		
+		if(!isSamples){
+			selectedSubsamples = selected;
+			samples.add(parent);
+			getAllData(samples);
+		} else {
+			samples.addAll(selected);
+			getAllData(samples);
+		}
 		
 		// These two buttons are in every dialog so we create them once here
 		closeX = new Button("X");
@@ -88,16 +108,6 @@ public class MakePublicDialog extends MDialogBox{
 				}.begin();			
 			}
 		});
-		
-		//If no samples were selected
-		if(samples.size() == 0){
-			MakePublicDialog.this.setWidget(noSamplesWidget());
-			return;
-		}
-		
-		getAllData(samples);
-		this.samples = samples;
-		this.list = list;
 	}
 	
 	private Widget loading(){
@@ -109,7 +119,11 @@ public class MakePublicDialog extends MDialogBox{
 	
 	private Widget noSamplesWidget(){
 		final FlowPanel container = new FlowPanel();
-		container.add(new Label("No Samples selected"));
+		if(isSamples){
+			container.add(new Label("No Samples selected"));
+		} else {
+			container.add(new Label("No Subsamples selected"));
+		}
 		Button ok = new Button("Ok");
 		ok.addClickListener(new ClickListener(){
 			public void onClick(final Widget sender){

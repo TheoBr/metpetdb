@@ -200,28 +200,9 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 		});
 		addSubsample.addStyleName(CSS.ADDLINK);
 		subsamples_ft.setWidget(0, 2, addSubsample);
-		
-		/*final MLink makeSubsamplesPublic = new MLink(LocaleHandler.lc_text
-				.makeSubsamplePublic(), new ClickListener() {
-			public void onClick(final Widget sender) {
-				
-			}
-		});
-		makeSubsamplesPublic.addStyleName(CSS.BETA);
-		subsamples_ft.setWidget(0, 1, makeSubsamplesPublic);*/
 
 		Label Subsamples_label = new Label(LocaleHandler.lc_text.subsamples());;
 		subsamples_ft.setWidget(0, 0, Subsamples_label);
-
-		/*final SubsampleListEx list = new SubsampleListEx(LocaleHandler.lc_text
-				.noSubsamplesFound()) {
-			public void update(final PaginationParameters p,
-					final AsyncCallback<Results<Subsample>> ac) {
-				MpDb.subsample_svc.all(p, sampleId, ac);
-			}
-		};
-
-		subsamples_ft.setWidget(1, 0, list);*/
 		
 		SubsampleList list = new SubsampleList() {
 			public void update(final PaginationParameters p,

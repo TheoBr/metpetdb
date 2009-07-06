@@ -167,7 +167,7 @@ public abstract class SubsampleList extends DataList<Subsample> {
 	
 	public void initialize() {
 		super.initialize();
-		//setTableActions(new SampleListActions(this));
+		setTableActions(new SubsampleListActions(this));
 	}
 
 	public SubsampleList() {
