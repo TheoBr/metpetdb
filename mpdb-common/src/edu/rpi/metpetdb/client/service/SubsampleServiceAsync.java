@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Subsample;
@@ -27,6 +28,8 @@ public interface SubsampleServiceAsync {
 	void save(final Subsample s, AsyncCallback<Subsample> ac);
 
 	void delete(long id, AsyncCallback<Object> ac);
+	
+	void deleteAll(Collection<Long> ids, AsyncCallback<Void> ac);
 	
 	void saveAll(Collection<Subsample> subsamples, AsyncCallback<Void> ac);
 	

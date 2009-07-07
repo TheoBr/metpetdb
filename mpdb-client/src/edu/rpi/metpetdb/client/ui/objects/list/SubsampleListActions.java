@@ -119,7 +119,7 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 	}
 
 	private final MLink makePublic;
-	//private final MLink remove;
+	private final MLink remove;
 	
 	public SubsampleListActions(final DataList<Subsample> list) {
 		this.list = list;
@@ -128,11 +128,11 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 		makePublic = new MLink("Make Public", this);
 		makePublic.addStyleName("item");
 
-		//remove = new MLink("Remove", this);
-		//remove.addStyleName("item");
+		remove = new MLink("Remove", this);
+		remove.addStyleName("item");
 		
 		add(makePublic);
-		//add(remove);
+		add(remove);
 		setStylePrimaryName("scrolltable-actions");
 	}
 
@@ -146,7 +146,7 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 					ids.add(itr.next().getId());
 				}
 				
-				//MpDb.subsample_svc.deleteAll(ids, this);
+				MpDb.subsample_svc.deleteAll(ids, this);
 
 			}
 			public void onSuccess() {
@@ -176,8 +176,8 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 					}	
 				}.begin();
 			}
-		}/* else if (sender == remove) {
-			final List<Sample> checkedSamples = list.getSelectedValues();
+		} else if (sender == remove) {
+			final List<Subsample> checkedSubsamples = list.getSelectedValues();
 			new ServerOp<Boolean>() {
 				public void begin() {
 					new ConfirmationDialogBox(LocaleHandler.lc_text
@@ -186,10 +186,10 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 
 				public void onSuccess(final Boolean result) {
 					if (result)
-						deleteSelected(checkedSamples);
+						deleteSelected(checkedSubsamples);
 				}
 			}.begin();
-		}*/
+		}
 	}
 	
 	private void noSubsamplesSelected(){

@@ -28,6 +28,8 @@ public interface SubsampleService extends RemoteService {
 
 	void delete(long id) throws MpDbException, LoginRequiredException;
 	
+	void deleteAll(Collection<Long> ids) throws MpDbException, LoginRequiredException;
+	
 	void saveAll(Collection<Subsample> subsamples)
 		throws ValidationException, LoginRequiredException, MpDbException;
 	

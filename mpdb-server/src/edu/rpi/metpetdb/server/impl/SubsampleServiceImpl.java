@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.server.impl;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -79,6 +80,19 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 		s.setId(id);
 		s = dao.fill(s);
 		dao.delete(s);
+		commit();
+	}
+	
+	public void deleteAll(Collection<Long> ids)  throws MpDbException, LoginRequiredException {
+		final SubsampleDAO dao = new SubsampleDAO(this.currentSession());
+		final Iterator<Long> itr = ids.iterator();
+		while(itr.hasNext()){
+			long current = itr.next();
+			Subsample ss = new Subsample();
+			ss.setId(current);
+			ss = dao.fill(ss);
+			dao.delete(ss);
+		}
 		commit();
 	}
 }
