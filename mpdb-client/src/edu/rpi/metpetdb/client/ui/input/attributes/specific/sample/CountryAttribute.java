@@ -16,11 +16,11 @@ import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 public class CountryAttribute  extends SuggestTextAttribute {
 
 	public CountryAttribute(final ObjectConstraint sc) {
-		super(sc);
+		super(sc,true);
 	}
 
 	public CountryAttribute(final StringConstraint sc) {
-		super(sc);
+		super(sc,true);
 	}
 	
 	protected Object get(Widget editWidget) throws ValidationException {

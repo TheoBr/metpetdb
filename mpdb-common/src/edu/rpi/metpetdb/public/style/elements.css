@@ -140,6 +140,9 @@ button:active {
 	background-color: #fff;
 	background-image: url(../images/button-bg-down.png);
 }
+button:disabled{
+	color: gray;	
+}
 button.btnPrimary,
 button.submit {
 	font-weight: bold;
