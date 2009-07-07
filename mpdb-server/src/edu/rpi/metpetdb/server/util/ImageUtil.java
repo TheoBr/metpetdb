@@ -14,6 +14,7 @@ public class ImageUtil {
 	}
 	
 	public static Set<Image> stripFilename(Set<Image> images){
+		if (images == null) return null;
 		for (Image i: images){
 			i.setFilename(stripFilename(i.getFilename()));
 		}
