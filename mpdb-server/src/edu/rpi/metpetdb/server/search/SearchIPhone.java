@@ -154,7 +154,7 @@ public class SearchIPhone extends HttpServlet{
 				Set<edu.rpi.metpetdb.client.model.Image> subImages= sub.getImages();
 				for(edu.rpi.metpetdb.client.model.Image im : subImages)
 				{
-					final String subImagePath= "http://samana.cs.rpi.edu/metpetweb//image/?checksum=" + im.getChecksum64x64();
+					final String subImagePath= im.getChecksum64x64();
 				
 					response.getWriter().write("<image>");
 					x.toXML(subImagePath, response.getWriter());
