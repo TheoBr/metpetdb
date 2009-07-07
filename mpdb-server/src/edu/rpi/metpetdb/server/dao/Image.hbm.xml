@@ -16,6 +16,7 @@
     <property name="height" column="height" />
     <property name="checksum64x64" column="checksum_64x64" />
     <property name="checksumHalf" column="checksum_half" />
+    <property name="checksumMobile" column="checksum_mobile"/>
     <property name="filename" column="filename" />
     <property name="collector" column="collector" length="100" />
     <property name="scale" />

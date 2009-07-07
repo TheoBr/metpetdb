@@ -51,6 +51,7 @@ public class XrayImage extends Image {
 		i.setChecksum(this.getChecksum());
 		i.setChecksum64x64(this.getChecksum64x64());
 		i.setChecksumHalf(this.getChecksumHalf());
+		i.setChecksumMobile(this.getChecksumMobile());
 		i.setFilename(this.getFilename());
 		i.setSample(this.getSample());
 		return i;

@@ -22,6 +22,7 @@ public class Image extends MObject implements HasSubsample, HasSample, PublicDat
 	private String checksum;
 	private String checksum64x64;
 	private String checksumHalf;
+	private String checksumMobile;
 
 	private Subsample Subsample;
 
@@ -162,6 +163,12 @@ public class Image extends MObject implements HasSubsample, HasSample, PublicDat
 
 	public void setChecksum64x64(final String s) {
 		checksum64x64 = s;
+	}
+	public String getChecksumMobile(){
+		return checksumMobile;
+	}
+	public void setChecksumMobile(final String s){
+		checksumMobile= s;
 	}
 
 	public String getChecksumHalf() {

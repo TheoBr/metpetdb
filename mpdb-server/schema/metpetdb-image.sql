@@ -58,6 +58,7 @@ CREATE TABLE images
    public_data CHAR(1) CHECK (public_data IN ('Y','N')) NOT NULL,
    checksum_64x64 CHAR(50) NOT NULL,
    checksum_half CHAR(50) NOT NULL,
+   checksum_mobile CHAR(50),
    filename VARCHAR(256) NOT NULL,
    CONSTRAINT images_sk PRIMARY KEY (image_id),
    CONSTRAINT images_fk_image_format FOREIGN KEY (image_format_id)

@@ -77,6 +77,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 			img.setChecksum(ImageUploadServlet.generateFullsize(ro, false));
 			img.setChecksum64x64(ImageUploadServlet.generate64x64(ro, false));
 			img.setChecksumHalf(ImageUploadServlet.generateHalf(ro, false));
+			img.setChecksumMobile(ImageUploadServlet.generateMobileVersion(ro,false));
 			img.setWidth(ro.getWidth());
 			img.setHeight(ro.getHeight());
 		}

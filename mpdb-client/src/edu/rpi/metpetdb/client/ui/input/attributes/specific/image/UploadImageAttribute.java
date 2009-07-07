@@ -65,12 +65,13 @@ public class UploadImageAttribute extends GenericAttribute<Image> {
 
 					image.setChecksum(results.split(",")[0].trim());
 					image.setChecksum64x64(results.split(",")[1].trim());
-					image.setChecksumHalf(results.split(",")[2].trim());
-					image.setWidth(Integer.parseInt(results.split(",")[3]
+					image.setChecksumMobile(results.split(",")[2].trim());
+					image.setChecksumHalf(results.split(",")[3].trim());
+					image.setWidth(Integer.parseInt(results.split(",")[4]
 							.trim()));
-					image.setHeight(Integer.parseInt(results.split(",")[4]
+					image.setHeight(Integer.parseInt(results.split(",")[5]
 							.trim()));
-					image.setFilename(results.split(",")[5].trim());
+					image.setFilename(results.split(",")[6].trim());
 					image.setOwner(MpDb.currentUser());
 					error.setText("Image Upload Successfully");
 					hasBeenUploaded = true;

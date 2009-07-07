@@ -55,6 +55,7 @@ public class ImageUploadServlet extends HttpServlet {
 		// final String originalChecksum = writeFile(uploadItem.get());
 		al.add(generateFullsize(ro, false));
 		al.add(generate64x64(ro, false));
+		al.add(generateMobileVersion(ro, false));
 		al.add(generateHalf(ro, false));
 		al.add(String.valueOf(ro.getWidth()));
 		al.add(String.valueOf(ro.getHeight()));
@@ -99,6 +100,29 @@ public class ImageUploadServlet extends HttpServlet {
 		ByteArrayOutputStream bs = new ByteArrayOutputStream();
 		pb.addSource(small);
 		if (!doAsPng)
+			pb.add(bs).add("jpeg").add(encodeParam);
+		else
+			pb.add(bs).add("png");
+		JAI.create("encode", pb);
+		final byte[] bytes = bs.toByteArray();
+		try {
+			bs.close();
+		} catch (IOException ioe) {
+
+		}
+		return writeFile(bytes);
+	}
+	public static String generateMobileVersion(final RenderedOp ro,
+			final boolean doAsPng){
+	
+		final float scale= (float) 320.0 / ro.getWidth();
+		final RenderedOp mobile= scale(ro, scale, scale);
+		final JPEGEncodeParam encodeParam = new JPEGEncodeParam();
+		encodeParam.setQuality(1.0f);
+		final ParameterBlock pb= new ParameterBlock();
+		ByteArrayOutputStream bs = new ByteArrayOutputStream();
+		pb.addSource(mobile);
+		if(!doAsPng)
 			pb.add(bs).add("jpeg").add(encodeParam);
 		else
 			pb.add(bs).add("png");

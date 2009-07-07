@@ -137,7 +137,7 @@ public class SearchIPhone extends HttpServlet{
 			response.getWriter().write("<thumbnails>");
 			for(edu.rpi.metpetdb.client.model.Image i : images)
 			{
-				final String imagePath = "http://samana.cs.rpi.edu:8080/metpetwebtst//image/?checksum=" + i.getChecksum64x64();
+				final String imagePath = "http://samana.cs.rpi.edu/metpetweb//image/?checksum=" + i.getChecksum64x64();
 	
 				response.getWriter().write("<image>");
 				x.toXML(imagePath, response.getWriter());
@@ -154,7 +154,7 @@ public class SearchIPhone extends HttpServlet{
 				Set<edu.rpi.metpetdb.client.model.Image> subImages= sub.getImages();
 				for(edu.rpi.metpetdb.client.model.Image im : subImages)
 				{
-					final String subImagePath= "http://samana.cs.rpi.edu:8080/metpetwebtst//image/?checksum=" + im.getChecksum64x64();
+					final String subImagePath= "http://samana.cs.rpi.edu/metpetweb//image/?checksum=" + im.getChecksum64x64();
 				
 					response.getWriter().write("<image>");
 					x.toXML(subImagePath, response.getWriter());
@@ -185,12 +185,19 @@ public class SearchIPhone extends HttpServlet{
 			response.getWriter().write("<image>");
 			ImageServiceImpl i= new ImageServiceImpl();
 			edu.rpi.metpetdb.client.model.Image image= i.details(imageID);
-			final String checksum = image.getChecksumHalf();
-			final String folder = checksum.substring(0, 2);
-			final String subfolder = checksum.substring(2, 4);
-			final String filename = checksum.substring(4, checksum.length());
-			final String imagePath = "http://samana.cs.rpi.edu:8080/metpetwebtst//image/?checksum=" + image.getChecksumHalf();
-			
+			//final String checksum = image.getChecksumHalf();
+			//final String folder = checksum.substring(0, 2);
+			//final String subfolder = checksum.substring(2, 4);
+			//final String filename = checksum.substring(4, checksum.length());
+			final String imagePath;
+			if(image.getChecksumMobile()== null || image.getChecksumMobile().equals(""))
+			{
+				imagePath =image.getChecksumHalf();
+			}
+			else
+			{
+				imagePath = image.getChecksumMobile();
+			}
 			x.toXML(imagePath, response.getWriter());
 			response.getWriter().write("</image>");
 		}	
@@ -280,11 +287,12 @@ public class SearchIPhone extends HttpServlet{
 		try {
 			RegionServiceImpl service = new RegionServiceImpl();
 			final XStream x = new XStream();
-			Set<String> regionNames=service.viewableNamesForUser(0);
+			//Set<String> regionNames=service.viewableNamesForUser(0);
+			Set<String> regionNames= service.viewableNamesForUser(0);
 			List<String>regionList= new ArrayList<String>(regionNames);
 			java.util.Collections.sort(regionList);
-			x.toXML(service.viewableNamesForUser(0),response.getWriter());
-			//x.toXML(regionList, response.getWriter());
+			//x.toXML(service.viewableNamesForUser(0),response.getWriter());
+			x.toXML(regionList, response.getWriter());
 		} catch(final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
 		}
