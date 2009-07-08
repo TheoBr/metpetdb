@@ -63,6 +63,25 @@
     order by p.owner.emailAddress
   </query>
   
+  <query name="Project.byMemberId">
+    select p
+    from Project p
+    where p.owner = :id
+  </query>
+  
+  <query name="Project.byMemberId,size">
+  	select count(*)
+    from Project as p
+    where p.owner = :id
+  </query>
+  
+  <query name="Project.byMemberId/name">
+    select p
+    from Project as p
+    where p.owner = :id
+    order by p.name
+  </query>
+  
   <query name="Project.samples,size">
   	select count(*) from Project p
   	inner join p.samples

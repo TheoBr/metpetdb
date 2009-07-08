@@ -20,13 +20,13 @@ import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	private static final long serialVersionUID = 1L;
 
-	public Results<Project> all(final PaginationParameters p, final long ownerId) throws MpDbException {
-		return (new ProjectDAO(this.currentSession())).getForOwner(p, ownerId);
+	public Results<Project> all(final PaginationParameters p, final long userId) throws MpDbException {
+		return (new ProjectDAO(this.currentSession())).getForUser(p, userId);
 	}
 
 	public List<Project> all(final long userId) throws MpDbException {
 		List<Project> lDAO = (new ProjectDAO(this.currentSession()))
-				.getForOwner(userId);
+				.getForUser(userId);
 		return (lDAO);
 	}
 
@@ -70,5 +70,23 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	
 	public List<Project> getInvitesForUser(int id) throws MpDbException {
 		return new ProjectDAO(currentSession()).getInvitesForUser(id);
+	}
+
+	public void acceptInvite(Invite i) throws MpDbException {
+		User u = new User();
+		u.setId(i.getMember_id());
+		u = (new UserDAO(this.currentSession())).fill(u);
+		new ProjectDAO(this.currentSession()).acceptInvite(i, u);
+		commit();
+		return;
+	}
+
+	public void rejectInvite(Invite i) throws MpDbException {
+		User u = new User();
+		u.setId(i.getMember_id());
+		u = (new UserDAO(this.currentSession())).fill(u);
+		new ProjectDAO(this.currentSession()).removeInvite(i, u);
+		commit();
+		return;
 	}
 }

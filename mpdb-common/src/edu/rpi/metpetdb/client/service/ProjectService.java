@@ -56,5 +56,9 @@ public interface ProjectService extends RemoteService {
 	
 	Invite saveInvite(Invite i) throws MpDbException;
 	
+	void acceptInvite(Invite i) throws MpDbException;
+	
+	void rejectInvite(Invite i) throws MpDbException;
+	
 	List<Project> getInvitesForUser(int id) throws MpDbException;
 }

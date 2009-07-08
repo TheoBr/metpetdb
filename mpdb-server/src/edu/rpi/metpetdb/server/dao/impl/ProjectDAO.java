@@ -49,18 +49,18 @@ public class ProjectDAO extends MpDbDAO<Project> {
 		return inst;
 	}
 
-	public List<Project> getForOwner(final long userId) throws MpDbException{
-		Query q = namedQuery("Project.byOwnerId");
-		q.setLong("ownerId", userId);
+	public List<Project> getForUser(final long userId) throws MpDbException{
+		Query q = namedQuery("Project.byMemberId");
+		q.setLong("id", userId);
 		return (List<Project>) getResults(q);
 	}
 
-	public Results<Project> getForOwner(final PaginationParameters p,
-			final long ownerId) throws MpDbException {
-		final Query sizeQ = sizeQuery("Project.byOwnerId");
-		final Query pageQ = pageQuery("Project.byOwnerId", p);
-		sizeQ.setLong("ownerId", ownerId);
-		pageQ.setLong("ownerId", ownerId);
+	public Results<Project> getForUser(final PaginationParameters p,
+			final long userId) throws MpDbException {
+		final Query sizeQ = sizeQuery("Project.byMemberId");
+		final Query pageQ = pageQuery("Project.byMemberId", p);
+		sizeQ.setLong("id", userId);
+		pageQ.setLong("id", userId);
 		return getProjects(sizeQ, pageQ);
 	}
 
@@ -94,6 +94,25 @@ public class ProjectDAO extends MpDbDAO<Project> {
 		p.getInvites().add(u);
 		save(p);
 		return i;
+	}
+	
+	public void removeInvite(Invite i, User u) throws MpDbException {
+		Project p = new Project();
+		p.setId(i.getProject_id());
+		p = fill(p);
+		p.getInvites().remove(u);
+		save(p);
+		return;
+	}
+	
+	public void acceptInvite(Invite i, User u) throws MpDbException {
+		Project p = new Project();
+		p.setId(i.getProject_id());
+		p = fill(p);
+		p.getMembers().add(u);
+		p.getInvites().remove(u);
+		save(p);
+		return;
 	}
 	
 	public List<Project> getInvitesForUser(int id) throws MpDbException {

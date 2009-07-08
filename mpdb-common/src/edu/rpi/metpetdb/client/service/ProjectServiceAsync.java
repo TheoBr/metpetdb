@@ -31,5 +31,9 @@ public interface ProjectServiceAsync {
 
 	void saveInvite(Invite i, AsyncCallback<Invite> ac);
 	
+	void acceptInvite(Invite i, AsyncCallback<Void> ac);
+	
+	void rejectInvite(Invite i, AsyncCallback<Void> ac);
+	
 	void getInvitesForUser(int id, AsyncCallback<List<Project>> ac);
 }

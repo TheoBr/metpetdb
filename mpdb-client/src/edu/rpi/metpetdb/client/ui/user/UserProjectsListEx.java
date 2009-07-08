@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
@@ -19,10 +20,12 @@ import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.commands.LoggedInServerOp;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.objects.list.ProjectListEx;
@@ -65,10 +68,14 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 							(invites.size() > 1 ? "s!" : "!"), 
 							new ClickListener(){
 								public void onClick(Widget sender) {
-									//TODO: go to my invites page
+									new LoggedInServerOp<Subsample>() {
+										@Override
+										public void command() {
+											History.newItem(TokenSpace.viewMyInvites(MpDb.currentUser()));
+										}
+									}.begin();
 								}	
 					});
-					newInvites.addStyleName("beta");
 					header1.setWidget(0, 1, newInvites);
 				}
 			}

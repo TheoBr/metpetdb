@@ -37,6 +37,7 @@ import edu.rpi.metpetdb.client.ui.objects.details.SubsampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.list.ImageListViewer;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
+import edu.rpi.metpetdb.client.ui.project.MyInvites;
 import edu.rpi.metpetdb.client.ui.project.ProjectDescription;
 import edu.rpi.metpetdb.client.ui.project.ProjectInvite;
 import edu.rpi.metpetdb.client.ui.search.Search;
@@ -309,17 +310,6 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 	
-/*	public static final Screen projectInvite = new Screen(LocaleHandler.lc_entity
-			.TokenSpace_Project_Invite()) {
-				public void executeToken(String args) {
-					new VoidLoggedInOp() {
-						public void command() {
-							show(new ProjectInvite().newInvite());
-						}
-					}.begin();
-				}
-		
-	};*/
 	public static final TokenHandler projectInvite = new IKey(
 			LocaleHandler.lc_entity.TokenSpace_Project_Invite()) {
 		public int get(final Object obj) {
@@ -436,6 +426,22 @@ public class TokenSpace implements HistoryListener {
 			}.execute();
 		}
 	};
+	private static final TokenHandler myInvites = new LKey(
+			LocaleHandler.lc_entity.TokenSpace_My_Invites()) {
+
+		public long get(Object obj) {
+			return ((User) obj).getId();
+		}
+		
+		public void execute(final long id) {
+			new VoidLoggedInOp() {
+				public void command() {
+					show(new MyInvites().showById(id));
+				}
+			}.begin();
+		}
+	};
+	
 	static {
 		register(sampleDetails);
 		register(userDetails);
@@ -449,6 +455,7 @@ public class TokenSpace implements HistoryListener {
 		register(samplesForUser);
 		register(projectDescription);
 		register(projectSamples);
+		register(myInvites);
 		register(editProfile);
 		register(imageBrowserDetails);
 		register(chemicalAnalysisDetails);
@@ -551,7 +558,11 @@ public class TokenSpace implements HistoryListener {
 	public static String descriptionOf(Project p) {
 		return projectDescription.makeToken(p);
 	}
-
+	
+	public static String viewMyInvites(User u) {
+		return myInvites.makeToken(u);
+	}
+	
 	public static void dispatch(final String historyToken) {
 		try {
 			internalDispatch(historyToken);

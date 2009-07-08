@@ -164,6 +164,7 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String TokenSpace_Enter_ChemicalAnalysis();
 	String TokenSpace_Create_Image_Map();
 	String TokenSpace_Edit_Subsample();
+	String TokenSpace_My_Invites();
 	/* Left Side */
 	String LeftSide_UserInfo();
 	String LeftSide_MySamples();
