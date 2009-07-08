@@ -44,6 +44,7 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String Sample_comments();
 	String SampleMineral_amount();
 	String Sample_locationError();
+	String Sample_aliases();
 	/* User */
 	String User();
 	String User_name();

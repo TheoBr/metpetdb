@@ -64,6 +64,18 @@ CREATE TABLE samples
   CONSTRAINT samples_fk_rock_type FOREIGN KEY (rock_type_id)
     REFERENCES rock_type(rock_type_id)
 ) WITHOUT OIDS;
+
+CREATE TABLE sample_aliases
+(
+  sample_alias_id INT8 NOT NULL,
+  sample_id INT8,
+  alias VARCHAR(35) NOT NULL,
+  CONSTRAINT sample_aliases_sk PRIMARY KEY (sample_alias_id),
+  CONSTRAINT sample_aliases_nk UNIQUE (sample_id, alias),
+  CONSTRAINT sample_id_fk_sample FOREIGN KEY (sample_id)
+  REFERENCES samples (sample_id)
+) WITHOUT OIDS;
+
 -- Use WGS 84 (srid = 4326)
 SELECT AddGeometryColumn('samples', 'location', 4326, 'POINT', 2);
 CREATE INDEX samples_ix_loc ON samples
@@ -234,3 +246,4 @@ CREATE SEQUENCE reference_seq;
 CREATE SEQUENCE uploaded_files_seq;
 CREATE SEQUENCE sample_comments_seq;
 CREATE SEQUENCE subsample_type_seq;
+CREATE SEQUENCE sample_aliases_seq;

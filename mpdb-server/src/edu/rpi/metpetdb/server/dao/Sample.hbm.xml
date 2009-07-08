@@ -108,6 +108,13 @@
     										WHERE s.sample_id = sample_id AND
     										sm.sample_id = s.sample_id AND
     										m.mineral_id = sm.mineral_id)" />
+
+    <set name="aliases" table="sample_aliases" cascade="all,delete-orphan" order-by="alias" lazy="false"> 
+      <key column="sample_id" />
+      <one-to-many class="SampleAlias" />
+    </set>
+    
+    
     
     <filter name="boundingBox"
             condition="ST_Intersects(location, :polygon)" 

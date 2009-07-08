@@ -13,6 +13,7 @@ import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.Region;
 import edu.rpi.metpetdb.client.model.RockType;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SampleAlias;
 import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.User;
@@ -276,6 +277,15 @@ public enum SampleProperty implements Property<Sample> {
 
 		public void set(final Sample sample, final Object datePrecision) {
 			sample.setDatePrecision(Short.parseShort(datePrecision.toString()));
+		}
+	},
+	aliases {
+		public Object get(final Sample sample){
+			return sample.getAliases();
+		}
+		
+		public void set(final Sample sample, final Object aliases){
+			sample.setAliases((Set<SampleAlias>) aliases);
 		}
 	};
 

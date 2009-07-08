@@ -1,0 +1,28 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="SampleAlias" table="sample_aliases">
+    <id name="id" column="sample_alias_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">sample_aliases_seq</param>
+      </generator>
+    </id>
+    <property name="alias" column="alias" length="35"/>
+    <many-to-one name="sample" column="sample_id" class="Sample"/>
+    
+    </class>
+    
+  <query name="SampleAlias.byId">
+    from SampleAlias sa
+    where sa.id = :id
+  </query>
+  
+  <query name="SampleAlias.bySampleId">
+    from SampleAlias sa
+    where sa.sample.id = :sampleId
+    order by sa.id
+  </query>
+  
+</hibernate-mapping>

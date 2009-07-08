@@ -23,9 +23,8 @@ public class SampleCommentDAO extends MpDbDAO<SampleComment>{
 
 	@Override
 	public SampleComment fill(SampleComment inst) throws MpDbException {
-		// Use Region Name
 		final org.hibernate.Query sampleComments = namedQuery("SampleComment.byId");
-		sampleComments.setString("id", String.valueOf(inst.getId()));
+		sampleComments.setLong("id", inst.getId());
 		if (sampleComments.uniqueResult() != null)
 			return (SampleComment) sampleComments.uniqueResult();
 

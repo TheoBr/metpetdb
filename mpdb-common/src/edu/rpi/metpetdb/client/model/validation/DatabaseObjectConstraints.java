@@ -19,6 +19,7 @@ import edu.rpi.metpetdb.client.model.RockType;
 import edu.rpi.metpetdb.client.model.Role;
 import edu.rpi.metpetdb.client.model.RoleChange;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SampleAlias;
 import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
@@ -113,6 +114,10 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ Rock Type ------
 	public PropertyConstraint[] RockType__all;
 	public StringConstraint RockType_rockType;
+	
+	// ------ SampleAlias -------
+	public PropertyConstraint[] SampleAlias__all;
+	public StringConstraint SampleAlias_alias;
 
 	// ------ SampleComment ------
 	public PropertyConstraint[] SampleComment__all;
@@ -196,6 +201,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public ValueInCollectionConstraint<MetamorphicGrade> Sample_metamorphicGrades;
 	public ObjectConstraint<Reference> Sample_references;
 	public ObjectConstraint<Image> Sample_images;
+	public ObjectConstraint<SampleAlias> Sample_aliases;
 
 	public void validate(final Sample s) throws ValidationException {
 		validate(s, Sample__all);

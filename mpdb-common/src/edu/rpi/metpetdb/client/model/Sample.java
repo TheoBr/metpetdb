@@ -42,6 +42,8 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String number;
+	
+	private Set<SampleAlias> aliases = new HashSet<SampleAlias>();
 
 	@Field(index = Index.UN_TOKENIZED)
 	@DateBridge(resolution = Resolution.DAY)
@@ -237,6 +239,31 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 
 	public void setPublicData(final Boolean p) {
 		publicData = p;
+	}
+	
+	public void setAliases(final Set<SampleAlias> sa) {
+		aliases = sa;
+		for (SampleAlias alias : aliases){
+			alias.setSample(this);
+		}
+	}
+
+	public void addAlias(final SampleAlias sa) {
+		sa.setSample(this);
+		if (aliases == null)
+			aliases = new HashSet<SampleAlias>();
+		aliases.add(sa);
+	}
+	
+	public void addAlias(final String alias){
+		SampleAlias sa = new SampleAlias(alias);
+		addAlias(sa);
+	}
+	
+	public Set<SampleAlias> getAliases() {
+		if (aliases == null)
+			aliases = new HashSet<SampleAlias>();
+		return aliases;
 	}
 
 	public Set<Subsample> getSubsamples() {

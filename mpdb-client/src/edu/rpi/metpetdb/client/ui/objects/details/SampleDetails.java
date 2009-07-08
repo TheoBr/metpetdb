@@ -7,13 +7,10 @@ import org.postgis.Point;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.maps.client.InfoWindowContent;
-import com.google.gwt.maps.client.MapType;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.control.LargeMapControl;
 import com.google.gwt.maps.client.control.MapTypeControl;
 import com.google.gwt.maps.client.control.ScaleControl;
-import com.google.gwt.maps.client.event.EarthInstanceHandler;
-import com.google.gwt.maps.client.event.MapTypeChangedHandler;
 import com.google.gwt.maps.client.event.MarkerClickHandler;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.overlay.Marker;
@@ -52,17 +49,15 @@ import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.image.AddImageAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.AliasAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.CountryAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.LocationAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.MetamorphicGradeAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.MineralAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.ReferenceAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.RegionAttribute;
-import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
 import edu.rpi.metpetdb.client.ui.objects.list.SubsampleList;
-import edu.rpi.metpetdb.client.ui.objects.list.SubsampleListEx;
 import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
-import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarth;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MNoticePanel;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
@@ -85,6 +80,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
 			new TextAttribute(MpDb.doc.Sample_sesarNumber).setImmutable(true),
 			new TextAttribute(MpDb.doc.Sample_number),
+			new AliasAttribute(MpDb.doc.Sample_aliases),
 			new DateAttribute(MpDb.doc.Sample_collectionDate,
 					MpDb.doc.Sample_datePrecision),
 			new ListboxAttribute(MpDb.doc.Sample_rockType),

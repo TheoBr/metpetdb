@@ -166,6 +166,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_UserAlreadyExists();
 	String errorDesc_UserNotFound();
 	String errorDesc_SampleCommentNotFound();
+	String errorDesc_SampleAliasNotFound();
 
 	/* Character Names */
 	String character_space();
