@@ -630,7 +630,13 @@ public class SearchDb {
 				else if (parameter.equals("mineral")){
 					parameter = "analysisMaterial";
 				}
-				queryString += " order by " + ((isSample) ? "s." : "ca.") + parameter;
+				String realParameter = ((isSample) ? "s." : "ca.") + parameter;
+				if (!(parameter.contains("count") || parameter.contains("Count") || 
+						parameter.contains("date") || parameter.contains("Date") ||
+						parameter.equalsIgnoreCase("referenceX") || parameter.equalsIgnoreCase("referenceY"))){
+					realParameter = "lower(" +realParameter +")";
+				}
+				queryString += " order by "  + realParameter;
 				queryString += (p.isAscending()) ? "" : " DESC";
 				org.hibernate.Query q2 = session.createQuery(queryString);
 				q2.setFirstResult(p.getFirstResult());
