@@ -305,15 +305,13 @@ public abstract class Parser<T extends MObject> {
 							((HasSample) newObject).getSample().mSet(
 									pc.property, cell.toString());
 						}
-					} else if (pc == doc.Image_filename) {
-						if (newObject instanceof HasImage) {
-							if (((HasImage) newObject).getImage() == null) {
-								final Image im = new Image();
-								((HasImage) newObject).setImage(im);
-							}
-							((HasImage) newObject).getImage().mSet(
-									pc.property, cell.toString());
+					} else if (pc == doc.Image_filename && newObject instanceof HasImage) {
+						if (((HasImage) newObject).getImage() == null) {
+							final Image im = new Image();
+							((HasImage) newObject).setImage(im);
 						}
+						((HasImage) newObject).getImage().mSet(
+								pc.property, cell.toString());
 					} else if (pc.entityName.equals(newObject.getClass()
 							.getSimpleName())
 							|| ((pc.entityName.equals("Image")
