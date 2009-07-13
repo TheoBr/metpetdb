@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -15,6 +16,7 @@ import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -25,6 +27,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
+import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.dialogs.MakePublicDialog;
 import edu.rpi.metpetdb.client.ui.excel.ExcelUtil;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
@@ -361,6 +364,21 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 			}
 		}.begin();
 	}
+	
+	private void noSamplesSelected(){
+		final MDialogBox noSamplesBox = new MDialogBox();
+		final FlowPanel container = new FlowPanel();
+		container.add(new Label("No Samples selected"));
+		Button ok = new Button("Ok");
+		ok.addClickListener(new ClickListener(){
+			public void onClick(final Widget sender){
+				noSamplesBox.hide();
+			}
+		});
+		container.add(ok);
+		noSamplesBox.setWidget(container);
+		noSamplesBox.show();
+	}
 
 	public void onClick(Widget sender) {
 		if (sender == viewGoogleEarth) {
@@ -374,17 +392,21 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 			m.show();
 		} else if (sender == remove) {
 			final List<Sample> checkedSamples = list.getSelectedValues();
-			new ServerOp<Boolean>() {
-				public void begin() {
-					new ConfirmationDialogBox(LocaleHandler.lc_text
-							.confirmation_Delete(), true, this);
-				}
-
-				public void onSuccess(final Boolean result) {
-					if (result)
-						deleteSelected(checkedSamples);
-				}
-			}.begin();
+			if(checkedSamples.size() == 0){
+				noSamplesSelected();
+			} else {
+				new ServerOp<Boolean>() {
+					public void begin() {
+						new ConfirmationDialogBox(LocaleHandler.lc_text
+								.confirmation_Delete(), true, this);
+					}
+	
+					public void onSuccess(final Boolean result) {
+						if (result)
+							deleteSelected(checkedSamples);
+					}
+				}.begin();
+			}
 		}
 	}
 }

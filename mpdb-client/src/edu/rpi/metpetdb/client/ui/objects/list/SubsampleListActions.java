@@ -178,17 +178,21 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 			}
 		} else if (sender == remove) {
 			final List<Subsample> checkedSubsamples = list.getSelectedValues();
-			new ServerOp<Boolean>() {
-				public void begin() {
-					new ConfirmationDialogBox(LocaleHandler.lc_text
-							.confirmation_Delete(), true, this);
-				}
-
-				public void onSuccess(final Boolean result) {
-					if (result)
-						deleteSelected(checkedSubsamples);
-				}
-			}.begin();
+			if (checkedSubsamples.size() == 0){
+				noSubsamplesSelected();
+			} else {
+				new ServerOp<Boolean>() {
+					public void begin() {
+						new ConfirmationDialogBox(LocaleHandler.lc_text
+								.confirmation_Delete(), true, this);
+					}
+	
+					public void onSuccess(final Boolean result) {
+						if (result)
+							deleteSelected(checkedSubsamples);
+					}
+				}.begin();
+			}
 		}
 	}
 	
