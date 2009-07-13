@@ -41,6 +41,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.LoggedInServerOp;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
@@ -120,7 +121,19 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			}
 
 			protected void deleteBean(final AsyncCallback<Object> ac) {
-				MpDb.sample_svc.delete(((Sample) getBean()).getId(), ac);
+				new ServerOp<Boolean>() {
+					public void begin() {
+						new ConfirmationDialogBox("Are you sure you want to delete this sample?"
+								, true, this);
+					}
+					public void onSuccess(final Boolean result) {
+						if (result){
+							MpDb.sample_svc.delete(((Sample) getBean()).getId(), ac);
+						} else {
+							p_sample.setEnabled(true);
+						}
+					}
+				}.begin();
 			}
 
 			protected boolean canEdit() {

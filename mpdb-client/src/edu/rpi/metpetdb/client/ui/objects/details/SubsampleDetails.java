@@ -24,6 +24,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidLoggedInOp;
+import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
@@ -77,7 +78,19 @@ public class SubsampleDetails extends MPagePanel {
 
 			protected void deleteBean(final AsyncCallback<Object> ac) {
 				sampleId = getBean().getSampleId();
-				MpDb.subsample_svc.delete(((Subsample) getBean()).getId(), ac);
+				new ServerOp<Boolean>() {
+					public void begin() {
+						new ConfirmationDialogBox("Are you sure you want to delete this subsample?"
+								, true, this);
+					}
+					public void onSuccess(final Boolean result) {
+						if (result){
+							MpDb.subsample_svc.delete(((Subsample) getBean()).getId(), ac);
+						} else {
+							p_subsample.setEnabled(true);
+						}
+					}
+				}.begin();
 			}
 
 			protected boolean canEdit() {
