@@ -198,7 +198,12 @@ public class SearchIPhone extends HttpServlet{
 			{
 				imagePath = image.getChecksumMobile();
 			}
+			response.getWriter().write("<path>");
 			x.toXML(imagePath, response.getWriter());
+			response.getWriter().write("</path>");
+			response.getWriter().write("<filename>");
+			x.toXML(image.getFilename(), response.getWriter());
+			response.getWriter().write("</filename>");
 			response.getWriter().write("</image>");
 		}	
 		catch(final Exception ioe){
