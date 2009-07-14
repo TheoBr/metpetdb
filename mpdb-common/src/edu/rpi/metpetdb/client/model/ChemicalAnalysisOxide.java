@@ -124,6 +124,14 @@ public class ChemicalAnalysisOxide extends MObject {
 		return oxide != null ? oxide.hashCode() : 0;
 	}
 	
+	public String getDisplayAmount(){
+		if (amount >= 0){
+			return amount.toString();
+		} else {
+			return "<" + String.valueOf((-amount));
+		}
+	}
+	
 	public void setValues(final Oxide o, final Double amount, final Double precision, 
 			final String measurementUnit, final String precisionUnit){
 		oxide = o;
@@ -142,12 +150,21 @@ public class ChemicalAnalysisOxide extends MObject {
 			precisionUnit = "REL";
 		}
 		Double unitMod = ChemicalAnalysis.getUnitOffset(measurementUnit);
-		if (precisionUnit.equalsIgnoreCase("ABS")){
-			maxAmount = (amount + precision) * unitMod;
-			minAmount = (amount - precision) * unitMod;
-		} else if (precisionUnit.equalsIgnoreCase("REL")){
-			maxAmount = (amount + precision) * unitMod;
-			minAmount = (amount - precision) * unitMod;
+		if (amount < 0){
+			minAmount = 0D;
+			if (precisionUnit.equalsIgnoreCase("ABS")){
+				maxAmount = (-amount + precision) * unitMod;
+			} else if (precisionUnit.equalsIgnoreCase("REL")){
+				maxAmount = (-amount * (1+precision)) * unitMod;
+			}
+		} else {
+			if (precisionUnit.equalsIgnoreCase("ABS")){
+				maxAmount = (amount + precision) * unitMod;
+				minAmount = (amount - precision) * unitMod;
+			} else if (precisionUnit.equalsIgnoreCase("REL")){
+				maxAmount = (amount * (1+precision)) * unitMod;
+				minAmount = (amount * (1-precision)) * unitMod;
+			}
 		}
 	}
 

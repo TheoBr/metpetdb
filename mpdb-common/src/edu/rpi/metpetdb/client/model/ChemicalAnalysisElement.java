@@ -128,6 +128,14 @@ public class ChemicalAnalysisElement extends MObject {
 		// return mineral.hashCode();
 	}
 	
+	public String getDisplayAmount(){
+		if (amount >= 0){
+			return amount.toString();
+		} else {
+			return "<" + String.valueOf((-amount));
+		}
+	}
+	
 	public void setValues(final Element e, final Double amount, Double precision, 
 			final String measurementUnit, final String precisionUnit){
 		element = e;
@@ -145,12 +153,21 @@ public class ChemicalAnalysisElement extends MObject {
 			precisionUnit = "REL";
 		}
 		Double unitMod = ChemicalAnalysis.getUnitOffset(measurementUnit);
-		if (precisionUnit.equalsIgnoreCase("ABS")){
-			maxAmount = (amount + precision) * unitMod;
-			minAmount = (amount - precision) * unitMod;
-		} else if (precisionUnit.equalsIgnoreCase("REL")){
-			maxAmount = (amount + precision) * unitMod;
-			minAmount = (amount - precision) * unitMod;
+		if (amount < 0){
+			minAmount = 0D;
+			if (precisionUnit.equalsIgnoreCase("ABS")){
+				maxAmount = (-amount + precision) * unitMod;
+			} else if (precisionUnit.equalsIgnoreCase("REL")){
+				maxAmount = (-amount * (1+precision)) * unitMod;
+			}
+		} else {
+			if (precisionUnit.equalsIgnoreCase("ABS")){
+				maxAmount = (amount + precision) * unitMod;
+				minAmount = (amount - precision) * unitMod;
+			} else if (precisionUnit.equalsIgnoreCase("REL")){
+				maxAmount = (amount * (1+precision)) * unitMod;
+				minAmount = (amount * (1-precision)) * unitMod;
+			}
 		}
 	}
 

@@ -89,7 +89,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 						//add in header
 						elementPPM = "<tr class=\\\"\" + CSS.TYPE_SMALL_CAPS\n" + 
 								"					+ \"\\\"><th>ppm</th><th>Element</th></tr>";
-					elementPPM += "<tr><td class=\"ppm\">" + element.getAmount()
+					elementPPM += "<tr><td class=\"ppm\">" + element.getDisplayAmount()
 					+ "</td><td>" + element.getDisplayName()
 					+ "</td></tr>";
 				} else {
@@ -97,7 +97,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 						//add in header
 						elementWT = "<tr class=\\\"\" + CSS.TYPE_SMALL_CAPS\n" + 
 								"					+ \"\\\"><th>wt%</th><th>Element</th></tr>";
-					elementWT += "<tr><td class=\"wt\">" + element.getAmount()
+					elementWT += "<tr><td class=\"wt\">" + element.getDisplayAmount()
 					+ "%</td><td>" + element.getDisplayName()
 					+ "</td></tr>";
 				}
@@ -121,14 +121,14 @@ public class ChemistryAttribute extends GenericAttribute implements
 					if (oxidePPM.length() == 0)
 						// add in the header row
 						oxidePPM = "<tr class=\\\"\"+ CSS.TYPE_SMALL_CAPS +\"\\\"><th>ppm</th><th>Oxide</th></tr>";
-					oxidePPM += "<tr><td class=\"ppm\">" + oxide.getAmount()
+					oxidePPM += "<tr><td class=\"ppm\">" + oxide.getDisplayAmount()
 							+ "</td><td>" + oxide.getDisplayName()
 							+ "</td></tr>";
 				} else {
 					if (oxideWT.length() == 0)
 						// add in the header row
 						oxideWT = "<tr class=\\\"\"+ CSS.TYPE_SMALL_CAPS +\"\\\"><th>wt%</th><th>Oxide</th></tr>";
-					oxideWT += "<tr><td class=\"wt\">" + oxide.getAmount()
+					oxideWT += "<tr><td class=\"wt\">" + oxide.getDisplayAmount()
 							+ "%</td><td>" + oxide.getDisplayName()
 							+ "</td></tr>";
 				}
