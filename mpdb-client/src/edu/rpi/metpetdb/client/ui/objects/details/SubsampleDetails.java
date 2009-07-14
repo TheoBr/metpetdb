@@ -4,8 +4,10 @@ import java.util.Set;
 
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Label;
@@ -25,6 +27,7 @@ import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidLoggedInOp;
 import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
+import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
@@ -94,14 +97,10 @@ public class SubsampleDetails extends MPagePanel {
 			}
 
 			protected boolean canEdit() {
-				// TODO temporary while testing permissions
-				// final Sample s = ((Subsample) getBean()).getSample();
-				// if (s.isPublicData())
-				// return false;
-				// if (MpDb.isCurrentUser(s.getOwner()))
-				// return true;
-				// return false;
-				return true;
+				final Subsample s = ((Subsample) getBean());
+				if (MpDb.isCurrentUser(s.getOwner()))
+					return true;
+				return false;
 			}
 
 			protected void onSaveCompletion(final Subsample result) {
@@ -170,9 +169,13 @@ public class SubsampleDetails extends MPagePanel {
 			public void onClick(final Widget sender) {
 				new VoidLoggedInOp() {
 					public void command() {
-						History.newItem(TokenSpace
+						if(canEdit()){
+							History.newItem(TokenSpace
 								.createNewChemicalAnalysis(p_subsample
 										.getBean()));
+						} else {
+							noPermissionWarning();
+						}
 					}
 				}.begin();
 			}
@@ -230,6 +233,26 @@ public class SubsampleDetails extends MPagePanel {
 			}
 		}.begin();
 		return this;
+	}
+	
+	private boolean canEdit(){
+		final Subsample s = ((Subsample) p_subsample.getBean());
+		return MpDb.isCurrentUser(s.getOwner());
+	}
+	
+	private void noPermissionWarning(){
+		final MDialogBox noPermissionBox = new MDialogBox();
+		final FlowPanel container = new FlowPanel();
+		container.add(new Label("You do not have the correct permissions to add a chemical analysis."));
+		Button ok = new Button("Ok");
+		ok.addClickListener(new ClickListener(){
+			public void onClick(final Widget sender){
+				noPermissionBox.hide();
+			}
+		});
+		container.add(ok);
+		noPermissionBox.setWidget(container);
+		noPermissionBox.show();
 	}
 	
 	private void makeImagesPublicIfPublic(Subsample subsample){

@@ -42,6 +42,7 @@ import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.LoggedInServerOp;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
+import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
@@ -137,14 +138,10 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			}
 
 			protected boolean canEdit() {
-				// TODO temporary while testing permissions
-				// final Sample s = (Sample) getBean();
-				// if (s.isPublicData())
-				// return false;
-				// if (MpDb.isCurrentUser(s.getOwner()))
-				// return true;
-				// return false;
-				return true;
+				final Sample s = (Sample) getBean();
+				if (MpDb.isCurrentUser(s.getOwner()))
+					return true;
+				return false;
 			}
 
 			protected void onSaveCompletion(final Sample result) {
@@ -201,8 +198,12 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 				new LoggedInServerOp<Subsample>() {
 					@Override
 					public void command() {
-						History.newItem(TokenSpace.createNewSubsample(p_sample
+						if(canEdit()){
+							History.newItem(TokenSpace.createNewSubsample(p_sample
 								.getBean()));
+						} else {
+							noPermissionWarning();
+						}
 					}
 				}.begin();
 			}
@@ -509,6 +510,26 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 		s.setOwner(MpDb.currentUser());
 		p_sample.edit(s);
 		return this;
+	}
+	
+	private boolean canEdit(){
+		final Sample s = (Sample) p_sample.getBean();
+		return MpDb.isCurrentUser(s.getOwner());
+	}
+	
+	private void noPermissionWarning(){
+		final MDialogBox noPermissionBox = new MDialogBox();
+		final FlowPanel container = new FlowPanel();
+		container.add(new Label("You do not have the correct permissions to add a subsample."));
+		Button ok = new Button("Ok");
+		ok.addClickListener(new ClickListener(){
+			public void onClick(final Widget sender){
+				noPermissionBox.hide();
+			}
+		});
+		container.add(ok);
+		noPermissionBox.setWidget(container);
+		noPermissionBox.show();
 	}
 	
 	private void makeImagesPublicIfPublic(Sample sample) {
