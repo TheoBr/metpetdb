@@ -40,7 +40,7 @@
 -(void)backToCriteria
 {
 	SearchCriteriaController *viewController= [[SearchCriteriaController alloc] initWithNibName:@"SearchCriteriaSummary" bundle:nil];
-	[viewController setData:original:modifiedLocations:mapType];
+	[viewController setData:original:modifiedLocations:mapType:points];
 	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
 	self.criteriaController=viewController;
 	[viewController release];
@@ -166,11 +166,12 @@
 	gradeName=nil;
 	gradeName= [myMetamorphicGrades objectAtIndex:row];
 }
--(void)setData:(NSMutableArray*)originalData: (NSMutableArray*)locations:(NSString*)type
+-(void)setData:(NSMutableArray*)originalData: (NSMutableArray*)locations:(NSString*)type:(NSMutableArray*)LatLongPoints
 {
 	mapType=type;
 	original=originalData;
 	mylocations=locations;
+	points=LatLongPoints;
 	bool added;
 	int x, y, z, w;
 	myMetamorphicGrades=[[NSMutableArray alloc] init];	

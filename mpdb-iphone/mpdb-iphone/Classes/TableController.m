@@ -92,7 +92,7 @@
 -(void)loadMetamorphicGradeView{
 
 	MetamorphicGradeController *viewController=[[MetamorphicGradeController alloc] initWithNibName:@"MetamorphicGradeView" bundle:nil];
-	[viewController setData:original:locations:mapType];
+	[viewController setData:original:locations:mapType:points];
 	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
 	self.metamorphicGradeController= viewController;
 	[viewController release];
@@ -105,7 +105,7 @@
 	
 		RockTypeController *viewController = [[RockTypeController alloc] initWithNibName:@"RockTypeView" bundle:nil];
 	//all of the following values must be passed so they can be passed back to the map straight from the rock view
-	[viewController setData:original:locations:mapType];
+	[viewController setData:original:locations:mapType:points];
 	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
 		self.rockTypeController = viewController;
 		[viewController release];
@@ -116,7 +116,7 @@
 -(void)loadPublicController
 {
 	PublicStatusController *viewController = [[PublicStatusController alloc] initWithNibName:@"PublicStatusView" bundle:nil];
-	[viewController setData:original:locations:mapType];
+	[viewController setData:original:locations:mapType:points];
 	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
 	self.publicStatusController=viewController;
 	[viewController release];
@@ -210,11 +210,12 @@
 }*/
 
 //set the various arrays in this controller with the information about the samples
--(void)setData:(NSMutableArray*)originalData:(NSMutableArray*)sampleLocations:(NSString*)type
+-(void)setData:(NSMutableArray*)originalData:(NSMutableArray*)sampleLocations:(NSString*)type:(NSMutableArray*)LatLongPoints
 {
 	original=originalData;
 	locations= sampleLocations;
 	mapType=type;
+	points=LatLongPoints;
 }
 -(void)setCurrentSearchData:(NSMutableArray*)rocks:(NSMutableArray*)mins:(NSMutableArray*)metgrades:(NSMutableArray*)public:(NSString*)aregion:(CLLocationCoordinate2D)coord
 {

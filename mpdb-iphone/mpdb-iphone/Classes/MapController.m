@@ -110,33 +110,27 @@
 	boundaryAnnotations= [[NSMutableArray alloc] init];
 	//before making a pin, make sure the annotation does not have the same lat and long a sample
 	//if it does, move the pin slightly
-/*	for(int w=0; w<[mySamples count]; w++)
+	for(int w=0; w<[mySamples count]; w++)
 	{
 		uniqueSamples *tempSample= [mySamples objectAtIndex:w];
-		if((tempSample.coordinate.latitude == maxLat))
+		if(tempSample.coordinate.latitude == maxLat)
 		{
-			if(coord.latitude >= 0)
-			{
-				coord.latitude+= .001;
-			}
-			else
-			{
-				coord.latitude -= .001;
-			}
-			if(coord.longitude > 0)
-			{
-				coord.longitude+= .001;
-			}
-			else
-			{
-				coord.longitude-=.001;
-			}
-			annotation.coordinate= coord;
-			break;
+			maxLat+= .0001;
 		}
-	}*/
-	
-	for(int z=0; z< 4; z++)
+		if(tempSample.coordinate.latitude== minLat)
+		{
+			minLat-=.0001;
+		}
+		if(tempSample.coordinate.longitude== maxLong)
+		{
+			maxLong+= .0001;
+		}
+		if(tempSample.coordinate.longitude == minLong)
+		{
+			minLong-= .0001;
+		}
+	}
+		for(int z=0; z< 4; z++)
 	{
 		uniqueSamples *newGroup=[uniqueSamples new];
 		newGroup.title=@"Boundary Point";
@@ -239,7 +233,7 @@
 -(IBAction)narrowSearchResults{
 	
 	SearchCriteriaController *viewController= [[SearchCriteriaController alloc] initWithNibName:@"SearchCriteriaSummary" bundle:nil];
-	[viewController setData:originalData:mySamples:mapType];
+	[viewController setData:originalData:mySamples:mapType:points];
 	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myLocation];
 	self.criteriaController=viewController;
 	[viewController release];

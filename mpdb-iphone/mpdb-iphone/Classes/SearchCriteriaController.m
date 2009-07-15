@@ -445,7 +445,7 @@
 {
 	//load the table containing the choices for search criteria so the user can add more
 	TableController *viewController = [[TableController alloc] initWithNibName:@"TableView" bundle:nil];
-	[viewController setData:original:remainingLocations:mapType];
+	[viewController setData:original:remainingLocations:mapType:points];
 	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
 	 self.tableController = viewController;
 	 [viewController release];
@@ -563,11 +563,13 @@
 }
 //this is the data of the annotations from the original search result and the current annotations that are left
 //this information needs to be passed to the table controller where more search criteria can be added
--(void)setData:(NSMutableArray*)originalData:(NSMutableArray*)sampleLocations:(NSString*)type
+-(void)setData:(NSMutableArray*)originalData:(NSMutableArray*)sampleLocations:(NSString*)type:(NSMutableArray*)LatLongPoints
 {
 	mapType=type;
 	original=originalData;
 	remainingLocations= sampleLocations;
+	points= LatLongPoints;
+	
 }
 
 //this function will set the data that has been specified in the current search

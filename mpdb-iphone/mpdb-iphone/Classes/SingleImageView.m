@@ -23,14 +23,14 @@
 	[imageView setImage:image];
 	[imageView setUserInteractionEnabled:YES];
 	//make a toolbar at the bottom of the view
-	NSMutableArray *buttons=[[NSMutableArray alloc] init];
+	/*NSMutableArray *buttons=[[NSMutableArray alloc] init];
 	UIBarButtonItem *barButton=[[UIBarButtonItem alloc] initWithTitle:@"Add Image To My Library" style:UIBarButtonItemStyleBordered target:self action:@selector(addToLibrary)];
 	[buttons addObject:barButton];
 	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
 	toolbar = [ [ UIToolbar alloc ] init ];
 	toolbar.frame = toolBarFrame;
 	toolbar.items=buttons;	
-	[toolbar setBarStyle:1];
+	[toolbar setBarStyle:1];*/
 	//CGRect rect= CGRectMake(0, 0, imageView.frame.size.width, imageView.frame.size.height);
 	//scrollView.frame=rect;//[[UIScreen mainScreen] applicationFrame]; 
 

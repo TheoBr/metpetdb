@@ -54,7 +54,7 @@ sampleSelector.showsSelectionIndicator=YES;
 -(void)backToCriteria
 {
 	SearchCriteriaController *viewController= [[SearchCriteriaController alloc] initWithNibName:@"SearchCriteriaSummary" bundle:nil];
-	[viewController setData:original:modifiedLocations:mapType];
+	[viewController setData:original:modifiedLocations:mapType:points];
 	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
 	self.criteriaController=viewController;
 	[viewController release];
@@ -159,12 +159,13 @@ sampleSelector.showsSelectionIndicator=YES;
 
 //if the sample has the correct rock type, add it to the new array
 //[modifiedLocations addObject:[myLocations objectAtIndex:x]];
--(void)setData:(NSMutableArray*) originalData:(NSMutableArray*)locations:(NSString*)type
+-(void)setData:(NSMutableArray*) originalData:(NSMutableArray*)locations:(NSString*)type:(NSMutableArray*)LatLongPoints
 {
 	mapType=type;
 	original=originalData; //we must pass the original search results so that the map can be reset
 	myLocations=locations;
 	myRockTypes=[[NSMutableArray alloc] init];
+	points=LatLongPoints;
 	
 	//initially add a blank line so the user is forced to move the scroll wheel
 	[myRockTypes addObject:@""];

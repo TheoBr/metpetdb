@@ -30,7 +30,7 @@
 -(void)backToCriteria
 {
 	SearchCriteriaController *viewController= [[SearchCriteriaController alloc] initWithNibName:@"SearchCriteriaSummary" bundle:nil];
-	[viewController setData:original:modifiedLocations:mapType];
+	[viewController setData:original:modifiedLocations:mapType:points];
 	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
 	self.criteriaController=viewController;
 	[viewController release];
@@ -149,9 +149,10 @@
 
 //the only array that needs to be passed is the one containing all the pin annotations since the 
 //public status string is a member of the annotation class
--(void)setData:(NSMutableArray*)originalData:(NSMutableArray*)locations:(NSString*)type
+-(void)setData:(NSMutableArray*)originalData:(NSMutableArray*)locations:(NSString*)type:(NSMutableArray*)LatLongPoints
 {
 	mapType=type;
+	points=LatLongPoints;
 	original=originalData; //we must pass the original search results so the map can be reset to its original values
 	myLocations=locations;
 }

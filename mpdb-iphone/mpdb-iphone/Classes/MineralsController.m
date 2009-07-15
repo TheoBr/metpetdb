@@ -63,7 +63,7 @@
 -(void)backToCriteria
 {
 	SearchCriteriaController *viewController= [[SearchCriteriaController alloc] initWithNibName:@"SearchCriteriaSummary" bundle:nil];
-	[viewController setData:original:modifiedLocations:mapType];
+	[viewController setData:original:modifiedLocations:mapType:points];
 	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
 	self.criteriaController=viewController;
 	[viewController release];
@@ -174,11 +174,12 @@
 
 }
 
--(void)setData:(NSMutableArray*)originalData: (NSMutableArray*)locations:(NSString*)type
+-(void)setData:(NSMutableArray*)originalData: (NSMutableArray*)locations:(NSString*)type:(NSMutableArray*)LatLongPoints
 {
 	mapType=type;
 	original=originalData; //pass the array with the original search results so the map can be reset
 	myLocations=locations;
+	points= LatLongPoints;
 
 	//create an array containing the minerals that are in the remaining samples after some search criteria have been provided
 	int x, y, z, w;
