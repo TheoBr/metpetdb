@@ -28,6 +28,7 @@ import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.LoggedInServerOp;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
+import edu.rpi.metpetdb.client.ui.objects.list.ProjectList;
 import edu.rpi.metpetdb.client.ui.objects.list.ProjectListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -35,7 +36,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MLink;
 public class UserProjectsListEx extends FlowPanel implements ClickListener {
 	private static final String cookieString = "UserProjectsListEx";
 	private FlexTable header1;
-	private ProjectListEx list;
+	private ProjectList list;
 	private ListBox lb;
 	private FlexTable Projects_ft;
 
@@ -153,7 +154,7 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 	}
 
 	private void addProjects() {
-		list = new ProjectListEx(LocaleHandler.lc_text.noProjectsFound()) {
+		list = new ProjectList() {
 			public void update(final PaginationParameters p,
 					final AsyncCallback<Results<Project>> ac) {
 				long id = (long) (MpDb.currentUser().getId());
@@ -165,7 +166,7 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 		Projects_ft.setWidget(0, 0, list);
 
 		FixedWidthFlexTable footer = new FixedWidthFlexTable();
-		CheckBox cb = new CheckBox("Select All");
+		/*CheckBox cb = new CheckBox("Select All");
 		cb.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
 				for (int i = 0; i < list.getScrollTable().getDataTable()
@@ -190,12 +191,12 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 				}
 			}
 		});
-		btn.setHeight("30px");
+		btn.setHeight("30px");*/
 		FlexTable realFooter = new FlexTable();
 
-		realFooter.setWidget(0, 0, cb);
-		realFooter.setWidget(0, 1, lb);
-		realFooter.setWidget(0, 2, btn);
+		//realFooter.setWidget(0, 0, cb);
+		//realFooter.setWidget(0, 1, lb);
+		//realFooter.setWidget(0, 2, btn);
 		realFooter.addStyleName("mpdb-dataTableBlue");
 		realFooter.getFlexCellFormatter().setWidth(0, 0, "85px");
 		realFooter.getFlexCellFormatter().setWidth(0, 1, "100px");
@@ -210,7 +211,7 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 		footer.setWidget(0, 0, realFooter);
 		footer.getFlexCellFormatter().setColSpan(0, 0, 4);
 		footer.setWidth("100%");
-		list.getScrollTable().setFooterTable(footer);
+		//list.getScrollTable().setFooterTable(footer);
 
 		this.add(Projects_ft);
 	}

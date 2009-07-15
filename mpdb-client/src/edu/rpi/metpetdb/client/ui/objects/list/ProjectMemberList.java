@@ -8,8 +8,10 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.properties.SampleProperty;
+import edu.rpi.metpetdb.client.model.properties.SubsampleProperty;
 import edu.rpi.metpetdb.client.model.properties.UserProperty;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -19,6 +21,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.paging.DataList;
 import edu.rpi.metpetdb.client.ui.widgets.paging.columns.Column;
 import edu.rpi.metpetdb.client.ui.widgets.paging.columns.ColumnDefinition;
+import edu.rpi.metpetdb.client.ui.widgets.paging.columns.StringColumn;
 
 public abstract class ProjectMemberList extends DataList<User> {
 	
@@ -31,6 +34,7 @@ public abstract class ProjectMemberList extends DataList<User> {
 		columns = new ColumnDefinition<User>();
 		defaultColumns = new ColumnDefinition<User>();
 		
+		//User name
 		{
 			Column<User, MLink> col = new Column<User, MLink>(enttxt.User_name(),
 					UserProperty.name) {
@@ -47,10 +51,22 @@ public abstract class ProjectMemberList extends DataList<User> {
 			columns.addColumn(col);
 			defaultColumns.addColumn(col);
 		}
+		// email address
+		{
+			StringColumn<User> col = new StringColumn<User>(enttxt.User_emailAddress(),
+					UserProperty.emailAddress);
+			col.setColumnSortable(true);
+			col.setMinimumColumnWidth(50);
+			col.setPreferredColumnWidth(150);
+			col.setOptional(false);
+			columns.addColumn(col);
+			defaultColumns.addColumn(col);
+		}
 	}
 	
 	public void initialize() {
 		super.initialize();
+		setTableActions(new ProjectMemberListActions(this));
 	}
 	
 	public ProjectMemberList() {

@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Label;
 
 import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -12,12 +13,13 @@ import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.objects.list.ProjectMemberList;
 import edu.rpi.metpetdb.client.ui.objects.list.ProjectMemberListEx;
+import edu.rpi.metpetdb.client.ui.objects.list.SubsampleList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
 public class ProjectDescription extends MPagePanel{
 	//TODO: make page more awesome	
-	private ProjectMemberListEx list;
+	private ProjectMemberList list;
 	
 	public ProjectDescription() {	
 		
@@ -38,7 +40,7 @@ public class ProjectDescription extends MPagePanel{
 				add(new Label(result.getDescription()));
 				addPageActionItem(new MLink("Invite Member", TokenSpace.sendNewInvite(result)));
 				
-				list = new ProjectMemberListEx() {
+				list = new ProjectMemberList() {
 					public void update(final PaginationParameters p,
 							final AsyncCallback<Results<User>> ac) {
 						MpDb.project_svc.allProjectMembers(p, id, ac);

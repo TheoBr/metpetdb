@@ -82,6 +82,13 @@
     order by p.name
   </query>
   
+  <query name="Project.byMemberId/owner">
+    select p
+    from Project as p
+    where p.owner = :id
+    order by p.owner
+  </query>
+  
   <query name="Project.samples,size">
   	select count(*) from Project p
   	inner join p.samples

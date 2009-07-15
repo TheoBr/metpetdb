@@ -184,7 +184,7 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 				new ServerOp<Boolean>() {
 					public void begin() {
 						new ConfirmationDialogBox(LocaleHandler.lc_text
-								.confirmation_Delete(), true, this);
+								.confirmation_Delete_Subsample(), true, this);
 					}
 	
 					public void onSuccess(final Boolean result) {

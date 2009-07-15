@@ -51,6 +51,12 @@
   	inner join u.projects as project with project.id = :id
   	order by u.name
   </query>
+  <query name="User.byProjectId/emailAddress">
+    select u
+  	from User u
+  	inner join u.projects as project with project.id = :id
+  	order by u.emailAddress
+  </query>
   <query name="User.byProjectId,size">
     select count(*)
   	from User u
