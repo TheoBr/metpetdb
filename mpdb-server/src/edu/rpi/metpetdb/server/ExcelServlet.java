@@ -34,22 +34,23 @@ public class ExcelServlet extends HttpServlet{
 		response.addHeader("Content-Disposition", "inline;filename=results.tsv");
 
 		Session session = DataStore.open();
-		session.beginTransaction();
-		
-		List<Sample> samples = new LinkedList<Sample>();
-		Query q;
-		
-		// If there is a GET string, fetch by ids
-		if (request.getParameter(samplesParameter) != null) {
-			String ids[] = request.getParameterValues(samplesParameter);
-			q = session.getNamedQuery("Sample.byId");
-			for (int i = 0; i < ids.length; i++) {
-				q.setParameter("id", Long.parseLong(ids[i]));
-				samples.add((Sample) q.uniqueResult());
-			}
-		}
-		session.close();
 		try {
+			session.beginTransaction();
+			
+			List<Sample> samples = new LinkedList<Sample>();
+			Query q;
+			
+			// If there is a GET string, fetch by ids
+			if (request.getParameter(samplesParameter) != null) {
+				String ids[] = request.getParameterValues(samplesParameter);
+				q = session.getNamedQuery("Sample.byId");
+				for (int i = 0; i < ids.length; i++) {
+					q.setParameter("id", Long.parseLong(ids[i]));
+					samples.add((Sample) q.uniqueResult());
+				}
+			}
+			
+		
 			// output the column headers
 			if (request.getParameter("column") != null) {
 				String headers[] = request.getParameterValues("column");
@@ -81,6 +82,8 @@ public class ExcelServlet extends HttpServlet{
 			}
 		} catch (final IOException ioe) {
 			throw new IllegalStateException(ioe.getMessage());
+		} finally {
+			session.close();
 		}
 		
 		return;

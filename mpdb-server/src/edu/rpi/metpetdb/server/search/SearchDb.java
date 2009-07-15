@@ -138,14 +138,14 @@ public class SearchDb {
 
 	public static Results<ChemicalAnalysis> chemicalAnalysisSearch(
 			final PaginationParameters p, SearchSample searchSamp,
-			User userSearching) throws MpDbException {
+			User userSearching, Session session) throws MpDbException {
 		final User u = userSearching;
 		final int userId;
 		if (u == null)
 			userId = 0;
 		else
 			userId = u.getId();
-		Session session = DataStore.open();
+
 		DataStore.enableSecurityFilters(session, userId);
 		FullTextSession fullTextSession = Search.getFullTextSession(session);
 

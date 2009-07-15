@@ -23,7 +23,7 @@ public class SearchServiceImpl extends MpDbServlet implements
 	public Results<ChemicalAnalysis> chemicalAnalysisSearch(
 			final PaginationParameters p, SearchSample searchSamp,
 			User userSearching) throws MpDbException {
-		return (SearchDb.chemicalAnalysisSearch(p, searchSamp, userSearching));
+		return (SearchDb.chemicalAnalysisSearch(p, searchSamp, userSearching, this.currentSession()));
 	}
 
 	public Results<Sample> sampleSearch(final PaginationParameters p,

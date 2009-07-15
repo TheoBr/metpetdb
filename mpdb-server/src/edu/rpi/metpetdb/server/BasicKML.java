@@ -44,6 +44,7 @@ public class BasicKML extends HttpServlet {
 			userId = u.getId();
 
 		Session session = DataStore.open();
+		try {
 		DataStore.enableSecurityFilters(session, userId);
 		session.beginTransaction();
 
@@ -70,15 +71,12 @@ public class BasicKML extends HttpServlet {
 		else {
 			samples = session.createQuery("from Sample").list();
 		}
-		
-		session.close();
-
-		try {
-			response.getWriter().write(KMLCreater.createKML(samples, baseURL));
+	    response.getWriter().write(KMLCreater.createKML(samples, baseURL));
 		} catch (final IOException ioe) {
 			throw new IllegalStateException(ioe.getMessage());
+		} finally {
+			session.close();
 		}
-		return;
 	}
 
 }

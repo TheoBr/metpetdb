@@ -29,6 +29,7 @@ public class FileUploadServlet extends HttpServlet {
 	protected void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException {
 		response.setContentType("text/plain");
+		Session s = DataStore.open();
 		try {
 			final FileItem uploadItem = getFileItem(request);
 			if (uploadItem == null) {
@@ -40,7 +41,6 @@ public class FileUploadServlet extends HttpServlet {
 					UUID.randomUUID().toString());
 			final String hash = writeFile(uploadItem);
 
-			Session s = DataStore.open();
 			Transaction t = s.beginTransaction();
 			s
 					.createSQLQuery(
@@ -48,12 +48,13 @@ public class FileUploadServlet extends HttpServlet {
 					.setParameter("hash", hash).setParameter("filename",
 							uploadItem.getName()).executeUpdate();
 			t.commit();
-			s.close();
 			response.getWriter().write(hash);
 
 		} catch (final IOException ioe) {
 			throw new IllegalStateException(ioe.getMessage());
 
+		} finally {
+			s.close();
 		}
 
 	}

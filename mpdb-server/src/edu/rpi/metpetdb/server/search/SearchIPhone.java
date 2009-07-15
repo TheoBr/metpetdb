@@ -58,58 +58,57 @@ public class SearchIPhone extends HttpServlet{
 		Session session = DataStore.open();
 		try{
 		
-		// If there is a GET string for latitude and longitude then it is a search
-		if (request.getParameter(NORTH_PARAMETER) != null && request.getParameter(SOUTH_PARAMETER) != null && request.getParameter(WEST_PARAMETER)!= null && request.getParameter(EAST_PARAMETER) != null) {
-			double north = Double.parseDouble(request.getParameterValues (NORTH_PARAMETER)[0]);
-			double south = Double.parseDouble(request.getParameterValues(SOUTH_PARAMETER)[0]);
-			double west = Double.parseDouble(request.getParameterValues(WEST_PARAMETER)[0]);
-			double east= Double.parseDouble(request.getParameterValues(EAST_PARAMETER)[0]);
-			
-			System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
-			outputSearchXML(search(north,south, east, west, session),response);
-		} else if (request.getParameter(SEARCH_REGIONS) != null){
-			Set<String> regions = new HashSet<String>();
-			for (String s : request.getParameterValues(SEARCH_REGIONS)){
-				if (s.length() > 2 && s.substring(0, 1).equals("'") && s.substring(s.length()-1, s.length()).equals("'")){
-					regions.add(s.substring(1, s.length()-1));
+			// If there is a GET string for latitude and longitude then it is a search
+			if (request.getParameter(NORTH_PARAMETER) != null && request.getParameter(SOUTH_PARAMETER) != null && request.getParameter(WEST_PARAMETER)!= null && request.getParameter(EAST_PARAMETER) != null) {
+				double north = Double.parseDouble(request.getParameterValues (NORTH_PARAMETER)[0]);
+				double south = Double.parseDouble(request.getParameterValues(SOUTH_PARAMETER)[0]);
+				double west = Double.parseDouble(request.getParameterValues(WEST_PARAMETER)[0]);
+				double east= Double.parseDouble(request.getParameterValues(EAST_PARAMETER)[0]);
+				
+				System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
+				outputSearchXML(search(north,south, east, west, session),response);
+			} else if (request.getParameter(SEARCH_REGIONS) != null){
+				Set<String> regions = new HashSet<String>();
+				for (String s : request.getParameterValues(SEARCH_REGIONS)){
+					if (s.length() > 2 && s.substring(0, 1).equals("'") && s.substring(s.length()-1, s.length()).equals("'")){
+						regions.add(s.substring(1, s.length()-1));
+					}
 				}
+				outputSearchXML(search(regions, session),response);
+			} else if (request.getParameter(SAMPLE_ID) != null){
+				for (String id : request.getParameterValues(SAMPLE_ID))
+					sampleIds.add(Long.parseLong(id));
+				sampleInfo(sampleIds,response);
+			} else if (request.getParameter(REGIONS) != null){
+				if (request.getParameterValues(REGIONS)[0].equalsIgnoreCase("t")){
+					regions(response);
+				}
+			} else if (request.getParameter(ROCK_TYPES) != null){
+				if (request.getParameterValues(ROCK_TYPES)[0].equalsIgnoreCase("t")){
+					rockTypes(response);
+				}
+			}else if (request.getParameter(COMMENTS) != null){
+			
+				long id= Long.parseLong(request.getParameterValues(COMMENTS)[0]);
+				comments(response, id);
 			}
-			outputSearchXML(search(regions, session),response);
-		} else if (request.getParameter(SAMPLE_ID) != null){
-			for (String id : request.getParameterValues(SAMPLE_ID))
-				sampleIds.add(Long.parseLong(id));
-			sampleInfo(sampleIds,response);
-		} else if (request.getParameter(REGIONS) != null){
-			if (request.getParameterValues(REGIONS)[0].equalsIgnoreCase("t")){
-				regions(response);
+			else if (request.getParameter(SUBSAMPLE_INFO)!= null)
+			{
+				//using the sample id, get a summary of the subsample and analysis information
+				long id= Long.parseLong(request.getParameterValues(SUBSAMPLE_INFO)[0]);
+				subsampleInfo(response, id);
 			}
-		} else if (request.getParameter(ROCK_TYPES) != null){
-			if (request.getParameterValues(ROCK_TYPES)[0].equalsIgnoreCase("t")){
-				rockTypes(response);
+			else if (request.getParameter(THUMBNAILS)!=null)
+			{
+				long id= Long.parseLong(request.getParameterValues(THUMBNAILS)[0]);
+				get_thumbnails(response, id);
 			}
-		}else if (request.getParameter(COMMENTS) != null){
-		
-			long id= Long.parseLong(request.getParameterValues(COMMENTS)[0]);
-			comments(response, id);
-		}
-		else if (request.getParameter(SUBSAMPLE_INFO)!= null)
-		{
-			//using the sample id, get a summary of the subsample and analysis information
-			long id= Long.parseLong(request.getParameterValues(SUBSAMPLE_INFO)[0]);
-			subsampleInfo(response, id);
-		}
-		else if (request.getParameter(THUMBNAILS)!=null)
-		{
-			long id= Long.parseLong(request.getParameterValues(THUMBNAILS)[0]);
-			get_thumbnails(response, id);
-		}
-		else if (request.getParameter(LARGE_IMAGE)!=null)
-		{
-			//the id that is passed into the url here is the id of the image, not the sample
-			long imageID= Long.parseLong(request.getParameterValues(LARGE_IMAGE)[0]);
-			get_large_image(response, imageID);
-		}
-		return;
+			else if (request.getParameter(LARGE_IMAGE)!=null)
+			{
+				//the id that is passed into the url here is the id of the image, not the sample
+				long imageID= Long.parseLong(request.getParameterValues(LARGE_IMAGE)[0]);
+				get_large_image(response, imageID);
+			}
 		}
 		catch(Exception e){
 			throw new IllegalStateException(e.getMessage());
