@@ -1,0 +1,28 @@
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m: In function '-[SampleViewController parser:foundCharacters:]':
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:73: warning: 'NSString' may not respond to '-appendString:'
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:73: warning: (Messages without a matching method signature
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:73: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:73: warning: '...' as arguments.)
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m: At top level:
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: property 'toolbar' requires method '-toolbar' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: property 'toolbar' requires the method 'setToolbar:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: property 'searchButton' requires method '-searchButton' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: property 'searchButton' requires the method 'setSearchButton:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: property 'radius' requires method '-radius' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: property 'radius' requires the method 'setRadius:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: property 'coord' requires method '-coord' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: property 'coord' requires the method 'setCoord:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: property 'sampleName' requires method '-sampleName' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: property 'sampleName' requires the method 'setSampleName:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: property 'coordinate' requires method '-coordinate' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: incomplete implementation of class 'SampleViewController'
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: method definition for '-openGoogleMapsApp' not found
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: method definition for '-loadMap:' not found
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: incomplete implementation of class 'SampleViewController'
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: method definition for '-pickerView:numberOfRowsInComponent:' not found
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: method definition for '-numberOfComponentsInPickerView:' not found
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: class 'SampleViewController' does not fully implement the 'UIPickerViewDataSource' protocol
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: incomplete implementation of class 'SampleViewController'
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: method definition for '-reverseGeocoder:didFailWithError:' not found
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: method definition for '-reverseGeocoder:didFindPlacemark:' not found
+/Users/heatherbuletti/Documents/MetPetDB/Classes/SampleViewController.m:167: warning: class 'SampleViewController' does not fully implement the 'MKReverseGeocoderDelegate' protocol
