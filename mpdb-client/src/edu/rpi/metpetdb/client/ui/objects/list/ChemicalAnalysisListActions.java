@@ -14,41 +14,61 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
+import edu.rpi.metpetdb.client.ui.dialogs.MakePublicDialog;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.paging.DataList;
 
-public class ProjectListActions extends FlowPanel implements ClickListener {
+public class ChemicalAnalysisListActions extends FlowPanel implements ClickListener {
 
-	private final DataList<Project> list;
+	private final DataList<ChemicalAnalysis> list;
 
 	private enum SelectOption {
 
 		EMPTY("----") {
-			public void doAction(final DataList<Project> list) {
+			public void doAction(final DataList<ChemicalAnalysis> list) {
 			// do nothing for empty
 			}
 		},
 		NONE("None") {
-			public void doAction(final DataList<Project> list) {
+			public void doAction(final DataList<ChemicalAnalysis> list) {
 				list.getDataTable().deselectAllRows();
 			}
 		},
+		PRIVATE("Private") {
+			public void doAction(final DataList<ChemicalAnalysis> list) {
+				for (int i = 0; i < list.getDataTable().getRowCount(); i++)
+					if (!list.getRowValue(i).isPublicData())
+						list.getDataTable().selectRow(i, false);
+					else
+						list.getDataTable().deselectRow(i);
+			}
+		},
+		PUBLIC("Public") {
+			public void doAction(final DataList<ChemicalAnalysis> list) {
+				for (int i = 0; i < list.getDataTable().getRowCount(); i++)
+					if (list.getRowValue(i).isPublicData())
+						list.getDataTable().selectRow(i, false);
+					else
+						list.getDataTable().deselectRow(i);
+			}
+		},
 		ALL("All on this page") {
-			public void doAction(final DataList<Project> list) {
+			public void doAction(final DataList<ChemicalAnalysis> list) {
 				list.getDataTable().selectAllRows();
 			}
 		};
 
 		final String display;
 
-		public abstract void doAction(final DataList<Project> list);
+		public abstract void doAction(final DataList<ChemicalAnalysis> list);
 
 		SelectOption(final String display) {
 			this.display = display;
@@ -67,7 +87,7 @@ public class ProjectListActions extends FlowPanel implements ClickListener {
 		}
 	}
 
-	private void setupSelect(final DataList<Project> list) {
+	private void setupSelect(final DataList<ChemicalAnalysis> list) {
 		final InlineLabel selectLabel = new InlineLabel("Select:");
 		selectLabel.setStylePrimaryName("label");
 		selectLabel.addStyleName("item");
@@ -90,7 +110,7 @@ public class ProjectListActions extends FlowPanel implements ClickListener {
 
 	private final MLink remove;
 	
-	public ProjectListActions(final DataList<Project> list) {
+	public ChemicalAnalysisListActions(final DataList<ChemicalAnalysis> list) {
 		this.list = list;
 		setupSelect(list);
 
@@ -101,17 +121,16 @@ public class ProjectListActions extends FlowPanel implements ClickListener {
 		setStylePrimaryName("scrolltable-actions");
 	}
 
-	private void deleteSelected(final List<Project> checkedProjects) {
+	private void deleteSelected(final List<ChemicalAnalysis> CheckedSubsamples) {
 		new VoidServerOp() {
 			@Override
-			public void begin() {		
-				Iterator<Project> itr = checkedProjects.iterator();
+			public void begin() {			
+				Iterator<ChemicalAnalysis> itr = CheckedSubsamples.iterator();
 				final ArrayList<Integer> ids = new ArrayList<Integer>();
 				while (itr.hasNext()) {
 					ids.add(itr.next().getId());
 				}
-				
-				MpDb.project_svc.deleteAll(ids, this);
+				MpDb.chemicalAnalysis_svc.deleteAll(ids, this);
 
 			}
 			public void onSuccess() {
@@ -120,12 +139,12 @@ public class ProjectListActions extends FlowPanel implements ClickListener {
 		}.begin();
 	}
 	
-	private boolean checkDeletePermissions(List<Project> checkedProjects){
-		//check to see if any of the projects are not owned by the current user
-		Iterator<Project> itr = checkedProjects.iterator();
+	private boolean checkDeletePermissions(List<ChemicalAnalysis> checkedAnalyses){
+		//check to see if any of the samples are not owned by the current user
+		Iterator<ChemicalAnalysis> itr = checkedAnalyses.iterator();
 		while(itr.hasNext()){
-			Project current = itr.next();
-			if(!MpDb.isCurrentUser(current.getOwner()))
+			ChemicalAnalysis current = itr.next();
+			if(!MpDb.isCurrentUser(current.getSubsample().getOwner()))
 				return true;
 		}
 		return false;
@@ -134,7 +153,7 @@ public class ProjectListActions extends FlowPanel implements ClickListener {
 	private void noPermissionToDelete(){
 		final MDialogBox box = new MDialogBox();
 		final FlowPanel container = new FlowPanel();
-		container.add(new Label("You do not haver permission to delete one or more of these projects"));
+		container.add(new Label("You do not haver permission to delete one or more of these analyses"));
 		Button ok = new Button("Ok");
 		ok.addClickListener(new ClickListener(){
 			public void onClick(final Widget sender){
@@ -148,40 +167,39 @@ public class ProjectListActions extends FlowPanel implements ClickListener {
 
 	public void onClick(Widget sender) {
 		if (sender == remove) {
-			final List<Project> checkedProjects = list.getSelectedValues();
-			if (checkedProjects.size() == 0){
-				noProjectsSelected();
-			} else if(checkDeletePermissions(checkedProjects)) {
+			final List<ChemicalAnalysis> checkedAnalyses = list.getSelectedValues();
+			if (checkedAnalyses.size() == 0){
+				noAnalysesSelected();
+			} else if(checkDeletePermissions(checkedAnalyses)) {
 				noPermissionToDelete();
 			} else {
 				new ServerOp<Boolean>() {
 					public void begin() {
 						new ConfirmationDialogBox(LocaleHandler.lc_text
-								.confirmation_Delete_Project(), true, this);
+								.confirmation_Delete_Analysis(), true, this);
 					}
 	
 					public void onSuccess(final Boolean result) {
 						if (result)
-							deleteSelected(checkedProjects);
+							deleteSelected(checkedAnalyses);
 					}
 				}.begin();
 			}
 		}
 	}
 	
-	private void noProjectsSelected(){
-		final MDialogBox noProjectsBox = new MDialogBox();
+	private void noAnalysesSelected(){
+		final MDialogBox noAnalysesBox = new MDialogBox();
 		final FlowPanel container = new FlowPanel();
-		container.add(new Label("No Projects selected"));
+		container.add(new Label("No analyses selected"));
 		Button ok = new Button("Ok");
 		ok.addClickListener(new ClickListener(){
 			public void onClick(final Widget sender){
-				noProjectsBox.hide();
+				noAnalysesBox.hide();
 			}
 		});
 		container.add(ok);
-		noProjectsBox.setWidget(container);
-		noProjectsBox.show();
+		noAnalysesBox.setWidget(container);
+		noAnalysesBox.show();
 	}
-	
 }

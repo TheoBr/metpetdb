@@ -31,6 +31,8 @@ public interface ChemicalAnalysisService extends RemoteService {
 
 	void delete(long id) throws MpDbException, LoginRequiredException;
 	
+	void deleteAll(Collection<Integer> ids) throws MpDbException, LoginRequiredException;
+	
 	Map<Long, List<ChemicalAnalysis>> allFromManySubsamples(final Collection<Long> subsampleIds) throws MpDbException;
 	
 	void makePublic(ArrayList<ChemicalAnalysis> selectedChemicalAnalyses) throws ValidationException,

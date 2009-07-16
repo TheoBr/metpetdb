@@ -154,6 +154,32 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 			}
 		}.begin();
 	}
+	
+	private boolean checkDeletePermissions(List<Subsample> checkedSubsamples){
+		//check to see if any of the subsamples are not owned by the current user
+		Iterator<Subsample> itr = checkedSubsamples.iterator();
+		while(itr.hasNext()){
+			Subsample current = itr.next();
+			if(!MpDb.isCurrentUser(current.getOwner()))
+				return true;
+		}
+		return false;
+	}
+	
+	private void noPermissionToDelete(){
+		final MDialogBox box = new MDialogBox();
+		final FlowPanel container = new FlowPanel();
+		container.add(new Label("You do not haver permission to delete one or more of these subsamples"));
+		Button ok = new Button("Ok");
+		ok.addClickListener(new ClickListener(){
+			public void onClick(final Widget sender){
+				box.hide();
+			}
+		});
+		container.add(ok);
+		box.setWidget(container);
+		box.show();
+	}
 
 	public void onClick(Widget sender) {
 		if (sender == makePublic) {
@@ -180,6 +206,8 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 			final List<Subsample> checkedSubsamples = list.getSelectedValues();
 			if (checkedSubsamples.size() == 0){
 				noSubsamplesSelected();
+			} else if(checkDeletePermissions(checkedSubsamples)){
+				noPermissionToDelete();
 			} else {
 				new ServerOp<Boolean>() {
 					public void begin() {

@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.server.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -88,5 +89,22 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 			dao.makePublic(ca);
 		}
 		commit();
+	}
+
+	public void deleteAll(Collection<Integer> ids) throws MpDbException,
+			LoginRequiredException {
+		final Iterator<Integer> itr = ids.iterator();
+		while(itr.hasNext()){
+			deleteImpl(itr.next());
+		}
+		commit();
+	}
+	
+	private void deleteImpl(int id) throws MpDbException, LoginRequiredException {
+		ChemicalAnalysisDAO dao = new ChemicalAnalysisDAO(this.currentSession());
+		ChemicalAnalysis ca = new ChemicalAnalysis();
+		ca.setId(id);
+		ca = dao.fill(ca);
+		dao.delete(ca);
 	}
 }

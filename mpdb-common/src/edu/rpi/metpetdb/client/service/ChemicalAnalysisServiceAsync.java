@@ -26,6 +26,8 @@ public interface ChemicalAnalysisServiceAsync {
 
 	void delete(long id, AsyncCallback<Object> ac);
 	
+	void deleteAll(Collection<Integer> ids, AsyncCallback<Void> ac);
+	
 	/**
 	 * Maps a subsample id to a list of chemical analyses
 	 * @param subsampleIds

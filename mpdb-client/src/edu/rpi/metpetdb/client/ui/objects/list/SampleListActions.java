@@ -379,6 +379,32 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 		noSamplesBox.setWidget(container);
 		noSamplesBox.show();
 	}
+	
+	private boolean checkDeletePermissions(List<Sample> checkedSamples){
+		//check to see if any of the samples are not owned by the current user
+		Iterator<Sample> itr = checkedSamples.iterator();
+		while(itr.hasNext()){
+			Sample current = itr.next();
+			if(!MpDb.isCurrentUser(current.getOwner()))
+				return true;
+		}
+		return false;
+	}
+	
+	private void noPermissionToDelete(){
+		final MDialogBox box = new MDialogBox();
+		final FlowPanel container = new FlowPanel();
+		container.add(new Label("You do not haver permission to delete one or more of these samples"));
+		Button ok = new Button("Ok");
+		ok.addClickListener(new ClickListener(){
+			public void onClick(final Widget sender){
+				box.hide();
+			}
+		});
+		container.add(ok);
+		box.setWidget(container);
+		box.show();
+	}
 
 	public void onClick(Widget sender) {
 		if (sender == viewGoogleEarth) {
@@ -394,6 +420,8 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 			final List<Sample> checkedSamples = list.getSelectedValues();
 			if(checkedSamples.size() == 0){
 				noSamplesSelected();
+			} else if(checkDeletePermissions(checkedSamples)) {
+				noPermissionToDelete();
 			} else {
 				new ServerOp<Boolean>() {
 					public void begin() {

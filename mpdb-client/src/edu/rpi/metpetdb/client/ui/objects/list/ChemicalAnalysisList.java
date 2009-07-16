@@ -203,6 +203,7 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 	
 	public void initialize() {
 		super.initialize();
+		setTableActions(new ChemicalAnalysisListActions(this));
 	}
 
 	public ChemicalAnalysisList() {
