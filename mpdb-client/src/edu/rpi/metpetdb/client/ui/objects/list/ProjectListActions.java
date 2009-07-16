@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
@@ -93,8 +94,7 @@ public class ProjectListActions extends FlowPanel implements ClickListener {
 		setupSelect(list);
 
 		remove = new MLink("Remove", this);
-		//remove.addStyleName("item");
-		remove.addStyleName("beta");
+		remove.addStyleName("item");
 		
 		add(remove);
 		setStylePrimaryName("scrolltable-actions");
@@ -104,14 +104,13 @@ public class ProjectListActions extends FlowPanel implements ClickListener {
 		new VoidServerOp() {
 			@Override
 			public void begin() {		
-				//TODO delete projects
-				/*Iterator<Project> itr = checkedProjects.iterator();
-				final ArrayList<Long> ids = new ArrayList<Long>();
+				Iterator<Project> itr = checkedProjects.iterator();
+				final ArrayList<Integer> ids = new ArrayList<Integer>();
 				while (itr.hasNext()) {
 					ids.add(itr.next().getId());
 				}
 				
-				MpDb.subsample_svc.deleteAll(ids, this);*/
+				MpDb.project_svc.deleteAll(ids, this);
 
 			}
 			public void onSuccess() {

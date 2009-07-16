@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -88,5 +90,22 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 		new ProjectDAO(this.currentSession()).removeInvite(i, u);
 		commit();
 		return;
+	}
+
+	public void deleteAll(Collection<Integer> ids) throws MpDbException,
+			LoginRequiredException {
+		final Iterator<Integer> itr = ids.iterator();
+		while(itr.hasNext()) {
+			deleteImpl(itr.next());
+		}
+		commit();
+	}
+	
+	private void deleteImpl(int id) throws MpDbException, LoginRequiredException {
+		ProjectDAO dao = new ProjectDAO(this.currentSession());
+		Project p = new Project();
+		p.setId(id);
+		p = dao.fill(p);
+		dao.delete(p);
 	}
 }

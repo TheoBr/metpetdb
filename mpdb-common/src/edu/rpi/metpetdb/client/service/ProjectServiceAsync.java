@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -20,6 +21,8 @@ public interface ProjectServiceAsync {
 	void details(int projectId, AsyncCallback<Project> ac);
 
 	void saveProject(Project proj, AsyncCallback<Project> ac);
+	
+	void deleteAll(Collection<Integer> ids, AsyncCallback<Void> ac);
 
 	void samplesFromProject(PaginationParameters parameters, long id,
 			AsyncCallback<Results<Sample>> ac);

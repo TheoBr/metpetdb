@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -49,6 +50,8 @@ public interface ProjectService extends RemoteService {
 	 */
 	Project saveProject(Project proj) throws LoginRequiredException,
 			ValidationException, MpDbException;
+	
+	void deleteAll(Collection<Integer> ids) throws MpDbException, LoginRequiredException;
 
 	Results<Sample> samplesFromProject(PaginationParameters parameters, long id)  throws MpDbException;
 	

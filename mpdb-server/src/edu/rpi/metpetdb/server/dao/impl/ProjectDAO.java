@@ -25,8 +25,8 @@ public class ProjectDAO extends MpDbDAO<Project> {
 
 	@Override
 	public Project delete(Project inst) throws MpDbException {
-		// TODO Auto-generated method stub
-		throw new FunctionNotImplementedException();
+		_delete(inst);
+		return null;
 	}
 
 	@Override
