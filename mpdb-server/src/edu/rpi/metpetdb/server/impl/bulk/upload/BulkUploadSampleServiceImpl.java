@@ -8,6 +8,7 @@ import java.util.Map;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
+import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResult;
@@ -43,6 +44,11 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 			final Sample s = samples.get(row);
 			initObject(s);
 			try {
+				if (s.getRockType() == null) {
+					results.addError(row, new PropertyRequiredException(
+							"Rock Type"));
+					continue;
+				}
 				if (sampleDao.isNew(s))
 					resultCount.incrementFresh();
 				else
