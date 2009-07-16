@@ -269,7 +269,7 @@ public abstract class Parser<T extends MObject> {
 						}
 				}
 
-				if (pc != null && cell != null && !cell.toString().equals("")
+				if (pc != null && cell != null && !cell.toString().matches("^\\s*$")
 						&& !parseColumnSpecialCase(row, cell, pc, newObject, i)) {
 
 					if (pc == doc.Subsample_subsampleType) {
