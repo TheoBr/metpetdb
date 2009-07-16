@@ -11,15 +11,18 @@ import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.util.CellReference;
 
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.MpDbException;
+import edu.rpi.metpetdb.client.error.bulk.upload.MissingMeasurementUnitsException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisElement;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysisOxide;
 import edu.rpi.metpetdb.client.model.Element;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Oxide;
+import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadError;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadHeader;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
@@ -113,6 +116,13 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 		// measurement unit
 		final HSSFCell measurementUnitCell = sheet.getRow(
 				header.getRowNum() + 1).getCell(cellNumber);
+		if (measurementUnitCell == null){
+			errors.put(header.getRowNum() + 1, new BulkUploadError(
+					header.getRowNum() + 1, new CellReference(header.getRowNum(), cellNumber)
+					.formatAsString(), new MissingMeasurementUnitsException(cellText),
+					""));
+			return;
+		}
 		measurementUnits.put(cellText,
 				parseOutMeasurementUnit(measurementUnitCell.toString()));
 		// Get text of the next column
