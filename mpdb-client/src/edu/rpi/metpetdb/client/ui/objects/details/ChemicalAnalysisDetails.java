@@ -5,9 +5,12 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.ChooseImageAttribute;
@@ -67,21 +70,27 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 			}
 
 			protected void deleteBean(final AsyncCallback<Object> ac) {
-				subsampleObj = ((ChemicalAnalysis) getBean()).getSubsample();
-				MpDb.chemicalAnalysis_svc.delete(((ChemicalAnalysis) getBean())
-						.getId(), ac);
+				new ServerOp<Boolean>() {
+					public void begin() {
+						new ConfirmationDialogBox("Are you sure you want to delete this analysis?"
+								, true, this);
+					}
+					public void onSuccess(final Boolean result) {
+						if (result){
+							subsampleObj = ((ChemicalAnalysis) getBean()).getSubsample();
+							MpDb.chemicalAnalysis_svc.delete(((ChemicalAnalysis) getBean())
+									.getId(), ac);
+						} else {
+							p_chemicalAnalysis.setEnabled(true);
+						}
+					}
+				}.begin();
 			}
 
 			protected boolean canEdit() {
-				// TODO temporary while testing permissions
-				// final Sample s = ((ChemicalAnalysis)
-				// getBean()).getSubsample()
-				// .getSample();
-				// if (s.isPublicData())
-				// return false;
-				// if (MpDb.isCurrentUser(s.getOwner()))
-				// return true;
-				// return false;
+				final Subsample s = ((ChemicalAnalysis) getBean()).getSubsample();
+				if (MpDb.isCurrentUser(s.getOwner()))
+					return true;
 				return true;
 			}
 
