@@ -202,7 +202,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 						Subsample ss = (img.getSubsample());
 						ss.setSample(s);
 						img.setSample(null);
-						if (ss != null) {
+						if (ss != null && ss.getName() != null) {
 							// if we don't have the name stored already we
 							// need
 							// to load the subsample
