@@ -29,8 +29,9 @@ import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.server.DataStore;
-import edu.rpi.metpetdb.server.impl.ImageServiceImpl;
-import edu.rpi.metpetdb.server.impl.RegionServiceImpl;
+import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
+import edu.rpi.metpetdb.server.dao.impl.RegionDAO;
+import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.impl.SampleServiceImpl;
 
 
@@ -49,13 +50,14 @@ public class SearchIPhone extends HttpServlet{
 	private static final String THUMBNAILS="thumbnails";
 	private static final String LARGE_IMAGE="large_image";
 
+	private Session session;
 	@Override
 	protected void doGet(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException {
 		response.setContentType("text/xml");
 		
 		List<Long> sampleIds = new ArrayList<Long>();
-		Session session = DataStore.open();
+		session = DataStore.open();
 		try{
 		
 			// If there is a GET string for latitude and longitude then it is a search
@@ -129,8 +131,10 @@ public class SearchIPhone extends HttpServlet{
 	private void get_thumbnails(HttpServletResponse response, long id)
 	{
 		try{
-			SampleServiceImpl s= new SampleServiceImpl();
-			Sample sample= s.details(id);
+			SampleDAO s= new SampleDAO(session);
+			Sample sample= new Sample();
+			sample.setId(id);
+			s.fill(sample);
 			Set<edu.rpi.metpetdb.client.model.Image> images= sample.getImages();
 			final XStream x = new XStream();
 			response.getWriter().write("<thumbnails>");
@@ -182,8 +186,10 @@ public class SearchIPhone extends HttpServlet{
 		try{
 			final XStream x = new XStream();
 			response.getWriter().write("<image>");
-			ImageServiceImpl i= new ImageServiceImpl();
-			edu.rpi.metpetdb.client.model.Image image= i.details(imageID);
+			ImageDAO i= new ImageDAO(session);
+			edu.rpi.metpetdb.client.model.Image image = new edu.rpi.metpetdb.client.model.Image();
+			image.setId(imageID);
+			image = i.fill(image);
 			//final String checksum = image.getChecksumHalf();
 			//final String folder = checksum.substring(0, 2);
 			//final String subfolder = checksum.substring(2, 4);
@@ -214,8 +220,10 @@ public class SearchIPhone extends HttpServlet{
 	private void comments(HttpServletResponse response, long id){
 		try{
 			final XStream x = new XStream();
-			SampleServiceImpl s= new SampleServiceImpl();
-			Sample sample= s.details(id);
+			SampleDAO s= new SampleDAO(session);
+			Sample sample= new Sample();
+			sample.setId(id);
+			sample = s.fill(sample);
 			response.getWriter().write("<comments>");
 			
 			for (SampleComment sc : sample.getComments())
@@ -229,8 +237,10 @@ public class SearchIPhone extends HttpServlet{
 	private void subsampleInfo(HttpServletResponse response, long id ){
 		try{
 			final XStream x= new XStream();
-			SampleServiceImpl s= new SampleServiceImpl();
-			Sample sample= s.details(id);
+			SampleDAO s= new SampleDAO(session);
+			Sample sample= new Sample();
+			sample.setId(id);
+			sample = s.fill(sample);
 			//get the count of the subsamples for the sample
 			Set<Subsample> subsamples= sample.getSubsamples();
 			int count= subsamples.size();
@@ -289,11 +299,16 @@ public class SearchIPhone extends HttpServlet{
 	} 
 	private void regions(HttpServletResponse response){
 		try {
-			RegionServiceImpl service = new RegionServiceImpl();
+			RegionDAO service = new RegionDAO(session);
+			session.enableFilter("hasSamplePublicOrUser").setParameter("userId", 0);
 			final XStream x = new XStream();
 			//Set<String> regionNames=service.viewableNamesForUser(0);
-			Set<String> regionNames= service.viewableNamesForUser(0);
-			List<String>regionList= new ArrayList<String>(regionNames);
+			Object[] regionNames= service.allNames();
+			List<String>regionList= new ArrayList<String>();
+			for (Object region : regionNames){
+				regionList.add((String) region);
+			}
+
 			java.util.Collections.sort(regionList);
 			//x.toXML(service.viewableNamesForUser(0),response.getWriter());
 			x.toXML(regionList, response.getWriter());
@@ -304,11 +319,13 @@ public class SearchIPhone extends HttpServlet{
 	
 	private void sampleInfo(List<Long> sampleIds, final HttpServletResponse response){
 		try {
-			SampleServiceImpl s = new SampleServiceImpl();
+			SampleDAO s= new SampleDAO(session);
 			final XStream x = new XStream();
 			response.getWriter().write("<set>");
 			for (Long id : sampleIds){
-				x.toXML(s.details(id),response.getWriter());
+				Sample sample= new Sample();
+				sample.setId(id);
+				x.toXML(s.fill(sample),response.getWriter());
 			}
 			response.getWriter().write("</set>");
 		} catch (final Exception ioe){
