@@ -247,15 +247,20 @@
 	NSError *error;
 	myReturn = [NSURLConnection sendSynchronousRequest:myRequest
 									 returningResponse:myReturn error:&error];
-	//NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/MetPetDB/searchResults.kml"];
-	//[fh writeData:myReturn];
+	if(error!=NULL)
+	{ 
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+	}
+	
+	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/mpdb-iphone/searchResults.kml"];
+	[fh writeData:myReturn];
 	[myRequest setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
 	[myRequest setHTTPMethod:@"GET"];
 	//[myRequest setHTTPBody:myData];
 	
 	
 	NSURLResponse *response;
-	
 	NSXMLParser *myParser= [[NSXMLParser alloc] initWithData:myReturn];
 	[myParser setDelegate:self];
 	[myParser parse];
@@ -275,13 +280,36 @@
 	NSError *error;
 	locationResponse = [NSURLConnection sendSynchronousRequest:myRequest
 											 returningResponse:&response error:&error];
-
+	if(error!=NULL)
+	{ 
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+	}
+		
+	
+	NSString *localError= error.localizedDescription;
+	
+	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/mpdb-iphone/mpdb-iphone/searchResults.kml"];
+	[fh writeData:locationResponse];
 	NSXMLParser *locationParser= [[NSXMLParser alloc] initWithData:locationResponse];
 	[locationParser setDelegate:self];
 	[locationParser parse];
 }
-
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
+	if([elementName isEqualToString:@"html"])
+	{ 
+		//if a tag exists called html, an error was produced
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+		return;
+	}
+	if([elementName isEqualToString:@"html"])
+	{ 
+		//if a tag exists called html, an error was produced
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+		return;
+	}
 	if([elementName isEqualToString:@"set"])
 	{
 		//make sure this array is reset here so that when the back button is pressed the samples do not get added to the original array
