@@ -88,4 +88,10 @@ public class ImageDAO extends MpDbDAO<Image> {
 		final int size = ((Number) getResult(sizeQuery)).intValue();
 		return new Results<Image>(size, l);
 	}
+
+	public List<Image> getImagesWithoutMobile() throws MpDbException{
+		Query q = sess.createQuery("from Image i where i.checksumMobile is null order by i.filename");
+		this.sess.disableFilter("imagePublicOrUser");
+		return (List<Image>) getResults(q);
+	}
 }

@@ -7,10 +7,13 @@ import java.awt.image.ColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.SampleModel;
 import java.awt.image.renderable.ParameterBlock;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -238,4 +241,47 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 			commit();
 		}
 	}
+	private byte[] getBytesFromInputStream(InputStream is) throws IOException {
+		// Read Data into byte sequence
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] tmpSpace = new byte[2048];
+		int amount = 0;
+		while ((amount = is.read(tmpSpace, 0, tmpSpace.length)) > -1)
+			baos.write(tmpSpace, 0, amount);
+		return baos.toByteArray();
+	}
+
+	public void makeMobileImages()throws ValidationException, MpDbException {
+		final ImageDAO dao = new ImageDAO(this.currentSession());
+		List <Image> imageList= dao.getImagesWithoutMobile();
+		for(Image i : imageList)
+		{
+			String checksum= i.getChecksum();
+			if (checksum != null) {
+				checksum = checksum.replaceAll("\\\\|/", "");
+
+				final String folder = checksum.substring(0, 2);
+				final String subfolder = checksum.substring(2, 4);
+				final String filename = checksum.substring(4, checksum.length());
+
+				final File imagePath = new File(baseFolder + "/" + folder + "/"
+						+ subfolder + "/" + filename);
+			try{
+				final FileInputStream reader = new FileInputStream(imagePath
+						+ "/" + i.getChecksum());
+				//BufferedInputStream input = null;
+				//input = new BufferedInputStream(new FileInputStream(imagePath));
+				final byte[] imgData = getBytesFromInputStream(reader);
+				RenderedOp ro = ImageUploadServlet.loadImage(imgData);
+				i.setChecksumMobile(ImageUploadServlet.generateMobileVersion(ro,false));
+				dao.save(i);
+			} catch (IOException ioe){
+				//ignore it
+			}
+			}
+		}
+	}
 }
+	
+
+

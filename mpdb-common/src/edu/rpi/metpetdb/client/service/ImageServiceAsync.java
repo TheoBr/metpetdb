@@ -38,4 +38,6 @@ public interface ImageServiceAsync {
 	void makePublicBySubsampleId(ArrayList<Subsample> selectedSubsamples, AsyncCallback<Void> ac);
 
 	void makePublicBySampleId(ArrayList<Sample> samples, AsyncCallback<Void> ac);
+	
+	 void makeMobileImages(AsyncCallback<Void> ac);
 }

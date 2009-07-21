@@ -327,10 +327,26 @@ public class MetPetDBApplication implements EntryPoint {
 				new ServerOp<Void>() {
 					public void begin() {
 						MpDb.search_svc.rebuildSearchIndex(this);
+						MpDb.image_svc.makeMobileImages(this);
 					}
 
 					public void onSuccess(Void result) {
 						Window.alert("done regenerating indicies");
+					}
+				}.begin();
+			}
+
+		});
+		dev.addItem("Make mobile images", new Command() {
+
+			public void execute() {
+				new ServerOp<Void>() {
+					public void begin() {
+						MpDb.image_svc.makeMobileImages(this);
+					}
+
+					public void onSuccess(Void result) {
+						Window.alert("Done making mobile images");
 					}
 				}.begin();
 			}
@@ -346,6 +362,8 @@ public class MetPetDBApplication implements EntryPoint {
 				Window.open(MpDb.JUNIT_URL, "mpdb_junit", "");
 			}
 		});
+		
+		
 		
 		final MMenuBar help = new MMenuBar(true);
 		help.addItem("MetPetDB Help", new Command() {

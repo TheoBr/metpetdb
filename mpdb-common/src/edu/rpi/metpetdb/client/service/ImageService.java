@@ -29,4 +29,5 @@ public interface ImageService extends RemoteService {
 	ImageOnGrid rotate(ImageOnGrid iog, int degrees);
 	void makePublicBySubsampleId(ArrayList<Subsample> subsamples) throws ValidationException, MpDbException;
 	void makePublicBySampleId(ArrayList<Sample> samples) throws ValidationException, MpDbException;
+	void makeMobileImages()throws ValidationException, MpDbException;
 }
