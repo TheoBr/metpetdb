@@ -134,7 +134,7 @@ public class SearchIPhone extends HttpServlet{
 			SampleDAO s= new SampleDAO(session);
 			Sample sample= new Sample();
 			sample.setId(id);
-			s.fill(sample);
+			sample=s.fill(sample);
 			Set<edu.rpi.metpetdb.client.model.Image> images= sample.getImages();
 			final XStream x = new XStream();
 			response.getWriter().write("<thumbnails>");
