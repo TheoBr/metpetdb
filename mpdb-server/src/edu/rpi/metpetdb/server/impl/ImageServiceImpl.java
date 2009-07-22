@@ -267,14 +267,14 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 				final File imagePath = new File(baseFolder + "/" + folder + "/"
 						+ subfolder + "/" + filename);
 			try{
-				final FileInputStream reader = new FileInputStream(imagePath
-						+ "/" + i.getChecksum());
+				final FileInputStream reader = new FileInputStream(imagePath);
 				//BufferedInputStream input = null;
 				//input = new BufferedInputStream(new FileInputStream(imagePath));
 				final byte[] imgData = getBytesFromInputStream(reader);
 				RenderedOp ro = ImageUploadServlet.loadImage(imgData);
 				i.setChecksumMobile(ImageUploadServlet.generateMobileVersion(ro,false));
 				dao.save(i);
+				commit();
 			} catch (IOException ioe){
 				//ignore it
 			}
