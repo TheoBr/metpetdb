@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -64,4 +65,6 @@ public interface ProjectService extends RemoteService {
 	void rejectInvite(Invite i) throws MpDbException;
 	
 	List<Project> getInvitesForUser(int id) throws MpDbException;
+	
+	Map<Project,Invite> inviteDetails(List<Project> projects, int userId) throws MpDbException;
 }

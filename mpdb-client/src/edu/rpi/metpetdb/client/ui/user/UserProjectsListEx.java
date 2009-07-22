@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.model.Invite;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
@@ -63,7 +64,7 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 				MpDb.project_svc.getInvitesForUser(MpDb.currentUser().getId(), this);
 			}
 			public void onSuccess(final Object result){
-				List<Project> invites = (List<Project>) result;
+				List<Invite> invites = (List<Invite>) result;
 				if(invites != null && invites.size() > 0){
 					final MLink newInvites = new MLink("You have " + invites.size() + " project invite" +
 							(invites.size() > 1 ? "s!" : "!"), 
@@ -77,6 +78,7 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 									}.begin();
 								}	
 					});
+					newInvites.addStyleName("beta");
 					header1.setWidget(0, 1, newInvites);
 				}
 			}

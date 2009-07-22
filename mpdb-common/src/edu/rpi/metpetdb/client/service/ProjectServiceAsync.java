@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -39,4 +40,6 @@ public interface ProjectServiceAsync {
 	void rejectInvite(Invite i, AsyncCallback<Void> ac);
 	
 	void getInvitesForUser(int id, AsyncCallback<List<Project>> ac);
+
+	void inviteDetails(List<Project> projects, int userId, AsyncCallback<Map<Project,Invite>> ac);
 }

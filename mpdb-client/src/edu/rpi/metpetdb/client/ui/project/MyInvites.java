@@ -1,6 +1,8 @@
 package edu.rpi.metpetdb.client.ui.project;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -24,7 +26,7 @@ public class MyInvites extends MPagePanel {
 		this.setPageTitle("My Invites");	
 	}
 	
-	private void listInvite(final Project p){
+	private void listInvite(final Project p, Invite i){
 		final HorizontalPanel panel = new HorizontalPanel();
 		panel.setSpacing(15);
 		
@@ -35,7 +37,7 @@ public class MyInvites extends MPagePanel {
 					@Override
 					public void begin(){
 						Invite i = new Invite();
-						i.setMember_id(MpDb.currentUser().getId());
+						i.setUser_id(MpDb.currentUser().getId());
 						i.setProject_id(p.getId());
 						MpDb.project_svc.acceptInvite(i, this);
 					}
@@ -51,7 +53,7 @@ public class MyInvites extends MPagePanel {
 					@Override
 					public void begin(){
 						Invite i = new Invite();
-						i.setMember_id(MpDb.currentUser().getId());
+						i.setUser_id(MpDb.currentUser().getId());
 						i.setProject_id(p.getId());
 						MpDb.project_svc.rejectInvite(i, this);
 					}
@@ -81,15 +83,25 @@ public class MyInvites extends MPagePanel {
 			public void begin() {
 				MpDb.project_svc.getInvitesForUser(MpDb.currentUser().getId(), this);
 			}
-
-			public void onSuccess(Object result) {
-				List<Project> invites = (List<Project>) result;
+			public void onSuccess(final Object projects) {
+				new ServerOp(){
+					public void begin() {
+						MpDb.project_svc.inviteDetails((List<Project>) projects, MpDb.currentUser().getId(), this);
+					}
+					public void onSuccess(Object inviteMap){
+						Map<Project,Invite> invites = (Map<Project, Invite>) inviteMap;
+						System.out.println("out test");
+					}
+				}.begin();
+				
+				
+				/*List<Project> invites = (List<Project>) result;
 				for(Project p: invites){
 					listInvite(p);
 				}
 				if(invites.size() == 0){
 					noInvitesLabel();
-				}
+				}*/
 			}
 			
 		}.begin();

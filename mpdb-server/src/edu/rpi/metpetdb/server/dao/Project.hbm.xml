@@ -22,7 +22,11 @@
     
     <set name="invites" table="project_invites">
       <key column="project_id" />
-      <many-to-many class="User" column="user_id" />
+      <composite-element class="Invite">
+      	<property name="action_timestamp" type="timestamp"/>
+      	<property name="status"/>
+      	<many-to-one name="user_id" class="User" not-null="true"/>
+      </composite-element>
     </set>
 
     <set name="samples" table="project_samples">
@@ -63,29 +67,40 @@
     order by p.owner.emailAddress
   </query>
   
+  <query name="Project.invitesById">
+    select p
+    from Project p
+    join p.invites i
+    with i.id = :id
+  </query>
+  
   <query name="Project.byMemberId">
     select p
     from Project p
-    where p.owner = :id
+    join p.members m
+    with m.id = :id
   </query>
   
   <query name="Project.byMemberId,size">
   	select count(*)
     from Project as p
-    where p.owner = :id
+    join p.members m
+    with m.id = :id
   </query>
   
   <query name="Project.byMemberId/name">
     select p
     from Project as p
-    where p.owner = :id
+    join p.members m
+    with m.id = :id
     order by p.name
   </query>
   
   <query name="Project.byMemberId/owner">
     select p
     from Project as p
-    where p.owner = :id
+    join p.members m
+    with m.id = :id
     order by p.owner
   </query>
   

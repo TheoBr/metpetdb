@@ -46,9 +46,10 @@ public class ProjectInvite extends FlowPanel {
 					}
 					public void onSuccess(final User result) {
 						if(result != null){
-							i.setMember_id(result.getId());
+							i.setUser_id(result.getId());
 							new ServerOp<Invite>() {
 								public void begin() {	
+									i.setStatus("New");
 									MpDb.project_svc.saveInvite(i, this);
 								}
 								public void onSuccess(final Invite result){

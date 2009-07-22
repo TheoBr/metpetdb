@@ -3,15 +3,19 @@
     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping package="edu.rpi.metpetdb.client.model">
-  <class name="Invites" table="project_invites">
-    <id name="id" column="project_id" unsaved-value="0">
-      <generator class="sequence">
-        <param name="sequence">project_invites_seq</param>
-      </generator>
-    </id>
-    <version name="version" />
-    <property name="project_id" column="project_id" />
-    <property name="member_id" column="member_id" />
-
+  <class name="Invite" table="project_invites">
+  	<composite-id>
+  	  <key-property name="project_id" column="project_id"/>
+  	  <key-property name="user_id" column="user_id"/>
+  	</composite-id>
+    <property name="action_timestamp" column="action_timestamp"/>
+    <property name="status" column="status" type="java.lang.String"/>
   </class>
+  
+  <query name="Invite.byProjectIdMemberId">
+    select i
+  	from Invite i
+	where project_id = :project_id AND 
+	user_id = :user_id
+  </query>
 </hibernate-mapping>

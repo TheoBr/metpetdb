@@ -1,8 +1,12 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
@@ -15,6 +19,7 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.ProjectService;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.InviteDAO;
 import edu.rpi.metpetdb.server.dao.impl.ProjectDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
@@ -63,9 +68,10 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	
 	public Invite saveInvite(Invite i) throws MpDbException {
 		User u = new User();
-		u.setId(i.getMember_id());
+		u.setId(i.getUser_id());
 		u = (new UserDAO(this.currentSession())).fill(u);
-		new ProjectDAO(this.currentSession()).saveInvite(i, u);
+		i.setAction_timestamp(new Timestamp(new Date().getTime()));
+		new InviteDAO(this.currentSession()).save(i);
 		commit();
 		return i;
 	}
@@ -76,18 +82,17 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 
 	public void acceptInvite(Invite i) throws MpDbException {
 		User u = new User();
-		u.setId(i.getMember_id());
+		u.setId(i.getUser_id());
 		u = (new UserDAO(this.currentSession())).fill(u);
+		i.setStatus("Accepted");
 		new ProjectDAO(this.currentSession()).acceptInvite(i, u);
 		commit();
 		return;
 	}
 
 	public void rejectInvite(Invite i) throws MpDbException {
-		User u = new User();
-		u.setId(i.getMember_id());
-		u = (new UserDAO(this.currentSession())).fill(u);
-		new ProjectDAO(this.currentSession()).removeInvite(i, u);
+		i.setStatus("Rejected");
+		new ProjectDAO(this.currentSession()).rejectInvite(i);
 		commit();
 		return;
 	}
@@ -107,5 +112,20 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 		p.setId(id);
 		p = dao.fill(p);
 		dao.delete(p);
+	}
+
+	public Map<Project, Invite> inviteDetails(List<Project> projects, int userId)
+			throws MpDbException {
+		Map<Project, Invite> inviteMap = new HashMap<Project, Invite>();
+		final Iterator<Project> itr = projects.iterator();
+		while(itr.hasNext()) {
+			Project current = itr.next();
+			Invite i = new Invite();
+			i.setUser_id(userId);
+			i.setProject_id(current.getId());
+			i = (new InviteDAO(this.currentSession())).fill(i);
+			inviteMap.put(current, i);
+		}
+		return inviteMap;
 	}
 }
