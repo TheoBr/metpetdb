@@ -92,6 +92,9 @@ public class ImageDAO extends MpDbDAO<Image> {
 	public List<Image> getImagesWithoutMobile() throws MpDbException{
 		Query q = sess.createQuery("from Image i where i.checksumMobile is null order by i.filename");
 		this.sess.disableFilter("imagePublicOrUser");
+		this.sess.disableFilter("samplePublicOrUser");
+		this.sess.disableFilter("subsamplePublicOrUser");
+		this.sess.disableFilter("chemicalAnalysisPublicOrUser");
 		return (List<Image>) getResults(q);
 	}
 }

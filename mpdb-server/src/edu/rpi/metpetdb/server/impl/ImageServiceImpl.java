@@ -256,6 +256,10 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		List <Image> imageList= dao.getImagesWithoutMobile();
 		for(Image i : imageList)
 		{
+			if(i.getSubsample()!=null)
+				i.getSubsample().getId();
+			if(i.getSample()!=null)
+				i.getSample().getId();
 			String checksum= i.getChecksum();
 			if (checksum != null) {
 				checksum = checksum.replaceAll("\\\\|/", "");
@@ -274,12 +278,12 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 				RenderedOp ro = ImageUploadServlet.loadImage(imgData);
 				i.setChecksumMobile(ImageUploadServlet.generateMobileVersion(ro,false));
 				dao.save(i);
-				commit();
 			} catch (IOException ioe){
 				//ignore it
 			}
 			}
 		}
+		commit();
 	}
 }
 	
