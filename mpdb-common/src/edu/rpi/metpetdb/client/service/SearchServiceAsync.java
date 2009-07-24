@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -18,6 +19,10 @@ public interface SearchServiceAsync {
 	
 	void sampleSearch(final PaginationParameters p, final SearchSample searchSamp, final User userSearching,
 			AsyncCallback<Results<Sample>> ac);
+	
+	void chemicalAnalysisSearchIds(final SearchSample searchSamp, final User userSearching, AsyncCallback<Map<Object,Boolean>> ac);
+	
+	void sampleSearchIds(final SearchSample searchSamp, final User userSearching, AsyncCallback<Map<Object,Boolean>> ac);
 	
 	void rebuildSearchIndex(AsyncCallback<Void> ac);
 	

@@ -20,8 +20,12 @@ public interface ChemicalAnalysisService extends RemoteService {
 			final long subsampleId) throws MpDbException;
 
 	List<ChemicalAnalysis> all(final long subsampleId) throws MpDbException;
+	
+	Map<Object,Boolean> allIdsForSubsample(long subsampleId) throws MpDbException;
 
 	ChemicalAnalysis details(long id) throws MpDbException;
+	
+	List<ChemicalAnalysis> details(List<Integer> ids) throws MpDbException;
 
 	ChemicalAnalysis save(ChemicalAnalysis chemicalAnalysis)
 			throws ValidationException, LoginRequiredException, MpDbException;

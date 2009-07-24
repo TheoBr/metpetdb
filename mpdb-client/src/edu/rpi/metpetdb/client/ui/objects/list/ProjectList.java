@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.properties.ProjectProperty;
 import edu.rpi.metpetdb.client.ui.CSS;
@@ -124,6 +125,11 @@ public abstract class ProjectList extends DataList<Project> {
 		HTML w = new HTML("No Projects Found");
 		w.setStyleName(CSS.NULLSET);
 		return w;
+	}
+	
+	@Override
+	protected Object getId(Project p){
+		return p.getId();
 	}
 
 }

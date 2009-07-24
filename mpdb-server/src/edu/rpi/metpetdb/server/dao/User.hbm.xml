@@ -44,6 +44,11 @@
   <query name="User.byProjectId">
   	from User u
   	inner join u.projects as project with project.id = :id
+  </query> 
+  <query name="User.byProjectId.Ids">
+  	select u.id
+  	from User u
+  	inner join u.projects as project with project.id = :id
   </query>
   <query name="User.byProjectId/name">
     select u

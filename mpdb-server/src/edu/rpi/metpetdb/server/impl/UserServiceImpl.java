@@ -3,7 +3,9 @@ package edu.rpi.metpetdb.server.impl;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,7 +29,6 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.UserService;
 import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
-import edu.rpi.metpetdb.server.dao.impl.RegionDAO;
 import edu.rpi.metpetdb.server.dao.impl.RoleChangeDAO;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 import edu.rpi.metpetdb.server.security.Action;
@@ -304,6 +305,18 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 	
 	public Results<RoleChange> getSponsorRoleChanges(int sponsorId, PaginationParameters p) throws MpDbException {
 		return new UserDAO(currentSession()).getSponsorRoleChanges(sponsorId, p);
+	}
+	
+	/**
+	 * used for pagination tables to select all/public/private
+	 * the boolean is null because users are not public or private
+	 */
+	public Map<Object,Boolean> getSponsorRoleChangeIds(int sponsorId) throws MpDbException {
+		Map<Object,Boolean> ids = new HashMap<Object,Boolean>();
+		for (Long l : new UserDAO(this.currentSession()).getSponsorRoleChangeIds(sponsorId)){
+			ids.put(l,null);
+		}
+		return ids;
 	}
 
 	public void approveRoleChange(RoleChange rc) throws MpDbException, UnableToSendEmailException {

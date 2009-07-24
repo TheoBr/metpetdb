@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -51,6 +52,9 @@ public interface UserServiceAsync {
 	public void getEligableRoles(int currentRank, AsyncCallback<Collection<Role>> ac);
 	
 	public void getSponsorRoleChanges(int sponsorId, PaginationParameters p,AsyncCallback<Results<RoleChange>> ac);
+	
+	public void getSponsorRoleChangeIds(int sponsorId, AsyncCallback< Map<Object,Boolean>> ac);
+	
 	public void approveRoleChange(RoleChange rc, AsyncCallback<Void> ac);
 	public void denyRoleChange(RoleChange rc, AsyncCallback<Void> ac);
 }

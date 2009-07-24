@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.user.client.ui.Button;
@@ -12,6 +13,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
@@ -33,13 +35,18 @@ public class ProjectMemberListActions extends FlowPanel implements ClickListener
 		},
 		NONE("None") {
 			public void doAction(final DataList<User> list) {
-				list.getDataTable().deselectAllRows();
+				list.deselectAllRows();
 			}
 		},
 		ALL("All on this page") {
 			public void doAction(final DataList<User> list) {
-				list.getDataTable().selectAllRows();
+				list.selectAllRows();
 			}
+		},
+		ALL_TABLE("All") {
+			public void doAction(final DataList<User> list) {
+				list.selectAllRows();
+			}	
 		};
 
 		final String display;
@@ -98,7 +105,7 @@ public class ProjectMemberListActions extends FlowPanel implements ClickListener
 		setStylePrimaryName("scrolltable-actions");
 	}
 
-	private void deleteSelected(final List<User> checkedProjects) {
+	private void deleteSelected(final List<Integer> checkedProjects) {
 		new VoidServerOp() {
 			@Override
 			public void begin() {		
@@ -120,8 +127,11 @@ public class ProjectMemberListActions extends FlowPanel implements ClickListener
 
 	public void onClick(Widget sender) {
 		if (sender == remove) {
-			final List<User> checkedProjects = list.getSelectedValues();
-			if (checkedProjects.size() == 0){
+			final ArrayList<Integer> checkedProjectIds = new ArrayList<Integer>();
+			for (Object id : list.getSelectedValues().keySet()){
+				checkedProjectIds.add((Integer) id);
+			}
+			if (checkedProjectIds.size() == 0){
 				noMembersSelected();
 			} else {
 				new ServerOp<Boolean>() {
@@ -132,7 +142,7 @@ public class ProjectMemberListActions extends FlowPanel implements ClickListener
 	
 					public void onSuccess(final Boolean result) {
 						if (result)
-							deleteSelected(checkedProjects);
+							deleteSelected(checkedProjectIds);
 					}
 				}.begin();
 			}

@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.ui;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.HistoryListener;
@@ -141,6 +142,11 @@ public class TokenSpace implements HistoryListener {
 					MpDb.image_svc.allImages(id, p, ac);
 				}
 
+				@Override
+				public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
+					MpDb.image_svc.allImageIds(id, ac);
+				}
+
 			});
 		}
 	};
@@ -189,19 +195,6 @@ public class TokenSpace implements HistoryListener {
 					show(new EditUserProfile(((User) result)));
 				}
 			}.begin();
-		}
-	};
-
-	public static final Screen allSamples = new Screen(LocaleHandler.lc_entity
-			.TokenSpace_All_Samples()) {
-		public void executeToken(final String args) {
-			show(new SampleList() {
-				@Override
-				public void update(PaginationParameters p,
-						AsyncCallback<Results<Sample>> ac) {
-					MpDb.sample_svc.allPublicSamples(p, ac);
-				}
-			});
 		}
 	};
 
@@ -450,7 +443,6 @@ public class TokenSpace implements HistoryListener {
 		register(subsampleEdit);
 		register(register);
 		register(home);
-		register(allSamples);
 		register(allPublicSamples);
 		register(samplesForUser);
 		register(projectDescription);

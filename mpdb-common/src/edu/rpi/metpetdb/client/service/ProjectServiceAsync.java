@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.model.Invite;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
@@ -18,8 +19,12 @@ public interface ProjectServiceAsync {
 
 	void all(PaginationParameters p, long ownerId,
 			AsyncCallback<Results<Project>> ac);
+	
+	void allIdsForUser(long userId, AsyncCallback<Map<Object,Boolean>> ac);
 
 	void details(int projectId, AsyncCallback<Project> ac);
+	
+	void details(List<Integer> ids, AsyncCallback<List<Project>> ac);
 
 	void saveProject(Project proj, AsyncCallback<Project> ac);
 	
@@ -32,6 +37,8 @@ public interface ProjectServiceAsync {
 
 	void allProjectMembers(PaginationParameters p, int id,
 			AsyncCallback<Results<User>> ac);
+	
+	public void allProjectMemberIds(int id, AsyncCallback<Map<Object,Boolean>> ac);
 
 	void saveInvite(Invite i, AsyncCallback<Invite> ac);
 	

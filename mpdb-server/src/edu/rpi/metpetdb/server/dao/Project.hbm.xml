@@ -77,6 +77,12 @@
     with m.id = :id
   </query>
   
+  <query name="Project.byMemberId.Ids">
+    select p.id
+    from Project p
+    where p.owner = :id
+  </query>
+  
   <query name="Project.byMemberId,size">
   	select count(*)
     from Project as p

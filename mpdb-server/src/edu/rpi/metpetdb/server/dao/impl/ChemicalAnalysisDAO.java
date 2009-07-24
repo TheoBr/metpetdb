@@ -85,6 +85,14 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 		return l;
 	}
 	
+	public List<Object[]> getAllIdsForSubsample(final int subsampleId)
+			throws MpDbException {
+		final Query q = namedQuery("ChemicalAnalysis-ids,publicData.bySubsampleId");
+		q.setLong("id", subsampleId);
+		final List<Object[]> l = (List<Object[]>) getResults(q);
+		return l;
+	}
+	
 	public List<ChemicalAnalysis> getAllSimple(final long subsampleId)
 		throws MpDbException {
 		final Query q = namedQuery("ChemicalAnalysis.bySubsampleId/simple");

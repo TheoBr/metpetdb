@@ -92,6 +92,11 @@
     from ChemicalAnalysis ma
     where ma.subsample.id = :id
   </query>
+  <query name="ChemicalAnalysis-ids,publicData.bySubsampleId">
+    select ma.id, ma.publicData
+    from ChemicalAnalysis ma
+    where ma.subsample.id = :id
+  </query>
   <query name="ChemicalAnalysis.bySubsampleId,size">
     select count(*) from ChemicalAnalysis ma
     where ma.subsample.id = :id

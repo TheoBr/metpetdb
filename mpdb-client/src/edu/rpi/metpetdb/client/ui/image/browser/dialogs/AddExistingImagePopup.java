@@ -1,6 +1,8 @@
 package edu.rpi.metpetdb.client.ui.image.browser.dialogs;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.gen2.table.event.client.PageLoadEvent;
@@ -22,6 +24,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserImageList;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
+import edu.rpi.metpetdb.client.ui.input.attributes.ChooseImageDialog;
 
 public class AddExistingImagePopup extends PopupPanel {
 
@@ -38,6 +41,11 @@ public class AddExistingImagePopup extends PopupPanel {
 					final AsyncCallback<Results<Image>> ac) {
 				MpDb.image_svc.allImages(subsample.getId(), p, ac);
 			}
+
+			@Override
+			public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
+				MpDb.image_svc.allImageIds(subsample.getId(), ac);
+			}
 		};
 		list.addPageLoadHandler(new PageLoadHandler() {
 			public void onPageLoad(PageLoadEvent event) {
@@ -52,8 +60,25 @@ public class AddExistingImagePopup extends PopupPanel {
 		});
 		vp.add(new Button("Add Selected", new ClickListener() {
 			public void onClick(final Widget sender) {
-				r.onSuccess(list.getSelectedValues());
-				((PopupPanel) sender.getParent().getParent()).hide();
+				new ServerOp<List<Image>>(){
+					public void begin(){
+						List<Long> ids = new ArrayList<Long>();
+						for (Object id : list.getSelectedValues().keySet()){
+							ids.add((Long) id);
+						}
+						MpDb.image_svc.details(ids, this);
+					}
+					
+					public void onSuccess(List<Image> result){
+						r.onSuccess(result);
+						((PopupPanel) sender.getParent().getParent()).hide();
+					}
+					
+					public void onFailure(Throwable e){
+						((PopupPanel) sender.getParent().getParent()).hide();
+						super.onFailure(e);
+					}
+				}.begin();
 			}
 		}));
 		final ScrollPanel scrollPanel = new ScrollPanel(list);

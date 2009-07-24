@@ -1,7 +1,10 @@
 package edu.rpi.metpetdb.client.ui.widgets.paging;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.gen2.table.client.DefaultTableDefinition;
 import com.google.gwt.gen2.table.client.TableModel;
@@ -10,10 +13,13 @@ import com.google.gwt.gen2.table.client.TableModelHelper.ColumnSortList;
 import com.google.gwt.gen2.table.client.TableModelHelper.Request;
 import com.google.gwt.gen2.table.client.TableModelHelper.SerializableResponse;
 import com.google.gwt.gen2.table.event.client.PageLoadHandler;
+import com.google.gwt.gen2.table.event.client.RowSelectionEvent;
 import com.google.gwt.gen2.table.event.client.RowSelectionHandler;
+import com.google.gwt.gen2.table.event.client.TableEvent.Row;
 import com.google.gwt.gen2.table.override.client.HTMLTable.RowFormatter;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -50,6 +56,17 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 
 	private final ListCookieJar cookies;
 	private final InlineLabel results;
+	
+	/**
+	 * Object is the Id of the value in the row
+	 * Boolean is whether or not the value is public or private,
+	 *         or null if the object doesn't support public/private
+	 */
+	private Map<Object,Boolean> tableSelections;
+	
+	protected abstract Object getId(RowType obj);
+	
+	public abstract void getAllIds(final AsyncCallback<Map<Object,Boolean>> ac);
 
 	/**
 	 * Returns the name of the list for use in the cookie (YUM!)
@@ -57,6 +74,7 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 	 * @return
 	 */
 	protected abstract String getListName();
+	
 
 	/**
 	 * Returns the name of the cookie for storing stuff
@@ -109,10 +127,34 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 	private SimplePanel tableActions;
 
 	private MpDbDataTable dataTable;
-
+	
+	private boolean ignoreSelections = true;
 	public MpDbDataTable getDataTable() {
 		if (dataTable == null) {
-			dataTable = new MpDbDataTable();
+			dataTable = new MpDbDataTable(){
+				public void onBrowserEvent(Event e){
+					if(e.getTypeInt() == Event.ONMOUSEDOWN){
+						ignoreSelections = false;
+					}
+					super.onBrowserEvent(e);
+				}
+			};
+			dataTable.addRowSelectionHandler(new RowSelectionHandler(){
+				public void onRowSelection(final RowSelectionEvent e){
+					if (!ignoreSelections) {
+						for (Row r : e.getSelectedRows()){
+							if (!tableSelections.containsKey(getId(getRowValue(r.getRowIndex())))){
+								tableSelections.put(getId(getRowValue(r.getRowIndex())),null);
+							}
+						}
+						for (Row r : e.getDeselectedRows()){
+							tableSelections.remove(getId(getRowValue(r.getRowIndex())));
+						}
+						ignoreSelections = true;
+					}
+				}
+			});
+			
 		}
 		return dataTable;
 	}
@@ -171,8 +213,25 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 					final SerializableResponse<RowType> response = new SerializableResponse<RowType>(
 							result.getList());
 					callback.onRowsReady(request, response);
+					setSelectionsForPage(result.getList());
 				}
 			}.begin();
+		}
+	}
+	
+	
+	/**
+	 * selects the rows that are in the list of tableSelections
+	 * called when the user navigates to a different page
+	 * @param pageValues
+	 */
+	public void setSelectionsForPage(List<RowType> pageValues){
+		for (int i = 0; i < pageValues.size(); i++) {
+			RowType t = pageValues.get(i);
+			Object id = getId(t);
+			if (tableSelections.containsKey(id)){
+				dataTable.selectRow(i, false);
+			}
 		}
 	}
 
@@ -200,21 +259,8 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 		dataTable.addRowSelectionHandler(handler);
 	}
 
-	public ArrayList<RowType> getSelectedValues() {
-		final ArrayList<RowType> selectedRows = new ArrayList<RowType>();
-		for (Integer i : dataTable.getSelectedRows()) {
-			selectedRows.add(getScrollTable().getRowValue(i));
-		}
-		return selectedRows;
-	}
-	
-	public ArrayList<RowType> getAllValuesForPage() {
-		final ArrayList<RowType> selectedRows = new ArrayList<RowType>();
-		for (int i = 0; i < dataTable.getRowCount(); i++) {
-			if (getScrollTable().getRowValue(i) != null)
-				selectedRows.add(getScrollTable().getRowValue(i));
-		}
-		return selectedRows;
+	public Map<Object,Boolean> getSelectedValues() {
+		return tableSelections;	
 	}
 
 	public RowType getRowValue(int row) {
@@ -338,7 +384,6 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 		
 		// container for widgets used to do stuff with selected rows
 		tableActions = new SimplePanel();
-
 		setPageSize(cookies.getPageSize());
 
 		add(topbar);
@@ -357,6 +402,7 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 		cookies = new ListCookieJar(getCookieName());
 		results = new InlineLabel("");
 		setUpColumns();
+		tableSelections = new HashMap<Object,Boolean>();
 	}
 
 	public FlowPanel getTopBar() {
@@ -369,13 +415,94 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 			getScrollTable().setPageSize(pageSize);
 			cookies.setPageSize(pageSize);
 			getScrollTable().gotoFirstPage();
-			getScrollTable().reloadPage();
-			
+			getScrollTable().reloadPage();	
 		}
 	}
-
+	
 	public void setTableActions(Widget w) {
 		tableActions.setWidget(w);
+	}
+	
+	/**
+	 * The selection functions are wrappers of the dataTable selections
+	 * 		but they also update the tableSelections Map
+	 * @param row
+	 * @param unselectAll
+	 */
+	public void selectRow(int row, boolean unselectAll){
+		getDataTable().selectRow(row,unselectAll);
+		if (!tableSelections.containsKey(getId(getRowValue(row)))){
+			tableSelections.put(getId(getRowValue(row)),null);
+		}
+	}
+	public void deselectRow(int row){
+		getDataTable().deselectRow(row);
+		tableSelections.remove(getId(getRowValue(row)));
+	}
+	
+	public void deselectAllPageRows(){
+		for (int i = 0; i < getDataTable().getRowCount(); i++) {
+	        deselectRow(i);
+		}
+	}
+	
+	public void deselectAllRows(){
+		for (int i = 0; i < getDataTable().getRowCount(); i++) {
+	        deselectRow(i);
+		}
+		tableSelections.clear();
+	}
+	
+	public void selectAllPageRows(){
+		for (int i = 0; i < getDataTable().getRowCount(); i++) {
+		    selectRow(i, false);
+		}
+	}
+	
+	public void selectAllRows(final Boolean isPublic){
+		new ServerOp<Map<Object,Boolean>>(){
+			@Override
+			public void begin(){
+				getAllIds(this);
+			}			
+			public void onSuccess(Map<Object,Boolean> results){
+				tableSelections = results;
+				// only select the ones that match isPublic
+				for (int i = 0; i < getDataTable().getRowCount(); i++) {
+					if (tableSelections.containsKey(getId(getRowValue(i))) && tableSelections.get(getId(getRowValue(i))) == isPublic){
+						selectRow(i, false);
+					} else {
+						deselectRow(i);
+					}
+				}
+				// remove the entries with a different value for isPublic
+				// since they are not being selected
+				List<Object> toRemove = new LinkedList<Object>();
+				for (Object key : results.keySet()){
+					if (tableSelections.get(key) != isPublic){
+						toRemove.add(key);
+					}
+				}
+				for (Object key : toRemove){
+					tableSelections.remove(key);
+				}
+			}
+		}.begin();
+	}
+	
+	public void selectAllRows(){
+		new ServerOp<Map<Object,Boolean>>(){
+			@Override
+			public void begin(){
+				getAllIds(this);
+			}			
+			public void onSuccess(Map<Object,Boolean> results){
+				tableSelections = results;
+				for (int i = 0; i < getDataTable().getRowCount(); i++) {
+					selectRow(i, false);
+				}
+			}
+		}.begin();
 	}
 	
 	public void onAttach() {

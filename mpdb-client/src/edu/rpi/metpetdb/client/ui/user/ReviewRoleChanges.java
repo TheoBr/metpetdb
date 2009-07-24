@@ -1,6 +1,8 @@
 package edu.rpi.metpetdb.client.ui.user;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -120,5 +122,14 @@ public class ReviewRoleChanges extends DataList<RoleChange> {
 	@Override
 	protected ColumnDefinition<RoleChange> getDefaultColumns() {
 		return columns;
+	}
+	
+	protected Object getId(RoleChange rc){
+		return rc.getId();
+	}
+
+	@Override
+	public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
+		MpDb.user_svc.getSponsorRoleChangeIds(MpDb.currentUser().getId(),ac);
 	}
 }

@@ -36,6 +36,12 @@
     where rc.sponsor.id = :id
     	and rc.granted is null
   </query>
+  <query name="RoleChange.bySponsorId.Ids">
+  	select rc.id
+    from RoleChange rc
+    where rc.sponsor.id = :id
+    	and rc.granted is null
+  </query>
   <query name="RoleChange.bySponsorId/requestDate">
     from RoleChange rc
     where rc.sponsor.id = :id

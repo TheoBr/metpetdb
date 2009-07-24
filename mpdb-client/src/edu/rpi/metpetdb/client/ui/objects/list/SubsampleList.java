@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.properties.SampleProperty;
@@ -192,6 +193,11 @@ public abstract class SubsampleList extends DataList<Subsample> {
 	
 	protected ColumnDefinition<Subsample> getDefaultColumns() {
 		return defaultColumns;
+	}
+	
+	@Override
+	protected Object getId(Subsample ss){
+		return ss.getId();
 	}
 
 }

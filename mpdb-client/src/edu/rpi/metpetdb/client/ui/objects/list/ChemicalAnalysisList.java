@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
-import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.properties.ChemicalAnalysisProperty;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
@@ -228,6 +227,11 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 	
 	protected ColumnDefinition<ChemicalAnalysis> getDefaultColumns() {
 		return defaultColumns;
+	}
+	
+	@Override
+	protected Object getId(ChemicalAnalysis ca){
+		return ca.getId();
 	}
 	
 }

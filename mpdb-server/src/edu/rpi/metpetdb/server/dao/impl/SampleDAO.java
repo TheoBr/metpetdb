@@ -96,6 +96,11 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		final Query q = namedQuery("Sample.all/id");
 		return (List<Sample>) getResults(q);
 	}
+	
+	public List<Object[]> getAllIdsForUser(final long id) throws MpDbException{
+		final Query q = namedQuery("Sample-ids,publicData");
+		return (List<Object[]>) getResults(q);
+	}
 
 	private Results<Sample> getSamples(Query sizeQuery, Query pageQuery) throws MpDbException {
 		final List<Sample> l = (List<Sample>) getResults(pageQuery);

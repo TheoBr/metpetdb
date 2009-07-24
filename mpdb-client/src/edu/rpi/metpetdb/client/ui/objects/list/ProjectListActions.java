@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
@@ -37,14 +38,19 @@ public class ProjectListActions extends FlowPanel implements ClickListener {
 		},
 		NONE("None") {
 			public void doAction(final DataList<Project> list) {
-				list.getDataTable().deselectAllRows();
+				list.deselectAllRows();
 			}
 		},
 		ALL("All on this page") {
 			public void doAction(final DataList<Project> list) {
-				list.getDataTable().selectAllRows();
+				list.selectAllRows();
 			}
-		};
+		},
+		ALL_TABLE("All") {
+			public void doAction(final DataList<Project> list) {
+				list.selectAllRows();
+			}	
+		};;
 
 		final String display;
 
@@ -101,17 +107,11 @@ public class ProjectListActions extends FlowPanel implements ClickListener {
 		setStylePrimaryName("scrolltable-actions");
 	}
 
-	private void deleteSelected(final List<Project> checkedProjects) {
+	private void deleteSelected(final List<Integer> checkedProjects) {
 		new VoidServerOp() {
 			@Override
-			public void begin() {		
-				Iterator<Project> itr = checkedProjects.iterator();
-				final ArrayList<Integer> ids = new ArrayList<Integer>();
-				while (itr.hasNext()) {
-					ids.add(itr.next().getId());
-				}
-				
-				MpDb.project_svc.deleteAll(ids, this);
+			public void begin() {						
+				MpDb.project_svc.deleteAll(checkedProjects, this);
 
 			}
 			public void onSuccess() {
@@ -148,21 +148,38 @@ public class ProjectListActions extends FlowPanel implements ClickListener {
 
 	public void onClick(Widget sender) {
 		if (sender == remove) {
-			final List<Project> checkedProjects = list.getSelectedValues();
-			if (checkedProjects.size() == 0){
+			final ArrayList<Integer> checkedProjectIds = new ArrayList<Integer>();
+			for (Object id : list.getSelectedValues().keySet()){
+				checkedProjectIds.add((Integer) id);
+			}
+			if (checkedProjectIds.size() == 0){
 				noProjectsSelected();
-			} else if(checkDeletePermissions(checkedProjects)) {
-				noPermissionToDelete();
 			} else {
-				new ServerOp<Boolean>() {
-					public void begin() {
-						new ConfirmationDialogBox(LocaleHandler.lc_text
-								.confirmation_Delete_Project(), true, this);
+				new ServerOp<List<Project>>() {
+					public void begin(){
+						List<Integer> ids = new ArrayList<Integer>();
+						for (Object o :  list.getSelectedValues().keySet()){
+							ids.add((Integer) o);
+						}
+						MpDb.project_svc.details(ids, this);
 					}
-	
-					public void onSuccess(final Boolean result) {
-						if (result)
-							deleteSelected(checkedProjects);
+
+					public void onSuccess(List<Project> result2) {
+						if(checkDeletePermissions(result2)) {
+							noPermissionToDelete();
+						} else {
+							new ServerOp<Boolean>() {
+								public void begin() {
+									new ConfirmationDialogBox(LocaleHandler.lc_text
+											.confirmation_Delete_Project(), true, this);
+								}
+				
+								public void onSuccess(final Boolean result) {
+									if (result)
+										deleteSelected(checkedProjectIds);
+								}
+							}.begin();
+						}
 					}
 				}.begin();
 			}

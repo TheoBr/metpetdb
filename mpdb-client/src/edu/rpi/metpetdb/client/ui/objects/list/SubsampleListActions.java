@@ -42,39 +42,43 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 
 	private enum SelectOption {
 
+
 		EMPTY("----") {
 			public void doAction(final DataList<Subsample> list) {
 			// do nothing for empty
 			}
 		},
-		NONE("None") {
+		NONE_PAGE("None on this page") {
 			public void doAction(final DataList<Subsample> list) {
-				list.getDataTable().deselectAllRows();
+				list.deselectAllPageRows();
+			}
+		},
+		NONE_TABLE("None") {
+			public void doAction(final DataList<Subsample> list) {
+				list.deselectAllRows();
 			}
 		},
 		PRIVATE("Private") {
 			public void doAction(final DataList<Subsample> list) {
-				for (int i = 0; i < list.getDataTable().getRowCount(); i++)
-					if (!list.getRowValue(i).isPublicData())
-						list.getDataTable().selectRow(i, false);
-					else
-						list.getDataTable().deselectRow(i);
+				list.selectAllRows(false);
 			}
 		},
 		PUBLIC("Public") {
 			public void doAction(final DataList<Subsample> list) {
-				for (int i = 0; i < list.getDataTable().getRowCount(); i++)
-					if (list.getRowValue(i).isPublicData())
-						list.getDataTable().selectRow(i, false);
-					else
-						list.getDataTable().deselectRow(i);
+				list.selectAllRows(true);
 			}
 		},
-		ALL("All on this page") {
+		ALL_PAGE("All on this page") {
 			public void doAction(final DataList<Subsample> list) {
-				list.getDataTable().selectAllRows();
+				list.selectAllPageRows();
 			}
+		},
+		ALL_TABLE("All") {
+			public void doAction(final DataList<Subsample> list) {
+				list.selectAllRows();
+			}	
 		};
+
 
 		final String display;
 
@@ -136,17 +140,11 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 		setStylePrimaryName("scrolltable-actions");
 	}
 
-	private void deleteSelected(final List<Subsample> CheckedSubsamples) {
+	private void deleteSelected(final List<Long> CheckedSubsamples) {
 		new VoidServerOp() {
 			@Override
 			public void begin() {			
-				Iterator<Subsample> itr = CheckedSubsamples.iterator();
-				final ArrayList<Long> ids = new ArrayList<Long>();
-				while (itr.hasNext()) {
-					ids.add(itr.next().getId());
-				}
-				
-				MpDb.subsample_svc.deleteAll(ids, this);
+				MpDb.subsample_svc.deleteAll(CheckedSubsamples, this);
 
 			}
 			public void onSuccess() {
@@ -189,36 +187,64 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 			if(list.getSelectedValues().size() > 0){
 				new ServerOp<Sample>(){
 					public void begin() {
-						MpDb.sample_svc.details(list.getSelectedValues().get(0).getSampleId(), this);
+						MpDb.sample_svc.details((Long)list.getRowValue(0).getSampleId(), this);
 					}
 					public void onSuccess(final Sample result){
 						if(!result.isPublicData()){
 							sampleNotPublic();
 						} else{
-							MakePublicDialog m = new MakePublicDialog(list.getSelectedValues(), 
-								list, false, result);
-							m.show();
+							new ServerOp<List<Subsample>>() {
+								public void begin(){
+									List<Long> ids = new ArrayList<Long>();
+									for (Object o :  list.getSelectedValues().keySet()){
+										ids.add((Long) o);
+									}
+									MpDb.subsample_svc.details(ids, this);
+								}
+
+								public void onSuccess(List<Subsample> result2) {
+									MakePublicDialog m = new MakePublicDialog((ArrayList) result2, list, false, result);
+									m.show();	
+								};
+							}.begin();
 						}
 					}	
 				}.begin();
 			}
 		} else if (sender == remove) {
-			final List<Subsample> checkedSubsamples = list.getSelectedValues();
-			if (checkedSubsamples.size() == 0){
+			final ArrayList<Long> checkedSubsampleIds = new ArrayList<Long>();
+			for (Object id : list.getSelectedValues().keySet()){
+				checkedSubsampleIds.add((Long) id);
+			}
+			if (checkedSubsampleIds.size() == 0){
 				noSubsamplesSelected();
-			} else if(checkDeletePermissions(checkedSubsamples)){
-				noPermissionToDelete();
 			} else {
-				new ServerOp<Boolean>() {
-					public void begin() {
-						new ConfirmationDialogBox(LocaleHandler.lc_text
-								.confirmation_Delete_Subsample(), true, this);
+				new ServerOp<List<Subsample>>() {
+					public void begin(){
+						List<Long> ids = new ArrayList<Long>();
+						for (Object o :  list.getSelectedValues().keySet()){
+							ids.add((Long) o);
+						}
+						MpDb.subsample_svc.details(ids, this);
 					}
-	
-					public void onSuccess(final Boolean result) {
-						if (result)
-							deleteSelected(checkedSubsamples);
-					}
+
+					public void onSuccess(List<Subsample> result2) {
+						if(checkDeletePermissions(result2)){
+							noPermissionToDelete();
+						} else {
+							new ServerOp<Boolean>() {
+								public void begin() {
+									new ConfirmationDialogBox(LocaleHandler.lc_text
+											.confirmation_Delete_Subsample(), true, this);
+								}
+				
+								public void onSuccess(final Boolean result) {
+									if (result)
+										deleteSelected(checkedSubsampleIds);
+								}
+							}.begin();
+						}	
+					};
 				}.begin();
 			}
 		}

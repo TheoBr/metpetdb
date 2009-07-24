@@ -1,5 +1,9 @@
 package edu.rpi.metpetdb.client.ui.user;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.model.Sample;
@@ -22,6 +26,14 @@ public class UserSamplesList extends MPagePanel {
 				long id = (long) (MpDb.currentUser().getId());
 				MpDb.sample_svc.allSamplesForUser(p, id, ac);
 			}
+
+			@Override
+			public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
+				long id = (long) (MpDb.currentUser().getId());
+				MpDb.sample_svc.allIdsForUser(id,ac);	
+			}
+
+
 		};
 		addPageHeader();
 		add(list);

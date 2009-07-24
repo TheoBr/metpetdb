@@ -83,5 +83,9 @@ public abstract class ImageBrowserImageList extends DataList<Image> {
 	protected ColumnDefinition<Image> getDefaultColumns() {
 		return columns;
 	}
+	
+	protected Object getId(Image i){
+		return i.getId();
+	}
 
 }

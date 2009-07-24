@@ -60,7 +60,16 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 		final Query q = namedQuery("Subsample.bySampleId");
 		q.setParameter("sampleId", sampleId);
 		final List<Subsample> l = (List<Subsample>) getResults(q);
+		for (Subsample ss : l){
+			ss.getImages().size();
+		}
 		return l;
+	}
+	
+	public List<Object[]> getAllIds(final long sampleId) throws MpDbException{
+		final Query q = namedQuery("Subsample-ids,publicData.bySampleId");
+		q.setParameter("sampleId", sampleId);
+		return (List<Object[]>) getResults(q);
 	}
 
 	public Results<Subsample> getAllWithImagesBySampleID(

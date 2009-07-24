@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.objects.list;
 import org.postgis.Point;
 
 import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -10,9 +11,13 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.properties.SampleProperty;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
+import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.TooltipListener;
@@ -378,6 +383,11 @@ public abstract class SampleList extends DataList<Sample> {
 	
 	protected ColumnDefinition<Sample> getDefaultColumns() {
 		return defaultColumns;
+	}
+	
+	@Override
+	protected Object getId(Sample s){
+		return s.getId();
 	}
 
 }

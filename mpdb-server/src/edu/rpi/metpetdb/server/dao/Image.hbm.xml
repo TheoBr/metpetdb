@@ -58,6 +58,11 @@
     from Image i
     where i.subsample.id = :subsampleId
   </query>
+  <query name="Image-ids-publicData.bySubsampleId">
+  	select i.id, i.publicData
+    from Image i
+    where i.subsample.id = :subsampleId
+  </query>
   <query name="Image.bySampleId">
     from Image i 
     where i.sample.id = :sampleId

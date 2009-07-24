@@ -76,6 +76,12 @@ public class ImageDAO extends MpDbDAO<Image> {
 		q.setLong("subsampleId", subsampleId);
 		return (List<Image>) getResults(q);
 	}
+	
+	public List<Object[]> getIdsBySubsampleId(long subsampleId) throws MpDbException{
+		Query q= namedQuery("Image-ids-publicData.bySubsampleId");
+		q.setLong("subsampleId", subsampleId);
+		return (List<Object[]>) getResults(q);
+	}
 	public Results<Image> getAllBySubsampleId(final PaginationParameters p,
 			final long subsampleId) throws MpDbException {
 		final Query sizeQ = sizeQuery("Image.bySubsampleId", subsampleId);

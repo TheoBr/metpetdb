@@ -44,27 +44,24 @@ public class ChemicalAnalysisListActions extends FlowPanel implements ClickListe
 		},
 		PRIVATE("Private") {
 			public void doAction(final DataList<ChemicalAnalysis> list) {
-				for (int i = 0; i < list.getDataTable().getRowCount(); i++)
-					if (!list.getRowValue(i).isPublicData())
-						list.getDataTable().selectRow(i, false);
-					else
-						list.getDataTable().deselectRow(i);
+				list.selectAllRows(false);
 			}
 		},
 		PUBLIC("Public") {
 			public void doAction(final DataList<ChemicalAnalysis> list) {
-				for (int i = 0; i < list.getDataTable().getRowCount(); i++)
-					if (list.getRowValue(i).isPublicData())
-						list.getDataTable().selectRow(i, false);
-					else
-						list.getDataTable().deselectRow(i);
+				list.selectAllRows(true);
 			}
 		},
 		ALL("All on this page") {
 			public void doAction(final DataList<ChemicalAnalysis> list) {
-				list.getDataTable().selectAllRows();
+				list.selectAllPageRows();
 			}
-		};
+		},
+		ALL_TABLE("All") {
+			public void doAction(final DataList<ChemicalAnalysis> list) {
+				list.selectAllRows();
+			}	
+		};;
 
 		final String display;
 
@@ -121,16 +118,11 @@ public class ChemicalAnalysisListActions extends FlowPanel implements ClickListe
 		setStylePrimaryName("scrolltable-actions");
 	}
 
-	private void deleteSelected(final List<ChemicalAnalysis> CheckedSubsamples) {
+	private void deleteSelected(final List<Integer> CheckedSubsamples) {
 		new VoidServerOp() {
 			@Override
 			public void begin() {			
-				Iterator<ChemicalAnalysis> itr = CheckedSubsamples.iterator();
-				final ArrayList<Integer> ids = new ArrayList<Integer>();
-				while (itr.hasNext()) {
-					ids.add(itr.next().getId());
-				}
-				MpDb.chemicalAnalysis_svc.deleteAll(ids, this);
+				MpDb.chemicalAnalysis_svc.deleteAll(CheckedSubsamples, this);
 
 			}
 			public void onSuccess() {
@@ -167,21 +159,34 @@ public class ChemicalAnalysisListActions extends FlowPanel implements ClickListe
 
 	public void onClick(Widget sender) {
 		if (sender == remove) {
-			final List<ChemicalAnalysis> checkedAnalyses = list.getSelectedValues();
-			if (checkedAnalyses.size() == 0){
+			final ArrayList<Integer> checkedAnalysesIds = new ArrayList<Integer>();
+			for (Object id : list.getSelectedValues().keySet()){
+				checkedAnalysesIds.add((Integer) id);
+			}
+			if (checkedAnalysesIds.size() == 0){
 				noAnalysesSelected();
-			} else if(checkDeletePermissions(checkedAnalyses)) {
-				noPermissionToDelete();
 			} else {
-				new ServerOp<Boolean>() {
-					public void begin() {
-						new ConfirmationDialogBox(LocaleHandler.lc_text
-								.confirmation_Delete_Analysis(), true, this);
+				new ServerOp<List<ChemicalAnalysis>>() {
+					public void begin(){
+						MpDb.chemicalAnalysis_svc.details(checkedAnalysesIds, this);
 					}
-	
-					public void onSuccess(final Boolean result) {
-						if (result)
-							deleteSelected(checkedAnalyses);
+
+					public void onSuccess(List<ChemicalAnalysis> result2) {
+						if(checkDeletePermissions(result2)) {
+							noPermissionToDelete();
+						} else {
+							new ServerOp<Boolean>() {
+								public void begin() {
+									new ConfirmationDialogBox(LocaleHandler.lc_text
+											.confirmation_Delete_Analysis(), true, this);
+								}
+				
+								public void onSuccess(final Boolean result) {
+									if (result)
+										deleteSelected(checkedAnalysesIds);
+								}
+							}.begin();
+						}
 					}
 				}.begin();
 			}

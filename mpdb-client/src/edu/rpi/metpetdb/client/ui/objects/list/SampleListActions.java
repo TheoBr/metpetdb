@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Button;
@@ -30,7 +31,6 @@ import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.dialogs.MakePublicDialog;
 import edu.rpi.metpetdb.client.ui.excel.ExcelUtil;
-import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarthPopUp;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.paging.DataList;
@@ -51,33 +51,35 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 			// do nothing for empty
 			}
 		},
-		NONE("None") {
+		NONE_PAGE("None on this page") {
 			public void doAction(final DataList<Sample> list) {
-				list.getDataTable().deselectAllRows();
+				list.deselectAllPageRows();
+			}
+		},
+		NONE_TABLE("None") {
+			public void doAction(final DataList<Sample> list) {
+				list.deselectAllRows();
 			}
 		},
 		PRIVATE("Private") {
 			public void doAction(final DataList<Sample> list) {
-				for (int i = 0; i < list.getDataTable().getRowCount(); i++)
-					if (!list.getRowValue(i).isPublicData())
-						list.getDataTable().selectRow(i, false);
-					else
-						list.getDataTable().deselectRow(i);
+				list.selectAllRows(false);
 			}
 		},
 		PUBLIC("Public") {
 			public void doAction(final DataList<Sample> list) {
-				for (int i = 0; i < list.getDataTable().getRowCount(); i++)
-					if (list.getRowValue(i).isPublicData())
-						list.getDataTable().selectRow(i, false);
-					else
-						list.getDataTable().deselectRow(i);
+				list.selectAllRows(true);
 			}
 		},
-		ALL("All on this page") {
+		ALL_PAGE("All on this page") {
 			public void doAction(final DataList<Sample> list) {
-				list.getDataTable().selectAllRows();
+				list.selectAllPageRows();
 			}
+		},
+		ALL_TABLE("All") {
+			public void doAction(final DataList<Sample> list) {
+				list.selectAllRows();
+			}	
 		};
 
 		final String display;
@@ -147,9 +149,15 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 					projectListBox.addChangeListener(new ChangeListener() {
 						public void onChange(Widget sender) {
 							if (projectListBox.getSelectedIndex() > 0) {
-								final List<Sample> checkedSamples = list
-										.getSelectedValues();
-								if (checkedSamples.size() > 0) {
+								final Set<Object> checkedSampleIds =  list
+										.getSelectedValues().keySet();
+								final List<Sample> checkedSamples = new ArrayList<Sample>();
+								for (Object id : checkedSampleIds){
+									Sample s = new Sample();
+									s.setId((Long) id);
+									checkedSamples.add(s);
+								}
+								if (checkedSampleIds.size() > 0) {
 									new ServerOp<Boolean>() {
 										public void begin() {
 											new ConfirmationDialogBox(
@@ -246,12 +254,11 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 		new ServerOp<List<Sample>>() {
 			@Override
 			public void begin() {
-				List<Sample> checked = list.getSelectedValues();
-				if (checked.size() == 0)
-					onSuccess(list.getAllValuesForPage());
-				else {
-					onSuccess(checked);
+				final ArrayList<Long> checkedSampleIds = new ArrayList<Long>();
+				for (Object id : list.getSelectedValues().keySet()){
+					checkedSampleIds.add((Long) id);
 				}
+				MpDb.sample_svc.details(checkedSampleIds, this);
 			}
 			public void onSuccess(List<Sample> result) {
 				if (result != null && result.size() > 0) {
@@ -273,12 +280,11 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 		new ServerOp<List<Sample>>() {
 			@Override
 			public void begin() {
-				List<Sample> checked = list.getSelectedValues();
-				if (checked.size() == 0)
-					onSuccess(list.getAllValuesForPage());
-				else {
-					onSuccess(checked);
+				final ArrayList<Long> checkedSampleIds = new ArrayList<Long>();
+				for (Object id : list.getSelectedValues().keySet()){
+					checkedSampleIds.add((Long) id);
 				}
+				MpDb.sample_svc.details(checkedSampleIds, this);
 			}
 			public void onSuccess(List<Sample> result) {
 				if (result != null && result.size() > 0) {
@@ -312,12 +318,11 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 		new ServerOp<List<Sample>>() {
 			@Override
 			public void begin() {
-				List<Sample> checked = list.getSelectedValues();
-				if (checked.size() == 0)
-					onSuccess(list.getAllValuesForPage());
-				else {
-					onSuccess(checked);
+				final ArrayList<Long> checkedSampleIds = new ArrayList<Long>();
+				for (Object id : list.getSelectedValues().keySet()){
+					checkedSampleIds.add((Long) id);
 				}
+				MpDb.sample_svc.details(checkedSampleIds, this);
 			}
 			public void onSuccess(List<Sample> result) {
 				if (result != null && result.size() > 0) {
@@ -347,16 +352,11 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 		}.begin();
 	}
 
-	private void deleteSelected(final List<Sample> CheckedSamples) {
+	private void deleteSelected(final List<Long> CheckedSamples) {
 		new VoidServerOp() {
 			@Override
 			public void begin() {			
-				Iterator<Sample> itr = CheckedSamples.iterator();
-				final ArrayList<Long> ids = new ArrayList<Long>();
-				while (itr.hasNext()) {
-					ids.add(itr.next().getId());
-				}
-				MpDb.sample_svc.deleteAll(ids, this);
+				MpDb.sample_svc.deleteAll(CheckedSamples, this);
 
 			}
 			public void onSuccess() {
@@ -414,25 +414,55 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 		} else if (sender == exportGoogleEarth) {
 			doExportGoogleEarth();
 		} else if (sender == makePublic) {
-			MakePublicDialog m = new MakePublicDialog(list.getSelectedValues(), list, true, null);
-			m.show();
+			new ServerOp<List<Sample>>() {
+				public void begin(){
+					List<Long> ids = new ArrayList<Long>();
+					for (Object o :  list.getSelectedValues().keySet()){
+						ids.add((Long) o);
+					}
+					MpDb.sample_svc.details(ids, this);
+				}
+
+				public void onSuccess(List<Sample> result) {
+					MakePublicDialog m = new MakePublicDialog((ArrayList) result, list, true, null);
+					m.show();	
+				};
+			}.begin();
+			
 		} else if (sender == remove) {
-			final List<Sample> checkedSamples = list.getSelectedValues();
-			if(checkedSamples.size() == 0){
+			final ArrayList<Long> checkedSampleIds = new ArrayList<Long>();
+			for (Object id : list.getSelectedValues().keySet()){
+				checkedSampleIds.add((Long) id);
+			}
+			if(checkedSampleIds.size() == 0){
 				noSamplesSelected();
-			} else if(checkDeletePermissions(checkedSamples)) {
-				noPermissionToDelete();
 			} else {
-				new ServerOp<Boolean>() {
-					public void begin() {
-						new ConfirmationDialogBox(LocaleHandler.lc_text
-								.confirmation_Delete(), true, this);
+				new ServerOp<List<Sample>>() {
+					public void begin(){
+						List<Long> ids = new ArrayList<Long>();
+						for (Object o :  list.getSelectedValues().keySet()){
+							ids.add((Long) o);
+						}
+						MpDb.sample_svc.details(ids, this);
 					}
-	
-					public void onSuccess(final Boolean result) {
-						if (result)
-							deleteSelected(checkedSamples);
-					}
+
+					public void onSuccess(List<Sample> result2) {
+						if(checkDeletePermissions(result2)){
+							noPermissionToDelete();
+						} else {
+							new ServerOp<Boolean>() {
+								public void begin() {
+									new ConfirmationDialogBox(LocaleHandler.lc_text
+											.confirmation_Delete(), true, this);
+								}
+				
+								public void onSuccess(final Boolean result) {
+									if (result)
+										deleteSelected(checkedSampleIds);
+								}
+							}.begin();
+						}	
+					};
 				}.begin();
 			}
 		}

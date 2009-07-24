@@ -1,6 +1,8 @@
 package edu.rpi.metpetdb.server.impl;
 
+
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,10 +13,10 @@ import java.util.Map;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.Invite;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.User;
-import edu.rpi.metpetdb.client.model.Invite;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.ProjectService;
@@ -36,12 +38,35 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 				.getForUser(userId);
 		return (lDAO);
 	}
+	
+	/**
+	 * used for pagination tables to select all
+	 * the boolean is null because projects are not public or private
+	 */
+	public Map<Object,Boolean> allIdsForUser(final long userId) throws MpDbException {
+		Map<Object,Boolean> ids = new HashMap<Object,Boolean>();
+		for (Integer i : new ProjectDAO(this.currentSession()).getAllIdsForUser(userId)){
+			ids.put(i,null);
+		}
+		return ids;
+	}
 
 	public Project details(final int projectId) throws MpDbException {
 		Project p = new Project();
 		p.setId(projectId);
 		p = (new ProjectDAO(this.currentSession())).fill(p);
 		return (p);
+	}
+	
+	public List<Project> details(final List<Integer> ids) throws MpDbException {
+		List<Project> projects = new ArrayList<Project>();
+		for (Integer projectId : ids){
+			Project p = new Project();
+			p.setId(projectId);
+			p = (new ProjectDAO(this.currentSession())).fill(p);
+			projects.add(p);
+		}
+		return projects;
 	}
 
 	public Project saveProject(Project project) throws ValidationException,
@@ -64,6 +89,14 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	public Results<User> allProjectMembers(PaginationParameters p, int id)
 			throws MpDbException {
 		return (new ProjectDAO(this.currentSession())).getMembersForProject(p, id);
+	}
+	
+	public Map<Object,Boolean> allProjectMemberIds(int id) throws MpDbException {
+		Map<Object,Boolean> ids = new HashMap<Object,Boolean>();
+		for (Long l : new ProjectDAO(this.currentSession()).getProjectMemberIds(id)){
+			ids.put(l,null);
+		}
+		return ids;
 	}
 	
 	public Invite saveInvite(Invite i) throws MpDbException {

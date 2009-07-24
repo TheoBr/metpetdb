@@ -20,11 +20,15 @@ public interface SubsampleService extends RemoteService {
 			final long sampleId) throws MpDbException;
 
 	Subsample details(long id) throws MpDbException;
+	
+	List<Subsample> details(List<Long> ids) throws MpDbException;
 
 	Subsample save(final Subsample s) throws MpDbException, ValidationException,
 			LoginRequiredException;
 
 	List<Subsample> all(final long sampleId) throws MpDbException;
+	
+	Map<Object,Boolean> allIdsForSample(long sampleId) throws MpDbException;
 
 	void delete(long id) throws MpDbException, LoginRequiredException;
 	

@@ -1,5 +1,8 @@
 package edu.rpi.metpetdb.client.ui.input.attributes;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -14,6 +17,7 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.MCommand;
+import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserImageList;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.image.AddImageWizard;
@@ -37,6 +41,11 @@ public class ChooseImageDialog extends MDialogBox implements ClickListener {
 					AsyncCallback<Results<Image>> ac) {
 				MpDb.image_svc.allImages(s.getId(), p, ac);
 			}
+
+			@Override
+			public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
+				MpDb.image_svc.allImageIds(s.getId(), ac);
+			}
 		};
 		list.getDataTable().setSelectionPolicy(SelectionPolicy.RADIO);
 		fp.add(list);
@@ -57,9 +66,24 @@ public class ChooseImageDialog extends MDialogBox implements ClickListener {
 		if (sender == cancel) {
 			this.hide();
 		} else if (sender == ok) {
-			if (continuation != null && list.getSelectedValues().size() > 0)
-				continuation.execute(list.getSelectedValues().get(0));
-			this.hide();
+			if (continuation != null && list.getSelectedValues().size() > 0) {
+				new ServerOp<Image>(){
+					public void begin(){
+						Iterator<Object> itr = list.getSelectedValues().keySet().iterator();
+						MpDb.image_svc.details((Long)itr.next(), this);
+					}
+					
+					public void onSuccess(Image result){
+						continuation.execute(result);
+						ChooseImageDialog.this.hide();
+					}
+					
+					public void onFailure(Throwable e){
+						ChooseImageDialog.this.hide();
+						super.onFailure(e);
+					}
+				}.begin();
+			}
 		} else if (sender == newImage) {
 			new AddImageWizard(new MCommand<Image>() {
 				@Override

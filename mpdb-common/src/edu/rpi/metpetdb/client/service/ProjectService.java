@@ -33,8 +33,12 @@ public interface ProjectService extends RemoteService {
 	 * 		the project does not exist in the database.
 	 */
 	Project details(int projectId) throws MpDbException;
+	
+	List<Project> details(List<Integer> ids) throws MpDbException;
 
 	List<Project> all(final long userId) throws MpDbException;
+	
+	Map<Object,Boolean> allIdsForUser(final long userId) throws MpDbException;
 
 	/**
 	 * Create or update an existing project.
@@ -57,6 +61,8 @@ public interface ProjectService extends RemoteService {
 	Results<Sample> samplesFromProject(PaginationParameters parameters, long id)  throws MpDbException;
 	
 	Results<User> allProjectMembers(PaginationParameters p, int id) throws MpDbException;
+	
+	public Map<Object,Boolean> allProjectMemberIds(int id) throws MpDbException;
 	
 	Invite saveInvite(Invite i) throws MpDbException;
 	

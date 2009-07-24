@@ -2,11 +2,11 @@ package edu.rpi.metpetdb.client.service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
-import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -25,6 +25,10 @@ public interface SampleServiceAsync {
 			AsyncCallback<Results<Sample>> ac);
 
 	void details(long id, AsyncCallback<Sample> ac);
+	
+	void details(List<Long> ids, AsyncCallback<List<Sample>> ac);
+	
+	void allIdsForUser(long id, AsyncCallback<Map<Object,Boolean>> ac);
 
 	void save(Sample sample, AsyncCallback<Sample> ac);
 	

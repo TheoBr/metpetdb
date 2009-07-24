@@ -70,6 +70,12 @@
   	where s.sample.id = :sampleId
   </query>
   
+  <query name="Subsample-ids,publicData.bySampleId">
+  	select s.id, s.publicData
+  	from Subsample s
+  	where s.sample.id = :sampleId
+  </query>
+  
   <query name="Subsample.allWithImages,size">
     select count(*) from Subsample s
     where s.sample.id = :id and size( s.images ) > 0

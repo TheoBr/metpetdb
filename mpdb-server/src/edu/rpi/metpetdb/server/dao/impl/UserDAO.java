@@ -70,6 +70,12 @@ public class UserDAO extends MpDbDAO<User> {
 		final int size = ((Number) getResult(sizeQuery)).intValue();
 		return new Results<RoleChange>(size, l);
 	}
+	
+	public List<Long> getSponsorRoleChangeIds(int sponsorId) throws MpDbException {
+		final Query q = namedQuery("RoleChange.bySponsorId.Ids");
+		q.setLong("id", sponsorId);
+		return ((List<Long>) getResults(q));
+	}
 
 	public Object[] allNames() throws MpDbException{
 		final Query q = namedQuery("User.all/name");

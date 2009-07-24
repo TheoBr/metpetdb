@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
@@ -18,6 +19,10 @@ public interface SearchService extends RemoteService {
 	
 	Results<Sample> sampleSearch(final PaginationParameters p, final SearchSample searchSamp, User userSearching) throws MpDbException;
 
+	Map<Object,Boolean> sampleSearchIds(final SearchSample searchSamp, User userSearching) throws MpDbException;
+	
+	Map<Object,Boolean> chemicalAnalysisSearchIds(final SearchSample searchSamp, User userSearching) throws MpDbException;
+	
 	void rebuildSearchIndex() throws MpDbException;
 	
 	void setSessionSearchSample(final SearchSample searchSamp);

@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.properties.ImageProperty;
 import edu.rpi.metpetdb.client.model.properties.XrayImageProperty;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserImageList;
@@ -72,6 +73,11 @@ public abstract class ImageListViewer extends DataList<Image> {
 	
 	protected ColumnDefinition<Image> getDefaultColumns() {
 		return columns;
+	}
+	
+	@Override
+	protected Object getId(Image i){
+		return i.getId();
 	}
 
 }

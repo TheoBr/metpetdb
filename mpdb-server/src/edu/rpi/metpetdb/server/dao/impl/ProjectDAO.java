@@ -92,4 +92,16 @@ public class ProjectDAO extends MpDbDAO<Project> {
 		q.setInteger("id", id);
 		return (List<Project>) getResults(q);
 	}
+	
+	public List<Integer> getAllIdsForUser(final long memberId) throws MpDbException{
+		final Query q = namedQuery("Project.byMemberId.Ids");
+		q.setParameter("id", memberId);
+		return (List<Integer>) getResults(q);
+	}
+	
+	public List<Long> getProjectMemberIds(final int projectId) throws MpDbException{
+		final Query q = namedQuery("User.byProjectId.Ids");
+		q.setParameter("id", projectId);
+		return (List<Long>) getResults(q);
+	}
 }

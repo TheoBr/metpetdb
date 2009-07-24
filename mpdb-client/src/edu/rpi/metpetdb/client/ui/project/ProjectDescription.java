@@ -1,5 +1,8 @@
 package edu.rpi.metpetdb.client.ui.project;
 
+import java.util.List;
+import java.util.Map;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Label;
 
@@ -44,6 +47,11 @@ public class ProjectDescription extends MPagePanel{
 					public void update(final PaginationParameters p,
 							final AsyncCallback<Results<User>> ac) {
 						MpDb.project_svc.allProjectMembers(p, id, ac);
+					}
+
+					@Override
+					public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
+						MpDb.project_svc.allProjectMemberIds(id, ac);
 					}
 				};
 				add(list);

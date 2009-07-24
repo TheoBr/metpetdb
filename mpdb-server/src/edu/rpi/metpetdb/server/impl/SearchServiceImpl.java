@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.server.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.security.NoPermissionsException;
@@ -29,6 +30,19 @@ public class SearchServiceImpl extends MpDbServlet implements
 	public Results<Sample> sampleSearch(final PaginationParameters p,
 			SearchSample searchSamp, User userSearching) throws MpDbException {
 		return (SearchDb.sampleSearch(p, searchSamp, userSearching, this.currentSession()));
+	}
+	
+	/**
+	 * used for pagination tables to select all/public/private
+	 */
+	public Map<Object,Boolean> sampleSearchIds(SearchSample searchSamp, User userSearching) throws MpDbException {
+		return (SearchDb.sampleSearchIds(searchSamp, userSearching, this.currentSession()));
+	}
+	/**
+	 * used for pagination tables to select all/public/private
+	 */
+	public Map<Object,Boolean> chemicalAnalysisSearchIds(SearchSample searchSamp, User userSearching) throws MpDbException {
+		return (SearchDb.chemicalAnalysisSearchIds(searchSamp, userSearching, this.currentSession()));
 	}
 
 	public void rebuildSearchIndex() throws NoPermissionsException {

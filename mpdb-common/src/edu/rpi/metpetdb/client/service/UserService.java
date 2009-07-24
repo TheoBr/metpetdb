@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -152,6 +153,8 @@ public interface UserService extends RemoteService {
 	Collection<Role> getEligableRoles(int currentRank) throws MpDbException;
 	
 	public Results<RoleChange> getSponsorRoleChanges(int sponsorId,PaginationParameters p) throws MpDbException;
+	
+	public Map<Object,Boolean> getSponsorRoleChangeIds(int sponsorId) throws MpDbException;
 	
 	public void approveRoleChange(RoleChange rc) throws MpDbException, UnableToSendEmailException;
 	public void denyRoleChange(RoleChange rc) throws MpDbException, UnableToSendEmailException;

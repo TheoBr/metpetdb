@@ -16,6 +16,7 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.ChemicalAnalysisService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
+import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
 public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		ChemicalAnalysisService {
@@ -26,6 +27,18 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		ca.setId(new Long(id).intValue());
 		ca = (new ChemicalAnalysisDAO(this.currentSession())).fill(ca);
 		return (ca);
+	}
+	
+	public List<ChemicalAnalysis> details(List<Integer> ids) throws MpDbException {
+		ArrayList<ChemicalAnalysis> cas = new ArrayList<ChemicalAnalysis>();
+		for (Integer id : ids){
+			ChemicalAnalysis ca = new ChemicalAnalysis();
+			ca.setId(id);
+			ca = (new ChemicalAnalysisDAO(this.currentSession())).fill(ca);
+			cas.add(ca);
+			
+		}
+		return cas;
 	}
 
 	public Results<ChemicalAnalysis> all(PaginationParameters parameters,
@@ -38,6 +51,17 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		List<ChemicalAnalysis> l = (new ChemicalAnalysisDAO(this
 				.currentSession())).getAll(subsampleId);
 		return l;
+	}
+	
+	/**
+	 * used for pagination tables to select all/public/private
+	 */
+	public Map<Object,Boolean> allIdsForSubsample(long subsampleId) throws MpDbException {
+		Map<Object,Boolean> ids = new HashMap<Object,Boolean>();
+		for (Object[] row : (new ChemicalAnalysisDAO(this.currentSession())).getAllIdsForSubsample(new Long(subsampleId).intValue())){
+			ids.put(row[0],(Boolean) row[1]);
+		}
+		return ids;
 	}
 
 	public Map<Long, List<ChemicalAnalysis>> allFromManySubsamples(
@@ -95,7 +119,7 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 			LoginRequiredException {
 		final Iterator<Integer> itr = ids.iterator();
 		while(itr.hasNext()){
-			deleteImpl(itr.next());
+			deleteImpl(itr.next().intValue());
 		}
 		commit();
 	}

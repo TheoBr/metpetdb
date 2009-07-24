@@ -137,6 +137,10 @@
     inner join fetch s.owner
     where s.id = :id
   </query>
+  <query name="Sample-ids,publicData">
+  	select s.id, s.publicData
+  	from Sample s
+  </query>
   <query name="Sample.all,size">
     select count(*) from Sample s
   </query>

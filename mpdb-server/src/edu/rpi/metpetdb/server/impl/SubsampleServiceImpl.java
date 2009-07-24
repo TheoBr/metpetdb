@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,6 +15,7 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SubsampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
 public class SubsampleServiceImpl extends MpDbServlet implements
@@ -33,6 +35,17 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 			.getAllBySampleID(id));
 		}
 		return sas;
+	}
+	
+	/**
+	 * used for pagination tables to select all/public/private
+	 */
+	public Map<Object,Boolean> allIdsForSample(long sampleId) throws MpDbException {
+		Map<Object,Boolean> ids = new HashMap<Object,Boolean>();
+		for (Object[] row : new SubsampleDAO(this.currentSession()).getAllIds(sampleId)){
+			ids.put(row[0], (Boolean) row[1]);
+		}
+		return ids;
 	}
 
 	public Results<Subsample> all(final PaginationParameters p,
@@ -56,6 +69,21 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 		s.getImages().size();
 		return s;
 	}
+	
+	public List<Subsample> details(final List<Long> ids) throws MpDbException {
+		List<Subsample> subsamples = new ArrayList<Subsample>();
+		for (Long id : ids){
+			Subsample s = new Subsample();
+			s.setId(id);
+			s = (new SubsampleDAO(this.currentSession())).fill(s);
+			//FIXME: force a lazy load of the images so they can be added/removed from the UI
+			//in the future images should be made its own page, similar to chemical analyses
+			s.getImages().size();
+			subsamples.add(s);
+		}
+		return subsamples;
+	}
+	
 	public Subsample save(Subsample subsample) throws MpDbException,
 			ValidationException, LoginRequiredException {
 		doc.validate(subsample);

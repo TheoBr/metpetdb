@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.postgis.Point;
@@ -218,6 +219,11 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			public void update(final PaginationParameters p,
 					final AsyncCallback<Results<Subsample>> ac) {
 				MpDb.subsample_svc.all(p, sampleId, ac);
+			}
+
+			@Override
+			public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
+				MpDb.subsample_svc.allIdsForSample(sampleId, ac);
 			}
 		};
 		

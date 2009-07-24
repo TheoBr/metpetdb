@@ -1,20 +1,13 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
 import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleEntity;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
-import edu.rpi.metpetdb.client.model.properties.SampleProperty;
-import edu.rpi.metpetdb.client.model.properties.SubsampleProperty;
 import edu.rpi.metpetdb.client.model.properties.UserProperty;
-import edu.rpi.metpetdb.client.paging.PaginationParameters;
-import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -96,6 +89,11 @@ public abstract class ProjectMemberList extends DataList<User> {
 		HTML w = new HTML("No Members Found");
 		w.setStyleName(CSS.NULLSET);
 		return w;
+	}
+	
+	@Override
+	protected Object getId(User u){
+		return u.getId();
 	}
 
 }

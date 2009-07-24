@@ -7,7 +7,6 @@ import java.awt.image.ColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.SampleModel;
 import java.awt.image.renderable.ParameterBlock;
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +14,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.media.jai.ImageLayout;
 import javax.media.jai.Interpolation;
@@ -52,6 +53,18 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 
 		return (i);
 	}
+	
+	public List<Image> details(final List<Long> ids) throws MpDbException {
+		List<Image> images = new ArrayList<Image>();
+		for (Long id : ids) {
+			Image i = new Image();
+			i.setId(id);
+			i = (new ImageDAO(this.currentSession())).fill(i);
+			images.add(i);
+		}
+		return images;
+	}
+
 
 	public Image saveImage(Image image) throws ValidationException,
 			LoginRequiredException, MpDbException {
@@ -214,6 +227,17 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		return new ImageDAO(currentSession()).getAllBySubsampleId(p, subsampleId);
 	}
 	
+	/**
+	 * used for pagination tables to select all/public/private
+	 */
+	public Map<Object,Boolean> allImageIds(long subsampleId) throws MpDbException {
+		Map<Object,Boolean> ids = new HashMap<Object,Boolean>();
+		for (Object[] row : new ImageDAO(this.currentSession()).getIdsBySubsampleId(subsampleId)){
+			ids.put(row[0], (Boolean) row[1]);
+		}
+		return ids;
+	}
+	
 	public void makePublicBySubsampleId(ArrayList<Subsample> subsamples) throws ValidationException, MpDbException {
 		final ImageDAO dao = new ImageDAO(this.currentSession());
 		List<Image> imageList = new ArrayList<Image>();
@@ -224,8 +248,8 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 				doc.validate(i);
 				dao.save(i);
 			}
-			commit();
 		}
+		commit();
 	}
 	
 	public void makePublicBySampleId(ArrayList<Sample> samples) throws ValidationException, MpDbException {
@@ -238,8 +262,8 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 				doc.validate(i);
 				dao.save(i);
 			}
-			commit();
 		}
+		commit();
 	}
 	private byte[] getBytesFromInputStream(InputStream is) throws IOException {
 		// Read Data into byte sequence
@@ -256,9 +280,9 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		List <Image> imageList= dao.getImagesWithoutMobile();
 		for(Image i : imageList)
 		{
-			if(i.getSubsample()!=null)
+			if (i.getSubsample() != null)
 				i.getSubsample().getId();
-			if(i.getSample()!=null)
+			if (i.getSample() != null)
 				i.getSample().getId();
 			String checksum= i.getChecksum();
 			if (checksum != null) {
@@ -270,22 +294,20 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 
 				final File imagePath = new File(baseFolder + "/" + folder + "/"
 						+ subfolder + "/" + filename);
-			try{
-				final FileInputStream reader = new FileInputStream(imagePath);
-				//BufferedInputStream input = null;
-				//input = new BufferedInputStream(new FileInputStream(imagePath));
-				final byte[] imgData = getBytesFromInputStream(reader);
-				RenderedOp ro = ImageUploadServlet.loadImage(imgData);
-				i.setChecksumMobile(ImageUploadServlet.generateMobileVersion(ro,false));
-				dao.save(i);
-			} catch (IOException ioe){
-				//ignore it
-			}
+
+				try{
+					final FileInputStream reader = new FileInputStream(imagePath);
+					//BufferedInputStream input = null;
+					//input = new BufferedInputStream(new FileInputStream(imagePath));
+					final byte[] imgData = getBytesFromInputStream(reader);
+					RenderedOp ro = ImageUploadServlet.loadImage(imgData);
+					i.setChecksumMobile(ImageUploadServlet.generateMobileVersion(ro,false));
+					dao.save(i);
+				} catch (IOException ioe){
+					//ignore it
+				}
 			}
 		}
 		commit();
 	}
 }
-	
-
-

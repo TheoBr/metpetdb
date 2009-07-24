@@ -2,9 +2,11 @@ package edu.rpi.metpetdb.server.search;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -16,7 +18,6 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FilteredQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.RangeQuery;
-import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TermQuery;
 import org.hibernate.CallbackException;
 import org.hibernate.Filter;
@@ -44,13 +45,182 @@ import edu.rpi.metpetdb.server.security.ConvertSecurityException;
 
 public class SearchDb {
 	private static String RETURN_CHEMICAL_ANALYSIS = "";
-	private static String RETURN_CHEMICAL_ANALYSIS_SUBSAMPLE_ID = "select ca.subsampleId";
-	private static String RETURN_CHEMICAL_ANALYSIS_COUNT = "select count(*)";
-	private static String RETURN_CHEMICAL_ANALYSIS_ID = "select ca.id";
+	private static String RETURN_CHEMICAL_ANALYSIS_SUBSAMPLE_ID = "select ca.subsampleId ";
+	private static String RETURN_CHEMICAL_ANALYSIS_COUNT = "select count(*) ";
+	private static String RETURN_CHEMICAL_ANALYSIS_ID = "select ca.id ";
+	private static String RETURN_CHEMICAL_ANALYSIS_ID_PUBLICDATA = "select ca.id, ca.publicData ";
 	
 	public SearchDb() {
 	}
 
+	public static Map<Object,Boolean> sampleSearchIds(SearchSample searchSamp,
+			User userSearching, Session session) throws MpDbException{
+		// Either do chemical analysis -> subsample -> Sample search if they
+		// have chem anal restrictions
+		// Or just Sample search if no chem anal restrictions
+
+		final User u = userSearching;
+		final int userId;
+		if (u == null)
+			userId = 0;
+		else
+			userId = u.getId();
+		DataStore.enableSecurityFilters(session, userId);
+		FullTextSession fullTextSession = Search.getFullTextSession(session);
+
+		boolean haveChemicalProperties = checkForChemicalProperties(searchSamp);
+		Query fullQuery;
+
+		if (!haveChemicalProperties) {
+			fullQuery = getSamplesQuery(searchSamp, userSearching, session);
+		} else {
+			// Get chemical analyses first
+			org.hibernate.Query chemQuery = getChemicalsQuery(searchSamp, userSearching,
+					session, RETURN_CHEMICAL_ANALYSIS_SUBSAMPLE_ID);
+
+			// Get the subsample ids that correspond to the chemical analyses.
+			System.out.println("Search Query Project Subsample Ids:" + chemQuery.getQueryString());
+
+			// no chemical analysis fit search, no reason to try finding samples with "no matches"
+			String  subsampleIds = getLongIdStringForList(chemQuery.list());
+			if (subsampleIds == null) {
+				return new HashMap<Object,Boolean>();
+			}
+
+			// Get samples third... will need to incorporate top two pieces
+			fullQuery = getSamplesQuery(searchSamp, userSearching, session);
+			FullTextQuery sampleQuery = fullTextSession.createFullTextQuery(fullQuery, Sample.class);
+			System.out.println("Search Query Project Sample Ids:" + fullQuery.toString());
+			String  sampleIds = getLongIdString(sampleQuery.setProjection("id").list());
+			if (sampleIds == null) {
+				return new HashMap<Object,Boolean>();
+			}
+			String queryString = "from Sample s where s.id in (" + sampleIds +
+					") and exists (select 1 from Subsample ss where ss.sampleId = s.id and ss.id in (" + 
+					subsampleIds + "))";
+			org.hibernate.Query hql = session.createQuery("select s.id, s.publicData " + queryString);
+			org.hibernate.Query sizeQuery = session.createQuery("select count(*) " + queryString);
+			System.out.println("Search Query Find Samples by Id and SubsampleId:" + hql.getQueryString());
+			try {
+				//this is here in order to convert java.util.Collection$EmptyList into
+				//the correct representation so it can be serialized by GWT
+				List<Object[]> list = hql.list();
+				if (list.size() == 0)
+					return new HashMap<Object,Boolean>();
+				Map<Object,Boolean> map = new HashMap<Object,Boolean>();
+				for (Object[] row : list){
+					map.put(row[0], (Boolean) row[1]);
+				}
+				return map;
+			} catch (CallbackException e) {
+				throw ConvertSecurityException.convertToException(e);
+			}
+		}
+
+		System.out.println("Search Query:" + fullQuery.toString());
+
+		try {			
+			FullTextQuery sizeHibQuery = fullTextSession.createFullTextQuery(
+					fullQuery, Sample.class);
+			String  sampleIds = getLongIdString(sizeHibQuery.setProjection("id").list());
+			if (sampleIds == null) {
+				return new HashMap<Object,Boolean>();
+			}
+			String queryString = "from Sample s where s.id in (" + sampleIds + ")";
+			org.hibernate.Query resultQuery = session.createQuery("select s.id, s.publicData " + queryString);
+			org.hibernate.Query sizeQuery = session.createQuery("select count(*) " + queryString);
+			List<Object[]> list = resultQuery.list();
+			if (list.size() == 0)
+				return new HashMap<Object,Boolean>();
+			Map<Object,Boolean> map = new HashMap<Object,Boolean>();
+			for (Object[] row : list){
+				map.put(row[0], (Boolean) row[1]);
+			}
+			return map;
+		} catch (CallbackException e) {
+			throw ConvertSecurityException.convertToException(e);
+		}
+	}
+	
+	public static Map<Object,Boolean> chemicalAnalysisSearchIds(SearchSample searchSamp,
+			User userSearching, Session session) throws MpDbException{
+		final User u = userSearching;
+		final int userId;
+		if (u == null)
+			userId = 0;
+		else
+			userId = u.getId();
+
+		DataStore.enableSecurityFilters(session, userId);
+		FullTextSession fullTextSession = Search.getFullTextSession(session);
+
+		boolean haveSampleProperties = checkForSampleProperties(searchSamp);
+		
+
+		if (!haveSampleProperties) {
+			org.hibernate.Query fullQuery = getChemicalsQuery(searchSamp, userSearching, session, RETURN_CHEMICAL_ANALYSIS_ID_PUBLICDATA);
+			org.hibernate.Query sizeQuery = getChemicalsQuery(searchSamp, userSearching, session, RETURN_CHEMICAL_ANALYSIS_COUNT);
+			System.out.println("Search Query:" + fullQuery.toString());			
+			try {
+				//this is here in order to convert java.util.Collection$EmptyList into
+				//the correct representation so it can be serialized by GWT
+				List<Object[]> list = fullQuery.list();
+				if (list.size() == 0)
+					return new HashMap<Object,Boolean>();
+				Map<Object,Boolean> map = new HashMap<Object,Boolean>();
+				for (Object[] row : list){
+					map.put(row[0], (Boolean) row[1]);
+				}
+				return map;
+			} catch (CallbackException e) {
+				throw ConvertSecurityException.convertToException(e);
+			} 
+		} else {
+			Query fullQuery;
+			// Get samples first
+			Query tempSampleQuery = getSamplesQuery(searchSamp, userSearching,
+					session,true);
+			// // Get the subsample ids that correspond to the samples.
+			final FullTextQuery sampleQuery = fullTextSession
+					.createFullTextQuery(tempSampleQuery, Subsample.class);
+			System.out.println("Search Query Project Subsample Ids:" + sampleQuery.toString());	
+			String  subsampleIds = getLongIdString(sampleQuery.setProjection("id").list());
+			if (subsampleIds == null) {
+				return new HashMap<Object,Boolean>();
+			}
+			// Get chemical analyses third... will need to incorporate top two pieces
+			org.hibernate.Query chemQuery = getChemicalsQuery(searchSamp, userSearching, session, RETURN_CHEMICAL_ANALYSIS_ID);
+			System.out.println("Search Query Project Chemical Analysis Ids:" + chemQuery.getQueryString());	
+
+			String  chemIds = getIntIdStringForList(chemQuery.list());
+			if (chemIds == null) {
+				return new HashMap<Object,Boolean>();
+			}
+			String queryString = "from ChemicalAnalysis ca where ca.id in (" + chemIds +
+					") and ca.subsampleId in (" + 
+					subsampleIds + ")";
+			org.hibernate.Query hql = session.createQuery(RETURN_CHEMICAL_ANALYSIS_ID_PUBLICDATA + queryString);
+			org.hibernate.Query sizeQuery = session.createQuery("select count(*) " + queryString);
+			System.out.println("Search Query Find Chemical Analyses by Id and SubsampleId:" + hql.getQueryString());
+
+			try {
+				//this is here in order to convert java.util.Collection$EmptyList into
+				//the correct representation so it can be serialized by GWT
+				List<Object[]> list = hql.list();
+				if (list.size() == 0)
+					return new HashMap<Object,Boolean>();
+				Map<Object,Boolean> map = new HashMap<Object,Boolean>();
+				for (Object[] row : list){
+					map.put(row[0], (Boolean) row[1]);
+				}
+				return map;
+			} catch (CallbackException e) {
+				throw ConvertSecurityException.convertToException(e);
+			} 
+		}
+		
+	}
+	
 	public static Results<Sample> sampleSearch(final PaginationParameters p,
 			SearchSample searchSamp, User userSearching, Session session) throws MpDbException {
 

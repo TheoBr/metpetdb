@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.user;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -168,6 +169,12 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 					final AsyncCallback<Results<Project>> ac) {
 				long id = (long) (MpDb.currentUser().getId());
 				MpDb.project_svc.all(p, id, ac);
+			}
+
+			@Override
+			public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
+				long id = (long) (MpDb.currentUser().getId());
+				MpDb.project_svc.allIdsForUser(id, ac);	
 			}
 		};
 		Projects_ft = new FlexTable();

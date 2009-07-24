@@ -1,9 +1,12 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -14,7 +17,6 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
-import edu.rpi.metpetdb.server.dao.impl.RegionDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 
 public class SampleServiceImpl extends MpDbServlet implements SampleService {
@@ -29,6 +31,20 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		this.currentSession().enableFilter("user").setParameter("id", id);
 		return (new SampleDAO(this.currentSession())).getAll(p);
 	}
+	
+	
+	/**
+	 * used for pagination tables to select all/public/private
+	 */
+	public Map<Object,Boolean> allIdsForUser(long id) throws MpDbException {
+		this.currentSession().enableFilter("user").setParameter("id", id);
+		Map<Object,Boolean> ids = new HashMap<Object,Boolean>();
+		for (Object[] row : new SampleDAO(this.currentSession()).getAllIdsForUser(id)){
+			ids.put(row[0], (Boolean) row[1]);
+		}
+		return ids;
+	}
+	
 	
 	public List<Sample> allSamplesForUser(final long id) throws MpDbException {
 		this.currentSession().enableFilter("user").setParameter("id", id);
@@ -69,6 +85,18 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		s = (new SampleDAO(this.currentSession())).fill(s);
 		s.getImages().size();
 		return s;
+	}
+	
+	public List<Sample> details(final List<Long> ids) throws MpDbException {
+		List<Sample> results = new ArrayList<Sample>();
+		for (Long id : ids) {
+			Sample s = new Sample();
+			s.setId(id);
+			s = (new SampleDAO(this.currentSession())).fill(s);
+			s.getImages().size();
+			results.add(s);
+		}
+		return results;
 	}
 
 	

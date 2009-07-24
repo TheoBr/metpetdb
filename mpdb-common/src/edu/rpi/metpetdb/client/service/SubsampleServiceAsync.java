@@ -22,9 +22,13 @@ public interface SubsampleServiceAsync {
 			AsyncCallback<Results<Subsample>> ac);
 
 	void details(long id, AsyncCallback<Subsample> ac);
+	
+	void details(List<Long> ids, AsyncCallback<List<Subsample>> ac);
 
 	void all(long sampleId, AsyncCallback<List<Subsample>> ac);
-
+	
+	void allIdsForSample(long sampleId, AsyncCallback< Map<Object,Boolean>> ac);
+ 
 	void save(final Subsample s, AsyncCallback<Subsample> ac);
 
 	void delete(long id, AsyncCallback<Object> ac);

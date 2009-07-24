@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.user.client.History;
@@ -135,6 +137,11 @@ public class SubsampleDetails extends MPagePanel {
 						MpDb.image_svc.allImages(result.getId(), p, ac);
 					}
 
+					@Override
+					public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
+						MpDb.image_svc.allImageIds(result.getId(), ac);
+					}
+
 				};
 				panel.getRightCol().clear();
 				panel.getRightCol().add(images);
@@ -158,6 +165,11 @@ public class SubsampleDetails extends MPagePanel {
 			public void update(final PaginationParameters p,
 					final AsyncCallback<Results<ChemicalAnalysis>> ac) {
 				MpDb.chemicalAnalysis_svc.all(p, subsampleId, ac);
+			}
+
+			@Override
+			public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
+				MpDb.chemicalAnalysis_svc.allIdsForSubsample(subsampleId, ac);
 			}
 		};
 		

@@ -1,6 +1,8 @@
 package edu.rpi.metpetdb.client.service;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 
@@ -19,6 +21,8 @@ public interface ImageService extends RemoteService {
 	Results<Image> allImages(long subsampleId, PaginationParameters p)
 			throws MpDbException;
 	Image details(long id) throws MpDbException;
+	List<Image> details(List<Long> ids) throws MpDbException;
+	Map<Object,Boolean> allImageIds(long subsampleId) throws MpDbException;
 	Image saveImage(Image image) throws ValidationException,
 			LoginRequiredException, MpDbException;
 	XrayImage saveImage(XrayImage xrayimg) throws ValidationException,
