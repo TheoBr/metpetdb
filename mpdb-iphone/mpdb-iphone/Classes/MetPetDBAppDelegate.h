@@ -1,18 +1,18 @@
 
 
 
-#import "WelcomeViewController.h"
+#import "MainViewController.h"
 
 
-@class WelcomeViewController;
+@class MainViewController;
 @interface MetPetDBAppDelegate : NSObject <UIApplicationDelegate> {
 	IBOutlet UIWindow *window;
-	WelcomeViewController *welcomeController;
+	MainViewController *mainController;
 	UINavigationController *navigationController;
 }
 
 @property (nonatomic, retain) IBOutlet UIWindow *window;
-@property (nonatomic, retain) WelcomeViewController *welcomeController;
+@property (nonatomic, retain) MainViewController *mainController;
 @property (nonatomic, retain) UINavigationController *navigationController;
 
 @end

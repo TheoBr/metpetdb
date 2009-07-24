@@ -55,11 +55,17 @@
 		scrollView.contentSize=imageView.frame.size;
 	}*/
 	scrollView.contentSize= imageView.frame.size;
+
 	[self.view addSubview:toolbar];
 		
 }
 -(UIView *) viewForZoomingInScrollView:(UIScrollView *)scrollView {
-    return imageView;
+	return imageView;
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+		//scrollView.frame=CGRectMake(-100, -100, 1000, 1000);
+		//scrollView.contentSize= CGSizeMake(2000, 2000);
 }
 
 -(void)get_large_image
@@ -76,6 +82,12 @@
 	NSError *error;
 	imageResponse = [NSURLConnection sendSynchronousRequest:myRequest
 										  returningResponse:&response error:&error];
+	if(error!=NULL)
+	{ 
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+	}
+	
 	NSString *dataReceived=[[NSString alloc] initWithData:imageResponse encoding:NSASCIIStringEncoding];
 	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/MetPetDB/searchResults.kml"];
 	[fh writeData:imageResponse];
@@ -88,6 +100,13 @@
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict 
 {
+	if([elementName isEqualToString:@"html"])
+	{ 
+		//if a tag exists called html, an error was produced
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+		return;
+	}
 	if([elementName isEqualToString:@"string"])
 	{
 		currentStringValue=nil;

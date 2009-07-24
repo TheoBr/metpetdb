@@ -68,6 +68,12 @@
 	NSError *error;
 	subsampleResponse = [NSURLConnection sendSynchronousRequest:myRequest
 											returningResponse:&response error:&error];
+	if(error!=NULL)
+	{ 
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+	}
+	
 	NSString *dataReceived=[[NSString alloc] initWithData:subsampleResponse encoding:NSASCIIStringEncoding];
 	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/Location/searchResults.kml"];
 	[fh writeData:subsampleResponse];
@@ -77,6 +83,13 @@
 	[subsampleParser parse];
 }
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
+	if([elementName isEqualToString:@"html"])
+	{ 
+		//if a tag exists called html, an error was produced
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+		return;
+	}
 	if([elementName isEqualToString:@"subsamples"])
 	{
 		currentStringValue=nil;

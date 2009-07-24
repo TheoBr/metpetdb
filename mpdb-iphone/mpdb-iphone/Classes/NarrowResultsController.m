@@ -49,6 +49,12 @@
 	NSError *error;
 	rockReturn = [NSURLConnection sendSynchronousRequest:myRequest
 									   returningResponse:&response error:&error];
+	if(error!=NULL)
+	{ 
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+	}
+	
 	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/Location/searchResults.kml"];
 	[fh writeData:rockReturn];
 	NSXMLParser *rockParser=[[NSXMLParser alloc] initWithData:rockReturn];
@@ -57,6 +63,13 @@
 	
 }	
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
+	if([elementName isEqualToString:@"html"])
+	{ 
+		//if a tag exists called html, an error was produced
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+		return;
+	}
 	if([elementName isEqualToString:@"rockType"])
 	{
 		currentStringValue=nil;

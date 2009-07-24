@@ -8,7 +8,7 @@
 
 @implementation MainViewController
 @synthesize myLocationButton, regionButton, coordinateButton, locationViewController, radiusController, myLat, myLong, myCoordinate;
-@synthesize coordController, regionController, tableView;
+@synthesize coordController, regionController, tableView, infoController;
 -(void)viewDidLoad
 {
 	[MyCLController sharedInstance].delegate = self;
@@ -26,12 +26,25 @@
 	tableView.delegate=self;
 	[self. view addSubview:tableView];
 	
+	UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
+	[infoButton addTarget:self action:@selector(infoButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+	UIBarButtonItem *infoBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
+	self.navigationItem.rightBarButtonItem = infoBarButtonItem;
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)table {
 	return 1;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	return [rows count];
+}
+-(void)infoButtonPressed
+{
+	InfoViewController *viewController = [[InfoViewController alloc] initWithNibName:@"InfoView" bundle:nil];
+	self.infoController= viewController;
+	[viewController release];
+	UIView *newView=[infoController view];
+	[self.view addSubview:newView];
+	[self.navigationController pushViewController:infoController animated:NO];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

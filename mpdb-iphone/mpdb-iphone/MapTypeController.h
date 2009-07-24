@@ -21,6 +21,7 @@
 	NSMutableArray *currentMinerals;
 	NSMutableArray *currentMetamorphicGrades;
 	NSMutableArray *currentPublicStatus;
+	NSMutableArray *currentOwners;
 	NSString *region;
 	CLLocationCoordinate2D myLocation;
 	double latitudeSpan;

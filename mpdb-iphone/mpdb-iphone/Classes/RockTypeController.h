@@ -36,12 +36,14 @@
 	NSMutableArray *currentMinerals;
 	NSMutableArray *currentMetamorphicGrades;
 	NSMutableArray *currentPublicStatus;
+	NSMutableArray *currentOwners;
 	NSString *region;
 	CLLocationCoordinate2D myCoordinate;
 	NSString *tempRock;
 	uniqueSamples *group;
 	uniqueSamples *newgroup;
 	NSString* mapType; //indicates map, hybrid or satellite
+	NSMutableArray *points;
 	
 }
 @property (nonatomic, retain) uniqueSamples *group;

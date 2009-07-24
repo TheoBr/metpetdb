@@ -51,12 +51,25 @@
 	NSError *error;
 	commentResponse = [NSURLConnection sendSynchronousRequest:myRequest
 											 returningResponse:&response error:&error];
+	if(error!=NULL)
+	{ 
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+	}
+	
 	NSString *dataReceived=[[NSString alloc] initWithData:commentResponse encoding:NSASCIIStringEncoding];
 	NSXMLParser *commentParser= [[NSXMLParser alloc] initWithData:commentResponse];
 	[commentParser setDelegate:self];
 	[commentParser parse];
 }
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
+	if([elementName isEqualToString:@"html"])
+	{ 
+		//if a tag exists called html, an error was produced
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+		return;
+	}
 	if([elementName isEqualToString:@"comments"])
 	{
 		//make sure this array is reset here so that when the back button is pressed the samples do not get added to the original array

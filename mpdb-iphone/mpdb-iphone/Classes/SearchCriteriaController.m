@@ -15,7 +15,7 @@
 
 @implementation SearchCriteriaController
 @synthesize tableController, toolbar, addButton, removeButton, clearButton, searchButton, mapController, region, editButton, group, newgroup;
-@synthesize mapType, deleteButton;
+@synthesize mapType, deleteButton, minimumLat, maximumLat, minimumLong, maximumLong, newTag;
 
 
 -(void)viewDidLoad
@@ -31,14 +31,14 @@
 	rowSubtitles=[[NSMutableArray alloc] init];
 		//the only criteria that is automatically displayed is the geographic location, the rest are only displayed if they have been added
 	[rowTitles addObject:@"Geographic Location"];
-	if(![region isEqualToString:nil])
+	if(region!=nil)
 	{
 		NSString *regionName=[[NSString alloc] initWithFormat:@"Region: %@", region];
 		[rowSubtitles addObject:regionName];
 	}
 	else
 	{
-		NSString *coordinate=[[NSString alloc] initWithFormat:@"Center Coordinate: %g, %g", myCoordinate.latitude, myCoordinate.longitude];
+		NSString *coordinate=[[NSString alloc] initWithFormat:@"Center Coordinate:\n%g, %g", myCoordinate.latitude, myCoordinate.longitude];
 		[rowSubtitles addObject:coordinate];
 	}
 	if([currentRockTypes count]!=0)
@@ -51,6 +51,17 @@
 			myRockTypes=[myRockTypes stringByAppendingFormat:@", %@",[currentRockTypes objectAtIndex:z]];
 		}
 		[rowSubtitles addObject:myRockTypes];
+	}
+	if([currentOwners count]!=0)
+	{
+		[rowTitles addObject:@"Sample Owner"];
+		NSString *myOwners=[[NSString alloc] initWithFormat:@"%@", [currentOwners objectAtIndex:0]];
+		
+		for(z=1; z<[currentOwners count]; z++)
+		{
+			myOwners=[[NSString alloc] initWithFormat:@"%@", [currentOwners objectAtIndex:z]];
+		}
+		[rowSubtitles addObject:myOwners];
 	}
 	if([currentMinerals count]!=0)
 	{
@@ -265,9 +276,20 @@
 		//check to see if all the search data has been cleared and if so, pass the map the "original" arr
 		[viewController setData:original:remainingLocations];
 		[viewController setType:mapType];
-		[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
-		[viewController setCoordinate:center:latSpan:longSpan:maxLat:minLat:maxLong:minLong];
-		self.mapController = viewController;
+		[viewController setCurrentSearchData:currentOwners: currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
+		if(region==nil)
+		{
+			maximumLat= [[NSString alloc] initWithString: [points objectAtIndex:0]];
+			minimumLat=[[NSString alloc] initWithString:[points objectAtIndex:1]];
+			maximumLong=[[NSString alloc] initWithString: [points objectAtIndex:2]];
+			minimumLong=[[NSString alloc] initWithString: [points objectAtIndex:3]];
+			[viewController setCoordinate:center:latSpan:longSpan:[maximumLat doubleValue]:[minimumLat doubleValue]:[maximumLong doubleValue]: [minimumLong doubleValue]];
+		}
+		else
+		{
+			[viewController setCoordinate:center:latSpan:longSpan:maxLat:minLat:maxLong:minLong];
+		}
+		self.mapController = viewController; 
 		[viewController release];
 		UIView *ControllersView = [mapController view];
 		[self.view addSubview:ControllersView];
@@ -275,10 +297,15 @@
 	}
 }
 
--(void)deleteRow
+-(void)deleteRow:(id)sender
 {
-		canShowMap=TRUE;
-		removing=FALSE;
+	
+	canShowMap=TRUE;
+	removing=FALSE;
+	//num=[[sender tag] intValue];
+	num=[sender tag];
+	[delete addObject:[rowTitles objectAtIndex:num]];
+
 		self.navigationItem.rightBarButtonItem=nil;
 		remainingLocations=[[NSMutableArray alloc] init];
 
@@ -304,10 +331,14 @@
 		if([rowToDelete isEqualToString:@"Minerals"])
 		{
 			currentMinerals=[[NSMutableArray alloc] init];
-		}
+		} 
 		if([rowToDelete isEqualToString:@"Metamorphic Grade"])
 		{
 			currentMetamorphicGrades=[[NSMutableArray alloc] init];
+		}
+		if([rowToDelete isEqualToString:@"Sample Owner"])
+		{
+			currentOwners=[[NSMutableArray alloc] init];
 		}
 		/*if([rowToDelete isEqualToString:@"Public/Private status"])
 		{
@@ -338,41 +369,82 @@
 				NSMutableArray *tempMetGrades=[[NSMutableArray alloc] init];
 				tempMetGrades=tempSample.metamorphicGrades;
 				NSString *tempRockType=[[NSString alloc] initWithFormat:@"%@", tempSample.rockType];
-				bool addSampleToMap=FALSE;
-				//check each annotation to see if it remains on the map due to a specified rock type, mineral, metamorphic grade, or its public status
-				for(z=0; z<[currentRockTypes count]; z++)
+				NSString *tempOwner=[[NSString alloc] initWithFormat:@"%@", tempSample.owner];
+				bool addSampleToMap1=FALSE;
+				bool addSampleToMap2=FALSE;
+				bool addSampleToMap3=FALSE;
+				bool addSampleToMap4=FALSE;
+				//each criteria that has been specified must be true for the sample to remain on the map
+				//if a criteria has not been specified OR a given sample satisfies the criteria, then that specific bool is true
+				//for a sample to be added to the map they must all be true
+				if([currentRockTypes count]==0)
 				{
-					if([[currentRockTypes objectAtIndex:z] isEqualToString:tempRockType])
-					{
-						addSampleToMap=TRUE;
-					}
+					addSampleToMap1=TRUE;
 				}
-				for(z=0; z<[currentMinerals count]; z++)
+				else
 				{
-					for(w=0; w<[tempMinerals count]; w++)
+					for(z=0; z<[currentRockTypes count]; z++)
 					{
-						if([[currentMinerals objectAtIndex:z] isEqualToString: [tempMinerals objectAtIndex:w]])
+						if([[currentRockTypes objectAtIndex:z] isEqualToString:tempRockType])
 						{
-							addSampleToMap=TRUE; //the mineral is contained in this sample, it remains on the map after the rock types are cleared
+							addSampleToMap1=TRUE;
 						}
 					}
 				}
-				for(z=0; z<[currentMetamorphicGrades count]; z++)
+				if([currentOwners count]==0)
 				{
-					for(w=0; w<[tempMetGrades count]; w++)
+					addSampleToMap2=TRUE;
+					
+				}
+				else
+				{
+					for(z=0; z<[currentOwners count]; z++)
 					{
-						if([[currentMetamorphicGrades objectAtIndex:z] isEqualToString:[tempMinerals objectAtIndex:w]])
+						if([[currentOwners objectAtIndex:z] isEqualToString:tempOwner])
 						{
-							addSampleToMap=TRUE;
+							addSampleToMap2=TRUE;
 						}
 					}
 				}
-				if(addSampleToMap==TRUE)
+				if([currentMinerals count]==0)
+				{
+					addSampleToMap3=TRUE;
+				}
+				else
+				{
+					for(z=0; z<[currentMinerals count]; z++)
+					{
+						for(w=0; w<[tempMinerals count]; w++)
+						{
+							if([[currentMinerals objectAtIndex:z] isEqualToString: [tempMinerals objectAtIndex:w]])
+							{
+								addSampleToMap3=TRUE; //the mineral is contained in this sample, it remains on the map after the rock types are cleared
+							}
+						}
+					}
+				}
+				if([currentMetamorphicGrades count]==0)
+				{
+					addSampleToMap4=TRUE;
+				}
+				else
+				{
+					for(z=0; z<[currentMetamorphicGrades count]; z++)
+					{
+						for(w=0; w<[tempMetGrades count]; w++)
+						{
+							if([[currentMetamorphicGrades objectAtIndex:z] isEqualToString:[tempMetGrades objectAtIndex:w]])
+							{
+								addSampleToMap4=TRUE;
+							}
+						}
+					}
+				}
+				if(addSampleToMap1==TRUE && addSampleToMap2==TRUE && addSampleToMap3==TRUE && addSampleToMap4==TRUE)
 				{ 
 					if([group.id isEqualToString:@"multiple samples"])
 					{
-						//modified=TRUE;
-						//newgroup.count++;
+						newgroup.count++;
 						[newgroup.samples addObject:tempSample];
 						newgroup.count=[newgroup.samples count];
 						if(newgroup.count==1)
@@ -415,7 +487,7 @@
 			}
 		}
 	//if there are no search criteria remaining, the remainingLocations array is the same as the original array
-	if([currentRockTypes count]==0 && [currentMinerals count]==0 && [currentMetamorphicGrades count]==0 && [currentPublicStatus count]==0)
+	if([currentRockTypes count]==0 && [currentMinerals count]==0 && [currentMetamorphicGrades count]==0 && [currentPublicStatus count]==0 && [currentOwners count]==0)
 	{
 		remainingLocations=original;
 	}
@@ -446,7 +518,7 @@
 	//load the table containing the choices for search criteria so the user can add more
 	TableController *viewController = [[TableController alloc] initWithNibName:@"TableView" bundle:nil];
 	[viewController setData:original:remainingLocations:mapType:points];
-	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
+	[viewController setCurrentSearchData:currentOwners:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
 	 self.tableController = viewController;
 	 [viewController release];
 	 UIView *ControllersView = [tableController view];
@@ -505,15 +577,14 @@
 		}
         [cell.contentView addSubview:titleLabel];
 		
-        subtitleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(110.0, 0.0, 180.0, 25.0)] autorelease];
+        subtitleLabel = [[[UILabel alloc] initWithFrame:CGRectMake(110.0, 0.0, 180.0, 50.0)] autorelease];
         subtitleLabel.tag = SUBTITLELABEL_TAG;
-		subtitleLabel.numberOfLines=2;
+		subtitleLabel.numberOfLines=4;
         subtitleLabel.font = [UIFont systemFontOfSize:12.0];
         subtitleLabel.textAlignment = UITextAlignmentLeft;
         subtitleLabel.textColor = [UIColor darkGrayColor];
         subtitleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
         [cell.contentView addSubview:subtitleLabel];
-		
 		
 		checkmarkView = [[[UIImageView alloc] initWithFrame:CGRectMake(250.0, 8.0, 30.0, 30.0)] autorelease];
 		checkmarkView.tag = PHOTO_TAG;
@@ -546,14 +617,17 @@
 		}*/
 		if(indexPath.row!=0)
 		{
-			[delete addObject:[rowTitles objectAtIndex:indexPath.row]];
+			//[delete addObject:[rowTitles objectAtIndex:indexPath.row]];
 			CGRect frame= CGRectMake(240.0, 8.0, 60.0, 30.0);
 			UIButton *button=[[UIButton alloc] initWithFrame:frame];
 			deleteButton= [UIButton buttonWithType:UIButtonTypeRoundedRect];
 			deleteButton.frame=frame;
 			[deleteButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
 			[deleteButton setTitle:@"Delete" forState:UIControlStateNormal];
-			[deleteButton addTarget:self action:@selector(deleteRow) forControlEvents:UIControlEventTouchUpInside];
+			//newTag=[[NSString alloc] initWithFormat:@"%d", indexPath.row];
+			[deleteButton setTag:indexPath.row];
+			//num=indexPath.row;
+			[deleteButton addTarget:self action:@selector(deleteRow:) forControlEvents:UIControlEventTouchUpInside];
 			[cell.contentView addSubview:deleteButton];
 			//[self deleteRow];
 			
@@ -568,13 +642,16 @@
 	mapType=type;
 	original=originalData;
 	remainingLocations= sampleLocations;
-	points= LatLongPoints;
-	
+	if([LatLongPoints count]!=0)
+	{
+		points= LatLongPoints;
+	}
 }
 
 //this function will set the data that has been specified in the current search
--(void)setCurrentSearchData:(NSMutableArray*)rocks:(NSMutableArray*)mins:(NSMutableArray*)metgrades:(NSMutableArray*)public:(NSString*)aregion:(CLLocationCoordinate2D)coord
+-(void)setCurrentSearchData:(NSMutableArray*)owners:(NSMutableArray*)rocks:(NSMutableArray*)mins:(NSMutableArray*)metgrades:(NSMutableArray*)public:(NSString*)aregion:(CLLocationCoordinate2D)coord
 {
+	currentOwners=owners;
 	currentRockTypes=rocks;
 	currentMinerals=mins;
 	currentMetamorphicGrades=metgrades;

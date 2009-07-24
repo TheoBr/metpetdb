@@ -87,11 +87,11 @@ CGRect textViewFrame=	CGRectMake(0, 150, 320, 250);
 	
 	if(pubNum==nil)//there is no publication number
 	{
-		outputText=[[NSString alloc] initWithFormat:@"Sample ID: %@\nPublication Number: None \nOwner: %@ \nLatitude: %@ \nLongitude: %@ \nPublic: %@ \n", sampleID, owner, latitude,longitude, status];
+		outputText=[[NSString alloc] initWithFormat:@"Publication Number: None \nOwner: %@ \nLatitude: %@ \nLongitude: %@ \nPublic: %@ \n", owner, latitude,longitude, status];
 	}
 	else
 	{
-		outputText=[[NSString alloc] initWithFormat: @"Sample ID: %@\nPublication Number: %@ \nOwner: %@ \nLatitude: %@ \nLongitude: %@ \nPublic: %@ \n", sampleID, pubNum, owner, latitude,longitude, status];
+		outputText=[[NSString alloc] initWithFormat: @"Publication Number: %@ \nOwner: %@ \nLatitude: %@ \nLongitude: %@ \nPublic: %@ \n", pubNum, owner, latitude,longitude, status];
 	}
 	NSString *mineralOutput=[[NSString alloc] init];
 	if([minerals count]==0)
@@ -192,6 +192,12 @@ CGRect textViewFrame=	CGRectMake(0, 150, 320, 250);
 	NSError *error;
 	imageResponse = [NSURLConnection sendSynchronousRequest:myRequest
 										  returningResponse:&response error:&error];
+	if(error!=NULL)
+	{ 
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+	}
+	
 	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/MetPetDB/searchResults.kml"];
 	[fh writeData:imageResponse];
 	NSString *dataReceived=[[NSString alloc] initWithData:imageResponse encoding:NSASCIIStringEncoding];
@@ -201,6 +207,13 @@ CGRect textViewFrame=	CGRectMake(0, 150, 320, 250);
 }
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
+	if([elementName isEqualToString:@"html"])
+	{ 
+		//if a tag exists called html, an error was produced
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+		return;
+	}
 	if([elementName isEqualToString:@"int"])
 	{
 		currentStringValue=nil;
@@ -263,6 +276,7 @@ CGRect textViewFrame=	CGRectMake(0, 150, 320, 250);
 	AnalysisSummary *viewController = [[AnalysisSummary alloc] initWithNibName:@"ChemicalAnalysis" bundle:nil];
 	//pass the analysis table the subsample ID so a list of subsamples can be obtainined
 	[viewController setData:sampleID];
+	
 	self.analysisSummary= viewController;
 	[viewController release];
 	UIView *ControllersView = [analysisSummary view];

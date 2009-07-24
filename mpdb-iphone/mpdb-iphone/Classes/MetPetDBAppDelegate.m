@@ -3,16 +3,14 @@
 @implementation MetPetDBAppDelegate
 
 @synthesize window;
-@synthesize navigationController, welcomeController;
+@synthesize navigationController, mainController;
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
-
-	
-	WelcomeViewController *viewController=[[WelcomeViewController alloc] initWithNibName:@"WelcomeView" bundle:nil];
-	self.welcomeController = viewController;
+	MainViewController *viewController=[[MainViewController alloc] initWithNibName:@"MainView" bundle:nil];
+	self.mainController= viewController;
 	[viewController release];
-	UIView *newView= [welcomeController view];
-	navigationController= [[UINavigationController alloc] initWithRootViewController:welcomeController];
+	UIView *newView= [mainController view];
+	navigationController= [[UINavigationController alloc] initWithRootViewController:mainController];
 	[navigationController.navigationBar setBarStyle:1];
 
 
@@ -23,7 +21,7 @@
 
 - (void)dealloc {
 	
-	[welcomeController release];
+	[mainController release];
 	[window release];
 	[super dealloc];
 }

@@ -31,7 +31,7 @@
 {
 	SearchCriteriaController *viewController= [[SearchCriteriaController alloc] initWithNibName:@"SearchCriteriaSummary" bundle:nil];
 	[viewController setData:original:modifiedLocations:mapType:points];
-	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
+	[viewController setCurrentSearchData:currentOwners:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
 	self.criteriaController=viewController;
 	[viewController release];
 	UIView *ControllersView =[criteriaController view];
@@ -93,7 +93,6 @@
 				{
 					if([group.title isEqualToString:@"multiple samples"])
 					{
-						modified=TRUE;
 						newgroup.count++;
 						[newgroup.samples addObject:tempSample];
 						if(newgroup.count==1)
@@ -152,12 +151,16 @@
 -(void)setData:(NSMutableArray*)originalData:(NSMutableArray*)locations:(NSString*)type:(NSMutableArray*)LatLongPoints
 {
 	mapType=type;
-	points=LatLongPoints;
 	original=originalData; //we must pass the original search results so the map can be reset to its original values
 	myLocations=locations;
+	if([LatLongPoints count]!=0)
+	{
+		points=LatLongPoints;
+	}
 }
--(void)setCurrentSearchData:(NSMutableArray*)rocks:(NSMutableArray*)mins:(NSMutableArray*)metgrades:(NSMutableArray*)public:(NSString*)aregion:(CLLocationCoordinate2D)coord
+-(void)setCurrentSearchData:(NSMutableArray*)owners:(NSMutableArray*)rocks:(NSMutableArray*)mins:(NSMutableArray*)metgrades:(NSMutableArray*)public:(NSString*)aregion:(CLLocationCoordinate2D)coord
 {
+	currentOwners=owners;
 	currentRockTypes=rocks;
 	currentMinerals=mins;
 	currentMetamorphicGrades=metgrades;

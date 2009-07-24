@@ -49,7 +49,7 @@
 	[viewController setType:mapType];
 	[viewController setData:originalData :samples];
 	[viewController setCoordinate:myLocation :latitudeSpan :longitudeSpan:maxLat:minLat:maxLong:minLong];
-	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus :region :myLocation];
+	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus: currentOwners :region :myLocation];
 	self.mapController= viewController;
 	[viewController release];
 	UIView *newView=[mapController view];
@@ -76,12 +76,13 @@
 }
 
 
--(void)setCurrentSearchData:(NSMutableArray*)rocks:(NSMutableArray*)mins:(NSMutableArray*)metGrades:(NSMutableArray*)public:(NSString*)aRegion:(CLLocationCoordinate2D)coord
+-(void)setCurrentSearchData:(NSMutableArray*) owners:(NSMutableArray*)rocks:(NSMutableArray*)mins:(NSMutableArray*)metGrades:(NSMutableArray*)public:(NSString*)aRegion:(CLLocationCoordinate2D)coord
 {
 	currentRockTypes=rocks; 
 	currentMinerals=mins; 
 	currentMetamorphicGrades=metGrades; 
 	currentPublicStatus=public; 
+	currentOwners= owners;
 	myLocation=coord;
 	region=aRegion;
 }

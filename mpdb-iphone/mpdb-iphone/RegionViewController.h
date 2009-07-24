@@ -54,6 +54,7 @@
 	CLLocationCoordinate2D center;
 	double latSpan;
 	double longSpan;
+	bool htmlFlag;
 }
 @property(nonatomic, retain) IBOutlet UITableView *tableView;
 @property (nonatomic, copy) NSString *latitude;
@@ -69,6 +70,7 @@
 @property (nonatomic, copy) NSString *currentRockType;
 @property (nonatomic, copy) NSString *selectedRegion;
 @property (nonatomic, copy) NSString *regionName;
+@property (nonatomic, retain) IBOutlet UIImageView *imageView;
 
 -(void)setCoordinates:(CLLocation*)mylocation;
 

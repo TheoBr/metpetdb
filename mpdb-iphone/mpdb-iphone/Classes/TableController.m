@@ -12,7 +12,7 @@
 #import "uniqueSamples.h"
 
 @implementation TableController
-@synthesize tableView, rockTypeController, metamorphicGradeController, publicStatusController, mineralsController, mapController;
+@synthesize tableView, rockTypeController, metamorphicGradeController, publicStatusController, mineralsController, mapController, ownerController;
 @synthesize mapType, region;
 
 
@@ -21,6 +21,7 @@
 	[rows addObject:@"Rock Type"];
 	[rows addObject:@"Minerals"];
 	[rows addObject:@"Metamorphic Grade"];
+	[rows addObject:@"Sample Owner"];
 	//[rows addObject:@"Public/Private status"];
 	tableView= [[UITableView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]
                                              style:UITableViewStylePlain];
@@ -66,11 +67,17 @@
 	{
 		[self loadMetamorphicGradeView];
 	}
+	//if the button corresponding to sample owner is pressed, load the corresponding row
+	else if(indexPath.row ==3)
+	{
+		[self loadOwnerView];
+	}
 	//if the button corresponding to public status is pressed, load the corresponding view
-	else if(indexPath.row==3)
+	
+	/*else if(indexPath.row==3)
 	{
 		[self loadPublicController];
-	}
+	}*/
 
 		
 }
@@ -80,8 +87,8 @@
 -(void)loadMineralsView
 {
 	MineralsController *viewController= [[MineralsController alloc] initWithNibName:@"MineralsView" bundle:nil];
-	[viewController setData:original:locations:mapType];	
-	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
+	[viewController setData:original:locations:mapType:points];	
+	[viewController setCurrentSearchData:currentOwners:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
 	self.mineralsController=viewController;
 	[viewController release];
 	UIView *ControllersView =[mineralsController view];
@@ -93,7 +100,7 @@
 
 	MetamorphicGradeController *viewController=[[MetamorphicGradeController alloc] initWithNibName:@"MetamorphicGradeView" bundle:nil];
 	[viewController setData:original:locations:mapType:points];
-	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
+	[viewController setCurrentSearchData:currentOwners:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
 	self.metamorphicGradeController= viewController;
 	[viewController release];
 	UIView *ControllersView=[metamorphicGradeController view];
@@ -106,7 +113,7 @@
 		RockTypeController *viewController = [[RockTypeController alloc] initWithNibName:@"RockTypeView" bundle:nil];
 	//all of the following values must be passed so they can be passed back to the map straight from the rock view
 	[viewController setData:original:locations:mapType:points];
-	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
+	[viewController setCurrentSearchData:currentOwners:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
 		self.rockTypeController = viewController;
 		[viewController release];
 		UIView *ControllersView = [rockTypeController view];
@@ -117,15 +124,28 @@
 {
 	PublicStatusController *viewController = [[PublicStatusController alloc] initWithNibName:@"PublicStatusView" bundle:nil];
 	[viewController setData:original:locations:mapType:points];
-	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
+	[viewController setCurrentSearchData:currentOwners:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myCoordinate];
 	self.publicStatusController=viewController;
 	[viewController release];
 	UIView *ControllersView = [publicStatusController view];
 	[self.view addSubview:ControllersView];
 	[self.navigationController pushViewController:publicStatusController animated:NO];
 }
+-(void)loadOwnerView
+{
+	OwnerViewController *viewController = [[OwnerViewController alloc] initWithNibName:@"OwnerView" bundle:nil];
+	[viewController setData:original:locations:mapType: points];
+	[viewController setCurrentSearchData:currentOwners:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus :region :myCoordinate];
+	self.ownerController= viewController;
+	[viewController release];
+	UIView *ControllersView= [ownerController view];
+	[self.view addSubview:ControllersView];
+	[self.navigationController pushViewController:ownerController animated:NO];
+}
 
-/*-(void)clearSearch{
+
+	
+	/*-(void)clearSearch{
 	//before the map is loaded, find the center coordinate and span for the zoom
 	//to find the center, average all the latitudes and then all the longitudes and that will be the coordinate
 	int p,q;
@@ -217,8 +237,9 @@
 	mapType=type;
 	points=LatLongPoints;
 }
--(void)setCurrentSearchData:(NSMutableArray*)rocks:(NSMutableArray*)mins:(NSMutableArray*)metgrades:(NSMutableArray*)public:(NSString*)aregion:(CLLocationCoordinate2D)coord
+-(void)setCurrentSearchData:(NSMutableArray*)owners:(NSMutableArray*)rocks:(NSMutableArray*)mins:(NSMutableArray*)metgrades:(NSMutableArray*)public:(NSString*)aregion:(CLLocationCoordinate2D)coord
 {
+	currentOwners=owners;
 	currentRockTypes=rocks;
 	currentMinerals=mins;
 	currentMetamorphicGrades=metgrades;

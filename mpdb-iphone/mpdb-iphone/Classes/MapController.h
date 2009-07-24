@@ -69,11 +69,14 @@
 	NSMutableArray *currentMetamorphicGrades;
 	NSMutableArray *currentPublicStatus;
 	NSMutableArray *currentRemovedSamples; //this array represents the samples that have been removed from the map as search criteria have been specified
+	NSMutableArray *currentOwners;
 	NSString *region; //region being searched in, needs to be displayed as a geographic crieria
 	uniqueSamples *selectedSample;
 	NSString *mapType; //this string can be either map, satellite, or hybrid
 	double maxLat, minLat, minLong, maxLong; //these will be used to make the points that will be used to make the search square;
 	NSMutableArray *boundaryAnnotations;
+	NSMutableArray *points; //this array holds the max and min lat and longs so the original search box on the map can be redrawn
+	
 }
 @property (nonatomic, retain) MKMapView *mapView;
 @property (nonatomic, retain) SampleInfoController *sampleinfo;
@@ -96,5 +99,4 @@
 @property (nonatomic, copy) NSString *region;
 @property (nonatomic, retain) uniqueSamples *selectedSample;
 @property (nonatomic, copy) NSString *mapType;
-
 @end

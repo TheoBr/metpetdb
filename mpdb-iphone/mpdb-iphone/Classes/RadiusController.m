@@ -23,7 +23,7 @@
 //#import "CFHTTPMessage/CFHTTPMessage.h"
 @implementation RadiusController
 @synthesize searchButton, radius, outputlabel, toolbar, mylocationCoordinate;
-@synthesize currentStringValue, mapController, sampleID, sampleName, publicStatus, currentRockType, currentOwner;
+@synthesize currentStringValue, mapController, sampleID, sampleName, publicStatus, currentRockType, currentOwner, indicator;
 -(void)viewDidLoad{
 	toolbar.barStyle=UIBarStyleBlack;
 	locations=[[NSMutableArray alloc] init];
@@ -35,7 +35,13 @@
 	nameFlag=TRUE;
 	rockFlag=FALSE;
 	uniqueFlag=TRUE;
-	
+	indicator=[[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(280, 15, 20, 20)];
+	[indicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleWhite];
+	[toolbar addSubview:indicator];
+	searchButton=[[UIBarButtonItem alloc] initWithTitle:@"Search" style:UIBarButtonItemStyleBordered target:self action:@selector(showMap)];
+	NSMutableArray *items=[[NSMutableArray alloc] init];
+	[items addObject:searchButton];
+	toolbar.items= items;
 	
 	//build the array that the picker view will use
 	radii=[[NSMutableArray alloc] init];
@@ -77,13 +83,14 @@
 	return [radii objectAtIndex:row];
 }
 - (void)pickerView:(UIPickerView *)sampleSelector didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-	
 	radius=[[NSString alloc] initWithString:[radii objectAtIndex:row]];
 }
 
-
--(IBAction)showMap:(id)sender{
-	//since this is the first time we are loading sample location information, we pass this flag in as true and copy the
+-(void)showMap
+{
+	//start the activity indicator spinning when the map button is pressed
+	[indicator startAnimating];
+		//since this is the first time we are loading sample location information, we pass this flag in as true and copy the
 	//data into an array in the mapController
 	//when the sample location annotations are loaded from there narrow search table, this bool is passed in as false and no data is copied
 	bool dataFlag=TRUE;
@@ -107,9 +114,11 @@
 	UIView *ControllersView = [mapController view];
 	[self.view addSubview:ControllersView];
 	[self.navigationController pushViewController:mapController animated:NO];
+	[indicator stopAnimating];
 }
 -(void)getSamples{
 	
+
 	//before querying the database, we must convert the entered radius into degrees to create a box that all returned samples must be within
 	
 	//since the scroll wheel contains values in kilometers, all values must be converted to meters
@@ -152,6 +161,12 @@
 	NSError *error;
 	myReturn = [NSURLConnection sendSynchronousRequest:myRequest
 									 returningResponse:&response error:&error];
+	if(error!=NULL)
+	{ 
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+	}
+	
 	
 	NSXMLParser *myParser= [[NSXMLParser alloc] initWithData:myReturn];
 	[myParser setDelegate:self];
@@ -161,6 +176,13 @@
 
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
+	if([elementName isEqualToString:@"html"])
+	{ 
+		//if a tag exists called html, an error was produced
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Unable to connect to server." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		[alert show];
+		return;
+	}
 	if([elementName isEqualToString:@"set"])
 	{
 		//make sure this array is reset here so that when the back button is pressed the samples do not get added to the original array

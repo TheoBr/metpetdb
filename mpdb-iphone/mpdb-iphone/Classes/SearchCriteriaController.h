@@ -39,6 +39,7 @@
 	NSMutableArray *currentMinerals;
 	NSMutableArray *currentMetamorphicGrades;
 	NSMutableArray *currentPublicStatus;
+	NSMutableArray *currentOwners;
 	NSMutableArray *delete; //this array holds bools, if they are false the row should be deleted
 	MapController *mapController;
 	
@@ -53,6 +54,13 @@
 	int rowCount;
 	NSString *mapType;
 	UIButton *deleteButton;
+	NSMutableArray *points; //this array holds the max and min lat and longs so the original search box on the map can be redrawn
+	NSString *minimumLat;
+	NSString *maximumLat;
+	NSString *minimumLong;
+	NSString *maximumLong;
+	int num;
+	NSString *newTag;
 }
 //@property(nonatomic, retain) IBOutlet UITableView *tableView;
 @property (nonatomic, retain) TableController *tableController;
@@ -68,5 +76,11 @@
 @property (nonatomic, retain) uniqueSamples *newgroup;
 @property (nonatomic, copy) NSString *mapType;
 @property (nonatomic, retain) UIButton *deleteButton;
+@property (nonatomic, copy) NSString *minimumLat;
+@property (nonatomic, copy) NSString *maximumLat;
+@property (nonatomic, copy) NSString *minimumLong;
+@property (nonatomic, copy) NSString *maximumLong;
+@property (nonatomic, copy) NSString *newTag;
+
 @end
    

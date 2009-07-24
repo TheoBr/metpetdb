@@ -3,7 +3,9 @@
 #import "RadiusController.h"
 #import "CoordInputController.h"
 #import "RegionViewController.h"
+#import "InfoViewController.h"
 
+@class InfoViewController;
 @class RadiusController;
 @class LocationViewController;
 @class CoordInputController;
@@ -24,8 +26,9 @@
 	BOOL firstUpdate;
 	CLLocation *myCoordinate;
 	NSMutableArray *rows;
-
+	InfoViewController *infoController;
 }
+@property (nonatomic, retain) InfoViewController *infoController;
 @property (nonatomic, retain) UITableView *tableView;
 @property(nonatomic, retain) IBOutlet UIButton *myLocationButton;
 @property(nonatomic, retain) IBOutlet UIButton *coordinateButton;

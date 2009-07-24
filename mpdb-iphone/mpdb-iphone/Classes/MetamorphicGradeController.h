@@ -25,9 +25,13 @@
 	NSMutableArray *currentMinerals;
 	NSMutableArray *currentMetamorphicGrades;
 	NSMutableArray *currentPublicStatus;
+	NSMutableArray *currentOwners;
 	NSString *region;
 	CLLocationCoordinate2D myCoordinate;
 	NSString* mapType; //indicates map, hybrid or satellite
+	NSMutableArray *points;
+	NSMutableArray *modifiedLocations2;
+	int index;
 	
 }
 @property (nonatomic, retain) UIPickerView *sampleSelector;

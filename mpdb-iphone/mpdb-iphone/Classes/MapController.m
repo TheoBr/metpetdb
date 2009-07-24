@@ -15,7 +15,7 @@
 @implementation MapController
 @synthesize sampleinfo, details, selectedID, navBar, satelliteView, mapViewButton, narrowSearch, mapView, infoButton, homeButton;
 @synthesize tableController, rockTypeController, sampleTableController, mainViewController, mapTypeController;
-@synthesize boxView, criteriaController, region, hybridView, selectedSample;
+@synthesize boxView, criteriaController, region, hybridView, selectedSample; 
 
 
 -(void)viewDidLoad{
@@ -24,6 +24,7 @@
 	viewHeight= self.view.bounds.size.height;
 	
 	singlePoints=[[NSMutableArray alloc] init];
+	points= [[NSMutableArray alloc] init];
 	multiplePoints=[[NSMutableArray alloc] init];
 	buttonArray=[[NSMutableArray alloc] init];
 	mapView=[[MKMapView alloc] initWithFrame:self.view.bounds];
@@ -34,8 +35,8 @@
 	MKCoordinateRegion mapRegion;
 	MKCoordinateSpan mapSpan;
 	
-	mapSpan.latitudeDelta= latitudeSpan+.05;
-	mapSpan.longitudeDelta=longitudeSpan+.05;
+	mapSpan.latitudeDelta= latitudeSpan+.1;
+	mapSpan.longitudeDelta=longitudeSpan+.1;
 	mapRegion.span=mapSpan;
 	
 
@@ -56,13 +57,13 @@
 	clearView.backgroundColor=[UIColor clearColor];
 	
 	//if the region is null, then we are searching using a coordinate and a radius and should draw a search box
-	//if(region==nil)
-	//{
+	if(region==nil)
+	{
 		//the following function creates the map annotations for the boundary points
 		[self makeSearchBox];
 		//the following functions adds those annotations to the map
 		[mapView addAnnotations:boundaryAnnotations];
-	//}
+	}
 	[mapView addAnnotations:mySamples];
 	
 	if([mapType isEqualToString:@"map"])
@@ -110,6 +111,16 @@
 	boundaryAnnotations= [[NSMutableArray alloc] init];
 	//before making a pin, make sure the annotation does not have the same lat and long a sample
 	//if it does, move the pin slightly
+	NSString *maxLatitude=[[NSString alloc] initWithFormat:@"%f", maxLat];
+	NSString *minLatitude=[[NSString alloc] initWithFormat:@"%f", minLat];
+	NSString *maxLongitude= [[NSString alloc] initWithFormat:@"%f", maxLong];
+	NSString *minLongitude=[[NSString alloc] initWithFormat:@"%f", minLong];
+	points= [[NSMutableArray alloc] init];
+	[points addObject:maxLatitude];
+	[points addObject:minLatitude];
+	[points addObject:maxLongitude];
+	[points addObject:minLongitude];
+	
 	for(int w=0; w<[mySamples count]; w++)
 	{
 		uniqueSamples *tempSample= [mySamples objectAtIndex:w];
@@ -223,7 +234,7 @@
 	MapTypeController *viewController= [[MapTypeController alloc] initWithNibName:@"MapTypeView" bundle:nil];
 	self.mapTypeController= viewController;
 	[viewController setSamples:mySamples:originalData];
-	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myLocation];
+	[viewController setCurrentSearchData:currentOwners:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myLocation];
 	[viewController setCoordinate:myLocation:latitudeSpan:longitudeSpan: maxLat:minLat: maxLong: minLong];
 	UIView *newView= [mapTypeController view];
 	[self.view addSubview:newView];
@@ -231,10 +242,10 @@
 }
 
 -(IBAction)narrowSearchResults{
-	
 	SearchCriteriaController *viewController= [[SearchCriteriaController alloc] initWithNibName:@"SearchCriteriaSummary" bundle:nil];
+	
 	[viewController setData:originalData:mySamples:mapType:points];
-	[viewController setCurrentSearchData:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myLocation];
+	[viewController setCurrentSearchData:currentOwners:currentRockTypes :currentMinerals :currentMetamorphicGrades :currentPublicStatus:region:myLocation];
 	self.criteriaController=viewController;
 	[viewController release];
 	UIView *ControllersView =[criteriaController view];
@@ -392,8 +403,9 @@
 }
 //this array must store 4 arrays with search criteria to be displayed in the search criteria summary
 //the data will be passed in from the rocktypeController, metamorphicgradecontroller, mineralscontroller, and the publicstatuscontroller
--(void)setCurrentSearchData:(NSMutableArray*)rocks:(NSMutableArray*)mins:(NSMutableArray*)metGrades:(NSMutableArray*)public:(NSString*)aRegion:(CLLocationCoordinate2D)coord
+-(void)setCurrentSearchData:(NSMutableArray*)owners:(NSMutableArray*)rocks:(NSMutableArray*)mins:(NSMutableArray*)metGrades:(NSMutableArray*)public:(NSString*)aRegion:(CLLocationCoordinate2D)coord
 {
+	currentOwners=owners;
 	currentRockTypes=rocks;
 	currentMinerals=mins;
 	currentMetamorphicGrades=metGrades;

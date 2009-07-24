@@ -2,6 +2,7 @@
 #import <UIKit/UIKit.h>
 #import "MapController.h"
 #import "SearchCriteriaController.h"
+#import "uniqueSamples.h"
 
 @class SearchCriteriaController;
 @interface MineralsController : UIViewController <UIPickerViewDelegate, UIPickerViewDataSource>{
@@ -13,7 +14,8 @@
 	NSString *currentStringValue;
 	AnnotationObjects *newAnnotation;
 	NSMutableArray *myLocations;
-	NSMutableArray *modifiedLocations; //stores the locations of the samples that contain the specified mineral
+	NSMutableArray *modifiedLocations; //stores the samples with any other search criteria that have been specified, not including minerals
+	NSMutableArray *modifiedLocations2; //stores the samples with the minerals search criteria
 	NSString *mineralName;
 	UIToolbar *toolbar;
 	UIBarButtonItem *refineButton;
@@ -25,10 +27,17 @@
 	NSMutableArray *currentMinerals; //this array will be modified by this controller to contain the minerals the user specifies 
 	NSMutableArray *currentMetamorphicGrades;
 	NSMutableArray *currentPublicStatus;
+	NSMutableArray *currentOwners;
 	NSString *region;
 	CLLocationCoordinate2D myCoordinate;
 	NSString *mapType;
+	NSMutableArray *points;
+	NSString *min;
+	int index; //represents the current position in the modified locations array where the object should be added, for multiple samples it replaces the last object added
+	uniqueSamples *newgroup;
+	bool modified;
 }
+@property (nonatomic, retain) uniqueSamples *newgroup;
 @property (nonatomic, retain) UIPickerView *sampleSelector;
 @property (nonatomic, retain) UILabel *output;
 //@property (nonatomic, retain) UIBarButtonItem *searchButton;
@@ -40,6 +49,7 @@
 @property (nonatomic, copy) NSString *region;
 @property (nonatomic, retain) SearchCriteriaController *criteriaController;
 @property (nonatomic, copy) NSString *mapType;
+@property (nonatomic, copy) NSString *min;
 
 
 -(IBAction)loadMap:(id)sender;

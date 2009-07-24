@@ -18,7 +18,7 @@
 @class MapController;
 @interface RadiusController : UIViewController <NSObject, UIPickerViewDelegate, UIPickerViewDataSource>{
 	IBOutlet UIPickerView *radiusPicker;
-	IBOutlet UIBarButtonItem *searchButton;
+	UIBarButtonItem *searchButton;
 	IBOutlet UILabel *outputlabel;
 	IBOutlet UIToolbar *toolbar;
 	BOOL isCurrentlyUpdating;
@@ -57,6 +57,8 @@
 	double latitudeDegrees;
 	double longitudeDegrees;
 	double n, s, e, w;
+	bool blah;
+	UIActivityIndicatorView *indicator;
 }
 
 @property (nonatomic, retain) IBOutlet UIPickerView *radiusPicker;
@@ -74,8 +76,9 @@
 @property (nonatomic, copy) NSString *publicStatus;
 @property (nonatomic, copy) NSString *currentRockType;
 @property (nonatomic, copy) NSString *currentOwner;
+@property (nonatomic, retain) UIActivityIndicatorView *indicator;
 
--(IBAction)showMap:(id)sender;
+//-(IBAction)showMap:(id)sender;
 -(void)setCoordinates:(CLLocation*)mylocation;
 
 

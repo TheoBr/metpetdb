@@ -26,9 +26,11 @@
 	NSMutableArray *currentMinerals;
 	NSMutableArray *currentMetamorphicGrades;
 	NSMutableArray *currentPublicStatus;
+	NSMutableArray *currentOwners;
 	NSString *region;
 	CLLocationCoordinate2D myCoordinate;
 	NSString* mapType; //indicates map, hybrid or satellite
+	NSMutableArray *points;
 }
 @property (nonatomic,retain) UISegmentedControl *segcontrol;
 @property (nonatomic, retain) IBOutlet UILabel *label;

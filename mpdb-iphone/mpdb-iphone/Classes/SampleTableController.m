@@ -26,7 +26,7 @@
 		for(x=0; x<[mySamples count]; x++)
 		{
 			AnnotationObjects *sample=[mySamples objectAtIndex:x];
-			NSString *id=[[NSString alloc] initWithFormat:@"%@, %@",sample.name, sample.owner, sample.rockType];
+			NSString *id=[[NSString alloc] initWithFormat:@"%@, %@",sample.name, sample.owner];
 			[rows addObject:id];
 			[names addObject:sample.name];
 			[owners addObject:sample.owner];
@@ -53,7 +53,7 @@
 			for(z=0; z< [samplesInGroup count]; z++)
 			{
 				AnnotationObjects *sample= [samplesInGroup objectAtIndex:z];
-				NSString *id=[[NSString alloc] initWithFormat:@"%@, %@, %@",sample.name, sample.owner, sample.rockType];
+				NSString *id=[[NSString alloc] initWithFormat:@"%@, %@",sample.name, sample.owner];//, sample.rockType];
 				[rows addObject:id];
 				[names addObject:sample.name];
 				[owners addObject:sample.owner];

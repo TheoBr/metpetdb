@@ -11,8 +11,10 @@
 #import "MetamorphicGradeController.h"
 #import "PublicStatusController.h"
 #import "MineralsController.h"
+#import "OwnerViewController.h"
 
 @class RockTypeController;
+@class OwnerViewController;
 @class MetamorphicGradeController;
 @class PublicStatusController;
 @class MineralsController;
@@ -26,6 +28,7 @@
 	MineralsController *mineralsController;
 	PublicStatusController *publicStatusController;
 	MapController *mapController;
+	OwnerViewController *ownerController;
 	NSMutableArray *original; //this array will hold the original search data so that the search criteria can be cleared
 	CLLocationCoordinate2D center;
 	double latSpan;
@@ -34,9 +37,11 @@
 	NSMutableArray *currentMinerals;
 	NSMutableArray *currentMetamorphicGrades;
 	NSMutableArray *currentPublicStatus;
+	NSMutableArray *currentOwners;
 	NSString *region; //region that the user initially chose, must be displayed in the search criteria
 	CLLocationCoordinate2D myCoordinate;
 	NSString *mapType; //indicates map, hybrid or satellite
+	NSMutableArray *points;
 }
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
 @property(nonatomic, retain) RockTypeController *rockTypeController;
@@ -44,6 +49,7 @@
 @property (nonatomic, retain) MineralsController *mineralsController;
 @property (nonatomic, retain) PublicStatusController *publicStatusController;
 @property (nonatomic, retain) MapController *mapController;
+@property (nonatomic, retain) OwnerViewController *ownerController;
 @property (nonatomic, copy) NSString *region;
 @property (nonatomic, copy) NSString *mapType;
 @end

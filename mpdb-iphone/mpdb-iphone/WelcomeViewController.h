@@ -14,11 +14,13 @@
 	//IBOutlet UIButton *beginButton;
 	MainViewController *mainViewController;
 	UIButton *button;
+	NSString *resultString;
 
 }
 @property (nonatomic, retain) MainViewController *mainViewController;
 //@property (nonatomic, retain) IBOutlet UIButton *beginButton;
 @property (nonatomic, retain) UIButton *button;
+@property (nonatomic, copy) NSString *resultString;
 
 //  -(IBAction) begin:(id)sender;
 @end
