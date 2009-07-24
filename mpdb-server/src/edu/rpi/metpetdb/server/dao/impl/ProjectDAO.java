@@ -86,34 +86,6 @@ public class ProjectDAO extends MpDbDAO<Project> {
 		
 		return new Results<User>(size, l);
 	}
-
-	public Invite saveInvite(Invite i, User u) throws MpDbException {
-		Query q = sess.createSQLQuery("INSERT INTO project_invites " +
-				"VALUES (" + i.getProject_id() + "," + i.getUser_id() + ",now(),'" + i.getStatus() +"');");
-		q.executeUpdate();
-		return i;
-	}
-	
-	public void rejectInvite(Invite i) throws MpDbException {
-		Query q = sess.createSQLQuery("UPDATE project_invites " +
-				"SET status='" + i.getStatus() + "',action_timestamp=now() " + 
-				"WHERE project_id =" + i.getProject_id() + " AND user_id=" + i.getUser_id() + ";");
-		q.executeUpdate();
-		return;
-	}
-	
-	public void acceptInvite(Invite i, User u) throws MpDbException {
-		Project p = new Project();
-		p.setId(i.getProject_id());
-		p = fill(p);
-		p.getMembers().add(u);
-		save(p);
-		Query q = sess.createSQLQuery("UPDATE project_invites " +
-				"SET status='" + i.getStatus() + "',action_timestamp=now() " + 
-				"WHERE project_id =" + i.getProject_id() + " AND user_id=" + i.getUser_id() + ";");
-		q.executeUpdate();
-		return;
-	}
 	
 	public List<Project> getInvitesForUser(int id) throws MpDbException {
 		final Query q = namedQuery("Project.invitesById");

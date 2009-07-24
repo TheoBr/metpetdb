@@ -64,7 +64,15 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 				MpDb.project_svc.getInvitesForUser(MpDb.currentUser().getId(), this);
 			}
 			public void onSuccess(final Object result){
-				List<Invite> invites = (List<Invite>) result;
+				//copy the results. Can't modify in place the list received from the callback
+				List<Invite> invites = new ArrayList<Invite>();
+				
+				//Take out any invites that are not New because no action would be needed on those
+				for(Invite i: (List<Invite>) result){
+					if(i.getStatus().equals("New"))
+						invites.add(i);
+				}
+				//If there are any new invites, create a link to the My Invites page
 				if(invites != null && invites.size() > 0){
 					final MLink newInvites = new MLink("You have " + invites.size() + " project invite" +
 							(invites.size() > 1 ? "s!" : "!"), 
@@ -78,7 +86,6 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 									}.begin();
 								}	
 					});
-					newInvites.addStyleName("beta");
 					header1.setWidget(0, 1, newInvites);
 				}
 			}
@@ -168,37 +175,9 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 		Projects_ft.setWidget(0, 0, list);
 
 		FixedWidthFlexTable footer = new FixedWidthFlexTable();
-		/*CheckBox cb = new CheckBox("Select All");
-		cb.addClickListener(new ClickListener() {
-			public void onClick(Widget sender) {
-				for (int i = 0; i < list.getScrollTable().getDataTable()
-						.getRowCount(); i++)
-					((MCheckBox) list.getScrollTable().getDataTable()
-							.getWidget(i, 0)).setChecked(((CheckBox) sender)
-							.isChecked());
-			}
-		});
-		lb = new ListBox();
 
-		lb.addItem("Remove");
-		lb.addItem("Duplicate");
-
-		Button btn = new Button("Apply to Selected", new ClickListener() {
-			public void onClick(Widget sender) {
-				if (lb.getItemText(lb.getSelectedIndex()).equals("Remove")) {
-					deleteSelected();
-				} else if (lb.getItemText(lb.getSelectedIndex()).equals(
-						"Duplicate")) {
-					DuplicateSelected();
-				}
-			}
-		});
-		btn.setHeight("30px");*/
 		FlexTable realFooter = new FlexTable();
 
-		//realFooter.setWidget(0, 0, cb);
-		//realFooter.setWidget(0, 1, lb);
-		//realFooter.setWidget(0, 2, btn);
 		realFooter.addStyleName("mpdb-dataTableBlue");
 		realFooter.getFlexCellFormatter().setWidth(0, 0, "85px");
 		realFooter.getFlexCellFormatter().setWidth(0, 1, "100px");
@@ -213,7 +192,6 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 		footer.setWidget(0, 0, realFooter);
 		footer.getFlexCellFormatter().setColSpan(0, 0, 4);
 		footer.setWidth("100%");
-		//list.getScrollTable().setFooterTable(footer);
 
 		this.add(Projects_ft);
 	}

@@ -22,11 +22,7 @@
     
     <set name="invites" table="project_invites">
       <key column="project_id" />
-      <composite-element class="Invite">
-      	<property name="action_timestamp" type="timestamp"/>
-      	<property name="status"/>
-      	<many-to-one name="user_id" class="User" not-null="true"/>
-      </composite-element>
+      <many-to-many class="User" column="user_id" />
     </set>
 
     <set name="samples" table="project_samples">

@@ -154,9 +154,12 @@ CREATE TABLE project_samples
 
 CREATE TABLE project_invites
 (
+  invite_id INT4 NOT NULL,
   project_id INT4 NOT NULL,
   user_id INT4 NOT NULL,
-  CONSTRAINT project_invites_nk PRIMARY KEY (project_id, user_id),
+  action_timestamp TIMESTAMP NOT NULL,
+  status VARCHAR(32),
+  CONSTRAINT project_invites_nk PRIMARY KEY (invite_id),
   CONSTRAINT project_invites_fk_proj FOREIGN KEY (project_id)
     REFERENCES projects (project_id),
   CONSTRAINT project_invites_fk_user FOREIGN KEY (user_id)
@@ -236,6 +239,7 @@ CREATE TABLE uploaded_files
       REFERENCES users (user_id)
 ) WITHOUT OIDS;
 
+CREATE SEQUENCE invite_seq;
 CREATE SEQUENCE project_seq;
 CREATE SEQUENCE region_seq;
 CREATE SEQUENCE rock_type_seq;

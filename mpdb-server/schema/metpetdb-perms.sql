@@ -49,6 +49,7 @@ GRANT select,insert,update,delete ON role_changes to @APPUSER@;
 GRANT select,insert,update,delete ON project_invites to @APPUSER@;
 GRANT select,insert,update,delete ON sample_aliases to @APPUSER@;
 
+GRANT update ON invite_seq TO @APPUSER@;
 GRANT update ON mineral_seq   TO @APPUSER@;
 GRANT update ON project_seq   TO @APPUSER@;
 GRANT update ON region_seq    TO @APPUSER@;

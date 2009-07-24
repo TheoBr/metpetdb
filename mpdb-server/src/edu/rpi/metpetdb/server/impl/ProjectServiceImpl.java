@@ -67,17 +67,14 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	}
 	
 	public Invite saveInvite(Invite i) throws MpDbException {
-		User u = new User();
-		u.setId(i.getUser_id());
-		u = (new UserDAO(this.currentSession())).fill(u);
 		i.setAction_timestamp(new Timestamp(new Date().getTime()));
 		new InviteDAO(this.currentSession()).save(i);
 		commit();
 		return i;
 	}
 	
-	public List<Project> getInvitesForUser(int id) throws MpDbException {
-		return new ProjectDAO(currentSession()).getInvitesForUser(id);
+	public List<Invite> getInvitesForUser(int id) throws MpDbException {
+		return new InviteDAO(currentSession()).getInvitesForUser(id);
 	}
 
 	public void acceptInvite(Invite i) throws MpDbException {
@@ -85,14 +82,16 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 		u.setId(i.getUser_id());
 		u = (new UserDAO(this.currentSession())).fill(u);
 		i.setStatus("Accepted");
-		new ProjectDAO(this.currentSession()).acceptInvite(i, u);
+		i.setAction_timestamp(new Timestamp(new Date().getTime()));
+		new InviteDAO(this.currentSession()).acceptInvite(i, u);
 		commit();
 		return;
 	}
 
 	public void rejectInvite(Invite i) throws MpDbException {
 		i.setStatus("Rejected");
-		new ProjectDAO(this.currentSession()).rejectInvite(i);
+		i.setAction_timestamp(new Timestamp(new Date().getTime()));
+		new InviteDAO(this.currentSession()).save(i);
 		commit();
 		return;
 	}
@@ -114,18 +113,21 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 		dao.delete(p);
 	}
 
-	public Map<Project, Invite> inviteDetails(List<Project> projects, int userId)
+	public Map<Invite, Project> getProjectsForInvites(List<Invite> invites)
 			throws MpDbException {
-		Map<Project, Invite> inviteMap = new HashMap<Project, Invite>();
-		final Iterator<Project> itr = projects.iterator();
-		while(itr.hasNext()) {
-			Project current = itr.next();
-			Invite i = new Invite();
-			i.setUser_id(userId);
-			i.setProject_id(current.getId());
-			i = (new InviteDAO(this.currentSession())).fill(i);
-			inviteMap.put(current, i);
+		Map<Invite,Project> inviteMap = new HashMap<Invite,Project>();
+		final Iterator<Invite> itr = invites.iterator();
+		while(itr.hasNext()){
+			Invite current = itr.next();
+			Project p = new Project();
+			p.setId(current.getProject_id());
+			p = (new ProjectDAO(this.currentSession())).fill(p);
+			inviteMap.put(current, p);
 		}
 		return inviteMap;
+	}
+	
+	public Invite inviteDetails(int id) throws MpDbException {
+		return (new InviteDAO(this.currentSession())).inviteDetails(id);
 	}
 }

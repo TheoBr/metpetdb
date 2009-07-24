@@ -4,18 +4,31 @@
 
 <hibernate-mapping package="edu.rpi.metpetdb.client.model">
   <class name="Invite" table="project_invites">
-  	<composite-id>
-  	  <key-property name="project_id" column="project_id"/>
-  	  <key-property name="user_id" column="user_id"/>
-  	</composite-id>
+  	<id name="id" column="invite_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">invite_seq</param>
+      </generator>
+    </id>
+  	<property name="project_id" column="project_id"/>
+  	<property name="user_id" column="user_id"/>
     <property name="action_timestamp" column="action_timestamp"/>
     <property name="status" column="status" type="java.lang.String"/>
   </class>
+  
+  <query name="Invite.byId">
+    from Invite i
+    where id = :id
+  </query>
   
   <query name="Invite.byProjectIdMemberId">
     select i
   	from Invite i
 	where project_id = :project_id AND 
 	user_id = :user_id
+  </query>
+  
+  <query name="Invite.byUserId">
+    from Invite i
+    where user_id = :user_id
   </query>
 </hibernate-mapping>

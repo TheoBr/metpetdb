@@ -39,7 +39,9 @@ public interface ProjectServiceAsync {
 	
 	void rejectInvite(Invite i, AsyncCallback<Void> ac);
 	
-	void getInvitesForUser(int id, AsyncCallback<List<Project>> ac);
+	void getInvitesForUser(int id, AsyncCallback<List<Invite>> ac);
 
-	void inviteDetails(List<Project> projects, int userId, AsyncCallback<Map<Project,Invite>> ac);
+	void getProjectsForInvites(List<Invite> invites, AsyncCallback<Map<Invite,Project>> ac);
+	
+	void inviteDetails(int id, AsyncCallback<Invite> ac);
 }

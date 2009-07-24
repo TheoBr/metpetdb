@@ -31,11 +31,7 @@
     
     <set name="invites" table="project_invites">
       <key column="user_id" />
-      <composite-element class="Invite">
-      	<property name="action_timestamp" type="timestamp"/>
-      	<property name="status"/>
-      	<many-to-one name="project_id" class="Project" not-null="true"/>
-      </composite-element>
+      <many-to-many class="Project" column="project_id"/>
     </set>
     
     <many-to-one name="role" column="role_id"/>
