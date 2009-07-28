@@ -191,7 +191,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 					}
 					Sample s = img.getSample();
 					img.setSample(checkForSample(s, samples, sampleDao, results,
-							subsampleNames, row));
+							subsampleNames, ssDao, subsamples, row));
 					if (img.getSample().getId() == 0)
 						continue;
 					if (img.getSample() != null && img.getSubsample() == null) {

@@ -173,7 +173,8 @@ public abstract class BulkUploadService extends MpDbServlet {
 	protected Sample checkForSample(Sample s,
 			final Map<String, Sample> samples, final SampleDAO sampleDao,
 			final BulkUploadResult results,
-			final Map<String, Collection<String>> subsampleNames, int row) {
+			final Map<String, Collection<String>> subsampleNames,
+			final SubsampleDAO subsampleDAO, final Map<String, Subsample> subsamples, int row) {
 		try {
 			// if we don't have this sample already loaded check
 			// for it in the database
@@ -182,8 +183,12 @@ public abstract class BulkUploadService extends MpDbServlet {
 				samples.put(s.getNumber().toLowerCase(), s);
 				subsampleNames.put(s.getNumber().toLowerCase(),
 						new HashSet<String>());
-				for (Subsample subsample : s.getSubsamples())
+				for (Subsample subsample : s.getSubsamples()) {
 					subsampleNames.get(s.getNumber().toLowerCase()).add(subsample.getName());
+					subsample = subsampleDAO.fill(subsample);
+					subsamples.put(s.getNumber().toLowerCase()
+							+ subsample.getName().toLowerCase(), subsample);
+				}
 			} else {
 				s = samples.get(s.getNumber().toLowerCase());
 			}

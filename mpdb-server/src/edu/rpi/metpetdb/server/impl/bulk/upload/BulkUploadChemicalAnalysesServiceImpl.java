@@ -68,7 +68,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 				}
 				Sample s = ca.getSubsample().getSample();
 				checkForSample(s, samples, sampleDao, results, subsampleNames,
-						row);
+						ssDao, subsamples,row);
 				Subsample ss = (ca.getSubsample());
 				ss.setSample(s);
 				if (ss != null && s != null  && ss.getName() != null) {
