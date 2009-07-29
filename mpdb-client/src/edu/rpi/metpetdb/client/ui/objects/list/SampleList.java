@@ -151,6 +151,7 @@ public abstract class SampleList extends DataList<Sample> {
 			col.setPreferredColumnWidth(30);
 			col.setOptional(true);
 			columns.addColumn(col);
+			defaultColumns.addColumn(col);
 		}
 		
 		// owner (link to owner profile)

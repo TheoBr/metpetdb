@@ -36,7 +36,6 @@ import edu.rpi.metpetdb.client.ui.objects.details.SampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SubsampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.list.ImageListViewer;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
-import edu.rpi.metpetdb.client.ui.project.InviteUser;
 import edu.rpi.metpetdb.client.ui.project.MyInvites;
 import edu.rpi.metpetdb.client.ui.project.ProjectDescription;
 import edu.rpi.metpetdb.client.ui.project.ProjectInvite;
