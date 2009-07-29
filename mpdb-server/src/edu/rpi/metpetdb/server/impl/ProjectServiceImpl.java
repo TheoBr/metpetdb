@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
@@ -181,7 +182,14 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 			sampleList.add(s);
 		}
 		
-		p.setSamples(new HashSet(sampleList));
+		Set<Sample> currentSet = p.getSamples();
+		if(currentSet == null){
+			currentSet = new HashSet(sampleList);
+		} else {
+				currentSet.addAll(sampleList);
+		}
+		
+		p.setSamples(currentSet);
 		dao.save(p);
 		commit();
 		return p;

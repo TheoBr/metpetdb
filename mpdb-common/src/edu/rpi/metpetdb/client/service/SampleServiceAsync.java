@@ -47,4 +47,7 @@ public interface SampleServiceAsync {
 	void viewableCollectorsForUser(int userId, AsyncCallback<Set<String>> ac);
 	
 	void allSamplesForUser(long id, AsyncCallback<List<Sample>> ac);
+
+	void allSamplesForProject(PaginationParameters p, long projectId,
+			AsyncCallback<Results<Sample>> ac);
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -48,4 +49,7 @@ public interface SampleService extends RemoteService {
 	void delete(long id) throws MpDbException, LoginRequiredException;
 	
 	void deleteAll(Collection<Long> ids) throws MpDbException, LoginRequiredException;
+	
+	Results<Sample> allSamplesForProject(PaginationParameters p, long projectId) 
+		throws MpDbException, LoginRequiredException;
 }

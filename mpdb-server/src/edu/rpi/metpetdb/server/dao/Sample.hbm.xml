@@ -252,9 +252,137 @@
   	inner join s.projects as project with project.id = :id
   </query>
   <query name="Sample.forProject/number">
-  	select s from Sample s
-  	inner join s.projects as project with project.id = :id
-  	order by s.number
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by (lower(s.number))
+  </query>
+  <query name="Sample.forProject/id">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by s.id
+  </query>
+  <query name="Sample.forProject/sesarNumber">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by s.sesarNumber
+  </query>
+  <query name="Sample.forProject/owner">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by (lower(s.owner))
+  </query>
+  <query name="Sample.forProject/rockType">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by (lower(s.rockTypeName))
+  </query>
+  <query name="Sample.forProject/collectionDate">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by s.collectionDate
+  </query>
+  <query name="Sample.forProject/publicData">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by s.publicData
+  </query>
+  <query name="Sample.forProject/latitude">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by s.location
+  </query>
+  <query name="Sample.forProject/longitude">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by s.location
+  </query>
+  <query name="Sample.forProject/country">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by (lower(s.country))
+  </query>
+  <query name="Sample.forProject/subsampleCount">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by s.subsampleCount
+  </query>
+  <query name="Sample.forProject/imageCount">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by s.imageCount
+  </query>
+  <query name="Sample.forProject/analysisCount">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by s.analysisCount
+  </query>
+  <query name="Sample.forProject/collector">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by (lower(s.collector))
+  </query>
+  <query name="Sample.forProject/locationText">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by (lower(s.locationText))
+  </query>
+  <query name="Sample.forProject/regions">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by (s.firstRegion)
+  </query>
+  <query name="Sample.forProject/metamorphicGrades">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by (s.firstMetamorphicGrade)
+  </query>
+  <query name="Sample.forProject/references">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by (s.firstReference)
+  </query>
+  <query name="Sample.forProject/minerals">
+  	select s 
+  	from Sample as s
+  	join s.projects p
+	with p.id = :id
+  	order by (s.firstMineral)
   </query>
   
   <query name="Sample.Collectors/Collector">

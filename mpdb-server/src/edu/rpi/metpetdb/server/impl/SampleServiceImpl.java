@@ -57,6 +57,7 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	}
 
 	public Results<Sample> projectSamples(final PaginationParameters p, long id) throws MpDbException {
+		this.currentSession().disableFilter("samplePublicOrUser");
 		return (new SampleDAO(this.currentSession()).getProjectSamples(p, id));
 	}
 	
@@ -148,5 +149,12 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 				options.add(o[i].toString());
 		}
 		return options;
+	}
+
+	public Results<Sample> allSamplesForProject(PaginationParameters p,
+			long projectId) throws MpDbException, LoginRequiredException {
+		
+		
+		return null;
 	}
 }

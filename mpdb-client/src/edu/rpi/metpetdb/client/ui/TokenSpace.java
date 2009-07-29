@@ -1,7 +1,6 @@
 package edu.rpi.metpetdb.client.ui;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.user.client.HistoryListener;
@@ -36,14 +35,15 @@ import edu.rpi.metpetdb.client.ui.objects.details.ProjectDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SubsampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.list.ImageListViewer;
-import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
+import edu.rpi.metpetdb.client.ui.project.InviteUser;
 import edu.rpi.metpetdb.client.ui.project.MyInvites;
 import edu.rpi.metpetdb.client.ui.project.ProjectDescription;
 import edu.rpi.metpetdb.client.ui.project.ProjectInvite;
 import edu.rpi.metpetdb.client.ui.search.Search;
 import edu.rpi.metpetdb.client.ui.user.Confirmation;
 import edu.rpi.metpetdb.client.ui.user.EditUserProfile;
+import edu.rpi.metpetdb.client.ui.user.ProjectSamplesList;
 import edu.rpi.metpetdb.client.ui.user.RequestRoleChange;
 import edu.rpi.metpetdb.client.ui.user.ReviewRoleChanges;
 import edu.rpi.metpetdb.client.ui.user.UserDetails;
@@ -242,7 +242,7 @@ public class TokenSpace implements HistoryListener {
 		public void execute(final long id) {
 			new VoidLoggedInOp() {
 				public void command() {
-					show(new UserSamplesList());
+					show(new ProjectSamplesList(id));
 				}
 			}.begin();
 		}
