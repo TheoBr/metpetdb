@@ -151,13 +151,12 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 							if (projectListBox.getSelectedIndex() > 0) {
 								final Set<Object> checkedSampleIds =  list
 										.getSelectedValues().keySet();
-								final List<Sample> checkedSamples = new ArrayList<Sample>();
+								final List<Long> checkedSamples = new ArrayList<Long>();
 								for (Object id : checkedSampleIds){
-									Sample s = new Sample();
-									s.setId((Long) id);
-									checkedSamples.add(s);
+									checkedSamples.add((Long) id);
 								}
 								if (checkedSampleIds.size() > 0) {
+									//confirm that the user would like to add these samples to the project
 									new ServerOp<Boolean>() {
 										public void begin() {
 											new ConfirmationDialogBox(
@@ -175,23 +174,15 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 																		.getSelectedIndex()));
 												final Project proj = projects
 														.get(projectId);
-												proj
-														.setSamples(new HashSet<Sample>(
-																checkedSamples));
+												//Add selected samples to the project selected
 												new ServerOp<Project>() {
 													public void begin() {
-														MpDb.project_svc
-																.saveProject(
-																		proj,
-																		this);
+														MpDb.project_svc.addSamples(projectId, checkedSamples, this);
 													}
-
-													public void onSuccess(
-															Project result) {
+													public void onSuccess(final Project result) {
 														projects.put(projectId,
 																result);
 													}
-
 												}.begin();
 
 											}

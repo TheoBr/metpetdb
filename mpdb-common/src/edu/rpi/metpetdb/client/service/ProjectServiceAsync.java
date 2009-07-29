@@ -51,4 +51,6 @@ public interface ProjectServiceAsync {
 	void getProjectsForInvites(List<Invite> invites, AsyncCallback<Map<Invite,Project>> ac);
 	
 	void inviteDetails(int id, AsyncCallback<Invite> ac);
+
+	void addSamples(int projectId, List<Long> checkedSamples, AsyncCallback<Project> ac);
 }

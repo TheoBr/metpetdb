@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -162,5 +163,27 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	
 	public Invite inviteDetails(int id) throws MpDbException {
 		return (new InviteDAO(this.currentSession())).inviteDetails(id);
+	}
+
+	public Project addSamples(int projectId, List<Long> checkedSamples) throws MpDbException {
+		ProjectDAO dao = new ProjectDAO(this.currentSession());
+		Project p = new Project();
+		p.setId(projectId);
+		p = dao.fill(p);
+		
+		//Get all the real samples for each id
+		SampleDAO sampleDao = new SampleDAO(this.currentSession());
+		List<Sample> sampleList = new ArrayList<Sample>();
+		for(long id : checkedSamples){
+			Sample s = new Sample();
+			s.setId(id);
+			s = sampleDao.fill(s);
+			sampleList.add(s);
+		}
+		
+		p.setSamples(new HashSet(sampleList));
+		dao.save(p);
+		commit();
+		return p;
 	}
 }
