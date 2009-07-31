@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.server.search;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -32,7 +33,6 @@ import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.RegionDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
-import edu.rpi.metpetdb.server.impl.SampleServiceImpl;
 
 
 public class SearchIPhone extends HttpServlet{
@@ -41,6 +41,8 @@ public class SearchIPhone extends HttpServlet{
 	private static final String SOUTH_PARAMETER = "south";
 	private static final String WEST_PARAMETER=  "west";
 	private static final String EAST_PARAMETER= "east";
+	private static final String USERNAME_PARAMETER ="username";
+	private static final String PASSWORD_PARAMETER ="password";
 	private static final String SAMPLE_ID = "sampleId";
 	private static final String REGIONS = "regions";
 	private static final String ROCK_TYPES = "rockTypes";
@@ -52,14 +54,29 @@ public class SearchIPhone extends HttpServlet{
 
 	private Session session;
 	@Override
+	protected void doPost(final HttpServletRequest request,
+			final HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/plain");
+		byte[] postBytes= new byte[1024];
+		while(request.getInputStream().read(postBytes)!=-1)
+		{
+			String postText= new String(postBytes);
+			response.getWriter().write(postText);
+		}
+		if(request.getInputStream().read(postBytes)==-1)
+		{
+			response.getWriter().write("Done Reading Post");
+		}
+		
+	}
+	
 	protected void doGet(final HttpServletRequest request,
-			final HttpServletResponse response) throws ServletException {
+			final HttpServletResponse response) throws ServletException  {
 		response.setContentType("text/xml");
 		
 		List<Long> sampleIds = new ArrayList<Long>();
 		session = DataStore.open();
 		try{
-		
 			// If there is a GET string for latitude and longitude then it is a search
 			if (request.getParameter(NORTH_PARAMETER) != null && request.getParameter(SOUTH_PARAMETER) != null && request.getParameter(WEST_PARAMETER)!= null && request.getParameter(EAST_PARAMETER) != null) {
 				double north = Double.parseDouble(request.getParameterValues (NORTH_PARAMETER)[0]);
