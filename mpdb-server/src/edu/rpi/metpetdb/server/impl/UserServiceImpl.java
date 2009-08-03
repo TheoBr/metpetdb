@@ -40,7 +40,7 @@ import edu.rpi.metpetdb.server.security.permissions.principals.OwnerPrincipal;
 public class UserServiceImpl extends MpDbServlet implements UserService {
 	private static final long serialVersionUID = 1L;
 
-	private static boolean authenticate(final User u, final String pw) {
+	public static boolean authenticate(final User u, final String pw) {
 		return PasswordEncrypter.verify(u.getEncryptedPassword(), pw);
 	}
 

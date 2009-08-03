@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -26,6 +27,7 @@ import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
@@ -33,10 +35,12 @@ import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.RegionDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
+import edu.rpi.metpetdb.server.impl.SampleCommentServiceImpl;
+import edu.rpi.metpetdb.server.impl.UserServiceImpl;
 
 
 public class SearchIPhone extends HttpServlet{
-	private static final long serialVersionUID = 1L;
+	/*private static final long serialVersionUID = 1L;
 	private static final String NORTH_PARAMETER = "north";
 	private static final String SOUTH_PARAMETER = "south";
 	private static final String WEST_PARAMETER=  "west";
@@ -50,27 +54,140 @@ public class SearchIPhone extends HttpServlet{
 	private static final String COMMENTS = "comments";
 	private static final String SUBSAMPLE_INFO="subsampleInfo";
 	private static final String THUMBNAILS="thumbnails";
-	private static final String LARGE_IMAGE="large_image";
+	private static final String LARGE_IMAGE="large_image";*/
 
 	private Session session;
 	@Override
+
 	protected void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/plain");
+		response.setContentType("text/xml");
 		byte[] postBytes= new byte[1024];
+		String postText= new String();
+		List<Long> sampleIds = new ArrayList<Long>();
+		session = DataStore.open();
+		try{
 		while(request.getInputStream().read(postBytes)!=-1)
 		{
-			String postText= new String(postBytes);
-			response.getWriter().write(postText);
+			String temp= new String(postBytes);
+			postText+=temp;
 		}
-		if(request.getInputStream().read(postBytes)==-1)
+		Scanner scanner = new Scanner(request.getInputStream());
+		//test to see what the first word of the input is and call the functions in the rest of the 
+		//file accordingly
+		if(scanner.hasNext("username="))
 		{
-			response.getWriter().write("Done Reading Post");
+			scanner.next();
+			String username=scanner.next().trim();
+			if(scanner.hasNext("password="))
+			{
+				scanner.next();
+				String password= scanner.next().trim();
+				UserServiceImpl userImpl= new UserServiceImpl();
+				User u= new User();
+				u= userImpl.details(username);
+				if(userImpl.authenticate(u, password))
+				{
+					response.getWriter().write("authentication succeeded");
+				}
+				else
+				{
+					response.getWriter().write("authentication failed");
+				}
+			}
 		}
-		
+		if(scanner.hasNext("coordinates="))
+		{
+			scanner.next();
+			double north= Double.valueOf(scanner.next().trim());
+			double south= Double.valueOf(scanner.next().trim());
+			double east= Double.valueOf(scanner.next().trim());
+			double west= Double.valueOf(scanner.next().trim());
+			
+			System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
+			outputSearchXML(search(north,south, east, west, session),response);
+		}
+		else if(scanner.hasNext("searchRegion="))
+		{
+			scanner.next();
+			Set<String> regions = new HashSet<String>();
+			String newRegion= new String();
+			while(scanner.hasNext())
+			{
+				newRegion+= scanner.next().trim();
+			}
+			regions.add(newRegion);
+			outputSearchXML(search(regions, session),response);
+		}
+		else if(scanner.hasNext("sampleID="))
+		{
+			scanner.next();
+			sampleIds.add(Long.parseLong(scanner.next().trim()));
+			sampleInfo(sampleIds,response);
+		}
+		else if(scanner.hasNext("regions"))
+		{
+			regions(response);
+		}
+		else if(scanner.hasNext("rockTypes"))
+		{
+			rockTypes(response);
+		}
+		else if(scanner.hasNext("comments="))
+		{
+			scanner.next();
+			//the number following comments= will be the id of the sample we want comments for
+			long id= Long.parseLong(scanner.next().trim());
+			comments(response, id);
+		}
+		else if(scanner.hasNext("subsampleInfo="))
+		{
+			scanner.next();
+			//the number following subsampleInfo= will be the id of the sample we want comments for
+			long id= Long.parseLong(scanner.next().trim());
+			subsampleInfo(response, id);
+		}
+		else if(scanner.hasNext("thumbnails="))
+		{
+			scanner.next();
+			//the number following the thumbnails= will be the id of the sample we want thumbnails for
+			long id=Long.parseLong(scanner.next().trim());
+			get_thumbnails(response, id);
+		}
+		else if(scanner.hasNext("largeImage="))
+		{
+			scanner.next();
+			//the number following the largeImage= will be id of the image we want to enlarge
+			long imageID= Long.parseLong(scanner.next().trim());
+			get_large_image(response, imageID);
+		}
+		else if(scanner.hasNext("addComment"))
+		{
+			scanner.next();
+			//the number following addComment will be the id of the sample we want to add a comment to
+			long id= Long.parseLong(scanner.next().trim());
+			//the text following the id is the string make a comment out of
+			String comment= new String();
+			while(scanner.hasNext())
+			{
+				comment+= scanner.next().trim();
+				comment+= " ";
+			}
+			SampleComment newComment= new SampleComment();
+			SampleCommentServiceImpl commentImpl= new SampleCommentServiceImpl();
+			commentImpl.save(newComment);
+			response.getWriter().write("Comment Added");
+		}
+	}
+		catch(Exception e){
+			throw new IllegalStateException(e.getMessage());
+		} finally {
+			session.close();
+		}
 	}
 	
-	protected void doGet(final HttpServletRequest request,
+	
+	/*protected void doGet(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException  {
 		response.setContentType("text/xml");
 		
@@ -135,7 +252,7 @@ public class SearchIPhone extends HttpServlet{
 			session.close();
 		}
 	}
-		
+		*/
 	private void rockTypes(HttpServletResponse response){
 		try {
 			DatabaseObjectConstraints doc = DataStore.getInstance().getDatabaseObjectConstraints();		
