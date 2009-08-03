@@ -2,9 +2,9 @@ package edu.rpi.metpetdb.client.ui.search;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -30,6 +30,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabProv
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabRockTypes;
 import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisList;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
+import edu.rpi.metpetdb.client.ui.plot.PlotInterface;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
 public class Search extends MPagePanel {
@@ -42,7 +43,7 @@ public class Search extends MPagePanel {
 
 	private final static FlowPanel samplesContainer = new FlowPanel();
 	private final static FlowPanel chemContainer = new FlowPanel();
-//	private final static FlowPanel plotContainer = new FlowPanel();
+	private final static FlowPanel plotContainer = new FlowPanel();
 	private final static ObjectSearchPanel searchPanel;
 	private final static SearchInterface sui = new SearchInterface(searchTabs);
 	private static boolean outputSamples = true;
@@ -108,12 +109,14 @@ public class Search extends MPagePanel {
 
 	};
 	
-//	private final static PlotInterface pi = new PlotInterface();
+	private final static PlotInterface pi = new PlotInterface(chemList);
 
 	static {
 		samplesContainer.add(sampleList);
 		chemContainer.add(chemList);
-//		plotContainer.add(pi.getWidget());
+		if (!GWT.getHostPageBaseURL().contains("metpetweb") || GWT.getHostPageBaseURL().contains("metpetwebtst")){
+			chemContainer.add(pi.getWidget());
+		}
 		searchPanel.edit(ss);
 		chemContainer.setVisible(!outputSamples);
 		samplesContainer.setVisible(outputSamples);
@@ -125,7 +128,7 @@ public class Search extends MPagePanel {
 		add(searchPanel);
 		add(samplesContainer);
 		add(chemContainer);
-//		add(plotContainer);
+		add(plotContainer);
 	}
 
 	public void reload() {

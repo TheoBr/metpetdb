@@ -149,7 +149,7 @@ public class ProjectListActions extends FlowPanel implements ClickListener {
 	public void onClick(Widget sender) {
 		if (sender == remove) {
 			final ArrayList<Integer> checkedProjectIds = new ArrayList<Integer>();
-			for (Object id : list.getSelectedValues().keySet()){
+			for (Object id : list.getSelectedValues()){
 				checkedProjectIds.add((Integer) id);
 			}
 			if (checkedProjectIds.size() == 0){
@@ -158,7 +158,7 @@ public class ProjectListActions extends FlowPanel implements ClickListener {
 				new ServerOp<List<Project>>() {
 					public void begin(){
 						List<Integer> ids = new ArrayList<Integer>();
-						for (Object o :  list.getSelectedValues().keySet()){
+						for (Object o :  list.getSelectedValues()){
 							ids.add((Integer) o);
 						}
 						MpDb.project_svc.details(ids, this);

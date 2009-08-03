@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.gen2.table.client.DefaultTableDefinition;
 import com.google.gwt.gen2.table.client.TableModel;
@@ -259,8 +260,8 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 		dataTable.addRowSelectionHandler(handler);
 	}
 
-	public Map<Object,Boolean> getSelectedValues() {
-		return tableSelections;	
+	public Set<Object> getSelectedValues() {
+		return tableSelections.keySet();	
 	}
 
 	public RowType getRowValue(int row) {

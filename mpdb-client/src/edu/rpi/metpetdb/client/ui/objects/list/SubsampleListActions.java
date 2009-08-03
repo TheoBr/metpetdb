@@ -196,7 +196,7 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 							new ServerOp<List<Subsample>>() {
 								public void begin(){
 									List<Long> ids = new ArrayList<Long>();
-									for (Object o :  list.getSelectedValues().keySet()){
+									for (Object o :  list.getSelectedValues()){
 										ids.add((Long) o);
 									}
 									MpDb.subsample_svc.details(ids, this);
@@ -213,7 +213,7 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 			}
 		} else if (sender == remove) {
 			final ArrayList<Long> checkedSubsampleIds = new ArrayList<Long>();
-			for (Object id : list.getSelectedValues().keySet()){
+			for (Object id : list.getSelectedValues()){
 				checkedSubsampleIds.add((Long) id);
 			}
 			if (checkedSubsampleIds.size() == 0){
@@ -222,7 +222,7 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 				new ServerOp<List<Subsample>>() {
 					public void begin(){
 						List<Long> ids = new ArrayList<Long>();
-						for (Object o :  list.getSelectedValues().keySet()){
+						for (Object o :  list.getSelectedValues()){
 							ids.add((Long) o);
 						}
 						MpDb.subsample_svc.details(ids, this);

@@ -69,7 +69,7 @@ public class ChooseImageDialog extends MDialogBox implements ClickListener {
 			if (continuation != null && list.getSelectedValues().size() > 0) {
 				new ServerOp<Image>(){
 					public void begin(){
-						Iterator<Object> itr = list.getSelectedValues().keySet().iterator();
+						Iterator<Object> itr = list.getSelectedValues().iterator();
 						MpDb.image_svc.details((Long)itr.next(), this);
 					}
 					

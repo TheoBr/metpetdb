@@ -23,7 +23,7 @@ import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 
 public class MGoogleEarthPopUp extends MDialogBox{
 	public MGoogleEarthPopUp(){
-		
+		super(false,false);
 	}
 	
 	public void createUI(final List<Sample> list){

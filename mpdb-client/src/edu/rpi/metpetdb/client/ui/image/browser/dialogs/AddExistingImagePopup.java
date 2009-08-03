@@ -63,7 +63,7 @@ public class AddExistingImagePopup extends PopupPanel {
 				new ServerOp<List<Image>>(){
 					public void begin(){
 						List<Long> ids = new ArrayList<Long>();
-						for (Object id : list.getSelectedValues().keySet()){
+						for (Object id : list.getSelectedValues()){
 							ids.add((Long) id);
 						}
 						MpDb.image_svc.details(ids, this);

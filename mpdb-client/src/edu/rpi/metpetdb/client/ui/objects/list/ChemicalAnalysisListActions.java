@@ -160,7 +160,7 @@ public class ChemicalAnalysisListActions extends FlowPanel implements ClickListe
 	public void onClick(Widget sender) {
 		if (sender == remove) {
 			final ArrayList<Integer> checkedAnalysesIds = new ArrayList<Integer>();
-			for (Object id : list.getSelectedValues().keySet()){
+			for (Object id : list.getSelectedValues()){
 				checkedAnalysesIds.add((Integer) id);
 			}
 			if (checkedAnalysesIds.size() == 0){

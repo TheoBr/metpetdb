@@ -128,7 +128,7 @@ public class ProjectMemberListActions extends FlowPanel implements ClickListener
 	public void onClick(Widget sender) {
 		if (sender == remove) {
 			final ArrayList<Integer> checkedProjectIds = new ArrayList<Integer>();
-			for (Object id : list.getSelectedValues().keySet()){
+			for (Object id : list.getSelectedValues()){
 				checkedProjectIds.add((Integer) id);
 			}
 			if (checkedProjectIds.size() == 0){

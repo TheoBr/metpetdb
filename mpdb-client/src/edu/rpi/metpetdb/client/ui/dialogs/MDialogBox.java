@@ -12,6 +12,15 @@ import edu.rpi.metpetdb.client.ui.JS;
 public class MDialogBox extends DialogBox implements PopupListener,
 		WindowResizeListener {
 	private GlassPanel glassPanel;
+	
+	public MDialogBox(boolean autohide, boolean modal) {
+		super(autohide,modal);
+		addPopupListener(this);
+		super.setHTML("&nbsp;");
+
+		DOM.setStyleAttribute(this.getElement(), "zIndex", String.valueOf(1000));
+		glassPanel = new GlassPanel(false);
+	}
 
 	public MDialogBox() {
 		addPopupListener(this);

@@ -150,7 +150,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 						public void onChange(Widget sender) {
 							if (projectListBox.getSelectedIndex() > 0) {
 								final Set<Object> checkedSampleIds =  list
-										.getSelectedValues().keySet();
+										.getSelectedValues();
 								final List<Long> checkedSamples = new ArrayList<Long>();
 								for (Object id : checkedSampleIds){
 									checkedSamples.add((Long) id);
@@ -246,7 +246,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 			@Override
 			public void begin() {
 				final ArrayList<Long> checkedSampleIds = new ArrayList<Long>();
-				for (Object id : list.getSelectedValues().keySet()){
+				for (Object id : list.getSelectedValues()){
 					checkedSampleIds.add((Long) id);
 				}
 				MpDb.sample_svc.details(checkedSampleIds, this);
@@ -272,7 +272,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 			@Override
 			public void begin() {
 				final ArrayList<Long> checkedSampleIds = new ArrayList<Long>();
-				for (Object id : list.getSelectedValues().keySet()){
+				for (Object id : list.getSelectedValues()){
 					checkedSampleIds.add((Long) id);
 				}
 				MpDb.sample_svc.details(checkedSampleIds, this);
@@ -310,7 +310,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 			@Override
 			public void begin() {
 				final ArrayList<Long> checkedSampleIds = new ArrayList<Long>();
-				for (Object id : list.getSelectedValues().keySet()){
+				for (Object id : list.getSelectedValues()){
 					checkedSampleIds.add((Long) id);
 				}
 				MpDb.sample_svc.details(checkedSampleIds, this);
@@ -408,7 +408,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 			new ServerOp<List<Sample>>() {
 				public void begin(){
 					List<Long> ids = new ArrayList<Long>();
-					for (Object o :  list.getSelectedValues().keySet()){
+					for (Object o :  list.getSelectedValues()){
 						ids.add((Long) o);
 					}
 					MpDb.sample_svc.details(ids, this);
@@ -422,7 +422,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 			
 		} else if (sender == remove) {
 			final ArrayList<Long> checkedSampleIds = new ArrayList<Long>();
-			for (Object id : list.getSelectedValues().keySet()){
+			for (Object id : list.getSelectedValues()){
 				checkedSampleIds.add((Long) id);
 			}
 			if(checkedSampleIds.size() == 0){
@@ -431,7 +431,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 				new ServerOp<List<Sample>>() {
 					public void begin(){
 						List<Long> ids = new ArrayList<Long>();
-						for (Object o :  list.getSelectedValues().keySet()){
+						for (Object o :  list.getSelectedValues()){
 							ids.add((Long) o);
 						}
 						MpDb.sample_svc.details(ids, this);
