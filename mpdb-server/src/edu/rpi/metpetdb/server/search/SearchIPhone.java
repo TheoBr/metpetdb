@@ -72,7 +72,12 @@ public class SearchIPhone extends HttpServlet{
 			String temp= new String(postBytes);
 			postText+=temp;
 		}
-		Scanner scanner = new Scanner(postText);
+		Scanner scanner = new Scanner(request.getInputStream());
+		
+		String responseString="<";
+		responseString+= postText;
+		responseString+= ">";
+		response.getWriter().write(responseString);
 		//test to see what the first word of the input is and call the functions in the rest of the 
 		//file accordingly
 		if(scanner.hasNext("username="))
