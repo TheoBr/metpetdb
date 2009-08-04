@@ -7,9 +7,11 @@ import org.hibernate.Session;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 import edu.rpi.metpetdb.server.util.ImageUtil;
 
@@ -43,6 +45,16 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 			q.setParameter("name", inst.getName());
 			if (getResult(q) != null)
 				return (Subsample) getResult(q);
+		}
+		
+		//Those may have failed because of a filter even if it should be visible
+		if(inst.getId() > 0 && (new ProjectDAO(sess)).isSampleVisibleToUser(MpDbServlet.currentReq().user.getId(), inst.getSample().getId())){
+			//don't worry about infinite loops because if isSampleVisible succeeds, fill will definitely succeed.
+			sess.disableFilter("subsamplePublicOrUser");
+			Subsample result = fill(inst);
+			sess.enableFilter("subsamplePublicOrUser").setParameter(
+					"userId", MpDbServlet.currentReq().user.getId());
+			return result;
 		}
 
 		throw new SubsampleNotFoundException();

@@ -12,6 +12,7 @@ import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 import edu.rpi.metpetdb.server.util.ImageUtil;
 
@@ -46,6 +47,16 @@ public class SampleDAO extends MpDbDAO<Sample> {
 			if (getResult(q) != null)
 				return (Sample) getResult(q);
 		}
+		
+		//Those may have failed because of a filter even if it should be visible
+		if(inst.getId() > 0 && (new ProjectDAO(sess)).isSampleVisibleToUser(MpDbServlet.currentReq().user.getId(), inst.getId())){
+			//don't worry about infinite loops because if isSampleVisible succeeds, fill will definitely succeed.
+			sess.disableFilter("samplePublicOrUser");
+			Sample result = fill(inst);
+			sess.enableFilter("samplePublicOrUser").setParameter(
+					"userId", MpDbServlet.currentReq().user.getId());
+			return result;
+		}
 
 		throw new SampleNotFoundException(inst);
 	}
@@ -77,7 +88,8 @@ public class SampleDAO extends MpDbDAO<Sample> {
 			long id) throws MpDbException {
 		final Query sizeQ = sizeQuery("Sample.forProject", id);
 		final Query pageQ = pageQuery("Sample.forProject", p, id);
-		return getSamples(sizeQ, pageQ);
+		Results<Sample> results = getSamples(sizeQ, pageQ);
+		return results;
 	}
 
 	public Results<Sample> getAllPublicSamples(final PaginationParameters p) throws MpDbException {

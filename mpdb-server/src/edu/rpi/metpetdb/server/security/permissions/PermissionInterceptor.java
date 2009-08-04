@@ -4,12 +4,15 @@ import java.io.Serializable;
 import java.security.Principal;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.hibernate.CallbackException;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.Session;
 import org.hibernate.type.Type;
 
+import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.security.AccountNotEnabledException;
 import edu.rpi.metpetdb.client.error.security.CannotCreateRoleChangeException;
 import edu.rpi.metpetdb.client.error.security.CannotLoadPrivateDataException;
@@ -18,6 +21,8 @@ import edu.rpi.metpetdb.client.error.security.CannotLoadRoleChangeException;
 import edu.rpi.metpetdb.client.error.security.CannotSaveDataException;
 import edu.rpi.metpetdb.client.error.security.NotOwnerException;
 import edu.rpi.metpetdb.client.error.security.UnableToModifyPublicDataException;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.RoleChange;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleComment;
@@ -29,6 +34,8 @@ import edu.rpi.metpetdb.client.model.interfaces.HasSubsample;
 import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.ProjectDAO;
+import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.security.Action;
 import edu.rpi.metpetdb.server.security.permissions.principals.AdminPrincipal;
 import edu.rpi.metpetdb.server.security.permissions.principals.OwnerPrincipal;
@@ -43,7 +50,34 @@ public class PermissionInterceptor extends EmptyInterceptor {
 	public PermissionInterceptor() {
 
 	}
-
+	
+	/**This gets called any time a user tries to load an object that it has already been determined that they do not
+	 * own. This checks to see if that object belongs to a project that they are a member of, thus giving them
+	 * permission to load the object.
+	 *
+	 * @throws MpDbException 
+	 */
+	private boolean isInProjectUserBelongsTo(Object entity) throws MpDbException{
+		if(entity instanceof Sample || entity instanceof Subsample || entity instanceof ChemicalAnalysis){
+			//Identify what this entity is and get the owning sampleId
+			long sampleId = 0;
+			if (entity instanceof Sample){
+				sampleId = ((Sample) entity).getId();
+			} else if (entity instanceof Subsample){
+				sampleId = ((Subsample) entity).getSample().getId();
+			} else if (entity instanceof ChemicalAnalysis){
+				sampleId = ((ChemicalAnalysis) entity).getSample().getId();
+			}
+			//See if this sample is visible via project membership
+			Session sess = DataStore.open();
+			User u = MpDbServlet.currentReq().user;
+			ProjectDAO pDAO = (new ProjectDAO(sess));
+			boolean result = pDAO.isSampleVisibleToUser(u.getId(), sampleId);
+			sess.close();
+			return result;
+		}
+		return false;
+	}
 	/**
 	 * Checks if the current user is the owner of the entity, if they are they
 	 * are safe, if not an exception is thrown
@@ -62,8 +96,13 @@ public class PermissionInterceptor extends EmptyInterceptor {
 		if (entity instanceof HasOwner && !(entity instanceof SampleComment)) {
 			if (!principals.contains(new OwnerPrincipal(getOwnerId(
 					propertyNames, state)))) {
-				// only let the owner load it
-				throw new CallbackException(new NotOwnerException());
+				try {
+					if(!isInProjectUserBelongsTo(entity)){
+						throw new CallbackException(new NotOwnerException());
+					}
+				} catch (MpDbException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -157,9 +196,9 @@ public class PermissionInterceptor extends EmptyInterceptor {
 									.get(usersRank)
 									.contains(
 											Privilages.LOAD_OTHERS_PRIVATE_DATA)) {
-								checkOwner(entity, state, propertyNames,
+									checkOwner(entity, state, propertyNames,
 										principals);
-								checkOwningObject(entity, state, propertyNames);
+									checkOwningObject(entity, state, propertyNames);
 							}
 						} else {
 							// user cannot load private data

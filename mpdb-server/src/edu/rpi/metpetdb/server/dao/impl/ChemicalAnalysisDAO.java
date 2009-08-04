@@ -9,8 +9,10 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.ChemicalAnalysisNotFoundException;
 import edu.rpi.metpetdb.client.error.dao.ReferenceNotFoundException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 
 public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
@@ -41,6 +43,16 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 			q.setString("spotId", inst.getSpotId());
 			if (getResult(q) != null)
 				return (ChemicalAnalysis) getResult(q);
+		}
+		
+		//Those may have failed because of a filter even if it should be visible
+		if(inst.getId() > 0 && (new ProjectDAO(sess)).isSampleVisibleToUser(MpDbServlet.currentReq().user.getId(), inst.getSample().getId())){
+			//don't worry about infinite loops because if isSampleVisible succeeds, fill will definitely succeed.
+			sess.disableFilter("chemicalAnalysisPublicOrUser");
+			ChemicalAnalysis result = fill(inst);
+			sess.enableFilter("chemicalAnalysisPublicOrUser").setParameter(
+					"userId", MpDbServlet.currentReq().user.getId());
+			return result;
 		}
 
 		throw new ChemicalAnalysisNotFoundException();

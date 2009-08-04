@@ -106,6 +106,12 @@
     order by p.owner
   </query>
   
+  <query name="Project.bySampleId">
+  	Select p
+  	from Project p
+  	inner join p.samples as sample with sample.id = :sampleId
+  </query>
+  
   <query name="Project.samples,size">
   	select count(*) from Project p
   	inner join p.samples

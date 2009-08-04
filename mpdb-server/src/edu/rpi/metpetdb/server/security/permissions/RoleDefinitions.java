@@ -25,6 +25,9 @@ public class RoleDefinitions {
 		roleDefinitions.get(1).add(Privilages.SAVE_PRIVATE_DATA);
 		roleDefinitions.get(1).add(Privilages.SAVE_OWN_PUBLIC_DATA);
 		roleDefinitions.get(1).addAll(roleDefinitions.get(0));
+		//Project Member - temporary rank given while viewing project data
+		roleDefinitions.get(2).addAll(roleDefinitions.get(1));
+		roleDefinitions.get(2).add(Privilages.LOAD_OTHERS_PRIVATE_DATA);
 	}
 
 }

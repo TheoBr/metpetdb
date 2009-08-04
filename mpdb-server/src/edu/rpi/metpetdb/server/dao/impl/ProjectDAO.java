@@ -104,4 +104,23 @@ public class ProjectDAO extends MpDbDAO<Project> {
 		q.setParameter("id", projectId);
 		return (List<Long>) getResults(q);
 	}
+	
+	public boolean isSampleVisibleToUser(final int userId, final long sampleId) throws MpDbException{
+		//Get list of projects that sample belongs to
+		final Query q = namedQuery("Project.bySampleId");
+		q.setLong("sampleId", sampleId);
+		List<Project> projects =  getResults(q);
+		
+		//Get list of projects that user has access to
+		final Query q2 = namedQuery("Project.byMemberId");
+		q2.setLong("id", userId);
+		List<Project> memberProjects = getResults(q2);
+		
+		//See if any are the same
+		for(Project p : projects) {
+			if(memberProjects.contains(p)) return true;
+		}
+		
+		return false;
+	}
 }
