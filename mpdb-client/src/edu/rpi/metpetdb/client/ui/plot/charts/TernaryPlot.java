@@ -69,8 +69,11 @@ public class TernaryPlot extends MPlot {
 		container = new FlowPanel();
 		container.add(canvas);	
 		defaultBottomAxis = new MAxis();
+		defaultBottomAxis.setLabel(new MAxisLabel("3"));
 		defaultLeftAxis = new MAxis();
+		defaultLeftAxis.setLabel(new MAxisLabel("1"));
 		defaultRightAxis = new MAxis();
+		defaultRightAxis.setLabel(new MAxisLabel("2"));
 		bottomMajorTicks = new ArrayList<Line>();
 		bottomMinorTicks = new ArrayList<Line>();
 		bottomMicroTicks = new ArrayList<Line>();
@@ -287,8 +290,7 @@ public class TernaryPlot extends MPlot {
 			canvas.remove(bottomLabel);
 		if (defaultBottomAxis.getLabelOrientation().equals(MAxis.LabelOrientation.HORIZONTAL)){
 			bottomLabel = new Text(defaultBottomAxis.getLabel().getText());
-			double x = rightBoundary+leftBoundary-(bottomLabel.getWidth()/1.5);
-//			double x = 5+(rightBoundary-bottomLabel.getWidth())/2;
+			double x = rightBoundary-(bottomLabel.getWidth()/2)+10;
 			double y = sideLength+25;
 			canvas.add(bottomLabel,(int)x,(int)y);
 		}
@@ -466,9 +468,7 @@ public class TernaryPlot extends MPlot {
 			canvas.remove(leftLabel);
 		if (defaultLeftAxis.getLabelOrientation().equals(MAxis.LabelOrientation.HORIZONTAL)){
 			leftLabel = new Text(defaultLeftAxis.getLabel().getText());
-//			double x = (rightBoundary/4-(int)leftLabel.getWidth()/2)-20;
-//			double y = sideLength/2;
-			double x = 0;//leftBoundary-(bottomLabel.getWidth()/2);
+			double x = leftBoundary-10;
 			double y = sideLength+25;
 			canvas.add(leftLabel,(int) x, (int)y);
 		}
@@ -589,8 +589,6 @@ public class TernaryPlot extends MPlot {
 			canvas.remove(rightLabel);
 		if (defaultRightAxis.getLabelOrientation().equals(MAxis.LabelOrientation.HORIZONTAL)){
 			rightLabel = new Text(defaultRightAxis.getLabel().getText());
-//			double x = (3*(rightBoundary/4)+(int)rightLabel.getWidth()/2)+10;
-//			double y = sideLength/2;
 			double x = center-(rightLabel.getWidth()/2);
 			double y = top-25;
 			canvas.add(rightLabel,(int)x,(int)y);

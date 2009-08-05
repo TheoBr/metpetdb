@@ -124,7 +124,7 @@ public class AxisFormula {
 		for (AxisFormulaOxide afo : oxides){
 			if (afo.getCoefficient() != 0){
 				label += ((label.length() > 0) ? " + " : "") + afo.getCoefficient() + 
-							"*" + afo.getOxide().getDisplayName();
+							"*" + afo.getOxide().getSpecies();
 			}
 		}
 		return label;

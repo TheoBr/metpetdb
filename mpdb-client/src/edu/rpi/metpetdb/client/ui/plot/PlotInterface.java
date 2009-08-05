@@ -193,9 +193,9 @@ public class PlotInterface implements ClickListener, ChangeListener{
 				} else if (sender == twoAxes){
 					onGraphTypeChange(new ScatterPlot());
 				} else if (sender == threeAxes){
-					onGraphTypeChange(new TernaryPlot(600,600,500));
+					onGraphTypeChange(new TernaryPlot(700,700,500));
 				} else if (sender == fourAxes){
-					onGraphTypeChange(new TetrahedralPlot());
+					onGraphTypeChange(new TetrahedralPlot(700,700,400));
 					final TextBox x = new TextBox();
 					final TextBox y = new TextBox();
 					final TextBox z = new TextBox();
@@ -207,10 +207,19 @@ public class PlotInterface implements ClickListener, ChangeListener{
 									Double.parseDouble(z.getText()));
 						}
 					});
+					Button getCurrent = new Button("Update");
+					getCurrent.addClickListener(new ClickListener(){
+						public void onClick(final Widget sender){
+							x.setText(String.valueOf(((TetrahedralPlot)currentGraph).theta.getX()*180/Math.PI));
+							y.setText(String.valueOf(((TetrahedralPlot)currentGraph).theta.getY()*180/Math.PI));
+							z.setText(String.valueOf(((TetrahedralPlot)currentGraph).theta.getZ()*180/Math.PI));
+						}
+					});
 					axisContainer.add(x);
 					axisContainer.add(y);
 					axisContainer.add(z);
 					axisContainer.add(draw);
+					axisContainer.add(getCurrent);
 				} else if (sender == help){
 					//TODO popup with some help 
 				}
