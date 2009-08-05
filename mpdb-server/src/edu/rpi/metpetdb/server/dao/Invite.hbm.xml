@@ -31,4 +31,9 @@
     from Invite i
     where user_id = :user_id
   </query>
+  
+  <query name="Invite.byProjectId">
+  	from Invite i
+  	where project_id = :project_id
+  </query>
 </hibernate-mapping>

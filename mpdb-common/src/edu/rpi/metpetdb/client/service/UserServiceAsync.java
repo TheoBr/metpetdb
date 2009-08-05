@@ -57,4 +57,6 @@ public interface UserServiceAsync {
 	
 	public void approveRoleChange(RoleChange rc, AsyncCallback<Void> ac);
 	public void denyRoleChange(RoleChange rc, AsyncCallback<Void> ac);
+
+	void userById(int user_id, AsyncCallback<User> ac);
 }

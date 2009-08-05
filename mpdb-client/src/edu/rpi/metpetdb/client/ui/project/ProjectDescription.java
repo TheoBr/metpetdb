@@ -42,6 +42,7 @@ public class ProjectDescription extends MPagePanel{
 				add(new Label("Creator: " + result.getOwner().getName()));
 				add(new Label(result.getDescription()));
 				addPageActionItem(new MLink("Invite Member", TokenSpace.sendNewInvite(result)));
+				addPageActionItem(new MLink("View Status of Invites", TokenSpace.viewInviteStatus(result)));
 				
 				list = new ProjectMemberList() {
 					public void update(final PaginationParameters p,

@@ -72,6 +72,8 @@ public interface ProjectService extends RemoteService {
 	
 	List<Invite> getInvitesForUser(int id) throws MpDbException;
 	
+	List<Invite> getInvitesForProject(long id) throws MpDbException;
+	
 	Map<Invite,Project> getProjectsForInvites(List<Invite> invites) throws MpDbException;
 	
 	Invite inviteDetails(int id) throws MpDbException;

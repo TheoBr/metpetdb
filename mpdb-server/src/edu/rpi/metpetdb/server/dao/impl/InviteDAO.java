@@ -44,6 +44,12 @@ public class InviteDAO extends MpDbDAO<Invite> {
 		q.setInteger("user_id", id);
 		return (List<Invite>) getResults(q);
 	}
+	
+	public List<Invite> getInvitesForProject(long id) throws MpDbException {
+		Query q = namedQuery("Invite.byProjectId");
+		q.setLong("project_id", id);
+		return (List<Invite>) getResults(q);
+	}
 
 	public void acceptInvite(Invite i, User u) throws MpDbException {
 		Project p = new Project();

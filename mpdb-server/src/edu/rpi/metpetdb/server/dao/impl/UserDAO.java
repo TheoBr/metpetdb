@@ -87,4 +87,11 @@ public class UserDAO extends MpDbDAO<User> {
 		return inst;
 	}
 
+	public User getNameById(int user_id) throws MpDbException {
+		User u = new User();
+		u.setId(user_id);
+		u = fill(u);
+		return u;
+	}
+
 }

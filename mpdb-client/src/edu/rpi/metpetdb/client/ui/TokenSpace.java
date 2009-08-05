@@ -36,6 +36,7 @@ import edu.rpi.metpetdb.client.ui.objects.details.SampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.details.SubsampleDetails;
 import edu.rpi.metpetdb.client.ui.objects.list.ImageListViewer;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleListEx;
+import edu.rpi.metpetdb.client.ui.project.InviteStatus;
 import edu.rpi.metpetdb.client.ui.project.MyInvites;
 import edu.rpi.metpetdb.client.ui.project.ProjectDescription;
 import edu.rpi.metpetdb.client.ui.project.ProjectInvite;
@@ -319,6 +320,16 @@ public class TokenSpace implements HistoryListener {
 		}
 	};
 	
+	public static final TokenHandler projectViewInvites = new IKey(
+			LocaleHandler.lc_entity.TokenSpace_Project_View_Invites()) {
+		public int get(final Object obj) {
+			return ((Project) obj).getId();
+		}
+		public void execute(final int id) {
+			show(new InviteStatus().showById(id));
+		}
+	};
+	
 	
 	private static final TokenHandler newSubsample = new LKey(
 			LocaleHandler.lc_entity.TokenSpace_Enter_Subsample()) {
@@ -453,6 +464,7 @@ public class TokenSpace implements HistoryListener {
 		register(enterSample);
 		register(newProject);
 		register(projectInvite);
+		register(projectViewInvites);
 		register(bulkUpload);
 		register(search);
 		register(ImageListViewer);
@@ -524,6 +536,10 @@ public class TokenSpace implements HistoryListener {
 	
 	public static String sendNewInvite(final Project p) {
 		return projectInvite.makeToken(p);
+	}
+	
+	public static String viewInviteStatus(final Project p) {
+		return projectViewInvites.makeToken(p);
 	}
 
 	public static String ViewOf(final Subsample p) {
@@ -601,4 +617,6 @@ public class TokenSpace implements HistoryListener {
 	}
 
 	private TokenSpace() {}
+
+	
 }

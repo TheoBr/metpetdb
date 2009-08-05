@@ -348,4 +348,8 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 						rc.getGrantReason()
 				});
 	}
+
+	public User userById(int user_id) throws MpDbException {
+		return (new UserDAO(currentSession()).getNameById(user_id));
+	}
 }

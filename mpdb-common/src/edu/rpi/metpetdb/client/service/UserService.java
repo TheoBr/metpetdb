@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -158,5 +159,7 @@ public interface UserService extends RemoteService {
 	
 	public void approveRoleChange(RoleChange rc) throws MpDbException, UnableToSendEmailException;
 	public void denyRoleChange(RoleChange rc) throws MpDbException, UnableToSendEmailException;
+	
+	public User userById(int user_id) throws MpDbException;
 }
 

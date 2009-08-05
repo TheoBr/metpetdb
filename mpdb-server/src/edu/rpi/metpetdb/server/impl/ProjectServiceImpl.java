@@ -111,6 +111,10 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	public List<Invite> getInvitesForUser(int id) throws MpDbException {
 		return new InviteDAO(currentSession()).getInvitesForUser(id);
 	}
+	
+	public List<Invite> getInvitesForProject(long id) throws MpDbException {
+		return new InviteDAO(currentSession()).getInvitesForProject(id);
+	}
 
 	public void acceptInvite(Invite i) throws MpDbException {
 		User u = new User();
