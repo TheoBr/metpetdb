@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.server.search;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -71,16 +72,25 @@ public class SearchIPhone extends HttpServlet{
 		{
 			String temp= new String(postBytes);
 			postText+=temp;
+			response.getWriter().write("<Attempt1>");
+			String temp1="<";
+			temp1+=temp;
+			temp1+=">";
+			response.getWriter().write(temp1);
 		}
 		Scanner scanner = new Scanner(request.getInputStream());
-		
+		response.getWriter().write("<Attempt2>");
 		String responseString="<";
 		responseString+= postText;
 		responseString+= ">";
 		response.getWriter().write(responseString);
+		response.getWriter().write("<Attempt 3>");
+		PrintWriter out = response.getWriter();
+	    out.println(responseString);
+
 		//test to see what the first word of the input is and call the functions in the rest of the 
 		//file accordingly
-		if(scanner.hasNext("username="))
+		/*if(scanner.hasNext("username="))
 		{
 			scanner.next();
 			String username=scanner.next().trim();
@@ -249,7 +259,7 @@ public class SearchIPhone extends HttpServlet{
 				//the id that is passed into the url here is the id of the image, not the sample
 				long imageID= Long.parseLong(request.getParameterValues(LARGE_IMAGE)[0]);
 				get_large_image(response, imageID);
-			}
+			}*/
 		}
 		catch(Exception e){
 			throw new IllegalStateException(e.getMessage());
@@ -257,7 +267,7 @@ public class SearchIPhone extends HttpServlet{
 			session.close();
 		}
 	}
-		*/
+		
 	private void rockTypes(HttpServletResponse response){
 		try {
 			DatabaseObjectConstraints doc = DataStore.getInstance().getDatabaseObjectConstraints();		
