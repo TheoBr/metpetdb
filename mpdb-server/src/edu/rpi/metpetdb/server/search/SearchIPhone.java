@@ -64,11 +64,34 @@ public class SearchIPhone extends HttpServlet{
 			final HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/xml");
 		byte[] postBytes= new byte[1024];
+		ArrayList byteList= new ArrayList();
+		int numbytes=0;
 		String postText= new String();
 		List<Long> sampleIds = new ArrayList<Long>();
 		session = DataStore.open();
 		try{
-		while(request.getInputStream().read(postBytes)!=-1)
+		while(true)
+		{
+			numbytes= request.getInputStream().read(postBytes);
+			if(numbytes==-1)
+			{
+				break;
+			}
+			else
+			{
+				//make a new array that just consists of the number of bytes in the array that was read in
+				byte[] newPostBytes= new byte[postBytes.length];
+				newPostBytes= postBytes;
+				byteList.add(newPostBytes);
+			}
+		}
+		postText=byteList.toString();
+		response.getWriter().write("<Attempt123>");
+		String temp="<";
+		temp+=postText;
+		temp+=">";
+		response.getWriter().write(temp);
+		/*while(request.getInputStream().read(postBytes)!=-1)
 		{
 			String temp= new String(postBytes);
 			postText+=temp;
@@ -77,16 +100,11 @@ public class SearchIPhone extends HttpServlet{
 			temp1+=temp;
 			temp1+=">";
 			response.getWriter().write(temp1);
-		}
+		}*/
+		response.getWriter().write("<Attempte234");
 		Scanner scanner = new Scanner(request.getInputStream());
-		response.getWriter().write("<Attempt2>");
-		String responseString="<";
-		responseString+= postText;
-		responseString+= ">";
-		response.getWriter().write(responseString);
-		response.getWriter().write("<Attempt 3>");
-		PrintWriter out = response.getWriter();
-	    out.println(responseString);
+		response.getWriter().write(scanner.next());
+	
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
 		//file accordingly
