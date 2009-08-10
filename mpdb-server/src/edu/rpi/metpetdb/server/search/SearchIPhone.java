@@ -76,9 +76,9 @@ public class SearchIPhone extends HttpServlet{
 		{
 			numbytes= request.getInputStream().read(postBytes);
 			String tempString= new String(postBytes);
-			postText+=tempString;
+			response.getWriter().write(tempString);
 		}
-		response.getWriter().write(postText);
+		
 		
 		response.getWriter().write("</Attempt123>");
 		/*while(request.getInputStream().read(postBytes)!=-1)
