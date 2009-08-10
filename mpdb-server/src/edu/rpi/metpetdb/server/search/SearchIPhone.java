@@ -71,7 +71,7 @@ public class SearchIPhone extends HttpServlet{
 		String postText= new String();
 		while(numbytes!=-1)
 		{
-			numbytes= request.getInputStream().read(postBytes);
+			numbytes= request.getInputStream().read(postBytes,0, numbytes);   //read(postBytes);
 			postText= new String(postBytes);
 			response.getWriter().write(postText);
 		}
@@ -96,7 +96,7 @@ public class SearchIPhone extends HttpServlet{
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
 		//file accordingly
-		/*if(scanner.hasNext("username="))
+		if(scanner.hasNext("username="))
 		{
 			scanner.next();
 			String username=scanner.next().trim();
