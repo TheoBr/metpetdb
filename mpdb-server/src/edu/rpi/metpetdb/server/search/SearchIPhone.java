@@ -1,7 +1,7 @@
 package edu.rpi.metpetdb.server.search;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -28,7 +28,6 @@ import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
@@ -36,8 +35,6 @@ import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.RegionDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
-import edu.rpi.metpetdb.server.impl.SampleCommentServiceImpl;
-import edu.rpi.metpetdb.server.impl.UserServiceImpl;
 
 
 public class SearchIPhone extends HttpServlet{
@@ -75,10 +72,9 @@ public class SearchIPhone extends HttpServlet{
 		while(numbytes!=-1)
 		{
 			numbytes= request.getInputStream().read(postBytes);
-			String tempString= new String(postBytes);
-			response.getWriter().write(tempString);
+			postText= new String(postBytes);
+			response.getWriter().write(postText);
 		}
-		
 		
 		response.getWriter().write("</Attempt123>");
 		/*while(request.getInputStream().read(postBytes)!=-1)
@@ -92,7 +88,7 @@ public class SearchIPhone extends HttpServlet{
 			response.getWriter().write(temp1);
 		}*/
 		response.getWriter().write("<Attempte234");
-		Scanner scanner = new Scanner(request.getInputStream());
+		Scanner scanner = new Scanner(postText);
 		response.getWriter().write(scanner.next());
 		response.getWriter().write("</Attempt234>");
 		response.getWriter().write("</testing>");
