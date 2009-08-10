@@ -1,7 +1,6 @@
 package edu.rpi.metpetdb.server.search;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -28,6 +27,7 @@ import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
@@ -35,6 +35,8 @@ import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.RegionDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
+import edu.rpi.metpetdb.server.impl.SampleCommentServiceImpl;
+import edu.rpi.metpetdb.server.impl.UserServiceImpl;
 
 
 public class SearchIPhone extends HttpServlet{
@@ -60,7 +62,8 @@ public class SearchIPhone extends HttpServlet{
 	protected void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/xml");
-		byte[] postBytes= new byte[1024];
+		int responseLength= request.getContentLength();
+		byte[] postBytes= new byte[responseLength];
 		ArrayList byteList= new ArrayList();
 		int numbytes=0;
 		List<Long> sampleIds = new ArrayList<Long>();
@@ -71,11 +74,10 @@ public class SearchIPhone extends HttpServlet{
 		String postText= new String();
 		while(numbytes!=-1)
 		{
-			numbytes= request.getInputStream().read(postBytes,0, numbytes);   //read(postBytes);
+			numbytes= request.getInputStream().read(postBytes);
 			postText= new String(postBytes);
 			response.getWriter().write(postText);
 		}
-		
 		response.getWriter().write("</Attempt123>");
 		/*while(request.getInputStream().read(postBytes)!=-1)
 		{
@@ -87,7 +89,7 @@ public class SearchIPhone extends HttpServlet{
 			temp1+=">";
 			response.getWriter().write(temp1);
 		}*/
-		response.getWriter().write("<Attempte234");
+		response.getWriter().write("<Attempte234>");
 		Scanner scanner = new Scanner(postText);
 		response.getWriter().write(scanner.next());
 		response.getWriter().write("</Attempt234>");
@@ -199,7 +201,7 @@ public class SearchIPhone extends HttpServlet{
 			commentImpl.save(newComment);
 			response.getWriter().write("Comment Added");
 		}
-	}
+		}
 		catch(Exception e){
 			throw new IllegalStateException(e.getMessage());
 		} finally {
@@ -265,14 +267,14 @@ public class SearchIPhone extends HttpServlet{
 				//the id that is passed into the url here is the id of the image, not the sample
 				long imageID= Long.parseLong(request.getParameterValues(LARGE_IMAGE)[0]);
 				get_large_image(response, imageID);
-			}*/
+			}
 		}
 		catch(Exception e){
 			throw new IllegalStateException(e.getMessage());
 		} finally {
 			session.close();
 		}
-	}
+		}*/
 		
 	private void rockTypes(HttpServletResponse response){
 		try {
