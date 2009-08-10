@@ -69,6 +69,7 @@ public class SearchIPhone extends HttpServlet{
 		List<Long> sampleIds = new ArrayList<Long>();
 		session = DataStore.open();
 		try{
+		//response.getWriter().write("<testing>");
 		response.getWriter().write("<Attempt123>");
 		while(numbytes!=-1)
 		{
@@ -87,11 +88,11 @@ public class SearchIPhone extends HttpServlet{
 			temp1+=temp;
 			temp1+=">";
 			response.getWriter().write(temp1);
-		}*/
+		}
 		response.getWriter().write("<Attempte234");
 		Scanner scanner = new Scanner(request.getInputStream());
 		response.getWriter().write(scanner.next());
-		response.getWriter().write("</Attempt234>");
+		response.getWriter().write("</Attempt234>");*/
 	
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
