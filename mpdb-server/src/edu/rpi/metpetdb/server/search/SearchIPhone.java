@@ -66,31 +66,18 @@ public class SearchIPhone extends HttpServlet{
 		byte[] postBytes= new byte[1024];
 		ArrayList byteList= new ArrayList();
 		int numbytes=0;
-		String postText= new String();
 		List<Long> sampleIds = new ArrayList<Long>();
 		session = DataStore.open();
 		try{
-		while(true)
+		response.getWriter().write("<Attempt123>");
+		while(numbytes!=-1)
 		{
 			numbytes= request.getInputStream().read(postBytes);
-			if(numbytes==-1)
-			{
-				break;
-			}
-			else
-			{
-				//make a new array that just consists of the number of bytes in the array that was read in
-				byte[] newPostBytes= new byte[postBytes.length];
-				newPostBytes= postBytes;
-				byteList.add(newPostBytes);
-			}
+			String tempString= new String(postBytes);
+			response.getWriter().write(tempString);
 		}
-		postText=byteList.toString();
-		response.getWriter().write("<Attempt123>");
-		String temp="<";
-		temp+=postText;
-		temp+=">";
-		response.getWriter().write(temp);
+		
+		response.getWriter().write("</Attempt123>");
 		/*while(request.getInputStream().read(postBytes)!=-1)
 		{
 			String temp= new String(postBytes);
@@ -104,6 +91,7 @@ public class SearchIPhone extends HttpServlet{
 		response.getWriter().write("<Attempte234");
 		Scanner scanner = new Scanner(request.getInputStream());
 		response.getWriter().write(scanner.next());
+		response.getWriter().write("</Attempt234>");
 	
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
