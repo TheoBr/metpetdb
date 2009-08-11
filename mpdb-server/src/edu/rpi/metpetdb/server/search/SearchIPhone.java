@@ -96,7 +96,7 @@ public class SearchIPhone extends HttpServlet{
 				scanner.next();
 				String password= scanner.next().trim();
 				response.getWriter().write(password);
-				response.getWriter().write("<password>");
+				response.getWriter().write("</password>");
 				UserServiceImpl userImpl= new UserServiceImpl();
 				User u= new User();
 				u= userImpl.details(username);
