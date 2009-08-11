@@ -75,25 +75,17 @@ public class SearchIPhone extends HttpServlet{
 		while(numbytes!=-1)
 		{
 			numbytes= request.getInputStream().read(postBytes);
-			postText= new String(postBytes);
-			response.getWriter().write(postText);
+			
 		}
+		postText= new String(postBytes);
+		response.getWriter().write(postText);
 		response.getWriter().write("</Attempt123>");
-		/*while(request.getInputStream().read(postBytes)!=-1)
-		{
-			String temp= new String(postBytes);
-			postText+=temp;
-			response.getWriter().write("<Attempt1>");
-			String temp1="<";
-			temp1+=temp;
-			temp1+=">";
-			response.getWriter().write(temp1);
-		}*/
-		response.getWriter().write("<Attempte234>");
+		
+		//response.getWriter().write("<Attempte234>");
 		Scanner scanner = new Scanner(postText);
-		response.getWriter().write(scanner.next());
+		/*response.getWriter().write(scanner.next());
 		response.getWriter().write("</Attempt234>");
-		response.getWriter().write("</testing>");
+		response.getWriter().write("</testing>");*/
 	
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
