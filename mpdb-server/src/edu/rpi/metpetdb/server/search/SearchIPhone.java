@@ -69,8 +69,6 @@ public class SearchIPhone extends HttpServlet{
 		List<Long> sampleIds = new ArrayList<Long>();
 		session = DataStore.open();
 		try{
-		response.getWriter().write("<testing>");
-		response.getWriter().write("<Attempt123>");
 		String postText= new String();
 		while(numbytes!=-1)
 		{
@@ -78,14 +76,9 @@ public class SearchIPhone extends HttpServlet{
 			
 		}
 		postText= new String(postBytes);
-		response.getWriter().write(postText);
-		response.getWriter().write("</Attempt123>");
+		//response.getWriter().write(postText);
 		
-		//response.getWriter().write("<Attempte234>");
 		Scanner scanner = new Scanner(postText);
-		/*response.getWriter().write(scanner.next());
-		response.getWriter().write("</Attempt234>");
-		response.getWriter().write("</testing>");*/
 	
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
@@ -93,15 +86,21 @@ public class SearchIPhone extends HttpServlet{
 		if(scanner.hasNext("username="))
 		{
 			scanner.next();
+			response.getWriter().write("<username>");
 			String username=scanner.next().trim();
+			response.getWriter().write(username);
+			response.getWriter().write("</username>");
 			if(scanner.hasNext("password="))
 			{
+				response.getWriter().write("<password>");
 				scanner.next();
 				String password= scanner.next().trim();
+				response.getWriter().write(password);
+				response.getWriter().write("<password>");
 				UserServiceImpl userImpl= new UserServiceImpl();
 				User u= new User();
 				u= userImpl.details(username);
-				if(userImpl.authenticate(u, password))
+				if(UserServiceImpl.authenticate(u, password))
 				{
 					response.getWriter().write("authentication succeeded");
 				}
@@ -130,6 +129,10 @@ public class SearchIPhone extends HttpServlet{
 			while(scanner.hasNext())
 			{
 				newRegion+= scanner.next().trim();
+				if(scanner.hasNext())
+				{
+					newRegion+=" ";
+				}
 			}
 			regions.add(newRegion);
 			outputSearchXML(search(regions, session),response);
