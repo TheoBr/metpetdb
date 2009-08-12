@@ -114,9 +114,17 @@ public class ImageUploadServlet extends HttpServlet {
 	}
 	public static String generateMobileVersion(final RenderedOp ro,
 			final boolean doAsPng){
-	
-		final float scale= (float) 320.0 / ro.getWidth();
-		final RenderedOp mobile= scale(ro, scale, scale);
+		//if the width of the original image is less than 320, leave the image its original size
+		final RenderedOp mobile;
+		if(ro.getWidth()<320.0) 
+		{
+			mobile= scale(ro, ro.getWidth(), ro.getHeight());
+		}
+		else
+		{
+			final float scale= (float) 1280.0 / ro.getWidth();
+			mobile= scale(ro, scale, scale);
+		}
 		final JPEGEncodeParam encodeParam = new JPEGEncodeParam();
 		encodeParam.setQuality(1.0f);
 		final ParameterBlock pb= new ParameterBlock();
