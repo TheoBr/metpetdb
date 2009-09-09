@@ -126,8 +126,11 @@
      <filter name="public"
      		condition="public_data='Y'" />
      		
-     <filter name="samplePublicOrUser"
-     		condition="( user_id=:userId OR public_data='Y')" />
+	 <filter name="samplePublicOrUser"
+	 		condition="(user_id=:userId OR public_data='Y' OR 
+	 		:userId in (select pm.user_id from project_members pm where
+			pm.project_id in (select ps.project_id from project_samples ps where
+			ps.sample_id = sample_id)))" />
   </class>
   
   

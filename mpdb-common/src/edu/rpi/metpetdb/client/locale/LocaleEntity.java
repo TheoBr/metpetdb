@@ -11,8 +11,8 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String Project_Owner();
 	String Project_MemberCount();
 	String Project_LastSampleAddded();
-	String Project_ViewSamples();
-	String Project_ViewMembers();
+	String Project_ViewDetails();
+	//String Project_ViewMembers();
 	/* Sample */
 	String Sample();
 	String Sample_sesarNumber();

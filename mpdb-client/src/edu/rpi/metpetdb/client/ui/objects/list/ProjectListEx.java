@@ -67,7 +67,7 @@ public abstract class ProjectListEx extends ListEx<Project> {
 					//return new Label(data.mGet(ProjectProperty.memberCount).toString());
 					return new Label("Coming soon");
 				}
-			}, new Column(true,enttxt.Project_ViewSamples(), true) {
+			}, new Column(true,enttxt.Project_ViewDetails(), true) {
 				protected Object getWidget(final MObject data,
 						final int currentRow) {
 					return new MLink("View Samples", new ClickListener() {

@@ -36,7 +36,7 @@ public abstract class ProjectList extends DataList<Project> {
 				@Override
 				public MLink getCellValue(Project rowValue) {
 					return new MLink((String) rowValue.mGet(ProjectProperty.name), 
-							TokenSpace.descriptionOf((Project) rowValue));
+							TokenSpace.samplesOf((Project) rowValue));
 				}
 			};
 			col.setColumnSortable(true);
@@ -74,14 +74,14 @@ public abstract class ProjectList extends DataList<Project> {
 			columns.addColumn(col);
 			defaultColumns.addColumn(col);
 		}
-		//View Samples
+		//View Details/Members
 		{
-			Column<Project, MLink> col = new Column<Project, MLink>(enttxt.Project_ViewSamples(),
+			Column<Project, MLink> col = new Column<Project, MLink>(enttxt.Project_ViewDetails(),
 					ProjectProperty.description) {
 				@Override
 				public MLink getCellValue(final Project rowValue) {
-					return new MLink("View Samples", 
-							TokenSpace.samplesOf((Project) rowValue));
+					return new MLink("View Details", 
+							TokenSpace.descriptionOf((Project) rowValue));
 				}
 			};
 			col.setColumnSortable(false);

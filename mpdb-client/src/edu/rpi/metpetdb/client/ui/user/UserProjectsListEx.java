@@ -52,12 +52,6 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 
 		final MLink createProject = new MLink("Create New Project",
 				TokenSpace.newProject);
-
-		final MLink recentlyAdded = new MLink("Recent Changes",
-				new ClickListener() {
-					public void onClick(Widget sender) {
-					}
-				});
 		
 		//Look for invites and display a link only if invites exist
 		new ServerOp() {
@@ -92,37 +86,14 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 			}
 		}.begin();
 
-		final MLink simple = new MLink("Simple", new ClickListener() {
-			public void onClick(Widget sender) {
-			}
-		});
-
-		final MLink detailed = new MLink("Detailed", new ClickListener() {
-			public void onClick(Widget sender) {
-			}
-		});
-
-		final MLink createView = new MLink("Create New View", this);
-
 		final Label myProjectsSamples_label = new Label("My Projects");
 		final Label quickfilters_label = new Label("Quick Filters:");
-		final Label changeView_label = new Label("Change View:");
 		createProject.addStyleName("addlink");
-
-		recentlyAdded.addStyleName("beta");
-		simple.addStyleName("beta");
-		detailed.addStyleName("beta");
-		createView.addStyleName("beta");
 
 		header1.setWidget(0, 0, myProjectsSamples_label);
 		header1.setWidget(1, 0, createProject);
 
 		header1.setWidget(2, 0, quickfilters_label);
-		header1.setWidget(2, 1, recentlyAdded);
-		header1.setWidget(2, 3, changeView_label);
-		header1.setWidget(2, 4, simple);
-		header1.setWidget(2, 5, detailed);
-		header1.setWidget(2, 6, createView);
 
 		header1.getFlexCellFormatter().setColSpan(0, 0, 3);
 		header1.getFlexCellFormatter().setColSpan(0, 1, 4);

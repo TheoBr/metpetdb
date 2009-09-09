@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hibernate.Filter;
+
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -57,7 +59,8 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	}
 
 	public Results<Sample> projectSamples(final PaginationParameters p, long id) throws MpDbException {
-		this.currentSession().disableFilter("samplePublicOrUser");
+		//this.currentSession().disableFilter("samplePublicOrUser");
+		this.currentSession().enableFilter("samplePublicOrUser").setParameter("userId", MpDbServlet.currentReq().user.getId());
 		return (new SampleDAO(this.currentSession()).getProjectSamples(p, id));
 	}
 	
