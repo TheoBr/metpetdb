@@ -40,7 +40,7 @@ import edu.rpi.metpetdb.server.impl.UserServiceImpl;
 
 
 public class SearchIPhone extends HttpServlet{
-	/*private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	private static final String NORTH_PARAMETER = "north";
 	private static final String SOUTH_PARAMETER = "south";
 	private static final String WEST_PARAMETER=  "west";
@@ -54,12 +54,12 @@ public class SearchIPhone extends HttpServlet{
 	private static final String COMMENTS = "comments";
 	private static final String SUBSAMPLE_INFO="subsampleInfo";
 	private static final String THUMBNAILS="thumbnails";
-	private static final String LARGE_IMAGE="large_image";*/
+	private static final String LARGE_IMAGE="large_image";
 
 	private Session session;
 	@Override
 
-	protected void doPost(final HttpServletRequest request,
+	/*protected void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/xml");
 		int responseLength= request.getContentLength();
@@ -202,10 +202,10 @@ public class SearchIPhone extends HttpServlet{
 		} finally {
 			session.close();
 		}
-	}
+	}*/
 	
 	
-	/*protected void doGet(final HttpServletRequest request,
+	protected void doGet(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException  {
 		response.setContentType("text/xml");
 		
@@ -269,7 +269,7 @@ public class SearchIPhone extends HttpServlet{
 		} finally {
 			session.close();
 		}
-		}*/
+		}
 		
 	private void rockTypes(HttpServletResponse response){
 		try {
@@ -505,6 +505,9 @@ public class SearchIPhone extends HttpServlet{
 				response.getWriter().write(createXMLElement("publicData",x.toXML(sample.isPublicData())));
 				x.toXML(sample.getLocation(),response.getWriter());
 				response.getWriter().write(createXMLElement("owner",x.toXML(sample.getOwner().getName())));
+				response.getWriter().write("<description>");
+				x.toXML(sample.getDescription(), response.getWriter());
+				response.getWriter().write("</description>");
 				
 				response.getWriter().write("</sample>");
 			}
