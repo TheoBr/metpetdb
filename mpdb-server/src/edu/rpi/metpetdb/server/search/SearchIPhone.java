@@ -336,9 +336,9 @@ public class SearchIPhone extends HttpServlet{
 					  response.getWriter().write("<imageID>");
 				    x.toXML(im.getId(), response.getWriter());
 				    response.getWriter().write("</imageID>");
-				    response.getWriter().write("<imageType");
+				    response.getWriter().write("<imageType>");
 				    x.toXML(im.getImageType(), response.getWriter());
-				    response.getWriter().write("</imageType");
+				    response.getWriter().write("</imageType>");
 				}
 			 response.getWriter().write("<imageCount>");
 			 x.toXML(sample.getImageCount(), response.getWriter());
