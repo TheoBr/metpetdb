@@ -1,11 +1,10 @@
 package edu.rpi.metpetdb.server.search;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -20,6 +19,7 @@ import org.postgis.Point;
 import com.thoughtworks.xstream.XStream;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.MetamorphicGrade;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Sample;
@@ -27,7 +27,6 @@ import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
@@ -35,8 +34,6 @@ import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.RegionDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
-import edu.rpi.metpetdb.server.impl.SampleCommentServiceImpl;
-import edu.rpi.metpetdb.server.impl.UserServiceImpl;
 
 
 public class SearchIPhone extends HttpServlet{
@@ -280,6 +277,31 @@ public class SearchIPhone extends HttpServlet{
 			throw new IllegalStateException(ioe.getMessage());
 		} 
 	}
+	public class imageComparator implements Comparator {
+		/*  public int compare(edu.rpi.metpetdb.client.model.Image image1, edu.rpi.metpetdb.client.model.Image image2) {
+			  if((Math.abs((image1.getImageType().getId())-5))>= (Math.abs((image2.getImageType().getId())-5)))
+			  {
+				  return 0;
+			  }
+			  else
+			  {
+				  return 1;
+			  }	  
+		  }*/
+		public int compare(Object obj1, Object obj2) {
+			edu.rpi.metpetdb.client.model.Image image1= (edu.rpi.metpetdb.client.model.Image) obj1;
+			edu.rpi.metpetdb.client.model.Image image2= (edu.rpi.metpetdb.client.model.Image) obj2;
+			if((Math.abs((image1.getImageType().getId())-5))<= (Math.abs((image2.getImageType().getId())-5)))
+			  {
+				  return 0;
+			  }
+			  else
+			  {
+				  return 1;
+			  }	  
+		}
+	}
+
 	private void get_thumbnails(HttpServletResponse response, long id)
 	{
 		try{
@@ -288,26 +310,23 @@ public class SearchIPhone extends HttpServlet{
 			sample.setId(id);
 			sample=s.fill(sample);
 			Set<edu.rpi.metpetdb.client.model.Image> images= sample.getImages();
-			final XStream x = new XStream();
-			response.getWriter().write("<thumbnails>");
-			for(edu.rpi.metpetdb.client.model.Image i : images)
-			{
-				final String imagePath = i.getChecksum64x64();
-	
-				response.getWriter().write("<image>");
-				x.toXML(imagePath, response.getWriter());
-				response.getWriter().write("</image>");
-				  response.getWriter().write("<imageID>");
-			    x.toXML(i.getId(), response.getWriter());
-			    response.getWriter().write("</imageID>");
+			List<edu.rpi.metpetdb.client.model.Image> imageList= new ArrayList(images);
 			
-			}
-			//after all the samples images have bee output, display subsample images
+			
+			final XStream x = new XStream();
+			
+			
+			//after all the samples images have been output, display subsample images
 			Set<Subsample> subsamples= sample.getSubsamples();
+			//add the subsample images to the imageList before sorting
 			for(Subsample sub : subsamples)
 			{
 				Set<edu.rpi.metpetdb.client.model.Image> subImages= sub.getImages();
-				for(edu.rpi.metpetdb.client.model.Image im : subImages)
+				imageList.addAll(subImages);
+			}
+			java.util.Collections.sort(imageList, new imageComparator());
+			response.getWriter().write("<thumbnails>");
+				for(edu.rpi.metpetdb.client.model.Image im : imageList)
 				{
 					final String subImagePath= im.getChecksum64x64();
 				
@@ -317,22 +336,18 @@ public class SearchIPhone extends HttpServlet{
 					  response.getWriter().write("<imageID>");
 				    x.toXML(im.getId(), response.getWriter());
 				    response.getWriter().write("</imageID>");
+				    response.getWriter().write("<imageType");
+				    x.toXML(im.getImageType(), response.getWriter());
+				    response.getWriter().write("</imageType");
 				}
-			}
 			 response.getWriter().write("<imageCount>");
-			x.toXML(sample.getImageCount(), response.getWriter());
+			 x.toXML(sample.getImageCount(), response.getWriter());
 			 response.getWriter().write("</imageCount>");
 			response.getWriter().write("</thumbnails>");
-		} catch(final Exception ioe){
-			try {
-				response.getWriter().flush();
-				response.getWriter().write(ioe.getMessage());
-			} catch (Exception e){
-				
-			}
-			throw new IllegalStateException(ioe.getMessage());
-		}
-	}
+		} catch(Exception e){
+			throw new IllegalStateException(e.getMessage());
+		}	}
+	
 	private void get_large_image(HttpServletResponse response, long imageID)
 	{
 		try{
