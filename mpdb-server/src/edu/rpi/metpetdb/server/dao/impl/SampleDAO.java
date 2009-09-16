@@ -3,8 +3,10 @@ package edu.rpi.metpetdb.server.dao.impl;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.SampleNotFoundException;
@@ -89,6 +91,7 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		final Query sizeQ = sizeQuery("Sample.forProject", id);
 		final Query pageQ = pageQuery("Sample.forProject", p, id);
 		Results<Sample> results = getSamples(sizeQ, pageQ);
+		
 		return results;
 	}
 
@@ -117,6 +120,7 @@ public class SampleDAO extends MpDbDAO<Sample> {
 	private Results<Sample> getSamples(Query sizeQuery, Query pageQuery) throws MpDbException {
 		final List<Sample> l = (List<Sample>) getResults(pageQuery);
 		final int size = ((Number) getResult(sizeQuery)).intValue();
+		
 		return new Results<Sample>(size, l);
 	}
 	

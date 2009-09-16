@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Filter;
+import org.hibernate.Session;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
@@ -59,8 +60,9 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	}
 
 	public Results<Sample> projectSamples(final PaginationParameters p, long id) throws MpDbException {
-		//this.currentSession().disableFilter("samplePublicOrUser");
-		this.currentSession().enableFilter("samplePublicOrUser").setParameter("userId", MpDbServlet.currentReq().user.getId());
+		this.currentSession().disableFilter("samplePublicOrUser");
+		this.currentSession().enableFilter("sampleInProject").setParameter("userId", MpDbServlet.currentReq().user.getId());
+
 		return (new SampleDAO(this.currentSession()).getProjectSamples(p, id));
 	}
 	
