@@ -1,10 +1,12 @@
 package edu.rpi.metpetdb.server.search;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -19,7 +21,6 @@ import org.postgis.Point;
 import com.thoughtworks.xstream.XStream;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
-import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.MetamorphicGrade;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Sample;
@@ -27,6 +28,7 @@ import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
@@ -34,6 +36,8 @@ import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.RegionDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
+import edu.rpi.metpetdb.server.impl.SampleCommentServiceImpl;
+import edu.rpi.metpetdb.server.impl.UserServiceImpl;
 
 
 public class SearchIPhone extends HttpServlet{
@@ -56,7 +60,7 @@ public class SearchIPhone extends HttpServlet{
 	private Session session;
 	@Override
 
-	/*protected void doPost(final HttpServletRequest request,
+	protected void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/xml");
 		int responseLength= request.getContentLength();
@@ -199,10 +203,10 @@ public class SearchIPhone extends HttpServlet{
 		} finally {
 			session.close();
 		}
-	}*/
+	}
 	
 	
-	protected void doGet(final HttpServletRequest request,
+/*	protected void doGet(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException  {
 		response.setContentType("text/xml");
 		
@@ -266,7 +270,7 @@ public class SearchIPhone extends HttpServlet{
 		} finally {
 			session.close();
 		}
-		}
+		}*/
 		
 	private void rockTypes(HttpServletResponse response){
 		try {
