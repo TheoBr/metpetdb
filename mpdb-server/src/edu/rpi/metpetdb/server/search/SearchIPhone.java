@@ -1,12 +1,11 @@
 package edu.rpi.metpetdb.server.search;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -23,21 +22,18 @@ import com.thoughtworks.xstream.XStream;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.MetamorphicGrade;
 import edu.rpi.metpetdb.client.model.Mineral;
+import edu.rpi.metpetdb.client.model.RockType;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.model.User;
-import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.RegionDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
-import edu.rpi.metpetdb.server.impl.SampleCommentServiceImpl;
-import edu.rpi.metpetdb.server.impl.UserServiceImpl;
 
 
 public class SearchIPhone extends HttpServlet{
@@ -50,17 +46,24 @@ public class SearchIPhone extends HttpServlet{
 	private static final String PASSWORD_PARAMETER ="password";
 	private static final String SAMPLE_ID = "sampleId";
 	private static final String REGIONS = "regions";
-	private static final String ROCK_TYPES = "rockTypes";
 	private static final String SEARCH_REGIONS = "searchRegion";
 	private static final String COMMENTS = "comments";
 	private static final String SUBSAMPLE_INFO="subsampleInfo";
 	private static final String THUMBNAILS="thumbnails";
 	private static final String LARGE_IMAGE="large_image";
+	private static final String ROCK_TYPE= "rockType";
+	private static final String MINERAL= "mineral";
+	private static final String METAMORPHIC_GRADE="metamorphicGrade";
+	private static final String OWNER="owner";  
 
 	private Session session;
+	private Set<String> owners= new HashSet();
+	private Set<RockType> rockTypes= new HashSet();
+	private Set<MetamorphicGrade> metamorphicGrades= new HashSet();
+	private Set<Mineral> minerals= new HashSet();
 	@Override
 
-	protected void doPost(final HttpServletRequest request,
+	/*protected void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/xml");
 		int responseLength= request.getContentLength();
@@ -203,16 +206,53 @@ public class SearchIPhone extends HttpServlet{
 		} finally {
 			session.close();
 		}
-	}
+	}*/
 	
 	
-/*	protected void doGet(final HttpServletRequest request,
+	protected void doGet(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException  {
 		response.setContentType("text/xml");
 		
 		List<Long> sampleIds = new ArrayList<Long>();
 		session = DataStore.open();
 		try{
+			//make sets of the various search criteria so they can be passed to the various search functions
+			if(request.getParameter(OWNER)!= null)
+			{
+				String tempOwners[]  = request.getParameterValues(OWNER);
+				List list = Arrays.asList(tempOwners);
+				owners  = new HashSet(list);
+			}
+			if(request.getParameter(ROCK_TYPE)!= null)
+			{	
+				String tempRockTypes[]= request.getParameterValues(ROCK_TYPE);
+				//loop through the strings of rock types and convert them to rock type objects
+				for(int i=0; i<tempRockTypes.length; i++)
+				{
+					RockType rt= new RockType(tempRockTypes[i]);
+					rockTypes.add(rt);
+				}
+			}
+			if(request.getParameter(METAMORPHIC_GRADE)!= null)
+			{
+				String tempMetGrades[]=request.getParameterValues(METAMORPHIC_GRADE);
+				for(int i=0; i<tempMetGrades.length; i++)
+				{
+					MetamorphicGrade mg= new MetamorphicGrade(tempMetGrades[i]);
+					metamorphicGrades.add(mg);
+				}
+			}
+			if(request.getParameter(MINERAL)!= null)
+			{
+				String tempMinerals[]= request.getParameterValues(MINERAL);
+				for(int i=0; i<tempMinerals.length; i++)
+				{
+					Mineral min= new Mineral();
+					min.setName(tempMinerals[i]);
+					minerals.add(min);
+				}
+			}
+			
 			// If there is a GET string for latitude and longitude then it is a search
 			if (request.getParameter(NORTH_PARAMETER) != null && request.getParameter(SOUTH_PARAMETER) != null && request.getParameter(WEST_PARAMETER)!= null && request.getParameter(EAST_PARAMETER) != null) {
 				double north = Double.parseDouble(request.getParameterValues (NORTH_PARAMETER)[0]);
@@ -238,11 +278,12 @@ public class SearchIPhone extends HttpServlet{
 				if (request.getParameterValues(REGIONS)[0].equalsIgnoreCase("t")){
 					regions(response);
 				}
-			} else if (request.getParameter(ROCK_TYPES) != null){
+			} /*else if (request.getParameter(ROCK_TYPES) != null){
 				if (request.getParameterValues(ROCK_TYPES)[0].equalsIgnoreCase("t")){
 					rockTypes(response);
 				}
-			}else if (request.getParameter(COMMENTS) != null){
+			}*/
+			else if (request.getParameter(COMMENTS) != null){
 			
 				long id= Long.parseLong(request.getParameterValues(COMMENTS)[0]);
 				comments(response, id);
@@ -270,9 +311,9 @@ public class SearchIPhone extends HttpServlet{
 		} finally {
 			session.close();
 		}
-		}*/
+		}
 		
-	private void rockTypes(HttpServletResponse response){
+	/*private void rockTypes(HttpServletResponse response){
 		try {
 			DatabaseObjectConstraints doc = DataStore.getInstance().getDatabaseObjectConstraints();		
 			final XStream x = new XStream();
@@ -280,7 +321,7 @@ public class SearchIPhone extends HttpServlet{
 		} catch(final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
 		} 
-	}
+	}*/
 	public class imageComparator implements Comparator {
 		/*  public int compare(edu.rpi.metpetdb.client.model.Image image1, edu.rpi.metpetdb.client.model.Image image2) {
 			  if((Math.abs((image1.getImageType().getId())-5))>= (Math.abs((image2.getImageType().getId())-5)))
@@ -553,6 +594,24 @@ public class SearchIPhone extends HttpServlet{
 	
 	private Results<Sample> search(final SearchSample s, Session session){
 		try{
+			//if any search criteria have been specified (owners, rocktypes, metamorphic grades, or minerals)
+			//then set searchSample to have these attributes
+			if(!owners.isEmpty())
+			{
+				s.setOwners(owners);
+			}
+			if(!rockTypes.isEmpty())
+			{
+				s.setPossibleRockTypes(rockTypes);
+			}
+			if(!metamorphicGrades.isEmpty())
+			{
+				s.setMetamorphicGrades(metamorphicGrades);
+			}
+			if(!minerals.isEmpty())
+			{
+				s.setMinerals(minerals);
+			}
 			return SearchDb.sampleSearch(null, s, null, session);
 		}
 		catch(Exception e){
