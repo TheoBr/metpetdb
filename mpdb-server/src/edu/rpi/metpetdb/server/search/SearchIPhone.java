@@ -2,7 +2,6 @@ package edu.rpi.metpetdb.server.search;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -12,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.plaf.synth.Region;
 
 import org.hibernate.Session;
 import org.postgis.LinearRing;
@@ -263,13 +263,13 @@ public class SearchIPhone extends HttpServlet{
 				System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
 				outputSearchXML(search(north,south, east, west, session),response);
 			} else if (request.getParameter(SEARCH_REGIONS) != null){
-				Set<String> regions = new HashSet<String>();
+				String region = new String();
 				for (String s : request.getParameterValues(SEARCH_REGIONS)){
 					if (s.length() > 2 && s.substring(0, 1).equals("'") && s.substring(s.length()-1, s.length()).equals("'")){
-						regions.add(s.substring(1, s.length()-1));
+						region=(s.substring(1, s.length()-1));
 					}
 				}
-				outputSearchXML(search(regions, session),response);
+				outputSearchXML(search(region, session),response);
 			} else if (request.getParameter(SAMPLE_ID) != null){
 				for (String id : request.getParameterValues(SAMPLE_ID))
 					sampleIds.add(Long.parseLong(id));
@@ -562,6 +562,12 @@ public class SearchIPhone extends HttpServlet{
 				for (MetamorphicGrade m : sample.getMetamorphicGrades())
 					x.toXML(m.getName(),response.getWriter());
 				response.getWriter().write("</metamorphicGrades>");
+				response.getWriter().write("<regions>");
+				for(edu.rpi.metpetdb.client.model.Region r :sample.getRegions())
+				{
+					x.toXML(r.getName(), response.getWriter());
+				}
+				response.getWriter().write("</regions>");
 				response.getWriter().write(createXMLElement("publicData",x.toXML(sample.isPublicData())));
 				x.toXML(sample.getLocation(),response.getWriter());
 				response.getWriter().write(createXMLElement("owner",x.toXML(sample.getOwner().getName())));
@@ -577,10 +583,11 @@ public class SearchIPhone extends HttpServlet{
 		}
 	}
 	
-	private Results<Sample> search(final Collection<String> regions, Session session){
+	/*private Results<Sample> search(final Collection<String> regions, Session session){
 		try{
 			SearchSample s = new SearchSample();
 			for (String r : regions){
+				System.out.print(r);
 				s.addRegion(r);
 			}	
 			return search(s, session);
@@ -590,12 +597,15 @@ public class SearchIPhone extends HttpServlet{
 		}
 			
 		
-	}
+	}*/
 	
-	private Results<Sample> search(final SearchSample s, Session session){
+	//private Results<Sample> search(final SearchSample s, Session session){
+	private Results<Sample> search(final String region, Session session){
 		try{
 			//if any search criteria have been specified (owners, rocktypes, metamorphic grades, or minerals)
 			//then set searchSample to have these attributes
+			SearchSample s = new SearchSample();
+			s.addRegion(region);
 			if(!owners.isEmpty())
 			{
 				s.setOwners(owners);
@@ -653,7 +663,8 @@ public class SearchIPhone extends HttpServlet{
 			boundingBox.dimension = 2;
 			
 			s.setBoundingBox(boundingBox);
-			return search(s, session);
+			//return search(s, session);
+			return SearchDb.sampleSearch(null, s, null, session);
 
 		} catch (final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
