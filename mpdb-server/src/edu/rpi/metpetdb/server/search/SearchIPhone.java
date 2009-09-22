@@ -61,6 +61,7 @@ public class SearchIPhone extends HttpServlet{
 	private Set<RockType> rockTypes= new HashSet();
 	private Set<MetamorphicGrade> metamorphicGrades= new HashSet();
 	private Set<Mineral> minerals= new HashSet();
+	private String region= new String();
 	@Override
 
 	/*protected void doPost(final HttpServletRequest request,
@@ -222,6 +223,7 @@ public class SearchIPhone extends HttpServlet{
 				String tempOwners[]  = request.getParameterValues(OWNER);
 				List list = Arrays.asList(tempOwners);
 				owners  = new HashSet(list);
+				outputSearchXML(search(session), response);
 			}
 			if(request.getParameter(ROCK_TYPE)!= null)
 			{	
@@ -232,6 +234,7 @@ public class SearchIPhone extends HttpServlet{
 					RockType rt= new RockType(tempRockTypes[i]);
 					rockTypes.add(rt);
 				}
+				outputSearchXML(search(session), response);
 			}
 			if(request.getParameter(METAMORPHIC_GRADE)!= null)
 			{
@@ -241,6 +244,7 @@ public class SearchIPhone extends HttpServlet{
 					MetamorphicGrade mg= new MetamorphicGrade(tempMetGrades[i]);
 					metamorphicGrades.add(mg);
 				}
+				outputSearchXML(search(session), response);
 			}
 			if(request.getParameter(MINERAL)!= null)
 			{
@@ -251,6 +255,7 @@ public class SearchIPhone extends HttpServlet{
 					min.setName(tempMinerals[i]);
 					minerals.add(min);
 				}
+				outputSearchXML(search(session), response);
 			}
 			
 			// If there is a GET string for latitude and longitude then it is a search
@@ -263,13 +268,14 @@ public class SearchIPhone extends HttpServlet{
 				System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
 				outputSearchXML(search(north,south, east, west, session),response);
 			} else if (request.getParameter(SEARCH_REGIONS) != null){
-				String region = new String();
+			//String region = new String();
 				for (String s : request.getParameterValues(SEARCH_REGIONS)){
 					if (s.length() > 2 && s.substring(0, 1).equals("'") && s.substring(s.length()-1, s.length()).equals("'")){
 						region=(s.substring(1, s.length()-1));
 					}
 				}
-				outputSearchXML(search(region, session),response);
+				//outputSearchXML(search(region, session),response);
+				outputSearchXML(search(session), response);
 			} else if (request.getParameter(SAMPLE_ID) != null){
 				for (String id : request.getParameterValues(SAMPLE_ID))
 					sampleIds.add(Long.parseLong(id));
@@ -603,7 +609,8 @@ public class SearchIPhone extends HttpServlet{
 	}*/
 	
 	//private Results<Sample> search(final SearchSample s, Session session){
-	private Results<Sample> search(final String region, Session session){
+	//private Results<Sample> search(final String region, Session session){
+	private Results<Sample> search(Session session){
 		try{
 			//if any search criteria have been specified (owners, rocktypes, metamorphic grades, or minerals)
 			//then set searchSample to have these attributes
