@@ -549,6 +549,9 @@ public class SearchIPhone extends HttpServlet{
 		try{
 			final XStream x = new XStream();
 			response.getWriter().write("<set>");
+			response.getWriter().write("<resultCount>");
+			x.toXML(results.getCount(), response.getWriter());
+			response.getWriter().write("</resultCount>");
 			for (Sample sample : results.getList()){			
 				response.getWriter().write("<sample>");
 				response.getWriter().write(createXMLElement("number",x.toXML(sample.getNumber())));
