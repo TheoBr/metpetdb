@@ -75,7 +75,11 @@
     </set>
     
       <filter name="chemicalAnalysisPublicOrUser"
-     		condition="(public_data='Y' OR user_id=:userId)" />
+	 		condition="(user_id=:userId or public_data='Y' or
+	 		(select ss.sample_id from subsamples ss where ss.subsample_id = subsample_id)
+	 		in (select ps.sample_id from project_samples ps
+	 		where ps.project_id in (select pm.project_id from
+	 		project_members pm where pm.user_id = :userId)))" />
      		
 
   </class>

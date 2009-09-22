@@ -42,7 +42,10 @@
     </set>
     
     <filter name="subsamplePublicOrUser"
-     		condition="( user_id=:userId OR public_data='Y')" />
+	 		condition="(user_id=:userId or public_data='Y' or
+	 		sample_id in (select ps.sample_id from project_samples ps
+	 		where ps.project_id in (select pm.project_id from
+	 		project_members pm where pm.user_id = :userId)))" />
     
   </class>
 

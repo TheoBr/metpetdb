@@ -125,10 +125,8 @@
      		
      <filter name="public"
      		condition="public_data='Y'" />
-     		
-	 <filter name="samplePublicOrUser"
-	 		condition="(user_id=:userId OR public_data='Y')" />			
-	  <filter name="sampleInProject"
+     				
+	  <filter name="samplePublicOrUser"
 	 		condition="(user_id=:userId or public_data='Y' or
 	 		sample_id in (select ps.sample_id from project_samples ps
 	 		where ps.project_id in (select pm.project_id from
@@ -414,10 +412,6 @@
   <filter-def name="samplePublicOrUser">
   	<filter-param name="userId" type="int" />
   </filter-def>
-  <filter-def name="sampleInProject">
-  	<filter-param name="userId" type="int" />
-  </filter-def>
-  
   
  
 

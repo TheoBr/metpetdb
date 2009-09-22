@@ -60,9 +60,6 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	}
 
 	public Results<Sample> projectSamples(final PaginationParameters p, long id) throws MpDbException {
-		this.currentSession().disableFilter("samplePublicOrUser");
-		this.currentSession().enableFilter("sampleInProject").setParameter("userId", MpDbServlet.currentReq().user.getId());
-
 		return (new SampleDAO(this.currentSession()).getProjectSamples(p, id));
 	}
 	
