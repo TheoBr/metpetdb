@@ -217,6 +217,11 @@ public class SearchIPhone extends HttpServlet{
 		List<Long> sampleIds = new ArrayList<Long>();
 		session = DataStore.open();
 		try{
+			owners= new HashSet();
+			rockTypes= new HashSet();
+			metamorphicGrades= new HashSet();
+			minerals= new HashSet();
+			region= new String();
 			//make sets of the various search criteria so they can be passed to the various search functions
 			if(request.getParameter(OWNER)!= null)
 			{
@@ -615,7 +620,10 @@ public class SearchIPhone extends HttpServlet{
 			//if any search criteria have been specified (owners, rocktypes, metamorphic grades, or minerals)
 			//then set searchSample to have these attributes
 			SearchSample s = new SearchSample();
-			s.addRegion(region);
+			if(!region.isEmpty())
+			{
+				s.addRegion(region);
+			}
 			if(!owners.isEmpty())
 			{
 				s.setOwners(owners);
