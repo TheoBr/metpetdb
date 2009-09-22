@@ -182,6 +182,9 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 													public void onSuccess(final Project result) {
 														projects.put(projectId,
 																result);
+														//reset the combo box by setting the index to 0
+														projectListBox.setSelectedIndex(0);
+														list.deselectAllRows();
 													}
 												}.begin();
 
