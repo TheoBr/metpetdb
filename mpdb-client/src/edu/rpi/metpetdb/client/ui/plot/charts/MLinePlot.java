@@ -3,6 +3,8 @@ package edu.rpi.metpetdb.client.ui.plot.charts;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -24,13 +26,14 @@ import edu.rpi.metpetdb.client.ui.plot.AxisFormulaElement;
 import edu.rpi.metpetdb.client.ui.plot.AxisFormulaOxide;
 
 public class MLinePlot extends MPlot{
+	private Chart2D c;
 	
 	public MLinePlot(){
 		
 	}
 	
-	public Widget createWidget(List<ChemicalAnalysis> data, List<AxisFormula> formulas){
-		Chart2D c = new Chart2D("400px", "400px");
+	public Widget createWidget(List<ChemicalAnalysis> data, List<AxisFormula> formulas, Map<Integer,Set<Integer>> groups){
+		c = new Chart2D("400px", "400px");
 		Plot2D p = new Plot2D(Plot2D.PLOT_TYPE_SCATTER);
 		
 		FlowPanel chartPanel = new FlowPanel();
@@ -105,5 +108,13 @@ public class MLinePlot extends MPlot{
 	
 	public int getAxisCount(){
 		return 1;
+	}
+	
+	public String getSVG(){
+		String innerhtml = c.getElement().getInnerHTML();
+		int startIndex = innerhtml.indexOf("<svg");
+		int endIndex = innerhtml.indexOf("</svg>")+6;
+		innerhtml = innerhtml.substring(startIndex, endIndex);
+		return innerhtml.substring(0, innerhtml.indexOf(">")) + "version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"" + innerhtml.substring(innerhtml.indexOf(">"));
 	}
 }

@@ -17,9 +17,9 @@ public class Line3D extends GraphicObject3D{
 		this.p2 = p2;
 	}
 	
-	public Line getGraphicObject(Rotation theta, double centerX, double centerY){
-		Point p1Projection = projectPoint(theta,p1);
-		Point p2Projection = projectPoint(theta,p2);
+	public Line getGraphicObject(Rotation theta,Point3D camera, double centerX, double centerY){
+		Point p1Projection = projectPoint(theta,p1,camera);
+		Point p2Projection = projectPoint(theta,p2,camera);
 		p1Projection.setX(p1Projection.getX()+centerX);
 		p1Projection.setY(p1Projection.getY()+centerY);
 		p2Projection.setX(p2Projection.getX()+centerX);

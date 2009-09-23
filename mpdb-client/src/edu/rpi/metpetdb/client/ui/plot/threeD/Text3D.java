@@ -61,12 +61,12 @@ public class Text3D extends GraphicObject3D {
 		return text;
 	}
 	
-	public Text getText(Rotation theta,double centerZ,double sideLength){
-		Point3D p = projectPoint3D(theta,new Point3D(x,y,z));
+	public Text getText(Rotation theta,Point3D camera, double centerZ,double sideLength){
+		Point3D p = projectPoint3D(theta,new Point3D(x,y,z),camera);
 		p.setZ(p.getZ()+centerZ);
 		Text t = new Text(text);
 		double scale = 2 - ((3/2)*(p.getZ()/(sideLength-centerZ)));
-		t.scale(new Double(scale).floatValue());
+		t.scale(new Double((1-camera.getZ())*scale).floatValue());
 		return (t);
 	}
 }

@@ -2,20 +2,29 @@ package edu.rpi.metpetdb.client.ui.plot;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DisclosureEvent;
+import com.google.gwt.user.client.ui.DisclosureHandler;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -32,6 +41,7 @@ import edu.rpi.metpetdb.client.ui.plot.charts.MPlot;
 import edu.rpi.metpetdb.client.ui.plot.charts.ScatterPlot;
 import edu.rpi.metpetdb.client.ui.plot.charts.TernaryPlot;
 import edu.rpi.metpetdb.client.ui.plot.charts.TetrahedralPlot;
+import edu.rpi.metpetdb.client.ui.widgets.NumericKeyboardListener;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
 
 public class PlotInterface implements ClickListener, ChangeListener{
@@ -46,12 +56,16 @@ public class PlotInterface implements ClickListener, ChangeListener{
 	
 	private List<FlowPanel> axisFormulaContainers = new ArrayList<FlowPanel>();
 	
+	private RadioButton mono = new RadioButton("tetra","Mono");
+	private RadioButton stereo = new RadioButton("tetra","Stereoscopic");
+	
 	private class FormulaCell extends FlowPanel{
 		public TextBox value;
 		public HTML label;
 		
 		public FormulaCell(){
 			value = new TextBox();
+			value.addKeyboardListener(new NumericKeyboardListener());
 			value.setWidth("40px");
 			label = new HTML();
 			add(value);
@@ -66,7 +80,7 @@ public class PlotInterface implements ClickListener, ChangeListener{
 	}
 	
 	private Widget createAxisContainer(){
-		axisContainer.clear();
+/*		axisContainer.clear();
 		final ListBox plotTypes = new ListBox();
 		
 		plotTypes.addItem("Custom...");
@@ -76,7 +90,7 @@ public class PlotInterface implements ClickListener, ChangeListener{
 				
 			}
 		});
-		axisContainer.add(plotTypes);
+		axisContainer.add(plotTypes); */
 		
 		new ServerOp<List<ChemicalAnalysis>>() {
 			public void begin() {
@@ -88,63 +102,95 @@ public class PlotInterface implements ClickListener, ChangeListener{
 			}
 
 			public void onSuccess(final List<ChemicalAnalysis> result) {
-				axisFormulaContainers.clear();
-				for (int i = 1; i <= currentGraph.getAxisCount(); i++){					
-					final FlowPanel individualAxisContainer = new FlowPanel();
-					final Label axisNum = new Label(String.valueOf(i));
-					individualAxisContainer.add(axisNum);
-					
-					final FlowPanel formulaContainer = new FlowPanel();
-					axisFormulaContainers.add(formulaContainer);
-					final HorizontalPanel numeratorContainer = new HorizontalPanel();
-					
-					formulaContainer.add(numeratorContainer);
-					
-					FormulaCell numeratorConstant = new FormulaCell(0,"");
-					FormulaCell denominatorConstant = new FormulaCell(0,"");
-					numeratorContainer.add(numeratorConstant);
-					individualAxisContainer.add(formulaContainer);
-					
-					final DisclosurePanel editSpecies = new DisclosurePanel();
-					editSpecies.setHeader(new Label("Edit species..."));
-					
-					final ClickListener boxListener = new ClickListener(){
-						public void onClick(final Widget sender){
-							CheckBox temp = (CheckBox) sender;
-							if (temp.isChecked()){
-								FormulaCell numeratorCell = new FormulaCell(0,temp.getHTML());
-								numeratorContainer.add(new Label("+"));
-								numeratorContainer.add(numeratorCell);
-							} else {
-								Set<Widget> toRemoveNum = new HashSet<Widget>();
-								for (int i = 0; i < numeratorContainer.getWidgetCount(); i++){
-									if (numeratorContainer.getWidget(i) instanceof FormulaCell){
-										if (((FormulaCell) numeratorContainer.getWidget(i)).label.getHTML().equals(temp.getHTML())){
-											toRemoveNum.add(numeratorContainer.getWidget(i));
-											toRemoveNum.add(numeratorContainer.getWidget(i-1));
-											break;
+				if (axisFormulaContainers.size() >= currentGraph.getAxisCount()){
+					for (int i = axisFormulaContainers.size()-1; i >= currentGraph.getAxisCount(); i--){
+						axisContainer.remove(axisFormulaContainers.get(i).getParent());
+						axisFormulaContainers.remove(i);
+					}
+				} else {
+					for (int i = axisFormulaContainers.size()+1; i <= currentGraph.getAxisCount(); i++){					
+						final FlowPanel individualAxisContainer = new FlowPanel();
+						final Label axisNum = new Label(String.valueOf(i));
+						individualAxisContainer.add(axisNum);
+						
+						final FlowPanel formulaContainer = new FlowPanel();
+						axisFormulaContainers.add(formulaContainer);
+						final HorizontalPanel numeratorContainer = new HorizontalPanel();
+						
+						formulaContainer.add(numeratorContainer);
+						
+						FormulaCell numeratorConstant = new FormulaCell(0,"");
+						numeratorContainer.add(numeratorConstant);
+						individualAxisContainer.add(formulaContainer);
+						
+						final ClickListener boxListener = new ClickListener(){
+							public void onClick(final Widget sender){
+								CheckBox temp = (CheckBox) sender;
+								if (temp.isChecked()){
+									FormulaCell numeratorCell = new FormulaCell(0,temp.getHTML());
+									numeratorContainer.add(new Label("+"));
+									numeratorContainer.add(numeratorCell);
+								} else {
+									Set<Widget> toRemoveNum = new HashSet<Widget>();
+									for (int i = 0; i < numeratorContainer.getWidgetCount(); i++){
+										if (numeratorContainer.getWidget(i) instanceof FormulaCell){
+											if (((FormulaCell) numeratorContainer.getWidget(i)).label.getHTML().equals(temp.getHTML())){
+												toRemoveNum.add(numeratorContainer.getWidget(i));
+												toRemoveNum.add(numeratorContainer.getWidget(i-1));
+												break;
+											}
 										}
 									}
+									for (Widget w: toRemoveNum)
+										numeratorContainer.remove(w);
 								}
-								for (Widget w: toRemoveNum)
-									numeratorContainer.remove(w);
 							}
-						}
-					};
-					
-					final FlowPanel speciesContainer = new FlowPanel();
-					Set<String> displayNames = getPlottableSpecies(result);
-					for (String name : displayNames){
-						final CheckBox box = new CheckBox();
-						box.setHTML(name);
-						box.addClickListener(boxListener);
-						speciesContainer.add(box);
+						};
 						
+						final DisclosurePanel editSpecies = new DisclosurePanel();
+						editSpecies.setHeader(new Label("Edit species..."));
+						editSpecies.addEventHandler(new DisclosureHandler(){
+
+							public void onClose(DisclosureEvent event) {
+
+							}
+
+							public void onOpen(DisclosureEvent event) {
+								editSpecies.clear();
+								new ServerOp<List<ChemicalAnalysis>>() {
+									public void begin() {
+										final List<Integer> ids = new ArrayList<Integer>();
+										for (Object id : chemList.getSelectedValues()){
+											ids.add((Integer) id);
+										}
+										MpDb.chemicalAnalysis_svc.details(ids, this);
+									}
+
+									public void onSuccess(final List<ChemicalAnalysis> result2) {
+										editSpecies.clear();
+										final FlowPanel speciesContainer = new FlowPanel();
+										Set<String> displayNames = getPlottableSpecies(result2);
+										if (displayNames.size() == 0){
+											speciesContainer.add(new Label("No elements or oxides present in selected analyses"));
+										}
+										for (String name : displayNames){
+											final CheckBox box = new CheckBox();
+											box.setHTML(name);
+											box.addClickListener(boxListener);
+											speciesContainer.add(box);
+											
+										}
+										editSpecies.add(speciesContainer);
+									}
+								}.begin();
+							}
+							
+						});
+						
+						individualAxisContainer.add(editSpecies);
+						
+						axisContainer.add(individualAxisContainer);
 					}
-					editSpecies.add(speciesContainer);
-					individualAxisContainer.add(editSpecies);
-					
-					axisContainer.add(individualAxisContainer);
 				}
 			}
 		}.begin();
@@ -173,7 +219,7 @@ public class PlotInterface implements ClickListener, ChangeListener{
 		currentGraph = newGraph;
 		panel.getRightCol().clear();
 		panel.getRightCol().add(currentGraph.createWidget(new ArrayList<ChemicalAnalysis>(),
-				new ArrayList<AxisFormula>()));
+				new ArrayList<AxisFormula>(), new HashMap<Integer,Set<Integer>>()));
 		createAxisContainer();
 	}
 	
@@ -188,40 +234,32 @@ public class PlotInterface implements ClickListener, ChangeListener{
 		
 		ClickListener graphTypeListener = new ClickListener(){
 			public void onClick(final Widget sender){
-				if (sender == oneAxis){
-					onGraphTypeChange(new MLinePlot());
-				} else if (sender == twoAxes){
-					onGraphTypeChange(new ScatterPlot());
-				} else if (sender == threeAxes){
-					onGraphTypeChange(new TernaryPlot(700,700,500));
-				} else if (sender == fourAxes){
-					onGraphTypeChange(new TetrahedralPlot(700,700,400));
-					final TextBox x = new TextBox();
-					final TextBox y = new TextBox();
-					final TextBox z = new TextBox();
-					Button draw = new Button("Rotate");
-					draw.addClickListener(new ClickListener(){
-						public void onClick(final Widget sender){
-							((TetrahedralPlot)currentGraph).setRotation(Double.parseDouble(x.getText()),
-									Double.parseDouble(y.getText()),
-									Double.parseDouble(z.getText()));
-						}
-					});
-					Button getCurrent = new Button("Update");
-					getCurrent.addClickListener(new ClickListener(){
-						public void onClick(final Widget sender){
-							x.setText(String.valueOf(((TetrahedralPlot)currentGraph).theta.getX()*180/Math.PI));
-							y.setText(String.valueOf(((TetrahedralPlot)currentGraph).theta.getY()*180/Math.PI));
-							z.setText(String.valueOf(((TetrahedralPlot)currentGraph).theta.getZ()*180/Math.PI));
-						}
-					});
-					axisContainer.add(x);
-					axisContainer.add(y);
-					axisContainer.add(z);
-					axisContainer.add(draw);
-					axisContainer.add(getCurrent);
-				} else if (sender == help){
+				if (sender == help){
 					//TODO popup with some help 
+				} else {
+					removeMonoStereo();
+					if (sender == oneAxis){
+						onGraphTypeChange(new MLinePlot());
+					} else if (sender == twoAxes){
+						onGraphTypeChange(new ScatterPlot());
+					} else if (sender == threeAxes){
+						onGraphTypeChange(new TernaryPlot(700,700,500));
+					} else if (sender == fourAxes){
+						onGraphTypeChange(new TetrahedralPlot(700,700,500));
+						mono.addClickListener(new ClickListener(){
+							public void onClick(final Widget sender){
+								((TetrahedralPlot)currentGraph).setViewType(TetrahedralPlot.VIEW_TYPE.MONO);
+							}
+						});
+						stereo.addClickListener(new ClickListener(){
+							public void onClick(final Widget sender){
+								((TetrahedralPlot)currentGraph).setViewType(TetrahedralPlot.VIEW_TYPE.STEREO);
+							}
+						});
+						mono.setChecked(true);
+						axisContainer.insert(mono,0);
+						axisContainer.insert(stereo,1);
+					} 
 				}
 			}
 		};
@@ -240,8 +278,16 @@ public class PlotInterface implements ClickListener, ChangeListener{
 		
 		return graphTypeContainer;
 	}
+	
+	private void removeMonoStereo(){
+		if (mono.isAttached()){
+			mono.removeFromParent();
+			stereo.removeFromParent();
+		}
+	}
 		
 	private Button draw = new Button("Draw");	
+	private Button export = new Button("Export");
 	private DisclosurePanel disclosurePanel;
 	private MTwoColPanel panel = new MTwoColPanel();
 	
@@ -260,7 +306,29 @@ public class PlotInterface implements ClickListener, ChangeListener{
 	
 	public PlotInterface(){
 
-		panel.setRightColWidth("30%");
+		panel.setRightColWidth("60%");
+		panel.setLeftColWidth("40%");
+		
+		export.addClickListener(new ClickListener(){
+			public void onClick(Widget sender) {
+				String svg = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" standalone=\"no\"?>";
+				svg += "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20010904//EN\"";
+				svg += "\"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">";
+				
+				final FormPanel fp = new FormPanel();
+				fp.setMethod(FormPanel.METHOD_GET);
+				fp.setEncoding(FormPanel.ENCODING_URLENCODED);
+				final HorizontalPanel hp = new HorizontalPanel();
+				Hidden data = new Hidden("data", svg+currentGraph.getSVG());
+				hp.add(data);
+				fp.add(hp);
+				fp.setAction(GWT.getModuleBaseURL() + "svg.svc?");
+				fp.setVisible(false);
+				RootPanel.get().add(fp);
+				fp.submit();
+				panel.getLeftCol().add(new Label(svg+currentGraph.getSVG()));
+			}
+		});
 		
 		draw.addClickListener(new ClickListener(){
 
@@ -304,7 +372,14 @@ public class PlotInterface implements ClickListener, ChangeListener{
 
 					public void onSuccess(final List<ChemicalAnalysis> result) {						
 						panel.getRightCol().clear();
-						panel.getRightCol().add(currentGraph.createWidget(result,formulas));
+						Map<Integer,Set<Integer>> groups = new HashMap<Integer,Set<Integer>>();
+						Set<Integer> ids = new HashSet<Integer>();
+						for (ChemicalAnalysis ca : result){
+							ids.add(ca.getId());
+						}
+						groups.put(1, ids);
+		
+						panel.getRightCol().add(currentGraph.createWidget(result,formulas, groups));
 					}
 				}.begin();
 			}
@@ -315,6 +390,7 @@ public class PlotInterface implements ClickListener, ChangeListener{
 		leftContainer.add(createGraphTypeContainer());
 		leftContainer.add(axisContainer);
 		leftContainer.add(draw);
+		leftContainer.add(export);
 		panel.getLeftCol().add(leftContainer);
 		
 		
@@ -388,6 +464,5 @@ public class PlotInterface implements ClickListener, ChangeListener{
 	}
 	public Widget getWidget(){
 		return disclosurePanel;
-		
 	}
 }

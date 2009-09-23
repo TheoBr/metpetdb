@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.objetdirect.tatami.client.charting.Point;
@@ -110,8 +111,10 @@ public abstract class MPlot {
 		return data;
 	}
 	
-	public abstract Widget createWidget(List<ChemicalAnalysis> data, List<AxisFormula> formulas);
+	public abstract Widget createWidget(List<ChemicalAnalysis> data, List<AxisFormula> formulas, Map<Integer,Set<Integer>> groups);
 	
 	public abstract int getAxisCount();
+	
+	public abstract String getSVG();
 
 }

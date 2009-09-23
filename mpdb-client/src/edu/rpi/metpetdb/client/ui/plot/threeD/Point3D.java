@@ -19,6 +19,12 @@ public class Point3D extends GraphicObject3D {
 		this.z = z;
 	}
 	
+	public Point3D(Point3D p){
+		this.x = p.x;
+		this.y = p.y;
+		this.z = p.z;
+	}
+	
 	public void setX(double x){
 		this.x = x;
 	}
@@ -43,7 +49,11 @@ public class Point3D extends GraphicObject3D {
 		return z;
 	}
 	
-	public Point getProjection(Rotation theta){
-		return projectPoint(theta,this);
+	public Point getProjection(Rotation theta, Point3D camera){
+		return projectPoint(theta,this,camera);
+	}
+	
+	public String toString(){
+		return x + " " + y + " " + z;
 	}
 }

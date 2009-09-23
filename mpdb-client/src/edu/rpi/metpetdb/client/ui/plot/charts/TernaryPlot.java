@@ -3,6 +3,8 @@ package edu.rpi.metpetdb.client.ui.plot.charts;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -102,7 +104,7 @@ public class TernaryPlot extends MPlot {
 		drawAxes();
 	}
 	
-	public Widget createWidget(List<ChemicalAnalysis> data, List<AxisFormula> formulas){
+	public Widget createWidget(List<ChemicalAnalysis> data, List<AxisFormula> formulas, Map<Integer,Set<Integer>> groups){
 		if (formulas.size() < 3){
 			return container;
 		}
@@ -766,5 +768,10 @@ public class TernaryPlot extends MPlot {
 	
 	public int getAxisCount(){
 		return 3;
+	}
+	
+	public String getSVG(){
+		String innerhtml = canvas.getElement().getInnerHTML();
+		return innerhtml.substring(0, innerhtml.indexOf(">")) + "version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\"" + innerhtml.substring(innerhtml.indexOf(">"));
 	}
 }

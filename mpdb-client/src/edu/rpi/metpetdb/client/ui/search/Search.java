@@ -8,8 +8,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
@@ -122,7 +124,7 @@ public class Search extends MPagePanel {
 		samplesContainer.setVisible(outputSamples);
 	}
 
-	public Search() {
+	public Search() {		
 		setStyleName(CSS.SEARCH);
 		setPageTitle("Search");
 		add(searchPanel);
