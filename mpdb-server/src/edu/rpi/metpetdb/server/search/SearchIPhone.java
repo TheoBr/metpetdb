@@ -11,7 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.plaf.synth.Region;
 
 import org.hibernate.Session;
 import org.postgis.LinearRing;
@@ -55,6 +54,7 @@ public class SearchIPhone extends HttpServlet{
 	private static final String MINERAL= "mineral";
 	private static final String METAMORPHIC_GRADE="metamorphicGrade";
 	private static final String OWNER="owner";  
+	private static final String PAGINATION="pagination";
 
 	private Session session;
 	private Set<String> owners= new HashSet();
@@ -62,6 +62,7 @@ public class SearchIPhone extends HttpServlet{
 	private Set<MetamorphicGrade> metamorphicGrades= new HashSet();
 	private Set<Mineral> minerals= new HashSet();
 	private String region= new String();
+	private edu.rpi.metpetdb.client.paging.PaginationParameters p= new edu.rpi.metpetdb.client.paging.PaginationParameters();
 	@Override
 
 	/*protected void doPost(final HttpServletRequest request,
@@ -222,13 +223,24 @@ public class SearchIPhone extends HttpServlet{
 			metamorphicGrades= new HashSet();
 			minerals= new HashSet();
 			region= new String();
+			p= new edu.rpi.metpetdb.client.paging.PaginationParameters();
 			//make sets of the various search criteria so they can be passed to the various search functions
+			if(request.getParameter(PAGINATION)!=null)
+			{
+				//the pagination parameter that is passed as an argument is the first result we want, as the max results number is fixed
+				//there should never be more than one value for the pagination param, so can convert tempParams[0] to an int
+				//and it will be the first result we want
+				String tempParams[]= request.getParameterValues(PAGINATION);
+				int param= Integer.parseInt(tempParams[0]);
+				p.setFirstResult(param);
+				p.setMaxResults(100);
+			}
 			if(request.getParameter(OWNER)!= null)
 			{
 				String tempOwners[]  = request.getParameterValues(OWNER);
 				List list = Arrays.asList(tempOwners);
 				owners  = new HashSet(list);
-				outputSearchXML(search(session), response);
+				//outputSearchXML(search(session), response);
 			}
 			if(request.getParameter(ROCK_TYPE)!= null)
 			{	
@@ -239,7 +251,7 @@ public class SearchIPhone extends HttpServlet{
 					RockType rt= new RockType(tempRockTypes[i]);
 					rockTypes.add(rt);
 				}
-				outputSearchXML(search(session), response);
+				//outputSearchXML(search(session), response);
 			}
 			if(request.getParameter(METAMORPHIC_GRADE)!= null)
 			{
@@ -249,7 +261,7 @@ public class SearchIPhone extends HttpServlet{
 					MetamorphicGrade mg= new MetamorphicGrade(tempMetGrades[i]);
 					metamorphicGrades.add(mg);
 				}
-				outputSearchXML(search(session), response);
+				//outputSearchXML(search(session), response);
 			}
 			if(request.getParameter(MINERAL)!= null)
 			{
@@ -260,7 +272,7 @@ public class SearchIPhone extends HttpServlet{
 					min.setName(tempMinerals[i]);
 					minerals.add(min);
 				}
-				outputSearchXML(search(session), response);
+				//outputSearchXML(search(session), response);
 			}
 			
 			// If there is a GET string for latitude and longitude then it is a search
@@ -281,7 +293,13 @@ public class SearchIPhone extends HttpServlet{
 				}
 				//outputSearchXML(search(region, session),response);
 				outputSearchXML(search(session), response);
-			} else if (request.getParameter(SAMPLE_ID) != null){
+			}
+			//if search criteria were entered but a search region or search box was not, a seperate search must be done
+			else if(!minerals.isEmpty() || !owners.isEmpty() || !rockTypes.isEmpty() || !metamorphicGrades.isEmpty())
+			{
+				outputSearchXML(search(session), response);
+			}
+			else if (request.getParameter(SAMPLE_ID) != null){
 				for (String id : request.getParameterValues(SAMPLE_ID))
 					sampleIds.add(Long.parseLong(id));
 				sampleInfo(sampleIds,response);
@@ -616,34 +634,42 @@ public class SearchIPhone extends HttpServlet{
 	//private Results<Sample> search(final SearchSample s, Session session){
 	//private Results<Sample> search(final String region, Session session){
 	private Results<Sample> search(Session session){
+		
 		try{
 			//if any search criteria have been specified (owners, rocktypes, metamorphic grades, or minerals)
 			//then set searchSample to have these attributes
-			SearchSample s = new SearchSample();
+			SearchSample ss = new SearchSample();
 			if(!region.isEmpty())
 			{
-				s.addRegion(region);
+				ss.addRegion(region);
 			}
 			if(!owners.isEmpty())
 			{
-				s.setOwners(owners);
+				ss.setOwners(owners);
 			}
 			if(!rockTypes.isEmpty())
 			{
-				s.setPossibleRockTypes(rockTypes);
+				ss.setPossibleRockTypes(rockTypes);
 			}
 			if(!metamorphicGrades.isEmpty())
 			{
-				s.setMetamorphicGrades(metamorphicGrades);
+				ss.setMetamorphicGrades(metamorphicGrades);
 			}
 			if(!minerals.isEmpty())
 			{
-				s.setMinerals(minerals);
+				ss.setMinerals(minerals);
 			}
-			return SearchDb.sampleSearch(null, s, null, session);
+			if(p.equals(null))
+			{
+				return SearchDb.sampleSearch(null, ss, null, session);
+			}
+			else
+			{
+				return SearchDb.sampleSearch(p, ss, null, session);
+			}
 		}
-		catch(Exception e){
-			throw new IllegalStateException(e.getMessage());
+		catch (final Exception ioe){
+			throw new IllegalStateException(ioe.getMessage());
 		}
 	}
 
