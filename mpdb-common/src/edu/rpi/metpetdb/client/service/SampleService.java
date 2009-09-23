@@ -12,6 +12,7 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 
@@ -52,4 +53,6 @@ public interface SampleService extends RemoteService {
 	
 	Results<Sample> allSamplesForProject(PaginationParameters p, long projectId) 
 		throws MpDbException, LoginRequiredException;
+	
+	Boolean canEdit(long id) throws MpDbException;
 }

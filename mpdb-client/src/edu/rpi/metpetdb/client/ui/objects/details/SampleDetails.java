@@ -106,6 +106,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 	private final ObjectEditorPanel<Sample> p_sample;
 	private long sampleId;
 	private Sample sample;
+	private boolean canEdit;
 
 	public SampleDetails() {
 		p_sample = new ObjectEditorPanel<Sample>(sampleAtts,
@@ -199,12 +200,26 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 				new LoggedInServerOp<Subsample>() {
 					@Override
 					public void command() {
-						if(canEdit()){
+						final Sample s = (Sample) p_sample.getBean();
+						if(MpDb.currentUser() == null) noPermissionWarning();
+						if(MpDb.isCurrentUser(s.getOwner())){
 							History.newItem(TokenSpace.createNewSubsample(p_sample
-								.getBean()));
-						} else {
-							noPermissionWarning();
+									.getBean()));
 						}
+						//check to see if the sample is part of a project that the current user
+						//is a member of
+						new ServerOp<Boolean>() {
+							public void begin() {
+								MpDb.sample_svc.canEdit(s.getId(), this);
+							}
+
+							public void onSuccess(Boolean result) {
+								if(result){
+									History.newItem(TokenSpace.createNewSubsample(p_sample
+											.getBean()));
+								} else noPermissionWarning();
+							}
+						}.begin();
 					}
 				}.begin();
 			}
@@ -516,11 +531,6 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 		s.setOwner(MpDb.currentUser());
 		p_sample.edit(s);
 		return this;
-	}
-	
-	private boolean canEdit(){
-		final Sample s = (Sample) p_sample.getBean();
-		return MpDb.isCurrentUser(s.getOwner());
 	}
 	
 	private void noPermissionWarning(){

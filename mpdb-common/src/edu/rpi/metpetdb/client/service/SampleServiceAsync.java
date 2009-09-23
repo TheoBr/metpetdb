@@ -8,6 +8,7 @@ import java.util.Set;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 
@@ -50,4 +51,6 @@ public interface SampleServiceAsync {
 
 	void allSamplesForProject(PaginationParameters p, long projectId,
 			AsyncCallback<Results<Sample>> ac);
+	
+	void canEdit(long id, AsyncCallback<Boolean> ac);
 }

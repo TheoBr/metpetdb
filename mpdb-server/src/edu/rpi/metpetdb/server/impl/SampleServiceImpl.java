@@ -15,12 +15,18 @@ import org.hibernate.Session;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SampleService;
+import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.ProjectDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
+import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 
 public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	private static final long serialVersionUID = 1L;
@@ -151,6 +157,13 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 				options.add(o[i].toString());
 		}
 		return options;
+	}
+	
+	public Boolean canEdit(final long id) throws MpDbException{
+		User u = MpDbServlet.currentReq().user;
+		ProjectDAO pDAO = (new ProjectDAO(this.currentSession()));
+		boolean result = pDAO.isSampleVisibleToUser(u.getId(), id);
+		return result;
 	}
 
 	public Results<Sample> allSamplesForProject(PaginationParameters p,
