@@ -639,7 +639,7 @@ public class SearchIPhone extends HttpServlet{
 			//if any search criteria have been specified (owners, rocktypes, metamorphic grades, or minerals)
 			//then set searchSample to have these attributes
 			SearchSample ss = new SearchSample();
-			if(!region.isEmpty())
+			if(region.length()!=0)
 			{
 				ss.addRegion(region);
 			}
