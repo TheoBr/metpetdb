@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.dialogs;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -19,13 +20,20 @@ public class UnknownErrorDialog extends MDialogBox implements ClickListener {
 
 	public UnknownErrorDialog(final Throwable err, final boolean canClose) {
 		final FlowPanel p = new FlowPanel();
-		p.add(new Label(LocaleHandler.lc_text.errorTitle_UnknownError()));
-		p.add(new Label(LocaleHandler.lc_text.errorDesc_UnknownError()));
+		p.add(new Label("Sorry, something went wrong. If this problem is effecting the")); 
+		p.add(new Label("functionality of the system, please try reloading this page.")); 
+		p.add(new Label("You can see the details of the error message below."));
+		final Label hideLabel = new Label("Hide");
+		final DisclosurePanel dp = new DisclosurePanel(hideLabel,false);
+		p.add(dp);
+		final FlowPanel container = new FlowPanel();
+		container.add(new Label(LocaleHandler.lc_text.errorTitle_UnknownError()));
+		container.add(new Label(LocaleHandler.lc_text.errorDesc_UnknownError()));
 
 		if (err instanceof InvocationException && isHTML(err.getMessage()))
-			p.add(new HTML(err.getMessage()));
+			container.add(new HTML(err.getMessage()));
 		else
-			p.add(new Label(err.toString() + err.getMessage()));
+			container.add(new Label(err.toString() + err.getMessage()));
 		err.printStackTrace();
 
 		if (canClose) {
@@ -34,7 +42,9 @@ public class UnknownErrorDialog extends MDialogBox implements ClickListener {
 		} else {
 			close = null;
 		}
-
+		dp.add(container);
+		dp.setStylePrimaryName("criteria-collapse");
+		dp.setAnimationEnabled(true);
 		setWidget(p);
 	}
 

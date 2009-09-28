@@ -25,6 +25,29 @@
 	padding-right: 2px;
 }
 
+.dialogBox .criteria-collapse {
+	background-color: #f1f1f1;
+	width: 100%;
+}
+.dialogBox .criteria-collapse a.header {
+	background: #c2c2c2 url(../images/search-collapsebar-bg.png) repeat-x left top;
+	height: 7px;
+	padding-top: 4px;
+}
+.dialogBox .criteria-collapse a.header:hover {
+	background-position: left -11px;
+}
+.dialogBox .criteria-collapse a.header div {
+	width: 10px;
+	height: 5px;
+	background: transparent url(../images/search-collapsebar-arrow.png) no-repeat left top;
+	margin: 0 auto;
+	text-indent: -9999px;
+}
+.dialogBox .criteria-collapse-closed a.header div {
+	background-position: left -5px;
+}
+
 /*-------------------------------------
                login
  --------------------------------------*/
