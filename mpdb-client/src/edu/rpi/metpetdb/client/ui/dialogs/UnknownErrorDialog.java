@@ -20,7 +20,7 @@ public class UnknownErrorDialog extends MDialogBox implements ClickListener {
 
 	public UnknownErrorDialog(final Throwable err, final boolean canClose) {
 		final FlowPanel p = new FlowPanel();
-		p.add(new Label("Sorry, something went wrong. If this problem is effecting the")); 
+		p.add(new Label("Sorry, something went wrong. If this problem is affecting the")); 
 		p.add(new Label("functionality of the system, please try reloading this page.")); 
 		p.add(new Label("You can see the details of the error message below."));
 		final Label hideLabel = new Label("Hide");
