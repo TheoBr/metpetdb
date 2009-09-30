@@ -198,4 +198,33 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 		commit();
 		return p;
 	}
+
+	public void removeFromProject(List<Long> checkedSamples, long projectId)
+			throws MpDbException {
+		ProjectDAO dao = new ProjectDAO(this.currentSession());
+		Project p = new Project();
+		p.setId((int)projectId);
+		p = dao.fill(p);
+		
+		//Get all the real samples for each id
+		SampleDAO sampleDao = new SampleDAO(this.currentSession());
+		List<Sample> sampleList = new ArrayList<Sample>();
+		for(long id : checkedSamples){
+			Sample s = new Sample();
+			s.setId(id);
+			s = sampleDao.fill(s);
+			sampleList.add(s);
+		}
+		
+		Set<Sample> currentSet = p.getSamples();
+		if(currentSet == null){
+			currentSet = new HashSet(sampleList);
+		} else {
+				currentSet.removeAll(sampleList);
+		}
+		
+		p.setSamples(currentSet);
+		dao.save(p);
+		commit();
+	}
 }

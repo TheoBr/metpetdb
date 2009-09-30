@@ -209,6 +209,19 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 	private final MLink viewGoogleEarth;
 	private final MLink makePublic;
 	private final MLink remove;
+	private final MLink removeFromProject = new MLink("Remove from project", this);;
+	
+	public SampleListActions(final DataList<Sample> list, boolean isForProject){
+		this(list);
+		if(isForProject){
+			//Get rid of the remove sample link
+			remove(remove);
+			
+			//Put in a remove from project link
+			removeFromProject.addStyleName("item");
+			add(removeFromProject);
+		}
+	}
 
 	public SampleListActions(final DataList<Sample> list) {
 		projects = new HashMap<Integer, Project>();
@@ -359,6 +372,18 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 		}.begin();
 	}
 	
+	private void removeFromProject(final List<Long> checkedSamples, final long projectId){
+		new VoidServerOp() {
+			public void begin() {
+				MpDb.project_svc.removeFromProject(checkedSamples, projectId, this);
+			}
+			public void onSuccess(){
+				list.getScrollTable().reloadPage();
+			}
+			
+		}.begin();
+	}
+	
 	private void noSamplesSelected(){
 		final MDialogBox noSamplesBox = new MDialogBox();
 		final FlowPanel container = new FlowPanel();
@@ -459,6 +484,41 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 					};
 				}.begin();
 			}
+		} else if (sender == removeFromProject){
+			final long projectId = ((ProjectSampleList)list).getProjectId();
+			final ArrayList<Long> checkedSampleIds = new ArrayList<Long>();
+			for (Object id : list.getSelectedValues()){
+				checkedSampleIds.add((Long) id);
+			}
+			if(checkedSampleIds.size() == 0){
+				noSamplesSelected();
+			} else {
+				new ServerOp<List<Sample>>(){
+					public void begin(){
+						List<Long> ids = new ArrayList<Long>();
+						for (Object o :  list.getSelectedValues()){
+							ids.add((Long) o);
+						}
+						MpDb.sample_svc.details(ids, this);
+					}
+					
+					public void onSuccess(List<Sample> result){
+						new ServerOp<Boolean>() {
+							public void begin() {
+								new ConfirmationDialogBox(LocaleHandler.lc_text
+										.confirmation_Remove_From_Project(), true, this);
+							}
+							
+							public void onSuccess(final Boolean result) {
+								removeFromProject(checkedSampleIds, projectId);
+							}
+							
+						}.begin();
+					}
+					
+				}.begin();	
+			}
+			
 		}
 	}
 }

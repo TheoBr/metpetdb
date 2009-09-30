@@ -8,6 +8,7 @@ import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
+import edu.rpi.metpetdb.client.ui.objects.list.ProjectSampleList;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
@@ -15,7 +16,7 @@ public class ProjectSamplesList extends MPagePanel {
 		private final SampleList list;
 		
 		public ProjectSamplesList(final long projectId) {
-			list = new SampleList() {
+			list = new ProjectSampleList() {
 				public void update(final PaginationParameters p,
 						final AsyncCallback<Results<Sample>> ac) {
 					MpDb.sample_svc.projectSamples(p, projectId, ac);
@@ -30,6 +31,7 @@ public class ProjectSamplesList extends MPagePanel {
 
 			};
 			addPageHeader();
+			((ProjectSampleList)list).setProjectId(projectId);
 			add(list);
 		}
 		
@@ -39,20 +41,6 @@ public class ProjectSamplesList extends MPagePanel {
 
 		protected void addPageHeader() {
 			setPageTitle("Project Samples");
-
-			//Not going to support adding samples directly to projects yet
-			/*final MLink addSample = new MLink("Add Sample", TokenSpace.enterSample);
-			final MLink bulkUpload = new MLink("Upload Data",
-					TokenSpace.bulkUpload);
-
-			addSample.setStylePrimaryName(CSS.LINK_LARGE_ICON);
-			addSample.addStyleName(CSS.LINK_ADD);
-
-			bulkUpload.setStylePrimaryName(CSS.LINK_LARGE_ICON);
-			bulkUpload.addStyleName(CSS.LINK_UPLOAD_MULTI);
-
-			addPageActionItem(addSample);
-			addPageActionItem(bulkUpload);*/
 		}
 
 	}

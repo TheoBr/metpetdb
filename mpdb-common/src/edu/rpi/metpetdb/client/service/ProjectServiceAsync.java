@@ -55,4 +55,6 @@ public interface ProjectServiceAsync {
 	void inviteDetails(int id, AsyncCallback<Invite> ac);
 
 	void addSamples(int projectId, List<Long> checkedSamples, AsyncCallback<Project> ac);
+	
+	void removeFromProject(List<Long> checkedSamples, long projectId, AsyncCallback<Void> ac);
 }
