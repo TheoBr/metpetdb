@@ -403,9 +403,7 @@ public class MetPetDBApplication implements EntryPoint {
 		});
 
 		hdrnav.addItem("My Samples", TokenSpace.samplesForUser);
-		if (!GWT.getHostPageBaseURL().contains("metpetweb") || GWT.getHostPageBaseURL().contains("metpetwebtst")){
-			hdrnav.addItem(LocaleHandler.lc_text.projectMenu(), TokenSpace.allProjects);
-		}
+		hdrnav.addItem(LocaleHandler.lc_text.projectMenu(), TokenSpace.allProjects);
 		hdrnav.addItem("Search", TokenSpace.search);
 		hdrnav.addItem("Upload Data", TokenSpace.bulkUpload);
 		hdrnav.addItem("Wiki", new Command() {

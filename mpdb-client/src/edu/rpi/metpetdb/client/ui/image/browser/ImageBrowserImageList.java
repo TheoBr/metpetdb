@@ -36,7 +36,7 @@ public abstract class ImageBrowserImageList extends DataList<Image> {
 
 		columns
 				.addColumn(new Column<Image, com.google.gwt.user.client.ui.Image>(
-						"") {
+						"Thumbnail") {
 					@Override
 					public com.google.gwt.user.client.ui.Image getCellValue(
 							final Image rowValue) {

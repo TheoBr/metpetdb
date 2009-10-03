@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.ui.objects.list;
 
+import com.google.gwt.gen2.table.client.AbstractScrollTable.ScrollPolicy;
 import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -35,16 +36,17 @@ public abstract class ImageListViewer extends DataList<Image> {
 		for(Column<Image,?> c: ImageBrowserImageList.getColumns()) {
 			columns.addColumn(c);
 		}
+		
 		columns.addColumn(new StringColumn<Image>(enttxt.Image_collector(),
-				ImageProperty.collector));
+				ImageProperty.collector).setOptional(true));
 		columns.addColumn(new XrayColumn(enttxt.XrayImage_current(),
-				XrayImageProperty.current));
+				XrayImageProperty.current).setOptional(true));
 		columns.addColumn(new XrayColumn(enttxt.XrayImage_voltage(),
-				XrayImageProperty.voltage));
+				XrayImageProperty.voltage).setOptional(true));
 		columns.addColumn(new XrayColumn(enttxt.XrayImage_dwelltime(),
-				XrayImageProperty.dwelltime));
+				XrayImageProperty.dwelltime).setOptional(true));
 		columns.addColumn(new XrayColumn(enttxt.XrayImage_element(),
-				XrayImageProperty.element));
+				XrayImageProperty.element).setOptional(true));
 	}
 	
 	@Override
