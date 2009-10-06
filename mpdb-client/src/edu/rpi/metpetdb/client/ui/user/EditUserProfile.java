@@ -24,7 +24,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MText;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
 public class EditUserProfile extends MPagePanel implements UsesCurrentUser {
-	private final User user;
+	private static User user;
 
 	public EditUserProfile(final User whoToEdit) {
 		setPageTitle("Edit Profile");
@@ -43,6 +43,10 @@ public class EditUserProfile extends MPagePanel implements UsesCurrentUser {
 			throw new LoginRequiredException();
 	}
 	
+	private static void setUser(User u){
+		user = u;
+	}
+	
 	static class InfoChanger extends FlowPanel implements ClickListener{
 		private static final GenericAttribute[] userAttributes = {
 			new TextAttribute(MpDb.doc.User_name),
@@ -55,11 +59,15 @@ public class EditUserProfile extends MPagePanel implements UsesCurrentUser {
 			new TextAttribute(MpDb.doc.User_institution), 
 			new TextAttribute(MpDb.doc.User_referenceEmail),
 		};
-		private final User u;
+		private User u;
 		private final DetailsPanel<User> p_main;
 		private final FlowPanel infoContainer = new FlowPanel();
 		private final MText infoHeader = new MText("Change your information", "h2");
 		private final Button changeInfo;
+		
+		private void setUser(User u){
+			this.u = u;
+		}
 		
 		InfoChanger(final User whoToEdit) {
 			u = whoToEdit;
@@ -97,6 +105,8 @@ public class EditUserProfile extends MPagePanel implements UsesCurrentUser {
 					super.onFailure(e);
 				}
 				public void onSuccess(final User result) {
+					setUser(result);
+					u = result;
 					enable(true);
 					p_main.edit(u);
 					MetPetDBApplication.notice(LocaleHandler.lc_text
