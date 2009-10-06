@@ -234,7 +234,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		if (results != "NO-SCRIPT-DATA" && results != "") {
 			// TODO: This is bad! It's to strip the <pre> and </pre>
 			// tags that get stuck on the string for some reason
-			fileOnServer = results.substring(5, results.length() - 6);
+			fileOnServer = results.replaceAll("<.*?>", "");
 			resultStatus.sendNotice(NoticeType.WORKING,
 					"Upload complete. Parsing " + contentType
 							+ ", please wait...");
