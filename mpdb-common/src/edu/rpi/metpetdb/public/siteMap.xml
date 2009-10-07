@@ -76,6 +76,21 @@
 			<name>Specific Project</name>
 			<token>SamplesForProject</token>
 			<screen>false</screen>
+			<page>
+				<name>Description</name>
+				<token>DescriptionOfProject</token>
+				<screen>false</screen>
+			</page>
+			<page>
+				<name>Status of Invites</name>
+				<token>ProjectViewInvites</token>
+				<screen>false</screen>
+			</page>
+			<page>
+				<name>Invite New Member</name>
+				<token>ProjectInvite</token>
+				<screen>false</screen>
+			</page>
 		</page>
 	</page>
 	<page>
