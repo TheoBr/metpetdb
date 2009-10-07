@@ -422,7 +422,7 @@ public class TokenSpace implements HistoryListener {
 						}
 
 						public void onSuccess(Void result) {
-							Window.alert("done regenerating indicies");
+							Window.alert("done regenerating indexes");
 						}
 					}.begin();
 				}

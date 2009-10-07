@@ -86,6 +86,13 @@
     where i.subsample.id = :id
     order by i.imageType.imageType
   </query>
+  <query name="Image.bySubsampleId/collector">
+	from Image i
+    where i.subsample.id = :id
+    order by i.collector
+  </query>
+  
+  
   <query name="Image.bySampleIdbyFilename">
     from Image i
     where i.sample.id = :id 

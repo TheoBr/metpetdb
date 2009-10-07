@@ -78,25 +78,30 @@ public class ChemistryAttribute extends GenericAttribute implements
 
 		String elementDisplay = "";
 		if (elements != null) {
-			String elementWT = "";
-			String elementPPM = "";
 			elementDisplay += "<table>";
 			final Iterator<ChemicalAnalysisElement> iter = elements.iterator();
+			String currentHeader = "";
 			while (iter.hasNext()) {
+				String elementWT = "";
+				String elementPPM = "";
 				final ChemicalAnalysisElement element = iter.next();
 				if (element.getMeasurementUnit().equalsIgnoreCase("ppm")) {
-					if (elementPPM.length() == 0)
+					if (!currentHeader.equals("ppm")){
 						//add in header
 						elementPPM = "<tr class=\\\"\" + CSS.TYPE_SMALL_CAPS\n" + 
 								"					+ \"\\\"><th>ppm</th><th>Element</th></tr>";
+						currentHeader = "ppm";
+					}
 					elementPPM += "<tr><td class=\"ppm\">" + element.getDisplayAmount()
 					+ "</td><td>" + element.getDisplayName()
 					+ "</td></tr>";
 				} else {
-					if (elementWT.length() == 0)
+					if (!currentHeader.equals("wt%")){
 						//add in header
 						elementWT = "<tr class=\\\"\" + CSS.TYPE_SMALL_CAPS\n" + 
 								"					+ \"\\\"><th>wt%</th><th>Element</th></tr>";
+						currentHeader = "wt%";
+					}
 					elementWT += "<tr><td class=\"wt\">" + element.getDisplayAmount()
 					+ "%</td><td>" + element.getDisplayName()
 					+ "</td></tr>";

@@ -36,17 +36,35 @@ public abstract class ImageListViewer extends DataList<Image> {
 		for(Column<Image,?> c: ImageBrowserImageList.getColumns()) {
 			columns.addColumn(c);
 		}
-		
-		columns.addColumn(new StringColumn<Image>(enttxt.Image_collector(),
-				ImageProperty.collector).setOptional(true));
-		columns.addColumn(new XrayColumn(enttxt.XrayImage_current(),
-				XrayImageProperty.current).setOptional(true));
-		columns.addColumn(new XrayColumn(enttxt.XrayImage_voltage(),
-				XrayImageProperty.voltage).setOptional(true));
-		columns.addColumn(new XrayColumn(enttxt.XrayImage_dwelltime(),
-				XrayImageProperty.dwelltime).setOptional(true));
-		columns.addColumn(new XrayColumn(enttxt.XrayImage_element(),
-				XrayImageProperty.element).setOptional(true));
+		{
+			Column<Image,String> col = new StringColumn<Image>(enttxt.Image_collector(),
+				ImageProperty.collector).setOptional(true);
+			columns.addColumn(col);
+		}
+		{
+			Column<Image,String> col = new XrayColumn(enttxt.XrayImage_current(),
+					XrayImageProperty.current).setOptional(true);
+			col.setColumnSortable(false);
+			columns.addColumn(col);
+		}
+		{
+			Column<Image,String> col = new XrayColumn(enttxt.XrayImage_voltage(),
+					XrayImageProperty.voltage).setOptional(true);
+			col.setColumnSortable(false);
+			columns.addColumn(col);
+		}
+		{
+			Column<Image,String> col = new XrayColumn(enttxt.XrayImage_dwelltime(),
+					XrayImageProperty.dwelltime).setOptional(true);
+			col.setColumnSortable(false);
+			columns.addColumn(col);
+		}
+		{
+			Column<Image,String> col = new XrayColumn(enttxt.XrayImage_element(),
+					XrayImageProperty.element).setOptional(true);
+			col.setColumnSortable(false);
+			columns.addColumn(col);
+		}
 	}
 	
 	@Override

@@ -321,7 +321,7 @@ public class MetPetDBApplication implements EntryPoint {
 				}.begin();
 			}
 		});
-		dev.addItem("Regenerate Search Indecies", new Command() {
+		dev.addItem("Regenerate Search Indexes", new Command() {
 
 			public void execute() {
 				new ServerOp<Void>() {
@@ -331,7 +331,7 @@ public class MetPetDBApplication implements EntryPoint {
 					}
 
 					public void onSuccess(Void result) {
-						Window.alert("done regenerating indicies");
+						Window.alert("done regenerating indexes");
 					}
 				}.begin();
 			}

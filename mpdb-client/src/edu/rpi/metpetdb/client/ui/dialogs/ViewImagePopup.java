@@ -28,8 +28,6 @@ public class ViewImagePopup extends MDialogBox implements ClickListener,
 	private Label page;
 	private com.google.gwt.user.client.ui.Image displayImage;
 	private ArrayList<Image> images;
-	private PopupPanel left;
-	private PopupPanel right;
 
 	public ViewImagePopup(final ArrayList<Image> images,
 			final com.google.gwt.user.client.ui.Image image, int indexStart) {
@@ -44,34 +42,6 @@ public class ViewImagePopup extends MDialogBox implements ClickListener,
 		Image currentImage = (Image) images.get(index);
 		imageTitle = new Label(parseFilename(currentImage.getFilename()));
 		page = new Label("Image " + (index + 1) + " of " + images.size());
-		image.addMouseListener(new MouseListener() {
-			public void onMouseDown(final Widget sender, final int x,
-					final int y) {
-
-			}
-			public void onMouseUp(final Widget sender, final int x, final int y) {
-				if (x < displayImage.getOffsetWidth() / 2)
-					nextImage(false);
-				else
-					nextImage(true);
-			}
-			public void onMouseMove(final Widget sender, final int x,
-					final int y) {
-				if (x < displayImage.getOffsetWidth() / 2) {
-					left.show();
-					right.hide();
-				} else {
-					right.show();
-					left.hide();
-				}
-			}
-			public void onMouseLeave(final Widget sender) {
-				left.hide();
-				right.hide();
-			}
-			public void onMouseEnter(final Widget sender) {
-			}
-		});
 
 		displayImage.setStyleName("image-title");
 		imageTitle.setStyleName("gray");
@@ -130,16 +100,12 @@ public class ViewImagePopup extends MDialogBox implements ClickListener,
 	public void onClick(Widget sender) {
 		if (sender == close) {
 			this.hide();
-			left.hide();
-			right.hide();
 		}
 	}
 
 	public void onKeyPress(final Widget sender, final char kc, final int mod) {
 		if (kc == KEY_ESCAPE) {
 			ViewImagePopup.this.hide();
-			left.hide();
-			right.hide();
 		}
 		if (kc == 'n')
 			nextImage(true);
@@ -178,37 +144,5 @@ public class ViewImagePopup extends MDialogBox implements ClickListener,
 			displayImage.setSize(((int) (imageWidth * imageMultiplier)) + "px",
 					((int) (imageHeight * imageMultiplier)) + "px");
 		}
-
-		right = new PopupPanel() {
-			protected void onLoad() {
-				final int topPos = (ViewImagePopup.this.getPopupTop() + ViewImagePopup.this
-						.getOffsetHeight() / 4);
-				final int rightPos = ViewImagePopup.this.getPopupLeft()
-						+ ViewImagePopup.this.getOffsetWidth()
-						- this.getOffsetWidth();
-				setPopupPosition(rightPos, topPos);
-				DOM.setStyleAttribute(right.getElement(), "zIndex", String
-						.valueOf(10000));
-				f.setFocus(true);
-			}
-		};
-		left = new PopupPanel() {
-			protected void onLoad() {
-				final int topPos = (ViewImagePopup.this.getPopupTop() + ViewImagePopup.this
-						.getOffsetHeight() / 4);
-				final int leftPos = ViewImagePopup.this.getPopupLeft();
-				setPopupPosition(leftPos, topPos);
-				DOM.setStyleAttribute(left.getElement(), "zIndex", String
-						.valueOf(10000));
-				f.setFocus(true);
-			}
-		};
-
-		MLink prev = new MLink("", this);
-		MLink next = new MLink("", this);
-		prev.addStyleName("prevLink");
-		next.addStyleName("nextLink");
-		right.add(next);
-		left.add(prev);
 	}
 }
