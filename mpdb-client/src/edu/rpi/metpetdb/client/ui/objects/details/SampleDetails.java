@@ -90,7 +90,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			new RadioButtonAttribute(MpDb.doc.Sample_publicData,
 					LocaleHandler.lc_text.publicDataWarning()),
 			new LocationAttribute(MpDb.doc.Sample_location),
-			new TextAttribute(MpDb.doc.Sample_locationError),
+			new TextAttribute(MpDb.doc.Sample_locationError,true,false,false),
 			new CountryAttribute(MpDb.doc.Sample_country),
 			new TextAttribute(MpDb.doc.Sample_description),
 			new TextAttribute(MpDb.doc.Sample_collector),

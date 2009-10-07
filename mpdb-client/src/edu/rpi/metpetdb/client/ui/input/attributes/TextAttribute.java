@@ -12,9 +12,13 @@ import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.MaxLengthConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.Util;
+import edu.rpi.metpetdb.client.ui.widgets.NumericKeyboardListener;
 
 public class TextAttribute extends GenericAttribute {
 	protected int visibleLength;
+	private boolean numeric = false;
+	private boolean integer = false;
+	private boolean negative = false;
 
 	public TextAttribute(final StringConstraint sc) {
 		super(sc);
@@ -24,6 +28,13 @@ public class TextAttribute extends GenericAttribute {
 	public TextAttribute(final PropertyConstraint pc) {
 		super(pc);
 		visibleLength = 30;
+	}
+	
+	public TextAttribute(final PropertyConstraint pc, final boolean numeric, final boolean integer, final boolean negative) {
+		this(pc);
+		this.numeric = numeric;
+		this.integer = integer;
+		this.negative = negative;
 	}
 
 	public int getVisibleLength() {
@@ -42,6 +53,8 @@ public class TextAttribute extends GenericAttribute {
 
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		final TextBox b = new TextBox();
+		if (numeric) b.addKeyboardListener(new NumericKeyboardListener(integer,negative));
+
 		DOM.setElementAttribute(b.getElement(), "id", id);
 		b.setText(get(obj));
 		b.setVisibleLength(visibleLength);

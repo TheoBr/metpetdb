@@ -42,9 +42,9 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 			new TextAreaAttribute(MpDb.doc.ChemicalAnalysis_description),
 			new AnalysisMaterialAttribute(MpDb.doc.ChemicalAnalysis_mineral,
 					MpDb.doc.ChemicalAnalysis_largeRock),
-			new TextAttribute(MpDb.doc.ChemicalAnalysis_total),
-			new TextAttribute(MpDb.doc.ChemicalAnalysis_stageX),
-			new TextAttribute(MpDb.doc.ChemicalAnalysis_stageY),
+			new TextAttribute(MpDb.doc.ChemicalAnalysis_total,true,false,false),
+			new TextAttribute(MpDb.doc.ChemicalAnalysis_stageX,true,true,false),
+			new TextAttribute(MpDb.doc.ChemicalAnalysis_stageY,true,true,false),
 			new ChemistryAttribute(MpDb.doc.ChemicalAnalysis_elements,
 					MpDb.doc.ChemicalAnalysis_oxides),
 	};

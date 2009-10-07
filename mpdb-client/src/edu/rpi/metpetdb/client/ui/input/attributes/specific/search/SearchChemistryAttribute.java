@@ -15,7 +15,6 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.InlineLabel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.SuggestionEvent;
@@ -43,6 +42,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MPartialCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
+import edu.rpi.metpetdb.client.ui.widgets.NumericKeyboardListener;
 import edu.rpi.metpetdb.client.ui.widgets.MPartialCheckBox.CheckedState;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MultipleInputPanel;
 
@@ -67,6 +67,11 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 		private TextBox lessThan = new TextBox();
 		private TextBox greaterThan = new TextBox();
 		private TextBox precision = new TextBox();
+		{
+			lessThan.addKeyboardListener(new NumericKeyboardListener());
+			greaterThan.addKeyboardListener(new NumericKeyboardListener());
+			precision.addKeyboardListener(new NumericKeyboardListener());
+		};
 		private final MText and = new MText("and","span");
 		private final MText percent = new MText("%", "span");
 		private final HTML plusminus = new HTML("&#177;");

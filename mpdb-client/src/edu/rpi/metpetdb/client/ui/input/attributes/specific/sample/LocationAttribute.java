@@ -19,6 +19,7 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
+import edu.rpi.metpetdb.client.ui.widgets.NumericKeyboardListener;
 
 public class LocationAttribute extends GenericAttribute {
 
@@ -43,6 +44,8 @@ public class LocationAttribute extends GenericAttribute {
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		final TextBox pointX = new TextBox();
 		final TextBox pointY = new TextBox();
+		pointX.addKeyboardListener(new NumericKeyboardListener(false,true));
+		pointY.addKeyboardListener(new NumericKeyboardListener(false,true));
 
 		DOM.setElementAttribute(pointX.getElement(), "id", id);
 		DOM.setElementAttribute(pointY.getElement(), "id", id);

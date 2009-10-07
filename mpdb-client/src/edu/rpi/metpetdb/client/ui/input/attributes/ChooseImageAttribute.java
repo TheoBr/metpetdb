@@ -28,8 +28,8 @@ public class ChooseImageAttribute<DataType extends HasImage> extends GenericAttr
 				ic, x, y
 		});
 		image = null;
-		pointX = new TextAttribute(x);
-		pointY = new TextAttribute(y);
+		pointX = new TextAttribute(x,true,true,false);
+		pointY = new TextAttribute(y,true,true,false);
 	}
 
 	public Widget[] createDisplayWidget(final HasImage obj) {

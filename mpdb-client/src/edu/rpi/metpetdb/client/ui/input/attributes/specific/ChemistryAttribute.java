@@ -464,15 +464,15 @@ public class ChemistryAttribute extends GenericAttribute implements
 		ChemicalAnalysisElement tryme = new ChemicalAnalysisElement();
 
 		TextAttribute amount_input_text = new TextAttribute(
-				MpDb.doc.ChemicalAnalysisElement_ChemicalAnalysis_elements_amount);
+				MpDb.doc.ChemicalAnalysisElement_ChemicalAnalysis_elements_amount,true,false,false);
 		amount_input_text.setVisibleLength(5);
 
 		TextAttribute precision_input_text = new TextAttribute(
-				MpDb.doc.ChemicalAnalysisElement_ChemicalAnalysis_elements_precision);
+				MpDb.doc.ChemicalAnalysisElement_ChemicalAnalysis_elements_precision,true,false,false);
 		precision_input_text.setVisibleLength(5);
 
 		TextAttribute choice_label = new TextAttribute(
-				MpDb.doc.ChemicalAnalysisElement_ChemicalAnalysis_elements_element);
+				MpDb.doc.ChemicalAnalysisElement_ChemicalAnalysis_elements_element,true,false,false);
 		choice_label.setVisibleLength(5);
 
 		remove.setStyleName("remove");

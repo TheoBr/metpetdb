@@ -21,8 +21,10 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.DateSpanConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchGenericAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.DateKeyboardListener;
 import edu.rpi.metpetdb.client.ui.widgets.MButton;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
+import edu.rpi.metpetdb.client.ui.widgets.NumericKeyboardListener;
 
 public class DateRangeAttribute extends SearchGenericAttribute implements
 		ChangeListener, ClickListener {
@@ -77,13 +79,14 @@ public class DateRangeAttribute extends SearchGenericAttribute implements
 				DateRangeAttribute.this.getSearchInterface().createCritera();
 			}
 		});
-		//from.addKeyboardListener(this);
+		from.addKeyboardListener(new DateKeyboardListener());
 		to = new TextBox();
 		to.addChangeListener(new ChangeListener(){
 			public void onChange(final Widget sender){
 				DateRangeAttribute.this.getSearchInterface().createCritera();
 			}
 		});
+		to.addKeyboardListener(new DateKeyboardListener());
 		ew.setStyleName(STYLENAME);
 		dpTo.setStyleName(STYLENAME + "-btn");
 		dpFrom.setStyleName(STYLENAME + "-btn");

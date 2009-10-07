@@ -20,6 +20,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.widgets.NumericKeyboardListener;
 
 /**
  * @modified lindez
@@ -197,26 +198,7 @@ public class MPagingOptions extends Composite {
     // Setup the widget
     curPageBox.setStyleName("curpage-box");
     curPageBox.setText("1");
-
-    // Disallow non-numeric pages
-    KeyboardListenerAdapter listener = new KeyboardListenerAdapter() {
-      @Override
-      public void onKeyPress(Widget sender, char keyCode, int modifiers) {
-        if (keyCode == (char) KEY_ENTER) {
-          MPagingOptions.this.table.gotoPage(getPagingBoxValue(), false);
-        } else if ((!Character.isDigit(keyCode)) && (keyCode != (char) KEY_TAB)
-            && (keyCode != (char) KEY_BACKSPACE)
-            && (keyCode != (char) KEY_DELETE) && (keyCode != (char) KEY_ENTER)
-            && (keyCode != (char) KEY_HOME) && (keyCode != (char) KEY_END)
-            && (keyCode != (char) KEY_LEFT) && (keyCode != (char) KEY_UP)
-            && (keyCode != (char) KEY_RIGHT) && (keyCode != (char) KEY_DOWN)) {
-          ((TextBox) sender).cancelKey();
-        }
-      }
-    };
-
-    // Add the listener
-    curPageBox.addKeyboardListener(listener);
+    curPageBox.addKeyboardListener(new NumericKeyboardListener(true));
   }
 
   /**

@@ -23,6 +23,7 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.ShortConstraint;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
+import edu.rpi.metpetdb.client.ui.widgets.NumericKeyboardListener;
 
 public class DateAttribute extends GenericAttribute implements ChangeListener {
 	
@@ -46,6 +47,9 @@ public class DateAttribute extends GenericAttribute implements ChangeListener {
 
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		final Timestamp currentDate = get(obj);
+		month.addKeyboardListener(new NumericKeyboardListener(true));
+		day.addKeyboardListener(new NumericKeyboardListener(true));
+		year.addKeyboardListener(new NumericKeyboardListener(true));
 
 		if (currentDate != null) {
 			month.setText(currentDate.getMonth() + 1 + "");

@@ -22,7 +22,6 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -40,7 +39,7 @@ import edu.rpi.metpetdb.client.ui.plot.charts.MLinePlot;
 import edu.rpi.metpetdb.client.ui.plot.charts.MPlot;
 import edu.rpi.metpetdb.client.ui.plot.charts.ScatterPlot;
 import edu.rpi.metpetdb.client.ui.plot.charts.TernaryPlot;
-import edu.rpi.metpetdb.client.ui.plot.charts.TetrahedralPlot;
+import edu.rpi.metpetdb.client.ui.plot.charts.TetrahedralPlotO3D;
 import edu.rpi.metpetdb.client.ui.widgets.NumericKeyboardListener;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
 
@@ -245,20 +244,22 @@ public class PlotInterface implements ClickListener, ChangeListener{
 					} else if (sender == threeAxes){
 						onGraphTypeChange(new TernaryPlot(700,700,500));
 					} else if (sender == fourAxes){
-						onGraphTypeChange(new TetrahedralPlot(700,700,500));
-						mono.addClickListener(new ClickListener(){
-							public void onClick(final Widget sender){
-								((TetrahedralPlot)currentGraph).setViewType(TetrahedralPlot.VIEW_TYPE.MONO);
-							}
-						});
-						stereo.addClickListener(new ClickListener(){
-							public void onClick(final Widget sender){
-								((TetrahedralPlot)currentGraph).setViewType(TetrahedralPlot.VIEW_TYPE.STEREO);
-							}
-						});
-						mono.setChecked(true);
-						axisContainer.insert(mono,0);
-						axisContainer.insert(stereo,1);
+//						onGraphTypeChange(new TetrahedralPlot(700,700,500));
+//						mono.addClickListener(new ClickListener(){
+//							public void onClick(final Widget sender){
+//								((TetrahedralPlot)currentGraph).setViewType(TetrahedralPlot.VIEW_TYPE.MONO);
+//							}
+//						});
+//						stereo.addClickListener(new ClickListener(){
+//							public void onClick(final Widget sender){
+//								((TetrahedralPlot)currentGraph).setViewType(TetrahedralPlot.VIEW_TYPE.STEREO);
+//							}
+//						});
+//						mono.setChecked(true);
+//						axisContainer.insert(mono,0);
+//						axisContainer.insert(stereo,1);
+						
+						onGraphTypeChange(new TetrahedralPlotO3D());
 					} 
 				}
 			}

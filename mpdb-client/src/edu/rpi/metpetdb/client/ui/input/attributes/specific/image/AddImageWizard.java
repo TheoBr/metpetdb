@@ -21,9 +21,9 @@ public class AddImageWizard extends WizardDialog {
 		final UploadImageAttribute uploadImage = new UploadImageAttribute(
 				MpDb.doc.Subsample_images);
 		final GenericAttribute xray_attributes[] = {
-				new TextAttribute(MpDb.doc.XrayImage_current),
-				new TextAttribute(MpDb.doc.XrayImage_voltage),
-				new TextAttribute(MpDb.doc.XrayImage_dwelltime),
+				new TextAttribute(MpDb.doc.XrayImage_current,true,false,false),
+				new TextAttribute(MpDb.doc.XrayImage_voltage,true,false,false),
+				new TextAttribute(MpDb.doc.XrayImage_dwelltime,true,false,false),
 				new TextAttribute(MpDb.doc.XrayImage_element),
 		};
 

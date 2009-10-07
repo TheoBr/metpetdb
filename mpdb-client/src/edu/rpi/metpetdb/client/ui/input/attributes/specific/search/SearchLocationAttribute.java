@@ -35,6 +35,7 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarth;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
+import edu.rpi.metpetdb.client.ui.widgets.NumericKeyboardListener;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
 
 public class SearchLocationAttribute extends SearchGenericAttribute implements
@@ -50,6 +51,12 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 	private final TextBox southInput = new TextBox();
 	private final TextBox eastInput = new TextBox();
 	private final TextBox westInput = new TextBox();
+	{
+		northInput.addKeyboardListener(new NumericKeyboardListener(false,true));
+		southInput.addKeyboardListener(new NumericKeyboardListener(false,true));
+		eastInput.addKeyboardListener(new NumericKeyboardListener(false,true));
+		westInput.addKeyboardListener(new NumericKeyboardListener(false,true));
+	};
 	private org.postgis.Polygon boundingBox;
 	private static final String STYLENAME = "search-map";
 	private final Label northLabel = new Label("North Latitude");
