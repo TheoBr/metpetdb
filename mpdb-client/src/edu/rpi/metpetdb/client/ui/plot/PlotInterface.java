@@ -64,7 +64,7 @@ public class PlotInterface implements ClickListener, ChangeListener{
 		
 		public FormulaCell(){
 			value = new TextBox();
-			value.addKeyboardListener(new NumericKeyboardListener());
+			value.addKeyboardListener(new NumericKeyboardListener(false,true));
 			value.setWidth("40px");
 			label = new HTML();
 			add(value);
@@ -274,7 +274,7 @@ public class PlotInterface implements ClickListener, ChangeListener{
 		graphTypeContainer.add(oneAxis);
 		graphTypeContainer.add(twoAxes);
 		graphTypeContainer.add(threeAxes);
-		graphTypeContainer.add(fourAxes);
+//		graphTypeContainer.add(fourAxes);
 		graphTypeContainer.add(help);
 		
 		return graphTypeContainer;
@@ -343,17 +343,20 @@ public class PlotInterface implements ClickListener, ChangeListener{
 						if (numerator.getWidget(i) instanceof FormulaCell){
 							FormulaCell temp = (FormulaCell) numerator.getWidget(i);
 							if (temp.label.getHTML().equals("")){
-								axisForm.setConstant(Double.parseDouble(temp.value.getText()));
+								if (temp.value.getText().length() > 0)
+									axisForm.setConstant(Double.parseDouble(temp.value.getText()));
 							} else {
 								String displayName = temp.label.getHTML();
 								for (Element e : plottableElements){
 									if (e.getSymbol().equals(displayName)){
-										axisForm.addElement(new AxisFormulaElement(e,Double.parseDouble(temp.value.getText())));
+										if (temp.value.getText().length() > 0)
+											axisForm.addElement(new AxisFormulaElement(e,Double.parseDouble(temp.value.getText())));
 									}
 								}
 								for (Oxide o : plottableOxides){
 									if (o.getDisplayName().equals(displayName)){
-										axisForm.addOxide(new AxisFormulaOxide(o,Double.parseDouble(temp.value.getText())));
+										if (temp.value.getText().length() > 0)
+											axisForm.addOxide(new AxisFormulaOxide(o,Double.parseDouble(temp.value.getText())));
 									}
 								}
 							}
