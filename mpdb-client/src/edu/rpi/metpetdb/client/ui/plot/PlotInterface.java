@@ -39,7 +39,7 @@ import edu.rpi.metpetdb.client.ui.plot.charts.MLinePlot;
 import edu.rpi.metpetdb.client.ui.plot.charts.MPlot;
 import edu.rpi.metpetdb.client.ui.plot.charts.ScatterPlot;
 import edu.rpi.metpetdb.client.ui.plot.charts.TernaryPlot;
-import edu.rpi.metpetdb.client.ui.plot.charts.TetrahedralPlotO3D;
+import edu.rpi.metpetdb.client.ui.plot.charts.TetrahedralPlot;
 import edu.rpi.metpetdb.client.ui.widgets.NumericKeyboardListener;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
 
@@ -244,22 +244,22 @@ public class PlotInterface implements ClickListener, ChangeListener{
 					} else if (sender == threeAxes){
 						onGraphTypeChange(new TernaryPlot(700,700,500));
 					} else if (sender == fourAxes){
-//						onGraphTypeChange(new TetrahedralPlot(700,700,500));
-//						mono.addClickListener(new ClickListener(){
-//							public void onClick(final Widget sender){
-//								((TetrahedralPlot)currentGraph).setViewType(TetrahedralPlot.VIEW_TYPE.MONO);
-//							}
-//						});
-//						stereo.addClickListener(new ClickListener(){
-//							public void onClick(final Widget sender){
-//								((TetrahedralPlot)currentGraph).setViewType(TetrahedralPlot.VIEW_TYPE.STEREO);
-//							}
-//						});
-//						mono.setChecked(true);
-//						axisContainer.insert(mono,0);
-//						axisContainer.insert(stereo,1);
+						onGraphTypeChange(new TetrahedralPlot(700,700,500));
+						mono.addClickListener(new ClickListener(){
+							public void onClick(final Widget sender){
+								((TetrahedralPlot)currentGraph).setViewType(TetrahedralPlot.VIEW_TYPE.MONO);
+							}
+						});
+						stereo.addClickListener(new ClickListener(){
+							public void onClick(final Widget sender){
+								((TetrahedralPlot)currentGraph).setViewType(TetrahedralPlot.VIEW_TYPE.STEREO);
+							}
+						});
+						mono.setChecked(true);
+						axisContainer.insert(mono,0);
+						axisContainer.insert(stereo,1);
 						
-						onGraphTypeChange(new TetrahedralPlotO3D());
+//						onGraphTypeChange(new TetrahedralPlotO3D());
 					} 
 				}
 			}
@@ -274,7 +274,7 @@ public class PlotInterface implements ClickListener, ChangeListener{
 		graphTypeContainer.add(oneAxis);
 		graphTypeContainer.add(twoAxes);
 		graphTypeContainer.add(threeAxes);
-//		graphTypeContainer.add(fourAxes);
+		graphTypeContainer.add(fourAxes);
 		graphTypeContainer.add(help);
 		
 		return graphTypeContainer;
@@ -377,11 +377,11 @@ public class PlotInterface implements ClickListener, ChangeListener{
 					public void onSuccess(final List<ChemicalAnalysis> result) {						
 						panel.getRightCol().clear();
 						Map<Integer,Set<Integer>> groups = new HashMap<Integer,Set<Integer>>();
-						Set<Integer> ids = new HashSet<Integer>();
-						for (ChemicalAnalysis ca : result){
-							ids.add(ca.getId());
-						}
-						groups.put(1, ids);
+//						Set<Integer> ids = new HashSet<Integer>();
+//						for (ChemicalAnalysis ca : result){
+//							ids.add(ca.getId());
+//						}
+//						groups.put(1, ids);
 		
 						panel.getRightCol().add(currentGraph.createWidget(result,formulas, groups));
 					}
