@@ -8,10 +8,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
-import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
@@ -33,6 +31,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabRock
 import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisList;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
 import edu.rpi.metpetdb.client.ui.plot.PlotInterface;
+import edu.rpi.metpetdb.client.ui.plot.charts.TetrahedralPlotO3D;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
 public class Search extends MPagePanel {
@@ -116,9 +115,7 @@ public class Search extends MPagePanel {
 	static {
 		samplesContainer.add(sampleList);
 		chemContainer.add(chemList);
-		if (!GWT.getHostPageBaseURL().contains("metpetweb") || GWT.getHostPageBaseURL().contains("metpetwebtst")){
-			chemContainer.add(pi.getWidget());
-		}
+		chemContainer.add(pi.getWidget());
 		searchPanel.edit(ss);
 		chemContainer.setVisible(!outputSamples);
 		samplesContainer.setVisible(outputSamples);
