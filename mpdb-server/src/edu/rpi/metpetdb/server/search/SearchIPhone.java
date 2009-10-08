@@ -577,6 +577,7 @@ public class SearchIPhone extends HttpServlet{
 	private void outputSearchXML(final Results<Sample> results, final HttpServletResponse response){
 		try{
 			final XStream x = new XStream();
+
 			response.getWriter().write("<set>");
 			response.getWriter().write("<resultCount>");
 			x.toXML(results.getCount(), response.getWriter());
@@ -627,7 +628,6 @@ public class SearchIPhone extends HttpServlet{
 		catch(Exception e){
 			throw new IllegalStateException(e.getMessage());
 		}
-			
 		
 	}*/
 	
@@ -638,8 +638,9 @@ public class SearchIPhone extends HttpServlet{
 		try{
 			//if any search criteria have been specified (owners, rocktypes, metamorphic grades, or minerals)
 			//then set searchSample to have these attributes
+
 			SearchSample ss = new SearchSample();
-			if(region.length()!=0)
+			if(region!=null && region.length()!=0)
 			{
 				ss.addRegion(region);
 			}
@@ -659,14 +660,14 @@ public class SearchIPhone extends HttpServlet{
 			{
 				ss.setMinerals(minerals);
 			}
-			if(p.equals(null))
-			{
+			//if(p.equals(null))
+			//{
 				return SearchDb.sampleSearch(null, ss, null, session);
-			}
-			else
-			{
-				return SearchDb.sampleSearch(p, ss, null, session);
-			}
+			//}
+			//else
+			//{
+				//return SearchDb.sampleSearch(p, ss, null, session);
+			//}
 		}
 		catch (final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
