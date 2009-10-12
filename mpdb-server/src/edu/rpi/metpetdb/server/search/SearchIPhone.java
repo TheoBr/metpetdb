@@ -27,6 +27,7 @@ import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 import edu.rpi.metpetdb.server.DataStore;
@@ -62,7 +63,7 @@ public class SearchIPhone extends HttpServlet{
 	private Set<MetamorphicGrade> metamorphicGrades= new HashSet();
 	private Set<Mineral> minerals= new HashSet();
 	private String region= new String();
-	private edu.rpi.metpetdb.client.paging.PaginationParameters p= new edu.rpi.metpetdb.client.paging.PaginationParameters();
+	private PaginationParameters p= new PaginationParameters();
 	@Override
 
 	/*protected void doPost(final HttpServletRequest request,
@@ -223,7 +224,7 @@ public class SearchIPhone extends HttpServlet{
 			metamorphicGrades= new HashSet();
 			minerals= new HashSet();
 			region= new String();
-			p= new edu.rpi.metpetdb.client.paging.PaginationParameters();
+			p= new PaginationParameters();
 			//make sets of the various search criteria so they can be passed to the various search functions
 			if(request.getParameter(PAGINATION)!=null)
 			{
@@ -235,6 +236,10 @@ public class SearchIPhone extends HttpServlet{
 				p.setFirstResult(param);
 				p.setMaxResults(100);
 			}
+			else
+			{
+				p=null;	
+			}
 			if(request.getParameter(OWNER)!= null)
 			{
 				String tempOwners[]  = request.getParameterValues(OWNER);
@@ -242,6 +247,7 @@ public class SearchIPhone extends HttpServlet{
 				owners  = new HashSet(list);
 				//outputSearchXML(search(session), response);
 			}
+			
 			if(request.getParameter(ROCK_TYPE)!= null)
 			{	
 				String tempRockTypes[]= request.getParameterValues(ROCK_TYPE);
@@ -660,14 +666,14 @@ public class SearchIPhone extends HttpServlet{
 			{
 				ss.setMinerals(minerals);
 			}
-			//if(p.equals(null))
-			//{
+			if(p==null)
+			{
 				return SearchDb.sampleSearch(null, ss, null, session);
-			//}
-			//else
-			//{
-				//return SearchDb.sampleSearch(p, ss, null, session);
-			//}
+			}
+			else
+			{
+				return SearchDb.sampleSearch(p, ss, null, session);
+			}
 		}
 		catch (final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
