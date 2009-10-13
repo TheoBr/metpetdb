@@ -32,7 +32,7 @@ public class MLinePlot extends MPlot{
 		
 	}
 	
-	public Widget createWidget(List<ChemicalAnalysis> data, List<AxisFormula> formulas, Map<Integer,Set<Integer>> groups){
+	public Widget createWidget(List<ChemicalAnalysis> data, List<AxisFormula> formulas, Map<Integer,Set<Integer>> groups, boolean moles){
 		c = new Chart2D("400px", "400px");
 		Plot2D p = new Plot2D(Plot2D.PLOT_TYPE_SCATTER);
 		
@@ -52,7 +52,11 @@ public class MLinePlot extends MPlot{
 					ChemicalAnalysisOxide o = itr.next();
 					for (AxisFormulaOxide i : formulaLeft.getOxides()){
 						if (i.getOxide().getOxideId() == o.getOxide().getOxideId()){
-							leftAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
+							if (moles){
+								leftAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit())/o.getOxide().getWeight();
+							} else {
+								leftAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
+							}
 						}
 					}
 				}
@@ -61,7 +65,11 @@ public class MLinePlot extends MPlot{
 					ChemicalAnalysisElement o = itr2.next();
 					for (AxisFormulaElement i : formulaLeft.getElements()){
 						if (i.getElement().getId() == o.getElement().getId()){
-							leftAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
+							if (moles){
+								leftAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit())/o.getElement().getWeight();
+							} else {
+								leftAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
+							}
 						}
 					}
 				}

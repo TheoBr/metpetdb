@@ -40,6 +40,7 @@ import edu.rpi.metpetdb.client.ui.plot.charts.MPlot;
 import edu.rpi.metpetdb.client.ui.plot.charts.ScatterPlot;
 import edu.rpi.metpetdb.client.ui.plot.charts.TernaryPlot;
 import edu.rpi.metpetdb.client.ui.plot.charts.TetrahedralPlot;
+import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.NumericKeyboardListener;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
 
@@ -57,6 +58,8 @@ public class PlotInterface implements ClickListener, ChangeListener{
 	
 	private RadioButton mono = new RadioButton("tetra","Mono");
 	private RadioButton stereo = new RadioButton("tetra","Stereoscopic");
+
+	private MCheckBox moles = new MCheckBox("Convert to moles");
 	
 	private class FormulaCell extends FlowPanel{
 		public TextBox value;
@@ -222,7 +225,7 @@ public class PlotInterface implements ClickListener, ChangeListener{
 		currentGraph = newGraph;
 		panel.getRightCol().clear();
 		panel.getRightCol().add(currentGraph.createWidget(new ArrayList<ChemicalAnalysis>(),
-				new ArrayList<AxisFormula>(), new HashMap<Integer,Set<Integer>>()));
+				new ArrayList<AxisFormula>(), new HashMap<Integer,Set<Integer>>(), false));
 		createAxisContainer();
 	}
 	
@@ -280,6 +283,7 @@ public class PlotInterface implements ClickListener, ChangeListener{
 		graphTypeContainer.add(threeAxes);
 		graphTypeContainer.add(fourAxes);
 		graphTypeContainer.add(help);
+		graphTypeContainer.add(moles);
 		
 		return graphTypeContainer;
 	}
@@ -387,7 +391,7 @@ public class PlotInterface implements ClickListener, ChangeListener{
 //						}
 //						groups.put(1, ids);
 		
-						panel.getRightCol().add(currentGraph.createWidget(result,formulas, groups));
+						panel.getRightCol().add(currentGraph.createWidget(result,formulas, groups,moles.isChecked()));
 					}
 				}.begin();
 			}

@@ -26,7 +26,7 @@ public class TetrahedralPlotO3D extends MPlot {
 	}
 
 	public Widget createWidget(List<ChemicalAnalysis> data,
-			List<AxisFormula> formulas, Map<Integer, Set<Integer>> groups) {
+			List<AxisFormula> formulas, Map<Integer, Set<Integer>> groups, boolean moles) {
 		myInit(container.getElement());
 		return container;
 	}

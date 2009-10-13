@@ -111,7 +111,7 @@ public abstract class MPlot {
 		return data;
 	}
 	
-	public abstract Widget createWidget(List<ChemicalAnalysis> data, List<AxisFormula> formulas, Map<Integer,Set<Integer>> groups);
+	public abstract Widget createWidget(List<ChemicalAnalysis> data, List<AxisFormula> formulas, Map<Integer,Set<Integer>> groups, boolean moles);
 	
 	public abstract int getAxisCount();
 	
