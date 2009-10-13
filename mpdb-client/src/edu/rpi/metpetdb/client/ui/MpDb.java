@@ -108,6 +108,8 @@ public class MpDb {
 	public static final String VIDEO_TUTORIALS_URL = "http://wiki.cs.rpi.edu/trac/metpetdb/wiki/VideoTutorials";
 	public static final String LISTS_OF_DATA_TYPES_URL = "http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Lists";
 	public static final String ABOUT_METPETDB_URL = "http://wiki.cs.rpi.edu/trac/metpetdb/wiki/About";
+	public static final String DOWNLOAD_IPHONE_APP_URL = "http://appshopper.com/link/metpetdb";
+	public static final String IPHONE_APP_WIKI = "http://wiki.cs.rpi.edu/trac/metpetdb/wiki/IphoneApp";
 
 
 	// public static final HtmlFactory factory;
