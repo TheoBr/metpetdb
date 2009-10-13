@@ -41,14 +41,14 @@ public class LoginTextAttribute extends TextAttribute{
 	@Override
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		b = new TextBox();
-		if (!elementId.equals("")){
+		/*if (!elementId.equals("")){
 			try {
 				final TextBox temp = TextBox.wrap(Document.get().getElementById(elementId));
 				b.setText(temp.getText());
 			} catch (Exception e){
 				
 			}
-		}
+		}*/
 		b.setVisibleLength(visibleLength);
 		if (getConstraint() instanceof MaxLengthConstraint)
 			b.setMaxLength(((MaxLengthConstraint) getConstraint())

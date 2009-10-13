@@ -209,11 +209,11 @@ public class LoginDialog extends MDialogBox implements ClickListener,
 			public void onSuccess(final User result) {
 				MpDb.setCurrentUser((User) result);
 				try {
-					final PasswordTextBox passwordTemp = PasswordTextBox.wrap(Document.get().getElementById(CSS.PASSWORD_ID));
-					final TextBox usernameTemp = TextBox.wrap(Document.get().getElementById(CSS.USERNAME_ID));
+					final PasswordTextBox passwordTemp = new PasswordTextBox(); //PasswordTextBox.wrap(Document.get().getElementById(CSS.PASSWORD_ID));
+					final TextBox usernameTemp = new TextBox(); //TextBox.wrap(Document.get().getElementById(CSS.USERNAME_ID));
 					
-					passwordTemp.setText(passwordAtt.getText());
-					usernameTemp.setText(usernameAtt.getText());
+					//passwordTemp.setText(passwordAtt.getText());
+					//usernameTemp.setText(usernameAtt.getText());
 				
 					final Button submit = Button.wrap(Document.get().getElementById(CSS.LOGIN_SUBMIT_ID));
 					submit.click();

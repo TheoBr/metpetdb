@@ -34,14 +34,14 @@ public class PasswordAttribute extends GenericAttribute {
 
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		b = new PasswordTextBox();
-		if (!elementId.equals("")){
+		/*if (!elementId.equals("")){
 			try {
 				final PasswordTextBox temp = PasswordTextBox.wrap(Document.get().getElementById(elementId));
 				b.setText(temp.getText());
 			} catch (Exception e) {
 				
 			}
-		}
+		}*/
 		b.setVisibleLength(visibleLength);
 		applyStyle(b, true);
 		return new Widget[] {

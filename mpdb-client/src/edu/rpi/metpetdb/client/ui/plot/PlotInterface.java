@@ -203,12 +203,16 @@ public class PlotInterface implements ClickListener, ChangeListener{
 		plottableOxides.clear();
 		for (ChemicalAnalysis ca : analyses){
 			for (ChemicalAnalysisElement cae : ca.getElements()){
-				displayNames.add(cae.getElement().getSymbol());
-				plottableElements.add(cae.getElement());
+				if (!displayNames.contains(cae.getElement().getSymbol())) {
+					displayNames.add(cae.getElement().getSymbol());
+					plottableElements.add(cae.getElement());
+				}
 			}
 			for (ChemicalAnalysisOxide cao : ca.getOxides()){
-				displayNames.add(cao.getDisplayName());
-				plottableOxides.add(cao.getOxide());
+				if (!displayNames.contains(cao.getDisplayName())) {
+					displayNames.add(cao.getDisplayName());
+					plottableOxides.add(cao.getOxide());
+				}
 			}
 		}
 		return displayNames;
@@ -394,7 +398,7 @@ public class PlotInterface implements ClickListener, ChangeListener{
 		leftContainer.add(createGraphTypeContainer());
 		leftContainer.add(axisContainer);
 		leftContainer.add(draw);
-		leftContainer.add(export);
+//		leftContainer.add(export);
 		panel.getLeftCol().add(leftContainer);
 		
 		
