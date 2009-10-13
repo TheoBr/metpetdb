@@ -229,22 +229,22 @@ public class TetrahedralPlot extends MPlot implements MouseListener{
 				ChemicalAnalysisOxide o = itr.next();
 				for (AxisFormulaOxide i : formulaBottomLeft.getOxides()){
 					if (i.getOxide().getOxideId() == o.getOxide().getOxideId()){
-						bottomLeftAxisTotal += i.getCoefficient()*o.getAmount();
+						bottomLeftAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 					}
 				}
 				for (AxisFormulaOxide i : formulaBottomRight.getOxides()){
 					if (i.getOxide().getOxideId() == o.getOxide().getOxideId()){
-						bottomRightAxisTotal += i.getCoefficient()*o.getAmount();
+						bottomRightAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 					}
 				}
 				for (AxisFormulaOxide i : formulaBottomBack.getOxides()){
 					if (i.getOxide().getOxideId() == o.getOxide().getOxideId()){
-						bottomBackAxisTotal += i.getCoefficient()*o.getAmount();
+						bottomBackAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 					}
 				}
 				for (AxisFormulaOxide i : formulaTop.getOxides()){
 					if (i.getOxide().getOxideId() == o.getOxide().getOxideId()){
-						topAxisTotal += i.getCoefficient()*o.getAmount();
+						topAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 					}
 				}
 			}
@@ -253,22 +253,22 @@ public class TetrahedralPlot extends MPlot implements MouseListener{
 				ChemicalAnalysisElement o = itr2.next();
 				for (AxisFormulaElement i : formulaBottomLeft.getElements()){
 					if (i.getElement().getId() == o.getElement().getId()){
-						bottomLeftAxisTotal += i.getCoefficient()*o.getAmount();
+						bottomLeftAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 					}
 				}
 				for (AxisFormulaElement i : formulaBottomRight.getElements()){
 					if (i.getElement().getId() == o.getElement().getId()){
-						bottomRightAxisTotal += i.getCoefficient()*o.getAmount();
+						bottomRightAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 					}
 				}
 				for (AxisFormulaElement i : formulaBottomBack.getElements()){
 					if (i.getElement().getId() == o.getElement().getId()){
-						bottomBackAxisTotal += i.getCoefficient()*o.getAmount();
+						bottomBackAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 					}
 				}
 				for (AxisFormulaElement i : formulaTop.getElements()){
 					if (i.getElement().getId() == o.getElement().getId()){
-						topAxisTotal += i.getCoefficient()*o.getAmount();
+						topAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 					}
 				}
 			}

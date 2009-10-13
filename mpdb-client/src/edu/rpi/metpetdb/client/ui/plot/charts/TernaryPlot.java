@@ -132,17 +132,17 @@ public class TernaryPlot extends MPlot {
 				ChemicalAnalysisOxide o = itr.next();
 				for (AxisFormulaOxide i : formulaBottom.getOxides()){
 					if (i.getOxide().getOxideId() == o.getOxide().getOxideId()){
-						bottomAxisTotal += i.getCoefficient()*o.getAmount();
+						bottomAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 					}
 				}
 				for (AxisFormulaOxide i : formulaLeft.getOxides()){
 					if (i.getOxide().getOxideId() == o.getOxide().getOxideId()){
-						leftAxisTotal += i.getCoefficient()*o.getAmount();
+						leftAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 					}
 				}
 				for (AxisFormulaOxide i : formulaRight.getOxides()){
 					if (i.getOxide().getOxideId() == o.getOxide().getOxideId()){
-						rightAxisTotal += i.getCoefficient()*o.getAmount();
+						rightAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 					}
 				}
 			}
@@ -151,17 +151,17 @@ public class TernaryPlot extends MPlot {
 				ChemicalAnalysisElement o = itr2.next();
 				for (AxisFormulaElement i : formulaBottom.getElements()){
 					if (i.getElement().getId() == o.getElement().getId()){
-						bottomAxisTotal += i.getCoefficient()*o.getAmount();
+						bottomAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 					}
 				}
 				for (AxisFormulaElement i : formulaLeft.getElements()){
 					if (i.getElement().getId() == o.getElement().getId()){
-						leftAxisTotal += i.getCoefficient()*o.getAmount();
+						leftAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 					}
 				}
 				for (AxisFormulaElement i : formulaRight.getElements()){
 					if (i.getElement().getId() == o.getElement().getId()){
-						rightAxisTotal += i.getCoefficient()*o.getAmount();
+						rightAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 					}
 				}
 			}

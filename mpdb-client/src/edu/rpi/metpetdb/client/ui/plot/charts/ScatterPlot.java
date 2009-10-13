@@ -53,12 +53,12 @@ public class ScatterPlot extends MPlot{
 					ChemicalAnalysisOxide o = itr.next();
 					for (AxisFormulaOxide i : formulaBottom.getOxides()){
 						if (i.getOxide().getOxideId() == o.getOxide().getOxideId()){
-							bottomAxisTotal += i.getCoefficient()*o.getAmount();
+							bottomAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 						}
 					}
 					for (AxisFormulaOxide i : formulaLeft.getOxides()){
 						if (i.getOxide().getOxideId() == o.getOxide().getOxideId()){
-							leftAxisTotal += i.getCoefficient()*o.getAmount();
+							leftAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 						}
 					}
 				}
@@ -67,18 +67,18 @@ public class ScatterPlot extends MPlot{
 					ChemicalAnalysisElement o = itr2.next();
 					for (AxisFormulaElement i : formulaBottom.getElements()){
 						if (i.getElement().getId() == o.getElement().getId()){
-							bottomAxisTotal += i.getCoefficient()*o.getAmount();
+							bottomAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 						}
 					}
 					for (AxisFormulaElement i : formulaLeft.getElements()){
 						if (i.getElement().getId() == o.getElement().getId()){
-							leftAxisTotal += i.getCoefficient()*o.getAmount();
+							leftAxisTotal += i.getCoefficient()*o.getAmount()*ChemicalAnalysis.getUnitOffset(o.getMeasurementUnit());
 						}
 					}
 				}
 				if (leftAxisTotal != 0 && bottomAxisTotal != 0) {
-					yMax = (leftAxisTotal > yMax+5) ? leftAxisTotal+5 : yMax;
-					xMax = (bottomAxisTotal > xMax+5) ? bottomAxisTotal+5 : xMax;
+					yMax = (leftAxisTotal > yMax) ? leftAxisTotal + (leftAxisTotal/10): yMax;
+					xMax = (bottomAxisTotal > xMax) ? bottomAxisTotal  + (bottomAxisTotal/10): xMax;
 					points.add(new Point(bottomAxisTotal, leftAxisTotal, ca.getSpotId()));
 				}
 			}
