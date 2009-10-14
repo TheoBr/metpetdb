@@ -1,5 +1,8 @@
 package edu.rpi.metpetdb.server.search;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.Token;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.DateTools;
 import org.apache.lucene.index.Term;
@@ -686,13 +692,21 @@ public class SearchDb {
 			if (andedTokenization){
 				BooleanQuery query = new BooleanQuery();
 				for (int i = 0; i < queryArray.length; i++){
-					BooleanQuery tokenizedQuery = new BooleanQuery();
+					BooleanQuery subquery = new BooleanQuery();
 					String searchTerm = queryArray[i].split(":",2)[1];
-					for (String s : searchTerm.split(" ")){
-						TermQuery term = new TermQuery(new Term(columnsArray[i],s.toLowerCase()));
-						tokenizedQuery.add(term,BooleanClause.Occur.MUST);
-					}	
-					query.add(tokenizedQuery, flagsArray[i]);
+					Reader reader = new StringReader(searchTerm);
+					Analyzer analyzer = new StandardAnalyzer();
+					TokenStream stream = analyzer.tokenStream(columnsArray[i], reader);
+					Token token = new Token();
+					token = stream.next(token);
+					while (token != null){
+						if (token.termLength() != 0){
+							String term = new String(token.termBuffer(),0,token.termLength());
+							subquery.add(new TermQuery(new Term(columnsArray[i],term)),BooleanClause.Occur.MUST);
+						}
+						token = stream.next(token);
+					}
+					query.add(subquery,BooleanClause.Occur.SHOULD);
 				} 
 				return query;
 			} else {
@@ -701,7 +715,7 @@ public class SearchDb {
 					.parse(queryArray, columnsArray, flagsArray, new StandardAnalyzer());
 					return query;
 			}
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}

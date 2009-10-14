@@ -147,6 +147,7 @@ public class SearchMetamorphicGradeAttribute extends SearchGenericAttribute impl
 	public void onClear(){
 		for(CheckBox cb : items.keySet())
 			cb.setChecked(false);
+		selected.clear();
 	}
 	
 	public ArrayList<Widget> getCriteria(){

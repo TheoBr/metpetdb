@@ -369,7 +369,6 @@ public class MetPetDBApplication implements EntryPoint {
 				new ServerOp<Void>() {
 					public void begin() {
 						MpDb.search_svc.rebuildSearchIndex(this);
-						MpDb.image_svc.makeMobileImages(this);
 					}
 
 					public void onSuccess(Void result) {
