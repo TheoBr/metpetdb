@@ -391,7 +391,6 @@
   <query name="Sample.Collectors/Collector">
     Select Distinct collector
     from Sample s
-    where s.publicData = 'Y'
     order by s.collector
   </query>
   <query name="Sample.Countries/Countries">
