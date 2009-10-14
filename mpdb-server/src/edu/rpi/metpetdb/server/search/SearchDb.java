@@ -780,7 +780,7 @@ public class SearchDb {
 	
 	private static org.hibernate.Query setPagination(PaginationParameters p, org.hibernate.Query q, Session session, Boolean isSample){
 		if (p != null){
-			if (!p.getParameter().equals("")){
+			if (p.getParameter() != null && !p.getParameter().equals("")){
 				String queryString = q.getQueryString();
 				String parameter = p.getParameter();
 				if (parameter.equals("owner"))

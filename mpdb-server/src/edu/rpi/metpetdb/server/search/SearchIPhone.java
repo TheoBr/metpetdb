@@ -342,6 +342,7 @@ public class SearchIPhone extends HttpServlet{
 			}
 		}
 		catch(Exception e){
+			System.out.print(e.getMessage());
 			throw new IllegalStateException(e.getMessage());
 		} finally {
 			session.close();
