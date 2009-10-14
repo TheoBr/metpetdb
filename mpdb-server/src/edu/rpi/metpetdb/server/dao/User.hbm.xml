@@ -24,7 +24,7 @@
 	<property name="confirmationCode" column="confirmation_code" />    
 	<property name="rank" formula="(select r.rank from roles r where r.role_id=role_id)" />
 
-    <set name="projects" table="project_members" inverse="true">
+    <set name="projects" table="project_members">
       <key column="user_id" />
       <many-to-many class="Project" column="project_id" />
     </set>

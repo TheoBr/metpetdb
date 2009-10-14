@@ -32,10 +32,11 @@ public enum ProjectProperty implements Property<Project> {
 	},
 	memberCount {
 		public Integer get(final Project project) {
-			return ((Project) project).getMembers().size();
+			return ((Project) project).getMemberCount();
 		}
 
-		public void set(final Project project, final Object subsampleCount) {
+		public void set(final Project project, final Object memberCount) {
+			project.setMemberCount((Integer) memberCount);
 		}
 	},
 

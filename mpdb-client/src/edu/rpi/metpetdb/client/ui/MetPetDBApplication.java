@@ -1,8 +1,10 @@
 package edu.rpi.metpetdb.client.ui;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -24,9 +26,12 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.model.Invite;
 import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
+import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
+import edu.rpi.metpetdb.client.ui.commands.LoggedInServerOp;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.LoginDialog;
@@ -48,6 +53,7 @@ public class MetPetDBApplication implements EntryPoint {
 	private static MLink editProfileLink;
 	private static MLink logoutLink;
 	private static MLink reportBugLink;
+	private static MLink projectInviteLink;
 	
 	private static MMenuBar hdrnav;
 	private static RootPanel breadcrumbsBar;
@@ -247,7 +253,7 @@ public class MetPetDBApplication implements EntryPoint {
 		pageChangeWatchers.remove(w);
 	}
 
-	private static void populateLogbar(final User n) {
+	public static void populateLogbar(final User n) {
 		logbar.clear();
 		logbarLinks.clear();
 		if (n != null) {
@@ -256,6 +262,7 @@ public class MetPetDBApplication implements EntryPoint {
 			logbarLinks.add(loggedIn);
 			logbarLinks.add(editProfileLink);
 			logbarLinks.add(logoutLink);
+			checkProjectInvites();
 			
 		} else {
 			logbarLinks.add(loginLink);
@@ -264,6 +271,41 @@ public class MetPetDBApplication implements EntryPoint {
 		}
 		logbar.add(logbarLinks);
 		logbar.add(reportBugLink);
+	}
+	
+	private static void checkProjectInvites() {
+		//Look for invites and display a link only if invites exist
+		new ServerOp() {
+			public void begin(){
+				MpDb.project_svc.getInvitesForUser(MpDb.currentUser().getId(), this);
+			}
+			public void onSuccess(final Object result){
+				//copy the results. Can't modify in place the list received from the callback
+				List<Invite> invites = new ArrayList<Invite>();
+				
+				//Take out any invites that are not New because no action would be needed on those
+				for(Invite i: (List<Invite>) result){
+					if(i.getStatus().equals("New"))
+						invites.add(i);
+				}
+				//If there are any new invites, create a link to the My Invites page
+				if(invites != null && invites.size() > 0){
+					final MLink projectInviteLink = new MLink(invites.size() + " new project invite" +
+							(invites.size() > 1 ? "s!" : "!"), 
+							new ClickListener(){
+								public void onClick(Widget sender) {
+									new LoggedInServerOp<Subsample>() {
+										@Override
+										public void command() {
+											History.newItem(TokenSpace.viewMyInvites(MpDb.currentUser()));
+										}
+									}.begin();
+								}	
+					});
+					logbar.add(projectInviteLink);
+				}
+			}
+		}.begin();
 	}
 
 	public static void show(final Widget w) {

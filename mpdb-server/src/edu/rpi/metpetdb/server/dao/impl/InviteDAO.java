@@ -56,8 +56,9 @@ public class InviteDAO extends MpDbDAO<Invite> {
 		ProjectDAO dao = new ProjectDAO(this.sess);
 		p.setId(i.getProject_id());
 		p = dao.fill(p);
-		p.getMembers().add(u);
-		dao.save(p);
+		u.getProjects().add(p);
+		UserDAO uDAO = new UserDAO(this.sess);
+		uDAO.save(u);
 		save(i);
 	}
 	

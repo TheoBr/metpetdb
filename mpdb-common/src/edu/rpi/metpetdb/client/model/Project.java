@@ -16,6 +16,8 @@ public class Project extends MObject {
 	private User owner;
 
 	private Set<User> members;
+	
+	private int memberCount;
 
 	private Set<Sample> samples;
 	
@@ -69,6 +71,14 @@ public class Project extends MObject {
 
 	public void setMembers(final Set<User> c) {
 		members = c;
+	}
+	
+	public int getMemberCount() {
+		return memberCount;
+	}
+
+	public void setMemberCount(final int i) {
+		memberCount = i;
 	}
 
 	public Set<Sample> getSamples() {

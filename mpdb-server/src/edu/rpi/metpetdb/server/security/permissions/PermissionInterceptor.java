@@ -93,7 +93,9 @@ public class PermissionInterceptor extends EmptyInterceptor {
 		// we don't really care about owners of sample comments,
 		// we do care about their owning object (sample) which we check for
 		// private/public
-		if (entity instanceof HasOwner && !(entity instanceof SampleComment)) {
+		// Projects are also ignored since they are changeable by users
+		// other than the owner
+		if (entity instanceof HasOwner && !(entity instanceof SampleComment) && !(entity instanceof Project)) {
 			if (!principals.contains(new OwnerPrincipal(getOwnerId(
 					propertyNames, state)))) {
 				try {

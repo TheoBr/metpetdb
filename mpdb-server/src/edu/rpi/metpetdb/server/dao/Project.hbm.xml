@@ -15,10 +15,13 @@
 
     <many-to-one name="owner" column="user_id" lazy="false" />
 
-    <set name="members" table="project_members">
+    <set name="members" table="project_members" inverse="true">
       <key column="project_id" />
       <many-to-many class="User" column="user_id" />
     </set>
+    
+    <property name="memberCount" formula="(select count(*) from project_members pm
+    										where pm.project_id=project_id)" />
     
     <set name="invites" table="project_invites">
       <key column="project_id" />

@@ -14,6 +14,7 @@ import edu.rpi.metpetdb.client.model.Invite;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.properties.ProjectProperty;
+import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
@@ -52,6 +53,7 @@ public class MyInvites extends MPagePanel {
 						}
 						public void onSuccess(Object result){
 							refreshInviteListing(panel, i, p);
+							MetPetDBApplication.populateLogbar(MpDb.currentUser());
 						}
 					}.begin();
 				}
@@ -67,6 +69,7 @@ public class MyInvites extends MPagePanel {
 						}
 						public void onSuccess(Object result){
 							refreshInviteListing(panel, i, p);
+							MetPetDBApplication.populateLogbar(MpDb.currentUser());
 						}
 					}.begin();
 				}

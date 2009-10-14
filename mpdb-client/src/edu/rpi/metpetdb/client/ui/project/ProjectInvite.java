@@ -3,7 +3,9 @@ package edu.rpi.metpetdb.client.ui.project;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
@@ -13,6 +15,7 @@ import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
@@ -67,6 +70,10 @@ public class ProjectInvite extends FlowPanel {
 							
 						}
 					}
+					@Override
+					public void onFailure(final Throwable e) {
+						userNotFound();
+					}
 				}.begin();
 			}
 			
@@ -75,6 +82,24 @@ public class ProjectInvite extends FlowPanel {
 		Button save = p_user.getSaveButton();
 		save.setText("Send Invite");
 		add(new OnEnterPanel.ObjectEditor(p_user));
+	}
+	
+	private void userNotFound(){
+		final MDialogBox notFoundBox = new MDialogBox();
+		final FlowPanel container = new FlowPanel();
+		container.add(new Label("This user has not yet registered at MetPetDB"));
+		Button ok = new Button("Ok");
+		ok.addClickListener(new ClickListener(){
+			public void onClick(final Widget sender){
+				notFoundBox.hide();
+				User u = new User();
+				u.setEmailAddress("test");
+				p_user.edit(u);
+			}
+		});
+		container.add(ok);
+		notFoundBox.setWidget(container);
+		notFoundBox.show();
 	}
 
 	public ProjectInvite newInvite(Project p) {

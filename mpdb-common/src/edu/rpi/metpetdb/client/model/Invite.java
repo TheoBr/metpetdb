@@ -1,14 +1,6 @@
 package edu.rpi.metpetdb.client.model;
 
 import java.sql.Timestamp;
-import java.util.Date;
-
-import org.hibernate.search.annotations.DateBridge;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Resolution;
-
-import edu.rpi.metpetdb.client.model.properties.Property;
 
 public class Invite extends MObject {
 	private static final long serialVersionUID = 1L;
@@ -74,19 +66,9 @@ public class Invite extends MObject {
 	
 	public String timeAsString(){
 		if(action_timestamp == null) return "";
-		final int year = action_timestamp.getYear() + 1900;
-		final int month = action_timestamp.getMonth();
-		final int day = action_timestamp.getDay();
 		
-		int hour = action_timestamp.getHours();
-		final int minute = action_timestamp.getMinutes();
-		final int seconds = action_timestamp.getSeconds();
-		String m = months[month];
+		java.util.Date date = new java.util.Date(action_timestamp.getTime());
+		return date.toString();
 		
-		String daytime = (hour >=12 ? "PM" : "AM");
-		hour = (hour > 12 ? hour - 12 : hour);
-		
-		return (m + " " + String.valueOf(day) + " " + String.valueOf(year) + " " + 
-			String.valueOf(hour) + ":" + String.valueOf(minute) + ":" + String.valueOf(seconds) + " " + daytime); 
 	}
 }

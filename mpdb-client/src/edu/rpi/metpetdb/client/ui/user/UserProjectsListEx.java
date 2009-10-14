@@ -25,6 +25,7 @@ import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.LoggedInServerOp;
@@ -34,8 +35,9 @@ import edu.rpi.metpetdb.client.ui.objects.list.ProjectList;
 import edu.rpi.metpetdb.client.ui.objects.list.ProjectListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
+import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
-public class UserProjectsListEx extends FlowPanel implements ClickListener {
+public class UserProjectsListEx extends MPagePanel implements ClickListener {
 	private static final String cookieString = "UserProjectsListEx";
 	private FlexTable header1;
 	private ProjectList list;
@@ -53,81 +55,11 @@ public class UserProjectsListEx extends FlowPanel implements ClickListener {
 		final MLink createProject = new MLink("Create New Project",
 				TokenSpace.newProject);
 		
-		//Look for invites and display a link only if invites exist
-		new ServerOp() {
-			public void begin(){
-				MpDb.project_svc.getInvitesForUser(MpDb.currentUser().getId(), this);
-			}
-			public void onSuccess(final Object result){
-				//copy the results. Can't modify in place the list received from the callback
-				List<Invite> invites = new ArrayList<Invite>();
-				
-				//Take out any invites that are not New because no action would be needed on those
-				for(Invite i: (List<Invite>) result){
-					if(i.getStatus().equals("New"))
-						invites.add(i);
-				}
-				//If there are any new invites, create a link to the My Invites page
-				if(invites != null && invites.size() > 0){
-					final MLink newInvites = new MLink("You have " + invites.size() + " project invite" +
-							(invites.size() > 1 ? "s!" : "!"), 
-							new ClickListener(){
-								public void onClick(Widget sender) {
-									new LoggedInServerOp<Subsample>() {
-										@Override
-										public void command() {
-											History.newItem(TokenSpace.viewMyInvites(MpDb.currentUser()));
-										}
-									}.begin();
-								}	
-					});
-					header1.setWidget(0, 1, newInvites);
-				}
-			}
-		}.begin();
 
-		final Label myProjectsSamples_label = new Label("My Projects");
-		final Label quickfilters_label = new Label("Quick Filters:");
-		createProject.addStyleName("addlink");
-
-		header1.setWidget(0, 0, myProjectsSamples_label);
-		header1.setWidget(1, 0, createProject);
-
-		header1.setWidget(2, 0, quickfilters_label);
-
-		header1.getFlexCellFormatter().setColSpan(0, 0, 3);
-		header1.getFlexCellFormatter().setColSpan(0, 1, 4);
-		header1.getFlexCellFormatter().setColSpan(1, 1, 2);
-		header1.getFlexCellFormatter().setWidth(1, 0, "130px");
-		header1.getFlexCellFormatter().setAlignment(0, 1,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.getFlexCellFormatter().setWidth(2, 2, "50%");
-		header1.getFlexCellFormatter().setAlignment(2, 0,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.getFlexCellFormatter().setAlignment(2, 1,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.getFlexCellFormatter().setAlignment(2, 2,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.getFlexCellFormatter().setAlignment(2, 3,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.getFlexCellFormatter().setAlignment(2, 4,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.getFlexCellFormatter().setAlignment(2, 5,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.getFlexCellFormatter().setAlignment(2, 6,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		header1.setCellSpacing(10);
-		header1.addStyleName("mpdb-dataTableUserSamples");
-		myProjectsSamples_label.setStyleName("big");
-		this.add(header1);
+		setPageTitle("My Projects");
+		createProject.setStylePrimaryName(CSS.LINK_LARGE_ICON);
+		createProject.addStyleName(CSS.LINK_ADD);
+		addPageActionItem(createProject);
 	}
 
 	public void onClick(Widget sender) {
