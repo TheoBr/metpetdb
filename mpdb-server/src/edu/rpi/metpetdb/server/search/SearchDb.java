@@ -447,7 +447,7 @@ public class SearchDb {
 						// incorporate privacy stuff
 						fullQuery.add(getPrivacyQuery(Integer
 								.parseInt(methodResult.toString()),
-								userSearching), BooleanClause.Occur.MUST);
+								userSearching,onSubsample ? SAMPLE_PREFIX : ""), BooleanClause.Occur.MUST);
 					} else if (methodResult instanceof Set) { // if a set of
 						// data is
 						// returned, it should be an
