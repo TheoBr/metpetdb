@@ -149,6 +149,7 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String TokenSpace_ImageListViewer();
 	String TokenSpace_Register();
 	String TokenSpace_Home();
+	String TokenSpace_App();
 	String TokenSpace_Bulk_Upload();
 	String TokenSpace_Search();
 	String TokenSpace_Permission_Denied();
