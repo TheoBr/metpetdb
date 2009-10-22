@@ -93,7 +93,6 @@ public class ProjectInvite extends FlowPanel {
 			public void onClick(final Widget sender){
 				notFoundBox.hide();
 				User u = new User();
-				u.setEmailAddress("test");
 				p_user.edit(u);
 			}
 		});

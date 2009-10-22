@@ -2,6 +2,11 @@ package edu.rpi.metpetdb.client.ui.objects.details;
 
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
@@ -11,6 +16,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
+import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.ChooseImageAttribute;
@@ -65,8 +71,27 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 			}
 
 			protected void saveBean(final AsyncCallback<ChemicalAnalysis> ac) {
-				MpDb.chemicalAnalysis_svc
-						.save((ChemicalAnalysis) getBean(), ac);
+				//If the user attempts to make the analysis public, make sure the owning subsample is public
+				if(((ChemicalAnalysis) getBean()).isPublicData()){
+					new ServerOp(){
+						@Override
+						public void begin(){
+							MpDb.subsample_svc.details(((ChemicalAnalysis) getBean()).getSubsampleId(), this);
+						}
+						public void onSuccess(Object result){
+							if(!((Subsample) result).isPublicData()){
+								//Can't save this subsample as public
+								cannotMakePublic();
+							} else {
+								MpDb.chemicalAnalysis_svc
+								.save((ChemicalAnalysis) getBean(), ac);
+							}
+						}
+					}.begin();
+				} else{
+					MpDb.chemicalAnalysis_svc
+					.save((ChemicalAnalysis) getBean(), ac);
+				}
 			}
 
 			protected void deleteBean(final AsyncCallback<Object> ac) {
@@ -121,6 +146,23 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 		chemicalAnalysisId = id;
 		p_chemicalAnalysis.load();
 		return this;
+	}
+	
+	private void cannotMakePublic(){
+		final MDialogBox box = new MDialogBox();
+		final FlowPanel container = new FlowPanel();
+		container.add(new Label("Cannot make analysis public. It is owned by a private Subsample"));
+		Button ok = new Button("Ok");
+		ok.addClickListener(new ClickListener(){
+			public void onClick(final Widget sender){
+				box.hide();
+				p_chemicalAnalysis.getBean().setPublicData(false);
+				p_chemicalAnalysis.edit(p_chemicalAnalysis.getBean());
+			}
+		});
+		container.add(ok);
+		box.setWidget(container);
+		box.show();
 	}
 
 	public ChemicalAnalysisDetails createNew(final Subsample ss) {

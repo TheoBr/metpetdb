@@ -21,9 +21,11 @@ import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
@@ -78,7 +80,25 @@ public class SubsampleDetails extends MPagePanel {
 
 			protected void saveBean(final AsyncCallback<Subsample> ac) {
 				makeImagesPublicIfPublic((Subsample) getBean());
-				MpDb.subsample_svc.save((Subsample) getBean(), ac);
+				//If the user attempts to make the subsample public, make sure the owning sample is public
+				if(((Subsample) getBean()).isPublicData()){
+					new ServerOp(){
+						@Override
+						public void begin(){
+							MpDb.sample_svc.details(((Subsample) getBean()).getSampleId(), this);
+						}
+						public void onSuccess(Object result){
+							if(!((Sample) result).isPublicData()){
+								//Can't save this subsample as public
+								cannotMakePublic();
+							} else {
+								MpDb.subsample_svc.save((Subsample) getBean(), ac);
+							}
+						}
+					}.begin();
+				} else{
+					MpDb.subsample_svc.save((Subsample) getBean(), ac);
+				}
 			}
 
 			protected void deleteBean(final AsyncCallback<Object> ac) {
@@ -265,6 +285,23 @@ public class SubsampleDetails extends MPagePanel {
 		container.add(ok);
 		noPermissionBox.setWidget(container);
 		noPermissionBox.show();
+	}
+	
+	private void cannotMakePublic(){
+		final MDialogBox box = new MDialogBox();
+		final FlowPanel container = new FlowPanel();
+		container.add(new Label("Cannot make subsample public. It is owned by a private Sample"));
+		Button ok = new Button("Ok");
+		ok.addClickListener(new ClickListener(){
+			public void onClick(final Widget sender){
+				box.hide();
+				p_subsample.getBean().setPublicData(false);
+				p_subsample.edit(p_subsample.getBean());
+			}
+		});
+		container.add(ok);
+		box.setWidget(container);
+		box.show();
 	}
 	
 	private void makeImagesPublicIfPublic(Subsample subsample){
