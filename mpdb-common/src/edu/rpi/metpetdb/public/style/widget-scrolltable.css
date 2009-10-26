@@ -87,3 +87,30 @@
 	border-bottom-color: #c5d3fb;
 	color: #333;
 }
+
+.criteria-collapse {
+	background-color: #f1f1f1;
+	width: 100%;
+}
+.criteria-dropshadow {
+	background: #ededed url(../images/search-criteria-shadow.png) repeat-x left bottom;
+	height: 6px;
+}
+.criteria-collapse a.header {
+	background: #c2c2c2 url(../images/search-collapsebar-bg.png) repeat-x left top;
+	height: 7px;
+	padding-top: 4px;
+}
+.criteria-collapse a.header:hover {
+	background-position: left -11px;
+}
+.criteria-collapse a.header div {
+	width: 10px;
+	height: 5px;
+	background: transparent url(../images/search-collapsebar-arrow.png) no-repeat left top;
+	margin: 0 auto;
+	text-indent: -9999px;
+}
+.criteria-collapse-closed a.header div {
+	background-position: left -5px;
+}

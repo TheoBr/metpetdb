@@ -11,6 +11,7 @@ import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.properties.ChemicalAnalysisProperty;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.plot.PlotInterface;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.paging.DataList;
 import edu.rpi.metpetdb.client.ui.widgets.paging.columns.Column;
@@ -25,6 +26,7 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 	private static ColumnDefinition<ChemicalAnalysis> defaultColumns;
 	
 	static {
+		
 		columns = new ColumnDefinition<ChemicalAnalysis>();
 		defaultColumns = new ColumnDefinition<ChemicalAnalysis>();
 		
@@ -203,6 +205,7 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 	public void initialize() {
 		super.initialize();
 		setTableActions(new ChemicalAnalysisListActions(this));
+		add(new PlotInterface(this).getWidget());
 	}
 
 	public ChemicalAnalysisList() {

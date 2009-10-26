@@ -44,7 +44,6 @@ public class Search extends MPagePanel {
 
 	private final static FlowPanel samplesContainer = new FlowPanel();
 	private final static FlowPanel chemContainer = new FlowPanel();
-	private final static FlowPanel plotContainer = new FlowPanel();
 	private final static ObjectSearchPanel searchPanel;
 	private final static SearchInterface sui = new SearchInterface(searchTabs);
 	private static boolean outputSamples = true;
@@ -109,13 +108,10 @@ public class Search extends MPagePanel {
 		}
 
 	};
-	
-	private final static PlotInterface pi = new PlotInterface(chemList);
 
 	static {
 		samplesContainer.add(sampleList);
 		chemContainer.add(chemList);
-		chemContainer.add(pi.getWidget());
 		searchPanel.edit(ss);
 		chemContainer.setVisible(!outputSamples);
 		samplesContainer.setVisible(outputSamples);
@@ -127,7 +123,6 @@ public class Search extends MPagePanel {
 		add(searchPanel);
 		add(samplesContainer);
 		add(chemContainer);
-		add(plotContainer);
 	}
 
 	public void reload() {
