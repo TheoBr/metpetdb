@@ -275,6 +275,8 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 							" is " + lessThan.getText() + " " + unit.getValue(unit.getSelectedIndex())+ mineralString);
 				}
 				
+			} else if (mineral.getText() != ""){
+				currentCriteria.put(this,"Mineral: " + mineral.getText());
 			}
 			SearchChemistryAttribute.this.getSearchInterface().createCritera();
 		}
@@ -585,7 +587,25 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 			}
 			return Elements;
 		} else if (constraint == wholeRockConstraint){
-			return null;
+			Iterator<RowContainer> itr = currentCriteria.keySet().iterator();
+			
+			while (itr.hasNext()){
+				final RowContainer temp = itr.next();
+				if (temp.st.getText().equals("") && temp.wholeRock)
+					return new Boolean(true);
+			}
+			return new Boolean(false);
+		} else if (constraint == mineralConstraint){
+			// search for minerals with no oxide/element
+			Iterator<RowContainer> itr = currentCriteria.keySet().iterator();
+			final Set<Mineral> chemMinerals = new HashSet<Mineral>();
+			
+			while (itr.hasNext()){
+				final RowContainer temp = itr.next();
+				if (temp.st.getText().equals(""))
+					chemMinerals.addAll(temp.tree.getSelectedItems());
+			}
+			return chemMinerals;
 		} else {
 			return null;
 		}

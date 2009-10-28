@@ -528,6 +528,8 @@ public class SearchDb {
 		SearchProperty[] enums = SearchSampleProperty.class.getEnumConstants();
 		String query = "";
 		String fromQuery = "from ChemicalAnalysis ca";
+		String chemMinerals = "";
+		String largeRock = "";
 		for (SearchProperty i : enums) {
 
 			// column to search on
@@ -538,7 +540,21 @@ public class SearchDb {
 
 			if (i.isChemicalAnalysisAttr()) {
 				// if there is no value returned in this field...
-				if (columnName.equals("oxides")) {
+				if (columnName.equals("Mineral_name")){
+					if (methodResult != null && ((Set) methodResult).size() > 0) {
+						String mineralQuery = "ca.mineral.name in (";
+						for (Mineral m : (Set<Mineral>) methodResult){
+							mineralQuery += "lower('" +m.getName() +"'),";
+						}
+						mineralQuery = mineralQuery.substring(0,mineralQuery.length()-1);
+						mineralQuery += ")";
+						chemMinerals = mineralQuery;
+					}				
+				} else if (columnName.equals("largeRock")){
+					if (methodResult != null && (Boolean) methodResult){
+						largeRock = "ca.largeRock = 'Y'";
+					}
+				} else if (columnName.equals("oxides")) {
 					if (((Set) methodResult).size() > 0) {
 						fromQuery += " join ca.oxides o";
 						String oxideQuery = "";
@@ -597,6 +613,12 @@ public class SearchDb {
 				query += q + " and ";
 			}
 			query = query.substring(0,query.length()-5);
+			if (!chemMinerals.equals("")){
+				query += " or " + chemMinerals;
+			}
+			if (!largeRock.equals("")){
+				query += " or " + largeRock;
+			}
 		}
 		
 		return session.createQuery(query);
