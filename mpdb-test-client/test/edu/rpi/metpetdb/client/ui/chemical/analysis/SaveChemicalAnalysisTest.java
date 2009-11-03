@@ -30,7 +30,7 @@ public class SaveChemicalAnalysisTest extends MpDbTestCase {
 		final Element e = new Element();
 		e.setId((short) 1);
 		element.setElement(e);
-		element.setAmount(0.0f);
+		element.setAmount(0.0);
 		elements.add(element);
 
 		final Set<ChemicalAnalysisOxide> oxides = new HashSet<ChemicalAnalysisOxide>();
@@ -38,7 +38,7 @@ public class SaveChemicalAnalysisTest extends MpDbTestCase {
 		final Oxide o = new Oxide();
 		o.setOxideId((short) 1);
 		oxide.setOxide(o);
-		oxide.setAmount(0.0f);
+		oxide.setAmount(0.0);
 		oxides.add(oxide);
 		chemicalAnalysis.setElements(elements);
 		chemicalAnalysis.setOxides(oxides);

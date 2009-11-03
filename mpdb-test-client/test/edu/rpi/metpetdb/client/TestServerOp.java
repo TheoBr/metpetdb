@@ -1,7 +1,7 @@
 package edu.rpi.metpetdb.client;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.ui.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 
 public abstract class TestServerOp<T> extends ServerOp<T> {
 

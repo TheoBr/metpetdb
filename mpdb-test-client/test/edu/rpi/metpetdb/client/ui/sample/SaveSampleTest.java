@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.ui.sample;
 
+import java.util.HashSet;
+
 import edu.rpi.metpetdb.client.MpDbTestCase;
 import edu.rpi.metpetdb.client.TestServerOp;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -7,6 +9,7 @@ import edu.rpi.metpetdb.client.error.validation.InvalidSESARNumberException;
 import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
 import edu.rpi.metpetdb.client.model.RockType;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.SampleAlias;
 import edu.rpi.metpetdb.client.ui.MpDb;
 
 /**
@@ -41,7 +44,7 @@ public class SaveSampleTest extends MpDbTestCase {
 		sample.setLatitude(LATITUDE);
 		sample.setLongitude(LONGITUDE);
 		sample.setRockType(ROCK_TYPE);
-		sample.setAlias(ALIAS);
+		sample.addAlias(ALIAS);
 		sample.setId(ROTATING_SAMPLE_ID++);
 		sample.setOwner(this.getUser());
 	}
@@ -116,7 +119,7 @@ public class SaveSampleTest extends MpDbTestCase {
 	}
 
 	public void testSaveSampleFailAlias() {
-		sample.setAlias(null);
+		sample.setAliases(new HashSet<SampleAlias>());
 		new TestServerOp<Sample>(this) {
 			public void begin() {
 				MpDb.sample_svc.save(sample, this);
@@ -135,7 +138,7 @@ public class SaveSampleTest extends MpDbTestCase {
 				}
 			}
 		}.begin();
-		sample.setAlias(ALIAS);
+		sample.addAlias(ALIAS);
 		delayTestFinish(10000);
 	}
 
