@@ -82,6 +82,11 @@
       <many-to-many class="Reference" column="reference_id" order-by="lower(name)"/>
     </set>
     
+	<set name="geoReferences" table="sample_georeferences" cascade="all" lazy="false">
+      <key column="sample_id" />
+      <many-to-many class="GeoReference" column="georef_id" order-by="lower(title)"/>
+    </set>
+    
     <property name="firstReference" formula="(SELECT min(r.name) FROM samples s, sample_reference sr, reference r
     										WHERE s.sample_id = sample_id AND
     										sr.sample_id = s.sample_id AND

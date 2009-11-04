@@ -214,6 +214,29 @@ CREATE TABLE sample_reference
       ON UPDATE NO ACTION ON DELETE NO ACTION
 ) WITHOUT OIDS;
 
+CREATE TABLE georeference
+(
+  georef_id INT8 NOT NULL,
+  title VARCHAR(100) NOT NULL,
+  authors VARCHAR(512) NOT NULL,
+  journal_name VARCHAR(128) NOT NULL,
+  misc_info VARCHAR(128),
+  CONSTRAINT georeference_sk PRIMARY KEY (georef_id)
+) WITHOUT OIDS;
+
+CREATE TABLE sample_georeferences
+(
+  sample_id INT8 NOT NULL,
+  georef_id INT8 NOT NULL,
+  CONSTRAINT sample_georeferences_pk PRIMARY KEY (sample_id, georef_id),
+  CONSTRAINT sample_georeferences_fk_georeferenc FOREIGN KEY (georef_id)
+      REFERENCES georeference (georef_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT sample_georeferences_fk_sample FOREIGN KEY (sample_id)
+      REFERENCES samples (sample_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+) WITHOUT OIDS;
+
 CREATE TABLE elements
 (
    element_id INT2 NOT NULL,
@@ -239,6 +262,7 @@ CREATE TABLE uploaded_files
       REFERENCES users (user_id)
 ) WITHOUT OIDS;
 
+CREATE SEQUENCE georeference_seq;
 CREATE SEQUENCE invite_seq;
 CREATE SEQUENCE project_seq;
 CREATE SEQUENCE region_seq;

@@ -50,6 +50,8 @@ alter table role_changes owner to metpetdb_dev;
 alter table mineral_relationships owner to metpetdb_dev;
 alter table project_invites to owner metpetdb_dev;
 alter table sample_aliases to owner metpetdb_dev;
+alter table georeference to owner metpetdb_dev;
+alter table sample_georeferences to owner metpetdb_dev;
 
 --triggers
 alter function archive_sample() owner to metpetdb_dev;
@@ -90,6 +92,7 @@ grant all PRIVILEGES on uploaded_files_seq to metpetdb_dev;
 grant all PRIVILEGES on user_seq to metpetdb_dev;
 grant all PRIVILEGES on role_seq to metpetdb_dev; 
 grant all PRIVILEGES on sample_aliases_seq to metpetdb_dev;
+grant all PRIVILEGES on georeference_seq to metpetdb_dev;
 
 grant create on database mpdb_test to metpetdb_dev;
 grant all privileges on database mpdb_test to metpetdb_dev;

@@ -7,6 +7,7 @@ import java.util.Set;
 import org.postgis.Geometry;
 import org.postgis.Point;
 
+import edu.rpi.metpetdb.client.model.GeoReference;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.MetamorphicGrade;
 import edu.rpi.metpetdb.client.model.Reference;
@@ -226,6 +227,15 @@ public enum SampleProperty implements Property<Sample> {
 			} else {
 				sample.setReferences((Set<Reference>) references);
 			}
+		}
+	},
+	geoReferences {
+		public Set<GeoReference> get(final Sample sample) {
+			return sample.getGeoReferences();
+		}
+
+		public void set(final Sample sample, final Object geoReferences) {
+				sample.setGeoReferences((Set<GeoReference>) geoReferences);
 		}
 	},
 	comments {

@@ -19,6 +19,7 @@ public class RegularExpressions {
 	public static final String METAMORPHIC_GRADES = "(grade)|(facies)";
 	public static final String LATITUDE = "(\\s*latitude\\s*$)|(lat\\s*$)";
 	public static final String LONGITUDE = "(\\s*longitude\\s*$)|(lon\\s*$)";
+	public static final String REFERENCE_FILENAME = "(reference path)";
 
 	/** Chemical Analysis */
 	public static final String SUBSAMPLE = "^\\s*subsample\\s*$";

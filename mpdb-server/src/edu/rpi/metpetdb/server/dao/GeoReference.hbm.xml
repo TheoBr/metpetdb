@@ -1,0 +1,29 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="GeoReference" table="georeference">
+    <id name="id" column="georef_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">georeference_seq</param>
+      </generator>
+    </id>
+    <property name="title" column="title"/>
+    <property name="authors" column="authors"/>
+    <property name="journal_name" column="journal_name"/>
+    <property name="misc_info" column="misc_info"/>
+  </class>
+  
+  <query name="GeoReference.byName">
+    from GeoReference g
+    where lower(g.title) = lower(:title)
+  </query>
+  
+   <query name="GeoReference.all/title">
+  	select distinct title
+  	from GeoReference g
+    order by g.title
+   </query>
+
+</hibernate-mapping>

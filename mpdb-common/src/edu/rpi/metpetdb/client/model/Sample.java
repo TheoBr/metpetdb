@@ -99,6 +99,8 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	private Set<Reference> references = new HashSet<Reference>();
 	
 	private String firstReference;
+	
+	private Set<GeoReference> geoReferences = new HashSet<GeoReference>();
 
 	private Set<SampleComment> comments = new HashSet<SampleComment>();
 
@@ -448,6 +450,14 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	
 	public void setFirstReference(final String s) {
 		firstReference = s;
+	}
+	
+	public Set<GeoReference> getGeoReferences(){
+		return geoReferences;
+	}
+	
+	public void setGeoReferences(final Set<GeoReference> g){
+		geoReferences = g;
 	}
 
 	public Set<SampleComment> getComments() {

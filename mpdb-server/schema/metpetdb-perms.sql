@@ -48,6 +48,8 @@ GRANT select,insert,update,delete ON chemical_analysis_oxides_archive to @APPUSE
 GRANT select,insert,update,delete ON role_changes to @APPUSER@;
 GRANT select,insert,update,delete ON project_invites to @APPUSER@;
 GRANT select,insert,update,delete ON sample_aliases to @APPUSER@;
+GRANT select,insert,update,delete ON georeference to @APPUSER@;
+GRANT select,insert,update,delete ON sample_georeferences to @APPUSER@;
 
 GRANT update ON invite_seq TO @APPUSER@;
 GRANT update ON mineral_seq   TO @APPUSER@;
@@ -79,3 +81,4 @@ GRANT update ON admin_user_seq TO @APPUSER@;
 GRANT update ON role_changes_seq TO @APPUSER@;
 GRANT update ON role_seq TO @APPUSER@;
 GRANT update ON sample_aliases_seq TO @APPUSER@;
+GRANT update ON georeference_seq TO @APPUSER@;

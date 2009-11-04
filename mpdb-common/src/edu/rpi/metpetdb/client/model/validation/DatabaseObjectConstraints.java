@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Element;
+import edu.rpi.metpetdb.client.model.GeoReference;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.ImageComment;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
@@ -102,6 +103,9 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	// ------ Reference ------
 	public PropertyConstraint[] Reference__all;
 	public StringConstraint Reference_name;
+	
+	// ------ GeoReference ------
+	public PropertyConstraint[] GeoReference__all;
 
 	// ------ Image Type ------
 	public PropertyConstraint[] ImageType__all;
@@ -202,6 +206,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public ObjectConstraint<Reference> Sample_references;
 	public ObjectConstraint<Image> Sample_images;
 	public ObjectConstraint<SampleAlias> Sample_aliases;
+	public ObjectConstraint<GeoReference> Sample_geoReferences;
 
 	public void validate(final Sample s) throws ValidationException {
 		validate(s, Sample__all);
