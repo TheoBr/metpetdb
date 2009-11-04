@@ -21,6 +21,9 @@ public class NumericKeyboardListener implements KeyboardListener{
 	}
 	
 	public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+		if (modifiers == MODIFIER_CTRL || modifiers == MODIFIER_META){
+			return;
+		}
 		if (((!Character.isDigit(keyCode)) && (keyCode != (char) KEY_TAB)
 				&& (keyCode != (char) KEY_BACKSPACE)
 				&& (keyCode != (char) KEY_DELETE) && (keyCode != (char) KEY_ENTER) 

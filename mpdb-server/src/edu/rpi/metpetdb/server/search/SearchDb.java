@@ -522,14 +522,13 @@ public class SearchDb {
 	public static org.hibernate.Query getChemicalsQuery(SearchSample searchSamp,
 			User userSearching, Session session, String selectQuery) {
 		Set<String> queries = new HashSet<String>();
+		Set<String> orQueries = new HashSet<String>();
 
 		String columnName;
 		Object methodResult = null;
 		SearchProperty[] enums = SearchSampleProperty.class.getEnumConstants();
 		String query = "";
-		String fromQuery = "from ChemicalAnalysis ca";
-		String chemMinerals = "";
-		String largeRock = "";
+		String fromQuery = "from ChemicalAnalysis ca";	
 		for (SearchProperty i : enums) {
 
 			// column to search on
@@ -548,16 +547,16 @@ public class SearchDb {
 						}
 						mineralQuery = mineralQuery.substring(0,mineralQuery.length()-1);
 						mineralQuery += ")";
-						chemMinerals = mineralQuery;
+						orQueries.add(mineralQuery);
 					}				
 				} else if (columnName.equals("largeRock")){
 					if (methodResult != null && (Boolean) methodResult){
-						largeRock = "ca.largeRock = 'Y'";
+						orQueries.add("ca.largeRock = 'Y'");
 					}
 				} else if (columnName.equals("oxides")) {
 					if (((Set) methodResult).size() > 0) {
 						fromQuery += " join ca.oxides o";
-						String oxideQuery = "";
+						String tempOxideQuery = "";
 						for (SearchOxide o : (Set<SearchOxide>) methodResult) {
 							String q = "(o.minAmount <= " + o.getUpperBound() + 
 							" and o.maxAmount >= " + o.getLowerBound() + " and lower(o.oxide.species) = lower('" + o.getSpecies() + "')";
@@ -572,15 +571,15 @@ public class SearchDb {
 								q+= " and ca.largeRock = 'Y'";
 							}
 							q+= ")";
-							oxideQuery += q + " or ";
+							tempOxideQuery += q + " or ";
 						}	
-						queries.add("(" + oxideQuery.substring(0,oxideQuery.length()-4) + ")");
+						orQueries.add("(" + tempOxideQuery.substring(0,tempOxideQuery.length()-4) + ")");
 						
 					}
 				} else if (columnName.equals("elements")) {
 					if (((Set) methodResult).size() > 0) {
 						fromQuery += " join ca.elements e";
-						String elementQuery = "";
+						String tempElementQuery = "";
 						for (SearchElement o : (Set<SearchElement>) methodResult) {
 							String q = "(e.minAmount <= " + o.getUpperBound().toString() + 
 							" and e.maxAmount >= " + o.getLowerBound() + " and lower(e.element.symbol) = lower('" + o.getElementSymbol() + "')";
@@ -595,9 +594,9 @@ public class SearchDb {
 								q+= " and ca.largeRock = 'Y'";
 							}
 							q+= ")";	
-							elementQuery += q + " or ";
+							tempElementQuery += q + " or ";
 						}
-						queries.add("(" + elementQuery.substring(0, elementQuery.length()-4) + ")");
+						orQueries.add("(" + tempElementQuery.substring(0, tempElementQuery.length()-4) + ")");
 					}
 				} else if (columnName.equals("publicData")) {
 					// incorporate privacy stuff
@@ -613,11 +612,14 @@ public class SearchDb {
 				query += q + " and ";
 			}
 			query = query.substring(0,query.length()-5);
-			if (!chemMinerals.equals("")){
-				query += " or " + chemMinerals;
-			}
-			if (!largeRock.equals("")){
-				query += " or " + largeRock;
+			
+			if (orQueries.size() > 0){
+				query += " and (";
+				for (String q : orQueries){
+					query += q + " or ";
+				}
+				query = query.substring(0,query.length()-4);
+				query+= ")";
 			}
 		}
 		
