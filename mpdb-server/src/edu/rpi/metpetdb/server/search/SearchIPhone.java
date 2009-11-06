@@ -245,42 +245,55 @@ public class SearchIPhone extends HttpServlet{
 			
 			if(request.getParameter(OWNER)!= null)
 			{
-				String tempOwners[]  = request.getParameterValues(OWNER);
-				List list = Arrays.asList(tempOwners);
-				owners  = new HashSet(list);
+				String tempOwner="";
+				for (String s : request.getParameterValues(OWNER)){
+					if (s.length() > 2 && s.substring(0, 1).equals("'") && s.substring(s.length()-1, s.length()).equals("'")){
+						tempOwner=(s.substring(1, s.length()-1));
+					}
+				}
+				//String tempOwners[]  = request.getParameterValues(OWNER);
+				//List list = Arrays.asList(tempOwners);
+				owners  = new HashSet();
+				owners.add(tempOwner);
 				//outputSearchXML(search(session), response);
 			}
 			
 			if(request.getParameter(ROCK_TYPE)!= null)
 			{	
-				String tempRockTypes[]= request.getParameterValues(ROCK_TYPE);
-				//loop through the strings of rock types and convert them to rock type objects
-				for(int i=0; i<tempRockTypes.length; i++)
-				{
-					RockType rt= new RockType(tempRockTypes[i]);
-					rockTypes.add(rt);
+				String tempRockType="";
+				for (String s : request.getParameterValues(ROCK_TYPE)){
+					if (s.length() > 2 && s.substring(0, 1).equals("'") && s.substring(s.length()-1, s.length()).equals("'")){
+
+						tempRockType=(s.substring(1, s.length()-1));
+					}
 				}
+				RockType rt= new RockType(tempRockType);
+				rockTypes.add(rt);
 				//outputSearchXML(search(session), response);
 			}
 			if(request.getParameter(METAMORPHIC_GRADE)!= null)
 			{
-				String tempMetGrades[]=request.getParameterValues(METAMORPHIC_GRADE);
-				for(int i=0; i<tempMetGrades.length; i++)
-				{
-					MetamorphicGrade mg= new MetamorphicGrade(tempMetGrades[i]);
-					metamorphicGrades.add(mg);
+				String tempMetGrade="";
+				for (String s : request.getParameterValues(METAMORPHIC_GRADE)){
+					if (s.length() > 2 && s.substring(0, 1).equals("'") && s.substring(s.length()-1, s.length()).equals("'")){
+						tempMetGrade=(s.substring(1, s.length()-1));
+					}
 				}
+				MetamorphicGrade mg= new MetamorphicGrade(tempMetGrade);
+				metamorphicGrades.add(mg);
 				//outputSearchXML(search(session), response);
 			}
 			if(request.getParameter(MINERAL)!= null)
 			{
-				String tempMinerals[]= request.getParameterValues(MINERAL);
-				for(int i=0; i<tempMinerals.length; i++)
-				{
-					Mineral min= new Mineral();
-					min.setName(tempMinerals[i]);
-					minerals.add(min);
+				String tempMineral="";
+				for (String s : request.getParameterValues(MINERAL)){
+					if (s.length() > 2 && s.substring(0, 1).equals("'") && s.substring(s.length()-1, s.length()).equals("'")){
+						tempMineral=(s.substring(1, s.length()-1));
+					}
 				}
+					Mineral min= new Mineral();
+					min.setName(tempMineral);
+					minerals.add(min);
 				//outputSearchXML(search(session), response);
 			}
 			if(request.getParameter(CRITERIA)!= null)
