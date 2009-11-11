@@ -15,6 +15,11 @@ public class Grid extends MObject implements PublicData {
 	private Subsample Subsample;
 	private Set<ImageOnGrid> imagesOnGrid;
 	private Boolean publicData;
+	
+	public Grid() {
+		width = 200;
+		height = 200;
+	}
 
 	public int getId() {
 		return id;

@@ -51,6 +51,7 @@ public class AddImageWizard extends WizardDialog {
 		final GenericAttribute image[] = {
 				uploadImage, imageType,
 				new TextAttribute(MpDb.doc.Image_collector),
+				new TextAttribute(MpDb.doc.Image_scale,true,true,false)
 		};
 		final DetailsPanel<Image> p_image = new DetailsPanel<Image>(image,
 				new Button[] {});

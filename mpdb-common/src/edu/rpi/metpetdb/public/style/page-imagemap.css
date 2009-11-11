@@ -99,6 +99,12 @@
 	background: transparent url(../images/arrow-blue-left.gif) no-repeat 50% 50%;
 }
 
+#workspaceBoundary {
+	position: relative;
+	border: solid 2px black;
+	z-index: 999;	
+}
+
 /* zoom and pan controls */
 #viewControl {
 	position: absolute;

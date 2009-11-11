@@ -11,7 +11,7 @@ public class ZoomHandler {
 	private Collection<ImageOnGridContainer> imagesOnGrid;
 	public final Element zSlide;
 	public final ImageBrowserDetails imageBrowser;
-	private final static int zoomMultiplier = 2;
+	public final static int zoomMultiplier = 2;
 	public final static int MAXZOOM = 10;
 	public final static int MINZOOM = 130;
 	private int referenceX = 0;
@@ -60,8 +60,18 @@ public class ZoomHandler {
 		/* by default put refence in the center */
 		referenceY = imageBrowser.getGrid().getOffsetHeight() / 2;
 		referenceX = imageBrowser.getGrid().getOffsetWidth() / 2;
-		imageBrowser.updateScale(level == 1 ? zoomMultiplier
-				: (1 / (float) zoomMultiplier));
+		imageBrowser.updateScale(level == 1 ?  (1 / (float) zoomMultiplier) : zoomMultiplier);
+		if (level == -1) {
+			imageBrowser.totalYOffset = (int)Math.round(((double)imageBrowser.totalYOffset/2.0) + ((double)imageBrowser.getGrid().getOffsetHeight()/4.0));
+			imageBrowser.totalXOffset = (int)Math.round(((double)imageBrowser.totalXOffset/2.0) + ((double)imageBrowser.getGrid().getOffsetWidth()/4.0));
+		} else {
+			imageBrowser.totalYOffset = (int)Math.round((2*imageBrowser.totalYOffset) - ((double)imageBrowser.getGrid().getOffsetHeight()/2.0));
+			imageBrowser.totalXOffset = (int)Math.round((2*imageBrowser.totalXOffset) - ((double)imageBrowser.getGrid().getOffsetWidth()/2.0));
+		}
+		DOM.setStyleAttribute(imageBrowser.getGrid().getElement(), "backgroundPosition",
+				(imageBrowser.totalXOffset) + "px "
+						+ (imageBrowser.totalYOffset) + "px");
+		imageBrowser.updateBoundary();
 		while (itr.hasNext()) {
 			final ImageOnGridContainer iog = itr.next();
 			final int newWidth = Math
@@ -81,6 +91,10 @@ public class ZoomHandler {
 
 			}
 		}
+	}
+	
+	private void changeBoundaryPosition(final int level, int centerX, int centerY){
+	
 	}
 
 	private void changePosition(final ImageOnGridContainer iog, final int level, int centerX, int centerY) {

@@ -12,6 +12,7 @@ import edu.rpi.metpetdb.client.model.ImageOnGrid;
 
 public class ImageOnGridContainer {
 
+	private static int pps = 20; //pixels per grid square
 	private ImageOnGrid iog;
 	private FlowPanel imageContainer;
 	private com.google.gwt.user.client.ui.Image actualImage;
@@ -29,10 +30,10 @@ public class ImageOnGridContainer {
 	// The current position of the container (top left x/y)
 	private Point currentContainerPosition = new Point();
 
-	public ImageOnGridContainer(final ImageOnGrid iog) {
+	public ImageOnGridContainer(final ImageOnGrid iog,final float scale) {
 		this.iog = iog;
-		currentContainerPosition.x = iog.getTopLeftX();
-		currentContainerPosition.y = iog.getTopLeftY();
+		currentContainerPosition.x = Math.round(pps*(iog.getTopLeftX()/scale));
+		currentContainerPosition.y = Math.round(pps*(iog.getTopLeftY()/scale));
 	}
 
 	/**
@@ -44,8 +45,8 @@ public class ImageOnGridContainer {
 	 * @param scale
 	 */
 	public void move(final int deltaX, final int deltaY, final float scale) {
-		iog.setTopLeftX((int) (iog.getTopLeftX() + (scale * deltaX)));
-		iog.setTopLeftY((int) (iog.getTopLeftY() + (scale * deltaY)));
+		iog.setTopLeftX((int) (iog.getTopLeftX() + ((scale/pps) * deltaX)));
+		iog.setTopLeftY((int) (iog.getTopLeftY() + ((scale/pps) * deltaY)));
 		currentContainerPosition.x += deltaX;
 		currentContainerPosition.y += deltaY;
 	}

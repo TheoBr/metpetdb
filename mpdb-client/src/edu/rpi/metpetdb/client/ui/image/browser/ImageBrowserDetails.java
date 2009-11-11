@@ -85,12 +85,14 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 	private ZoomHandler zoomer;
 
 	private final PanHandler panHandler;
+	private FlowPanel boundary = new FlowPanel();
 
 	// Scale
-	private int totalXOffset = 0;
-	private int totalYOffset = 0;
+	private static int pps = 20; // pixels per grid square
+	public int totalXOffset = 250;
+	public int totalYOffset = 50;
 	private final Label scaleDisplay;
-	private float scale = 30; /* in milli meters */
+	private float scale = 10; /* in milli meters */
 	private int unit = 1;
 	private static String[] units = {
 			"m", /* meter 10x10^0 */
@@ -117,7 +119,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 		this.grid = new MAbsolutePanel();
 		this.grid.add(this.scaleDisplay);
 		this.imagesOnGrid = new HashMap<Image, ImageOnGridContainer>();
-		panHandler = new PanHandler(grid);
+		panHandler = new PanHandler(grid,this);
 		chemicalAnalyses = new ArrayList<ChemicalAnalysis>();
 		sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEMOVE);
 	}
@@ -195,8 +197,12 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 		this.add(sampleHeader);
 		this.add(header);
 		DOM.setElementAttribute(this.grid.getElement(), "id", "canvas");
+		DOM.setStyleAttribute(grid.getElement(), "backgroundPosition",
+				(totalXOffset) + "px "
+						+ (totalYOffset) + "px");
 		final FlowPanel fp = this.createViewControls();
 		this.grid.add(fp);
+		this.grid.add(this.createWorkspaceBoundary());
 		final MHtmlList ul = new MHtmlList();
 		this.addNewImageToSubsample = new MLink("Add New Image to Subsample",
 				TokenSpace.edit(this.g.getSubsample()));
@@ -219,6 +225,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 		this.grid.addMouseListener(this.mouseListener);
 
 	}
+	
 	public void updateScale(final float multiplier) {
 		this.scale *= multiplier;
 
@@ -271,13 +278,14 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 		while (itr.hasNext()) {
 			final ImageOnGrid iog = itr.next();
 			final ImageOnGridContainer imageOnGrid = new ImageOnGridContainer(
-					iog);
+					iog, this.scale);
 			if (firstTime) {
 				imageOnGrid.setCurrentWidth(Math.round((iog.getImage()
 						.getWidth() * iog.getResizeRatio())));
 				imageOnGrid.setCurrentHeight(Math.round((iog.getImage()
 						.getHeight() * iog.getResizeRatio())));
 			}
+			imageOnGrid.pan(totalXOffset, totalYOffset);
 			this.addImage(imageOnGrid);
 		}
 	}
@@ -287,7 +295,10 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 		iog.setGrid(this.g);
 		iog.setImage(i);
 		iog.setOpacity(100);
-		iog.setResizeRatio(1);
+		if (i.getScale() != null && i.getScale() != 0)
+			iog.setResizeRatio((((float)i.getScale()/(float)i.getWidth())/this.scale)*(float)pps);
+		else
+			iog.setResizeRatio(1);
 		iog.setZorder(1);
 		iog.setTopLeftX(cascade[0]);
 		iog.setTopLeftY(cascade[0]);
@@ -297,11 +308,12 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 		iog.setGchecksum(i.getChecksum());
 		iog.setGchecksum64x64(i.getChecksum64x64());
 		iog.setGchecksumHalf(i.getChecksumHalf());
-		final ImageOnGridContainer imageOnGrid = new ImageOnGridContainer(iog);
+		final ImageOnGridContainer imageOnGrid = new ImageOnGridContainer(iog,scale);
 		imageOnGrid.setCurrentWidth(Math
 				.round((iog.getImage().getWidth() * (iog.getResizeRatio()))));
 		imageOnGrid.setCurrentHeight(Math
 				.round((iog.getImage().getHeight() * (iog.getResizeRatio()))));
+		imageOnGrid.pan(totalXOffset, totalYOffset);
 		this.addImage(imageOnGrid);
 		cascade[0] += 10;
 		this.g.addImageOnGrid(iog);
@@ -497,6 +509,12 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 		DOM.setStyleAttribute(element, "filter", "alpha(opacity=" + amount
 				+ ")");
 	}
+	
+	private FlowPanel createWorkspaceBoundary() {
+		DOM.setElementAttribute(boundary.getElement(), "id", "workspaceBoundary");
+		updateBoundary();
+		return boundary;		
+	}
 
 	private FlowPanel createViewControls() {
 		final FlowPanel viewControls = new FlowPanel();
@@ -679,6 +697,24 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 
 	public PanHandler getPanHandler() {
 		return panHandler;
+	}
+	
+	public FlowPanel getBoundary() {
+		return boundary;
+	}
+	
+	public Grid getImageGrid() {
+		return g;
+	}
+	
+	public void updateBoundary() {
+		float height = (g.getHeight()/this.scale)*pps;
+		float width = (g.getWidth()/this.scale)*pps;
+		DOM.setStyleAttribute(boundary.getElement(), "width",width+"px");
+		DOM.setStyleAttribute(boundary.getElement(), "height",height+"px");
+		
+		DOM.setStyleAttribute(boundary.getElement(), "top", totalYOffset+"px");
+		DOM.setStyleAttribute(boundary.getElement(), "left",totalXOffset+"px");
 	}
 
 }

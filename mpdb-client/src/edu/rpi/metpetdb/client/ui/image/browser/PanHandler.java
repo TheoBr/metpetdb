@@ -12,13 +12,14 @@ public class PanHandler {
 	// Offset from the origin
 	private int xOffset = 0;
 	private int yOffset = 0;
-	private int currentBackgroundX = 0;
-	private int currentBackgroundY = 0;
 	private final MAbsolutePanel grid;
 	private Collection<ImageOnGridContainer> imagesOnGrid;
+	public final ImageBrowserDetails imageBrowser;
 
-	public PanHandler(final MAbsolutePanel grid) {
+	public PanHandler(final MAbsolutePanel grid, final ImageBrowserDetails imageBrowser) {
 		this.grid = grid;
+		this.imageBrowser = imageBrowser;
+		
 	}
 
 	public Collection<ImageOnGridContainer> getImagesOnGrid() {
@@ -39,10 +40,13 @@ public class PanHandler {
 	public void pan(final int deltaX, final int deltaY) {
 		this.xOffset += deltaX;
 		this.yOffset += deltaY;
+		imageBrowser.totalXOffset += deltaX;
+		imageBrowser.totalYOffset += deltaY;
 		DOM.setStyleAttribute(this.grid.getElement(), "backgroundPosition",
-				(currentBackgroundX + deltaX) + "px "
-						+ (currentBackgroundY + deltaY) + "px");
+				(imageBrowser.totalXOffset + deltaX) + "px "
+						+ (imageBrowser.totalYOffset + deltaY) + "px");
 		final Iterator<ImageOnGridContainer> itr = imagesOnGrid.iterator();
+		imageBrowser.updateBoundary();
 		while (itr.hasNext()) {
 			final ImageOnGridContainer iog = itr.next();
 			final int newX = iog.getCurrentContainerPosition().x + deltaX;
@@ -50,8 +54,6 @@ public class PanHandler {
 			this.grid.setWidgetPosition(iog.getImageContainer(), newX, newY);
 			iog.pan(deltaX, deltaY);
 		}
-		currentBackgroundX += deltaX;
-		currentBackgroundY += deltaY;
 	}
 
 	/**
@@ -61,6 +63,14 @@ public class PanHandler {
 		pan(-xOffset, -yOffset);
 		xOffset = 0;
 		yOffset = 0;
+	}
+	
+	public int getXOffset(){
+		return xOffset;
+	}
+	
+	public int getYOffset(){
+		return yOffset;
 	}
 
 }
