@@ -15,8 +15,10 @@ import edu.rpi.metpetdb.client.model.properties.SubsampleProperty;
 import edu.rpi.metpetdb.client.paging.Column;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
+import edu.rpi.metpetdb.client.ui.widgets.MText;
 
 public abstract class SubsampleListEx extends ListEx<Subsample> {
 
@@ -79,8 +81,14 @@ public abstract class SubsampleListEx extends ListEx<Subsample> {
 						final int currentRow) {
 					final Subsample s = (Subsample) data;
 					if (s.getGrid() == null) {
-						return new MLink("Create Map", TokenSpace
-								.createNewImageMap(s));
+						//Only the owner should be able to create an image map
+						if(s.getOwner() != null && MpDb.currentUser() != null && 
+							s.getOwner().equals(MpDb.currentUser())){
+								return new MLink("Create Map", TokenSpace
+										.createNewImageMap(s));
+						} else {
+							return new MText();
+						}
 					} else {
 						return new MLink("View Map", TokenSpace.detailsOf(s
 								.getGrid()));

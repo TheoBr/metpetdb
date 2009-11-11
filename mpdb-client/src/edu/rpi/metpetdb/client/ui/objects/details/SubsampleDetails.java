@@ -139,8 +139,14 @@ public class SubsampleDetails extends MPagePanel {
 				super.onLoadCompletion(result);
 				final Subsample s = (Subsample) result;
 				if (s.getGrid() == null) {
-					map.setText("Create Map");
-					map.setTargetHistoryToken(TokenSpace.createNewImageMap(s));
+					//Only the owner should be able to create an image map
+					if(s.getOwner() != null && MpDb.currentUser() != null && 
+						s.getOwner().equals(MpDb.currentUser())){
+						map.setText("Create Map");
+						map.setTargetHistoryToken(TokenSpace.createNewImageMap(s));
+					} else {
+						//map.setText("No Image Map exists");
+					}
 				} else {
 					map.setText("View Map");
 					map

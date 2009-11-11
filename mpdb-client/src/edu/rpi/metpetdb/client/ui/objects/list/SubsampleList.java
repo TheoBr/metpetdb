@@ -13,6 +13,7 @@ import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.properties.SampleProperty;
 import edu.rpi.metpetdb.client.model.properties.SubsampleProperty;
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.paging.DataList;
@@ -142,7 +143,13 @@ public abstract class SubsampleList extends DataList<Subsample> {
 			Column<Subsample, MLink> col = new Column<Subsample, MLink>("Image Map", SubsampleProperty.images) {
 				public MLink getCellValue(final Subsample rowValue) {
 					if(rowValue.getGrid() == null){
-						return new MLink("Create Map", TokenSpace.createNewImageMap(rowValue));
+						//Only the owner should be able to create an image map
+						if(rowValue.getOwner() != null && MpDb.currentUser() != null && 
+							rowValue.getOwner().equals(MpDb.currentUser())){
+								return new MLink("Create Map", TokenSpace.createNewImageMap(rowValue));
+						} else {
+							return new MLink();
+						}
 					} else {
 						return new MLink("View Map", TokenSpace.detailsOf(rowValue.getGrid()));
 					}
