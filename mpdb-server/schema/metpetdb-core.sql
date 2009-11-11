@@ -218,9 +218,10 @@ CREATE TABLE georeference
 (
   georef_id INT8 NOT NULL,
   title VARCHAR(100) NOT NULL,
-  authors VARCHAR(512) NOT NULL,
+  first_author VARCHAR(32) NOT NULL,
+  second_authors VARCHAR(480),
   journal_name VARCHAR(128) NOT NULL,
-  misc_info VARCHAR(128),
+  full_text VARCHAR(1024) NOT NULL,
   CONSTRAINT georeference_sk PRIMARY KEY (georef_id)
 ) WITHOUT OIDS;
 

@@ -10,9 +10,10 @@
       </generator>
     </id>
     <property name="title" column="title"/>
-    <property name="authors" column="authors"/>
+    <property name="first_author" column="first_author"/>
+    <property name="second_authors" column="second_authors"/>
     <property name="journal_name" column="journal_name"/>
-    <property name="misc_info" column="misc_info"/>
+    <property name="full_text" column="full_text"/>
   </class>
   
   <query name="GeoReference.byName">
