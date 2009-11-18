@@ -5,10 +5,10 @@ public class GeoReference  extends MObject implements Comparable {
 	
 	private short id;
 	private String title;
-	private String first_author;
-	private String second_authors;
-	private String journal_name;
-	private String full_text;
+	private String firstAuthor;
+	private String secondAuthors;
+	private String journalName;
+	private String fullText;
 	
 	public short getId(){
 		return id;
@@ -26,36 +26,36 @@ public class GeoReference  extends MObject implements Comparable {
 		title = t;
 	}
 	
-	public String getFirst_author(){
-		return first_author;
+	public String getFirstAuthor(){
+		return firstAuthor;
 	}
 	
-	public void setFirst_author(final String a){
-		first_author = a;
+	public void setFirstAuthor(final String a){
+		firstAuthor = a;
 	}
 	
-	public String getSecond_authors(){
-		return second_authors;
+	public String getSecondAuthors(){
+		return secondAuthors;
 	}
 	
-	public void setSecond_authors(final String a){
-		second_authors = a;
+	public void setSecondAuthors(final String a){
+		secondAuthors = a;
 	}
 	
-	public String getJournal_name(){
-		return journal_name;
+	public String getJournalName(){
+		return journalName;
 	}
 	
-	public void setJournal_name(final String j){
-		journal_name = j;
+	public void setJournalName(final String j){
+		journalName = j;
 	}
 	
-	public String getFull_text(){
-		return full_text;
+	public String getFullText(){
+		return fullText;
 	}
 	
-	public void setFull_text(final String t){
-		full_text = t;
+	public void setFullText(final String t){
+		fullText = t;
 	}
 
 	@Override

@@ -76,6 +76,7 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		s.setReferences((new ReferenceDAO(sess)).fill(s.getReferences()));
 		s.setMinerals(((new SampleMineralDAO(sess))).fill(s.getMinerals()));
 		s.setRockType(new RockTypeDAO(sess).fill(s.getRockType()));
+		s.setGeoReferences(new GeoReferenceDAO(sess).fill(s.getGeoReferences()));
 	}
 
 	@Override

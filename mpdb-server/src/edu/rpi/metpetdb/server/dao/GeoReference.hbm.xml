@@ -10,15 +10,20 @@
       </generator>
     </id>
     <property name="title" column="title"/>
-    <property name="first_author" column="first_author"/>
-    <property name="second_authors" column="second_authors"/>
-    <property name="journal_name" column="journal_name"/>
-    <property name="full_text" column="full_text"/>
+    <property name="firstAuthor" column="first_author"/>
+    <property name="secondAuthors" column="second_authors"/>
+    <property name="journalName" column="journal_name"/>
+    <property name="fullText" column="full_text"/>
   </class>
   
   <query name="GeoReference.byName">
     from GeoReference g
     where lower(g.title) = lower(:title)
+  </query>
+  
+  <query name="GeoReference.byId">
+    from GeoReference g
+    where g.id = :id
   </query>
   
    <query name="GeoReference.all/title">
