@@ -9,7 +9,7 @@ public class ImageOnGrid extends MObject {
 	private int topLeftY;
 	private int zOrder;
 	private int opacity;
-	private float resizeRatio;
+	private double resizeRatio;
 	private int gwidth;
 	private int gheight;
 	private String gchecksum;
@@ -114,11 +114,11 @@ public class ImageOnGrid extends MObject {
 		opacity = s;
 	}
 
-	public float getResizeRatio() {
+	public double getResizeRatio() {
 		return resizeRatio;
 	}
 
-	public void setResizeRatio(final float s) {
+	public void setResizeRatio(final double s) {
 		resizeRatio = s;
 	}
 

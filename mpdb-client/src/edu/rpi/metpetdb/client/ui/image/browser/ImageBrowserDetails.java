@@ -29,9 +29,11 @@ import edu.rpi.metpetdb.client.model.ImageOnGrid;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
+import edu.rpi.metpetdb.client.ui.PageChangeListener;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
+import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.image.browser.click.listeners.AddPointListener;
 import edu.rpi.metpetdb.client.ui.image.browser.click.listeners.HideMenuListener;
 import edu.rpi.metpetdb.client.ui.image.browser.click.listeners.LockListener;
@@ -51,7 +53,7 @@ import edu.rpi.metpetdb.client.ui.widgets.panels.MAbsolutePanel;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MAbsolutePanel.ZMode;
 
-public class ImageBrowserDetails extends MPagePanel implements ClickListener {
+public class ImageBrowserDetails extends MPagePanel implements ClickListener, PageChangeListener {
 
 	// Links
 	private final MLink addExistingImage;
@@ -88,11 +90,11 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 	private FlowPanel boundary = new FlowPanel();
 
 	// Scale
-	private static int pps = 20; // pixels per grid square
-	public int totalXOffset = 250;
-	public int totalYOffset = 50;
+	public static int pps = 20; // pixels per grid square
+	public int totalXOffset = 50;
+	public int totalYOffset = 10;
 	private final Label scaleDisplay;
-	private float scale = 10; /* in milli meters */
+	public float scale = 1f; /* in milli meters */
 	private int unit = 1;
 	private static String[] units = {
 			"m", /* meter 10x10^0 */
@@ -122,6 +124,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 		panHandler = new PanHandler(grid,this);
 		chemicalAnalyses = new ArrayList<ChemicalAnalysis>();
 		sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEMOVE);
+		MetPetDBApplication.registerPageWatcher(this);
 	}
 
 	public ImageBrowserDetails createNew(final long subsampleId) {
@@ -226,7 +229,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 
 	}
 	
-	public void updateScale(final float multiplier) {
+	public void updateScale(final double multiplier) {
 		this.scale *= multiplier;
 
 		while (String.valueOf((int) this.scale).length() > 3) {
@@ -236,7 +239,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 			else
 				this.scale *= 1000;
 		}
-		if ((int) this.scale == 0) {
+		if (this.scale == 0) {
 			--this.unit;
 			this.scale /= 1000;
 		}
@@ -280,9 +283,9 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 			final ImageOnGridContainer imageOnGrid = new ImageOnGridContainer(
 					iog, this.scale);
 			if (firstTime) {
-				imageOnGrid.setCurrentWidth(Math.round((iog.getImage()
+				imageOnGrid.setCurrentWidth((int)Math.round((iog.getImage()
 						.getWidth() * iog.getResizeRatio())));
-				imageOnGrid.setCurrentHeight(Math.round((iog.getImage()
+				imageOnGrid.setCurrentHeight((int)Math.round((iog.getImage()
 						.getHeight() * iog.getResizeRatio())));
 			}
 			imageOnGrid.pan(totalXOffset, totalYOffset);
@@ -309,13 +312,12 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 		iog.setGchecksum64x64(i.getChecksum64x64());
 		iog.setGchecksumHalf(i.getChecksumHalf());
 		final ImageOnGridContainer imageOnGrid = new ImageOnGridContainer(iog,scale);
-		imageOnGrid.setCurrentWidth(Math
+		imageOnGrid.setCurrentWidth((int)Math
 				.round((iog.getImage().getWidth() * (iog.getResizeRatio()))));
-		imageOnGrid.setCurrentHeight(Math
+		imageOnGrid.setCurrentHeight((int)Math
 				.round((iog.getImage().getHeight() * (iog.getResizeRatio()))));
 		imageOnGrid.pan(totalXOffset, totalYOffset);
 		this.addImage(imageOnGrid);
-		cascade[0] += 10;
 		this.g.addImageOnGrid(iog);
 	}
 
@@ -345,7 +347,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 		this.layers.registerImage(iog);
 		this.zOrderManager.register(iog);
 
-		this.grid.add(imageContainer, iog.getCurrentContainerPosition().x, iog
+		this.grid.add(imageContainer, (int)iog.getCurrentContainerPosition().x, (int)iog
 				.getCurrentContainerPosition().y);
 
 		this.imagesOnGrid.put(iog.getIog().getImage(), iog);
@@ -451,9 +453,9 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 
 	private void scale(final ImageOnGridContainer iog) {
 		final int multiplier = 1;
-		iog.setCurrentWidth(Math.round((iog.getIog().getImage().getWidth()
+		iog.setCurrentWidth((int)Math.round((iog.getIog().getImage().getWidth()
 				* multiplier * iog.getIog().getResizeRatio())));
-		iog.setCurrentHeight(Math.round((iog.getIog().getImage().getHeight()
+		iog.setCurrentHeight((int)Math.round((iog.getIog().getImage().getHeight()
 				* multiplier * iog.getIog().getResizeRatio())));
 	}
 
@@ -615,13 +617,13 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 			public void onSuccess(final Collection<Image> result) {
 				final Iterator<Image> itr = result.iterator();
 				final int[] cascade = {
-					100
+					0
 				};
 				while (itr.hasNext()) {
 					ImageBrowserDetails.this.addImage(
 							(edu.rpi.metpetdb.client.model.Image) itr.next(),
 							cascade);
-					cascade[0] += 20;
+					cascade[0] += 1;
 				}
 				MetPetDBApplication.show(imageBrowser);
 			}
@@ -713,8 +715,15 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener {
 		DOM.setStyleAttribute(boundary.getElement(), "width",width+"px");
 		DOM.setStyleAttribute(boundary.getElement(), "height",height+"px");
 		
-		DOM.setStyleAttribute(boundary.getElement(), "top", totalYOffset+"px");
-		DOM.setStyleAttribute(boundary.getElement(), "left",totalXOffset+"px");
+		DOM.setStyleAttribute(boundary.getElement(), "top", totalYOffset-1+"px");
+		DOM.setStyleAttribute(boundary.getElement(), "left",totalXOffset-1+"px");
+	}
+
+	public void onPageChanged() {
+		if (g != null) {
+			doSave();
+			MetPetDBApplication.removePageWatcher(this);
+		}
 	}
 
 }

@@ -104,6 +104,23 @@
     and lower(i.filename) = lower(:filename)
   </query>
   
+  <query name="Image.PublicationPublicCount">
+    Select count(*)
+  	from Image i
+  	where i.owner.name = 'PUBLICATION'  
+  	and i.publicData = 'Y' 
+  </query>
+  <query name="Image.PublicCount">
+    Select count(*)
+  	from Image i
+  	where i.publicData = 'Y'   
+  </query>
+   <query name="Image.PrivateCount">
+    Select count(*)
+  	from Image i
+  	where i.publicData = 'N'  
+  </query>
+  
   <filter-def name="imagePublicOrUser">
   	<filter-param name="userId" type="long" />
   </filter-def>

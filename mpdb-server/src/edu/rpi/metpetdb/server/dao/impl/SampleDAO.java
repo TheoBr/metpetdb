@@ -134,4 +134,19 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		final Query q = namedQuery("Sample.Countries/Countries");
 		return	((List<String>)getResults(q)).toArray();
 	}
+	
+	public long getPublicCount(){
+		final Query q = namedQuery("Sample.PublicCount");
+		return (Long) q.uniqueResult();
+	}
+	
+	public long getPrivateCount(){
+		final Query q = namedQuery("Sample.PrivateCount");
+		return (Long) q.uniqueResult();
+	}
+	
+	public long getPublicationCount(){
+		final Query q = namedQuery("Sample.PublicationPublicCount");
+		return (Long) q.uniqueResult();
+	}
 }

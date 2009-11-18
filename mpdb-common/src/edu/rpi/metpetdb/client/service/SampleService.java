@@ -55,4 +55,10 @@ public interface SampleService extends RemoteService {
 		throws MpDbException, LoginRequiredException;
 	
 	Boolean canEdit(long id) throws MpDbException;
+	
+	long getPublicationCount();
+	
+	long getPublicCount();
+	
+	long getPrivateCount();
 }

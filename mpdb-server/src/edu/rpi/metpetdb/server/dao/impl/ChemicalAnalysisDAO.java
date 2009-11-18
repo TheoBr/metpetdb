@@ -136,4 +136,19 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 		Query q = sess.createSQLQuery("UPDATE chemical_analyses SET public_data = 'Y' WHERE chemical_analysis_id = " + ca.getId() + ";");
 		q.executeUpdate();
 	}
+	
+	public long getPublicCount(){
+		final Query q = namedQuery("ChemicalAnalysis.PublicCount");
+		return (Long) q.uniqueResult();
+	}
+	
+	public long getPrivateCount(){
+		final Query q = namedQuery("ChemicalAnalysis.PrivateCount");
+		return (Long) q.uniqueResult();
+	}
+	
+	public long getPublicationCount(){
+		final Query q = namedQuery("ChemicalAnalysis.PublicationPublicCount");
+		return (Long) q.uniqueResult();
+	}
 }

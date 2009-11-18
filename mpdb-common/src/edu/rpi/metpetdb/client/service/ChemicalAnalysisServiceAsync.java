@@ -41,4 +41,10 @@ public interface ChemicalAnalysisServiceAsync {
 	void allFromManySubsamples(final Collection<Long> subsampleIds, AsyncCallback<Map<Long, List<ChemicalAnalysis>>> ac);
 
 	void makePublic(ArrayList<ChemicalAnalysis> selectedChemicalAnalyses, AsyncCallback<Void> ac);
+	
+	void getPublicationCount(AsyncCallback<Long> ac);
+	
+	void getPublicCount(AsyncCallback<Long> ac);
+	
+	void getPrivateCount(AsyncCallback<Long> ac);
 }

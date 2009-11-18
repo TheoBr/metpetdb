@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.List;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
@@ -13,4 +15,6 @@ public interface MpDbGenericServiceAsync {
 	void regenerateConstraints(AsyncCallback<ResumeSessionResponse> ac);
 	
 	void getCurrentTime(AsyncCallback<Long> ac);
+	
+	void  getStatistics(AsyncCallback<List<List>> ac);
 }

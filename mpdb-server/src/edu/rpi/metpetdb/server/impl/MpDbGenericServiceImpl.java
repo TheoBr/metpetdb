@@ -2,7 +2,10 @@ package edu.rpi.metpetdb.server.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
@@ -11,6 +14,10 @@ import edu.rpi.metpetdb.client.service.MpDbGenericService;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.EmailSupport;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
+import edu.rpi.metpetdb.server.dao.impl.GeoReferenceDAO;
+import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
+import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 
 public class MpDbGenericServiceImpl extends MpDbServlet implements
 		MpDbGenericService {
@@ -86,4 +93,37 @@ public class MpDbGenericServiceImpl extends MpDbServlet implements
 		return now.getTime();
 	}
 
+	public List<List> getStatistics(){
+		List<List> stats = new ArrayList<List>();
+		List labels = new ArrayList();
+		List counts = new ArrayList();
+		stats.add(labels);
+		stats.add(counts);
+		
+		labels.add("Publication Samples: ");
+		counts.add(new SampleDAO(this.currentSession()).getPublicationCount());
+		labels.add("Publication Chemical Analyses: ");
+		counts.add(new ChemicalAnalysisDAO(this.currentSession()).getPublicationCount());
+		labels.add("Publication Images: ");
+		counts.add(new ImageDAO(this.currentSession()).getPublicationCount());
+		
+		labels.add("Public Samples: ");
+		counts.add(new SampleDAO(this.currentSession()).getPublicCount());
+		labels.add("Public Chemical Analyses: ");
+		counts.add(new ChemicalAnalysisDAO(this.currentSession()).getPublicCount());
+		labels.add("Public Images: ");
+		counts.add(new ImageDAO(this.currentSession()).getPublicCount());
+
+		labels.add("Private Samples: ");
+		counts.add(new SampleDAO(this.currentSession()).getPrivateCount());
+		labels.add("Private Chemical Analyses: ");
+		counts.add(new ChemicalAnalysisDAO(this.currentSession()).getPrivateCount());
+		labels.add("Private Images: ");
+		counts.add(new ImageDAO(this.currentSession()).getPrivateCount());
+
+		labels.add("GeoReferences: ");
+		counts.add(new GeoReferenceDAO(this.currentSession()).getCount());
+		
+		return stats;
+	}
 }

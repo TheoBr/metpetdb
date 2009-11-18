@@ -115,14 +115,14 @@ public class MAbsolutePanel extends AbsolutePanel implements
 		super.onBrowserEvent(event);
 	}
 
-	public void setWidgetPosition(final Widget w, final int x, final int y) {
+	public void setWidgetPosition(final Widget w, final double x, final double y) {
 		// account for borders on the images
-		int newX = x + 1; // - 16;
-		int newY = y + 1; // - 16;
+		//int newX = x + 1; // - 16;
+		//int newY = y + 1; // - 16;
 		if (w.getStyleName().equals("imageContainer")) {
 
 		}
-		super.setWidgetPosition(w, newX, newY);
+		super.setWidgetPosition(w, (int)Math.rint(x), (int)Math.rint(y));
 	}
 
 }

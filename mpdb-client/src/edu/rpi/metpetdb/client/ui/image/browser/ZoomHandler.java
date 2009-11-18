@@ -11,7 +11,7 @@ public class ZoomHandler {
 	private Collection<ImageOnGridContainer> imagesOnGrid;
 	public final Element zSlide;
 	public final ImageBrowserDetails imageBrowser;
-	public final static int zoomMultiplier = 2;
+	public final static double zoomMultiplier = 1.5f;
 	public final static int MAXZOOM = 10;
 	public final static int MINZOOM = 130;
 	private int referenceX = 0;
@@ -60,7 +60,7 @@ public class ZoomHandler {
 		/* by default put refence in the center */
 		referenceY = imageBrowser.getGrid().getOffsetHeight() / 2;
 		referenceX = imageBrowser.getGrid().getOffsetWidth() / 2;
-		imageBrowser.updateScale(level == 1 ?  (1 / (float) zoomMultiplier) : zoomMultiplier);
+		imageBrowser.updateScale(level == 1 ?  (1 / zoomMultiplier) : zoomMultiplier);
 		if (level == -1) {
 			imageBrowser.totalYOffset = (int)Math.round(((double)imageBrowser.totalYOffset/2.0) + ((double)imageBrowser.getGrid().getOffsetHeight()/4.0));
 			imageBrowser.totalXOffset = (int)Math.round(((double)imageBrowser.totalXOffset/2.0) + ((double)imageBrowser.getGrid().getOffsetWidth()/4.0));
@@ -74,15 +74,13 @@ public class ZoomHandler {
 		imageBrowser.updateBoundary();
 		while (itr.hasNext()) {
 			final ImageOnGridContainer iog = itr.next();
-			final int newWidth = Math
-					.round((iog.getCurrentWidth() * (level == 1 ? zoomMultiplier
-							: 1 / (float) zoomMultiplier)));
-			final int newHeight = Math
-					.round((iog.getCurrentHeight() * (level == 1 ? zoomMultiplier
-							: 1 / (float) zoomMultiplier)));
+			final double newWidth = (iog.getCurrentWidth() * (level == 1 ? zoomMultiplier
+							: 1 / zoomMultiplier));
+			final double newHeight = (iog.getCurrentHeight() * (level == 1 ? zoomMultiplier
+							: 1 /  zoomMultiplier));
 			if (!iog.skipZoom(newWidth, newHeight)) {
-				int centerX = getCenterX(iog);
-				int centerY = getCenterY(iog);
+				double centerX = getCenterX(iog);
+				double centerY = getCenterY(iog);
 				iog.resizeImage(newWidth, newHeight, false);
 				changePosition(iog, level,centerX,centerY);
 				imageBrowser.getGrid().setWidgetPosition(
@@ -97,7 +95,7 @@ public class ZoomHandler {
 	
 	}
 
-	private void changePosition(final ImageOnGridContainer iog, final int level, int centerX, int centerY) {
+	private void changePosition(final ImageOnGridContainer iog, final int level, double centerX, double centerY) {
 
 
 		// transform center based on refenceX/Y
@@ -115,29 +113,41 @@ public class ZoomHandler {
 		centerY += referenceY;
 
 		// transform centers to top lefts
-		iog.getCurrentContainerPosition().x = (centerX
+		/*iog.getCurrentContainerPosition().x = (centerX
 				- Math.round((getCurrentWidth(iog) / (float) 2)));
 		iog.getCurrentContainerPosition().y = (centerY
-				- Math.round((getCurrentHeight(iog) / (float) 2)));
+				- Math.round((getCurrentHeight(iog) / (float) 2)));*/
+		
+		iog.getCurrentContainerPosition().x = Math.round(ImageBrowserDetails.pps*(iog.getImageOnGrid().getTopLeftX()/imageBrowser.scale));
+		iog.getCurrentContainerPosition().y = Math.round(ImageBrowserDetails.pps*(iog.getImageOnGrid().getTopLeftY()/imageBrowser.scale));
+		iog.pan(imageBrowser.totalXOffset, imageBrowser.totalYOffset);
+		
+		/*if (level == -1) {
+			iog.getCurrentContainerPosition().y = (int)Math.round((iog.getCurrentContainerPosition().y/2.0) + ((double)imageBrowser.getGrid().getOffsetHeight()/4.0));
+			iog.getCurrentContainerPosition().x = (int)Math.round((iog.getCurrentContainerPosition().x/2.0) + ((double)imageBrowser.getGrid().getOffsetWidth()/4.0));
+		} else {
+			iog.getCurrentContainerPosition().y = (int)Math.round((2*iog.getCurrentContainerPosition().y) - ((double)imageBrowser.getGrid().getOffsetHeight()/2.0));
+			iog.getCurrentContainerPosition().x = (int)Math.round((2*iog.getCurrentContainerPosition().x) - ((double)imageBrowser.getGrid().getOffsetWidth()/2.0));
+		}*/
 	}
 
-	private int getCenterX(final ImageOnGridContainer iog) {
+	private double getCenterX(final ImageOnGridContainer iog) {
 		return Math.round(iog.getCurrentContainerPosition().x
-				+ (getCurrentWidth(iog) / (float) 2));
+				+ (getCurrentWidth(iog) / 2));
 	}
 
-	private int getCenterY(final ImageOnGridContainer iog) {
+	private double getCenterY(final ImageOnGridContainer iog) {
 		return Math.round(iog.getCurrentContainerPosition().y
-				+ (getCurrentHeight(iog) / (float) 2));
+				+ (getCurrentHeight(iog) / 2));
 	}
 
-	private int getCurrentWidth(final ImageOnGridContainer iog) {
+	private double getCurrentWidth(final ImageOnGridContainer iog) {
 		// return Math.round((iog.getImage().getWidth() *
 		// (iog.getResizeRatio())));
 		return iog.getCurrentWidth();
 	}
 
-	private int getCurrentHeight(final ImageOnGridContainer iog) {
+	private double getCurrentHeight(final ImageOnGridContainer iog) {
 		// return Math.round( (iog.getImage().getHeight() *
 		// (iog.getResizeRatio())));
 		return iog.getCurrentHeight();

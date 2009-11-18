@@ -10,6 +10,8 @@ import edu.rpi.metpetdb.client.service.ChemicalAnalysisService;
 import edu.rpi.metpetdb.client.service.ChemicalAnalysisServiceAsync;
 import edu.rpi.metpetdb.client.service.ConstantsService;
 import edu.rpi.metpetdb.client.service.ConstantsServiceAsync;
+import edu.rpi.metpetdb.client.service.GeoReferenceService;
+import edu.rpi.metpetdb.client.service.GeoReferenceServiceAsync;
 import edu.rpi.metpetdb.client.service.ImageBrowserService;
 import edu.rpi.metpetdb.client.service.ImageBrowserServiceAsync;
 import edu.rpi.metpetdb.client.service.ImageService;
@@ -90,6 +92,8 @@ public class MpDb {
 	public static final MetamorphicGradeServiceAsync metamorphicGrade_svc;
 	
 	public static final SampleCommentServiceAsync sampleComment_svc;
+	
+	public static final GeoReferenceServiceAsync geoReference_svc;
 
 	public static DatabaseObjectConstraints doc;
 
@@ -169,6 +173,9 @@ public class MpDb {
 		
 		sampleComment_svc = (SampleCommentServiceAsync) bindService(GWT
 				.create(SampleCommentService.class), "sampleComment");
+		
+		geoReference_svc = (GeoReferenceServiceAsync) bindService(GWT
+				.create(GeoReferenceService.class), "geoReference");
 
 		// factory = (HtmlFactory) GWT.create(HtmlFactory.class);
 	}

@@ -17,8 +17,8 @@ public class Grid extends MObject implements PublicData {
 	private Boolean publicData;
 	
 	public Grid() {
-		width = 200;
-		height = 200;
+		width = 50;
+		height = 30;
 	}
 
 	public int getId() {

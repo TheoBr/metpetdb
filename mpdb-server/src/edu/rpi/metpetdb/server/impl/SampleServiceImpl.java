@@ -24,6 +24,7 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
 import edu.rpi.metpetdb.server.dao.impl.ProjectDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
@@ -167,9 +168,19 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	}
 
 	public Results<Sample> allSamplesForProject(PaginationParameters p,
-			long projectId) throws MpDbException, LoginRequiredException {
-		
-		
+			long projectId) throws MpDbException, LoginRequiredException {	
 		return null;
+	}
+	
+	public long getPublicCount() {
+		return new SampleDAO(this.currentSession()).getPublicCount();
+	}
+	
+	public long getPrivateCount() {
+		return new SampleDAO(this.currentSession()).getPrivateCount();
+	}
+	
+	public long getPublicationCount() {
+		return new SampleDAO(this.currentSession()).getPublicationCount();
 	}
 }

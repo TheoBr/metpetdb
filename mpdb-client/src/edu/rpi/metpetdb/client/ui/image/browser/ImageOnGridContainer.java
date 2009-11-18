@@ -18,10 +18,10 @@ public class ImageOnGridContainer {
 	private com.google.gwt.user.client.ui.Image actualImage;
 	private AbsolutePanel imagePanel;
 	// Always the size of the image
-	private int currentWidth;
-	private int currentHeight;
-	private float aspectRatio;
-	private float aspectRatioHeight;
+	private double currentWidth;
+	private double currentHeight;
+	private double aspectRatio;
+	private double aspectRatioHeight;
 	private boolean isShown;
 	private Set<ChemicalAnalysis> chemicalAnalyses;
 	private boolean isLocked;
@@ -44,11 +44,12 @@ public class ImageOnGridContainer {
 	 * @param deltaY
 	 * @param scale
 	 */
-	public void move(final int deltaX, final int deltaY, final float scale) {
-		iog.setTopLeftX((int) (iog.getTopLeftX() + ((scale/pps) * deltaX)));
-		iog.setTopLeftY((int) (iog.getTopLeftY() + ((scale/pps) * deltaY)));
+	public void move(final int deltaX, final int deltaY, final double scale, final ImageBrowserDetails imageBrowser) {
 		currentContainerPosition.x += deltaX;
 		currentContainerPosition.y += deltaY;
+		iog.setTopLeftX((int)Math.round((((currentContainerPosition.x - imageBrowser.totalXOffset)/pps)*scale)));
+		iog.setTopLeftY((int)Math.round((((currentContainerPosition.y - imageBrowser.totalYOffset)/pps)*scale)));
+		// ((currentContainerX - totalOffset)/pps)*scale = squares
 	}
 
 	/**
@@ -71,11 +72,11 @@ public class ImageOnGridContainer {
 	}
 	
 	public void setupForResize() {
-		aspectRatio = currentHeight / (float) currentWidth;
-		aspectRatioHeight = currentWidth / (float) currentHeight;
+		aspectRatio = currentHeight / currentWidth;
+		aspectRatioHeight = currentWidth / currentHeight;
 	}
 
-	public boolean skipZoom(int width, int height) {
+	public boolean skipZoom(double width, double height) {
 		if (width < this.getCurrentWidth() || height < this.getCurrentHeight()) {
 			if (width <= 5 || height <= 5) {
 				if (this.getZoomLevelsSkipped() >= 1) {
@@ -97,7 +98,7 @@ public class ImageOnGridContainer {
 		return false;
 	}
 
-	public void resizeImage(int width, int height, boolean resize) {
+	public void resizeImage(double width, double height, boolean resize) {
 
 		if (width < height && height < 32) {
 			this.getImageContainer().setStyleName("imageContainerNoMenu");
@@ -212,7 +213,7 @@ public class ImageOnGridContainer {
 		this.imagePanel = imagePanel;
 	}
 
-	public int getCurrentWidth() {
+	public double getCurrentWidth() {
 		return currentWidth;
 	}
 
@@ -220,7 +221,7 @@ public class ImageOnGridContainer {
 		this.currentWidth = width;
 	}
 
-	public int getCurrentHeight() {
+	public double getCurrentHeight() {
 		return currentHeight;
 	}
 
@@ -228,7 +229,7 @@ public class ImageOnGridContainer {
 		this.currentHeight = height;
 	}
 
-	public float getAspectRatio() {
+	public double getAspectRatio() {
 		return aspectRatio;
 	}
 
@@ -236,7 +237,7 @@ public class ImageOnGridContainer {
 		this.aspectRatio = aspectRatio;
 	}
 
-	public float getAspectRatioHeight() {
+	public double getAspectRatioHeight() {
 		return aspectRatioHeight;
 	}
 
@@ -282,5 +283,9 @@ public class ImageOnGridContainer {
 
 	public void setZoomLevelsSkipped(int zoomLevelsSkipped) {
 		this.zoomLevelsSkipped = zoomLevelsSkipped;
+	}
+	
+	public ImageOnGrid getImageOnGrid(){
+		return iog;
 	}
 }

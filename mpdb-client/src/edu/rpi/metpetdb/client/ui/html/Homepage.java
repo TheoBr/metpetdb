@@ -1,11 +1,15 @@
 package edu.rpi.metpetdb.client.ui.html;
 
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
 
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 
 public class Homepage extends FlowPanel {
@@ -25,11 +29,22 @@ public class Homepage extends FlowPanel {
 						"<li><span>serving as a portal for students beginning their studies of metamorphic geology.</span></li>" +
 						"</ol>" +
 						"<p>Read more about the MetPetDB project <a href=\""+MpDb.WIKI_URL+"\" title=\"More about MetPetDB\">here</a>.</p>")); 
-		ImageHyperlink appLink = new ImageHyperlink(new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()+"/images/app-store.png"), 
-				"", TokenSpace.iphoneApp.getName(), false);
-		this.add(appLink);
 		
-		this.add(new HTML(
+		new ServerOp<List<List>>() {
+			@Override
+			public void begin() {
+				MpDb.mpdbGeneric_svc.getStatistics(this);
+			}
+
+			public void onSuccess(final List<List> result) {
+				result.get(0);
+				for (int i = 0; i < result.get(0).size(); i++){
+					Homepage.this.add(new Label(result.get(0).get(i).toString() + result.get(1).get(i).toString()));
+				}
+				ImageHyperlink appLink = new ImageHyperlink(new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()+"/images/app-store.png"), 
+						"", TokenSpace.iphoneApp.getName(), false);
+				Homepage.this.add(appLink);
+				Homepage.this.add(new HTML(
 						"<table id=\"dblist\" cellspacing=\"0\"><tbody>" +
 						"<tr><td><a href=\"http://www.earthchem.org\" title=\"EarthChem\"><img src=\"images/earthchem-logo.jpg\" alt=\"EarthChem\"></a>Advanced Data Management in Solid Earth Geochemistry</td>" +
 						"<td><a href=\"http://www.petdb.org\" title=\"PETDB\"><img src=\"images/petdb-logo.jpg\" alt=\"PETDB\"></a>Petrological Database of the Ocean Floor</td>" +
@@ -37,6 +52,8 @@ public class Homepage extends FlowPanel {
 						"<td><a href=\"http://georoc.mpch-mainz.gwdg.de/georoc/Start.asp\" title=\"GEOROC\"><img src=\"images/georoc-logo.jpg\" alt=\"GEOROC\"></a>Geochemistry of Rocks of the Ocean and Continents</td>" +
 						"<td><a href=\"http://www.geosamples.org\" title=\"SESAR\"><img src=\"images/sesar-logo.jpg\" alt=\"SESAR\"></a>System for Earth Sample Registration</td></tr>" +
 						"</tbody></table>"));
+			}
+		}.begin();
 	}
 
 }

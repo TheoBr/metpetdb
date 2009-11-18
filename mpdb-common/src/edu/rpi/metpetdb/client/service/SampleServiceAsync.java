@@ -53,4 +53,10 @@ public interface SampleServiceAsync {
 			AsyncCallback<Results<Sample>> ac);
 	
 	void canEdit(long id, AsyncCallback<Boolean> ac);
+	
+	void getPublicationCount(AsyncCallback<Long> ac);
+	
+	void getPublicCount(AsyncCallback<Long> ac);
+	
+	void getPrivateCount(AsyncCallback<Long> ac);
 }

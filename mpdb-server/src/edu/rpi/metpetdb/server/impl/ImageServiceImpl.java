@@ -38,6 +38,7 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.ImageService;
 import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageOnGridDAO;
 import edu.rpi.metpetdb.server.dao.impl.XrayImageDAO;
@@ -303,14 +304,27 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 						final byte[] imgData = getBytesFromInputStream(reader);
 						RenderedOp ro = ImageUploadServlet.loadImage(imgData);
 						i.setChecksumMobile(ImageUploadServlet.generateMobileVersion(ro,false));
+						System.out.print("Created checksum for image: " + i.getId() + " : " + i.getChecksumMobile());
 						dao.save(i);
 					} catch (IOException ioe){
-						//ignore it
+						System.out.print(ioe.getMessage());
 					}
 				}
 			}
-			commit();
 			imageList = dao.getImagesWithoutMobile();
 		}
+		commit();
+	}
+	
+	public long getPublicCount() {
+		return new ImageDAO(this.currentSession()).getPublicCount();
+	}
+	
+	public long getPrivateCount() {
+		return new ImageDAO(this.currentSession()).getPrivateCount();
+	}
+	
+	public long getPublicationCount() {
+		return new ImageDAO(this.currentSession()).getPublicationCount();
 	}
 }

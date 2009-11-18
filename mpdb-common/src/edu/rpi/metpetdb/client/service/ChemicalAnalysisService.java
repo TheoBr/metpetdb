@@ -41,4 +41,10 @@ public interface ChemicalAnalysisService extends RemoteService {
 	
 	void makePublic(ArrayList<ChemicalAnalysis> selectedChemicalAnalyses) throws ValidationException,
 			LoginRequiredException, MpDbException;
+	
+	long getPublicationCount();
+	
+	long getPublicCount();
+	
+	long getPrivateCount();
 }

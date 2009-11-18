@@ -131,4 +131,16 @@ public class ChemicalAnalysisServiceImpl extends MpDbServlet implements
 		ca = dao.fill(ca);
 		dao.delete(ca);
 	}
+	
+	public long getPublicCount() {
+		return new ChemicalAnalysisDAO(this.currentSession()).getPublicCount();
+	}
+	
+	public long getPrivateCount() {
+		return new ChemicalAnalysisDAO(this.currentSession()).getPrivateCount();
+	}
+	
+	public long getPublicationCount() {
+		return new ChemicalAnalysisDAO(this.currentSession()).getPublicationCount();
+	}
 }

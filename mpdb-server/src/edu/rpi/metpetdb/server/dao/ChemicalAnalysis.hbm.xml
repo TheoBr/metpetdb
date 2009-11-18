@@ -160,6 +160,32 @@
     where ma.subsample.id = :id
     order by (lower(ma.analysisMaterial))
   </query>
+    <query name="ChemicalAnalysis.PublicationPublicCount">
+  	Select count(*)
+  	from ChemicalAnalysis ma
+  	where ma.owner.name = 'PUBLICATION'
+  	and ma.publicData = 'Y'
+  </query>
+  <query name="ChemicalAnalysis.PublicCount">
+  	Select count(*)
+  	from ChemicalAnalysis ma
+  	where ma.publicData = 'Y'
+  </query>
+  <query name="ChemicalAnalysis.PrivateCount">
+  	Select count(*)
+  	from ChemicalAnalysis ma
+  	where ma.publicData = 'N'
+  </query>
+  <query name="ChemicalAnalysis.PublicElementCount">
+  	Select sum(count(elements(ma.elements))) + sum(count(elements(ma.oxides)))
+  	from ChemicalAnalysis ma
+  	where ma.publicData = 'Y'
+  </query>
+   <query name="ChemicalAnalysis.PrivateElementCount">
+  	Select sum(count(elements(ma.elements))) + sum(count(elements(ma.oxides)))
+  	from ChemicalAnalysis ma
+  	where ma.publicData = 'N'
+  </query>
   
 <!-- only returns data that is either public or owned by the current user
    	used when showing the chemical analyses for a user 

@@ -49,8 +49,8 @@ public class PanHandler {
 		imageBrowser.updateBoundary();
 		while (itr.hasNext()) {
 			final ImageOnGridContainer iog = itr.next();
-			final int newX = iog.getCurrentContainerPosition().x + deltaX;
-			final int newY = iog.getCurrentContainerPosition().y + deltaY;
+			final double newX = iog.getCurrentContainerPosition().x + deltaX;
+			final double newY = iog.getCurrentContainerPosition().y + deltaY;
 			this.grid.setWidgetPosition(iog.getImageContainer(), newX, newY);
 			iog.pan(deltaX, deltaY);
 		}

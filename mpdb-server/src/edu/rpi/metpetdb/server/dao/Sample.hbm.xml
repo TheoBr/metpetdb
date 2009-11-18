@@ -403,6 +403,23 @@
     from Sample s
     order by s.country
   </query>
+  <query name="Sample.PublicationPublicCount">
+  	Select count(*)
+  	from Sample s
+  	where s.owner.name = 'PUBLICATION'
+  	and s.publicData = 'Y'
+  </query>
+  <query name="Sample.PublicCount">
+  	Select count(*)
+  	from Sample s
+  	where s.publicData = 'Y'
+  </query>
+  <query name="Sample.PrivateCount">
+  	Select count(*)
+  	from Sample s
+  	where s.publicData = 'N'
+  </query>
+
   
   <filter-def name="boundingBox">
     <filter-param name="polygon" type="edu.rpi.metpetdb.server.dao.GeometryType"/>

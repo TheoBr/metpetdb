@@ -186,6 +186,15 @@
     <url-pattern>/excel.svc</url-pattern>
   </servlet-mapping>
   
+   <servlet>
+	<servlet-name>svg</servlet-name>
+	<servlet-class>edu.rpi.metpetdb.server.svgServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>svg</servlet-name>
+    <url-pattern>/svg.svc</url-pattern>
+  </servlet-mapping>
+  
   <servlet>
     <servlet-name>region</servlet-name>
     <servlet-class>edu.rpi.metpetdb.server.impl.RegionServiceImpl</servlet-class>
@@ -234,6 +243,16 @@
   <servlet-mapping>
     <servlet-name>sampleComment</servlet-name>
     <url-pattern>/sampleComment.svc</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>geoReference</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.impl.GeoReferenceServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>geoReference</servlet-name>
+    <url-pattern>/geoReference.svc</url-pattern>
   </servlet-mapping>
   
   <servlet>

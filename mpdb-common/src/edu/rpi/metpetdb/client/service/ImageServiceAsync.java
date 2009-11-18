@@ -45,5 +45,11 @@ public interface ImageServiceAsync {
 
 	void makePublicBySampleId(ArrayList<Sample> samples, AsyncCallback<Void> ac);
 	
-	 void makeMobileImages(AsyncCallback<Void> ac);
+	void makeMobileImages(AsyncCallback<Void> ac);
+	 
+	void getPublicationCount(AsyncCallback<Long> ac);
+		
+	void getPublicCount(AsyncCallback<Long> ac);
+		
+	void getPrivateCount(AsyncCallback<Long> ac);
 }

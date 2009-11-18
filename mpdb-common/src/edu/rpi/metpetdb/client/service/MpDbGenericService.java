@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.List;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 
 import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
@@ -15,4 +17,5 @@ public interface MpDbGenericService extends RemoteService {
 	
 	long getCurrentTime();
 
+	List<List> getStatistics();
 }

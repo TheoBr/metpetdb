@@ -31,5 +31,10 @@
   	from GeoReference g
     order by g.title
    </query>
+   
+   <query name="GeoReference.Count">
+    Select count(*)
+    from GeoReference g
+   </query>
 
 </hibernate-mapping>
