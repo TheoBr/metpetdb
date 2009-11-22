@@ -279,39 +279,35 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 	public void makeMobileImages()throws ValidationException, MpDbException {
 		final ImageDAO dao = new ImageDAO(this.currentSession());
 		List <Image> imageList = dao.getImagesWithoutMobile();
-		while (imageList.size() > 0) {
-			for(Image i : imageList)
-			{
-				if (i.getSubsample() != null)
-					i.getSubsample().getId();
-				if (i.getSample() != null)
-					i.getSample().getId();
-				String checksum= i.getChecksum();
-				if (checksum != null) {
-					checksum = checksum.replaceAll("\\\\|/", "");
-	
-					final String folder = checksum.substring(0, 2);
-					final String subfolder = checksum.substring(2, 4);
-					final String filename = checksum.substring(4, checksum.length());
-	
-					final File imagePath = new File(baseFolder + "/" + folder + "/"
-							+ subfolder + "/" + filename);
-	
-					try{
-						final FileInputStream reader = new FileInputStream(imagePath);
-						//BufferedInputStream input = null;
-						//input = new BufferedInputStream(new FileInputStream(imagePath));
-						final byte[] imgData = getBytesFromInputStream(reader);
-						RenderedOp ro = ImageUploadServlet.loadImage(imgData);
-						i.setChecksumMobile(ImageUploadServlet.generateMobileVersion(ro,false));
-						System.out.print("Created checksum for image: " + i.getId() + " : " + i.getChecksumMobile());
-						dao.save(i);
-					} catch (IOException ioe){
-						System.out.print(ioe.getMessage());
-					}
+		for(Image i : imageList) {
+			if (i.getSubsample() != null)
+				i.getSubsample().getId();
+			if (i.getSample() != null)
+				i.getSample().getId();
+			String checksum= i.getChecksum();
+			if (checksum != null) {
+				checksum = checksum.replaceAll("\\\\|/", "");
+
+				final String folder = checksum.substring(0, 2);
+				final String subfolder = checksum.substring(2, 4);
+				final String filename = checksum.substring(4, checksum.length());
+
+				final File imagePath = new File(baseFolder + "/" + folder + "/"
+						+ subfolder + "/" + filename);
+
+				try{
+					final FileInputStream reader = new FileInputStream(imagePath);
+					//BufferedInputStream input = null;
+					//input = new BufferedInputStream(new FileInputStream(imagePath));
+					final byte[] imgData = getBytesFromInputStream(reader);
+					RenderedOp ro = ImageUploadServlet.loadImage(imgData);
+					i.setChecksumMobile(ImageUploadServlet.generateMobileVersion(ro,false));
+					System.out.print("Created checksum for image: " + i.getId() + " : " + i.getChecksumMobile());
+					dao.save(i);
+				} catch (IOException ioe){
+					System.out.print(ioe.getMessage());
 				}
 			}
-			imageList = dao.getImagesWithoutMobile();
 		}
 		commit();
 	}

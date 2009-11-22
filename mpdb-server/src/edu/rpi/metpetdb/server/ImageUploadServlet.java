@@ -118,7 +118,7 @@ public class ImageUploadServlet extends HttpServlet {
 		final RenderedOp mobile;
 		if(ro.getWidth()<320.0) 
 		{
-			mobile= scale(ro, ro.getWidth(), ro.getHeight());
+			mobile= scale(ro, 1, 1);
 		}
 		else
 		{
