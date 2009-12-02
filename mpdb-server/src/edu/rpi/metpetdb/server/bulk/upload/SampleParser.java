@@ -61,8 +61,6 @@ public class SampleParser extends Parser<Sample> {
 				doc.Sample_number));
 		columns.add(new ColumnMapping(RegularExpressions.MINERALS,
 				doc.Sample_minerals));
-		columns.add(new ColumnMapping(RegularExpressions.REFERENCE_FILENAME,
-				doc.Sample_geoReferences));
 	}
 
 	public List<ColumnMapping> getColumMappings() {

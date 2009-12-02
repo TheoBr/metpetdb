@@ -217,5 +217,6 @@ public interface LocaleText extends Messages {
 	String bulkUpload_Samples();
 	String bulkUpload_ChemicalAnalyses();
 	String bulkUpload_Images();
+	String bulkUpload_References();
 	String bulkUpload_LooksGoodSoCommit();
 }

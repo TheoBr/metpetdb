@@ -42,6 +42,8 @@ import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadChemicalAnalysesSer
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadChemicalAnalysesServiceAsync;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadImagesService;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadImagesServiceAsync;
+import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadReferencesService;
+import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadReferencesServiceAsync;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadSampleService;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadSampleServiceAsync;
 import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
@@ -80,6 +82,8 @@ public class MpDb {
 	public static final BulkUploadChemicalAnalysesServiceAsync bulkUploadChemicalAnalyses_svc;
 
 	public static final BulkUploadImagesServiceAsync bulkUploadImages_svc;
+	
+	public static final BulkUploadReferencesServiceAsync bulkUploadReferences_svc;
 
 	public static final SearchServiceAsync search_svc;
 
@@ -155,6 +159,9 @@ public class MpDb {
 
 		bulkUploadImages_svc = (BulkUploadImagesServiceAsync) bindService(GWT
 				.create(BulkUploadImagesService.class), "bulkUploadImages");
+		
+		bulkUploadReferences_svc = (BulkUploadReferencesServiceAsync) bindService(GWT
+				.create(BulkUploadReferencesService.class), "bulkUploadReferences");
 
 		search_svc = (SearchServiceAsync) bindService(GWT
 				.create(SearchService.class), "search");

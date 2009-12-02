@@ -19,7 +19,6 @@ public class RegularExpressions {
 	public static final String METAMORPHIC_GRADES = "(grade)|(facies)";
 	public static final String LATITUDE = "(\\s*latitude\\s*$)|(lat\\s*$)";
 	public static final String LONGITUDE = "(\\s*longitude\\s*$)|(lon\\s*$)";
-	public static final String REFERENCE_FILENAME = "(reference path)";
 
 	/** Chemical Analysis */
 	public static final String SUBSAMPLE = "^\\s*subsample\\s*$";
@@ -56,4 +55,5 @@ public class RegularExpressions {
 	public static final String COMMENTS = "(comment)|(note)|(description)";
 	public static final String SAMPLE = "(^sample[ number| name|])|(^sample$)";
 	public static final String COLLECTOR = "(collector)|(collected by)";
+	public static final String REFERENCE_FILENAME = "(reference path)";
 }

@@ -38,6 +38,7 @@
 	<servlet path="/bulkUpload.svc" class="edu.rpi.metpetdb.server.impl.bulk.upload.BulkUploadSampleServiceImpl" />
 	<servlet path="/bulkUploadChemicalAnalyses.svc" class="edu.rpi.metpetdb.server.impl.bulk.upload.BulkUploadChemicalAnalysesServiceImpl" />
 	<servlet path="/bulkUploadImages.svc" class="edu.rpi.metpetdb.server.impl.bulk.upload.BulkUploadImagesServiceImpl" />
+	<servlet path="/bulkUploadReferences.svc" class="edu.rpi.metpetdb.server.impl.bulk.upload.BulkUploadReferencesServiceImpl" />
 	<servlet path="/search.svc" class="edu.rpi.metpetdb.server.impl.SearchServiceImpl"/>
 	<servlet path="/image" class="edu.rpi.metpetdb.server.ImagesService"/>
 	<servlet path="/image.svc" class="edu.rpi.metpetdb.server.impl.ImageServiceImpl"/>

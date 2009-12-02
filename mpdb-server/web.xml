@@ -58,6 +58,16 @@
     <servlet-name>bulkUploadImages</servlet-name>
     <url-pattern>/bulkUploadImages.svc</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+	<servlet-name>bulkUploadReferences</servlet-name>
+	<servlet-class>edu.rpi.metpetdb.server.impl.bulk.upload.BulkUploadReferencesServiceImpl</servlet-class>
+	<load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>bulkUploadReferences</servlet-name>
+    <url-pattern>/bulkUploadReferences.svc</url-pattern>
+  </servlet-mapping>
 
   <servlet>
     <servlet-name>constants</servlet-name>
