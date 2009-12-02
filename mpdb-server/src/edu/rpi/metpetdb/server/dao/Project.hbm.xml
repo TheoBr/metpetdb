@@ -15,7 +15,7 @@
 
     <many-to-one name="owner" column="user_id" lazy="false" />
 
-    <set name="members" table="project_members" inverse="true">
+    <set name="members" table="project_members" inverse="false">
       <key column="project_id" />
       <many-to-many class="User" column="user_id" />
     </set>
