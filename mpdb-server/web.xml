@@ -274,7 +274,15 @@
     <servlet-name>searchIPhone</servlet-name>
     <url-pattern>/searchIPhone.svc</url-pattern>
   </servlet-mapping>
-
+ <servlet>
+    <servlet-name>searchIPhonePost</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.search.SearchIPhonePost</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>searchIPhonePost</servlet-name>
+    <url-pattern>/searchIPhonePost.svc</url-pattern>
+  </servlet-mapping>
   <!--
   * Our static data caching and compression servlet.
   *
