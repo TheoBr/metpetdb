@@ -47,4 +47,5 @@
 	<servlet path="/BasicKML.kml" class="edu.rpi.metpetdb.server.BasicKML"/>
 	<servlet path="/excel.svc" class="edu.rpi.metpetdb.server.ExcelServlet"/>
 	<servlet path="/searchIPhone.svc" class="edu.rpi.metpetdb.server.search.SearchIPhone"/>
+	<servlet path="/searchIPhonePost.svc" class="edu.rpi.metpetdb.server.search.SearchIPhonePost"/>
 </module>
