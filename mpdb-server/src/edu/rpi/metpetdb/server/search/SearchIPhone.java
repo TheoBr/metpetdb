@@ -58,160 +58,16 @@ public class SearchIPhone extends HttpServlet{
 	private static final String PAGINATION="pagination";
 	private static final String CRITERIA="criteriaSummary";
 
-	private Session session;
-	private Set<String> owners= new HashSet();
-	private Set<RockType> rockTypes= new HashSet();
-	private Set<MetamorphicGrade> metamorphicGrades= new HashSet();
-	private Set<Mineral> minerals= new HashSet();
-	private String region= new String();
-	private PaginationParameters p= new PaginationParameters();
-	private String criteria= "";
+	private static Session session;
+	private static Set<String> owners= new HashSet();
+	private static Set<RockType> rockTypes= new HashSet();
+	private static Set<MetamorphicGrade> metamorphicGrades= new HashSet();
+	private static Set<Mineral> minerals= new HashSet();
+	private static String region= new String();
+	private static PaginationParameters p= new PaginationParameters();
+	private static String criteria= "";
 	@Override
 
-	/*protected void doPost(final HttpServletRequest request,
-			final HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/xml");
-		int responseLength= request.getContentLength();
-		byte[] postBytes= new byte[responseLength];
-		ArrayList byteList= new ArrayList();
-		int numbytes=0;
-		List<Long> sampleIds = new ArrayList<Long>();
-		session = DataStore.open();
-		try{
-		String postText= new String();
-		while(numbytes!=-1)
-		{
-			numbytes= request.getInputStream().read(postBytes);
-			
-		}
-		postText= new String(postBytes);
-		//response.getWriter().write(postText);
-		
-		Scanner scanner = new Scanner(postText);
-	
-
-		//test to see what the first word of the input is and call the functions in the rest of the 
-		//file accordingly
-		if(scanner.hasNext("username="))
-		{
-			scanner.next();
-			response.getWriter().write("<username>");
-			String username=scanner.next().trim();
-			response.getWriter().write(username);
-			response.getWriter().write("</username>");
-			if(scanner.hasNext("password="))
-			{
-				response.getWriter().write("<password>");
-				scanner.next();
-				String password= scanner.next().trim();
-				response.getWriter().write(password);
-				response.getWriter().write("</password>");
-				UserServiceImpl userImpl= new UserServiceImpl();
-				User u= new User();
-				u= userImpl.details(username);
-				if(UserServiceImpl.authenticate(u, password))
-				{
-					response.getWriter().write("authentication succeeded");
-				}
-				else
-				{
-					response.getWriter().write("authentication failed");
-				}
-			}
-		}
-		if(scanner.hasNext("coordinates="))
-		{
-			scanner.next();
-			double north= Double.valueOf(scanner.next().trim());
-			double south= Double.valueOf(scanner.next().trim());
-			double east= Double.valueOf(scanner.next().trim());
-			double west= Double.valueOf(scanner.next().trim());
-			
-			System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
-			outputSearchXML(search(north,south, east, west, session),response);
-		}
-		else if(scanner.hasNext("searchRegion="))
-		{
-			scanner.next();
-			Set<String> regions = new HashSet<String>();
-			String newRegion= new String();
-			while(scanner.hasNext())
-			{
-				newRegion+= scanner.next().trim();
-				if(scanner.hasNext())
-				{
-					newRegion+=" ";
-				}
-			}
-			regions.add(newRegion);
-			outputSearchXML(search(regions, session),response);
-		}
-		else if(scanner.hasNext("sampleID="))
-		{
-			scanner.next();
-			sampleIds.add(Long.parseLong(scanner.next().trim()));
-			sampleInfo(sampleIds,response);
-		}
-		else if(scanner.hasNext("regions"))
-		{
-			regions(response);
-		}
-		else if(scanner.hasNext("rockTypes"))
-		{
-			rockTypes(response);
-		}
-		else if(scanner.hasNext("comments="))
-		{
-			scanner.next();
-			//the number following comments= will be the id of the sample we want comments for
-			long id= Long.parseLong(scanner.next().trim());
-			comments(response, id);
-		}
-		else if(scanner.hasNext("subsampleInfo="))
-		{
-			scanner.next();
-			//the number following subsampleInfo= will be the id of the sample we want comments for
-			long id= Long.parseLong(scanner.next().trim());
-			subsampleInfo(response, id);
-		}
-		else if(scanner.hasNext("thumbnails="))
-		{
-			scanner.next();
-			//the number following the thumbnails= will be the id of the sample we want thumbnails for
-			long id=Long.parseLong(scanner.next().trim());
-			get_thumbnails(response, id);
-		}
-		else if(scanner.hasNext("largeImage="))
-		{
-			scanner.next();
-			//the number following the largeImage= will be id of the image we want to enlarge
-			long imageID= Long.parseLong(scanner.next().trim());
-			get_large_image(response, imageID);
-		}
-		else if(scanner.hasNext("addComment"))
-		{
-			scanner.next();
-			//the number following addComment will be the id of the sample we want to add a comment to
-			long id= Long.parseLong(scanner.next().trim());
-			//the text following the id is the string make a comment out of
-			String comment= new String();
-			while(scanner.hasNext())
-			{
-				comment+= scanner.next().trim();
-				comment+= " ";
-			}
-			SampleComment newComment= new SampleComment();
-			SampleCommentServiceImpl commentImpl= new SampleCommentServiceImpl();
-			commentImpl.save(newComment);
-			response.getWriter().write("Comment Added");
-		}
-		}
-		catch(Exception e){
-			throw new IllegalStateException(e.getMessage());
-		} finally {
-			session.close();
-		}
-	}*/
 	
 	
 	protected void doGet(final HttpServletRequest request,
@@ -398,7 +254,7 @@ public class SearchIPhone extends HttpServlet{
 			throw new IllegalStateException(ioe.getMessage());
 		} 
 	}*/
-	public class imageComparator implements Comparator {
+	public static class imageComparator implements Comparator {
 		/*  public int compare(edu.rpi.metpetdb.client.model.Image image1, edu.rpi.metpetdb.client.model.Image image2) {
 			  if((Math.abs((image1.getImageType().getId())-5))>= (Math.abs((image2.getImageType().getId())-5)))
 			  {
@@ -423,7 +279,7 @@ public class SearchIPhone extends HttpServlet{
 		}
 	}
 
-	private void get_thumbnails(HttpServletResponse response, long id)
+	public static void get_thumbnails(HttpServletResponse response, long id)
 	{
 		try{
 			SampleDAO s= new SampleDAO(session);
@@ -469,7 +325,7 @@ public class SearchIPhone extends HttpServlet{
 			throw new IllegalStateException(e.getMessage());
 		}	}
 	
-	private void get_large_image(HttpServletResponse response, long imageID)
+	public static void get_large_image(HttpServletResponse response, long imageID)
 	{
 		try{
 			final XStream x = new XStream();
@@ -505,7 +361,7 @@ public class SearchIPhone extends HttpServlet{
 	}
 	
 	
-	private void comments(HttpServletResponse response, long id){
+	public static void comments(HttpServletResponse response, long id){
 		try{
 			final XStream x = new XStream();
 			SampleDAO s= new SampleDAO(session);
@@ -522,7 +378,7 @@ public class SearchIPhone extends HttpServlet{
 		}
 	}
 
-	private void subsampleInfo(HttpServletResponse response, long id ){
+	public static void subsampleInfo(HttpServletResponse response, long id ){
 		try{
 			final XStream x= new XStream();
 			SampleDAO s= new SampleDAO(session);
@@ -585,7 +441,7 @@ public class SearchIPhone extends HttpServlet{
 			throw new IllegalStateException(ioe.getMessage());
 		}
 	} 
-	private void regions(HttpServletResponse response){
+	public static void regions(HttpServletResponse response){
 		try {
 			RegionDAO service = new RegionDAO(session);
 			session.enableFilter("hasSamplePublicOrUser").setParameter("userId", 0);
@@ -605,7 +461,7 @@ public class SearchIPhone extends HttpServlet{
 		}
 	}
 	
-	private void sampleInfo(List<Long> sampleIds, final HttpServletResponse response){
+	public static void sampleInfo(List<Long> sampleIds, final HttpServletResponse response){
 		try {
 			SampleDAO s= new SampleDAO(session);
 			final XStream x = new XStream();
@@ -620,7 +476,7 @@ public class SearchIPhone extends HttpServlet{
 			throw new IllegalStateException(ioe.getMessage());
 		}
 	}
-	private void getSearchCriteria(final Results<Sample> results, final HttpServletResponse response) {
+	public static void getSearchCriteria(final Results<Sample> results, final HttpServletResponse response) {
 		try{
 			final XStream x = new XStream();
 		response.getWriter().write("<searchCriteria>");
@@ -788,7 +644,7 @@ public class SearchIPhone extends HttpServlet{
 		
 	}
 	
-	private void outputSearchXML(final Results<Sample> results, final HttpServletResponse response){
+	public static void outputSearchXML(final Results<Sample> results, final HttpServletResponse response){
 		try{
 			final XStream x = new XStream();
 
@@ -847,7 +703,7 @@ public class SearchIPhone extends HttpServlet{
 	
 	//private Results<Sample> search(final SearchSample s, Session session){
 	//private Results<Sample> search(final String region, Session session){
-	private Results<Sample> search(Session session){
+	public static Results<Sample> search(Session session){
 		
 		try{
 			//if any search criteria have been specified (owners, rocktypes, metamorphic grades, or minerals)
@@ -887,7 +743,7 @@ public class SearchIPhone extends HttpServlet{
 		}
 	}
 
-	private Results<Sample> search(final Double north, final Double south, final Double east, final Double west, Session session){		
+	public static Results<Sample> search(final Double north, final Double south, final Double east, final Double west, Session session){		
 		try{
 			SearchSample s = new SearchSample();
 			final LinearRing[] ringArray = new LinearRing[1];
@@ -953,7 +809,7 @@ public class SearchIPhone extends HttpServlet{
 			throw new IllegalStateException(ioe.getMessage());
 		}
 	}
-	private String createXMLElement(final String tag, final String value){
+	public static String createXMLElement(final String tag, final String value){
 		return "<"+ tag + ">" + value + "</" + tag + ">";
 	}
 }
