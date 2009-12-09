@@ -26,25 +26,25 @@ public enum ChemicalAnalysisProperty implements Property<ChemicalAnalysis> {
 		}
 	},
 	referenceX {
-		public Integer get(final ChemicalAnalysis chemicalAnalysis) {
+		public Double get(final ChemicalAnalysis chemicalAnalysis) {
 			return ((ChemicalAnalysis) chemicalAnalysis).getReferenceX();
 		}
 
 		public void set(final ChemicalAnalysis chemicalAnalysis,
 				final Object pointX) {
 			((ChemicalAnalysis) chemicalAnalysis).setReferenceX(PropertyUtils
-					.convertToInteger(pointX));
+					.convertToDouble(pointX));
 		}
 	},
 	referenceY {
-		public Integer get(final ChemicalAnalysis chemicalAnalysis) {
+		public Double get(final ChemicalAnalysis chemicalAnalysis) {
 			return ((ChemicalAnalysis) chemicalAnalysis).getReferenceY();
 		}
 
 		public void set(final ChemicalAnalysis chemicalAnalysis,
 				final Object pointY) {
 			((ChemicalAnalysis) chemicalAnalysis).setReferenceY(PropertyUtils
-					.convertToInteger(pointY));
+					.convertToDouble(pointY));
 		}
 	},
 	stageX {

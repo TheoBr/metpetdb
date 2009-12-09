@@ -201,7 +201,7 @@
 		<dirname file="${user_war}" property="user_webapps_dir" />
 		<basename file="${user_war}" property="user_war_name" suffix=".war" />
 		<delete dir="${user_webapps_dir}/${user_war_name}" />
-		<exec executable="${catalina_home}/bin/catalina.sh" taskname="tomcat">
+		<exec executable="/Users/Dennis/Downloads/tomcat/bin/catalina.sh" taskname="tomcat">
 			<arg value="run" />
 		</exec>
 	</target>
@@ -212,13 +212,13 @@
 		</target>
 	
 	<target name="tomcat-zak" depends="war">
-		<exec failonerror="false" executable="${tomcat_home}/bin/shutdown.sh"/>
+		<exec failonerror="false" executable="/Users/Dennis/Downloads/tomcat/bin/shutdown.sh"/>
 		
-		<delete failonerror="true" dir="${tomcat_home}/webapps/MetPetDB"/>
-		<delete failonerror="true" file="${tomcat_home}/webapps/MetPetDB.war"/>
-		<copy failonerror="true" file="${war}" todir="${tomcat_home}/webapps"/>
+		<delete failonerror="true" dir="/Users/Dennis/Downloads/tomcat/webapps/MetPetDB"/>
+		<delete failonerror="true" file="/Users/Dennis/Downloads/tomcat/webapps/MetPetDB.war"/>
+		<copy failonerror="true" file="${war}" todir="/Users/Dennis/Downloads/tomcat/webapps"/>
 		
-		<exec failonerror="true" executable="${tomcat_home}/bin/startup.sh"/>	
+		<exec failonerror="true" executable="/Users/Dennis/Downloads/tomcat/bin/startup.sh"/>	
 	</target>
 
 	<target name="eclipse" depends="setup" description="Sets up eclipse by generating the .classpath file and the launch configuration">

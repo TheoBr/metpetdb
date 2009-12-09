@@ -100,6 +100,8 @@ public class MpDbGenericServiceImpl extends MpDbServlet implements
 		stats.add(labels);
 		stats.add(counts);
 		
+		DataStore.disableSecurityFilters(this.currentSession());
+		
 		labels.add("Publication Samples: ");
 		counts.add(new SampleDAO(this.currentSession()).getPublicationCount());
 		labels.add("Publication Chemical Analyses: ");
@@ -121,8 +123,10 @@ public class MpDbGenericServiceImpl extends MpDbServlet implements
 		labels.add("Private Images: ");
 		counts.add(new ImageDAO(this.currentSession()).getPrivateCount());
 
-		labels.add("GeoReferences: ");
+		labels.add("Referenced Publications: ");
 		counts.add(new GeoReferenceDAO(this.currentSession()).getCount());
+		
+		DataStore.enableSecurityFilters(this.currentSession(), this.currentUserIdIfExists());
 		
 		return stats;
 	}

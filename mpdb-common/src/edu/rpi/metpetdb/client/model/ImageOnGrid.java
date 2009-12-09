@@ -5,8 +5,8 @@ public class ImageOnGrid extends MObject {
 	private int id;
 	private Grid grid;
 	private Image image;
-	private int topLeftX;
-	private int topLeftY;
+	private double topLeftX;
+	private double topLeftY;
 	private int zOrder;
 	private int opacity;
 	private double resizeRatio;
@@ -80,20 +80,20 @@ public class ImageOnGrid extends MObject {
 		gchecksumHalf = s;
 	}
 
-	public int getTopLeftX() {
+	public double getTopLeftX() {
 		return topLeftX;
 	}
 
-	public void setTopLeftX(final int s) {
+	public void setTopLeftX(final double s) {
 		topLeftX = s;
 		// originalTopLeftX = s;
 	}
 
-	public int getTopLeftY() {
+	public double getTopLeftY() {
 		return topLeftY;
 	}
 
-	public void setTopLeftY(final int s) {
+	public void setTopLeftY(final double s) {
 		topLeftY = s;
 		// originalTopLeftY = s;
 	}

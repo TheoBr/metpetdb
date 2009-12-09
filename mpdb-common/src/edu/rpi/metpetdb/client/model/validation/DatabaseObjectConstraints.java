@@ -167,8 +167,8 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 	// ------ ImageOnGrid ------
 	public PropertyConstraint[] ImageOnGrid__all;
-	public IntegerConstraint ImageOnGrid_topLeftX;
-	public IntegerConstraint ImageOnGrid_topLeftY;
+	public DoubleConstraint ImageOnGrid_topLeftX;
+	public DoubleConstraint ImageOnGrid_topLeftY;
 
 	public void validate(final ImageOnGrid i) throws ValidationException {
 		validate(i, ImageOnGrid__all);
@@ -250,8 +250,8 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint ChemicalAnalysis_description;
 	public TimestampConstraint ChemicalAnalysis_analysisDate;
 	public ShortConstraint ChemicalAnalysis_datePrecision;
-	public IntegerConstraint ChemicalAnalysis_referenceX;
-	public IntegerConstraint ChemicalAnalysis_referenceY;
+	public DoubleConstraint ChemicalAnalysis_referenceX;
+	public DoubleConstraint ChemicalAnalysis_referenceY;
 	public DoubleConstraint ChemicalAnalysis_stageX;
 	public DoubleConstraint ChemicalAnalysis_stageY;
 	public BooleanConstraint ChemicalAnalysis_largeRock;

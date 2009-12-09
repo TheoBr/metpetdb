@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserDetails;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
 import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
@@ -20,15 +21,17 @@ public class PointPopup extends DialogBox implements ClickListener {
 
 	private final ImageOnGridContainer imageOnGrid;
 	private final ChemicalAnalysis chemicalAnalysis;
+	private final ImageBrowserDetails imageBrowser;
 	private final FocusPanel fp;
 	private final MLink remove;
 	private final MLink lock;
 	private boolean locked;
 
 	public PointPopup(final ChemicalAnalysis ma,
-			final ImageOnGridContainer iog, final int x, final int y) {
+			final ImageOnGridContainer iog, final int x, final int y, ImageBrowserDetails ibd) {
 		this.imageOnGrid = iog;
 		this.chemicalAnalysis = ma;
+		this.imageBrowser = ibd;
 
 		this.locked = ma.isLocked();
 
@@ -52,7 +55,6 @@ public class PointPopup extends DialogBox implements ClickListener {
 
 		this.setStyleName("mpdb-pointPopup");
 		this.setPopupPosition(x + 10, y);
-
 	}
 
 	public void onClick(final Widget sender) {

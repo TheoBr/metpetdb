@@ -137,19 +137,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 			public void onSuccess(final Subsample s) {
 				ImageBrowserDetails.this.g = new Grid();
 				ImageBrowserDetails.this.g.setSubsample(s);
-				new ServerOp<List<ChemicalAnalysis>>() {
-					@Override
-					public void begin() {
-						MpDb.chemicalAnalysis_svc.all(subsampleId, this);
-					}
-					public void onSuccess(final List<ChemicalAnalysis> ss) {
-						ImageBrowserDetails.this.g.getSubsample()
-								.setChemicalAnalyses(
-										new HashSet<ChemicalAnalysis>(ss));
-						s.setGrid(ImageBrowserDetails.this.g);
-						ImageBrowserDetails.this.buildInterface();
-					}
-				}.begin();
+				ImageBrowserDetails.this.buildInterface();
 			}
 		}.begin();
 
@@ -165,21 +153,8 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 
 			public void onSuccess(final Grid result) {
 				ImageBrowserDetails.this.g = result;
-				new ServerOp<List<ChemicalAnalysis>>() {
-					@Override
-					public void begin() {
-						MpDb.chemicalAnalysis_svc.all((result).getSubsample()
-								.getId(), this);
-					}
-
-					public void onSuccess(final List<ChemicalAnalysis> s) {
-						ImageBrowserDetails.this.g.getSubsample()
-								.setChemicalAnalyses(
-										new HashSet<ChemicalAnalysis>(s));
-						ImageBrowserDetails.this.buildInterface();
-						ImageBrowserDetails.this.addImagesOnGrid(true);
-					}
-				}.begin();
+				ImageBrowserDetails.this.buildInterface();
+				ImageBrowserDetails.this.addImagesOnGrid(true);
 			}
 		}.begin();
 		return this;
@@ -287,6 +262,10 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 						.getWidth() * iog.getResizeRatio())));
 				imageOnGrid.setCurrentHeight((int)Math.round((iog.getImage()
 						.getHeight() * iog.getResizeRatio())));
+				for (ChemicalAnalysis ca : g.getSubsample().getChemicalAnalyses()) {
+					if (ca.getImage() != null && ca.getImage().getId() == iog.getImage().getId())
+						imageOnGrid.getChemicalAnalyses().add(ca);
+				}
 			}
 			imageOnGrid.pan(totalXOffset, totalYOffset);
 			this.addImage(imageOnGrid);
@@ -416,22 +395,22 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		this.totalYOffset += amount;
 	}
 
-	private void addPoints(final ImageOnGridContainer iog) {
+	public void addPoints(final ImageOnGridContainer iog) {
 		final Iterator<ChemicalAnalysis> itr = iog.getChemicalAnalyses()
 				.iterator();
 		while (itr.hasNext()) {
 			final ChemicalAnalysis ma = itr.next();
 			final com.google.gwt.user.client.ui.Image i = new com.google.gwt.user.client.ui.Image(
 					GWT.getModuleBaseURL() + "/images/point0.gif");
-			iog.getImagePanel().add(i, ma.getReferenceX(), ma.getReferenceY());
+			iog.getImagePanel().add(i, (int)Math.round(ma.getReferenceX()/this.scale*pps), (int)Math.round(ma.getReferenceY()/this.scale*pps));
 			ma.setActualImage(i);
-			ma.setPercentX(ma.getReferenceX() / (float) iog.getCurrentWidth());
-			ma.setPercentY(ma.getReferenceY() / (float) iog.getCurrentHeight());
+			ma.setPercentX((float)ma.getReferenceX()/this.scale*pps/ (float) iog.getCurrentWidth());
+			ma.setPercentY((float)ma.getReferenceY()/this.scale*pps / (float) iog.getCurrentHeight());
 			ma.setLocked(true);
 			i.addClickListener(new ClickListener() {
 				public void onClick(final Widget sender) {
 					new PointPopup(ma, iog, i.getAbsoluteLeft(), i
-							.getAbsoluteTop()).show();
+							.getAbsoluteTop(), ImageBrowserDetails.this).show();
 				}
 			});
 		}
@@ -632,6 +611,18 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 
 	private void doSave() {
 		// Save the grid
+		// update chemical analyses that have been removed
+		for (ImageOnGridContainer iog : this.imagesOnGrid.values()){
+			for (ChemicalAnalysis ca : iog.getChemicalAnalyses()){
+				for (ChemicalAnalysis ca2 : this.g.getSubsample().getChemicalAnalyses()){
+					if (ca.getId() == ca2.getId()){
+						ca2.setImage(ca.getImage());
+						ca2.setReferenceX(ca.getReferenceX());
+						ca2.setReferenceY(ca.getReferenceY());
+					}
+				}
+			}
+		}
 		new ServerOp<Grid>() {
 			@Override
 			public void begin() {
@@ -655,16 +646,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 					container.setIog(iog);
 				}
 				mouseListener.setImagesOnGrid(imagesOnGrid.values());
-			}
-		}.begin();
-		// Save any chemical analyses that have been modified
-		new VoidServerOp() {
-			@Override
-			public void begin() {
-				MpDb.chemicalAnalysis_svc.saveAll(chemicalAnalyses, this);
-			}
-			public void onSuccess() {
-				chemicalAnalyses.clear();
+			
 			}
 		}.begin();
 	}

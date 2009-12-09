@@ -9,7 +9,7 @@ public enum ImageOnGridProperty implements Property<ImageOnGrid> {
 		}
 
 		public void set(final ImageOnGrid image, final Object imageType) {
-			image.setTopLeftX(PropertyUtils.convertToInteger(imageType));
+			image.setTopLeftX(PropertyUtils.convertToDouble(imageType));
 		}
 	},
 	topLeftY {
@@ -18,7 +18,7 @@ public enum ImageOnGridProperty implements Property<ImageOnGrid> {
 		}
 
 		public void set(final ImageOnGrid image, final Object imageType) {
-			image.setTopLeftY(PropertyUtils.convertToInteger(imageType));
+			image.setTopLeftY(PropertyUtils.convertToDouble(imageType));
 		}
 	},
 }

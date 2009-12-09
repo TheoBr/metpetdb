@@ -35,8 +35,8 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String spotId;
 	private int version;
-	private int referenceX;
-	private int referenceY;
+	private double referenceX;
+	private double referenceY;
 	private Image image;
 	private Subsample subsample;
 	private String analysisMethod;
@@ -95,6 +95,21 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	public ChemicalAnalysis(int id, String spotId) {
 		this.id = id;
 		this.spotId = spotId;
+	}
+	
+	public ChemicalAnalysis(int id, String spotId, Image i, double refX, double refY) {
+		this.id = id;
+		this.spotId = spotId;
+		this.image = i;
+		this.referenceX = refX;
+		this.referenceY = refY;
+	}
+	
+	public ChemicalAnalysis(int id, String spotId, int refX, int refY) {
+		this.id = id;
+		this.spotId = spotId;
+		this.referenceX = refX;
+		this.referenceY = refY;
 	}
 	
 	public ChemicalAnalysis(int id, String spotId, Set<ChemicalAnalysisElement> elements, Set<ChemicalAnalysisOxide> oxides ) {
@@ -168,19 +183,19 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		this.sampleName = sampleName;
 	}
 
-	public int getReferenceX() {
+	public double getReferenceX() {
 		return referenceX;
 	}
 
-	public void setReferenceX(final int i) {
+	public void setReferenceX(final double i) {
 		referenceX = i;
 	}
 
-	public int getReferenceY() {
+	public double getReferenceY() {
 		return referenceY;
 	}
 
-	public void setReferenceY(final int i) {
+	public void setReferenceY(final double i) {
 		referenceY = i;
 	}
 

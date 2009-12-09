@@ -34,7 +34,8 @@
    
    <query name="GeoReference.Count">
     Select count(*)
-    from GeoReference g
+    from GeoReference g, Sample s
+    where g in elements(s.geoReferences)
    </query>
 
 </hibernate-mapping>

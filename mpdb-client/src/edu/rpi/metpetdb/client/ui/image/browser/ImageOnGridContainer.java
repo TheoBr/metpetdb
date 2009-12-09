@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.ui.image.browser;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -34,6 +35,7 @@ public class ImageOnGridContainer {
 		this.iog = iog;
 		currentContainerPosition.x = Math.round(pps*(iog.getTopLeftX()/scale));
 		currentContainerPosition.y = Math.round(pps*(iog.getTopLeftY()/scale));
+		chemicalAnalyses = new HashSet<ChemicalAnalysis>();
 	}
 
 	/**

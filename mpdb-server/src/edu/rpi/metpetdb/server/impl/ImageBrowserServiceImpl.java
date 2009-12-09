@@ -50,7 +50,10 @@ public class ImageBrowserServiceImpl extends MpDbServlet implements
 	}
 
 	public Grid saveGrid(Grid grid) throws LoginRequiredException, MpDbException {
-		grid = (new GridDAO(this.currentSession())).save(grid);
+		for (ChemicalAnalysis ca : grid.getSubsample().getChemicalAnalyses()){
+			ca = (new ChemicalAnalysisDAO(this.currentSession())).save(ca);
+		}
+	    grid = (new GridDAO(this.currentSession())).save(grid);
 		commit();
 		return grid;
 	}

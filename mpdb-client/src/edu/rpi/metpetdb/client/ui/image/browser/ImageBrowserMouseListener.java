@@ -195,17 +195,19 @@ public class ImageBrowserMouseListener implements MouseListener {
 		int pointX = x;
 		int pointY = y;
 		pointX -= currentImage.getImagePanel().getAbsoluteLeft()
-				- grid.getAbsoluteLeft() + 4;
+				- grid.getAbsoluteLeft() ;
 		pointY -= currentImage.getImagePanel().getAbsoluteTop()
-				- grid.getAbsoluteTop() + 13;
-		ca.setReferenceX(pointX);
-		ca.setReferenceY(pointY);
+				- grid.getAbsoluteTop() ;
+		pointX -= 4;
+		pointY -= 13;
+		ca.setReferenceX((double)pointX/imageBrowser.pps*imageBrowser.scale);
+		ca.setReferenceY((double)pointY/imageBrowser.pps*imageBrowser.scale);
 		ca.setActualImage(pointer);
 		ca.setLocked(true);
 		((Image) pointer).addClickListener(new ClickListener() {
 			public void onClick(final Widget sender) {
 				new PointPopup(ca, currentImage, ((Image) pointer)
-						.getAbsoluteLeft(), ((Image) pointer).getAbsoluteTop())
+						.getAbsoluteLeft(), ((Image) pointer).getAbsoluteTop(), imageBrowser)
 						.show();
 			}
 		});
@@ -214,7 +216,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 		currentImage.getChemicalAnalyses().add(ca);
 		imageBrowser.getChemicalAnalysesToSave().add(ca);
 	}
-
+	
 	/**
 	 * Validates whether where the user is placing the chemical analysis is
 	 * within the image dimension
@@ -227,9 +229,11 @@ public class ImageBrowserMouseListener implements MouseListener {
 		int pointX = x;
 		int pointY = y;
 		pointX -= currentImage.getImagePanel().getAbsoluteLeft()
-				- grid.getAbsoluteLeft() + 4;
+				- grid.getAbsoluteLeft() ;
 		pointY -= currentImage.getImagePanel().getAbsoluteTop()
-				- grid.getAbsoluteTop() + 13;
+				- grid.getAbsoluteTop() ;
+		pointX -= 4;
+		pointY -= 13;
 		if (pointX < 0 || pointX > currentImage.getCurrentWidth()) {
 			return false;
 		}
@@ -532,10 +536,10 @@ public class ImageBrowserMouseListener implements MouseListener {
 	}
 
 	private void handleEndMovePoint(final int x, final int y) {
-		int newX = x
+		double newX = x
 				- (currentImage.getImagePanel().getAbsoluteLeft()
 						- grid.getAbsoluteLeft() + 4);
-		int newY = y
+		double newY = y
 				- (currentImage.getImagePanel().getAbsoluteTop()
 						- grid.getAbsoluteTop() + 13);
 		if (newX < 0 || newY < 0
@@ -547,7 +551,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 		currentPoint.setReferenceX(newX);
 		currentPoint.setReferenceY(newY);
 		currentImage.getImagePanel().setWidgetPosition(
-				currentPoint.getActualImage(), newX, newY);
+				currentPoint.getActualImage(), (int)Math.round(newX), (int)Math.round(newY));
 	}
 
 	public void onMouseUp(final Widget sender, final int x, final int y) {

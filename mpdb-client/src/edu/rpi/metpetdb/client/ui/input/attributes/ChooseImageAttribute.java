@@ -13,7 +13,7 @@ import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.interfaces.HasImage;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
-import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.DoubleConstraint;
 import edu.rpi.metpetdb.client.ui.commands.MCommand;
 
 public class ChooseImageAttribute<DataType extends HasImage> extends GenericAttribute<DataType> {
@@ -23,7 +23,7 @@ public class ChooseImageAttribute<DataType extends HasImage> extends GenericAttr
 	private TextAttribute pointY;
 
 	public ChooseImageAttribute(final ObjectConstraint<Image> ic,
-			final IntegerConstraint x, final IntegerConstraint y) {
+			final DoubleConstraint x, final DoubleConstraint y) {
 		super(new PropertyConstraint[] {
 				ic, x, y
 		});
@@ -35,15 +35,16 @@ public class ChooseImageAttribute<DataType extends HasImage> extends GenericAttr
 	public Widget[] createDisplayWidget(final HasImage obj) {
 		if (get(obj) != null) {
 			final Image image = (Image) get(obj);
-			final int x = Integer.parseInt(pointX.get(obj));
-			final int y = Integer.parseInt(pointY.get(obj));
+			final double x = Double.parseDouble(pointX.get(obj));
+			final double y = Double.parseDouble(pointY.get(obj));
 			final AbsolutePanel ap = new AbsolutePanel();
 			ap.add(new com.google.gwt.user.client.ui.Image(((Image) image)
 					.get64x64ServerPath()), 0, 0);
 			final com.google.gwt.user.client.ui.Image i = new com.google.gwt.user.client.ui.Image(
 					GWT.getModuleBaseURL() + "/images/point0.gif");
-			ap.add(i, (int) ((64 / (float) image.getWidth()) * x) - 4,
-					(int) ((64 / (float) image.getWidth()) * y) - 7);
+			double mmPerPixel = image.getScale() == null || image.getScale() == 0 ? image.getWidth() : image.getScale()/64D;
+			ap.add(i, (int) (x/mmPerPixel) - 4,
+					(int) (y/mmPerPixel) - 7);
 			ap.setWidth("64px");
 			ap.setHeight((image.getHeight() / (image.getWidth() / 64)) + "px");
 			return new Widget[] {

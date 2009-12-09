@@ -31,16 +31,28 @@ public class GridDAO extends MpDbDAO<Grid> {
 		if (inst.getId() > 0) {
 			final Query q = namedQuery("Grid.byId");
 			q.setLong("id", inst.getId());
-			if (getResult(q) != null)
-				return (Grid) getResult(q);
+			if (getResult(q) != null) {
+				Grid g = (Grid) getResult(q);
+				g.setSubsample(new SubsampleDAO(sess).fill(g.getSubsample()));
+				for (ChemicalAnalysis ca : g.getSubsample().getChemicalAnalyses()){
+					ca.getId();
+				}
+				return g;
+			}
 		}
 
 		// By Subsample Id
 		if (inst.getSubsample() != null && inst.getSubsample().getId() > 0) {
 			final Query q = namedQuery("Grid.bySubsampleId");
 			q.setParameter("id", inst.getSubsample().getId());
-			if (getResult(q) != null)
-				return (Grid) getResult(q);
+			if (getResult(q) != null) {
+				Grid g = (Grid) getResult(q);
+				g.setSubsample(new SubsampleDAO(sess).fill(g.getSubsample()));
+				for (ChemicalAnalysis ca : g.getSubsample().getChemicalAnalyses()){
+					ca.getId();
+				}
+				return g;
+			}
 		}
 
 		throw new GridNotFoundException();
@@ -68,7 +80,7 @@ public class GridDAO extends MpDbDAO<Grid> {
 		}
 
 		inst = _save(inst);
-		return inst;
+		return fill(inst);
 	}
 
 }

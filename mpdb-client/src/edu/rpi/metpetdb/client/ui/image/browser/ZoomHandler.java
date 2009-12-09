@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.image.browser;
 import java.util.Collection;
 import java.util.Iterator;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 
@@ -112,23 +113,21 @@ public class ZoomHandler {
 		centerX += referenceX;
 		centerY += referenceY;
 
-		// transform centers to top lefts
-		/*iog.getCurrentContainerPosition().x = (centerX
-				- Math.round((getCurrentWidth(iog) / (float) 2)));
-		iog.getCurrentContainerPosition().y = (centerY
-				- Math.round((getCurrentHeight(iog) / (float) 2)));*/
-		
 		iog.getCurrentContainerPosition().x = Math.round(ImageBrowserDetails.pps*(iog.getImageOnGrid().getTopLeftX()/imageBrowser.scale));
 		iog.getCurrentContainerPosition().y = Math.round(ImageBrowserDetails.pps*(iog.getImageOnGrid().getTopLeftY()/imageBrowser.scale));
-		iog.pan(imageBrowser.totalXOffset, imageBrowser.totalYOffset);
 		
-		/*if (level == -1) {
-			iog.getCurrentContainerPosition().y = (int)Math.round((iog.getCurrentContainerPosition().y/2.0) + ((double)imageBrowser.getGrid().getOffsetHeight()/4.0));
-			iog.getCurrentContainerPosition().x = (int)Math.round((iog.getCurrentContainerPosition().x/2.0) + ((double)imageBrowser.getGrid().getOffsetWidth()/4.0));
-		} else {
-			iog.getCurrentContainerPosition().y = (int)Math.round((2*iog.getCurrentContainerPosition().y) - ((double)imageBrowser.getGrid().getOffsetHeight()/2.0));
-			iog.getCurrentContainerPosition().x = (int)Math.round((2*iog.getCurrentContainerPosition().x) - ((double)imageBrowser.getGrid().getOffsetWidth()/2.0));
-		}*/
+		for (int i = 0; i < iog.getImagePanel().getWidgetCount(); i++){
+			if (iog.getImagePanel().getWidget(i) instanceof com.google.gwt.user.client.ui.Image){
+				com.google.gwt.user.client.ui.Image im = (com.google.gwt.user.client.ui.Image) iog.getImagePanel().getWidget(i);
+				if (im.getUrl().equalsIgnoreCase(GWT.getModuleBaseURL() + "/images/point0.gif")) {
+					iog.getImagePanel().remove(i);
+				}
+			}
+		}
+		
+		imageBrowser.addPoints(iog);
+		
+		iog.pan(imageBrowser.totalXOffset, imageBrowser.totalYOffset);
 	}
 
 	private double getCenterX(final ImageOnGridContainer iog) {

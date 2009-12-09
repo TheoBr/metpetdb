@@ -94,7 +94,23 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 		final Query q = namedQuery("ChemicalAnalysis.bySubsampleId");
 		q.setParameter("id", subsampleId);
 		final List<ChemicalAnalysis> l = (List<ChemicalAnalysis>) getResults(q);
-		return l;
+		final Query q2 = namedQuery("ChemicalAnalysis.bySubsampleIdWithImage");
+		q2.setParameter("id", subsampleId);
+		final List<ChemicalAnalysis> l2 = (List<ChemicalAnalysis>) getResults(q2);
+		
+		for (ChemicalAnalysis ca : l) {
+			boolean found = false;
+			for (ChemicalAnalysis ca2 : l2) {
+				if (ca2.getId() == ca.getId()){
+					found = true;
+				}
+			}
+			if (!found) {
+				l2.add(ca);
+			}
+		}
+		
+		return l2;
 	}
 	
 	public List<Object[]> getAllIdsForSubsample(final int subsampleId)

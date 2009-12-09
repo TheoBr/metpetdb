@@ -96,6 +96,11 @@
     from ChemicalAnalysis ma
     where ma.subsample.id = :id
   </query>
+  <query name="ChemicalAnalysis.bySubsampleIdWithImage">
+  select new ChemicalAnalysis(ma.id, ma.spotId, ma.image, ma.referenceX, ma.referenceY) 
+    from ChemicalAnalysis ma
+    where ma.subsample.id = :id
+  </query>
   <query name="ChemicalAnalysis-ids,publicData.bySubsampleId">
     select ma.id, ma.publicData
     from ChemicalAnalysis ma
