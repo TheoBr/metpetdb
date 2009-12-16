@@ -10,6 +10,7 @@ import org.postgis.Point;
 import edu.rpi.metpetdb.client.model.GeoReference;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.MetamorphicGrade;
+import edu.rpi.metpetdb.client.model.MetamorphicRegion;
 import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.Region;
 import edu.rpi.metpetdb.client.model.RockType;
@@ -204,15 +205,21 @@ public enum SampleProperty implements Property<Sample> {
 		public void set(final Sample sample, final Object metamorphicGrades) {
 			if (metamorphicGrades instanceof String) {
 				if (sample.getMetamorphicGrades() == null)
-					sample
-							.setMetamorphicGrades(new HashSet<MetamorphicGrade>());
-				sample.getMetamorphicGrades().add(
-						new MetamorphicGrade((String) metamorphicGrades));
+					sample.setMetamorphicGrades(new HashSet<MetamorphicGrade>());
+				sample.getMetamorphicGrades().add(new MetamorphicGrade((String) metamorphicGrades));
 			} else {
-				sample
-						.setMetamorphicGrades((Set<MetamorphicGrade>) metamorphicGrades);
+				sample.setMetamorphicGrades((Set<MetamorphicGrade>) metamorphicGrades);
 			}
 		}
+	},
+	metamorphicRegions {
+		public Set<MetamorphicRegion> get(final Sample sample) {
+			return sample.getMetamorphicRegions();
+		}
+		
+		public void set(final Sample sample, final Object metamorphicRegions) {
+				sample.setMetamorphicGrades((Set<MetamorphicGrade>) metamorphicGrades);
+			}
 	},
 	references {
 		public Set<Reference> get(final Sample sample) {

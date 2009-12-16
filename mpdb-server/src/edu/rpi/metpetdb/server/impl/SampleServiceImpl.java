@@ -183,4 +183,10 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	public long getPublicationCount() {
 		return new SampleDAO(this.currentSession()).getPublicationCount();
 	}
+	public void sampleMetamorphicRegionsRetroactive() throws MpDbException {
+		DataStore.disableSecurityFilters(this.currentSession());
+		new SampleDAO(this.currentSession()).sampleMetamorphicRegionsRetroactive();
+		commit();
+		DataStore.enableSecurityFilters(this.currentSession(), this.currentUserIdIfExists());
+		}
 }

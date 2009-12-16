@@ -59,4 +59,6 @@ public interface SampleServiceAsync {
 	void getPublicCount(AsyncCallback<Long> ac);
 	
 	void getPrivateCount(AsyncCallback<Long> ac);
+	
+	void sampleMetamorphicRegionsRetroactive(AsyncCallback<Void> ac);
 }

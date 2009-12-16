@@ -11,6 +11,7 @@ import edu.rpi.metpetdb.client.model.ImageComment;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
 import edu.rpi.metpetdb.client.model.ImageType;
 import edu.rpi.metpetdb.client.model.MetamorphicGrade;
+import edu.rpi.metpetdb.client.model.MetamorphicRegion;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.Project;
@@ -82,6 +83,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public ObjectConstraint<Element> SearchSample_elements;
 	public ObjectConstraint<Oxide> SearchSample_oxides;
 	public ValueInCollectionConstraint<RockType> SearchSample_possibleRockTypes;
+	public ObjectConstraint<MetamorphicRegion> SearchSample_metamorphicRegions;
 
 	// ------ SampleMineral ------
 	public PropertyConstraint[] SampleMineral__all;
@@ -100,6 +102,11 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public PropertyConstraint[] MetamorphicGrade__all;
 	public ValueInCollectionConstraint<MetamorphicGrade> MetamorphicGrade_Sample_metamorphicGrades_metamorphicGrade;
 
+	//------ MetamorphicRegion -------
+	public PropertyConstraint[] MetamorphicRegion__all;
+	public ValueInCollectionConstraint<MetamorphicGrade> MetamorphicRegion_Sample_metamorphicRegions_metamorphicRegion;
+
+	
 	// ------ Reference ------
 	public PropertyConstraint[] Reference__all;
 	public StringConstraint Reference_name;
@@ -208,6 +215,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public ObjectConstraint<SampleComment> Sample_comments;
 	public ObjectConstraint<User> Sample_owner;
 	public ValueInCollectionConstraint<MetamorphicGrade> Sample_metamorphicGrades;
+	public ValueInCollectionConstraint<MetamorphicRegion> Sample_metamorphicRegions;
 	public ObjectConstraint<Reference> Sample_references;
 	public ObjectConstraint<Image> Sample_images;
 	public ObjectConstraint<SampleAlias> Sample_aliases;
@@ -360,6 +368,13 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		SearchSample_minerals.propertyName = "Minerals";
 		SearchSample_minerals.required = false;
 		SearchSample_minerals.entityName = "SearchSample";
+		
+		SearchSample_metamorphicRegions.setConstraints(new PropertyConstraint[] {Sample_metamorphicRegions});
+		SearchSample_metamorphicRegions.entityName= "SearchSample";
+		SearchSample_metamorphicRegions.property= SearchSampleProperty.metamorphicRegions;
+		SearchSample_metamorphicRegions.propertyName= "MeramorphicRegions";
+		SearchSample_metamorphicRegions.required=false;
+		
 		
 		SearchSample_chemMinerals.setValues(Sample_minerals.getValues());
 		SearchSample_chemMinerals.property = SearchSampleProperty.chemMinerals;

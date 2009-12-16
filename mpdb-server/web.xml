@@ -220,6 +220,11 @@
     <servlet-class>edu.rpi.metpetdb.server.impl.MetamorphicGradeServiceImpl</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
+   <servlet>
+    <servlet-name>metamorphicRegion</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.server.impl.MetamorphicRegionServiceImpl</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
   <servlet-mapping>
     <servlet-name>metamorphicGrade</servlet-name>
     <url-pattern>/metamorphicGrade.svc</url-pattern>

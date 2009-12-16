@@ -152,6 +152,7 @@ public interface LocaleText extends Messages {
 	String errorDesc_ImageAlreadyExists();
 	String errorDesc_ImageNotFound();
 	String errorDesc_MetamorphicGradeNotFound();
+	String errorDesc_MetamorphicRegionNotFound();
 	String errorDesc_MineralNotFound();
 	String errorDesc_ProjectAlreadyExists();
 	String errorDesc_ProjectNotFound();

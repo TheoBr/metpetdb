@@ -18,7 +18,9 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 public class SearchTabLocation extends SearchTabAttribute{
 	private static SearchGenericAttribute[] atts = {new SearchLocationAttribute(MpDb.oc.SearchSample_boundingBox),
 		new SearchRegionAttribute(MpDb.oc.SearchSample_region),
-		new SearchCountriesAttribute(MpDb.oc.SearchSample_country)};
+		new SearchCountriesAttribute(MpDb.oc.SearchSample_country),
+		new SearchMetamorphicRegionsAttribute(MpDb.doc.SearchSample_metamorphicRegions)};
+	
 	
 	private final RadioButton coordsRadio = new RadioButton("loctype","Map Coordinates");
 	private final RadioButton regionRadio = new RadioButton("loctype","Region");
@@ -77,9 +79,12 @@ public class SearchTabLocation extends SearchTabAttribute{
 		for (int i = 0, j=0; i < atts.length; i++){
 			Widget[] w = (atts[i].createEditWidget(obj, id));
 			currentEditWidgets.add(w);
-			
-			if (atts[i] instanceof SearchRegionAttribute || 
-					atts[i] instanceof SearchCountriesAttribute) {
+			if (atts[i] instanceof SearchLocationAttribute) {
+				map = ((SearchLocationAttribute) atts[i]).getMap();
+				for (int k = 0; k < w.length; k++)
+					coordsPanel.add(w[k]);
+			}
+			else {
 				
 				Label labelWrap = new Label(atts[i].getLabel());
 				labelWrap.setStyleName(CSS.SEARCH_LABEL);
@@ -92,10 +97,6 @@ public class SearchTabLocation extends SearchTabAttribute{
 				regionTable.setWidget(j, 0, labelWrap);
 				regionTable.setWidget(j, 1, inputWrap);
 				j++;
-			} else if (atts[i] instanceof SearchLocationAttribute) {
-				map = ((SearchLocationAttribute) atts[i]).getMap();
-				for (int k = 0; k < w.length; k++)
-					coordsPanel.add(w[k]);
 			}
 		}
 		container.add(coordsPanel);

@@ -11,3 +11,5 @@
 \i elements_and_oxides.sql
 \i elements_and_oxides_mineral_types.sql
 \i sample-data.sql
+\i metpetdb-polygons.sql
+\i metamorphic-regions.sql

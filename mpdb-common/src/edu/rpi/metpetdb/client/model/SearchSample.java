@@ -44,6 +44,8 @@ public class SearchSample extends MObject implements IsSerializable{
 	
 	private Set<MetamorphicGrade> metamorphicGrades  = new HashSet<MetamorphicGrade>();
 	
+	private Set<MetamorphicRegion> metamorphicRegions= new HashSet<MetamorphicRegion>();
+	
 	// 0 = public and private, 1 = public only, 2 = private only
 	private int getPublic;
 	
@@ -267,7 +269,18 @@ public class SearchSample extends MObject implements IsSerializable{
 		final Reference r = new Reference(name);
 		references.add(r);
 	}
-	
+	public Set<MetamorphicRegion> getMetamorphicRegions() {
+		return metamorphicRegions;
+	}
+	public void setMetamorphicRegions(final Set<MetamorphicRegion> mr) {
+		metamorphicRegions= mr;
+	}
+	public void addMetamorphicRegion(final String name) {
+		if(metamorphicRegions == null)
+			metamorphicRegions= new HashSet<MetamorphicRegion> ();
+		final MetamorphicRegion mr= new MetamorphicRegion(name);
+		metamorphicRegions.add(mr);
+	}
 	public Set<MetamorphicGrade> getMetamorphicGrades() {
 		return metamorphicGrades;
 	}

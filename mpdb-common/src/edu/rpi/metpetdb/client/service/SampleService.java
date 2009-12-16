@@ -61,4 +61,6 @@ public interface SampleService extends RemoteService {
 	long getPublicCount();
 	
 	long getPrivateCount();
+	
+	void sampleMetamorphicRegionsRetroactive() throws MpDbException;
 }

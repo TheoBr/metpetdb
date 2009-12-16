@@ -20,6 +20,8 @@ import edu.rpi.metpetdb.client.service.ImageTypeService;
 import edu.rpi.metpetdb.client.service.ImageTypeServiceAsync;
 import edu.rpi.metpetdb.client.service.MetamorphicGradeService;
 import edu.rpi.metpetdb.client.service.MetamorphicGradeServiceAsync;
+import edu.rpi.metpetdb.client.service.MetamorphicRegionService;
+import edu.rpi.metpetdb.client.service.MetamorphicRegionServiceAsync;
 import edu.rpi.metpetdb.client.service.MpDbGenericService;
 import edu.rpi.metpetdb.client.service.MpDbGenericServiceAsync;
 import edu.rpi.metpetdb.client.service.ProjectService;
@@ -94,6 +96,8 @@ public class MpDb {
 	public static final ReferenceServiceAsync reference_svc;
 
 	public static final MetamorphicGradeServiceAsync metamorphicGrade_svc;
+	
+	public static final MetamorphicRegionServiceAsync metamorphicRegion_svc;
 	
 	public static final SampleCommentServiceAsync sampleComment_svc;
 	
@@ -177,6 +181,9 @@ public class MpDb {
 
 		metamorphicGrade_svc = (MetamorphicGradeServiceAsync) bindService(GWT
 				.create(MetamorphicGradeService.class), "metamorphicGrade");
+		
+		metamorphicRegion_svc = (MetamorphicRegionServiceAsync) bindService(GWT
+				.create(MetamorphicRegionService.class), "metamorphicRegion");
 		
 		sampleComment_svc = (SampleCommentServiceAsync) bindService(GWT
 				.create(SampleCommentService.class), "sampleComment");

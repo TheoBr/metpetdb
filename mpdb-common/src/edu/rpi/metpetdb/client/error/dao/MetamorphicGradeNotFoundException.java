@@ -10,5 +10,4 @@ public class MetamorphicGradeNotFoundException extends DAOException {
 	public String format() {
 		return LocaleHandler.lc_text.errorDesc_MetamorphicGradeNotFound();
 	}
-
 }

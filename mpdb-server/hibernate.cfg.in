@@ -48,6 +48,7 @@
 	<mapping resource="edu/rpi/metpetdb/server/dao/Role.hbm.xml" />
 	<mapping resource="edu/rpi/metpetdb/server/dao/RoleChange.hbm.xml" />
 	<mapping resource="edu/rpi/metpetdb/server/dao/SampleAlias.hbm.xml" />
+	<mapping resource="edu/rpi/metpetdb/server/dao/MetamorphicRegion.hbm.xml"/>
 	<!--<mapping resource="edu/rpi/metpetdb/server/dao/A.hbm.xml" />-->
 	<!--<mapping resource="edu/rpi/metpetdb/server/dao/B.hbm.xml" />-->
     <event type="post-update">

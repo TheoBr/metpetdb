@@ -1,0 +1,44 @@
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="edu.rpi.metpetdb.client.model">
+  <class name="MetamorphicRegion" table="metamorphic_regions">
+    <id name="id" column="metamorphic_region_id" unsaved-value="0">
+      <generator class="sequence">
+        <param name="sequence">metamorphic_regions_seq</param>
+      </generator>
+    </id>
+    <property name="name" column="name"/>
+    <property name="shape" column="shape"
+              type="edu.rpi.metpetdb.server.dao.GeometryType" />
+  <filter name="metRegionBox"
+        condition="ST_Intersects(shape, :polygon)" 
+     />
+    
+  </class>
+   
+  
+  <query name="MetamorphicRegion.byName">
+    from MetamorphicRegion mr
+    where lower(mr.name) = lower(:name)
+  </query>
+  
+  <query name="MetamorphicRegion.all">
+    from MetamorphicRegion mr
+  </query>
+  
+  <query name="MetamorphicRegion.all/name">
+  	select distinct name
+  	from MetamorphicRegion mr
+    order by mr.name
+   </query> 
+   
+<filter-def name="metRegionBox">
+    <filter-param name="polygon" type="edu.rpi.metpetdb.server.dao.GeometryType"/>
+  </filter-def>
+   
+   <filter-def name="hasSamplePublicOrUser">
+  	<filter-param name="userId" type="int" />
+  </filter-def>
+</hibernate-mapping>

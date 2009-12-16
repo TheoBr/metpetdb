@@ -218,6 +218,17 @@ public abstract class SampleList extends DataList<Sample> {
 			col.setOptional(true);
 			columns.addColumn(col);
 		}
+		// metamorphic regions
+		{
+			CollapsedColumn<Sample> col = new CollapsedColumn<Sample>(enttxt
+					.Sample_metamorphicRegions(), SampleProperty.metamorphicRegions);
+			col.setTruncateOptions(TruncateMethod.ITEM_COUNT, 2);
+			col.setColumnSortable(true);
+			col.setMinimumColumnWidth(120);
+			col.setPreferredColumnWidth(120);
+			col.setOptional(true);
+			columns.addColumn(col);
+		}
 		
 		// minerals
 		{

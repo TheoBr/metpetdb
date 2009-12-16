@@ -57,6 +57,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.CountryAttrib
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.GeoReferenceAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.LocationAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.MetamorphicGradeAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.MetamorphicRegionAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.MineralAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.ReferenceAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.RegionAttribute;
@@ -98,6 +99,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			new TextAttribute(MpDb.doc.Sample_locationText),
 			new MineralAttribute(MpDb.doc.Sample_minerals),
 			new RegionAttribute(MpDb.doc.Sample_regions),
+			new MetamorphicRegionAttribute(MpDb.doc.Sample_metamorphicRegions).setReadOnly(true),
 			new MetamorphicGradeAttribute(MpDb.doc.Sample_metamorphicGrades),
 			new ReferenceAttribute(MpDb.doc.Sample_references),
 			new GeoReferenceAttribute(MpDb.doc.Sample_geoReferences),

@@ -6,6 +6,7 @@ import org.postgis.Geometry;
 
 import edu.rpi.metpetdb.client.model.DateSpan;
 import edu.rpi.metpetdb.client.model.MetamorphicGrade;
+import edu.rpi.metpetdb.client.model.MetamorphicRegion;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.Region;
@@ -351,6 +352,31 @@ public enum SearchSampleProperty implements SearchProperty {
 		}
 		public String columnName() {
 			return "metamorphicGrade_name";
+		}
+		
+		public boolean isSampleAttr(){
+			return true;
+		}
+		
+		public boolean isChemicalAnalysisAttr(){
+			return false;
+		}
+		
+		public boolean isTokenizationAnded(){
+			return true;
+		}
+	},
+	metamorphicRegions {
+		public Set<MetamorphicRegion> get(final SearchSample sample) {
+			return ((SearchSample) sample).getMetamorphicRegions();
+		}
+		public void set(final SearchSample sample,
+				final Object metamorphicRegions) {
+			((SearchSample) sample)
+					.setMetamorphicRegions((Set<MetamorphicRegion>) metamorphicRegions);
+		}
+		public String columnName() {
+			return "metamorphicRegion_name";
 		}
 		
 		public boolean isSampleAttr(){

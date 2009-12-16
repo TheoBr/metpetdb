@@ -29,6 +29,7 @@
 	<servlet path="/imagetype.svc" class="edu.rpi.metpetdb.server.impl.ImageTypeServiceImpl"/>
 	<servlet path="/reference.svc" class="edu.rpi.metpetdb.server.impl.ReferenceServiceImpl"/>
 	<servlet path="/metamorphicGrade.svc" class="edu.rpi.metpetdb.server.impl.MetamorphicGradeServiceImpl"/>
+	<servlet path="/metamorphicRegion.svc" class="edu.rpi.metpetdb.server.impl.MetamorphicRegionServiceImpl"/>
 	<servlet path="/subsample.svc" class="edu.rpi.metpetdb.server.impl.SubsampleServiceImpl"/>
 	<servlet path="/sampleComment.svc" class="edu.rpi.metpetdb.server.impl.SampleCommentServiceImpl"/>
 	<servlet path="/user.svc" class="edu.rpi.metpetdb.server.impl.UserServiceImpl"/>

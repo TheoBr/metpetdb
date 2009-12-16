@@ -36,6 +36,7 @@ import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.LoginDialog;
 import edu.rpi.metpetdb.client.ui.dialogs.UnknownErrorDialog;
+import edu.rpi.metpetdb.client.ui.html.MetamorphicRegionsView;
 import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -54,7 +55,7 @@ public class MetPetDBApplication implements EntryPoint {
 	private static MLink logoutLink;
 	private static MLink reportBugLink;
 	private static MLink projectInviteLink;
-	
+
 	private static MMenuBar hdrnav;
 	private static RootPanel breadcrumbsBar;
 	private static RootPanel inPageNotice;
@@ -62,14 +63,14 @@ public class MetPetDBApplication implements EntryPoint {
 	private static RootPanel noticeContainer;
 	private static HashSet<Widget> pageChangeWatchers;
 	private static RootPanel footerContainer;
-	
+
 	{
 		loginLink = new MLink(LocaleHandler.lc_text.buttonLogin(),
 				new ClickListener() {
-					public void onClick(final Widget sender) {
-						new LoginDialog(null).show();
-					}
-				});
+			public void onClick(final Widget sender) {
+				new LoginDialog(null).show();
+			}
+		});
 		loginLink.addStyleName(CSS.LIGHT_LINK);
 		registerLink = new MLink(LocaleHandler.lc_text.buttonRegister(),
 				TokenSpace.register);
@@ -85,12 +86,12 @@ public class MetPetDBApplication implements EntryPoint {
 		editProfileLink.addStyleName(CSS.LIGHT_LINK);
 		logoutLink = new MLink(LocaleHandler.lc_text.buttonLogout(),
 				new ClickListener() {
-					public void onClick(Widget sender) {
-						MpDb.setCurrentUser(null);
-						TokenSpace.home.execute();
-						History.newItem(TokenSpace.home.getName());
-					}
-				});
+			public void onClick(Widget sender) {
+				MpDb.setCurrentUser(null);
+				TokenSpace.home.execute();
+				History.newItem(TokenSpace.home.getName());
+			}
+		});
 		logoutLink.addStyleName("logout");
 	}
 
@@ -145,7 +146,7 @@ public class MetPetDBApplication implements EntryPoint {
 
 	private void finishOnModuleLoad() {
 		createHdrNav();
-		
+
 		// If there is no user we didn't receive a user change event,
 		// as null (initial user) == null (current user).
 		if (!MpDb.isLoggedIn())
@@ -176,16 +177,16 @@ public class MetPetDBApplication implements EntryPoint {
 			// notice(MpDb.lc_text.notice_Welcome());
 			DeferredCommand.addCommand(TokenSpace.home);
 		}
-		
+
 		// add message to the top of the screen to tell the user
 		// which browsers we currently support.
 		if (!JS.getUserAgent().contains("firefox")) {
 			MNoticePanel browserMsg = new MNoticePanel();
 			noticeContainer.add(browserMsg);
 			browserMsg.sendNotice(NoticeType.ALERT, "You are using a <strong>currently-unsupported browser</strong>. " +
-					"For the best experience please test MetPetDB using the latest version of <a href=\"http://firefox.com\" title=\"Mozilla Firefox\"><strong>Firefox</strong></a>.");
+			"For the best experience please test MetPetDB using the latest version of <a href=\"http://firefox.com\" title=\"Mozilla Firefox\"><strong>Firefox</strong></a>.");
 		}
-		
+
 	}
 
 	static void onCurrentUserChanged(final User n) {
@@ -263,7 +264,7 @@ public class MetPetDBApplication implements EntryPoint {
 			logbarLinks.add(editProfileLink);
 			logbarLinks.add(logoutLink);
 			checkProjectInvites();
-			
+
 		} else {
 			logbarLinks.add(loginLink);
 			logbarLinks.add(registerLink);
@@ -272,7 +273,7 @@ public class MetPetDBApplication implements EntryPoint {
 		logbar.add(logbarLinks);
 		logbar.add(reportBugLink);
 	}
-	
+
 	private static void checkProjectInvites() {
 		//Look for invites and display a link only if invites exist
 		new ServerOp() {
@@ -282,7 +283,7 @@ public class MetPetDBApplication implements EntryPoint {
 			public void onSuccess(final Object result){
 				//copy the results. Can't modify in place the list received from the callback
 				List<Invite> invites = new ArrayList<Invite>();
-				
+
 				//Take out any invites that are not New because no action would be needed on those
 				for(Invite i: (List<Invite>) result){
 					if(i.getStatus().equals("New"))
@@ -293,14 +294,14 @@ public class MetPetDBApplication implements EntryPoint {
 					final MLink projectInviteLink = new MLink(invites.size() + " new project invite" +
 							(invites.size() > 1 ? "s!" : "!"), 
 							new ClickListener(){
-								public void onClick(Widget sender) {
-									new LoggedInServerOp<Subsample>() {
-										@Override
-										public void command() {
-											History.newItem(TokenSpace.viewMyInvites(MpDb.currentUser()));
-										}
-									}.begin();
-								}	
+						public void onClick(Widget sender) {
+							new LoggedInServerOp<Subsample>() {
+								@Override
+								public void command() {
+									History.newItem(TokenSpace.viewMyInvites(MpDb.currentUser()));
+								}
+							}.begin();
+						}	
 					});
 					logbar.add(projectInviteLink);
 				}
@@ -343,10 +344,10 @@ public class MetPetDBApplication implements EntryPoint {
 	private void createHdrNav() {
 		hdrnav.setAutoOpen(true);
 
-//		final MMenuBar projects = new MMenuBar(true);
-//		projects.addItem("My Projects", TokenSpace.allProjects);
-//		projects.addItem(LocaleHandler.lc_text.projectsMenu_NewProject(),
-//				TokenSpace.newProject);
+		//		final MMenuBar projects = new MMenuBar(true);
+		//		projects.addItem("My Projects", TokenSpace.allProjects);
+		//		projects.addItem(LocaleHandler.lc_text.projectsMenu_NewProject(),
+		//				TokenSpace.newProject);
 
 		final MMenuBar dev = new MMenuBar(true);
 		dev.addItem("Regenerate Constraints", new Command() {
@@ -393,6 +394,28 @@ public class MetPetDBApplication implements EntryPoint {
 			}
 
 		});
+		dev.addItem("Update metamorphic regions", new Command() {
+
+			public void execute() {
+				new ServerOp<Void>() {
+					public void begin() {
+						MpDb.sample_svc.sampleMetamorphicRegionsRetroactive(this);
+					}
+
+					public void onSuccess(Void result) {
+						Window.alert("Done updating metamorphic regions");
+					}
+				}.begin();
+			}
+
+		});
+		dev.addItem("view metamorphic regions", new Command() {
+
+			public void execute() {
+				show(new MetamorphicRegionsView());
+			}
+
+		});
 		dev.addItem("JavaDocs", new Command() {
 			public void execute() {
 				Window.open(MpDb.JAVADOC_URL, "mpdb_javadoc", "");
@@ -403,9 +426,9 @@ public class MetPetDBApplication implements EntryPoint {
 				Window.open(MpDb.JUNIT_URL, "mpdb_junit", "");
 			}
 		});
-		
-		
-		
+
+
+
 		final MMenuBar help = new MMenuBar(true);
 		help.addItem("MetPetDB Help", new Command() {
 			public void execute() {
@@ -453,10 +476,10 @@ public class MetPetDBApplication implements EntryPoint {
 			}
 		});
 		hdrnav.addItem("Help", help);
-		
-		
+
+
 		if (!GWT.getHostPageBaseURL().contains("metpetweb") || (MpDb.isLoggedIn() && MpDb.currentUser.getEmailAddress().equalsIgnoreCase("goldfd@rpi.edu")));
-			hdrnav.addItem("Developers", dev);
+		hdrnav.addItem("Developers", dev);
 
 	}
 }

@@ -48,8 +48,11 @@ alter table subsamples_archive owner to metpetdb_dev;
 alter table roles owner to metpetdb_dev;
 alter table role_changes owner to metpetdb_dev;
 alter table mineral_relationships owner to metpetdb_dev;
-alter table project_invites to owner metpetdb_dev;
-alter table sample_aliases to owner metpetdb_dev;
+alter table project_invites owner to metpetdb_dev;
+alter table sample_aliases owner to metpetdb_dev;
+alter table metamorphic_regions owner to metpetdb_dev;
+alter table sample_metamorphic_regions owner to metpetdb_dev;
+
 alter table georeference to owner metpetdb_dev;
 alter table sample_georeferences to owner metpetdb_dev;
 
@@ -97,3 +100,5 @@ grant all PRIVILEGES on georeference_seq to metpetdb_dev;
 grant create on database mpdb_test to metpetdb_dev;
 grant all privileges on database mpdb_test to metpetdb_dev;
 grant all privileges on table geometry_columns to metpetdb_dev;
+grant all privileges on metamorphic_regions_seq to metpetdb_dev;
+grant all privileges on sample_metamorphic_regions_seq to metpetdb_dev;

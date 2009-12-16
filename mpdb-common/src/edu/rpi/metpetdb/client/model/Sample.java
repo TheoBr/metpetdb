@@ -89,12 +89,15 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	private Set<Region> regions = new HashSet<Region>();
 	
 	private String firstRegion;
+	
+	private Set<MetamorphicRegion> metamorphicRegions = new HashSet<MetamorphicRegion>();
+	private String firstMetamorphicRegion;
 
 	@IndexedEmbedded(depth = 1, prefix = "metamorphicGrade_")
 	private Set<MetamorphicGrade> metamorphicGrades = new HashSet<MetamorphicGrade>();
 	
 	private String firstMetamorphicGrade;
-
+	
 	@IndexedEmbedded(depth = 1, prefix = "reference_")
 	private Set<Reference> references = new HashSet<Reference>();
 	
@@ -411,6 +414,23 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	
 	public void setFirstRegion(final String region) {
 		firstRegion = region;
+	}
+	public Set<MetamorphicRegion> getMetamorphicRegions() {
+		return metamorphicRegions;
+	}
+	public void setMetamorphicRegions (final Set<MetamorphicRegion> mr) {
+		metamorphicRegions= mr;
+	}
+	public void addMetamorphicRegion(final MetamorphicRegion newRegion) {
+		if (metamorphicRegions == null)
+			metamorphicRegions = new HashSet<MetamorphicRegion>();
+		metamorphicRegions.add(newRegion);
+	}
+	public String getFirstMetamorphicRegion() {
+		return firstMetamorphicRegion;
+	}
+	public void setFirstMetamorphicRegion(final String s) {
+		firstMetamorphicRegion= s;
 	}
 
 	public Set<MetamorphicGrade> getMetamorphicGrades() {

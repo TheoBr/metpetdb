@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
+import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
@@ -26,6 +27,11 @@ public abstract class MultipleTextAttribute<T> extends GenericAttribute
 
 	public MultipleTextAttribute(final ObjectConstraint sc) {
 		super(sc);
+		realEditWidgets = new ArrayList<Widget>();
+	}
+	
+	public MultipleTextAttribute(final PropertyConstraint[] pc) {
+		super(pc);
 		realEditWidgets = new ArrayList<Widget>();
 	}
 

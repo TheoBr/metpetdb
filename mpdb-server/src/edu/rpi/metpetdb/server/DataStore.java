@@ -427,6 +427,8 @@ public class DataStore {
 					queryName = "Oxide.all";
 				else if (name.equals("metamorphicGrades"))
 					queryName = "MetamorphicGrades.all";
+				else if (name.equals("metamorphicRegions"))
+					queryName = "MetamorphicRegion.all";
 			}
 			final Session session = open();
 			try {

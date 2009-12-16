@@ -1,15 +1,15 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.SampleNotFoundException;
+import edu.rpi.metpetdb.client.model.MetamorphicRegion;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
@@ -78,11 +78,25 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		s.setRockType(new RockTypeDAO(sess).fill(s.getRockType()));
 		s.setGeoReferences(new GeoReferenceDAO(sess).fill(s.getGeoReferences()));
 	}
+	
+	public Set<MetamorphicRegion> getMatchingMetamorphicRegions(final Sample s){
+		final org.hibernate.Query mregions = namedQuery("Sample.getMetRegions");
+		sess.enableFilter("metRegionBox").setParameter(
+		"polygon", s.getLocation()); 
+		Set<MetamorphicRegion> regions = new HashSet<MetamorphicRegion>();
+		if (mregions.list().size() != 0) {
+		regions.addAll(mregions.list());
+		}
+		sess.disableFilter("metRegionBox");
+		return regions;
+	}
+
 
 	@Override
 	public Sample save(Sample s) throws MpDbException {
 		replaceTransientObjects(s);
 		s.setImages(ImageUtil.stripFilename(s.getImages()));
+		s.setMetamorphicRegions(getMatchingMetamorphicRegions(s));
 		s = _save(s);
 		return s;
 	}
@@ -148,5 +162,11 @@ public class SampleDAO extends MpDbDAO<Sample> {
 	public long getPublicationCount(){
 		final Query q = namedQuery("Sample.PublicationPublicCount");
 		return (Long) q.uniqueResult();
+	}
+	public void sampleMetamorphicRegionsRetroactive() throws MpDbException{
+		final Query q = namedQuery("Sample.all/number");
+		for (Sample s : (List<Sample>) getResults(q)){
+		save(s);
+		}
 	}
 }

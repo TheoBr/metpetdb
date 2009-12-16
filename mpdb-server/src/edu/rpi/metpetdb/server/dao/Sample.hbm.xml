@@ -77,6 +77,16 @@
     										smg.sample_id = s.sample_id AND
     										mg.metamorphic_grade_id = smg.metamorphic_grade_id)" />
 
+    <set name="metamorphicRegions" table="sample_metamorphic_regions" cascade="none" lazy="false">
+      <key column="sample_id" />
+      <many-to-many class="MetamorphicRegion" column="metamorphic_region_id" order-by="lower(name)"/>
+    </set>
+    
+    <property name="firstMetamorphicRegion" formula="(SELECT min(mr.name) FROM samples s, sample_metamorphic_regions smr, metamorphic_regions mr
+    										  WHERE s.sample_id= sample_id AND
+    										  smr.sample_id= s.sample_id AND
+    										  mr.metamorphic_region_id = smr.metamorphic_region_id)" />
+    
     <set name="references" table="sample_reference" cascade="persist,merge" lazy="false">
       <key column="sample_id" />
       <many-to-many class="Reference" column="reference_id" order-by="lower(name)"/>
@@ -419,6 +429,9 @@
   	from Sample s
   	where s.publicData = 'N'
   </query>
+   <query name="Sample.getMetRegions">
+     from MetamorphicRegion mr
+     </query>
 
   
   <filter-def name="boundingBox">

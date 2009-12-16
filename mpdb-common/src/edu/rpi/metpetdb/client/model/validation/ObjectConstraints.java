@@ -82,11 +82,13 @@ public class ObjectConstraints extends DatabaseObjectConstraints {
 			SearchSample_references.property = SearchSampleProperty.references;
 			SearchSample_references.propertyName = "References";
 			SearchSample_references.required = false;
+		
 
 			SearchSample_metamorphicGrades.entityName = "SearchSample";
 			SearchSample_metamorphicGrades.property = SearchSampleProperty.metamorphicGrades;
 			SearchSample_metamorphicGrades.propertyName = "MetamorphicGrades";
 			SearchSample_metamorphicGrades.required = false;
+
 
 			SearchSample_collectionDateRange.entityName = "SearchSample";
 			SearchSample_collectionDateRange.property = SearchSampleProperty.collectionDateRange;

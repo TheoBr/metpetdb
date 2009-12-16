@@ -31,6 +31,7 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String Sample_locationText();
 	String Sample_regions();
 	String Sample_metamorphicGrades();
+	String Sample_metamorphicRegions();
 	String Sample_references();
 	String Sample_geoReferences();
 	String Sample_subsampleCount();

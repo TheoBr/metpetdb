@@ -37,7 +37,17 @@ CREATE TABLE subsample_type
     CONSTRAINT subsample_types_subsample_type_key UNIQUE (subsample_type)
 ) WITHOUT OIDS;
 
+CREATE TABLE metamorphic_regions
+(
+  metamorphic_region_id INT8 NOT NULL,
+  name VARCHAR(50) NOT NULL UNIQUE,
+  CONSTRAINT metamorphic_regions_sk PRIMARY KEY (metamorphic_region_id),
+  CONSTRAINT metamorphic_regions_name_key UNIQUE (name)
+)WITHOUT OIDS;
 
+--add a column of gis polygons to the metamorhpic_regions table
+SELECT AddGeometryColumn('metamorphic_regions', 'shape', 4326, 'POLYGON', 2);
+  
 
 CREATE TABLE samples
 (
@@ -54,6 +64,7 @@ CREATE TABLE samples
   country VARCHAR(100),
   description text,
   collector VARCHAR(50),
+  metamorphic_region_id INT8,
   collector_id INT4,
   location_text VARCHAR(50),
   CONSTRAINT samples_sk PRIMARY KEY (sample_id),
@@ -201,6 +212,17 @@ CONSTRAINT samples_metgrade_fk_metgrade FOREIGN KEY (metamorphic_grade_id)
     REFERENCES metamorphic_grades (metamorphic_grade_id)
 ) WITHOUT OIDS;
 
+CREATE TABLE sample_metamorphic_regions
+( 
+  sample_id INT8 NOT NULL,
+  metamorphic_grade_id INT2 NOT NULL,
+  CONSTRAINT samples_metregion_pk PRIMARY KEY (sample_id, metamorphic_region_id),
+  CONSTRAINT samples_metregion_fk_samples FOREIGN KEY (sample_id)
+     REFERENCES samples (sample_id),
+CONSTRAINT samples_metgrade_fk_metgrade FOREIGN KEY (metamorphic_region_id)
+    REFERENCES metamorphic_regions (metamorphic_region_id)
+}
+
 CREATE TABLE sample_reference
 (
   sample_id INT8 NOT NULL,
@@ -276,3 +298,5 @@ CREATE SEQUENCE uploaded_files_seq;
 CREATE SEQUENCE sample_comments_seq;
 CREATE SEQUENCE subsample_type_seq;
 CREATE SEQUENCE sample_aliases_seq;
+CREATE SEQUENCE metamorphic_regions_seq;
+CREATE SEQUENCE sample_metamorphic_regions_seq;
