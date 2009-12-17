@@ -780,7 +780,13 @@ public class SearchDb {
 				{
 					if(methodResult != null)
 					{
-						return true;
+						if (methodResult instanceof Boolean){
+							if ((Boolean) methodResult != false) {
+								return true;
+							}
+						} else {
+							return true;
+						}
 					}
 				}
 			}

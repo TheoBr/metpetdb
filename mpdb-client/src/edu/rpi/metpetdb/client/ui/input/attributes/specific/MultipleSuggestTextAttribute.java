@@ -117,6 +117,7 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute impl
 					// remove one
 					editList.remove(panel);
 					realEditWidgets.remove(st);
+					onChange(panel);
 				}
 				setStyles();
 			}

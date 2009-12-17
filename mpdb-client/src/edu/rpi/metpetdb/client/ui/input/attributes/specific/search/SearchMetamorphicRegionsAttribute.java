@@ -95,7 +95,7 @@ public class SearchMetamorphicRegionsAttribute extends SearchGenericAttribute {
 		if (itr.hasNext()){
 			final MSuggestText st = (MSuggestText) itr.next();
 			if (!st.getText().equals(""))
-			crit = "Country: " + st.getText() + ", ";;
+			crit = "Metamorphic Region: " + st.getText() + ", ";;
 		}
 		while (itr.hasNext()) {
 			final MSuggestText st = (MSuggestText) itr.next();

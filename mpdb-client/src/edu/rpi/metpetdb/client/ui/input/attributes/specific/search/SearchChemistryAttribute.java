@@ -482,6 +482,8 @@ public class SearchChemistryAttribute extends SearchGenericAttribute {
 					// remove one
 					editList.remove(panel);
 					realEditWidgets.remove(rc);
+					currentCriteria.remove(rc);
+					SearchChemistryAttribute.this.getSearchInterface().createCritera();
 				}
 				setStyles();
 			}

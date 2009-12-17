@@ -90,6 +90,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	
 	private String firstRegion;
 	
+	@IndexedEmbedded(depth = 1, prefix = "metamorphicRegion_")
 	private Set<MetamorphicRegion> metamorphicRegions = new HashSet<MetamorphicRegion>();
 	private String firstMetamorphicRegion;
 
