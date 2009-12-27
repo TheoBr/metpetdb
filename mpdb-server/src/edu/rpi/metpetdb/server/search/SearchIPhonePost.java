@@ -173,6 +173,7 @@ public class SearchIPhonePost extends HttpServlet {
 		}
 		else if(scanner.hasNext("searchRegion="))
 		{
+			response.getWriter().write(postText);
 			scanner.next();
 			Set<String> regions = new HashSet<String>();
 			String newRegion= new String();
@@ -184,6 +185,7 @@ public class SearchIPhonePost extends HttpServlet {
 					newRegion+=" ";
 				}
 			}
+			response.getWriter().write(newRegion);
 			regions.add(newRegion);
 			if(criteria.equals("true"))
 			{
@@ -192,6 +194,7 @@ public class SearchIPhonePost extends HttpServlet {
 			else
 			{
 				SearchIPhone.outputSearchXML(SearchIPhone.search(session),response);
+				response.getWriter().write("not criteria output");
 			}
 		}
 		//if search criteria were entered but a search region or search box was not, a seperate search must be done
@@ -214,6 +217,7 @@ public class SearchIPhonePost extends HttpServlet {
 		}
 		else if(scanner.hasNext("regions"))
 		{
+			response.getWriter().write(postText);
 			SearchIPhone.regions(response);
 		}
 		else if(scanner.hasNext("comments="))
