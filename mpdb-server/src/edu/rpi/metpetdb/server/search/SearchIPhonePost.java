@@ -73,9 +73,9 @@ public class SearchIPhonePost extends HttpServlet {
 			
 		}
 		postText= new String(postBytes);
-		response.getWriter().write(postText);
+		//response.getWriter().write(postText);
 		
-		/*Scanner scanner = new Scanner(postText);
+		Scanner scanner = new Scanner(postText);
 	
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
@@ -260,7 +260,7 @@ public class SearchIPhonePost extends HttpServlet {
 			SampleCommentServiceImpl commentImpl= new SampleCommentServiceImpl();
 			commentImpl.save(newComment);
 			response.getWriter().write("Comment Added");
-		}*/
+		}
 		}
 		catch(Exception e){
 			throw new IllegalStateException(e.getMessage());
