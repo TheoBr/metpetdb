@@ -153,6 +153,11 @@ public class SearchIPhonePost extends HttpServlet {
 			p.setFirstResult(param);
 			p.setMaxResults(5);
 		}
+		if(scanner.hasNext("regions"))
+		{
+			response.getWriter().write(postText);
+			SearchIPhone.regions(response);
+		}
 		if(scanner.hasNext("coordinates="))
 		{
 			scanner.next();
@@ -187,8 +192,11 @@ public class SearchIPhonePost extends HttpServlet {
 			}
 			response.getWriter().write(newRegion);
 			regions.add(newRegion);
+			response.getWriter().write(postText);
+			response.getWriter().write(criteria);
 			if(criteria.equals("true"))
 			{
+				
 				SearchIPhone.getSearchCriteria(SearchIPhone.search(session), response);
 			}
 			else
@@ -214,11 +222,6 @@ public class SearchIPhonePost extends HttpServlet {
 			scanner.next();
 			sampleIds.add(Long.parseLong(scanner.next().trim()));
 			SearchIPhone.sampleInfo(sampleIds,response);
-		}
-		else if(scanner.hasNext("regions"))
-		{
-			response.getWriter().write(postText);
-			SearchIPhone.regions(response);
 		}
 		else if(scanner.hasNext("comments="))
 		{
