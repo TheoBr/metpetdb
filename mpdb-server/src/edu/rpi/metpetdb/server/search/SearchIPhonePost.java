@@ -115,14 +115,17 @@ public class SearchIPhonePost extends HttpServlet {
 			scanner.next();
 			String tempRockType= "";
 			tempRockType=scanner.next().trim();
+			response.getWriter().write(tempRockType);
 			RockType rt= new RockType(tempRockType);
 			rockTypes.add(rt);
 		}
 		while(scanner.hasNext("mineral="))
 		{
 			scanner.next();
+			response.getWriter().write(scanner.next());
 			String tempMineral="";
 			tempMineral=scanner.next().trim();
+			response.getWriter().write(tempMineral);
 			Mineral min= new Mineral();
 			min.setName(tempMineral);
 			minerals.add(min);
@@ -130,8 +133,10 @@ public class SearchIPhonePost extends HttpServlet {
 		while(scanner.hasNext("metamorphicGrade="))
 		{
 			scanner.next();
+			response.getWriter().write(scanner.next());
 			String tempMetGrade="";
 			tempMetGrade=scanner.next().trim();
+			response.getWriter().write(tempMetGrade);
 			MetamorphicGrade mg= new MetamorphicGrade(tempMetGrade);
 			metamorphicGrades.add(mg);
 		}
@@ -139,6 +144,8 @@ public class SearchIPhonePost extends HttpServlet {
 		{
 			scanner.next();
 			String tempOwner="";
+			tempOwner=scanner.next().trim();
+			response.getWriter().write(tempOwner);
 			owners  = new HashSet();
 			owners.add(tempOwner);
 		}
@@ -156,6 +163,7 @@ public class SearchIPhonePost extends HttpServlet {
 		}
 		if(scanner.hasNext("regions"))
 		{
+			response.getWriter().write(scanner.next());
 			SearchIPhone.regions(response);
 		}
 		if(scanner.hasNext("coordinates="))
