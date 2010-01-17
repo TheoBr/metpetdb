@@ -80,6 +80,7 @@ public class SearchIPhonePost extends HttpServlet {
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
 		//file accordingly
+		response.getWriter().write(postText);
 			if(scanner.hasNext("username="))
 			{
 			scanner.next();
@@ -155,7 +156,6 @@ public class SearchIPhonePost extends HttpServlet {
 		}
 		if(scanner.hasNext("regions"))
 		{
-			response.getWriter().write(postText);
 			SearchIPhone.regions(response);
 		}
 		if(scanner.hasNext("coordinates="))
@@ -178,7 +178,6 @@ public class SearchIPhonePost extends HttpServlet {
 		}
 		else if(scanner.hasNext("searchRegion="))
 		{
-			response.getWriter().write(postText);
 			scanner.next();
 			Set<String> regions = new HashSet<String>();
 			String newRegion= new String();
@@ -192,11 +191,10 @@ public class SearchIPhonePost extends HttpServlet {
 			}
 			response.getWriter().write(newRegion);
 			regions.add(newRegion);
-			response.getWriter().write(postText);
 			response.getWriter().write(criteria);
 			if(criteria.equals("true"))
 			{
-				
+				response.getWriter().write("Criteria was set to true!");
 				SearchIPhone.getSearchCriteria(SearchIPhone.search(session), response);
 			}
 			else
