@@ -85,14 +85,14 @@ public class SearchIPhonePost extends HttpServlet {
 			{
 			scanner.next();
 			response.getWriter().write("<username>");
-			String username=scanner.next().trim();
+			String username=scanner.next();
 			response.getWriter().write(username);
 			response.getWriter().write("</username>");
 			if(scanner.hasNext("password="))
 			{
-				response.getWriter().write("<password>");
 				scanner.next();
-				String password= scanner.next().trim();
+				response.getWriter().write("<password>");
+				String password= scanner.next();
 				response.getWriter().write(password);
 				response.getWriter().write("</password>");
 				UserServiceImpl userImpl= new UserServiceImpl();
@@ -114,17 +114,20 @@ public class SearchIPhonePost extends HttpServlet {
 		{
 			scanner.next();
 			String tempRockType= "";
-			tempRockType=scanner.next().trim();
+			tempRockType=scanner.next();
 			response.getWriter().write(tempRockType);
 			RockType rt= new RockType(tempRockType);
 			rockTypes.add(rt);
+			response.getWriter().write("Entire list of rock types added: \n");
+			for(RockType r :rockTypes )
+				response.getWriter().write(r.getRockType());
 		}
 		while(scanner.hasNext("mineral="))
 		{
 			scanner.next();
 			response.getWriter().write(scanner.next());
 			String tempMineral="";
-			tempMineral=scanner.next().trim();
+			tempMineral=scanner.next();
 			response.getWriter().write(tempMineral);
 			Mineral min= new Mineral();
 			min.setName(tempMineral);
@@ -135,7 +138,7 @@ public class SearchIPhonePost extends HttpServlet {
 			scanner.next();
 			response.getWriter().write(scanner.next());
 			String tempMetGrade="";
-			tempMetGrade=scanner.next().trim();
+			tempMetGrade=scanner.next();
 			response.getWriter().write(tempMetGrade);
 			MetamorphicGrade mg= new MetamorphicGrade(tempMetGrade);
 			metamorphicGrades.add(mg);
@@ -144,7 +147,7 @@ public class SearchIPhonePost extends HttpServlet {
 		{
 			scanner.next();
 			String tempOwner="";
-			tempOwner=scanner.next().trim();
+			tempOwner=scanner.next();
 			response.getWriter().write(tempOwner);
 			owners  = new HashSet();
 			owners.add(tempOwner);
@@ -233,40 +236,40 @@ public class SearchIPhonePost extends HttpServlet {
 		{
 			scanner.next();
 			//the number following comments= will be the id of the sample we want comments for
-			long id= Long.parseLong(scanner.next().trim());
+			long id= Long.parseLong(scanner.next());
 			SearchIPhone.comments(response, id);
 		}
 		else if(scanner.hasNext("subsampleInfo="))
 		{
 			scanner.next();
 			//the number following subsampleInfo= will be the id of the sample we want comments for
-			long id= Long.parseLong(scanner.next().trim());
+			long id= Long.parseLong(scanner.next());
 			SearchIPhone.subsampleInfo(response, id);
 		}
 		else if(scanner.hasNext("thumbnails="))
 		{
 			scanner.next();
 			//the number following the thumbnails= will be the id of the sample we want thumbnails for
-			long id=Long.parseLong(scanner.next().trim());
+			long id=Long.parseLong(scanner.next());
 			SearchIPhone.get_thumbnails(response, id);
 		}
 		else if(scanner.hasNext("largeImage="))
 		{
 			scanner.next();
 			//the number following the largeImage= will be id of the image we want to enlarge
-			long imageID= Long.parseLong(scanner.next().trim());
+			long imageID= Long.parseLong(scanner.next());
 			SearchIPhone.get_large_image(response, imageID);
 		}
 		else if(scanner.hasNext("addComment"))
 		{
 			scanner.next();
 			//the number following addComment will be the id of the sample we want to add a comment to
-			long id= Long.parseLong(scanner.next().trim());
+			long id= Long.parseLong(scanner.next());
 			//the text following the id is the string make a comment out of
 			String comment= new String();
 			while(scanner.hasNext())
 			{
-				comment+= scanner.next().trim();
+				comment+= scanner.next();
 				comment+= " ";
 			}
 			SampleComment newComment= new SampleComment();
