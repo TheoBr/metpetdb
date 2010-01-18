@@ -125,7 +125,6 @@ public class SearchIPhonePost extends HttpServlet {
 		while(scanner.hasNext("mineral="))
 		{
 			scanner.next();
-			response.getWriter().write(scanner.next());
 			String tempMineral="";
 			tempMineral=scanner.next();
 			response.getWriter().write(tempMineral);
@@ -136,7 +135,6 @@ public class SearchIPhonePost extends HttpServlet {
 		while(scanner.hasNext("metamorphicGrade="))
 		{
 			scanner.next();
-			response.getWriter().write(scanner.next());
 			String tempMetGrade="";
 			tempMetGrade=scanner.next();
 			response.getWriter().write(tempMetGrade);
@@ -155,7 +153,7 @@ public class SearchIPhonePost extends HttpServlet {
 		if(scanner.hasNext("criteriaSummary="))
 		{
 			scanner.next();
-			SearchIPhone.criteria= scanner.next().trim();
+			SearchIPhone.criteria= scanner.next();
 		}
 		if(scanner.hasNext("pagination="))
 		{
@@ -166,7 +164,6 @@ public class SearchIPhonePost extends HttpServlet {
 		}
 		if(scanner.hasNext("regions"))
 		{
-			response.getWriter().write(scanner.next());
 			SearchIPhone.regions(response);
 		}
 		if(scanner.hasNext("coordinates="))
