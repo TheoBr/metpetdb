@@ -47,13 +47,13 @@ import edu.rpi.metpetdb.server.search.SearchIPhone;
 public class SearchIPhonePost extends HttpServlet {
 	//make global variables out of all the search criteria and the session
 	private static Session session;
-	private static Set<String> owners= new HashSet();
+	/*private static Set<String> owners= new HashSet();
 	private static Set<RockType> rockTypes= new HashSet();
 	private static Set<MetamorphicGrade> metamorphicGrades= new HashSet();
 	private static Set<Mineral> minerals= new HashSet();
 	private static String region= new String();
 	private static PaginationParameters p= new PaginationParameters();
-	private static String criteria= "";
+	private static String criteria= "";*/
 
 	
 	protected void doPost(final HttpServletRequest request,
@@ -117,9 +117,9 @@ public class SearchIPhonePost extends HttpServlet {
 			tempRockType=scanner.next();
 			response.getWriter().write(tempRockType);
 			RockType rt= new RockType(tempRockType);
-			rockTypes.add(rt);
+			SearchIPhone.rockTypes.add(rt);
 			response.getWriter().write("Entire list of rock types added: \n");
-			for(RockType r :rockTypes )
+			for(RockType r :SearchIPhone.rockTypes )
 				response.getWriter().write(r.getRockType());
 		}
 		while(scanner.hasNext("mineral="))
@@ -131,7 +131,7 @@ public class SearchIPhonePost extends HttpServlet {
 			response.getWriter().write(tempMineral);
 			Mineral min= new Mineral();
 			min.setName(tempMineral);
-			minerals.add(min);
+			SearchIPhone.minerals.add(min);
 		}
 		while(scanner.hasNext("metamorphicGrade="))
 		{
@@ -141,7 +141,7 @@ public class SearchIPhonePost extends HttpServlet {
 			tempMetGrade=scanner.next();
 			response.getWriter().write(tempMetGrade);
 			MetamorphicGrade mg= new MetamorphicGrade(tempMetGrade);
-			metamorphicGrades.add(mg);
+			SearchIPhone.metamorphicGrades.add(mg);
 		}
 		while(scanner.hasNext("owner="))
 		{
@@ -149,20 +149,20 @@ public class SearchIPhonePost extends HttpServlet {
 			String tempOwner="";
 			tempOwner=scanner.next();
 			response.getWriter().write(tempOwner);
-			owners  = new HashSet();
-			owners.add(tempOwner);
+			SearchIPhone.owners  = new HashSet();
+			SearchIPhone.owners.add(tempOwner);
 		}
 		if(scanner.hasNext("criteriaSummary="))
 		{
 			scanner.next();
-			criteria= scanner.next().trim();
+			SearchIPhone.criteria= scanner.next().trim();
 		}
 		if(scanner.hasNext("pagination="))
 		{
 			scanner.next();
 			int param= Integer.parseInt(scanner.next().trim());
-			p.setFirstResult(param);
-			p.setMaxResults(5);
+			SearchIPhone.p.setFirstResult(param);
+			SearchIPhone.p.setMaxResults(5);
 		}
 		if(scanner.hasNext("regions"))
 		{
@@ -178,7 +178,7 @@ public class SearchIPhonePost extends HttpServlet {
 			double west= Double.valueOf(scanner.next().trim());
 			
 			System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
-			if(criteria.equals("true"))
+			if(SearchIPhone.criteria.equals("true"))
 			{
 				SearchIPhone.getSearchCriteria(SearchIPhone.search(north,south,east,west, session), response);
 			}
@@ -202,8 +202,8 @@ public class SearchIPhonePost extends HttpServlet {
 			}
 			response.getWriter().write(newRegion);
 			regions.add(newRegion);
-			response.getWriter().write(criteria);
-			if(criteria.equals("true"))
+			response.getWriter().write(SearchIPhone.criteria);
+			if(SearchIPhone.criteria.equals("true"))
 			{
 				response.getWriter().write("Criteria was set to true!");
 				SearchIPhone.getSearchCriteria(SearchIPhone.search(session), response);
@@ -215,9 +215,9 @@ public class SearchIPhonePost extends HttpServlet {
 			}
 		}
 		//if search criteria were entered but a search region or search box was not, a seperate search must be done
-		else if(!minerals.isEmpty() || !owners.isEmpty() || !rockTypes.isEmpty() || !metamorphicGrades.isEmpty())
+		else if(!SearchIPhone.minerals.isEmpty() || !SearchIPhone.owners.isEmpty() || !SearchIPhone.rockTypes.isEmpty() || !SearchIPhone.metamorphicGrades.isEmpty())
 		{
-			if(criteria.equals("true"))
+			if(SearchIPhone.criteria.equals("true"))
 			{
 				SearchIPhone.getSearchCriteria(SearchIPhone.search(session), response);
 			}

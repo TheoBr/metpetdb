@@ -59,13 +59,13 @@ public class SearchIPhone extends HttpServlet{
 	private static final String CRITERIA="criteriaSummary";
 
 	private static Session session;
-	private static Set<String> owners= new HashSet();
-	private static Set<RockType> rockTypes= new HashSet();
-	private static Set<MetamorphicGrade> metamorphicGrades= new HashSet();
-	private static Set<Mineral> minerals= new HashSet();
-	private static String region= new String();
-	private static PaginationParameters p= new PaginationParameters();
-	private static String criteria= "";
+	public static Set<String> owners= new HashSet();
+	public static Set<RockType> rockTypes= new HashSet();
+	public static Set<MetamorphicGrade> metamorphicGrades= new HashSet();
+	public static Set<Mineral> minerals= new HashSet();
+	public static String region= new String();
+	public static PaginationParameters p= new PaginationParameters();
+	public static String criteria= "";
 	@Override
 
 	
