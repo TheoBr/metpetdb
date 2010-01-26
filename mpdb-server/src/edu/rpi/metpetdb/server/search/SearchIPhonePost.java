@@ -215,11 +215,11 @@ public class SearchIPhonePost extends HttpServlet {
 		{
 			if(SearchIPhone.criteria.equals("true"))
 			{
-				SearchIPhone.getSearchCriteria(SearchIPhone.search(session), response);
+				iphoneObject.getSearchCriteria(SearchIPhone.search(session), response);
 			}
 			else
 			{
-				SearchIPhone.outputSearchXML(SearchIPhone.search(session), response);
+				iphoneObject.outputSearchXML(SearchIPhone.search(session), response);
 			}
 		}
 		else if(scanner.hasNext("sampleID="))
