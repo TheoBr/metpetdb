@@ -489,6 +489,9 @@ public class SearchIPhone extends HttpServlet{
 		Double maxLat= -90.0;
 		Double minLong= 180.0;  //initialize to somthing bigger than it could be so something is guaranteed to be smaller
 		Double minLat= 90.0;
+		response.getWriter().write("Size of List:");
+		response.getWriter().write(results.getCount());
+		response.getWriter().write(sampleList.size());
 		
 		for(int i=0; i<sampleList.size(); i++)
 		{
@@ -530,7 +533,8 @@ public class SearchIPhone extends HttpServlet{
 		response.getWriter().write("<criteriaMinerals>");
 		for(SampleMineral min : currentMinerals)
 		{
-			x.toXML(min.getName(), response.getWriter());
+			//x.toXML(min.getName(), response.getWriter());
+			response.getWriter().write(min.getName());
 		}
 		response.getWriter().write("</criteriaMinerals>");
 		
@@ -649,6 +653,10 @@ public class SearchIPhone extends HttpServlet{
 			response.getWriter().write("<resultCount>");
 			x.toXML(results.getCount(), response.getWriter());
 			response.getWriter().write("</resultCount>");
+			
+			response.getWriter().write("Size of list");
+			response.getWriter().write(results.getList().size());
+			response.getWriter().write(results.getCount());
 			for (Sample sample : results.getList()){			
 				response.getWriter().write("<sample>");
 				response.getWriter().write(createXMLElement("number",x.toXML(sample.getNumber())));
