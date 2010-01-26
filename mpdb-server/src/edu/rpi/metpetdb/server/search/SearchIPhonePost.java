@@ -58,6 +58,15 @@ public class SearchIPhonePost extends HttpServlet {
 	
 	protected void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException, IOException {
+		//clear all of the variables so there are not left over values from previous requests
+		owners= new HashSet();
+		rockTypes= new HashSet();
+		metamorphicGrades= new HashSet();
+		minerals= new HashSet();
+		region= new String();
+		p= new PaginationParameters();
+		criteria= "";
+		
 		response.setContentType("text/xml");
 		int responseLength= request.getContentLength();
 		byte[] postBytes= new byte[responseLength];
