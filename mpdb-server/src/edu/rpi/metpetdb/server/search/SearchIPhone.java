@@ -66,10 +66,7 @@ public class SearchIPhone extends HttpServlet{
 	public static String region= new String();
 	public static PaginationParameters p= new PaginationParameters();
 	public static String criteria= "";
-	@Override
 
-	
-	
 	protected void doGet(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException  {
 		response.setContentType("text/xml");
@@ -166,11 +163,11 @@ public class SearchIPhone extends HttpServlet{
 				System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
 				if(criteria.equals("true"))
 				{
-					getSearchCriteria(search(north,south,east,west, session), response);
+					getSearchCriteria(search(north,south,east,west, session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
 				}
 				else
 				{
-					outputSearchXML(search(north,south, east, west, session),response);
+					outputSearchXML(search(north,south, east, west, session, owners, rockTypes, metamorphicGrades, minerals, region, p),response);
 				}
 			} 
 			else if (request.getParameter(SEARCH_REGIONS) != null){
@@ -182,11 +179,11 @@ public class SearchIPhone extends HttpServlet{
 				}
 				if(criteria.equals("true"))
 				{
-					getSearchCriteria(search(session), response);
+					getSearchCriteria(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
 				}
 				else
 				{
-					outputSearchXML(search(session), response);
+					outputSearchXML(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
 				}
 			}
 			//if search criteria were entered but a search region or search box was not, a seperate search must be done
@@ -194,11 +191,11 @@ public class SearchIPhone extends HttpServlet{
 			{
 				if(criteria.equals("true"))
 				{
-					getSearchCriteria(search(session), response);
+					getSearchCriteria(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
 				}
 				else
 				{
-					outputSearchXML(search(session), response);
+					outputSearchXML(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
 				}
 			}
 			else if (request.getParameter(SAMPLE_ID) != null){
@@ -703,7 +700,11 @@ public class SearchIPhone extends HttpServlet{
 	
 	//private Results<Sample> search(final SearchSample s, Session session){
 	//private Results<Sample> search(final String region, Session session){
-	public static Results<Sample> search(Session session){
+	
+
+	
+	public static Results<Sample> search(Session session, Set<String> owners, Set<RockType> rockTypes,
+			Set<MetamorphicGrade> metamorphicGrades, Set<Mineral> minerals, String region, PaginationParameters p){
 		
 		try{
 			//if any search criteria have been specified (owners, rocktypes, metamorphic grades, or minerals)
@@ -741,9 +742,9 @@ public class SearchIPhone extends HttpServlet{
 		catch (final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
 		}
-	}
-
-	public static Results<Sample> search(final Double north, final Double south, final Double east, final Double west, Session session){		
+	}	
+	public static Results<Sample> search(final Double north, final Double south, final Double east, final Double west, Session session,
+				Set<String> owners, Set<RockType> rockTypes, Set<MetamorphicGrade> metamorphicGrades, Set<Mineral> minerals, String region, PaginationParameters p){		
 		try{
 			SearchSample s = new SearchSample();
 			final LinearRing[] ringArray = new LinearRing[1];
