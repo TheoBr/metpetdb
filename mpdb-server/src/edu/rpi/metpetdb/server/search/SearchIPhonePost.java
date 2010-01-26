@@ -47,6 +47,7 @@ import edu.rpi.metpetdb.server.search.SearchIPhone;
 public class SearchIPhonePost extends HttpServlet {
 	//make global variables out of all the search criteria and the session
 	private static Session session;
+	private static SearchIPhone iphoneObject;
 	/*private static Set<String> owners= new HashSet();
 	private static Set<RockType> rockTypes= new HashSet();
 	private static Set<MetamorphicGrade> metamorphicGrades= new HashSet();
@@ -117,9 +118,9 @@ public class SearchIPhonePost extends HttpServlet {
 			tempRockType=scanner.next();
 			response.getWriter().write(tempRockType);
 			RockType rt= new RockType(tempRockType);
-			SearchIPhone.rockTypes.add(rt);
+			iphoneObject.rockTypes.add(rt);
 			response.getWriter().write("Entire list of rock types added: \n");
-			for(RockType r :SearchIPhone.rockTypes )
+			for(RockType r :iphoneObject.rockTypes )
 				response.getWriter().write(r.getRockType());
 		}
 		while(scanner.hasNext("mineral="))
@@ -169,10 +170,10 @@ public class SearchIPhonePost extends HttpServlet {
 		if(scanner.hasNext("coordinates="))
 		{
 			scanner.next();
-			double north= Double.valueOf(scanner.next().trim());
-			double south= Double.valueOf(scanner.next().trim());
-			double east= Double.valueOf(scanner.next().trim());
-			double west= Double.valueOf(scanner.next().trim());
+			double north= Double.valueOf(scanner.next());
+			double south= Double.valueOf(scanner.next());
+			double east= Double.valueOf(scanner.next());
+			double west= Double.valueOf(scanner.next());
 			
 			System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
 			if(SearchIPhone.criteria.equals("true"))
@@ -187,18 +188,16 @@ public class SearchIPhonePost extends HttpServlet {
 		else if(scanner.hasNext("searchRegion="))
 		{
 			scanner.next();
-			Set<String> regions = new HashSet<String>();
 			String newRegion= new String();
 			while(scanner.hasNext())
 			{
-				newRegion+= scanner.next().trim();
+				newRegion+= scanner.next();
 				if(scanner.hasNext())
 				{
 					newRegion+=" ";
 				}
 			}
-			response.getWriter().write(newRegion);
-			regions.add(newRegion);
+			SearchIPhone.region= newRegion;
 			response.getWriter().write(SearchIPhone.criteria);
 			if(SearchIPhone.criteria.equals("true"))
 			{
