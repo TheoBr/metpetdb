@@ -173,7 +173,7 @@ public class SearchIPhonePost extends HttpServlet {
 		}
 		if(scanner.hasNext("regions"))
 		{
-			SearchIPhone.regions(response);
+			SearchIPhone.regions(response, session);
 		}
 		if(scanner.hasNext("coordinates="))
 		{
@@ -208,26 +208,26 @@ public class SearchIPhonePost extends HttpServlet {
 			region= newRegion;
 			response.getWriter().write(criteria);
 			if(criteria.equals("true"))
-			{
+			{  
 				response.getWriter().write("Criteria was set to true!");
-				SearchIPhone.getSearchCriteria(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
+				SearchIPhone.getSearchCriteria(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
 			}
 			else
 			{
-				SearchIPhone.outputSearchXML(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p),response);
+				SearchIPhone.outputSearchXML(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response),response);
 				response.getWriter().write("not criteria output");
 			}
 		}
 		//if search criteria were entered but a search region or search box was not, a seperate search must be done
-		else if(!minerals.isEmpty() || !owners.isEmpty() || !rockTypes.isEmpty() || !metamorphicGrades.isEmpty())
+		else if((!minerals.isEmpty() || !owners.isEmpty() || !rockTypes.isEmpty() || !metamorphicGrades.isEmpty()) && region.isEmpty())
 		{
 			if(criteria.equals("true"))
 			{
-				SearchIPhone.getSearchCriteria(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
+				SearchIPhone.getSearchCriteria(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
 			}
 			else
 			{
-				SearchIPhone.outputSearchXML(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
+				SearchIPhone.outputSearchXML(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
 			}
 		}
 		else if(scanner.hasNext("sampleID="))

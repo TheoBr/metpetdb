@@ -179,11 +179,11 @@ public class SearchIPhone extends HttpServlet{
 				}
 				if(criteria.equals("true"))
 				{
-					getSearchCriteria(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
+					//getSearchCriteria(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
 				}
 				else
 				{
-					outputSearchXML(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
+				//	outputSearchXML(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
 				}
 			}
 			//if search criteria were entered but a search region or search box was not, a seperate search must be done
@@ -191,11 +191,11 @@ public class SearchIPhone extends HttpServlet{
 			{
 				if(criteria.equals("true"))
 				{
-					getSearchCriteria(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
+					//getSearchCriteria(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
 				}
 				else
 				{
-					outputSearchXML(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
+					//outputSearchXML(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
 				}
 			}
 			else if (request.getParameter(SAMPLE_ID) != null){
@@ -204,7 +204,7 @@ public class SearchIPhone extends HttpServlet{
 				sampleInfo(sampleIds,response);
 			} else if (request.getParameter(REGIONS) != null){
 				if (request.getParameterValues(REGIONS)[0].equalsIgnoreCase("t")){
-					regions(response);
+					regions(response, session);
 				}
 			} /*else if (request.getParameter(ROCK_TYPES) != null){
 				if (request.getParameterValues(ROCK_TYPES)[0].equalsIgnoreCase("t")){
@@ -438,7 +438,7 @@ public class SearchIPhone extends HttpServlet{
 			throw new IllegalStateException(ioe.getMessage());
 		}
 	} 
-	public static void regions(HttpServletResponse response){
+	public static void regions(HttpServletResponse response, Session session){
 		try {
 			RegionDAO service = new RegionDAO(session);
 			session.enableFilter("hasSamplePublicOrUser").setParameter("userId", 0);
@@ -653,10 +653,7 @@ public class SearchIPhone extends HttpServlet{
 			response.getWriter().write("<resultCount>");
 			x.toXML(results.getCount(), response.getWriter());
 			response.getWriter().write("</resultCount>");
-			
-			response.getWriter().write("Size of list");
-			response.getWriter().write(results.getList().size());
-			response.getWriter().write(results.getCount());
+		
 			for (Sample sample : results.getList()){			
 				response.getWriter().write("<sample>");
 				response.getWriter().write(createXMLElement("number",x.toXML(sample.getNumber())));
@@ -712,7 +709,7 @@ public class SearchIPhone extends HttpServlet{
 
 	
 	public static Results<Sample> search(Session session, Set<String> owners, Set<RockType> rockTypes,
-			Set<MetamorphicGrade> metamorphicGrades, Set<Mineral> minerals, String region, PaginationParameters p){
+			Set<MetamorphicGrade> metamorphicGrades, Set<Mineral> minerals, String region, PaginationParameters p, final HttpServletResponse response){
 		
 		try{
 			//if any search criteria have been specified (owners, rocktypes, metamorphic grades, or minerals)
@@ -738,6 +735,8 @@ public class SearchIPhone extends HttpServlet{
 			{
 				ss.setMinerals(minerals);
 			}
+			final XStream x = new XStream();
+			x.toXML(ss, response.getWriter());
 			if(p==null)
 			{
 				return SearchDb.sampleSearch(null, ss, null, session);
@@ -804,6 +803,7 @@ public class SearchIPhone extends HttpServlet{
 			{
 				s.setMinerals(minerals);
 			}
+			
 			if(p==null)
 			{
 				return SearchDb.sampleSearch(null, s, null, session);
