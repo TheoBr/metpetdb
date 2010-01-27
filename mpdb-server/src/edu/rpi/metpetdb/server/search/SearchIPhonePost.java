@@ -182,6 +182,11 @@ public class SearchIPhonePost extends HttpServlet {
 			double south= Double.valueOf(scanner.next());
 			double east= Double.valueOf(scanner.next());
 			double west= Double.valueOf(scanner.next());
+			if(scanner.hasNext("criteriaSummary="))
+			{
+				scanner.next();
+				criteria= scanner.next();
+			}
 			
 			System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
 			if(criteria.equals("true"))
@@ -192,6 +197,7 @@ public class SearchIPhonePost extends HttpServlet {
 			{
 				SearchIPhone.outputSearchXML(SearchIPhone.search(north,south, east, west, session, owners, rockTypes, metamorphicGrades, minerals, region, p),response);
 			}
+			
 		}
 		else if(scanner.hasNext("searchRegion="))
 		{
@@ -206,6 +212,11 @@ public class SearchIPhonePost extends HttpServlet {
 				}
 			}
 			region= newRegion;
+			if(scanner.hasNext("criteriaSummary="))
+			{
+				scanner.next();
+				criteria= scanner.next();
+			}
 			response.getWriter().write(criteria);
 			if(criteria.equals("true"))
 			{  
@@ -219,7 +230,7 @@ public class SearchIPhonePost extends HttpServlet {
 			}
 		}
 		//if search criteria were entered but a search region or search box was not, a seperate search must be done
-		else if((!minerals.isEmpty() || !owners.isEmpty() || !rockTypes.isEmpty() || !metamorphicGrades.isEmpty()) && region.isEmpty())
+		else if((!minerals.isEmpty() || !owners.isEmpty() || !rockTypes.isEmpty() || !metamorphicGrades.isEmpty()) && region!="")
 		{
 			if(criteria.equals("true"))
 			{
