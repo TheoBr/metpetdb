@@ -54,7 +54,11 @@ public class SearchIPhonePost extends HttpServlet {
 	private static String region= new String();
 	private static PaginationParameters p= new PaginationParameters();
 	private static String criteria= "";
-
+	//initialize the coordinates to -1 so we can see if they have been given values
+	private static double north= -1;
+	private static double south= -1;
+	private static double east= -1;
+	private static double west= -1;
 	
 	protected void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException, IOException {
@@ -66,6 +70,7 @@ public class SearchIPhonePost extends HttpServlet {
 		region= new String();
 		p= new PaginationParameters();
 		criteria= "";
+		String username= new String();
 		
 		response.setContentType("text/xml");
 		int responseLength= request.getContentLength();
@@ -107,10 +112,11 @@ public class SearchIPhonePost extends HttpServlet {
 			if(criteriaType.equals("username"))
 			{
 			response.getWriter().write("<username>");
-			String username= value;
+			username= value;
 			response.getWriter().write(username);
 			response.getWriter().write("</username>");
-			if(criteriaType.equals("password"))
+			}
+			else if(criteriaType.equals("password"))
 			{
 				response.getWriter().write("<password>");
 				String password= value;
@@ -128,10 +134,9 @@ public class SearchIPhonePost extends HttpServlet {
 					response.getWriter().write("authentication failed");
 				}
 			}
-		}
 		//assign each of the search criteria to their respective variables using 
 		//the scanner
-		if(criteriaType.equals("rockType"))
+		else if(criteriaType.equals("rockType"))
 		{
 			String tempRockType= value;
 			response.getWriter().write(tempRockType);
@@ -141,7 +146,7 @@ public class SearchIPhonePost extends HttpServlet {
 			for(RockType r : rockTypes )
 				response.getWriter().write(r.getRockType());
 		}
-		if(criteriaType.equals("mineral"))
+		else if(criteriaType.equals("mineral"))
 		{
 			String tempMineral= value;
 			response.getWriter().write(tempMineral);
@@ -149,82 +154,32 @@ public class SearchIPhonePost extends HttpServlet {
 			min.setName(tempMineral);
 			minerals.add(min);
 		}
-		if(criteriaType.equals("metamorphicGrade"))
+		else if(criteriaType.equals("metamorphicGrade"))
 		{
 			String tempMetGrade= value;
 			response.getWriter().write(tempMetGrade);
 			MetamorphicGrade mg= new MetamorphicGrade(tempMetGrade);
 			metamorphicGrades.add(mg);
 		}
-		if(criteriaType.equals("owner"))
+		else if(criteriaType.equals("owner"))
 		{
 			String tempOwner= value;
 			response.getWriter().write(tempOwner);
 			owners  = new HashSet();
 			owners.add(tempOwner);
 		}
-		if(criteriaType.equals("criteriaSummary"))
+		else if(criteriaType.equals("criteriaSummary"))
 		{
 			criteria= value;
 		}
-		if(criteriaType.equals("pagination"))
+		else if(criteriaType.equals("pagination"))
 		{
 			int param= Integer.parseInt(value);
 			p.setFirstResult(param);
 			p.setMaxResults(5);
 		}
-		if(criteriaType.equals("regions"))
-		{
+		else if(criteriaType.equals("regions")){
 			SearchIPhone.regions(response, session);
-		}
-		if(criteriaType.equals("coordinates"))
-		{
-			double north= Double.valueOf(scanner.next());
-			double south= Double.valueOf(scanner.next());
-			double east= Double.valueOf(scanner.next());
-			double west= Double.valueOf(scanner.next());
-			if(scanner.hasNext("criteriaSummary="))
-			{
-				scanner.next();
-				criteria= scanner.next();
-			}
-			
-			System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
-			if(criteria.equals("true"))
-			{
-				SearchIPhone.getSearchCriteria(SearchIPhone.search(north,south,east,west, session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
-			}
-			else
-			{
-				SearchIPhone.outputSearchXML(SearchIPhone.search(north,south, east, west, session, owners, rockTypes, metamorphicGrades, minerals, region, p),response);
-			}
-			
-		}
-		else if(criteriaType.equals("searchRegion"))
-		{
-			region= value;
-			if(criteria.equals("true"))
-			{  
-				response.getWriter().write("Criteria was set to true!");
-				SearchIPhone.getSearchCriteria(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
-			}
-			else
-			{
-				SearchIPhone.outputSearchXML(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response),response);
-				response.getWriter().write("not criteria output");
-			}
-		}
-		//if search criteria were entered but a search region or search box was not, a seperate search must be done
-		else if((!minerals.isEmpty() || !owners.isEmpty() || !rockTypes.isEmpty() || !metamorphicGrades.isEmpty()))
-		{
-			if(criteria.equals("true"))
-			{
-				SearchIPhone.getSearchCriteria(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
-			}
-			else
-			{
-				SearchIPhone.outputSearchXML(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
-			}
 		}
 		else if(criteriaType.equals("sampleID"))
 		{
@@ -271,7 +226,68 @@ public class SearchIPhonePost extends HttpServlet {
 			commentImpl.save(newComment);
 			response.getWriter().write("Comment Added");
 		}
+		//since there can only be one geographic search criteria,
+		//the following are if-else statements
+		if(criteriaType.equals("north")){
+			north= Double.valueOf(value);
 		}
+		else if(criteriaType.equals("south")){
+			south= Double.valueOf(value);
+		}
+		else if(criteriaType.equals("east")){
+			east = Double.valueOf(value);
+		}
+		else if(criteriaType.equals("west")){
+			west= Double.valueOf(value);
+		}
+		
+		else if(criteriaType.equals("searchRegion"))
+		{
+			region= value;
+		}
+		}
+		//the following statements will perform the actual database searches
+		//and xml output from the searchIPhone file
+		if(region!="") //if a region has been provided, call searchIPhone functions to search by region
+		{
+			if(criteria.equals("true"))
+			{  
+				response.getWriter().write("Criteria was set to true!");
+				SearchIPhone.getSearchCriteria(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
+			}
+			else
+			{
+				SearchIPhone.outputSearchXML(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response),response);
+				response.getWriter().write("not criteria output");
+			}
+		}
+		//just test the value of the north value because all 4 coordinates are needed
+		//to search based on geographic coordinates
+		else if(north!= -1)
+		{
+			System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
+			if(criteria.equals("true"))
+			{
+				SearchIPhone.getSearchCriteria(SearchIPhone.search(north,south,east,west, session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
+			}
+			else
+			{
+				SearchIPhone.outputSearchXML(SearchIPhone.search(north,south, east, west, session, owners, rockTypes, metamorphicGrades, minerals, region, p),response);
+			}
+		}
+		//if search criteria were entered but a search region or search box was not, a seperate search must be done
+		else if((!minerals.isEmpty() || !owners.isEmpty() || !rockTypes.isEmpty() || !metamorphicGrades.isEmpty()))
+		{
+			if(criteria.equals("true"))
+			{
+				SearchIPhone.getSearchCriteria(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
+			}
+			else
+			{
+				SearchIPhone.outputSearchXML(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
+			}
+		}
+		
 		}
 		catch(Exception e){
 			throw new IllegalStateException(e.getMessage());
