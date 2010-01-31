@@ -85,22 +85,33 @@ public class SearchIPhonePost extends HttpServlet {
 		//response.getWriter().write(postText);
 		
 		Scanner scanner = new Scanner(postText);
+		while(scanner.hasNextLine())
+		{
+			Scanner lineScan= new Scanner(scanner.nextLine());
+			//each individual search criteria will be on its own line in the format criteria = value
+			//we can therefore use an equal sign as a delimiter
+			lineScan.useDelimiter("=");
+			String criteriaType= new String();
+			String value= new String();
+			if(lineScan.hasNext())
+			{
+				criteriaType= lineScan.next();
+				value= lineScan.next();
+			}
 	
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
 		//file accordingly]
-			if(scanner.hasNext("username="))
+			if(criteriaType.equals("username"))
 			{
-			scanner.next();
 			response.getWriter().write("<username>");
-			String username=scanner.next();
+			String username= value;
 			response.getWriter().write(username);
 			response.getWriter().write("</username>");
-			if(scanner.hasNext("password="))
+			if(criteriaType.equals("password"))
 			{
-				scanner.next();
 				response.getWriter().write("<password>");
-				String password= scanner.next();
+				String password= value;
 				response.getWriter().write(password);
 				response.getWriter().write("</password>");
 				UserServiceImpl userImpl= new UserServiceImpl();
@@ -118,11 +129,9 @@ public class SearchIPhonePost extends HttpServlet {
 		}
 		//assign each of the search criteria to their respective variables using 
 		//the scanner
-		while(scanner.hasNext("rockType="))
+		if(criteriaType.equals("rockType"))
 		{
-			scanner.next();
-			String tempRockType= "";
-			tempRockType=scanner.next();
+			String tempRockType= value;
 			response.getWriter().write(tempRockType);
 			RockType rt= new RockType(tempRockType);
 			rockTypes.add(rt);
@@ -130,56 +139,44 @@ public class SearchIPhonePost extends HttpServlet {
 			for(RockType r : rockTypes )
 				response.getWriter().write(r.getRockType());
 		}
-		while(scanner.hasNext("mineral="))
+		if(criteriaType.equals("mineral"))
 		{
-			//scanner.next();
-			scanner.useDelimiter("'");
-		
-			String tempMineral="";
-			tempMineral=scanner.next();
+			String tempMineral= value;
 			response.getWriter().write(tempMineral);
 			Mineral min= new Mineral();
 			min.setName(tempMineral);
 			minerals.add(min);
-			scanner.useDelimiter(" ");
 		}
-		while(scanner.hasNext("metamorphicGrade="))
+		if(criteriaType.equals("metamorphicGrade"))
 		{
-			scanner.next();
-			String tempMetGrade="";
-			tempMetGrade=scanner.next();
+			String tempMetGrade= value;
 			response.getWriter().write(tempMetGrade);
 			MetamorphicGrade mg= new MetamorphicGrade(tempMetGrade);
 			metamorphicGrades.add(mg);
 		}
-		while(scanner.hasNext("owner="))
+		if(criteriaType.equals("owner"))
 		{
-			scanner.next();
-			String tempOwner="";
-			tempOwner=scanner.next();
+			String tempOwner= value;
 			response.getWriter().write(tempOwner);
 			owners  = new HashSet();
 			owners.add(tempOwner);
 		}
-		if(scanner.hasNext("criteriaSummary="))
+		if(criteriaType.equals("criteriaSummary"))
 		{
-			scanner.next();
-			criteria= scanner.next();
+			criteria= value;
 		}
-		if(scanner.hasNext("pagination="))
+		if(criteriaType.equals("pagination"))
 		{
-			scanner.next();
-			int param= Integer.parseInt(scanner.next().trim());
+			int param= Integer.parseInt(value);
 			p.setFirstResult(param);
 			p.setMaxResults(5);
 		}
-		if(scanner.hasNext("regions"))
+		if(criteriaType.equals("regions"))
 		{
 			SearchIPhone.regions(response, session);
 		}
-		if(scanner.hasNext("coordinates="))
+		if(criteriaType.equals("coordinates"))
 		{
-			scanner.next();
 			double north= Double.valueOf(scanner.next());
 			double south= Double.valueOf(scanner.next());
 			double east= Double.valueOf(scanner.next());
@@ -201,25 +198,9 @@ public class SearchIPhonePost extends HttpServlet {
 			}
 			
 		}
-		else if(scanner.hasNext("searchRegion="))
+		else if(criteriaType.equals("searchRegion"))
 		{
-			scanner.next();
-			String newRegion= new String();
-			while(scanner.hasNext())
-			{
-				newRegion+= scanner.next();
-				if(scanner.hasNext())
-				{
-					newRegion+=" ";
-				}
-			}
-			region= newRegion;
-			if(scanner.hasNext("criteriaSummary="))
-			{
-				scanner.next();
-				criteria= scanner.next();
-			}
-			response.getWriter().write(criteria);
+			region= value;
 			if(criteria.equals("true"))
 			{  
 				response.getWriter().write("Criteria was set to true!");
@@ -243,43 +224,37 @@ public class SearchIPhonePost extends HttpServlet {
 				SearchIPhone.outputSearchXML(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
 			}
 		}
-		else if(scanner.hasNext("sampleID="))
+		else if(criteriaType.equals("sampleID"))
 		{
-			scanner.next();
-			sampleIds.add(Long.parseLong(scanner.next().trim()));
+			sampleIds.add(Long.parseLong(value));
 			SearchIPhone.sampleInfo(sampleIds,response);
 		}
-		else if(scanner.hasNext("comments="))
+		else if(criteriaType.equals("comments"))
 		{
-			scanner.next();
 			//the number following comments= will be the id of the sample we want comments for
-			long id= Long.parseLong(scanner.next());
+			long id= Long.parseLong(value);
 			SearchIPhone.comments(response, id);
 		}
-		else if(scanner.hasNext("subsampleInfo="))
+		else if(criteriaType.equals("subsampleInfo"))
 		{
-			scanner.next();
 			//the number following subsampleInfo= will be the id of the sample we want comments for
-			long id= Long.parseLong(scanner.next());
+			long id= Long.parseLong(value);
 			SearchIPhone.subsampleInfo(response, id);
 		}
-		else if(scanner.hasNext("thumbnails="))
+		else if(criteriaType.equals("thumbnails"))
 		{
-			scanner.next();
 			//the number following the thumbnails= will be the id of the sample we want thumbnails for
-			long id=Long.parseLong(scanner.next());
+			long id=Long.parseLong(value);
 			SearchIPhone.get_thumbnails(response, id);
 		}
-		else if(scanner.hasNext("largeImage="))
+		else if(criteriaType.equals("largeImage"))
 		{
-			scanner.next();
 			//the number following the largeImage= will be id of the image we want to enlarge
-			long imageID= Long.parseLong(scanner.next());
+			long imageID= Long.parseLong(value);
 			SearchIPhone.get_large_image(response, imageID);
 		}
-		else if(scanner.hasNext("addComment"))
+		else if(criteriaType.equals("addComment"))
 		{
-			scanner.next();
 			//the number following addComment will be the id of the sample we want to add a comment to
 			long id= Long.parseLong(scanner.next());
 			//the text following the id is the string make a comment out of
@@ -293,6 +268,7 @@ public class SearchIPhonePost extends HttpServlet {
 			SampleCommentServiceImpl commentImpl= new SampleCommentServiceImpl();
 			commentImpl.save(newComment);
 			response.getWriter().write("Comment Added");
+		}
 		}
 		}
 		catch(Exception e){
