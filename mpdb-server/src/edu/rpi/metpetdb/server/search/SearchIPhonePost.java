@@ -88,8 +88,7 @@ public class SearchIPhonePost extends HttpServlet {
 	
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
-		//file accordingly
-		response.getWriter().write(postText);
+		//file accordingly]
 			if(scanner.hasNext("username="))
 			{
 			scanner.next();
@@ -133,13 +132,16 @@ public class SearchIPhonePost extends HttpServlet {
 		}
 		while(scanner.hasNext("mineral="))
 		{
-			scanner.next();
+			//scanner.next();
+			scanner.useDelimiter("'");
+		
 			String tempMineral="";
 			tempMineral=scanner.next();
 			response.getWriter().write(tempMineral);
 			Mineral min= new Mineral();
 			min.setName(tempMineral);
 			minerals.add(min);
+			scanner.useDelimiter(" ");
 		}
 		while(scanner.hasNext("metamorphicGrade="))
 		{
