@@ -90,7 +90,7 @@ public class SearchIPhonePost extends HttpServlet {
 			Scanner lineScan= new Scanner(scanner.nextLine());
 			//each individual search criteria will be on its own line in the format criteria = value
 			//we can therefore use an equal sign as a delimiter
-			lineScan.useDelimiter("=");
+			lineScan.useDelimiter("= ");
 			String criteriaType= new String();
 			String value= new String();
 			if(lineScan.hasNext())
@@ -98,6 +98,8 @@ public class SearchIPhonePost extends HttpServlet {
 				criteriaType= lineScan.next();
 				value= lineScan.next();
 			}
+			response.getWriter().write("Current line of input:\n");
+			response.getWriter().write(criteriaType + " " + value);
 	
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
@@ -213,7 +215,7 @@ public class SearchIPhonePost extends HttpServlet {
 			}
 		}
 		//if search criteria were entered but a search region or search box was not, a seperate search must be done
-		else if((!minerals.isEmpty() || !owners.isEmpty() || !rockTypes.isEmpty() || !metamorphicGrades.isEmpty()) && region!="")
+		else if((!minerals.isEmpty() || !owners.isEmpty() || !rockTypes.isEmpty() || !metamorphicGrades.isEmpty()))
 		{
 			if(criteria.equals("true"))
 			{
