@@ -113,10 +113,10 @@ public class SearchIPhonePost extends HttpServlet {
 			response.getWriter().write(criteriaType);
 			response.getWriter().write("value\n");
 			response.getWriter().write(value);
-			response.getWriter().write("outputing rock types");
+			response.getWriter().write("outputing rock types ");
 			for(RockType r : rockTypes )
 				response.getWriter().write(r.getRockType());
-			response.getWriter().write("outputing minerals");
+			response.getWriter().write("outputing minerals ");
 			for(Mineral m : minerals)
 				response.getWriter().write(m.getName());
 	
@@ -152,14 +152,15 @@ public class SearchIPhonePost extends HttpServlet {
 		//the scanner
 		else if(criteriaType.equals("rockType"))
 		{
+			response.getWriter().write(value+ " has been added as a rock type");
 			String tempRockType= value;
 			response.getWriter().write(tempRockType);
 			RockType rt= new RockType(tempRockType);
 			rockTypes.add(rt);
-			response.getWriter().write("Entire list of rock types added: \n");
 		}
 		else if(criteriaType.equals("mineral"))
 		{
+			response.getWriter().write(value+ " has been added as a mineral");
 			String tempMineral= value;
 			response.getWriter().write(tempMineral);
 			Mineral min= new Mineral();
@@ -168,6 +169,7 @@ public class SearchIPhonePost extends HttpServlet {
 		}
 		else if(criteriaType.equals("metamorphicGrade"))
 		{
+			response.getWriter().write(value+" has been added as a metamorphic grade");
 			String tempMetGrade= value;
 			response.getWriter().write(tempMetGrade);
 			MetamorphicGrade mg= new MetamorphicGrade(tempMetGrade);
@@ -289,7 +291,7 @@ public class SearchIPhonePost extends HttpServlet {
 			}
 		}
 		//if search criteria were entered but a search region or search box was not, a seperate search must be done
-		else if((!minerals.isEmpty() || !owners.isEmpty() || !rockTypes.isEmpty() || !metamorphicGrades.isEmpty()))
+		else if((minerals.size()!=0 || owners.size()!=0 || rockTypes.size()!=0 || metamorphicGrades.size()!=0))
 		{
 			for(RockType r : rockTypes )
 				response.getWriter().write(r.getRockType());
