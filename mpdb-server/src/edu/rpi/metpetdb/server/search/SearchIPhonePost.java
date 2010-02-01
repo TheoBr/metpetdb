@@ -67,7 +67,7 @@ public class SearchIPhonePost extends HttpServlet {
 		rockTypes= new HashSet();
 		metamorphicGrades= new HashSet();
 		minerals= new HashSet();
-		region= new String();
+		region= "";
 		p= new PaginationParameters();
 		criteria= "";
 		String username= new String();
@@ -143,8 +143,6 @@ public class SearchIPhonePost extends HttpServlet {
 			RockType rt= new RockType(tempRockType);
 			rockTypes.add(rt);
 			response.getWriter().write("Entire list of rock types added: \n");
-			for(RockType r : rockTypes )
-				response.getWriter().write(r.getRockType());
 		}
 		else if(criteriaType.equals("mineral"))
 		{
@@ -250,15 +248,17 @@ public class SearchIPhonePost extends HttpServlet {
 		//and xml output from the searchIPhone file
 		if(region!="") //if a region has been provided, call searchIPhone functions to search by region
 		{
+			for(RockType r : rockTypes )
+				response.getWriter().write(r.getRockType());
+			for(Mineral m : minerals)
+				response.getWriter().write(m.getName());
 			if(criteria.equals("true"))
 			{  
-				response.getWriter().write("Criteria was set to true!");
 				SearchIPhone.getSearchCriteria(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
 			}
 			else
 			{
 				SearchIPhone.outputSearchXML(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response),response);
-				response.getWriter().write("not criteria output");
 			}
 		}
 		//just test the value of the north value because all 4 coordinates are needed
@@ -278,6 +278,10 @@ public class SearchIPhonePost extends HttpServlet {
 		//if search criteria were entered but a search region or search box was not, a seperate search must be done
 		else if((!minerals.isEmpty() || !owners.isEmpty() || !rockTypes.isEmpty() || !metamorphicGrades.isEmpty()))
 		{
+			for(RockType r : rockTypes )
+				response.getWriter().write(r.getRockType());
+			for(Mineral m : minerals)
+				response.getWriter().write(m.getName());
 			if(criteria.equals("true"))
 			{
 				SearchIPhone.getSearchCriteria(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
