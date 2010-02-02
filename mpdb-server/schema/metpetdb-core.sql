@@ -221,7 +221,7 @@ CREATE TABLE sample_metamorphic_regions
      REFERENCES samples (sample_id),
 CONSTRAINT samples_metgrade_fk_metgrade FOREIGN KEY (metamorphic_region_id)
     REFERENCES metamorphic_regions (metamorphic_region_id)
-}
+) WITHOUT OIDS;
 
 CREATE TABLE sample_reference
 (
