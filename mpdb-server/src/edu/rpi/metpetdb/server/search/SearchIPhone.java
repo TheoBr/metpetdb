@@ -683,6 +683,7 @@ public class SearchIPhone extends HttpServlet{
 				response.getWriter().write("</sample>");
 			}
 			response.getWriter().write("</set>");
+			response.getWriter().write("</testTag>");
 		} catch (final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());
 		}
@@ -736,6 +737,7 @@ public class SearchIPhone extends HttpServlet{
 				ss.setMinerals(minerals);
 			}
 			final XStream x = new XStream();
+			response.getWriter().write("<testTag>");
 			x.toXML(ss, response.getWriter());
 			if(p==null)
 			{
