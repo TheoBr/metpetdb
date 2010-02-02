@@ -107,18 +107,18 @@ public class SearchIPhonePost extends HttpServlet {
 				value= lineScan.next();
 			}
 			response.getWriter().write("Current line of input:\n");
-			response.getWriter().write(criteriaType + " " + value);
+			response.getWriter().write(criteriaType + " " + value + "\n");
 			
-			response.getWriter().write("criteriaType\n");
-			response.getWriter().write(criteriaType);
-			response.getWriter().write("value\n");
-			response.getWriter().write(value);
+			response.getWriter().write("criteriaType: ");
+			response.getWriter().write(criteriaType+ "\n");
+			response.getWriter().write("value: ");
+			response.getWriter().write(value+ "\n");
 			response.getWriter().write("outputing rock types ");
 			for(RockType r : rockTypes )
 				response.getWriter().write(r.getRockType());
 			response.getWriter().write("outputing minerals ");
 			for(Mineral m : minerals)
-				response.getWriter().write(m.getName());
+				response.getWriter().write(m.getName() + "\n");
 	
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
@@ -152,15 +152,14 @@ public class SearchIPhonePost extends HttpServlet {
 		//the scanner
 		else if(criteriaType.equals("rockType"))
 		{
-			response.getWriter().write(value+ " has been added as a rock type");
+			response.getWriter().write(value+ " has been added as a rock type\n");
 			String tempRockType= value;
-			response.getWriter().write(tempRockType);
 			RockType rt= new RockType(tempRockType);
 			rockTypes.add(rt);
 		}
 		else if(criteriaType.equals("mineral"))
 		{
-			response.getWriter().write(value+ " has been added as a mineral");
+			response.getWriter().write(value+ " has been added as a mineral\n");
 			String tempMineral= value;
 			response.getWriter().write(tempMineral);
 			Mineral min= new Mineral();

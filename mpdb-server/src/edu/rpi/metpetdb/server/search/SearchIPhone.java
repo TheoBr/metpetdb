@@ -179,11 +179,11 @@ public class SearchIPhone extends HttpServlet{
 				}
 				if(criteria.equals("true"))
 				{
-					//getSearchCriteria(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
+					getSearchCriteria(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
 				}
 				else
 				{
-				//	outputSearchXML(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
+					outputSearchXML(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
 				}
 			}
 			//if search criteria were entered but a search region or search box was not, a seperate search must be done
@@ -191,11 +191,11 @@ public class SearchIPhone extends HttpServlet{
 			{
 				if(criteria.equals("true"))
 				{
-					//getSearchCriteria(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
+					getSearchCriteria(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
 				}
 				else
 				{
-					//outputSearchXML(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
+					outputSearchXML(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
 				}
 			}
 			else if (request.getParameter(SAMPLE_ID) != null){
