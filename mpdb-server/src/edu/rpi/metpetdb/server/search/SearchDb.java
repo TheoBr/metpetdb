@@ -233,7 +233,7 @@ public class SearchDb {
 		// Either do chemical analysis -> subsample -> Sample search if they
 		// have chem anal restrictions
 		// Or just Sample search if no chem anal restrictions
-
+		System.out.println(session.toString());
 		final User u = userSearching;
 		final int userId;
 		if (u == null)
