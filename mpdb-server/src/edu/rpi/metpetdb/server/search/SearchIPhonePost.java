@@ -94,7 +94,6 @@ public class SearchIPhonePost extends HttpServlet {
 		while(scanner.hasNextLine())
 		{
 			iterations++;
-			response.getWriter().write("iterations= " + iterations);
 			Scanner lineScan= new Scanner(scanner.nextLine());
 			//each individual search criteria will be on its own line in the format criteria = value
 			//we can therefore use an equal sign as a delimiter
@@ -106,7 +105,7 @@ public class SearchIPhonePost extends HttpServlet {
 				criteriaType= lineScan.next();
 				value= lineScan.next();
 			}
-			response.getWriter().write("Current line of input:\n");
+			/*response.getWriter().write("Current line of input:\n");
 			response.getWriter().write(criteriaType + " " + value + "\n");
 			
 			response.getWriter().write("criteriaType: ");
@@ -118,7 +117,7 @@ public class SearchIPhonePost extends HttpServlet {
 				response.getWriter().write(r.getRockType());
 			response.getWriter().write("outputing minerals ");
 			for(Mineral m : minerals)
-				response.getWriter().write(m.getName() + "\n");
+				response.getWriter().write(m.getName() + "\n");*/
 	
 
 		//test to see what the first word of the input is and call the functions in the rest of the 

@@ -301,8 +301,11 @@ public class SearchDb {
 			}
 			org.hibernate.Query resultQuery = session.createQuery("from Sample s where s.id in (" + sampleIds + ")");
 			org.hibernate.Query sizeQuery = session.createQuery("select count(*) " + resultQuery.getQueryString());
+			System.out.println("Search resultQuery:" + resultQuery.getQueryString());
+			System.out.println("Search sizeQuery:" + sizeQuery.getQueryString());
 			resultQuery = setPagination(p,resultQuery,session,true);
 			List<Sample> list = resultQuery.list();
+			System.out.println("Search query result list:" + list.toString());
 			if (list.size() == 0)
 				list = new ArrayList<Sample>();
 			final Results<Sample> results = new Results<Sample>(((Long)sizeQuery.uniqueResult()).intValue(),list);
