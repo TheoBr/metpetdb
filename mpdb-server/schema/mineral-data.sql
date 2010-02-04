@@ -270,7 +270,6 @@ insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((
 insert into minerals (mineral_id, real_mineral_id, name)  VALUES (nextval('mineral_seq'), currval('mineral_seq'), 'Spinel Group');
 insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Oxides'),(select mineral_id from minerals where name='Spinel Group'));
 insert into minerals (mineral_id, real_mineral_id, name)  VALUES (nextval('mineral_seq'),(select mineral_id from minerals where name='Spinel Group'), 'Spinel');
-insert into minerals (mineral_id, real_mineral_id, name)  VALUES (nextval('mineral_seq'), currval('mineral_seq'), 'Spinel');
 insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Spinel Group'),(select mineral_id from minerals where name='Spinel'));
 insert into minerals (mineral_id, real_mineral_id, name)  VALUES (nextval('mineral_seq'), currval('mineral_seq'), 'Magnetite');
 insert into mineral_relationships (parent_mineral_id, child_mineral_id) VALUES((select mineral_id from minerals where name='Spinel Group'),(select mineral_id from minerals where name='Magnetite'));

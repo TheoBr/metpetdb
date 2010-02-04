@@ -215,7 +215,7 @@ CONSTRAINT samples_metgrade_fk_metgrade FOREIGN KEY (metamorphic_grade_id)
 CREATE TABLE sample_metamorphic_regions
 ( 
   sample_id INT8 NOT NULL,
-  metamorphic_grade_id INT2 NOT NULL,
+  metamorphic_region_id INT2 NOT NULL,
   CONSTRAINT samples_metregion_pk PRIMARY KEY (sample_id, metamorphic_region_id),
   CONSTRAINT samples_metregion_fk_samples FOREIGN KEY (sample_id)
      REFERENCES samples (sample_id),

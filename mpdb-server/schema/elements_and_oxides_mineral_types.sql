@@ -10,8 +10,6 @@ insert into oxide_mineral_types values((select oxide_id from oxides where specie
 insert into oxide_mineral_types values((select oxide_id from oxides where species='Na2O'),(select mineral_type_id from mineral_types where name='Silicates'));
 insert into oxide_mineral_types values((select oxide_id from oxides where species='K2O'),(select mineral_type_id from mineral_types where name='Silicates'));
 insert into oxide_mineral_types values((select oxide_id from oxides where species='H2O'),(select mineral_type_id from mineral_types where name='Silicates'));
-insert into oxide_mineral_types values((select oxide_id from oxides where species='Cl'),(select mineral_type_id from mineral_types where name='Silicates'));
-insert into oxide_mineral_types values((select oxide_id from oxides where species='F'),(select mineral_type_id from mineral_types where name='Silicates'));
 
 --Oxide oxides
 insert into oxide_mineral_types values((select oxide_id from oxides where species='SiO2'),(select mineral_type_id from mineral_types where name='Oxides'));
@@ -67,8 +65,6 @@ insert into oxide_mineral_types values((select oxide_id from oxides where specie
 insert into oxide_mineral_types values((select oxide_id from oxides where species='Na2O'),(select mineral_type_id from mineral_types where name='Other'));
 insert into oxide_mineral_types values((select oxide_id from oxides where species='K2O'),(select mineral_type_id from mineral_types where name='Other'));
 insert into oxide_mineral_types values((select oxide_id from oxides where species='H2O'),(select mineral_type_id from mineral_types where name='Other'));
-insert into oxide_mineral_types values((select oxide_id from oxides where species='Cl'),(select mineral_type_id from mineral_types where name='Other'));
-insert into oxide_mineral_types values((select oxide_id from oxides where species='F'),(select mineral_type_id from mineral_types where name='Other'));
 
 --Elements Silicates
 insert into element_mineral_types values((select element_id from elements where symbol='Si'),(select mineral_type_id from mineral_types where name='Silicates'));
