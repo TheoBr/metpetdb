@@ -45,6 +45,7 @@ import edu.rpi.metpetdb.server.search.SearchIPhone;
 
 
 public class SearchIPhonePost extends HttpServlet {
+	
 	//make global variables out of all the search criteria and the session
 	private static Session session;
 	private static Set<String> owners= new HashSet();
@@ -68,7 +69,7 @@ public class SearchIPhonePost extends HttpServlet {
 		metamorphicGrades= new HashSet();
 		minerals= new HashSet();
 		region= "";
-		p= new PaginationParameters();
+		p= null;
 		criteria= "";
 		String username= new String();
 		
@@ -105,20 +106,6 @@ public class SearchIPhonePost extends HttpServlet {
 				criteriaType= lineScan.next();
 				value= lineScan.next();
 			}
-			/*response.getWriter().write("Current line of input:\n");
-			response.getWriter().write(criteriaType + " " + value + "\n");
-			
-			response.getWriter().write("criteriaType: ");
-			response.getWriter().write(criteriaType+ "\n");
-			response.getWriter().write("value: ");
-			response.getWriter().write(value+ "\n");
-			response.getWriter().write("outputing rock types ");
-			for(RockType r : rockTypes )
-				response.getWriter().write(r.getRockType());
-			response.getWriter().write("outputing minerals ");
-			for(Mineral m : minerals)
-				response.getWriter().write(m.getName() + "\n");*/
-	
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
 		//file accordingly]
@@ -151,32 +138,26 @@ public class SearchIPhonePost extends HttpServlet {
 		//the scanner
 		else if(criteriaType.equals("rockType"))
 		{
-			response.getWriter().write(value+ " has been added as a rock type\n");
 			String tempRockType= value;
 			RockType rt= new RockType(tempRockType);
 			rockTypes.add(rt);
 		}
 		else if(criteriaType.equals("mineral"))
 		{
-			response.getWriter().write(value+ " has been added as a mineral\n");
 			String tempMineral= value;
-			response.getWriter().write(tempMineral);
 			Mineral min= new Mineral();
 			min.setName(tempMineral);
 			minerals.add(min);
 		}
 		else if(criteriaType.equals("metamorphicGrade"))
 		{
-			response.getWriter().write(value+" has been added as a metamorphic grade");
 			String tempMetGrade= value;
-			response.getWriter().write(tempMetGrade);
 			MetamorphicGrade mg= new MetamorphicGrade(tempMetGrade);
 			metamorphicGrades.add(mg);
 		}
 		else if(criteriaType.equals("owner"))
 		{
 			String tempOwner= value;
-			response.getWriter().write(tempOwner);
 			owners  = new HashSet();
 			owners.add(tempOwner);
 		}
