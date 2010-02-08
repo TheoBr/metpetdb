@@ -14,6 +14,7 @@
     <property name="secondAuthors" column="second_authors"/>
     <property name="journalName" column="journal_name"/>
     <property name="fullText" column="full_text"/>
+    <property name="filename" column="filename"/>
   </class>
   
   <query name="GeoReference.byName">

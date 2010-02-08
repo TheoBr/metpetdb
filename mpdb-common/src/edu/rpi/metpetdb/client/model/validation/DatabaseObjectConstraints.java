@@ -118,6 +118,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint GeoReference_secondAuthors;
 	public StringConstraint GeoReference_journalName;
 	public StringConstraint GeoReference_fullText;
+	public StringConstraint GeoReference_filename;
 
 	// ------ Image Type ------
 	public PropertyConstraint[] ImageType__all;

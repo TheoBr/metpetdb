@@ -1,0 +1,1 @@
+ALTER TABLE georeference ADD COLUMN filename VARCHAR(256);

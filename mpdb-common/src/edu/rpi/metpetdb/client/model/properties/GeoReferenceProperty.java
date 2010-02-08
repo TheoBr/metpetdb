@@ -47,5 +47,14 @@ public enum GeoReferenceProperty implements Property<GeoReference> {
 		public void set(final GeoReference geoReference, final Object fullText) {
 			((GeoReference) geoReference).setFullText((String) fullText);
 		}
+	},
+	filename {
+		public String get(final GeoReference geoReference) {
+			return ((GeoReference) geoReference).getFilename();
+		}
+
+		public void set(final GeoReference geoReference, final Object filename) {
+			((GeoReference) geoReference).setFilename((String) filename);
+		}
 	};
 }

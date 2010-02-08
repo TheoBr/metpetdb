@@ -9,6 +9,7 @@ public class GeoReference  extends MObject implements Comparable {
 	private String secondAuthors;
 	private String journalName;
 	private String fullText;
+	private String filename;
 	
 	public short getId(){
 		return id;
@@ -56,6 +57,14 @@ public class GeoReference  extends MObject implements Comparable {
 	
 	public void setFullText(final String t){
 		fullText = t;
+	}
+	
+	public String getFilename(){
+		return filename;
+	}
+	
+	public void setFilename(final String f){
+		filename = f;
 	}
 
 	@Override
