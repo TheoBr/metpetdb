@@ -1,0 +1,118 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+ <title>SampleObject - MetPetDB</title><link rel="alternate" href="SampleObject?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="SampleObject?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="SampleObject?format=pdf" title="PDF" type="text/x-trac-wiki" /><style type="text/css">
+</style>
+ 
+</head>
+<body>
+
+   <div class="wikipage">
+    <div id="searchable"><p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+<hr />
+
+<h1 id="SampleObject">Sample Object</h1>
+<h2 id="REQUIREDFIELDS">REQUIRED FIELDS</h2>
+<dl><dt>SAMPLE NUMBER</dt><dd>
+Each sample name must be unique to the sample owner. That is, there may be more than one sample with a specific number (e.g. 93-24) but only one sample with a particular owner can have this number.  Note that there is no case sensetivity, so v-10=V-10.
+</dd></dl>
+<dl><dt>ROCK TYPE</dt><dd>
+This is not an exercise in taxonomy. However, every rock in the database must have a name. The "Rock Type" must be from list of rock types (see Appendix A). Additionally, multiple rock names are not only permitted, but encouraged (simply add an additional rock names as "Comments" – see below). However, a single rock type is required. The list of <a class="wiki" href="RockType.html">rock types</a> is largely from the British Geological Survey's recommendations.
+</dd></dl>
+<dl><dt>LATITUDE</dt><dd>
+Must be between -90 and 90 (negative for south).  Units are decimal degrees (DD.DDDDD).  Note that five (5) decimal places corresponds to roughly 1 meter spatial resolution.
+</dd></dl>
+<dl><dt>LONGITUDE</dt><dd>
+Must be between -180 and 180 (negative for west).  Units are decimal degrees (DD.DDDDD).
+</dd></dl>
+<p>
+<br />
+</p>
+<h2 id="OPTIONALFIELDS">OPTIONAL FIELDS</h2>
+<dl><dt>LOCATION ERROR</dt><dd>
+<ul><li>Units are in meters
+</li><li>Latitude/longitude errors are an optional field for samples that are not well located.  Errors are assumed to be the same in all directions.
+</li></ul></dd></dl>
+<dl><dt>IGSN</dt><dd>
+IGSN (International Geological Sample Numbers) are unique identifiers that are created by SESAR (System for Earth SAmple Registration <a class="ext-link" href="http://www.geosamples.org/"><span class="icon">http://www.geosamples.org/</span></a>). You must register your samples to obtain an IGSN. If you have an IGSN you can enter it here. We plan to have a tool for automatic sample registration through MetPetDB in the future. 
+</dd></dl>
+<dl><dt>REGION</dt><dd>
+<ul><li>This is the region from which the sample was collected. It can be any text you choose and there can be any number of regions. Regions can be geographic (e.g. Alps, Valhalla Complex, Raging River Valley, Pine Island) or political (e.g. Vermont, Cooke County).
+</li><li>When specifying multiple regions, put each distinct region in a separate spreadsheet column. Each column should be headed by the word "Region".
+</li><li>Also: you may want to look through the database to see if your region already exists.  Please conform to existing spellings for your region.  Suggestions can be made to MetPetDB administrators.
+</li></ul></dd></dl>
+<dl><dt>COUNTRY</dt><dd>
+Where sample was collected.  Pretty obvious, except where countries change names or the boundaries change. For consistency, input the country of collection at the time the sample was collected.
+</dd></dl>
+<dl><dt>ALIAS (alternate sample number)</dt><dd>
+In some cases the same rock sample has been referred to by different sample numbers. These are sample aliases. There can be any number of aliases.
+</dd></dl>
+<dl><dt>COLLECTOR</dt><dd>
+The name of the person who collected the sample.  Preferred format: Lastname, First name middle initial.
+</dd></dl>
+<dl><dt>DATE OF COLLECTION</dt><dd>
+Must be a date in MM-DD-YYYY, YYYY-MM-DD or a shortened version (i.e. YYYY, or, YYYY-MM). <a class="wiki" href="Dates.html">Notes on entering dates for upload to MetPedDB</a>.
+</dd></dl>
+<dl><dt>PRESENT SAMPLE LOCATION</dt><dd>
+Institution, department, or lab where the sample currently resides (in case someone wishes to find the sample).
+</dd></dl>
+<dl><dt>METAMORPHIC GRADE</dt><dd>
+This is the grade of metamorphism. The grade must be from the list of <a class="wiki" href="MetamorphicGrade.html">metamorphic grades</a>. A sample may have zero or more metamorphic grades. Alternate descriptions of the metamorphic grade are encouraged, and should included as "Comments".
+</dd></dl>
+<dl><dt>REFERENCE</dt><dd>
+MetPetDB uses the year and the GeoRef accession number (the same as NAVDAT), which can be found from a GeoRef search.  For example, “1983-018415”. Data that are published require a reference to the publication. References in non-publication data may be included to direct a user to a publication that includes a reference to this sample or another version of it.
+</dd></dl>
+<dl><dt>COMMENT</dt><dd>
+There may be any number of comment columns.  You can input alternate rock names or alternate descriptions of the metamorphic grade (or anything else) as comments. <strong>RE: Bulk Upload</strong> For organization purposes, it is probably best to put separate types of information in separate comment columns, rather than strung together in a single comment. The key to using the comment field is to put in information that will describe the sample, and will help others find it in a search.
+</dd></dl>
+<dl><dt>MINERALS PRESENT and MINERAL MODES</dt><dd>
+A list of minerals present in the sample and, if available, the modes of the minerals are very useful information. For an individual spreadsheet, the format is to
+</dd></dl>
+<ul><li>(1) Put the name of a specific mineral as the column header.  Headers must be from <a class="wiki" href="Mineral.html">LIST OF MINERALS</a>.
+</li><li>(2) If the mineral is present but the mode is unknown, put "x" in the field
+</li><li>(3) If the mineral is present and the mode is known, put the mode in the field (note: modes typically sum to 100%).
+</li><li>(4) If the mineral is not present, leave the field blank.
+</li></ul><blockquote>
+<p>
+For example, for a suite of schists, this part of the spreadsheet might look like this:
+</p>
+</blockquote>
+<blockquote>
+<table class="wiki">
+<tr><td>Quartz</td><td>Plagioclase</td><td>Muscovite</td><td>Biotite</td><td>Garnet</td><td>Chlorite</td><td>Ilmenite</td><td>Zircon</td><td>Staurolite</td><td>Kyanite
+</td></tr><tr><td>x        </td><td>x        </td><td>x        </td><td>x        </td><td>x </td><td>x        </td><td>x </td><td> </td><td> </td><td> 
+</td></tr><tr><td>30        </td><td>5        </td><td>30        </td><td>20        </td><td>10        </td><td>1 </td><td> </td><td> </td><td>  
+</td></tr><tr><td>x        </td><td>x        </td><td>x        </td><td>20        </td><td>x        </td><td>&lt;1        </td><td>?        </td><td>x </td><td> </td><td>  
+</td></tr><tr><td>x        </td><td>x        </td><td>x        </td><td>x        </td><td>x        </td><td>x        </td><td>x        </td><td>x </td><td> </td><td>  
+</td></tr></table>
+</blockquote>
+<h3 id="NonNumerics">Any text or number field is permissible and signifies a mineral is present.</h3>
+<p>
+ 
+</p>
+<blockquote>
+<p>
+Common usage includes:
+</p>
+</blockquote>
+<ul><li>[A number] = mode
+</li><li>&lt; or &gt; [a number]
+</li><li>x = present
+</li><li>? = may be present
+</li><li>t = present in trace amounts
+</li></ul><hr />
+<p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+</div>
+   </div>
+   
+  
+ 
+ </body>
+</html>
+

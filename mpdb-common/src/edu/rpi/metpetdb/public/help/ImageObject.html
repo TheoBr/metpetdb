@@ -1,0 +1,81 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+ <title>ImageObject - MetPetDB</title><link rel="alternate" href="ImageObject?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="ImageObject?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="ImageObject?format=pdf" title="PDF" type="text/x-trac-wiki" /><style type="text/css">
+</style>
+ 
+</head>
+<body>
+
+
+
+   <div class="wikipage">
+    <div id="searchable"><p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+<hr />
+
+<h1 id="ImageObject">Image Object</h1>
+<p>
+Associated with one or more <a class="wiki" href="Sample.html">samples</a> and one or more <a class="wiki" href="Subsample.html">subsamples</a>.
+</p>
+<p>
+More information on images <a class="wiki" href="Image.html">here</a>.
+</p>
+
+<h2 id="REQUIREDFIELDS">REQUIRED FIELDS</h2>
+<dl><dt>SAMPLE NUMBER</dt><dd>
+Must correlate to existing sample in the database.  (<a class="wiki" href="HowToUploadData.html#Images">Upload help</a>)
+</dd></dl>
+<dl><dt>FILE (or PATH)</dt><dd>
+The complete filename of the <a class="wiki" href="Image.html">image</a> as it appears in the zipped folder, including a .xxx extension indicating the file format (e.g. samp1_polish_scan.jpg).  Path notation may be used for subdirectories, using slashes between each subdirectory (e.g.: zipfolder/08-1xraymaps/08-1Femap.jpg)
+</dd></dl>
+<dl><dt>IMAGE TYPE</dt><dd>
+Must be from <a class="wiki" href="Image.html#Types">list of acceptable image types</a>. Note that abbreviations may be used for certain image types.
+</dd></dl>
+<dl><dt>ELEMENT -required x-ray maps</dt><dd>
+The <a class="wiki" href="Element.html">element</a> or species that was measured to create an x-ray map.
+</dd></dl>
+<h2 id="OPTIONALFIELDS">OPTIONAL FIELDS</h2>
+<dl><dt>SUBSAMPLE</dt><dd>
+Must either (1) correlate to existing <a class="wiki" href="Subsample.html">subsample</a> of the given sample number, or (2) if a subsample has not yet been created, you may create one with an appropriate name here, as long as you provide the subsample type (see below).
+</dd></dl>
+<p>
+        
+<dl><dt>SUBSAMPLE TYPE &#x2012; required to create subsamples at bulk upload</dt><dd>
+In order to create a subsample during bulk upload of images, you must specify a type for the new subsample.  Subsample types accepted: Thin section, Polished thin section, Rock Chip, or Mineral separate.  Subsample type only needs to be specified for the first chemical analysis for a particular subsample in a list.  For example, if you have a thin section scan of a new polished thin section that you want to upload, you only need to enter 'polished thin section' in the subsample type column for the first (topmost) analysis.
+</p>
+</dd></dl>
+<dl><dt>SCALE</dt><dd>
+Full width of image measured along the actual sample in millimeters.  For example, a horizontal scan of a full standard thin section should have a scale of ~46 mm.
+</dd></dl>
+<dl><dt>COLLECTOR</dt><dd>
+The person who collected the image, as this may not be the sample owner.  Preferred format: Lastname, First initial.
+</dd></dl>
+<dl><dt>DWELL TIME</dt><dd>
+Value in milliseconds for x-ray maps.
+</dd></dl>
+<dl><dt>CURRENT</dt><dd>
+Value in nanoAmps for x-ray maps.
+</dd></dl>
+<dl><dt>VOLTAGE</dt><dd>
+Value in kilovolts for x-ray maps.
+</dd></dl>
+<dl><dt>COMMENT</dt><dd>
+There may be any number of comment columns.  You can input any type of description of the analytical strategy.
+</dd></dl>
+<hr />
+<p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+</div>
+   </div>
+   
+  
+ 
+
+ </body>
+</html>
+

@@ -1,0 +1,64 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+ <title>ChemicalAnalysis - MetPetDB</title><link rel="alternate" href="ChemicalAnalysis?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="ChemicalAnalysis?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="ChemicalAnalysis?format=pdf" title="PDF" type="text/x-trac-wiki" /><style type="text/css">
+</style>
+ 
+</head>
+<body>
+
+
+ 
+  
+  
+   
+   <div class="wikipage">
+    <div id="searchable"><p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+<hr />
+<h1 id="ChemicalAnalysis">Chemical Analysis</h1>
+<p>
+Chemical analyses of <a class="wiki" href="Mineral.html">minerals</a> is at the core of quantitative metamorphic geochemistry. The database will:
+</p>
+<ul><li>Provide flexibility for storing all types of chemical data including
+<ul><li>Major <a class="wiki" href="Element.html">elements</a>
+</li><li>Trace elements
+</li><li>Isotopic data (not yet implemented)
+</li></ul></li><li>Indicate precision of a value
+</li><li>Preserve the spatial location of an analysis (where known)
+<ul><li>This will be accomplished by reference to a reference image and coordinates on that image
+</li></ul></li></ul><h2 id="RequiredformatforChemicalAnalysisUpload">Required format for <a class="wiki" href="HowToUploadData.html#ChemicalAnalysis">Chemical Analysis Upload</a></h2>
+<p>
+Chemical analyses are referenced to a <a class="wiki" href="Sample.html">sample number</a> and a <a class="wiki" href="Subsample.html">subsample</a>, which are required.  The sample must be <a class="wiki" href="HowToUploadData.html#Sample">uploaded</a>/added first, before chemical analyses can be uploaded.  An upload spreadsheet contains data arranged in columns, each with an <a class="wiki" href="UploadHeaders.html">appropriate header</a>.  
+</p>
+<p>
+The following is a list of accepted headers, with notes as to which fields are required for every uploaded analysis.
+</p>
+<ul><li>The first row is reserved for the column headers.
+</li><li>The second row is reserved for units (chemical analysis and precision).
+</li><li>Each additional row should contain data for each analysis to be uploaded.
+</li><li>Only some fields are required in order to upload your data, as indicated below, but we encourage you to be thorough to maintain a database that is as versatile as possible.
+</li></ul><p>
+Please note that chemical analyses must be in weight percent, ppm, or ppb, and molar percents will be calculated by the database with a user specified method (coming soon).
+</p>
+<p>
+All uploaded chemical analyses will initially be private.  They may then be made public once they are in <strong>My Samples</strong>.  You are encouraged to check your uploaded data for accuracy before making it public.
+</p>
+<h2 id="Analysisdatadescription">Analysis data description</h2>
+<p>
+For more information see <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Object</a>.
+</p>
+<hr />
+<p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+</div>
+   </div>
+  
+
+ </body>
+</html>
+

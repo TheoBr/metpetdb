@@ -1,0 +1,61 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+ <title>Sample - MetPetDB</title><link rel="alternate" href="Sample?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="Sample?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="Sample?format=pdf" title="PDF" type="text/x-trac-wiki" /><style type="text/css">
+</style>
+ 
+</head>
+<body>
+
+   <div class="wikipage">
+    <div id="searchable"><p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+<hr />
+<h1 id="Sample">Sample</h1>
+<p>
+The basic unit of information is based on the physical sample, which is typically the hand sample collected in the field. (See page on general description of data types for a more general overview)
+</p>
+<p>
+The types of information that will be stored for a sample include the following items. 
+</p>
+<ul><li>The letter "R" means it is required. 
+</li><li>The number preceding the data descriptor indicates the number of possibility entries. Note that required fields have one and only 1 entry. 
+</li><li>The minimum amount of information about a sample is a unique sample number, location, and rock type.
+</li></ul><table class="wiki">
+<tr><td>Required</td><td>Number</td><td>Data Name</td><td>Units</td><td>Notes
+</td></tr><tr><td>R</td><td>1 </td><td>Owner</td><td></td><td>automatically assigned as user name
+</td></tr><tr><td>R </td><td>1 </td><td>Sample number</td><td> </td><td>user's personal sample identifier
+</td></tr><tr><td>R </td><td>1 </td><td><a class="wiki" href="RockType.html">Rock Type</a></td><td> 
+</td></tr><tr><td>R </td><td>1 </td><td>Longitude</td><td>decimal degrees</td><td> 
+</td></tr><tr><td>R </td><td>1 </td><td>Latitude</td><td>decimal degrees</td><td> 
+</td></tr><tr><td>R*</td><td>0-n</td><td>Reference</td><td> </td><td>published data require a reference
+</td></tr><tr><td></td><td>0-1 </td><td>Location error</td><td>meters</td><td> 
+</td></tr><tr><td></td><td>0-1</td><td>IGSN</td><td> </td><td> (SESAR)
+</td></tr><tr><td></td><td>0-n</td><td><a class="wiki" href="Region.html">Region</a></td><td> </td><td>Geographic descriptor
+</td></tr><tr><td></td><td>0-1</td><td>Country</td><td> 
+</td></tr><tr><td></td><td>0-n </td><td>Alias</td><td> </td><td>multiple aliases possible
+</td></tr><tr><td></td><td>0-1 </td><td>Collector</td><td> </td><td> 
+</td></tr><tr><td></td><td>0-1</td><td>Date of collection</td><td><a class="wiki" href="Dates.html">YYYY-MM-DD</a></td><td>
+</td></tr><tr><td></td><td>0-1</td><td>Present sample location</td><td> </td><td>
+</td></tr><tr><td></td><td>0-n</td><td><a class="wiki" href="MetamorphicGrade.html">Metamorphic Grade</a></td><td> </td><td>
+</td></tr><tr><td></td><td>0-n</td><td><a class="wiki" href="Comment.html">Comment</a></td><td> </td><td>multiple comments possible
+</td></tr><tr><td></td><td>0-n</td><td><a class="wiki" href="Mineral.html">Minerals present</a></td><td>modal percent</td><td>use mineral names as headers
+</td></tr></table>
+<p>
+Addition information about <a class="wiki" href="SampleObject.html">Sample Attributes</a>                        
+</p>
+<hr />
+<p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+</div>
+   </div>
+   
+  
+
+ </body>
+</html>
+
