@@ -244,7 +244,7 @@ CREATE TABLE georeference
   second_authors VARCHAR(480),
   journal_name VARCHAR(128) NOT NULL,
   full_text VARCHAR(1024) NOT NULL,
-  filename VARCHAR(256) NOT NULL,
+  filename VARCHAR(256),
   CONSTRAINT georeference_sk PRIMARY KEY (georef_id)
 ) WITHOUT OIDS;
 

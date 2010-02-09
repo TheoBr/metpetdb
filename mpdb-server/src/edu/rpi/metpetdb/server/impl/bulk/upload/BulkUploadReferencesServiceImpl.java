@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
@@ -37,28 +38,41 @@ public class BulkUploadReferencesServiceImpl extends BulkUploadService implement
 		rp.parse();
 		results.setHeaders(rp.getHeaders());
 		final Map<Integer, GeoReference> references = rp.getReferences();
+		final List<String> sampleNumbers = rp.getSampleNumbers();
 		addErrors(rp, results);
 		addWarnings(rp, results);
 		final BulkUploadResultCount resultCount = new BulkUploadResultCount();
 		final Iterator<Integer> rows = references.keySet().iterator();
+		final Iterator<String> sampleItr = sampleNumbers.iterator();
 		while (rows.hasNext()) {
 			final int row = rows.next();
 			final GeoReference gr = references.get(row);
 			initObject(gr);
-			/*try {
-				//GeoReferenceDAO geoDao = new GeoReferenceDAO()
-				if (geoDao.isNew(gr))
+			try {
+				if (gr.getFilename() == null) {
+					results.addError(row, new PropertyRequiredException(
+							"Reference Path"));
+					continue;
+				}
+				//Make sure the sample actually exists before trying to fill in GeoRef Data
+				Sample s = new Sample();
+				initObject(s);
+				String sampleNumber = sampleItr.next();
+				s.setNumber(sampleNumber);
+				if (!sampleDao.isNew(s)){
+					sampleDao.fill(s);
+					/*if (save)
+						sampleDao.save(s);*/
 					resultCount.incrementFresh();
-				else
-					resultCount.incrementOld();
-				if (save)
-					sampleDao.save(s);
+				} else{
+					//Sample doesn't exist, can't add a reference to nothing
+					resultCount.incrementInvalid();
+				}
 			} catch (Exception e) {
 				resultCount.incrementInvalid();
-				results.addError(row, getNiceException(e, s));
-			}*/
+				results.addError(row, getNiceException(e, gr));
+			} 
 		}
 		results.addResultCount("Reference", resultCount);
 	}
-
 }

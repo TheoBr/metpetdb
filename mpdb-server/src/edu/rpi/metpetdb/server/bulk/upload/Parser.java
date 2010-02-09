@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,6 +59,7 @@ public abstract class Parser<T extends MObject> {
 	protected static Collection<Element> elements;
 	protected static Collection<Oxide> oxides;
 	protected static Collection<ImageType> imageTypes;
+	protected static List<String> sampleNumbers;
 	protected final Map<Integer, BulkUploadHeader> headers = new HashMap<Integer, BulkUploadHeader>();
 	protected static DatabaseObjectConstraints doc = DataStore.getInstance()
 			.getDatabaseObjectConstraints();
@@ -235,6 +237,10 @@ public abstract class Parser<T extends MObject> {
 	public static void setImageTypes(final Collection<ImageType> imageTypes) {
 		Parser.imageTypes = imageTypes;
 	}
+	
+	public List<String> getSampleNumbers(){
+		return Parser.sampleNumbers;
+	}
 
 	protected final void parseRow(final int rowindex) {
 		final HSSFRow row = sheet.getRow(rowindex);
@@ -267,6 +273,13 @@ public abstract class Parser<T extends MObject> {
 									new ExpectedStringColumnTypeException(),
 									cell.toString()));
 						}
+					//Store Sample numbers in a container 
+					if (pc == doc.Sample_number){
+						if(sampleNumbers == null)
+							sampleNumbers = new ArrayList<String>();
+						sampleNumbers.add(cell.toString());
+					}
+
 				}
 
 				if (pc != null && cell != null && !cell.toString().matches("^\\s*$")
