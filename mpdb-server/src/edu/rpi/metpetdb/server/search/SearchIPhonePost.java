@@ -53,7 +53,7 @@ public class SearchIPhonePost extends HttpServlet {
 	private static Set<MetamorphicGrade> metamorphicGrades= new HashSet();
 	private static Set<Mineral> minerals= new HashSet();
 	private static String region= new String();
-	private static PaginationParameters p= new PaginationParameters();
+	private static PaginationParameters p;
 	private static String criteria= "";
 	//initialize the coordinates to -1 so we can see if they have been given values
 	private static double north= -1;
@@ -167,6 +167,7 @@ public class SearchIPhonePost extends HttpServlet {
 		}
 		else if(criteriaType.equals("pagination"))
 		{
+			p= new PaginationParameters();
 			int param= Integer.parseInt(value);
 			p.setFirstResult(param);
 			p.setMaxResults(5);
