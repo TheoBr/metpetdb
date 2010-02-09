@@ -489,9 +489,6 @@ public class SearchIPhone extends HttpServlet{
 		Double maxLat= -90.0;
 		Double minLong= 180.0;  //initialize to somthing bigger than it could be so something is guaranteed to be smaller
 		Double minLat= 90.0;
-		response.getWriter().write("Size of List:");
-		response.getWriter().write(results.getCount());
-		response.getWriter().write(sampleList.size());
 		
 		for(int i=0; i<sampleList.size(); i++)
 		{
