@@ -530,8 +530,8 @@ public class SearchIPhone extends HttpServlet{
 		response.getWriter().write("<criteriaMinerals>");
 		for(SampleMineral min : currentMinerals)
 		{
-			//x.toXML(min.getName(), response.getWriter());
-			response.getWriter().write(min.getName());
+			x.toXML(min.getName(), response.getWriter());
+			//response.getWriter().write(min.getName());
 		}
 		response.getWriter().write("</criteriaMinerals>");
 		
