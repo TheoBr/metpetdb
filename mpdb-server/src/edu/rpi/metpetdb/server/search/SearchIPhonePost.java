@@ -178,31 +178,31 @@ public class SearchIPhonePost extends HttpServlet {
 		else if(criteriaType.equals("sampleID"))
 		{
 			sampleIds.add(Long.parseLong(value));
-			SearchIPhone.sampleInfo(sampleIds,response);
+			SearchIPhone.sampleInfo(session, sampleIds,response);
 		}
 		else if(criteriaType.equals("comments"))
 		{
 			//the number following comments= will be the id of the sample we want comments for
 			long id= Long.parseLong(value);
-			SearchIPhone.comments(response, id);
+			SearchIPhone.comments(session, response, id);
 		}
 		else if(criteriaType.equals("subsampleInfo"))
 		{
 			//the number following subsampleInfo= will be the id of the sample we want comments for
 			long id= Long.parseLong(value);
-			SearchIPhone.subsampleInfo(response, id);
+			SearchIPhone.subsampleInfo(session, response, id);
 		}
 		else if(criteriaType.equals("thumbnails"))
 		{
 			//the number following the thumbnails= will be the id of the sample we want thumbnails for
 			long id=Long.parseLong(value);
-			SearchIPhone.get_thumbnails(response, id);
+			SearchIPhone.get_thumbnails(session, response, id);
 		}
 		else if(criteriaType.equals("largeImage"))
 		{
 			//the number following the largeImage= will be id of the image we want to enlarge
 			long imageID= Long.parseLong(value);
-			SearchIPhone.get_large_image(response, imageID);
+			SearchIPhone.get_large_image(session, response, imageID);
 		}
 		else if(criteriaType.equals("addComment"))
 		{

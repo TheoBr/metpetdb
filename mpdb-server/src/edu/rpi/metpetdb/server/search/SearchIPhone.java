@@ -201,7 +201,7 @@ public class SearchIPhone extends HttpServlet{
 			else if (request.getParameter(SAMPLE_ID) != null){
 				for (String id : request.getParameterValues(SAMPLE_ID))
 					sampleIds.add(Long.parseLong(id));
-				sampleInfo(sampleIds,response);
+				sampleInfo(session, sampleIds,response);
 			} else if (request.getParameter(REGIONS) != null){
 				if (request.getParameterValues(REGIONS)[0].equalsIgnoreCase("t")){
 					regions(response, session);
@@ -214,24 +214,24 @@ public class SearchIPhone extends HttpServlet{
 			else if (request.getParameter(COMMENTS) != null){
 			
 				long id= Long.parseLong(request.getParameterValues(COMMENTS)[0]);
-				comments(response, id);
+				comments(session, response, id);
 			}
 			else if (request.getParameter(SUBSAMPLE_INFO)!= null)
 			{
 				//using the sample id, get a summary of the subsample and analysis information
 				long id= Long.parseLong(request.getParameterValues(SUBSAMPLE_INFO)[0]);
-				subsampleInfo(response, id);
+				subsampleInfo(session, response, id);
 			}
 			else if (request.getParameter(THUMBNAILS)!=null)
 			{
 				long id= Long.parseLong(request.getParameterValues(THUMBNAILS)[0]);
-				get_thumbnails(response, id);
+				get_thumbnails(session, response, id);
 			}
 			else if (request.getParameter(LARGE_IMAGE)!=null)
 			{
 				//the id that is passed into the url here is the id of the image, not the sample
 				long imageID= Long.parseLong(request.getParameterValues(LARGE_IMAGE)[0]);
-				get_large_image(response, imageID);
+				get_large_image(session, response, imageID);
 			}
 		}
 		catch(Exception e){
@@ -276,7 +276,7 @@ public class SearchIPhone extends HttpServlet{
 		}
 	}
 
-	public static void get_thumbnails(HttpServletResponse response, long id)
+	public static void get_thumbnails(Session session, HttpServletResponse response, long id)
 	{
 		try{
 			SampleDAO s= new SampleDAO(session);
@@ -322,7 +322,7 @@ public class SearchIPhone extends HttpServlet{
 			throw new IllegalStateException(e.getMessage());
 		}	}
 	
-	public static void get_large_image(HttpServletResponse response, long imageID)
+	public static void get_large_image(Session session, HttpServletResponse response, long imageID)
 	{
 		try{
 			final XStream x = new XStream();
@@ -358,7 +358,7 @@ public class SearchIPhone extends HttpServlet{
 	}
 	
 	
-	public static void comments(HttpServletResponse response, long id){
+	public static void comments(Session session, HttpServletResponse response, long id){
 		try{
 			final XStream x = new XStream();
 			SampleDAO s= new SampleDAO(session);
@@ -375,7 +375,7 @@ public class SearchIPhone extends HttpServlet{
 		}
 	}
 
-	public static void subsampleInfo(HttpServletResponse response, long id ){
+	public static void subsampleInfo(Session session, HttpServletResponse response, long id ){
 		try{
 			final XStream x= new XStream();
 			SampleDAO s= new SampleDAO(session);
@@ -458,7 +458,7 @@ public class SearchIPhone extends HttpServlet{
 		}
 	}
 	
-	public static void sampleInfo(List<Long> sampleIds, final HttpServletResponse response){
+	public static void sampleInfo(Session session, List<Long> sampleIds, final HttpServletResponse response){
 		try {
 			SampleDAO s= new SampleDAO(session);
 			final XStream x = new XStream();
