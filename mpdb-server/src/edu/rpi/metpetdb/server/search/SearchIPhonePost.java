@@ -243,10 +243,6 @@ public class SearchIPhonePost extends HttpServlet {
 		//and xml output from the searchIPhone file
 		if(region!="") //if a region has been provided, call searchIPhone functions to search by region
 		{
-			for(RockType r : rockTypes )
-				response.getWriter().write(r.getRockType());
-			for(Mineral m : minerals)
-				response.getWriter().write(m.getName());
 			if(criteria.equals("true"))
 			{  
 				SearchIPhone.getSearchCriteria(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
