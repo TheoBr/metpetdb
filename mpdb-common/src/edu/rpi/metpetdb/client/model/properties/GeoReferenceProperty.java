@@ -48,13 +48,13 @@ public enum GeoReferenceProperty implements Property<GeoReference> {
 			((GeoReference) geoReference).setFullText((String) fullText);
 		}
 	},
-	filename {
+	referenceNumber {
 		public String get(final GeoReference geoReference) {
-			return ((GeoReference) geoReference).getFilename();
+			return ((GeoReference) geoReference).getReferenceNumber();
 		}
 
-		public void set(final GeoReference geoReference, final Object filename) {
-			((GeoReference) geoReference).setFilename((String) filename);
+		public void set(final GeoReference geoReference, final Object referenceNumber) {
+			((GeoReference) geoReference).setReferenceNumber((String) referenceNumber);
 		}
 	};
 }

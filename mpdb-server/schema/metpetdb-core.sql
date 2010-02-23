@@ -239,13 +239,14 @@ CREATE TABLE sample_reference
 CREATE TABLE georeference
 (
   georef_id INT8 NOT NULL,
-  title VARCHAR(100) NOT NULL,
-  first_author VARCHAR(32) NOT NULL,
-  second_authors VARCHAR(480),
-  journal_name VARCHAR(128) NOT NULL,
-  full_text VARCHAR(1024) NOT NULL,
-  filename VARCHAR(256),
-  CONSTRAINT georeference_sk PRIMARY KEY (georef_id)
+  title TEXT NOT NULL,
+  first_author TEXT NOT NULL,
+  second_authors TEXT,
+  journal_name TEXT NOT NULL,
+  full_text TEXT NOT NULL,
+  reference_number TEXT,
+  CONSTRAINT georeference_sk PRIMARY KEY (georef_id),
+  CONSTRAINT ref_num_unq UNIQUE (reference_number)
 ) WITHOUT OIDS;
 
 CREATE TABLE sample_georeferences

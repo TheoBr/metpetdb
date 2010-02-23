@@ -402,6 +402,12 @@
 	where p.id = :id
   	order by (s.firstMineral)
   </query>
+  <query name="Sample.byReference">
+  	select s
+  	from Sample as s
+  	join s.references r
+  	where r.name = :number
+  </query>
   
   <query name="Sample.Collectors/Collector">
     Select Distinct collector

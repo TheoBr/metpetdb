@@ -4,12 +4,12 @@ public class GeoReference  extends MObject implements Comparable {
 	private static final long serialVersionUID = 1L;
 	
 	private short id;
+	private String referenceNumber;
 	private String title;
 	private String firstAuthor;
 	private String secondAuthors;
 	private String journalName;
 	private String fullText;
-	private String filename;
 	
 	public short getId(){
 		return id;
@@ -17,6 +17,14 @@ public class GeoReference  extends MObject implements Comparable {
 	
 	public void setId(final short i){
 		id = i;
+	}
+	
+	public String getReferenceNumber(){
+		return referenceNumber;
+	}
+	
+	public void setReferenceNumber(String r){
+		referenceNumber = r;
 	}
 	
 	public String getTitle(){
@@ -59,14 +67,6 @@ public class GeoReference  extends MObject implements Comparable {
 		fullText = t;
 	}
 	
-	public String getFilename(){
-		return filename;
-	}
-	
-	public void setFilename(final String f){
-		filename = f;
-	}
-
 	@Override
 	public boolean mIsNew() {
 		return id == 0;

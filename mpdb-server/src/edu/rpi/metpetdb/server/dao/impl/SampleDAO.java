@@ -131,6 +131,12 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		final Query q = namedQuery("Sample-ids,publicData");
 		return (List<Object[]>) getResults(q);
 	}
+	
+	public List<Sample> getSamplesForReference(final String reference) throws MpDbException{
+		final Query q = namedQuery("Sample.byReference");
+		q.setString("number", reference);
+		return (List<Sample>) getResults(q);
+	}
 
 	private Results<Sample> getSamples(Query sizeQuery, Query pageQuery) throws MpDbException {
 		final List<Sample> l = (List<Sample>) getResults(pageQuery);
