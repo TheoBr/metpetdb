@@ -370,7 +370,7 @@ public class SearchIPhone extends HttpServlet{
 			//response.getWriter().write("<commentCount>");
 			//response.getWriter().write(commentCount);
 			//response.getWriter().write("</commentCount>");
-			x.toXML(sample.getComments().size());
+			x.toXML(sample.getComments().size(), response.getWriter());
 			for (SampleComment sc : sample.getComments())
 			 	x.toXML(sc.getText() , response.getWriter());
 			response.getWriter().write("</comments>");
