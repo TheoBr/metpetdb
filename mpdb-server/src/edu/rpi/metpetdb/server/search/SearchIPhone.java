@@ -365,10 +365,12 @@ public class SearchIPhone extends HttpServlet{
 			Sample sample= new Sample();
 			sample.setId(id);
 			sample = s.fill(sample);
+			int commentCount= sample.getComments().size();
 			response.getWriter().write("<comments>");
-			response.getWriter().write("<commentCount>");
-			response.getWriter().write(sample.getComments().size());
-			response.getWriter().write("</commentCount>");
+			//response.getWriter().write("<commentCount>");
+			//response.getWriter().write(commentCount);
+			//response.getWriter().write("</commentCount>");
+			x.toXML(sample.getComments().size());
 			for (SampleComment sc : sample.getComments())
 			 	x.toXML(sc.getText() , response.getWriter());
 			response.getWriter().write("</comments>");
@@ -397,6 +399,7 @@ public class SearchIPhone extends HttpServlet{
 				totalImageCount+= sub.getImageCount();
 				totalAnalysisCount+= sub.getAnalysisCount();
 			}
+			
 			response.getWriter().write("<imageCount>");
 			x.toXML(totalImageCount, response.getWriter());
 			response.getWriter().write("</imageCount>");
