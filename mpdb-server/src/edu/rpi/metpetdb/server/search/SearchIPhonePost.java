@@ -111,20 +111,15 @@ public class SearchIPhonePost extends HttpServlet {
 		//file accordingly]
 			if(criteriaType.equals("username"))
 			{
-			response.getWriter().write("<username>");
-			username= value;
-			response.getWriter().write(username);
-			response.getWriter().write("</username>");
+				username= value;
 			}
 			else if(criteriaType.equals("password"))
 			{
-				response.getWriter().write("<password>");
 				String password= value;
-				response.getWriter().write(password);
-				response.getWriter().write("</password>");
 				UserServiceImpl userImpl= new UserServiceImpl();
 				User u= new User();
 				u= userImpl.details(username);
+				response.getWriter().write("<response>");
 				if(UserServiceImpl.authenticate(u, password))
 				{
 					response.getWriter().write("authentication succeeded");
@@ -133,6 +128,7 @@ public class SearchIPhonePost extends HttpServlet {
 				{
 					response.getWriter().write("authentication failed");
 				}
+				response.getWriter().write("</response>");
 			}
 		//assign each of the search criteria to their respective variables using 
 		//the scanner
