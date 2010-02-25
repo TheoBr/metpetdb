@@ -220,6 +220,8 @@
 		
 		<exec failonerror="true" executable="/Users/Dennis/Downloads/tomcat/bin/startup.sh"/>	
 	</target>
+	
+
 
 	<target name="eclipse" depends="setup" description="Sets up eclipse by generating the .classpath file and the launch configuration">
 		<property name="name.e" value="MetPetDB" />
@@ -267,5 +269,54 @@
 </launchConfiguration>
 ]]>
 </echo>
+		
+	</target>
+	
+	<target name="eclipse-mac" depends="setup" description="Sets up eclipse by generating the .classpath file and the launch configuration on a mac">
+			<property name="name.e" value="MetPetDB" />
+
+			<pathconvert property="libs.e" dirsep="/" pathsep="&quot;/&gt;&#10;&#09;&lt;classpathentry kind=&quot;lib&quot; path=&quot;">
+				<path refid="libs" />
+				<map from="${basedir}/" to="" />
+			</pathconvert>
+
+			<pathconvert property="gwt.e" dirsep="/" pathsep=":">
+				<path>
+					<fileset dir="${gwt_home}" includes="gwt-dev-*.jar" />
+				</path>
+			</pathconvert>
+		
+		<echo file=".classpath">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+		&lt;classpath&gt;
+			&lt;classpathentry kind="src" path="src" excluding="**/java_emu/**/*.java"/&gt;
+			&lt;classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/JVM 1.5"/&gt;
+			&lt;classpathentry kind=&quot;lib&quot; path=&quot;${libs.e}&quot;/&gt;
+			&lt;classpathentry kind="output" path="bin"/&gt;
+			&lt;classpathentry combineaccessrules="false" kind="src" path="/mpdb-common"/&gt;
+		&lt;/classpath&gt;
+		</echo>
+		
+		<echo file="mpdb-server.launch"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+			<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+			<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+			<listEntry value="/mpdb-server"/>
+			</listAttribute>
+			<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+			<listEntry value="4"/>
+			</listAttribute>
+			<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
+			<listAttribute key="org.eclipse.jdt.launching.CLASSPATH">
+			<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry containerPath=&quot;org.eclipse.jdt.launching.JRE_CONTAINER&quot; javaProject=&quot;mpdb-server&quot; path=&quot;1&quot; type=&quot;4&quot;/&gt;&#10;"/>
+			<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/mpdb-client/src&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#10;"/>
+			<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/mpdb-common/src&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#10;"/>
+			<listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&lt;runtimeClasspathEntry id=&quot;org.eclipse.jdt.launching.classpathentry.defaultClasspath&quot;&gt;&#10;&lt;memento exportedEntriesOnly=&quot;false&quot; project=&quot;mpdb-server&quot;/&gt;&#10;&lt;/runtimeClasspathEntry&gt;&#10;"/>
+			</listAttribute>
+			<booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
+			<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.google.gwt.dev.GWTShell"/>
+			<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="mpdb-server"/>
+			<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xmx256m -XstartOnFirstThread"/>
+			</launchConfiguration>
+			]]>
+		</echo>
 	</target>
 </project>

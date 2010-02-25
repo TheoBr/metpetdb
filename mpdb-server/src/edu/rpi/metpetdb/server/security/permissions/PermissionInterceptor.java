@@ -172,6 +172,7 @@ public class PermissionInterceptor extends EmptyInterceptor {
 			if (!principals.contains(new AdminPrincipal())) {
 				final int usersRank;
 				if (MpDbServlet.currentReq().user != null) {
+					System.out.println("Loading User Rank: " + MpDbServlet.currentReq().user.getEmailAddress());
 					usersRank = MpDbServlet.currentReq().user.getRank();
 				} else
 					usersRank = -1;
