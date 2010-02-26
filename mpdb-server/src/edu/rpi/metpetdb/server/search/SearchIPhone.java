@@ -448,7 +448,18 @@ public class SearchIPhone extends HttpServlet{
 	public static void regions(HttpServletResponse response, Session session){
 		try {
 			RegionDAO service = new RegionDAO(session);
-			session.enableFilter("hasSamplePublicOrUser").setParameter("userId", 0);
+			User u= new User();
+			int userID;
+			/*if(username!="")
+			{
+				u.setName(username);
+				userID= u.getId();
+				session.enableFilter("hasSamplePublicOrUser").setParameter("userId", userID);
+			}
+			else
+			{*/
+				session.enableFilter("hasSamplePublicOrUser").setParameter("userId", 0);
+			//}
 			final XStream x = new XStream();
 			//Set<String> regionNames=service.viewableNamesForUser(0);
 			Object[] regionNames= service.allNames();

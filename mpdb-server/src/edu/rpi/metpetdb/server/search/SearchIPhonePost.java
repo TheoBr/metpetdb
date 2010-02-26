@@ -109,6 +109,14 @@ public class SearchIPhonePost extends HttpServlet {
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
 		//file accordingly]
+			if(criteriaType.equals("username"))
+ 			{
+			response.getWriter().write("<username>");
+			username= value;
+			response.getWriter().write(username);
+			response.getWriter().write("</username>");
+				username= value;
+ 			}
 			else if(criteriaType.equals("password"))
 			{
 				String password= value;
@@ -127,7 +135,7 @@ public class SearchIPhonePost extends HttpServlet {
 				response.getWriter().write("</response>");
 			}
 			//if the user has signed in, create that user and pass it to the server
-			if(criteriaType.equals("user"))
+			else if(criteriaType.equals("user"))
 			{
 				username=value;
 			}
