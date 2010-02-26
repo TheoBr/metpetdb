@@ -111,10 +111,6 @@ public class SearchIPhonePost extends HttpServlet {
 		//file accordingly]
 			if(criteriaType.equals("username"))
  			{
-			response.getWriter().write("<username>");
-			username= value;
-			response.getWriter().write(username);
-			response.getWriter().write("</username>");
 				username= value;
  			}
 			else if(criteriaType.equals("password"))
