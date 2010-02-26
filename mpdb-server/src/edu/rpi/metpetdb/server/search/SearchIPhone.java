@@ -27,6 +27,7 @@ import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.SearchSample;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
@@ -66,6 +67,7 @@ public class SearchIPhone extends HttpServlet{
 	public static String region= new String();
 	public static PaginationParameters p= new PaginationParameters();
 	public static String criteria= "";
+	public static String username="";
 
 	protected void doGet(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException  {
@@ -163,11 +165,11 @@ public class SearchIPhone extends HttpServlet{
 				System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
 				if(criteria.equals("true"))
 				{
-					getSearchCriteria(search(north,south,east,west, session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
+					getSearchCriteria(search(north,south,east,west, session, owners, rockTypes, metamorphicGrades, minerals, region, username, p), response);
 				}
 				else
 				{
-					outputSearchXML(search(north,south, east, west, session, owners, rockTypes, metamorphicGrades, minerals, region, p),response);
+					outputSearchXML(search(north,south, east, west, session, owners, rockTypes, metamorphicGrades, minerals, region, username, p),response);
 				}
 			} 
 			else if (request.getParameter(SEARCH_REGIONS) != null){
@@ -179,11 +181,11 @@ public class SearchIPhone extends HttpServlet{
 				}
 				if(criteria.equals("true"))
 				{
-					getSearchCriteria(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
+					getSearchCriteria(search(session, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
 				}
 				else
 				{
-					outputSearchXML(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
+					outputSearchXML(search(session, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
 				}
 			}
 			//if search criteria were entered but a search region or search box was not, a seperate search must be done
@@ -191,11 +193,11 @@ public class SearchIPhone extends HttpServlet{
 			{
 				if(criteria.equals("true"))
 				{
-					getSearchCriteria(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
+					getSearchCriteria(search(session, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
 				}
 				else
 				{
-					outputSearchXML(search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
+					outputSearchXML(search(session, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
 				}
 			}
 			else if (request.getParameter(SAMPLE_ID) != null){
@@ -711,12 +713,13 @@ public class SearchIPhone extends HttpServlet{
 
 	
 	public static Results<Sample> search(Session session, Set<String> owners, Set<RockType> rockTypes,
-			Set<MetamorphicGrade> metamorphicGrades, Set<Mineral> minerals, String region, PaginationParameters p, final HttpServletResponse response){
+			Set<MetamorphicGrade> metamorphicGrades, Set<Mineral> minerals, String region, String username, PaginationParameters p, final HttpServletResponse response){
 		
 		try{
 			//if any search criteria have been specified (owners, rocktypes, metamorphic grades, or minerals)
 			//then set searchSample to have these attributes
 			SearchSample ss = new SearchSample();
+			User u= new User();
 			if(region!=null && region.length()!=0)
 			{
 				ss.addRegion(region);
@@ -737,13 +740,16 @@ public class SearchIPhone extends HttpServlet{
 			{
 				ss.setMinerals(minerals);
 			}
+			if(username!=""){
+				u.setName(username);
+			}
 			if(p==null)
 			{
-				return SearchDb.sampleSearch(null, ss, null, session);
+				return SearchDb.sampleSearch(null, ss, u, session);
 			}
 			else
 			{
-				return SearchDb.sampleSearch(p, ss, null, session);
+				return SearchDb.sampleSearch(p, ss, u, session);
 			}
 		}
 		catch (final Exception ioe){
@@ -751,9 +757,10 @@ public class SearchIPhone extends HttpServlet{
 		}
 	}	
 	public static Results<Sample> search(final Double north, final Double south, final Double east, final Double west, Session session,
-				Set<String> owners, Set<RockType> rockTypes, Set<MetamorphicGrade> metamorphicGrades, Set<Mineral> minerals, String region, PaginationParameters p){		
+				Set<String> owners, Set<RockType> rockTypes, Set<MetamorphicGrade> metamorphicGrades, Set<Mineral> minerals, String region, String username, PaginationParameters p){		
 		try{
 			SearchSample s = new SearchSample();
+			User u= new User();
 			final LinearRing[] ringArray = new LinearRing[1];
 			final Point[] points = new Point[5];
 			final Point p1 = new Point();
@@ -803,14 +810,17 @@ public class SearchIPhone extends HttpServlet{
 			{
 				s.setMinerals(minerals);
 			}
-			
+			if(username!="")
+			{
+			u.setName(username);
+			}
 			if(p==null)
 			{
-				return SearchDb.sampleSearch(null, s, null, session);
+				return SearchDb.sampleSearch(null, s, u, session);
 			}
 			else
 			{
-				return SearchDb.sampleSearch(p, s, null, session);
+				return SearchDb.sampleSearch(p, s, u, session);
 			}
 			//return SearchDb.sampleSearch(null, s, null, session);
 

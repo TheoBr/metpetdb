@@ -60,6 +60,7 @@ public class SearchIPhonePost extends HttpServlet {
 	private static double south= -1;
 	private static double east= -1;
 	private static double west= -1;
+	private static String username="";
 	
 	protected void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException, IOException {
@@ -71,7 +72,6 @@ public class SearchIPhonePost extends HttpServlet {
 		region= "";
 		p= null;
 		criteria= "";
-		String username= new String();
 		
 		response.setContentType("text/xml");
 		int responseLength= request.getContentLength();
@@ -109,10 +109,6 @@ public class SearchIPhonePost extends HttpServlet {
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
 		//file accordingly]
-			if(criteriaType.equals("username"))
-			{
-				username= value;
-			}
 			else if(criteriaType.equals("password"))
 			{
 				String password= value;
@@ -129,6 +125,11 @@ public class SearchIPhonePost extends HttpServlet {
 					response.getWriter().write("authentication failed");
 				}
 				response.getWriter().write("</response>");
+			}
+			//if the user has signed in, create that user and pass it to the server
+			if(criteriaType.equals("user"))
+			{
+				username=value;
 			}
 		//assign each of the search criteria to their respective variables using 
 		//the scanner
@@ -241,11 +242,11 @@ public class SearchIPhonePost extends HttpServlet {
 		{
 			if(criteria.equals("true"))
 			{  
-				SearchIPhone.getSearchCriteria(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
+				SearchIPhone.getSearchCriteria(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
 			}
 			else
 			{
-				SearchIPhone.outputSearchXML(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response),response);
+				SearchIPhone.outputSearchXML(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response),response);
 			}
 		}
 		//just test the value of the north value because all 4 coordinates are needed
@@ -255,11 +256,11 @@ public class SearchIPhonePost extends HttpServlet {
 			System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
 			if(criteria.equals("true"))
 			{
-				SearchIPhone.getSearchCriteria(SearchIPhone.search(north,south,east,west, session, owners, rockTypes, metamorphicGrades, minerals, region, p), response);
+				SearchIPhone.getSearchCriteria(SearchIPhone.search(north,south,east,west, session, owners, rockTypes, metamorphicGrades, minerals, region, username, p), response);
 			}
 			else
 			{
-				SearchIPhone.outputSearchXML(SearchIPhone.search(north,south, east, west, session, owners, rockTypes, metamorphicGrades, minerals, region, p),response);
+				SearchIPhone.outputSearchXML(SearchIPhone.search(north,south, east, west, session, owners, rockTypes, metamorphicGrades, minerals, region, username, p),response);
 			}
 		}
 		//if search criteria were entered but a search region or search box was not, a seperate search must be done
@@ -271,11 +272,11 @@ public class SearchIPhonePost extends HttpServlet {
 				response.getWriter().write(m.getName());
 			if(criteria.equals("true"))
 			{
-				SearchIPhone.getSearchCriteria(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
+				SearchIPhone.getSearchCriteria(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
 			}
 			else
 			{
-				SearchIPhone.outputSearchXML(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, p, response), response);
+				SearchIPhone.outputSearchXML(SearchIPhone.search(session, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
 			}
 		}
 		
