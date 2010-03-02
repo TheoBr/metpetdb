@@ -61,6 +61,7 @@ public class SearchIPhonePost extends HttpServlet {
 	private static double east= -1;
 	private static double west= -1;
 	private static String username="";
+	SampleCommentServiceImpl commentImpl= new SampleCommentServiceImpl();
 	
 	protected void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException, IOException {
@@ -205,21 +206,20 @@ public class SearchIPhonePost extends HttpServlet {
 			long imageID= Long.parseLong(value);
 			SearchIPhone.get_large_image(session, response, imageID);
 		}
-		else if(criteriaType.equals("addComment"))
+		else if(criteriaType.equals("addCommentSampleID"))
 		{
-			//the number following addComment will be the id of the sample we want to add a comment to
-			long id= Long.parseLong(scanner.next());
-			//the text following the id is the string make a comment out of
-			String comment= new String();
-			while(scanner.hasNext())
-			{
-				comment+= scanner.next();
-				comment+= " ";
-			}
+			SearchSample ss= new SearchSample();
+			ss.setNumber(value);
+			commentImpl.setSearchSample(ss);
+		}
+		else if(criteriaType.equals("commentToAdd"))
+		{
+			User u= new User();
+			u.setName(username);
 			SampleComment newComment= new SampleComment();
-			SampleCommentServiceImpl commentImpl= new SampleCommentServiceImpl();
+			newComment.setText(value);
+			newComment.setOwner(u);
 			commentImpl.save(newComment);
-			response.getWriter().write("Comment Added");
 		}
 		//since there can only be one geographic search criteria,
 		//the following are if-else statements

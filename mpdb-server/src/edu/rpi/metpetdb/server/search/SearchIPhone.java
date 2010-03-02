@@ -753,6 +753,7 @@ public class SearchIPhone extends HttpServlet{
 			}
 			if(username!=""){
 				u.setName(username);
+				ss.setGetPublic(0);
 			}
 			if(p==null)
 			{
