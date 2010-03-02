@@ -138,7 +138,6 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		uploadTypeList.add(samplesRadio);
 		uploadTypeList.add(analysesRadio);
 		uploadTypeList.add(imagesRadio);
-		referenceRadio.setStyleName(CSS.BETA);
 		uploadTypeList.add(referenceRadio);
 
 		main.add(uploadButton);
@@ -326,7 +325,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				resultStatus.hide();
 				uploadButton.setText("Parse File for Upload");
 				uploadButton.setEnabled(true);
-				if (results.getHeaders() != null)
+				if (results.getHeaders() != null && !results.getHeaders().isEmpty())
 					populateMatchedColsPanel(results.getHeaders());
 				populateSummaryPanel(results.getResultCounts(), results
 						.getErrors().size());
@@ -574,6 +573,8 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				plural = "Chemical Analyses";
 			if (in.equalsIgnoreCase("Image"))
 				plural = "Images";
+			if (in.equalsIgnoreCase("GeoReference"))
+				plural = "References";
 		}
 		return plural.toLowerCase();
 	}

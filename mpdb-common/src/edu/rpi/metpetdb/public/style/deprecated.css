@@ -22,7 +22,7 @@
 .lbCloseLink {
 	background:transparent url(../images/closelabel.gif) no-repeat scroll center;
 	display:block;
-	float:right;
+	float:left;
 	height:22px;
 	margin:5px 0pt;
 	width:75px;

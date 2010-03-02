@@ -91,7 +91,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 		final ArrayList<ZipEntry> discoveredSpreadsheets = new ArrayList<ZipEntry>();
 		while ((ent = zis.getNextEntry()) != null) {
 			String entryName = ent.getName();
-			String[] entryNameSplit = entryName.split(File.separator);
+			String[] entryNameSplit = entryName.split("/");
 			// Ignore any subdirectories
 			if (entryNameSplit.length > 1){
 				continue;

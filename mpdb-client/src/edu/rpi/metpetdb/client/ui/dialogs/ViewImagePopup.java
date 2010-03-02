@@ -45,10 +45,10 @@ public class ViewImagePopup extends MDialogBox implements ClickListener,
 
 		displayImage.setStyleName("image-title");
 		imageTitle.setStyleName("gray");
-		ft.setWidget(0, 0, displayImage);
+		ft.setWidget(3, 0, displayImage);
 		ft.setWidget(1, 0, imageTitle);
 		ft.setWidget(2, 0, page);
-		ft.setWidget(1, 1, close);
+		ft.setWidget(0, 0, close);
 		ft.getFlexCellFormatter().setRowSpan(1, 1, 2);
 		ft.getFlexCellFormatter().setColSpan(0, 0, 2);
 		ft.getFlexCellFormatter().setAlignment(1, 1,
