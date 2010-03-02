@@ -171,8 +171,8 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				principals = new HashSet<Principal>();
 			if (!principals.contains(new AdminPrincipal())) {
 				final int usersRank;
-				if (MpDbServlet.currentReq().user != null && MpDbServlet.currentReq().user.getRole() != null) {
-					usersRank = MpDbServlet.currentReq().user.getRank();
+				if (MpDbServlet.currentReq().user != null) {
+					usersRank = MpDbServlet.currentReq().user.getRole().getRank();
 				} else
 					usersRank = -1;
 				boolean isPublic = false;

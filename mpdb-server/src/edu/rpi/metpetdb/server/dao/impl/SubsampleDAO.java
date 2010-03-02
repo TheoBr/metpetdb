@@ -26,6 +26,26 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 		_delete(inst);
 		return null;
 	}
+	
+	public Subsample fillWithAnalyses(Subsample inst) throws MpDbException {
+		if (inst.getId() > 0) {
+			final Query q = namedQuery("Subsample.byId,analyses");
+			q.setLong("id", inst.getId());
+			if (getResult(q) != null)
+				return (Subsample) getResult(q);
+		}
+		
+		//Those may have failed because of a filter even if it should be visible
+		if(inst.getId() > 0 && (new ProjectDAO(sess)).isSampleVisibleToUser(MpDbServlet.currentReq().user.getId(), inst.getSample().getId())){
+			//don't worry about infinite loops because if isSampleVisible succeeds, fill will definitely succeed.
+			sess.disableFilter("subsamplePublicOrUser");
+			Subsample result = fillWithAnalyses(inst);
+			sess.enableFilter("subsamplePublicOrUser").setParameter(
+					"userId", MpDbServlet.currentReq().user.getId());
+			return result;
+		}
+		throw new SubsampleNotFoundException();	
+	}
 
 	@Override
 	public Subsample fill(Subsample inst) throws MpDbException {

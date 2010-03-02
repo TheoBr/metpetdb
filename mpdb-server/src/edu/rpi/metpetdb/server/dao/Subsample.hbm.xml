@@ -48,6 +48,12 @@
 	 		project_members pm where pm.user_id = :userId)))" />
     
   </class>
+  
+  <query name="Subsample.byId,analyses">
+  	from Subsample s
+  	left join fetch s.chemicalAnalyses
+  	where s.id = :id
+  </query>
 
   <query name="Subsample.byId">
     from Subsample s

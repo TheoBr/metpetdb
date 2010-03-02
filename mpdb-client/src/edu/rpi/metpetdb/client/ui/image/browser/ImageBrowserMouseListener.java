@@ -192,14 +192,16 @@ public class ImageBrowserMouseListener implements MouseListener {
 	private void addChemicalAnalysis(final ChemicalAnalysis ca, final int x,
 			final int y) {
 		ca.setImage(currentImage.getIog().getImage());
-		int pointX = x;
-		int pointY = y;
+		double pointX = x;
+		double pointY = y;
 		pointX -= currentImage.getImagePanel().getAbsoluteLeft()
 				- grid.getAbsoluteLeft() ;
 		pointY -= currentImage.getImagePanel().getAbsoluteTop()
 				- grid.getAbsoluteTop() ;
 		pointX -= 4;
 		pointY -= 13;
+		pointX += pointer.getWidth()/2;
+		pointY += pointer.getHeight();
 		ca.setReferenceX((double)pointX/imageBrowser.pps*imageBrowser.scale);
 		ca.setReferenceY((double)pointY/imageBrowser.pps*imageBrowser.scale);
 		ca.setActualImage(pointer);
@@ -211,8 +213,8 @@ public class ImageBrowserMouseListener implements MouseListener {
 						.show();
 			}
 		});
-		ca.setPercentX(pointX / (float) currentImage.getCurrentWidth());
-		ca.setPercentY(pointY / (float) currentImage.getCurrentHeight());
+		ca.setPercentX((float) pointX / (float) currentImage.getCurrentWidth());
+		ca.setPercentY((float) pointY / (float) currentImage.getCurrentHeight());
 		currentImage.getChemicalAnalyses().add(ca);
 		imageBrowser.getChemicalAnalysesToSave().add(ca);
 	}

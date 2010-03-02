@@ -23,6 +23,8 @@ public interface SubsampleServiceAsync {
 
 	void details(long id, AsyncCallback<Subsample> ac);
 	
+	void detailsWithAnalyses(long id, AsyncCallback<Subsample> ac);
+	
 	void details(List<Long> ids, AsyncCallback<List<Subsample>> ac);
 
 	void all(long sampleId, AsyncCallback<List<Subsample>> ac);

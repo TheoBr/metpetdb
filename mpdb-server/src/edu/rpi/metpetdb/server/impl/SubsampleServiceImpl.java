@@ -70,6 +70,16 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 		return s;
 	}
 	
+	public Subsample detailsWithAnalyses(final long id) throws MpDbException {
+		Subsample s = new Subsample();
+		s.setId(id);
+		s = (new SubsampleDAO(this.currentSession())).fillWithAnalyses(s);
+		//FIXME: force a lazy load of the images so they can be added/removed from the UI
+		//in the future images should be made its own page, similar to chemical analyses
+		s.getImages().size();
+		return s;
+	}
+	
 	public List<Subsample> details(final List<Long> ids) throws MpDbException {
 		List<Subsample> subsamples = new ArrayList<Subsample>();
 		for (Long id : ids){

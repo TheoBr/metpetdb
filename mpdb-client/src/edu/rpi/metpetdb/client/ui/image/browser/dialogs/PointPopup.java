@@ -65,6 +65,8 @@ public class PointPopup extends DialogBox implements ClickListener {
 					this.chemicalAnalysis.getActualImage());
 			this.chemicalAnalysis.setImage(null);
 			this.chemicalAnalysis.setActualImage(null);
+			this.imageOnGrid.getChemicalAnalyses().remove(chemicalAnalysis);
+			
 			this.hide();
 		} else if (sender == this.lock) {
 			this.lock.setText(this.locked ? "Lock" : "Unlock");

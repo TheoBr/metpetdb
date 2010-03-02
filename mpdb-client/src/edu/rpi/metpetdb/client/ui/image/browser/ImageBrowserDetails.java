@@ -131,7 +131,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		new ServerOp<Subsample>() {
 			@Override
 			public void begin() {
-				MpDb.subsample_svc.details(subsampleId, this);
+				MpDb.subsample_svc.detailsWithAnalyses(subsampleId, this);
 			}
 
 			public void onSuccess(final Subsample s) {
@@ -402,7 +402,10 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 			final ChemicalAnalysis ma = itr.next();
 			final com.google.gwt.user.client.ui.Image i = new com.google.gwt.user.client.ui.Image(
 					GWT.getModuleBaseURL() + "/images/point0.gif");
-			iog.getImagePanel().add(i, (int)Math.round(ma.getReferenceX()/this.scale*pps), (int)Math.round(ma.getReferenceY()/this.scale*pps));
+
+			int pointX = (int)Math.round(ma.getReferenceX()/this.scale*pps) - i.getWidth()/2;
+			int pointY = (int)Math.round(ma.getReferenceY()/this.scale*pps) - i.getHeight();
+			iog.getImagePanel().add(i,pointX,pointY );
 			ma.setActualImage(i);
 			ma.setPercentX((float)ma.getReferenceX()/this.scale*pps/ (float) iog.getCurrentWidth());
 			ma.setPercentY((float)ma.getReferenceY()/this.scale*pps / (float) iog.getCurrentHeight());

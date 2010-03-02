@@ -21,6 +21,8 @@ public interface SubsampleService extends RemoteService {
 
 	Subsample details(long id) throws MpDbException;
 	
+	Subsample detailsWithAnalyses(long id) throws MpDbException;
+	
 	List<Subsample> details(List<Long> ids) throws MpDbException;
 
 	Subsample save(final Subsample s) throws MpDbException, ValidationException,

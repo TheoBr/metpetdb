@@ -188,7 +188,7 @@ public class PlotInterface implements ClickListener, ChangeListener{
 							}
 							
 						});
-						
+						editSpecies.setOpen(true);
 						individualAxisContainer.add(editSpecies);
 						
 						axisContainer.add(individualAxisContainer);
