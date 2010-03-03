@@ -1,7 +1,6 @@
 package edu.rpi.metpetdb.server.search;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +34,8 @@ import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.RegionDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
+import edu.rpi.metpetdb.server.dao.impl.UserDAO;
+import edu.rpi.metpetdb.server.impl.UserServiceImpl;
 
 
 public class SearchIPhone extends HttpServlet{
@@ -752,7 +753,9 @@ public class SearchIPhone extends HttpServlet{
 				ss.setMinerals(minerals);
 			}
 			if(username!=""){
-				u.setName(username);
+				UserServiceImpl Uimp= new UserServiceImpl();
+				u= Uimp.details(username);
+				u = new UserDAO(session).fill(u);
 				ss.setGetPublic(0);
 			}
 			if(p==null)
@@ -824,7 +827,10 @@ public class SearchIPhone extends HttpServlet{
 			}
 			if(username!="")
 			{
-			u.setName(username);
+				UserServiceImpl Uimp= new UserServiceImpl();
+				u= Uimp.details(username);
+				u = new UserDAO(session).fill(u);
+				s.setGetPublic(0);
 			}
 			if(p==null)
 			{
