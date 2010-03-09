@@ -102,28 +102,28 @@ public class MpDbGenericServiceImpl extends MpDbServlet implements
 		
 		DataStore.disableSecurityFilters(this.currentSession());
 		
-		labels.add("Publication Samples: ");
+		labels.add(" Publication Samples");
 		counts.add(new SampleDAO(this.currentSession()).getPublicationCount());
-		labels.add("Publication Chemical Analyses: ");
+		labels.add(" Publication Chemical Analyses");
 		counts.add(new ChemicalAnalysisDAO(this.currentSession()).getPublicationCount());
-		labels.add("Publication Images: ");
+		labels.add(" Publication Images");
 		counts.add(new ImageDAO(this.currentSession()).getPublicationCount());
 		
-		labels.add("Public Samples: ");
+		labels.add(" Public Samples");
 		counts.add(new SampleDAO(this.currentSession()).getPublicCount());
-		labels.add("Public Chemical Analyses: ");
+		labels.add(" Public Chemical Analyses");
 		counts.add(new ChemicalAnalysisDAO(this.currentSession()).getPublicCount());
-		labels.add("Public Images: ");
+		labels.add(" Public Images");
 		counts.add(new ImageDAO(this.currentSession()).getPublicCount());
 
-		labels.add("Private Samples: ");
+		labels.add(" Private Samples");
 		counts.add(new SampleDAO(this.currentSession()).getPrivateCount());
-		labels.add("Private Chemical Analyses: ");
+		labels.add(" Private Chemical Analyses");
 		counts.add(new ChemicalAnalysisDAO(this.currentSession()).getPrivateCount());
-		labels.add("Private Images: ");
+		labels.add(" Private Images");
 		counts.add(new ImageDAO(this.currentSession()).getPrivateCount());
 
-		labels.add("Referenced Publications: ");
+		labels.add(" Referenced Publicationss");
 		counts.add(new GeoReferenceDAO(this.currentSession()).getCount());
 		
 		DataStore.enableSecurityFilters(this.currentSession(), this.currentUserIdIfExists());

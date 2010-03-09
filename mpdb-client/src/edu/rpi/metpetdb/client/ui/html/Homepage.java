@@ -15,6 +15,7 @@ import edu.rpi.metpetdb.client.ui.widgets.ImageHyperlink;
 public class Homepage extends FlowPanel {
 	
 	public Homepage() {
+		this.getElement().setId("homepageWrapper");
 		this.add(new HTML(
 						"<h1>Welcome to MetPetDB</h1> " +
 						"<img src=\"images/slices.jpg\" alt=\"\" class=\"r\">" +
@@ -38,22 +39,30 @@ public class Homepage extends FlowPanel {
 
 			public void onSuccess(final List<List> result) {
 				result.get(0);
+
 				for (int i = 0; i < result.get(0).size(); i++){
-					Homepage.this.add(new Label(result.get(0).get(i).toString() + result.get(1).get(i).toString()));
+					Label temp = new Label(result.get(1).get(i).toString() + result.get(0).get(i).toString());
+					temp.setStyleName("statList");
+					Homepage.this.add(temp);
 				}
+					
+				
+		/*		Homepage.this.add(new HTML("<p><a href=\"\"><img class=\"noUnderline\" src=\"images/app-store.png\" alt=\"iTunes App Store\" title=\"iTunes App Store\" /></a></p>"));*/
 				ImageHyperlink appLink = new ImageHyperlink(new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()+"/images/app-store.png"), 
-						"", TokenSpace.iphoneApp.getName(), false);
+						"", TokenSpace.iphoneApp.getName(), false);		
+				appLink.setStyleName("noUnderline");
 				Homepage.this.add(appLink);
+				
 				Homepage.this.add(new HTML(
-						"<table id=\"dblist\" cellspacing=\"0\"><tbody>" +
-						"<tr><td><a href=\"http://www.earthchem.org\" title=\"EarthChem\"><img src=\"images/earthchem-logo.jpg\" alt=\"EarthChem\"></a>Advanced Data Management in Solid Earth Geochemistry</td>" +
-						"<td><a href=\"http://www.petdb.org\" title=\"PETDB\"><img src=\"images/petdb-logo.jpg\" alt=\"PETDB\"></a>Petrological Database of the Ocean Floor</td>" +
-						"<td><a href=\"http://navdat.kgs.ku.edu\" title=\"NAVDAT\"><img src=\"images/navdat-logo.jpg\" alt=\"NAVDAT\"></a>The Western North American Volcanic and Intrusive Rock Database</td>" +
-						"<td><a href=\"http://georoc.mpch-mainz.gwdg.de/georoc/Start.asp\" title=\"GEOROC\"><img src=\"images/georoc-logo.jpg\" alt=\"GEOROC\"></a>Geochemistry of Rocks of the Ocean and Continents</td>" +
-						"<td><a href=\"http://www.geosamples.org\" title=\"SESAR\"><img src=\"images/sesar-logo.jpg\" alt=\"SESAR\"></a>System for Earth Sample Registration</td></tr>" +
-						"</tbody></table>"));
+						"<h3>Other \"Word\" Links</h3>" +
+						"<ul class=\"noBullets\">" +
+						"<li><span><a href=\"http://www.earthchem.org\" title=\"EarthChem\"><img src=\"images/earthchem-logo.jpg\" alt=\"EarthChem\"></a>Advanced Data Management in Solid Earth Geochemistry</span></li>" +
+						"<li><span><a href=\"http://www.petdb.org\" title=\"PETDB\"><img src=\"images/petdb-logo.jpg\" alt=\"PETDB\"></a>Petrological Database of the Ocean Floor</span></li>" +
+						"<li><span><a href=\"http://navdat.kgs.ku.edu\" title=\"NAVDAT\"><img src=\"images/navdat-logo.jpg\" alt=\"NAVDAT\"></a>The Western North American Volcanic and Intrusive Rock Database</span></li>" +
+						"<li><span><a href=\"http://georoc.mpch-mainz.gwdg.de/georoc/Start.asp\" title=\"GEOROC\"><img src=\"images/georoc-logo.jpg\" alt=\"GEOROC\"></a>Geochemistry of Rocks of the Ocean and Continents</span></li>" +
+						"<li><span><a href=\"http://www.geosamples.org\" title=\"SESAR\"><img src=\"images/sesar-logo.jpg\" alt=\"SESAR\"></a>System for Earth Sample Registration</span></li>" +
+						"</ul>"));
 			}
 		}.begin();
 	}
-
 }

@@ -18,6 +18,7 @@
 	padding: 0.8em 0.5em 0.5em;
 	border-bottom: 1px solid #EBEBEA;
 }
+
 #dblist {
 	margin: 1em;
 }
@@ -29,9 +30,37 @@
 	display: block;
 } 
 #dblist a img {
-	border: 1px solid #aaa;
+	/*border: 1px solid #aaa;*/
 	margin-bottom: 0.3em;
 }
 #dblist a:hover img {
-	border-color: #000;
+	/*border-color: #000;*/
+}
+
+/*-------------------------------------
+              homepage
+ --------------------------------------*/
+ 
+#homepageWrapper {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#homepageWrapper ul.noBullets {
+	list-style-type: none;
+}
+
+#homepageWrapper ul.noBullets li img {
+	vertical-align: middle;
+	height: 30px;
+	width: 70px;
+	margin-right: 10px;
+}
+
+#homepageWrapper ul.noBullets li {
+	line-height: 3;
+}
+
+#homepageWrapper.noUnderline {
+	text-decoration: none;
 }
