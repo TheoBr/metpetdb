@@ -8,4 +8,6 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 
 public interface MetamorphicRegionService extends RemoteService {
 	Set<String> allMetamorphicRegions() throws MpDbException;
+	
+	Set<String> viewableNamesForUser(final int userId) throws MpDbException;
 }

@@ -31,7 +31,7 @@ public class SearchMetamorphicRegionsAttribute extends SearchGenericAttribute {
 						int userId = 0;
 						if (MpDb.isLoggedIn())
 							userId = MpDb.currentUser().getId();
-						MpDb.metamorphicRegion_svc.allMetamorphicRegions(this);
+						MpDb.metamorphicRegion_svc.viewableNamesForUser(userId, this);
 					}
 					public void onSuccess(final Object result) {
 						createSuggest((Set<String>) result);

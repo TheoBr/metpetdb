@@ -171,8 +171,14 @@ public class PermissionInterceptor extends EmptyInterceptor {
 				principals = new HashSet<Principal>();
 			if (!principals.contains(new AdminPrincipal())) {
 				final int usersRank;
-				if (MpDbServlet.currentReq().user != null) {
-					usersRank = MpDbServlet.currentReq().user.getRole().getRank();
+				
+				// if the user is registering, they will try resume their session but not have a rank loaded
+				// when they try to load their own user, they will always crash here because of the lack of a rank
+				// this first if statement is here to bypass that problem.
+				if (entity instanceof User){
+					usersRank = 1;
+				} else if (MpDbServlet.currentReq().user != null) {
+					usersRank = MpDbServlet.currentReq().user.getRank();
 				} else
 					usersRank = -1;
 				boolean isPublic = false;

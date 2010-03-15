@@ -9,6 +9,7 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.MetamorphicRegionNotFoundException;
 import edu.rpi.metpetdb.client.model.MetamorphicRegion;
+import edu.rpi.metpetdb.client.model.Region;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 
 public class MetamorphicRegionDAO extends MpDbDAO<MetamorphicRegion> {
@@ -44,5 +45,4 @@ public class MetamorphicRegionDAO extends MpDbDAO<MetamorphicRegion> {
 		final Query q = namedQuery("MetamorphicRegion.all/name");
 		return	((List<MetamorphicRegion>)getResults(q)).toArray();
 	}
-
 }

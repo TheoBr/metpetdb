@@ -16,6 +16,11 @@
         condition="ST_Intersects(shape, :polygon)" 
      />
     
+    <filter name="hasSamplePublicOrUser"
+     		condition="(exists (select 1 from sample_metamorphic_regions smr where smr.metamorphic_region_id = metamorphic_region_id  
+								and exists ( select 1 from samples s where s.sample_id = smr.sample_id 
+											and (s.public_data = 'Y' or s.user_id = :userId))))" />
+    
   </class>
    
   
