@@ -27,7 +27,6 @@ public class ImageOnGridContainer {
 	private boolean isShown;
 	private Set<ChemicalAnalysis> chemicalAnalyses;
 	private Set<Image> chemicalAnalysisImages;
-	private boolean isLocked;
 	private boolean isMenuHidden;
 	private int zoomLevelsSkipped;
 	// The current position of the container (top left x/y)
@@ -269,11 +268,11 @@ public class ImageOnGridContainer {
 	}
 
 	public boolean isLocked() {
-		return isLocked;
+		return iog.isLocked();
 	}
 
 	public void setLocked(boolean isLocked) {
-		this.isLocked = isLocked;
+		iog.setLocked(isLocked);
 	}
 
 	public boolean isMenuHidden() {

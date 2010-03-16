@@ -15,6 +15,11 @@ public class ImageOnGrid extends MObject {
 	private String gchecksum;
 	private String gchecksum64x64;
 	private String gchecksumHalf;
+	private Boolean locked; 
+	
+	public ImageOnGrid(){
+		locked = false;
+	}
 
 	public int getId() {
 		return id;
@@ -138,5 +143,13 @@ public class ImageOnGrid extends MObject {
 	public void delete() {
 		this.getGrid().getImagesOnGrid().remove(this);
 		this.setGrid(null);
+	}
+	
+	public Boolean isLocked(){
+		return locked;
+	}
+	
+	public void setLocked(final Boolean l) {
+		locked = l;
 	}
 }

@@ -21,4 +21,13 @@ public enum ImageOnGridProperty implements Property<ImageOnGrid> {
 			image.setTopLeftY(PropertyUtils.convertToDouble(imageType));
 		}
 	},
+	locked {
+		public Object get(final ImageOnGrid image) {
+			return image.isLocked();
+		}
+		
+		public void set(final ImageOnGrid image, final Object locked){
+			image.setLocked((Boolean)locked);
+		}
+	}
 }

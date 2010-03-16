@@ -177,6 +177,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public PropertyConstraint[] ImageOnGrid__all;
 	public DoubleConstraint ImageOnGrid_topLeftX;
 	public DoubleConstraint ImageOnGrid_topLeftY;
+	public BooleanConstraint ImageOnGrid_locked;
 
 	public void validate(final ImageOnGrid i) throws ValidationException {
 		validate(i, ImageOnGrid__all);

@@ -17,7 +17,7 @@
 	color: #394486 !important;
 }
 #canvas .imageContainer {
-	background-color: #f1fbff;
+	/*background-color: #f1fbff;*/
 	/*border: 1px solid #bec7cf;*/
 	/*padding: 2px;*/
 	position: absolute;
@@ -49,6 +49,7 @@
 #canvas .imageContainer:hover {
 	margin-top: -19px;
 	z-index: 999;
+	background-color: #f1fbff;
 }
 #canvas .imageContainer:hover ul {
 	display: block;
