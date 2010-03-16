@@ -23,6 +23,7 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.bulk.upload.InvalidSpreadSheetException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
+import edu.rpi.metpetdb.client.error.validation.ImageNotUploadedException;
 import edu.rpi.metpetdb.client.error.validation.InvalidImageException;
 import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
 import edu.rpi.metpetdb.client.model.Grid;
@@ -178,7 +179,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 			initObject(img);
 			// Confirm the filename is in the zip
 			if (getZipEntry(zp, img, spreadsheetPrefix)== null) {
-				results.addError(row, new InvalidImageException(
+				results.addError(row, new ImageNotUploadedException(
 						spreadsheetPrefix + img.getFilename()));
 			} else {
 				try {
