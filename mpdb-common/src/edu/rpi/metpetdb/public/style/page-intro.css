@@ -61,6 +61,14 @@
 	line-height: 3;
 }
 
-#homepageWrapper.noUnderline {
+#imageHyperlink {
 	text-decoration: none;
+}
+
+#homepageWrapper .right-col {
+ 	float: right;
+}
+
+#homepageWrapper .listNumber {
+	font-size: 1.3em;	
 }

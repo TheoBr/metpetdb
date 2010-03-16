@@ -8,6 +8,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 public class IPhoneApp extends FlowPanel {
 	
 	public IPhoneApp() {
+		this.getElement().setId("homepageWrapper");
 		this.add(new HTML(
 						"<img src=\"images/iphone-sample.png\" style = \"margin:5px\" alt=\"\" class=\"r\">" +
 						"<div style = \"width:50%\">" +
@@ -19,3 +20,4 @@ public class IPhoneApp extends FlowPanel {
 						"</div>"));
 	}
 }
+ 
