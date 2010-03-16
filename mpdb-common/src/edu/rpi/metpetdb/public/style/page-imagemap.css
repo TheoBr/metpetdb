@@ -214,9 +214,22 @@ cursor:sw-resize;
 cursor:se-resize;
 }
 
+.topResizer{
+cursor:n-resize;
+}
+.bottomResizer{
+cursor:s-resize;
+}
+.leftResizer{
+cursor:w-resize;
+}
+.rightResizer{
+cursor:e-resize;
+}
+
 .resizerSize {
-width:0px;
-height:0px;
+width:8px;
+height:8px;
 /*border:solid 1px black;*/
 }
 

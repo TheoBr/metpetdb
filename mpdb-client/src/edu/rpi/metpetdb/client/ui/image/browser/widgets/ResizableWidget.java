@@ -24,9 +24,24 @@ public class ResizableWidget extends Composite {
 		bottomLeft.setStyleName("bottomLeftResizer");
 		final Label bottomRight = new Label();
 		bottomRight.setStyleName("bottomRightResizer");
+		
+		final Label top = new Label();
+		top.setStyleName("topResizer");
+		final Label right = new Label();
+		right.setStyleName("rightResizer");
+		final Label left = new Label();
+		left.setStyleName("leftResizer");
+		final Label bottom = new Label();
+		bottom.setStyleName("rightResizer");
+		
+		top.addStyleName("resizerSize");
+		right.addStyleName("resizerSize");
+		left.addStyleName("resizerSize");
+		right.addStyleName("resizerSize");
 
 		final SimplePanel sp = new SimplePanel();
 		sp.setStyleName("resizerSize");
+		//sp.setStyleName("topResizer");
 
 		topLeft.addStyleName("resizerSize");
 		topRight.addStyleName("resizerSize");
