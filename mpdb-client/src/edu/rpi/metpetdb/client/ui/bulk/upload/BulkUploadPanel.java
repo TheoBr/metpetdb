@@ -359,7 +359,8 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		if (!errors.isEmpty()) {
 			resultStatus.sendNotice(NoticeType.WARNING,
 					"Parse complete, but the file contains errors.");
-			nextStepText.setText("Please fix the errors and re-upload.");
+			nextStepText.setText("Errors listed will be ignored, but you may commit correct rows.");
+			show(commitButton);
 			resultsPanel.selectTab(2);
 		} else {
 			resultStatus.sendNotice(NoticeType.SUCCESS,
@@ -575,6 +576,9 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				plural = "Images";
 			if (in.equalsIgnoreCase("GeoReference"))
 				plural = "References";
+		}
+		if(plural.equalsIgnoreCase("GeoReference")){
+			plural = "Reference";
 		}
 		return plural.toLowerCase();
 	}

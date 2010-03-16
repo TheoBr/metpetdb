@@ -167,7 +167,7 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 	private void noPermissionToDelete(){
 		final MDialogBox box = new MDialogBox();
 		final FlowPanel container = new FlowPanel();
-		container.add(new Label("You do not haver permission to delete one or more of these subsamples"));
+		container.add(new Label("You do not have permission to delete one or more of these subsamples"));
 		Button ok = new Button("Ok");
 		ok.addClickListener(new ClickListener(){
 			public void onClick(final Widget sender){

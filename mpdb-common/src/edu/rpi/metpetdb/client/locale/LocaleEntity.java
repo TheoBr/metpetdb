@@ -47,6 +47,12 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String SampleMineral_amount();
 	String Sample_locationError();
 	String Sample_aliases();
+	/* Reference */
+	String GeoReference_title();
+	String GeoReference_firstAuthor();
+	String GeoReference_secondAuthors();
+	String GeoReference_journalName();
+	String GeoReference_fullText();
 	/* User */
 	String User();
 	String User_name();

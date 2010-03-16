@@ -134,7 +134,7 @@ public class ProjectListActions extends FlowPanel implements ClickListener {
 	private void noPermissionToDelete(){
 		final MDialogBox box = new MDialogBox();
 		final FlowPanel container = new FlowPanel();
-		container.add(new Label("You do not haver permission to delete one or more of these projects"));
+		container.add(new Label("You do not have permission to delete one or more of these projects"));
 		Button ok = new Button("Ok");
 		ok.addClickListener(new ClickListener(){
 			public void onClick(final Widget sender){

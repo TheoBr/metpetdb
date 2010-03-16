@@ -62,7 +62,7 @@ public abstract class BulkUploadService extends MpDbServlet {
 			parserImpl(fileOnServer, save, results, sampleDao, ssDAO,
 					subsampleNames, samples, subsamples);
 
-			if (save && results.getErrors().isEmpty()) {
+			if (save) {
 				try {
 					commit();
 					updateFile(fileOnServer);

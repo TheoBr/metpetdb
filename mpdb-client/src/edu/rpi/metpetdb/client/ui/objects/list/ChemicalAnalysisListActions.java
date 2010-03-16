@@ -145,7 +145,7 @@ public class ChemicalAnalysisListActions extends FlowPanel implements ClickListe
 	private void noPermissionToDelete(){
 		final MDialogBox box = new MDialogBox();
 		final FlowPanel container = new FlowPanel();
-		container.add(new Label("You do not haver permission to delete one or more of these analyses"));
+		container.add(new Label("You do not have permission to delete one or more of these analyses"));
 		Button ok = new Button("Ok");
 		ok.addClickListener(new ClickListener(){
 			public void onClick(final Widget sender){

@@ -209,21 +209,22 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 						if(MpDb.isCurrentUser(s.getOwner())){
 							History.newItem(TokenSpace.createNewSubsample(p_sample
 									.getBean()));
-						}
-						//check to see if the sample is part of a project that the current user
-						//is a member of
-						new ServerOp<Boolean>() {
-							public void begin() {
-								MpDb.sample_svc.canEdit(s.getId(), this);
-							}
+						} else{
+							//check to see if the sample is part of a project that the current user
+							//is a member of
+							new ServerOp<Boolean>() {
+								public void begin() {
+									MpDb.sample_svc.canEdit(s.getId(), this);
+								}
 
-							public void onSuccess(Boolean result) {
-								if(result){
-									History.newItem(TokenSpace.createNewSubsample(p_sample
-											.getBean()));
-								} else noPermissionWarning();
-							}
-						}.begin();
+								public void onSuccess(Boolean result) {
+									if(result){
+										History.newItem(TokenSpace.createNewSubsample(p_sample
+												.getBean()));
+									} else noPermissionWarning();
+								}
+							}.begin();
+						}
 					}
 				}.begin();
 			}
