@@ -4,7 +4,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Image;
 
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MAbsolutePanel;
 
 public class PanHandler {
@@ -52,7 +54,10 @@ public class PanHandler {
 			final double newX = iog.getCurrentContainerPosition().x + deltaX;
 			final double newY = iog.getCurrentContainerPosition().y + deltaY;
 			this.grid.setWidgetPosition(iog.getImageContainer(), newX, newY);
+			
 			iog.pan(deltaX, deltaY);
+	
+			imageBrowser.updatePoints(iog);
 		}
 	}
 

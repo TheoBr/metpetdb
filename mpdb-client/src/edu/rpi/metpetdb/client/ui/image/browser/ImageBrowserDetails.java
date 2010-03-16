@@ -102,6 +102,9 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 			"um", /* micrometer 10x10^-6 */
 			"nm", /* nanometer 10x10^-9 */
 	};
+	
+	public static int chemImageWidth = 4;
+	public static int chemImageHeight = 13;
 
 	/** which chemical analyses that need to be saved */
 	private final Collection<ChemicalAnalysis> chemicalAnalyses;
@@ -258,10 +261,6 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 			final ImageOnGridContainer imageOnGrid = new ImageOnGridContainer(
 					iog, this.scale);
 			if (firstTime) {
-				imageOnGrid.setCurrentWidth((int)Math.round((iog.getImage()
-						.getWidth() * iog.getResizeRatio())));
-				imageOnGrid.setCurrentHeight((int)Math.round((iog.getImage()
-						.getHeight() * iog.getResizeRatio())));
 				for (ChemicalAnalysis ca : g.getSubsample().getChemicalAnalyses()) {
 					if (ca.getImage() != null && ca.getImage().getId() == iog.getImage().getId())
 						imageOnGrid.getChemicalAnalyses().add(ca);
@@ -292,9 +291,9 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		iog.setGchecksumHalf(i.getChecksumHalf());
 		final ImageOnGridContainer imageOnGrid = new ImageOnGridContainer(iog,scale);
 		imageOnGrid.setCurrentWidth((int)Math
-				.round((iog.getImage().getWidth() * (iog.getResizeRatio()))));
+				.round((iog.getGwidth() * (iog.getResizeRatio()))));
 		imageOnGrid.setCurrentHeight((int)Math
-				.round((iog.getImage().getHeight() * (iog.getResizeRatio()))));
+				.round((iog.getGheight() * (iog.getResizeRatio()))));
 		imageOnGrid.pan(totalXOffset, totalYOffset);
 		this.addImage(imageOnGrid);
 		this.g.addImageOnGrid(iog);
@@ -394,6 +393,18 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	public void adTotalYOffset(final int amount) {
 		this.totalYOffset += amount;
 	}
+	
+	public void updatePoints(ImageOnGridContainer iog) {
+		final Iterator<ChemicalAnalysis> itr2 = iog.getChemicalAnalyses().iterator();
+		while (itr2.hasNext()) {
+			final ChemicalAnalysis ma = itr2.next();
+			final com.google.gwt.user.client.ui.Image i = (com.google.gwt.user.client.ui.Image) ma.getActualImage();
+			
+			int pointX = (int)Math.round(ma.getReferenceX()/this.scale*this.pps) - this.chemImageWidth;
+			int pointY = (int)Math.round(ma.getReferenceY()/this.scale*this.pps) - this.chemImageHeight;
+			this.grid.add(i,(int)iog.getCurrentContainerPosition().x + pointX, (int)iog.getCurrentContainerPosition().y + pointY);
+		}
+	}
 
 	public void addPoints(final ImageOnGridContainer iog) {
 		final Iterator<ChemicalAnalysis> itr = iog.getChemicalAnalyses()
@@ -403,9 +414,15 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 			final com.google.gwt.user.client.ui.Image i = new com.google.gwt.user.client.ui.Image(
 					GWT.getModuleBaseURL() + "/images/point0.gif");
 
-			int pointX = (int)Math.round(ma.getReferenceX()/this.scale*pps) - i.getWidth()/2;
-			int pointY = (int)Math.round(ma.getReferenceY()/this.scale*pps) - i.getHeight();
-			iog.getImagePanel().add(i,pointX,pointY );
+			int pointX = (int)Math.round(ma.getReferenceX()/this.scale*pps) - chemImageWidth;
+			int pointY = (int)Math.round(ma.getReferenceY()/this.scale*pps) - chemImageHeight;
+			i.setStyleName("chem-point");
+			this.grid.add(i,(int)iog.getCurrentContainerPosition().x + pointX, (int)iog.getCurrentContainerPosition().y + pointY);
+			iog.getChemicalAnalysisImages().add(i);
+			
+			//final com.google.gwt.user.client.ui.Image i2 = new com.google.gwt.user.client.ui.Image(
+			//		GWT.getModuleBaseURL() + "/images/point0.gif");
+			//iog.getImagePanel().add(i2,pointX,pointY );
 			ma.setActualImage(i);
 			ma.setPercentX((float)ma.getReferenceX()/this.scale*pps/ (float) iog.getCurrentWidth());
 			ma.setPercentY((float)ma.getReferenceY()/this.scale*pps / (float) iog.getCurrentHeight());
@@ -435,9 +452,9 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 
 	private void scale(final ImageOnGridContainer iog) {
 		final int multiplier = 1;
-		iog.setCurrentWidth((int)Math.round((iog.getIog().getImage().getWidth()
+		iog.setCurrentWidth((int)Math.round((iog.getIog().getGwidth()
 				* multiplier * iog.getIog().getResizeRatio())));
-		iog.setCurrentHeight((int)Math.round((iog.getIog().getImage().getHeight()
+		iog.setCurrentHeight((int)Math.round((iog.getIog().getGheight()
 				* multiplier * iog.getIog().getResizeRatio())));
 	}
 

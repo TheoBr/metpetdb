@@ -7,6 +7,7 @@ import java.util.Set;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
@@ -25,6 +26,7 @@ public class ImageOnGridContainer {
 	private double aspectRatioHeight;
 	private boolean isShown;
 	private Set<ChemicalAnalysis> chemicalAnalyses;
+	private Set<Image> chemicalAnalysisImages;
 	private boolean isLocked;
 	private boolean isMenuHidden;
 	private int zoomLevelsSkipped;
@@ -36,6 +38,7 @@ public class ImageOnGridContainer {
 		currentContainerPosition.x = Math.round(pps*(iog.getTopLeftX()/scale));
 		currentContainerPosition.y = Math.round(pps*(iog.getTopLeftY()/scale));
 		chemicalAnalyses = new HashSet<ChemicalAnalysis>();
+		chemicalAnalysisImages = new HashSet<Image>();
 	}
 
 	/**
@@ -51,6 +54,8 @@ public class ImageOnGridContainer {
 		currentContainerPosition.y += deltaY;
 		iog.setTopLeftX((int)Math.round((((currentContainerPosition.x - imageBrowser.totalXOffset)/pps)*scale)));
 		iog.setTopLeftY((int)Math.round((((currentContainerPosition.y - imageBrowser.totalYOffset)/pps)*scale)));
+		
+		imageBrowser.updatePoints(this);
 		// ((currentContainerX - totalOffset)/pps)*scale = squares
 	}
 
@@ -289,5 +294,13 @@ public class ImageOnGridContainer {
 	
 	public ImageOnGrid getImageOnGrid(){
 		return iog;
+	}
+	
+	public void setChemicalAnalysisImages(Set<Image> chemImages){
+		this.chemicalAnalysisImages = chemImages;
+	}
+	
+	public Set<Image> getChemicalAnalysisImages(){
+		return this.chemicalAnalysisImages;
 	}
 }

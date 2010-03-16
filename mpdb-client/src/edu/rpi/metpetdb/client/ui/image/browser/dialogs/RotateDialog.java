@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.ui.image.browser.dialogs;
 
+import java.util.Iterator;
+
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -11,6 +13,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
@@ -103,7 +106,23 @@ public class RotateDialog extends MDialogBox implements ClickListener {
 				imageOnGrid.getIog().setGchecksumHalf(iog.getGchecksumHalf());
 				imageOnGrid.getIog().setGheight(iog.getGheight());
 				imageOnGrid.getIog().setGwidth(iog.getGwidth());
+				
+				//TODO Update the chemical analysis points to correctly rotate with the image
+				
+				/*final Iterator<ChemicalAnalysis> itr = RotateDialog.this.imageOnGrid.getChemicalAnalyses().iterator();
+				while (itr.hasNext()) {
+					final ChemicalAnalysis ma = itr.next();
+					final com.google.gwt.user.client.ui.Image i = (com.google.gwt.user.client.ui.Image) ma.getActualImage();
+					
+					
+					
+					int pointX = (int)Math.round(ma.getReferenceX()/this.scale*this.pps) - this.chemImageWidth;
+					int pointY = (int)Math.round(ma.getReferenceY()/this.scale*this.pps) - this.chemImageHeight;
+					this.grid.add(i,(int)iog.getCurrentContainerPosition().x + pointX, (int)iog.getCurrentContainerPosition().y + pointY);
+				}*/
+				
 				image.setUrl(imageOnGrid.getGoodLookingPicture());
+				image.setWidth("256px");
 				loading.setText("Done");
 			}
 		}.begin();

@@ -61,7 +61,7 @@ public class PointPopup extends DialogBox implements ClickListener {
 		if (sender == this.fp)
 			this.hide();
 		else if (sender == this.remove) {
-			this.imageOnGrid.getImagePanel().remove(
+			this.imageBrowser.getGrid().remove(
 					this.chemicalAnalysis.getActualImage());
 			this.chemicalAnalysis.setImage(null);
 			this.chemicalAnalysis.setActualImage(null);

@@ -289,3 +289,11 @@ height:0px;
 	background:white;
 	z-index:1000;
 }
+
+.chem-point {
+	z-index:999;	
+}
+
+.chem-point-hidden {
+	display:none;	
+}

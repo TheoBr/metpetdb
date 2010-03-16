@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.ui.sidebar.Sidebar;
 import edu.rpi.metpetdb.client.ui.sidebar.UsesSidebar;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
@@ -40,12 +41,25 @@ public class LayersSidebar extends Sidebar implements UsesSidebar {
 				if (!checkBox.isChecked()) {
 					iog.getImageContainer()
 							.setStyleName("imageContainerHidden");
+					final Iterator<ChemicalAnalysis> itr2 = iog.getChemicalAnalyses().iterator();
+					while (itr2.hasNext()) {
+						final ChemicalAnalysis ma = itr2.next();
+						final com.google.gwt.user.client.ui.Image i = (com.google.gwt.user.client.ui.Image) ma.getActualImage();
+						i.setStyleName("chem-point-hidden");
+					}
 				} else {
 					if (iog.isMenuHidden())
 						iog.getImageContainer().setStyleName(
 								"imageContainerNoMenu");
-					else
+					else {
 						iog.getImageContainer().setStyleName("imageContainer");
+						final Iterator<ChemicalAnalysis> itr2 = iog.getChemicalAnalyses().iterator();
+						while (itr2.hasNext()) {
+							final ChemicalAnalysis ma = itr2.next();
+							final com.google.gwt.user.client.ui.Image i = (com.google.gwt.user.client.ui.Image) ma.getActualImage();
+							i.setStyleName("chem-point");
+						}
+					}
 				}
 			}
 		});

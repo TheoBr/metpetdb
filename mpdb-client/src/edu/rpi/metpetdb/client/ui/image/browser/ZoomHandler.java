@@ -6,6 +6,7 @@ import java.util.Iterator;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.Image;
 
 public class ZoomHandler {
 
@@ -116,18 +117,15 @@ public class ZoomHandler {
 		iog.getCurrentContainerPosition().x = Math.round(ImageBrowserDetails.pps*(iog.getImageOnGrid().getTopLeftX()/imageBrowser.scale));
 		iog.getCurrentContainerPosition().y = Math.round(ImageBrowserDetails.pps*(iog.getImageOnGrid().getTopLeftY()/imageBrowser.scale));
 		
-		for (int i = 0; i < iog.getImagePanel().getWidgetCount(); i++){
-			if (iog.getImagePanel().getWidget(i) instanceof com.google.gwt.user.client.ui.Image){
-				com.google.gwt.user.client.ui.Image im = (com.google.gwt.user.client.ui.Image) iog.getImagePanel().getWidget(i);
-				if (im.getUrl().equalsIgnoreCase(GWT.getModuleBaseURL() + "/images/point0.gif")) {
-					iog.getImagePanel().remove(i);
-				}
-			}
+		final Iterator<Image> itr = iog.getChemicalAnalysisImages().iterator();
+		while (itr.hasNext()) {
+			final Image i = itr.next();
+			imageBrowser.getGrid().remove(i);
 		}
-		
-		imageBrowser.addPoints(iog);
+		iog.getChemicalAnalysisImages().clear();
 		
 		iog.pan(imageBrowser.totalXOffset, imageBrowser.totalYOffset);
+		imageBrowser.addPoints(iog);
 	}
 
 	private double getCenterX(final ImageOnGridContainer iog) {

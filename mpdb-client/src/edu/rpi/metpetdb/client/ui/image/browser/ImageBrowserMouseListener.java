@@ -198,10 +198,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 				- grid.getAbsoluteLeft() ;
 		pointY -= currentImage.getImagePanel().getAbsoluteTop()
 				- grid.getAbsoluteTop() ;
-		pointX -= 4;
-		pointY -= 13;
-		pointX += pointer.getWidth()/2;
-		pointY += pointer.getHeight();
+
 		ca.setReferenceX((double)pointX/imageBrowser.pps*imageBrowser.scale);
 		ca.setReferenceY((double)pointY/imageBrowser.pps*imageBrowser.scale);
 		ca.setActualImage(pointer);

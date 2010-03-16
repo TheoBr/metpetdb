@@ -373,7 +373,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		SearchSample_metamorphicRegions.setConstraints(new PropertyConstraint[] {Sample_metamorphicRegions});
 		SearchSample_metamorphicRegions.entityName= "SearchSample";
 		SearchSample_metamorphicRegions.property= SearchSampleProperty.metamorphicRegions;
-		SearchSample_metamorphicRegions.propertyName= "Meramorphic Region";
+		SearchSample_metamorphicRegions.propertyName= "Metamorphic Region";
 		SearchSample_metamorphicRegions.required=false;
 		
 		

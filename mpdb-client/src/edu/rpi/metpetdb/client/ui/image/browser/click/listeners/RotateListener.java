@@ -29,18 +29,29 @@ public class RotateListener implements ClickListener {
 			public void onSuccess(final ImageOnGridContainer result) {
 				// final float widthRatio = iog.getWidth()
 				// / (float) iog.getImage().getWidth();
-				final double heightRatio = iog.getCurrentHeight()
-						/  iog.getIog().getImage().getHeight();
+				result.setCurrentWidth((int)Math
+						.round((result.getIog().getGwidth() * (result.getIog().getResizeRatio()))));
+				result.setCurrentHeight((int)Math
+						.round((result.getIog().getGheight() * (result.getIog().getResizeRatio()))));
+				
+				result.getImagePanel().setHeight(result.getCurrentHeight() + "px");
+				result.getImagePanel().setWidth(result.getCurrentWidth() + "px");
+				
+				result.getActualImage().setWidth(result.getCurrentWidth() + "px");
+				result.getActualImage().setHeight(result.getCurrentHeight() + "px");
+				
+				//final double heightRatio = iog.getCurrentHeight()
+				//		/  iog.getIog().getImage().getHeight();
 				iog.getIog().setImage(
 						(((ImageOnGridContainer) result).getIog().getImage()));
 				iog.getActualImage()
 						.setUrl(
 								((ImageOnGridContainer) result)
 										.getGoodLookingPicture());
-				iog.resizeImage(Math.round(iog.getIog().getImage().getWidth()
-						* heightRatio), Math.round(iog.getIog().getImage()
-						.getHeight()
-						* heightRatio), false);
+				//iog.resizeImage(Math.round(iog.getIog().getImage().getWidth()
+				//		* heightRatio), Math.round(iog.getIog().getImage()
+				//		.getHeight()
+				//		* heightRatio), false);
 
 			}
 		}.begin();
