@@ -108,14 +108,19 @@ public class SearchIPhonePost extends HttpServlet {
 				String password= value;
 				UserServiceImpl userImpl= new UserServiceImpl();
 				User u= new User();
-				u= userImpl.details(username);
 				response.getWriter().write("<response>");
-				if(UserServiceImpl.authenticate(u, password))
-				{
-					response.getWriter().write("authentication succeeded");
+				try{
+					u=userImpl.details(username);
+					if(UserServiceImpl.authenticate(u, password))
+					{
+						response.getWriter().write("authentication succeeded");
+					}
+					else
+					{
+						response.getWriter().write("authentication failed");
+					}
 				}
-				else
-				{
+				catch(Exception e){
 					response.getWriter().write("authentication failed");
 				}
 				response.getWriter().write("</response>");
@@ -216,22 +221,21 @@ public class SearchIPhonePost extends HttpServlet {
 			{
 				int intValue= Integer.valueOf(value);
 				commentSample= ssi.details(intValue);
-				//commentImpl.details(intValue);
 			}
 			else if(criteriaType.equals("commentToAdd"))
 			{
-				UserServiceImpl Uimp= new UserServiceImpl();
-				u= Uimp.details(username);
+				u.setEmailAddress(username);
+
 				u = new UserDAO(session).fill(u);
-				commentSample.setOwner(u);
-				commentSample.addComment(value);
-				ssi.save(commentSample);
+				//commentSample.setOwner(u);
+				//commentSample.addComment(value);
+				//ssi.save(commentSample);
 				
 				//commentSample.addComment(value);
-				//SampleComment newComment= new SampleComment(value);
-				//newComment.setOwner(u);
-				//newComment.setSample(commentSample);
-				//commentImpl.save(newComment);
+				SampleComment newComment= new SampleComment(value);
+				newComment.setOwner(u);
+				newComment.setSample(commentSample);
+				commentImpl.save(newComment);
 			}
 			//since there can only be one geographic search criteria,
 			//the following are if-else statements
