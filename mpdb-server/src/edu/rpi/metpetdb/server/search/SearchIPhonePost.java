@@ -84,7 +84,7 @@ public class SearchIPhonePost extends HttpServlet {
 		Scanner scanner = new Scanner(postText);
 		int iterations=0;
 		
-		Object user = request.getSession().getAttribute("username");
+	/*	Object user = request.getSession().getAttribute("username");
 		response.getWriter().write("<sessionResponse>");
 		if (user!=null) {
 		try {
@@ -102,6 +102,7 @@ public class SearchIPhonePost extends HttpServlet {
 		}
 		}
 		response.getWriter().write("</sessionResponse>");
+		*/
 		while(scanner.hasNextLine())
 		{
 			iterations++;
