@@ -46,6 +46,7 @@ public class SearchIPhonePost extends HttpServlet {
 	private static double east= -1;
 	private static double west= -1;
 	private static String username="";
+	private static String password="";
 	SampleCommentServiceImpl commentImpl= new SampleCommentServiceImpl();
 	User u= new User();
 	Sample commentSample= new Sample();
@@ -82,6 +83,21 @@ public class SearchIPhonePost extends HttpServlet {
 		
 		Scanner scanner = new Scanner(postText);
 		int iterations=0;
+		
+		Object user = request.getSession().getAttribute("username");
+		if (user!=null) {
+		try {
+				username=(String)user; 
+			} catch(Exception e) {
+			}
+		}
+		String pass= (String) request.getSession().getAttribute("password");
+		if(pass!=null){
+			try{
+				password=pass;
+			}catch(Exception e){
+		}
+		}
 		while(scanner.hasNextLine())
 		{
 			iterations++;
@@ -96,6 +112,7 @@ public class SearchIPhonePost extends HttpServlet {
 				criteriaType= lineScan.next();
 				value= lineScan.next();
 			}
+		
 
 		//test to see what the first word of the input is and call the functions in the rest of the 
 		//file accordingly]
@@ -105,7 +122,7 @@ public class SearchIPhonePost extends HttpServlet {
  			}
 			else if(criteriaType.equals("password"))
 			{
-				String password= value;
+				password= value;
 				UserServiceImpl userImpl= new UserServiceImpl();
 				User u= new User();
 				response.getWriter().write("<response>");
@@ -114,6 +131,9 @@ public class SearchIPhonePost extends HttpServlet {
 					if(UserServiceImpl.authenticate(u, password))
 					{
 						response.getWriter().write("authentication succeeded");
+						//when the user successfully logs in set the session username and password
+						request.getSession().setAttribute("username", username);
+						request.getSession().setAttribute("password", password);
 					}
 					else
 					{
