@@ -85,9 +85,11 @@ public class SearchIPhonePost extends HttpServlet {
 		int iterations=0;
 		
 		Object user = request.getSession().getAttribute("username");
+		response.getWriter().write("<sessionResponse>");
 		if (user!=null) {
 		try {
 				username=(String)user; 
+				response.getWriter().write("username recovered from session");
 			} catch(Exception e) {
 			}
 		}
@@ -95,9 +97,11 @@ public class SearchIPhonePost extends HttpServlet {
 		if(pass!=null){
 			try{
 				password=pass;
+				response.getWriter().write("password recovered from session");
 			}catch(Exception e){
 		}
 		}
+		response.getWriter().write("</sessionResponse>");
 		while(scanner.hasNextLine())
 		{
 			iterations++;
