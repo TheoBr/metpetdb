@@ -133,6 +133,7 @@ public class SearchIPhonePost extends HttpServlet {
 				response.getWriter().write("<response>");
 				try{
 					u=userImpl.details(username);
+
 					if(UserServiceImpl.authenticate(u, password))
 					{
 						response.getWriter().write("authentication succeeded");
@@ -325,7 +326,7 @@ public class SearchIPhonePost extends HttpServlet {
 			
 			}
 			catch(Exception e){
-				throw new IllegalStateException(e.getMessage());
+				System.out.println(e.getMessage());
 			} finally {
 				session.close();
 			}
