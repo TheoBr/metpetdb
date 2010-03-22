@@ -137,8 +137,6 @@ public class SearchIPhonePost extends HttpServlet {
 					{
 						response.getWriter().write("authentication succeeded");
 						//when the user successfully logs in set the session username and password
-						request.getSession().setAttribute("username", username);
-						request.getSession().setAttribute("password", password);
 					}
 					else
 					{
