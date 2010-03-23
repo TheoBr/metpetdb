@@ -51,7 +51,8 @@ public class GeoReferenceAttribute extends GenericAttribute implements ClickList
 				Iterator itr = refSet.iterator();
 				while(itr.hasNext()){
 					final GeoReference ref = (GeoReference) itr.next();
-					Label refLabel = new Label(((GeoReference) ref).getTitle());
+					Label refLabel = new Label(((GeoReference) ref).getFirstAuthor() + ": " +
+							((GeoReference) ref).getTitle());
 					final Image infoImage = new Image("images/icon-info-small.png");
 					infoImage.addMouseListener(new TooltipListener("Loading...", 0, "sample-infobox", true){
 						public String getTooltipContents() {

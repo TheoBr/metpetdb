@@ -26,6 +26,7 @@ import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResult;
 import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadReferencesService;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.GeoReferenceDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
@@ -103,8 +104,9 @@ public class BulkUploadReferencesServiceImpl extends BulkUploadService implement
 				//If the sample already has this geoRef, do nothing
 				Iterator<GeoReference> geoItr = currentRefs.iterator();
 				boolean old = false;
+				GeoReference currentRef = null;
 				while(geoItr.hasNext()){
-					GeoReference currentRef = geoItr.next();
+					currentRef = geoItr.next();
 					if(currentRef.getReferenceNumber().equals(geoRef.getReferenceNumber())){
 						old = true;
 						break;
@@ -116,7 +118,14 @@ public class BulkUploadReferencesServiceImpl extends BulkUploadService implement
 					sampleDao.save(s);
 					resultCount.incrementFresh();
 				} else {
-					resultCount.incrementOld();
+					//replace the existing reference with this number with the new one
+					if(currentRef != null){
+						currentRefs.remove(currentRef);
+						currentRefs.add(geoRef);
+						s.setGeoReferences(currentRefs);
+						sampleDao.save(s);
+						resultCount.incrementOld();
+					}
 				}
 			}	
 		}

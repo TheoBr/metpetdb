@@ -1,6 +1,9 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javassist.bytecode.Descriptor.Iterator;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -45,7 +48,22 @@ public class GeoReferenceDAO extends MpDbDAO<GeoReference>{
 	}
 	
 	public Object[] allReferences()throws MpDbException {
-        final Query q = namedQuery("GeoReference.all/name");
+        final Query q = namedQuery("GeoReference.all/title");
         return ((List<GeoReference>)getResults(q)).toArray();
     }
+	
+	public ArrayList<GeoReference> referencesByNumber(ArrayList<String> refNums) throws MpDbException {
+		final Query q = namedQuery("GeoReference.byNumber");
+		ArrayList<GeoReference> results = new ArrayList<GeoReference>();
+		java.util.Iterator<String> refItr = refNums.iterator();
+		while(refItr.hasNext()){
+			q.setString("number", refItr.next());
+			GeoReference currentRef = (GeoReference) getResult(q);
+			if(currentRef != null){
+				results.add(currentRef);
+			}
+		}
+		
+		return results;
+	}
 }

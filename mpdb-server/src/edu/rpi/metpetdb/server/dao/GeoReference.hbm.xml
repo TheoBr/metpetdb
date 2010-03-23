@@ -22,6 +22,11 @@
     where lower(g.title) = lower(:title)
   </query>
   
+  <query name="GeoReference.byNumber">
+   	from GeoReference g
+   	where lower(g.referenceNumber) = lower(:number)
+   </query>
+  
   <query name="GeoReference.byId">
     from GeoReference g
     where g.id = :id

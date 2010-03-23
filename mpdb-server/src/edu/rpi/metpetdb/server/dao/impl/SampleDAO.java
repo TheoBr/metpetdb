@@ -1,6 +1,8 @@
 package edu.rpi.metpetdb.server.dao.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -9,7 +11,9 @@ import org.hibernate.Session;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.SampleNotFoundException;
+import edu.rpi.metpetdb.client.model.GeoReference;
 import edu.rpi.metpetdb.client.model.MetamorphicRegion;
+import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
@@ -76,7 +80,33 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		s.setReferences((new ReferenceDAO(sess)).fill(s.getReferences()));
 		s.setMinerals(((new SampleMineralDAO(sess))).fill(s.getMinerals()));
 		s.setRockType(new RockTypeDAO(sess).fill(s.getRockType()));
-		s.setGeoReferences(new GeoReferenceDAO(sess).fill(s.getGeoReferences()));
+		
+		//Check to see if there are any references that don't have a corresponding georef
+		GeoReferenceDAO geoDAO = new GeoReferenceDAO(sess);
+		Set<GeoReference> geoRefs = s.getGeoReferences();
+		ArrayList<String> geoRefNumbers = new ArrayList<String>();
+		Iterator<GeoReference> geoRefItr = geoRefs.iterator();
+		while(geoRefItr.hasNext()){
+			GeoReference currentRef = geoRefItr.next();
+			geoRefNumbers.add(currentRef.getReferenceNumber());
+		}
+		
+		ArrayList<String> numbersToLookup = new ArrayList<String>();
+		Set<Reference> refs = s.getReferences();
+		Iterator<Reference> refItr = refs.iterator();
+		while(refItr.hasNext()){
+			Reference currentRef = refItr.next();
+			if(!geoRefNumbers.contains(currentRef.getName())){
+				numbersToLookup.add(currentRef.getName());
+			}
+		}
+
+		//look up these numbers without a match
+		ArrayList<GeoReference> matchingRefs = geoDAO.referencesByNumber(numbersToLookup);		
+		//add them to the current georefs
+		geoRefs.addAll(matchingRefs);				
+		
+		s.setGeoReferences(geoDAO.fill(geoRefs));
 	}
 	
 	public Set<MetamorphicRegion> getMatchingMetamorphicRegions(final Sample s){
@@ -90,7 +120,6 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		sess.disableFilter("metRegionBox");
 		return regions;
 	}
-
 
 	@Override
 	public Sample save(Sample s) throws MpDbException {
