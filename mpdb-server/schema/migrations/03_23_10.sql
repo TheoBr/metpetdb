@@ -1,0 +1,1 @@
+ALTER TABLE georeference DROP CONSTRAINT ref_num_unq;
