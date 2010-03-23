@@ -207,7 +207,7 @@ public class SearchIPhonePost extends HttpServlet {
 				p= new PaginationParameters();
 				int param= Integer.parseInt(value);
 				p.setFirstResult(param);
-				p.setMaxResults(5);
+				p.setMaxResults(10);
 			}
 			else if(criteriaType.equals("regions")){
 				SearchIPhone.regions(response, session);
