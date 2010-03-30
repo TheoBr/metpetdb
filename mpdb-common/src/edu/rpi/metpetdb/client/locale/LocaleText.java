@@ -205,6 +205,7 @@ public interface LocaleText extends Messages {
 	String confirmation_Delete_Member();
 	String confirmation_Delete_Analysis();
 	String confirmation_AddToProject();
+	String confirmation_SaveImageMap();
 	String message_ChooseSamples();
 	String message_resetForm();
 	

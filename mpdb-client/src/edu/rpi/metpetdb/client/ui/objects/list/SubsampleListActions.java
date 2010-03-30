@@ -232,17 +232,13 @@ public class SubsampleListActions extends FlowPanel implements ClickListener {
 						if(checkDeletePermissions(result2)){
 							noPermissionToDelete();
 						} else {
-							new ServerOp<Boolean>() {
-								public void begin() {
-									new ConfirmationDialogBox(LocaleHandler.lc_text
-											.confirmation_Delete_Subsample(), true, this);
+							new ConfirmationDialogBox(LocaleHandler.lc_text
+									.confirmation_Delete_Subsample(), true) {
+								
+								public void onSubmit(){
+									deleteSelected(checkedSubsampleIds);
 								}
-				
-								public void onSuccess(final Boolean result) {
-									if (result)
-										deleteSelected(checkedSubsampleIds);
-								}
-							}.begin();
+							}.show();
 						}	
 					};
 				}.begin();

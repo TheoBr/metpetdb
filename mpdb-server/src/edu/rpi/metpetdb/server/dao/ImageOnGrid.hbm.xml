@@ -22,6 +22,7 @@
     <property name="gchecksum64x64" column="checksum_64x64" />
     <property name="gchecksumHalf" column="checksum_half" />
     <property name="locked" column="locked" type="yes_no"/>
+    <property name="angle" column="angle" />
     
     <many-to-one name="image" column="image_id" class="Image" lazy="false" cascade="none"/>
     <many-to-one name="grid" column="grid_id" class="Grid" lazy="false" cascade="none"/>

@@ -13,6 +13,7 @@ import edu.rpi.metpetdb.client.ui.sidebar.Sidebar;
 import edu.rpi.metpetdb.client.ui.sidebar.UsesSidebar;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MText;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList.ListItem;
 
 public class LayersSidebar extends Sidebar implements UsesSidebar {
 
@@ -32,9 +33,14 @@ public class LayersSidebar extends Sidebar implements UsesSidebar {
 
 	public void registerImage(final ImageOnGridContainer iog) {
 		final SimplePanel container = new SimplePanel();
+		double width = iog.getIog().getImage().getScale()*iog.getIog().getResizeRatio();
+		double height = width/iog.getIog().getImage().getWidth()*iog.getIog().getImage().getHeight();
+		width = (double)Math.round(width*1000)/1000;
+		height = (double)Math.round(height*1000)/1000;
 		final String checkBoxText = iog.getIog().getImage().getFilename()
 				.equals("") ? iog.getIog().getImage().getChecksum() : iog
-				.getIog().getImage().getFilename();
+				.getIog().getImage().getFilename() + " " + width +" mm x " + 
+				height + " mm";
 		final CheckBox checkBox = new CheckBox(checkBoxText);
 		checkBox.addClickListener(new ClickListener() {
 			public void onClick(final Widget sender) {
@@ -115,6 +121,24 @@ public class LayersSidebar extends Sidebar implements UsesSidebar {
 			}
 		}
 		return null;
+	}
+	
+	public void updateImageScale(final ImageOnGridContainer iog) {
+		for (ListItem l : ul.getItems()) {
+			CheckBox cb = (CheckBox) ((SimplePanel) l.getWidget()).getWidget(); 
+			if (cb.getText().contains(iog.getIog().getImage().getChecksum() + " ") ||
+					cb.getText().contains(iog.getIog().getImage().getFilename()  + " ")){
+				double width = iog.getIog().getImage().getScale()*iog.getIog().getResizeRatio();
+				double height = width/iog.getIog().getImage().getWidth()*iog.getIog().getImage().getHeight();
+				width = (double)Math.round(width*1000)/1000;
+				height = (double)Math.round(height*1000)/1000;
+				final String checkBoxText = iog.getIog().getImage().getFilename()
+						.equals("") ? iog.getIog().getImage().getChecksum() : iog
+						.getIog().getImage().getFilename() + " " + width +" mm x " + 
+						height + " mm";
+				cb.setText(checkBoxText);
+			}
+		}
 	}
 
 	public void onPageChanged() {

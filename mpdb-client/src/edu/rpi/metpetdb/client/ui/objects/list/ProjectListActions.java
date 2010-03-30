@@ -168,17 +168,12 @@ public class ProjectListActions extends FlowPanel implements ClickListener {
 						if(checkDeletePermissions(result2)) {
 							noPermissionToDelete();
 						} else {
-							new ServerOp<Boolean>() {
-								public void begin() {
-									new ConfirmationDialogBox(LocaleHandler.lc_text
-											.confirmation_Delete_Project(), true, this);
-								}
-				
-								public void onSuccess(final Boolean result) {
-									if (result)
+							new ConfirmationDialogBox(LocaleHandler.lc_text
+										.confirmation_Delete_Project(), true) {
+									public void onSubmit(){
 										deleteSelected(checkedProjectIds);
-								}
-							}.begin();
+									}
+							}.show();
 						}
 					}
 				}.begin();

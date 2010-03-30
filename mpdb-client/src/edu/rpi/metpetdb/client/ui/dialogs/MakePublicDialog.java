@@ -82,30 +82,24 @@ public class MakePublicDialog extends MDialogBox{
 		closeX = new Button("X");
 		closeX.addClickListener(new ClickListener(){
 			public void onClick(final Widget sender){
-				new ServerOp<Boolean>(){
-					public void begin() {
-						new ConfirmationDialogBox("Cancel?", true, this);
-					}
-					public void onSuccess(final Boolean result) {
-						if (result)
+						new ConfirmationDialogBox("Cancel?", true) {
+							
+						public void onSubmit() {
 							MakePublicDialog.this.hide();
-					}
-				}.begin();		
+						}
+					}.show();		
 			}
 		});
 		
 		cancel = new Button("Cancel");
 		cancel.addClickListener(new ClickListener(){
 			public void onClick(final Widget sender){
-				new ServerOp<Boolean>(){
-					public void begin() {
-						new ConfirmationDialogBox("Cancel?", true, this);
+				new ConfirmationDialogBox("Cancel?", true) {
+					
+					public void onSubmit() {
+						MakePublicDialog.this.hide();
 					}
-					public void onSuccess(final Boolean result) {
-						if (result)
-							MakePublicDialog.this.hide();
-					}
-				}.begin();			
+				}.show();		
 			}
 		});
 	}

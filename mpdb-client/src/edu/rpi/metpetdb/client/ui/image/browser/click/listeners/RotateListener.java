@@ -6,15 +6,18 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserDetails;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
 import edu.rpi.metpetdb.client.ui.image.browser.dialogs.RotateDialog;
 
 public class RotateListener implements ClickListener {
 
 	private final ImageOnGridContainer iog;
+	private final ImageBrowserDetails imageBrowser;
 
-	public RotateListener(final ImageOnGridContainer imageOnGrid) {
+	public RotateListener(final ImageOnGridContainer imageOnGrid, final ImageBrowserDetails imageBrowser) {
 		iog = imageOnGrid;
+		this.imageBrowser = imageBrowser;
 	}
 
 	public void onClick(final Widget sender) {
@@ -30,9 +33,9 @@ public class RotateListener implements ClickListener {
 				// final float widthRatio = iog.getWidth()
 				// / (float) iog.getImage().getWidth();
 				result.setCurrentWidth((int)Math
-						.round((result.getIog().getGwidth() * (result.getIog().getResizeRatio()))));
+						.round((result.getIog().getGwidth() * (result.getIog().getActualCurrentResizeRatio()))));
 				result.setCurrentHeight((int)Math
-						.round((result.getIog().getGheight() * (result.getIog().getResizeRatio()))));
+						.round((result.getIog().getGheight() * (result.getIog().getActualCurrentResizeRatio()))));
 				
 				result.getImagePanel().setHeight(result.getCurrentHeight() + "px");
 				result.getImagePanel().setWidth(result.getCurrentWidth() + "px");
@@ -48,6 +51,20 @@ public class RotateListener implements ClickListener {
 						.setUrl(
 								((ImageOnGridContainer) result)
 										.getGoodLookingPicture());
+				imageBrowser.updatePoints(iog);
+				
+				//TODO Update the chemical analysis points to correctly rotate with the image
+				
+				/*final Iterator<ChemicalAnalysis> itr = iog.getChemicalAnalyses().iterator();
+				while (itr.hasNext()) {
+					final ChemicalAnalysis ma = itr.next();
+					final com.google.gwt.user.client.ui.Image i = (com.google.gwt.user.client.ui.Image) ma.getActualImage();				
+					
+					int pointX = (int)Math.round(ma.getReferenceX()/this.scale*this.pps) - this.chemImageWidth;
+					int pointY = (int)Math.round(ma.getReferenceY()/this.scale*this.pps) - this.chemImageHeight;
+					this.grid.add(i,(int)iog.getCurrentContainerPosition().x + pointX, (int)iog.getCurrentContainerPosition().y + pointY);
+					
+				}*/
 				//iog.resizeImage(Math.round(iog.getIog().getImage().getWidth()
 				//		* heightRatio), Math.round(iog.getIog().getImage()
 				//		.getHeight()

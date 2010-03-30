@@ -95,21 +95,18 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 			}
 
 			protected void deleteBean(final AsyncCallback<Object> ac) {
-				new ServerOp<Boolean>() {
-					public void begin() {
 						new ConfirmationDialogBox("Are you sure you want to delete this analysis?"
-								, true, this);
-					}
-					public void onSuccess(final Boolean result) {
-						if (result){
-							subsampleObj = ((ChemicalAnalysis) getBean()).getSubsample();
-							MpDb.chemicalAnalysis_svc.delete(((ChemicalAnalysis) getBean())
-									.getId(), ac);
-						} else {
-							p_chemicalAnalysis.setEnabled(true);
-						}
-					}
-				}.begin();
+								, true) {
+							public void onSubmit(){
+								subsampleObj = ((ChemicalAnalysis) getBean()).getSubsample();
+								MpDb.chemicalAnalysis_svc.delete(((ChemicalAnalysis) getBean())
+										.getId(), ac);
+							}
+							
+							public void onCancel() {
+								p_chemicalAnalysis.setEnabled(true);
+							}
+					}.show();
 			}
 
 			protected boolean canEdit() {

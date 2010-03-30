@@ -75,7 +75,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 
 	private Grid g;
 	private final MAbsolutePanel grid;
-	private LayersSidebar layers;
+	public LayersSidebar layers;
 
 	// Listeners
 	private ImageBrowserMouseListener mouseListener;
@@ -90,10 +90,10 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	private FlowPanel boundary = new FlowPanel();
 
 	// Scale
-	public static int pps = 20; // pixels per grid square
-	public int totalXOffset = 50;
+	public int totalXOffset = 100;
 	public int totalYOffset = 10;
-	private final Label scaleDisplay;
+	private final Label scaleDisplayBottom;
+	private final Label scaleDisplayTop;
 	public float scale = 1f; /* in milli meters */
 	private int unit = 1;
 	private static String[] units = {
@@ -102,9 +102,6 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 			"um", /* micrometer 10x10^-6 */
 			"nm", /* nanometer 10x10^-9 */
 	};
-	
-	public static int chemImageWidth = 4;
-	public static int chemImageHeight = 13;
 
 	/** which chemical analyses that need to be saved */
 	private final Collection<ChemicalAnalysis> chemicalAnalyses;
@@ -113,16 +110,21 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 
 	public ImageBrowserDetails() {
 		this.info = new Label();
-		this.scaleDisplay = new Label();
-		this.scaleDisplay.setStyleName("mpdb-scale");
-		this.scaleDisplay.setText(String.valueOf(this.scale) + " mm");
+		this.scaleDisplayTop = new Label();
+		this.scaleDisplayTop.setStyleName("mpdb-scale-top");
+		this.scaleDisplayTop.setText(String.valueOf(this.scale) + " mm");
+		this.scaleDisplayBottom = new Label();
+		this.scaleDisplayBottom.setStyleName("mpdb-scale-bottom");
+		this.scaleDisplayBottom.setText(String.valueOf(this.scale) + " mm");
 		this.addExistingImage = new MLink("Add Existing Image", this);
 		this.addExistingImage.setStyleName("addlink");
 		this.bringToFront = new MLink("Bring To Front", this);
 		this.senBack = new MLink("Send To Back", this);
 		this.save = new Button(LocaleHandler.lc_text.buttonSave(), this);
 		this.grid = new MAbsolutePanel();
-		this.grid.add(this.scaleDisplay);
+		this.grid.add(this.scaleDisplayTop);
+		this.grid.add(this.scaleDisplayBottom);
+		updateScale(1);
 		this.imagesOnGrid = new HashMap<Image, ImageOnGridContainer>();
 		panHandler = new PanHandler(grid,this);
 		chemicalAnalyses = new ArrayList<ChemicalAnalysis>();
@@ -210,22 +212,21 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	public void updateScale(final double multiplier) {
 		this.scale *= multiplier;
 
-		while (String.valueOf((int) this.scale).length() > 3) {
-			++this.unit;
-			if (this.unit == ImageBrowserDetails.units.length)
-				--this.unit;
-			else
-				this.scale *= 1000;
-		}
-		if (this.scale == 0) {
-			--this.unit;
-			this.scale /= 1000;
+		double scaleString = 4*scale;
+		
+		if (4*scale >= 1) {
+			scaleString = Math.round(4*scale);
+		} else {
+			scaleString = (double)Math.round(4*scale*10)/10;
 		}
 
-		if ((this.unit >= ImageBrowserDetails.units.length) || (this.unit < 0))
-			return;
-		this.scaleDisplay.setText(String.valueOf(this.scale) + " "
+		this.scaleDisplayTop.setText(String.valueOf(scaleString) + " "
 				+ ImageBrowserDetails.units[this.unit]);
+		this.scaleDisplayBottom.setText(String.valueOf(scaleString) + " "
+				+ ImageBrowserDetails.units[this.unit]);
+		int pixels = ImageBrowserUtil.MMToPixels(scaleString, scale, 1);
+		DOM.setStyleAttribute(scaleDisplayTop.getElement(), "width", pixels+"px");
+		DOM.setStyleAttribute(scaleDisplayBottom.getElement(), "width", pixels+"px");
 	}
 
 	@Override
@@ -277,9 +278,11 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		iog.setImage(i);
 		iog.setOpacity(100);
 		if (i.getScale() != null && i.getScale() != 0)
-			iog.setResizeRatio((((float)i.getScale()/(float)i.getWidth())/this.scale)*(float)pps);
-		else
-			iog.setResizeRatio(1);
+			iog.setActualCurrentResizeRatio(ImageBrowserUtil.calculateCurrentResizeRatio(i.getScale(), i.getWidth(), scale));
+		else {
+			iog.setActualCurrentResizeRatio(ImageBrowserUtil.calculateCurrentResizeRatio(i.getWidth(), scale));
+		}
+		iog.setResizeRatio(1);
 		iog.setZorder(1);
 		iog.setTopLeftX(cascade[0]);
 		iog.setTopLeftY(cascade[0]);
@@ -291,9 +294,9 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		iog.setGchecksumHalf(i.getChecksumHalf());
 		final ImageOnGridContainer imageOnGrid = new ImageOnGridContainer(iog,scale);
 		imageOnGrid.setCurrentWidth((int)Math
-				.round((iog.getGwidth() * (iog.getResizeRatio()))));
+				.round((iog.getGwidth() * (iog.getActualCurrentResizeRatio()))));
 		imageOnGrid.setCurrentHeight((int)Math
-				.round((iog.getGheight() * (iog.getResizeRatio()))));
+				.round((iog.getGheight() * (iog.getActualCurrentResizeRatio()))));
 		imageOnGrid.pan(totalXOffset, totalYOffset);
 		this.addImage(imageOnGrid);
 		this.g.addImageOnGrid(iog);
@@ -348,7 +351,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		popupMenu.addItem(new ImageHyperlink(
 				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
 						+ "/images/icon-rotate.gif"), "Rotate",
-				new RotateListener(iog), false));
+				new RotateListener(iog,this), false));
 		popupMenu.addItem(new ImageHyperlink(
 				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
 						+ "/images/icon-opacity.gif"), "Opacity",
@@ -399,9 +402,10 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		while (itr2.hasNext()) {
 			final ChemicalAnalysis ma = itr2.next();
 			final com.google.gwt.user.client.ui.Image i = (com.google.gwt.user.client.ui.Image) ma.getActualImage();
-			
-			int pointX = (int)Math.round(ma.getReferenceX()/this.scale*this.pps) - this.chemImageWidth;
-			int pointY = (int)Math.round(ma.getReferenceY()/this.scale*this.pps) - this.chemImageHeight;
+			int tpointX = ImageBrowserUtil.MMToPixelsChemWidth(ma.getReferenceX(), scale, iog.getIog().getResizeRatio());
+			int tpointY = ImageBrowserUtil.MMToPixelsChemHeight(ma.getReferenceY(), scale, iog.getIog().getResizeRatio());
+			int pointX = tpointX; //ImageBrowserUtil.rotateWidth(tpointX, tpointY, iog.getIog().getAngle());
+			int pointY = tpointY; //ImageBrowserUtil.rotateHeight(tpointX, tpointY, iog.getIog().getAngle());
 			this.grid.add(i,(int)iog.getCurrentContainerPosition().x + pointX, (int)iog.getCurrentContainerPosition().y + pointY);
 		}
 	}
@@ -414,18 +418,17 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 			final com.google.gwt.user.client.ui.Image i = new com.google.gwt.user.client.ui.Image(
 					GWT.getModuleBaseURL() + "/images/point0.gif");
 
-			int pointX = (int)Math.round(ma.getReferenceX()/this.scale*pps) - chemImageWidth;
-			int pointY = (int)Math.round(ma.getReferenceY()/this.scale*pps) - chemImageHeight;
+			int tpointX = ImageBrowserUtil.MMToPixelsChemWidth(ma.getReferenceX(), scale, iog.getIog().getResizeRatio());
+			int tpointY = ImageBrowserUtil.MMToPixelsChemHeight(ma.getReferenceY(), scale, iog.getIog().getResizeRatio());
+			int pointX = tpointX; //ImageBrowserUtil.rotateWidth(tpointX, tpointY, iog.getIog().getAngle());
+			int pointY = tpointY; //ImageBrowserUtil.rotateHeight(tpointX, tpointY, iog.getIog().getAngle());
 			i.setStyleName("chem-point");
 			this.grid.add(i,(int)iog.getCurrentContainerPosition().x + pointX, (int)iog.getCurrentContainerPosition().y + pointY);
 			iog.getChemicalAnalysisImages().add(i);
 			
-			//final com.google.gwt.user.client.ui.Image i2 = new com.google.gwt.user.client.ui.Image(
-			//		GWT.getModuleBaseURL() + "/images/point0.gif");
-			//iog.getImagePanel().add(i2,pointX,pointY );
 			ma.setActualImage(i);
-			ma.setPercentX((float)ma.getReferenceX()/this.scale*pps/ (float) iog.getCurrentWidth());
-			ma.setPercentY((float)ma.getReferenceY()/this.scale*pps / (float) iog.getCurrentHeight());
+			ma.setPercentX((float) (ImageBrowserUtil.MMToPixels(ma.getReferenceX(), scale, 1)/ iog.getCurrentWidth()));
+			ma.setPercentY((float) (ImageBrowserUtil.MMToPixels(ma.getReferenceY(), scale, 1)/ iog.getCurrentHeight()));
 			ma.setLocked(true);
 			i.addClickListener(new ClickListener() {
 				public void onClick(final Widget sender) {
@@ -452,10 +455,13 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 
 	private void scale(final ImageOnGridContainer iog) {
 		final int multiplier = 1;
+		Image i = iog.getIog().getImage();
+		iog.getImageOnGrid().setActualCurrentResizeRatio((float)iog.getIog().getResizeRatio()*(((float)i.getScale()/(float)i.getWidth())/this.scale)*ImageBrowserUtil.pps);
+
 		iog.setCurrentWidth((int)Math.round((iog.getIog().getGwidth()
-				* multiplier * iog.getIog().getResizeRatio())));
+				* multiplier * iog.getIog().getActualCurrentResizeRatio())));
 		iog.setCurrentHeight((int)Math.round((iog.getIog().getGheight()
-				* multiplier * iog.getIog().getResizeRatio())));
+				* multiplier * iog.getIog().getActualCurrentResizeRatio())));
 	}
 
 	private MHtmlList makeBottomMenu(final ImageOnGridContainer iog) {
@@ -486,7 +492,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		final MLink rotate = new ImageHyperlink(
 				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
 						+ "/images/icon-rotate.gif"), "Rotate",
-				new RotateListener(iog), false);
+				new RotateListener(iog, this), false);
 		final MLink opacity = new ImageHyperlink(
 				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
 						+ "/images/icon-opacity.gif"), "Opacity",
@@ -494,6 +500,9 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		final MLink hideMenu = new MLink("Hide Menu", this.hideMenuListener);
 		this.hideMenuListener.addNotifier(hideMenu);
 		final MLink lock = new MLink("Lock", this.lockListener);
+		if (iog.getImageOnGrid().isLocked()) {
+			lock.setText("Unlock");
+		}
 		this.lockListener.addNotifier(lock);
 		ulTop.add(rotate);
 		ulTop.add(opacity);
@@ -712,8 +721,8 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	}
 	
 	public void updateBoundary() {
-		float height = (g.getHeight()/this.scale)*pps;
-		float width = (g.getWidth()/this.scale)*pps;
+		float height = (g.getHeight()/this.scale)*ImageBrowserUtil.pps;
+		float width = (g.getWidth()/this.scale)*ImageBrowserUtil.pps;
 		DOM.setStyleAttribute(boundary.getElement(), "width",width+"px");
 		DOM.setStyleAttribute(boundary.getElement(), "height",height+"px");
 		
@@ -723,8 +732,15 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 
 	public void onPageChanged() {
 		if (g != null) {
-			doSave();
-			MetPetDBApplication.removePageWatcher(this);
+			//new ConfirmationDialogBox(LocaleHandler.lc_text.confirmation_SaveImageMap(), true, true) {
+			//	public void onSubmit() {
+					doSave();
+			//	}
+			//	public void onCancel() {
+					
+			//	}
+			//}.show();
+		MetPetDBApplication.removePageWatcher(this);
 		}
 	}
 

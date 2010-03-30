@@ -104,8 +104,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 			final RenderedOp originalImage = ImageUploadServlet
 					.loadImage(bytes);
 			final RenderedOp rotatedImage = rotate(originalImage,
-					(double) degrees, iog.getImage().getWidth(), iog.getImage()
-							.getHeight());
+					(double) degrees, iog.getImage().getWidth(), iog.getImage().getHeight());
 
 			final File halfFile = new File(baseFolder
 					+ Image.getServerPath(iog.getImage().getChecksumHalf()));
@@ -115,8 +114,8 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 			final RenderedOp halfsizeImage = ImageUploadServlet
 					.loadImage(halfBytes);
 			final RenderedOp halfsizeRotated = rotate(halfsizeImage,
-					(double) degrees, (float) halfsizeImage.getWidth(),
-					(float) halfsizeImage.getHeight());
+					(double) degrees, halfsizeImage.getWidth(),
+					halfsizeImage.getHeight());
 			deleteRotatedImages(iog);
 			iog.setGchecksum(ImageUploadServlet.generateFullsize(rotatedImage,
 					true));
@@ -126,6 +125,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 					rotatedImage, true));
 			iog.setGwidth(rotatedImage.getWidth());
 			iog.setGheight(rotatedImage.getHeight());
+			iog.setAngle(degrees);
 			stream.close();
 			halfStream.close();
 			// TODO: This many exceptions just ignored scares me
@@ -191,7 +191,7 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		pb.add((float) (srca.getHeight()) / 2.0f);
 		pb.add((float) Math.toRadians(ang));
 		pb.add(Interpolation.getInstance(Interpolation.INTERP_BICUBIC));
-		return JAI.create("rotate", pb);
+		return JAI.create("rotate", pb); 
 	}
 
 	public void deleteRotatedImages(final ImageOnGrid iog) {

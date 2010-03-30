@@ -13,7 +13,7 @@ public class ZoomHandler {
 	private Collection<ImageOnGridContainer> imagesOnGrid;
 	public final Element zSlide;
 	public final ImageBrowserDetails imageBrowser;
-	public final static double zoomMultiplier = 1.5f;
+	public final static double zoomMultiplier = 2f;
 	public final static int MAXZOOM = 10;
 	public final static int MINZOOM = 130;
 	private int referenceX = 0;
@@ -63,12 +63,13 @@ public class ZoomHandler {
 		referenceY = imageBrowser.getGrid().getOffsetHeight() / 2;
 		referenceX = imageBrowser.getGrid().getOffsetWidth() / 2;
 		imageBrowser.updateScale(level == 1 ?  (1 / zoomMultiplier) : zoomMultiplier);
+
 		if (level == -1) {
-			imageBrowser.totalYOffset = (int)Math.round(((double)imageBrowser.totalYOffset/2.0) + ((double)imageBrowser.getGrid().getOffsetHeight()/4.0));
-			imageBrowser.totalXOffset = (int)Math.round(((double)imageBrowser.totalXOffset/2.0) + ((double)imageBrowser.getGrid().getOffsetWidth()/4.0));
+			imageBrowser.totalYOffset = (int)Math.round(((double)imageBrowser.totalYOffset/zoomMultiplier) + ((double)imageBrowser.getGrid().getOffsetHeight()/Math.pow(zoomMultiplier,2)));
+			imageBrowser.totalXOffset = (int)Math.round(((double)imageBrowser.totalXOffset/zoomMultiplier) + ((double)imageBrowser.getGrid().getOffsetWidth()/Math.pow(zoomMultiplier,2)));
 		} else {
-			imageBrowser.totalYOffset = (int)Math.round((2*imageBrowser.totalYOffset) - ((double)imageBrowser.getGrid().getOffsetHeight()/2.0));
-			imageBrowser.totalXOffset = (int)Math.round((2*imageBrowser.totalXOffset) - ((double)imageBrowser.getGrid().getOffsetWidth()/2.0));
+			imageBrowser.totalYOffset = (int)Math.round((zoomMultiplier*imageBrowser.totalYOffset) - ((double)imageBrowser.getGrid().getOffsetHeight()/zoomMultiplier));
+			imageBrowser.totalXOffset = (int)Math.round((zoomMultiplier*imageBrowser.totalXOffset) - ((double)imageBrowser.getGrid().getOffsetWidth()/zoomMultiplier));
 		}
 		DOM.setStyleAttribute(imageBrowser.getGrid().getElement(), "backgroundPosition",
 				(imageBrowser.totalXOffset) + "px "
@@ -114,8 +115,8 @@ public class ZoomHandler {
 		centerX += referenceX;
 		centerY += referenceY;
 
-		iog.getCurrentContainerPosition().x = Math.round(ImageBrowserDetails.pps*(iog.getImageOnGrid().getTopLeftX()/imageBrowser.scale));
-		iog.getCurrentContainerPosition().y = Math.round(ImageBrowserDetails.pps*(iog.getImageOnGrid().getTopLeftY()/imageBrowser.scale));
+		iog.getCurrentContainerPosition().x = Math.round(ImageBrowserUtil.pps*(iog.getImageOnGrid().getTopLeftX()/imageBrowser.scale));
+		iog.getCurrentContainerPosition().y = Math.round(ImageBrowserUtil.pps*(iog.getImageOnGrid().getTopLeftY()/imageBrowser.scale));
 		
 		final Iterator<Image> itr = iog.getChemicalAnalysisImages().iterator();
 		while (itr.hasNext()) {

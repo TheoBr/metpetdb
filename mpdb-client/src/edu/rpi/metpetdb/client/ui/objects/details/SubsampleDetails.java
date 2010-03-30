@@ -103,19 +103,16 @@ public class SubsampleDetails extends MPagePanel {
 
 			protected void deleteBean(final AsyncCallback<Object> ac) {
 				sampleId = getBean().getSampleId();
-				new ServerOp<Boolean>() {
-					public void begin() {
 						new ConfirmationDialogBox("Are you sure you want to delete this subsample?"
-								, true, this);
-					}
-					public void onSuccess(final Boolean result) {
-						if (result){
-							MpDb.subsample_svc.delete(((Subsample) getBean()).getId(), ac);
-						} else {
-							p_subsample.setEnabled(true);
-						}
-					}
-				}.begin();
+								, true) {
+							public void onCancel() {
+								p_subsample.setEnabled(true);
+							}
+							
+							public void onSubmit() {
+								MpDb.subsample_svc.delete(((Subsample) getBean()).getId(), ac);
+							}
+					}.show();
 			}
 
 			protected boolean canEdit() {

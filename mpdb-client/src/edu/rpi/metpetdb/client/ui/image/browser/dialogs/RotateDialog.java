@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.image.browser.dialogs;
 import java.util.Iterator;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -19,6 +20,7 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
+import edu.rpi.metpetdb.client.ui.widgets.NumericKeyboardListener;
 
 public class RotateDialog extends MDialogBox implements ClickListener {
 
@@ -43,29 +45,33 @@ public class RotateDialog extends MDialogBox implements ClickListener {
 		vp.add(fp);
 
 		final HorizontalPanel hpControls = new HorizontalPanel();
-		ok = new Button("Ok", this);
-		cancel = new Button("Cancel", this);
 		rotateCW90 = new Button("CW 90", this);
 		rotateCCW90 = new Button("CCW 90", this);
 		rotate180 = new Button("180", this);
-		hpControls.add(cancel);
 		hpControls.add(rotateCCW90);
 		hpControls.add(rotate180);
 		hpControls.add(rotateCW90);
-		hpControls.add(ok);
+		hpControls.add(new Label("Custom:"));
+		angle = new TextBox();
+		angle.setWidth("40px");
+		angle.addKeyboardListener(new NumericKeyboardListener(false,true));
+		update = new Button("Rotate", this);
+		hpControls.add(angle);
+		hpControls.add(update);
 
 		loading = new Label();
 
-		angle = new TextBox();
-		update = new Button("Update", this);
 
-		final HorizontalPanel hpAngle = new HorizontalPanel();
-		hpAngle.add(new Label("Enter the number of degrees:"));
-		hpAngle.add(angle);
-		hpAngle.add(update);
+
+		final HorizontalPanel controls = new HorizontalPanel();
+		ok = new Button("Finish", this);
+		cancel = new Button("Cancel", this);
+		controls.add(ok);
+		controls.add(cancel);
+
 
 		vp.add(hpControls);
-		vp.add(hpAngle);
+		vp.add(controls);
 		vp.add(loading);
 
 		continuation = r;
@@ -84,7 +90,10 @@ public class RotateDialog extends MDialogBox implements ClickListener {
 		} else if (sender == rotate180) {
 			rotate(180);
 		} else if (sender == update) {
-			rotate(Integer.parseInt(angle.getText()));
+			if (!angle.getText().equals(""))
+				rotate(Integer.parseInt(angle.getText()));
+			else
+				loading.setText("Please input an amount of degrees to rotate by");
 		} else if (sender == ok) {
 			continuation.onSuccess(imageOnGrid);
 			this.hide();
@@ -94,10 +103,29 @@ public class RotateDialog extends MDialogBox implements ClickListener {
 	}
 
 	public void rotate(final int degrees) {
+		final Timer t = new Timer(){
+			@Override
+			public void run() {
+				int count=0;
+				if (loading.getText().endsWith("...")) count = 3;
+				else if (loading.getText().endsWith("..")) count = 2;
+				else if (loading.getText().endsWith(".")) count = 1;
+				count = (++count)%4;
+				String myText = "Please Wait";
+				int i = 0;
+				while (i < count){
+					myText += ".";
+					i++;
+				}
+				loading.setText(myText);
+			}		
+		};
+		
 		new ServerOp<ImageOnGrid>() {
 			public void begin() {
 				MpDb.image_svc.rotate(imageOnGrid.getIog(), degrees, this);
-				loading.setText("Please Wait");
+				t.scheduleRepeating(500);
+				t.run();
 			}
 			public void onSuccess(final ImageOnGrid result) {
 				final ImageOnGrid iog = (ImageOnGrid) result;
@@ -106,24 +134,13 @@ public class RotateDialog extends MDialogBox implements ClickListener {
 				imageOnGrid.getIog().setGchecksumHalf(iog.getGchecksumHalf());
 				imageOnGrid.getIog().setGheight(iog.getGheight());
 				imageOnGrid.getIog().setGwidth(iog.getGwidth());
+				imageOnGrid.getIog().setAngle(iog.getAngle());
 				
-				//TODO Update the chemical analysis points to correctly rotate with the image
-				
-				/*final Iterator<ChemicalAnalysis> itr = RotateDialog.this.imageOnGrid.getChemicalAnalyses().iterator();
-				while (itr.hasNext()) {
-					final ChemicalAnalysis ma = itr.next();
-					final com.google.gwt.user.client.ui.Image i = (com.google.gwt.user.client.ui.Image) ma.getActualImage();
-					
-					
-					
-					int pointX = (int)Math.round(ma.getReferenceX()/this.scale*this.pps) - this.chemImageWidth;
-					int pointY = (int)Math.round(ma.getReferenceY()/this.scale*this.pps) - this.chemImageHeight;
-					this.grid.add(i,(int)iog.getCurrentContainerPosition().x + pointX, (int)iog.getCurrentContainerPosition().y + pointY);
-				}*/
 				
 				image.setUrl(imageOnGrid.getGoodLookingPicture());
 				image.setWidth("256px");
 				loading.setText("Done");
+				t.cancel();
 			}
 		}.begin();
 	}

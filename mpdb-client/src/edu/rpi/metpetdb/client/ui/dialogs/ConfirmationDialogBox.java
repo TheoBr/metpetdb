@@ -17,19 +17,26 @@ public class ConfirmationDialogBox extends MDialogBox implements ClickListener,
 		KeyboardListener {
 	private final Button submit;
 	private final Button cancel;
+	private final Button no;
 	private final Label msg;
-	private final ServerOp s;
 
 	// cancel = false will display just a button that says "continue"
 	// cancel = true will display two buttons, "yes", and "cancel"
-	public ConfirmationDialogBox(final String msg, final boolean cancel, ServerOp s) {
+	// threeButtons = true will display three buttons, "yes", "no", and "cancel"
+	public ConfirmationDialogBox(final String msg, final boolean cancel) {
+		this(msg,cancel,false);
+	}
+	
+	public ConfirmationDialogBox(final String msg, final boolean cancel, final boolean threeButtons) {
 		this.msg = new Label(msg);
-		this.s = s;
 		if (cancel)
 			this.submit = new Submit(LocaleHandler.lc_text.buttonYes(), this);
 		else
 			this.submit = new Submit(LocaleHandler.lc_text.buttonContinue(),
 					this);
+		if (threeButtons) {
+			this.no = new Submit("No", this);
+		} else this.no = null;
 
 		this.cancel = new Button(LocaleHandler.lc_text.buttonCancel(), this);
 
@@ -39,26 +46,33 @@ public class ConfirmationDialogBox extends MDialogBox implements ClickListener,
 
 		final HorizontalPanel hp = new HorizontalPanel();
 		hp.add(submit);
+		if (threeButtons)
+			hp.add(this.no);
 		if (cancel)
 			hp.add(this.cancel);
+
 		hp.setSpacing(5);
 		vp.add(hp);
 		vp.setCellHorizontalAlignment(hp, HasHorizontalAlignment.ALIGN_CENTER);
 		this.setWidget(vp);
-		this.show();
 	}
 
 	public void onClick(final Widget sender) {
-		if (cancel == sender)
-			cancel();
-		else if (submit == sender) {
-			submit();
+		if (cancel == sender) {
+			onCancel();
 		}
+		else if (submit == sender) {
+			onSubmit();
+		} else if (no == sender) {
+			onNo();
+		}
+		hide();
 	}
 	public void onKeyPress(final Widget sender, final char kc, final int mod) {
 		if (kc == KEY_ENTER) {
-			submit();
+			onSubmit();
 		}
+		hide();
 	}
 
 	public void onKeyDown(final Widget sender, final char kc, final int mod) {
@@ -67,16 +81,10 @@ public class ConfirmationDialogBox extends MDialogBox implements ClickListener,
 	public void onKeyUp(final Widget sender, final char kc, final int mod) {
 	}
 
-	private void cancel() {
-		if (s != null)
-			s.onSuccess(false);
-		hide();
-	}
+	public void onCancel() {};
 
-	private void submit() {
-		if (s != null)
-			s.onSuccess(true);
-		hide();
-	}
+	public void onSubmit() {};
+	
+	public void onNo() {};
 
 }

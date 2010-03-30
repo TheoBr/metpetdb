@@ -175,17 +175,12 @@ public class ChemicalAnalysisListActions extends FlowPanel implements ClickListe
 						if(checkDeletePermissions(result2)) {
 							noPermissionToDelete();
 						} else {
-							new ServerOp<Boolean>() {
-								public void begin() {
-									new ConfirmationDialogBox(LocaleHandler.lc_text
-											.confirmation_Delete_Analysis(), true, this);
-								}
-				
-								public void onSuccess(final Boolean result) {
-									if (result)
-										deleteSelected(checkedAnalysesIds);
-								}
-							}.begin();
+								new ConfirmationDialogBox(LocaleHandler.lc_text
+											.confirmation_Delete_Analysis(), true) {
+										public void onSubmit(){
+											deleteSelected(checkedAnalysesIds);
+										}
+								}.show();
 						}
 					}
 				}.begin();

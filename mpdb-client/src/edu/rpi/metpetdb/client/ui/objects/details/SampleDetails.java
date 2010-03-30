@@ -128,19 +128,16 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			}
 
 			protected void deleteBean(final AsyncCallback<Object> ac) {
-				new ServerOp<Boolean>() {
-					public void begin() {
-						new ConfirmationDialogBox("Are you sure you want to delete this sample?"
-								, true, this);
+				new ConfirmationDialogBox("Are you sure you want to delete this sample?"
+							, true) {
+					public void onSubmit() {
+						MpDb.sample_svc.delete(((Sample) getBean()).getId(), ac);
 					}
-					public void onSuccess(final Boolean result) {
-						if (result){
-							MpDb.sample_svc.delete(((Sample) getBean()).getId(), ac);
-						} else {
-							p_sample.setEnabled(true);
-						}
+					
+					public void onCancel() {
+						p_sample.setEnabled(true);
 					}
-				}.begin();
+				}.show();
 			}
 
 			protected boolean canEdit() {

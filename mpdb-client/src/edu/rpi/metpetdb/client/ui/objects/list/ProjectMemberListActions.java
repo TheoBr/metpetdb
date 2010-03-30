@@ -134,17 +134,12 @@ public class ProjectMemberListActions extends FlowPanel implements ClickListener
 			if (checkedProjectIds.size() == 0){
 				noMembersSelected();
 			} else {
-				new ServerOp<Boolean>() {
-					public void begin() {
-						new ConfirmationDialogBox(LocaleHandler.lc_text
-								.confirmation_Delete_Member(), true, this);
+				new ConfirmationDialogBox(LocaleHandler.lc_text
+							.confirmation_Delete_Member(), true){
+					public void onSubmit() {
+						deleteSelected(checkedProjectIds);
 					}
-	
-					public void onSuccess(final Boolean result) {
-						if (result)
-							deleteSelected(checkedProjectIds);
-					}
-				}.begin();
+				}.show();
 			}
 		}
 	}

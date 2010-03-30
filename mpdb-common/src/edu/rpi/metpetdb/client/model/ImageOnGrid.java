@@ -16,6 +16,8 @@ public class ImageOnGrid extends MObject {
 	private String gchecksum64x64;
 	private String gchecksumHalf;
 	private Boolean locked; 
+	private double actualCurrentResizeRatio;
+	private double angle;
 	
 	public ImageOnGrid(){
 		locked = false;
@@ -151,5 +153,21 @@ public class ImageOnGrid extends MObject {
 	
 	public void setLocked(final Boolean l) {
 		locked = l;
+	}
+	
+	public double getActualCurrentResizeRatio(){
+		return actualCurrentResizeRatio;
+	}
+	
+	public void setActualCurrentResizeRatio(final double s) {
+		actualCurrentResizeRatio = s;
+	}
+	
+	public double getAngle(){
+		return angle;
+	}
+	
+	public void setAngle(final double angle) {
+		this.angle = angle;
 	}
 }

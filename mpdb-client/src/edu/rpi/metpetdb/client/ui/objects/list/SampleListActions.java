@@ -157,40 +157,34 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 								}
 								if (checkedSampleIds.size() > 0) {
 									//confirm that the user would like to add these samples to the project
-									new ServerOp<Boolean>() {
-										public void begin() {
 											new ConfirmationDialogBox(
 													LocaleHandler.lc_text
 															.confirmation_AddToProject(),
-													true, this);
-										}
+													true) {
+												public void onSubmit() {
+													final int projectId = Integer
+													.parseInt(projectListBox
+															.getValue(projectListBox
+																	.getSelectedIndex()));
+											final Project proj = projects
+													.get(projectId);
+											//Add selected samples to the project selected
+											new ServerOp<Project>() {
+												public void begin() {
+													MpDb.project_svc.addSamples(projectId, checkedSamples, this);
+												}
+												public void onSuccess(final Project result) {
+													projects.put(projectId,
+															result);
+													//reset the combo box by setting the index to 0
+													projectListBox.setSelectedIndex(0);
+													list.deselectAllRows();
+												}
+											}.begin();
 
-										public void onSuccess(
-												final Boolean result) {
-											if (result) {
-												final int projectId = Integer
-														.parseInt(projectListBox
-																.getValue(projectListBox
-																		.getSelectedIndex()));
-												final Project proj = projects
-														.get(projectId);
-												//Add selected samples to the project selected
-												new ServerOp<Project>() {
-													public void begin() {
-														MpDb.project_svc.addSamples(projectId, checkedSamples, this);
-													}
-													public void onSuccess(final Project result) {
-														projects.put(projectId,
-																result);
-														//reset the combo box by setting the index to 0
-														projectListBox.setSelectedIndex(0);
-														list.deselectAllRows();
-													}
-												}.begin();
-
-											}
-										}
-									}.begin();
+												}
+		
+										}; 
 								}
 							}
 						}
@@ -272,7 +266,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 					earthPopup.createUI(result);
 					earthPopup.show();
 				} else {
-					new ConfirmationDialogBox("There are no samples to view",false,null);
+					new ConfirmationDialogBox("There are no samples to view",false).show();
 				}
 			}
 		}.begin();
@@ -315,7 +309,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 					add(fp);
 					fp.submit();
 				} else {
-					new ConfirmationDialogBox("There are no samples to export",false,null);
+					new ConfirmationDialogBox("There are no samples to export",false).show();
 				}
 			}
 		}.begin();
@@ -353,7 +347,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 					add(fp);
 					fp.submit();
 				} else {
-					new ConfirmationDialogBox("There are no samples to export",false,null);
+					new ConfirmationDialogBox("There are no samples to export",false).show();
 				}
 			}
 		}.begin();
@@ -469,17 +463,14 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 						if(checkDeletePermissions(result2)){
 							noPermissionToDelete();
 						} else {
-							new ServerOp<Boolean>() {
-								public void begin() {
-									new ConfirmationDialogBox(LocaleHandler.lc_text
-											.confirmation_Delete(), true, this);
-								}
+							new ConfirmationDialogBox(LocaleHandler.lc_text.confirmation_Delete(), true) {
+								public void onCancel() {}
+
+								public void onSubmit() {
+									deleteSelected(checkedSampleIds);
+								}		
+							}.show();
 				
-								public void onSuccess(final Boolean result) {
-									if (result)
-										deleteSelected(checkedSampleIds);
-								}
-							}.begin();
 						}	
 					};
 				}.begin();
@@ -503,17 +494,11 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 					}
 					
 					public void onSuccess(List<Sample> result){
-						new ServerOp<Boolean>() {
-							public void begin() {
-								new ConfirmationDialogBox(LocaleHandler.lc_text
-										.confirmation_Remove_From_Project(), true, this);
-							}
-							
-							public void onSuccess(final Boolean result) {
-								removeFromProject(checkedSampleIds, projectId);
-							}
-							
-						}.begin();
+								new ConfirmationDialogBox(LocaleHandler.lc_text.confirmation_Remove_From_Project(), true) {
+									public void onSubmit() {
+										removeFromProject(checkedSampleIds, projectId);
+									}
+							}.show();
 					}
 					
 				}.begin();	

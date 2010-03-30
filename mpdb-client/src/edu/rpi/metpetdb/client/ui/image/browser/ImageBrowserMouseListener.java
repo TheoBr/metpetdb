@@ -199,8 +199,8 @@ public class ImageBrowserMouseListener implements MouseListener {
 		pointY -= currentImage.getImagePanel().getAbsoluteTop()
 				- grid.getAbsoluteTop() ;
 
-		ca.setReferenceX((double)pointX/imageBrowser.pps*imageBrowser.scale);
-		ca.setReferenceY((double)pointY/imageBrowser.pps*imageBrowser.scale);
+		ca.setReferenceX(ImageBrowserUtil.pixelsToMM(pointX,imageBrowser.scale,currentImage.getIog().getResizeRatio()));
+		ca.setReferenceY(ImageBrowserUtil.pixelsToMM(pointY,imageBrowser.scale,currentImage.getIog().getResizeRatio()));
 		ca.setActualImage(pointer);
 		ca.setLocked(true);
 		((Image) pointer).addClickListener(new ClickListener() {
@@ -501,6 +501,8 @@ public class ImageBrowserMouseListener implements MouseListener {
 					currentImage.getGoodLookingPicture());
 		moveResizedImage(x, y);
 		currentImage.resizeImage(width, height, true);
+		imageBrowser.updatePoints(currentImage);
+		imageBrowser.layers.updateImageScale(currentImage);
 	}
 
 	private void moveResizedImage(final int x, final int y) {
@@ -514,14 +516,14 @@ public class ImageBrowserMouseListener implements MouseListener {
 		} else if (resizeDirection == ResizeCorner.SOUTH_WEST) {
 			deltaX = x - lastX;
 		}
-
+	
 		final double scale = imageBrowser.scale;
 		currentImage.move(deltaX, deltaY, scale,imageBrowser);
+		edu.rpi.metpetdb.client.model.Image i = currentImage.getIog().getImage();
 		currentImage.getIog()
 				.setResizeRatio(
 						currentImage.getCurrentWidth()
-								/ (currentImage.getIog().getImage()
-										.getWidth()));
+								/ (float) (currentImage.getIog().getGwidth()*(((float)i.getScale()/(float)i.getWidth())/imageBrowser.scale)*(float)ImageBrowserUtil.pps));
 	}
 
 	private void handleEndPan(final int x, final int y) {
