@@ -31,6 +31,7 @@ import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.Parser;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
+import edu.rpi.metpetdb.server.dao.impl.GeoReferenceDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
@@ -51,6 +52,7 @@ public abstract class BulkUploadService extends MpDbServlet {
 		try {
 			final SampleDAO sampleDao = new SampleDAO(this.currentSession());
 			final SubsampleDAO ssDAO = new SubsampleDAO(this.currentSession());
+			final GeoReferenceDAO geoDao = new GeoReferenceDAO(this.currentSession());
 
 			// Keeps track of existing/new subsample names for each sample
 			final Map<String, Collection<String>> subsampleNames = new HashMap<String, Collection<String>>();
@@ -59,7 +61,7 @@ public abstract class BulkUploadService extends MpDbServlet {
 			// maps a sample number + subsample name to an actual subsample
 			final Map<String, Subsample> subsamples = new HashMap<String, Subsample>();
 
-			parserImpl(fileOnServer, save, results, sampleDao, ssDAO,
+			parserImpl(fileOnServer, save, results, sampleDao, ssDAO, geoDao,
 					subsampleNames, samples, subsamples);
 
 			if (save) {
@@ -79,7 +81,7 @@ public abstract class BulkUploadService extends MpDbServlet {
 	}
 
 	public abstract void parserImpl(String fileOnServer, boolean save,
-			BulkUploadResult results, SampleDAO sampleDao, SubsampleDAO ssDao,
+			BulkUploadResult results, SampleDAO sampleDao, SubsampleDAO ssDao, GeoReferenceDAO geoDao,
 			final Map<String, Collection<String>> subsampleNames,
 			final Map<String, Sample> samples,
 			final Map<String, Subsample> subsamples)

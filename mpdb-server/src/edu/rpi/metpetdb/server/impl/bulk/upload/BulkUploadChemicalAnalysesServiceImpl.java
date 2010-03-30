@@ -18,6 +18,7 @@ import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadChemicalAnalysesSer
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.AnalysisParser;
 import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
+import edu.rpi.metpetdb.server.dao.impl.GeoReferenceDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
@@ -30,6 +31,7 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 	@Override
 	public void parserImpl(String fileOnServer, boolean save,
 			BulkUploadResult results, SampleDAO sampleDao, SubsampleDAO ssDao,
+			GeoReferenceDAO geoDao,
 			final Map<String, Collection<String>> subsampleNames,
 			final Map<String, Sample> samples,
 			final Map<String, Subsample> subsamples)

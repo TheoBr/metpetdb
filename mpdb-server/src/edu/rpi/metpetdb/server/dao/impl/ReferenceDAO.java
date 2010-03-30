@@ -35,9 +35,11 @@ public class ReferenceDAO extends MpDbDAO<Reference> {
 	}
 
 	@Override
-	public Reference save(Reference inst) throws MpDbException {
-		// TODO Auto-generated method stub
-		throw new FunctionNotImplementedException();
+	public Reference save(Reference r) throws MpDbException {
+		if(isNew(r)){
+			r = _save(r);
+		}
+		return r;
 	}
 	
 	public Object[] allReferences()throws MpDbException {

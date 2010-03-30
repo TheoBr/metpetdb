@@ -33,7 +33,7 @@ public class MyInvites extends MPagePanel {
 	
 	private void listInvite(final Invite i, final Project p){
 		final HorizontalPanel panel = new HorizontalPanel();
-		panel.setSpacing(15);
+		panel.setSpacing(35);
 		
 		Label projectName = new Label(p.getName());
 		projectName.setWidth("150px");
@@ -58,7 +58,7 @@ public class MyInvites extends MPagePanel {
 					}.begin();
 				}
 			});
-			acceptLink.setWidth("100px");
+			acceptLink.setWidth("150px");
 			panel.add(acceptLink);
 			MLink rejectLink = new MLink("Reject", new ClickListener(){
 				public void onClick(Widget sender){
@@ -74,7 +74,7 @@ public class MyInvites extends MPagePanel {
 					}.begin();
 				}
 			});
-			rejectLink.setWidth("100px");
+			rejectLink.setWidth("150px");
 			panel.add(rejectLink);
 		} else {
 			Label statusLabel = new Label(i.getStatus());

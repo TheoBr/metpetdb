@@ -13,6 +13,7 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.FunctionNotImplementedException;
 import edu.rpi.metpetdb.client.error.dao.ReferenceNotFoundException;
 import edu.rpi.metpetdb.client.model.GeoReference;
+import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.server.dao.MpDbDAO;
 
 public class GeoReferenceDAO extends MpDbDAO<GeoReference>{
@@ -41,10 +42,14 @@ public class GeoReferenceDAO extends MpDbDAO<GeoReference>{
         throw new ReferenceNotFoundException();
 	}
 	@Override
-	public GeoReference save(GeoReference inst) throws MpDbException,
+	public GeoReference save(GeoReference g) throws MpDbException,
 			HibernateException {
-		// TODO Auto-generated method stub
-		throw new FunctionNotImplementedException();
+		g = _save(g);
+		ReferenceDAO refDAO = new ReferenceDAO(sess);
+		Reference r = new Reference();
+		r.setName(g.getReferenceNumber());
+		refDAO.save(r);
+		return g;
 	}
 	
 	public Object[] allReferences()throws MpDbException {

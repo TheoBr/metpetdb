@@ -39,6 +39,7 @@ import edu.rpi.metpetdb.server.ImageUploadServlet;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.BulkUploadImage;
 import edu.rpi.metpetdb.server.bulk.upload.ImageParser;
+import edu.rpi.metpetdb.server.dao.impl.GeoReferenceDAO;
 import edu.rpi.metpetdb.server.dao.impl.GridDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageOnGridDAO;
@@ -133,6 +134,7 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 	@Override
 	public void parserImpl(String fileOnServer, boolean save,
 			BulkUploadResult results, SampleDAO sampleDao, SubsampleDAO ssDao,
+			GeoReferenceDAO geoDao,
 			Map<String, Collection<String>> subsampleNames,
 			Map<String, Sample> samples, Map<String, Subsample> subsamples)
 			throws FileNotFoundException, MpDbException, LoginRequiredException {
@@ -290,4 +292,5 @@ public class BulkUploadImagesServiceImpl extends BulkUploadService implements
 		iog = (new ImageOnGridDAO(this.currentSession())).save(iog);
 		return (iog);
 	}
+
 }

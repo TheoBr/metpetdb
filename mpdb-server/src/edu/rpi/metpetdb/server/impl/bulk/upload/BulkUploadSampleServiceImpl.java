@@ -16,6 +16,7 @@ import edu.rpi.metpetdb.client.model.bulk.upload.BulkUploadResultCount;
 import edu.rpi.metpetdb.client.service.bulk.upload.BulkUploadSampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.bulk.upload.SampleParser;
+import edu.rpi.metpetdb.server.dao.impl.GeoReferenceDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
@@ -26,6 +27,7 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 	@Override
 	public void parserImpl(String fileOnServer, boolean save,
 			BulkUploadResult results, SampleDAO sampleDao, SubsampleDAO ssDao,
+			GeoReferenceDAO geoDao,
 			final Map<String, Collection<String>> subsampleNames,
 			final Map<String, Sample> cachedSamples,
 			final Map<String, Subsample> subsamples)
@@ -62,4 +64,5 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 		}
 		results.addResultCount("Sample", resultCount);
 	}
+
 }

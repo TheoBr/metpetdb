@@ -35,7 +35,7 @@ public class BulkUploadReferencesServiceImpl extends BulkUploadService implement
 
 	@Override
 	public void parserImpl(String fileOnServer, boolean save,
-			BulkUploadResult results, SampleDAO sampleDao, SubsampleDAO ssDao,
+			BulkUploadResult results, SampleDAO sampleDao, SubsampleDAO ssDao, GeoReferenceDAO geoDao,
 			Map<String, Collection<String>> subsampleNames,
 			Map<String, Sample> samples, Map<String, Subsample> subsamples)
 			throws FileNotFoundException, MpDbException, LoginRequiredException {
@@ -96,38 +96,43 @@ public class BulkUploadReferencesServiceImpl extends BulkUploadService implement
 		while(itr.hasNext()){
 			GeoReference geoRef = itr.next();
 			ArrayList<Sample> sampleList = (ArrayList<Sample>) sampleDao.getSamplesForReference(geoRef.getReferenceNumber());
-			//For each sample found, link it to this GeoRef
-			Iterator<Sample> sampleItr = sampleList.iterator();
-			while(sampleItr.hasNext()){
-				Sample s = sampleItr.next();
-				Set<GeoReference> currentRefs = s.getGeoReferences();
-				//If the sample already has this geoRef, do nothing
-				Iterator<GeoReference> geoItr = currentRefs.iterator();
-				boolean old = false;
-				GeoReference currentRef = null;
-				while(geoItr.hasNext()){
-					currentRef = geoItr.next();
-					if(currentRef.getReferenceNumber().equals(geoRef.getReferenceNumber())){
-						old = true;
-						break;
+			//If the reference is not found in any sample, insert it by itself
+			if(sampleList.isEmpty()){
+				geoDao.save(geoRef);
+			} else{
+				//For each sample found, link it to this GeoRef
+				Iterator<Sample> sampleItr = sampleList.iterator();
+				while(sampleItr.hasNext()){
+					Sample s = sampleItr.next();
+					Set<GeoReference> currentRefs = s.getGeoReferences();
+					//If the sample already has this geoRef, do nothing
+					Iterator<GeoReference> geoItr = currentRefs.iterator();
+					boolean old = false;
+					GeoReference currentRef = null;
+					while(geoItr.hasNext()){
+						currentRef = geoItr.next();
+						if(currentRef.getReferenceNumber().equals(geoRef.getReferenceNumber())){
+							old = true;
+							break;
+						}
 					}
-				}
-				if(!old){
-					currentRefs.add(geoRef);
-					s.setGeoReferences(currentRefs);
-					sampleDao.save(s);
-					resultCount.incrementFresh();
-				} else {
-					//replace the existing reference with this number with the new one
-					if(currentRef != null){
-						currentRefs.remove(currentRef);
+					if(!old){
 						currentRefs.add(geoRef);
 						s.setGeoReferences(currentRefs);
 						sampleDao.save(s);
-						resultCount.incrementOld();
+						resultCount.incrementFresh();
+					} else {
+						//replace the existing reference with this number with the new one
+						if(currentRef != null){
+							currentRefs.remove(currentRef);
+							currentRefs.add(geoRef);
+							s.setGeoReferences(currentRefs);
+							sampleDao.save(s);
+							resultCount.incrementOld();
+						}
 					}
 				}
-			}	
+			}
 		}
 		
 		results.addResultCount("GeoReference", resultCount);
@@ -224,4 +229,5 @@ public class BulkUploadReferencesServiceImpl extends BulkUploadService implement
 		
 		return refFileEntries;
 	}
+
 }
