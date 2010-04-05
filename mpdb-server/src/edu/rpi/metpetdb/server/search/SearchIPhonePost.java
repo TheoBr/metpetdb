@@ -210,36 +210,36 @@ public class SearchIPhonePost extends HttpServlet {
 				p.setMaxResults(10);
 			}
 			else if(criteriaType.equals("regions")){
-				SearchIPhone.regions(response, session);
+				SearchIPhone1_1.regions(response, session);
 			}
 			else if(criteriaType.equals("sampleID"))
 			{
 				sampleIds.add(Long.parseLong(value));
-				SearchIPhone.sampleInfo(session, sampleIds,response);
+				SearchIPhone1_1.sampleInfo(session, sampleIds,response);
 			}
 			else if(criteriaType.equals("comments"))
 			{
 				//the number following comments= will be the id of the sample we want comments for
 				long id= Long.parseLong(value);
-				SearchIPhone.comments(session, response, id);
+				SearchIPhone1_1.comments(session, response, id);
 			}
 			else if(criteriaType.equals("subsampleInfo"))
 			{
 				//the number following subsampleInfo= will be the id of the sample we want comments for
 				long id= Long.parseLong(value);
-				SearchIPhone.subsampleInfo(session, response, id);
+				SearchIPhone1_1.subsampleInfo(session, response, id);
 			}
 			else if(criteriaType.equals("thumbnails"))
 			{
 				//the number following the thumbnails= will be the id of the sample we want thumbnails for
 				long id=Long.parseLong(value);
-				SearchIPhone.get_thumbnails(session, response, id);
+				SearchIPhone1_1.get_thumbnails(session, response, id);
 			}
 			else if(criteriaType.equals("largeImage"))
 			{
 				//the number following the largeImage= will be id of the image we want to enlarge
 				long imageID= Long.parseLong(value);
-				SearchIPhone.get_large_image(session, response, imageID);
+				SearchIPhone1_1.get_large_image(session, response, imageID);
 			}
 			else if(criteriaType.equals("addCommentSampleID"))
 			{
@@ -281,16 +281,16 @@ public class SearchIPhonePost extends HttpServlet {
 			}
 			}
 			//the following statements will perform the actual database searches
-			//and xml output from the searchIPhone file
-			if(region!="") //if a region has been provided, call searchIPhone functions to search by region
+			//and xml output from the SearchIPhone1_1 file
+			if(region!="") //if a region has been provided, call SearchIPhone1_1 functions to search by region
 			{
 				if(criteria.equals("true"))
 				{  
-					SearchIPhone.getSearchCriteria(SearchIPhone.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
+					SearchIPhone1_1.getSearchCriteria(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
 				}
 				else
 				{
-					SearchIPhone.outputSearchXML(SearchIPhone.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response),response);
+					SearchIPhone1_1.outputSearchXML(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response),response);
 				}
 			}
 			//just test the value of the north value because all 4 coordinates are needed
@@ -300,11 +300,11 @@ public class SearchIPhonePost extends HttpServlet {
 				System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
 				if(criteria.equals("true"))
 				{
-					SearchIPhone.getSearchCriteria(SearchIPhone.search(north,south,east,west, session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p), response);
+					SearchIPhone1_1.getSearchCriteria(SearchIPhone1_1.search(north,south,east,west, session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p), response);
 				}
 				else
 				{
-					SearchIPhone.outputSearchXML(SearchIPhone.search(north,south, east, west, session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p),response);
+					SearchIPhone1_1.outputSearchXML(SearchIPhone1_1.search(north,south, east, west, session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p),response);
 				}
 			}
 			//if search criteria were entered but a search region or search box was not, a seperate search must be done
@@ -316,11 +316,11 @@ public class SearchIPhonePost extends HttpServlet {
 					response.getWriter().write(m.getName());
 				if(criteria.equals("true"))
 				{
-					SearchIPhone.getSearchCriteria(SearchIPhone.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
+					SearchIPhone1_1.getSearchCriteria(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
 				}
 				else
 				{
-					SearchIPhone.outputSearchXML(SearchIPhone.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
+					SearchIPhone1_1.outputSearchXML(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
 				}
 			}
 			

@@ -49,4 +49,5 @@
 	<servlet path="/excel.svc" class="edu.rpi.metpetdb.server.ExcelServlet"/>
 	<servlet path="/searchIPhone.svc" class="edu.rpi.metpetdb.server.search.SearchIPhone"/>
 	<servlet path="/searchIPhonePost.svc" class="edu.rpi.metpetdb.server.search.SearchIPhonePost"/>
+	<servlet path="/searchIPhone1_1.scv" class= "edu.rpi.metpetdb.server.search.SearchIPhone1_1"/>
 </module>
