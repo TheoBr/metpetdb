@@ -1,18 +1,23 @@
 package edu.rpi.metpetdb.server;
 
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.postgis.Point;
 
 import edu.rpi.metpetdb.client.model.MetamorphicGrade;
+import edu.rpi.metpetdb.client.model.MetamorphicRegion;
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.server.dao.impl.MetamorphicRegionDAO;
 
 public class KMLCreater {
 	private static Double lat;
 	private static Double lng;
-	private static Double latErr;
-	private static Double lngErr;
+	private static Double latErrMeters;
+	private static Double lngErrMeters;
 	
 	static public String createKML(final List<Sample> samples, final String baseURL){
 		
@@ -29,11 +34,13 @@ public class KMLCreater {
 			lat = ((Point) theSample.getLocation()).y;
 			lng = ((Point) theSample.getLocation()).x;
 			if (theSample.getLocationError() != null) {
-				latErr = theSample.getLocationError().doubleValue();
-				lngErr = theSample.getLocationError().doubleValue();
+				//location error is in meters, convert it to degrees
+				latErrMeters = theSample.getLocationError().doubleValue() * .000009;
+				lngErrMeters = theSample.getLocationError().doubleValue() * .000009;
+				
 			} else {
-				latErr = 0D;
-				lngErr = 0D;
+				latErrMeters = 0D;
+				lngErrMeters = 0D;
 			}
 			KML += " <Folder>\n";
 			KML += "<name>" + theSample.getNumber() + "</name>\n";
@@ -86,12 +93,12 @@ public class KMLCreater {
 			KML += " <extrude>1</extrude>\n";
 			KML += " <tessellate>1</tessellate>\n";
 			KML += " <altitudeMode>clampToGround</altitudeMode>\n";
-			KML += "<coordinates> " + (lng - lngErr) + ","
-							+ (lat - latErr) + "\n";
-			KML += lng + lngErr + "," + (lat - latErr) + "\n";
-			KML += lng + lngErr + "," + (lat + latErr) + "\n";
-			KML += lng - lngErr + "," + (lat + latErr) + "\n";
-			KML += lng - lngErr + "," + (lat - latErr) + "\n";
+			KML += "<coordinates> " + (lng - lngErrMeters) + ","
+							+ (lat - latErrMeters) + "\n";
+			KML += lng + lngErrMeters + "," + (lat - latErrMeters) + "\n";
+			KML += lng + lngErrMeters + "," + (lat + latErrMeters) + "\n";
+			KML += lng - lngErrMeters + "," + (lat + latErrMeters) + "\n";
+			KML += lng - lngErrMeters + "," + (lat - latErrMeters) + "\n";
 
 			KML += " </coordinates>\n";
 			KML += " </LineString>\n";
@@ -101,4 +108,66 @@ public class KMLCreater {
 		KML += "</Document>";
 		return KML;
 	}
+static public String createKMLMetamorphicRegions(){
+		try {
+		String KML = "";
+		KML += "<Document id='doc0'>\n";
+		List<MetamorphicRegion> mr;
+		MetamorphicRegionDAO mrDAO;
+		mr = new ArrayList(DataStore.getInstance().getDatabaseObjectConstraints().Sample_metamorphicRegions.getValues());
+
+
+		//for (int i = 0; i < mr.size(); i++) {
+		//for(int i=mr.size()-5; i<mr.size(); i++){
+			KML += " <Folder>\n";
+			KML += "<name> Metamorphic Belts </name>\n";
+			for(MetamorphicRegion region: mr){
+				List<Double> latitudes= new ArrayList();
+				List<Double> longitudes= new ArrayList();
+				org.postgis.Polygon pg = (org.postgis.Polygon) region.getShape();
+				for (int j = 0; j < pg.getRing(0).numPoints(); j++){
+					Point p = pg.getRing(0).getPoint(j);
+					latitudes.add(p.y);
+					longitudes.add(p.x);
+				}
+					KML += " <Placemark>\n";
+					KML += "<description>" + region.getName() + "</description>\n";
+		
+					KML += " <Polygon>\n";
+					KML += "<outerBoundaryIs>\n";
+					KML += "<LinearRing>\n";
+					KML += " <coordinates>\n";
+					for(int k=0; k<latitudes.size(); k++){
+						KML +=  longitudes.get(k) + "," + latitudes.get(k) + ",0\n";
+					}
+
+					KML	+= "</coordinates>\n";
+					KML += "</LinearRing>\n";
+					KML += "</outerBoundaryIs>\n";
+					KML += " </Polygon>\n";
+					KML += "<Style>\n";
+					KML += "<PolyStyle>\n";
+					KML += "<color>7f3300FF</color>\n";
+					KML += "</PolyStyle>\n";
+					KML += "<LineStyle>\n";
+					KML += "<color>ff000000</color>\n";
+					KML += "<width>4</width>\n";
+					KML += "</LineStyle>\n";
+					KML += "</Style>\n";
+					KML += " </Placemark>\n";
+				}
+			//}
+			KML += " </Folder>\n";
+			KML += "</Document>";
+			FileOutputStream out= new FileOutputStream("/Users/heatherbuletti/Documents/testkml.kml");
+			PrintStream p= new PrintStream(out);
+			p.print(KML);
+			return KML;
+		}
+			catch (Exception e) {
+				System.out.print(e.getMessage());
+			}
+			return "";
+			
+		}
 }

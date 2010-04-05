@@ -22,8 +22,8 @@ import edu.rpi.metpetdb.client.ui.widgets.panels.MultipleInputPanel;
 
 public abstract class MultipleSuggestTextAttribute extends GenericAttribute implements ChangeListener, SuggestionHandler{
 	private final boolean addShow;
-	private Set<String> suggestions;
-	private MHtmlList editList;
+	protected Set<String> suggestions;
+	protected MHtmlList editList;
 	protected final ArrayList<Widget> realEditWidgets;
 	private static final String STYLENAME = "multi-suggest";
 	
@@ -44,7 +44,7 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute impl
 		realEditWidgets = new ArrayList<Widget>();
 		suggestions = new HashSet<String>();
 	}
-	
+
 	public Widget[] createDisplayWidget(final MObject obj){
 		final MHtmlList list = new MHtmlList();
 
@@ -173,6 +173,11 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute impl
 			}
 		}
 	}
+	
+	//add var to constructor so 
+	
+	
+	
 	
 //	protected class MultipleInputEntry{
 //		private MultipleInputPanel p;

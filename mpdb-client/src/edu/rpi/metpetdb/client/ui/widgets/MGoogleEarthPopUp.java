@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.model.MetamorphicRegion;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
@@ -74,6 +75,40 @@ public class MGoogleEarthPopUp extends MDialogBox{
 	    });
 	    earthContainer.add(locationLinks);
 	    earthContainer.add(goTo);
+    	earthContainer.add(close);
+		setWidget(earthContainer);
+	}
+	public void createUIMetamorphicRegions(){
+		final FlowPanel earthContainer = new FlowPanel();
+		final Button close = new Button("Close");
+		close.addClickListener(new ClickListener(){
+			public void onClick(final Widget sender){
+				hide();
+			}
+		});
+		final MapWidget map = new MapWidget();
+		new ServerOp<String>(){
+			public void begin(){
+				final String baseURL = GWT.getModuleBaseURL() + "#" + 
+				LocaleHandler.lc_entity.TokenSpace_Sample_Details() + LocaleHandler.lc_text.tokenSeparater();
+				MpDb.search_svc.createKMLMetamorphicRegions(this);
+			}
+			public void onSuccess(final String kml){
+				System.out.print(kml);
+				map.getEarthInstance(new EarthInstanceHandler(){
+					public void onEarthInstance(final EarthInstanceEvent e){
+						MGoogleEarth.parseKML(e,kml);
+				      }
+				});
+			}
+		}.begin();
+		
+		map.setSize("500px", "500px");
+	    map.addControl(new SmallMapControl());
+	    map.addMapType(MapType.getEarthMap());
+	    map.setCurrentMapType(MapType.getEarthMap());
+	    
+    	earthContainer.add(map);
     	earthContainer.add(close);
 		setWidget(earthContainer);
 	}

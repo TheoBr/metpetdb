@@ -39,4 +39,6 @@ public interface SearchServiceAsync {
 	void getSessionLastSearchPagination(AsyncCallback<PaginationParameters> ac);
 	
 	void createKML(final List<Sample> samples, final String baseURL, AsyncCallback<String> KML);
+	
+	void createKMLMetamorphicRegions(AsyncCallback<String> KML);
 }

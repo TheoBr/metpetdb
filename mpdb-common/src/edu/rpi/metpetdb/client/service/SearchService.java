@@ -39,4 +39,5 @@ public interface SearchService extends RemoteService {
 	
 	String createKML(final List<Sample> samples, final String baseURL);
 	
+	String createKMLMetamorphicRegions();
 }

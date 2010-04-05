@@ -35,21 +35,19 @@ public class MetamorphicRegionsView extends FlowPanel{
 		for (final MetamorphicRegion mr : regions){ 
 			final List<LatLng> points = new ArrayList<LatLng>();
 			org.postgis.Polygon pg = (org.postgis.Polygon) mr.getShape();
-			String coordinates = "";
+
 			for (int i = 0; i < pg.getRing(0).numPoints(); i++){
 				Point p = pg.getRing(0).getPoint(i);
 
 				points.add(LatLng.newInstance(p.y, p.x));
-				coordinates+= "\n point" + i + ": lat= " + p.y + " long= " + p.x;
 			}
-			final String coords = coordinates;
 			final LatLng[] newPoints = points.toArray(new LatLng[]{});
 			Polygon overlay = new Polygon(newPoints, "#0f2e3c", 1, .60, "#000000", .33);
 			overlay.addPolygonClickHandler(new PolygonClickHandler(){
 
 				public void onClick(PolygonClickEvent event) {
 					map.getInfoWindow().open(event.getLatLng(),
-							new InfoWindowContent(mr.getName() + coords));
+							new InfoWindowContent(mr.getName()));
 				}
 
 

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SuggestionEvent;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -14,16 +15,20 @@ import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.MetamorphicRegionSuggestText;
+import edu.rpi.metpetdb.client.ui.widgets.MGoogleEarthPopUp;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MultipleSuggestTextAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MultipleInputPanel;
 
 public class SearchMetamorphicRegionsAttribute extends SearchGenericAttribute {
 
-	private MultipleSuggestTextAttribute sta;
+	//private MultipleSuggestTextAttribute sta;
+	private MetamorphicRegionSuggestText mr;
 	public SearchMetamorphicRegionsAttribute(final ObjectConstraint sc) {
 		super(sc);
-		sta = new MultipleSuggestTextAttribute(sc){
+		//sta = new MultipleSuggestTextAttribute(sc){
+		mr= new MetamorphicRegionSuggestText(sc, true){
 			public void setSuggest(){
 				new ServerOp() {
 					@Override
@@ -52,11 +57,11 @@ public class SearchMetamorphicRegionsAttribute extends SearchGenericAttribute {
 	}
 	
 	public Widget[] createDisplayWidget(final MObject obj){
-		return sta.createDisplayWidget(obj);
+		return mr.createDisplayWidget(obj);
 	}
 	
 	public Widget[] createEditWidget(final MObject obj, final String id){
-		return sta.createEditWidget(obj,id);
+		return mr.createEditWidget(obj,id);
 	}
 	protected void set(final MObject obj, final Object o) {
 		mSet(obj, o);
@@ -69,7 +74,7 @@ public class SearchMetamorphicRegionsAttribute extends SearchGenericAttribute {
 	@Override
 	protected Object get(Widget editWidget) throws ValidationException {
 		final HashSet countries = new HashSet();
-		final Iterator itr = sta.getRealEditWidgets().iterator();
+		final Iterator itr = mr.getRealEditWidgets().iterator();
 		while (itr.hasNext()) {
 			final Object obj = itr.next();
 			String name = ((MSuggestText) obj).getText();
@@ -81,24 +86,24 @@ public class SearchMetamorphicRegionsAttribute extends SearchGenericAttribute {
 	}
 
 	public void onClear(){
-		while (sta.getRealEditWidgets().size()>1){
-				sta.getRealEditWidgets().remove(0);
-				sta.getEditList().remove(0);
+		while (mr.getRealEditWidgets().size()>1){
+				mr.getRealEditWidgets().remove(0);
+				mr.getEditList().remove(0);
 		}
-		((MSuggestText)((MultipleInputPanel) sta.getEditList().getListItemAtIndex(0).getWidget()).getInputWidget()).setText("");
+		((MSuggestText)((FlowPanel)((MultipleInputPanel) mr.getEditList().getListItemAtIndex(0).getWidget()).getInputWidget()).getWidget(0)).setText("");
 	}
 	
 	public ArrayList<Widget> getCriteria(){
 		final ArrayList<Widget> criteria = new ArrayList<Widget>();
-		final Iterator<Widget> itr = sta.getRealEditWidgets().iterator();
+		final Iterator<Widget> itr = mr.getRealEditWidgets().iterator();
 		String crit = "";
 		if (itr.hasNext()){
-			final MSuggestText st = (MSuggestText) itr.next();
+			final MSuggestText st = (MSuggestText)((FlowPanel) itr.next()).getWidget(0);
 			if (!st.getText().equals(""))
 			crit = "Metamorphic Region: " + st.getText() + ", ";;
 		}
 		while (itr.hasNext()) {
-			final MSuggestText st = (MSuggestText) itr.next();
+			final MSuggestText st = (MSuggestText)((FlowPanel) itr.next()).getWidget(0);
 			if (!st.getText().equals(""))
 				crit += st.getText() + ", ";
 		}
