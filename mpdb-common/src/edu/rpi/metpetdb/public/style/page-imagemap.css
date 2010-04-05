@@ -158,6 +158,11 @@ a.imagePoint span {
 
 .image-moving {
 	cursor:move;
+	/*background-color: transparent;*/
+}
+
+.image-moving ul {
+	display:none;
 }
 
 /* Subsample Images */
@@ -311,4 +316,22 @@ height:8px;
 
 .chem-point-hidden {
 	display:none;	
+}
+
+.remove {
+	background-image: url(../images/delete_icon.jpg); 
+	background-repeat:no-repeat;
+	background-position: center;
+	width: 16px;
+	height: 16px;
+}
+
+.remove:hover{
+	background-image: url(../images/delete_icon.jpg); 
+	background-repeat:no-repeat;
+	background-position: center;
+	width: 16px;
+	height: 16px;
+	opacity:0.8;
+	cursar:hand;
 }

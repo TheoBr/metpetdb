@@ -63,6 +63,8 @@ public class MetPetDBApplication implements EntryPoint {
 	private static RootPanel noticeContainer;
 	private static HashSet<Widget> pageChangeWatchers;
 	private static RootPanel footerContainer;
+	private static TokenHandler lastToken;
+	private static String lastArgs;
 
 	{
 		loginLink = new MLink(LocaleHandler.lc_text.buttonLogin(),
@@ -245,6 +247,26 @@ public class MetPetDBApplication implements EntryPoint {
 			}
 		}
 	}
+	
+	public static void dispatchBeforeCurrentPageChanged(final TokenHandler h, final String args) {
+		lastToken = h;
+		lastArgs = args;
+		if (pageChangeWatchers.size() == 0) {
+			finishDispatchingBeforeCurrentPageChanged();
+		}
+		final Iterator<Widget> itr = pageChangeWatchers.iterator();
+		while (itr.hasNext()) {
+			final Widget w = (Widget) itr.next();
+			if (w instanceof PageChangeListener) {
+				((PageChangeListener) w).onBeforePageChanged();
+			}
+		}
+	}
+	
+	public static void finishDispatchingBeforeCurrentPageChanged(){
+		TokenSpace.executeToken(lastToken, lastArgs);
+	}
+	
 
 	public static void registerPageWatcher(final Widget w) {
 		pageChangeWatchers.add(w);

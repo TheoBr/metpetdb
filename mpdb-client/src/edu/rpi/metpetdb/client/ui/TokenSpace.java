@@ -615,6 +615,10 @@ public class TokenSpace implements HistoryListener {
 		}
 		if (h == null)
 			throw new NoSuchObjectException("Page", historyToken);
+		MetPetDBApplication.dispatchBeforeCurrentPageChanged(h,args);
+	}
+	
+	public static void executeToken(final TokenHandler h, final String args){
 		h.executeToken(args);
 	}
 

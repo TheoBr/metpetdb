@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +31,6 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.PageChangeListener;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
-import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.image.browser.click.listeners.AddPointListener;
 import edu.rpi.metpetdb.client.ui.image.browser.click.listeners.HideMenuListener;
@@ -107,6 +105,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	private final Collection<ChemicalAnalysis> chemicalAnalyses;
 
 	private final Map<Image, ImageOnGridContainer> imagesOnGrid;
+	private Boolean leavingPage = false;
 
 	public ImageBrowserDetails() {
 		this.info = new Label();
@@ -199,7 +198,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		this.add(this.grid);
 		this.add(this.save);
 		this.add(this.info);
-		this.layers = new LayersSidebar(this.g.getSubsample().getName());
+		this.layers = new LayersSidebar(this.g.getSubsample().getName(), this);
 		setSidebar(this.layers);
 		this.mouseListener = new ImageBrowserMouseListener(this.grid,
 				this.imagesOnGrid.values(), this.zOrderManager, this.g
@@ -675,7 +674,9 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 					container.setIog(iog);
 				}
 				mouseListener.setImagesOnGrid(imagesOnGrid.values());
-			
+				if (leavingPage) {
+					leavingPage();
+				}
 			}
 		}.begin();
 	}
@@ -719,6 +720,10 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	public Grid getImageGrid() {
 		return g;
 	}
+
+	public Map<Image, ImageOnGridContainer> getImagesOnGrid(){
+		return imagesOnGrid;
+	}
 	
 	public void updateBoundary() {
 		float height = (g.getHeight()/this.scale)*ImageBrowserUtil.pps;
@@ -731,17 +736,31 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	}
 
 	public void onPageChanged() {
+
+	}
+	
+	public void onBeforePageChanged() {
+		leavingPage = true;
 		if (g != null) {
-			//new ConfirmationDialogBox(LocaleHandler.lc_text.confirmation_SaveImageMap(), true, true) {
-			//	public void onSubmit() {
+			new ConfirmationDialogBox(LocaleHandler.lc_text.confirmation_SaveImageMap(), true, true) {
+				public void onSubmit() {
 					doSave();
-			//	}
-			//	public void onCancel() {
-					
-			//	}
-			//}.show();
-		MetPetDBApplication.removePageWatcher(this);
+				}
+				public void onCancel() {
+					leavingPage = false;
+				}
+				
+				public void onNo() {
+					leavingPage();
+				}
+			}.show();
 		}
+	}
+	
+	private void leavingPage(){
+		leavingPage = false;
+		MetPetDBApplication.finishDispatchingBeforeCurrentPageChanged();
+		MetPetDBApplication.removePageWatcher(this);
 	}
 
 }

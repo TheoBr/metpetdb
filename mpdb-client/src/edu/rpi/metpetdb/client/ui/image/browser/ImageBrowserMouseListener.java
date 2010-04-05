@@ -125,7 +125,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 		if (grid.getZMode() == ZMode.NO_ZMODE) {
 			resizeDirection = getResizeCorner(sender.getAbsoluteLeft() + x,
 					sender.getAbsoluteTop() + y);
-			currentImage.getImageContainer().addStyleName("image-moving");
+			currentImage.getImageContainer().setStylePrimaryName("image-moving");		
 			if (resizeDirection != ResizeCorner.NONE) {
 				mode = MouseMode.RESIZE_IMAGE;
 				currentImage.setupForResize();
@@ -566,6 +566,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 					handleMoveImage(x, y);
 					currentImage.getImageContainer().removeStyleName(
 							"image-moving");
+					currentImage.getImageContainer().setStylePrimaryName("imageContainer");
 					break;
 				case PAN_GRID:
 					handleEndPan(x, y);

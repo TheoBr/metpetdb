@@ -7,6 +7,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventPreview;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.MouseListener;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -72,8 +73,8 @@ public class LayerDragMouseListener implements MouseListener {
 		currentItem = findListItem(x, y);
 		if (currentItem != null) {
 			currentItem.getWidget().setStyleName("layer-Drag");
-			currentCheck = ((CheckBox) ((SimplePanel) currentItem.getWidget())
-					.getWidget()).isChecked();
+			currentCheck = ((CheckBox) ((FlowPanel) currentItem.getWidget())
+					.getWidget(0)).isChecked();
 		}
 	}
 
@@ -81,7 +82,7 @@ public class LayerDragMouseListener implements MouseListener {
 		DOM.releaseCapture(sender.getElement());
 		if (currentItem != null) {
 			currentItem.getWidget().removeStyleName("layer-Drag");
-			((CheckBox) ((SimplePanel) currentItem.getWidget()).getWidget())
+			((CheckBox) ((FlowPanel) currentItem.getWidget()).getWidget(0))
 					.setChecked(currentCheck);
 		}
 		currentItem = null;
@@ -95,7 +96,7 @@ public class LayerDragMouseListener implements MouseListener {
 				moveLayer(currentItem.getIndex(), target.getIndex());
 				ul.moveItem(currentItem, target.getIndex());
 			}
-			if (((CheckBox) ((SimplePanel) currentItem.getWidget()).getWidget())
+			if (((CheckBox) ((FlowPanel) currentItem.getWidget()).getWidget(0))
 					.isChecked() == currentCheck) {
 				currentCheck = !currentCheck;
 			}

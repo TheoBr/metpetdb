@@ -45,5 +45,9 @@ public class MyProjects extends Sidebar implements UsesSidebar {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public void onBeforePageChanged() {
+		
+	}
 
 }

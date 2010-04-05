@@ -29,6 +29,7 @@ public class PointPopup extends DialogBox implements ClickListener {
 
 	public PointPopup(final ChemicalAnalysis ma,
 			final ImageOnGridContainer iog, final int x, final int y, ImageBrowserDetails ibd) {
+		super(true);
 		this.imageOnGrid = iog;
 		this.chemicalAnalysis = ma;
 		this.imageBrowser = ibd;

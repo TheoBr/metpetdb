@@ -3,12 +3,14 @@ package edu.rpi.metpetdb.client.ui.image.browser;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.ui.image.browser.click.listeners.RemoveListener;
 import edu.rpi.metpetdb.client.ui.sidebar.Sidebar;
 import edu.rpi.metpetdb.client.ui.sidebar.UsesSidebar;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
@@ -20,9 +22,11 @@ public class LayersSidebar extends Sidebar implements UsesSidebar {
 	private final MHtmlList ul;
 	private final LayerDragMouseListener layerDragger;
 	private final HashSet<LayerItem> layerItems;
+	private final ImageBrowserDetails imageBrowser;
 
-	public LayersSidebar(final String subsampleName) {
+	public LayersSidebar(final String subsampleName, final ImageBrowserDetails imageBrowser) {
 		add(new MText(subsampleName + "'s Layers", "h1"));
+		this.imageBrowser = imageBrowser;
 		layerItems = new HashSet<LayerItem>();
 		ul = new MHtmlList();
 		this.add(ul);
@@ -32,7 +36,7 @@ public class LayersSidebar extends Sidebar implements UsesSidebar {
 	}
 
 	public void registerImage(final ImageOnGridContainer iog) {
-		final SimplePanel container = new SimplePanel();
+		final FlowPanel container = new FlowPanel();
 		double width = iog.getIog().getImage().getScale()*iog.getIog().getResizeRatio();
 		double height = width/iog.getIog().getImage().getWidth()*iog.getIog().getImage().getHeight();
 		width = (double)Math.round(width*1000)/1000;
@@ -47,30 +51,34 @@ public class LayersSidebar extends Sidebar implements UsesSidebar {
 				if (!checkBox.isChecked()) {
 					iog.getImageContainer()
 							.setStyleName("imageContainerHidden");
-					final Iterator<ChemicalAnalysis> itr2 = iog.getChemicalAnalyses().iterator();
+					/*final Iterator<ChemicalAnalysis> itr2 = iog.getChemicalAnalyses().iterator();
 					while (itr2.hasNext()) {
 						final ChemicalAnalysis ma = itr2.next();
 						final com.google.gwt.user.client.ui.Image i = (com.google.gwt.user.client.ui.Image) ma.getActualImage();
 						i.setStyleName("chem-point-hidden");
-					}
+					}*/
 				} else {
 					if (iog.isMenuHidden())
 						iog.getImageContainer().setStyleName(
 								"imageContainerNoMenu");
 					else {
 						iog.getImageContainer().setStyleName("imageContainer");
-						final Iterator<ChemicalAnalysis> itr2 = iog.getChemicalAnalyses().iterator();
+						/*final Iterator<ChemicalAnalysis> itr2 = iog.getChemicalAnalyses().iterator();
 						while (itr2.hasNext()) {
 							final ChemicalAnalysis ma = itr2.next();
 							final com.google.gwt.user.client.ui.Image i = (com.google.gwt.user.client.ui.Image) ma.getActualImage();
 							i.setStyleName("chem-point");
-						}
+						}*/
 					}
 				}
 			}
 		});
 		checkBox.setChecked(true);
-		container.setWidget(checkBox);
+		Button remove = new Button();
+		remove.addClickListener(new RemoveListener(iog, this, imageBrowser.getImagesOnGrid()));
+		remove.setStylePrimaryName("remove");
+		container.add(checkBox);
+		container.add(remove);
 
 		ul.add(container, insertLayer(iog));
 	}
@@ -143,6 +151,10 @@ public class LayersSidebar extends Sidebar implements UsesSidebar {
 
 	public void onPageChanged() {
 		// MetPetDBApplication.removeFromLeft(this);
+	}
+	
+	public void onBeforePageChanged() {
+		
 	}
 
 	public class LayerItem {

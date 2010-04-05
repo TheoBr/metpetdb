@@ -129,6 +129,8 @@ CREATE TABLE image_on_grid
    z_order   INT2 NOT NULL,
    opacity  INT2 NOT NULL DEFAULT 100,
    resize_ratio FLOAT4 NOT NULL DEFAULT 100,
+   angle double precision NOT NULL default 0;
+   locked CHAR(1) NOT NULL default 'N' CHECK (locked IN ('Y','N'));
    width INT2 NOT NULL,
    height INT2 NOT NULL,
    checksum CHAR(50) NOT NULL,

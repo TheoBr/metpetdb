@@ -4,4 +4,6 @@ public interface PageChangeListener {
 	
 	public void onPageChanged();
 	
+	public void onBeforePageChanged();
+	
 }

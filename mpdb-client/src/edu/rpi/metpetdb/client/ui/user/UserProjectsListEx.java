@@ -126,7 +126,7 @@ public class UserProjectsListEx extends MPagePanel implements ClickListener {
 			if (((MCheckBox) list.getScrollTable().getDataTable().getWidget(i,
 					0)).isChecked())
 				results.add((Project) (((MCheckBox) list.getScrollTable()
-						.getDataTable().getWidget(i, 0)).getValue()));
+						.getDataTable().getWidget(i, 0)).getObjectValue()));
 		}
 		return results;
 	}

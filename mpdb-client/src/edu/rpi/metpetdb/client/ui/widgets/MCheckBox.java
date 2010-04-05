@@ -37,11 +37,11 @@ public class MCheckBox extends CheckBox {
 	    applyCheckedStyle(checked);
 	}
 
-	public void setValue(final Object value) {
+	public void setObjectValue(final Object value) {
 		this.value = value;
 	}
 
-	public Object getValue() {
+	public Object getObjectValue() {
 		return value;
 	}
 }
