@@ -76,5 +76,9 @@ public class SearchServiceImpl extends MpDbServlet implements
 	public String createKML(final List<Sample> samples, final String baseURL) {
 		return KMLCreater.createKML(samples, baseURL);
 	}
+	
+	public String createKMLMetamorphicRegions(){
+		return KMLCreater.createKMLMetamorphicRegions();
+	}
 
 }
