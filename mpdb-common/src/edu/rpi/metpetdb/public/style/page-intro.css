@@ -36,39 +36,3 @@
 #dblist a:hover img {
 	/*border-color: #000;*/
 }
-
-/*-------------------------------------
-              homepage
- --------------------------------------*/
- 
-#homepageWrapper {
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
-#homepageWrapper ul.noBullets {
-	list-style-type: none;
-}
-
-#homepageWrapper ul.noBullets li img {
-	vertical-align: middle;
-	height: 30px;
-	width: 70px;
-	margin-right: 10px;
-}
-
-#homepageWrapper ul.noBullets li {
-	line-height: 3;
-}
-
-#imageHyperlink {
-	text-decoration: none;
-}
-
-#homepageWrapper .right-col {
- 	float: right;
-}
-
-#homepageWrapper .listNumber {
-	font-size: 1.3em;	
-}

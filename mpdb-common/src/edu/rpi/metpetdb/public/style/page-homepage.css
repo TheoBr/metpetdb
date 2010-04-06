@@ -1,0 +1,63 @@
+/*-------------------------------------
+              homepage
+ --------------------------------------*/
+ 
+/* This stylesheet is used for Homepage.java */
+ 
+#homepageWrapper {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#homepageWrapper img.linkIcon {
+	height: 30px;
+	width: 80px;
+	margin-left: 10px;
+	margin-bottom: 3px;
+}
+
+#homepageWrapper.smallColumn {
+	float: left;	
+	height: auto;
+	width: auto;
+}
+
+#imageHyperlink {
+	text-decoration: none;
+}
+
+#homepageWrapper.right-col {
+ 	float: right;
+}
+
+#homepageWrapper.listNumber {
+	font-size: 1.3em;	
+}
+
+.evenRow {
+	background-color: #99CCFF;
+}
+
+.oddRow {
+	background-color: #FFFFFF;	
+}
+
+.numberPart {
+	border: 1px solid #F7FBFF;
+	width: 25px;
+	padding: 3px;
+	font: 1.0em Arial, sans-serif;
+	text-align: center;
+}
+
+.wordPart {
+	border: 1px solid #CCCCCC;
+	width: 210px;
+	padding: 3px;
+	font: 1.0em Arial, Verdana, sans-serif;
+}
+
+.image-slices {
+	width: 250px;
+	height: 184px;
+}
