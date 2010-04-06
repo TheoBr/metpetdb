@@ -159,9 +159,7 @@ static public String createKMLMetamorphicRegions(){
 			//}
 			KML += " </Folder>\n";
 			KML += "</Document>";
-			FileOutputStream out= new FileOutputStream("/Users/heatherbuletti/Documents/testkml.kml");
-			PrintStream p= new PrintStream(out);
-			p.print(KML);
+			
 			return KML;
 		}
 			catch (Exception e) {
