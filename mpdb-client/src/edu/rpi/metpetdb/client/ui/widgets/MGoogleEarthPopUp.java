@@ -94,7 +94,6 @@ public class MGoogleEarthPopUp extends MDialogBox{
 				MpDb.search_svc.createKMLMetamorphicRegions(this);
 			}
 			public void onSuccess(final String kml){
-				System.out.print(kml);
 				map.getEarthInstance(new EarthInstanceHandler(){
 					public void onEarthInstance(final EarthInstanceEvent e){
 						MGoogleEarth.parseKML(e,kml);
