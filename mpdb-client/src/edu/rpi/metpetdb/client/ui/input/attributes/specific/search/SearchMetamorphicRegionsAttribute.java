@@ -77,7 +77,7 @@ public class SearchMetamorphicRegionsAttribute extends SearchGenericAttribute {
 		final Iterator itr = mr.getRealEditWidgets().iterator();
 		while (itr.hasNext()) {
 			final Object obj = itr.next();
-			String name = ((MSuggestText) obj).getText();
+			String name = ((MSuggestText)((FlowPanel) obj).getWidget(0)).getText();
 			if (!name.equals("")) {
 				countries.add(name);
 			}
