@@ -30,6 +30,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 	private int lastX;
 	private int lastY;
 	private MouseMode mode;
+	private ClickMode clickMode = ClickMode.NORMAL;
 	private ResizeCorner resizeDirection = ResizeCorner.NONE;
 	private final ZOrderManager zOrderManager;
 	private final Subsample subsample;
@@ -44,6 +45,10 @@ public class ImageBrowserMouseListener implements MouseListener {
 		PLACE_POINT, // 3
 		MOVING_POINT
 		// 4
+	}
+	
+	public enum ClickMode {
+		NORMAL, CTRL, SHIFT
 	}
 
 	private enum ResizeCorner {
@@ -125,6 +130,9 @@ public class ImageBrowserMouseListener implements MouseListener {
 		if (grid.getZMode() == ZMode.NO_ZMODE) {
 			resizeDirection = getResizeCorner(sender.getAbsoluteLeft() + x,
 					sender.getAbsoluteTop() + y);
+			for (ImageOnGridContainer iog : imageBrowser.getSelectedImages()) {
+				iog.getImageContainer().setStylePrimaryName("image-moving");
+			}
 			currentImage.getImageContainer().setStylePrimaryName("image-moving");		
 			if (resizeDirection != ResizeCorner.NONE) {
 				mode = MouseMode.RESIZE_IMAGE;
@@ -133,11 +141,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 				// if we are not resizing then we are moving
 				mode = MouseMode.MOVE_IMAGE;
 			}
-		} else if (grid.getZMode() == ZMode.BRING_TO_FRONT) {
-			zOrderManager.bringToFront(currentImage);
-		} else if (grid.getZMode() == ZMode.SEND_TO_BACK) {
-			zOrderManager.sendToBack(currentImage);
-		}
+		} 
 	}
 
 	public void onMouseDown(final Widget sender, final int x, final int y) {
@@ -152,7 +156,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 				grid.setCanDrag(false);
 				DOM.setCapture(sender.getElement());
 				currentImage = findImageOnGrid(x, y);
-				isBeingDragged = true;
+				isBeingDragged = true;				
 				lastX = x;
 				lastY = y;
 				// If we found an image and we are not locked
@@ -172,9 +176,13 @@ public class ImageBrowserMouseListener implements MouseListener {
 						handleImageOperations(sender, x, y);
 					}
 				} else {
-					// User wants to Pan the grid
-					mode = MouseMode.PAN_GRID;
-					grid.addStyleName("image-moving");
+					if (findImageAndMenuOnGrid(x,y) == null) {
+						// User wants to Pan the grid
+						mode = MouseMode.PAN_GRID;
+						grid.addStyleName("image-moving");
+					} else {
+						mode = MouseMode.NONE;
+					}
 				}
 			}
 		}
@@ -331,6 +339,35 @@ public class ImageBrowserMouseListener implements MouseListener {
 		}
 		return null;
 	}
+	
+	public ImageOnGridContainer findImageAndMenuOnGrid(final int x, final int y) {
+		final Iterator<ImageOnGridContainer> itr = imagesOnGrid.iterator();
+	final ArrayList<ImageOnGridContainer> candidates = new ArrayList<ImageOnGridContainer>();
+	while (itr.hasNext()) {
+		final ImageOnGridContainer iog = itr.next();
+		if (x >= iog.getCurrentContainerPosition().x
+				&& x <= iog.getCurrentContainerPosition().x
+						+ iog.getImageContainer().getOffsetWidth()) {
+			if (y >= iog.getCurrentContainerPosition().y - iog.getImageContainer().getWidget(0).getOffsetHeight()
+					&& y <= iog.getCurrentContainerPosition().y
+							+ iog.getImageContainer().getWidget(1).getOffsetHeight() + iog.getImageContainer().getWidget(2).getOffsetHeight()) {
+				candidates.add(iog);
+			}
+		}
+	}
+	if (candidates.size() > 0) {
+		ImageOnGridContainer topmost = candidates.get(0);
+		final Iterator<ImageOnGridContainer> candidatesItr = candidates
+				.iterator();
+		while (candidatesItr.hasNext()) {
+			final ImageOnGridContainer iog = candidatesItr.next();
+			if (iog.getIog().getZorder() > topmost.getIog().getZorder())
+				topmost = iog;
+		}
+		return topmost;
+	}
+	return null;
+	}
 
 	/**
 	 * Returns the current image on grid that is within the x,y coordinates and
@@ -350,7 +387,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 							+ iog.getImageContainer().getOffsetWidth()) {
 				if (y >= iog.getCurrentContainerPosition().y
 						&& y <= iog.getCurrentContainerPosition().y
-								+ iog.getImageContainer().getOffsetHeight()) {
+								+ iog.getImageContainer().getWidget(1).getOffsetHeight()) {
 					candidates.add(iog);
 				}
 			}
@@ -394,21 +431,40 @@ public class ImageBrowserMouseListener implements MouseListener {
 
 	private void handleMoveImage(final int x, final int y) {
 		final int deltaX = x - lastX;
-		final int deltaY = y - lastY;
+		final int deltaY = y - lastY;	
+		
+		if (!imageBrowser.getSelectedImages().contains(currentImage)) {
+			if (clickMode == ClickMode.NORMAL) {
+				for (ImageOnGridContainer iog : imageBrowser.getSelectedImages()) {
+					iog.getImageContainer().removeStyleDependentName("selected");
+				}
+				imageBrowser.getSelectedImages().clear();
+			}
+			handleMoveImageHelper(currentImage,deltaX,deltaY);
+		}
+		
+		for (ImageOnGridContainer iog : imageBrowser.getSelectedImages()) {
+			handleMoveImageHelper(iog, deltaX, deltaY);
+		}
+	}
+	
+	private void handleMoveImageHelper(final ImageOnGridContainer iog, final int deltaX, final int deltaY) {
 		// Just move where the image is shown to the user
-		double newX = currentImage.getCurrentContainerPosition().x + deltaX;
-		double newY = currentImage.getCurrentContainerPosition().y + deltaY;
-		grid.setWidgetPosition(currentImage.getImageContainer(), newX, newY);
+		
+		final double scale = imageBrowser.scale;
+		double newX = iog.getCurrentContainerPosition().x + deltaX;
+		double newY = iog.getCurrentContainerPosition().y + deltaY;
+		grid.setWidgetPosition(iog.getImageContainer(), newX, newY);
 		// we multiple by -1, because if we are zoomed out the images
 		// are
 		// smaller, but we have to multiply by the scale when moving
-		final double scale = imageBrowser.scale;
+
 		GWT.log("Scale:" + scale + " deltaX:" + deltaX + " deltaY:" + deltaY
-				+ " currentX:" + currentImage.getCurrentContainerPosition().x
-				+ " currentY:" + currentImage.getCurrentContainerPosition().y
-				+ " iogX:" + currentImage.getIog().getTopLeftX() + " iogY:"
-				+ currentImage.getIog().getTopLeftY(), null);
-		currentImage.move(deltaX, deltaY, scale, imageBrowser);
+				+ " currentX:" + iog.getCurrentContainerPosition().x
+				+ " currentY:" + iog.getCurrentContainerPosition().y
+				+ " iogX:" + iog.getIog().getTopLeftX() + " iogY:"
+				+ iog.getIog().getTopLeftY(), null);
+		iog.move(deltaX, deltaY, scale, imageBrowser);
 	}
 
 	private void handleMovingPoint(final int x, final int y) {
@@ -448,6 +504,56 @@ public class ImageBrowserMouseListener implements MouseListener {
 		lastX = x;
 		lastY = y;
 	}
+	
+	private void handleResizeHelper(ImageOnGridContainer iog, final int x, final int y) {
+		double width = 0;
+		double height = 0;
+		if (resizeDirection == ResizeCorner.NORTH_WEST) {
+			double newX = iog.getCurrentContainerPosition().x
+					+ (x - lastX);
+			double newY = iog.getCurrentContainerPosition().y
+					+  ((x - lastX) * iog.getAspectRatio());
+			grid
+					.setWidgetPosition(iog.getImageContainer(), newX,
+							newY);
+			width = iog.getCurrentWidth()
+					+ (iog.getCurrentContainerPosition().x - newX);
+			height = (width * iog.getAspectRatio());
+		}
+		if (resizeDirection == ResizeCorner.NORTH_EAST) {
+			double newY = iog.getCurrentContainerPosition().y
+					+ ((y - lastY) * iog.getAspectRatio());
+			grid.setWidgetPosition(iog.getImageContainer(),
+					iog.getCurrentContainerPosition().x, newY);
+			height = iog.getCurrentHeight()
+					+ (iog.getCurrentContainerPosition().y - newY);
+			width = (height * iog.getAspectRatioHeight());
+		}
+		if (resizeDirection == ResizeCorner.SOUTH_WEST) {
+			double newX = iog.getCurrentContainerPosition().x
+					+ (x - lastX);
+			grid.setWidgetPosition(iog.getImageContainer(), newX,
+					iog.getCurrentContainerPosition().y);
+			width = iog.getCurrentWidth()
+					+ (iog.getCurrentContainerPosition().x - newX);
+			height = (width * iog.getAspectRatio());
+		}
+		if (resizeDirection == ResizeCorner.SOUTH_EAST) {
+			double newX = iog.getCurrentContainerPosition().x
+					+ (x - lastX);
+			width = iog.getCurrentWidth()
+					+ (newX - iog.getCurrentContainerPosition().x);
+			height = (width * iog.getAspectRatio());
+		}
+		if (!iog.getActualImage().getUrl().equals(
+				iog.getGoodLookingPicture()))
+			iog.getActualImage().setUrl(
+					iog.getGoodLookingPicture());
+		moveResizedImage(x, y, iog);
+		iog.resizeImage(width, height, true);
+		imageBrowser.updatePoints(iog);
+		imageBrowser.layers.updateImageScale(iog);
+	}
 
 	/**
 	 * Handles resizing an image
@@ -456,74 +562,40 @@ public class ImageBrowserMouseListener implements MouseListener {
 	 * @param y
 	 */
 	private void handleResize(final int x, final int y) {
-		double width = 0;
-		double height = 0;
-		if (resizeDirection == ResizeCorner.NORTH_WEST) {
-			double newX = currentImage.getCurrentContainerPosition().x
-					+ (x - lastX);
-			double newY = currentImage.getCurrentContainerPosition().y
-					+  ((x - lastX) * currentImage.getAspectRatio());
-			grid
-					.setWidgetPosition(currentImage.getImageContainer(), newX,
-							newY);
-			width = currentImage.getCurrentWidth()
-					+ (currentImage.getCurrentContainerPosition().x - newX);
-			height = (width * currentImage.getAspectRatio());
+		if (!imageBrowser.getSelectedImages().contains(currentImage)) {
+			if (clickMode == ClickMode.NORMAL) {
+				for (ImageOnGridContainer iog : imageBrowser.getSelectedImages()) {
+					iog.getImageContainer().removeStyleDependentName("selected");
+				}
+				imageBrowser.getSelectedImages().clear();
+			}
+			handleResizeHelper(currentImage,x,y);
 		}
-		if (resizeDirection == ResizeCorner.NORTH_EAST) {
-			double newY = currentImage.getCurrentContainerPosition().y
-					+ ((y - lastY) * currentImage.getAspectRatio());
-			grid.setWidgetPosition(currentImage.getImageContainer(),
-					currentImage.getCurrentContainerPosition().x, newY);
-			height = currentImage.getCurrentHeight()
-					+ (currentImage.getCurrentContainerPosition().y - newY);
-			width = (height * currentImage.getAspectRatioHeight());
+		
+		for (ImageOnGridContainer iog : imageBrowser.getSelectedImages()) {
+			handleResizeHelper(iog,x,y);
 		}
-		if (resizeDirection == ResizeCorner.SOUTH_WEST) {
-			double newX = currentImage.getCurrentContainerPosition().x
-					+ (x - lastX);
-			grid.setWidgetPosition(currentImage.getImageContainer(), newX,
-					currentImage.getCurrentContainerPosition().y);
-			width = currentImage.getCurrentWidth()
-					+ (currentImage.getCurrentContainerPosition().x - newX);
-			height = (width * currentImage.getAspectRatio());
-		}
-		if (resizeDirection == ResizeCorner.SOUTH_EAST) {
-			double newX = currentImage.getCurrentContainerPosition().x
-					+ (x - lastX);
-			width = currentImage.getCurrentWidth()
-					+ (newX - currentImage.getCurrentContainerPosition().x);
-			height = (width * currentImage.getAspectRatio());
-		}
-		if (!currentImage.getActualImage().getUrl().equals(
-				currentImage.getGoodLookingPicture()))
-			currentImage.getActualImage().setUrl(
-					currentImage.getGoodLookingPicture());
-		moveResizedImage(x, y);
-		currentImage.resizeImage(width, height, true);
-		imageBrowser.updatePoints(currentImage);
-		imageBrowser.layers.updateImageScale(currentImage);
 	}
 
-	private void moveResizedImage(final int x, final int y) {
+	private void moveResizedImage(final int x, final int y, final ImageOnGridContainer iog) {
 		int deltaX = 0;
 		int deltaY = 0;
 		if (resizeDirection == ResizeCorner.NORTH_EAST) {
-			deltaY = (int) ((y - lastY) * currentImage.getAspectRatio());
+			deltaY = (int) ((y - lastY) * iog.getAspectRatio());
 		} else if (resizeDirection == ResizeCorner.NORTH_WEST) {
 			deltaX = x - lastX;
-			deltaY = (int) ((x - lastX) * currentImage.getAspectRatio());
+			deltaY = (int) ((x - lastX) * iog.getAspectRatio());
 		} else if (resizeDirection == ResizeCorner.SOUTH_WEST) {
 			deltaX = x - lastX;
 		}
 	
 		final double scale = imageBrowser.scale;
-		currentImage.move(deltaX, deltaY, scale,imageBrowser);
-		edu.rpi.metpetdb.client.model.Image i = currentImage.getIog().getImage();
-		currentImage.getIog()
+		iog.move(deltaX, deltaY, scale,imageBrowser);
+		edu.rpi.metpetdb.client.model.Image i = iog.getIog().getImage();
+		iog.getIog()
 				.setResizeRatio(
-						currentImage.getCurrentWidth()
-								/ (float) (currentImage.getIog().getGwidth()*(((float)i.getScale()/(float)i.getWidth())/imageBrowser.scale)*(float)ImageBrowserUtil.pps));
+						iog.getCurrentWidth()
+								/ (float) (iog.getIog().getGwidth()*(((float)i.getScale()/(float)i.getWidth())/imageBrowser.scale)*(float)ImageBrowserUtil.pps));
 	}
 
 	private void handleEndPan(final int x, final int y) {
@@ -567,9 +639,50 @@ public class ImageBrowserMouseListener implements MouseListener {
 					currentImage.getImageContainer().removeStyleName(
 							"image-moving");
 					currentImage.getImageContainer().setStylePrimaryName("imageContainer");
+					currentImage.getImageContainer().addStyleDependentName("selected");
+					for (ImageOnGridContainer iog : imageBrowser.getSelectedImages()) {
+						iog.getImageContainer().removeStyleName("image-moving");
+						iog.getImageContainer().setStylePrimaryName("imageContainer");
+						iog.getImageContainer().addStyleDependentName("selected");
+					}
+					switch (clickMode) {
+						case NORMAL:
+							if (!imageBrowser.getSelectedImages().contains(currentImage)) { 
+								for (ImageOnGridContainer iog : imageBrowser.getSelectedImages()) {
+									iog.getImageContainer().removeStyleDependentName("selected");
+								}
+								imageBrowser.getSelectedImages().clear();
+								imageBrowser.getSelectedImages().add(currentImage);
+								currentImage.getImageContainer().addStyleDependentName("selected");
+							}
+							break;
+						case SHIFT:
+							if (imageBrowser.getSelectedImages().contains(currentImage)) {
+								currentImage.getImageContainer().removeStyleDependentName("selected");
+								imageBrowser.getSelectedImages().remove(currentImage);
+							} else {
+								imageBrowser.getSelectedImages().add(currentImage);
+								currentImage.getImageContainer().addStyleDependentName("selected");
+							}
+							break;
+							case CTRL:
+								if (imageBrowser.getSelectedImages().contains(currentImage)) {
+								currentImage.getImageContainer().removeStyleDependentName("selected");
+								imageBrowser.getSelectedImages().remove(currentImage);
+							} else {
+								imageBrowser.getSelectedImages().add(currentImage);
+								currentImage.getImageContainer().addStyleDependentName("selected");
+							}
+								break;
+					}
+
 					break;
 				case PAN_GRID:
 					handleEndPan(x, y);
+					for (ImageOnGridContainer iog : imageBrowser.getSelectedImages()) {
+						iog.getImageContainer().removeStyleDependentName("selected");
+					}
+					imageBrowser.getSelectedImages().clear();
 					break;
 				case RESIZE_IMAGE:
 					handleEndResize(x, y);
@@ -587,5 +700,9 @@ public class ImageBrowserMouseListener implements MouseListener {
 
 	public void setImagesOnGrid(Collection<ImageOnGridContainer> imagesOnGrid) {
 		this.imagesOnGrid = imagesOnGrid;
+	}
+	
+	public void setClickMode(final ClickMode mode) {
+		clickMode = mode;
 	}
 }

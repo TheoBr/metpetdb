@@ -133,7 +133,7 @@ public class LayersSidebar extends Sidebar implements UsesSidebar {
 	
 	public void updateImageScale(final ImageOnGridContainer iog) {
 		for (ListItem l : ul.getItems()) {
-			CheckBox cb = (CheckBox) ((SimplePanel) l.getWidget()).getWidget(); 
+			CheckBox cb = (CheckBox) ((FlowPanel) l.getWidget()).getWidget(0); 
 			if (cb.getText().contains(iog.getIog().getImage().getChecksum() + " ") ||
 					cb.getText().contains(iog.getIog().getImage().getFilename()  + " ")){
 				double width = iog.getIog().getImage().getScale()*iog.getIog().getResizeRatio();

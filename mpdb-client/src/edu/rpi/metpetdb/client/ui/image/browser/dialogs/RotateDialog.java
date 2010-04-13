@@ -1,12 +1,12 @@
 package edu.rpi.metpetdb.client.ui.image.browser.dialogs;
 
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
@@ -29,20 +28,24 @@ public class RotateDialog extends MDialogBox implements ClickListener {
 	private final Button rotate180;
 	private final Button ok;
 	private final Button cancel;
-	private final ServerOp<ImageOnGridContainer> continuation;
-	private final ImageOnGridContainer imageOnGrid;
-	private final Image image;
+	private final ServerOp<List<ImageOnGridContainer>> continuation;
+	private final List<ImageOnGridContainer> imagesOnGrid;
+	private final List<Image> images;
 	private final Label loading;
 	private final TextBox angle;
 	private final Button update;
 
-	public RotateDialog(final ImageOnGridContainer iog, final ServerOp<ImageOnGridContainer> r) {
+	public RotateDialog(final List<ImageOnGridContainer> iogs, final ServerOp<List<ImageOnGridContainer>> r) {
+		images = new ArrayList<Image>();
 		final VerticalPanel vp = new VerticalPanel();
-		final FocusPanel fp = new FocusPanel();
-		image = new Image(iog.getGoodLookingPicture(true));
-		image.setWidth("256px");
-		fp.add(image);
-		vp.add(fp);
+		final HorizontalPanel hp = new HorizontalPanel();
+		for (ImageOnGridContainer iog : iogs) {
+			Image i = new Image(iog.getGoodLookingPicture(true));
+			images.add(i);
+			i.setWidth("256px");
+			hp.add(i);
+		}
+		vp.add(hp);
 
 		final HorizontalPanel hpControls = new HorizontalPanel();
 		rotateCW90 = new Button("CW 90", this);
@@ -75,7 +78,7 @@ public class RotateDialog extends MDialogBox implements ClickListener {
 		vp.add(loading);
 
 		continuation = r;
-		imageOnGrid = iog;
+		imagesOnGrid = iogs;
 
 		DOM.setStyleAttribute(this.getElement(), "zIndex", "1000");
 
@@ -95,7 +98,7 @@ public class RotateDialog extends MDialogBox implements ClickListener {
 			else
 				loading.setText("Please input an amount of degrees to rotate by");
 		} else if (sender == ok) {
-			continuation.onSuccess(imageOnGrid);
+			continuation.onSuccess(imagesOnGrid);
 			this.hide();
 		} else if (sender == cancel) {
 			this.hide();
@@ -121,25 +124,31 @@ public class RotateDialog extends MDialogBox implements ClickListener {
 			}		
 		};
 		
-		new ServerOp<ImageOnGrid>() {
+		new ServerOp<List<ImageOnGrid>>() {
 			public void begin() {
-				MpDb.image_svc.rotate(imageOnGrid.getIog(), degrees, this);
+				List<ImageOnGrid> imagesOnGrid2 = new ArrayList<ImageOnGrid>();
+				for (ImageOnGridContainer iog : imagesOnGrid) {
+					imagesOnGrid2.add(iog.getImageOnGrid());
+				}
+				MpDb.image_svc.rotate(imagesOnGrid2, degrees, this);
 				t.scheduleRepeating(500);
 				t.run();
 			}
-			public void onSuccess(final ImageOnGrid result) {
-				final ImageOnGrid iog = (ImageOnGrid) result;
-				imageOnGrid.getIog().setGchecksum(iog.getGchecksum());
-				imageOnGrid.getIog().setGchecksum64x64(iog.getGchecksum64x64());
-				imageOnGrid.getIog().setGchecksumHalf(iog.getGchecksumHalf());
-				imageOnGrid.getIog().setGheight(iog.getGheight());
-				imageOnGrid.getIog().setGwidth(iog.getGwidth());
-				imageOnGrid.getIog().setAngle(iog.getAngle());
-				
-				
-				image.setUrl(imageOnGrid.getGoodLookingPicture());
-				image.setWidth("256px");
-				loading.setText("Done");
+			public void onSuccess(final List<ImageOnGrid> result) {
+				for (int i = 0; i < result.size(); i++) {
+					final ImageOnGrid iog = (ImageOnGrid) result.get(i);
+					imagesOnGrid.get(i).getIog().setGchecksum(iog.getGchecksum());
+					imagesOnGrid.get(i).getIog().setGchecksum64x64(iog.getGchecksum64x64());
+					imagesOnGrid.get(i).getIog().setGchecksumHalf(iog.getGchecksumHalf());
+					imagesOnGrid.get(i).getIog().setGheight(iog.getGheight());
+					imagesOnGrid.get(i).getIog().setGwidth(iog.getGwidth());
+					imagesOnGrid.get(i).getIog().setAngle(iog.getAngle());
+					
+					
+					images.get(i).setUrl(imagesOnGrid.get(i).getGoodLookingPicture());
+					images.get(i).setWidth("256px");
+					loading.setText("Done");
+				}
 				t.cancel();
 			}
 		}.begin();

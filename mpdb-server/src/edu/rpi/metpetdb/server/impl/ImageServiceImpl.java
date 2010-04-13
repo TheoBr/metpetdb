@@ -93,6 +93,13 @@ public class ImageServiceImpl extends MpDbServlet implements ImageService {
 		commit();
 		return (iog);
 	}
+	
+	public List<ImageOnGrid> rotate(List<ImageOnGrid> iogs, int degrees) {
+		for (ImageOnGrid iog : iogs) {
+			iog = rotate(iog, degrees);
+		}
+		return iogs;
+	}
 
 	public ImageOnGrid rotate(ImageOnGrid iog, int degrees) {
 		try {

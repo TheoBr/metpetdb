@@ -105,7 +105,10 @@ public class ImageOnGridContainer {
 	}
 
 	public void resizeImage(double width, double height, boolean resize) {
-
+		boolean selected = false;
+		if (this.getImageContainer().getStyleName().contains("selected")) {
+			selected = true;
+		}
 		if (width < height && height < 32) {
 			this.getImageContainer().setStyleName("imageContainerNoMenu");
 		} else if (height < width && width < 32) {
@@ -117,6 +120,7 @@ public class ImageOnGridContainer {
 				this.getImageContainer().setStyleName("imageContainer");
 			}
 		}
+		if (selected) this.getImageContainer().addStyleDependentName("selected");
 
 		this.getImagePanel().setWidth(width + "px");
 		this.getImagePanel().setHeight(height + "px");

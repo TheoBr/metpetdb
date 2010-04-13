@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.client.ui.image.browser;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
@@ -25,18 +26,22 @@ public class ZOrderManager {
 		imagesOnGrid.clear();
 	}
 
-	public void bringToFront(final ImageOnGridContainer iog) {
+	public void bringToFront(final List<ImageOnGridContainer> iogs) {
 		modifyAllZOrders(-1);
-		iog.getIog().setZorder(getHighestZOrder() + 1);
-		DOM.setStyleAttribute(iog.getImageContainer().getElement(), "zIndex",
-				String.valueOf(iog.getIog().getZorder()));
+		for (ImageOnGridContainer iog : iogs) {
+			iog.getIog().setZorder(getHighestZOrder() + 1);
+			DOM.setStyleAttribute(iog.getImageContainer().getElement(), "zIndex",
+					String.valueOf(iog.getIog().getZorder()));
+		}
 	}
 
-	public void sendToBack(final ImageOnGridContainer iog) {
+	public void sendToBack(final List<ImageOnGridContainer> iogs) {
 		modifyAllZOrders(1);
-		iog.getIog().setZorder((getLowestZOrder() - 1));
-		DOM.setStyleAttribute(iog.getImageContainer().getElement(), "zIndex",
-				String.valueOf(iog.getIog().getZorder()));
+		for (ImageOnGridContainer iog : iogs) {
+			iog.getIog().setZorder((getLowestZOrder() - 1));
+			DOM.setStyleAttribute(iog.getImageContainer().getElement(), "zIndex",
+					String.valueOf(iog.getIog().getZorder()));
+		}
 	}
 	public void modifyAllZOrders(final int offset) {
 		final Iterator<ImageOnGridContainer> itr = imagesOnGrid.iterator();

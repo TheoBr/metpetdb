@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -103,6 +104,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 
 	/** which chemical analyses that need to be saved */
 	private final Collection<ChemicalAnalysis> chemicalAnalyses;
+	private final List<ImageOnGridContainer> selectedImages;
 
 	private final Map<Image, ImageOnGridContainer> imagesOnGrid;
 	private Boolean leavingPage = false;
@@ -125,6 +127,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		this.grid.add(this.scaleDisplayBottom);
 		updateScale(1);
 		this.imagesOnGrid = new HashMap<Image, ImageOnGridContainer>();
+		this.selectedImages = new ArrayList<ImageOnGridContainer>();
 		panHandler = new PanHandler(grid,this);
 		chemicalAnalyses = new ArrayList<ChemicalAnalysis>();
 		sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEMOVE);
@@ -237,6 +240,12 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	public void onBrowserEvent(Event event) {
 		switch (DOM.eventGetType(event)) {
 			case Event.ONMOUSEDOWN:
+				if (DOM.eventGetCtrlKey(event) || DOM.eventGetMetaKey(event)) {
+					mouseListener.setClickMode(ImageBrowserMouseListener.ClickMode.CTRL);
+				} else if (DOM.eventGetShiftKey(event)) {
+					mouseListener.setClickMode(ImageBrowserMouseListener.ClickMode.SHIFT);
+				} else 
+					mouseListener.setClickMode(ImageBrowserMouseListener.ClickMode.NORMAL);
 			case Event.ONMOUSEMOVE:
 				// before we prevent default make sure the action is within
 				// our widget
@@ -400,12 +409,30 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		final Iterator<ChemicalAnalysis> itr2 = iog.getChemicalAnalyses().iterator();
 		while (itr2.hasNext()) {
 			final ChemicalAnalysis ma = itr2.next();
-			final com.google.gwt.user.client.ui.Image i = (com.google.gwt.user.client.ui.Image) ma.getActualImage();
-			int tpointX = ImageBrowserUtil.MMToPixelsChemWidth(ma.getReferenceX(), scale, iog.getIog().getResizeRatio());
-			int tpointY = ImageBrowserUtil.MMToPixelsChemHeight(ma.getReferenceY(), scale, iog.getIog().getResizeRatio());
-			int pointX = tpointX; //ImageBrowserUtil.rotateWidth(tpointX, tpointY, iog.getIog().getAngle());
-			int pointY = tpointY; //ImageBrowserUtil.rotateHeight(tpointX, tpointY, iog.getIog().getAngle());
-			this.grid.add(i,(int)iog.getCurrentContainerPosition().x + pointX, (int)iog.getCurrentContainerPosition().y + pointY);
+			final com.google.gwt.user.client.ui.Image i = (com.google.gwt.user.client.ui.Image) ma.getActualImage();		
+			// convert MM to pixels
+			int x = ImageBrowserUtil.MMToPixelsChemWidth(ma.getReferenceX(), scale, iog.getIog().getResizeRatio());
+			int y = ImageBrowserUtil.MMToPixelsChemHeight(ma.getReferenceY(), scale, iog.getIog().getResizeRatio());
+			// calculate original origin
+			int originX = (int)Math.round((iog.getImageOnGrid().getImage().getWidth() * (iog.getImageOnGrid().getActualCurrentResizeRatio())))/2;
+			int originY = (int)Math.round((iog.getImageOnGrid().getImage().getHeight() * (iog.getImageOnGrid().getActualCurrentResizeRatio())))/2;
+			// translate point relative to original origin
+			x -= originX;
+			y = (int)Math.round((iog.getImageOnGrid().getImage().getHeight() * (iog.getImageOnGrid().getActualCurrentResizeRatio()))) - y;
+			y -= originY; 
+			// rotate around original origin
+			double theta = -1*Math.toRadians(iog.getIog().getAngle());
+			int newx = (int)Math.round(((Math.cos(theta) * x) - (Math.sin(theta)*y)));
+			int newy = (int)Math.round( ((Math.sin(theta) * x) + (Math.cos(theta)*y)));
+			x = newx;
+			y = newy;
+			// calculate new origin
+			int newOriginX = (int)Math.round((iog.getIog().getGwidth() * (iog.getImageOnGrid().getActualCurrentResizeRatio())))/2;
+			int newOriginY = (int)Math.round((iog.getIog().getGheight() * (iog.getImageOnGrid().getActualCurrentResizeRatio())))/2;
+			// translate rotated point back from the new origin
+			x += newOriginX;
+			y = newOriginY - y;
+			this.grid.add(i,(int)iog.getCurrentContainerPosition().x + x, (int)iog.getCurrentContainerPosition().y + y);
 		}
 	}
 
@@ -417,12 +444,30 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 			final com.google.gwt.user.client.ui.Image i = new com.google.gwt.user.client.ui.Image(
 					GWT.getModuleBaseURL() + "/images/point0.gif");
 
-			int tpointX = ImageBrowserUtil.MMToPixelsChemWidth(ma.getReferenceX(), scale, iog.getIog().getResizeRatio());
-			int tpointY = ImageBrowserUtil.MMToPixelsChemHeight(ma.getReferenceY(), scale, iog.getIog().getResizeRatio());
-			int pointX = tpointX; //ImageBrowserUtil.rotateWidth(tpointX, tpointY, iog.getIog().getAngle());
-			int pointY = tpointY; //ImageBrowserUtil.rotateHeight(tpointX, tpointY, iog.getIog().getAngle());
+			// convert MM to pixels
+			int x = ImageBrowserUtil.MMToPixelsChemWidth(ma.getReferenceX(), scale, iog.getIog().getResizeRatio());
+			int y = ImageBrowserUtil.MMToPixelsChemHeight(ma.getReferenceY(), scale, iog.getIog().getResizeRatio());
+			// calculate original origin
+			int originX = (int)Math.round((iog.getImageOnGrid().getImage().getWidth() * (iog.getImageOnGrid().getActualCurrentResizeRatio())))/2;
+			int originY = (int)Math.round((iog.getImageOnGrid().getImage().getHeight() * (iog.getImageOnGrid().getActualCurrentResizeRatio())))/2;
+			// translate point relative to original origin
+			x -= originX;
+			y = (int)Math.round((iog.getImageOnGrid().getImage().getHeight() * (iog.getImageOnGrid().getActualCurrentResizeRatio()))) - y;
+			y -= originY; 
+			// rotate around original origin
+			double theta = -1*Math.toRadians(iog.getIog().getAngle());
+			int newx = (int)Math.round(((Math.cos(theta) * x) - (Math.sin(theta)*y)));
+			int newy = (int)Math.round( ((Math.sin(theta) * x) + (Math.cos(theta)*y)));
+			x = newx;
+			y = newy;
+			// calculate new origin
+			int newOriginX = (int)Math.round((iog.getIog().getGwidth() * (iog.getImageOnGrid().getActualCurrentResizeRatio())))/2;
+			int newOriginY = (int)Math.round((iog.getIog().getGheight() * (iog.getImageOnGrid().getActualCurrentResizeRatio())))/2;
+			// translate rotated point back from the new origin
+			x += newOriginX;
+			y = newOriginY - y;
 			i.setStyleName("chem-point");
-			this.grid.add(i,(int)iog.getCurrentContainerPosition().x + pointX, (int)iog.getCurrentContainerPosition().y + pointY);
+			this.grid.add(i,(int)iog.getCurrentContainerPosition().x + x, (int)iog.getCurrentContainerPosition().y + y);
 			iog.getChemicalAnalysisImages().add(i);
 			
 			ma.setActualImage(i);
@@ -453,14 +498,13 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	}
 
 	private void scale(final ImageOnGridContainer iog) {
-		final int multiplier = 1;
 		Image i = iog.getIog().getImage();
 		iog.getImageOnGrid().setActualCurrentResizeRatio((float)iog.getIog().getResizeRatio()*(((float)i.getScale()/(float)i.getWidth())/this.scale)*ImageBrowserUtil.pps);
 
 		iog.setCurrentWidth((int)Math.round((iog.getIog().getGwidth()
-				* multiplier * iog.getIog().getActualCurrentResizeRatio())));
+				* iog.getIog().getActualCurrentResizeRatio())));
 		iog.setCurrentHeight((int)Math.round((iog.getIog().getGheight()
-				* multiplier * iog.getIog().getActualCurrentResizeRatio())));
+				* iog.getIog().getActualCurrentResizeRatio())));
 	}
 
 	private MHtmlList makeBottomMenu(final ImageOnGridContainer iog) {
@@ -603,11 +647,11 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	}
 
 	private void doBringToFront() {
-		this.grid.setZMode(ZMode.BRING_TO_FRONT);
+		this.zOrderManager.bringToFront(selectedImages);
 	}
 
 	private void doSendToBack() {
-		this.grid.setZMode(ZMode.SEND_TO_BACK);
+		this.zOrderManager.sendToBack(selectedImages);
 	}
 
 	private void doAddExistingImage() {
@@ -703,6 +747,10 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 
 	public MAbsolutePanel getGrid() {
 		return this.grid;
+	}
+	
+	public List<ImageOnGridContainer> getSelectedImages(){
+		return this.selectedImages;
 	}
 
 	public float getZoomScale() {

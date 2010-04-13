@@ -80,8 +80,18 @@
 	top: 29px;
 }
 
+#canvas .imageContainer-selected {
+	background-color: #FF0000;
+	border: 3px solid #FF0000;
+}
+
 #canvas .imageContainerNoMenu ul {
 	display:none;
+}
+
+#canvas .imageContainerNoMenu-selected {
+	background-color: #FF0000;
+	border: 3px solid #FF0000;
 }
 
 #canvas .imageContainerHidden, #canvas .imageContainerHidden ul, #canvas .imageContainerHidden image{

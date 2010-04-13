@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.ui.image.browser.click.listeners;
 
+import java.util.List;
+
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -21,37 +23,43 @@ public class RotateListener implements ClickListener {
 	}
 
 	public void onClick(final Widget sender) {
-		new ServerOp<ImageOnGridContainer>() {
+		new ServerOp<List<ImageOnGridContainer>>() {
 			public void begin() {
 				if (MpDb.isLoggedIn()) {
-					new RotateDialog(iog, this).show();
+					if (!imageBrowser.getSelectedImages().contains(iog)){
+						imageBrowser.getSelectedImages().add(iog);
+						iog.getImageContainer().addStyleDependentName("selected");
+					}
+					new RotateDialog(imageBrowser.getSelectedImages(), this).show();
 				} else {
 					onFailure(new LoginRequiredException());
 				}
 			}
-			public void onSuccess(final ImageOnGridContainer result) {
+			public void onSuccess(final List<ImageOnGridContainer> result) {
 				// final float widthRatio = iog.getWidth()
 				// / (float) iog.getImage().getWidth();
-				result.setCurrentWidth((int)Math
-						.round((result.getIog().getGwidth() * (result.getIog().getActualCurrentResizeRatio()))));
-				result.setCurrentHeight((int)Math
-						.round((result.getIog().getGheight() * (result.getIog().getActualCurrentResizeRatio()))));
-				
-				result.getImagePanel().setHeight(result.getCurrentHeight() + "px");
-				result.getImagePanel().setWidth(result.getCurrentWidth() + "px");
-				
-				result.getActualImage().setWidth(result.getCurrentWidth() + "px");
-				result.getActualImage().setHeight(result.getCurrentHeight() + "px");
-				
-				//final double heightRatio = iog.getCurrentHeight()
-				//		/  iog.getIog().getImage().getHeight();
-				iog.getIog().setImage(
-						(((ImageOnGridContainer) result).getIog().getImage()));
-				iog.getActualImage()
-						.setUrl(
-								((ImageOnGridContainer) result)
-										.getGoodLookingPicture());
-				imageBrowser.updatePoints(iog);
+				for (ImageOnGridContainer imageOnGrid : result) {
+					imageOnGrid.setCurrentWidth((int)Math
+							.round((imageOnGrid.getIog().getGwidth() * (imageOnGrid.getIog().getActualCurrentResizeRatio()))));
+					imageOnGrid.setCurrentHeight((int)Math
+							.round((imageOnGrid.getIog().getGheight() * (imageOnGrid.getIog().getActualCurrentResizeRatio()))));
+					
+					imageOnGrid.getImagePanel().setHeight(imageOnGrid.getCurrentHeight() + "px");
+					imageOnGrid.getImagePanel().setWidth(imageOnGrid.getCurrentWidth() + "px");
+					
+					imageOnGrid.getActualImage().setWidth(imageOnGrid.getCurrentWidth() + "px");
+					imageOnGrid.getActualImage().setHeight(imageOnGrid.getCurrentHeight() + "px");
+					
+					//final double heightRatio = iog.getCurrentHeight()
+					//		/  iog.getIog().getImage().getHeight();
+					iog.getIog().setImage(
+							(((ImageOnGridContainer) imageOnGrid).getIog().getImage()));
+					iog.getActualImage()
+							.setUrl(
+									((ImageOnGridContainer) imageOnGrid)
+											.getGoodLookingPicture());
+					imageBrowser.updatePoints(iog);
+				}
 				
 				//TODO Update the chemical analysis points to correctly rotate with the image
 				

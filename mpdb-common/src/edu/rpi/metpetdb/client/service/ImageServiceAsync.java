@@ -28,6 +28,8 @@ public interface ImageServiceAsync {
 	void delete(Image i, AsyncCallback<Void> ac);
 
 	void rotate(ImageOnGrid iog, int degrees, AsyncCallback<ImageOnGrid> ac);
+	
+	void rotate(List<ImageOnGrid> iogs, int degrees, AsyncCallback<List<ImageOnGrid>> ac);
 
 	/**
 	 * Used to fetch the images eligable for addition to an image map, aka
