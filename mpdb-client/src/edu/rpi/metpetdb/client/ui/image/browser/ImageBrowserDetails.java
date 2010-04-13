@@ -288,7 +288,8 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		if (i.getScale() != null && i.getScale() != 0)
 			iog.setActualCurrentResizeRatio(ImageBrowserUtil.calculateCurrentResizeRatio(i.getScale(), i.getWidth(), scale));
 		else {
-			iog.setActualCurrentResizeRatio(ImageBrowserUtil.calculateCurrentResizeRatio(i.getWidth(), scale));
+			iog.setActualCurrentResizeRatio(ImageBrowserUtil.calculateCurrentResizeRatio(10, i.getWidth(),  scale));
+			iog.getImage().setScale(10);
 		}
 		iog.setResizeRatio(1);
 		iog.setZorder(1);
