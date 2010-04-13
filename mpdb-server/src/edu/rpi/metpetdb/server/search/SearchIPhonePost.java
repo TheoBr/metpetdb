@@ -137,15 +137,21 @@ public class SearchIPhonePost extends HttpServlet {
 					if(UserServiceImpl.authenticate(u, password))
 					{
 						response.getWriter().write("authentication succeeded");
+						username="";
+						password="";
 						//when the user successfully logs in set the session username and password
 					}
 					else
 					{
 						response.getWriter().write("authentication failed");
+						username="";
+						password="";
 					}
 				}
 				catch(Exception e){
 					response.getWriter().write("authentication failed");
+					username="";
+					password="";
 				}
 				response.getWriter().write("</response>");
 			}
@@ -287,10 +293,12 @@ public class SearchIPhonePost extends HttpServlet {
 				if(criteria.equals("true"))
 				{  
 					SearchIPhone1_1.getSearchCriteria(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
+					username="";
 				}
 				else
 				{
 					SearchIPhone1_1.outputSearchXML(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response),response);
+					username="";
 				}
 			}
 			//just test the value of the north value because all 4 coordinates are needed
@@ -301,10 +309,12 @@ public class SearchIPhonePost extends HttpServlet {
 				if(criteria.equals("true"))
 				{
 					SearchIPhone1_1.getSearchCriteria(SearchIPhone1_1.search(north,south,east,west, session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p), response);
+					username="";
 				}
 				else
 				{
 					SearchIPhone1_1.outputSearchXML(SearchIPhone1_1.search(north,south, east, west, session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p),response);
+					username="";
 				}
 			}
 			//if search criteria were entered but a search region or search box was not, a seperate search must be done
@@ -317,10 +327,12 @@ public class SearchIPhonePost extends HttpServlet {
 				if(criteria.equals("true"))
 				{
 					SearchIPhone1_1.getSearchCriteria(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
+					username="";
 				}
 				else
 				{
 					SearchIPhone1_1.outputSearchXML(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
+					username="";
 				}
 			}
 			
