@@ -52,9 +52,9 @@ public class RotateListener implements ClickListener {
 					
 					//final double heightRatio = iog.getCurrentHeight()
 					//		/  iog.getIog().getImage().getHeight();
-					iog.getIog().setImage(
-							(((ImageOnGridContainer) imageOnGrid).getIog().getImage()));
-					iog.getActualImage()
+					//iog.getIog().setImage(
+					//		(((ImageOnGridContainer) imageOnGrid).getIog().getImage()));
+					imageOnGrid.getActualImage()
 							.setUrl(
 									((ImageOnGridContainer) imageOnGrid)
 											.getGoodLookingPicture());

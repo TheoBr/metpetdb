@@ -345,13 +345,15 @@ public class ImageBrowserMouseListener implements MouseListener {
 	final ArrayList<ImageOnGridContainer> candidates = new ArrayList<ImageOnGridContainer>();
 	while (itr.hasNext()) {
 		final ImageOnGridContainer iog = itr.next();
-		if (x >= iog.getCurrentContainerPosition().x
-				&& x <= iog.getCurrentContainerPosition().x
-						+ iog.getImageContainer().getOffsetWidth()) {
-			if (y >= iog.getCurrentContainerPosition().y - iog.getImageContainer().getWidget(0).getOffsetHeight()
-					&& y <= iog.getCurrentContainerPosition().y
-							+ iog.getImageContainer().getWidget(1).getOffsetHeight() + iog.getImageContainer().getWidget(2).getOffsetHeight()) {
-				candidates.add(iog);
+		if (!iog.isLocked()) {
+			if (x >= iog.getCurrentContainerPosition().x
+					&& x <= iog.getCurrentContainerPosition().x
+							+ iog.getImageContainer().getOffsetWidth()) {
+				if (y >= iog.getCurrentContainerPosition().y - iog.getImageContainer().getWidget(0).getOffsetHeight()
+						&& y <= iog.getCurrentContainerPosition().y
+								+ iog.getImageContainer().getWidget(1).getOffsetHeight() + iog.getImageContainer().getWidget(2).getOffsetHeight()) {
+					candidates.add(iog);
+				}
 			}
 		}
 	}

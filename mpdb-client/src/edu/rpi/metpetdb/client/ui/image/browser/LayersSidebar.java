@@ -10,6 +10,8 @@ import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.image.browser.click.listeners.RemoveListener;
 import edu.rpi.metpetdb.client.ui.sidebar.Sidebar;
 import edu.rpi.metpetdb.client.ui.sidebar.UsesSidebar;
@@ -41,9 +43,10 @@ public class LayersSidebar extends Sidebar implements UsesSidebar {
 		double height = width/iog.getIog().getImage().getWidth()*iog.getIog().getImage().getHeight();
 		width = (double)Math.round(width*1000)/1000;
 		height = (double)Math.round(height*1000)/1000;
-		final String checkBoxText = iog.getIog().getImage().getFilename()
+		final String name =  iog.getIog().getImage().getFilename()
 				.equals("") ? iog.getIog().getImage().getChecksum() : iog
-				.getIog().getImage().getFilename() + " " + width +" mm x " + 
+				.getIog().getImage().getFilename();
+		final String checkBoxText = name + " " + width +" mm x " + 
 				height + " mm";
 		final CheckBox checkBox = new CheckBox(checkBoxText);
 		checkBox.addClickListener(new ClickListener() {
@@ -76,6 +79,7 @@ public class LayersSidebar extends Sidebar implements UsesSidebar {
 		checkBox.setChecked(true);
 		Button remove = new Button();
 		remove.addClickListener(new RemoveListener(iog, this, imageBrowser.getImagesOnGrid()));
+		
 		remove.setStylePrimaryName("remove");
 		container.add(checkBox);
 		container.add(remove);
