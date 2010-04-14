@@ -35,6 +35,7 @@ import edu.rpi.metpetdb.server.dao.impl.ImageDAO;
 import edu.rpi.metpetdb.server.dao.impl.RegionDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
+import edu.rpi.metpetdb.server.impl.RegionServiceImpl;
 import edu.rpi.metpetdb.server.impl.UserServiceImpl;
 
 
@@ -209,7 +210,7 @@ public class SearchIPhone1_1 extends HttpServlet{
 				sampleInfo(session, sampleIds,response);
 			} else if (request.getParameter(REGIONS) != null){
 				if (request.getParameterValues(REGIONS)[0].equalsIgnoreCase("t")){
-					regions(response, session);
+					regions(response, session, username);
 				}
 			} /*else if (request.getParameter(ROCK_TYPES) != null){
 				if (request.getParameterValues(ROCK_TYPES)[0].equalsIgnoreCase("t")){
@@ -448,22 +449,19 @@ public class SearchIPhone1_1 extends HttpServlet{
 			throw new IllegalStateException(ioe.getMessage());
 		}
 	} 
-	public static void regions(HttpServletResponse response, Session session){
+	public static void regions(HttpServletResponse response, Session session, String username){
 		try {
 			RegionDAO service = new RegionDAO(session);
-			User u= new User();
-			int userID;
-			/*if(username!="")
+			RegionServiceImpl impl= new RegionServiceImpl();
+			int userID=0;
+			if(!username.equals(""))
 			{
-				u.setName(username);
+				User u= new User();
+				UserServiceImpl usi= new UserServiceImpl();
+				u=usi.details(username);
 				userID= u.getId();
-				session.enableFilter("hasSamplePublicOrUser").setParameter("userId", userID);
 			}
-			else
-			{*/
-				session.enableFilter("hasSamplePublicOrUser").setParameter("userId", 0);
-			//}
-			final XStream x = new XStream();
+			/*final XStream x = new XStream();
 			//Set<String> regionNames=service.viewableNamesForUser(0);
 			Object[] regionNames= service.allNames();
 			List<String>regionList= new ArrayList<String>();
@@ -472,7 +470,10 @@ public class SearchIPhone1_1 extends HttpServlet{
 			}
 
 			java.util.Collections.sort(regionList);
-			//x.toXML(service.viewableNamesForUser(0),response.getWriter());
+			//x.toXML(service.viewableNamesForUser(0),response.getWriter());*/
+			final XStream x = new XStream();
+			Set<String> regionList;
+			regionList= impl.viewableNamesForUser(userID);
 			x.toXML(regionList, response.getWriter());
 		} catch(final Exception ioe){
 			throw new IllegalStateException(ioe.getMessage());

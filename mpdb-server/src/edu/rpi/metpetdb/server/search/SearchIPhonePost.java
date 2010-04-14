@@ -216,36 +216,42 @@ public class SearchIPhonePost extends HttpServlet {
 				p.setMaxResults(10);
 			}
 			else if(criteriaType.equals("regions")){
-				SearchIPhone1_1.regions(response, session);
+				SearchIPhone1_1.regions(response, session, username);
+				username="";
 			}
 			else if(criteriaType.equals("sampleID"))
 			{
 				sampleIds.add(Long.parseLong(value));
 				SearchIPhone1_1.sampleInfo(session, sampleIds,response);
+				username="";
 			}
 			else if(criteriaType.equals("comments"))
 			{
 				//the number following comments= will be the id of the sample we want comments for
 				long id= Long.parseLong(value);
 				SearchIPhone1_1.comments(session, response, id);
+				username="";
 			}
 			else if(criteriaType.equals("subsampleInfo"))
 			{
 				//the number following subsampleInfo= will be the id of the sample we want comments for
 				long id= Long.parseLong(value);
 				SearchIPhone1_1.subsampleInfo(session, response, id);
+				username="";
 			}
 			else if(criteriaType.equals("thumbnails"))
 			{
 				//the number following the thumbnails= will be the id of the sample we want thumbnails for
 				long id=Long.parseLong(value);
 				SearchIPhone1_1.get_thumbnails(session, response, id);
+				username="";
 			}
 			else if(criteriaType.equals("largeImage"))
 			{
 				//the number following the largeImage= will be id of the image we want to enlarge
 				long imageID= Long.parseLong(value);
 				SearchIPhone1_1.get_large_image(session, response, imageID);
+				username="";
 			}
 			else if(criteriaType.equals("addCommentSampleID"))
 			{
