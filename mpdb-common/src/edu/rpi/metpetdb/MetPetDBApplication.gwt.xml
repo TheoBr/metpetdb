@@ -50,4 +50,10 @@
 	<servlet path="/searchIPhone.svc" class="edu.rpi.metpetdb.server.search.SearchIPhone"/>
 	<servlet path="/searchIPhonePost.svc" class="edu.rpi.metpetdb.server.search.SearchIPhonePost"/>
 	<servlet path="/searchIPhone1_1.scv" class= "edu.rpi.metpetdb.server.search.SearchIPhone1_1"/>
+	
+	<replace-with class="com.google.gwt.dom.client.DOMImplMozillaFix">
+    	<when-type-is class="com.google.gwt.dom.client.DOMImpl"/>
+    	<when-property-is name="user.agent" value="gecko1_8"/>
+    </replace-with>
+	
 </module>
