@@ -385,7 +385,7 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 		
 		// container for widgets used to do stuff with selected rows
 		tableActions = new SimplePanel();
-		setPageSize(cookies.getPageSize());
+		setPageSizeInitial(cookies.getPageSize());
 
 		add(topbar);
 		add(tableActions);
@@ -408,6 +408,14 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 
 	public FlowPanel getTopBar() {
 		return topbar.getLeftCol();
+	}
+	
+	public void setPageSizeInitial(final int pageSize) {
+		if (pageSize > 0) {
+			dataTable.resize(pageSize, allColumns.size());
+			getScrollTable().setPageSize(pageSize);
+			cookies.setPageSize(pageSize);
+		}
 	}
 
 	public void setPageSize(final int pageSize) {

@@ -44,6 +44,7 @@ import edu.rpi.metpetdb.client.ui.commands.LoggedInServerOp;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
+import edu.rpi.metpetdb.client.ui.input.DetailsPanelTableLoc;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
@@ -81,7 +82,6 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 	private HTMLPanel commentPanel;
 
 	private static GenericAttribute[] sampleAtts = {
-			new AddImageAttribute<Sample>(MpDb.doc.Sample_images),
 			new TextAttribute(MpDb.doc.Sample_owner).setReadOnly(true),
 			new TextAttribute(MpDb.doc.Sample_sesarNumber).setImmutable(true),
 			new TextAttribute(MpDb.doc.Sample_number),
@@ -94,17 +94,18 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			new LocationAttribute(MpDb.doc.Sample_location),
 			new TextAttribute(MpDb.doc.Sample_locationError,true,false,false),
 			new CountryAttribute(MpDb.doc.Sample_country),
-			new TextAttribute(MpDb.doc.Sample_description),
-			new TextAttribute(MpDb.doc.Sample_collector),
-			new TextAttribute(MpDb.doc.Sample_locationText),
-			new MineralAttribute(MpDb.doc.Sample_minerals),
-			new RegionAttribute(MpDb.doc.Sample_regions),
-			new MetamorphicRegionAttribute(MpDb.doc.Sample_metamorphicRegions).setReadOnly(true),
-			new MetamorphicGradeAttribute(MpDb.doc.Sample_metamorphicGrades),
-			new ReferenceAttribute(MpDb.doc.Sample_references),
-			new GeoReferenceAttribute(MpDb.doc.Sample_geoReferences),
+			new TextAttribute(MpDb.doc.Sample_description).setPos(DetailsPanelTableLoc.BOTTOM),
+			new TextAttribute(MpDb.doc.Sample_collector).setPos(DetailsPanelTableLoc.RIGHT),
+			new TextAttribute(MpDb.doc.Sample_locationText).setPos(DetailsPanelTableLoc.RIGHT),
+			new MineralAttribute(MpDb.doc.Sample_minerals).setPos(DetailsPanelTableLoc.RIGHT),
+			new RegionAttribute(MpDb.doc.Sample_regions).setPos(DetailsPanelTableLoc.RIGHT),
+			new MetamorphicRegionAttribute(MpDb.doc.Sample_metamorphicRegions).setReadOnly(true).setPos(DetailsPanelTableLoc.RIGHT),
+			new MetamorphicGradeAttribute(MpDb.doc.Sample_metamorphicGrades).setPos(DetailsPanelTableLoc.RIGHT),
+			new ReferenceAttribute(MpDb.doc.Sample_references).setPos(DetailsPanelTableLoc.RIGHT),
+			new GeoReferenceAttribute(MpDb.doc.Sample_geoReferences).setPos(DetailsPanelTableLoc.RIGHT),
 			// new CommentAttribute(MpDb.doc.Sample_comments),
-			new TextAttribute(MpDb.doc.Sample_subsampleCount).setReadOnly(true)
+			new TextAttribute(MpDb.doc.Sample_subsampleCount).setReadOnly(true).setPos(DetailsPanelTableLoc.RIGHT),
+			new AddImageAttribute<Sample>(MpDb.doc.Sample_images).setPos(DetailsPanelTableLoc.RIGHT)
 	};
 
 	private final ObjectEditorPanel<Sample> p_sample;

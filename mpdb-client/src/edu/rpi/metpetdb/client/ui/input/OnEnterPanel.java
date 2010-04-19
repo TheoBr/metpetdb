@@ -7,6 +7,8 @@ import edu.rpi.metpetdb.client.ui.widgets.panels.MSimplePanel;
 
 public abstract class OnEnterPanel extends MSimplePanel implements
 		KeyboardListener {
+	public static boolean cancelEnter = false;
+	
 	public OnEnterPanel(final Widget child) {
 		addKeyboardListener(this);
 		setWidget(child);
@@ -14,7 +16,10 @@ public abstract class OnEnterPanel extends MSimplePanel implements
 
 	public void onKeyPress(final Widget sender, final char kc, final int mod) {
 		if (kc == KEY_ENTER)
-			onEnter();
+			if (!cancelEnter)
+				onEnter();
+			else
+				cancelEnter = false;
 		else if (kc == KEY_ESCAPE)
 			onEscape();
 	}

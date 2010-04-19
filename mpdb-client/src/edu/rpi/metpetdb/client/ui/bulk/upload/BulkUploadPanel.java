@@ -138,7 +138,11 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		uploadTypeList.add(samplesRadio);
 		uploadTypeList.add(analysesRadio);
 		uploadTypeList.add(imagesRadio);
-		uploadTypeList.add(referenceRadio);
+		
+		if (!GWT.getHostPageBaseURL().contains("samana.cs.rpi.edu") || 
+				(MpDb.currentUser() != null && MpDb.currentUser().getName().equals("PUBLICATION"))) {
+			uploadTypeList.add(referenceRadio);
+		}
 
 		main.add(uploadButton);
 		uploadButton.addClickListener(new ClickListener() {

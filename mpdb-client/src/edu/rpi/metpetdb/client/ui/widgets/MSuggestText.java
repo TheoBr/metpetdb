@@ -5,7 +5,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.google.gwt.user.client.ui.ChangeListener;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -20,6 +21,8 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
+
+import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 
 
 public class MSuggestText extends FlowPanel implements ClickListener, KeyboardListener, MouseListener {
@@ -38,6 +41,7 @@ public class MSuggestText extends FlowPanel implements ClickListener, KeyboardLi
 	private ScrollPanel sp;
 	private FlowPanel linker;
 	private boolean isChemistry = false;
+	private boolean didType = false;
 	
 	public MSuggestText(){
 		this(new HashSet<String>(), false);
@@ -56,6 +60,7 @@ public class MSuggestText extends FlowPanel implements ClickListener, KeyboardLi
 		oracle.addAll(suggestions);
 		suggestBox = new SuggestBox(oracle);
 		suggestBox.setStyleName(STYLENAME+"-box");
+		suggestBox.addKeyboardListener(this);
 		setPopupStyleName(STYLENAME+"-popup");
 		add(suggestBox);
 		
@@ -104,19 +109,30 @@ public class MSuggestText extends FlowPanel implements ClickListener, KeyboardLi
 	}
 	
 	public void onKeyDown(final Widget sender, final char c, final int i){
-		if (Integer.valueOf(c) == KEY_DOWN){
-			selectedDown(sender);
-			setSelected();
-		} else if (Integer.valueOf(c) == KEY_UP){
-			selectedUp(sender);
-			setSelected();
-		} else if (Integer.valueOf(c) == KEY_ENTER){
-			selectionComplete((HTML)fp.getWidget(selected));
+		if (sender == fp) {
+			if (Integer.valueOf(c) == KEY_DOWN){
+				selectedDown(sender);
+				setSelected();
+			} else if (Integer.valueOf(c) == KEY_UP){
+				selectedUp(sender);
+				setSelected();
+			} else if (Integer.valueOf(c) == KEY_ENTER){
+				selectionComplete((HTML)fp.getWidget(selected));
+			}
+		} else if (sender == suggestBox) {
+			if (Integer.valueOf(c) == KEY_ENTER){
+				if (didType == true) {
+					OnEnterPanel.cancelEnter = true;
+					didType = false;
+				}
+			} else {
+				didType = true;
+			}
 		}
 	}
 	
 	public void onKeyPress(final Widget sender, final char c, final int i){
-		
+
 	}
 	
 	public void onMouseUp(final Widget sender, final int x, final int y){

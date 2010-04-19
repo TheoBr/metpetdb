@@ -2,14 +2,17 @@ package edu.rpi.metpetdb.client.ui.input.attributes.specific.sample;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -32,6 +35,7 @@ import edu.rpi.metpetdb.client.ui.input.WizardDialog;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TreeAttribute;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 
 public class MineralAttribute extends GenericAttribute implements ClickListener {
 
@@ -64,9 +68,37 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 	}
 
 	public Widget[] createDisplayWidget(final MObject obj) {
-		remakeContainer(obj);
+		final DisclosurePanel expand = new DisclosurePanel();
+		
+		List<String> vals = new ArrayList<String>();
+		
+		this.obj = obj;
+		addItemsToTree();
+		final Widget[] widgets = tree.createDisplayWidget(obj);
+		MHtmlList tempList = (MHtmlList) ((SimplePanel) widgets[0]).getWidget();
+
+		Collection s = tempList.getItems();
+		if (s != null) {
+			final Iterator itr = s.iterator();
+			while (itr.hasNext()) {
+				vals.add(((Label)((MHtmlList.ListItem) itr.next()).getWidget()).getText());
+			}
+		}
+		Collections.sort(vals);
+		Iterator<String> itr = vals.iterator();
+		MHtmlList list = new MHtmlList();
+		for (int i = 1; i < vals.size(); i++) {
+			list.add(new Label(vals.get(i)));
+		}
+
+		if (vals.size() > 0) {
+			final Label closedText = new Label(vals.get(0));
+			expand.setHeader(closedText);
+		}
+		expand.add(list);
+		expand.setAnimationEnabled(true);
 		return new Widget[] {
-			container
+			expand
 		};
 	}
 

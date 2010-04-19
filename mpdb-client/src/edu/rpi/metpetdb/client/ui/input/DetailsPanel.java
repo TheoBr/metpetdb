@@ -27,6 +27,8 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 	private T bean;
 	protected int actionCount;
 	protected Element tbody;
+	protected Element tbody2;
+	protected Element tbody3;
 	protected boolean isEditMode = false;
 	protected final String STYLENAME_DEFAULT = "detailsPanel";
 
@@ -66,13 +68,29 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 		setStylePrimaryName(STYLENAME_DEFAULT);
 
 		final Element table = DOM.createTable();
-		CSS.setStyleName(table, STYLENAME_DEFAULT + "-table");
+		final Element table2 = DOM.createTable();
+		final Element table3 = DOM.createTable();
+		CSS.setStyleName(table, STYLENAME_DEFAULT + "-table-left");
+		CSS.setStyleName(table2, STYLENAME_DEFAULT + "-table-right");
+		CSS.setStyleName(table2, STYLENAME_DEFAULT + "-table-bottom");
 		tbody = DOM.createTBody();
+		tbody2 = DOM.createTBody();
+		tbody3 = DOM.createTBody();
+		
 		DOM.appendChild(getElement(), table);
 		DOM.appendChild(table, tbody);
+		DOM.appendChild(getElement(), table2);
+		DOM.appendChild(table2, tbody2);
+		DOM.appendChild(getElement(), table3);
+		DOM.appendChild(table3, tbody3);
 
 		attributes = new ArrayList<GenericAttribute>();
 		dpEntries = new HashMap<GenericAttribute, DetailsPanelEntry>();
+		
+		int leftRow = 0;
+		int rightRow = 0;
+		int bottomRow = 0;
+		
 		for (int row = 0; row < atts.length; ++row) {
 			attributes.add(atts[row]);
 			final DetailsPanelRow newRow = createRow(atts[row], row);
@@ -83,14 +101,28 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 				// "collapse");
 				DOM.setStyleAttribute(newRow.getRow(), "display", "none");
 			}
-			DOM.insertChild(tbody, newRow.getRow(), row);
+			switch (atts[row].getPos()) {
+				case LEFT: {
+					DOM.insertChild(tbody, newRow.getRow(), leftRow);
+					leftRow++;
+					break;
+				} case RIGHT: {
+					DOM.insertChild(tbody2, newRow.getRow(), rightRow);
+					rightRow++;
+					break;
+				} case BOTTOM: {
+					DOM.insertChild(tbody3, newRow.getRow(), bottomRow);
+					bottomRow++;
+					break;
+				}
+			}
 			dpEntries.put(atts[row], new DetailsPanelEntry(atts[row], newRow));
 		}
 
 		if (actions != null && actions.length > 0) {
 			final Element tr = DOM.createTR();
 			CSS.setStyleName(tr, CSS.LAST_ROW);
-			DOM.appendChild(tbody, tr);
+			DOM.appendChild(tbody3, tr);
 			DOM.appendChild(tr, DOM.createTD());
 			final Element td = DOM.createTD();
 			CSS.setStyleName(td, CSS.ACTIONS);

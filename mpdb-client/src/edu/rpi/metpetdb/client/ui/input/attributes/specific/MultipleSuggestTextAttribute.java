@@ -1,13 +1,17 @@
 package edu.rpi.metpetdb.client.ui.input.attributes.specific;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DisclosurePanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SuggestionHandler;
 import com.google.gwt.user.client.ui.Widget;
@@ -26,6 +30,8 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute impl
 	protected MHtmlList editList;
 	protected final ArrayList<Widget> realEditWidgets;
 	private static final String STYLENAME = "multi-suggest";
+	private static int truncLength = 30;
+	private boolean isClosed = true;
 	
 	public ArrayList<Widget> getRealEditWidgets(){
 		return realEditWidgets;
@@ -46,18 +52,32 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute impl
 	}
 
 	public Widget[] createDisplayWidget(final MObject obj){
-		final MHtmlList list = new MHtmlList();
-
+		final DisclosurePanel expand = new DisclosurePanel();
+		
+		List<String> vals = new ArrayList<String>();
+		
 		final Set s = get(obj);
 		if (s != null) {
 			final Iterator itr = s.iterator();
 			while (itr.hasNext()) {
-				final Label r = new Label(itr.next().toString());
-				list.add(r);
+				vals.add(itr.next().toString());
 			}
+		}		
+		Collections.sort(vals);
+		Iterator<String> itr = vals.iterator();
+		MHtmlList list = new MHtmlList();
+		for (int i = 1; i < vals.size(); i++) {
+			list.add(new Label(vals.get(i)));
 		}
+
+		if (vals.size() > 0) {
+			final Label closedText = new Label(vals.get(0));
+			expand.setHeader(closedText);
+		}
+		expand.add(list);
+		expand.setAnimationEnabled(true);
 		return new Widget[] {
-			list
+			expand
 		};
 	}
 

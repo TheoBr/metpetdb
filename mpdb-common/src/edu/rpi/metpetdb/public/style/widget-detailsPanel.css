@@ -5,6 +5,7 @@
  
 .detailsPanel {
 	margin-top: 10px;
+	width: 1000px;
 }
 .detailsPanel td {
 	vertical-align: baseline;
@@ -44,6 +45,21 @@
 	background-repeat: no-repeat;
 	background-position: 5px 50%;
 	padding-left: 22px;
+}	
+
+.detailsPanel-table-left {
+	float: left;
+	width: 300px;
+}
+
+.detailsPanel-table-right {
+	display: inline;	
+	width: 300px;
+}
+
+.detailsPanel-table-bottom {
+	display: block;	
+	width: 600px;
 }
 
 

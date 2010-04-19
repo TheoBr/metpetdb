@@ -17,6 +17,7 @@ import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.CurrentError;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
+import edu.rpi.metpetdb.client.ui.input.DetailsPanelTableLoc;
 
 /**
  * Every attribute that goes on a DetailsPanel will extend this class
@@ -27,6 +28,7 @@ public abstract class GenericAttribute<DataType extends MObject> {
 	private boolean readOnly; // Cannot be modified or created
 	private boolean immutable; // Cannot be modified, but can be created
 	private DetailsPanel<DataType> myPanel;
+	private DetailsPanelTableLoc pos = DetailsPanelTableLoc.LEFT;
 
 	/**
 	 * Creates a new generic attribute and fetches the labels from the locale
@@ -300,5 +302,14 @@ public abstract class GenericAttribute<DataType extends MObject> {
 			if (editWidgets[i] instanceof FocusWidget)
 				((FocusWidget) editWidgets[i]).setEnabled(enable);
 		}
+	}
+	
+	public GenericAttribute<DataType> setPos(final DetailsPanelTableLoc pos) {
+		this.pos = pos;
+		return this;
+	}
+	
+	public DetailsPanelTableLoc getPos() {
+		return pos;
 	}
 }
