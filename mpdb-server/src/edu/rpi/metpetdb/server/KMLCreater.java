@@ -125,14 +125,51 @@ static public String createKMLMetamorphicRegions(){
 				List<Double> latitudes= new ArrayList();
 				List<Double> longitudes= new ArrayList();
 				org.postgis.Polygon pg = (org.postgis.Polygon) region.getShape();
+				
 				for (int j = 0; j < pg.getRing(0).numPoints(); j++){
 					Point p = pg.getRing(0).getPoint(j);
 					latitudes.add(p.y);
 					longitudes.add(p.x);
 				}
-					KML += " <Placemark>\n";
-					KML += "<description>" + region.getName() + "</description>\n";
-		
+				//get the area of the region in order to find the x and y coordinates of the center of mass (cx and cy)
+				double area=0;
+				double centerX=0;
+				double centerY=0;
+			
+				int position=0;
+				for(int k=0; k< latitudes.size(); k++){
+					if(k+1==latitudes.size()){
+						position=0;
+					}
+					else{
+						position=k+1;
+					}
+					area+= (longitudes.get(k)*latitudes.get(position))- (longitudes.get(position)*latitudes.get(k));
+					//area+= ((longitudes.get(k+1)- longitudes.get(k)) * (latitudes.get(k+1)- latitudes.get(k)))/2;
+					centerX+= (longitudes.get(k)*longitudes.get(position))*(longitudes.get(k)*latitudes.get(position) + longitudes.get(position)* latitudes.get(k));
+					centerY+= (latitudes.get(k)*latitudes.get(position))*(longitudes.get(k)*latitudes.get(position) + longitudes.get(position)* latitudes.get(k));
+					//centerX+=longitudes.get(k);
+					//centerY+=latitudes.get(k);
+				}
+				//centerX=centerX/longitudes.size()-1;
+				//centerY=centerY/latitudes.size()-1;
+				area*=.5;
+				centerX= centerX*(1/(6*area));
+				centerY= centerY*(1/(6*area));
+				//add a placemark to each region at the center of mass
+				
+				
+				
+			      	KML += "<Placemark>\n";
+			      	KML += "<name>" + region.getName() + "</name>\n";
+			      	KML += "<description>" + region.getDescription() + "</description>\n";
+			      	KML += "<Point>\n <coordinates>";
+			      	KML += centerX +","+ centerY + ",0 </coordinates>\n</Point>\n";
+			      	KML += "</Placemark>\n";
+					
+			      	KML += " <Placemark>\n";
+					KML += "<name>" + region.getName() + "</name>\n";
+					KML += "<description>"+ region.getDescription() + "</description>\n";
 					KML += " <Polygon>\n";
 					KML += "<outerBoundaryIs>\n";
 					KML += "<LinearRing>\n";
@@ -159,6 +196,10 @@ static public String createKMLMetamorphicRegions(){
 			//}
 			KML += " </Folder>\n";
 			KML += "</Document>";
+			FileOutputStream fos = new FileOutputStream("/Users/heatherbuletti/MetPetDB/testkml.kml", true);
+			PrintStream p = new PrintStream(fos);
+			p.print(KML);
+			System.out.print(KML);
 			
 			return KML;
 		}
