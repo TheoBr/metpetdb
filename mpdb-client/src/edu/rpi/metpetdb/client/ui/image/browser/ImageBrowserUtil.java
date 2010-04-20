@@ -23,19 +23,19 @@ public class ImageBrowserUtil {
 	}
 	
 	public static int MMToPixelsChemWidth(int mm, float mmPerSquare, double resizeRatio) {
-		return (int) Math.round(mm*pps/mmPerSquare*resizeRatio)-chemImageWidthHalf+magicNumber;
+		return (int) Math.round((mm*pps/mmPerSquare)*resizeRatio)-chemImageWidthHalf+magicNumber;
 	}
 	
 	public static int MMToPixelsChemWidth(double mm, float mmPerSquare, double resizeRatio) {
-		return (int) Math.round(mm*pps/mmPerSquare*resizeRatio)-chemImageWidthHalf+magicNumber;
+		return (int) Math.round((mm*pps/mmPerSquare)*resizeRatio)-chemImageWidthHalf+magicNumber;
 	}
 	
 	public static int MMToPixelsChemHeight(int mm, float mmPerSquare, double resizeRatio) {
-		return (int) Math.round(mm*pps/mmPerSquare*resizeRatio)-chemImageHeight+magicNumber;
+		return (int) Math.round((mm*pps/mmPerSquare)*resizeRatio)-chemImageHeight+magicNumber;
 	}
 	
 	public static int MMToPixelsChemHeight(double mm, float mmPerSquare, double resizeRatio) {
-		return (int) Math.round(mm*pps/mmPerSquare*resizeRatio)-chemImageHeight+magicNumber;
+		return (int) Math.round((mm*pps/mmPerSquare)*resizeRatio)-chemImageHeight+magicNumber;
 	}
 	
 	public static float calculateCurrentResizeRatio(float imageScale, int imageWidth, float mmPerSquare) {

@@ -206,7 +206,27 @@ public class ImageBrowserMouseListener implements MouseListener {
 				- grid.getAbsoluteLeft() ;
 		pointY -= currentImage.getImagePanel().getAbsoluteTop()
 				- grid.getAbsoluteTop() ;
-
+		
+		// calculate current origin
+		int newOriginX = (int)Math.round((currentImage.getIog().getGwidth() * (currentImage.getImageOnGrid().getActualCurrentResizeRatio())))/2;
+		int newOriginY = (int)Math.round((currentImage.getIog().getGheight() * (currentImage.getImageOnGrid().getActualCurrentResizeRatio())))/2;
+		// translate point from the current origin
+		pointX -= newOriginX;
+		pointY = (int)Math.round((currentImage.getIog().getGheight() * (currentImage.getImageOnGrid().getActualCurrentResizeRatio()))) - pointY;
+		pointY -= newOriginY;	
+		// rotate around current origin
+		double theta = 1*Math.toRadians(currentImage.getIog().getAngle());
+		int newx = (int)Math.round(((Math.cos(theta) * pointX) - (Math.sin(theta)*pointY)));
+		int newy = (int)Math.round(((Math.sin(theta) * pointX) + (Math.cos(theta)*pointY)));
+		pointX = newx;
+		pointY = newy;
+		// calculate original origin
+		int originX = (int)Math.round((currentImage.getImageOnGrid().getImage().getWidth() * (currentImage.getImageOnGrid().getActualCurrentResizeRatio())))/2;
+		int originY = (int)Math.round((currentImage.getImageOnGrid().getImage().getHeight() * (currentImage.getImageOnGrid().getActualCurrentResizeRatio())))/2;
+		// translate point relative to original origin
+		pointX += originX;
+		pointY = originY - pointY; 
+		// convert pixels to MM
 		ca.setReferenceX(ImageBrowserUtil.pixelsToMM(pointX,imageBrowser.scale,currentImage.getIog().getResizeRatio()));
 		ca.setReferenceY(ImageBrowserUtil.pixelsToMM(pointY,imageBrowser.scale,currentImage.getIog().getResizeRatio()));
 		ca.setActualImage(pointer);
@@ -598,6 +618,7 @@ public class ImageBrowserMouseListener implements MouseListener {
 				.setResizeRatio(
 						iog.getCurrentWidth()
 								/ (float) (iog.getIog().getGwidth()*(((float)i.getScale()/(float)i.getWidth())/imageBrowser.scale)*(float)ImageBrowserUtil.pps));
+		iog.getImageOnGrid().setActualCurrentResizeRatio((float)iog.getIog().getResizeRatio()*(((float)i.getScale()/(float)i.getWidth())/imageBrowser.scale)*ImageBrowserUtil.pps);
 	}
 
 	private void handleEndPan(final int x, final int y) {

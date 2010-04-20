@@ -428,7 +428,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 			// rotate around original origin
 			double theta = -1*Math.toRadians(iog.getIog().getAngle());
 			int newx = (int)Math.round(((Math.cos(theta) * x) - (Math.sin(theta)*y)));
-			int newy = (int)Math.round( ((Math.sin(theta) * x) + (Math.cos(theta)*y)));
+			int newy = (int)Math.round(((Math.sin(theta) * x) + (Math.cos(theta)*y)));
 			x = newx;
 			y = newy;
 			// calculate new origin
@@ -462,7 +462,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 			// rotate around original origin
 			double theta = -1*Math.toRadians(iog.getIog().getAngle());
 			int newx = (int)Math.round(((Math.cos(theta) * x) - (Math.sin(theta)*y)));
-			int newy = (int)Math.round( ((Math.sin(theta) * x) + (Math.cos(theta)*y)));
+			int newy = (int)Math.round(((Math.sin(theta) * x) + (Math.cos(theta)*y)));
 			x = newx;
 			y = newy;
 			// calculate new origin

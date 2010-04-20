@@ -85,10 +85,14 @@ public class ZoomHandler {
 				double centerX = getCenterX(iog);
 				double centerY = getCenterY(iog);
 				iog.resizeImage(newWidth, newHeight, false);
+				edu.rpi.metpetdb.client.model.Image i = iog.getIog().getImage();
+				iog.getImageOnGrid().setActualCurrentResizeRatio((float)iog.getIog().getResizeRatio()*(((float)i.getScale()/(float)i.getWidth())/imageBrowser.scale)*ImageBrowserUtil.pps);
+				
 				changePosition(iog, level,centerX,centerY);
 				imageBrowser.getGrid().setWidgetPosition(
 						iog.getImageContainer(), iog.getCurrentContainerPosition().x,
 						iog.getCurrentContainerPosition().y);
+				
 
 			}
 		}

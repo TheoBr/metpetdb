@@ -87,7 +87,8 @@ public abstract class MpDbServlet extends PersistentRemoteService {
 
 	protected static final Properties fileProps = new Properties();
 
-	private static int autoLoginId = 9;
+	private static int autoLoginId = -1;
+
 	private static final String fileUploadPath;
 
 	static {

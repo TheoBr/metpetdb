@@ -105,6 +105,15 @@ public class ImageOnGridContainer {
 	}
 
 	public void resizeImage(double width, double height, boolean resize) {
+		if (width < 1){
+			double diff = 1-width;
+			width = 1;
+			height = (diff * getAspectRatio()) + height;
+		} else if (height < 1){
+			double diff = 1-height;
+			height = 1;
+			width = (diff * getAspectRatioHeight()) + width;
+		}
 		boolean selected = false;
 		if (this.getImageContainer().getStyleName().contains("selected")) {
 			selected = true;
@@ -240,6 +249,7 @@ public class ImageOnGridContainer {
 	}
 
 	public double getAspectRatio() {
+		setupForResize();
 		return aspectRatio;
 	}
 
