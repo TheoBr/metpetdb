@@ -196,10 +196,10 @@ static public String createKMLMetamorphicRegions(){
 			//}
 			KML += " </Folder>\n";
 			KML += "</Document>";
-			FileOutputStream fos = new FileOutputStream("/Users/heatherbuletti/MetPetDB/testkml.kml", true);
-			PrintStream p = new PrintStream(fos);
-			p.print(KML);
-			System.out.print(KML);
+			//FileOutputStream fos = new FileOutputStream("/Users/heatherbuletti/MetPetDB/testkml.kml", true);
+			//PrintStream p = new PrintStream(fos);
+			//p.print(KML);
+			//System.out.print(KML);
 			
 			return KML;
 		}
