@@ -137,7 +137,7 @@ static public String createKMLMetamorphicRegions(){
 				double centerY=0;
 			
 				int position=0;
-				for(int k=0; k< latitudes.size(); k++){
+				for(int k=0; k< latitudes.size()-1; k++){
 					if(k+1==latitudes.size()){
 						position=0;
 					}
@@ -146,8 +146,8 @@ static public String createKMLMetamorphicRegions(){
 					}
 					area+= (longitudes.get(k)*latitudes.get(position))- (longitudes.get(position)*latitudes.get(k));
 					//area+= ((longitudes.get(k+1)- longitudes.get(k)) * (latitudes.get(k+1)- latitudes.get(k)))/2;
-					centerX+= (longitudes.get(k)*longitudes.get(position))*(longitudes.get(k)*latitudes.get(position) + longitudes.get(position)* latitudes.get(k));
-					centerY+= (latitudes.get(k)*latitudes.get(position))*(longitudes.get(k)*latitudes.get(position) + longitudes.get(position)* latitudes.get(k));
+					centerX+= (longitudes.get(k)+longitudes.get(position))*(longitudes.get(k)*latitudes.get(position) - longitudes.get(position)* latitudes.get(k));
+					centerY+= (latitudes.get(k)+latitudes.get(position))*(longitudes.get(k)*latitudes.get(position) - longitudes.get(position)* latitudes.get(k));
 					//centerX+=longitudes.get(k);
 					//centerY+=latitudes.get(k);
 				}

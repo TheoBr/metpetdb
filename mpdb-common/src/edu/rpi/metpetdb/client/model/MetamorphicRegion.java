@@ -12,6 +12,7 @@ public class MetamorphicRegion extends MObject implements Comparable {
 
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String name;
+	private String description;
 	private Geometry shape;
 	
 	
@@ -37,6 +38,12 @@ public class MetamorphicRegion extends MObject implements Comparable {
 
 	public void setName(final String s) {
 		name = s;
+	}
+	public void setDescription(final String s){
+		description=s;
+	}
+	public String getDescription(){
+		return description;
 	}
 	public Geometry getShape() {
 		return shape;

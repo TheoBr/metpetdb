@@ -10,6 +10,7 @@
       </generator>
     </id>
     <property name="name" column="name"/>
+    <property name="description" column="description"/>
     <property name="shape" column="shape"
               type="edu.rpi.metpetdb.server.dao.GeometryType" />
   <filter name="metRegionBox"

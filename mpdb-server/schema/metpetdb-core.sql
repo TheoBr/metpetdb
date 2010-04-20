@@ -42,7 +42,8 @@ CREATE TABLE metamorphic_regions
   metamorphic_region_id INT8 NOT NULL,
   name VARCHAR(50) NOT NULL UNIQUE,
   CONSTRAINT metamorphic_regions_sk PRIMARY KEY (metamorphic_region_id),
-  CONSTRAINT metamorphic_regions_name_key UNIQUE (name)
+  CONSTRAINT metamorphic_regions_name_key UNIQUE (name),
+  description text
 )WITHOUT OIDS;
 
 --add a column of gis polygons to the metamorhpic_regions table

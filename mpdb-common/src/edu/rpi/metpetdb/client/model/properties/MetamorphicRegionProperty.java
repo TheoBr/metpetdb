@@ -14,6 +14,14 @@ public enum MetamorphicRegionProperty implements Property<MetamorphicRegion> {
 			((MetamorphicRegion) metamorphicRegion).setName((String) name);
 		}
 	},
+	description {
+		public String get(final MetamorphicRegion metamorphicRegion){
+			return ((MetamorphicRegion) metamorphicRegion).getDescription();
+		}
+		public void set(final MetamorphicRegion metamorphicRegion, final Object description){
+			((MetamorphicRegion) metamorphicRegion).setDescription((String) description);
+		}
+	},
 	metamorphicRegion {
 		public MetamorphicRegion get(final MetamorphicRegion metamorphicRegion) {
 			return ((MetamorphicRegion) metamorphicRegion);
