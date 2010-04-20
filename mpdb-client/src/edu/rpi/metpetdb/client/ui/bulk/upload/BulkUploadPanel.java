@@ -61,6 +61,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 	private final FlowPanel main = new FlowPanel();
 	private final FormPanel form = new FormPanel();
 	private final FileUpload file = new FileUpload();
+	private final FileUpload imageFile = new FileUpload();
 	private final MNoticePanel formMessage = new MNoticePanel();
 
 	private final MTabPanel resultsPanel = new MTabPanel();
@@ -83,10 +84,13 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 
 	private final MButton uploadButton = new MButton(lc_text
 			.bulkUpload_Upload());
+	private final MButton uploadImageZipButton = new MButton(lc_text
+			.bulkUpload_UploadZip());
 	private final MButton commitButton = new MButton(lc_text
 			.bulkUpload_SubmitData());
 
 	private final FlowPanel nextStepPanel = new FlowPanel();
+	private final FormPanel imageZipForm = new FormPanel();
 	private final MLink resetLink = new MLink(lc_text.message_resetForm(),
 			TokenSpace.bulkUpload);
 	private final MText nextStepText = new MText(lc_text
@@ -107,6 +111,8 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 	private String contentType;
 	private BulkUploadServiceAsync service;
 	private String fileOnServer;
+	private String spreadsheetFileOnServer;
+	private boolean isImageZip = false;
 
 	{
 		setStylePrimaryName(CSS.BULK_UPLOAD);
@@ -147,6 +153,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		main.add(uploadButton);
 		uploadButton.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
+				isImageZip = false;
 				updateUploadType();
 				doUploadAndParse();
 				commitButton.setEnabled(true);
@@ -202,6 +209,27 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 
 		resultsPanel.add(warningsPanel, warningTab);
 		warningsPanel.setStyleName(CSS.BULK_RESULTS_WARNINGS);
+		
+		main.add(imageZipForm);
+		imageZipForm.setMethod(FormPanel.METHOD_POST);
+		imageZipForm.setEncoding(FormPanel.ENCODING_MULTIPART);
+		imageZipForm.setAction(GWT.getModuleBaseURL() + "/spreadsheetUpload");
+		imageZipForm.addFormHandler(this);
+		imageZipForm.setStyleName(CSS.BULK_UPLOAD_FORM);
+		imageZipForm.setWidget(imageFile);
+		imageFile.setName("bulkUpload");
+		imageFile.getElement().setAttribute("size", "61");
+		imageZipForm.setVisible(false);
+		
+		main.add(uploadImageZipButton);
+		uploadImageZipButton.setVisible(false);
+		uploadImageZipButton.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				isImageZip = true;
+				doZipUpload();
+				commitButton.setEnabled(true);
+			}
+		});
 
 		main.add(nextStepPanel);
 		nextStepPanel.setStyleName(CSS.BULK_NEXTSTEP);
@@ -210,17 +238,22 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		commitButton.addStyleName(CSS.SUBMIT);
 		commitButton.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
-				doCommit();
+				if(!isImageZip){
+					doCommit();
+				} else {
+					doImageCommit();
+				}
 			}
 		});
-		
+
 		resetLink.addClickListener(new ClickListener() {
-			public void onClick(Widget sender){
+			public void onClick(Widget sender) {
 				clearResults();
 			}
 		});
 
 		nextStepPanel.add(resetLink);
+
 	}
 
 	public BulkUploadPanel() {
@@ -233,19 +266,27 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 	private void doUploadAndParse() {
 		form.submit();
 	}
+	
+	private void doZipUpload(){
+		imageZipForm.submit();
+	}
 
 	public void onSubmitComplete(final FormSubmitCompleteEvent event) {
 		final String results = event.getResults();
 		progressTimer.cancel();
 		uploadProgress.setProgress(1.0d);
-		if (results != "NO-SCRIPT-DATA" && results != "") {
+		if (results != "NO-SCRIPT-DATA" && results != "" && results != "<PRE>NO-SCRIPT-DATA</PRE>") {
 			// TODO: This is bad! It's to strip the <pre> and </pre>
 			// tags that get stuck on the string for some reason
 			fileOnServer = results.replaceAll("<.*?>", "");
 			resultStatus.sendNotice(NoticeType.WORKING,
 					"Upload complete. Parsing " + contentType
 							+ ", please wait...");
-			parse();
+			if(!isImageZip){
+				parse();
+			} else{
+				uploadImages();
+			}
 		}
 	}
 
@@ -287,6 +328,36 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 	private void updateContentType(String type) {
 		contentType = type;
 	}
+	
+	private void doImageCommit(){
+		resultStatus.sendNotice(NoticeType.WORKING, "Submitting " + contentType
+				+ " to MetPetDB. This may take a few moments...");
+		commitButton.setText("Submitting data...");
+		commitButton.setEnabled(false);
+		new ServerOp<BulkUploadResult>() {
+			public void begin() {
+				service.imageZipUpload(spreadsheetFileOnServer, fileOnServer, true,
+						this);
+			}
+
+			public void onSuccess(BulkUploadResult result) {
+				commitButton.setText(lc_text.bulkUpload_SubmitData());
+				handleCommitErrors(result);
+			}
+			public void onFailure(final Throwable e) {
+				hide(progressContainer);
+				// TODO better error handling
+				resultStatus.sendNotice(NoticeType.ERROR,
+						"There was an error submitting the data.");
+				nextStepText
+						.setText("Please submit a bug report to the developers. We are very sorry for the inconvenience.");
+				resetLink.setText("Reset the form");
+				commitButton.setText(lc_text.bulkUpload_SubmitData());
+				commitButton.setEnabled(true);
+				show(nextStepPanel);
+			}
+		}.begin();
+	}
 
 	private void doCommit() {
 		resultStatus.sendNotice(NoticeType.WORKING, "Submitting " + contentType
@@ -318,6 +389,33 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		}.begin();
 	}
 
+	private void uploadImages() {
+		new ServerOp<BulkUploadResult>() {
+			public void begin() {
+				service.imageZipUpload(spreadsheetFileOnServer, fileOnServer, false,
+								this);
+			}
+			public void onSuccess(final BulkUploadResult results) {
+				hide(progressContainer);
+				uploadButton.setText("Parse File for Upload");
+				uploadButton.setEnabled(true);
+				commitButton.setText(lc_text.bulkUpload_SubmitData());
+				show(commitButton);
+				show(nextStepPanel);
+			}
+			public void onFailure(final Throwable e) {
+				hide(progressContainer);
+				resultStatus.sendNotice(NoticeType.ERROR,
+						"There was an error submitting the data.");
+				nextStepText
+						.setText("Please submit a bug report to the developers. We are very sorry for the inconvenience.");
+				resetLink.setText("Reset the form");
+				commitButton.setText(lc_text.bulkUpload_SubmitData());
+				show(nextStepPanel);
+			}
+		}.begin();
+	}
+	
 	private void parse() {
 		new ServerOp<BulkUploadResult>() {
 			public void begin() {
@@ -329,13 +427,20 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				resultStatus.hide();
 				uploadButton.setText("Parse File for Upload");
 				uploadButton.setEnabled(true);
-				if (results.getHeaders() != null && !results.getHeaders().isEmpty())
+				if (results.getHeaders() != null
+						&& !results.getHeaders().isEmpty())
 					populateMatchedColsPanel(results.getHeaders());
 				populateSummaryPanel(results.getResultCounts(), results
 						.getErrors().size());
 				handleParseErrors(results);
 				show(resultsPanel);
-				show(nextStepPanel);
+				if (contentType.equals("Images")) {
+					imageZipForm.setVisible(true);
+					uploadImageZipButton.setVisible(true);
+					spreadsheetFileOnServer = results.getImageFile();
+				} else {
+					show(nextStepPanel);
+				}
 			}
 			public void onFailure(final Throwable e) {
 				if (e instanceof LoginRequiredException)
@@ -363,13 +468,16 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		if (!errors.isEmpty()) {
 			resultStatus.sendNotice(NoticeType.WARNING,
 					"Parse complete, but the file contains errors.");
-			nextStepText.setText("Errors listed will be ignored, but you may commit correct rows.");
+			nextStepText
+					.setText("Errors listed will be ignored, but you may commit correct rows.");
 			show(commitButton);
 			resultsPanel.selectTab(2);
 		} else {
-			resultStatus.sendNotice(NoticeType.SUCCESS,
-					"Parsing completed successfully. <strong>Your data is not in MetPetDB yet</strong>. " +
-					"Please review the results below and click <strong>Submit</strong> if everything is correct.");
+			resultStatus
+					.sendNotice(
+							NoticeType.SUCCESS,
+							"Parsing completed successfully. <strong>Your data is not in MetPetDB yet</strong>. "
+									+ "Please review the results below and click <strong>Submit</strong> if everything is correct.");
 			nextStepText
 					.setText("Looks good! Remember to double-check the matched columns before submitting.");
 			resultsPanel.selectTab(1);
@@ -489,9 +597,11 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			setErrorTabStyle(errors.size());
 		}
 	}
-	
-	private void populateWarningPanel(Map<Integer, List<BulkUploadError>> warnings) {
-		populatePanel(warnings, warningsPanel, warningGrid, "warning", "warnings");
+
+	private void populateWarningPanel(
+			Map<Integer, List<BulkUploadError>> warnings) {
+		populatePanel(warnings, warningsPanel, warningGrid, "warning",
+				"warnings");
 		if (warnings != null) {
 			setWarningTabStyle(warnings.size());
 		}
@@ -501,7 +611,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			FlowPanel panel, Grid grid, String singular, String plural) {
 		if (messages != null) {
 			panel.clear();
-			String msg = "There were " + messages.size() + " " +  plural + ":";
+			String msg = "There were " + messages.size() + " " + plural + ":";
 			if (messages.size() == 1)
 				msg = "There was one " + singular + ":";
 			if (messages.size() == 0)
@@ -522,7 +632,9 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 					if (row == -1)
 						grid.setHTML(++i, 0, "Unknown");
 					else
-						grid.setHTML(++i, 0, "<span class=\"cell\">"+((BulkUploadError) messages.get(row).get(0)).getColumn()+"</span>");
+						grid.setHTML(++i, 0, "<span class=\"cell\">"
+								+ ((BulkUploadError) messages.get(row).get(0))
+										.getColumn() + "</span>");
 					grid.setHTML(i, 1, explode(messages.get(row)));
 				}
 			}
@@ -536,9 +648,11 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			while (itr.hasNext()) {
 				final BulkUploadError err = itr.next();
 				if (err.getException() != null)
-					text += "<span class=\"error-message\">" + err.getException().format() + "</span>";
+					text += "<span class=\"error-message\">"
+							+ err.getException().format() + "</span>";
 				if (err.getCellData() != null && err.getCellData().length() > 0)
-					text += "<span class=\"cell-contents\">Cell Contents: " + err.getCellData() + "</span>";
+					text += "<span class=\"cell-contents\">Cell Contents: "
+							+ err.getCellData() + "</span>";
 			}
 		}
 		return text;
@@ -554,7 +668,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			errorTab.addStyleName(CSS.EMPTY);
 		}
 	}
-	
+
 	private void setWarningTabStyle(int numErrors) {
 		warningTab.setHTML("Warnings <span>" + numErrors + "</span>");
 		if (numErrors > 0) {
@@ -581,7 +695,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			if (in.equalsIgnoreCase("GeoReference"))
 				plural = "References";
 		}
-		if(plural.equalsIgnoreCase("GeoReference")){
+		if (plural.equalsIgnoreCase("GeoReference")) {
 			plural = "Reference";
 		}
 		return plural.toLowerCase();

@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
@@ -63,6 +64,11 @@ public class BulkUploadSampleServiceImpl extends BulkUploadService implements
 			}
 		}
 		results.addResultCount("Sample", resultCount);
+	}
+
+	public BulkUploadResult imageZipUploadImpl(String spreadsheetFile, String imageFile, boolean save) throws InvalidFormatException,
+			LoginRequiredException, MpDbException {
+		return null;
 	}
 
 }

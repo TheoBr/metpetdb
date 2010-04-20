@@ -214,6 +214,7 @@ public interface LocaleText extends Messages {
 	
 	/* Bulk Upload */
 	String bulkUpload_Upload();
+	String bulkUpload_UploadZip();
 	String bulkUpload_SubmitData();
 	String bulkUpload_Desc();
 	String bulkUpload_Help();

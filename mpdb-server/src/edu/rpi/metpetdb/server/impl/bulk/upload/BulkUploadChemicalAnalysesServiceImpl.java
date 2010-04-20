@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.validation.PropertyRequiredException;
@@ -102,5 +103,10 @@ public class BulkUploadChemicalAnalysesServiceImpl extends BulkUploadService
 		}
 		results.addResultCount("Chemical Analysis", caResultCount);
 		results.addResultCount("Subsamples", ssResultCount);
+	}
+
+	public BulkUploadResult imageZipUploadImpl(String spreadsheetFile, String imageFile, boolean save) 
+		throws InvalidFormatException, LoginRequiredException, MpDbException {
+		return null;
 	}
 }

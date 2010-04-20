@@ -11,6 +11,7 @@ import java.util.Set;
 import org.hibernate.HibernateException;
 import org.hibernate.exception.GenericJDBCException;
 
+import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
@@ -86,6 +87,26 @@ public abstract class BulkUploadService extends MpDbServlet {
 			final Map<String, Sample> samples,
 			final Map<String, Subsample> subsamples)
 			throws FileNotFoundException, MpDbException, LoginRequiredException;
+	
+	public BulkUploadResult imageZipUpload(String spreadsheetFile, String imageFile,
+			boolean save) throws InvalidFormatException, LoginRequiredException, MpDbException {
+		
+		BulkUploadResult results = imageZipUploadImpl(spreadsheetFile, imageFile, save);
+		
+		if (save) {
+			try {
+				commit();
+				updateFile(spreadsheetFile);
+				updateFile(imageFile);
+			} catch (Exception e) {
+				results.addError(0, getNiceException(e));
+			}
+		}
+		return results;
+	}
+	
+	public abstract BulkUploadResult imageZipUploadImpl(String spreadsheetFile, String imageFile,
+			boolean save) throws InvalidFormatException, LoginRequiredException, MpDbException;
 
 	/**
 	 * updates the file in the datbase and specifies which user saved the

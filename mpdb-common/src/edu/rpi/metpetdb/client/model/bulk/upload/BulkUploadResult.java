@@ -9,6 +9,7 @@ import java.util.Map;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
+import edu.rpi.metpetdb.client.model.Image;
 
 public class BulkUploadResult implements IsSerializable {
 
@@ -17,6 +18,7 @@ public class BulkUploadResult implements IsSerializable {
 	//maps row numbers to a list of exceptions
 	private Map<Integer, List<BulkUploadError>> errors = new HashMap<Integer, List<BulkUploadError>>();
 	private Map<Integer, List<BulkUploadError>> warnings = new HashMap<Integer, List<BulkUploadError>>();
+	private String imageFile = new String();
 	/**
 	 * the key is the name of the object, i.e. Sample, the value is a
 	 * ResultCount class that contains the counts of fresh, invalid, and old
@@ -74,6 +76,16 @@ public class BulkUploadResult implements IsSerializable {
 		if (resultCounts == null) 
 			resultCounts = new HashMap<String, BulkUploadResultCount>();
 		resultCounts.put(key, results);
+	}
+	
+	public void setImageFile(final String file){
+		imageFile = file;
+	}
+	
+	public String getImageFile(){
+		if(imageFile == null)
+			imageFile = "";
+		return imageFile;
 	}
 
 	public Date getTimeTaken() {

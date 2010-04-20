@@ -16,6 +16,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
@@ -228,6 +229,12 @@ public class BulkUploadReferencesServiceImpl extends BulkUploadService implement
 		}
 		
 		return refFileEntries;
+	}
+
+	public BulkUploadResult imageZipUploadImpl(String spreadsheetFile, String imageFile,
+			boolean save) throws InvalidFormatException,
+			LoginRequiredException, MpDbException {
+		return null;
 	}
 
 }
