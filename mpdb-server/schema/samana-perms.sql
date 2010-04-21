@@ -53,8 +53,8 @@ alter table sample_aliases owner to metpetdb_dev;
 alter table metamorphic_regions owner to metpetdb_dev;
 alter table sample_metamorphic_regions owner to metpetdb_dev;
 
-alter table georeference to owner metpetdb_dev;
-alter table sample_georeferences to owner metpetdb_dev;
+alter table georeference owner to metpetdb_dev;
+alter table sample_georeferences owner to metpetdb_dev;
 
 --triggers
 alter function archive_sample() owner to metpetdb_dev;

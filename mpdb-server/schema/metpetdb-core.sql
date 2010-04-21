@@ -246,7 +246,7 @@ CREATE TABLE georeference
   journal_name TEXT NOT NULL,
   full_text TEXT NOT NULL,
   reference_number TEXT,
-  CONSTRAINT georeference_sk PRIMARY KEY (georef_id),
+  CONSTRAINT georeference_sk PRIMARY KEY (georef_id)
 ) WITHOUT OIDS;
 
 CREATE TABLE sample_georeferences
