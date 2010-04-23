@@ -53,6 +53,24 @@ public class SearchIPhonePost extends HttpServlet {
 	SampleServiceImpl ssi= new SampleServiceImpl();
 	int publicPrivate; // 0 = public and private, 1 = public only, 2 = private only
 	
+	private void clearVariables(){
+		owners=null;
+		rockTypes=null;
+		metamorphicGrades=null;
+		minerals=null;
+		region="";
+		p=null;
+		criteria="";
+		north=-1;
+		south=-1;
+		east=-1;
+		west=-1;
+		username="";
+		password="";
+		u=null;
+		publicPrivate=-1;
+	}
+	
 	protected void doPost(final HttpServletRequest request,
 			final HttpServletResponse response) throws ServletException, IOException {
 		//clear all of the variables so there are not left over values from previous requests
@@ -137,23 +155,21 @@ public class SearchIPhonePost extends HttpServlet {
 					if(UserServiceImpl.authenticate(u, password))
 					{
 						response.getWriter().write("authentication succeeded");
-						username="";
-						password="";
+						clearVariables();
 						//when the user successfully logs in set the session username and password
 					}
 					else
 					{
 						response.getWriter().write("authentication failed");
-						username="";
-						password="";
+						clearVariables();
 					}
 				}
 				catch(Exception e){
 					response.getWriter().write("authentication failed");
-					username="";
-					password="";
+					clearVariables();
 				}
 				response.getWriter().write("</response>");
+				clearVariables();
 			}
 			//if the user has signed in, create that user and pass it to the server
 			else if(criteriaType.equals("user"))
@@ -217,41 +233,41 @@ public class SearchIPhonePost extends HttpServlet {
 			}
 			else if(criteriaType.equals("regions")){
 				SearchIPhone1_1.regions(response, session, username);
-				username="";
+				clearVariables();
 			}
 			else if(criteriaType.equals("sampleID"))
 			{
 				sampleIds.add(Long.parseLong(value));
 				SearchIPhone1_1.sampleInfo(session, sampleIds,response);
-				username="";
+				clearVariables();
 			}
 			else if(criteriaType.equals("comments"))
 			{
 				//the number following comments= will be the id of the sample we want comments for
 				long id= Long.parseLong(value);
 				SearchIPhone1_1.comments(session, response, id);
-				username="";
+				clearVariables();
 			}
 			else if(criteriaType.equals("subsampleInfo"))
 			{
 				//the number following subsampleInfo= will be the id of the sample we want comments for
 				long id= Long.parseLong(value);
 				SearchIPhone1_1.subsampleInfo(session, response, id);
-				username="";
+				clearVariables();
 			}
 			else if(criteriaType.equals("thumbnails"))
 			{
 				//the number following the thumbnails= will be the id of the sample we want thumbnails for
 				long id=Long.parseLong(value);
 				SearchIPhone1_1.get_thumbnails(session, response, id);
-				username="";
+				clearVariables();
 			}
 			else if(criteriaType.equals("largeImage"))
 			{
 				//the number following the largeImage= will be id of the image we want to enlarge
 				long imageID= Long.parseLong(value);
 				SearchIPhone1_1.get_large_image(session, response, imageID);
-				username="";
+				clearVariables();
 			}
 			else if(criteriaType.equals("addCommentSampleID"))
 			{
@@ -299,12 +315,12 @@ public class SearchIPhonePost extends HttpServlet {
 				if(criteria.equals("true"))
 				{  
 					SearchIPhone1_1.getSearchCriteria(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
-					username="";
+					clearVariables();
 				}
 				else
 				{
 					SearchIPhone1_1.outputSearchXML(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response),response);
-					username="";
+					clearVariables();
 				}
 			}
 			//just test the value of the north value because all 4 coordinates are needed
@@ -315,12 +331,12 @@ public class SearchIPhonePost extends HttpServlet {
 				if(criteria.equals("true"))
 				{
 					SearchIPhone1_1.getSearchCriteria(SearchIPhone1_1.search(north,south,east,west, session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p), response);
-					username="";
+					clearVariables();
 				}
 				else
 				{
 					SearchIPhone1_1.outputSearchXML(SearchIPhone1_1.search(north,south, east, west, session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p),response);
-					username="";
+					clearVariables();
 				}
 			}
 			//if search criteria were entered but a search region or search box was not, a seperate search must be done
@@ -333,12 +349,12 @@ public class SearchIPhonePost extends HttpServlet {
 				if(criteria.equals("true"))
 				{
 					SearchIPhone1_1.getSearchCriteria(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
-					username="";
+					clearVariables();
 				}
 				else
 				{
 					SearchIPhone1_1.outputSearchXML(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
-					username="";
+					clearVariables();
 				}
 			}
 			
