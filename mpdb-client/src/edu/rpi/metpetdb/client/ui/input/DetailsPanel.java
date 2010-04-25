@@ -10,11 +10,10 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.CSS;
-import edu.rpi.metpetdb.client.ui.commands.MCommand;
-import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidMCommand;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
@@ -122,7 +121,14 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 		if (actions != null && actions.length > 0) {
 			final Element tr = DOM.createTR();
 			CSS.setStyleName(tr, CSS.LAST_ROW);
-			DOM.appendChild(tbody3, tr);
+			if (DOM.getChildCount(tbody2) == 0 && DOM.getChildCount(tbody3) == 0) {
+				DOM.appendChild(tbody, tr);
+				DOM.removeChild(getElement(), table2);
+				DOM.removeChild(getElement(), table3);
+				CSS.setStyleName(table, STYLENAME_DEFAULT + "-table");
+			} else {
+				DOM.appendChild(tbody3, tr);
+			}
 			DOM.appendChild(tr, DOM.createTD());
 			final Element td = DOM.createTD();
 			CSS.setStyleName(td, CSS.ACTIONS);
