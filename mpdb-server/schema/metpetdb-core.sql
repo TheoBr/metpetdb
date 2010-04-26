@@ -48,7 +48,7 @@ CREATE TABLE metamorphic_regions
 
 --add a column of gis polygons to the metamorhpic_regions table
 SELECT AddGeometryColumn('metamorphic_regions', 'shape', 4326, 'POLYGON', 2);
-  
+SELECT AddGeometryColumn('metamorphic_regions', 'label_location', 4326, 'POINT', 2);
 
 CREATE TABLE samples
 (

@@ -267,4 +267,14 @@ insert into metamorphic_regions(metamorphic_region_id, name, description, shape)
  insert into metamorphic_regions(metamorphic_region_id, name, description, shape) VALUES (nextval('metamorphic_regions_seq'), 'Queen Maud / Thelon Belt','Nunavut, Canada',
  GeomFromText('POLYGON((-89.5856904826671 74.18034229832357, -83.71629108525188 74.78580994983433, -78.92051932710655 75.11272842429823, -77.07841836878337 76.82240952865142, -74.65193317487457 78.04147221156174, -69.19752164351901 79.81893067828226, -56.81508663734171 82.86098228302592, -63.28010548971254 83.2894622718489, -77.94826460659604 83.42586164774582, -94.81512106173325 82.30857204320999, -91.8310433873103 81.13984908891082, -85.00473914909252 80.04526845915289, -84.1583130573203 78.41097236943747, -89.48714558241734 76.50778610338189, -99.91028331394634 73.97930037315115, -100.5951461541777 71.86115411949388, -95.17618168004418 68.81501185716387, -89.68786363528099 69.29186491702961, -89.5856904826671 74.18034229832357))', 4326));
  
- 
+update metamorphic_regions set label_location = ST_Centroid(shape);
+
+update metamorphic_regions set label_location = GeometryFromText('POINT (-112.713283 36.320681)',4326) where name = 'Grand Canyon';
+update metamorphic_regions set label_location = GeometryFromText('POINT (-121.696711 37.517958)',4326) where name = 'California - Oregon Coast Ranges';
+update metamorphic_regions set label_location = GeometryFromText('POINT (122.241383 -33.224819)',4326) where name = 'Albany-Fraser Orogen';
+update metamorphic_regions set label_location = GeometryFromText('POINT (-127.183294 57.715981)',4326) where name = 'Canadian Cordillera';
+update metamorphic_regions set label_location = GeometryFromText('POINT (-78.591336 49.298814)',4326) where name = 'Superior Province';
+update metamorphic_regions set label_location = GeometryFromText('POINT (-85.978317 67.56985)',4326) where name = 'Ray / Hearne Province';
+update metamorphic_regions set label_location = GeometryFromText('POINT (-53.296478 69.836825)',4326) where name = 'West Greenland';
+
+

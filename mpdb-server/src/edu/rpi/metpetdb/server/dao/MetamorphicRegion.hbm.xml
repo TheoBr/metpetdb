@@ -13,6 +13,8 @@
     <property name="description" column="description"/>
     <property name="shape" column="shape"
               type="edu.rpi.metpetdb.server.dao.GeometryType" />
+     <property name="labelLocation" column="label_location"
+     		  type="edu.rpi.metpetdb.server.dao.GeometryType" />
   <filter name="metRegionBox"
         condition="ST_Intersects(shape, :polygon)" 
      />

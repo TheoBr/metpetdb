@@ -14,6 +14,7 @@ public class MetamorphicRegion extends MObject implements Comparable {
 	private String name;
 	private String description;
 	private Geometry shape;
+	private Geometry labelLocation;
 	
 	
 	public MetamorphicRegion() {
@@ -51,6 +52,14 @@ public class MetamorphicRegion extends MObject implements Comparable {
 
 	public void setShape(final Geometry g) {
 		shape = g;
+	}
+	
+	public Geometry getLabelLocation() {
+		return labelLocation;
+	}
+
+	public void setLabelLocation(final Geometry g) {
+		labelLocation = g;
 	}
 	//the following function takes a sample as an argument and determines whether 
 	//or not it is contained in the polygon

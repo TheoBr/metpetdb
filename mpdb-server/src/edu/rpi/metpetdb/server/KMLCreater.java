@@ -18,16 +18,16 @@ public class KMLCreater {
 	private static Double lng;
 	private static Double latErrMeters;
 	private static Double lngErrMeters;
-	
+
 	static public String createKML(final List<Sample> samples, final String baseURL){
-		
+
 		String KML = "";
 		KML += "<Document id='doc0'>\n";
 		KML += "<Style id='RedPerimeter'>\n" + "<LineStyle>\n"
-						+ "<width>2</width>\n"
-						+ "<color>7d0000ff</color>\n" + "</LineStyle>\n"
-						+ "<PolyStyle>\n" + "<color>7d0000ff</color>\n"
-						+ "</PolyStyle>\n" + "</Style>\n";
+		+ "<width>2</width>\n"
+		+ "<color>7d0000ff</color>\n" + "</LineStyle>\n"
+		+ "<PolyStyle>\n" + "<color>7d0000ff</color>\n"
+		+ "</PolyStyle>\n" + "</Style>\n";
 
 		for (int i = 0; i < samples.size(); i++) {
 			Sample theSample = (Sample) samples.get(i);
@@ -37,7 +37,7 @@ public class KMLCreater {
 				//location error is in meters, convert it to degrees
 				latErrMeters = theSample.getLocationError().doubleValue() * .000009;
 				lngErrMeters = theSample.getLocationError().doubleValue() * .000009;
-				
+
 			} else {
 				latErrMeters = 0D;
 				lngErrMeters = 0D;
@@ -48,8 +48,8 @@ public class KMLCreater {
 			KML += "<name>" + theSample.getNumber() + "</name>\n";
 			KML += " <description>";
 			KML += "<![CDATA[\n" + "<a href='" + baseURL
-							+ theSample.getId() + "'>"
-							+ theSample.getNumber() + "</a> ";
+			+ theSample.getId() + "'>"
+			+ theSample.getNumber() + "</a> ";
 
 			/* Add Sample info that isn't null */
 			if (theSample.getDescription() != null) {
@@ -79,22 +79,22 @@ public class KMLCreater {
 			KML += " <Point>\n";
 
 			KML += " <coordinates>" + lng + "," + lat + ",0"
-							+ "</coordinates>\n";
+			+ "</coordinates>\n";
 			KML += " </Point>\n";
 			KML += " </Placemark>\n";
 
 			KML += " <Placemark>\n";
 			KML += " <name>Error Perimeter</name>\n";
 			KML += " <description>This is the area that "
-									+ theSample.getNumber()
-									+ " can be found in based on it's latitutde and longitude errors </description>\n";
+				+ theSample.getNumber()
+				+ " can be found in based on it's latitutde and longitude errors </description>\n";
 			KML += " <styleUrl>#RedPerimeter</styleUrl>\n ";
 			KML += " <LineString>\n";
 			KML += " <extrude>1</extrude>\n";
 			KML += " <tessellate>1</tessellate>\n";
 			KML += " <altitudeMode>clampToGround</altitudeMode>\n";
 			KML += "<coordinates> " + (lng - lngErrMeters) + ","
-							+ (lat - latErrMeters) + "\n";
+			+ (lat - latErrMeters) + "\n";
 			KML += lng + lngErrMeters + "," + (lat - latErrMeters) + "\n";
 			KML += lng + lngErrMeters + "," + (lat + latErrMeters) + "\n";
 			KML += lng - lngErrMeters + "," + (lat + latErrMeters) + "\n";
@@ -108,105 +108,75 @@ public class KMLCreater {
 		KML += "</Document>";
 		return KML;
 	}
-static public String createKMLMetamorphicRegions(){
+	static public String createKMLMetamorphicRegions(){
 		try {
-		String KML = "";
-		KML += "<Document id='doc0'>\n";
-		List<MetamorphicRegion> mr;
-		MetamorphicRegionDAO mrDAO;
-		mr = new ArrayList(DataStore.getInstance().getDatabaseObjectConstraints().Sample_metamorphicRegions.getValues());
+			String KML = "";
+			KML += "<Document id='doc0'>\n";
+			List<MetamorphicRegion> mr;
+			MetamorphicRegionDAO mrDAO;
+			mr = new ArrayList(DataStore.getInstance().getDatabaseObjectConstraints().Sample_metamorphicRegions.getValues());
 
-
-		//for (int i = 0; i < mr.size(); i++) {
-		//for(int i=mr.size()-5; i<mr.size(); i++){
 			KML += " <Folder>\n";
 			KML += "<name> Metamorphic Belts </name>\n";
 			for(MetamorphicRegion region: mr){
 				List<Double> latitudes= new ArrayList();
 				List<Double> longitudes= new ArrayList();
 				org.postgis.Polygon pg = (org.postgis.Polygon) region.getShape();
-				
+
 				for (int j = 0; j < pg.getRing(0).numPoints(); j++){
 					Point p = pg.getRing(0).getPoint(j);
 					latitudes.add(p.y);
 					longitudes.add(p.x);
 				}
-				//get the area of the region in order to find the x and y coordinates of the center of mass (cx and cy)
-				double area=0;
-				double centerX=0;
-				double centerY=0;
-			
-				int position=0;
-				for(int k=0; k< latitudes.size()-1; k++){
-					if(k+1==latitudes.size()){
-						position=0;
-					}
-					else{
-						position=k+1;
-					}
-					area+= (longitudes.get(k)*latitudes.get(position))- (longitudes.get(position)*latitudes.get(k));
-					//area+= ((longitudes.get(k+1)- longitudes.get(k)) * (latitudes.get(k+1)- latitudes.get(k)))/2;
-					centerX+= (longitudes.get(k)+longitudes.get(position))*(longitudes.get(k)*latitudes.get(position) - longitudes.get(position)* latitudes.get(k));
-					centerY+= (latitudes.get(k)+latitudes.get(position))*(longitudes.get(k)*latitudes.get(position) - longitudes.get(position)* latitudes.get(k));
-					//centerX+=longitudes.get(k);
-					//centerY+=latitudes.get(k);
-				}
-				//centerX=centerX/longitudes.size()-1;
-				//centerY=centerY/latitudes.size()-1;
-				area*=.5;
-				centerX= centerX*(1/(6*area));
-				centerY= centerY*(1/(6*area));
-				//add a placemark to each region at the center of mass
-				
-				
-				
-			      	KML += "<Placemark>\n";
-			      	KML += "<name>" + region.getName() + "</name>\n";
-			      	KML += "<description>" + region.getDescription() + "</description>\n";
-			      	KML += "<Point>\n <coordinates>";
-			      	KML += centerX +","+ centerY + ",0 </coordinates>\n</Point>\n";
-			      	KML += "</Placemark>\n";
-					
-			      	KML += " <Placemark>\n";
-					KML += "<name>" + region.getName() + "</name>\n";
-					KML += "<description>"+ region.getDescription() + "</description>\n";
-					KML += " <Polygon>\n";
-					KML += "<outerBoundaryIs>\n";
-					KML += "<LinearRing>\n";
-					KML += " <coordinates>\n";
-					for(int k=0; k<latitudes.size(); k++){
-						KML +=  longitudes.get(k) + "," + latitudes.get(k) + ",0\n";
-					}
 
-					KML	+= "</coordinates>\n";
-					KML += "</LinearRing>\n";
-					KML += "</outerBoundaryIs>\n";
-					KML += " </Polygon>\n";
-					KML += "<Style>\n";
-					KML += "<PolyStyle>\n";
-					KML += "<color>7f3300FF</color>\n";
-					KML += "</PolyStyle>\n";
-					KML += "<LineStyle>\n";
-					KML += "<color>ff000000</color>\n";
-					KML += "<width>4</width>\n";
-					KML += "</LineStyle>\n";
-					KML += "</Style>\n";
-					KML += " </Placemark>\n";
+				org.postgis.Point labelLoc = (org.postgis.Point) region.getLabelLocation();
+
+				KML += "<Placemark>\n";
+				KML += "<name>" + region.getName() + "</name>\n";
+				KML += "<description>" + region.getDescription() + "</description>\n";
+				KML += "<Point>\n <coordinates>";
+				KML += labelLoc.x +","+ labelLoc.y + ",0 </coordinates>\n</Point>\n";
+				KML += "</Placemark>\n";
+
+				KML += " <Placemark>\n";
+				KML += "<name>" + region.getName() + "</name>\n";
+				KML += "<description>"+ region.getDescription() + "</description>\n";
+				KML += " <Polygon>\n";
+				KML += "<outerBoundaryIs>\n";
+				KML += "<LinearRing>\n";
+				KML += " <coordinates>\n";
+				for(int k=0; k<latitudes.size(); k++){
+					KML +=  longitudes.get(k) + "," + latitudes.get(k) + ",0\n";
 				}
-			//}
+
+				KML	+= "</coordinates>\n";
+				KML += "</LinearRing>\n";
+				KML += "</outerBoundaryIs>\n";
+				KML += " </Polygon>\n";
+				KML += "<Style>\n";
+				KML += "<PolyStyle>\n";
+				KML += "<color>7f3300FF</color>\n";
+				KML += "</PolyStyle>\n";
+				KML += "<LineStyle>\n";
+				KML += "<color>ff000000</color>\n";
+				KML += "<width>4</width>\n";
+				KML += "</LineStyle>\n";
+				KML += "</Style>\n";
+				KML += " </Placemark>\n";
+			}
 			KML += " </Folder>\n";
 			KML += "</Document>";
-			//FileOutputStream fos = new FileOutputStream("/Users/heatherbuletti/MetPetDB/testkml.kml", true);
-			//PrintStream p = new PrintStream(fos);
-			//p.print(KML);
-			//System.out.print(KML);
-			
+			FileOutputStream fos = new FileOutputStream("/Users/Dennis/MetPetDB/testkml.kml", true);
+			PrintStream p = new PrintStream(fos);
+			p.print(KML);
+			System.out.print(KML);
+
 			return KML;
 		}
-			catch (Exception e) {
-				System.out.print(e.getMessage());
-			}
-			return "";
-			
+		catch (Exception e) {
+			System.out.print(e.getMessage());
 		}
+		return "";
+
+	}
 }
