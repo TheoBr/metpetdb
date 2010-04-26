@@ -147,7 +147,9 @@ public class KMLCreater {
 				KML += "<![CDATA[\n";
 				KML += "<html><head><script>";
 				KML += "function addCriteria(region){";
-				KML += "$wnd.alert(region);}</script></head><body>";
+				KML += "$wnd.alert(region);";
+				KML += "var myfunc=@edu.rpi.metpetdb.client.ui.input.attributes.specific.search.searchMetamorphicRegionsAttribute::addRegion(Ljava/lang/String;)";
+				KML += "myfunc(region);}</script></head><body>";
 				KML += "<br/><br/><br/><a onclick= addCriteria("+region.getName()+"); href=#>Add to Search Criteria</a>";
 				KML += "</body></html>]]>";
 				KML+= "</description>";
@@ -176,10 +178,10 @@ public class KMLCreater {
 			}
 			KML += " </Folder>\n";
 			KML += "</Document>";
-			FileOutputStream fos = new FileOutputStream("/Users/Dennis/MetPetDB/testkml.kml", true);
-			PrintStream p = new PrintStream(fos);
-			p.print(KML);
-			System.out.print(KML);
+			//FileOutputStream fos = new FileOutputStream("/Users/Dennis/MetPetDB/testkml.kml", true);
+			//PrintStream p = new PrintStream(fos);
+			//p.print(KML);
+			//System.out.print(KML);
 
 			return KML;
 		}
