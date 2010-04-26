@@ -129,6 +129,9 @@ public class KMLCreater {
 					longitudes.add(p.x);
 				}
 
+					
+
+
 				org.postgis.Point labelLoc = (org.postgis.Point) region.getLabelLocation();
 
 				KML += "<Placemark>\n";
@@ -140,7 +143,14 @@ public class KMLCreater {
 
 				KML += " <Placemark>\n";
 				KML += "<name>" + region.getName() + "</name>\n";
-				KML += "<description>"+ region.getDescription() + "</description>\n";
+				KML += "<description>"+region.getDescription();
+				KML += "<![CDATA[\n";
+				KML += "<html><head><script>";
+				KML += "function addCriteria(region){";
+				KML += "$wnd.alert(region);}</script></head><body>";
+				KML += "<br/><br/><br/><a onclick= addCriteria("+region.getName()+"); href=#>Add to Search Criteria</a>";
+				KML += "</body></html>]]>";
+				KML+= "</description>";
 				KML += " <Polygon>\n";
 				KML += "<outerBoundaryIs>\n";
 				KML += "<LinearRing>\n";
