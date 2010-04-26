@@ -8,6 +8,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
@@ -48,6 +49,8 @@ public class Search extends MPagePanel {
 	private final static SearchInterface sui = new SearchInterface(searchTabs);
 	private static boolean outputSamples = true;
 	private static SearchSample ss = new SearchSample();
+	private static boolean firstTimeSample = true;
+	private static boolean firstTimeChem = true;
 
 	static {
 		searchPanel = new ObjectSearchPanel(sui) {
@@ -70,10 +73,12 @@ public class Search extends MPagePanel {
 		@Override
 		public void update(PaginationParameters p,
 				AsyncCallback<Results<Sample>> ac) {
-			if (ss != null)
+			if (ss != null && !firstTimeSample)
 				MpDb.search_svc.sampleSearch(p, ss, MpDb.currentUser(), ac);
-			else
+			else {
 				ac.onSuccess(new Results<Sample>(0, new ArrayList<Sample>()));
+				firstTimeSample = false;
+			}
 		}
 
 
@@ -84,6 +89,13 @@ public class Search extends MPagePanel {
 			else
 				ac.onSuccess(new HashMap<Object,Boolean>());
 		}
+		
+		@Override
+		protected Widget getNoResultsWidget() {
+			HTML w = new HTML("No Samples Found");
+			w.setStyleName(CSS.NULLSET);
+			return w;
+		}
 
 	};
 	private final static ChemicalAnalysisList chemList = new ChemicalAnalysisList() {
@@ -91,12 +103,14 @@ public class Search extends MPagePanel {
 		@Override
 		public void update(PaginationParameters p,
 				AsyncCallback<Results<ChemicalAnalysis>> ac) {
-			if (ss != null)
+			if (ss != null && !firstTimeChem)
 				MpDb.search_svc.chemicalAnalysisSearch(p, ss, MpDb
 						.currentUser(), ac);
-			else
+			else {
 				ac.onSuccess(new Results<ChemicalAnalysis>(0,
 						new ArrayList<ChemicalAnalysis>()));
+				firstTimeChem = false;
+			}
 		}
 
 		@Override
@@ -127,6 +141,7 @@ public class Search extends MPagePanel {
 
 	public void reload() {
 		sampleList.getScrollTable().reloadPage();
+		chemList.getScrollTable().reloadPage();
 	}
 
 	private static Widget createResultTypeToggle() {

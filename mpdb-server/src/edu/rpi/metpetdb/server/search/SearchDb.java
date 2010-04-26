@@ -848,9 +848,9 @@ public class SearchDb {
 					parameter = "analysisMaterial";
 				}
 				String realParameter = ((isSample) ? "s." : "ca.") + parameter;
-				if (!(parameter.contains("count") || parameter.contains("Count") || 
-						parameter.contains("date") || parameter.contains("Date") ||
-						parameter.equalsIgnoreCase("referenceX") || parameter.equalsIgnoreCase("referenceY"))){
+				String lowerParam = parameter.toLowerCase();
+				if (!(lowerParam.contains("count") || lowerParam.contains("date") || lowerParam.contains("spotid") ||
+						lowerParam.equalsIgnoreCase("referenceX") || lowerParam.equalsIgnoreCase("referenceY"))){
 					realParameter = "lower(" +realParameter +")";
 				}
 				queryString += " order by "  + realParameter;

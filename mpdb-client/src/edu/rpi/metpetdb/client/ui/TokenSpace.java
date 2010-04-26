@@ -189,7 +189,8 @@ public class TokenSpace implements HistoryListener {
 		public void executeToken(final String args) {
 			if (s == null)
 				s = new Search();
-			s.reload();
+			else 
+				s.reload();
 			show(s);
 		}
 	};
