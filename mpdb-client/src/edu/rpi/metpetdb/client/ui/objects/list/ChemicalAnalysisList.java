@@ -36,13 +36,13 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 					ChemicalAnalysisProperty.spotId) {
 				@Override
 				public MLink getCellValue(ChemicalAnalysis rowValue) {
-					return new MLink((String) rowValue.mGet(ChemicalAnalysisProperty.spotId),
+					return new MLink(((Integer)rowValue.mGet(ChemicalAnalysisProperty.spotId)).toString(),
 							TokenSpace.detailsOf((ChemicalAnalysis) rowValue));
 				}
 			};
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(50);
-			col.setPreferredColumnWidth(120);
+			col.setMinimumColumnWidth(40);
+			col.setPreferredColumnWidth(60);
 			col.setOptional(false);
 			columns.addColumn(col);
 			defaultColumns.addColumn(col);

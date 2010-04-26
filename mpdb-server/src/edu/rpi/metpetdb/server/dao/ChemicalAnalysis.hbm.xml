@@ -17,7 +17,7 @@
     <property name="stageY" column="stage_y" />
     <property name="datePrecision" column="date_precision" />
     <property name="subsampleId" column="subsample_id" update="false" insert="false"/>
-    <property name="spotId" column="spot_id" type="java.lang.String"/>
+    <property name="spotId" column="spot_id"/>
     <property name="analysisMethod" column="analysis_method" type="java.lang.String"/>
     <property name="location" column="where_done" type="java.lang.String"/>
     <property name="analyst" column="analyst" type="java.lang.String"/>
@@ -113,12 +113,12 @@
   <query name="ChemicalAnalysis.bySubsampleId.byspotId">
   	from ChemicalAnalysis ma
   	where ma.subsample.id = :id
-  	and lower(ma.spotId) = lower(:spotId)
+  	and ma.spotId = :spotId
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/spotId">
     from ChemicalAnalysis ma
     where ma.subsample.id = :id
-    order by (lower(ma.spotId))
+    order by ma.spotId
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/publicData">
     from ChemicalAnalysis ma

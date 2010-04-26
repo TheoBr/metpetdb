@@ -7,7 +7,7 @@ import org.hibernate.Session;
 
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.SubsampleNotFoundException;
-import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
@@ -85,6 +85,15 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 		inst.setSubsampleType(new SubsampleTypeDAO(sess).fill(inst
 				.getSubsampleType()));
 		inst.setImages(ImageUtil.stripFilename(inst.getImages()));
+		for (Image i : inst.getImages()) {
+			if (i.getScale() == null || i.getScale() == 0) {
+				if (i.getImageType().getImageType().equalsIgnoreCase("Thin Section Scan")) {
+					i.setScale(40);
+				} else {
+					i.setScale(10);
+				}
+			}
+		}
 		return _save(inst);
 	}
 

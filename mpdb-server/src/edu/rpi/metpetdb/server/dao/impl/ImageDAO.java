@@ -61,6 +61,13 @@ public class ImageDAO extends MpDbDAO<Image> {
 			inst.setSubsample((new SubsampleDAO(sess)).fill(inst.getSubsample()));
 		inst.setImageType(new ImageTypeDAO(sess).fill(inst.getImageType()));
 		inst.setFilename(ImageUtil.stripFilename(inst.getFilename()));
+		if (inst.getScale() == null || inst.getScale() == 0) {
+			if (inst.getImageType().getImageType().equalsIgnoreCase("Thin Section Scan")) {
+				inst.setScale(40);
+			} else {
+				inst.setScale(10);
+			}
+		}
 		inst = _save(inst);
 		return inst;
 	}

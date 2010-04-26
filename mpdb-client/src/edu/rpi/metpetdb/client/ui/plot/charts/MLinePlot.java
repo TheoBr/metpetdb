@@ -74,7 +74,7 @@ public class MLinePlot extends MPlot{
 					}
 				}
 				yMax = (leftAxisTotal > yMax+5) ? leftAxisTotal+5 : yMax;
-				points.add(new Point(count, leftAxisTotal, ca.getSpotId()));
+				points.add(new Point(count, leftAxisTotal, ca.toString()));
 				count++;
 			}
 			final Serie s = new Serie<Point>(points);

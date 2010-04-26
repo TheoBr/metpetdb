@@ -33,7 +33,7 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 	private static GenericAttribute[] chemicalAnalysisAtts = {
 			new TextAttribute(MpDb.doc.ChemicalAnalysis_owner)
 					.setReadOnly(true),
-			new TextAttribute(MpDb.doc.ChemicalAnalysis_spotId),
+			new TextAttribute(MpDb.doc.ChemicalAnalysis_spotId, true, true, false),
 			new RadioButtonAttribute(MpDb.doc.ChemicalAnalysis_publicData,
 					LocaleHandler.lc_text.publicDataWarning()),
 			new ChooseImageAttribute<ChemicalAnalysis>(MpDb.doc.ChemicalAnalysis_image,

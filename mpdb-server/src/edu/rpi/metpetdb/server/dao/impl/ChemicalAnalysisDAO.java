@@ -40,7 +40,7 @@ public class ChemicalAnalysisDAO extends MpDbDAO<ChemicalAnalysis> {
 		if (inst.getSubsample() != null && inst.getSubsample().getId() > 0) {
 			final Query q = namedQuery("ChemicalAnalysis.bySubsampleId.byspotId");
 			q.setLong("id", inst.getSubsample().getId());
-			q.setString("spotId", inst.getSpotId());
+			q.setInteger("spotId", inst.getSpotId());
 			if (getResult(q) != null)
 				return (ChemicalAnalysis) getResult(q);
 		}

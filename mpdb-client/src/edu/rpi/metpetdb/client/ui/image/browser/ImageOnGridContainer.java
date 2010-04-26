@@ -11,6 +11,8 @@ import com.google.gwt.user.client.ui.Image;
 
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
+import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
+import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
 public class ImageOnGridContainer {
 
@@ -315,5 +317,9 @@ public class ImageOnGridContainer {
 	
 	public Set<Image> getChemicalAnalysisImages(){
 		return this.chemicalAnalysisImages;
+	}
+	
+	public MLink getLockedLink(){
+		return (MLink) ((MHtmlList) imageContainer.getWidget(0)).getWidget(3);
 	}
 }

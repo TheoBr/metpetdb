@@ -33,7 +33,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 //	@DocumentId
 	private int id;
 	@Field(index = Index.TOKENIZED, store = Store.NO)
-	private String spotId;
+	private int spotId;
 	private int version;
 	private double referenceX;
 	private double referenceY;
@@ -92,12 +92,12 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 
 	}
 
-	public ChemicalAnalysis(int id, String spotId) {
+	public ChemicalAnalysis(int id, int spotId) {
 		this.id = id;
 		this.spotId = spotId;
 	}
 	
-	public ChemicalAnalysis(int id, String spotId, Image i, double refX, double refY) {
+	public ChemicalAnalysis(int id, int spotId, Image i, double refX, double refY) {
 		this.id = id;
 		this.spotId = spotId;
 		this.image = i;
@@ -105,14 +105,14 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		this.referenceY = refY;
 	}
 	
-	public ChemicalAnalysis(int id, String spotId, int refX, int refY) {
+	public ChemicalAnalysis(int id, int spotId, int refX, int refY) {
 		this.id = id;
 		this.spotId = spotId;
 		this.referenceX = refX;
 		this.referenceY = refY;
 	}
 	
-	public ChemicalAnalysis(int id, String spotId, Set<ChemicalAnalysisElement> elements, Set<ChemicalAnalysisOxide> oxides ) {
+	public ChemicalAnalysis(int id, int spotId, Set<ChemicalAnalysisElement> elements, Set<ChemicalAnalysisOxide> oxides ) {
 		this.id = id;
 		this.spotId = spotId;
 		this.elements = elements;
@@ -135,11 +135,11 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		version = v;
 	}
 
-	public String getSpotId() {
+	public int getSpotId() {
 		return spotId;
 	}
 
-	public void setSpotId(final String i) {
+	public void setSpotId(final int i) {
 		spotId = i;
 	}
 	
@@ -485,6 +485,6 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 
 	@Override
 	public String toString() {
-		return spotId;
+		return Integer.toString(spotId);
 	}
 }

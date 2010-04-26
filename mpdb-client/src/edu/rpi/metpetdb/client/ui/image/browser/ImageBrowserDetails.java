@@ -13,6 +13,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -59,6 +60,8 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	private MLink addNewImageToSubsample;
 	private final MLink bringToFront;
 	private final MLink senBack;
+	private final MLink groupTogether;
+	private final MLink unGroup;
 	private final MLink panUp = new MLink("", this);
 	private final MLink panRight = new MLink("", this);
 	private final MLink panDown = new MLink("", this);
@@ -96,20 +99,23 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	public float scale = 1f; /* in milli meters */
 	private int unit = 1;
 	private static String[] units = {
-			"m", /* meter 10x10^0 */
-			"mm", /* millimeter 10x10^-3 */
-			"um", /* micrometer 10x10^-6 */
-			"nm", /* nanometer 10x10^-9 */
+		"m", /* meter 10x10^0 */
+		"mm", /* millimeter 10x10^-3 */
+		"um", /* micrometer 10x10^-6 */
+		"nm", /* nanometer 10x10^-9 */
 	};
 
 	/** which chemical analyses that need to be saved */
 	private final Collection<ChemicalAnalysis> chemicalAnalyses;
-	private final List<ImageOnGridContainer> selectedImages;
+
+	/** keeps track of selected and grouped images **/
+	public final SelectionHandler selectionHandler;
 
 	private final Map<Image, ImageOnGridContainer> imagesOnGrid;
 	private Boolean leavingPage = false;
 
 	public ImageBrowserDetails() {
+		selectionHandler = new SelectionHandler(this);
 		this.info = new Label();
 		this.scaleDisplayTop = new Label();
 		this.scaleDisplayTop.setStyleName("mpdb-scale-top");
@@ -121,16 +127,19 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		this.addExistingImage.setStyleName("addlink");
 		this.bringToFront = new MLink("Bring To Front", this);
 		this.senBack = new MLink("Send To Back", this);
+		this.groupTogether = new MLink("Group", this);
+		this.unGroup = new MLink("Ungroup", this);
+		this.setGroupEnabled(false);
+		this.setUngroupEnabled(false);
 		this.save = new Button(LocaleHandler.lc_text.buttonSave(), this);
 		this.grid = new MAbsolutePanel();
 		this.grid.add(this.scaleDisplayTop);
 		this.grid.add(this.scaleDisplayBottom);
 		updateScale(1);
 		this.imagesOnGrid = new HashMap<Image, ImageOnGridContainer>();
-		this.selectedImages = new ArrayList<ImageOnGridContainer>();
 		panHandler = new PanHandler(grid,this);
 		chemicalAnalyses = new ArrayList<ChemicalAnalysis>();
-		sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEMOVE);
+		sinkEvents(Event.ONMOUSEDOWN | Event.ONMOUSEMOVE| Event.ONMOUSEUP);
 		MetPetDBApplication.registerPageWatcher(this);
 	}
 
@@ -184,7 +193,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		DOM.setElementAttribute(this.grid.getElement(), "id", "canvas");
 		DOM.setStyleAttribute(grid.getElement(), "backgroundPosition",
 				(totalXOffset) + "px "
-						+ (totalYOffset) + "px");
+				+ (totalYOffset) + "px");
 		final FlowPanel fp = this.createViewControls();
 		this.grid.add(fp);
 		this.grid.add(this.createWorkspaceBoundary());
@@ -197,6 +206,8 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		ul.add(this.addNewImageToSubsample);
 		ul.add(this.bringToFront);
 		ul.add(this.senBack);
+		ul.add(this.groupTogether);
+		ul.add(this.unGroup);
 		this.add(ul);
 		this.add(this.grid);
 		this.add(this.save);
@@ -205,17 +216,17 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		setSidebar(this.layers);
 		this.mouseListener = new ImageBrowserMouseListener(this.grid,
 				this.imagesOnGrid.values(), this.zOrderManager, this.g
-						.getSubsample(), this, fp);
+				.getSubsample(), this, fp);
 		panHandler.setImagesOnGrid(this.imagesOnGrid.values());
 		this.grid.addMouseListener(this.mouseListener);
 
 	}
-	
+
 	public void updateScale(final double multiplier) {
 		this.scale *= multiplier;
 
 		double scaleString = 4*scale;
-		
+
 		if (4*scale >= 1) {
 			scaleString = Math.round(4*scale);
 		} else {
@@ -235,7 +246,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	public void onLoad() {
 		super.onLoad();
 	}
-	
+
 	@Override
 	public void onBrowserEvent(Event event) {
 		switch (DOM.eventGetType(event)) {
@@ -246,9 +257,15 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 					mouseListener.setClickMode(ImageBrowserMouseListener.ClickMode.SHIFT);
 				} else 
 					mouseListener.setClickMode(ImageBrowserMouseListener.ClickMode.NORMAL);
+				break;
 			case Event.ONMOUSEMOVE:
 				// before we prevent default make sure the action is within
 				// our widget
+				if (DOM.eventGetShiftKey(event)) {
+					mouseListener.setClickMode(ImageBrowserMouseListener.ClickMode.SHIFT);
+				} else {
+					mouseListener.setClickMode(ImageBrowserMouseListener.ClickMode.NORMAL);
+				}
 				final int eventX = DOM.eventGetClientX(event);
 				final int eventY = DOM.eventGetClientY(event);
 				final int x = grid.getAbsoluteLeft();
@@ -260,7 +277,13 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 						DOM.eventPreventDefault(event);
 					}
 				}
-			}
+				break;
+			case Event.ONMOUSEUP:
+				if (DOM.eventGetShiftKey(event)) {
+					mouseListener.setClickMode(ImageBrowserMouseListener.ClickMode.NORMAL);
+				} 
+				break;
+		}
 	}
 
 	private void addImagesOnGrid(final boolean firstTime) {
@@ -285,16 +308,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		iog.setGrid(this.g);
 		iog.setImage(i);
 		iog.setOpacity(100);
-		if (i.getScale() != null && i.getScale() != 0)
-			iog.setActualCurrentResizeRatio(ImageBrowserUtil.calculateCurrentResizeRatio(i.getScale(), i.getWidth(), scale));
-		else {
-			if (i.getImageType().getImageType().equalsIgnoreCase("Thin Section Scan")) {
-				iog.getImage().setScale(40);
-			} else {
-				iog.getImage().setScale(10);
-			}
-			iog.setActualCurrentResizeRatio(ImageBrowserUtil.calculateCurrentResizeRatio(10, i.getWidth(),  scale));
-		}
+		iog.setActualCurrentResizeRatio(ImageBrowserUtil.calculateCurrentResizeRatio(i.getScale(), i.getWidth(), scale));
 		iog.setResizeRatio(1);
 		iog.setZorder(1);
 		iog.setTopLeftX(cascade[0]);
@@ -323,7 +337,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 
 		final SimplePanel imagePanel = this.createImagePanel(iog);
 
-		this.lockListener = new LockListener(iog);
+		this.lockListener = new LockListener(iog, this);
 		this.hideMenuListener = new HideMenuListener(iog);
 
 		imageContainer.add(this.makeTopMenu(iog));
@@ -345,6 +359,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 				.getCurrentContainerPosition().y);
 
 		this.imagesOnGrid.put(iog.getIog().getImage(), iog);
+		selectionHandler.addNewImage(iog);
 	}
 
 	private PopupMenu createPopupMenu(final ImageOnGridContainer iog) {
@@ -356,19 +371,19 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		popupMenu.addItem(new ImageHyperlink(
 				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
 						+ "/images/icon-addpoint.gif"), "Add Point",
-				new AddPointListener(this.mouseListener, iog), false));
+						new AddPointListener(this.mouseListener, iog), false));
 		popupMenu.addItem(new ImageHyperlink(
 				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
 						+ "/images/icon-remove.gif"), "Remove",
-				new RemoveListener(iog, this.layers, imagesOnGrid), false));
+						new RemoveListener(iog, this.layers, imagesOnGrid,selectionHandler), false));
 		popupMenu.addItem(new ImageHyperlink(
 				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
 						+ "/images/icon-rotate.gif"), "Rotate",
-				new RotateListener(iog,this), false));
+						new RotateListener(iog,this), false));
 		popupMenu.addItem(new ImageHyperlink(
 				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
 						+ "/images/icon-opacity.gif"), "Opacity",
-				new OpacityListener(iog, this.grid), false));
+						new OpacityListener(iog, this.grid, this), false));
 		final MLink lock = new MLink("Lock", this.lockListener);
 		this.lockListener.addNotifier(lock);
 		popupMenu.addItem(lock);
@@ -387,8 +402,8 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 				iog.getGoodLookingPicture());
 		ap.add(image, 0, 0);
 		final HashSet<ChemicalAnalysis> chemicalAnalyses = this
-				.getChemicalAnalyses(iog.getIog().getImage(), this.g
-						.getSubsample().getChemicalAnalyses());
+		.getChemicalAnalyses(iog.getIog().getImage(), this.g
+				.getSubsample().getChemicalAnalyses());
 		iog.setChemicalAnalyses(chemicalAnalyses);
 
 		image.setWidth(iog.getCurrentWidth() + "px");
@@ -409,7 +424,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	public void adTotalYOffset(final int amount) {
 		this.totalYOffset += amount;
 	}
-	
+
 	public void updatePoints(ImageOnGridContainer iog) {
 		final Iterator<ChemicalAnalysis> itr2 = iog.getChemicalAnalyses().iterator();
 		while (itr2.hasNext()) {
@@ -443,7 +458,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 
 	public void addPoints(final ImageOnGridContainer iog) {
 		final Iterator<ChemicalAnalysis> itr = iog.getChemicalAnalyses()
-				.iterator();
+		.iterator();
 		while (itr.hasNext()) {
 			final ChemicalAnalysis ma = itr.next();
 			final com.google.gwt.user.client.ui.Image i = new com.google.gwt.user.client.ui.Image(
@@ -474,7 +489,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 			i.setStyleName("chem-point");
 			this.grid.add(i,(int)iog.getCurrentContainerPosition().x + x, (int)iog.getCurrentContainerPosition().y + y);
 			iog.getChemicalAnalysisImages().add(i);
-			
+
 			ma.setActualImage(i);
 			ma.setPercentX((float) (ImageBrowserUtil.MMToPixels(ma.getReferenceX(), scale, 1)/ iog.getCurrentWidth()));
 			ma.setPercentY((float) (ImageBrowserUtil.MMToPixels(ma.getReferenceY(), scale, 1)/ iog.getCurrentHeight()));
@@ -521,11 +536,11 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		final MLink addPoint = new ImageHyperlink(
 				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
 						+ "/images/icon-addpoint.gif"), "Add Point",
-				new AddPointListener(this.mouseListener, iog), false);
+						new AddPointListener(this.mouseListener, iog), false);
 		final MLink remove = new ImageHyperlink(
 				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
 						+ "/images/icon-remove.gif"), "Remove",
-				new RemoveListener(iog, this.layers, imagesOnGrid), false);
+						new RemoveListener(iog, this.layers, imagesOnGrid,selectionHandler), false);
 		ulBottom.add(details);
 		ulBottom.add(addPoint);
 		ulBottom.add(remove);
@@ -540,11 +555,11 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		final MLink rotate = new ImageHyperlink(
 				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
 						+ "/images/icon-rotate.gif"), "Rotate",
-				new RotateListener(iog, this), false);
+						new RotateListener(iog, this), false);
 		final MLink opacity = new ImageHyperlink(
 				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
 						+ "/images/icon-opacity.gif"), "Opacity",
-				new OpacityListener(iog, this.grid), false);
+						new OpacityListener(iog, this.grid, this), false);
 		final MLink hideMenu = new MLink("Hide Menu", this.hideMenuListener);
 		this.hideMenuListener.addNotifier(hideMenu);
 		final MLink lock = new MLink("Lock", this.lockListener);
@@ -567,7 +582,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		DOM.setStyleAttribute(element, "filter", "alpha(opacity=" + amount
 				+ ")");
 	}
-	
+
 	private FlowPanel createWorkspaceBoundary() {
 		DOM.setElementAttribute(boundary.getElement(), "id", "workspaceBoundary");
 		updateBoundary();
@@ -645,6 +660,10 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 			this.doAddExistingImage();
 		else if (sender == this.addNewImageToSubsample)
 			this.doAddNewImageToSubsample();
+		else if (sender == this.groupTogether)
+			selectionHandler.groupSelectedImages();
+		else if (sender == this.unGroup)
+			selectionHandler.ungroupSelectedImages();
 	}
 
 	private void doAddNewImageToSubsample() {
@@ -652,11 +671,11 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	}
 
 	private void doBringToFront() {
-		this.zOrderManager.bringToFront(selectedImages);
+		this.zOrderManager.bringToFront(selectionHandler.getSelectedImages());
 	}
 
 	private void doSendToBack() {
-		this.zOrderManager.sendToBack(selectedImages);
+		this.zOrderManager.sendToBack(selectionHandler.getSelectedImages());
 	}
 
 	private void doAddExistingImage() {
@@ -673,7 +692,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 			public void onSuccess(final Collection<Image> result) {
 				final Iterator<Image> itr = result.iterator();
 				final int[] cascade = {
-					0
+						0
 				};
 				while (itr.hasNext()) {
 					ImageBrowserDetails.this.addImage(
@@ -704,7 +723,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 			@Override
 			public void begin() {
 				MpDb.imageBrowser_svc
-						.saveGrid(ImageBrowserDetails.this.g, this);
+				.saveGrid(ImageBrowserDetails.this.g, this);
 				ImageBrowserDetails.this.info.setText("Saving, please wait...");
 				save.setEnabled(false);
 			}
@@ -715,7 +734,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 				// After saving we have to update our copies
 				g = result;
 				final Iterator<ImageOnGrid> itr = g.getImagesOnGrid()
-						.iterator();
+				.iterator();
 				while (itr.hasNext()) {
 					final ImageOnGrid iog = itr.next();
 					final ImageOnGridContainer container = imagesOnGrid.get(iog
@@ -753,9 +772,9 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	public MAbsolutePanel getGrid() {
 		return this.grid;
 	}
-	
+
 	public List<ImageOnGridContainer> getSelectedImages(){
-		return this.selectedImages;
+		return selectionHandler.getSelectedImages();
 	}
 
 	public float getZoomScale() {
@@ -765,25 +784,33 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	public PanHandler getPanHandler() {
 		return panHandler;
 	}
-	
+
 	public FlowPanel getBoundary() {
 		return boundary;
 	}
-	
+
 	public Grid getImageGrid() {
 		return g;
+	}
+
+	public void setGroupEnabled(final boolean enabled) {
+		groupTogether.setVisible(enabled);
+	}
+
+	public void setUngroupEnabled(final boolean enabled) {
+		unGroup.setVisible(enabled);
 	}
 
 	public Map<Image, ImageOnGridContainer> getImagesOnGrid(){
 		return imagesOnGrid;
 	}
-	
+
 	public void updateBoundary() {
 		float height = (g.getHeight()/this.scale)*ImageBrowserUtil.pps;
 		float width = (g.getWidth()/this.scale)*ImageBrowserUtil.pps;
 		DOM.setStyleAttribute(boundary.getElement(), "width",width+"px");
 		DOM.setStyleAttribute(boundary.getElement(), "height",height+"px");
-		
+
 		DOM.setStyleAttribute(boundary.getElement(), "top", totalYOffset-1+"px");
 		DOM.setStyleAttribute(boundary.getElement(), "left",totalXOffset-1+"px");
 	}
@@ -791,7 +818,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	public void onPageChanged() {
 
 	}
-	
+
 	public void onBeforePageChanged() {
 		leavingPage = true;
 		if (g != null) {
@@ -802,14 +829,14 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 				public void onCancel() {
 					leavingPage = false;
 				}
-				
+
 				public void onNo() {
 					leavingPage();
 				}
 			}.show();
 		}
 	}
-	
+
 	private void leavingPage(){
 		leavingPage = false;
 		MetPetDBApplication.finishDispatchingBeforeCurrentPageChanged();

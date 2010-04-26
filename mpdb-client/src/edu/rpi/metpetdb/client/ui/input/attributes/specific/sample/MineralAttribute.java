@@ -262,48 +262,7 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 			final Command dialog_finish = new Command() {
 				public void execute() {
 					if (getConstraint().equals(MpDb.doc.Sample_minerals)){
-						
-						//hack to grab values from the form
-						HashMap<GenericAttribute, DetailsPanelEntry> entries = dialog.getPanelEntries(1);
-						Iterator entryItr = entries.entrySet().iterator();
-						String htmlString = "";
-						while (entryItr.hasNext()){
-							Map.Entry<GenericAttribute, DetailsPanelEntry> pairs = (Map.Entry)entryItr.next();
-							htmlString = pairs.getValue().getAttr().getMyPanel().toString();
-						}
-
-						Map<String, String> enteredValues = new HashMap();;
-						
-						Set<SampleMineral> amounts = p_amounts.getBeans();
-						
-						//set the sample amounts to the floats entered in the dialog
-						//extra label at the beginning
-						int index = htmlString.indexOf("/LABEL") + 6;
-						htmlString = htmlString.substring(index);
-						for(SampleMineral sm : amounts){
- 							//get Mineral
-							index = htmlString.indexOf("LABEL>") + 6;
-							htmlString = htmlString.substring(index);
-							int end = htmlString.indexOf("<");
-							int endSpace = htmlString.indexOf(" ");
-							String mineralString = htmlString.substring(0,Math.min(end, endSpace));
-							
-							//get value
-							index = htmlString.indexOf("value=") + 6;
-							htmlString = htmlString.substring(index);
-							end = htmlString.indexOf(">");
-							String floatString = htmlString.substring(0,end);
-							
-							enteredValues.put(mineralString, floatString);
-						}
-						
-						//set each entered amount to its SampleMineral
-						Iterator itr = amounts.iterator();
-						while (itr.hasNext()){
-							SampleMineral thisMineral = (SampleMineral) itr.next();
-							thisMineral.setAmount(enteredValues.get(thisMineral.getMineral().toString()));
-						}
-						
+						p_amounts.validateEdit(null);
 						tree.set(obj, get(obj));
 					}
 					else

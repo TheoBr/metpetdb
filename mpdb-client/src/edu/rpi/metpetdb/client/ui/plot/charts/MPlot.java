@@ -102,7 +102,7 @@ public abstract class MPlot {
 			}
 			
 			if (xAxisTotal != 0 || yAxisTotal !=0)
-				data.add(new Point(xAxisTotal, yAxisTotal, ca.getSpotId()));
+				data.add(new Point(xAxisTotal, yAxisTotal, ca.toString()));
 		}
 		
 //		}

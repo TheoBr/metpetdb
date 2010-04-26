@@ -13,19 +13,22 @@ import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
 import edu.rpi.metpetdb.client.ui.image.browser.LayersSidebar;
+import edu.rpi.metpetdb.client.ui.image.browser.SelectionHandler;
 
 public class RemoveListener implements ClickListener {
 
 	private final ImageOnGridContainer iog;
 	private final LayersSidebar leftSideLayer;
 	private final Map<Image, ImageOnGridContainer> imagesOnGrid;
+	private final SelectionHandler selectionHandler;
 
 	public RemoveListener(final ImageOnGridContainer imageOnGrid,
 			final LayersSidebar lsl,
-			final Map<Image, ImageOnGridContainer> imagesOnGrid) {
+			final Map<Image, ImageOnGridContainer> imagesOnGrid, final SelectionHandler selectionHandler) {
 		iog = imageOnGrid;
 		leftSideLayer = lsl;
 		this.imagesOnGrid = imagesOnGrid;
+		this.selectionHandler = selectionHandler;
 	}
 
 	public void onClick(final Widget sender) {
@@ -38,6 +41,7 @@ public class RemoveListener implements ClickListener {
 				}
 				leftSideLayer.removeImage(iog);
 				imagesOnGrid.remove(iog.getIog().getImage());
+				selectionHandler.removeImage(iog);
 				final Iterator<ChemicalAnalysis> itr = iog.getChemicalAnalyses().iterator();
 				while (itr.hasNext()) {
 					final ChemicalAnalysis ma = itr.next();

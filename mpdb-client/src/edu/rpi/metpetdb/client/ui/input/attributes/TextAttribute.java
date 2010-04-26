@@ -10,6 +10,8 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.MaxLengthConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.DoubleConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 import edu.rpi.metpetdb.client.ui.Util;
 import edu.rpi.metpetdb.client.ui.widgets.NumericKeyboardListener;
@@ -68,13 +70,21 @@ public class TextAttribute extends GenericAttribute {
 	}
 
 	protected Object get(final Widget editWidget) {
-		final String v = ((HasText) editWidget).getText();
+		final String text = ((HasText) editWidget).getText();
+		Object val = text;
+		if (text != null && text.length() > 0) {
+			if (this.getConstraints()[0] instanceof IntegerConstraint) {
+				val = Integer.parseInt(text);
+			} else if (this.getConstraints()[0] instanceof DoubleConstraint) {
+				val = Double.parseDouble(text);
+			} 
+		}
 		if (this.getConstraint() instanceof ValueInCollectionConstraint) {
 			// Get the real instance of the object instead of the string
 			return ((ValueInCollectionConstraint) this.getConstraint())
-					.getObjectWithName(v);
+					.getObjectWithName(text);
 		}
-		return v != null && v.length() > 0 ? v : null;
+		return val != null && text.length() > 0 ? val : null;
 	}
 
 	protected String get(final MObject obj) {

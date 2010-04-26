@@ -95,7 +95,7 @@ public class ScatterPlot extends MPlot{
 				if (leftAxisTotal != 0 && bottomAxisTotal != 0) {
 					yMax = (leftAxisTotal > yMax) ? leftAxisTotal + (leftAxisTotal/10): yMax;
 					xMax = (bottomAxisTotal > xMax) ? bottomAxisTotal  + (bottomAxisTotal/10): xMax;
-					points.add(new Point(bottomAxisTotal, leftAxisTotal, ca.getSpotId()));
+					points.add(new Point(bottomAxisTotal, leftAxisTotal, ca.toString()));
 				}
 			}
 			final Serie s = new Serie<Point>(points);

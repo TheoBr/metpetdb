@@ -78,7 +78,7 @@ public class LayersSidebar extends Sidebar implements UsesSidebar {
 		});
 		checkBox.setChecked(true);
 		Button remove = new Button();
-		remove.addClickListener(new RemoveListener(iog, this, imageBrowser.getImagesOnGrid()));
+		remove.addClickListener(new RemoveListener(iog, this, imageBrowser.getImagesOnGrid(), imageBrowser.selectionHandler));
 		
 		remove.setStylePrimaryName("remove");
 		container.add(checkBox);

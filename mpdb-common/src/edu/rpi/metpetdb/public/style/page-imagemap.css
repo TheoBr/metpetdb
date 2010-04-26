@@ -116,6 +116,14 @@
 	z-index: 0;	
 }
 
+#shiftSelectBoundary {
+	position: absolute;
+	border: solid 2px black;
+	background: #00FF00;
+	opacity: .5;
+	z-index: 999;	
+}
+
 /* zoom and pan controls */
 #viewControl {
 	position: absolute;

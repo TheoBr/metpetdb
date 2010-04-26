@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.image.browser;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
@@ -37,6 +38,9 @@ public class ImageBrowserMouseListener implements MouseListener {
 	private Image pointer;
 	private final ImageBrowserDetails imageBrowser;
 	private final FlowPanel viewControls;
+	private final SelectionHandler selectionHandler;
+	private Point firstClick;
+	private FlowPanel shiftSelectionBox = new FlowPanel();
 
 	public enum MouseMode {
 		NONE, MOVE_IMAGE, // 0
@@ -77,6 +81,8 @@ public class ImageBrowserMouseListener implements MouseListener {
 		subsample = ss;
 		imageBrowser = ibd;
 		viewControls = fp;
+		selectionHandler = ibd.selectionHandler;
+		DOM.setElementAttribute(shiftSelectionBox.getElement(), "id", "shiftSelectBoundary");
 	}
 
 	public void onMouseEnter(final Widget sender) {
@@ -457,12 +463,11 @@ public class ImageBrowserMouseListener implements MouseListener {
 		
 		if (!imageBrowser.getSelectedImages().contains(currentImage)) {
 			if (clickMode == ClickMode.NORMAL) {
-				for (ImageOnGridContainer iog : imageBrowser.getSelectedImages()) {
-					iog.getImageContainer().removeStyleDependentName("selected");
-				}
-				imageBrowser.getSelectedImages().clear();
+				selectionHandler.unselectAll();
 			}
-			handleMoveImageHelper(currentImage,deltaX,deltaY);
+			for (ImageOnGridContainer iog : selectionHandler.getGroupByImage(currentImage)){
+				handleMoveImageHelper(iog,deltaX,deltaY);
+			}
 		}
 		
 		for (ImageOnGridContainer iog : imageBrowser.getSelectedImages()) {
@@ -519,12 +524,57 @@ public class ImageBrowserMouseListener implements MouseListener {
 					break;
 			};
 		}
+		if (clickMode == ClickMode.SHIFT) {
+			if (firstClick != null) {
+				updateShiftSelectionBox(x,y);
+			} else {
+				firstClick = new Point(x,y);
+			}
+		} else {
+			if (shiftSelectionBox.isAttached()) {
+				imageBrowser.getGrid().remove(shiftSelectionBox);
+				selectionHandler.selectRectangle(firstClick, new Point(x,y));
+			}
+			firstClick = null;
+		}
 		// or we can be moving a point we want to place
 		if (mode == MouseMode.PLACE_POINT) {
 			handleMovingPoint(x, y);
 		}
 		lastX = x;
 		lastY = y;
+	}
+	
+	private void updateShiftSelectionBox(final int x, final int y) {
+		int top;
+		int bottom;
+		int left;
+		int right;
+
+		if (firstClick.x > x) {
+			right = (int) firstClick.x;
+			left = (int) x;
+		} else {
+			right = (int) x;
+			left = (int) firstClick.x;
+		}
+		if (firstClick.y > y) {
+			top = (int) y;
+			bottom = (int) firstClick.y;
+		} else {
+			top = (int) firstClick.y;
+			bottom = (int) y;
+		}
+		
+		
+		if (!shiftSelectionBox.isAttached()) {
+			imageBrowser.getGrid().add(shiftSelectionBox);
+		}
+		DOM.setStyleAttribute(shiftSelectionBox.getElement(), "width", right - left +"px");
+		DOM.setStyleAttribute(shiftSelectionBox.getElement(), "height", bottom - top +"px");
+		
+		DOM.setStyleAttribute(shiftSelectionBox.getElement(), "top", top-1+"px");
+		DOM.setStyleAttribute(shiftSelectionBox.getElement(), "left",left-1+"px");
 	}
 	
 	private void handleResizeHelper(ImageOnGridContainer iog, final int x, final int y) {
@@ -586,12 +636,11 @@ public class ImageBrowserMouseListener implements MouseListener {
 	private void handleResize(final int x, final int y) {
 		if (!imageBrowser.getSelectedImages().contains(currentImage)) {
 			if (clickMode == ClickMode.NORMAL) {
-				for (ImageOnGridContainer iog : imageBrowser.getSelectedImages()) {
-					iog.getImageContainer().removeStyleDependentName("selected");
-				}
-				imageBrowser.getSelectedImages().clear();
+				selectionHandler.unselectAll();
 			}
-			handleResizeHelper(currentImage,x,y);
+			for (ImageOnGridContainer iog : selectionHandler.getGroupByImage(currentImage)){
+				handleResizeHelper(iog,x,y);
+			}
 		}
 		
 		for (ImageOnGridContainer iog : imageBrowser.getSelectedImages()) {
@@ -659,10 +708,13 @@ public class ImageBrowserMouseListener implements MouseListener {
 			switch (mode) {
 				case MOVE_IMAGE:
 					handleMoveImage(x, y);
-					currentImage.getImageContainer().removeStyleName(
-							"image-moving");
-					currentImage.getImageContainer().setStylePrimaryName("imageContainer");
-					currentImage.getImageContainer().addStyleDependentName("selected");
+					final List<ImageOnGridContainer> group = selectionHandler.getGroupByImage(currentImage);
+					for (ImageOnGridContainer iog : group) {
+						iog.getImageContainer().removeStyleName(
+								"image-moving");
+						iog.getImageContainer().setStylePrimaryName("imageContainer");
+						iog.getImageContainer().addStyleDependentName("selected");
+					}
 					for (ImageOnGridContainer iog : imageBrowser.getSelectedImages()) {
 						iog.getImageContainer().removeStyleName("image-moving");
 						iog.getImageContainer().setStylePrimaryName("imageContainer");
@@ -671,41 +723,33 @@ public class ImageBrowserMouseListener implements MouseListener {
 					switch (clickMode) {
 						case NORMAL:
 							if (!imageBrowser.getSelectedImages().contains(currentImage)) { 
-								for (ImageOnGridContainer iog : imageBrowser.getSelectedImages()) {
-									iog.getImageContainer().removeStyleDependentName("selected");
-								}
-								imageBrowser.getSelectedImages().clear();
-								imageBrowser.getSelectedImages().add(currentImage);
-								currentImage.getImageContainer().addStyleDependentName("selected");
+								selectionHandler.unselectAll();
+								selectionHandler.selectImage(currentImage);
 							}
 							break;
 						case SHIFT:
-							if (imageBrowser.getSelectedImages().contains(currentImage)) {
-								currentImage.getImageContainer().removeStyleDependentName("selected");
-								imageBrowser.getSelectedImages().remove(currentImage);
+							if (firstClick == null) {
+								if (!imageBrowser.getSelectedImages().contains(currentImage)) { 
+									selectionHandler.unselectImage(currentImage);
+								} else {
+									selectionHandler.selectImage(currentImage);
+								}
 							} else {
-								imageBrowser.getSelectedImages().add(currentImage);
-								currentImage.getImageContainer().addStyleDependentName("selected");
+								selectionHandler.selectRectangle(firstClick, new Point(x,y));
 							}
 							break;
-							case CTRL:
-								if (imageBrowser.getSelectedImages().contains(currentImage)) {
-								currentImage.getImageContainer().removeStyleDependentName("selected");
-								imageBrowser.getSelectedImages().remove(currentImage);
+						case CTRL:
+							if (imageBrowser.getSelectedImages().contains(currentImage)) {
+									selectionHandler.unselectImage(currentImage);
 							} else {
-								imageBrowser.getSelectedImages().add(currentImage);
-								currentImage.getImageContainer().addStyleDependentName("selected");
+								selectionHandler.selectImage(currentImage);
 							}
-								break;
+							break;
 					}
-
 					break;
 				case PAN_GRID:
 					handleEndPan(x, y);
-					for (ImageOnGridContainer iog : imageBrowser.getSelectedImages()) {
-						iog.getImageContainer().removeStyleDependentName("selected");
-					}
-					imageBrowser.getSelectedImages().clear();
+					selectionHandler.unselectAll();
 					break;
 				case RESIZE_IMAGE:
 					handleEndResize(x, y);

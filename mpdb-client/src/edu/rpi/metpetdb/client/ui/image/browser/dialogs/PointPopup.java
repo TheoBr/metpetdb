@@ -37,7 +37,7 @@ public class PointPopup extends DialogBox implements ClickListener {
 		this.locked = ma.isLocked();
 
 		final FlowPanel panel = new FlowPanel();
-		panel.add(new MLinkandText("Spot Id: ", ma.getSpotId(), "", TokenSpace
+		panel.add(new MLinkandText("Spot Id: ", Integer.toString(ma.getSpotId()), "", TokenSpace
 				.detailsOf(ma)));
 		final MHtmlList ul = new MHtmlList();
 		ul.setStyleName("options");

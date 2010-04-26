@@ -42,8 +42,8 @@ public abstract class SubsampleList extends DataList<Subsample> {
 				}
 			};
 			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(50);
-			col.setPreferredColumnWidth(120);
+			col.setMinimumColumnWidth(40);
+			col.setPreferredColumnWidth(80);
 			col.setOptional(false);
 			columns.addColumn(col);
 			defaultColumns.addColumn(col);

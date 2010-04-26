@@ -27,17 +27,17 @@ public class RotateListener implements ClickListener {
 			public void begin() {
 				if (MpDb.isLoggedIn()) {
 					if (!imageBrowser.getSelectedImages().contains(iog)){
-						imageBrowser.getSelectedImages().add(iog);
-						iog.getImageContainer().addStyleDependentName("selected");
-					}
-					new RotateDialog(imageBrowser.getSelectedImages(), this).show();
+						imageBrowser.selectionHandler.selectImage(iog);
+						List<ImageOnGridContainer> groupPlusSelected = imageBrowser.selectionHandler.getGroupByImage(iog);
+						groupPlusSelected.addAll(imageBrowser.getSelectedImages());
+						new RotateDialog(groupPlusSelected, this).show();
+					} else 
+						new RotateDialog(imageBrowser.getSelectedImages(), this).show();
 				} else {
 					onFailure(new LoginRequiredException());
 				}
 			}
 			public void onSuccess(final List<ImageOnGridContainer> result) {
-				// final float widthRatio = iog.getWidth()
-				// / (float) iog.getImage().getWidth();
 				for (ImageOnGridContainer imageOnGrid : result) {
 					imageOnGrid.setCurrentWidth((int)Math
 							.round((imageOnGrid.getIog().getGwidth() * (imageOnGrid.getIog().getActualCurrentResizeRatio()))));
@@ -49,35 +49,13 @@ public class RotateListener implements ClickListener {
 					
 					imageOnGrid.getActualImage().setWidth(imageOnGrid.getCurrentWidth() + "px");
 					imageOnGrid.getActualImage().setHeight(imageOnGrid.getCurrentHeight() + "px");
-					
-					//final double heightRatio = iog.getCurrentHeight()
-					//		/  iog.getIog().getImage().getHeight();
-					//iog.getIog().setImage(
-					//		(((ImageOnGridContainer) imageOnGrid).getIog().getImage()));
+
 					imageOnGrid.getActualImage()
 							.setUrl(
 									((ImageOnGridContainer) imageOnGrid)
 											.getGoodLookingPicture());
 					imageBrowser.updatePoints(iog);
 				}
-				
-				//TODO Update the chemical analysis points to correctly rotate with the image
-				
-				/*final Iterator<ChemicalAnalysis> itr = iog.getChemicalAnalyses().iterator();
-				while (itr.hasNext()) {
-					final ChemicalAnalysis ma = itr.next();
-					final com.google.gwt.user.client.ui.Image i = (com.google.gwt.user.client.ui.Image) ma.getActualImage();				
-					
-					int pointX = (int)Math.round(ma.getReferenceX()/this.scale*this.pps) - this.chemImageWidth;
-					int pointY = (int)Math.round(ma.getReferenceY()/this.scale*this.pps) - this.chemImageHeight;
-					this.grid.add(i,(int)iog.getCurrentContainerPosition().x + pointX, (int)iog.getCurrentContainerPosition().y + pointY);
-					
-				}*/
-				//iog.resizeImage(Math.round(iog.getIog().getImage().getWidth()
-				//		* heightRatio), Math.round(iog.getIog().getImage()
-				//		.getHeight()
-				//		* heightRatio), false);
-
 			}
 		}.begin();
 	}

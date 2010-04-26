@@ -33,6 +33,7 @@ public class AddPointDialog extends DialogBox implements ClickListener,
 
 	public AddPointDialog(final Subsample s, final ImageOnGridContainer iog,
 			final ServerOp<ChemicalAnalysis> r, final int x, final int y) {
+		super(true);
 		this.continuation = r;
 		this.submit = new Button(LocaleHandler.lc_text.buttonSubmit(), this);
 
@@ -46,7 +47,7 @@ public class AddPointDialog extends DialogBox implements ClickListener,
 		while (itr.hasNext()) {
 			final ChemicalAnalysis ca = itr.next();
 			if (ca.getImage() == null)
-				this.lb.addItem(ca.getSpotId());
+				this.lb.addItem(Integer.toString(ca.getSpotId()));
 		}
 
 		this.hp = new HorizontalPanel();
@@ -91,8 +92,7 @@ public class AddPointDialog extends DialogBox implements ClickListener,
 				final Iterator<ChemicalAnalysis> itr = this.chemicalAnalyses.iterator();
 				while (itr.hasNext()) {
 					final ChemicalAnalysis ma = (ChemicalAnalysis) itr.next();
-					if (ma.getSpotId().equals(
-							this.lb.getItemText(this.lb.getSelectedIndex()))) {
+					if (ma.getSpotId() == Integer.parseInt((this.lb.getItemText(this.lb.getSelectedIndex())))) {
 						this.continuation.onSuccess(ma);
 						break;
 					}

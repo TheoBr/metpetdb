@@ -16,13 +16,13 @@ import edu.rpi.metpetdb.client.model.User;
 public enum ChemicalAnalysisProperty implements Property<ChemicalAnalysis> {
 
 	spotId {
-		public String get(final ChemicalAnalysis chemicalAnalysis) {
+		public Integer get(final ChemicalAnalysis chemicalAnalysis) {
 			return ((ChemicalAnalysis) chemicalAnalysis).getSpotId();
 		}
 
 		public void set(final ChemicalAnalysis chemicalAnalysis,
 				final Object spotId) {
-			((ChemicalAnalysis) chemicalAnalysis).setSpotId((String) spotId);
+			((ChemicalAnalysis) chemicalAnalysis).setSpotId((Integer) spotId);
 		}
 	},
 	referenceX {

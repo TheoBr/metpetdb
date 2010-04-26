@@ -12,11 +12,11 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
+import edu.rpi.metpetdb.client.ui.commands.VoidMCommand;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
 public class MultipleObjectDetailsPanel<T extends MObject> extends
 		DetailsPanel<T> {
-	// HashMap<MObject, HashMap<GenericAttribute, DetailsPanelEntry >
 	protected HashMap<T, HashMap<GenericAttribute, DetailsPanelEntry>> dpBeans;
 	private Set<T> beans = new HashSet<T>();
 
@@ -161,7 +161,7 @@ public class MultipleObjectDetailsPanel<T extends MObject> extends
 		}
 		isEditMode = true;
 	}
-	public boolean validateEdit(final ServerOp<?> r) {
+	public boolean validateEdit(final VoidMCommand r) {
 		if (!isEditMode())
 			return true;
 		int failed = 0;
@@ -177,10 +177,6 @@ public class MultipleObjectDetailsPanel<T extends MObject> extends
 					failed++;
 			}
 		}
-		if (failed == 0)
-			r.onSuccess(null);
-		else
-			r.onFailure(null);
 		return failed == 0;
 	}
 	private Widget[] getEditWidgets(final GenericAttribute attr,

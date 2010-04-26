@@ -2,7 +2,7 @@ CREATE TABLE chemical_analyses
 (
    chemical_analysis_id INT8 NOT NULL,
    version INT4 NOT NULL,
-   spot_id VARCHAR(50) NOT NULL,
+   spot_id INT8 NOT NULL,
    subsample_id INT8 NOT NULL,
    public_data CHAR(1) CHECK (public_data IN ('Y','N')) NOT NULL,
    reference_x double precision,

@@ -253,7 +253,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 
 	// ------ ChemicalAnalysis ------
 	public PropertyConstraint[] ChemicalAnalysis__all;
-	public StringConstraint ChemicalAnalysis_spotId;
+	public IntegerConstraint ChemicalAnalysis_spotId;
 	public StringConstraint ChemicalAnalysis_analysisMethod;
 	public StringConstraint ChemicalAnalysis_location;
 	public StringConstraint ChemicalAnalysis_analyst;

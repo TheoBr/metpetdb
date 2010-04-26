@@ -317,7 +317,7 @@ public class Breadcrumbs extends FlowPanel {
 							if (((SimplePanel) w).getWidget() instanceof MLink) {
 								MLink l = (MLink) ((SimplePanel) w).getWidget();
 								if (((MLink) l).getText().equals(name)) {
-									((MLink) l).setText(result.getSpotId());
+									((MLink) l).setText(result.toString());
 									Breadcrumbs.this.id = String.valueOf(result
 											.getSubsample().getId());
 									Breadcrumbs.this
