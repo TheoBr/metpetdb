@@ -9,6 +9,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.NoSuchObjectException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
@@ -188,7 +189,13 @@ public class TokenSpace implements HistoryListener {
 		Search s;
 		public void executeToken(final String args) {
 			if (s == null)
-				s = new Search();
+				s = new Search() {	
+				@Override
+					public void onCurrentUserChanged(User whoIsIt) throws LoginRequiredException {
+						s = null;
+						search.executeToken("");
+					}			
+				};
 			else 
 				s.reload();
 			show(s);

@@ -70,6 +70,7 @@ public abstract class ObjectSearchPanel extends FlowPanel {
 				new FormOp<SearchSample>(ObjectSearchPanel.this) {
 					protected void onSubmit() {
 						performSearch();
+						onSuccess(result);
 					}
 					public void onSuccess(final SearchSample result) {
 						onSearchCompletion(this);

@@ -233,8 +233,10 @@ public class MetPetDBApplication implements EntryPoint {
 		}
 		if (w instanceof Panel) {
 			final Iterator<Widget> i = ((Panel) w).iterator();
-			while (i.hasNext())
-				dispatchCurrentUserChanged((Widget) i.next(), u);
+			while (i.hasNext()) {
+				Widget t = (Widget) i.next();
+				dispatchCurrentUserChanged(t, u);
+			}
 		}
 	}
 

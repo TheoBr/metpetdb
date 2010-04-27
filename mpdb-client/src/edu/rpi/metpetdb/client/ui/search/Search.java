@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -13,12 +12,15 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SearchSample;
+import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.FormOp;
 import edu.rpi.metpetdb.client.ui.input.ObjectSearchPanel;
@@ -31,99 +33,91 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabProv
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.search.SearchTabRockTypes;
 import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisList;
 import edu.rpi.metpetdb.client.ui.objects.list.SampleList;
-import edu.rpi.metpetdb.client.ui.plot.PlotInterface;
-import edu.rpi.metpetdb.client.ui.plot.charts.TetrahedralPlotO3D;
+import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
-public class Search extends MPagePanel {
+public class Search extends MPagePanel implements UsesCurrentUser {
 
-	private static SearchTabAttribute[] searchTabs = {
+	private SearchTabAttribute[] searchTabs = {
 			new SearchTabRockTypes(), new SearchTabMetamorphicGrade(),
 			new SearchTabLocation(), new SearchTabMinerals(),
 			new SearchTabChemicalAnalysis(), new SearchTabProvenance()
 	};
 
-	private final static FlowPanel samplesContainer = new FlowPanel();
-	private final static FlowPanel chemContainer = new FlowPanel();
-	private final static ObjectSearchPanel searchPanel;
-	private final static SearchInterface sui = new SearchInterface(searchTabs);
-	private static boolean outputSamples = true;
-	private static SearchSample ss = new SearchSample();
-	private static boolean firstTimeSample = true;
-	private static boolean firstTimeChem = true;
+	private FlowPanel samplesContainer = new FlowPanel();
+	private FlowPanel chemContainer = new FlowPanel();
+	private ObjectSearchPanel searchPanel;
+	private SearchInterface sui = new SearchInterface(searchTabs);
+	private boolean outputSamples = true;
+	private SearchSample ss = new SearchSample();
+	private boolean initLoad = true;
+	private boolean searched = false;
 
-	static {
+	private SampleList sampleList;
+	private ChemicalAnalysisList chemList;
+	
+	public void init(){
 		searchPanel = new ObjectSearchPanel(sui) {
 			protected void performSearch() {
-				if (outputSamples) {
+					searched = true;
 					sampleList.getScrollTable().gotoPage(0, true);
-				} else {
 					chemList.getScrollTable().gotoPage(0, true);
-				}
+					
 			}
 			protected void onSearchCompletion(final FormOp<SearchSample> ac) {
-				
 			}
 		};
 		sui.insertActionWidget(createResultTypeToggle(), 0);
-	}
-
-	private final static SampleList sampleList = new SampleList() {
-
-		@Override
-		public void update(PaginationParameters p,
-				AsyncCallback<Results<Sample>> ac) {
-			if (ss != null && !firstTimeSample)
-				MpDb.search_svc.sampleSearch(p, ss, MpDb.currentUser(), ac);
-			else {
-				ac.onSuccess(new Results<Sample>(0, new ArrayList<Sample>()));
-				firstTimeSample = false;
-			}
-		}
-
-
-		@Override
-		public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
-			if (ss != null)
-				MpDb.search_svc.sampleSearchIds(ss, MpDb.currentUser(), ac);
-			else
-				ac.onSuccess(new HashMap<Object,Boolean>());
-		}
 		
-		@Override
-		protected Widget getNoResultsWidget() {
-			HTML w = new HTML("No Samples Found");
-			w.setStyleName(CSS.NULLSET);
-			return w;
-		}
+		sampleList = new SampleList() {
 
-	};
-	private final static ChemicalAnalysisList chemList = new ChemicalAnalysisList() {
-
-		@Override
-		public void update(PaginationParameters p,
-				AsyncCallback<Results<ChemicalAnalysis>> ac) {
-			if (ss != null && !firstTimeChem)
-				MpDb.search_svc.chemicalAnalysisSearch(p, ss, MpDb
-						.currentUser(), ac);
-			else {
-				ac.onSuccess(new Results<ChemicalAnalysis>(0,
-						new ArrayList<ChemicalAnalysis>()));
-				firstTimeChem = false;
+			@Override
+			public void update(PaginationParameters p,
+					AsyncCallback<Results<Sample>> ac) {
+				if (ss != null && !initLoad && searched)
+					MpDb.search_svc.sampleSearch(p, ss, MpDb.currentUser(), ac);
+				else {
+					ac.onSuccess(new Results<Sample>(0, new ArrayList<Sample>()));
+					initLoad = false;
+				}
 			}
-		}
 
-		@Override
-		public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
-			if (ss != null)
-				MpDb.search_svc.chemicalAnalysisSearchIds(ss, MpDb.currentUser(), ac);
-			else
-				ac.onSuccess(new HashMap<Object,Boolean>());
-		}
 
-	};
+			@Override
+			public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
+				if (ss != null)
+					MpDb.search_svc.sampleSearchIds(ss, MpDb.currentUser(), ac);
+				else
+					ac.onSuccess(new HashMap<Object,Boolean>());
+			}
 
-	static {
+		};
+		
+		chemList = new ChemicalAnalysisList() {
+
+			@Override
+			public void update(PaginationParameters p,
+					AsyncCallback<Results<ChemicalAnalysis>> ac) {
+				if (ss != null && !initLoad && searched)
+					MpDb.search_svc.chemicalAnalysisSearch(p, ss, MpDb
+							.currentUser(), ac);
+				else {
+					ac.onSuccess(new Results<ChemicalAnalysis>(0,
+							new ArrayList<ChemicalAnalysis>()));
+					initLoad = false;
+				}
+			}
+
+			@Override
+			public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
+				if (ss != null)
+					MpDb.search_svc.chemicalAnalysisSearchIds(ss, MpDb.currentUser(), ac);
+				else
+					ac.onSuccess(new HashMap<Object,Boolean>());
+			}
+
+		};
+		
 		samplesContainer.add(sampleList);
 		chemContainer.add(chemList);
 		searchPanel.edit(ss);
@@ -131,7 +125,8 @@ public class Search extends MPagePanel {
 		samplesContainer.setVisible(outputSamples);
 	}
 
-	public Search() {		
+	public Search() {	
+		init();
 		setStyleName(CSS.SEARCH);
 		setPageTitle("Search");
 		add(searchPanel);
@@ -144,7 +139,7 @@ public class Search extends MPagePanel {
 		chemList.getScrollTable().reloadPage();
 	}
 
-	private static Widget createResultTypeToggle() {
+	private Widget createResultTypeToggle() {
 		final HTMLPanel container = new HTMLPanel(
 				"<span>Search for:</span> <span id=\"radio-samples\"></span><span id=\"radio-analyses\"></span>");
 		final String groupString = "resultType_attribute";
@@ -175,7 +170,7 @@ public class Search extends MPagePanel {
 		return container;
 	}
 
-	private static void updateResults() {
+	private void updateResults() {
 		if (outputSamples) {
 			samplesContainer.setVisible(true);
 			chemContainer.setVisible(false);
@@ -183,5 +178,11 @@ public class Search extends MPagePanel {
 			samplesContainer.setVisible(false);
 			chemContainer.setVisible(true);
 		}
+	}
+
+
+	public void onCurrentUserChanged(User whoIsIt)
+			throws LoginRequiredException {
+		
 	}
 }
