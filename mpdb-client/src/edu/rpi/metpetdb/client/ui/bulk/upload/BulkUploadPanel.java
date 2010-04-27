@@ -145,6 +145,28 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		uploadTypeList.add(analysesRadio);
 		uploadTypeList.add(imagesRadio);
 		
+		samplesRadio.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				clearResults();
+			}
+		});
+		analysesRadio.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				clearResults();
+			}
+		});
+		imagesRadio.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				clearResults();
+			}
+		});
+		referenceRadio.addClickListener(new ClickListener() {
+			public void onClick(Widget sender) {
+				clearResults();
+			}
+		});
+		
+		
 		if (!GWT.getHostPageBaseURL().contains("samana.cs.rpi.edu") || 
 				(MpDb.currentUser() != null && MpDb.currentUser().getName().equals("PUBLICATION"))) {
 			uploadTypeList.add(referenceRadio);
@@ -400,11 +422,11 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				uploadButton.setText("Parse File for Upload");
 				uploadButton.setEnabled(true);
 				commitButton.setText(lc_text.bulkUpload_SubmitData());
-				show(commitButton);
-				show(nextStepPanel);
+				handleCommitErrors(results);
 			}
 			public void onFailure(final Throwable e) {
 				hide(progressContainer);
+				show(resultsPanel);
 				resultStatus.sendNotice(NoticeType.ERROR,
 						"There was an error submitting the data.");
 				nextStepText
@@ -435,7 +457,9 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				handleParseErrors(results);
 				show(resultsPanel);
 				if (contentType.equals("Images")) {
+					show(imageZipForm);
 					imageZipForm.setVisible(true);
+					show(uploadImageZipButton);
 					uploadImageZipButton.setVisible(true);
 					spreadsheetFileOnServer = results.getImageFile();
 				} else {
@@ -515,6 +539,8 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		hide(resultsPanel);
 		hide(nextStepPanel);
 		hide(commitButton);
+		hide(imageZipForm);
+		hide(uploadImageZipButton);
 		formMessage.hide();
 		resultStatus.hide();
 		hide(progressContainer);
