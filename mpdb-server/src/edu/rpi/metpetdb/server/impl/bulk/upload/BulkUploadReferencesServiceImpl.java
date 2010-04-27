@@ -19,6 +19,7 @@ import java.util.zip.ZipInputStream;
 import edu.rpi.metpetdb.client.error.InvalidFormatException;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
+import edu.rpi.metpetdb.client.error.bulk.upload.InvalidReferenceFormatException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.model.GeoReference;
 import edu.rpi.metpetdb.client.model.Sample;
@@ -90,7 +91,7 @@ public class BulkUploadReferencesServiceImpl extends BulkUploadService implement
 			geoRefUnparsedMap.put(geoName, unparsedRefText);
 		}
 		
-		ArrayList<GeoReference> parsedGeoRefs = parseGeoRefs(geoRefUnparsedMap);
+		ArrayList<GeoReference> parsedGeoRefs = parseGeoRefs(geoRefUnparsedMap, results);
 		
 		//For each GeoReference, find samples that it belongs to
 		Iterator<GeoReference> itr = parsedGeoRefs.iterator();
@@ -146,10 +147,12 @@ public class BulkUploadReferencesServiceImpl extends BulkUploadService implement
 	 * 
 	 */
 	private ArrayList<GeoReference> parseGeoRefs(
-			Map<String, String> geoRefUnparsedMap) {
+			Map<String, String> geoRefUnparsedMap, 
+			BulkUploadResult results) {
 		ArrayList<GeoReference> parsedGeoRefs = new ArrayList<GeoReference>();
 		
 		Iterator itr = geoRefUnparsedMap.entrySet().iterator();
+		int rowNumber = 0; //Not really row numbers, but something to keep track of what file we're on
 		while(itr.hasNext()){
 			Map.Entry pairs = (Map.Entry)itr.next();
 			String unparsedText = (String) pairs.getValue();
@@ -164,6 +167,15 @@ public class BulkUploadReferencesServiceImpl extends BulkUploadService implement
 			int secondAuthorsIndex = unparsedText.indexOf("AU- ", firstAuthorIndex+1);
 			int journalNameIndex = unparsedText.indexOf("JN- ");
 			
+			//If any of these strings are not found, there's a problem with this file's format
+			//Add an error and skip this file
+			rowNumber++;
+			if(titleIndex == -1 || firstAuthorIndex == -1 || journalNameIndex == -1){
+				InvalidReferenceFormatException e = 
+					new InvalidReferenceFormatException("Error parsing file: " + geoRef.getReferenceNumber());
+				results.addError(rowNumber, e);
+				continue;
+			}
 			geoRef.setTitle(unparsedText.substring(titleIndex+4, 
 					unparsedText.indexOf('\n',titleIndex)-1));
 			geoRef.setFirstAuthor(unparsedText.substring(firstAuthorIndex+4, 
