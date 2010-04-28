@@ -716,9 +716,8 @@ public class SearchDb {
 		BooleanClause.Occur flagsArray[] = new BooleanClause.Occur[flags.size()];
 		flags.toArray(flagsArray);
 		try {
-			if (andedTokenization){
 				BooleanQuery query = new BooleanQuery();
-				for (int i = 0; i < queryArray.length; i++){
+				for (int i = 0; i < queryArray.length; i++){ 
 					BooleanQuery subquery = new BooleanQuery();
 					String searchTerm = queryArray[i].split(":",2)[1];
 					Reader reader = new StringReader(searchTerm);
@@ -729,19 +728,17 @@ public class SearchDb {
 					while (token != null){
 						if (token.termLength() != 0){
 							String term = new String(token.termBuffer(),0,token.termLength());
-							subquery.add(new TermQuery(new Term(columnsArray[i],term)),BooleanClause.Occur.MUST);
+							if (andedTokenization) 
+								subquery.add(new TermQuery(new Term(columnsArray[i],term)),BooleanClause.Occur.MUST);
+							else
+								subquery.add(new TermQuery(new Term(columnsArray[i],term)),BooleanClause.Occur.SHOULD);
 						}
 						token = stream.next(token);
 					}
 					query.add(subquery,BooleanClause.Occur.SHOULD);
 				} 
 				return query;
-			} else {
-				
-					Query query = org.apache.lucene.queryParser.MultiFieldQueryParser
-					.parse(queryArray, columnsArray, flagsArray, new StandardAnalyzer());
-					return query;
-			}
+
 		} catch (Exception e) {
 			return null;
 		}
