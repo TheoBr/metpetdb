@@ -414,7 +414,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 	private void uploadImages() {
 		new ServerOp<BulkUploadResult>() {
 			public void begin() {
-				service.imageZipUpload(spreadsheetFileOnServer, fileOnServer, false,
+				service.imageZipUpload(spreadsheetFileOnServer, fileOnServer, true,
 								this);
 			}
 			public void onSuccess(final BulkUploadResult results) {

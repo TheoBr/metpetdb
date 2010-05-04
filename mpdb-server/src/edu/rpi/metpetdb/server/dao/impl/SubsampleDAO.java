@@ -85,12 +85,14 @@ public class SubsampleDAO extends MpDbDAO<Subsample> {
 		inst.setSubsampleType(new SubsampleTypeDAO(sess).fill(inst
 				.getSubsampleType()));
 		inst.setImages(ImageUtil.stripFilename(inst.getImages()));
-		for (Image i : inst.getImages()) {
-			if (i.getScale() == null || i.getScale() == 0) {
-				if (i.getImageType().getImageType().equalsIgnoreCase("Thin Section Scan")) {
-					i.setScale(40);
-				} else {
-					i.setScale(10);
+		if(inst.getImages() != null){
+			for (Image i : inst.getImages()) {
+				if (i.getScale() == null || i.getScale() == 0) {
+					if (i.getImageType().getImageType().equalsIgnoreCase("Thin Section Scan")) {
+						i.setScale(40);
+					} else {
+						i.setScale(10);
+					}
 				}
 			}
 		}
