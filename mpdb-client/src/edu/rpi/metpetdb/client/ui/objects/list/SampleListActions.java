@@ -157,17 +157,15 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 								}
 								if (checkedSampleIds.size() > 0) {
 									//confirm that the user would like to add these samples to the project
-											new ConfirmationDialogBox(
-													LocaleHandler.lc_text
-															.confirmation_AddToProject(),
-													true) {
-												public void onSubmit() {
-													final int projectId = Integer
-													.parseInt(projectListBox
-															.getValue(projectListBox
-																	.getSelectedIndex()));
+									new ConfirmationDialogBox(
+										LocaleHandler.lc_text.confirmation_AddToProject(),
+											true) {
+										public void onSubmit() {
+											final int projectId = Integer.parseInt(projectListBox
+												.getValue(projectListBox
+												.getSelectedIndex()));
 											final Project proj = projects
-													.get(projectId);
+												.get(projectId);
 											//Add selected samples to the project selected
 											new ServerOp<Project>() {
 												public void begin() {
@@ -181,10 +179,8 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 													list.deselectAllRows();
 												}
 											}.begin();
-
-												}
-		
-										}; 
+										}
+									}.show(); 
 								}
 							}
 						}
