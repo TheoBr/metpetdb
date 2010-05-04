@@ -45,6 +45,7 @@ import edu.rpi.metpetdb.client.model.validation.DateStringConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.TimestampConstraint;
 import edu.rpi.metpetdb.client.model.validation.interfaces.NumberConstraint;
+import edu.rpi.metpetdb.client.model.validation.primitive.IntegerConstraint;
 import edu.rpi.metpetdb.server.DataStore;
 
 public abstract class Parser<T extends MObject> {
@@ -261,7 +262,6 @@ public abstract class Parser<T extends MObject> {
 				if (pc != null && cell != null) {
 					// verify cell type
 					if (pc == doc.Sample_number
-							|| pc == doc.ChemicalAnalysis_spotId
 							|| pc == doc.ChemicalAnalysis_sampleName
 							|| pc == doc.ChemicalAnalysis_subsampleName
 							|| pc == doc.Subsample_name
@@ -332,7 +332,9 @@ public abstract class Parser<T extends MObject> {
 									.equals("XrayImage")) && newObject
 									.getClass().getSimpleName().equals(
 											("BulkUploadImage")))) {
-						if (pc instanceof NumberConstraint<?>) {
+						if (pc instanceof IntegerConstraint){
+							newObject.mSet(pc.property, getIntegerValue(cell));
+						} else if (pc instanceof NumberConstraint<?>) {
 							newObject.mSet(pc.property, getDoubleValue(cell));
 						} else if (pc instanceof TimestampConstraint) {
 							// handle dates differently
@@ -412,6 +414,20 @@ public abstract class Parser<T extends MObject> {
 	protected abstract void addObject(final int index, T object);
 
 	protected abstract T getNewObject();
+	
+	protected Integer getIntegerValue(final HSSFCell cell) { 
+		try {
+			return new Integer((int) cell.getNumericCellValue());
+		} catch (Exception e) {
+			final String number = cell.toString();
+			final String data = sanitizeNumber(number);
+			if(data.equals("")) {
+				throw new NumberFormatException("Unable to convert '" + number
+						+ "' to a number");
+			}
+			return Integer.parseInt(data);
+		}
+	}
 
 	protected Double getDoubleValue(final HSSFCell cell) {
 		// first try to get the numeric value, if that fails try to parse it out
