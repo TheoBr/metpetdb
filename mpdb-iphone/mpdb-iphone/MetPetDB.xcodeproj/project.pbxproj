@@ -7,12 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F70FD5B2115989DF0022564C /* CurrentSearchData.m in Sources */ = {isa = PBXBuildFile; fileRef = F70FD5B1115989DF0022564C /* CurrentSearchData.m */; };
 		F73129A010188FDF0049CD99 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F731299F10188FDF0049CD99 /* Security.framework */; };
+		F74CDE151145E75200036599 /* PublicPrivateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F74CDE141145E75200036599 /* PublicPrivateView.xib */; };
+		F74CE1BF1149B7EF00036599 /* PostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F74CE1BE1149B7EF00036599 /* PostRequest.m */; };
 		F769E9440FC42BB700630D69 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F769E9430FC42BB700630D69 /* CoreLocation.framework */; };
+		F7792B67113D858F000B9B3D /* PublicPrivateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7792B66113D858F000B9B3D /* PublicPrivateViewController.m */; };
 		F789F60F0FB387B00062AC0F /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F789F60E0FB387B00062AC0F /* CoreFoundation.framework */; };
 		F79193260FC43777003BC117 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F79193250FC43777003BC117 /* MapKit.framework */; };
+		F7926A241180FFA00070EA83 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7926A231180FFA00070EA83 /* CFNetwork.framework */; };
 		F7AADFBC0FC1EF9500BDCDAB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7AADFBB0FC1EF9500BDCDAB /* Foundation.framework */; };
 		F7AADFC50FC1EFE100BDCDAB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7AADFC40FC1EFE100BDCDAB /* CoreData.framework */; };
+		F7AC97AB118B2B2100096F61 /* KeychainWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F7AC97AA118B2B2100096F61 /* KeychainWrapper.m */; };
 		F7BD469E1121BCDA005457F1 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7BD46611121BCDA005457F1 /* MainViewController.m */; };
 		F7BD469F1121BCDA005457F1 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7BD46631121BCDA005457F1 /* WelcomeViewController.m */; };
 		F7BD46A01121BCDA005457F1 /* RadiusController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7BD46651121BCDA005457F1 /* RadiusController.m */; };
@@ -40,7 +46,6 @@
 		F7BD46B61121BCDA005457F1 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7BD46911121BCDA005457F1 /* LoginViewController.m */; };
 		F7BD46B71121BCDA005457F1 /* uniqueSamples.m in Sources */ = {isa = PBXBuildFile; fileRef = F7BD46931121BCDA005457F1 /* uniqueSamples.m */; };
 		F7BD46B81121BCDA005457F1 /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7BD46951121BCDA005457F1 /* InfoViewController.m */; };
-		F7BD46B91121BCDA005457F1 /* SecurityController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7BD46971121BCDA005457F1 /* SecurityController.m */; };
 		F7BD46BA1121BCDA005457F1 /* xmlParser.m in Sources */ = {isa = PBXBuildFile; fileRef = F7BD46991121BCDA005457F1 /* xmlParser.m */; };
 		F7BD46BB1121BCDA005457F1 /* CriteriaSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = F7BD469B1121BCDA005457F1 /* CriteriaSummary.m */; };
 		F7BD46BC1121BCDA005457F1 /* MetPetDBAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F7BD469D1121BCDA005457F1 /* MetPetDBAppDelegate.m */; };
@@ -65,7 +70,6 @@
 		F7BD46F81121BD75005457F1 /* MapView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F7BD46D61121BD75005457F1 /* MapView.xib */; };
 		F7BD46F91121BD75005457F1 /* MetamorphicGradeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F7BD46D71121BD75005457F1 /* MetamorphicGradeView.xib */; };
 		F7BD46FA1121BD75005457F1 /* MineralsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F7BD46D81121BD75005457F1 /* MineralsView.xib */; };
-		F7BD46FB1121BD75005457F1 /* PublicStatusView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F7BD46D91121BD75005457F1 /* PublicStatusView.xib */; };
 		F7BD46FC1121BD75005457F1 /* RegionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F7BD46DA1121BD75005457F1 /* RegionView.xib */; };
 		F7BD46FD1121BD75005457F1 /* RockTypeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F7BD46DB1121BD75005457F1 /* RockTypeView.xib */; };
 		F7BD46FE1121BD75005457F1 /* SampleInfo.xib in Resources */ = {isa = PBXBuildFile; fileRef = F7BD46DC1121BD75005457F1 /* SampleInfo.xib */; };
@@ -80,21 +84,30 @@
 		F7BD47071121BD75005457F1 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = F7BD46E51121BD75005457F1 /* Default.png */; };
 		F7BD47081121BD75005457F1 /* MetPetDB-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F7BD46E61121BD75005457F1 /* MetPetDB-Info.plist */; };
 		F7BD47091121BD75005457F1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F7BD46E71121BD75005457F1 /* Localizable.strings */; };
-		F7BD470B1121BD9C005457F1 /* MetPetDB.app in Resources */ = {isa = PBXBuildFile; fileRef = F7BD470A1121BD9C005457F1 /* MetPetDB.app */; };
 		F7BD478B1121BFAE005457F1 /* MyCLController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7BD478A1121BFAE005457F1 /* MyCLController.m */; };
 		F7C1F7E40FCFFF89005AB0D5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7C1F7E30FCFFF89005AB0D5 /* CoreGraphics.framework */; };
-		F7CB9D330FC82C8A0072DCE5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7CB9D320FC82C8A0072DCE5 /* WebKit.framework */; };
 		F7F606A20FC1F5D500CF0CEF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F606A10FC1F5D500CF0CEF /* UIKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		8937D4470DF0E8EF001AA23D /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; usesTabs = 0; wrapsLines = 1; };
+		F70FD5B0115989DF0022564C /* CurrentSearchData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentSearchData.h; sourceTree = "<group>"; };
+		F70FD5B1115989DF0022564C /* CurrentSearchData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentSearchData.m; sourceTree = "<group>"; };
 		F731299F10188FDF0049CD99 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		F74CDE141145E75200036599 /* PublicPrivateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PublicPrivateView.xib; path = "IB Files/PublicPrivateView.xib"; sourceTree = "<group>"; };
+		F74CE1BD1149B7EF00036599 /* PostRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PostRequest.h; sourceTree = "<group>"; };
+		F74CE1BE1149B7EF00036599 /* PostRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PostRequest.m; sourceTree = "<group>"; };
 		F769E9430FC42BB700630D69 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		F7792B65113D858F000B9B3D /* PublicPrivateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublicPrivateViewController.h; sourceTree = "<group>"; };
+		F7792B66113D858F000B9B3D /* PublicPrivateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublicPrivateViewController.m; sourceTree = "<group>"; };
 		F789F60E0FB387B00062AC0F /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = /System/Library/Frameworks/CoreFoundation.framework; sourceTree = "<absolute>"; };
 		F79193250FC43777003BC117 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		F7926A231180FFA00070EA83 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		F7A6B25D11852CE6006D95EB /* MetPetDB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetPetDB.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7AADFBB0FC1EF9500BDCDAB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		F7AADFC40FC1EFE100BDCDAB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		F7AC97A9118B2B2100096F61 /* KeychainWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainWrapper.h; sourceTree = "<group>"; };
+		F7AC97AA118B2B2100096F61 /* KeychainWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainWrapper.m; sourceTree = "<group>"; };
 		F7BD46601121BCDA005457F1 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainViewController.h; path = ../../../../MetPetDB/Classes/MainViewController.h; sourceTree = SOURCE_ROOT; };
 		F7BD46611121BCDA005457F1 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainViewController.m; path = ../../../../MetPetDB/Classes/MainViewController.m; sourceTree = SOURCE_ROOT; };
 		F7BD46621121BCDA005457F1 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WelcomeViewController.h; path = ../../../../MetPetDB/WelcomeViewController.h; sourceTree = SOURCE_ROOT; };
@@ -149,8 +162,6 @@
 		F7BD46931121BCDA005457F1 /* uniqueSamples.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = uniqueSamples.m; path = ../../../../MetPetDB/Classes/uniqueSamples.m; sourceTree = SOURCE_ROOT; };
 		F7BD46941121BCDA005457F1 /* InfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InfoViewController.h; path = ../../../../MetPetDB/InfoViewController.h; sourceTree = SOURCE_ROOT; };
 		F7BD46951121BCDA005457F1 /* InfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InfoViewController.m; path = ../../../../MetPetDB/InfoViewController.m; sourceTree = SOURCE_ROOT; };
-		F7BD46961121BCDA005457F1 /* SecurityController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SecurityController.h; path = ../../../../MetPetDB/SecurityController.h; sourceTree = SOURCE_ROOT; };
-		F7BD46971121BCDA005457F1 /* SecurityController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SecurityController.m; path = ../../../../MetPetDB/SecurityController.m; sourceTree = SOURCE_ROOT; };
 		F7BD46981121BCDA005457F1 /* xmlParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xmlParser.h; path = ../../../../MetPetDB/xmlParser.h; sourceTree = SOURCE_ROOT; };
 		F7BD46991121BCDA005457F1 /* xmlParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = xmlParser.m; path = ../../../../MetPetDB/xmlParser.m; sourceTree = SOURCE_ROOT; };
 		F7BD469A1121BCDA005457F1 /* CriteriaSummary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CriteriaSummary.h; path = ../../../../MetPetDB/CriteriaSummary.h; sourceTree = SOURCE_ROOT; };
@@ -180,7 +191,6 @@
 		F7BD46D61121BD75005457F1 /* MapView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MapView.xib; path = "../../../../MetPetDB/IB Files/MapView.xib"; sourceTree = SOURCE_ROOT; };
 		F7BD46D71121BD75005457F1 /* MetamorphicGradeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MetamorphicGradeView.xib; path = "../../../../MetPetDB/IB Files/MetamorphicGradeView.xib"; sourceTree = SOURCE_ROOT; };
 		F7BD46D81121BD75005457F1 /* MineralsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MineralsView.xib; path = "../../../../MetPetDB/IB Files/MineralsView.xib"; sourceTree = SOURCE_ROOT; };
-		F7BD46D91121BD75005457F1 /* PublicStatusView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PublicStatusView.xib; path = "../../../../MetPetDB/IB Files/PublicStatusView.xib"; sourceTree = SOURCE_ROOT; };
 		F7BD46DA1121BD75005457F1 /* RegionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = RegionView.xib; path = "../../../../MetPetDB/IB Files/RegionView.xib"; sourceTree = SOURCE_ROOT; };
 		F7BD46DB1121BD75005457F1 /* RockTypeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = RockTypeView.xib; path = "../../../../MetPetDB/IB Files/RockTypeView.xib"; sourceTree = SOURCE_ROOT; };
 		F7BD46DC1121BD75005457F1 /* SampleInfo.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = SampleInfo.xib; path = "../../../../MetPetDB/IB Files/SampleInfo.xib"; sourceTree = SOURCE_ROOT; };
@@ -195,12 +205,9 @@
 		F7BD46E51121BD75005457F1 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../../../../MetPetDB/Default.png; sourceTree = SOURCE_ROOT; };
 		F7BD46E61121BD75005457F1 /* MetPetDB-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "MetPetDB-Info.plist"; path = "../../../../MetPetDB/MetPetDB-Info.plist"; sourceTree = SOURCE_ROOT; };
 		F7BD46E71121BD75005457F1 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = Localizable.strings; path = ../../../../MetPetDB/Localizable.strings; sourceTree = SOURCE_ROOT; };
-		F7BD470A1121BD9C005457F1 /* MetPetDB.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = MetPetDB.app; path = "../../../MetPetDB/build/Debug-iphonesimulator/MetPetDB.app"; sourceTree = SOURCE_ROOT; };
-		F7BD47401121BE25005457F1 /* MetPetDB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetPetDB.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7BD47891121BFAE005457F1 /* MyCLController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyCLController.h; path = ../../../MetPetDB/Classes/MyCLController.h; sourceTree = SOURCE_ROOT; };
 		F7BD478A1121BFAE005457F1 /* MyCLController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyCLController.m; path = ../../../MetPetDB/Classes/MyCLController.m; sourceTree = SOURCE_ROOT; };
 		F7C1F7E30FCFFF89005AB0D5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		F7CB9D320FC82C8A0072DCE5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/PrivateFrameworks/WebKit.framework; sourceTree = SDKROOT; };
 		F7F606A10FC1F5D500CF0CEF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -215,9 +222,9 @@
 				F7F606A20FC1F5D500CF0CEF /* UIKit.framework in Frameworks */,
 				F769E9440FC42BB700630D69 /* CoreLocation.framework in Frameworks */,
 				F79193260FC43777003BC117 /* MapKit.framework in Frameworks */,
-				F7CB9D330FC82C8A0072DCE5 /* WebKit.framework in Frameworks */,
 				F7C1F7E40FCFFF89005AB0D5 /* CoreGraphics.framework in Frameworks */,
 				F73129A010188FDF0049CD99 /* Security.framework in Frameworks */,
+				F7926A241180FFA00070EA83 /* CFNetwork.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,8 +244,7 @@
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F7BD470A1121BD9C005457F1 /* MetPetDB.app */,
-				F7BD47401121BE25005457F1 /* MetPetDB.app */,
+				F7A6B25D11852CE6006D95EB /* MetPetDB.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -276,6 +282,10 @@
 				F7BD467B1121BCDA005457F1 /* CommentDisplayController.m */,
 				F7BD467C1121BCDA005457F1 /* AddCommentController.h */,
 				F7BD467D1121BCDA005457F1 /* AddCommentController.m */,
+				F7BD468A1121BCDA005457F1 /* ImageViewController.h */,
+				F7BD468B1121BCDA005457F1 /* ImageViewController.m */,
+				F7BD468C1121BCDA005457F1 /* SingleImageView.h */,
+				F7BD468D1121BCDA005457F1 /* SingleImageView.m */,
 				F7BD467E1121BCDA005457F1 /* SearchCriteriaController.h */,
 				F7BD467F1121BCDA005457F1 /* SearchCriteriaController.m */,
 				F7BD46801121BCDA005457F1 /* TableController.h */,
@@ -288,10 +298,6 @@
 				F7BD46871121BCDA005457F1 /* MetamorphicGradeController.m */,
 				F7BD46881121BCDA005457F1 /* OwnerViewController.h */,
 				F7BD46891121BCDA005457F1 /* OwnerViewController.m */,
-				F7BD468A1121BCDA005457F1 /* ImageViewController.h */,
-				F7BD468B1121BCDA005457F1 /* ImageViewController.m */,
-				F7BD468C1121BCDA005457F1 /* SingleImageView.h */,
-				F7BD468D1121BCDA005457F1 /* SingleImageView.m */,
 				F7BD468E1121BCDA005457F1 /* AnnotationObjects.h */,
 				F7BD468F1121BCDA005457F1 /* AnnotationObjects.m */,
 				F7BD46901121BCDA005457F1 /* LoginViewController.h */,
@@ -300,12 +306,18 @@
 				F7BD46931121BCDA005457F1 /* uniqueSamples.m */,
 				F7BD46941121BCDA005457F1 /* InfoViewController.h */,
 				F7BD46951121BCDA005457F1 /* InfoViewController.m */,
-				F7BD46961121BCDA005457F1 /* SecurityController.h */,
-				F7BD46971121BCDA005457F1 /* SecurityController.m */,
 				F7BD46981121BCDA005457F1 /* xmlParser.h */,
 				F7BD46991121BCDA005457F1 /* xmlParser.m */,
 				F7BD469A1121BCDA005457F1 /* CriteriaSummary.h */,
 				F7BD469B1121BCDA005457F1 /* CriteriaSummary.m */,
+				F7792B65113D858F000B9B3D /* PublicPrivateViewController.h */,
+				F7792B66113D858F000B9B3D /* PublicPrivateViewController.m */,
+				F74CE1BD1149B7EF00036599 /* PostRequest.h */,
+				F74CE1BE1149B7EF00036599 /* PostRequest.m */,
+				F70FD5B0115989DF0022564C /* CurrentSearchData.h */,
+				F70FD5B1115989DF0022564C /* CurrentSearchData.m */,
+				F7AC97A9118B2B2100096F61 /* KeychainWrapper.h */,
+				F7AC97AA118B2B2100096F61 /* KeychainWrapper.m */,
 			);
 			name = classes;
 			sourceTree = "<group>";
@@ -337,6 +349,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F74CDE141145E75200036599 /* PublicPrivateView.xib */,
 				F7BD46C61121BD74005457F1 /* CoordinateInputView.xib */,
 				F7BD46C71121BD74005457F1 /* dropMapView.xib */,
 				F7BD46C81121BD74005457F1 /* ResetView.xib */,
@@ -356,7 +369,6 @@
 				F7BD46D61121BD75005457F1 /* MapView.xib */,
 				F7BD46D71121BD75005457F1 /* MetamorphicGradeView.xib */,
 				F7BD46D81121BD75005457F1 /* MineralsView.xib */,
-				F7BD46D91121BD75005457F1 /* PublicStatusView.xib */,
 				F7BD46DA1121BD75005457F1 /* RegionView.xib */,
 				F7BD46DB1121BD75005457F1 /* RockTypeView.xib */,
 				F7BD46DC1121BD75005457F1 /* SampleInfo.xib */,
@@ -380,13 +392,13 @@
 			children = (
 				F731299F10188FDF0049CD99 /* Security.framework */,
 				F7C1F7E30FCFFF89005AB0D5 /* CoreGraphics.framework */,
-				F7CB9D320FC82C8A0072DCE5 /* WebKit.framework */,
 				F79193250FC43777003BC117 /* MapKit.framework */,
 				F769E9430FC42BB700630D69 /* CoreLocation.framework */,
 				F7F606A10FC1F5D500CF0CEF /* UIKit.framework */,
 				F7AADFC40FC1EFE100BDCDAB /* CoreData.framework */,
 				F7AADFBB0FC1EF9500BDCDAB /* Foundation.framework */,
 				F789F60E0FB387B00062AC0F /* CoreFoundation.framework */,
+				F7926A231180FFA00070EA83 /* CFNetwork.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -419,7 +431,7 @@
 			);
 			name = MetPetDB;
 			productName = LocateMe;
-			productReference = F7BD47401121BE25005457F1 /* MetPetDB.app */;
+			productReference = F7A6B25D11852CE6006D95EB /* MetPetDB.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -470,7 +482,6 @@
 				F7BD46F81121BD75005457F1 /* MapView.xib in Resources */,
 				F7BD46F91121BD75005457F1 /* MetamorphicGradeView.xib in Resources */,
 				F7BD46FA1121BD75005457F1 /* MineralsView.xib in Resources */,
-				F7BD46FB1121BD75005457F1 /* PublicStatusView.xib in Resources */,
 				F7BD46FC1121BD75005457F1 /* RegionView.xib in Resources */,
 				F7BD46FD1121BD75005457F1 /* RockTypeView.xib in Resources */,
 				F7BD46FE1121BD75005457F1 /* SampleInfo.xib in Resources */,
@@ -485,7 +496,7 @@
 				F7BD47071121BD75005457F1 /* Default.png in Resources */,
 				F7BD47081121BD75005457F1 /* MetPetDB-Info.plist in Resources */,
 				F7BD47091121BD75005457F1 /* Localizable.strings in Resources */,
-				F7BD470B1121BD9C005457F1 /* MetPetDB.app in Resources */,
+				F74CDE151145E75200036599 /* PublicPrivateView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -523,13 +534,16 @@
 				F7BD46B61121BCDA005457F1 /* LoginViewController.m in Sources */,
 				F7BD46B71121BCDA005457F1 /* uniqueSamples.m in Sources */,
 				F7BD46B81121BCDA005457F1 /* InfoViewController.m in Sources */,
-				F7BD46B91121BCDA005457F1 /* SecurityController.m in Sources */,
 				F7BD46BA1121BCDA005457F1 /* xmlParser.m in Sources */,
 				F7BD46BB1121BCDA005457F1 /* CriteriaSummary.m in Sources */,
 				F7BD46BC1121BCDA005457F1 /* MetPetDBAppDelegate.m in Sources */,
 				F7BD46C21121BCFE005457F1 /* LocationControllerMain.m in Sources */,
 				F7BD46C51121BD53005457F1 /* main.m in Sources */,
 				F7BD478B1121BFAE005457F1 /* MyCLController.m in Sources */,
+				F7792B67113D858F000B9B3D /* PublicPrivateViewController.m in Sources */,
+				F74CE1BF1149B7EF00036599 /* PostRequest.m in Sources */,
+				F70FD5B2115989DF0022564C /* CurrentSearchData.m in Sources */,
+				F7AC97AB118B2B2100096F61 /* KeychainWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,7 +582,7 @@
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos3.0]" = "";
-				SDKROOT = iphoneos3.0;
+				SDKROOT = iphoneos3.1.3;
 			};
 			name = Debug;
 		};
@@ -577,9 +591,9 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos3.0]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Sibel Adali";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Sibel Adali";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos3.0]" = "iPhone Developer: Sibel Adali";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"/System/Library/Frameworks/Foundation.framework\"",
@@ -598,10 +612,10 @@
 				);
 				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = MetPetDB;
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos3.0]" = "";
-				SDKROOT = iphoneos3.0;
+				PROVISIONING_PROFILE = "DE2404AE-61F2-4FE7-9744-88F6D6E49831";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DE2404AE-61F2-4FE7-9744-88F6D6E49831";
+				"PROVISIONING_PROFILE[sdk=iphoneos3.0]" = "DE2404AE-61F2-4FE7-9744-88F6D6E49831";
+				SDKROOT = iphoneos3.1.3;
 			};
 			name = Release;
 		};
@@ -636,6 +650,54 @@
 			};
 			name = Release;
 		};
+		F7BE4B971177D253003DD8BB /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Sibel Adali";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Sibel Adali";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				PRODUCT_NAME = MetPetDB;
+				PROVISIONING_PROFILE = "53DD38E5-A1F5-420F-AF2F-09B6C6182A7A";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "53DD38E5-A1F5-420F-AF2F-09B6C6182A7A";
+				SDKROOT = iphoneos3.1.3;
+			};
+			name = Distribution;
+		};
+		F7BE4B981177D253003DD8BB /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"/System/Library/Frameworks/Foundation.framework\"",
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/Frameworks\"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)\"\"/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.0.sdk/System/Library/Frameworks/\"",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MetPetDB_Prefix.pch;
+				INFOPLIST_FILE = Info.plist;
+				LIBRARY_SEARCH_PATHS = (
+					"\"/System/Library/Frameworks/Foundation.framework\"",
+					"$(inherited)",
+					"\"$(SDKROOT)$(SYSTEM_LIBRARY_DIR)/Frameworks\"\"$(SRCROOT)\"",
+				);
+				"OTHER_LDFLAGS[arch=*]" = "";
+				PRODUCT_NAME = MetPetDB;
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				SDKROOT = iphoneos3.1.3;
+			};
+			name = Distribution;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -644,6 +706,7 @@
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
 				1D6058950D05DD3E006BFB54 /* Release */,
+				F7BE4B981177D253003DD8BB /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -653,6 +716,7 @@
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
+				F7BE4B971177D253003DD8BB /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
