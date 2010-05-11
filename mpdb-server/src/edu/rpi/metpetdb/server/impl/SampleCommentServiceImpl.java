@@ -8,6 +8,7 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.validation.TimeExpiredException;
 import edu.rpi.metpetdb.client.model.SampleComment;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.service.SampleCommentService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.SampleCommentDAO;
@@ -41,12 +42,14 @@ public class SampleCommentServiceImpl  extends MpDbServlet implements SampleComm
 		return (sampleComment);
 	}
 
-	public void delete(long id) throws MpDbException, LoginRequiredException {
+	public MObject delete(long id) throws MpDbException, LoginRequiredException {
 		final SampleCommentDAO dao = new SampleCommentDAO(this.currentSession());
 		SampleComment s = new SampleComment();
 		s.setId(id);
 		s = dao.fill(s);
 		dao.delete(s);
 		commit();
+		
+		return null;
 	}
 }

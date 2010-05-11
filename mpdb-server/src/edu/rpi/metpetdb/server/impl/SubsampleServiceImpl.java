@@ -11,11 +11,11 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SubsampleService;
 import edu.rpi.metpetdb.server.MpDbServlet;
-import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
 public class SubsampleServiceImpl extends MpDbServlet implements
@@ -112,13 +112,15 @@ public class SubsampleServiceImpl extends MpDbServlet implements
 			commit();
 	}
 
-	public void delete(long id) throws MpDbException, LoginRequiredException {
+	public MObject delete(long id) throws MpDbException, LoginRequiredException {
 		final SubsampleDAO dao = new SubsampleDAO(this.currentSession());
 		Subsample s = new Subsample();
 		s.setId(id);
 		s = dao.fill(s);
 		dao.delete(s);
 		commit();
+		
+		return null;
 	}
 	
 	public void deleteAll(Collection<Long> ids)  throws MpDbException, LoginRequiredException {

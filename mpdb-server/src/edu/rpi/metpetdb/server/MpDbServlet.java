@@ -16,6 +16,7 @@ import net.sf.gilead.core.PersistentBeanManager;
 import net.sf.gilead.core.beanlib.transformer.CustomTransformersFactory;
 import net.sf.gilead.core.hibernate.HibernateUtil;
 import net.sf.gilead.core.store.stateless.StatelessProxyStore;
+import net.sf.gilead.gwt.GwtConfigurationHelper;
 import net.sf.gilead.gwt.PersistentRemoteService;
 
 import org.hibernate.CallbackException;
@@ -87,7 +88,7 @@ public abstract class MpDbServlet extends PersistentRemoteService {
 
 	protected static final Properties fileProps = new Properties();
 
-	private static int autoLoginId = -1;
+	private static int autoLoginId = 61;
 
 	private static final String fileUploadPath;
 
@@ -121,25 +122,44 @@ public abstract class MpDbServlet extends PersistentRemoteService {
 	 */
 	public void init(final ServletConfig sc) throws ServletException {
 		super.init(sc);
+		
+		
 		// Setup hibernate4gwt
 		DataStore.initFactory();
-		final HibernateUtil hu = new HibernateUtil() {
+		final HibernateUtil hu = new HibernateUtil(DataStore.getFactory())
+		{
 			@Override
 			public boolean isPersistentClass(Class<?> clazz) {
 				if (clazz.equals(Results.class)) {
 					return true;
-				} else {
+				} 
+				else if (clazz.equals(SearchSample.class))
+				{
+					return true;
+				}
+				else {
 					return super.isPersistentClass(clazz);
 				}
+				
+				//TODO:  If you get a StackOverflowError inside PersistentBeanManager, add em as you find em.
+				
 			}
 		};
-		hu.setSessionFactory(DataStore.getFactory());
-		PersistentBeanManager.getInstance().setPersistenceUtil(hu);
-		final StatelessProxyStore sps = new StatelessProxyStore();
-		PersistentBeanManager.getInstance().setProxyStore(sps);
+		
+		
+		
+	//	hu.setSessionFactory(DataStore.getFactory());
+//		PersistentBeanManager.getInstance().setPersistenceUtil(hu);
+		
+	//	final StatelessProxyStore sps = new StatelessProxyStore();
+	//	PersistentBeanManager.getInstance().setProxyStore(sps);
 		CustomTransformersFactory.getInstance().addCustomBeanTransformer(
 				GeometryCustomTransformer.class);
-		DataStore.setBeanManager(PersistentBeanManager.getInstance());
+		
+	PersistentBeanManager pbm =	GwtConfigurationHelper.initGwtStatelessBeanManager(hu);
+		
+		DataStore.setBeanManager(pbm);
+		
 		doc = DataStore.getInstance().getDatabaseObjectConstraints();
 		if (doc == null) {
 			throw new RuntimeException(

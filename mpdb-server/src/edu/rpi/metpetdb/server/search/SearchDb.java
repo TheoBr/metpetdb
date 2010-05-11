@@ -244,6 +244,9 @@ public class SearchDb {
 		FullTextSession fullTextSession = Search.getFullTextSession(session);
 
 		boolean haveChemicalProperties = checkForChemicalProperties(searchSamp);
+		
+		System.out.println("hasChemicalProperties" + haveChemicalProperties);
+		
 		Query fullQuery;
 
 		if (!haveChemicalProperties) {
@@ -295,7 +298,10 @@ public class SearchDb {
 		try {			
 			FullTextQuery sizeHibQuery = fullTextSession.createFullTextQuery(
 					fullQuery, Sample.class);
+			System.out.println("Full Search Query" + sizeHibQuery.getQueryString());
+			
 			String  sampleIds = getLongIdString(sizeHibQuery.setProjection("id").list());
+			System.out.println("sampleIds" + sampleIds);
 			if (sampleIds == null) {
 				return new Results<Sample>(0, new ArrayList<Sample>());
 			}
@@ -416,7 +422,7 @@ public class SearchDb {
 		for (SearchProperty i : enums) {
 
 			// column to search on
-
+			System.out.println("column name: " + i.columnName());
 			columnName = (!onSubsample || i.columnName() == "") ? i.columnName() : "sample_" + i.columnName();
 
 			// return type of the method

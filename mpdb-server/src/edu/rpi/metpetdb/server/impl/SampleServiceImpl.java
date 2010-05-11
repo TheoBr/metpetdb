@@ -9,25 +9,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.hibernate.Filter;
-import org.hibernate.Session;
-
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Sample;
-import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.MpDbServlet;
-import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
 import edu.rpi.metpetdb.server.dao.impl.ProjectDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
-import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 
 public class SampleServiceImpl extends MpDbServlet implements SampleService {
 	private static final long serialVersionUID = 1L;
@@ -129,9 +123,10 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		commit();
 }
 
-	public void delete(long id) throws MpDbException, LoginRequiredException {
+	public MObject delete(long id) throws MpDbException, LoginRequiredException {
 		deleteImpl(id);
 		commit();
+		return null;
 	}
 
 	public void deleteAll(Collection<Long> ids) throws MpDbException,

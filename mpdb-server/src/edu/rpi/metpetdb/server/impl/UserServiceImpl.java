@@ -24,6 +24,7 @@ import edu.rpi.metpetdb.client.model.RoleChange;
 import edu.rpi.metpetdb.client.model.StartSessionRequest;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.UserService;
@@ -120,6 +121,8 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		try {
 			User u = new User();
 			u.setId(currentUserId());
+			
+			
 			currentReq().action = Action.LOGIN;
 			u = (new UserDAO(this.currentSession())).fill(u);
 			r.user = (User) clone(u);
@@ -186,7 +189,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return u;
 	}
 
-	public void changePassword(final UserWithPassword uwp)
+	public MObject changePassword(final UserWithPassword uwp)
 			throws LoginRequiredException, LoginFailureException,
 			MpDbException, ValidationException {
 		doc.UserWithPassword_user.validateEntity(uwp);
@@ -209,6 +212,8 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 		uDAO.save(u);
 		commit();
+		
+		return null;
 	}
 
 	public void emailPassword(final String emailAddress) throws MpDbException,

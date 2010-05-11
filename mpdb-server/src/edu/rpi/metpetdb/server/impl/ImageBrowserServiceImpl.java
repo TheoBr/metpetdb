@@ -10,17 +10,15 @@ import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Grid;
 import edu.rpi.metpetdb.client.model.ImageOnGrid;
-import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.service.ImageBrowserService;
 import edu.rpi.metpetdb.server.MpDbServlet;
 import edu.rpi.metpetdb.server.dao.impl.ChemicalAnalysisDAO;
 import edu.rpi.metpetdb.server.dao.impl.GridDAO;
 import edu.rpi.metpetdb.server.dao.impl.ImageOnGridDAO;
-import edu.rpi.metpetdb.server.dao.impl.SubsampleDAO;
 
 public class ImageBrowserServiceImpl extends MpDbServlet implements
 		ImageBrowserService {
-	private static final long serialVersionUID = 1L;
+	private static  long serialVersionUID = 1L;
 
 	public Grid details(final long id) throws MpDbException {
 		Grid g = new Grid();
