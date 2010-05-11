@@ -1,0 +1,162 @@
+In file included from /Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:9:
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:14: warning: cannot find interface declaration for 'CommentDisplayController'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:14: error: no declaration of property 'sampleID' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:14: error: no declaration of property 'titleText' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:14: error: no declaration of property 'addCommentButton' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:14: error: no declaration of property 'toolbar' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:14: error: no declaration of property 'addComment' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:14: error: no declaration of property 'textView' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:14: error: no declaration of property 'currentStringValue' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:14: error: no declaration of property 'sampleName' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:14: error: no declaration of property 'commentCount' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:14: error: no declaration of property 'Uname' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h: In function '-[CommentDisplayController viewDidLoad]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:21: error: 'titleText' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:21: error: (Each undeclared identifier is reported only once
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:21: error: for each function it appears in.)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:21: error: 'sampleName' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:26: error: request for member 'view' in something not a structure or union
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:33: error: 'toolbar' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:37: error: request for member 'view' in something not a structure or union
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:40: error: 'callCommentFunction' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:42: warning: 'CommentDisplayController' may not respond to '-getComments'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:42: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:42: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:42: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:45: warning: 'KeychainWrapper' may not respond to '-searchKeychainCopyMatching:'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:47: error: 'Uname' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h: In function '-[CommentDisplayController getComments]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:65: error: 'sampleID' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:67: error: 'Uname' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:75: error: 'myReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:87: warning: unused variable 'dataReceived'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:77: warning: unused variable 'returnValue'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h: In function '-[CommentDisplayController parser:didStartElement:namespaceURI:qualifiedName:attributes:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:103: error: 'comments' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:107: error: 'currentStringValue' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h: In function '-[CommentDisplayController parser:foundCharacters:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:116: error: 'currentStringValue' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h: In function '-[CommentDisplayController parser:didEndElement:namespaceURI:qualifiedName:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:127: error: 'comments' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:127: error: 'currentStringValue' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:134: warning: 'CommentDisplayController' may not respond to '-showComments'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:138: error: 'commentCount' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h: In function '-[CommentDisplayController showComments]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:148: error: 'textView' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:157: error: 'comments' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:172: error: request for member 'view' in something not a structure or union
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h: In function '-[CommentDisplayController getCommentCount]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:191: error: 'commentCount' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:192: warning: control reaches end of non-void function
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h: In function '-[CommentDisplayController didReceiveMemoryWarning]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:196: error: no super class declared in @interface for 'CommentDisplayController'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h: In function '-[CommentDisplayController setData:::]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:208: error: 'callCommentFunction' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:209: error: 'sampleName' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:210: error: 'sampleID' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h: In function '-[CommentDisplayController dealloc]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:215: error: 'sampleID' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:216: error: 'titleText' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:217: error: 'toolbar' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:218: error: 'addCommentButton' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:219: error: 'addComment' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:220: error: 'textView' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:221: error: 'commentResponse' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:222: error: 'myReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:223: error: 'comments' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:224: error: 'currentStringValue' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:225: error: 'sampleName' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:227: error: no super class declared in @interface for 'CommentDisplayController'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:14: error: reimplementation of class 'CommentDisplayController'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:14: error: no declaration of property 'sampleID' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:14: error: no declaration of property 'titleText' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:14: error: no declaration of property 'addCommentButton' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:14: error: no declaration of property 'toolbar' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:14: error: no declaration of property 'addComment' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:14: error: no declaration of property 'textView' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:14: error: no declaration of property 'currentStringValue' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:14: error: no declaration of property 'sampleName' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:14: error: no declaration of property 'commentCount' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:14: error: no declaration of property 'Uname' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:17: error: redefinition of '-[CommentDisplayController viewDidLoad]'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:17: error: previous definition of '-[CommentDisplayController viewDidLoad]' was here
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: In function '-[CommentDisplayController viewDidLoad]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:21: error: 'titleText' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:21: error: 'sampleName' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:26: error: request for member 'view' in something not a structure or union
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:33: error: 'toolbar' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:37: error: request for member 'view' in something not a structure or union
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:40: error: 'callCommentFunction' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:45: warning: 'KeychainWrapper' may not respond to '-searchKeychainCopyMatching:'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:47: error: 'Uname' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:55: error: redefinition of '-[CommentDisplayController getComments]'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:55: error: previous definition of '-[CommentDisplayController getComments]' was here
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: In function '-[CommentDisplayController getComments]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:65: error: 'sampleID' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:67: error: 'Uname' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:75: error: 'myReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:87: warning: unused variable 'dataReceived'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:77: warning: unused variable 'returnValue'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:92: error: redefinition of '-[CommentDisplayController parser:didStartElement:namespaceURI:qualifiedName:attributes:]'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:92: error: previous definition of '-[CommentDisplayController parser:didStartElement:namespaceURI:qualifiedName:attributes:]' was here
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: In function '-[CommentDisplayController parser:didStartElement:namespaceURI:qualifiedName:attributes:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:103: error: 'comments' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:107: error: 'currentStringValue' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:115: error: redefinition of '-[CommentDisplayController parser:foundCharacters:]'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:115: error: previous definition of '-[CommentDisplayController parser:foundCharacters:]' was here
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: In function '-[CommentDisplayController parser:foundCharacters:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:116: error: 'currentStringValue' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:124: error: redefinition of '-[CommentDisplayController parser:didEndElement:namespaceURI:qualifiedName:]'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:124: error: previous definition of '-[CommentDisplayController parser:didEndElement:namespaceURI:qualifiedName:]' was here
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: In function '-[CommentDisplayController parser:didEndElement:namespaceURI:qualifiedName:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:127: error: 'comments' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:127: error: 'currentStringValue' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:138: error: 'commentCount' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:145: error: redefinition of '-[CommentDisplayController showComments]'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:145: error: previous definition of '-[CommentDisplayController showComments]' was here
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: In function '-[CommentDisplayController showComments]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:148: error: 'textView' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:157: error: 'comments' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:172: error: request for member 'view' in something not a structure or union
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:188: error: redefinition of '-[CommentDisplayController getCommentCount]'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:188: error: previous definition of '-[CommentDisplayController getCommentCount]' was here
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: In function '-[CommentDisplayController getCommentCount]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:191: error: 'commentCount' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:192: warning: control reaches end of non-void function
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:194: error: redefinition of '-[CommentDisplayController didReceiveMemoryWarning]'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:194: error: previous definition of '-[CommentDisplayController didReceiveMemoryWarning]' was here
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: In function '-[CommentDisplayController didReceiveMemoryWarning]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:196: error: no super class declared in @interface for 'CommentDisplayController'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:201: error: redefinition of '-[CommentDisplayController viewDidUnload]'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:201: error: previous definition of '-[CommentDisplayController viewDidUnload]' was here
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:207: error: redefinition of '-[CommentDisplayController setData:::]'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:207: error: previous definition of '-[CommentDisplayController setData:::]' was here
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: In function '-[CommentDisplayController setData:::]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:208: error: 'callCommentFunction' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:209: error: 'sampleName' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:210: error: 'sampleID' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:214: error: redefinition of '-[CommentDisplayController dealloc]'
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.h:214: error: previous definition of '-[CommentDisplayController dealloc]' was here
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m: In function '-[CommentDisplayController dealloc]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:215: error: 'sampleID' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:216: error: 'titleText' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:217: error: 'toolbar' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:218: error: 'addCommentButton' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:219: error: 'addComment' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:220: error: 'textView' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:221: error: 'commentResponse' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:222: error: 'myReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:223: error: 'comments' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:224: error: 'currentStringValue' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:225: error: 'sampleName' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/CommentDisplayController.m:227: error: no super class declared in @interface for 'CommentDisplayController'

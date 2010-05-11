@@ -1,0 +1,51 @@
+In file included from /Users/heatherbuletti/mpdb-iphone/Classes/MapController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/SampleViewController.h:10,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/LocationViewController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/MainViewController.h:2,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/MetPetDBAppDelegate.h:4,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:10:
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.h:67: warning: property attributes must be separated by a comma
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:17: error: no declaration of property 'singleImage' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m: In function '-[SingleImageView viewDidLoad]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:22: warning: 'SingleImageView' may not respond to '-get_large_image'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:22: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:22: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:22: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:68: error: 'nextButton' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:68: error: (Each undeclared identifier is reported only once
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:68: error: for each function it appears in.)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:74: warning: 'KeychainWrapper' may not respond to '-searchKeychainCopyMatching:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:76: error: 'Uname' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:81: error: 'images' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:82: error: 'position' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:66: warning: unused variable 'imageFrame'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m: In function '-[SingleImageView nextImage]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:98: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:99: error: 'nextButton' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:100: error: 'position' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:101: error: 'images' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:104: warning: 'SingleImageView' may not respond to '-setData::'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:105: error: request for member 'singleImage' in something not a structure or union
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:107: error: 'singleImage' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:121: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m: In function '-[SingleImageView previousImage]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:125: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:127: error: 'position' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:132: error: 'images' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:132: warning: 'SingleImageView' may not respond to '-setData::'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:133: error: request for member 'singleImage' in something not a structure or union
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:135: error: 'singleImage' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:135: warning: unused variable 'newView'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:139: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m: In function '-[SingleImageView get_large_image]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:155: error: 'Uname' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:164: error: 'myReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:176: warning: unused variable 'response'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:166: warning: unused variable 'returnValue'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m: In function '-[SingleImageView parser:foundCharacters:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:207: warning: 'NSString' may not respond to '-appendString:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m: In function '-[SingleImageView setData::]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:249: error: 'position' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:250: error: 'images' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:275: warning: method possibly missing a [super dealloc] call

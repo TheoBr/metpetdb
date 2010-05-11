@@ -1,0 +1,10 @@
+/Users/heatherbuletti/mpdb-iphone/Classes/CoordInputController.m: In function '-[CoordInputController chooseRadius]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CoordInputController.m:50: warning: 'RadiusController' may not respond to '-setData:'
+/Users/heatherbuletti/mpdb-iphone/Classes/CoordInputController.m:50: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/CoordInputController.m:50: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/CoordInputController.m:50: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/CoordInputController.m: In function '-[CoordInputController loadMap:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/CoordInputController.m:78: warning: 'DropMapViewController' may not respond to '-setData:'
+/Users/heatherbuletti/mpdb-iphone/Classes/CoordInputController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/CoordInputController.m:116: warning: property 'currentSearchData' requires method '-currentSearchData' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/CoordInputController.m:116: warning: property 'currentSearchData' requires the method 'setCurrentSearchData:' to be defined - use @synthesize, @dynamic or provide a method implementation

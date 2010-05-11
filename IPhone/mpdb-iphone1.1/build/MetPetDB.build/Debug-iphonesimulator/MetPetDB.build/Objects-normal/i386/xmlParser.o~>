@@ -1,0 +1,14 @@
+/Users/heatherbuletti/mpdb-iphone/Classes/xmlParser.m: In function '-[xmlParser parser:foundCharacters:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/xmlParser.m:180: warning: 'NSString' may not respond to '-appendString:'
+/Users/heatherbuletti/mpdb-iphone/Classes/xmlParser.m:180: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/xmlParser.m:180: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/xmlParser.m:180: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/xmlParser.m: In function '-[xmlParser parser:didEndElement:namespaceURI:qualifiedName:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/xmlParser.m:304: warning: unused variable 'foo'
+/Users/heatherbuletti/mpdb-iphone/Classes/xmlParser.m:335: warning: 'AnnotationObjects' may not respond to '-setDescription:'
+/Users/heatherbuletti/mpdb-iphone/Classes/xmlParser.m:355: warning: unused variable 'q'
+/Users/heatherbuletti/mpdb-iphone/Classes/xmlParser.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/xmlParser.m:503: warning: property 'description' requires method '-description' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/xmlParser.m:503: warning: property 'description' requires the method 'setDescription:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/xmlParser.m:503: warning: incomplete implementation of class 'xmlParser'
+/Users/heatherbuletti/mpdb-iphone/Classes/xmlParser.m:503: warning: method definition for '-blah' not found

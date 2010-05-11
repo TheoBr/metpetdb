@@ -1,0 +1,74 @@
+In file included from /Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:9:
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.h:67: warning: property attributes must be separated by a comma
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:18: error: no declaration of property 'sampleName' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:19: error: no declaration of property 'searchCriteria' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:19: error: no declaration of property 'Uname' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m: In function '-[SampleInfoController viewDidLoad]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:29: warning: 'SampleInfoController' may not respond to '-makeImageButton'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:29: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:29: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:29: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:48: error: 'sampleName' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:48: error: (Each undeclared identifier is reported only once
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:48: error: for each function it appears in.)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:163: warning: 'SampleInfoController' may not respond to '-makeToolbar'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:173: warning: 'KeychainWrapper' may not respond to '-searchKeychainCopyMatching:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:175: error: 'Uname' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:168: warning: unused variable 'rect'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:56: warning: unused variable 'status'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m: In function '-[SampleInfoController makeToolbar]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:189: error: 'sampleName' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:189: warning: 'CommentDisplayController' may not respond to '-setData:::'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:195: warning: 'AnalysisSummary' may not respond to '-setData::'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:201: warning: 'AnalysisSummary' may not respond to '-getSubsampleCount'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:202: warning: 'CommentDisplayController' may not respond to '-getCommentCount'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m: In function '-[SampleInfoController makeImageButton]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:224: warning: 'SampleInfoController' may not respond to '-get_thumbnails'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m: In function '-[SampleInfoController get_thumbnails]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:249: error: 'Uname' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:259: error: 'myReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:271: warning: unused variable 'response'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:261: warning: unused variable 'returnValue'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m: In function '-[SampleInfoController parser:foundCharacters:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:308: warning: 'NSString' may not respond to '-appendString:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m: In function '-[SampleInfoController viewSubsamples]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:344: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:347: error: 'sampleName' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:347: warning: 'AnalysisSummary' may not respond to '-setData::'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:354: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m: In function '-[SampleInfoController viewComments]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:358: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:360: error: 'sampleName' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:360: warning: 'CommentDisplayController' may not respond to '-setData:::'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:366: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m: In function '-[SampleInfoController imagesDisplay]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:378: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:379: warning: receiver 'ImageViewController' is a forward class and corresponding @interface may not exist
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:380: warning: no '-setVars:::::' method found
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:381: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:381: warning: no '-setSamples:::' method found
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:382: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:388: warning: incompatible Objective-C types 'struct ImageViewController *', expected 'struct UIViewController *' when passing argument 1 of 'pushViewController:animated:' from distinct Objective-C type
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:389: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m: In function '-[SampleInfoController backToMap]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:394: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:397: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:397: warning: 'MapController' may not respond to '-setData::'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:398: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:398: warning: 'MapController' may not respond to '-setCurrentSearchData:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:399: warning: 'MapController' may not respond to '-makeNavBar'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:404: warning: 'MapController' may not respond to '-makeNavBar'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:406: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m: In function '-[SampleInfoController setSamples:::]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:415: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m: In function '-[SampleInfoController setCurrentSearchData:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:421: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m: In function '-[SampleInfoController dealloc]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:449: error: 'myReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:450: error: 'sampleName' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:451: error: 'samples' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:457: warning: property 'commentButton' requires method '-commentButton' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:457: warning: property 'commentButton' requires the method 'setCommentButton:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:457: warning: incomplete implementation of class 'SampleInfoController'
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.m:457: warning: method definition for '-imagesDisplay:' not found

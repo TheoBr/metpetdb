@@ -1,0 +1,72 @@
+In file included from /Users/heatherbuletti/mpdb-iphone/Classes/MapController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/SampleViewController.h:10,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/LocationViewController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/MainViewController.h:2,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:10:
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.h:67: warning: property attributes must be separated by a comma
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:14: error: no declaration of property 'backButton' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:14: error: no declaration of property 'returnValue' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:15: error: no declaration of property 'tableView' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:15: error: no declaration of property 'security' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:15: error: no declaration of property 'currentStringValue' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:15: error: no declaration of property 'loginResponse' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m: In function '-[LoginViewController viewDidLoad]':
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:19: error: 'currentStringValue' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:19: error: (Each undeclared identifier is reported only once
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:19: error: for each function it appears in.)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:20: error: 'loginResponse' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:24: error: 'tableView' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:32: error: 'rowTitles' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m: In function '-[LoginViewController textFieldShouldReturn:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:55: warning: 'LoginViewController' may not respond to '-login'
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:55: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:55: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:55: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m: In function '-[LoginViewController tableView:cellForRowAtIndexPath:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:118: error: 'rowTitles' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:124: warning: control reaches end of non-void function
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m: In function '-[LoginViewController login]':
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:128: error: 'MetPetDBAppDelegate' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:128: error: expected expression before ')' token
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m: In function '-[LoginViewController connection:didReceiveData:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:167: error: 'myReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:168: error: 'returnValue' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:170: error: 'apacheError' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m: In function '-[LoginViewController connectionDidFinishLoading:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:184: error: 'apacheError' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:188: error: 'myReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:193: error: 'loginResponse' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:196: error: 'KeychainWrapper' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:196: error: 'keychain' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:201: warning: 'LoginViewController' may not respond to '-backToMain'
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:187: warning: unused variable 'myResponse'
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:211: error: 'MetPetDBAppDelegate' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:211: error: expected expression before ')' token
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m: In function '-[LoginViewController backToMain]':
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:233: error: 'loginResponse' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:235: warning: 'MainViewController' may not respond to '-setSignIn::'
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:239: warning: 'MainViewController' may not respond to '-setSignIn::'
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m: In function '-[LoginViewController parser:didStartElement:namespaceURI:qualifiedName:attributes:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:261: error: 'currentStringValue' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m: In function '-[LoginViewController parser:foundCharacters:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:267: error: 'currentStringValue' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m: In function '-[LoginViewController parser:didEndElement:namespaceURI:qualifiedName:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:283: error: 'loginResponse' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:283: error: 'currentStringValue' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m: In function '-[LoginViewController dealloc]':
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:314: error: 'rowTitles' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:315: error: 'tableView' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:316: error: 'security' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:317: error: 'myReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:325: warning: property 'usernamelabel' requires method '-usernamelabel' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:325: warning: property 'usernamelabel' requires the method 'setUsernamelabel:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:325: warning: property 'passwordlabel' requires method '-passwordlabel' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:325: warning: property 'passwordlabel' requires the method 'setPasswordlabel:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:325: warning: property 'scrollEnabled' requires the method 'setScrollEnabled:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:325: warning: property 'username' requires method '-username' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:325: warning: property 'username' requires the method 'setUsername:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:325: warning: property 'password' requires method '-password' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:325: warning: property 'password' requires the method 'setPassword:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:325: warning: incomplete implementation of class 'LoginViewController'
+/Users/heatherbuletti/mpdb-iphone/Classes/LoginViewController.m:325: warning: method definition for '-loadMainViewController:' not found

@@ -1,0 +1,47 @@
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m: In function '-[PostRequest buildPostString]':
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:22: warning: 'KeychainWrapper' may not respond to '-searchKeychainCopyMatching:'
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:22: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:22: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:22: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:43: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:43: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:47: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:51: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:51: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:69: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:69: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:73: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:73: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:79: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:79: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:83: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:83: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:88: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:88: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:92: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:92: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:96: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:96: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:100: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:100: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:107: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:107: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:111: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:111: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:114: warning: local declaration of 'postString' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:119: warning: passing argument 2 of 'sendSynchronousRequest:returningResponse:error:' from incompatible pointer type
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:119: warning: incompatible Objective-C types assigning 'struct NSData *', expected 'struct NSString *'
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:127: warning: incompatible Objective-C types 'struct NSString *', expected 'struct NSData *' when passing argument 1 of 'writeData:' from distinct Objective-C type
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:130: warning: incompatible Objective-C types returning 'struct NSString *', expected 'struct NSData *'
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:39: warning: unused variable 'temp'
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:156: warning: property 'currentPublicStatus' requires method '-currentPublicStatus' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:156: warning: property 'currentPublicStatus' requires the method 'setCurrentPublicStatus:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:156: warning: property 'region' requires method '-region' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:156: warning: property 'region' requires the method 'setRegion:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:156: warning: property 'username' requires method '-username' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:156: warning: property 'username' requires the method 'setUsername:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:156: warning: property 'postString' requires method '-postString' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:156: warning: property 'postString' requires the method 'setPostString:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:156: warning: property 'criteriaSummary' requires method '-criteriaSummary' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PostRequest.m:156: warning: property 'criteriaSummary' requires the method 'setCriteriaSummary:' to be defined - use @synthesize, @dynamic or provide a method implementation

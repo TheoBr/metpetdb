@@ -1,0 +1,25 @@
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:14: error: no declaration of property 'sampleName' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:14: error: no declaration of property 'Uname' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m: In function '-[AnalysisSummary viewDidLoad]':
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:20: warning: 'AnalysisSummary' may not respond to '-getSubsampleInfo'
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:20: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:20: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:20: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:30: error: 'sampleName' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:30: error: (Each undeclared identifier is reported only once
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:30: error: for each function it appears in.)
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:59: warning: 'KeychainWrapper' may not respond to '-searchKeychainCopyMatching:'
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:61: error: 'Uname' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:22: warning: unused variable 'textViewSize'
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m: In function '-[AnalysisSummary getSubsampleInfo]':
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:80: error: 'Uname' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:89: error: 'myReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:101: warning: unused variable 'response'
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:91: warning: unused variable 'returnValue'
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m: In function '-[AnalysisSummary parser:foundCharacters:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:148: warning: 'NSString' may not respond to '-appendString:'
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m: In function '-[AnalysisSummary setData::]':
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:204: error: 'sampleName' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m: In function '-[AnalysisSummary dealloc]':
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:228: error: 'myReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/AnalysisSummary.m:232: error: 'sampleName' undeclared (first use in this function)

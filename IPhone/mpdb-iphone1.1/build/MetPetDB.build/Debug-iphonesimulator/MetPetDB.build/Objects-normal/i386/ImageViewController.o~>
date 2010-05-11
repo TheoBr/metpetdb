@@ -1,0 +1,56 @@
+In file included from /Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:9:
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.h:67: warning: property attributes must be separated by a comma
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:18: error: no declaration of property 'pageControl' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:18: error: no declaration of property 'progress' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:18: error: no declaration of property 'backButton' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:19: error: no declaration of property 'searchCriteria' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m: In function '-[ImageViewController viewDidLoad]':
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:31: error: 'pageControl' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:31: error: (Each undeclared identifier is reported only once
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:31: error: for each function it appears in.)
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:54: warning: unused variable 'buttons'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m: In function '-[ImageViewController touchesBegan:withEvent:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:114: error: 'startTouchPosition' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m: In function '-[ImageViewController touchesMoved:withEvent:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:127: error: 'startTouchPosition' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:134: warning: 'ImageViewController' may not respond to '-previousPage'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:134: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:134: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:134: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:140: warning: 'ImageViewController' may not respond to '-viewNextPage'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m: In function '-[ImageViewController turnPage]':
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:149: error: 'pageControl' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:151: warning: 'ImageViewController' may not respond to '-viewNextPage'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:155: warning: 'ImageViewController' may not respond to '-previousPage'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m: In function '-[ImageViewController viewNextPage]':
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:163: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:165: warning: 'ImageViewController' may not respond to '-setVars:::::'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:166: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:166: warning: 'ImageViewController' may not respond to '-setSamples:::'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:167: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:167: warning: 'ImageViewController' may not respond to '-setCurrentSearchData:'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:173: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m: In function '-[ImageViewController backToSample]':
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:182: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:185: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:185: warning: 'SampleInfoController' may not respond to '-setSamples:::'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:186: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:186: warning: 'SampleInfoController' may not respond to '-setCurrentSearchData:'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:192: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m: In function '-[ImageViewController enlarge]':
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:198: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:210: warning: 'SingleImageView' may not respond to '-setData::'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:218: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m: In function '-[ImageViewController setSamples:::]':
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:233: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m: In function '-[ImageViewController setCurrentSearchData:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:237: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:289: warning: method possibly missing a [super dealloc] call
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:292: warning: property 'toolbar' requires method '-toolbar' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:292: warning: property 'toolbar' requires the method 'setToolbar:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:292: warning: property 'prevButton' requires method '-prevButton' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:292: warning: property 'prevButton' requires the method 'setPrevButton:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:292: warning: property 'selectedImage' requires method '-selectedImage' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/ImageViewController.m:292: warning: property 'selectedImage' requires the method 'setSelectedImage:' to be defined - use @synthesize, @dynamic or provide a method implementation

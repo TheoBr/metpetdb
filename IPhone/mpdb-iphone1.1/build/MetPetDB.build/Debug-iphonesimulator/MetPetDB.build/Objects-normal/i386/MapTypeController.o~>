@@ -1,0 +1,30 @@
+In file included from /Users/heatherbuletti/mpdb-iphone/Classes/MapController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.h:10,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:9:
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.h:67: warning: property attributes must be separated by a comma
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:13: error: no declaration of property 'sampleCategory' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:13: error: no declaration of property 'searchCriteria' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m: In function '-[MapTypeController viewDidLoad]':
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:28: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:28: error: (Each undeclared identifier is reported only once
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:28: error: for each function it appears in.)
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m: In function '-[MapTypeController changeType]':
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:43: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m: In function '-[MapTypeController loadMap]':
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:59: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:59: warning: 'MapController' may not respond to '-setData::'
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:59: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:59: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:59: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:60: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:60: warning: 'MapController' may not respond to '-setCurrentSearchData:'
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:65: warning: 'MapController' may not respond to '-makeNavBar'
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m: In function '-[MapTypeController setSamples::]':
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:71: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m: In function '-[MapTypeController setCurrentSearchData:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:77: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m: In function '-[MapTypeController dealloc]':
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:84: error: 'sampleCategory' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:89: warning: property 'mapType' requires method '-mapType' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/MapTypeController.m:89: warning: property 'mapType' requires the method 'setMapType:' to be defined - use @synthesize, @dynamic or provide a method implementation

@@ -1,0 +1,29 @@
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m: In function '-[SingleImageView viewDidLoad]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:22: warning: 'SingleImageView' may not respond to '-get_large_image'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:22: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:22: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:22: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:74: warning: 'KeychainWrapper' may not respond to '-searchKeychainCopyMatching:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:66: warning: unused variable 'imageFrame'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m: In function '-[SingleImageView nextImage]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:98: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:104: warning: 'SingleImageView' may not respond to '-setData::'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:121: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m: In function '-[SingleImageView previousImage]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:125: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:132: warning: 'SingleImageView' may not respond to '-setData::'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:136: warning: passing argument 1 of 'addSubview:' from distinct Objective-C type
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:135: warning: unused variable 'newView'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:139: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m: In function '-[SingleImageView get_large_image]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:165: warning: passing argument 2 of 'sendSynchronousRequest:returningResponse:error:' from incompatible pointer type
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:176: warning: unused variable 'response'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:166: warning: unused variable 'returnValue'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m: In function '-[SingleImageView parser:foundCharacters:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:207: warning: 'NSString' may not respond to '-appendString:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:275: warning: method possibly missing a [super dealloc] call
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:278: warning: property 'nextButton' requires method '-nextButton' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:278: warning: property 'nextButton' requires the method 'setNextButton:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:278: warning: property 'Uname' requires method '-Uname' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/SingleImageView.m:278: warning: property 'Uname' requires the method 'setUname:' to be defined - use @synthesize, @dynamic or provide a method implementation

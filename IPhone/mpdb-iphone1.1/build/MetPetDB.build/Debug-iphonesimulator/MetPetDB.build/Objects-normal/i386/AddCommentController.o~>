@@ -1,0 +1,30 @@
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:13: error: no declaration of property 'toolbar' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:13: error: no declaration of property 'Uname' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m: In function '-[AddCommentController viewDidLoad]':
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:16: error: 'textCleared' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:16: error: (Each undeclared identifier is reported only once
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:16: error: for each function it appears in.)
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:39: warning: 'AddCommentController' may not respond to '-registerForKeyboardNotifications'
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:39: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:39: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:39: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:55: warning: 'KeychainWrapper' may not respond to '-searchKeychainCopyMatching:'
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:57: error: 'Uname' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:42: warning: unused variable 'buttons'
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m: In function '-[AddCommentController add]':
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:87: error: 'Uname' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:96: error: 'myReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:98: warning: unused variable 'returnValue'
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m: In function '-[AddCommentController textViewDidBeginEditing:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:116: warning: local declaration of 'textView' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:116: warning: 'AddCommentController' may not respond to '-scrollViewToCenterOfScreen:'
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m: In function '-[AddCommentController textView:shouldChangeTextInRange:replacementText:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:132: warning: local declaration of 'textView' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:132: error: 'textCleared' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:134: warning: local declaration of 'textView' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m: In function '-[AddCommentController dealloc]':
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:178: error: 'toolbar' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:179: error: 'myReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:185: warning: property 'scrollView' requires method '-scrollView' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/AddCommentController.m:185: warning: property 'scrollView' requires the method 'setScrollView:' to be defined - use @synthesize, @dynamic or provide a method implementation

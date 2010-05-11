@@ -1,0 +1,2 @@
+/Users/heatherbuletti/mpdb-iphone/Classes/uniqueSamples.m:24: warning: property 'countTitle' requires method '-countTitle' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/uniqueSamples.m:24: warning: property 'countTitle' requires the method 'setCountTitle:' to be defined - use @synthesize, @dynamic or provide a method implementation

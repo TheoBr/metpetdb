@@ -1,0 +1,27 @@
+In file included from /Users/heatherbuletti/mpdb-iphone/Classes/MapController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/RockTypeController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/TableController.h:10,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.h:4,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:9:
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.h:67: warning: property attributes must be separated by a comma
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m: In function '-[PublicPrivateViewController backToCriteria]':
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:65: warning: 'SearchCriteriaController' may not respond to '-setData::'
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:65: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:65: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:65: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:66: warning: 'SearchCriteriaController' may not respond to '-setCurrentSearchData:'
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:108: warning: property 'currentPublicStatus' requires method '-currentPublicStatus' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:108: warning: property 'currentPublicStatus' requires the method 'setCurrentPublicStatus:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:108: warning: property 'rockName' requires method '-rockName' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:108: warning: property 'rockName' requires the method 'setRockName:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:108: warning: property 'region' requires method '-region' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:108: warning: property 'region' requires the method 'setRegion:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:108: warning: property 'mapType' requires method '-mapType' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:108: warning: property 'mapType' requires the method 'setMapType:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:108: warning: property 'coordinate' requires method '-coordinate' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:108: warning: incomplete implementation of class 'PublicPrivateViewController'
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:108: warning: method definition for '-reverseGeocoder:didFailWithError:' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:108: warning: method definition for '-reverseGeocoder:didFindPlacemark:' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/PublicPrivateViewController.m:108: warning: class 'PublicPrivateViewController' does not fully implement the 'MKReverseGeocoderDelegate' protocol

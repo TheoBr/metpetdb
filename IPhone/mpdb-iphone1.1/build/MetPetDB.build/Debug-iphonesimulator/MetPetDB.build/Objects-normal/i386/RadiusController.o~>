@@ -1,0 +1,96 @@
+In file included from /Users/heatherbuletti/mpdb-iphone/Classes/MapController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/SampleViewController.h:10,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/LocationViewController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/MainViewController.h:2,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:9:
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.h:67: warning: property attributes must be separated by a comma
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:18: error: no declaration of property 'timer' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:19: error: no declaration of property 'searchCriteria' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:20: error: no declaration of property 'north' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:20: error: no declaration of property 'south' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:20: error: no declaration of property 'east' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:20: error: no declaration of property 'west' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:20: error: no declaration of property 'currentSearchData' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m: In function '-[RadiusController viewDidLoad]':
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:43: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:43: error: (Each undeclared identifier is reported only once
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:43: error: for each function it appears in.)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m: In function '-[RadiusController showMap:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:72: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:72: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:72: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:72: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:93: error: 'north' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:94: error: 'south' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:95: error: 'east' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:96: error: 'west' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:105: error: 'PostRequest' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:105: error: 'post' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:106: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:111: error: 'xmlParser' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:111: error: 'x' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:112: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:120: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:141: warning: 'RadiusController' may not respond to '-getSamples'
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:144: warning: 'MapController' may not respond to '-setData::'
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:145: warning: 'MapController' may not respond to '-setCurrentSearchData:'
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:156: warning: 'MapController' may not respond to '-makeNavBar'
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:159: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m: In function '-[RadiusController getSamples]':
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:172: error: 'PostRequest' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:172: error: 'post' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:173: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:178: error: 'xmlParser' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:178: error: 'y' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m: In function '-[RadiusController setData:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:200: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m: In function '-[RadiusController dealloc]':
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:218: error: 'north' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:219: error: 'south' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:220: error: 'east' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:221: error: 'west' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:233: error: 'timer' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:234: error: 'description' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:235: error: 'myThread' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:236: error: 'newSet' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:237: error: 'myParser' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:238: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: property 'radiusPicker' requires method '-radiusPicker' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: property 'radiusPicker' requires the method 'setRadiusPicker:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: property 'latitude' requires method '-latitude' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: property 'latitude' requires the method 'setLatitude:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: property 'longitude' requires method '-longitude' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: property 'longitude' requires the method 'setLongitude:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: property 'currentStringValue' requires method '-currentStringValue' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: property 'currentStringValue' requires the method 'setCurrentStringValue:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: property 'publicStatus' requires method '-publicStatus' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: property 'publicStatus' requires the method 'setPublicStatus:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: property 'currentRockType' requires method '-currentRockType' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: property 'currentRockType' requires the method 'setCurrentRockType:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: property 'currentOwner' requires method '-currentOwner' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: property 'currentOwner' requires the method 'setCurrentOwner:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: incomplete implementation of class 'RadiusController'
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-setCoordinates:' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: incomplete implementation of class 'RadiusController'
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-description' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-retainCount' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-autorelease' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-release' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-retain' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-respondsToSelector:' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-conformsToProtocol:' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-isMemberOfClass:' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-isKindOfClass:' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-isProxy' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-performSelector:withObject:withObject:' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-performSelector:withObject:' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-performSelector:' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-zone' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-self' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-class' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-superclass' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-hash' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: method definition for '-isEqual:' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.m:243: warning: class 'RadiusController' does not fully implement the 'NSObject' protocol

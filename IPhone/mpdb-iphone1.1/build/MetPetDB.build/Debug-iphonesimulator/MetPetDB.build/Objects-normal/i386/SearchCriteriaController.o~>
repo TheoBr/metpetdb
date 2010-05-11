@@ -1,0 +1,105 @@
+In file included from /Users/heatherbuletti/mpdb-iphone/Classes/MapController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/MineralsController.h:3,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/TableController.h:12,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.h:10,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:9:
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.h:67: warning: property attributes must be separated by a comma
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:20: error: no declaration of property 'doneButton' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:20: error: no declaration of property 'searchCriteria' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:21: error: no declaration of property 'Uname' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:21: error: no declaration of property 'publicPrivateController' found in the interface
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m: In function '-[SearchCriteriaController viewDidLoad]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:26: warning: 'KeychainWrapper' may not respond to '-searchKeychainCopyMatching:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:26: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:26: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:26: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:28: error: 'Uname' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:28: error: (Each undeclared identifier is reported only once
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:28: error: for each function it appears in.)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:33: error: 'pool' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:39: error: 'edit' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:47: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:120: warning: class 'SearchCriteriaController' does not implement the 'UITableViewDataSource' protocol
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:121: warning: class 'SearchCriteriaController' does not implement the 'UITableViewDelegate' protocol
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:123: warning: 'SearchCriteriaController' may not respond to '-makeToolbar'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m: In function '-[SearchCriteriaController calculateCriteria]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:133: error: 'PostRequest' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:133: error: 'post' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:134: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:135: error: 'postReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:137: error: 'xmlParser' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:137: error: 'x' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:138: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m: In function '-[SearchCriteriaController makeToolbar]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:158: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:158: error: 'Uname' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m: In function '-[SearchCriteriaController edit]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:174: error: 'edit' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:186: warning: class 'SearchCriteriaController' does not implement the 'UITableViewDataSource' protocol
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:187: warning: class 'SearchCriteriaController' does not implement the 'UITableViewDelegate' protocol
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:192: error: 'doneButton' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m: In function '-[SearchCriteriaController done]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:201: error: 'edit' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:206: warning: class 'SearchCriteriaController' does not implement the 'UITableViewDataSource' protocol
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:207: warning: class 'SearchCriteriaController' does not implement the 'UITableViewDelegate' protocol
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:200: warning: unused variable 'index'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m: In function '-[SearchCriteriaController backToMap]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:224: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:226: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:230: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:237: error: 'remainingSamples' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:238: warning: 'SearchCriteriaController' may not respond to '-getSamples'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:240: warning: 'MapController' may not respond to '-setData::'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:242: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:242: warning: 'MapController' may not respond to '-setCurrentSearchData:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:248: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m: In function '-[SearchCriteriaController getSamples]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:253: error: 'PostRequest' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:253: error: 'post' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:255: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:256: error: 'postReturn' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:260: error: 'xmlParser' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:260: error: 'x' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:261: error: 'remainingSamples' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m: In function '-[SearchCriteriaController deleteRow:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:287: error: 'remainingSamples' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:306: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:323: error: 'doneButton' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:334: warning: class 'SearchCriteriaController' does not implement the 'UITableViewDataSource' protocol
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:335: warning: class 'SearchCriteriaController' does not implement the 'UITableViewDelegate' protocol
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m: In function '-[SearchCriteriaController addCriteria]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:351: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:356: warning: incompatible Objective-C types assigning 'struct NSMutableArray *', expected 'struct TableController *'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:358: error: 'remainingSamples' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:358: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:358: warning: 'TableController' may not respond to '-setData::'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:359: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:366: warning: 'MetPetDBAppDelegate' may not respond to '-setNetworkActivityIndicatorVisible:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m: In function '-[SearchCriteriaController tableView:cellForRowAtIndexPath:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:443: warning: unused variable 'button'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:456: error: 'edit' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:456: error: 'Uname' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m: In function '-[SearchCriteriaController tableView:didSelectRowAtIndexPath:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:503: error: 'edit' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:506: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:506: warning: 'PublicPrivateViewController' may not respond to '-setData::'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:507: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:507: warning: 'PublicPrivateViewController' may not respond to '-setCurrentSearchData:'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:508: error: request for member 'publicPrivateController' in something not a structure or union
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:510: error: 'publicPrivateController' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:511: warning: incompatible Objective-C types 'struct UIViewController *', expected 'struct UIView *' when passing argument 1 of 'addSubview:' from distinct Objective-C type
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m: In function '-[SearchCriteriaController setData::]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:521: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:523: error: 'remainingSamples' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m: In function '-[SearchCriteriaController setCurrentSearchData:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:529: error: 'currentSearchData' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m: In function '-[SearchCriteriaController dealloc]':
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:557: error: 'doneButton' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:558: warning: invalid receiver type '_Bool'
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:561: error: 'remainingSamples' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:571: error: 'searchCriteria' undeclared (first use in this function)
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:576: warning: property 'region' requires method '-region' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:576: warning: property 'region' requires the method 'setRegion:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:576: warning: property 'mapType' requires method '-mapType' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/SearchCriteriaController.m:576: warning: property 'mapType' requires the method 'setMapType:' to be defined - use @synthesize, @dynamic or provide a method implementation

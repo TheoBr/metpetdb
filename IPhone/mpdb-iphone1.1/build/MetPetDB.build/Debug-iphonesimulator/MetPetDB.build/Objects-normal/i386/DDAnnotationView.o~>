@@ -1,0 +1,11 @@
+In file included from /Users/heatherbuletti/mpdb-iphone/Classes/MapController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/SampleViewController.h:10,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/LocationViewController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/MainViewController.h:2,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.h:12,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/DDAnnotationView.h:5,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/DDAnnotationView.m:2:
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.h:67: warning: property attributes must be separated by a comma
+/Users/heatherbuletti/mpdb-iphone/Classes/DDAnnotationView.m: In function '-[DDAnnotationView touchesEnded:withEvent:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/DDAnnotationView.m:79: warning: unused variable 'theAnnotation'

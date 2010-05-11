@@ -1,0 +1,28 @@
+In file included from /Users/heatherbuletti/mpdb-iphone/Classes/MapController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/SampleViewController.h:10,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/LocationViewController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/MainViewController.h:2,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/RadiusController.h:11,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.h:12,
+                 from /Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:9:
+/Users/heatherbuletti/mpdb-iphone/Classes/SampleInfoController.h:67: warning: property attributes must be separated by a comma
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m: In function '-[DropMapViewController dropPin]':
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:41: warning: class 'MKAnnotationView' does not implement the 'MKAnnotation' protocol
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m: In function '-[DropMapViewController loadMap]':
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:56: warning: 'RadiusController' may not respond to '-setData:'
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:56: warning: (Messages without a matching method signature
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:56: warning: will be assumed to return 'id' and accept
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:56: warning: '...' as arguments.)
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m: In function '-[DropMapViewController mapView:viewForAnnotation:]':
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:71: warning: local declaration of 'mapView' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:77: warning: local declaration of 'mapView' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:80: warning: local declaration of 'mapView' hides instance variable
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m: At top level:
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:121: warning: property 'currentSearchData' requires method '-currentSearchData' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:121: warning: property 'currentSearchData' requires the method 'setCurrentSearchData:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:121: warning: property 'annotationView' requires method '-annotationView' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:121: warning: property 'annotationView' requires the method 'setAnnotationView:' to be defined - use @synthesize, @dynamic or provide a method implementation
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:121: warning: incomplete implementation of class 'DropMapViewController'
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:121: warning: method definition for '-reverseGeocoder:didFailWithError:' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:121: warning: method definition for '-reverseGeocoder:didFindPlacemark:' not found
+/Users/heatherbuletti/mpdb-iphone/Classes/DropMapViewController.m:121: warning: class 'DropMapViewController' does not fully implement the 'MKReverseGeocoderDelegate' protocol
