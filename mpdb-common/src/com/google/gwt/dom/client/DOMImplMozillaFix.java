@@ -9,8 +9,8 @@ package com.google.gwt.dom.client;
  */
 public class DOMImplMozillaFix extends DOMImplMozilla {
 
-  @Override
-  public boolean isOrHasChild(Element parent, Element child) {
+//  @Override
+/*  public boolean isOrHasChild(Element parent, Element child) {
     try {
       return super.isOrHasChild(parent, child);
     }
@@ -25,7 +25,7 @@ public class DOMImplMozillaFix extends DOMImplMozilla {
         return false;  // give up
       }
     }
-  }
+  } */
 
   /**
    * This is how isOrHasChild was originally implemented in GWT 1.4

@@ -5,7 +5,6 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
 import edu.rpi.metpetdb.client.model.validation.ObjectConstraints;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
-import edu.rpi.metpetdb.client.service.UserService;
 
 /**
  * Response sent by {@link UserService#resumeSession()}.

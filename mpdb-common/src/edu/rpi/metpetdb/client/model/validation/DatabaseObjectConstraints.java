@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.model.validation;
 
+import net.sf.gilead.pojo.gwt.IGwtSerializableParameter;
+
 import com.google.gwt.user.client.rpc.IsSerializable;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
