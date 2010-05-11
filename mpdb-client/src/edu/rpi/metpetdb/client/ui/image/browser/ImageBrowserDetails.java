@@ -365,24 +365,19 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	private PopupMenu createPopupMenu(final ImageOnGridContainer iog) {
 		final PopupMenu popupMenu = new PopupMenu();
 		popupMenu.addItem(new ImageHyperlink(
-				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
-						+ "/images/icon-details.gif"), "Details", TokenSpace
+				new com.google.gwt.user.client.ui.Image("images/icon-details.gif"), "Details", TokenSpace
 						.detailsOf(this.g.getSubsample()), false));
 		popupMenu.addItem(new ImageHyperlink(
-				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
-						+ "/images/icon-addpoint.gif"), "Add Point",
+				new com.google.gwt.user.client.ui.Image("images/icon-addpoint.gif"), "Add Point",
 						new AddPointListener(this.mouseListener, iog), false));
 		popupMenu.addItem(new ImageHyperlink(
-				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
-						+ "/images/icon-remove.gif"), "Remove",
+				new com.google.gwt.user.client.ui.Image("images/icon-remove.gif"), "Remove",
 						new RemoveListener(iog, this.layers, imagesOnGrid,selectionHandler), false));
 		popupMenu.addItem(new ImageHyperlink(
-				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
-						+ "/images/icon-rotate.gif"), "Rotate",
+				new com.google.gwt.user.client.ui.Image("images/icon-rotate.gif"), "Rotate",
 						new RotateListener(iog,this), false));
 		popupMenu.addItem(new ImageHyperlink(
-				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
-						+ "/images/icon-opacity.gif"), "Opacity",
+				new com.google.gwt.user.client.ui.Image("images/icon-opacity.gif"), "Opacity",
 						new OpacityListener(iog, this.grid, this), false));
 		final MLink lock = new MLink("Lock", this.lockListener);
 		this.lockListener.addNotifier(lock);
@@ -461,8 +456,7 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		.iterator();
 		while (itr.hasNext()) {
 			final ChemicalAnalysis ma = itr.next();
-			final com.google.gwt.user.client.ui.Image i = new com.google.gwt.user.client.ui.Image(
-					GWT.getModuleBaseURL() + "/images/point0.gif");
+			final com.google.gwt.user.client.ui.Image i = new com.google.gwt.user.client.ui.Image("images/point0.gif");
 
 			// convert MM to pixels
 			int x = ImageBrowserUtil.MMToPixelsChemWidth(ma.getReferenceX(), scale, iog.getIog().getResizeRatio());
@@ -530,16 +524,13 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 	private MHtmlList makeBottomMenu(final ImageOnGridContainer iog) {
 		final MHtmlList ulBottom = new MHtmlList();
 		final MLink details = new ImageHyperlink(
-				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
-						+ "/images/icon-details.gif"), "Details", TokenSpace
+				new com.google.gwt.user.client.ui.Image("images/icon-details.gif"), "Details", TokenSpace
 						.detailsOf(this.g.getSubsample()), false);
 		final MLink addPoint = new ImageHyperlink(
-				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
-						+ "/images/icon-addpoint.gif"), "Add Point",
+				new com.google.gwt.user.client.ui.Image("images/icon-addpoint.gif"), "Add Point",
 						new AddPointListener(this.mouseListener, iog), false);
 		final MLink remove = new ImageHyperlink(
-				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
-						+ "/images/icon-remove.gif"), "Remove",
+				new com.google.gwt.user.client.ui.Image("images/icon-remove.gif"), "Remove",
 						new RemoveListener(iog, this.layers, imagesOnGrid,selectionHandler), false);
 		ulBottom.add(details);
 		ulBottom.add(addPoint);
@@ -553,12 +544,10 @@ public class ImageBrowserDetails extends MPagePanel implements ClickListener, Pa
 		// Top Menu
 		final MHtmlList ulTop = new MHtmlList();
 		final MLink rotate = new ImageHyperlink(
-				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
-						+ "/images/icon-rotate.gif"), "Rotate",
+				new com.google.gwt.user.client.ui.Image("images/icon-rotate.gif"), "Rotate",
 						new RotateListener(iog, this), false);
 		final MLink opacity = new ImageHyperlink(
-				new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()
-						+ "/images/icon-opacity.gif"), "Opacity",
+				new com.google.gwt.user.client.ui.Image("images/icon-opacity.gif"), "Opacity",
 						new OpacityListener(iog, this.grid, this), false);
 		final MLink hideMenu = new MLink("Hide Menu", this.hideMenuListener);
 		this.hideMenuListener.addNotifier(hideMenu);

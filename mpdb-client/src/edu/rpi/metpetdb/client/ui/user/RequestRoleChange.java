@@ -9,6 +9,7 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Role;
 import edu.rpi.metpetdb.client.model.RoleChange;
 import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.MCommand;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
@@ -69,7 +70,7 @@ public class RequestRoleChange extends FlowPanel {
 			protected void saveBean(final AsyncCallback<RoleChange> ac) {
 				MpDb.user_svc.saveRoleChange(getBean(), ac);
 			}
-			protected void deleteBean(final AsyncCallback<Object> ac) {
+			protected void deleteBean(final AsyncCallback<MObject> ac) {
 				// role changes cannot be deleted
 			}
 			protected boolean canEdit() {

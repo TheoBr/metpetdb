@@ -1,0 +1,429 @@
+/*-------------------------------------
+                content
+ --------------------------------------*/
+html {
+	font: 62.5% Verdana,Helvetica,Arial,sans-serif;
+	color: #000;
+}
+body {
+	width: 100%;
+	min-width: 600px;
+	font-size: 1.1em;
+}
+.page-panel .page-sidebar {
+	display: none;
+}
+.page-panel-twocol {
+	padding-left: 250px;
+	background: transparent url(../images/bg-sidebar.gif) repeat-y left top;
+}
+.page-panel-twocol .page-sidebar,
+.page-panel-twocol .page-content {
+	position: relative;
+	float: left;
+}
+.page-panel-twocol .page-content {
+	width: 100%;
+}
+.page-panel-twocol .page-sidebar {
+	display: block;
+	width: 250px;
+	margin-left: -100%;
+	right: 250px;
+}
+
+
+
+/*-------------------------------------
+                 header
+ --------------------------------------*/
+#header {
+	background: #585858 url(../images/header-bg.gif) repeat-x left top;
+	padding-top: 47px;
+	position: relative;
+	border-top: 5px solid #4a4a4a;
+}
+#mpdb-logo {
+	position: absolute;
+	left: 0;
+	top: 17px;
+	display: block;
+	width: 201px;
+	height: 74px;
+	background: transparent url(../images/mpdb-logo.gif) no-repeat left top;
+	cursor: pointer;
+}
+#mpdb-logo:focus,
+#mpdb-logo:hover,
+#mpdb-logo:active {
+	background-position: left bottom;
+}
+#header .hdrmsg {
+	position: absolute;
+	top: 26px;
+	left: 210px;
+	color: #e4e4e4;
+}
+
+/*-------------------------------------
+                 logbar
+ --------------------------------------*/
+.page-logbar {
+	position: absolute;
+	right: 16px;
+	top: 0;
+	height: 25px;
+	line-height: 20px;
+	padding-left: 0.2em;
+	-moz-border-radius-bottomleft: 6px;
+	-moz-border-radius-bottomright: 6px;
+	-webkit-border-bottom-left-radius: 6px;
+	-webkit-border-bottom-right-radius: 6px;
+	background-color: #4a4a4a;
+	color: #838383;
+}
+.page-logbar ul,
+.page-logbar ul li,
+.page-logbar .identity {
+	display: inline;
+}
+.page-logbar ul li {
+	margin: 0 0.5em;
+}
+.page-logbar .identity span {
+	color: #a9a9a9;
+}
+.page-logbar a,
+.page-logbar a:link,
+.page-logbar a:visited  {
+	color: #9ed2ff;
+}
+.page-logbar a:focus,
+.page-logbar a:hover,
+.page-logbar a:active  {
+	color: #cce8ff;
+}
+.page-logbar a.logout,
+.page-logbar a.logout:link,
+.page-logbar a.logout:visited {
+	text-decoration: none;
+	background-color: #000;
+	color: #eee;
+	padding: 0.1em 0.4em 0.3em;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
+.page-logbar a.logout:focus,
+.page-logbar a.logout:hover,
+.page-logbar a.logout:active {
+	color: #fff;
+}
+.page-logbar a.report-bug,
+.page-logbar a.report-bug:link,
+.page-logbar a.report-bug:visited,
+.page-logbar a.report-bug:focus,
+.page-logbar a.report-bug:hover,
+.page-logbar a.report-bug:active {
+	position: absolute;
+	left: -7.2em;
+	color: #B1DC8B;
+}
+
+/*-------------------------------------
+               header nav
+ --------------------------------------*/
+#hdrnav {
+	margin-left: 201px;
+	border-top: 1px solid #b3d37f;
+	border-bottom: 1px solid #7ba041;
+	background: #d2eea5 url(../images/nav-left.gif) no-repeat 0% 50%;
+}
+#hdrnav .gwt-MenuBar {
+	padding-right: 16px;
+	margin-left: 2px;
+	background: transparent url(../images/nav-bg.gif) repeat-x 0% 50%;
+}
+#hdrnav td {
+	height: 42px;
+	vertical-align: middle;
+	overflow: hidden;
+}
+#hdrnav .gwt-MenuItem a,
+#hdrnav .gwt-MenuItem a:link,
+#hdrnav .gwt-MenuItem a:visited {
+	color: #601d08;
+	cursor:pointer;
+	font-size: 12px;
+	padding: 15px 18px 15px 16px;
+	background: transparent url(../images/nav-tab-right.gif) no-repeat 100% 50%;
+}
+#hdrnav .gwt-MenuItem a:focus,
+#hdrnav .gwt-MenuItem a:hover,
+#hdrnav .gwt-MenuItem a:active,
+#hdrnav .gwt-MenuItem-selected a,
+#hdrnav .gwt-MenuItem-selected a:link,
+#hdrnav .gwt-MenuItem-selected a:visited {
+	color: #000;
+}
+#hdrnav .gwt-MenuItem-selected {
+	background: transparent url(../images/nav-bg-hover.gif) repeat-x 0% 50%;
+}
+#hdrnav .gwt-MenuItem a.hasMenu,
+#hdrnav .gwt-MenuItem a.hasMenu:link,
+#hdrnav .gwt-MenuItem a.hasMenu:visited {
+	background: transparent url(../images/nav-tab-drop.gif) no-repeat 100% 50%;
+	padding-right: 34px;
+}
+div.hdrnavMenu {
+	border-left: 1px solid #7ba041;
+	border-top: 1px solid #7ba041;
+	background: transparent url(../images/nav-menu-bottom.gif) no-repeat 100% 100%;
+	padding: 1px 0 2px 1px;
+}
+div.hdrnavMenu table {
+	background: #d5f6a1 url(../images/nav-menu-bg.gif) repeat-x 0% 0%;
+}
+div.hdrnavMenu .gwt-MenuItem {
+	border-left: 1px solid #e0feb0;
+	border-top: 1px solid #e7ffc0;
+	border-right: 1px solid #7ba041;
+	border-bottom: 1px solid #d5f6a1;
+}
+div.hdrnavMenu .gwt-MenuItem a,
+div.hdrnavMenu .gwt-MenuItem a:link,
+div.hdrnavMenu .gwt-MenuItem a:visited {
+	cursor: pointer;
+	padding: 0.2em 10px 0.2em 16px;
+	color: #601d08;
+	display: block;
+}
+div.hdrnavMenu .gwt-MenuItem a:focus,			/* need to fix - should be <a> for ie6:hover */
+div.hdrnavMenu .gwt-MenuItem a:hover,
+div.hdrnavMenu .gwt-MenuItem a:active {
+	background-color: #245406;
+	color: #eafec8;
+}
+
+
+
+
+
+/*-------------------------------------
+              left col
+ --------------------------------------*/
+
+#leftcol {
+	float: left;
+	width: 201px;
+	height: 100%;
+	color: #3a3436;
+	position: relative;
+	background: #fff url(../images/bg-sidebar.gif) repeat-y left top;
+}
+#leftcol ul.lcol-sectionList {
+	margin-bottom: 1.2em;
+	font-size: 0.9em;
+}
+#leftcol h1.header {
+	background: #dadada url(http://mpdb.zakness.com/samana/bg-leftcol-header.gif) repeat-y right top;
+	font: 1em Verdana, sans-serif bold;
+	padding: 0.8em 0.5em 0.5em;
+	color: #324453;
+	border-bottom: 1px solid #c8c8c8;
+	margin-top: 0;
+}
+#leftcol ul.lcol-sectionList a.gwt-Hyperlink,
+#leftcol ul.lcol-sectionList a.gwt-Hyperlink:link,
+#leftcol ul.lcol-sectionList a.gwt-Hyperlink:visited {
+	display: block;
+	padding: 0.3em 0.8em 0.3em 9px;
+	border-bottom: 1px solid #ddd;
+}
+#leftcol ul.lcol-sectionList a.gwt-Hyperlink:focus, 
+#leftcol ul.lcol-sectionList a.gwt-Hyperlink:hover,
+#leftcol ul.lcol-sectionList a.gwt-Hyperlink:active {
+	background-color: #fff;
+}
+#leftcol ul.lcol-sectionList li.evenRow {
+	background: #e6eaf1 url(http://mpdb.zakness.com/images/bg-sidebar-li-odd.gif) repeat-y right top;
+}
+
+#leftcol ul.lcol-sectionList .cur {
+	background:#FFFFFF url(../images/arrow-blue-right.gif) no-repeat scroll 2px center;
+	color:#163D6C;
+	font-weight:bold;
+}
+#leftcol #notice {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	font-size: 0.8em;
+	color: #762525;
+}
+
+/*-------------------------------------
+                page header
+ --------------------------------------*/
+.page-header {
+	background-color: #FBFBFB;
+	border-bottom: 1px solid #e4e4e4;
+	padding: 0.8em 10px;
+	position: relative;
+	line-height: 1;
+}
+.page-header-nocat {
+	padding-top: 1em; 
+}
+.page-header h4 {
+	color:#4E5159;
+	font: normal 1.1em "Gill Sans",Helvetica,Verdana,sans-serif;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+}
+.page-header-nocat h4 {
+	display: none;
+} 
+.page-actions {
+	position: absolute;
+	right: 10px;
+	top: 2.45em;
+	text-align: right;
+}
+.page-header-nocat .page-actions {
+	top: 1.4em;
+}
+.page-actions .action-item {
+	display: inline;
+	margin-left: 1em;
+}
+.page-actions .action-item a {
+	font-size: 1.1em;
+}
+.page-actions .action-item a:visited {
+	color: #0c5ea3;
+}
+.page-actions .action-item a:focus,
+.page-actions .action-item a:hover,
+.page-actions .action-item a:active {
+	color: #318fdf;
+}
+.page-header h1 .igsn {
+	font-size: 0.8em;
+	padding: 0.2em 0.2em 0;
+}
+.page-header p {
+	margin: 0;
+}
+
+/*-------------------------------------
+                footer
+ --------------------------------------*/
+#footer {
+	clear: both;
+	position: relative;
+	color: #67765a;
+}
+#footer a:hover, #footer a:active {
+	color: #318fdf;
+}
+#nsf {
+	height: 40px;
+	margin: 2.5em 1em 1em 0px;
+	padding-bottom: 10px;
+	font-size: 0.9em;
+	text-align: left;
+}
+#nsf img {
+	background: #aaa;
+	float: left;
+	margin: -9px 0.7em 0 1.5em;
+	border: none;
+}
+#nsf a:hover img {
+	background: #000;
+}
+
+
+/*-------------------------------------
+            notices/messages
+ --------------------------------------*/
+#loadingmessage {
+	position: absolute;
+	background: #818181 url(../images/loading-bg.gif) repeat-x left top;
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+}
+#loadingmessage div {
+	width: 20em;
+	font-size: 1.4em;
+	margin: 46px auto 0;
+	padding-top: 170px;
+	background-color: #818181;
+	text-align: center;
+}
+#loadingmessage div span {
+	background: transparent url(../images/loading.gif) no-repeat 0% 50%;
+	padding-left: 25px;
+	margin-left: -25px;
+	color: #fff;
+}
+
+
+/*------------------------
+	Breadcrumbs
+--------------------------*/
+
+.bcrumbs {
+	background-color: #f7fbff;
+	border-bottom: 1px solid #e6eef1;
+	color: #749490;
+	font-size: 0.9em;
+	height: 27px;
+}
+.bcrumbs:after {
+	content: ".";
+	height: 0;
+	visibility: hidden;
+	display: block;
+	clear: both;
+}
+.bcrumbs div {
+	background: transparent url(../images/breadcrumb-separator.gif) no-repeat 0% 50%;
+	float: left;
+	height: 27px;
+	padding-left: 24px;
+}
+.bcrumbs div.first {
+	background-image: none;
+	padding-left: 10px;
+}
+.bcrumbs div a {
+	line-height: 1;
+	margin-top: 10px;
+	float: left;
+}
+.bcrumbs div.current a, .bcrumbs div.current a:link,
+.bcrumbs div.current a:visited, .bcrumbs div.current a:focus,
+.bcrumbs div.current a:hover, .bcrumbs div.current a:active {
+	color: #7d8a8f;
+	text-decoration: none;
+}
+
+/*-------------------------------------
+             two-column panel
+ --------------------------------------*/
+.left-col,
+.right-col {
+	float: left;
+	width: 50%;
+}
+
+/*-------------------------------------
+             GWT Stuff
+ --------------------------------------*/
+iframe#__gwt_historyFrame,
+#login {
+	display: none;
+}
+ 
+

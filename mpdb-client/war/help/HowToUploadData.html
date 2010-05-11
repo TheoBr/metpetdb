@@ -1,0 +1,169 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+ <title>HowToUploadData - MetPetDB</title><link rel="alternate" href="HowToUploadData.html?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="HowToUploadData.html?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="HowToUploadData.html?format=pdf" title="PDF" type="text/x-trac-wiki" /><style type="text/css">
+</style>
+ 
+</head>
+<body>
+
+
+   <div class="wikipage">
+    <div id="searchable"><p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+<hr />
+<h1 id="UploadingData">Uploading Data</h1>
+<ul><li>Dowloadable <a class="wiki" href="VideoTutorials.html">Video Tutorials</a>
+</li><li><a class="attachment" href="/trac/metpetdb/attachment/wiki/HowToUploadData/Upload_Instructions2.2.pdf" title="Attachment HowToUploadData: Upload_Instructions2.2.pdf">Download a .pdf about bulk uploading your data.</a>
+</li></ul><p>
+There are 3 types of bulk uploads: Sample, Chemical Analysis, and Images. These must be done from a Microsoft Excel spreadsheet (.xls file). Only the first worksheet in a .xls workbook file (first tab at bottom left) will be uploaded, so be certain that the first sheet in the saved .xls file you are uploading contains the data you want uploaded for the correct type of upload.
+</p>
+<p>
+All uploaded data will initially be private. They may then be <a class="wiki" href="HowToMakePublic.html">made public</a> once they are in MetPetDB. You are encouraged to check your uploaded data before making it public, as once it is public it is viewable and downloadable by other MetPetDB members.
+</p>
+<h2 id="UploadTactics">Upload Tactics</h2>
+<p>
+MetPetDB recommends preparing <strong>a single excel file</strong> with a suite of data you would like to upload (<i>the alternative would be an individual file for each of samples, chemical analyses, and images</i>).  The single file should have separate worksheets for samples, chemical analyses, and images, labeled as such.  In this case, on each step of the upload process described below, you may browse for the same file, uploading a re-saved version of the file with the appropriate worksheet as the first (on top).  In microsoft excel, worksheets can be dragged to the top by their tab.
+</p>
+<p>
+This method allows all data for upload of a suite of samples to MetPetDB to be organized with a single file (apart from the individual image files), e.g. <a class="attachment" href="ExampleUploadSheet.xls" title="Attachment HowToUploadData: ExampleUploadSheet.xls">ExampleUploadSheet.xls</a>.
+<br /><br />
+</p>
+<h2 id="Samples">1. Upload your samples</h2>
+<p>
+Watch the downloadable <a class="wiki" href="VideoTutorials.html">Video Tutorial</a>.
+</p>
+<p>
+First you need to prepare a sample upload worksheet in .xls format (<a class="attachment" href="ExampleUploadSheet.xls" title="Attachment HowToUploadData: ExampleUploadSheet.xls">download an example</a>). An upload worksheet contains data arranged in columns, each with an <a class="wiki" href="UploadHeaders.html">appropriate header</a>. The first row is reserved for the column headers. Each additional row should contain data for each sample to be uploaded. Only some fields are required in order to upload your samples, as indicated <a class="wiki" href="Sample.html">here</a>, but we encourage you to be thorough to maintain a database that is as versatile as possible.
+</p>
+<ul><li>What types of data must/can be included with your <a class="wiki" href="Sample.html">samples</a>.
+<ul><li><strong>Lists of set data types:</strong>
+<ul><li><a class="wiki" href="Region.html">Regions</a>
+</li><li><a class="wiki" href="RockType.html">Rock Types</a>
+</li><li><a class="wiki" href="MetamorphicGrade.html">Metamorphic Grades</a>
+</li><li><a class="wiki" href="Mineral.html">Minerals</a>
+</li><li><a class="wiki" href="SampleObject.html#NonNumerics">Non-numeric abbreviations</a> for mineral modes
+</li></ul></li></ul></li><li>Detailed descriptions of <a class="wiki" href="SampleObject.html">sample attributes</a>.
+</li><li>Tips on <a class="wiki" href="LocatingSamples.html">Locating your Samples</a> (finding Latitudes and Longitudes).
+</li><li><a class="wiki" href="UploadHeaders.html#Samples">List of accepted headers</a>.
+</li></ul><p>
+Now you can upload the spreadsheet.
+</p>
+<ol><li>Save the excel file <i>with your samples worksheet on top</i> (the farthest tab to the left).
+</li><li>Log in to MetPetDB.
+</li><li>Click <strong>Upload Data</strong> (on the page menu bar).
+</li><li>Select the <strong>Samples</strong> radio button.
+</li><li>Choose your spreadsheet by clicking <strong>browse</strong>.
+</li><li>Click <strong>Upload</strong>. This will tell you if there are errors with your data, and how many samples will be added to MetPetDB. 
+</li><li>Check to see which headers were matched to MetPetDB. Check if you have any errors by clicking the <strong>errors</strong> tab. If you have an error or made a mistake with a header, edit and save your spreadsheet, save it, and re-upload.
+</li><li>If you have no errors and all of your headers are matched by MetPetDB, you are ready to submit your data to MetPetDB. Click <strong>Submit Data</strong>.
+</li><li>Navigate to <strong>My Samples</strong> to see that your samples have uploaded. Or, alternatively, find your new samples with a search. In this case it will help to input your screen name as the owner to exclude published samples and the samples of others.
+</li></ol><p>
+<br />
+</p>
+<h2 id="ChemicalAnalyses">2. Upload your chemical analyses</h2>
+<p>
+Watch the downloadable <a class="wiki" href="VideoTutorials.html">Video Tutorial</a>.
+</p>
+<p>
+First you need to prepare a chemical analyses upload worksheet in .xls format (<a class="attachment" href="ExampleUploadSheet.xls" title="Attachment HowToUploadData: ExampleUploadSheet.xls">download an example</a>).
+</p>
+<p>
+The first row is reserved for the column headers. The second row is reserved for units (chemical analysis and precision). Each additional row should contain data for each <a class="wiki" href="ChemicalAnalysis.html">analysis</a> to be uploaded. Only some fields are required in order to upload your data, but we encourage you to be thorough to maintain a database that is as versatile as possible. 
+</p>
+<ul><li>Be sure your data follows the requirements for <a class="wiki" href="ChemicalAnalysisObject.html">chemical analyses</a>.
+<ul><li><strong>Lists of set data types:</strong>
+<ul><li><a class="wiki" href="Subsample.html">Subsample Types</a>
+</li><li><a class="wiki" href="Mineral.html">Minerals</a>
+</li><li><a class="wiki" href="Element.html">Elements</a>
+</li><li><a class="wiki" href="Oxide.html">Oxides</a>
+</li><li><a class="wiki" href="ChemicalAnalysisObject.html#NonNumerics">Non-numeric abbreviations</a> for measurements
+</li></ul></li></ul></li><li>Detailed description of <a class="wiki" href="ChemicalAnalysisObject.html">chemical analysis attributes</a>.
+</li><li><a class="wiki" href="UploadHeaders.html#ChemicalAnalyses">List of accepted headers</a>.
+</li><li><i>Please note that chemical analyses must be in weight percent or ppm.</i>
+</li></ul><p>
+Now you can upload your chemical analyses.
+</p>
+<ol><li>Save the excel file <i>with your chemical analyses worksheet on top</i> (the farthest tab to the left).
+</li><li>Log in to MetPetDB.
+</li><li>Click <strong>Upload Data</strong> (on the page menu bar).
+</li><li>Select the <strong>Chemical Analyses</strong> radio button.
+</li><li>Choose your spreadsheet by clicking <strong>browse</strong>.
+</li><li>Click <strong>Upload</strong>. This will tell you if there are errors with your data, and how many analyses will be added to MetPetDB. 
+</li><li>Check to see which headers were matched to MetPetDB. Check if you have any errors by clicking the <strong>errors</strong> tab. If you have an error or made a mistake with a header, edit and save your spreadsheet, save it, and re-upload.
+</li><li>If you have no errors and all of your headers are matched by MetPetDB, you are ready to submit your data to MetPetDB. Click <strong>Submit Data</strong>.
+</li><li>Navigate to <strong>My Samples</strong> to see that your samples have uploaded. Or, alternatively, find your new samples with a search. In this case it will help to input your screen name as the owner to exclude published samples and the samples of others.
+</li></ol><p>
+<br />
+</p>
+<h2 id="Images">3. Upload your images</h2>
+<p>
+Watch the downloadable <a class="wiki" href="VideoTutorials.html">Video Tutorial</a>.
+</p>
+<p>
+Image upload is performed by compressing a folder containing the images (the <strong>image folder</strong>) <i>plus</i> a metadata spreadsheet. <a class="wiki" href="Image.html">Images</a> are referenced to a sample number which is required and possibly to a <a class="wiki" href="Subsample.html">subsample</a>, which is not required. <i>Note: The sample must be uploaded/added first, before images can be uploaded.</i>
+</p>
+<h3 id="PrepareImages">Prepare Images</h3>
+<ul><li>The same image file may be uploaded to more than one sample (e.g. a map with multiple sample locations).
+</li><li>Filenames should be cataloged in the accompanying image upload spreadsheet. 
+</li><li>Acceptable image formats are: .jpg , .gif , .tif , and .png.
+</li><li>The current size limit is 50 megabytes per image.
+</li><li>Images should be placed in an <strong>image folder</strong>.
+<ul><li>Images may also be included in subdirectories/subfolders within the image folder.  This requires that the image upload spreadsheet contains the path information for the images (e.g. [subfolder name]/image.png).  See below for how to prepare the image upload spreadsheet.
+</li></ul></li></ul><h3 id="PrepareImageUploadSpreadsheet">Prepare Image Upload Spreadsheet</h3>
+<p>
+The image upload spreadsheet must have the image data are on the first worksheet. An upload spreadsheet contains data arranged in columns, each with an <a class="wiki" href="UploadHeaders.html#Images">appropriate header</a>. The first row is reserved for the column headers. Each additional row should contain data for each image to be uploaded. Only some fields are required in order to upload your images, as indicated below, but we encourage you to be thorough to maintain a database that is as versatile as possible (<a class="attachment" href="ExampleUploadSheet.xls" title="Attachment HowToUploadData: ExampleUploadSheet.xls">download an example</a>).
+</p>
+<ul><li>Be sure your data follows the requirements for <a class="wiki" href="Image.html">images</a>.
+</li><li><strong>Lists of set data types:</strong>
+<ul><li><a class="wiki" href="Subsample.html">Subsample Types</a>
+</li><li><a class="wiki" href="Image.html#Types">Image Types</a>
+</li></ul></li><li>Detailed descriptions of <a class="wiki" href="ImageObject.html">image attributes</a>.
+</li><li><a class="wiki" href="UploadHeaders.html#Images">List of accepted headers</a>.
+</li></ul><h3 id="PrepareArchive.zipFile">Prepare Archive (.zip) File</h3>
+<p>
+<a class="attachment" href="/trac/metpetdb/attachment/wiki/HowToUploadData/ArchiveExample.zip" title="Attachment HowToUploadData: ArchiveExample.zip">Download an example archive.zip</a>.
+</p>
+<ol><li>Save the image upload file <i>with your images worksheet on top</i> (the farthest tab to the left).
+</li><li>Compress/create the Archive (.zip).
+</li></ol><ul><li>If you have archiving software, this is commonly done (in windows and in Mac OSX) by selecting/highlighting the files to be archived, right-clicking on one of them, and choosing "create archive of...".
+</li><li>If the image upload spreadsheet is the only excel spreadsheet in the archive (.zip) file, it can have any name.
+</li><li>If another .xls spreadsheet is included in the .zip archive (for any reason), the image upload spreadsheet <i>must</i> have the name <strong>image_upload.xls</strong>.
+</li><li>If the image upload spreadsheet is within the image folder, the path of the images need not contain the image folder; <i>however</i>, if it was compressed external to the image folder, the images must have [image folder name]/ as the beginning of their path (the image file location is referenced to the image spreadsheet location).
+</li></ul><p>
+<i>Note that the Image Upload Spreadsheet  must be in the archive (.zip).</i>
+</p>
+<h3 id="UploadArchive.zip">Upload Archive (.zip)</h3>
+<ol><li>Log in to MetPetDB.
+</li><li>Click <strong>Upload Data</strong> (on the page menu bar).
+</li><li>Select the <strong>Images</strong> radio button.
+</li><li>Choose your image archive (.zip) by clicking <strong>browse</strong>.
+</li><li>Click <strong>Upload</strong>. This will tell you if there are errors with your data, and how many analyses will be added to MetPetDB. 
+</li><li>Check to see which headers were matched to MetPetDB. Check if you have any errors by clicking the <strong>errors</strong> tab. If you have an error or made a mistake with a header, edit and save your spreadsheet, save it, and re-upload.
+</li><li>If you have no errors and all of your headers are matched by MetPetDB, you are ready to submit your data to MetPetDB. Click <strong>Submit Data</strong>.
+</li><li>Navigate to <strong>My Samples</strong> to see that your samples have uploaded. Or, alternatively, find your new samples with a search. In this case it will help to input your screen name as the owner to exclude published samples and the samples of others.
+</li></ol><p>
+<br />
+</p>
+<h2 id="Examples">Example Spreadsheets</h2>
+<p>
+Below are some example files that are ready to be uploaded to MetPetDB. If you already have these sample numbers in My samples, you must delete them to test the upload interface.
+</p>
+<hr />
+<p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+</div>
+   </div>
+   
+    <h3 id="tkt-changes-hdr">Attachments</h3>
+    <ul class="tkt-chg-list"><li class="tkt-chg-change"><a href="ExampleUploadSheet.xls">ExampleUploadSheet.xls</a> (39.0 kB) - added by halleb3@LAB.CS.RPI.EDU on 06/12/09 17:57:06.</li><li class="tkt-chg-change"><a href="/trac/metpetdb/attachment/wiki/HowToUploadData/ArchiveExample.zip">ArchiveExample.zip</a> (2.5 MB) - added by halleb3@LAB.CS.RPI.EDU on 06/12/09 18:01:04.</li><li class="tkt-chg-change"><a href="/trac/metpetdb/attachment/wiki/HowToUploadData/Upload_Instructions2.2.pdf">Upload_Instructions2.2.pdf</a> (256.2 kB) - added by halleb3@LAB.CS.RPI.EDU on 07/01/09 13:58:21.</li>
+    </ul>
+  
+ 
+ </body>
+</html>
+

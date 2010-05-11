@@ -35,7 +35,7 @@ public class Homepage extends FlowPanel {
 						"</ol>" +
 						"<p>Read more about the MetPetDB project <a href=\""+MpDb.WIKI_URL+"\" title=\"More about MetPetDB\">here</a>.</p>"));
 		
-		ImageHyperlink appLink = new ImageHyperlink(new com.google.gwt.user.client.ui.Image(GWT.getModuleBaseURL()+"/images/app-store.png"), 
+		ImageHyperlink appLink = new ImageHyperlink(new com.google.gwt.user.client.ui.Image("images/app-store.png"), 
 				"", TokenSpace.iphoneApp.getName(), false);		
 		appLink.getElement().setId("imageHyperlink");
 		appLink.addStyleName("l");

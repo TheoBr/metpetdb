@@ -127,11 +127,11 @@ public abstract class ObjectEditorPanel<T extends MObject> extends DetailsPanel<
 	}
 
 	public void delete() {
-		new ServerOp<Object>() {
+		new ServerOp<MObject>() {
 			public void begin() {
 				deleteBean(this);
 			}
-			public void onSuccess(final Object result) {
+			public void onSuccess(final MObject result) {
 				onDeleteCompletion(result);
 			}
 		}.begin();
@@ -172,7 +172,7 @@ public abstract class ObjectEditorPanel<T extends MObject> extends DetailsPanel<
 		setActiveButton(save);
 	}
 
-	protected abstract void deleteBean(final AsyncCallback<Object> ac);
+	protected abstract void deleteBean(final AsyncCallback<MObject> ac);
 
 	protected abstract void loadBean(final AsyncCallback<T> ac);
 

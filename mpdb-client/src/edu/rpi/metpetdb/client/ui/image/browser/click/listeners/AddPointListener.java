@@ -24,8 +24,7 @@ public class AddPointListener implements ClickListener {
 	public void onClick(final Widget sender) {
 		mouseListener.setMode(MouseMode.PLACE_POINT);
 		mouseListener.setCurrentImage(iog);
-		final Image image = new Image(GWT.getModuleBaseURL()
-				+ "/images/point0.gif");
+		final Image image = new Image("images/point0.gif");
 		mouseListener.setPoint(image);
 		DOM.setStyleAttribute(image.getElement(), "zIndex", "2000");
 		iog.getImagePanel().add(image);

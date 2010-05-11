@@ -1,0 +1,244 @@
+/*-------------------------------------
+               deprecated
+ --------------------------------------*/
+
+
+/*-------------------------------------
+               hyperlinks
+ --------------------------------------*/
+.addlink {
+	padding-left: 15px;
+	background-image: url(../images/add.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	cursor: pointer;
+}
+.editlink {
+	background-image:url(../images/icon-edit.gif);
+	background-position:left center;
+	background-repeat:no-repeat;
+	padding-left:15px;
+}
+.lbCloseLink {
+	background:transparent url(../images/closelabel.gif) no-repeat scroll center;
+	display:block;
+	float:left;
+	height:22px;
+	margin:5px 0pt;
+	width:75px;
+}
+.prevLink {
+	background:transparent url(../images/prev.bmp) no-repeat scroll center;
+	display:block;
+	float:right;
+	height:33px;
+	margin:5px 0pt;
+	width:75px;
+}
+
+.nextLink {
+	background:transparent url(../images/next.bmp) no-repeat scroll center;
+	display:block;
+	float:right;
+	height:33px;
+	margin:5px 0pt;
+	width:75px;
+}
+
+
+/*-------------------------------------
+                 lists
+ --------------------------------------*/
+ul.bullet, ol {
+	margin-left: 2em;
+}
+ul.bullet li {
+	list-style-image: url(http://mpdb.zakness.com/images/li-bluearrow.gif);
+	text-indent: -5px;
+}
+ol li {
+	list-style-type: decimal;
+	line-height: 1em;
+	margin: 0.6em 0;
+	color: #39c;
+}
+ol li span {
+	color: #000;
+}
+
+/*-------------------------------------
+             options list
+ --------------------------------------*/
+#content ul.options {
+	margin: 0.7em 0;
+}
+#content ul.options li {
+	display: inline;
+	margin-right: 1.5em;
+	line-height: 1em;
+}
+
+
+/*-------------------------------------
+            outdated
+ --------------------------------------*/
+
+/*-------------------------------------
+                tables
+		 
+		 * need classname when .headerCell is the current sorting cell (instead of adding img)
+ --------------------------------------*/
+.mpdb-dataTable {
+	width: 100%;
+}
+.mpdb-dataTable .headerCell {
+	background-color: #faf4df;
+	font-weight: bold;
+	color: #64230f;
+	text-align: left;
+	vertical-align: middle;
+	padding: 0.3em 0.5em;
+	border-bottom: 1px solid #e2c798;
+} 
+.mpdb-dataTable .headerCell .gwt-Hyperlink {			/* need to fix */
+	border-bottom: none;
+}
+.mpdb-dataTable .headerCell .gwt-Hyperlink a {			/* need to fix */
+	color: #64230f;
+	border-bottom: none !important;
+	padding-right: 15px;
+	background: transparent url(http://mpdb.zakness.com/samana/headerCell-sort.gif) no-repeat right center;
+}
+.mpdb-dataTable .headerCell .gwt-Hyperlink a img {			/* need to fix */
+	background-color: #faf4df;
+	margin-right: -15px;
+	padding-top: 6px;
+}
+
+.mpdb-dataTable td {
+	vertical-align: middle;
+	/*padding: 0.3em 0.5em;*/
+	border-bottom: 1px dotted #ddd;
+	color: #333;
+}
+.mpdb-dataTable tr.oddRow {
+	background: #f9f9f9;
+}
+
+.mpdb-dataTableBlue {
+	background-color: #E6EAF6;
+	}
+.mpdb-dataTablePink {
+	background-color: #FAF4DF;
+}
+
+.mpdb-dataTablePink td {
+	vertical-align: middle;
+	padding: 0.3em 0.5em;
+	border-bottom: 1px solid #E2C798;
+}
+	
+.mpdb-dataTableLightBlue {
+	background-color: #ECF5FD;
+}
+
+.mpdb-dataTableLightBlue td {
+	vertical-align: middle;
+	padding: 0.3em 0.5em;
+	border-top: 1px solid #DBE2EC;
+	border-bottom: 1px solid #DFECF9;
+}
+
+.mpdb-dataTableUserSamples {
+	margin: 6px 0;
+}
+
+
+.highlighted-row {
+	background-color: #FF3300;	
+}
+
+
+/*-------------------------------------
+            dialogs
+ --------------------------------------*/
+
+.image-title{
+	font-weight: bold;
+	color: #666666;
+}
+
+
+.resizeable{
+	display: table-cell;
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+
+.resizeable2{
+	display: table;
+}
+
+
+.subsample-imagetypes {
+	/*background:#696969 url(../images/loading-bg.gif) repeat-x scroll left top;*/
+	background:#696969
+}
+
+.subsample-header{
+	background: #F9F9F9;
+	width: 100%;
+	spacing-top: 15px;
+	margin-bottom: 15px;
+	margin-top: 15px;	
+	border-bottom: 1px solid #EFEFEF;
+}
+
+
+/*-------------------------------------
+			pagination
+ --------------------------------------*/
+.mpdb-pageTable {
+	margin: 1em 0;
+	clear: both;
+	float: right;
+}
+.mpdb-pageTable td {
+	padding: 0 0.1em;
+}
+.mpdb-pageTable .gwt-Hyperlink {
+	border-bottom: none !important;
+	cursor: default;
+}
+.mpdb-pageTable .gwt-Hyperlink a,
+.mpdb-pageTable .gwt-Hyperlink a:link,
+.mpdb-pageTable .gwt-Hyperlink a:visited {
+	border: 1px solid #9AAFE5 !important;
+	padding: 0.3em 0.5em;
+	color: #0c5ea3;
+	line-height: 1;
+}
+.mpdb-pageTable .gwt-Hyperlink a:focus, 
+.mpdb-pageTable .gwt-Hyperlink a:hover,
+.mpdb-pageTable .gwt-Hyperlink a:active {
+	border-color: #2E6AB1 !important;
+	background-color: #EFF8FF;
+}
+.mpdb-pageTable .currentPageCell a, .mpdb-pageTable .currentPageCell a:link, .mpdb-pageTable .currentPageCell a:visited,
+.mpdb-pageTable .currentPageCell a:focus, .mpdb-pageTable .currentPageCell a:hover, .mpdb-pageTable .currentPageCell a:active {
+	background-color: #2E6AB1;
+	border-color: #2E6AB1 !important;
+	font-weight: bold;
+	color: #fff !important;
+	cursor: default;
+}
+.mpdb-pageTable .noPreviousPageCell a, .mpdb-pageTable .noPreviousPageCell a:link, .mpdb-pageTable .noPreviousPageCell a:visited,
+.mpdb-pageTable .noPreviousPageCell a:focus, .mpdb-pageTable .noPreviousPageCell a:hover,.mpdb-pageTable .noPreviousPageCell a:active,
+.mpdb-pageTable .noNextPageCell a, .mpdb-pageTable .noNextPageCell a:link, .mpdb-pageTable .noNextPageCell a:visited, 
+.mpdb-pageTable .noNextPageCell a:focus, .mpdb-pageTable .noNextPageCell a:hover, .mpdb-pageTable .noNextPageCell a:active {
+	color: #898989 !important;
+	border: 1px solid #DDDDDD !important;
+	background-color: transparent;
+	cursor: default;
+}

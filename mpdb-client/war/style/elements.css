@@ -1,0 +1,186 @@
+/*-------------------------------------
+                  type
+ --------------------------------------*/
+h1, .h1 {
+	font-size: 2em;
+	font-weight: normal;
+	font-family: Helvetica, Arial, sans-serif;
+}
+h2, .h2 {
+	font-size: 1.5em;
+	font-weight: normal;
+	font-family: Helvetica, Arial, sans-serif;
+}
+h3, .h3 {
+	font-size: 1.3em;
+	font-weight: normal;
+	font-family: Helvetica, Arial, sans-serif;
+}
+p, .p {
+	margin: 1em 0;
+	line-height: 1.5;
+}
+
+.type-large-number {
+	font: 1.8em "Lucida Grande",Verdana,sans-serif;
+	color: #000;
+}
+.type-small-caps {
+	font: 0.9em "Gill Sans",Verdana,sans-serif;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	color: #999;
+}
+.element-margin {
+	margin: 10px;
+}
+.igsn {
+	color: #fff;
+	background-color: #d3d3d3;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+}
+.pdf {
+	color: #ae0808;
+	background-color: #fff;
+	font-size: 0.8em;
+	padding: 0.2em 0.2em 0;
+	-moz-border-radius: 1px;
+	-webkit-border-radius: 1px;
+	border-radius: 1px;
+	border: 1px solid #eee;
+}
+sub {
+	vertical-align: -30%;
+	font-size: 0.8em;
+}
+
+/*-------------------------------------
+               hyperlinks
+ --------------------------------------*/
+a, a:link, a:visited {
+	color: #0c5ea3;
+	text-decoration: underline;
+	cursor: pointer;
+}
+a:focus, a:hover, a:active {
+	color: #318fdf;
+}
+a.light-link,
+a.light-link:link,
+a.light-link:visited  {
+	color: #9ed2ff;
+}
+a.light-link:focus,
+a.light-link:hover,
+a.light-link:active  {
+	color: #cce8ff;
+}
+.large-icon-link {
+	padding: 10px 0 10px 24px;
+	background-repeat: no-repeat;
+	background-position: left center;
+	cursor: pointer;
+}
+.upload-link {
+	background-image: url(../images/icon-upload.png);
+}
+.upload-multi-link {
+	background-image: url(../images/icon-upload-multi.png);
+}
+.add-link {
+	background-image: url(../images/icon-add.png);
+}
+.info-link {
+	background-image: url(../images/icon-info.png);
+}
+
+/*-------------------------------------
+                 inputs
+ --------------------------------------*/
+input[type="text"],
+input[type="password"] {
+	border: 1px solid #ccc;
+	padding: 4px;
+}
+input[type="text"]:focus, 
+input[type="text"]:hover,
+input[type="password"]:focus, 
+input[type="password"]:hover {
+	border-color: #999;
+}
+input[type="text"].invalid,
+input[type="password"].invalid {
+	border-bottom: 2px solid #e31428;
+	background-color: #f9f9f9;
+}
+
+
+/*-------------------------------------
+                 buttons
+ --------------------------------------*/
+button {
+	background: #e4e5e9 url(../images/button-bg.png) repeat-x left top;
+	border: 1px solid #bec3cd;
+	border-bottom-color: #88909f;
+	-moz-border-radius: 1em;
+	-webkit-border-radius: 1em;
+	padding: 0.2em 0.75em;
+	color: #394148;
+	cursor: pointer;
+}
+button:focus, button:hover, button:active {
+	color: #27292b;
+	border-color: #a0a6b3;
+	background-image: url(../images/button-bg-hover.png);
+	border-bottom-color: #5d6574;
+}
+button:active {
+	background-color: #fff;
+	background-image: url(../images/button-bg-down.png);
+}
+button:disabled{
+	color: gray;	
+}
+button.btnPrimary,
+button.submit {
+	font-weight: bold;
+}
+.icon-plus,
+.icon-minus {
+	width: 16px;
+	height: 16px;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	border: none;
+}
+.icon-plus,
+.icon-plus:focus,
+.icon-plus:hover {
+	background-image: url(../images/icon-plus.png);
+}
+.icon-plus:active {
+	background-image: url(../images/icon-plus-active.png);
+}
+.icon-plus-disabled,
+.icon-plus-disabled:focus,
+.icon-plus-disabled:hover,
+.icon-plus-disabled:active {
+	background-image: url(../images/icon-plus-disabled.png);
+}
+.icon-minus,
+.icon-minus:focus,
+.icon-minus:hover {
+	background-image: url(../images/icon-minus.png);
+}
+.icon-minus:active {
+	background-image: url(../images/icon-minus-active.png);
+}
+.icon-minus-disabled,
+.icon-minus-disabled:focus,
+.icon-minus-disabled:hover,
+.icon-minus-disabled:active {
+	background-image: url(../images/icon-minus-disabled.png);
+}

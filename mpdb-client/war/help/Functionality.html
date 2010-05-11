@@ -1,0 +1,69 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+ <title>Functionality - MetPetDB</title><link rel="alternate" href="Functionality?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="Functionality?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="Functionality?format=pdf" title="PDF" type="text/x-trac-wiki" /><style type="text/css">
+</style>
+ 
+</head>
+<body>
+
+   <div class="wikipage">
+    <div id="searchable"><p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+<hr />
+<h1 id="SystemFunctionality">System Functionality</h1>
+<p>
+The functions that will be supported by the MetPetDB database can be grouped into several main groups.
+</p>
+<h2 id="DataUpload">Data Upload</h2>
+<p>
+Data upload involves the upload of data into the system by one of two main means: <a class="wiki" href="HowToUploadData.html">bulk upload</a> and single (manual) upload. 
+</p>
+<p>
+Bulk upload involves the loading of data with the help of Excel spreadsheets with a specific format using key words as data tags. Users are expected to upload data in different groups categorized as <a class="wiki" href="HowToUploadData.html#Samples">samples</a>, <a class="wiki" href="HowToUploadData.html#Images">images</a> and <a class="wiki" href="HowToUploadData.html#ChemicalAnalyses">chemical analyses</a>. Users can also create and upload specific information about <a class="wiki" href="Subsample.html">subsamples</a>, which are required for all chemical analyses (and may be applied to images).  Each upload involves rigorous error checking to find possible misspellings, format errors, values out of bounds, etc. Similarly, the system will check for duplicate values and require clarifications when necessary. The error checking will help user fix or ignore the problems.
+</p>
+<p>
+Single (manual) upload allows users to enter data for each sample, subsample, image or chemical analysis one by one. 
+</p>
+<h2 id="DataSearchBrowseandUse">Data Search, Browse and Use</h2>
+<p>
+The data <a class="wiki" href="Search.html">search</a> and browse functionality will allow users to formulate queries with various complexity and see the results of their searches. The users will be able to save their searches and revisit them. They will be able to specify whether they want to search within published data, public data owned by others, data they own, or data specific to a project.  Users will also be able to filter out specific <a class="wiki" href="Comment.html">comments</a> and add new comments of their own.  All changes made to the data in the system, public or private, will be stored using a <a class="wiki" href="Versioning.html">data versioning system</a>. Users will also be able to view changes to their private data, make changes or revoke changes to revert back to a previous version of their data. 
+</p>
+<p>
+<a class="missing wiki" href="DataClasses.html" rel="nofollow">More information on accessing data?</a>.
+</p>
+<p>
+The browse functionality will let users view the data in the system using various browsers, including an <a class="wiki" href="InterfaceDesign/ImageMap">image map</a> program that allows spatial referencing of various images of a subsample and the chemical analyses in their specific spatial context. We will also implement a Google Earth functionality for viewing the available data on the <a class="ext-link" href="http://earth.google.com/"><span class="icon">Google Earth application</span></a>.
+</p>
+<h2 id="MetPetDBToolset">MetPetDB Toolset</h2>
+<p>
+We will design MetPetDB so that data can be used with a range of analysis tools such as data plotting, mineral recalculations, and thermobarometry calculations. These tools will be available to all users and will greatly facilitate the manipulation of data in the future. We will encourage users to develop their own tools that can be used by other users of the database.
+</p>
+<h2 id="ProjectManagementSystem">Project Management System</h2>
+<p>
+This functionality will allow users to create groups, assign their data objects to specific projects and invite users to their project. Certain users of a project will be able to see and modify private samples in the project space even if they are not owned by that user. The users of the project will be able to view changes to the data in the project space since their last login. 
+</p>
+<p>
+<a class="wiki" href="Projects.html">More information on Projects</a>
+</p>
+<h2 id="AdministrativeandUserFunctions">Administrative and User Functions</h2>
+<p>
+The user functions involve the <a class="wiki" href="InterfaceDesign/Registration">user registration</a> and approval functions. The administrative functions involve the auditing of changes, changing of user access rights, especially blocking users from accessing data and removing public data under special circumstances. 
+</p>
+<p>
+<a class="wiki" href="UserTypes.html">More information on the different access rights of users</a>
+</p>
+<hr />
+<p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+</div>
+   </div>
+   
+  
+ </body>
+</html>
+

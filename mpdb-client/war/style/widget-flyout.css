@@ -1,0 +1,27 @@
+/*-------------------------------------
+                flyout
+ --------------------------------------*/
+
+.flyout-list {
+	padding-left: 10px;
+	background: transparent url(../images/flyout-bg-arrow.png) no-repeat left top;
+}
+.flyout-item {
+	display: table-row;
+	border: 1px solid #cbcbcb;
+}
+.flyout-list .flyout-item:first-child {
+	border-left: none;
+}
+.flyout-item .mpcheckbox,
+.flyout-item .morebutton {
+	display: table-cell;
+	vertical-align: middle;
+	padding: 4px;
+}
+.flyout-item .mpcheckbox .checkbox-img {
+	vertical-align: middle;
+}
+.flyout-item .morebutton {
+	cursor: pointer;
+}

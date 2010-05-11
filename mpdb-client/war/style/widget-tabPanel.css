@@ -1,0 +1,57 @@
+/*-------------------------------------
+               Tab Panel
+ --------------------------------------*/
+
+.tabBar {
+	background-color: #E4E4E4;
+	border-bottom: 1px solid #CBCBCB;
+	padding: 6px;
+}
+.tabBar-table {
+	margin: 0 auto;
+}
+.tabBarItem {
+	background: transparent url(../images/tabitem-bg.png) no-repeat 50% 50%;
+	cursor: default;
+}
+.tabBarItem-wrap {
+	background: transparent url(../images/tabitem-divider.png) no-repeat 100% 50%;
+	padding-right: 9px;
+}
+.tabBarItem-content {
+	color: #000;
+	height: 20px;
+	padding: 4px 0 0 8px;
+}
+.tabBarItem:active {
+	background-image: url(../images/tabitem-active-bg.png);
+}
+.tabBarItem-selected {
+	background-image: url(../images/tabitem-selected-bg.png);
+}
+.tabBarItem:active .tabBarItem-wrap {
+	background-image: url(../images/tabitem-active-right.png);
+}
+.tabBarItem-selected .tabBarItem-wrap {
+	background-image: url(../images/tabitem-selected-right.png);
+}
+.tabBarItem:active .tabBarItem-content {
+	background: transparent url(../images/tabitem-active-left.png) no-repeat 0% 50%;
+}
+.tabBarItem-selected .tabBarItem-content {
+	color: #fff;
+	text-shadow: 1px 1px 0 #000;
+	background: transparent url(../images/tabitem-selected-left.png) no-repeat 0% 50%;
+}
+.tabBar-table td:first-child .tabBarItem {
+	background-position: 0% 50%;
+}
+.tabBar-table td:last-child .tabBarItem {
+	background-position: 100% 50%;
+}
+.tabBar-table td:first-child .tabBarItem-selected .tabBarItem-content,
+.tabBar-table td:first-child .tabBarItem:active .tabBarItem-content,
+.tabBar-table td:last-child .tabBarItem-wrap {
+	background-image: none;
+}
+

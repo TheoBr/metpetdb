@@ -1,0 +1,68 @@
+
+/*-------------------------------------
+             Details Panel
+ --------------------------------------*/
+ 
+.detailsPanel {
+	margin-top: 10px;
+}
+.detailsPanel td {
+	vertical-align: baseline;
+	padding: 5px 10px;
+}
+.detailsPanel td:first-child {
+	padding-top: 10px;
+}
+.detailsPanel td.pairedRow-label {
+	padding-right: 5px;
+}
+.detailsPanel td.pairedRow-value {
+	padding-left: 5px;
+}
+.detailsPanel tr.required .pairedRow-label label {
+	padding-right: 15px;
+	background: transparent url(../images/icon-required-star.png) no-repeat 100% 50%; 
+}
+.detailsPanel .pairedRow-label em {
+	display: none;
+}
+
+.detailsPanel .invalid-message {
+	margin-top: 7px;
+	font-size: 0.9em;
+}
+.detailsPanel .invalid-message span {
+	color: #A20110;
+	background-color: #eee;
+	padding: 4px 6px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+}
+.detailsPanel .invalid-message span.icon-warning {
+	background-image: url(../images/icon-warning.png);
+	background-repeat: no-repeat;
+	background-position: 5px 50%;
+	padding-left: 22px;
+}	
+
+.detailsPanel-table-left {
+	float: left;
+	width: 300px;
+}
+
+.detailsPanel-table-right {
+	display: inline;	
+	width: 300px;
+}
+
+.detailsPanel-table-bottom {
+	display: block;	
+	width: 600px;
+}
+
+
+span.gwt-RadioButton label {
+    color: #000;
+    margin-right: 1em;
+}

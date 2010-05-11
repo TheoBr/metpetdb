@@ -40,8 +40,7 @@ public class ChooseImageAttribute<DataType extends HasImage> extends GenericAttr
 			final AbsolutePanel ap = new AbsolutePanel();
 			ap.add(new com.google.gwt.user.client.ui.Image(((Image) image)
 					.get64x64ServerPath()), 0, 0);
-			final com.google.gwt.user.client.ui.Image i = new com.google.gwt.user.client.ui.Image(
-					GWT.getModuleBaseURL() + "/images/point0.gif");
+			final com.google.gwt.user.client.ui.Image i = new com.google.gwt.user.client.ui.Image("images/point0.gif");
 			double mmPerPixel = image.getScale() == null || image.getScale() == 0 ? image.getWidth() : image.getScale()/64D;
 			ap.add(i, (int) (x/mmPerPixel) - 4,
 					(int) (y/mmPerPixel) - 7);

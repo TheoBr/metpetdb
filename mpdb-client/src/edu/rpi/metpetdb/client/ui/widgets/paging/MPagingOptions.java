@@ -125,7 +125,7 @@ public class MPagingOptions extends Composite {
     numPagesLabel = new InlineHTML();
 
     // Create the loading image
-    loadingImage = new Image(GWT.getModuleBaseURL() + "/images/icon-loading-list.gif");
+    loadingImage = new Image("images/icon-loading-list.gif");
     loadingImage.setStyleName("table-loading");
     loadingImage.addStyleName(CSS.INVISIBLE);
 
@@ -208,13 +208,13 @@ public class MPagingOptions extends Composite {
    */
   private void createPageButtons() {
     // Create the images
-    firstImage = new Image(GWT.getModuleBaseURL() + "/images/icon-paging-first.png");
+    firstImage = new Image("images/icon-paging-first.png");
     firstImage.addStyleName(STYLENAME_PREFIX + "-first");
-    prevImage = new Image(GWT.getModuleBaseURL() + "/images/icon-paging-prev.png");
+    prevImage = new Image("images/icon-paging-prev.png");
     prevImage.addStyleName(STYLENAME_PREFIX + "-prev");
-    nextImage = new Image(GWT.getModuleBaseURL() + "/images/icon-paging-next.png");
+    nextImage = new Image("images/icon-paging-next.png");
     nextImage.addStyleName(STYLENAME_PREFIX + "-next");
-    lastImage = new Image(GWT.getModuleBaseURL() + "/images/icon-paging-last.png");
+    lastImage = new Image("images/icon-paging-last.png");
     lastImage.addStyleName(STYLENAME_PREFIX + "-last");
 
     // Create the listener

@@ -9,6 +9,7 @@ import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.UserWithPassword;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
@@ -162,7 +163,7 @@ public class EditUserProfile extends MPagePanel implements UsesCurrentUser {
 		}
 
 		protected void doChangePassword() {
-			new FormOp<Object>(p_password) {
+			new FormOp<MObject>(p_password) {
 				protected void onSubmit() {
 					MpDb.user_svc.changePassword(uwp, this);
 				}
@@ -171,7 +172,7 @@ public class EditUserProfile extends MPagePanel implements UsesCurrentUser {
 					p_password.edit(uwp);
 					super.onFailure(e);
 				}
-				public void onSuccess(final Object result) {
+				public void onSuccess(final MObject result) {
 					enable(true);
 					uwp.setOldPassword(null);
 					uwp.setNewPassword(null);

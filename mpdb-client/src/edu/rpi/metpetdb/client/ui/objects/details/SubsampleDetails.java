@@ -1,6 +1,5 @@
 package edu.rpi.metpetdb.client.ui.objects.details;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,11 +20,10 @@ import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
-import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
-import edu.rpi.metpetdb.client.ui.MetPetDBApplication;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
@@ -40,7 +38,6 @@ import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.image.AddImageAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisList;
-import edu.rpi.metpetdb.client.ui.objects.list.ChemicalAnalysisListEx;
 import edu.rpi.metpetdb.client.ui.objects.list.ImageListViewer;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
@@ -101,7 +98,7 @@ public class SubsampleDetails extends MPagePanel {
 				}
 			}
 
-			protected void deleteBean(final AsyncCallback<Object> ac) {
+			protected void deleteBean(final AsyncCallback<MObject> ac) {
 				sampleId = getBean().getSampleId();
 						new ConfirmationDialogBox("Are you sure you want to delete this subsample?"
 								, true) {

@@ -41,7 +41,7 @@ public class UploadImageAttribute extends GenericAttribute<Image> {
 		fp = new FormPanel();
 		fp.setMethod(FormPanel.METHOD_POST);
 		fp.setEncoding(FormPanel.ENCODING_MULTIPART);
-		fp.setAction(GWT.getModuleBaseURL() + "/imageUpload");
+		fp.setAction(GWT.getModuleBaseURL() + "imageUpload");
 
 		fu = new FileUpload();
 		fu.setName("imageUpload");

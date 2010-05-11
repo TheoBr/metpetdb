@@ -41,8 +41,7 @@ public class PointPopup extends DialogBox implements ClickListener {
 				.detailsOf(ma)));
 		final MHtmlList ul = new MHtmlList();
 		ul.setStyleName("options");
-		this.remove = new ImageHyperlink(new Image(GWT.getModuleBaseURL()
-				+ "/images/icon-remove.gif"), "Remove", this, false);
+		this.remove = new ImageHyperlink(new Image("images/icon-remove.gif"), "Remove", this, false);
 		this.lock = new MLink(this.locked ? "Unlock" : "Lock", this);
 		ul.add(this.remove);
 		ul.add(this.lock);

@@ -1,0 +1,346 @@
+/*-------------------------------------
+              search
+ --------------------------------------*/
+ 
+.search .page-header {
+	border-bottom: 0;
+}
+.search .checkbox {
+	display: table-row;
+	color: #444;
+}
+.search .checkbox input {
+	border: 0 !important;
+	margin: 0 5px 0 0;
+}
+.search .checkbox label,
+.search .checkbox input {
+	display: table-cell;
+	vertical-align: middle;
+	padding-bottom: 6px;
+}
+.search .checkbox-checked {
+	color: #000;
+	text-shadow: 1px 1px 0 #eee;
+	text-decoration: underline;
+}
+.search-actions {
+	margin-right: 10px;
+	margin-left: 8px;
+}
+.search-actions li {
+	margin: 1em 0;
+	text-align: center;
+}
+.search-actions .return-type {
+	display: table-row;
+}
+.search-actions .return-type span {
+	display: table-cell;
+	vertical-align: middle;
+	padding-left: 1em;
+}
+.search-actions .return-type .gwt-RadioButton input,
+.search-actions .return-type .gwt-RadioButton label {
+	vertical-align: middle;
+}
+.search-actions .return-type .gwt-RadioButton label {
+	margin-left: 0.2em;
+	margin-right: 0;
+}
+
+/*-------------------------------------
+                criteria
+ --------------------------------------*/
+.search .criteria .tabPanel {
+	width: 100%;
+}
+.search .criteria .tabBar {
+	padding: 7px 6px;
+}
+.search .criteria-collapse {
+	background-color: #f1f1f1;
+	width: 100%;
+}
+.search .criteria-dropshadow {
+	background: #ededed url(../images/search-criteria-shadow.png) repeat-x left bottom;
+	height: 6px;
+}
+.search .criteria-collapse a.header {
+	background: #c2c2c2 url(../images/search-collapsebar-bg.png) repeat-x left top;
+	height: 7px;
+	padding-top: 4px;
+}
+.search .criteria-collapse a.header:hover {
+	background-position: left -11px;
+}
+.search .criteria-collapse a.header div {
+	width: 10px;
+	height: 5px;
+	background: transparent url(../images/search-collapsebar-arrow.png) no-repeat left top;
+	margin: 0 auto;
+	text-indent: -9999px;
+}
+.search .criteria-collapse-closed a.header div {
+	background-position: left -5px;
+}
+.search-button {
+	font-weight: bold; 	
+}
+.search-taboptions {
+	background-color: #E4E4E4;
+	border: 1px solid #CBCBCB;
+	border-top: none;
+	margin: -1px 0 10px;
+	padding: 1px 5px 5px;
+	text-align: center;
+	-moz-border-radius-bottomleft: 2px;
+	-moz-border-radius-bottomright: 2px;
+	-webkit-border-bottom-right-radius: 2px;
+	-webkit-border-bottom-left-radius: 2px;
+}
+.search-taboptions .gwt-RadioButton,
+.search-prov .gwt-RadioButton {
+	display: table-row;
+}
+.search-taboptions .gwt-RadioButton input,
+.search-prov .gwt-RadioButton input {
+	border: 0 !important;
+	margin: 0 4px 0 0;
+}
+.search-taboptions .gwt-RadioButton label,
+.search-taboptions .gwt-RadioButton input,
+.search-prov .gwt-RadioButton label,
+.search-prov .gwt-RadioButton input {
+	display: table-cell;
+	line-height: 1;
+	vertical-align: middle;
+}
+
+/*-------------------------------------
+             criteria summary
+ --------------------------------------*/
+.criteria-summary .header-wrap {
+	background-color: #E4E4E4;
+	border-bottom: 1px solid #CBCBCB;
+	padding: 8px 6px 0 0;
+}
+.criteria-summary .header-content {
+	background: transparent url(../images/srchsum-header-bg-start.png) no-repeat left top;
+	padding-left: 14px;
+}
+.criteria-summary .header-content div {
+	background: transparent url(../images/srchsum-header-bg-end.png) no-repeat right top;
+	padding: 9px 14px 0 0;
+	height: 21px;
+	text-transform: uppercase;
+	font-family: "Gill Sans",Verdana,sans-serif;
+	letter-spacing: 1px;
+}
+.criteria-summary .header-content div a {
+	float: right;
+	font: 11px Verdana, "Lucida Grande", sans-serif;
+	letter-spacing: 0;
+	text-transform: none;
+}
+.criteria-summary .content-wrap {
+	background: transparent url(../images/srchsum-content-bg-start.png) repeat-y left top;
+	padding-left: 4px;
+	margin: -1px 6px 0 0;
+}
+.criteria-summary-content {
+	background: transparent url(../images/srchsum-content-bg-end.png) repeat-y right top;
+	padding-right: 4px;
+}
+.criteria-summary .empty {
+	padding: 5px;
+	color: #888;
+	font-size: 0.9em;
+}
+.criteria-summary .bottom-wrap {
+	background: transparent url(../images/srchsum-bottom-start.png) no-repeat left top;
+	padding-left: 14px;
+	height: 6px;
+	margin-right: 6px;
+}
+.criteria-summary .bottom {
+	background: transparent url(../images/srchsum-bottom-end.png) no-repeat right top;
+	height: 6px;
+}
+.criteria-summary .section {
+	padding: 5px 0;
+}
+.criteria-summary .section-title {
+	position: relative;
+	padding: 5px 43px 2px 5px;
+	border-bottom: 1px solid #ddd;
+	color: #888;
+}
+.criteria-summary .section-title a.clear {
+	position: absolute;
+	bottom: 3px;
+	right: 10px;
+	font-family: Verdana, "Lucida Grande", sans-serif;
+	text-transform: none;
+	letter-spacing: 0;
+}
+.criteria-summary .section > div+div {
+	margin: 0 5px;
+}
+
+/*-------------------------------------
+              rock types
+ --------------------------------------*/
+.search-rt {
+	margin: 10px 7px 10px 10px;
+}
+.search-rt-table {
+	width: 100%;
+}
+
+/*-------------------------------------
+              location
+ --------------------------------------*/
+.search-loc {
+	margin: 0 7px 10px 10px;
+}
+.search-loc .search-taboptions li {
+	display: inline;
+	margin-right: 10px;
+}
+.search-map {
+	padding-right: 15.4em;
+}
+.search-map .left-col {
+	position: relative;
+	width: 100%;
+}
+.search-map .right-col {
+	position: relative;
+	margin-right: -15.4em;
+	width: 15.4em;
+}
+.search-map .right-col .content {
+	padding-left: 10px;
+}
+.search-map .right-col a {
+	margin-left: 5px;
+}
+.search-map .right-col input {
+	display: block;
+	width: 12em;
+	margin-bottom: 10px;
+}
+.search-map-nb, .search-map-sb,
+.search-map-eb, .search-map-wb {
+	padding-left: 20px !important;
+	background-position: 4px 4px;
+	background-repeat: no-repeat;
+}
+.search-map-nb { background-image: url(../images/icon-bounds-north.png); }
+.search-map-sb { background-image: url(../images/icon-bounds-south.png); }
+.search-map-eb { background-image: url(../images/icon-bounds-east.png); }
+.search-map-wb { background-image: url(../images/icon-bounds-west.png); }
+
+.search-loc-region {
+	margin: 0 auto;
+}
+.search-loc-region td {
+	padding-bottom: 10px;
+}
+.search-loc-region .label {
+	padding-right: 7px;
+	text-align: right;
+}
+
+/*-------------------------------------
+              minerals
+ --------------------------------------*/
+.search .flyout {
+	margin: 10px;
+}
+.mineral-chooser-popup  .popupContent {
+	background-color: #eee;
+	padding: 1em;
+	text-align: right;
+	border: 1px solid #CBCBCB;
+	margin-top: 5px;
+}
+.mineral-chooser-popup .flyout {
+	margin: 0.7em 0;
+	text-align: left;
+}
+.mineral-chooser-popup .popupContent > div > .mpcheckbox {
+	text-align: left;
+	display: block;
+}
+.mineral-chooser-popup button {
+	margin-left: 1em;
+}
+
+
+/*-------------------------------------
+              chemistry
+ --------------------------------------*/
+.search-chem {
+	margin: 10px;
+}
+.search-chem .chem-list {
+	margin: 1.3em auto 0;
+}
+.search-chem .chem-list li {
+	clear: both;
+}
+.search-chem .chem-list .multi-input-wrap {
+	display: block;
+	float: left;
+	height: 3.35em;
+	margin-top: -0.35em;
+}
+.search-chem .suggest-box {
+	width: 6em;
+}
+.search-chem .number-input {
+	width: 4em;
+}
+.search-chem .chem-item {
+	display: inline;
+}
+.search-chem .chem-item > *+* {
+	margin-left: 5px;
+}
+.chem-suggest-popup .item span,
+.all-suggest-popup-chem .item span {
+	margin-left: 3px;
+	font-size: 0.9em;
+	color: #6e7e91;
+}
+.chem-suggest-popup .item-selected span,
+.chem-suggest-popup .item:hover span,
+.all-suggest-popup-chem .item-selected span,
+.all-suggest-popup-chem .item:hover span {
+	color: #b8c8da;
+}
+.chem-suggest-popup .item sub,
+.all-suggest-popup-all .item sub {
+	text-align: bottom;
+}
+
+
+/*-------------------------------------
+              provenance
+ --------------------------------------*/
+.search-prov {
+	margin: 10px auto;
+}
+.search-prov td {
+	padding-bottom: 10px;
+}
+.search-prov .label {
+	padding-right: 7px;
+	text-align: right;
+}
+.search-prov .access li {
+	display: inline;
+	margin-right: 10px;
+}

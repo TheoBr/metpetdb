@@ -1,0 +1,100 @@
+/*-------------------------------------
+			calendar input
+ --------------------------------------*/
+.daterange .gwt-Label {
+	display: inline;
+	margin: 0 5px;
+}
+.daterange input {
+	width: 6.3em;
+}
+.daterange span {
+	margin: 0 10px;
+}
+.daterange .daterange-btn {
+	background: transparent url(../images/icon-calendar.gif) no-repeat 50% 50%;
+	width: 23px;
+	height: 24px;
+	vertical-align: top;
+	border: none;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+}
+.daterange .daterange-btn:hover {
+	background-image: url(../images/icon-calendar-hover.gif);
+}
+
+/*-------------------------------------
+			calendar popup
+ --------------------------------------*/
+
+.gwt-DatePicker {
+	background-color: #86a319;
+	border: 1px solid #86a319;
+}
+.gwt-DatePicker td {
+	text-align: center;
+	padding: 2px 4px;
+	vertical-align: middle !important;
+}
+.gwt-DatePicker .month-selector {
+	background: #9ebf2f url(../images/calendar-month-bg.png) repeat-x left top;
+}
+.gwt-DatePicker .month-label {
+	color: #fff;
+	font-weight: bold;
+	text-shadow: #86a319 1px 1px 0;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+.gwt-DatePicker .month-backward,
+.gwt-DatePicker .month-forward {
+	background: transparent url(../images/calendar-month-prev.png) no-repeat 50% top;
+	width: 13px;
+	height: 8px;
+	margin-top: 1px;
+	cursor: pointer;
+}
+.gwt-DatePicker .month-forward {
+	background-image: url(../images/calendar-month-next.png);
+}
+	background-image: url(../images/calendar-month-next.png);
+.gwt-DatePicker .month-backward:hover,
+.gwt-DatePicker .month-forward:hover {
+	background-position: 50% -8px;
+}
+.gwt-DatePicker .month-backward div,
+.gwt-DatePicker .month-forward div {
+	display: none;
+}
+.gwt-DatePicker .day-title {
+	background: #86a319 url(../images/calendar-weekdays-bg.png) repeat-x left top;
+	color: #c4db77;
+}
+.gwt-DatePicker .date-cell,
+.gwt-DatePicker .filler-cell {
+	cursor: pointer;
+}
+.gwt-DatePicker .date-cell {
+	background-color: #fff;
+	color: #69820b;
+}
+.gwt-DatePicker .date-cell:hover {
+	background-color: #e0efd2;
+	color: #4e6300;
+}
+.gwt-DatePicker .filler-cell {
+	background-color: #e7e7e7;
+	color: #b4b4b4;
+}
+.gwt-DatePicker .filler-cell:hover {
+	background-color: #d6d6d6;
+	color: #878787;
+}
+.gwt-DatePicker .selected-cell,
+.gwt-DatePicker .selected-cell:hover {
+	background:#000 url(../images/calendar-date-selected-bg.png) repeat-x left top;
+	color: #fff;
+}
+
+

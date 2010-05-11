@@ -10,8 +10,8 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
-import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
@@ -94,7 +94,7 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 				}
 			}
 
-			protected void deleteBean(final AsyncCallback<Object> ac) {
+			protected void deleteBean(final AsyncCallback<MObject> ac) {
 						new ConfirmationDialogBox("Are you sure you want to delete this analysis?"
 								, true) {
 							public void onSubmit(){

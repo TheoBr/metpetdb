@@ -67,8 +67,8 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 			add(cb);
 			if (value instanceof HasChildren && value.getChildren() != null && value.getChildren().size() > 0) {
 				moreBtn = new ToggleButton(
-						new Image(GWT.getModuleBaseURL() + "/images/icon-flyout-more-up.png"),
-						new Image(GWT.getModuleBaseURL() + "/images/icon-flyout-more-down.png"),
+						new Image("images/icon-flyout-more-up.png"),
+						new Image("images/icon-flyout-more-down.png"),
 						new ClickListener() {
 					public void onClick(Widget sender) {
 						Widget item = sender.getParent();

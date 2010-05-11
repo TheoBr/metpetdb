@@ -1,0 +1,51 @@
+/*-------------------------------------
+             utility styles
+ --------------------------------------*/
+.block {display: block;}
+.inline {display: inline;}
+.hide {display: none;}
+.invisible {visibility: hidden;}
+.visible {visibility: visible;}
+
+/*-------------------------------------
+           multi-purpose styles
+ --------------------------------------*/
+.tc {text-align: center;}
+.tr {text-align: right;}
+.vc {vertical-align: middle;}
+.tl {text-align: left;}
+.r {float: right;}
+.l {float: left;}
+.clr {clear: both;}
+.clrr {clear: right;}
+.clrl {clear: left;}
+.clrn {clear: none;}
+.ctr {margin-left: auto; margin-right: auto;}
+.nobdr {border: none !important;}
+.nobg {background: none !important;}
+.smt {font-size: 0.9em;}
+.xsmt {font-size: 0.8em;}
+.xxsmt {font-size: 0.7em;}
+.bigt {font-size: 1.1em;}
+.ml1 {margin-left: 1em;}
+.mr1 {margin-right: 1em;}
+.mt1 {margin-top: 1em;}
+.mb1 {margin-bottom: 1em;}
+.clearfix:after {
+	content: "."; 
+	display: block; 
+	height: 0; 
+	clear: both; 
+	visibility: hidden;
+}
+
+/*-------------------------------------
+               extras
+ --------------------------------------*/
+
+.beta {
+	background: transparent url(../images/beta-bg.png) repeat left top !important;
+	border: 1px solid #fda293;
+	border-right-color: #ea8d7e;
+	border-bottom-color: #ea8d7e;
+}

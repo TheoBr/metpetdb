@@ -12,6 +12,7 @@ import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Invite;
 import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
@@ -19,9 +20,7 @@ import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.TextAreaAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
-import edu.rpi.metpetdb.client.ui.objects.details.ProjectDetails;
 
 public class ProjectInvite extends FlowPanel {
 	private static GenericAttribute[] InviteAtts = {
@@ -77,7 +76,7 @@ public class ProjectInvite extends FlowPanel {
 				}.begin();
 			}
 			
-			protected void deleteBean(final AsyncCallback<Object> ac) {}
+			protected void deleteBean(final AsyncCallback<MObject> ac) {}
 		};
 		Button save = p_user.getSaveButton();
 		save.setText("Send Invite");

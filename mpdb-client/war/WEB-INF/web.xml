@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app >
+
+<servlet>
+  <servlet-name>userServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.UserServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>userServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/user.svc</url-pattern>
+</servlet-mapping>
+
+
+<servlet>
+  <servlet-name>metamorphicGradeServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.MetamorphicGradeServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>metamorphicGradeServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/metamorphicGrade.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>subsampleServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.SubsampleServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>subsampleServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/subsample.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>bulkUploadChemicalAnalysesServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.bulk.upload.BulkUploadChemicalAnalysesServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>bulkUploadChemicalAnalysesServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/bulkUploadChemicalAnalyses.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>bulkUploadReferencesServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.bulk.upload.BulkUploadReferencesServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>bulkUploadReferencesServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/bulkUploadReferences.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>bulkUploadImagesServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.bulk.upload.BulkUploadImagesServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>bulkUploadImagesServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/bulkUploadImages.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>remoteLoggingServiceImpl</servlet-name>
+  <servlet-class>com.google.gwt.libideas.logging.server.RemoteLoggingServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>remoteLoggingServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/logging</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>metamorphicRegionServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.MetamorphicRegionServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>metamorphicRegionServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/metamorphicRegion.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>projectServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.ProjectServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>projectServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/project.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>sampleServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.SampleServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>sampleServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/sample.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>imagesService</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.ImagesService</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>imagesService</servlet-name>
+  <url-pattern>/MetPetDBApplication/image</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>basicKML</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.BasicKML</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>basicKML</servlet-name>
+  <url-pattern>/MetPetDBApplication/BasicKML.kml</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>fileUploadServlet</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.FileUploadServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>fileUploadServlet</servlet-name>
+  <url-pattern>/MetPetDBApplication/spreadsheetUpload</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>imageTypeServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.ImageTypeServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>imageTypeServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/imagetype.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>searchIPhone</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.search.SearchIPhone</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>searchIPhone</servlet-name>
+  <url-pattern>/MetPetDBApplication/searchIPhone.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>referenceServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.ReferenceServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>referenceServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/reference.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>searchIPhonePost</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.search.SearchIPhonePost</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>searchIPhonePost</servlet-name>
+  <url-pattern>/MetPetDBApplication/searchIPhonePost.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>bulkUploadSampleServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.bulk.upload.BulkUploadSampleServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>bulkUploadSampleServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/bulkUpload.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>imageServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.ImageServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>imageServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/image.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>searchIPhone1_1</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.search.SearchIPhone1_1</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>searchIPhone1_1</servlet-name>
+  <url-pattern>/MetPetDBApplication/searchIPhone1_1.scv</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>constantsServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.ConstantsServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>constantsServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/constants.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>regionServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.RegionServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>regionServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/region.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>searchServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.SearchServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>searchServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/search.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>imageUploadServlet</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.ImageUploadServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>imageUploadServlet</servlet-name>
+  <url-pattern>/MetPetDBApplication/imageUpload</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>chemicalAnalysisServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.ChemicalAnalysisServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>chemicalAnalysisServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/chemicalAnalysis.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>sampleCommentServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.SampleCommentServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>sampleCommentServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/sampleComment.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>mpDbGenericServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.MpDbGenericServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>mpDbGenericServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/mpdbGeneric.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>excelServlet</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.ExcelServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>excelServlet</servlet-name>
+  <url-pattern>/MetPetDBApplication/excel.svc</url-pattern>
+</servlet-mapping>
+
+<servlet>
+  <servlet-name>imageBrowserServiceImpl</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.impl.ImageBrowserServiceImpl</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>imageBrowserServiceImpl</servlet-name>
+  <url-pattern>/MetPetDBApplication/imageBrowser.svc</url-pattern>
+</servlet-mapping>
+
+  
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>MetPetDBApplication.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>

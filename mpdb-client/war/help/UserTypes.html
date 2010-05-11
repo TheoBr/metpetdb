@@ -1,0 +1,128 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+ <title>UserTypes - MetPetDB</title><link rel="alternate" href="UserTypes?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="UserTypes?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="UserTypes?format=pdf" title="PDF" type="text/x-trac-wiki" /><style type="text/css">
+</style>
+ 
+</head>
+<body>
+
+   
+   <div class="wikipage">
+    <div id="searchable"><p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+<hr />
+<h1 id="UserTypes">User Types</h1>
+<h2 id="Anonymous">Anonymous</h2>
+<h3 id="Process">Process</h3>
+<p>
+Anonymous users are completely anonymous. They represent any user accessing the system without a login.
+</p>
+<h3 id="AccessRights">Access Rights</h3>
+<p>
+Anonymous users can search and view any public data. They cannot download any data sets from the system in spreadsheet, tabbed, Google Earth or any other supported format.
+</p>
+<h2 id="Member">Member</h2>
+<h3 id="Process1">Process</h3>
+<p>
+A Member must a valid email address.  The address will be verified by sending an activation link/token to the user.  The user must finish verification by visiting the link or entering the token on the website before being registered. 
+</p>
+<p>
+Members will be asked the following information:
+</p>
+<ul><li>(verified) email (also used as username), 
+</li><li>(required) firstname, lastname, password, 
+</li><li>(optional) affiliation (see also <a class="wiki" href="InterfaceDesign/Registration">registration wireframes</a>).
+</li></ul><h3 id="AccessRights1">Access Rights</h3>
+<ul><li>Members can do everything an Anonymous user can do.
+</li><li>Members can download any public data sets using one of the available formats.
+</li><li>Members cannot upload any new data to the system. 
+</li><li>Members cannot comment on existing data either public or private.
+</li></ul><h2 id="Contributor">Contributor</h2>
+<h3 id="Process2">Process</h3>
+<p>
+A Contributor must provide all the information provided by a Member plus the following: 
+</p>
+<ul><li>(required) affiliation
+</li><li>address
+</li><li>description of interests (short text with a description of research including past publications)
+</li><li>sponsor (username of another member of the metpetdb system who will verify the membership)
+</li></ul><p>
+The Contributor will be asked to look up an existing <a class="wiki" href="UserTypes.html#Fellow">Fellow</a> in their field of study from the database and designate this person as their sponsor. Upon registration, the system shall send a mail to the sponsor together with the name, affiliation, address, description of interests of the new user. The sponsor will then have the option of accepting/denying the membership of the new user. Upon acceptance, the new user will be notified by email and will become a Contributor.
+</p>
+<p>
+Students with no existing research publications will be asked to contact a faculty member active in the area and ask them to become members of the system first. These faculty members can then sponsor their research.
+</p>
+<p>
+The system shall keep track of the sponsor for each user and will use this information if necessary to track problems.
+</p>
+<p>
+A Member can also upgrade their membership to Contributor by providing the missing information and going through the same process.
+</p>
+<h3 id="AccessRights2">Access Rights</h3>
+<p>
+A Contributor can do everything a Member can do, plus:
+</p>
+<ul><li>Input new <a class="wiki" href="Sample.html">samples</a>.
+</li><li>Input comments on public samples.
+</li><li>Input comments on own samples, public or private.
+</li><li>Input new subsamples for his/her own samples or for public samples.
+</li><li>Input <a class="wiki" href="ChemicalAnalysis.html">chemical analyses</a> for his/her own <a class="wiki" href="Subsample.html">subsamples</a>.
+</li><li>Vote on the quality of public data.
+</li><li>Undo changes made to his/her own private data.
+<ul><li>All data created by a user is owned by that user.
+</li><li>Any data provided by a Contributor can be tagged as public or private by that user.
+</li></ul></li><li>Cannot access private data of other users.
+</li><li>Transfer ownership of private data to another Contributor.
+</li><li>Create and/or join a <a class="wiki" href="Projects.html">Project</a>.
+<ul><li><a class="missing wiki" href="ProjectRights.html" rel="nofollow">More Information about project rights?</a>.
+</li></ul></li></ul><h2 id="Fellow">Fellow</h2>
+<h3 id="Process3">Process</h3>
+<p>
+Fellows are Contributors that are assigned the Fellow privileges either by <a class="wiki" href="UserTypes.html#Admin">MetPetDB Admin</a> or by other Fellows. The Fellow privilege can only be revoked by a MetPetDB Admin.
+</p>
+<h3 id="AccessRights3">Access Rights</h3>
+<p>
+A Fellow can do everything a Contributor can do, plus:
+</p>
+<ul><li>Approve new Contributors.
+</li><li>Approve new Fellows.
+</li></ul><h2 id="Admin">MetPetDB Admin</h2>
+<h3 id="Process4">Process</h3>
+<p>
+A MetPetDB Admin is a member of the steering committee. They are given admin privileges by the System Admin in consultation with the steering committee. All Admins are required to be Contributors before becoming an Admin.
+</p>
+<h3 id="AccessRights4">Access Rights</h3>
+<p>
+Metpetdb Admins can do all of the things a Fellow can do, plus:
+</p>
+<ul><li>lock a user account so that they cannot access the system.  Locking a user account requires supplying a reason for the lock, viewable by that user and all Fellows. All the data supplied by the locked user account is taken offline.
+</li><li>unlock a previously locked user account.  Unlocking a user account requires supplying a reason for the unlock, viewable by all other Fellows.
+</li><li>make changes to published data with comments describing the reason for the change.
+</li><li>revoke Fellow rights from a Fellow, knocking them down to Contributor.
+</li></ul><p>
+In addition metpetdb admins probably should have the following capabilities in case they need to step in during a period of unfortunate circumstances and help keep a project from stalling due to unusual circumstances, such as the death of a user:
+</p>
+<ul><li>change ownership of private data to another Contributor.
+</li></ul><p>
+Metpetdb admins cannot see and modify the private data of other users.
+</p>
+<h2 id="Sysadmin">System Administrator</h2>
+<p>
+The System Administrator is a staff person who maintains the system. They have the ability to assign <a class="wiki" href="UserTypes.html#Admin">MetPetDB Admins</a>.
+</p>
+<hr />
+<p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+</div>
+   </div>
+   
+  
+
+ </body>
+</html>
+

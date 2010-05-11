@@ -34,7 +34,7 @@ public class Breadcrumbs extends FlowPanel {
 
 	public Breadcrumbs() {
 		RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET,
-				URL.encode("siteMap.xml"));
+				URL.encode("../siteMap.xml"));
 		try {
 			requestBuilder.sendRequest(null, new RequestCallback() {
 				public void onError(Request request, Throwable exception) {

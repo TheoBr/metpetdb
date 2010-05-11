@@ -35,6 +35,7 @@ import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.SampleComment;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
@@ -128,7 +129,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 				MpDb.sample_svc.save((Sample) getBean(), ac);
 			}
 
-			protected void deleteBean(final AsyncCallback<Object> ac) {
+			protected void deleteBean(final AsyncCallback<MObject> ac) {
 				new ConfirmationDialogBox("Are you sure you want to delete this sample?"
 							, true) {
 					public void onSubmit() {
@@ -384,7 +385,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 		private SampleComment comment;
 		
 		private HTML authorLine = new HTML();
-		private Image trash = new Image(GWT.getModuleBaseURL() + "/images/icon-trash-small.png");
+		private Image trash = new Image("images/icon-trash-small.png");
 		private HTML body = new HTML();
 		
 		private MLink editLink = new MLink("Edit");
@@ -462,12 +463,12 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 		
 		public void onClick(Widget sender){
 			if (sender == trash) {
-				new ServerOp<Object>() {
+				new ServerOp<MObject>() {
 					public void begin() {
 						MpDb.sampleComment_svc.delete(comment.getId(), this);
 					}
 	
-					public void onSuccess(Object result) {
+					public void onSuccess(MObject result) {
 						commentsContainer.remove(trash.getParent());
 						if(sample.getComments().size()==0){
 							commentsContainer.add(empty);

@@ -1,0 +1,100 @@
+
+/*-------------------------------------
+				Notices
+---------------------------------------*/
+
+.notice-panel .notice-message {
+	padding: 6px 9px;
+}
+.notice-panel .notice-hide {
+	float: right;
+	padding: 6px 7px 6px 2px;
+}
+.notice-panel .notice {
+	border: 1px solid #EFEFEF;
+	color: #000;
+}
+.notice-panel .notice-success {
+	border-color: #cbee95;
+	border-bottom-color: #bee0a2;
+	color: #3B5C20;
+}
+.notice-panel .notice-error, 
+.notice-panel .notice-disabled, 
+.notice-panel .notice-urgent {
+	border-color: #ffd2d2;
+	border-bottom-color: #ffb3a1;
+	color: #c41616;
+}
+.notice-panel .notice-working {
+	border-color: #cde3f3;
+	border-bottom-color: #a2c6de;
+	color: #617684;
+}
+.notice-panel .notice-warning {
+	border-color:#FFF1D2;
+	border-bottom-color:#FFC446;
+	color: #BC6600;
+}
+.notice-urgent:hover {
+	color:red;
+}
+
+
+/*-------------------------------------
+    confirm account (to enable it)
+ --------------------------------------*/
+.confirm-account-msg {
+	background: #1c1c1c url(../images/bg-notconfirmed.gif) repeat-x left top;
+	line-height: 30px;
+	height: 32px;
+	color: #fff;
+	padding: 0 10px;
+	text-align: center;
+}
+
+/*-------------------------------------
+    top alert (unsupported browser)
+ --------------------------------------*/
+.top-notice .notice-panel .notice-message,
+.top-notice .notice-panel .notice-hide {
+	padding: 0;
+}
+.top-notice .notice-panel .notice-message {
+	margin-right: 3em;
+}
+.top-notice .notice-panel .notice-alert {
+	background: #87241d url(../images/bg-alert.gif) repeat-x left top;
+	color: #fff;
+	padding: 10px;
+	border: none;
+}
+.top-notice .notice-panel .notice-alert .notice-message {
+	background: transparent url(../images/icon-warning.png) no-repeat left 2px;
+	padding-left: 17px;
+}
+.top-notice .notice-panel .notice-alert .notice-hide,
+.top-notice .notice-panel .notice-alert .notice-hide:link,
+.top-notice .notice-panel .notice-alert .notice-hide:visited {
+	display: block;
+	text-indent: -9999px;
+	width: 13px;
+	height: 14px;
+	margin-top: 2px;
+	background: transparent url(../images/icon-close-red.png) no-repeat left top;
+}
+.top-notice .notice-panel .notice-alert .notice-hide:focus,
+.top-notice .notice-panel .notice-alert .notice-hide:hover,
+.top-notice .notice-panel .notice-alert .notice-hide:active {
+	background-position: left -14px;
+}
+.top-notice .notice-panel .notice-alert a,
+.top-notice .notice-panel .notice-alert a:link,
+.top-notice .notice-panel .notice-alert a:visited {
+	color: #e68887;
+}
+.top-notice .notice-panel .notice-alert a:focus,
+.top-notice .notice-panel .notice-alert a:hover,
+.top-notice .notice-panel .notice-alert a:active {
+	color: #ffb6b5;
+}

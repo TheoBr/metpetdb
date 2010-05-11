@@ -1,0 +1,110 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+ <title>ChemicalAnalysisObject - MetPetDB</title><link rel="alternate" href="ChemicalAnalysisObject?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="ChemicalAnalysisObject?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="ChemicalAnalysisObject?format=pdf" title="PDF" type="text/x-trac-wiki" /><style type="text/css">
+</style>
+ 
+</head>
+<body>
+
+   
+   <div class="wikipage">
+    <div id="searchable"><p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+<hr />
+
+<h1 id="ChemicalAnalysisObject">Chemical Analysis Object</h1>
+<p>
+Associated with one <a class="wiki" href="Subsample.html">subsample</a> (and therefore also to one <a class="wiki" href="Sample.html">sample</a>).
+</p>
+<p>
+More information on chemical analyses can be found <a class="wiki" href="ChemicalAnalysis.html">here</a>.
+</p>
+<p>
+<h2 id="REQUIREDFIELDS">REQUIRED FIELDS</h2>
+<dl><dt>SAMPLE NUMBER</dt><dd>
+Must correlate to existing sample in database.  (<a class="wiki" href="HowToUploadData.html#ChemicalAnalysis">Upload help</a>)
+</dd></dl>
+<dl><dt>SUBSAMPLE</dt><dd>
+Must correlate to existing <a class="wiki" href="Subsample.html">subsample</a> of the given sample number. If a subsample has not yet been created, you may create one here, but you must provide a subsample type (see below).
+</dd></dl>
+<dl><dt>POINT</dt><dd>
+The analysis number.  It should be unique to the subsample to allow differentiation between different points for a particular subsample. It should be an <strong>integer</strong>.
+</dd></dl>
+<dl><dt>MINERAL</dt><dd>
+This must be in agreement with <a class="wiki" href="Mineral.html">minerals</a> or mineral modes listed as present for the sample. If the analysis is a bulk/whole rock analysis, this field should read <strong>bulk rock</strong>.
+</dd></dl>
+<dl><dt>METHOD</dt><dd>
+Method of analysis, i.e. EMP, LA-ICPMS, SIMS, etc.        
+</dd></dl>
+<dl><dt>SUBSAMPLE TYPE &#8210; required to create subsamples at bulk upload</dt><dd>
+In order to create a subsample during <a class="wiki" href="HowToUploadData.html#ChemicalAnalysis">bulk upload of chemical analysis</a>, you must specify a type for the new subsample.  Subsample types accepted: Thin section, Polished thin section, Rock Chip, or Mineral separate.  Subsample type only needs to be specified for the first chemical analysis for a particular subsample in a list.  For example, if you have 5 garnet analyses on a new polished thin section that you want to upload, you only need to enter 'polished thin section' in the subsample type column for the first (topmost) analysis.
+</dd></dl>
+<h2 id="OPTIONALFIELDS">OPTIONAL FIELDS</h2>
+<dl><dt>ANALYTICAL FACILITY</dt><dd>
+The analytical facility where analysis was performed.  This can be the name of an institution or department.
+</dd></dl>
+<dl><dt>ANALYSIS DATE</dt><dd>
+Must be a date in MM-DD-YYYY, YYYY-MM-DD or any shortened version (i.e. YYYY, or, YYYY-MM). <a class="wiki" href="Dates.html">Notes on entering dates for upload to MetPedDB</a>.
+</dd></dl>
+<dl><dt>ANALYST</dt><dd>
+The name of the person who analyzed the sample.  Preferred format: Lastname, First initial.
+</dd></dl>
+<dl><dt>REFERENCE IMAGE</dt><dd>
+The filename (including extension) of <a class="wiki" href="Image.html">image</a> on which the analysis location is referenced.  If you do not know it you can find it by navigating to the image itself. The goal here is to allow the user to link to an image showing the context of a chemical analysis, so the reference image <strong>must be uploaded prior to chemical analysis upload</strong>.  <i>Attempting to add a reference image that is not already in the subsample in MetPetDB will give a <strong>bulk upload warning message</i></strong>, and only the image name will be stored with no direct link to the image itself.  If no reference image exists or one cannot be uploaded, leave this column blank and none shall be assigned.
+</dd></dl>
+<dl><dt>X REFERENCE</dt><dd>
+The x coordinate location of the analysis on the reference image, measured in percent of total image width (in original orientaion).  The origin is assumed to be at bottom left of image.
+</dd></dl>
+<dl><dt>Y REFERENCE</dt><dd>
+The y coordinate location of the analysis on the reference image, measured in percent of total image height (in original orientaion).  The origin is assumed to be at bottom left of image.
+</dd></dl>
+<dl><dt>X STAGE</dt><dd>
+The stage X-coordinate recorded by a microscope or microprobe.  These are in microns.
+</dd></dl>
+<dl><dt>Y STAGE</dt><dd>
+The stage Y-coordinate recorded by a microscope or microprobe.  These are in microns.
+</dd></dl>
+<dl><dt>ELEMENTS/SPECIES – at least one required</dt><dd>
+<ul><li>Headers should be different <a class="wiki" href="Element.html">elements</a>/species (e.g. CaO, SiO<sub>2</sub>, Mg).
+</li><li>UNITS – must be in second row and in proper format, (e.g. wt%, ppm)
+</li><li>Non numerical values can be used to indicate information about an analysis as in the table below:
+</li></ul></dd></dl>
+<h3 id="NonNumerics">Values for Elements/Species can be numeric or these abbreviations:</h3>
+<p>
+        
+</p>
+<ul><li>n.d. = not determined        
+</li><li>[blank] = not determined        
+</li><li>n.a. = not determined  (literally not analyzed)
+</li><li>- = not determined                        
+</li><li>b.d. = below detection        
+</li><li>b.d.l. = below detection limit
+</li><li>&lt; [a value] = less than the specified value
+</li></ul><dl><dt>PRECISION</dt><dd>
+<ul><li>Uncertainty of measurement (relative or absolute).
+</li><li>Precision is entered for EACH SPECIFIC ELEMENT/SPECIES VALUE in the column directly to the right of the element/species.  <strong>PRECISION VALUES WILL NOT APPLY TO ALL ELEMENTS/SPECIES, ONLY PRECEDING COLUMN.</strong>
+</li><li>UNITS:  must be in second row and in proper format, including &#x2012;abs or -rel for absolute vs. relative.
+</li></ul>                
+</dd><dt>WEIGHT PERCENT TOTAL</dt><dd>
+The total weight percent of measured elements/species for this point.  This indicates the completeness of the analysis to a user.
+</dd></dl>
+<dl><dt>REFERENCE &#x2012; <i>Note: required for published data</i></dt><dd>
+Data that are published require a reference to the publication. MetPetDB uses the GeoRef assension number (the same as NAVDAT), which can be found from a GeoRef search.
+</dd></dl>
+<dl><dt>COMMENT</dt><dd>
+There may be any number of comment columns.  You can input any type of description of the analytical strategy. <strong>RE: Bulk Upload</strong> For organization purposes, it is probably best to put separate types of information in separate comment columns, rather than strung together in a single comment. The key to using the comment field is to put in information that will describe the analysis, and will help others find it in a search.
+</dd></dl>
+<hr />
+<p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+</div>
+   </div>
+ 
+ </body>
+</html>
+

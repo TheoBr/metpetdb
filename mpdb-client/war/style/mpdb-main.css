@@ -1,0 +1,44 @@
+/*-------------------------------------
+             MPDB
+ --------------------------------------*/
+@import "reset.css";
+@import "layout.css";
+@import "elements.css";
+@import "utility.css";
+@import "notices.css";
+
+/*-------------------------------------
+             widgets
+ --------------------------------------*/
+@import "dialogs.css";
+@import "widgets.css";
+@import "widget-calendar.css";
+@import "widget-detailsPanel.css";
+@import "widget-flyout.css";
+@import "widget-tabPanel.css";
+@import "widget-scrolltable.css";
+
+/*-------------------------------------
+             pages
+ --------------------------------------*/
+@import "page-bulk-upload.css";
+@import "page-imagemap.css";
+@import "page-intro.css";
+@import "page-myprojects.css";
+@import "page-mysamples.css";
+@import "page-projectdetails.css";
+@import "page-chemanalysisdetails.css";
+@import "page-register.css";
+@import "page-sampledetails.css";
+@import "page-search.css";
+@import "page-homepage.css";
+
+/*-------------------------------------
+             :(
+ --------------------------------------*/
+@import "deprecated.css";
+
+/*-------------------------------------
+             fun stuffs
+ --------------------------------------*/
+/*@import "xtra-halloween.css";*/

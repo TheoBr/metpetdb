@@ -1,0 +1,64 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+ <title>LocatingSamples - MetPetDB - Trac</title><link rel="start" href="/trac/metpetdb/wiki" /><link rel="search" href="/trac/metpetdb/search" /><link rel="help" href="/trac/metpetdb/wiki/TracGuide" /><link rel="stylesheet" href="/trac/metpetdb/chrome/common/css/trac.css" type="text/css" /><link rel="stylesheet" href="/trac/metpetdb/chrome/common/css/wiki.css" type="text/css" /><link rel="icon" href="/favicon.ico" type="image/x-icon" /><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" /><link rel="alternate" href="/trac/metpetdb/wiki/LocatingSamples?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="/trac/metpetdb/wiki/LocatingSamples?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="/trac/metpetdb/wiki/LocatingSamples?format=pdf" title="PDF" type="text/x-trac-wiki" /><style type="text/css">
+</style>
+
+</head>
+<body>
+
+   
+     <div class="wikipage">
+    <div id="searchable"><p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+<hr />
+<h1 id="TipsonLocatingyoursamples">Tips on Locating your samples</h1>
+<p>
+Samples are located in MetpetDB using decimal degrees latitude and longitude, referenced to the WGS1984 datum.  Below are notes on preparing your sample locations to be <a class="wiki" href="/trac/metpetdb/wiki/HowToUploadData">uploaded to MetPetDB</a>.  Google Earth is a powerful free tool which MetPetDB recommends for accurately determining precise sample locations.
+</p>
+<h2 id="SamplesfromaGPSorGPScoordinates">Samples from a GPS or GPS coordinates</h2>
+<ul><li>Note that latitude must be between -90 and 90 (negative for south). Also, longitude must be between -180 and 180 (negative for west).  Units are decimal degrees (DD.DDDDD).
+</li><li>Most GPS units can convert saved waypoints to latitude and longitude prior to uploading to a PC.  If waypoints are already uploaded in UTM format, they can be converted using <a class="ext-link" href="http://www.uwgb.edu/dutchs/UsefulData/UTMFormulas.htm"><span class="icon">Steve Dutch's UTM conversion spreadsheet</span></a>.
+</li><li>If you have uploaded your waypoint sample locations to Google Earth, see below "Samples from Google Earth Placemarks".
+</li></ul><h2 id="SamplesfromGoogleEarthPlacemarks">Samples from Google Earth Placemarks</h2>
+<ul><li>Download <a class="ext-link" href="http://earth.google.com/download-earth.html"><span class="icon">Google Earth</span></a> if you haven't already done so.
+</li><li>Create a new folder in the sidebar and add all desired placemarks to that folder.
+</li><li>Click the folder name and click File&gt;Save Place As.  Save it as a .kml file.
+</li><li>Use Frank Spear's KML parse program for mac OS X. (attachment)
+</li><li>The resultant text file can be imported into excel and converted to colums using Data&gt;Text to Columns.
+<ul><li>New html version of KML parse (coming soon).
+</li></ul></li></ul><h2 id="SamplesfromaUSGS7.5minutequadranglemapviagoogleearth">Samples from a USGS 7.5 minute quadrangle map via google earth</h2>
+<p>
+If your samples are located on a USGS 7.5 minute topographic quadrangle from the field, you may want to use google earth to estimate the latitudes and longitudes.
+</p>
+<ul><li>You may view and download most USGS 7.5 minute quadrangles in google earth by downloading an index .kml file from <a class="ext-link" href="http://www.gelib.com/usgs-topographic-maps.htm"><span class="icon">google earth library</span></a>.
+</li><li>Alternatively, you may overlay your own scanned map (see below: Samples from any other type of map) or a download from the <a class="ext-link" href="http://store.usgs.gov/b2c_usgs/usgs/maplocator/%28xcm=r3standardpitrex_prd&amp;layout=6_1_61_48&amp;uiarea=2&amp;ctype=areaDetails&amp;carea=%24ROOT%29/.do"><span class="icon">USGS</span></a>.
+</li><li>Add your samples as placemarks using the add placemark tool.  Be sure the title of each placemark matches the sample number for MetPetDB.
+</li><li>See above "Samples from Google Earth Placemarks" for the next steps.
+</li></ul><h2 id="Samplesfromanyothertypeofmap">Samples from any other type of map</h2>
+<ul><li>You can use google earth's image overlay to display any digital map in google earth's GIS.  The digital map must be in .png format (a "save as" option in adobe acrobat/photoshop or "export" option in adobe illustrator).
+</li><li>Navigate so your view area in google earth most closely matches that of your overlay map.
+</li><li>Select "add&gt;image overlay" in the google earth menu (or click the button in the toolbar).
+</li><li>The best way to accurately overlay your map is rather subjective.
+<ul><li>We recommend finding a couple of points that are well located on the map (such as latitude/longitude crosshairs).
+</li><li>Adding placemarks at the points used for the image overlay will help you keep track of how you spatially located the map (and the sample locations on it).  This information can be saved in a .kml file from google earth.
+</li><li>While projections, scales, and accuracy are highly variable, image overlay often takes a degree of "tweaking".
+</li></ul></li><li>Add placemarks for sample locations, and save a group of them as a .kml file.
+</li><li>MetPetDB will provide a simple program to parse your .kml file of sample locations as placemarks.  This will allow you to extract latitudes and longitudes and add them to a spreadsheet for bulk upload. (COMING SOON)
+</li></ul><h3 id="Estimatingsamplelocationerror">Estimating sample location error</h3>
+<ul><li>This too is a subjective exercise and MetPetDB requests that you avoid underestimating location errors.
+</li><li>Please keep in mind that the purpose of including location error is to help a geologist find a sample location in the field.
+</li></ul><hr />
+<p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+</div>
+   </div>
+   
+ 
+ </body>
+</html>
+

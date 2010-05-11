@@ -27,9 +27,9 @@ public class MPartialCheckBox extends FlowPanel implements ClickListener, HasTex
 	private InlineLabel label;
 	private boolean labelClickable;
 	
-	private final Image checkedImg = new Image(GWT.getModuleBaseURL() + "/images/icon-checkbox.png");
-	private final Image uncheckedImg = new Image(GWT.getModuleBaseURL() + "/images/icon-checkbox-un.png");
-	private final Image partiallyCheckedImg = new Image(GWT.getModuleBaseURL() + "/images/icon-checkbox-semi.png");
+	private final Image checkedImg = new Image("images/icon-checkbox.png");
+	private final Image uncheckedImg = new Image("images/icon-checkbox-un.png");
+	private final Image partiallyCheckedImg = new Image("images/icon-checkbox-semi.png");
 	
 	/**
 	 * Creates an MPartialCheckBox with an empty text label

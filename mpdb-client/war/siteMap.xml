@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- Used to create a tree representing the hierarchy of the website. -->
+<!-- <name> is the name we want to give the page. -->
+<!-- If the name needs to be dynamic (V6-B instead of 'Sample Details') 
+	 then <screen>false<screen> is added and Specific code will need to be added to Breadcrumbs.java. -->
+<!-- <token> is the name the page is given in the TokenSpace class, 
+	 these should all be strings found in LocaleEntity.properties -->
+<SiteMap>
+<page>
+	<name>Home</name>
+	<token>home</token>
+	<page>
+		<name>iPhone App</name>
+		<token>iphone-app</token>
+	</page>
+	<page>
+		<name>My Samples</name>
+		<token>my-samples</token>
+		<page>
+			<name>Add Sample</name>
+			<token>sample-add</token>
+		</page>
+		<page>
+			<name>Bulk Upload</name>
+			<token>bulk-upload</token>
+		</page>
+		<page>
+			<name>Specific Sample</name>
+			<token>sample</token>
+			<screen>false</screen>
+			<page>
+				<name>Add Subsample</name>
+				<token>subsample-add</token>
+				<screen>false</screen>
+			</page>
+			<page>
+				<name>Specific Subsample</name>
+				<token>subsample-edit</token>
+				<screen>false</screen>
+			</page>
+			<page>
+				<name>Specific Subsample</name>
+				<token>subsample</token>
+				<screen>false</screen>
+				<page>
+					<name>Image Map</name>
+					<token>ImageBrowserDetails</token>
+					<screen>false</screen>
+				</page>
+				<page>
+					<name>Create Map</name>
+					<token>CreateImageMap</token>
+					<screen>false</screen>
+				</page>
+				<page>
+					<name>Images</name>
+					<token>ImageListViewer</token>
+				</page>
+				<page>
+					<name>Specific Analysis</name>
+					<token>ChemicalAnalysisDetails</token>
+					<screen>false</screen>
+				</page>
+				<page>
+					<name>Add Chemical Analysis</name>
+					<token>chem-analysis-add</token>
+					<screen>false</screen>
+				</page>
+			</page>
+		</page>
+	</page>
+	<page>
+		<name>My Projects</name>
+		<token>my-projects</token>
+		<page>
+			<name>New Project</name>
+			<token>project-new</token>
+		</page>
+		<page>
+			<name>Specific Project</name>
+			<token>SamplesForProject</token>
+			<screen>false</screen>
+			<page>
+				<name>Description</name>
+				<token>DescriptionOfProject</token>
+				<screen>false</screen>
+			</page>
+			<page>
+				<name>Status of Invites</name>
+				<token>ProjectViewInvites</token>
+				<screen>false</screen>
+			</page>
+			<page>
+				<name>Invite New Member</name>
+				<token>ProjectInvite</token>
+				<screen>false</screen>
+			</page>
+		</page>
+	</page>
+	<page>
+		<name>Search</name>
+		<token>search</token>
+		<page>
+			<name>All Public Samples</name>
+			<token>AllPublicSamples</token>
+		</page>
+		<page>
+			<name>Specific Sample</name>
+			<token>sample</token>
+			<screen>false</screen>
+		</page>
+	</page>
+	<page>
+		<name>Register</name>
+		<token>register</token>
+	</page>
+	<page>
+		<name>Specific User</name>
+		<token>user</token>
+		<screen>false</screen>
+	</page>
+</page>
+</SiteMap>
+

@@ -5,12 +5,13 @@ import com.google.gwt.user.client.ui.FlowPanel;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Project;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.input.ObjectEditorPanel;
 import edu.rpi.metpetdb.client.ui.input.OnEnterPanel;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAreaAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 
 public class ProjectDetails extends FlowPanel {
 	private static GenericAttribute[] projectAtts = {
@@ -39,7 +40,7 @@ public class ProjectDetails extends FlowPanel {
 				// p.setOwner(MpDb.currentUser());
 				MpDb.project_svc.saveProject(p, ac);
 			}
-			protected void deleteBean(final AsyncCallback<Object> ac) {
+			protected void deleteBean(final AsyncCallback<MObject> ac) {
 				// TODO: implement delete for project
 			}
 			protected boolean canEdit() {

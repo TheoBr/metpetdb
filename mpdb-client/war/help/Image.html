@@ -1,0 +1,79 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+ <title>Image - MetPetDB</title><link rel="alternate" href="Image?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="Image?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="Image?format=pdf" title="PDF" type="text/x-trac-wiki" /><style type="text/css">
+</style>
+ 
+</head>
+<body>
+
+
+
+   <div class="wikipage">
+    <div id="searchable"><p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+<hr />
+<h1 id="Image">Image</h1>
+<p>
+Images are central to metamorphic geochemistry, and images must be stored with rock descriptions and <a class="wiki" href="ChemicalAnalysis.html">chemical analyses</a>.
+</p>
+<p>
+MetPetDB will store images of every type tagged to <a class="wiki" href="Sample.html">samples</a> or <a class="wiki" href="Subsample.html">subsamples</a>. Doing this in a way that provides the maximum flexibility and also enables spatial relations in a sample are critical to the usefulness of the database.
+</p>
+<p>
+Information about image object model can be found in the <a class="wiki" href="ImageObject.html">Image Object</a> page.
+</p>
+<h2 id="Imageregistration">Image registration</h2>
+<p>
+In many situations, a large number of images may be collected on a single polished thin section (e.g. photomicrographs, BSE images, X-ray maps, etc.). The spatial relationship of these images is an important piece of information. MetPetDB will preserve this information in the following way.
+</p>
+<p>
+All images collected on a specific subsample of a sample (eg. a thin section) will be spatially located with respect to either a thin section template, or another image (the parent image). The thin section template will be an empty coordinate system the size of the thin section glass. A digital scan of the thin section will fit inside this template. Other images will be located relative to either this template, or to a parent image. Four pieces of information are required to correctly locate one image with respect to another. Two ways to specify this information are:
+</p>
+<ul><li>(X,Y) position of two corners of the daughter image with respect to the parent image
+</li><li>(X,Y) position of one corner (or center) of the daughter image, a rotation angle, and a scale factor
+</li></ul><p>
+Some of the fields in the image data description record are for the purpose of this registration.
+</p>
+<h2 id="Chemicalanalysisregistration">Chemical analysis registration</h2>
+<p>
+Chemical analyses by electron microprobe are located at a small spot on a sample, and this is often recorded on an image. In the old days, this was done by placing a dot on a photomicrograph with a pen. Modern microprobes do this digitally. See the page on chemical analyses for more information.
+                                        
+</p>
+<h2 id="Types">Image types</h2>
+<p>
+Some fields required for certain image types.  You may spell out name or use abbreviations.                                        
+</p>
+<table class="wiki">
+<tr><td><strong>Image Type</strong></td><td><strong>Abbreviation</strong></td><td><strong>Comments</strong>
+</td></tr><tr><td>Field Notes</td><td><strong>FIELDNOTES</strong></td><td>Scanned/digital field notes
+</td></tr><tr><td>Drawing</td><td><strong>DRAWING</strong></td><td> hand sketch or drawing
+</td></tr><tr><td>Map</td><td><strong>MAP</strong></td><td>Map (geologic or otherwise) with sample locations
+</td></tr><tr><td>Cross Section</td><td><strong>XC</strong>        </td><td>Geologic cross section with sample locations
+</td></tr><tr><td>Figure</td><td><strong>FIG</strong></td><td>Miscellaneous figure, may be composite
+</td></tr><tr><td>Field Photo</td><td><strong>FIELDPHOTO</strong>        </td><td>Field photo of outcrop or sample location
+</td></tr><tr><td>Photograph</td><td><strong>PHOTO</strong>        </td><td>General sample imagery
+</td></tr><tr><td>Thin Section Scan</td><td><strong>TSS</strong>        </td><td>Special image of entire thin section
+</td></tr><tr><td>Photomicrograph-Transmitted Plane Polarized</td><td>         <strong>TPPL</strong></td><td>         
+</td></tr><tr><td>Photomicrograph-Transmitted Crossed Polars </td><td>        <strong>TXPL</strong></td><td>         
+</td></tr><tr><td>Photomicrograph-Reflected Plane Polarized </td><td>        <strong>RPPL</strong></td><td>         
+</td></tr><tr><td>Photomicrograph-Reflected Crossed Polars </td><td>        <strong>RXPL</strong></td><td>         
+</td></tr><tr><td>Secondary Electron Image        </td><td><strong>SE</strong></td><td> 
+</td></tr><tr><td>Back-Scattered Electron Image        </td><td><strong>BSE</strong></td><td>        
+</td></tr><tr><td>Cathodoluminescence Image        </td><td><strong>CL</strong></td><td>        
+</td></tr><tr><td>X-ray Map         </td><td><strong>XRM</strong>        </td><td>Element name (or combo) is required for X-ray maps
+</td></tr></table>
+<hr />
+<p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+</div>
+   </div>
+   
+  
+ </body>
+</html>
+

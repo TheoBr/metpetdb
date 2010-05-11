@@ -1,0 +1,85 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+ <title>PublishedData - MetPetDB</title><link rel="start" href="/trac/metpetdb/wiki" /><link rel="search" href="/trac/metpetdb/search" /><link rel="help" href="/trac/metpetdb/wiki/TracGuide" /><link rel="stylesheet" href="/trac/metpetdb/chrome/common/css/trac.css" type="text/css" /><link rel="stylesheet" href="/trac/metpetdb/chrome/common/css/wiki.css" type="text/css" /><link rel="icon" href="/favicon.ico" type="image/x-icon" /><link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" /><link rel="alternate" href="/trac/metpetdb/wiki/PublishedData?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="/trac/metpetdb/wiki/PublishedData?format=txt" title="Plain Text" type="text/x-trac-wiki" /><link rel="alternate" href="/trac/metpetdb/wiki/PublishedData?format=pdf" title="PDF" type="text/x-trac-wiki" /><style type="text/css">
+</style>
+ 
+</head>
+<body>
+
+   
+   <div class="wikipage">
+    <div id="searchable"><p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+<hr />
+<h1 id="PublishedData">Published Data</h1>
+<p>
+ 
+</p>
+<h2 id="MiningtheLiterature">Mining the Literature</h2>
+<p>
+<strong>Guidelines for the population of the published branch of MetPetDB:</strong>
+</p>
+<ul><li>Published data are added only by MetPetDB administrators.  
+</li><li>Initially, published data will consist of the following data components:
+<ul><li>A unique publication identifier (GeoRef Accession Number (AN)) - the AN will uniquely identify article title, authors, serial/book/other title, volume and pagination, and publisher information if included
+</li><li>location coordinates for all unique samples identified in the publication
+</li><li>A corresponding rock type for each unique sample identified in the publication
+</li><li>If given, the mineral assemblage for each unique sample identified in the publication
+</li><li>In order to distinguish published samples in the database from other published samples of the same sample number, the GeoRef Accession Number is appended to the sample number, separated by a colon (:).
+</li></ul></li></ul><p>
+Once these basic items are extracted from the publication and added to the database, the data will mined and transferred to the database. This data consists of a) images and b) numeric data. For initial population of the database, it is expected that images mined and ported to the database will be limited to:
+</p>
+<ul><li>Maps including sample locations
+</li><li>outcrop or hand-sample photographs
+</li><li>photomicrographs (binocular, unpolarized, thin-section scans, or plane-polarized or cross-nicol images in transmitted or reflected light)
+</li><li>outcrop, hand-sample, or thin section sketches (in older publications)
+</li><li>various types of electron-probe imagery (SE, BSE, TE, EBSD, OC, etc.)
+</li><li>X-ray element distribution maps
+</li></ul><p>
+This list is clearly not exhaustive, and doesn't touch on a large number of <a class="wiki" href="Image.html">image</a> types common to publications (cartesian or barycentric element variation diagrams, spectra, structural measurement diagrams, contoured composition diagrams, grain analytical traverses, etc., etc.). What this list does is emphasize spatial relationships between the <a class="wiki" href="Sample.html">sample</a>, constituent <a class="wiki" href="Subsample.html">subsamples</a>, and the chemical data collected from these subsamples. Additionally, MPDB will include a user tool kit that will allow production of basic cartesian or barycentric composition plots from the included data, so inclusion of these images types is redundant.
+</p>
+<p>
+The numeric data extracted from the publications (at least initially) is to be restricted to compositional data from whole rock analyses (for example, X-ray fluorescence), or analyses of individual mineral phases; either <i>in situ</i> spot analyses, or, for older publications, wet chemistry. This excludes isotopic data, and all age data...but as the database matures, these data types may be included, as well. Furthermore, no <strong>derivative data</strong> will be included (at least initially) in the database. This includes secondary data (e.g., element ratios), and tertiary (also interpretive) data, such as pressure-temperature estimates. Again, the MPDB tool kit included with the database will allow users to calculate secondary data (e.g., ratios) and to make estimations of extensive or intensive parameters which require end-user interpretation. 
+</p>
+<h2 id="ScopeoftheinitialDBpopulationwithpublisheddata">Scope of the initial DB population with published data</h2>
+<p>
+In the first 100-200 articles to be mined for inclusion in MPDB, we would like to achieve a broad survey of the metamorphic petrology literature. To achieve this end (inasmuch as it is possible), we will strive for a balance of
+</p>
+<ul><li>rock types (pelites will clearly dominate, but amphibolite, carbonate or calc-silicate, impure quartzite, and quartzofeldpsathic compositions will be included)
+</li><li>metamorphic facies (to please those who love illite and sapphirine!)
+</li><li>metamorphic environments (contact vs regional metamorphism)
+</li><li>geographic location
+</li><li>journal
+</li></ul><p>
+Additionally, we want to make available for sharing the images and compositional data of landmark papers from the metamorphic petrology literature (e.g., Eskola, Goldschmidt, Tilley, Buddington, Miyashiro, Harker, Barrow, Korzhinskii, Albee etc.) that emphasize petrologic and field relationships as well as the collection of quantitative mineral compositional data.
+</p>
+<h2 id="Problemsassociatedwithdataextraction">Problems associated with data extraction</h2>
+<p>
+In the initial stages of data mining from the literature, many problems will be come apparent, as they relate to the structure of the database, and how individual images or data are correlated with data tags or metadata. For example:
+</p>
+<ul><li>If only averaged analyses are presented, how are they treated in the database?
+</li><li>When a multi-panel image (say, one with 4 element maps of the same garnet) is extracted, is it extracted as a single image, or broken up into component images? If it is treated as a single image file, how are multiple data labels applied to it - or are they applied at all?
+</li><li>how are location coordinates entered for samples with only general locations (say, a dot on a map)? Are bounding coordinates entered, or a best estimate (e.g., DataThief, Google Earth)? Or, is the article excluded from data mining because of the poor sample location control? What about issues with coordinate conversion from archaic projection systems (e.g., Imperial Grid)?
+</li><li>Vagaries in presentation of the sample mineral assemblage? If modes are given, should they be listed, or subsumed into a present/absent designation?
+</li><li>Issues with OCR - many articles will require scanning and subsequent text rendering - how will quality control be executed on mineral data entered into the DB, and will the user perform QC <i>before</i> uploading archived data?
+</li></ul><p>
+Each data mining operation will carry its own unique issues, but the common issues will become apparent as more data mining is completed. To that end, each data extraction is paired with a text log of issues that crop up during the process, some operational, some interpretive. 
+</p>
+<p>
+Comments and such are welcome...
+</p>
+<hr />
+<p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+</p>
+</div>
+   </div>
+
+
+ </body>
+</html>
+
