@@ -14,7 +14,6 @@
 		F74CE1BF1149B7EF00036599 /* PostRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = F74CE1BE1149B7EF00036599 /* PostRequest.m */; };
 		F75722CF1198DAE3003A45D2 /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F75722CE1198DAE3003A45D2 /* InfoViewController.m */; };
 		F75725AD1198E1BE003A45D2 /* MainView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F757258B1198E1BE003A45D2 /* MainView.xib */; };
-		F75725AE1198E1BE003A45D2 /* PublicPrivateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F757258C1198E1BE003A45D2 /* PublicPrivateView.xib */; };
 		F75725B01198E1BE003A45D2 /* dropMapView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F757258E1198E1BE003A45D2 /* dropMapView.xib */; };
 		F75725B11198E1BE003A45D2 /* ResetView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F757258F1198E1BE003A45D2 /* ResetView.xib */; };
 		F75725B21198E1BE003A45D2 /* InfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F75725901198E1BE003A45D2 /* InfoView.xib */; };
@@ -43,7 +42,6 @@
 		F75725CC1198E1BE003A45D2 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = F75725AA1198E1BE003A45D2 /* Default.png */; };
 		F75725CD1198E1BE003A45D2 /* MetPetDB-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F75725AB1198E1BE003A45D2 /* MetPetDB-Info.plist */; };
 		F75725CE1198E1BE003A45D2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F75725AC1198E1BE003A45D2 /* Localizable.strings */; };
-		F75725D41198E27C003A45D2 /* PublicPrivateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F75725D31198E27C003A45D2 /* PublicPrivateView.xib */; };
 		F75726591198E692003A45D2 /* CoordinateInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F75726581198E692003A45D2 /* CoordinateInputView.xib */; };
 		F769E9440FC42BB700630D69 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F769E9430FC42BB700630D69 /* CoreLocation.framework */; };
 		F7792B67113D858F000B9B3D /* PublicPrivateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7792B66113D858F000B9B3D /* PublicPrivateViewController.m */; };
@@ -85,6 +83,7 @@
 		F7BD46C51121BD53005457F1 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F7BD46C41121BD53005457F1 /* main.m */; };
 		F7BD478B1121BFAE005457F1 /* MyCLController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7BD478A1121BFAE005457F1 /* MyCLController.m */; };
 		F7C1F7E40FCFFF89005AB0D5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7C1F7E30FCFFF89005AB0D5 /* CoreGraphics.framework */; };
+		F7F05558119A256B002B0D11 /* PublicPrivateView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F7F05557119A256B002B0D11 /* PublicPrivateView.xib */; };
 		F7F606A20FC1F5D500CF0CEF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7F606A10FC1F5D500CF0CEF /* UIKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -101,7 +100,6 @@
 		F75722CD1198DAE3003A45D2 /* InfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InfoViewController.h; path = Classes/InfoViewController.h; sourceTree = "<group>"; };
 		F75722CE1198DAE3003A45D2 /* InfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InfoViewController.m; path = Classes/InfoViewController.m; sourceTree = "<group>"; };
 		F757258B1198E1BE003A45D2 /* MainView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainView.xib; path = "IB Files/MainView.xib"; sourceTree = "<group>"; };
-		F757258C1198E1BE003A45D2 /* PublicPrivateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PublicPrivateView.xib; path = "IB Files/PublicPrivateView.xib"; sourceTree = "<group>"; };
 		F757258E1198E1BE003A45D2 /* dropMapView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = dropMapView.xib; path = "IB Files/dropMapView.xib"; sourceTree = "<group>"; };
 		F757258F1198E1BE003A45D2 /* ResetView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ResetView.xib; path = "IB Files/ResetView.xib"; sourceTree = "<group>"; };
 		F75725901198E1BE003A45D2 /* InfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = InfoView.xib; path = "IB Files/InfoView.xib"; sourceTree = "<group>"; };
@@ -130,7 +128,6 @@
 		F75725AA1198E1BE003A45D2 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		F75725AB1198E1BE003A45D2 /* MetPetDB-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = "MetPetDB-Info.plist"; sourceTree = "<group>"; };
 		F75725AC1198E1BE003A45D2 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
-		F75725D31198E27C003A45D2 /* PublicPrivateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = PublicPrivateView.xib; path = ../.Trash/PublicPrivateView.xib; sourceTree = SOURCE_ROOT; };
 		F75726581198E692003A45D2 /* CoordinateInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = CoordinateInputView.xib; path = "IB Files/CoordinateInputView.xib"; sourceTree = "<group>"; };
 		F769E9430FC42BB700630D69 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		F7792B65113D858F000B9B3D /* PublicPrivateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PublicPrivateViewController.h; path = Classes/PublicPrivateViewController.h; sourceTree = "<group>"; };
@@ -205,6 +202,7 @@
 		F7BD47891121BFAE005457F1 /* MyCLController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCLController.h; sourceTree = "<group>"; };
 		F7BD478A1121BFAE005457F1 /* MyCLController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCLController.m; sourceTree = "<group>"; };
 		F7C1F7E30FCFFF89005AB0D5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		F7F05557119A256B002B0D11 /* PublicPrivateView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PublicPrivateView.xib; sourceTree = "<group>"; };
 		F7F606A10FC1F5D500CF0CEF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -344,11 +342,11 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F7F05557119A256B002B0D11 /* PublicPrivateView.xib */,
 				F71748741199BC35002AA07D /* SingleImageView.xib */,
 				F738AA891198F794007F2F8E /* LoginView.xib */,
 				F75726581198E692003A45D2 /* CoordinateInputView.xib */,
 				F757258B1198E1BE003A45D2 /* MainView.xib */,
-				F757258C1198E1BE003A45D2 /* PublicPrivateView.xib */,
 				F757258E1198E1BE003A45D2 /* dropMapView.xib */,
 				F757258F1198E1BE003A45D2 /* ResetView.xib */,
 				F75725901198E1BE003A45D2 /* InfoView.xib */,
@@ -357,15 +355,14 @@
 				F75725931198E1BE003A45D2 /* Icon.png */,
 				F75725941198E1BE003A45D2 /* iTunesArtwork */,
 				F75725951198E1BE003A45D2 /* MapTypeView.xib */,
-				F75725D31198E27C003A45D2 /* PublicPrivateView.xib */,
 				F75725961198E1BE003A45D2 /* AddComment.xib */,
 				F75725971198E1BE003A45D2 /* ChemicalAnalysis.xib */,
 				F75725981198E1BE003A45D2 /* CommentDisplay.xib */,
 				F75725991198E1BE003A45D2 /* ImageView.xib */,
 				F757259A1198E1BE003A45D2 /* LocationView.xib */,
-				F757259C1198E1BE003A45D2 /* MainWindow.xib */,
 				F757259D1198E1BE003A45D2 /* MapView.xib */,
 				F757259E1198E1BE003A45D2 /* MetamorphicGradeView.xib */,
+				F757259C1198E1BE003A45D2 /* MainWindow.xib */,
 				F757259F1198E1BE003A45D2 /* MineralsView.xib */,
 				F75725A01198E1BE003A45D2 /* RegionView.xib */,
 				F75725A11198E1BE003A45D2 /* RockTypeView.xib */,
@@ -459,7 +456,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F75725AD1198E1BE003A45D2 /* MainView.xib in Resources */,
-				F75725AE1198E1BE003A45D2 /* PublicPrivateView.xib in Resources */,
 				F75725B01198E1BE003A45D2 /* dropMapView.xib in Resources */,
 				F75725B11198E1BE003A45D2 /* ResetView.xib in Resources */,
 				F75725B21198E1BE003A45D2 /* InfoView.xib in Resources */,
@@ -488,10 +484,10 @@
 				F75725CC1198E1BE003A45D2 /* Default.png in Resources */,
 				F75725CD1198E1BE003A45D2 /* MetPetDB-Info.plist in Resources */,
 				F75725CE1198E1BE003A45D2 /* Localizable.strings in Resources */,
-				F75725D41198E27C003A45D2 /* PublicPrivateView.xib in Resources */,
 				F75726591198E692003A45D2 /* CoordinateInputView.xib in Resources */,
 				F738AA8A1198F794007F2F8E /* LoginView.xib in Resources */,
 				F71748751199BC35002AA07D /* SingleImageView.xib in Resources */,
+				F7F05558119A256B002B0D11 /* PublicPrivateView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

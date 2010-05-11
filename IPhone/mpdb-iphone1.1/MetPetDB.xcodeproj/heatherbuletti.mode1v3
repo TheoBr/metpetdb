@@ -229,6 +229,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -263,14 +265,17 @@
 						<dict>
 							<key>PBXSmartGroupTreeModuleOutlineStateExpansionKey</key>
 							<array>
+								<string>29B97314FDCFA39411CA2CEA</string>
+								<string>29B97317FDCFA39411CA2CEA</string>
 								<string>1C37FBAC04509CD000000102</string>
 								<string>E2644B35053B69B200211256</string>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
-									<integer>7</integer>
+									<integer>26</integer>
 									<integer>6</integer>
+									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
@@ -304,8 +309,6 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -323,7 +326,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>F71749BC119A1B39002AA07D</string>
+										<string>F7F05554119A253F002B0D11</string>
 										<key>history</key>
 										<array>
 											<string>F71FE3580FC321F2000206FD</string>
@@ -389,7 +392,6 @@
 											<string>F78CAF511134B91D003DA06E</string>
 											<string>F7486125115C65D200C205F8</string>
 											<string>F7289ED4115D1D5800F386E9</string>
-											<string>F7FD506D1161569D000D145B</string>
 											<string>F7AC97F5118B386300096F61</string>
 											<string>F7AC9A05118B458300096F61</string>
 											<string>F7137716119226F600F25676</string>
@@ -502,7 +504,7 @@
 											<string>F7174997119A1A94002AA07D</string>
 											<string>F7174998119A1A94002AA07D</string>
 											<string>F71749BA119A1B39002AA07D</string>
-											<string>F71749BB119A1B39002AA07D</string>
+											<string>F71749BC119A1B39002AA07D</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -560,9 +562,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>F71749BD119A1B39002AA07D</string>
+				<string>F7F05555119A253F002B0D11</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>F71749BE119A1B39002AA07D</string>
+				<string>F7F05556119A253F002B0D11</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -700,10 +702,9 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>1C78EAAD065D492600B07095</string>
 		<string>1CD10A99069EF8BA00B06720</string>
 		<string>F725478F0FAE4474005C910D</string>
-		<string>/Users/heatherbuletti/mpdb-iphone1.1/MetPetDB.xcodeproj</string>
+		<string>/Users/heatherbuletti/Desktop/mpdb-iphone1.1/MetPetDB.xcodeproj</string>
 	</array>
 	<key>WindowString</key>
 	<string>0 72 1280 706 0 0 1280 778 </string>
@@ -744,6 +745,8 @@
 							<string>256pt</string>
 						</dict>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -783,7 +786,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>F725478F0FAE4474005C910D</string>
-				<string>F71749BF119A1B39002AA07D</string>
+				<string>F7F05536119A23D9002B0D11</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -903,13 +906,13 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1CD10A99069EF8BA00B06720</string>
-				<string>F71749C0119A1B39002AA07D</string>
+				<string>F7F05537119A23D9002B0D11</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>F71749C1119A1B39002AA07D</string>
-				<string>F71749C2119A1B39002AA07D</string>
-				<string>F71749C3119A1B39002AA07D</string>
-				<string>F71749C4119A1B39002AA07D</string>
-				<string>F71749C5119A1B39002AA07D</string>
+				<string>F7F05538119A23D9002B0D11</string>
+				<string>F7F05539119A23D9002B0D11</string>
+				<string>F7F0553A119A23D9002B0D11</string>
+				<string>F7F0553B119A23D9002B0D11</string>
+				<string>F7F0553C119A23D9002B0D11</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
