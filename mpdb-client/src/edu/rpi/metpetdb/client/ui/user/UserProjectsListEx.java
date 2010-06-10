@@ -78,8 +78,8 @@ public class UserProjectsListEx extends MPagePanel implements ClickListener {
 			public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
 				long id = (long) (MpDb.currentUser().getId());
 				MpDb.project_svc.allIdsForUser(id, ac);	
-			}
-		};
+			}			
+		};		
 		Projects_ft = new FlexTable();
 		Projects_ft.setWidth("100%");
 		Projects_ft.setWidget(0, 0, list);
@@ -107,7 +107,11 @@ public class UserProjectsListEx extends MPagePanel implements ClickListener {
 	}
 
 	public UserProjectsListEx display() {
-		new ServerOp() {
+		adpRows();
+		addProjects();
+		list.getScrollTable().reloadPage();
+		
+		/*new ServerOp() {
 			@Override
 			public void begin() {
 				MpDb.project_svc.all(MpDb.currentUser().getId(), this);
@@ -115,8 +119,11 @@ public class UserProjectsListEx extends MPagePanel implements ClickListener {
 			public void onSuccess(Object result) {
 				adpRows();
 				addProjects();
+		
+				List<Project> projects = (List<Project>)result;
+
 			}
-		}.begin();
+		}.begin();*/
 		return this;
 	}
 
