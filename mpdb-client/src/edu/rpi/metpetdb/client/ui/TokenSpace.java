@@ -189,6 +189,7 @@ public class TokenSpace implements HistoryListener {
 		Search s;
 		public void executeToken(final String args) {
 			if (s == null)
+			{
 				s = new Search() {	
 				@Override
 					public void onCurrentUserChanged(User whoIsIt) throws LoginRequiredException {
@@ -196,8 +197,10 @@ public class TokenSpace implements HistoryListener {
 						search.executeToken("");
 					}			
 				};
-			else 
-				s.reload();
+			}
+			
+			//else 
+			s.reload();
 			show(s);
 		}
 	};
