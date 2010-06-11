@@ -103,6 +103,7 @@ public abstract class ProjectList extends DataList<Project> {
 		getDataTable().setSelectionPolicy(SelectionPolicy.CHECKBOX);
 		getDataTable().setSelectionEnabled(true);
 		initialize();
+		this.getScrollTable().reloadPage();
 	}
 	
 	@Override

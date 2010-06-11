@@ -67,6 +67,7 @@ public abstract class ProjectMemberList extends DataList<User> {
 		getDataTable().setSelectionPolicy(SelectionPolicy.CHECKBOX);
 		getDataTable().setSelectionEnabled(true);
 		initialize();
+		this.getScrollTable().reloadPage();
 	}
 	
 	@Override

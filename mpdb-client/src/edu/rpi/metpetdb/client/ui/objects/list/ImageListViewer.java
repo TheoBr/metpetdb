@@ -79,6 +79,7 @@ public abstract class ImageListViewer extends DataList<Image> {
 		getDataTable().setSelectionPolicy(SelectionPolicy.ONE_ROW);
 		getDataTable().setSelectionEnabled(false);
 		initialize();
+		this.getScrollTable().reloadPage();
 	}
 
 	@Override

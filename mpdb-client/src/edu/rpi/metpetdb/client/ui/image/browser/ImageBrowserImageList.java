@@ -68,6 +68,7 @@ public abstract class ImageBrowserImageList extends DataList<Image> {
 		getDataTable().setSelectionEnabled(true);
 		getDataTable().setSelectionPolicy(SelectionPolicy.CHECKBOX);
 		initialize();
+		this.getScrollTable().reloadPage();
 	}
 
 	@Override

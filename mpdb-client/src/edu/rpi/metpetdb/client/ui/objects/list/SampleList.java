@@ -357,6 +357,7 @@ public abstract class SampleList extends DataList<Sample> {
 		getDataTable().setSelectionPolicy(SelectionPolicy.CHECKBOX);
 		getDataTable().setSelectionEnabled(true);
 		initialize();
+		this.getScrollTable().reloadPage();
 	}
 
 	@Override

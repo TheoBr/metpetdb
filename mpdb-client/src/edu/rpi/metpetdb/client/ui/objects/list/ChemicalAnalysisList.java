@@ -206,6 +206,7 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 		super.initialize();
 		setTableActions(new ChemicalAnalysisListActions(this));
 		add(new PlotInterface(this).getWidget());
+
 	}
 
 	public ChemicalAnalysisList() {
@@ -213,6 +214,7 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 		getDataTable().setSelectionPolicy(SelectionPolicy.CHECKBOX);
 		getDataTable().setSelectionEnabled(true);
 		initialize();
+		this.getScrollTable().reloadPage();
 	}
 
 	@Override
