@@ -176,6 +176,7 @@ public abstract class SubsampleList extends DataList<Subsample> {
 	public void initialize() {
 		super.initialize();
 		setTableActions(new SubsampleListActions(this));
+
 	}
 
 	public SubsampleList() {
@@ -183,6 +184,7 @@ public abstract class SubsampleList extends DataList<Subsample> {
 		getDataTable().setSelectionPolicy(SelectionPolicy.CHECKBOX);
 		getDataTable().setSelectionEnabled(true);
 		initialize();
+		this.getScrollTable().reloadPage();
 	}
 
 	@Override
@@ -204,7 +206,10 @@ public abstract class SubsampleList extends DataList<Subsample> {
 	
 	@Override
 	protected Object getId(Subsample ss){
-		return ss.getId();
+		if (ss != null)
+			return ss.getId();
+		else
+			return new Long(0);
 	}
 
 }
