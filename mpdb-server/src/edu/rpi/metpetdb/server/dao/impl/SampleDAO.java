@@ -38,7 +38,7 @@ public class SampleDAO extends MpDbDAO<Sample> {
 	public Sample fill(Sample inst) throws MpDbException {
 		System.out.println("LOGOUT DEBUGGING - PRINTING SESSION OPEN" + sess.isOpen());
 		System.out.println("LOGOUT DEBUGGING - PRINTING CURRENTREQ NULL" + MpDbServlet.currentReq() == null);
-		System.out.println("LOGOUT DEBUGGING - PRINTING USER ID" + MpDbServlet.currentReq().user.getId());
+//		System.out.println("LOGOUT DEBUGGING - PRINTING USER ID" + MpDbServlet.currentReq().user.getId());
 		// Use Id
 		if (inst.getId() > 0) {
 			final Query q = namedQuery("Sample.byId");
