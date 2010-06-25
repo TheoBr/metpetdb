@@ -14,7 +14,7 @@ public class MDialogBox extends DialogBox implements PopupListener,
 	private GlassPanel glassPanel;
 	
 	public MDialogBox(boolean autohide, boolean modal) {
-		super(autohide,modal);
+		super(autohide, modal);
 		addPopupListener(this);
 		super.setHTML("&nbsp;");
 

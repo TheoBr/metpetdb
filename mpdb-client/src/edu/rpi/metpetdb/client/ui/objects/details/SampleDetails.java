@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.postgis.Point;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.maps.client.InfoWindowContent;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.control.LargeMapControl;
@@ -75,7 +74,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 	private LatLng samplePosition;
 	private MapWidget map;
 	private MTwoColPanel panel = new MTwoColPanel();
-	private boolean geInit = false;
+	//private boolean geInit = false;
 	private FlowPanel commentsContainer = new FlowPanel();
 	private TextArea commentBox;
 	private MNoticePanel commentNotice;
@@ -112,7 +111,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 	private final ObjectEditorPanel<Sample> p_sample;
 	private long sampleId;
 	private Sample sample;
-	private boolean canEdit;
+	//private boolean canEdit;
 
 	public SampleDetails() {
 		p_sample = new ObjectEditorPanel<Sample>(sampleAtts,
@@ -184,7 +183,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 		try {
 			map = new MapWidget();
 		} catch (Exception e) {
-			//ignore any expections from google about the map
+			//ignore any exceptions from google about the map
 		}
 		oep.setStylePrimaryName("sd-details");
 		oep.addStyleName("mpdb-dataTable");
