@@ -22,6 +22,21 @@ public class Mineral extends MObject implements IHasName, HasChildren<Mineral> {
 	private Set<Mineral> children;
 	private Set<Mineral> parents;
 
+	
+	/*Used to remove the substring "(x)" if found in the name of the mineral.
+	 *For instance Biotite (x) should just be Biotite since (x) just means
+	 *that the mineral exists for that particular sample.*/
+	private String strip_x(String sample) {
+		int begin_substring;
+		
+		if ((begin_substring = sample.lastIndexOf("(x)")) != -1) {
+			/*begin_substring - 1 because of space before mineral and (x).
+			 *(Ex) Biotite (x)*/
+			sample = sample.substring(0, begin_substring - 1);
+		}
+		return sample;
+	}
+		
 	public short getId() {
 		return id;
 	}
@@ -31,7 +46,7 @@ public class Mineral extends MObject implements IHasName, HasChildren<Mineral> {
 	}
 
 	public String getName() {
-		return name;
+		return strip_x(name);
 	}
 
 	public void setName(final String s) {
@@ -71,15 +86,21 @@ public class Mineral extends MObject implements IHasName, HasChildren<Mineral> {
 	}
 
 	public boolean equals(final Object o) {
-		if (o instanceof Mineral)
-			return name != null
-					&& o instanceof Mineral
-					&& name.toLowerCase().equals(
-							((Mineral) o).name.toLowerCase());
-		else if (o instanceof SampleMineral) {
-			return equals(((SampleMineral)o).getMineral());
-		} else
-			return false;
+		boolean isEquals;
+		if (o instanceof Mineral) {
+			name = this.getName();
+			Mineral sample_object = (Mineral) o;
+			String value = sample_object.getName();
+			isEquals = name.toLowerCase().equals(value.toLowerCase());
+		} else if (o instanceof SampleMineral) {
+			name = this.getName();
+			Mineral sample_object = ((SampleMineral) o).getMineral();
+			String value = sample_object.getName();
+			isEquals = name.toLowerCase().equals(value.toLowerCase());
+		} else {
+			isEquals = false;
+		}
+		return isEquals;
 	}
 
 	public int hashCode() {
@@ -87,7 +108,7 @@ public class Mineral extends MObject implements IHasName, HasChildren<Mineral> {
 	}
 
 	public String toString() {
-		return name;
+		return this.getName();
 	}
 
 	public boolean mIsNew() {
