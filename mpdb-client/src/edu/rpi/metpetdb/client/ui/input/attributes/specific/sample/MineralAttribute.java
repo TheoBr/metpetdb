@@ -13,10 +13,12 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DisclosurePanel;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.Window;
 
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Sample;
@@ -51,66 +53,93 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 	final MultipleObjectDetailsPanel<SampleMineral> p_amounts = new MultipleObjectDetailsPanel<SampleMineral>(
 			new GenericAttribute[] {
 				new TextAttribute(MpDb.doc.SampleMineral_Sample_minerals_amount)
-			});
+			}
+	);
 
 	public MineralAttribute(final ObjectConstraint<Mineral> mc) {
 		this(mc, 0);
 	}
+	
 	public MineralAttribute(final ValueInCollectionConstraint<Mineral> mc,
 			int maxMinerals) {
 		this((PropertyConstraint) mc, maxMinerals);
 	}
+	
 	public MineralAttribute(final PropertyConstraint mc, int maxMinerals) {
 		super(mc);
 		chooseMinerals = new Button("Choose Minerals...", this);
 		container = new SimplePanel();
 		tree = new TreeAttribute<Mineral>(mc, 4, maxMinerals);
 	}
-
-	public Widget[] createDisplayWidget(final MObject obj) {
-		final DisclosurePanel expand = new DisclosurePanel();
-		
+	
+	
+	public Widget[] createDisplayWidget(final MObject obj) {	
+		FlexTable mineral_table = new FlexTable();
+		final Widget[] widgets;
+		MHtmlList tempList;
 		List<String> vals = new ArrayList<String>();
 		
-		this.obj = obj;
-		addItemsToTree();
-		final Widget[] widgets = tree.createDisplayWidget(obj);
-		MHtmlList tempList = (MHtmlList) ((SimplePanel) widgets[0]).getWidget();
-
+		widgets = tree.createDisplayWidget(obj);
+		tempList = (MHtmlList) ((SimplePanel) widgets[0]).getWidget();
 		Collection s = tempList.getItems();
 		if (s != null) {
 			final Iterator itr = s.iterator();
 			while (itr.hasNext()) {
-				vals.add(((Label)((MHtmlList.ListItem) itr.next()).getWidget()).getText());
+				String rock = ((Label)((MHtmlList.ListItem) itr.next()).getWidget()).getText();
+				vals.add(rock);
 			}
+			Collections.sort(vals);
 		}
-		Collections.sort(vals);
-		Iterator<String> itr = vals.iterator();
-		MHtmlList list = new MHtmlList();
-		for (int i = 1; i < vals.size(); i++) {
-			list.add(new Label(vals.get(i)));
+		
+		mineral_table.setStyleName("mineral_table");
+		mineral_table.setWidth("100%");
+		
+		int i;
+		int row = 0;
+		int col = 0;
+		for(i = 0; i < vals.size(); i++){
+			if(i % 10 == 0){
+				col++;
+				row = 0;
+			}
+			mineral_table.setText(row, col, vals.get(i));
+			row++;
 		}
-
-		if (vals.size() > 0) {
-			final Label closedText = new Label(vals.get(0));
-			expand.setHeader(closedText);
-		}
-		expand.add(list);
-		expand.setAnimationEnabled(true);
+		
 		return new Widget[] {
-			expand
+			mineral_table
 		};
 	}
 
+	
 	private void remakeContainer(final MObject obj) {
 		this.obj = obj;
-		addItemsToTree();
-		final Widget[] widgets = tree.createDisplayWidget(obj);
+		final Widget[] widgets;
+		MHtmlList tempList;
+		List<String> vals = new ArrayList<String>();
 		container.clear();
-		for (int i = 0; i < widgets.length; ++i)
-			container.add(widgets[i]);
+		//TODO: Remove the copy & paste
+		widgets = tree.createDisplayWidget(obj);
+		tempList = (MHtmlList) ((SimplePanel) widgets[0]).getWidget();
+		Collection s = tempList.getItems();
+		if (s != null) {
+			final Iterator itr = s.iterator();
+			while (itr.hasNext()) {
+				String rock = ((Label)((MHtmlList.ListItem) itr.next()).getWidget()).getText();
+				vals.add(rock);
+			}
+			Collections.sort(vals);
+		}
+		
+		MHtmlList list = new MHtmlList();
+		for (int i = 0; i < vals.size(); i++) {
+			list.add(new Label(vals.get(i)));
+		}
+		container.add(list);
+		return;
 	}
 
+	
 	public Widget[] createEditWidget(final MObject obj, final String id,
 			final GenericAttribute ga) {
 		final VerticalPanel vp = new VerticalPanel();
@@ -123,19 +152,8 @@ public class MineralAttribute extends GenericAttribute implements ClickListener 
 			vp
 		};
 	}
-
-	private void addItemsToTree() {
-		final ArrayList<Mineral> minerals = new ArrayList<Mineral>();
-		if (get(obj) != null) {
-			for (Object o : get(obj)) {
-				if (o instanceof SampleMineral)
-					minerals.add(((SampleMineral) o).getMineral());
-				else if (o instanceof Mineral)
-					minerals.add((Mineral) o);
-			}
-		}
-		tree.setSelectedItems(minerals);
-	}
+	
+	
 	private WizardDialog makeWizardDialog() {
 		final WizardDialog wd = new WizardDialog();
 
