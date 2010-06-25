@@ -12,6 +12,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DisclosurePanel;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -37,7 +38,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MHtmlList.ListItem;
 
 /**
  * 
- * @author millib2, ?
+ * @author millib2, wongp3
  * 
  * TODO: comments!!!
  *
@@ -78,11 +79,13 @@ public class MineralAttribute extends GenericAttribute<MObject> implements Click
 
 	public Widget[] createDisplayWidget(final MObject obj) {
 		
-		final DisclosurePanel expand = new DisclosurePanel();
-		List<String> vals = new ArrayList<String>();		
-		this.obj = obj;
+		FlexTable mineral_table = new FlexTable();
+		//final DisclosurePanel expand = new DisclosurePanel();
+		List<String> vals = new ArrayList<String>();
 		
-		addItemsToTree();
+		//this.obj = obj;
+		
+		//addItemsToTree();
 		
 		final Widget[] widgets = flyOutTree.createDisplayWidget(obj);
 		// MHtmlList tempList = (MHtmlList) ((SimplePanel) widgets[0]).getWidget();
@@ -92,11 +95,13 @@ public class MineralAttribute extends GenericAttribute<MObject> implements Click
 		if (s != null) {
 			final Iterator<ListItem> itr = s.iterator();
 			while (itr.hasNext()) {
-				vals.add(((Label)((MHtmlList.ListItem) itr.next()).getWidget()).getText());
+				String rock = ((Label)((MHtmlList.ListItem) itr.next()).getWidget()).getText();
+				vals.add(rock);
 			}
 		}
 		Collections.sort(vals);
 		
+		/*
 		MHtmlList list = new MHtmlList();
 		for (int i = 1; i < vals.size(); i++) {
 			list.add(new Label(vals.get(i)));
@@ -110,6 +115,25 @@ public class MineralAttribute extends GenericAttribute<MObject> implements Click
 		expand.setAnimationEnabled(true);
 		return new Widget[] {
 			expand
+		};*/
+		
+		mineral_table.setStyleName("mineral_table");
+		mineral_table.setWidth("100%");
+		
+		int i;
+		int row = 0;
+		int col = 0;
+		for(i = 0; i < vals.size(); i++){
+			if(i % 10 == 0){
+				col++;
+				row = 0;
+			}
+			mineral_table.setText(row, col, vals.get(i));
+			row++;
+		}
+		
+		return new Widget[] {
+			mineral_table
 		};
 	}
 
@@ -117,16 +141,37 @@ public class MineralAttribute extends GenericAttribute<MObject> implements Click
 		
 		this.obj = obj;
 		
-		addItemsToTree();
-		
+		//addItemsToTree();
+		MHtmlList tempList;
+		List<String> vals = new ArrayList<String>();
 		container.clear();
 		
 		final Widget[] widgets = flyOutTree.createDisplayWidget(obj);
+
+		tempList = (MHtmlList) ((HorizontalPanel)widgets[0]).getWidget(0);
+
+		Collection<ListItem> s = tempList.getItems();
 		
-		for (int i = 0; i < widgets.length; ++i) {
-			container.add(widgets[i]);
-			System.out.println(widgets[i].toString());
+		//for (int i = 0; i < widgets.length; ++i) {
+		//	container.add(widgets[i]);
+		//	System.out.println(widgets[i].toString());
+		//}
+		
+		if (s != null) {
+			final Iterator<ListItem> itr = s.iterator();
+			while (itr.hasNext()) {
+				String rock = ((Label)((MHtmlList.ListItem) itr.next()).getWidget()).getText();
+				vals.add(rock);
+			}
+			Collections.sort(vals);
 		}
+		
+		MHtmlList list = new MHtmlList();
+		for (int i = 0; i < vals.size(); i++) {
+			list.add(new Label(vals.get(i)));
+		}
+		container.add(list);
+		return;
 	}
 
 	public Widget[] createEditWidget(final MObject obj, final String id,
