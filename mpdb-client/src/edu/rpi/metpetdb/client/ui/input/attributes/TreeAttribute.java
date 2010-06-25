@@ -5,9 +5,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -31,7 +32,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
  * @param < T> the type of the items in the tree
  */
 public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
-		implements ClickListener {
+		implements ClickHandler {
 
 	protected final SimplePanel container;
 
@@ -172,11 +173,12 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 				} else
 					root.addItem(parentTreeItem);
 
-				cb.addClickListener(new ClickListener() {
-					public void onClick(final Widget w) {
+				cb.addClickHandler(new ClickHandler() {
+				//cb.addClickListener(new ClickListener() {
+					public void onClick(final ClickEvent event) {
 						checkChildren(parentTreeItem, cb.isChecked());
 						if (cb.isChecked()) {
-							selectedWidgets.add(w);
+							selectedWidgets.add((Widget)event.getSource());
 							selectedItems.add(parent);
 							if (maxSelectable != 0
 									&& selectedWidgets.size() > maxSelectable) {
@@ -187,7 +189,7 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 							}
 						} else {
 							selectedItems.remove(parent);
-							selectedWidgets.remove(w);
+							selectedWidgets.remove((Widget)event.getSource());
 						}
 					}
 				});
@@ -218,11 +220,12 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 				} else
 					t.addItem(parentTreeItem);
 
-				cb.addClickListener(new ClickListener() {
-					public void onClick(final Widget w) {
+				cb.addClickHandler(new ClickHandler() {
+				//cb.addClickListener(new ClickListener() {
+					public void onClick(final ClickEvent event) {
 						checkChildren(parentTreeItem, cb.isChecked());
 						if (cb.isChecked()) {
-							selectedWidgets.add(w);
+							selectedWidgets.add((Widget) event.getSource());
 							selectedItems.add(parent);
 							if (maxSelectable != 0
 									&& selectedWidgets.size() > maxSelectable) {
@@ -233,7 +236,7 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 							}
 						} else {
 							selectedItems.remove(parent);
-							selectedWidgets.remove(w);
+							selectedWidgets.remove((Widget) event.getSource());
 						}
 					}
 				});
@@ -339,8 +342,8 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 		return trees;
 	}
 
-	public void onClick(final Widget sender) {
-		if (sender == expand) {
+	public void onClick(ClickEvent event) {
+		if (event.getSource() == expand) {
 			final Iterator<Tree> treeItr = trees.iterator();
 			while (treeItr.hasNext()) {
 				final Iterator<TreeItem> itr = ((Tree) treeItr.next())
@@ -353,7 +356,7 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 				}
 			}
 
-		} else if (sender == collapse) {
+		} else if (event.getSource() == collapse) {
 			final Iterator<Tree> treeItr = trees.iterator();
 			while (treeItr.hasNext()) {
 				final Iterator<TreeItem> itr = ((Tree) treeItr.next())
@@ -365,7 +368,7 @@ public class TreeAttribute<T extends HasChildren<T>> extends GenericAttribute
 					}
 				}
 			}
-		}
+		}	
 	}
 
 }

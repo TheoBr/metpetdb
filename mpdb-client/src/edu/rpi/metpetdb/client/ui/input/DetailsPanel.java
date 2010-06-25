@@ -10,7 +10,6 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.CSS;
@@ -256,10 +255,10 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 		bean = toEdit;
 		clearNonActions();
 		for (int row = 0; row < attributes.size(); row++) {
-			final GenericAttribute attr = (GenericAttribute) attributes
-					.get(row);
-			final DetailsPanelEntry dpEntry = (DetailsPanelEntry) dpEntries
-					.get(attr);
+			final GenericAttribute attr = 
+				(GenericAttribute) attributes.get(row);
+			final DetailsPanelEntry dpEntry = 
+				(DetailsPanelEntry) dpEntries.get(attr);
 			showEditWidget(dpEntry, attr);
 			final CurrentError err = new CurrentError();
 			dpEntry.setCurrentError(err);

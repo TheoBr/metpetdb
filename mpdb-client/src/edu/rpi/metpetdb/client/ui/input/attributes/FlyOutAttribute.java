@@ -28,7 +28,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MPartialCheckBox.CheckedState;
 
 /**
  * 
- * @author goldfd, lindez
+ * @author goldfd, lindez, millib2
  * 
  * The FlyOutAttribute widget is used when the user needs to select items in a 
  * static tree structure, such as the list of searchable minerals. The widget is 
@@ -39,7 +39,6 @@ import edu.rpi.metpetdb.client.ui.widgets.MPartialCheckBox.CheckedState;
  */
 public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 		implements ClickListener {
-	private HorizontalPanel container;
 	
 	public class FlyOutItem extends FlowPanel implements ClickListener {
 		public T obj;
@@ -56,11 +55,13 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 		};
 		public MPartialCheckBox cb;
 		private ToggleButton moreBtn;
+		private boolean selectChildren;
 		
-		public FlyOutItem(final FlyOutItem parent, final T value){
+		public FlyOutItem(final FlyOutItem parent, final T value, final boolean selectChildren){
 			this.parent = parent;
 			setStyleName("flyout-item");
 			obj = value;
+			this.selectChildren = selectChildren;
 			children = new HashSet();
 			cb = new MPartialCheckBox(value.toString());
 			cb.addClickListener(this);
@@ -148,19 +149,25 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 					selectedWidgets.remove(this);
 					selectedItems.remove(obj);
 			}
-			checkChildren(this, cb.getState());
-			checkParents(this.parent, cb.getState());
+			if (selectChildren) {
+				checkChildren(this, cb.getState());
+				checkParents(this.parent, cb.getState());
+			}
 		}
 		
 	}
 
 
+	private HorizontalPanel container;
 	private ArrayList<T> selectedItems = new ArrayList<T>();
 	private ArrayList<Widget> selectedWidgets = new ArrayList<Widget>();
 	private final int maxSelectable;
+	
+	private final boolean selectChildren;
 
 	/**
 	 * Creates a FlyOutAttribute with no children
+	 * 
 	 * @param pc
 	 * @param i
 	 */
@@ -170,23 +177,38 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 
 	/**
 	 * Creates a FlyOutAttribute
+	 * 
 	 * @param pc
 	 * @param i
 	 * @param maxSelectable
 	 */
 	public FlyOutAttribute(final PropertyConstraint pc,
 			final int maxSelectable) {
+		this(pc, maxSelectable, true);
+	}
+	
+	/**
+	 * Creates a FlyOutAttribute
+	 * 
+	 * @param pc
+	 * @param i
+	 * @param maxSelectable
+	 * @param selectChildren
+	 */
+	public FlyOutAttribute(final PropertyConstraint pc,
+			final int maxSelectable, boolean selectChildren) {
 		super(pc);
 		container = new HorizontalPanel();
 		container.setStyleName("flyout");
 		this.maxSelectable = maxSelectable;
+		this.selectChildren = selectChildren;
 	}
-	
 	
 	public ArrayList<?> getSelectedWidgets() {
 		return selectedWidgets;
 	}
-	public ArrayList<?> getSelectedItems() {
+	// NOTE: Changed from ArrayList<?>, need to check that this is correct 
+	public ArrayList<T> getSelectedItems() {
 		return selectedItems;
 	}
 	public void setSelectedItems(final ArrayList<T> al) {
@@ -208,6 +230,12 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 				list.add(l);
 			}
 		}
+		
+		// Stops the selector widget from being displayed after minerals have
+		// been selected, may be causing a bug where the sub sample mineral chooser
+		// is not displayed when trying to choose minerals a second time 
+		container.clear();
+		
 		container.add(list);
 		return new Widget[] {
 			container
@@ -244,7 +272,7 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 		Iterator<T> itr = parent.getChildren().iterator();
 		while (itr.hasNext()){
 			final T child = itr.next();
-			final FlyOutItem fo2 = new FlyOutItem(fo,child);
+			final FlyOutItem fo2 = new FlyOutItem(fo, child, selectChildren);
 			if (get(obj) != null && get(obj).contains(child)
 					|| contains(get(obj), child)){
 				fo2.setState(CheckedState.CHECKED);
@@ -268,7 +296,7 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 			while (itr.hasNext()) {
 				final T parent = itr.next();
 				if (parent instanceof Mineral && ((Mineral) parent).getRealMineralId() == ((Mineral) parent).getId()) {
-					final FlyOutItem fo= new FlyOutItem(null,parent);
+					final FlyOutItem fo= new FlyOutItem(null, parent, selectChildren);
 					if (get(obj) != null && get(obj).contains(parent)
 							|| contains(get(obj), parent)) {
 						fo.setState(CheckedState.CHECKED);
@@ -384,7 +412,8 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 				fo.cb.setState(CheckedState.CHECKED);
 				selectedWidgets.add(fo);
 				selectedItems.add(fo.obj);
-				checkChildren(fo,CheckedState.CHECKED);
+				if (selectChildren)
+					checkChildren(fo,CheckedState.CHECKED);
 			} else
 				checkByStringChildren(target, fo);
 		}
@@ -396,7 +425,8 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 				fo.cb.setState(CheckedState.CHECKED);
 				selectedWidgets.add(fo);
 				selectedItems.add(fo.obj);
-				checkChildren(fo,CheckedState.CHECKED);
+				if (selectChildren)
+					checkChildren(fo,CheckedState.CHECKED);
 			}
 		}
 	}

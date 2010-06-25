@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
@@ -16,14 +15,12 @@ import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidMCommand;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 
 /**
- * Basically accepts multple ObjectEditorPanels, and creates a wizard out of
+ * Basically accepts multiple ObjectEditorPanels, and creates a wizard out of
  * them
  * 
  */
@@ -84,7 +81,7 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 		fp.add(cancel);
 		fp.add(back);
 		fp.add(next);
-		fp.add(finish);
+		fp.add(finish);		
 		this.setWidget(fp);
 	}
 
