@@ -5,6 +5,8 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
+import com.google.gwt.user.client.Window;
+
 import edu.rpi.metpetdb.client.model.properties.Property;
 
 public class SampleMineral extends MObject implements Comparable {
@@ -18,6 +20,22 @@ public class SampleMineral extends MObject implements Comparable {
 
 	private Sample sample;
 
+	
+	/*Used to remove the substring "(x)" if found in the name of the mineral.
+	 *For instance Biotite (x) should just be Biotite since (x) just means
+	 *that the mineral exists for that particular sample.*/
+	private String strip_x(String sample_mineral) {
+		int begin_substring;
+		
+		if ((begin_substring = sample_mineral.lastIndexOf("(x)")) != -1) {
+			/*begin_substring - 1 because of space before mineral and (x).
+			 *(Ex) Biotite (x)*/
+			sample_mineral = sample_mineral.substring(0, begin_substring-1);
+		}
+		return sample_mineral;
+	}
+	
+	
 	public void setAmount(final String f) {
 		amount = f;
 	}
@@ -46,38 +64,37 @@ public class SampleMineral extends MObject implements Comparable {
 	}
 
 	public String getName() {
-		return toString();
+		String sample_name;
+		
+		if (mineral != null) {
+			sample_name = strip_x(mineral.getName());
+		} else {
+			sample_name = super.toString();
+		}
+		return sample_name;
 	}
 
 	public String toString() {
-		if (mineral != null) {
-			if (amount != null && !amount.equals(""))
-				return mineral.getName() + " (" + amount + ")";
-			else
-				return mineral.getName();
-		} else {
-			return super.toString();
-		}
+		return this.getName();
 	}
 
 	public boolean equals(final Object o) {
+		boolean isEquals;
 		if (o instanceof SampleMineral) {
-			final boolean one = ((SampleMineral) o).getMineral()
-					.equals(mineral);
-			final boolean two = ((SampleMineral) o).getAmount() == null ? ((SampleMineral) o)
-					.getAmount().equals(amount)
-					: ((SampleMineral) o).getAmount().equals(amount);
-			return one && two;
+			Mineral sample_obj = ((SampleMineral) o).getMineral();
+			isEquals = sample_obj.equals(mineral);
 		} else if (o instanceof Mineral) {
-			return ((Mineral) o).equals(mineral);
+			Mineral sample_obj = (Mineral) o;
+			isEquals = sample_obj.equals(mineral);
+		} else {
+			isEquals = false;
 		}
-		return false;
+		return isEquals;
 	}
 
 	public int hashCode() {
 		return mineral != null && amount != null ? mineral.hashCode()
 				+ amount.hashCode() : mineral.hashCode();
-		//return mineral.hashCode();
 	}
 
 	@Override
@@ -88,7 +105,7 @@ public class SampleMineral extends MObject implements Comparable {
 	public int compareTo(Object sm) {
 		if(!(sm instanceof SampleMineral))
 			throw new ClassCastException("Sample Mineral object expected");
-		Mineral anotherMineral = ((SampleMineral) sm).getMineral();
-		return this.mineral.getName().compareTo(anotherMineral.getName());
+		Mineral sample_obj = ((SampleMineral) sm).getMineral();
+		return this.mineral.getName().compareTo(sample_obj.getName());
 	}
 }
