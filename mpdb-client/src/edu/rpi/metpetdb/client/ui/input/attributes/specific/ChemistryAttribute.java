@@ -68,6 +68,26 @@ public class ChemistryAttribute extends GenericAttribute implements
 		oxideConstraint = oxides;
 		elementConstraint = elements;
 	}
+	
+	
+	/*Truncates a given number to exactly 3 decimal places. Does not round that number up.*/
+	private static Double truncate(double x) {
+		long y = (long) (x*1000);
+		return (double) y/1000;
+	}
+	
+	/*Converts a given string to a double, if the string is a number. Otherwise, it just returns
+	 *a value of 0.*/
+	private static Double convertStringToDouble(String s) {
+		double d;
+		try {
+			d = Double.valueOf(s.trim()).doubleValue();
+		} catch (NumberFormatException nfe) {
+			d = 0.0;
+		}
+		return d;
+	}
+	
 
 	public Widget[] createDisplayWidget(final MObject obj) {
 
@@ -92,9 +112,16 @@ public class ChemistryAttribute extends GenericAttribute implements
 								"					+ \"\\\"><th>ppm</th><th>Element</th></tr>";
 						currentHeader = "ppm";
 					}
-					elementPPM += "<tr><td class=\"ppm\">" + element.getDisplayAmount()
+					
+					/*Truncates the amount value to exactly 3 decimal places*/
+					String displayAmount = element.getDisplayAmount();
+					Double realDisplayAmount = truncate(convertStringToDouble(displayAmount));
+					
+					elementPPM += "<tr><td class=\"ppm\">" + realDisplayAmount.toString()
 					+ "</td><td>" + element.getDisplayName()
 					+ "</td></tr>";
+					
+					
 				} else {
 					if (!currentHeader.equals("wt%")){
 						//add in header
@@ -102,9 +129,15 @@ public class ChemistryAttribute extends GenericAttribute implements
 								"					+ \"\\\"><th>wt%</th><th>Element</th></tr>";
 						currentHeader = "wt%";
 					}
-					elementWT += "<tr><td class=\"wt\">" + element.getDisplayAmount()
+					
+					/*Truncates the amount value to exactly 3 decimal places*/
+					String displayAmount = element.getDisplayAmount();
+					Double realDisplayAmount = truncate(convertStringToDouble(displayAmount));
+					
+					elementWT += "<tr><td class=\"wt\">" + realDisplayAmount.toString()
 					+ "%</td><td>" + element.getDisplayName()
 					+ "</td></tr>";
+					
 				}
 				if (elementWT.length() > 0)
 					elementDisplay += elementWT;
@@ -126,16 +159,28 @@ public class ChemistryAttribute extends GenericAttribute implements
 					if (oxidePPM.length() == 0)
 						// add in the header row
 						oxidePPM = "<tr class=\\\"\"+ CSS.TYPE_SMALL_CAPS +\"\\\"><th>ppm</th><th>Oxide</th></tr>";
-					oxidePPM += "<tr><td class=\"ppm\">" + oxide.getDisplayAmount()
+					
+					/*Truncates the amount value to exactly 3 decimal places*/
+					String displayAmount = oxide.getDisplayAmount();
+					Double realDisplayAmount = truncate(convertStringToDouble(displayAmount));
+					
+					oxidePPM += "<tr><td class=\"ppm\">" + realDisplayAmount.toString()
 							+ "</td><td>" + oxide.getDisplayName()
 							+ "</td></tr>";
+					
 				} else {
 					if (oxideWT.length() == 0)
 						// add in the header row
 						oxideWT = "<tr class=\\\"\"+ CSS.TYPE_SMALL_CAPS +\"\\\"><th>wt%</th><th>Oxide</th></tr>";
-					oxideWT += "<tr><td class=\"wt\">" + oxide.getDisplayAmount()
+					
+					/*Truncates the amount value to exactly 3 decimal places*/
+					String displayAmount = oxide.getDisplayAmount();
+					Double realDisplayAmount = truncate(convertStringToDouble(displayAmount));
+					
+					oxideWT += "<tr><td class=\"wt\">" + realDisplayAmount.toString()
 							+ "%</td><td>" + oxide.getDisplayName()
 							+ "</td></tr>";
+					
 				}
 			}
 			if (oxideWT.length() > 0)
@@ -161,6 +206,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 		};
 	}
 
+	
 	public Widget[] createEditWidget(final MObject obj, final String id) {
 		ChemicalAnalysis ca = (ChemicalAnalysis) obj;
 
@@ -195,7 +241,7 @@ public class ChemistryAttribute extends GenericAttribute implements
 		add.setSize("40px", "25px");
 
 		final Label label_add = new Label("Add:");
-		final Label label_amount = new Label("Amount");
+		final Label label_amount = new Label("Amount"); 
 		final Label label_precision = new Label("Precision");
 
 		label_add.addStyleName("bold");
@@ -222,8 +268,11 @@ public class ChemistryAttribute extends GenericAttribute implements
 			final ChemicalAnalysisElement element = (ChemicalAnalysisElement) itr
 					.next();
 			add_row("Element", String.valueOf(element.getElement().getId()));
+			
+			/*Truncates the amount value to exactly 3 decimal places*/
 			((TextBox) ft.getWidget(rows - 1, 1)).setText(String
-					.valueOf(element.getAmount()));
+					.valueOf(truncate(element.getAmount())));
+			
 			((HTML) ft.getWidget(rows - 1, 3)).setText(element.getElement()
 					.getName());
 			((TextBox) ft.getWidget(rows - 1, 4)).setText(String
@@ -241,8 +290,11 @@ public class ChemistryAttribute extends GenericAttribute implements
 			final ChemicalAnalysisOxide oxide = (ChemicalAnalysisOxide) itr2
 					.next();
 			add_row("Oxide", String.valueOf(oxide.getOxide().getOxideId()));
-			((TextBox) ft.getWidget(rows - 1, 1)).setText(String.valueOf(oxide
-					.getAmount()));
+			
+			/*Truncates the amount value to exactly 3 decimal places*/
+			((TextBox) ft.getWidget(rows - 1, 1)).setText(String.valueOf(truncate(oxide
+					.getAmount())));
+			
 			((HTML) ft.getWidget(rows - 1, 3)).setText(oxide.getOxide()
 					.getSpecies());
 			((TextBox) ft.getWidget(rows - 1, 4)).setText(String.valueOf(oxide
