@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.image.browser;
 import java.util.ArrayList;
 
 import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
@@ -41,7 +42,7 @@ public abstract class ImageBrowserImageList extends DataList<Image> {
 					public com.google.gwt.user.client.ui.Image getCellValue(
 							final Image rowValue) {
 						final com.google.gwt.user.client.ui.Image img = new com.google.gwt.user.client.ui.Image(
-								rowValue.get64x64ServerPath());
+								rowValue.get64x64ServerPath());						
 						img.addClickListener(new ClickListener() {
 							public void onClick(final Widget sender) {
 								// FIXME hack to work with view image popup
