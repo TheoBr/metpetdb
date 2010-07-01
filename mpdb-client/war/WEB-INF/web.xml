@@ -102,7 +102,7 @@
 </servlet>
 <servlet-mapping>
   <servlet-name>imagesService</servlet-name>
-  <url-pattern>/MetPetDBApplication/image</url-pattern>
+  <url-pattern>/image/*</url-pattern>
 </servlet-mapping>
 
 <servlet>
