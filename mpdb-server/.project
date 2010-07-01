@@ -22,14 +22,9 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>server-src</name>
+			<name>client-src</name>
 			<type>2</type>
-			<location>/Users/scball/workspace_metpetweb/mpdb-client/src</location>
-		</link>
-		<link>
-			<name>src-1</name>
-			<type>2</type>
-			<location>/Users/scball/workspace_metpetweb/mpdb-client/src</location>
+			<location>/Users/scball/metpetweb4/mpdb-client/src</location>
 		</link>
 	</linkedResources>
 </projectDescription>
