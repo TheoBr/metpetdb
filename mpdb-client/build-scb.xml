@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="mpdb" basedir="." >
+
+	
+	<property name="gwt.sdk" location="/Users/scball/Downloads/gwt-2.0.3"/>
+
+       	<property name="mpdb-common-dir" location="../mpdb-common" />
+        <property name="mpdb-client-dir" location="." />
+        <property name="mpdb-server-dir" location="../mpdb-server" />
+
+        <property name="build" location="${basedir}/build/WEB-INF/classes" />
+        
+        <property name="ctx_lib_server" location="${mpdb-common-dir}/lib-server" />
+        <property name="ctx_lib" location="${mpdb-common-dir}/lib" />
+        
+        <property name="war" location="${build}/MetPetDB.war" />
+        <property name="hibernate_cfg" value="edu/rpi/metpetdb/server/dao/hibernate.cfg.xml" />
+        <property name="app_name" value="MetPetDBApplication"/>
+
+	
+	
+
+		<target name="clean">
+			<delete dir="${build}" />
+			<mkdir dir="${build}" />
+		</target>
+		
+		<path id="project.class.path">
+	    <pathelement location="${build}"/>
+	    <pathelement location="${gwt.sdk}/gwt-user.jar"/>
+	    <pathelement location="${gwt.sdk}/gwt-dev.jar"/>
+	    <fileset dir="${ctx_lib}" includes="**/*.jar"/>
+	    <fileset dir="${ctx_lib_server}" includes="**/*.jar"/>
+		</path>
+     
+        <target name="compile" depends="clean" description="Compiles the java code">
+
+               <javac destdir="${build}" srcdir="${mpdb-common-dir}/src" classpathref="project.class.path" source="1.5" target="1.5" debug="false" optimize="false" excludes="**/java_emu/**/*.java" />
+
+		        <javac destdir="${build}" srcdir="${mpdb-client-dir}/src" classpathref="project.class.path" source="1.5" target="1.5" debug="true" optimize="false" excludes="**/java_emu/**/*.java" />
+ 
+                <javac destdir="${build}" srcdir="${mpdb-server-dir}/src" classpathref="project.class.path" source="1.5" target="1.5" debug="true" optimize="false" excludes="**/java_emu/**/*.java" />
+
+
+				<copy todir="${build}" includeemptydirs="no">
+						<fileset dir="${mpdb-common-dir}/src" includes="**/*.java" />				
+				</copy>
+				
+				<copy todir="${build}" includeemptydirs="no">
+						<fileset dir="${mpdb-common-dir}/src" includes="**/*.properties" />				
+				</copy>
+				<copy todir="${build}" includeemptydirs="no">
+						<fileset dir="${mpdb-server-dir}/src" includes="**/*.properties" />				
+				</copy>
+
+				<!-- Craziness to support the GWT Compiler -->
+				<copy todir="${build}" includeemptydirs="no">
+						<fileset dir="${mpdb-client-dir}/src" includes="**/*.java"/>				
+				</copy>                	
+				
+				<copy todir="${build}" includeemptydirs="no">
+						<fileset dir="${mpdb-client-dir}/src" includes="**/*.gwt.xml"/>				
+				</copy>
+				<copy todir="${build}" includeemptydirs="no">
+						<fileset dir="${mpdb-common-dir}/src" includes="**/*.gwt.xml"/>				
+				</copy>
+  
+				<copy todir="${build}" includeemptydirs="no">
+						<fileset dir="${mpdb-server-dir}/src" includes="**/*.hbm.xml"/>				
+				</copy>  
+        </target>
+        
+        <target name="gwt-compile" depends="compile" description="Executes the GWT compiler to convert java code to javascript">
+		<echo message="${basedir}"/>
+		<java fork="true" classname="com.google.gwt.dev.Compiler" taskname="gwtc" maxmemory="512m">
+			<classpath>
+				<pathelement location="${basedir}/build/WEB-INF/classes" />
+				<fileset dir="${ctx_lib}" includes="**/*.jar"/>
+	    		<fileset dir="${ctx_lib_server}" includes="**/*.jar"/>								
+				<path>
+					<fileset dir="${gwt.sdk}" includes="**/**.jar" />
+				</path>
+		
+				
+			</classpath>
+			<arg value="-logLevel"/>
+			<arg value="WARN"/>
+			<arg value="-workDir" />
+			<arg value="/projects/metpetdb/tmp" />
+			<arg value="-war" />
+			<arg value="${build}/../.." />
+			<arg value="edu.rpi.metpetdb.MetPetDBApplication" />
+			<arg value="-style" />
+			<arg value="PRETTY" />
+			<arg value="-localWorkers" />
+			<arg value="2" />
+		</java>
+	</target>
+
+	<target name="copy-stuff" depends="gwt-compile">
+		<copy todir="${build}/../lib" includeemptydirs="no" flatten="true">
+	    		<path>
+				<pathelement location="${gwt.sdk}/gwt-servlet.jar"/>
+			</path>
+			<fileset dir="${ctx_lib}" includes="**/*.jar"/>
+	    		<fileset dir="${ctx_lib_server}" includes="**/*.jar"/>
+		</copy>								
+		<copy todir="${build}/.." includeemptydirs="no" flatten="true">
+			<fileset dir="${mpdb-client-dir}/war/WEB-INF" includes="*.xml"/>
+		</copy>
+		<copy todir="${build}/../../docs">
+			<fileset dir="${mpdb-client-dir}/war/docs"/>
+		</copy>
+		<copy todir="${build}/../../help">
+			<fileset dir="${mpdb-client-dir}/war/help"/>
+		</copy>
+		<copy todir="${build}/../../images">
+			<fileset dir="${mpdb-client-dir}/war/images"/>
+		</copy>
+		<copy todir="${build}/../../style">
+			<fileset dir="${mpdb-client-dir}/war/style"/>
+		</copy>
+		<copy file="${mpdb-client-dir}/war/MetPetDBApplication.html" todir="${build}/../.."/>
+		<copy file="${mpdb-client-dir}/war/siteMap.xml" todir="${build}/../.."/>
+		
+
+	</target>
+
+	<target name="test-war" depends="copy-stuff">
+		<property file="${mpdb-common-dir}/test-build.properties" />
+		
+		<filterset id="props">
+			<filter token="APPUSER" value="${APPUSER}" />
+			<filter token="APPPASS" value="${APPPASS}" />
+			<filter token="DATABASE" value="${DATABASE}" />
+			<filter token="postgis" value="${postgis}" />
+			<filter token="INDICES" value="${INDICES}" />
+		</filterset>
+
+		<replace file="${build}/../../MetPetDBApplication.html" token="APIKEY" value="ABQIAAAALpV_9VK8HGf6x3ThZh8BVRTibFh1Wk25q9WePsGZnvYMEMvDOhQaDZEVApKAr6JO_X7S8ir2zMNpag" />
+
+		<copy tofile="${build}/${hibernate_cfg}" file="${mpdb-server-dir}/hibernate.cfg.in">
+			<filterset refid="props" />
+		</copy>
+
+		<copy tofile="${build}/files.properties" file="${mpdb-server-dir}/test-files.properties">
+			<filterset refid="props" />
+		</copy>
+
+		
+		<war destfile="metpetwebtst.war">
+			<fileset dir="${build}/../.."/>
+		</war>
+		
+	</target>
+	
+	<target name="stage-war" depends="copy-stuff">
+		<property file="${mpdb-common-dir}/stage-build.properties" />
+	
+		<filterset id="props">
+			<filter token="APPUSER" value="${APPUSER}" />
+			<filter token="APPPASS" value="${APPPASS}" />
+			<filter token="DATABASE" value="${DATABASE}" />
+			<filter token="postgis" value="${postgis}" />
+			<filter token="INDICES" value="${INDICES}" />
+		</filterset>
+
+		<replace file="${build}/../../MetPetDBApplication.html" token="APIKEY" value="ABQIAAAALpV_9VK8HGf6x3ThZh8BVRQ4VwJ8OAJiFKz00rLbR8TvXezRQhTrqir6CXQt9WI_DZrexB5aMSCsHw" />
+
+		<copy tofile="${build}/${hibernate_cfg}" file="${mpdb-server-dir}/hibernate.cfg.in">
+			<filterset refid="props" />
+		</copy>
+
+		<copy tofile="${build}/files.properties" file="${mpdb-server-dir}/stage-files.properties">
+			<filterset refid="props" />
+		</copy>
+
+		<war destfile="metpetweb.war">
+			<fileset dir="${build}/../.."/>
+		</war>
+	</target>
+</project>
