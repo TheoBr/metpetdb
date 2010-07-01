@@ -204,17 +204,17 @@ public class Image extends MObject implements HasSubsample, HasSample, PublicDat
 	}
 
 	public String get64x64ServerPath() {
-		return GWT.getModuleBaseURL() + "image/?checksum="
+		return "image/?checksum="
 				+ this.getChecksum64x64();
 	}
 
 	public String getHalfServerPath() {
-		return GWT.getModuleBaseURL() + "image/?checksum="
+		return "image/?checksum="
 				+ this.getChecksumHalf();
 	}
 
 	public String getServerPath() {
-		return GWT.getModuleBaseURL() + "image/?checksum="
+		return "image/?checksum="
 				+ this.getChecksum();
 	}
 
