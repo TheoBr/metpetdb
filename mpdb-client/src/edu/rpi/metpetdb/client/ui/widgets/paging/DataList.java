@@ -43,6 +43,7 @@ import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
  * paginated table.
  * 
  * @author anthony
+ * @modified millib2
  * 
  * @param < T>
  *            the types of objects that will be paginated in this table
@@ -75,7 +76,6 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 	 * @return
 	 */
 	protected abstract String getListName();
-	
 
 	/**
 	 * Returns the name of the cookie for storing stuff
@@ -91,6 +91,7 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 	 * that this list supports
 	 */
 	private ColumnDefinition<RowType> allColumns;
+	
 	/**
 	 * Map of the columns that are being shown NOW!
 	 */
@@ -98,19 +99,32 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 	private DefaultTableDefinition<RowType> tableDefinition = new DefaultTableDefinition<RowType>();
 
 	private MpDbPagingScrollTable<RowType> scrollTable;
-
+	
 	public MpDbPagingScrollTable<RowType> getScrollTable() {
 		if (scrollTable == null) {
 			scrollTable = new MpDbPagingScrollTable<RowType>(getTableModel(),
 					getDataTable(), getHeaderTable(), tableDefinition) {
+				
 				@Override
 				public Widget getNoResultsWidgetImpl() {
 					return getNoResultsWidget();
 				}
+				
+				/*
+				@Override
+				protected void onLoad() {
+					// Notify the Paging object that the display widget is loaded
+					// so that it can position the notification popup
+					options.notifyParentOnLoad();					
+				}
+				*/
 			};
+			
 		}
 		return scrollTable;
 	}
+	
+	private MPagingOptions options;
 
 	private MpDbTableModel tableModel;
 
@@ -180,7 +194,7 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 
 		/**
 		 * Called automatically when new rows are requested, i.e. when the user
-		 * navitages to a new page.
+		 * navigates to a new page.
 		 */
 		public void requestRows(final Request request,
 				final Callback<RowType> callback) {
@@ -244,12 +258,12 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 	public abstract String getDefaultSortParameter();
 
 	/**
-	 * The method that is called by the underlining table model to fetch more
+	 * The method that is called by the underlyning table model to fetch more
 	 * data from the server.
 	 * 
 	 * @param p
 	 *            the pagination parameters that are used to specify the special
-	 *            properties of the requisted data
+	 *            properties of the requested data
 	 * @param ac
 	 *            the callback to signal when we are done fetching data
 	 */
@@ -378,9 +392,10 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 
 		};
 		psc.setSelectedPageSize(cookies.getPageSize());
-
 		topbar.getRightCol().add(psc);
-		MPagingOptions options = new MPagingOptions(getScrollTable());
+		
+		// Widget for navigating paginated results, also shows loading notifications
+		options = new MPagingOptions(getScrollTable(), true);
 		topbar.getRightCol().add(options);
 		
 		// container for widgets used to do stuff with selected rows
@@ -404,6 +419,16 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 		results = new InlineLabel("");
 		setUpColumns();
 		tableSelections = new HashMap<Object,Boolean>();
+	}
+	
+	@Override
+	protected void onLoad() {
+		//options.updateNoticePosition(this.getAbsoluteLeft(), this.getAbsoluteTop(), 
+		//		this.getOffsetWidth(), this.getOffsetHeight());
+		
+		options.setNoticeParent(tableActions);
+		
+		super.onLoad();
 	}
 
 	public FlowPanel getTopBar() {
@@ -441,7 +466,7 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 	public void selectRow(int row, boolean unselectAll){
 		getDataTable().selectRow(row,unselectAll);
 		if (!tableSelections.containsKey(getId(getRowValue(row)))){
-			tableSelections.put(getId(getRowValue(row)),null);
+			tableSelections.put(getId(getRowValue(row)), null);
 		}
 	}
 	public void deselectRow(int row){

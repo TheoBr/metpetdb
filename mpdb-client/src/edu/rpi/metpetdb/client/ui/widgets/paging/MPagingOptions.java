@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.client.ui.widgets.paging;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.gen2.table.client.PagingScrollTable;
 import com.google.gwt.gen2.table.event.client.PageChangeEvent;
 import com.google.gwt.gen2.table.event.client.PageChangeHandler;
@@ -10,43 +11,36 @@ import com.google.gwt.gen2.table.event.client.PageLoadEvent;
 import com.google.gwt.gen2.table.event.client.PageLoadHandler;
 import com.google.gwt.gen2.table.event.client.PagingFailureEvent;
 import com.google.gwt.gen2.table.event.client.PagingFailureHandler;
-import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHTML;
-import com.google.gwt.user.client.ui.KeyboardListenerAdapter;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.ui.CSS;
+import edu.rpi.metpetdb.client.ui.JS;
 import edu.rpi.metpetdb.client.ui.widgets.NumericKeyboardListener;
 
 /**
- * @modified lindez
+ * @modified lindez, millib2
  * 
- * This is a reimplementation of the gen2 PagingOptions class
+ * This is a re-implementation of the gen2 PagingOptions class
  * because the original version is not flexible.
  * 
  * A panel that wraps a {@link PagingScrollTable} and includes options to
  * manipulate the page.
  * 
  * <h3>CSS Style Rules</h3>
- * 
  * <ul class="css">
- * 
  * <li>.pagination { applied to the entire widget }</li>
- * 
  * <li>.pagination .errorMessage { applied to the error message }</li>
- * 
  * <li>.pagination-first { the first page button }</li>
- * 
  * <li>.pagination-last { the last page button }</li>
- * 
  * <li>.pagination-next { the next page button }</li>
- * 
  * <li>.pagination-prev { the previous page button }</li>
- * 
  * </ul>
  */
 public class MPagingOptions extends Composite {
@@ -76,6 +70,31 @@ public class MPagingOptions extends Composite {
    * The loading image.
    */
   private Image loadingImage;
+  
+  /**
+   * Should an additional notice be displayed that data is being fetched.
+   */
+  private boolean showLoadingNotice;
+  
+  /**
+   * Set to true once the table we belong to is loaded, and the notice positioned.
+   */
+  private boolean loadingNoticeReady;
+  
+  /**
+   * Set to true while the widget is waiting for data
+   */
+  private boolean workInProgress;
+  
+  /**
+   * Store a reference to a parent widget so the loading notifier can be centered on it.
+   */
+  private Widget parentWidget;
+  
+  /**
+   * Widget to be shown if additional loading notice is turned on.
+   */
+  private PopupPanel loadingWidget;
 
   /**
    * Goto next page button.
@@ -101,14 +120,27 @@ public class MPagingOptions extends Composite {
    * The table being affected.
    */
   private PagingScrollTable<?> table;
-
+  
   /**
    * Constructor.
    * 
    * @param table the table being affected
    */
   public MPagingOptions(PagingScrollTable<?> table) {
+	  // Do not display a loading notice by default
+	  this(table, false);
+  }
+
+  /**
+   * Constructor.
+   * 
+   * @param table the table being affected
+   * @param whether an additional notice will be displayed while data is being fetched
+   */
+  public MPagingOptions(PagingScrollTable<?> table, boolean additionalLoadingNotice) {
     this.table = table;
+    
+    this.showLoadingNotice = additionalLoadingNotice;
 
     // Create the main widget
     FlowPanel panel = new FlowPanel();
@@ -129,6 +161,42 @@ public class MPagingOptions extends Composite {
     loadingImage.setStyleName("table-loading");
     loadingImage.addStyleName(CSS.INVISIBLE);
 
+    // Create the loading notifier
+    loadingWidget = new PopupPanel(false, false) {
+    	
+    	@Override
+    	public void onLoad() {
+    		// Do nothing ?
+    	}
+    	
+    	/**
+    	 * Whenever the loading widget is show it should update its position
+    	 * based on that of the designated parent widget.
+    	 */
+    	@Override
+    	public void show() {    		
+    		int offsetWidth = loadingWidget.getOffsetWidth();
+
+    		loadingWidget.setPopupPosition(parentWidget.getAbsoluteLeft() 
+    				+ (parentWidget.getOffsetWidth() / 2) - (offsetWidth / 2), 
+    				parentWidget.getAbsoluteTop() + parentWidget.getOffsetHeight());
+    		
+    		// TODO: Figure out what's causing this issue and fix it properly
+    		// Temporary hack to get rid of duplicate notifier on search page
+    		if (parentWidget.getAbsoluteTop() > 10) {
+	    		super.show();
+	    		JS.scrollWindowToTop();
+    		}
+    	}
+    	
+    };
+    Label loadingLbl = new Label("Working...");
+    loadingLbl.setStyleName("searching-popup");
+    loadingWidget.setWidget(loadingLbl);
+    loadingWidget.setAnimationEnabled(false);
+    
+    workInProgress = false;
+    
     // Create the error label
     errorLabel = new InlineHTML();
     errorLabel.setStylePrimaryName("errorMessage");
@@ -145,30 +213,72 @@ public class MPagingOptions extends Composite {
     // Add handlers to the table
     table.addPageLoadHandler(new PageLoadHandler() {
       public void onPageLoad(PageLoadEvent event) {
-        loadingImage.addStyleName(CSS.INVISIBLE);
+    	workInProgress = false;
+    	hideLoadingNotice();
         errorLabel.setHTML("");
       }
     });
+    
     table.addPageChangeHandler(new PageChangeHandler() {
       public void onPageChange(PageChangeEvent event) {
         curPageBox.setText((event.getNewPage() + 1) + "");
-        loadingImage.removeStyleName(CSS.INVISIBLE);
+        workInProgress = true;
+        showLoadingNotice();
         errorLabel.setHTML("");
       }
     });
+    
     table.addPagingFailureHandler(new PagingFailureHandler() {
       public void onPagingFailure(PagingFailureEvent event) {
-        loadingImage.addStyleName(CSS.INVISIBLE);
+    	workInProgress = false;
+    	hideLoadingNotice();
         errorLabel.setHTML(event.getException().getMessage());
       }
     });
+    
     table.addPageCountChangeHandler(new PageCountChangeHandler() {
       public void onPageCountChange(PageCountChangeEvent event) {
         setPageCount(event.getNewPageCount());
       }
     });
+    
     setPageCount(table.getPageCount());
   }
+  
+	/**
+	 * Display notifications that work is being done.
+	 */
+	protected void showLoadingNotice() {
+		loadingImage.removeStyleName(CSS.INVISIBLE);
+		if (showLoadingNotice && loadingNoticeReady) {
+			loadingWidget.show();
+		}
+	}
+  
+  /**
+   * Hide any notifications that work is being done.
+   */
+	protected void hideLoadingNotice() {
+		loadingImage.addStyleName(CSS.INVISIBLE);
+		if (showLoadingNotice && loadingNoticeReady) {
+			loadingWidget.hide();
+		}
+	}
+	
+	/**
+	 * Assigns a widget as the loading notice's "parent". The notice will 
+	 * always be displayed centered at the bottom of its parent.
+	 * 
+	 * @param parent
+	 */
+	public void setNoticeParent(Widget parent) {
+		this.parentWidget = parent;
+		loadingNoticeReady = true;
+		
+		if (workInProgress) {
+			loadingWidget.show();
+		}
+	}
 
   /**
    * @return the {@link PagingScrollTable}.
@@ -218,25 +328,25 @@ public class MPagingOptions extends Composite {
     lastImage.addStyleName(STYLENAME_PREFIX + "-last");
 
     // Create the listener
-    ClickListener listener = new ClickListener() {
-      public void onClick(Widget sender) {
-        if (sender == firstImage) {
+    ClickHandler listener = new ClickHandler() {
+      public void onClick(ClickEvent event) {
+        if (event.getSource() == firstImage) {
           table.gotoFirstPage();
-        } else if (sender == lastImage) {
+        } else if (event.getSource() == lastImage) {
           table.gotoLastPage();
-        } else if (sender == nextImage) {
+        } else if (event.getSource() == nextImage) {
           table.gotoNextPage();
-        } else if (sender == prevImage) {
+        } else if (event.getSource() == prevImage) {
           table.gotoPreviousPage();
         }
       }
     };
 
     // Add the listener to each image
-    firstImage.addClickListener(listener);
-    prevImage.addClickListener(listener);
-    nextImage.addClickListener(listener);
-    lastImage.addClickListener(listener);
+    firstImage.addClickHandler(listener);
+    prevImage.addClickHandler(listener);
+    nextImage.addClickHandler(listener);
+    lastImage.addClickHandler(listener);
   }
 
   /**
@@ -270,13 +380,13 @@ public class MPagingOptions extends Composite {
    * @param pageCount the current page count
    */
   private void setPageCount(int pageCount) {
-    if (pageCount < 0) {
-      numPagesLabel.setHTML("");
-      lastImage.setVisible(false);
-    } else {
-      numPagesLabel.setHTML("of " + pageCount);
-      numPagesLabel.setVisible(true);
-      lastImage.setVisible(true);
-    }
+	  if (pageCount < 0) {
+		  numPagesLabel.setHTML("");
+		  lastImage.setVisible(false);
+	  } else {
+		  numPagesLabel.setHTML("of " + pageCount);
+		  numPagesLabel.setVisible(true);
+		  lastImage.setVisible(true);
+	  }
   }
 }
