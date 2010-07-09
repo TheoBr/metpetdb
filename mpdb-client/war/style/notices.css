@@ -98,3 +98,16 @@
 .top-notice .notice-panel .notice-alert a:active {
 	color: #ffb6b5;
 }
+
+
+/*-------------------------------------
+         working notice
+ --------------------------------------*/
+ .searching-popup {
+ 	background: #c5cfec;
+	padding: 10px;
+	border-left: 1px solid #b6c2e3;
+	border-top: 0px;
+	border-right: 1px solid #b6c2e3;
+	border-bottom: 1px solid #b6c2e3;
+ }
