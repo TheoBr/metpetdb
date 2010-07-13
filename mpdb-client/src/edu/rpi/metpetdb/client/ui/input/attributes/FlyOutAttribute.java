@@ -27,8 +27,8 @@ import edu.rpi.metpetdb.client.ui.widgets.MPartialCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MPartialCheckBox.CheckedState;
 
 /**
- * 
- * @author goldfd, lindez, millib2
+ * @author goldfd, lindez
+ * @modified millib2
  * 
  * The FlyOutAttribute widget is used when the user needs to select items in a 
  * static tree structure, such as the list of searchable minerals. The widget is 
@@ -37,7 +37,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MPartialCheckBox.CheckedState;
  *
  * @param <T>
  */
-public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
+public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute<MObject>
 		implements ClickListener {
 	
 	public class FlyOutItem extends FlowPanel implements ClickListener {
@@ -62,11 +62,11 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 			setStyleName("flyout-item");
 			obj = value;
 			this.selectChildren = selectChildren;
-			children = new HashSet();
+			children = new HashSet<FlyOutAttribute<T>.FlyOutItem>();
 			cb = new MPartialCheckBox(value.toString());
 			cb.addClickListener(this);
 			add(cb);
-			if (value instanceof HasChildren && value.getChildren() != null && value.getChildren().size() > 0) {
+			if (value instanceof HasChildren<?> && value.getChildren() != null && value.getChildren().size() > 0) {
 				moreBtn = new ToggleButton(
 						new Image("images/icon-flyout-more-up.png"),
 						new Image("images/icon-flyout-more-down.png"),
@@ -204,10 +204,9 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 		this.selectChildren = selectChildren;
 	}
 	
-	public ArrayList<?> getSelectedWidgets() {
+	public ArrayList<Widget> getSelectedWidgets() {
 		return selectedWidgets;
-	}
-	// NOTE: Changed from ArrayList<?>, need to check that this is correct 
+	} 
 	public ArrayList<T> getSelectedItems() {
 		return selectedItems;
 	}
@@ -295,7 +294,7 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 			Iterator<T> itr = parents.iterator();
 			while (itr.hasNext()) {
 				final T parent = itr.next();
-				if (parent instanceof Mineral && ((Mineral) parent).getRealMineralId() == ((Mineral) parent).getId()) {
+			//	if (parent instanceof Mineral && ((Mineral) parent).getRealMineralId() == ((Mineral) parent).getId()) {
 					final FlyOutItem fo= new FlyOutItem(null, parent, selectChildren);
 					if (get(obj) != null && get(obj).contains(parent)
 							|| contains(get(obj), parent)) {
@@ -308,7 +307,7 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 					} 
 					fp.add(fo);		
 				}
-			}
+			//}
 		}
 		fp.setStyleName("flyout-parents");
 		return fp;
@@ -453,8 +452,14 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 	}
 
 	public Object get(final Widget editWidget) {
+		if (maxSelectable == 1 && selectedItems.size() > 0)
+			return selectedItems.get(0);
+		else if (selectedItems.size() > 0)
 			return new HashSet<T>(selectedItems);
+		else
+			return null;
 	}
+	
 	public Collection<T> get(final GenericAttribute ga) {
 		final PropertyConstraint pc = ga.getConstraint();
 
@@ -468,6 +473,7 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 			return (Collection<T>) voc.getValues();
 		}
 	}
+	
 	public Collection<T> get(final MObject obj) {
 		final Object o = mGet(obj);
 		if (o instanceof Collection)
@@ -480,6 +486,7 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute
 			return null;
 		}
 	}
+	
 	public void set(final MObject obj, final Object v) {
 		if (v instanceof Collection) {
 			final Collection c = (Collection) (v != null

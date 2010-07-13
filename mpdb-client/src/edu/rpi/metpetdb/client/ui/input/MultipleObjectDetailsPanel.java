@@ -7,14 +7,22 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.model.SampleMineral;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.ui.CSS;
-import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidMCommand;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 
+/**
+ * Provides an interface for editing or displaying a collection of MObjects.
+ * 
+ * @modified millib2
+ *
+ * @param <T>
+ */
 public class MultipleObjectDetailsPanel<T extends MObject> extends
 		DetailsPanel<T> {
 	protected HashMap<T, HashMap<GenericAttribute, DetailsPanelEntry>> dpBeans;
@@ -111,27 +119,45 @@ public class MultipleObjectDetailsPanel<T extends MObject> extends
 	public void edit(final ArrayList<T> beans) {
 		this.beans.clear();
 		this.beans.addAll(beans);
+		
 		addStyleName(STYLENAME_DEFAULT + "-" + CSS.EDITMODE);
 		removeStyleName(STYLENAME_DEFAULT + "-" + CSS.SHOWMODE);
 		clearNonActions();
+		
 		if (dpBeans == null)
 			dpBeans = new HashMap<T, HashMap<GenericAttribute, DetailsPanelEntry>>();
-		final Iterator<HashMap<GenericAttribute, DetailsPanelEntry>> entriesItr = dpBeans
-				.values().iterator();
+		
+		final HashMap<T, String> savedValues = new HashMap<T, String>();
+		
+		final Iterator<T> entriesItr = dpBeans.keySet().iterator();
 		while (entriesItr.hasNext()) {
-			final HashMap<GenericAttribute, DetailsPanelEntry> dpEntries = entriesItr
-					.next();
+			final T key = entriesItr.next();
+			final HashMap<GenericAttribute, DetailsPanelEntry> dpEntries = dpBeans.get(key);
 			if (dpEntries != null) {
 				final Iterator<GenericAttribute> dpItr = dpEntries.keySet()
 						.iterator();
 				while (dpItr.hasNext()) {
 					final DetailsPanelEntry dpEntry = (DetailsPanelEntry) dpEntries
 							.get(dpItr.next());
+					
+					// Save the value in text inputs so it doesn't have to be re-entered
+					// TODO: this is pretty hackish, need to rework this class laster
+					if (key instanceof SampleMineral) {
+						Widget[] widgets = dpEntry.getCurrentEditWidgets();
+						for (Widget w : widgets) {
+							if (w != null && w instanceof HasText ) {								
+								savedValues.put(key, ((HasText)w).getText());
+							}
+						}
+					}
+					
 					dpEntry.remove();
 				}
 			}
 		}
+		
 		dpBeans.clear();
+		
 		final Iterator<T> itr = beans.iterator();
 		while (itr.hasNext()) {
 			final T bean = itr.next();
@@ -154,6 +180,17 @@ public class MultipleObjectDetailsPanel<T extends MObject> extends
 					dpEntries.put(attr, dpEntry);
 				}
 				showEditWidget(dpEntry, attr, bean);
+				
+				// Save the value in text inputs so it doesn't have to be re-entered
+				Widget[] widgets = dpEntry.getCurrentEditWidgets();
+				for (Widget w : widgets) {
+					if (w != null && w instanceof HasText) {
+						if (savedValues.containsKey(bean)) {
+							((HasText)w).setText(savedValues.get(bean));
+						}
+					}
+				}
+				
 				final CurrentError err = new CurrentError();
 				dpEntry.setCurrentError(err);
 				add(err, dpEntry.getLastRow().getTdValue());
@@ -161,6 +198,7 @@ public class MultipleObjectDetailsPanel<T extends MObject> extends
 		}
 		isEditMode = true;
 	}
+	
 	public boolean validateEdit(final VoidMCommand r) {
 		if (!isEditMode())
 			return true;
@@ -179,6 +217,7 @@ public class MultipleObjectDetailsPanel<T extends MObject> extends
 		}
 		return failed == 0;
 	}
+	
 	private Widget[] getEditWidgets(final GenericAttribute attr,
 			final MObject bean) {
 		if (!isEditMode())
@@ -186,6 +225,7 @@ public class MultipleObjectDetailsPanel<T extends MObject> extends
 		final DetailsPanelEntry dpEntry = dpBeans.get(bean).get(attr);
 		return dpEntry.getCurrentEditWidgets();
 	}
+	
 	private CurrentError getCurrentError(final GenericAttribute attr,
 			final MObject bean) {
 		if (!isEditMode())

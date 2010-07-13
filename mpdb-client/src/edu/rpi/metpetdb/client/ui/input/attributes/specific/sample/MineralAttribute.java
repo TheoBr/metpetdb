@@ -7,10 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DisclosurePanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -26,10 +25,8 @@ import edu.rpi.metpetdb.client.model.validation.ObjectConstraint;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.model.validation.ValueInCollectionConstraint;
 import edu.rpi.metpetdb.client.ui.MpDb;
-import edu.rpi.metpetdb.client.ui.commands.VoidMCommand;
-import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
+import edu.rpi.metpetdb.client.ui.input.CurrentError;
 import edu.rpi.metpetdb.client.ui.input.MultipleObjectDetailsPanel;
-import edu.rpi.metpetdb.client.ui.input.WizardDialog;
 import edu.rpi.metpetdb.client.ui.input.attributes.FlyOutAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
@@ -37,93 +34,109 @@ import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList.ListItem;
 
 /**
+ * Responsible for the display and editing/selection of lists of minerals, possibly
+ * including quantities of each. Uses the FlyOutAttribute for selection and displays 
+ * data as a list of names and quantity values.
  * 
  * @author millib2, wongp3
- * 
- * TODO: comments!!!
- *
  */
-public class MineralAttribute extends GenericAttribute<MObject> implements ClickHandler {
+public class MineralAttribute extends GenericAttribute<MObject> {
 
-	private final Button chooseMinerals;
 	private MObject obj;
-	private final HorizontalPanel container;
 	
+	/**
+	 * Allows for selection of Minerals from a tree structure.
+	 */
 	private FlyOutAttribute<Mineral> flyOutTree;
 	
-	private WizardDialog dialog;
-	private boolean mineralsChosen = false;
-	private DetailsPanel<MObject> p_mineral;
+	/**
+	 * Provides a panel for entering amounts for selected minerals.
+	 */
+	private MultipleObjectDetailsPanel<SampleMineral> amountsPanel;
 
-	private final MultipleObjectDetailsPanel<SampleMineral> p_amounts = 
-		new MultipleObjectDetailsPanel<SampleMineral>(
-			new GenericAttribute[] {
-				new TextAttribute(MpDb.doc.SampleMineral_Sample_minerals_amount)
-			});
-
+	/**
+	 * Constructor
+	 * 
+	 * @param mc
+	 */
 	public MineralAttribute(final ObjectConstraint<Mineral> mc) {
 		this(mc, 0);
 	}
 	
+	/**
+	 * Constructor
+	 * 
+	 * @param mc
+	 * @param maxMinerals
+	 */
 	public MineralAttribute(final ValueInCollectionConstraint<Mineral> mc,
 			int maxMinerals) {
 		this((PropertyConstraint) mc, maxMinerals);
 	} 
 	
+	/**
+	 * Constructor
+	 * 
+	 * @param mc
+	 * @param maxMinerals
+	 */
 	public MineralAttribute(final PropertyConstraint mc, int maxMinerals) {
 		super(mc);
-		chooseMinerals = new Button("Choose Minerals...", this);
-		container = new HorizontalPanel();
 		flyOutTree = new FlyOutAttribute<Mineral>(mc, maxMinerals, false);
+		
+		amountsPanel = new MultipleObjectDetailsPanel<SampleMineral>(
+					new GenericAttribute[] {
+						new TextAttribute(MpDb.doc.SampleMineral_Sample_minerals_amount)
+					});
 	}
 
+	/**
+	 * Creates the widget for the display of a set of minerals and quantities. 
+	 * Minerals are displayed as a table of height ten, with as many columns 
+	 * as necessary. If the MObject passed is a sample its mineral data is 
+	 * displayed, otherwise the minerals set in the fly out tree are shown.
+	 * 
+	 * @param obj MObject with data to be displayed, usually a Sample 
+	 */
 	public Widget[] createDisplayWidget(final MObject obj) {
 		
+		this.obj = obj;
+		
 		FlexTable mineral_table = new FlexTable();
-		//final DisclosurePanel expand = new DisclosurePanel();
 		List<String> vals = new ArrayList<String>();
 		
-		//this.obj = obj;
-		
-		//addItemsToTree();
-		
-		final Widget[] widgets = flyOutTree.createDisplayWidget(obj);
-		// MHtmlList tempList = (MHtmlList) ((SimplePanel) widgets[0]).getWidget();
-		MHtmlList tempList = (MHtmlList) ((HorizontalPanel)widgets[0]).getWidget(0);
-		
-		Collection<ListItem> s = tempList.getItems();
-		if (s != null) {
-			final Iterator<ListItem> itr = s.iterator();
-			while (itr.hasNext()) {
-				String rock = ((Label)((MHtmlList.ListItem) itr.next()).getWidget()).getText();
-				vals.add(rock);
+		// Add sample
+		if (this.obj instanceof Sample) {
+			for (SampleMineral sm : ((Sample)this.obj).getMinerals()) {
+				String text = sm.getMineral().getName();
+				if (sm.getAmount() != null && !sm.getAmount().equals("")) {
+					text += " (" + sm.getAmount() + ")";
+				}
+				vals.add(text);
 			}
 		}
-		Collections.sort(vals);
+		// Add chemical analysis
+		else {
+			final Widget[] widgets = flyOutTree.createDisplayWidget(obj);
+			MHtmlList tempList = (MHtmlList) ((HorizontalPanel)widgets[0]).getWidget(0);
+			
+			Collection<ListItem> s = tempList.getItems();
+			if (s != null) {
+				final Iterator<ListItem> itr = s.iterator();
+				while (itr.hasNext()) {
+					String rock = ((Label)((MHtmlList.ListItem) itr.next()).getWidget()).getText();
+					vals.add(rock);
+				}
+			}
+		}
 		
-		/*
-		MHtmlList list = new MHtmlList();
-		for (int i = 1; i < vals.size(); i++) {
-			list.add(new Label(vals.get(i)));
-		}
-
-		if (vals.size() > 0) {
-			final Label closedText = new Label(vals.get(0));
-			expand.setHeader(closedText);
-		}
-		expand.add(list);
-		expand.setAnimationEnabled(true);
-		return new Widget[] {
-			expand
-		};*/
+		Collections.sort(vals);
 		
 		mineral_table.setStyleName("mineral_table");
 		mineral_table.setWidth("100%");
 		
-		int i;
-		int row = 0;
-		int col = 0;
-		for(i = 0; i < vals.size(); i++){
+		int row = 0, col = 0;
+		for(int i = 0; i < vals.size(); i++){
 			if(i % 10 == 0){
 				col++;
 				row = 0;
@@ -137,196 +150,189 @@ public class MineralAttribute extends GenericAttribute<MObject> implements Click
 		};
 	}
 
-	private void remakeContainer(final MObject obj) {
-		
-		this.obj = obj;
-		
-		//addItemsToTree();
-		MHtmlList tempList;
-		List<String> vals = new ArrayList<String>();
-		container.clear();
-		
-		final Widget[] widgets = flyOutTree.createDisplayWidget(obj);
-
-		tempList = (MHtmlList) ((HorizontalPanel)widgets[0]).getWidget(0);
-
-		Collection<ListItem> s = tempList.getItems();
-		
-		//for (int i = 0; i < widgets.length; ++i) {
-		//	container.add(widgets[i]);
-		//	System.out.println(widgets[i].toString());
-		//}
-		
-		if (s != null) {
-			final Iterator<ListItem> itr = s.iterator();
-			while (itr.hasNext()) {
-				String rock = ((Label)((MHtmlList.ListItem) itr.next()).getWidget()).getText();
-				vals.add(rock);
-			}
-			Collections.sort(vals);
-		}
-		
-		MHtmlList list = new MHtmlList();
-		for (int i = 0; i < vals.size(); i++) {
-			list.add(new Label(vals.get(i)));
-		}
-		container.add(list);
-		return;
-	}
-
+	/**
+	 * Creates the widget that allows for the editing of a list of minerals, possibly 
+	 * including quantities. 
+	 * 
+	 * @param obj MObject with data to be displayed, usually a Sample
+	 * @param id
+	 * @param ga
+	 */
 	public Widget[] createEditWidget(final MObject obj, final String id,
 			final GenericAttribute<MObject> ga) {
 		
-		final VerticalPanel vp = new VerticalPanel();
-		chooseMinerals.setEnabled(true);
 		this.obj = obj;
-		vp.add(chooseMinerals);
 		
-		remakeContainer(obj);
-		vp.add(container);
+		// Fixes a bug where minerals carry over from previous uses
+		amountsPanel = null;
+		amountsPanel = new MultipleObjectDetailsPanel<SampleMineral>(
+				new GenericAttribute[] {
+					new TextAttribute(MpDb.doc.SampleMineral_Sample_minerals_amount)
+				});
+		
+		final VerticalPanel vp = new VerticalPanel(); 
+		
+		// Clicking the "Choose Minerals..." button reveals the mineral chooser widget
+		final DisclosurePanel mineralDPanel = new DisclosurePanel();
+		mineralDPanel.setHeader(new Button("Choose Minerals..."));		
+		final Widget[] ws = flyOutTree.createEditWidget(obj, "minerals", flyOutTree);
+		for (Widget w : ws) {
+			mineralDPanel.add(w);
+		}
+		vp.add(mineralDPanel);
+
+		// If we want to be able to enter mineral amounts, add the panel to do so
+		if (this.getConstraint().equals(MpDb.doc.Sample_minerals)) {
+			final DisclosurePanel amountsDPanel = new DisclosurePanel();
+			amountsDPanel.setHeader(new Button("Choose Amounts..."));
+			
+			final VerticalPanel amountsContentPanel = new VerticalPanel();
+			setAmountsPanel(amountsContentPanel);
+			
+			// Whenever the user selects or deselects an item on the mineral chooser,
+			// the amounts panel needs to be updated
+			flyOutTree.addClickListener(new ClickListener() {
+				public void onClick(Widget sender) {					
+					setAmountsPanel(amountsContentPanel);
+				}
+			});
+			
+			amountsDPanel.add(amountsContentPanel);
+		
+			vp.add(amountsDPanel);
+		}
 		
 		return new Widget[] {
 			vp
 		};
 	}
-
-	private void addItemsToTree() {
-		final ArrayList<Mineral> minerals = new ArrayList<Mineral>();
-		if (get(obj) != null) {
-			for (Object o : get(obj)) {
-				if (o instanceof SampleMineral)
-					minerals.add(((SampleMineral) o).getMineral());
-				else if (o instanceof Mineral)
-					minerals.add((Mineral) o);
-			}
-		}
+	
+	/**
+	 * Updates the amounts panel to display the minerals currently selected
+	 * in the fly out tree.
+	 * 
+	 * @param amountsContentPanel 
+	 */
+	private void setAmountsPanel(VerticalPanel amountsContentPanel) {
 		
-		// tree.setSelectedItems(minerals);
-		flyOutTree.setSelectedItems(minerals);
+		// Give the amountsPanel the updated list of minerals
+		amountsPanel.edit(merge(flyOutTree.getSelectedItems(), 
+				((Sample)obj).getMinerals()));
+		
+		// Clear and repopulate amountsContentPanel
+		amountsContentPanel.clear();
+		if (amountsPanel.getBeans().size() > 0) {
+			amountsContentPanel.add(amountsPanel);	
+		}
+		else {
+			final Label noMineralsLabel = new Label("No minerals selected."); 
+			amountsContentPanel.add(noMineralsLabel);
+		}	
 	}
 	
-	private WizardDialog makeWizardDialog() {
-		
-		final WizardDialog wd = new WizardDialog();
-
-		final GenericAttribute<?> mineral_attributes[] = {
-			flyOutTree
-		};
-
-		p_mineral = new DetailsPanel<MObject>(mineral_attributes, null, false) {
-			public boolean validateEdit(final VoidMCommand r) {
-				if (r != null)
-					r.execute();
-				// don't worry about validating this, they are just selecting
-				// minerals
-				return true;
-			}
-		};
-		
-		wd.turnOffValidation();
-
-		p_mineral.edit(this.obj);
-		
-		final Command mineral_amount = new Command() {
-			public void execute() {
-				p_amounts.edit(merge(flyOutTree.getSelectedItems(), 
-						((Sample)obj).getMinerals()));
-				mineralsChosen = true;
-			}
-		};
-		
-		wd.addStep(p_mineral, 0, "Select Minerals");
-		if (this.getConstraint().equals(MpDb.doc.Sample_minerals)) {
-			wd.addTabChangeListener(mineral_amount);
-			wd.addStep(p_amounts, 1, "Enter Amounts");
-		}
-		
-		return wd;
-	}
-
+	/**
+	 * Builds a list of SampleMinerals from selectedItems. SampleMinerals
+	 * already contained in originalItems are just added to the list, while
+	 * new objects are instantiated for those that are not. 
+	 * 
+	 * @param selectedItems List of minerals (no amount data) usually grabbed
+	 * 		  from the fly out tree.
+	 * @param originalItems List of Sample Minerals usually taken from the Sample (obj).
+	 * @returns A list of SampleMinerals equivalent to the given list of Minerals, 
+	 * selectedItems.
+	 */
 	private ArrayList<SampleMineral> merge(
 			final ArrayList<Mineral> selectedItems,
 			final Set<SampleMineral> originalItems) {
+		
 		final ArrayList<SampleMineral> merged = new ArrayList<SampleMineral>();
+		
+		// Copy over all existing SampleMinerals
 		if (originalItems != null) {
 			for(SampleMineral so : originalItems) {
 				if (selectedItems.contains(so))
 					merged.add(so);
 			}
 		}
+		
+		// Create a new SampleMineral for each new object
 		for(Mineral m : selectedItems) {
 			if (!merged.contains(m)) {
-				final SampleMineral sm = new SampleMineral();
-				sm.setMineral(m);
-				merged.add(sm);
+				merged.add(new SampleMineral(m));
 			}
 		}
+		
 		return merged;
 	}
 	
+	/**
+	 * We want to intercept the call to commitEdit so that our amounts can
+	 * be validated.
+	 * 
+	 * @param obj
+	 * @param wditWidget
+	 * @param err
+	 * @param r 
+	 */
+	@Override
+	public void commitEdit(final MObject obj, final Widget[] editWidget,
+			final CurrentError err, final Command r) {
+		
+		amountsPanel.validateEdit(null);
+		super.commitEdit(obj, editWidget, err, r);		
+	}
+
+	/**
+	 * Updates the data object of the fly out tree.
+	 */
+	protected void set(final MObject obj, final Object v) {
+		flyOutTree.set(obj, v);
+	}
+	
+	/**
+	 * Retrieves the fly out tree's list of selected minerals.
+	 * 
+	 * @param ga
+	 * @return Collection of minerals.
+	 */
 	protected Collection<Mineral> get(final GenericAttribute<MObject> ga) {
 		return flyOutTree.get(ga);
 	}
 
-	protected void set(final MObject obj, final Object v) {
-		flyOutTree.set(obj, v);
-	}
-
+	/**
+	 * If we can enter amounts get the collection of SampleMinerals
+	 * from the amounts panel, otherwise get the list of Minerals
+	 * from the fly out tree.
+	 * 
+	 * @param editWidget
+	 * @return Either a Set of SampleMinerals a list of Minerals.
+	 */
 	public Object get(final Widget editWidget) {
 		if (this.getConstraint().equals(MpDb.doc.Sample_minerals)) {
-			// return the sample minerals
-			if (mineralsChosen)
-				return p_amounts.getBeans();
-			else
-				return ((Sample)obj).getMinerals();
+			// Return selected sample minerals (minerals + amounts)
+			return amountsPanel.getBeans();
 		} else {
-			// return the minerals in the tree
+			// Return the minerals in the tree (no amounts)
 			return flyOutTree.get(editWidget);
 		}
 	}
 
+	/**
+	 * If we can enter amounts get the collection of SampleMinerals
+	 * from the amounts panel, otherwise get the list of Minerals
+	 * from the fly out tree.
+	 * 
+	 * @param obj
+	 * @return Either a Set of SampleMinerals a list of Minerals.
+	 */
 	protected Collection<?> get(final MObject obj) {
 		if (this.getConstraint().equals(MpDb.doc.Sample_minerals)) {
-			// return the sample minerals
-			return p_amounts.getBeans();
+			// Return selected sample minerals (minerals + amounts)
+			return amountsPanel.getBeans();
 		} else {
-			// return the minerals in the tree
+			// Return the minerals in the tree (no amounts)
 			return flyOutTree.get(obj);
 		}
 	}
-	
-	/**
-	 * Called when the user clicks the "Choose minerals..." button.
-	 * 
-	 * @param event
-	 * 		The GWT ClickEvent object associated with the user's click action. 
-	 */
-	public void onClick(ClickEvent event) {
-		// Create and show the select minerals dialog
-		if (event.getSource() == chooseMinerals) {
-			
-			if (dialog == null || !(p_mineral.getBean().equals(this.obj)))
-				dialog = makeWizardDialog();
-			
-			// Command to be executed when the user is finished with the 
-			// select minerals dialog
-			final Command dialog_finish = new Command() {
-				public void execute() {
-					if (getConstraint().equals(MpDb.doc.Sample_minerals)){
-						p_amounts.validateEdit(null);
-						flyOutTree.set(obj, get(obj));
-					}
-					else {
-						//this is a hack to make it set the value the the user selected
-						flyOutTree.set(obj, get(new Label()));
-					}
-					MineralAttribute.this.remakeContainer(MineralAttribute.this.obj);
-				}
-			};
-			
-			dialog.clearDialogFinishListeners();
-			dialog.addDialogFinishListener(dialog_finish);
-			dialog.show();
-		}
-	}
+
 }
