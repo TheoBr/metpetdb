@@ -15,7 +15,6 @@ import javax.servlet.http.Cookie;
 import net.sf.gilead.core.PersistentBeanManager;
 import net.sf.gilead.core.beanlib.transformer.CustomTransformersFactory;
 import net.sf.gilead.core.hibernate.HibernateUtil;
-import net.sf.gilead.core.store.stateless.StatelessProxyStore;
 import net.sf.gilead.gwt.GwtConfigurationHelper;
 import net.sf.gilead.gwt.PersistentRemoteService;
 
@@ -88,7 +87,7 @@ public abstract class MpDbServlet extends PersistentRemoteService {
 
 	protected static final Properties fileProps = new Properties();
 
-	private static int autoLoginId = 61;
+	private static int autoLoginId = -1;
 
 	private static final String fileUploadPath;
 
@@ -123,6 +122,9 @@ public abstract class MpDbServlet extends PersistentRemoteService {
 	public void init(final ServletConfig sc) throws ServletException {
 		super.init(sc);
 		
+		
+		System.out.println("[SERVLETCTXNAME]" + this.getServletContext().getServletContextName());
+
 		
 		// Setup hibernate4gwt
 		DataStore.initFactory();
