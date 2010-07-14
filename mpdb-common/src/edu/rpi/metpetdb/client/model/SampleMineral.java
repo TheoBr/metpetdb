@@ -5,11 +5,7 @@ import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
-import com.google.gwt.user.client.Window;
-
-import edu.rpi.metpetdb.client.model.properties.Property;
-
-public class SampleMineral extends MObject implements Comparable {
+public class SampleMineral extends MObject implements Comparable<MObject> {
 	private static final long serialVersionUID = 1L;
 
 	@Field(index = Index.TOKENIZED, store = Store.NO)
@@ -20,10 +16,26 @@ public class SampleMineral extends MObject implements Comparable {
 
 	private Sample sample;
 
+	public SampleMineral() {
+		
+	}
 	
-	/*Used to remove the substring "(x)" if found in the name of the mineral.
-	 *For instance Biotite (x) should just be Biotite since (x) just means
-	 *that the mineral exists for that particular sample.*/
+	/**
+	 * Creates a new SampleMineral with the given value as its Mineral.
+	 * 
+	 * @param mineral
+	 */
+	public SampleMineral(Mineral mineral) {
+		super();
+		this.mineral = mineral;
+	}
+	
+	
+	/**
+	 * Used to remove the substring "(x)" if found in the name of the mineral.
+	 * For instance Biotite (x) should just be Biotite since (x) just means
+	 * that the mineral exists for that particular sample.
+	 */
 	private String strip_x(String sample_mineral) {
 		int begin_substring;
 		
@@ -102,10 +114,17 @@ public class SampleMineral extends MObject implements Comparable {
 		return false;
 	}
 
-	public int compareTo(Object sm) {
-		if(!(sm instanceof SampleMineral))
-			throw new ClassCastException("Sample Mineral object expected");
-		Mineral sample_obj = ((SampleMineral) sm).getMineral();
-		return this.mineral.getName().compareTo(sample_obj.getName());
+	public int compareTo(MObject sm) {
+		if (sm instanceof SampleMineral){
+			final Mineral sample_obj = ((SampleMineral)sm).getMineral();
+			return this.mineral.getName().compareTo(sample_obj.getName());
+		}
+		else if (sm instanceof Mineral) {
+			return this.mineral.getName().compareTo(((Mineral)sm).getName());
+		}
+		else {
+			throw new ClassCastException("Can only compare SampleMineral to " +
+					"SampleMineral or Mineral types");
+		}
 	}
 }

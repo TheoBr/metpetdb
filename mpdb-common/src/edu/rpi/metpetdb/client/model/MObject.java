@@ -1,8 +1,5 @@
 package edu.rpi.metpetdb.client.model;
 
-
-
-import net.sf.gilead.pojo.gwt.IGwtSerializableParameter;
 import net.sf.gilead.pojo.gwt.LightEntity;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
