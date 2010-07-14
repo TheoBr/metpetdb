@@ -132,7 +132,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		main.add(form);
 		form.setMethod(FormPanel.METHOD_POST);
 		form.setEncoding(FormPanel.ENCODING_MULTIPART);
-		form.setAction(GWT.getModuleBaseURL() + "spreadsheetUpload");
+		form.setAction("./spreadsheetUpload");
 		form.addFormHandler(this);
 		form.setStyleName(CSS.BULK_UPLOAD_FORM);
 		form.setWidget(file);
@@ -199,7 +199,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		progressTimer = new Timer() {
 			public void run() {
 				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET,
-						GWT.getModuleBaseURL() + "/spreadsheetUpload");
+						 "./spreadsheetUpload");
 				try {
 					builder.sendRequest("", new RequestCallback() {
 						public void onError(Request request, Throwable exception) {}
@@ -235,7 +235,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		main.add(imageZipForm);
 		imageZipForm.setMethod(FormPanel.METHOD_POST);
 		imageZipForm.setEncoding(FormPanel.ENCODING_MULTIPART);
-		imageZipForm.setAction(GWT.getModuleBaseURL() + "spreadsheetUpload");
+		imageZipForm.setAction("./spreadsheetUpload");
 		imageZipForm.addFormHandler(this);
 		imageZipForm.setStyleName(CSS.BULK_UPLOAD_FORM);
 		imageZipForm.setWidget(imageFile);
