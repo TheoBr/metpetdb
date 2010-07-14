@@ -94,7 +94,7 @@ public class SearchIPhone extends HttpServlet{
 				String tempParams[]= request.getParameterValues(PAGINATION);
 				int param= Integer.parseInt(tempParams[0]);
 				p.setFirstResult(param);
-				p.setMaxResults(10);
+				p.setMaxResults(50);
 			}
 			else
 			{
