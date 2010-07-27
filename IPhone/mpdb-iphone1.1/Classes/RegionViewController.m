@@ -123,7 +123,11 @@
 -(void)loadMap
 {
 	//make a post request to get the criteria for the samples that are returned from the region search
-	PostRequest *post= [[PostRequest init] alloc];
+	PostRequest *post= [[PostRequest alloc] init];
+
+	//PostRequest *post= nil;
+	//[[post init] alloc];
+	
 	[post setData:nil :nil :nil :nil :currentSearchData.currentPublicStatus :selectedRegion:nil:0:@"true"];
 	myReturn=[post buildPostString]; 
 	
@@ -169,14 +173,15 @@
 	
 	//create a post request by passing the necessary data to a PostRequest object
 	//the NSData that is returned will be the samples that are contained in whatever region the user has selected
-	PostRequest *post= [[PostRequest init] alloc];
+	PostRequest *post= [[PostRequest alloc] init];
+	
 	//since the user has not yet been able to narrow the search, nil can be passed instead of the arrays
 	[post setData:nil:nil:nil :nil:currentSearchData.currentPublicStatus :selectedRegion:nil:0:@"false"];
 	myReturn=[post buildPostString];
-	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test3.txt"];
-	[fh writeData:myReturn];
+//	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test3.txt"];
+//	[fh writeData:myReturn];
 	
-	xmlParser *x= [[xmlParser init] alloc];
+	xmlParser *x= [[xmlParser alloc] init];
 	sampleLocations= [x parseSamples:myReturn];
 	/*for(int z=0; z<[sampleLocations count]; z++)
 	 {
@@ -203,7 +208,7 @@
 	[myRequest setHTTPMethod:@"POST"];
 	NSString *postString = [[NSString alloc] init];
 	
-	if(Uname!=NULL)
+	if(Uname!=nil)
 	{
 		postString=[postString stringByAppendingFormat:@"username= %@\n", Uname];
 	}
@@ -211,15 +216,22 @@
 	NSData *myData= [postString dataUsingEncoding:NSASCIIStringEncoding];
  	[myRequest setHTTPBody:myData];
 	
+
 	
 	NSError *error;
+
+	NSURLResponse *myResponse;
+	
 	myReturn = [NSURLConnection sendSynchronousRequest:myRequest
 									 returningResponse:myReturn error:&error];
 	
+	
 	NSString *returnValue=[[NSString alloc] initWithData:myReturn encoding:NSASCIIStringEncoding];
-	if(error!=NULL)
-	{ 
-		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Network failure: unable to connect to internet." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+	
+	
+	if((myReturn == nil) && (error != nil))
+	{
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Network failure: unable to connect to internet." message:@"Foo" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 	}
 	xmlParser *y=[[xmlParser alloc] init];

@@ -40,7 +40,14 @@
 	[radii addObject:@"400"];
 	[radii addObject:@"500"];
 	
-	NSString *output=[[NSString alloc] initWithFormat:@"Latitude: %.8g\nLongitude: %.8g\nSelect a radius (in Kilometers) to\nuse for your search:", currentSearchData.centerCoordinate.latitude, currentSearchData.centerCoordinate.longitude];
+	
+	CLLocationCoordinate2D centerCoordinate = [CurrentSearchData getCenterCoordinate];
+	
+	double lat = centerCoordinate.latitude;
+	
+	double longish = centerCoordinate.longitude;
+	
+	NSString *output=[[NSString alloc] initWithFormat:@"Latitude: %.5f\nLongitude: %.5f\nSelect a radius (in Kilometers) to\nuse for your search:", centerCoordinate.latitude, centerCoordinate.longitude];
 	outputlabel.text=output;
 	
 	radiusPicker.showsSelectionIndicator=YES;
@@ -102,11 +109,12 @@
 	[tempCoordinates addObject:east];
 	[tempCoordinates addObject:west];
 	
-	PostRequest *post= [[PostRequest init] alloc];
+	PostRequest *post = [[PostRequest alloc] init];
 	[post setData:nil:nil :nil :nil :currentSearchData.currentPublicStatus :nil:tempCoordinates:0:@"true"];
 	myReturn=[post buildPostString];
 	
-	
+//	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/scball/Documents/test1.txt"];
+//	[fh writeData:myReturn];
 	
 	xmlParser *x= [[xmlParser alloc] init];
 	searchCriteria= [x parseSearchCriteria:myReturn];
@@ -136,9 +144,9 @@
 		[[currentSearchData originalCoordinates] addObject:num];
 		num=[NSNumber numberWithDouble:searchCriteria.minLong];
 		[[currentSearchData originalCoordinates]  addObject:num];
-		//int size= [[currentSearchData originalCoordinates] count];
+		int size= [[currentSearchData originalCoordinates] count];
 		
-		[self getSamples];
+		[self getSamples: tempCoordinates];
 		
 		MapController *viewController = [[MapController alloc] initWithNibName:@"MapView" bundle:nil];
 		[viewController setData:locations:searchCriteria];
@@ -160,7 +168,7 @@
 	}
 }
 
--(void)getSamples{
+-(void)getSamples:(NSMutableArray*)coordinates{
 	//[(MetPetDBAppDelegate *)[[UIApplication sharedApplication] delegate] setNetworkActivityIndicatorVisible:YES];
 	
 	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];  	
@@ -169,11 +177,13 @@
 	
 	//create a post request by sending the necessary data to a PostRequest object
 	//since the user has not yet specified any 
-	PostRequest *post= [[PostRequest init] alloc];
-	[post setData:nil:nil :nil :nil :currentSearchData.currentPublicStatus :nil:[currentSearchData originalCoordinates]:0:@"false"];
+	PostRequest *post= [[PostRequest alloc] init];
+	[post setData:nil:nil :nil :nil :currentSearchData.currentPublicStatus :nil:[currentSearchData coordinates]:0:@"false"];
+//	[post setData:nil:nil :nil :nil :nil :nil:coordinates:0:nil];
+
 	myReturn=[post buildPostString];
-	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test2.txt"];
-	[fh writeData:myReturn];
+//	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/scball/Documents/test2.txt"];
+//	[fh writeData:myReturn];
 	
 	xmlParser *y= [[xmlParser alloc] init];
 	locations= [y parseSamples:myReturn];
@@ -198,8 +208,11 @@
 -(void)setData:(CurrentSearchData*)data
 {
 	currentSearchData=data;
-	latitude= [[NSString alloc] initWithFormat:@"%g", currentSearchData.centerCoordinate.latitude];
-	longitude=[[NSString alloc] initWithFormat:@"%g", currentSearchData.centerCoordinate.longitude];
+	
+	CLLocationCoordinate2D centerCoord = [CurrentSearchData getCenterCoordinate];
+	
+	latitude= [[NSString alloc] initWithFormat:@"%.5f", centerCoord.latitude];
+	longitude=[[NSString alloc] initWithFormat:@"%.5f", centerCoord.longitude];
 }
 
 - (void)didReceiveMemoryWarning {

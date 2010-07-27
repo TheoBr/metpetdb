@@ -43,9 +43,12 @@
 	{
 		RadiusController *viewController = [[RadiusController alloc] initWithNibName:@"SearchView" bundle:nil];
 		self.radiusController=viewController;
-		CLLocationCoordinate2D myCoord;
-		myCoord.latitude=tempLat;
-		myCoord.longitude=tempLong;
+		CLLocation *myLocation = [[CLLocation alloc] initWithLatitude:tempLat longitude:tempLong];
+		
+	//	myCoord.latitude=tempLat;
+	//	myCoord.longitude=tempLong;
+		
+		CLLocationCoordinate2D myCoord = myLocation.coordinate;
 		[currentSearchData setCenterCoordinate:myCoord];
 		[viewController setData:currentSearchData];
 		[viewController release];

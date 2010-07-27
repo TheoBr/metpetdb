@@ -52,7 +52,22 @@
 	//selectedCoordinate= annotationView.newCoordinate;
 	selectedCoordinate=	[mapView convertPoint:annotationView.center toCoordinateFromView:self.view];	
 	RadiusController *viewController = [[RadiusController alloc] initWithNibName:@"SearchView" bundle:nil];
-	[currentSearchData setCenterCoordinate:selectedCoordinate];
+
+	CLLocation *myLocation= [[CLLocation alloc] initWithLatitude:selectedCoordinate.latitude longitude:selectedCoordinate.longitude];
+
+	
+	CLLocationCoordinate2D myLocationCoord = myLocation.coordinate;
+
+	double prelongcheck = myLocationCoord.longitude;
+	double prelatcheck = myLocationCoord.latitude;
+		
+	[CurrentSearchData setCenterCoordinateLatitude:prelatcheck];
+	[CurrentSearchData setCenterCoordinateLongitude:prelongcheck];
+
+	
+	CLLocationCoordinate2D postCoordCheck = [CurrentSearchData getCenterCoordinate];
+	
+
 	[viewController setData:currentSearchData];
 	
 	self.radiusController=viewController;

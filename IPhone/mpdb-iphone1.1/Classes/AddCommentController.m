@@ -84,7 +84,7 @@
 		NSString *postString=[[NSString alloc] initWithString:@"user= buleth@rpi.edu\n"];
 		postString=[postString stringByAppendingString:@"addCommentSampleID= 7\n"]; 
 		postString=[postString stringByAppendingFormat:@"commentToAdd= %@\n", newComment];
-		if(Uname!=NULL)
+		if(Uname!=nil)
 		{
 			postString=[postString stringByAppendingFormat:@"user= %@\n", Uname];
 		}
@@ -96,7 +96,7 @@
 		myReturn = [NSURLConnection sendSynchronousRequest:myRequest
 										 returningResponse:myReturn error:&error];
 		NSString *returnValue=[[NSString alloc] initWithData:myReturn encoding:NSASCIIStringEncoding];
-		if(error!=NULL)
+		if((myReturn == nil) && (error!=nil))
 		{ 
 			UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Network failure: unable to connect to internet." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 			[alert show];

@@ -21,12 +21,12 @@
 {
 	[self get_large_image];
 	//NSString *fullPath=[[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu:8080/metpetwebtst//image/?checksum=%@",imagePath];
-	NSString *fullPath=[[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu/metpetweb//image/?checksum=%@",imagePath];
-	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test2.txt"];
-	[fh writeData:[fullPath dataUsingEncoding:NSASCIIStringEncoding]];
-	NSData *newData=[[NSData alloc] init];
-	newData=[fullPath dataUsingEncoding:NSASCIIStringEncoding];
-	[fh writeData:newData];
+	NSString *fullPath=[[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu/metpetweb/image/?checksum=%@",imagePath];
+//	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test2.txt"];//
+//	[fh writeData:[fullPath dataUsingEncoding:NSASCIIStringEncoding]];
+//	NSData *newData=[[NSData alloc] init];
+//	newData=[fullPath dataUsingEncoding:NSASCIIStringEncoding];
+//	[fh writeData:newData];
 	
 	
 	
@@ -152,7 +152,7 @@
 	[myRequest setValue:@"text/plain" forHTTPHeaderField:@"Content-type"];
 	[myRequest setHTTPMethod:@"POST"];
 	NSString *postString=[[NSString alloc] initWithFormat: @"largeImage= %@\n", imageID];
-	if(Uname!=NULL)
+	if(Uname!=nil)
 	{
 		postString= [[NSString alloc] stringByAppendingFormat:@"user= %@\n", Uname];
 	}
@@ -164,14 +164,14 @@
 	myReturn = [NSURLConnection sendSynchronousRequest:myRequest
 									 returningResponse:myReturn error:&error];
 	NSString *returnValue=[[NSString alloc] initWithData:myReturn encoding:NSASCIIStringEncoding];
-	if(error!=NULL)
+	if((myReturn == nil) && (error != nil))
 	{ 
 		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Network failure: unable to connect to internet." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 	}
 	
-	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test2.txt"];
-	[fh writeData:myReturn];
+//	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test2.txt"];
+//	[fh writeData:myReturn];
 	
 	NSURLResponse *response;
 	NSXMLParser *myParser= [[NSXMLParser alloc] initWithData:myReturn];

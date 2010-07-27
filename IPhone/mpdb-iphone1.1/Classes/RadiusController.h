@@ -96,6 +96,6 @@
 -(IBAction)showMap:(id)sender;
 -(void)setCoordinates:(CLLocation*)mylocation;
 
-
+-(void)getSamples:(NSMutableArray*)coordinates;
 
 @end

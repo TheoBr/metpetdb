@@ -60,7 +60,12 @@
 	if(currentSearchData.locationVisible==TRUE)
 	{
 		mapView.showsUserLocation=TRUE;
-		[mapView setCenterCoordinate:currentSearchData.centerCoordinate animated:YES];
+		
+	//	CLLocation *centerCoordinate= [[CLLocation alloc] initWithLatitude:currentSearchData.centerCoordinate.latitude longitude:currentSearchData.centerCoordinate.latitude];
+		
+		CLLocationCoordinate2D centerCoord = [CurrentSearchData getCenterCoordinate];
+		
+		[mapView setCenterCoordinate:centerCoord animated:YES];
 	}
 	mapView.mapType=MKMapTypeStandard;
 	mapView.delegate=self;
@@ -98,12 +103,15 @@
 	{
 		mapView.mapType=MKMapTypeSatellite;
 	}
+
+
 	[self makeToolbar];
 	if(indicator!=nil)
 	{
 		[indicator stopAnimating];
 		
 	}
+	
 	//if the user is logged in, get the username so it can later be passed to the server
 	NSString *Uname= [[NSString alloc] init];
 	
@@ -168,14 +176,21 @@
 	CLLocationCoordinate2D temp;
 	temp.latitude=averageLat;
 	temp.longitude=averageLong;
-	[currentSearchData setCenterCoordinate: temp];
-	mapRegion.center= currentSearchData.centerCoordinate;
+	
+	CLLocation *averageCoordinate= [[CLLocation alloc] initWithLatitude:averageLat longitude:averageLong];
+	
+	[currentSearchData setCenterCoordinate: averageCoordinate.coordinate];
+	//mapRegion.center= currentSearchData.centerCoordinate;
 	latitudeSpan= searchCriteria.maxLat - searchCriteria.minLat;
 	longitudeSpan= searchCriteria.maxLong- searchCriteria.minLong;
-	mapSpan.latitudeDelta= latitudeSpan+.01;
-	mapSpan.longitudeDelta=longitudeSpan+.01;
-	mapRegion.span=mapSpan;
-	mapView.region= mapRegion;
+	//mapSpan.latitudeDelta= latitudeSpan;//+.01;
+	//mapSpan.longitudeDelta=longitudeSpan;//+.01;
+//	mapRegion.span=mapSpan;
+//	mapView.region= mapRegion;
+	mapSpan = MKCoordinateSpanMake(latitudeSpan, longitudeSpan);
+	mapRegion = MKCoordinateRegionMake(temp, mapSpan);  
+
+	
 }	
 -(void)setSpan2
 {
@@ -468,7 +483,7 @@
 {
 	[(MetPetDBAppDelegate *)[[UIApplication sharedApplication] delegate] setNetworkActivityIndicatorVisible:YES];
 	
-	PostRequest *post= [[PostRequest init] alloc];
+	PostRequest *post= [[PostRequest alloc] init];
 	[post setData:[currentSearchData minerals] :[currentSearchData rockTypes] :[currentSearchData owners] :[currentSearchData metamorphicGrades] :currentSearchData.currentPublicStatus :
 	 currentSearchData.region:[currentSearchData originalCoordinates]:currentSampleCount:@"false"];
 	myReturn=[post buildPostString];

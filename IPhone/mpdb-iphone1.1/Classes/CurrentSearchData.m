@@ -8,7 +8,7 @@
 
 @implementation CurrentSearchData
 @synthesize currentPublicStatus, mapType, region, locationVisible, originalCoordinates;
-@synthesize rockTypes, minerals, metamorphicGrades, owners, centerCoordinate, zoomed, latitudeSpan, longitudeSpan, zoomedCenter;
+@synthesize rockTypes, minerals, metamorphicGrades, owners, zoomed, latitudeSpan, longitudeSpan, zoomedCenter;
 //constructor function to initialize all the variables
 -(CurrentSearchData*)init
 {
@@ -22,6 +22,32 @@
 	mapType=nil;
 	locationVisible=FALSE;
 	zoomed=FALSE;
+
+	//CLLocationCoordinate2D location = nil;
+	//centerCoordinate;
+	centerCoordinate.latitude = 0;
+	centerCoordinate.longitude = 0;
+	//centerCoordinate = location.coordinate;
+
+}
+
+
++(void) setCenterCoordinateLatitude:(double) val
+{
+	centerCoordinate.latitude = val;
+}
+
+
++(void) setCenterCoordinateLongitude:(double) val
+{
+	centerCoordinate.longitude = val;
+}
+
+
++(CLLocationCoordinate2D) getCenterCoordinate
+{
+
+	return centerCoordinate;
 }
 
 

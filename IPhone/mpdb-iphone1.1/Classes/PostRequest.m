@@ -15,6 +15,13 @@
 @implementation PostRequest
 
 
+-(id)init
+{
+	[super init];
+	
+	return self;
+}
+
 -(NSData*)buildPostString
 {
 	//if the user is logged in, their username should be sent to the server
@@ -38,7 +45,7 @@
 	NSString *postString=[[NSString alloc] init];
 	NSString *temp;
 	int i; 
- 	if(region!=NULL)
+ 	if(region!=nil)
 	{
 		postString=[postString stringByAppendingFormat:@"searchRegion= %@\n", region];
 	}
@@ -95,7 +102,7 @@
 	{
 		postString=[postString stringByAppendingString:@"sampleType= both\n"];
 	}
-	if(username!=NULL)
+	if(username!=nil)
 	{
 		postString=[postString stringByAppendingFormat:@"user= %@\n", username];
 	}
@@ -117,14 +124,14 @@
 	NSError *error;
 	postReturn = [NSURLConnection sendSynchronousRequest:myRequest
 									   returningResponse:postReturn error:&error];
-	if(error!=NULL)
+	if((postReturn == nil) && (error != nil))
 	{ 
 		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Network failure: unable to connect to internet." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 	}
-	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test.txt"];
+//	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/scball/Documents/testpost.txt"];
 	
-	[fh writeData:postReturn];
+//	[fh writeData:postReturn];
 	
 	
 	return postReturn;

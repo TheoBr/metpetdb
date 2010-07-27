@@ -51,7 +51,8 @@
 	}
 	else
 	{
-		NSString *coordinate=[[NSString alloc] initWithFormat:@"Center Coordinate:\n%g, %g", currentSearchData.centerCoordinate.latitude, currentSearchData.centerCoordinate.longitude];
+		CLLocationCoordinate2D centerCoord = [CurrentSearchData getCenterCoordinate];
+		NSString *coordinate=[[NSString alloc] initWithFormat:@"Center Coordinate:\n%.5g, %.5g", centerCoord.latitude, centerCoord.longitude];
 		[rowSubtitles addObject:coordinate];
 	}
 	//make a subtitle depending on whether the user is logged in and whether they are viewing private, public, or both types of samples
@@ -130,7 +131,7 @@
 -(void)calculateCriteria
 {
 	//recaluclate the search criteria
-	PostRequest *post= [[PostRequest init] alloc];
+	PostRequest *post= [[PostRequest alloc] init];
 	[post setData:[currentSearchData minerals] :[currentSearchData rockTypes] :[currentSearchData owners] :[currentSearchData metamorphicGrades] :currentSearchData.currentPublicStatus :currentSearchData.region:[currentSearchData originalCoordinates]:0:@"true"];
 	postReturn=[post buildPostString]; 
 	
@@ -250,14 +251,14 @@
 }
 -(void)getSamples{
 	//make a post request to get the samples that match the search criteria
-	PostRequest *post= [[PostRequest init] alloc];
+	PostRequest *post= [[PostRequest alloc] init];
 	
 	[post setData:[currentSearchData minerals] :[currentSearchData rockTypes] :[currentSearchData owners] :[currentSearchData metamorphicGrades] :currentSearchData.currentPublicStatus :currentSearchData.region:[currentSearchData originalCoordinates]:0:@"false"];
 	postReturn=[post buildPostString];
 	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test2.txt"];
 	[fh writeData:postReturn];
 	
-	xmlParser *x= [[xmlParser init] alloc];
+	xmlParser *x= [[xmlParser alloc] init];
 	remainingSamples= [x parseSamples:postReturn];
 	/*for(int z=0; z<[remainingSamples count]; z++)
 	 {

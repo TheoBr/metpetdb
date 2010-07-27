@@ -16,8 +16,7 @@
 -(void)viewDidLoad
 {
 	self.navigationItem.hidesBackButton=YES;
-	currentSearchData=[[CurrentSearchData init] alloc];
-	[currentSearchData init];
+	currentSearchData=[[currentSearchData alloc] init];
  	[MyCLController sharedInstance].delegate = self;
 	rows=[[NSMutableArray alloc] init]; //this array is the data source for the table
 	
@@ -51,7 +50,7 @@
 		[usernameData release];
 	}
 	
-	if(Uname!=NULL)
+	if(Uname!= nil)
 	{
 		signedIn= TRUE;
 	}
@@ -163,7 +162,8 @@
 }
 -(void)login
 {
-	self.loginController= [[LoginViewController alloc] initWithNibName:@"LoginView" bundle:nil];
+	LoginViewController *loginController = [[LoginViewController alloc] initWithNibName:@"LoginView" bundle:nil];
+	
 	UIView *newView=[loginController view];
 	[self.view addSubview:newView];
 	[self.navigationController pushViewController:loginController animated:NO];
@@ -288,7 +288,10 @@
 	currentSearchData.locationVisible=TRUE;
 	currentSearchData.zoomed=FALSE;
 	RadiusController *viewController=[[RadiusController alloc] initWithNibName:@"SearchView" bundle:nil];
-	[currentSearchData setCenterCoordinate:myCoordinate.coordinate];
+	
+	CLLocationCoordinate2D myTrueCoord = myCoordinate.coordinate;
+	
+	[currentSearchData setCenterCoordinate:myTrueCoord];
 	[viewController setData:currentSearchData];
 	self.radiusController= viewController;
 	[viewController release];

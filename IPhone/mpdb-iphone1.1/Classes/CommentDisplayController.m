@@ -64,7 +64,7 @@
 	[myRequest setHTTPMethod:@"POST"];
 	NSString *postString=[[NSString alloc] initWithFormat: @"comments= %@\n", sampleID];
 	//NSString *postString=@"comments= 7\n";
-	if(Uname!=NULL)
+	if(Uname!=nil)
 	{
 		postString= [[NSString alloc] stringByAppendingFormat:@"user= %@\n", Uname];
 	}
@@ -75,14 +75,18 @@
 	myReturn = [NSURLConnection sendSynchronousRequest:myRequest
 									 returningResponse:myReturn error:&error];
 	NSString *returnValue=[[NSString alloc] initWithData:myReturn encoding:NSASCIIStringEncoding];
-	if(error!=NULL)
+	if((myReturn == nil) && (error != nil))
 	{ 
-		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Network failure: unable to connect to internet."@"Network failure: unable to connect to internet." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+		NSString* errorStr = [[NSString alloc] init];
+		
+		errorStr = error.domain;
+		
+		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Network failure: unable to connect to internet."@"Network failure: unable to connect to internet." message:errorStr delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 	}
 	
-	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test4.txt"];
-	[fh writeData:myReturn];
+//	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test4.txt"];
+//	[fh writeData:myReturn];
 	
 	NSString *dataReceived=[[NSString alloc] initWithData:myReturn encoding:NSASCIIStringEncoding];
 	NSXMLParser *commentParser= [[NSXMLParser alloc] initWithData:myReturn];

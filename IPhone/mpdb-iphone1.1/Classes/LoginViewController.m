@@ -18,7 +18,7 @@
 -(void)viewDidLoad{
 	currentStringValue=[[NSString alloc] init];
 	loginResponse=[[NSString alloc] init];
-	password=NULL;
+	password=nil;
 	CGRect frame= CGRectMake(0, 80, 320, 160);
 	
 	tableView=[[UITableView alloc] initWithFrame:frame style:UITableViewStyleGrouped];
@@ -33,11 +33,11 @@
 	[rowTitles addObject:@"Username:"];
 	[rowTitles addObject:@"Password:"];
 	
-	CGRect picFrame= CGRectMake(95, 20, 126, 37);
-	UIImageView *logoView= [[UIImageView alloc] initWithFrame:picFrame];
-	UIImage *backgroundImage=[[UIImage alloc] initWithContentsOfFile:@"/Users/heatherbuletti/Documents/mpdb-logo.png"];
-	logoView.image=backgroundImage;
-	[self.view addSubview:logoView];
+//	CGRect picFrame= CGRectMake(95, 20, 126, 37);
+//	UIImageView *logoView= [[UIImageView alloc] initWithFrame:picFrame];
+//	UIImage *backgroundImage=[[UIImage alloc] initWithContentsOfFile:@"/Users/heatherbuletti/Documents/mpdb-logo.png"];
+//	logoView.image=backgroundImage;
+//	[self.view addSubview:logoView];
 	
 }
 
@@ -109,7 +109,7 @@
 			passwordtext.enablesReturnKeyAutomatically=YES;
 			[passwordtext setSecureTextEntry:YES];
 			passwordtext.returnKeyType=UIReturnKeyGo;
-			passwordtext.placeholder= @"password";
+			//passwordtext.placeholder= @"password";
 			[cell.contentView addSubview:passwordtext];
 		}
 		
@@ -126,14 +126,14 @@
 //-(IBAction)login:(id)sender
 {
 	[(MetPetDBAppDelegate *)[[UIApplication sharedApplication] delegate] setNetworkActivityIndicatorVisible:YES];
-	if(passwordtext.text==NULL){
-		password=NULL;
+	if(passwordtext.text==nil){
+		password=nil;
 	}
 	else{
 		password= [[NSString alloc] initWithString:passwordtext.text];
 	}
-	if(usernametext.text==NULL){
-		username=NULL;
+	if(usernametext.text==nil){
+		username=nil;
 	}
 	else{
 		username= [[NSString alloc] initWithString:usernametext.text];
@@ -176,8 +176,8 @@
 		apacheError=TRUE;
 		return;
 	}
-	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test3.txt"];
-	[fh writeData:myReturn];
+//	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test3.txt"];
+//	[fh writeData:myReturn];
 	
 }
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection{
@@ -236,7 +236,7 @@
 	}
 	else
 	{
-		[viewController setSignIn:FALSE:NULL];
+		[viewController setSignIn:FALSE:nil];
 	}
 	self.mainViewController = viewController;
 	UIView *controllersview= [mainViewController view];

@@ -11,6 +11,13 @@
 @implementation KeychainWrapper
 @synthesize serviceName;
 
+-(id)init
+{
+	[super init];
+	
+	return self;
+}
+
 //search the keychain for a value 
 - (NSData *)searchKeychainCopyMatching:(NSString *)identifier {
     NSMutableDictionary *searchDictionary = [self newSearchDictionary:identifier];
@@ -55,7 +62,7 @@
 	NSData *passwordData = [password dataUsingEncoding:NSUTF8StringEncoding];
 	[dictionary setObject:passwordData forKey:(id)kSecValueData];
 	
-	OSStatus status = SecItemAdd((CFDictionaryRef)dictionary, NULL);
+	OSStatus status = SecItemAdd((CFDictionaryRef)dictionary, nil);
 	[dictionary release];
 	
 	if (status == errSecSuccess) {
