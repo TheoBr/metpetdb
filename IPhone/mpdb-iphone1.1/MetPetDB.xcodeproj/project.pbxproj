@@ -89,6 +89,8 @@
 
 /* Begin PBXFileReference section */
 		8937D4470DF0E8EF001AA23D /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; usesTabs = 0; wrapsLines = 1; };
+		F0BC7C9411F918710087D263 /* Testing for iOS4.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Testing for iOS4.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0BC7C9611F918710087D263 /* Testing for iOS4-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Testing for iOS4-Info.plist"; sourceTree = "<group>"; };
 		F70FD5B0115989DF0022564C /* CurrentSearchData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurrentSearchData.h; path = Classes/CurrentSearchData.h; sourceTree = "<group>"; };
 		F70FD5B1115989DF0022564C /* CurrentSearchData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CurrentSearchData.m; path = Classes/CurrentSearchData.m; sourceTree = "<group>"; };
 		F71748741199BC35002AA07D /* SingleImageView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = SingleImageView.xib; path = "IB Files/SingleImageView.xib"; sourceTree = "<group>"; };
@@ -106,7 +108,7 @@
 		F75725911198E1BE003A45D2 /* iTunesArtwork.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = iTunesArtwork.jpg; sourceTree = "<group>"; };
 		F75725921198E1BE003A45D2 /* OwnerView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = OwnerView.xib; path = "IB Files/OwnerView.xib"; sourceTree = "<group>"; };
 		F75725931198E1BE003A45D2 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
-		F75725941198E1BE003A45D2 /* iTunesArtwork */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; path = iTunesArtwork; sourceTree = "<group>"; };
+		F75725941198E1BE003A45D2 /* iTunesArtwork */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = iTunesArtwork; sourceTree = "<group>"; };
 		F75725951198E1BE003A45D2 /* MapTypeView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MapTypeView.xib; path = "IB Files/MapTypeView.xib"; sourceTree = "<group>"; };
 		F75725961198E1BE003A45D2 /* AddComment.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = AddComment.xib; path = "IB Files/AddComment.xib"; sourceTree = "<group>"; };
 		F75725971198E1BE003A45D2 /* ChemicalAnalysis.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = ChemicalAnalysis.xib; path = "IB Files/ChemicalAnalysis.xib"; sourceTree = "<group>"; };
@@ -223,6 +225,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F0BC7C9211F918710087D263 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -240,6 +249,7 @@
 			isa = PBXGroup;
 			children = (
 				F75722B51198D951003A45D2 /* MetPetDB.app */,
+				F0BC7C9411F918710087D263 /* Testing for iOS4.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -326,6 +336,7 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				F0BC7C9611F918710087D263 /* Testing for iOS4-Info.plist */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -426,6 +437,23 @@
 			productReference = F75722B51198D951003A45D2 /* MetPetDB.app */;
 			productType = "com.apple.product-type.application";
 		};
+		F0BC7C9311F918710087D263 /* Testing for iOS4 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F0BC7C9A11F918720087D263 /* Build configuration list for PBXNativeTarget "Testing for iOS4" */;
+			buildPhases = (
+				F0BC7C9011F918710087D263 /* Resources */,
+				F0BC7C9111F918710087D263 /* Sources */,
+				F0BC7C9211F918710087D263 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Testing for iOS4";
+			productName = "Testing for iOS4";
+			productReference = F0BC7C9411F918710087D263 /* Testing for iOS4.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -446,6 +474,7 @@
 			projectRoot = "";
 			targets = (
 				1D6058900D05DD3D006BFB54 /* MetPetDB */,
+				F0BC7C9311F918710087D263 /* Testing for iOS4 */,
 			);
 		};
 /* End PBXProject section */
@@ -488,6 +517,13 @@
 				F738AA8A1198F794007F2F8E /* LoginView.xib in Resources */,
 				F71748751199BC35002AA07D /* SingleImageView.xib in Resources */,
 				F7F05558119A256B002B0D11 /* PublicPrivateView.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F0BC7C9011F918710087D263 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -537,6 +573,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F0BC7C9111F918710087D263 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
@@ -572,7 +615,7 @@
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos3.0]" = "";
-				SDKROOT = iphoneos3.1.3;
+				SDKROOT = iphoneos4.0;
 			};
 			name = Debug;
 		};
@@ -581,9 +624,9 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Sibel Adali";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Sibel Adali";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos3.0]" = "iPhone Developer: Sibel Adali";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos3.0]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"/System/Library/Frameworks/Foundation.framework\"",
@@ -602,10 +645,10 @@
 				);
 				"OTHER_LDFLAGS[arch=*]" = "";
 				PRODUCT_NAME = MetPetDB;
-				PROVISIONING_PROFILE = "DE2404AE-61F2-4FE7-9744-88F6D6E49831";
+				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DE2404AE-61F2-4FE7-9744-88F6D6E49831";
-				"PROVISIONING_PROFILE[sdk=iphoneos3.0]" = "DE2404AE-61F2-4FE7-9744-88F6D6E49831";
-				SDKROOT = iphoneos3.1.3;
+				"PROVISIONING_PROFILE[sdk=iphoneos3.0]" = "";
+				SDKROOT = iphoneos4.0;
 			};
 			name = Release;
 		};
@@ -618,11 +661,13 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = "";
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				PRODUCT_NAME = MetPetDB;
-				SDKROOT = iphonesimulator3.1;
+				SDKROOT = iphoneos4.0;
 				SYMROOT = "/Users/heatherbuletti/mpdb-iphone/build";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -635,11 +680,86 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = MetPetDB;
-				SDKROOT = iphonesimulator3.1;
+				SDKROOT = iphoneos4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
+		};
+		F0BC7C9711F918720087D263 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/UIKit.framework/Headers/UIKit.h";
+				INFOPLIST_FILE = "Testing for iOS4-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					UIKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Testing for iOS4";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos4.0;
+			};
+			name = Debug;
+		};
+		F0BC7C9811F918720087D263 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/UIKit.framework/Headers/UIKit.h";
+				INFOPLIST_FILE = "Testing for iOS4-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					UIKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Testing for iOS4";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos4.0;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		F0BC7C9911F918720087D263 /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/UIKit.framework/Headers/UIKit.h";
+				INFOPLIST_FILE = "Testing for iOS4-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					UIKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Testing for iOS4";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos4.0;
+			};
+			name = Distribution;
 		};
 		F7BE4B971177D253003DD8BB /* Distribution */ = {
 			isa = XCBuildConfiguration;
@@ -650,11 +770,13 @@
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = MetPetDB;
 				PROVISIONING_PROFILE = "53DD38E5-A1F5-420F-AF2F-09B6C6182A7A";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "53DD38E5-A1F5-420F-AF2F-09B6C6182A7A";
-				SDKROOT = iphoneos3.1.3;
+				SDKROOT = iphoneos4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Distribution;
 		};
@@ -663,8 +785,9 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos3.0]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"/System/Library/Frameworks/Foundation.framework\"",
@@ -685,7 +808,8 @@
 				PRODUCT_NAME = MetPetDB;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos3.1.3;
+				"PROVISIONING_PROFILE[sdk=iphoneos3.0]" = "";
+				SDKROOT = iphoneos4.0;
 			};
 			name = Distribution;
 		};
@@ -708,6 +832,16 @@
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
 				F7BE4B971177D253003DD8BB /* Distribution */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F0BC7C9A11F918720087D263 /* Build configuration list for PBXNativeTarget "Testing for iOS4" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F0BC7C9711F918720087D263 /* Debug */,
+				F0BC7C9811F918720087D263 /* Release */,
+				F0BC7C9911F918720087D263 /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
