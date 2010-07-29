@@ -2,7 +2,7 @@
 <project name="mpdb" basedir="." >
 
 	
-	<property name="gwt.sdk" location="/Users/scball/Downloads/gwt-2.0.3"/>
+	<property name="gwt.sdk" location="/home/mpdb_test/gwt-2.0.3"/>
 
        	<property name="mpdb-common-dir" location="../mpdb-common" />
         <property name="mpdb-client-dir" location="." />
