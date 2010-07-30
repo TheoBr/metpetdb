@@ -490,8 +490,14 @@
 		checkmarkView = (UIImageView *)[cell.contentView viewWithTag:PHOTO_TAG];
     }
 	//NSDictionary *aDict = [self.list objectAtIndex:indexPath.row];
+	int rowNum = indexPath.row;
+	int rowTitlesNum = [rowTitles count];
+	int subTitlesNum = [rowSubtitles count];
     titleLabel.text = [rowTitles objectAtIndex:indexPath.row];
-    subtitleLabel.text = [rowSubtitles objectAtIndex:indexPath.row];
+	
+	if (indexPath.row < subTitlesNum)
+		subtitleLabel.text = [rowSubtitles objectAtIndex:indexPath.row];
+	
 	index= indexPath.row;
 	
 	cell.selectionStyle=UITableViewCellSelectionStyleNone;

@@ -9,7 +9,7 @@
 #import "CoordInputController.h"
 
 @implementation CoordInputController
-@synthesize radiusController, longitudeTextField, latitudeTextField, toolbar, latitude, longitude, currentPublicStatus, username, mapButton, dropMap;
+@synthesize radiusController, longitudeTextField, latitudeTextField, toolbar, latitude, longitude, currentPublicStatus, username, mapButton, dropMap, focusButton;
 
 -(void)viewDidLoad
 {
@@ -24,6 +24,7 @@
 	toolbar.items=buttons;	
 	[toolbar setBarStyle:1];
 	[self.view addSubview:toolbar];
+
 }
 
 -(void)chooseRadius
@@ -48,8 +49,12 @@
 	//	myCoord.latitude=tempLat;
 	//	myCoord.longitude=tempLong;
 		
-		CLLocationCoordinate2D myCoord = myLocation.coordinate;
-		[currentSearchData setCenterCoordinate:myCoord];
+	// 	CLLocationCoordinate2D myCoord = myLocation.coordinate;
+		
+		[CurrentSearchData setCenterCoordinateLatitude:myLocation.coordinate.latitude];
+		[CurrentSearchData setCenterCoordinateLongitude:myLocation.coordinate.longitude];
+		
+		//[currentSearchData setCenterCoordinate:myCoord];
 		[viewController setData:currentSearchData];
 		[viewController release];
 		UIView *newview=[radiusController view];
@@ -58,13 +63,18 @@
 	}
 }
 
+-(IBAction)textFieldDoneEditing:(id)sender{
+	[self.latitudeTextField resignFirstResponder];
+	[self.longitudeTextField resignFirstResponder];
+}
+
 //this function should hide the keyboard when the user presses the done button in each of the text fields
 -(BOOL) textFieldShouldReturn: (UITextField *) theTextField {
 	
 	latitude=[[NSString alloc] initWithString:latitudeTextField.text];
 	longitude= [[NSString alloc] initWithString:longitudeTextField.text];
 	
-	[theTextField resignFirstResponder];
+	//[theTextField resignFirstResponder];
 	
 	return YES;
 }

@@ -289,9 +289,9 @@
 	currentSearchData.zoomed=FALSE;
 	RadiusController *viewController=[[RadiusController alloc] initWithNibName:@"SearchView" bundle:nil];
 	
-	CLLocationCoordinate2D myTrueCoord = myCoordinate.coordinate;
 	
-	[currentSearchData setCenterCoordinate:myTrueCoord];
+	[CurrentSearchData setCenterCoordinateLatitude:myCoordinate.coordinate.latitude];
+	[CurrentSearchData setCenterCoordinateLongitude:myCoordinate.coordinate.longitude];
 	[viewController setData:currentSearchData];
 	self.radiusController= viewController;
 	[viewController release];

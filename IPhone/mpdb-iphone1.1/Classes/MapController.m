@@ -65,6 +65,9 @@
 		
 		CLLocationCoordinate2D centerCoord = [CurrentSearchData getCenterCoordinate];
 		
+		double lat = centerCoord.latitude;
+		double longi = centerCoord.longitude;
+		
 		[mapView setCenterCoordinate:centerCoord animated:YES];
 	}
 	mapView.mapType=MKMapTypeStandard;
@@ -91,6 +94,10 @@
 		[mapView addAnnotations:mySamples];
 	}
 	//load the map with the street view initially and then hybrid and satellite after the user specifies a different type
+	
+	NSString *mapType = currentSearchData.mapType;
+	
+	
 	if([currentSearchData.mapType isEqualToString:@"map"])
 	{
 		mapView.mapType= MKMapTypeStandard;

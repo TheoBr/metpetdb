@@ -37,6 +37,8 @@
 }
 -(void)changeType
 {
+	int segControlIndex = segControl.selectedSegmentIndex;
+	
 	if([segControl selectedSegmentIndex]==0)
 	{
 		[segControl setSelectedSegmentIndex:0];
