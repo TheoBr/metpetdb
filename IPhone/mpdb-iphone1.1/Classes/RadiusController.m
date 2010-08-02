@@ -136,15 +136,11 @@
 		//myThread = [[NSThread alloc] initWithTarget:self selector:@selector(getSamples) object:nil];
 		
 		//[myThread start];
-		NSNumber *num=[NSNumber numberWithDouble:searchCriteria.maxLat];
-		[[currentSearchData originalCoordinates] addObject:num];
-		num= [NSNumber numberWithDouble:searchCriteria.minLat];
-		[[currentSearchData originalCoordinates] addObject:num];
-		num=[NSNumber numberWithDouble:searchCriteria.maxLong];
-		[[currentSearchData originalCoordinates] addObject:num];
-		num=[NSNumber numberWithDouble:searchCriteria.minLong];
-		[[currentSearchData originalCoordinates]  addObject:num];
-		int size= [[currentSearchData originalCoordinates] count];
+
+		
+		NSMutableArray *originalCoords = [[NSMutableArray alloc] initWithArray:tempCoordinates];
+		
+		[CurrentSearchData setOriginalCoordinates:originalCoords];
 		
 		[self getSamples: tempCoordinates];
 		
@@ -173,7 +169,7 @@
 	
 	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];  	
 	
-	//NSMutableArray *coordArray = [currentSearchData coordinates];
+
 	
 	
 	
@@ -182,7 +178,7 @@
 	//since the user has not yet specified any 
 	PostRequest *post= [[PostRequest alloc] init];
 	[post setData:nil:nil :nil :nil :currentSearchData.currentPublicStatus :nil:coordinates:0:@"false"];
-//	[post setData:nil:nil :nil :nil :nil :nil:coordinates:0:nil];
+
 
 	myReturn=[post buildPostString];
 //	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/scball/Documents/test2.txt"];

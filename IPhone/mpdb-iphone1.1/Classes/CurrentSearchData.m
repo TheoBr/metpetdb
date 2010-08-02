@@ -7,7 +7,7 @@
 
 
 @implementation CurrentSearchData
-@synthesize currentPublicStatus, region, locationVisible, originalCoordinates;
+@synthesize currentPublicStatus, region, locationVisible;//, originalCoordinates;
 @synthesize rockTypes, minerals, metamorphicGrades, owners, zoomed, latitudeSpan, longitudeSpan, zoomedCenter;
 //constructor function to initialize all the variables
 -(CurrentSearchData*)init
@@ -29,6 +29,16 @@
 	centerCoordinate.longitude = 0;
 	//centerCoordinate = location.coordinate;
 
+}
+
++(void) setOriginalCoordinates:(NSMutableArray *) val
+{
+	originalCoordinates = val;
+}
+
++(NSMutableArray*) getOriginalCoordinates
+{
+	return originalCoordinates;
 }
 
 

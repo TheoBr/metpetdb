@@ -491,8 +491,9 @@
 	[(MetPetDBAppDelegate *)[[UIApplication sharedApplication] delegate] setNetworkActivityIndicatorVisible:YES];
 	
 	PostRequest *post= [[PostRequest alloc] init];
+	
 	[post setData:[currentSearchData minerals] :[currentSearchData rockTypes] :[currentSearchData owners] :[currentSearchData metamorphicGrades] :currentSearchData.currentPublicStatus :
-	 currentSearchData.region:[currentSearchData originalCoordinates]:currentSampleCount:@"false"];
+	 currentSearchData.region:[CurrentSearchData getOriginalCoordinates]:currentSampleCount:@"false"];
 	myReturn=[post buildPostString];
 	
 	NSURLResponse *response;

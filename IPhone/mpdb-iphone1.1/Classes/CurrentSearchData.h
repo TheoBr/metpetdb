@@ -35,7 +35,7 @@ NSString *mapType;
 @property(nonatomic, retain) NSMutableArray *minerals;
 @property(nonatomic, retain) NSMutableArray *metamorphicGrades;
 @property(nonatomic, retain)  NSMutableArray *owners;
-@property(nonatomic, retain) NSMutableArray *originalCoordinates;
+//@property(nonatomic, retain) NSMutableArray *originalCoordinates;
 @property BOOL locationVisible;
 @property BOOL zoomed;
 @property double latitudeSpan;
@@ -44,6 +44,9 @@ NSString *mapType;
 //@property(nonatomic, copy) NSString *mapType;
 @property(nonatomic,copy) NSString *currentPublicStatus;
 @property(nonatomic, copy) NSString *region;
+
++(void)setOriginalCoordinates:(NSMutableArray *)val;
++(NSMutableArray*)getOriginalCoordinates;
 
 +(void)setCenterCoordinateLatitude:(double)val;
 +(void)setCenterCoordinateLongitude:(double)val;
