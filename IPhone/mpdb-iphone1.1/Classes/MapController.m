@@ -95,18 +95,18 @@
 	}
 	//load the map with the street view initially and then hybrid and satellite after the user specifies a different type
 	
-	NSString *mapType = currentSearchData.mapType;
+	NSString *mapType = [CurrentSearchData getMapType];
 	
 	
-	if([currentSearchData.mapType isEqualToString:@"map"])
+	if((mapType != nil) && [mapType isEqualToString:@"map"])
 	{
-		mapView.mapType= MKMapTypeStandard;
+		mapView.mapType=MKMapTypeStandard;
 	}
-	else if([currentSearchData.mapType isEqualToString:@"hybrid"])
+	else if((mapType != nil) && [mapType isEqualToString:@"hybrid"])
 	{
 		mapView.mapType=MKMapTypeHybrid;
 	}
-	else if([currentSearchData.mapType isEqualToString:@"satellite"])
+	else if((mapType != nil) && [mapType isEqualToString:@"satellite"])
 	{
 		mapView.mapType=MKMapTypeSatellite;
 	}

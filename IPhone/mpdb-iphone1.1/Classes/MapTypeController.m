@@ -22,38 +22,63 @@
 	CGRect frame = CGRectMake(10.0, 120.0, 300.0, 50.0);
 	[segControl setFrame:frame];
 	[self.view addSubview:segControl];
-	[segControl addTarget:self action:@selector(changeType) forControlEvents:UIControlEventValueChanged];
+	
+	NSString *mapType = [CurrentSearchData getMapType];
 	
 	//highlight the segment representing the current map type
-	if([currentSearchData.mapType isEqualToString:@"map"]){
+	if([mapType isEqualToString:@"map"]){
 		[segControl setSelectedSegmentIndex:0];
 	}
-	else if([currentSearchData.mapType isEqualToString:@"hybrid"]){
+	else if([mapType isEqualToString:@"hybrid"]){
 		[segControl setSelectedSegmentIndex:1];
 	}
-	else if([currentSearchData.mapType isEqualToString:@"map"]){
+	else if([mapType isEqualToString:@"map"]){
 		[segControl setSelectedSegmentIndex:2];
 	}
+
+	[segControl addTarget:self action:@selector(changeType) forControlEvents:UIControlEventValueChanged];
+
 }
+
 -(void)changeType
 {
-	int segControlIndex = segControl.selectedSegmentIndex;
 	
 	if([segControl selectedSegmentIndex]==0)
 	{
 		[segControl setSelectedSegmentIndex:0];
-		currentSearchData.mapType=[[NSString alloc] initWithString:@"map"];
+		CurrentSearchData.mapType=[[NSString alloc] initWithString:@"map"];
 	}
 	else if([segControl selectedSegmentIndex]==1)
 	{
 		[segControl setSelectedSegmentIndex:1];
-		currentSearchData.mapType=[[NSString alloc] initWithString:@"hybrid"];
+		CurrentSearchData.mapType=[[NSString alloc] initWithString:@"hybrid"];
 	}
 	else if([segControl selectedSegmentIndex]==2)
 	{
 		[segControl setSelectedSegmentIndex:2];
-		currentSearchData.mapType=[[NSString alloc] initWithString:@"satellite"];
+		CurrentSearchData.mapType=[[NSString alloc] initWithString:@"satellite"];
 	}
+		
+	NSString *mapType = [CurrentSearchData getMapType];
+	
+		int segControlIndex = segControl.selectedSegmentIndex;
+	
+
+	if((mapType != nil) && [mapType isEqualToString:@"map"])
+	{
+		mapController.mapView.mapType=MKMapTypeStandard;
+	}
+	else if((mapType != nil) && [mapType isEqualToString:@"hybrid"])
+	{
+		mapController.mapView.mapType=MKMapTypeHybrid;
+	}
+	else if((mapType != nil) && [mapType isEqualToString:@"satellite"])
+	{
+		mapController.mapView.mapType=MKMapTypeSatellite;
+	}
+
+		
+	[self loadMap];
 }
 -(IBAction)loadMap
 {
@@ -65,7 +90,9 @@
 	UIView *newView=[mapController view];
 	[self.view addSubview:newView];
 	[mapController makeNavBar];
+	[self.navigationController popToViewController:self animated:NO];
 	[self.navigationController pushViewController:mapController animated:NO];
+
 }
 //the following 3 functions preserve the information needed by the map so no data is lost when the view is reloaded
 -(void)setSamples:(NSMutableArray*)mySamples:criteria

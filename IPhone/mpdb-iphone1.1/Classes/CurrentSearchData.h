@@ -29,6 +29,8 @@
 	CLLocationCoordinate2D zoomedCenter; //after the user has zoomed, the new center point is stored as the center of the map
 }
 CLLocationCoordinate2D centerCoordinate;
+NSString *mapType;
+
 @property(nonatomic,retain) NSMutableArray *rockTypes;
 @property(nonatomic, retain) NSMutableArray *minerals;
 @property(nonatomic, retain) NSMutableArray *metamorphicGrades;
@@ -39,7 +41,7 @@ CLLocationCoordinate2D centerCoordinate;
 @property double latitudeSpan;
 @property double longitudeSpan;
 @property CLLocationCoordinate2D zoomedCenter;
-@property(nonatomic, copy) NSString *mapType;
+//@property(nonatomic, copy) NSString *mapType;
 @property(nonatomic,copy) NSString *currentPublicStatus;
 @property(nonatomic, copy) NSString *region;
 
@@ -47,5 +49,8 @@ CLLocationCoordinate2D centerCoordinate;
 +(void)setCenterCoordinateLongitude:(double)val;
 
 +(CLLocationCoordinate2D)getCenterCoordinate;
+
++(void)setMapType:(NSString*)val;
++(NSString*)getMapType;
 
 @end

@@ -7,7 +7,7 @@
 
 
 @implementation CurrentSearchData
-@synthesize currentPublicStatus, mapType, region, locationVisible, originalCoordinates;
+@synthesize currentPublicStatus, region, locationVisible, originalCoordinates;
 @synthesize rockTypes, minerals, metamorphicGrades, owners, zoomed, latitudeSpan, longitudeSpan, zoomedCenter;
 //constructor function to initialize all the variables
 -(CurrentSearchData*)init
@@ -50,5 +50,13 @@
 	return centerCoordinate;
 }
 
++(void) setMapType:(NSString *)val
+{
+	mapType = val;
+}
 
++(NSString*) getMapType
+{
+	return mapType;
+}
 @end
