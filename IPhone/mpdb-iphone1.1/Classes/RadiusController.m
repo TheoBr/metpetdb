@@ -173,12 +173,15 @@
 	
 	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];  	
 	
+	//NSMutableArray *coordArray = [currentSearchData coordinates];
+	
+	
 	
 	
 	//create a post request by sending the necessary data to a PostRequest object
 	//since the user has not yet specified any 
 	PostRequest *post= [[PostRequest alloc] init];
-	[post setData:nil:nil :nil :nil :currentSearchData.currentPublicStatus :nil:[currentSearchData coordinates]:0:@"false"];
+	[post setData:nil:nil :nil :nil :currentSearchData.currentPublicStatus :nil:coordinates:0:@"false"];
 //	[post setData:nil:nil :nil :nil :nil :nil:coordinates:0:nil];
 
 	myReturn=[post buildPostString];
