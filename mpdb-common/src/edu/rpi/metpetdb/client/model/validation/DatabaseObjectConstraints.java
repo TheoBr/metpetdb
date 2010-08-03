@@ -333,8 +333,11 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	 * </p>
 	 */
 	public void finishInitialization(DatabaseObjectConstraints oc) {
-		// TODO email address pattern
-		User_emailAddress.pattern = "A-Z0-9a-z_\\.@";
+		
+		// TODO Need to do proper email validation. Regex pattern below would 
+		// work but the pattern is being parsed and changed by "IvalidCharacterException.formatPattern()"
+		// “^[\\w\\-]+(\\.[\\w\\-]+)*@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}$”
+		User_emailAddress.pattern = "-A-Z0-9a-z_\\.@";
 		// Sample_collectionEnded.collectionBegan = Sample_collectionBegan;
 
 		// UserWithPassword is not available in the database like this,
