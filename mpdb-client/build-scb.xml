@@ -134,6 +134,7 @@
 			<filter token="APPUSER" value="${APPUSER}" />
 			<filter token="APPPASS" value="${APPPASS}" />
 			<filter token="DATABASE" value="${DATABASE}" />
+			<filter token="DATABASE_HOST" value="${DATABASE_HOST}" />
 			<filter token="postgis" value="${postgis}" />
 			<filter token="INDICES" value="${INDICES}" />
 		</filterset>
