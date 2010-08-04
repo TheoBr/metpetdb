@@ -336,7 +336,7 @@ public class DatabaseObjectConstraints implements IsSerializable {
 		
 		// TODO Need to do proper email validation. Regex pattern below would 
 		// work but the pattern is being parsed and changed by "IvalidCharacterException.formatPattern()"
-		// “^[\\w\\-]+(\\.[\\w\\-]+)*@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}$”
+		// "^[\\w\\-]+(\\.[\\w\\-]+)*@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}$"
 		User_emailAddress.pattern = "-A-Z0-9a-z_\\.@";
 		// Sample_collectionEnded.collectionBegan = Sample_collectionBegan;
 
