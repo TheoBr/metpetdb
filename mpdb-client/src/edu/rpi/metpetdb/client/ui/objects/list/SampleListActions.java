@@ -338,7 +338,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 							+ LocaleHandler.lc_text.tokenSeparater());
 					hp.add(url);
 					fp.add(hp);
-					fp.setAction(GWT.getModuleBaseURL() + "BasicKML.kml?");
+					fp.setAction("./BasicKML.kml?");
 					fp.setVisible(false);
 					add(fp);
 					fp.submit();

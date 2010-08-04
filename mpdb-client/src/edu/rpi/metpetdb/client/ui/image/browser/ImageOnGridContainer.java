@@ -163,7 +163,7 @@ public class ImageOnGridContainer {
 			checksum = this.iog.getImage().getChecksum64x64();
 		else
 			checksum = this.iog.getGchecksum64x64();
-		return GWT.getModuleBaseURL() + "image/?checksum=" + checksum;
+		return "image/?checksum=" + checksum;
 	}
 
 	public String getHalfServerPath(final boolean original) {
@@ -172,7 +172,7 @@ public class ImageOnGridContainer {
 			checksum = this.iog.getImage().getChecksumHalf();
 		else
 			checksum = this.iog.getGchecksumHalf();
-		return GWT.getModuleBaseURL() + "image/?checksum=" + checksum;
+		return "image/?checksum=" + checksum;
 	}
 
 	public String getServerPath(final boolean original) {
@@ -181,7 +181,7 @@ public class ImageOnGridContainer {
 			checksum = this.iog.getImage().getChecksum();
 		else
 			checksum = this.iog.getGchecksum();
-		return GWT.getModuleBaseURL() + "image/?checksum=" + checksum;
+		return "image/?checksum=" + checksum;
 	}
 
 	public String getGoodLookingPicture() {
