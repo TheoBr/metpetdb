@@ -3,6 +3,8 @@
 
 	
 	<property name="gwt.sdk" location="/home/mpdb_test/gwt-2.0.3"/>
+	
+		<property name="mpdb-build-dir" location="/home/mpdb_test" />
 
        	<property name="mpdb-common-dir" location="../mpdb-common" />
         <property name="mpdb-client-dir" location="." />
@@ -126,7 +128,7 @@
 	</target>
 
 	<target name="test-war" depends="copy-stuff">
-		<property file="${mpdb-common-dir}/test-build.properties" />
+		<property file="${mpdb-build-dir}/test-build.properties" />
 		
 		<filterset id="props">
 			<filter token="APPUSER" value="${APPUSER}" />
@@ -142,7 +144,7 @@
 			<filterset refid="props" />
 		</copy>
 
-		<copy tofile="${build}/files.properties" file="${mpdb-server-dir}/test-files.properties">
+		<copy tofile="${build}/files.properties" file="${mpdb-build-dir}/test-files.properties">
 			<filterset refid="props" />
 		</copy>
 
