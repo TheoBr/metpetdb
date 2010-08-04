@@ -139,7 +139,7 @@
 			<filter token="INDICES" value="${INDICES}" />
 		</filterset>
 
-		<replace file="${build}/../../MetPetDBApplication.html" token="APIKEY" value="ABQIAAAALpV_9VK8HGf6x3ThZh8BVRTibFh1Wk25q9WePsGZnvYMEMvDOhQaDZEVApKAr6JO_X7S8ir2zMNpag" />
+		<replace file="${build}/../../MetPetDBApplication.html" token="APIKEY" value="ABQIAAAAhO0Df5we99eWtl64s0e8iBRUG88I3_UgDafUkh_vxhyskhFYVRS6ucJfvp2umNMHzTqCn-gs4wFg0g" />
 
 		<copy tofile="${build}/${hibernate_cfg}" file="${mpdb-server-dir}/hibernate.cfg.in">
 			<filterset refid="props" />
