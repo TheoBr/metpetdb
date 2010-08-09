@@ -11,7 +11,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DisclosurePanel;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SuggestionHandler;
 import com.google.gwt.user.client.ui.Widget;
@@ -25,13 +24,17 @@ import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MultipleInputPanel;
 
 public abstract class MultipleSuggestTextAttribute extends GenericAttribute implements ChangeListener, SuggestionHandler{
-	private final boolean addShow;
+	
 	protected Set<String> suggestions;
 	protected MHtmlList editList;
 	protected final ArrayList<Widget> realEditWidgets;
 	private static final String STYLENAME = "multi-suggest";
+
+	/* Not used
+	private final boolean addShow;
 	private static int truncLength = 30;
 	private boolean isClosed = true;
+	*/
 	
 	public ArrayList<Widget> getRealEditWidgets(){
 		return realEditWidgets;
@@ -46,7 +49,7 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute impl
 	
 	public MultipleSuggestTextAttribute(final PropertyConstraint sc, final boolean addShow) {
 		super(sc);
-		this.addShow = addShow;
+		//this.addShow = addShow;
 		realEditWidgets = new ArrayList<Widget>();
 		suggestions = new HashSet<String>();
 	}
@@ -62,7 +65,7 @@ public abstract class MultipleSuggestTextAttribute extends GenericAttribute impl
 			while (itr.hasNext()) {
 				vals.add(itr.next().toString());
 			}
-		}		
+		}
 		Collections.sort(vals);
 		Iterator<String> itr = vals.iterator();
 		MHtmlList list = new MHtmlList();

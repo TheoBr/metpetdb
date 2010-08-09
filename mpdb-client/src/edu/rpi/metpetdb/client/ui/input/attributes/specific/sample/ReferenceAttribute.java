@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SuggestionEvent;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -16,6 +17,11 @@ import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.MultipleSuggestTextAttribute;
 import edu.rpi.metpetdb.client.ui.widgets.MSuggestText;
 
+/**
+ * ReferenceAttribute
+ * 
+ * @modified millib2
+ */
 public class ReferenceAttribute extends MultipleSuggestTextAttribute {
 
 	public ReferenceAttribute(final ObjectConstraint sc) {
@@ -42,6 +48,26 @@ public class ReferenceAttribute extends MultipleSuggestTextAttribute {
 		}
 		return references;
 	}
+	
+	/**
+	 * Modifies the behavior of the suggest text widget such that when only
+	 * one reference is present it is a label, not link that does nothing.
+	 * 
+	 * @param obj
+	 */
+	@Override
+	public Widget[] createDisplayWidget(final MObject obj){
+		final Set<Reference> s = get(obj);		
+		if (s != null && s.size() == 1) {
+			return new Widget[] {
+				new Label(s.iterator().next().toString())
+			};	
+		}
+		else {
+			return super.createDisplayWidget(obj);
+		}
+	}
+	
 	public void setSuggest(){
 		new ServerOp() {
 			@Override
@@ -53,6 +79,7 @@ public class ReferenceAttribute extends MultipleSuggestTextAttribute {
 			}
 		}.begin();
 	}
+	
 	public void onChange(final Widget sender){
 
 	}
