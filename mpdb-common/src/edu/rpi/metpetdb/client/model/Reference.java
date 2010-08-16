@@ -9,7 +9,7 @@ import org.hibernate.search.annotations.Store;
 public class Reference extends MObject implements Comparable {
 	private static final long serialVersionUID = 1L;
 
-	private short id;
+	private Long id;
 
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String name;
@@ -22,11 +22,11 @@ public class Reference extends MObject implements Comparable {
 		this.name = name;
 	}
 
-	public short getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(final short i) {
+	public void setId(final long i) {
 		id = i;
 	}
 
@@ -45,7 +45,7 @@ public class Reference extends MObject implements Comparable {
 	}
 
 	public int hashCode() {
-		return name != null ? name.hashCode() + id : 0;
+		return name != null ? name.hashCode() + id.intValue() : 0;
 	}
 
 	public String toString() {
