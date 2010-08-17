@@ -35,7 +35,7 @@ public class GeoReferenceDAO extends MpDbDAO<GeoReference>{
 			HibernateException {
 		// Use Reference Name
         final org.hibernate.Query geoRefrences = namedQuery("GeoReference.byId");
-        geoRefrences.setShort("id", ref.getId());
+        geoRefrences.setLong("id", ref.getId());
         if (geoRefrences.uniqueResult() != null)
                 return (GeoReference) geoRefrences.uniqueResult();
 
