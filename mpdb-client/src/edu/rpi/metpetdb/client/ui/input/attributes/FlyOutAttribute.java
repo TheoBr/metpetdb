@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -288,26 +287,33 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute<
 			fo.addChild(fo2);
 		}
 	}
+	
 	private Widget makeWidget(final Collection<T> parents, final MObject obj) {
 		final FlowPanel fp = new FlowPanel();
 		if (parents != null) {
 			Iterator<T> itr = parents.iterator();
 			while (itr.hasNext()) {
-				final T parent = itr.next();
-			//	if (parent instanceof Mineral && ((Mineral) parent).getRealMineralId() == ((Mineral) parent).getId()) {
-					final FlyOutItem fo= new FlyOutItem(null, parent, selectChildren);
-					if (get(obj) != null && get(obj).contains(parent)
-							|| contains(get(obj), parent)) {
-						fo.setState(CheckedState.CHECKED);
-						selectedWidgets.add(fo);
-						selectedItems.add(fo.obj);
+				final T next = itr.next();
+				final Mineral parent;
+				// Casting to object first is a workaround for a compiler bug when casting generics
+				//	if (parent instanceof Mineral && ((Mineral) parent).getRealMineralId() == ((Mineral) parent).getId()) {
+				if ((Object)next instanceof Mineral) {
+					parent = (Mineral) ((Object) next);					
+					if (parent.getRealMineralId() == parent.getId()) {
+						final FlyOutItem fo= new FlyOutItem(null, next, selectChildren);
+						if (get(obj) != null && get(obj).contains(parent)
+								|| contains(get(obj), parent)) {
+							fo.setState(CheckedState.CHECKED);
+							selectedWidgets.add(fo);
+							selectedItems.add(fo.obj);
+						}
+						if (parent.getChildren() != null && parent.getChildren().size() > 0) {
+							makeChildren(fo, next, obj);
+						} 
+						fp.add(fo);		
 					}
-					if (parent.getChildren() != null && parent.getChildren().size() > 0) {
-						makeChildren(fo,parent, obj);
-					} 
-					fp.add(fo);		
 				}
-			//}
+			}
 		}
 		fp.setStyleName("flyout-parents");
 		return fp;
