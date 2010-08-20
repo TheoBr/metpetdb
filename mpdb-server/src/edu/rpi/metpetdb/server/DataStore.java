@@ -85,7 +85,9 @@ public class DataStore {
 				throw new MappingException("Missing dao/hibernate.cfg.xml.");
 			cfg.configure(x);
 			config = cfg;
-			config.setInterceptor(new PermissionInterceptor());
+			
+			//TODO:  Disabling the PermissionInterceptor at Frank's request.  Let's see what happens...
+			//config.setInterceptor(new PermissionInterceptor());
 		}
 		return config;
 	}
