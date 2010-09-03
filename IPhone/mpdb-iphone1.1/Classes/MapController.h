@@ -19,6 +19,7 @@
 #import "CriteriaSummary.h"
 #import "CurrentSearchData.h"
 
+
 @class MainViewController;
 @class MapTypeController;
 @class SampleInfoController;

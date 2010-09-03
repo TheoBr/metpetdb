@@ -14,7 +14,7 @@
 #import "SearchCriteriaController.h"
 #import "AnnotationObjects.h"
 #import "MetPetDBAppDelegate.h"
-
+#import "constants.h"
 
 @implementation MapController
 @synthesize sampleinfo, details, selectedID, navBar, satelliteView, mapViewButton, narrowSearch, mapView, infoButton, homeButton;
@@ -149,9 +149,10 @@
 	else
 	{
 		titleString=[[NSString alloc] initWithFormat:@"Displaying %d / %d samples", currentSampleCount, totalCount];
-		//UIImage *buttonImage= [[UIImage alloc] initWithContentsOfFile:@"/Users/heatherbuletti/Documents/button-next.png"];
-		//UIImage *buttonImage= [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString:@"http://samana.cs.rpi.edu:8080/metpetwebtst/images/button-next.png"]]];
-		UIImage *buttonImage= [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString:@"http://samana.cs.rpi.edu/metpetweb/images/button-next.png"]]];
+	
+	NSString * nextURL = [[NSString alloc] initWithFormat:@"%@images/button-next.png", RootURL];
+
+UIImage *buttonImage= [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString:nextURL]]];
 		UIButton *b= [[UIButton alloc] init];
 		b.frame=CGRectMake(0, 0, 45, 32);
 		[b setBackgroundImage:buttonImage forState:UIControlStateNormal];
@@ -292,8 +293,10 @@
 	
 	UIBarButtonItem *allSamplesButton=[[UIBarButtonItem alloc] initWithTitle:@"View Samples as List" style:UIBarButtonItemStyleBordered target:self action:@selector(viewSamplesAsList)];
 	UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
-	//UIImage *backgroundImage = [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString:@"http://samana.cs.rpi.edu:8080/metpetwebtst/images/my-location.png"]]];
-	UIImage *backgroundImage = [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString:@"http://samana.cs.rpi.edu/metpetweb/images/my-location.png"]]];
+	
+	NSString * backgroundURL = [[NSString alloc] initWithFormat:@"%@images/my-location.png", RootURL];
+	
+	UIImage *backgroundImage = [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString:backgroundURL]]];
 	//myLocationButton=[[UIBarButtonItem alloc] initWithImage:backgroundImage style:UIBarButtonItemStylePlain target:self action:@selector(viewMe)];
 	//UIButton *locButton= [[UIButton alloc] initWithFrame:CGRectMake(280, 3, 33, 33)];
 	//[locButton setImage:backgroundImage forState:UIControlStateNormal];
@@ -492,8 +495,19 @@
 	
 	PostRequest *post= [[PostRequest alloc] init];
 	
+	int existingCoords = [[CurrentSearchData getOriginalCoordinates] count];
+										   
+	if (existingCoords > 0)
+	{
 	[post setData:[currentSearchData minerals] :[currentSearchData rockTypes] :[currentSearchData owners] :[currentSearchData metamorphicGrades] :currentSearchData.currentPublicStatus :
-	 currentSearchData.region:[CurrentSearchData getOriginalCoordinates]:currentSampleCount:@"false"];
+	 currentSearchData.region:[CurrentSearchData getOriginalCoordinates]:currentSampleCount:@"false":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
+	}
+	else
+	{
+	[post setData:[currentSearchData minerals] :[currentSearchData rockTypes] :[currentSearchData owners] :[currentSearchData metamorphicGrades] :currentSearchData.currentPublicStatus :
+	 currentSearchData.region:nil:currentSampleCount:@"false":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
+	}
+										   
 	myReturn=[post buildPostString];
 	
 	NSURLResponse *response;
