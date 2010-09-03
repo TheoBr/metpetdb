@@ -31,6 +31,7 @@ import edu.rpi.metpetdb.server.impl.UserServiceImpl;
 
 public class SearchIPhonePost extends HttpServlet {
 	
+	private static int IPhonePageResultsSize = 50;
 	//make global variables out of all the search criteria and the session
 	private static Session session;
 	private static Set<String> owners= new HashSet();
@@ -52,7 +53,8 @@ public class SearchIPhonePost extends HttpServlet {
 	Sample commentSample= new Sample();
 	SampleServiceImpl ssi= new SampleServiceImpl();
 	int publicPrivate; // 0 = public and private, 1 = public only, 2 = private only
-	
+	private static String currentLatitude = "";
+	private static String currentLongitude = "";
 	private void clearVariables(){
 		owners=null;
 		rockTypes=null;
@@ -82,6 +84,8 @@ public class SearchIPhonePost extends HttpServlet {
 		p= null;
 		criteria= "";
 		
+		
+
 		response.setContentType("text/xml");
 		int responseLength= request.getContentLength();
 		byte[] postBytes= new byte[responseLength];
@@ -229,7 +233,8 @@ public class SearchIPhonePost extends HttpServlet {
 				p= new PaginationParameters();
 				int param= Integer.parseInt(value);
 				p.setFirstResult(param);
-				p.setMaxResults(10);
+				p.setMaxResults(IPhonePageResultsSize);
+				
 			}
 			else if(criteriaType.equals("regions")){
 				SearchIPhone1_1.regions(response, session, username);
@@ -307,19 +312,32 @@ public class SearchIPhonePost extends HttpServlet {
 			{
 				region= value;
 			}
+			else if (criteriaType.equals("currentLatitude"))
+			{
+				currentLatitude = value;
+			
 			}
+			else if (criteriaType.equals("currentLongitude"))
+			{
+				currentLongitude = value;
+			}
+		}
 			//the following statements will perform the actual database searches
 			//and xml output from the SearchIPhone1_1 file
 			if(region!="") //if a region has been provided, call SearchIPhone1_1 functions to search by region
+				
+				
 			{
 				if(criteria.equals("true"))
 				{  
-					SearchIPhone1_1.getSearchCriteria(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
+					
+
+					SearchIPhone1_1.getSearchCriteria(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response, currentLatitude, currentLongitude), response);
 					clearVariables();
 				}
 				else
 				{
-					SearchIPhone1_1.outputSearchXML(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response),response);
+					SearchIPhone1_1.outputSearchXML(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response, currentLatitude, currentLongitude),response);
 					clearVariables();
 				}
 			}
@@ -330,12 +348,12 @@ public class SearchIPhonePost extends HttpServlet {
 				System.out.println("iPhone query: north = " + north + "south = " + south + "west = " + west + "east =" + east);
 				if(criteria.equals("true"))
 				{
-					SearchIPhone1_1.getSearchCriteria(SearchIPhone1_1.search(north,south,east,west, session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p), response);
+					SearchIPhone1_1.getSearchCriteria(SearchIPhone1_1.search(north,south,east,west, session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, currentLatitude, currentLongitude), response);
 					clearVariables();
 				}
 				else
 				{
-					SearchIPhone1_1.outputSearchXML(SearchIPhone1_1.search(north,south, east, west, session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p),response);
+					SearchIPhone1_1.outputSearchXML(SearchIPhone1_1.search(north,south, east, west, session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, currentLatitude, currentLongitude),response);
 					clearVariables();
 				}
 			}
@@ -348,12 +366,12 @@ public class SearchIPhonePost extends HttpServlet {
 					response.getWriter().write(m.getName());
 				if(criteria.equals("true"))
 				{
-					SearchIPhone1_1.getSearchCriteria(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
+					SearchIPhone1_1.getSearchCriteria(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response, currentLatitude, currentLongitude), response);
 					clearVariables();
 				}
 				else
 				{
-					SearchIPhone1_1.outputSearchXML(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response), response);
+					SearchIPhone1_1.outputSearchXML(SearchIPhone1_1.search(session, publicPrivate, owners, rockTypes, metamorphicGrades, minerals, region, username, p, response, currentLatitude, currentLongitude), response);
 					clearVariables();
 				}
 			}
