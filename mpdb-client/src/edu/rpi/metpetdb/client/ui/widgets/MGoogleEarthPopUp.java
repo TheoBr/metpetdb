@@ -38,7 +38,7 @@ public class MGoogleEarthPopUp extends MDialogBox{
 		final MapWidget map = new MapWidget();
 		new ServerOp<String>(){
 			public void begin(){
-				final String baseURL = GWT.getModuleBaseURL() + "#" + 
+				final String baseURL = "#" + 
 				LocaleHandler.lc_entity.TokenSpace_Sample_Details() + LocaleHandler.lc_text.tokenSeparater();
 				MpDb.search_svc.createKML(list, baseURL, this);
 			}
