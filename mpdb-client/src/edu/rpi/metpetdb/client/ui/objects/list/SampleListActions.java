@@ -331,7 +331,7 @@ public class SampleListActions extends FlowPanel implements ClickListener {
 								.valueOf(s.getId()));
 						hp.add(sample);
 					}
-					Hidden url = new Hidden(urlParameter,  "#"
+					Hidden url = new Hidden(urlParameter,  GWT.getHostPageBaseURL() + "#"
 							+ LocaleHandler.lc_entity.TokenSpace_Sample_Details()
 							+ LocaleHandler.lc_text.tokenSeparater());
 					hp.add(url);
