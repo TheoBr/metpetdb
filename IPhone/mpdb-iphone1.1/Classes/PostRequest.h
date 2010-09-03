@@ -24,6 +24,9 @@
 	int pagination;
 	NSString* criteriaSummary;
 	NSMutableArray *coordinates;
+	double currentLatitude;
+	double currentLongitude;
+
 	
 }
 @property(nonatomic, copy)NSString *currentPublicStatus;
@@ -31,7 +34,8 @@
 @property(nonatomic, copy)NSString *username;
 @property(nonatomic, copy)NSString *postString;
 @property(nonatomic, copy)NSString *criteriaSummary;
-
+@property(nonatomic)double currentLatitude;
+@property(nonatomic)double currentLongitude;
 @end
 
 

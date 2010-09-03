@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "MyCLController.h"
-#import "MainViewController.h"
 #import "MapController.h"
 #import "AnnotationObjects.h"
 #import "uniqueSamples.h"

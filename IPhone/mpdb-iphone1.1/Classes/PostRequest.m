@@ -10,20 +10,22 @@
 
 #import "PostRequest.h"
 #import "KeychainWrapper.h"
-
+#import "constants.h"
 
 @implementation PostRequest
 
+//http://samana.cs.rpi.edu:8080/metpetwebtst/
+//http://samana.cs.rpi.edu/metpetweb/
 
 -(id)init
 {
 	[super init];
-	
 	return self;
 }
 
 -(NSData*)buildPostString
 {
+
 	//if the user is logged in, their username should be sent to the server
 	KeychainWrapper *keychain= [[KeychainWrapper alloc] init];
 	NSData *usernameData = [keychain searchKeychainCopyMatching:@"Username"];
@@ -33,8 +35,8 @@
 		[usernameData release];
 	}
 	
-	//NSString *urlString= [[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu:8080/metpetwebtst/searchIPhonePost.svc?"];
-	NSString *urlString= [[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu/metpetweb/searchIPhonePost.svc?"];
+	//NSString *urlString= [[NSString alloc] initWithFormat:@"searchIPhonePost.svc?"];
+	NSString *urlString= [[NSString alloc] initWithFormat:@"%@searchIPhonePost.svc?", RootURL];
 	
 	NSURL *myURL=[NSURL URLWithString:urlString];
 	NSMutableURLRequest *myRequest = [NSMutableURLRequest
@@ -118,6 +120,9 @@
 		postString= [postString stringByAppendingFormat:@"pagination= %d\ncriteriaSummary= %@\n", pagination, criteriaSummary];
 	}
 	
+	postString=[postString stringByAppendingFormat:@"currentLongitude= %.5g\n", currentLongitude];
+	postString=[postString stringByAppendingFormat:@"currentLatitude= %.5g\n", currentLatitude];
+	
 	NSData *myData= [postString dataUsingEncoding:NSASCIIStringEncoding];
  	[myRequest setHTTPBody:myData];
 	
@@ -140,7 +145,7 @@
 
 //this function gets passed all the current search data and sets the class variables accordingl
 -(void)setData:(NSMutableArray*)minerals:(NSMutableArray*)rocks:(NSMutableArray*)owners:(NSMutableArray*)metgrades:
-(NSString*)publicStatus:(NSString*)searchRegion:(NSMutableArray*)coords:(int)page:(NSString*)summary
+(NSString*)publicStatus:(NSString*)searchRegion:(NSMutableArray*)coords:(int)page:(NSString*)summary:(double)latitude:(double)longitude
 {
 	coordinates=coords;
 	currentMinerals=minerals;
@@ -151,6 +156,8 @@
 	currentPublicStatus=publicStatus;
 	pagination= page;
 	criteriaSummary=summary;
+	currentLatitude=latitude;
+	currentLongitude=longitude;
 	
 }
 

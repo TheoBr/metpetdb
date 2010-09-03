@@ -10,6 +10,7 @@
 
 #import "RegionViewController.h"
 #import "KeychainWrapper.h"
+#import "constants.h"
 
 @implementation RegionViewController
 @synthesize latitude, longitude, mylocationCoordinate, mylat;
@@ -17,6 +18,9 @@
 
 -(void)viewDidLoad
 {
+	NSMutableArray *emptyArray = [[NSMutableArray alloc] init];
+	[CurrentSearchData setOriginalCoordinates:emptyArray];
+
 	
 	//initialize all the arrays used in this controller
 	letters=[[NSMutableArray alloc] init];
@@ -128,7 +132,7 @@
 	//PostRequest *post= nil;
 	//[[post init] alloc];
 	
-	[post setData:nil :nil :nil :nil :currentSearchData.currentPublicStatus :selectedRegion:nil:0:@"true"];
+	[post setData:nil :nil :nil :nil :currentSearchData.currentPublicStatus :selectedRegion:nil:0:@"true":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
 	myReturn=[post buildPostString]; 
 	
 	
@@ -176,7 +180,7 @@
 	PostRequest *post= [[PostRequest alloc] init];
 	
 	//since the user has not yet been able to narrow the search, nil can be passed instead of the arrays
-	[post setData:nil:nil:nil :nil:currentSearchData.currentPublicStatus :selectedRegion:nil:0:@"false"];
+	[post setData:nil:nil:nil :nil:currentSearchData.currentPublicStatus :selectedRegion:nil:0:@"false":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
 	myReturn=[post buildPostString];
 //	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test3.txt"];
 //	[fh writeData:myReturn];
@@ -199,9 +203,8 @@
 	
 }
 -(void)getRegions{
-	//NSString *urlString= [[NSString alloc] initWithFormat:@"http://localhost:8888/edu.rpi.metpetdb.MetPetDBApplication/searchIPhonePost.svc?"];
-	//NSString *urlString= [[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu:8080/metpetwebtst/searchIPhonePost.svc?"];					 
-	NSString *urlString= [[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu/metpetweb/searchIPhonePost.svc?"];
+
+	NSString *urlString= [[NSString alloc] initWithFormat:@"%@searchIPhonePost.svc?", RootURL];
 	NSURL *myURL=[NSURL URLWithString:urlString];
 	NSMutableURLRequest *myRequest = [NSMutableURLRequest requestWithURL:myURL];	
 	[myRequest setValue:@"text/plain" forHTTPHeaderField:@"Content-type"];

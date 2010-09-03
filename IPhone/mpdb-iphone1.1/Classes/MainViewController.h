@@ -6,6 +6,7 @@
 #import "CurrentSearchData.h"
 #import "KeychainWrapper.h"
 
+
 @class CurrentSearchData;
 @class SecurityController;
 @class LoginViewController;

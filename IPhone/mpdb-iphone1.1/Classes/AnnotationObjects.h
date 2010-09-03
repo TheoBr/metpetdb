@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 
+
 @interface AnnotationObjects: NSObject <MKMapViewDelegate, MKAnnotation>{
 	CLLocationCoordinate2D coordinate;
 	NSString *title;

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface AnalysisSummary : UIViewController <UITextViewDelegate> {
 	NSString *sampleID;
 	IBOutlet UITextView *textView;

@@ -5,7 +5,6 @@
 #import "MetPetDBAppDelegate.h"
 #import <Security/Security.h>
 
-
 @implementation MainViewController
 @synthesize radiusController, myLat, myLong, myCoordinate, loginController, existingPassword;
 @synthesize coordController, regionController, tableView, username, segControl, security;
@@ -17,6 +16,10 @@
 {
 	self.navigationItem.hidesBackButton=YES;
 	currentSearchData=[[currentSearchData alloc] init];
+	
+
+	
+	
  	[MyCLController sharedInstance].delegate = self;
 	rows=[[NSMutableArray alloc] init]; //this array is the data source for the table
 	

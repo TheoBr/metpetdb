@@ -13,6 +13,7 @@
 #import "CriteriaSummary.h"
 #import "CurrentSearchData.h"
 
+
 @class CurrentSearchData;
 @class uniqueSamples;
 @class SearchCriteriaController;

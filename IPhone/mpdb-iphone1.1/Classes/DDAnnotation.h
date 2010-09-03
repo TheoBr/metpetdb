@@ -25,8 +25,9 @@
 //
 
 #import <MapKit/MapKit.h>
-#import "DropMapViewController.h"
 #import "DDAnnotationView.h"
+
+
 
 @interface DDAnnotation : NSObject <MKMapViewDelegate, MKAnnotation, MKReverseGeocoderDelegate> {
 	CLLocationCoordinate2D coordinate;

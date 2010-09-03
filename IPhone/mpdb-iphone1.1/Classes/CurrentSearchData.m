@@ -69,4 +69,6 @@
 {
 	return mapType;
 }
+
+
 @end

@@ -14,6 +14,10 @@
 #import "CriteriaSummary.h"
 #import "CurrentSearchData.h"
 
+
+
+
+
 @class CurrentSearchData;
 @class xmlParser;
 @class MapController;

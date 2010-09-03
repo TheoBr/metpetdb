@@ -8,7 +8,7 @@
 
 #import "ImageViewController.h"
 #import "MetPetDBAppDelegate.h"
-
+#import "constants.h"
 
 #define HORIZ_SWIPE_DRAG_MIN  12
 #define VERT_SWIPE_DRAG_MAX    4
@@ -74,8 +74,7 @@
 	}
 	for(x=imageCount; x<(imageCount+max); x++)
 	{
-		//fullPath=[[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu:8080/metpetwebtst//image/?checksum=%@",[imagePaths objectAtIndex:x]];
-		fullPath=[[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu/metpetweb//image/?checksum=%@",[imagePaths objectAtIndex:x]];
+		fullPath=[[NSString alloc] initWithFormat:@"%@/image/?checksum=%@", RootURL, [imagePaths objectAtIndex:x]];
 		
 		UIImage *image = [UIImage imageWithData: [NSData dataWithContentsOfURL: [NSURL URLWithString:fullPath]]];
 		CGRect rect=CGRectMake(width, height, 64.0, 64.0);

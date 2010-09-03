@@ -11,6 +11,7 @@
 #import "DropMapViewController.h" 
 #import "CurrentSearchData.h"
 
+
 @class RadiusController;
 @class DropMapViewController;
 @interface CoordInputController: UIViewController <UITextFieldDelegate, UIAlertViewDelegate, MKMapViewDelegate> {

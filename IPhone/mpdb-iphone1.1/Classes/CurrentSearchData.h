@@ -24,6 +24,7 @@
 	//values of the zoom after the user returns to the map
 	double latitudeSpan;
 	double longitudeSpan;
+	
 
 	
 	CLLocationCoordinate2D zoomedCenter; //after the user has zoomed, the new center point is stored as the center of the map
@@ -55,5 +56,6 @@ NSString *mapType;
 
 +(void)setMapType:(NSString*)val;
 +(NSString*)getMapType;
+
 
 @end

@@ -132,7 +132,8 @@
 {
 	//recaluclate the search criteria
 	PostRequest *post= [[PostRequest alloc] init];
-	[post setData:[currentSearchData minerals] :[currentSearchData rockTypes] :[currentSearchData owners] :[currentSearchData metamorphicGrades] :currentSearchData.currentPublicStatus :currentSearchData.region:[currentSearchData originalCoordinates]:0:@"true"];
+		
+	[post setData:[currentSearchData minerals] :[currentSearchData rockTypes] :[currentSearchData owners] :[currentSearchData metamorphicGrades] :currentSearchData.currentPublicStatus :currentSearchData.region:[currentSearchData originalCoordinates]:0:@"true":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
 	postReturn=[post buildPostString]; 
 	
 	xmlParser *x= [[xmlParser alloc] init];
@@ -253,7 +254,7 @@
 	//make a post request to get the samples that match the search criteria
 	PostRequest *post= [[PostRequest alloc] init];
 	
-	[post setData:[currentSearchData minerals] :[currentSearchData rockTypes] :[currentSearchData owners] :[currentSearchData metamorphicGrades] :currentSearchData.currentPublicStatus :currentSearchData.region:[currentSearchData originalCoordinates]:0:@"false"];
+	[post setData:[currentSearchData minerals] :[currentSearchData rockTypes] :[currentSearchData owners] :[currentSearchData metamorphicGrades] :currentSearchData.currentPublicStatus :currentSearchData.region:[currentSearchData originalCoordinates]:0:@"false":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
 	postReturn=[post buildPostString];
 	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test2.txt"];
 	[fh writeData:postReturn];

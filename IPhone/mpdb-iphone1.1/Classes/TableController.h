@@ -15,6 +15,7 @@
 #import "PublicPrivateViewController.h"
 #import "CurrentSearchData.h"
 
+
 @class CurrentSearchData;
 @class RockTypeController;
 @class OwnerViewController;

@@ -6,6 +6,7 @@
 #import "CriteriaSummary.h"
 #import "CurrentSearchData.h"
 
+
 @class CurrentSearchData;
 @class SearchCriteriaController;
 @class CriteriaSummary;

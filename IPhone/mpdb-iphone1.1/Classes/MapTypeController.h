@@ -11,6 +11,7 @@
 #import "CriteriaSummary.h"
 #import "CurrentSearchData.h"
 
+
 @class CurrentSearchData;
 @class MapController;
 @interface MapTypeController : UIViewController {

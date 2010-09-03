@@ -8,7 +8,7 @@
 
 #import "CommentDisplayController.h"
 #import "KeychainWrapper.h"
-
+#import "constants.h"
 
 @implementation CommentDisplayController
 @synthesize sampleID, titleText, addCommentButton, toolbar, addComment, textView, currentStringValue, sampleName, commentCount, Uname;
@@ -54,8 +54,7 @@
 -(void)getComments
 {
 	//send the username and password to the server to be authenticated
-	//NSString *urlString= [[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu:8080/metpetwebtst/searchIPhonePost.svc?"];
-	NSString *urlString= [[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu/metpetweb/searchIPhonePost.svc?"];
+	NSString *urlString= [[NSString alloc] initWithFormat:@"%@searchIPhonePost.svc?", RootURL];
 	NSURL *myURL=[NSURL URLWithString:urlString];
 	NSMutableURLRequest *myRequest = [NSMutableURLRequest
 									  requestWithURL:myURL];

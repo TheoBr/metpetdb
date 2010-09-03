@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "AddCommentController.h"
 
+
 @class AddCommentController;
 @interface CommentDisplayController : UIViewController <UITextViewDelegate, UITextFieldDelegate>  {
 	NSString *sampleID;

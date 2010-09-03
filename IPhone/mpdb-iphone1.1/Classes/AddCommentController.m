@@ -8,6 +8,7 @@
 
 #import "AddCommentController.h"
 #import "KeychainWrapper.h"
+#import "constants.h"
 
 @implementation AddCommentController
 @synthesize titleText, sampleID, textView, toolbar, Uname;
@@ -73,8 +74,7 @@
 	}
 	else
 	{
-		//NSString *urlString= [[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu:8080/metpetwebtst/searchIPhonePost.svc?"];
-		NSString *urlString= [[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu/metpetweb/searchIPhonePost.svc?"];
+		NSString *urlString= [[NSString alloc] initWithFormat:@"%@/searchIPhonePost.svc?", RootURL];
 		NSURL *myURL=[NSURL URLWithString:urlString];
 		NSMutableURLRequest *myRequest = [NSMutableURLRequest
 										  requestWithURL:myURL];

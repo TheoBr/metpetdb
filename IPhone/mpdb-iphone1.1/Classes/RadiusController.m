@@ -110,7 +110,7 @@
 	[tempCoordinates addObject:west];
 	
 	PostRequest *post = [[PostRequest alloc] init];
-	[post setData:nil:nil :nil :nil :currentSearchData.currentPublicStatus :nil:tempCoordinates:0:@"true"];
+	[post setData:nil:nil :nil :nil :currentSearchData.currentPublicStatus :nil:tempCoordinates:0:@"true": [CurrentSearchData getCenterCoordinate].latitude: [CurrentSearchData getCenterCoordinate].longitude];
 	myReturn=[post buildPostString];
 	
 //	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/scball/Documents/test1.txt"];
@@ -177,7 +177,7 @@
 	//create a post request by sending the necessary data to a PostRequest object
 	//since the user has not yet specified any 
 	PostRequest *post= [[PostRequest alloc] init];
-	[post setData:nil:nil :nil :nil :currentSearchData.currentPublicStatus :nil:coordinates:0:@"false"];
+	[post setData:nil:nil :nil :nil :currentSearchData.currentPublicStatus :nil:coordinates:0:@"false":nil:nil];
 
 
 	myReturn=[post buildPostString];

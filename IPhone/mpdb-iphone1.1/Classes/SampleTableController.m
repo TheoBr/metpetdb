@@ -11,6 +11,7 @@
 #import "SampleInfoController.h"
 #import "uniqueSamples.h"
 #import "KeychainWrapper.h"
+#import "constants.h"
 
 @implementation SampleTableController
 @synthesize tableView, sampleID, sampleInfo, tempSample, tempName, tempOwner, toolbar;
@@ -162,7 +163,7 @@
 		for(int z=0; z< [samplesInGroup count]; z++)
 		{
 			AnnotationObjects *sample= [samplesInGroup objectAtIndex:z];
-			NSString *sampleURL=[[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu/metpetweb/#sample/%@", sample.id];
+			NSString *sampleURL=[[NSString alloc] initWithFormat:@"%@#sample/%@", RootURL, sample.id];
 			body=[body stringByAppendingString:sampleURL];
 			body=[body stringByAppendingString:@"\n"];
 		}

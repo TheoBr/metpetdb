@@ -9,6 +9,7 @@
 #import "SingleImageView.h"
 #import "MetPetDBAppDelegate.h"
 #import "KeychainWrapper.h"
+#import "constants.h"
 #define HORIZ_SWIPE_DRAG_MIN  12
 #define VERT_SWIPE_DRAG_MAX    4
 
@@ -20,8 +21,7 @@
 -(void)viewDidLoad
 {
 	[self get_large_image];
-	//NSString *fullPath=[[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu:8080/metpetwebtst//image/?checksum=%@",imagePath];
-	NSString *fullPath=[[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu/metpetweb/image/?checksum=%@",imagePath];
+	NSString *fullPath=[[NSString alloc] initWithFormat:@"%@image/?checksum=%@", RootURL, imagePath];
 //	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test2.txt"];//
 //	[fh writeData:[fullPath dataUsingEncoding:NSASCIIStringEncoding]];
 //	NSData *newData=[[NSData alloc] init];
@@ -142,8 +142,7 @@
 -(void)get_large_image
 {
 	//send the username and password to the server to be authenticated
-	//NSString *urlString= [[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu:8080/metpetwebtst/searchIPhonePost.svc?"];
-	NSString *urlString= [[NSString alloc] initWithFormat:@"http://samana.cs.rpi.edu/metpetweb/searchIPhonePost.svc?"];
+	NSString *urlString= [[NSString alloc] initWithFormat:@"%@searchIPhonePost.svc?", RootURL];
 	
 	NSURL *myURL=[NSURL URLWithString:urlString];
 	NSMutableURLRequest *myRequest = [NSMutableURLRequest
