@@ -200,7 +200,7 @@ public class DataStore {
 		final PersistentClass cm;
 		final Property prop;
 		final Column col;
-		final Property tempProp;
+		 Property tempProp;
 		boolean isFormula = false;
 
 		if (oc instanceof ObjectConstraints)
@@ -209,7 +209,18 @@ public class DataStore {
 			cm = DataStore.getConfiguration().getClassMapping(
 					pkg + "." + entityName);
 
-		tempProp = cm != null ? cm.getProperty(attributeName) : null;
+
+		tempProp = null;
+		
+		try
+		{
+			tempProp = cm != null ? cm.getProperty(attributeName) : null;
+		}
+		catch (MappingException me)
+		{
+			me.printStackTrace();
+		}
+		
 		if (v.length == 2)
 			prop = tempProp;
 		else if (v.length == 4) {
