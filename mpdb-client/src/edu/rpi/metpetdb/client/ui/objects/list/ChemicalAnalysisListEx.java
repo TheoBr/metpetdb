@@ -139,7 +139,9 @@ public abstract class ChemicalAnalysisListEx extends ListEx<ChemicalAnalysis> {
 					return new MText(text);
 				}
 			},
-			new Column(true,enttxt.ChemicalAnalysis_referenceX(),
+/*			new Column(true,enttxt.ChemicalAnalysis_referenceNames(),
+					ChemicalAnalysisProperty.referenceNames),
+*/			new Column(true,enttxt.ChemicalAnalysis_referenceX(),
 					ChemicalAnalysisProperty.referenceX),
 			new Column(true,enttxt.ChemicalAnalysis_referenceY(),
 					ChemicalAnalysisProperty.referenceY),	

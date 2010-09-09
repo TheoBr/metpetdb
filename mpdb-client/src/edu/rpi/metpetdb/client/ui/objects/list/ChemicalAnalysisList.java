@@ -140,18 +140,6 @@ public abstract class ChemicalAnalysisList extends DataList<ChemicalAnalysis> {
 			defaultColumns.addColumn(col);
 		}
 		
-		// Reference
-		{
-			StringColumn<ChemicalAnalysis> col = new StringColumn<ChemicalAnalysis>(enttxt.ChemicalAnalysis_reference(),
-					ChemicalAnalysisProperty.reference);
-			col.setColumnSortable(true);
-			col.setMinimumColumnWidth(30);
-			col.setPreferredColumnWidth(30);
-			col.setOptional(true);
-			columns.addColumn(col);
-			defaultColumns.addColumn(col);
-		}
-		
 		// Reference X
 		{
 			StringColumn<ChemicalAnalysis> col = new StringColumn<ChemicalAnalysis>(enttxt.ChemicalAnalysis_referenceX(),

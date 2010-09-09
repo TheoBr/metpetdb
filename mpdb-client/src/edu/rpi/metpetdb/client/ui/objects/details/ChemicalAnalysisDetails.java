@@ -44,7 +44,7 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 			new TextAttribute(MpDb.doc.ChemicalAnalysis_analyst),
 			new DateAttribute(MpDb.doc.ChemicalAnalysis_analysisDate,
 					MpDb.doc.ChemicalAnalysis_datePrecision),
-			new TextAttribute(MpDb.doc.ChemicalAnalysis_reference),
+			
 			new TextAreaAttribute(MpDb.doc.ChemicalAnalysis_description),
 			new AnalysisMaterialAttribute(MpDb.doc.ChemicalAnalysis_mineral,
 					MpDb.doc.ChemicalAnalysis_largeRock),

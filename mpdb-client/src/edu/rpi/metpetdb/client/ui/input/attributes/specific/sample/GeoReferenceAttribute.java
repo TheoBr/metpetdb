@@ -13,12 +13,12 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.GeoReference;
+import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.commands.MCommand;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.image.AddImageWizard;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
 import edu.rpi.metpetdb.client.ui.widgets.TooltipListener;
 
@@ -34,7 +34,7 @@ public class GeoReferenceAttribute extends GenericAttribute implements ClickList
 	}
 	
 	private Set get(final MObject obj) {
-		return (Set) ((Sample) obj).getGeoReferences();
+		return ((Sample) obj).getGeoReferences();
 	}
 	
 	private MHtmlList createReferenceList(final MObject obj){
@@ -107,7 +107,7 @@ public class GeoReferenceAttribute extends GenericAttribute implements ClickList
 		if(data.getSecondAuthors() != null) 
 			tooltipData += "<tr><th>Second Authors:</th><td>" + data.getSecondAuthors() + "</td></tr>";
 		if(data.getFullText() != null) 
-			tooltipData += "<tr><th>Full Citation:</th><td>" + data.getFullText() + "</td></tr>";
+			tooltipData += "<tr><th>Abstract:</th><td>" + data.getFullText() + "</td></tr>";
 		
 		tooltipData += "</tbody></table>";
 		return tooltipData;
@@ -115,7 +115,18 @@ public class GeoReferenceAttribute extends GenericAttribute implements ClickList
 
 	@Override
 	protected void set(MObject obj, Object o) {
-		mSet(obj, ((Sample) obj).getGeoReferences());
+		
+		Set<Reference> refs = ((Sample) obj).getReferences();
+		
+		Set<GeoReference> geoRefs = new HashSet<GeoReference>();
+		
+		for (Reference currRef : refs)
+		{
+			geoRefs.add(currRef.getGeoref());
+		}
+		
+		
+		mSet(obj, geoRefs);
 	}
 
 	public void onClick(Widget sender) {
