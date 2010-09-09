@@ -255,7 +255,8 @@ public enum SampleProperty implements Property<Sample> {
 			
 			for (GeoReference currGeoRef : geoRefs)
 			{
-				refs.add(currGeoRef.getReference());
+				if (currGeoRef != null && currGeoRef.getReference() != null)
+					refs.add(currGeoRef.getReference());
 			}
 			
 				sample.setReferences(refs);
