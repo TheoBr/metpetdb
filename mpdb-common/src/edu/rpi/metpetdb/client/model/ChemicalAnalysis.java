@@ -65,7 +65,7 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 
 	private String subsampleName;
 	private String sampleName;
-	private String referenceName;
+	//private String referenceNames;
 	private String analysisMaterial;
 	
 	@Field(index = Index.UN_TOKENIZED, store = Store.YES)
@@ -142,14 +142,16 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	public void setSpotId(final int i) {
 		spotId = i;
 	}
-	
-	public String getReferenceName(){
-		return referenceName;
+/*	
+	public String getReferenceNames(){
+		return referenceNames;
 	}
 	
-	public void setReferenceName(final String ref){
-		referenceName = ref;
+	public void setReferenceNames(final String ref){
+		referenceNames = ref;
 	}
+	
+*/
 	
 	public String getAnalysisMaterial(){
 		return analysisMaterial;

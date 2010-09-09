@@ -10,6 +10,8 @@ public class GeoReference  extends MObject implements Comparable {
 	private String secondAuthors;
 	private String journalName;
 	private String fullText;
+	private Reference reference;
+	private long referenceId;
 	
 	public long getId(){
 		return id;
@@ -80,6 +82,22 @@ public class GeoReference  extends MObject implements Comparable {
 		if(!(g instanceof GeoReference))
 			throw new ClassCastException("GeoReference object expected");
 		return this.getTitle().compareTo(((GeoReference) g).getTitle());
+	}
+
+	public Reference getReference() {
+		return reference;
+	}
+
+	public void setReference(Reference reference) {
+		this.reference = reference;
+	}
+
+	public long getReferenceId() {
+		return referenceId;
+	}
+
+	public void setReferenceId(long referenceId) {
+		this.referenceId = referenceId;
 	}
 
 }

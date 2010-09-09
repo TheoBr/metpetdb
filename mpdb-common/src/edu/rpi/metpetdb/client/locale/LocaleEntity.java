@@ -94,6 +94,7 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String ChemicalAnalysis_spotId();
 	String ChemicalAnalysis_referenceX();
 	String ChemicalAnalysis_referenceY();
+	String ChemicalAnalysis_referenceNames();
 	String ChemicalAnalysis_method();
 	String ChemicalAnalysis_location();
 	String ChemicalAnalysis_analyst();

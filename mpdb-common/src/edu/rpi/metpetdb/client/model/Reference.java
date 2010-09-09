@@ -14,6 +14,8 @@ public class Reference extends MObject implements Comparable {
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String name;
 	
+	private GeoReference georef = null;
+	
 	public Reference() {
 		
 	}
@@ -60,5 +62,13 @@ public class Reference extends MObject implements Comparable {
 		if(!(r instanceof Reference))
 			throw new ClassCastException("Reference object expected");
 		return this.getName().compareTo(((Reference) r).getName());
+	}
+
+	public GeoReference getGeoref() {
+		return georef;
+	}
+
+	public void setGeoref(GeoReference georef) {
+		this.georef = georef;
 	}
 }

@@ -47,6 +47,19 @@ public enum ChemicalAnalysisProperty implements Property<ChemicalAnalysis> {
 					.convertToDouble(pointY));
 		}
 	},
+	
+//	referenceNames {
+//		public String get(final ChemicalAnalysis chemicalAnalysis)
+//		{
+//			return chemicalAnalysis.getReferenceNames();
+//		}
+		
+//		public void set(final ChemicalAnalysis chemicalAnalysis, Object name)
+//		{
+			
+//		}
+//	},
+	
 	stageX {
 		public Object get(final ChemicalAnalysis chemicalAnalysis) {
 			return ((ChemicalAnalysis) chemicalAnalysis).getStageX();
