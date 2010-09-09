@@ -239,18 +239,19 @@ public enum SampleProperty implements Property<Sample> {
 	geoReferences {
 		public Set<GeoReference> get(final Sample sample) {
 			
-			HashSet<GeoReference> geoRefs = new HashSet<GeoReference>();
+	/*		HashSet<GeoReference> geoRefs = new HashSet<GeoReference>();
 			
 			for (Reference currRef : sample.getReferences())
 			{
 				geoRefs.add(currRef.getGeoref());
 			}
 			
-			return geoRefs;
+			return geoRefs;*/
+			return null;
 		}
 
 		public void set(final Sample sample, final Object geoReferences) {
-			Set<GeoReference> geoRefs = (Set<GeoReference>) geoReferences;
+/*			Set<GeoReference> geoRefs = (Set<GeoReference>) geoReferences;
 			Set<Reference> refs = new HashSet<Reference>();
 			
 			for (GeoReference currGeoRef : geoRefs)
@@ -260,7 +261,7 @@ public enum SampleProperty implements Property<Sample> {
 			}
 			
 				sample.setReferences(refs);
-		}
+*/		}
 	},
 	comments {
 		public Object get(final Sample sample) {
