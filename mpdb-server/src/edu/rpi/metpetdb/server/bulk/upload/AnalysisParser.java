@@ -56,8 +56,8 @@ public class AnalysisParser extends Parser<ChemicalAnalysis> {
 				doc.ChemicalAnalysis_analysisMethod));
 		columns.add(new ColumnMapping(RegularExpressions.LOCATION,
 				doc.ChemicalAnalysis_location));
-		columns.add(new ColumnMapping(RegularExpressions.REFERENCES,
-				doc.ChemicalAnalysis_reference));
+//		columns.add(new ColumnMapping(RegularExpressions.REFERENCES,
+//				doc.ChemicalAnalysis_reference));
 		columns.add(new ColumnMapping(RegularExpressions.COLLECTION_DATE,
 				doc.ChemicalAnalysis_analysisDate));
 		columns.add(new ColumnMapping(RegularExpressions.ANALYST,

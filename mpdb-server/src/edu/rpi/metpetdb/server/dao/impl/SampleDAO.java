@@ -86,30 +86,23 @@ public class SampleDAO extends MpDbDAO<Sample> {
 		
 		//Check to see if there are any references that don't have a corresponding georef
 		GeoReferenceDAO geoDAO = new GeoReferenceDAO(sess);
-		Set<GeoReference> geoRefs = s.getGeoReferences();
-		ArrayList<String> geoRefNumbers = new ArrayList<String>();
-		Iterator<GeoReference> geoRefItr = geoRefs.iterator();
-		while(geoRefItr.hasNext()){
-			GeoReference currentRef = geoRefItr.next();
-			geoRefNumbers.add(currentRef.getReferenceNumber());
-		}
 		
-		ArrayList<String> numbersToLookup = new ArrayList<String>();
 		Set<Reference> refs = s.getReferences();
-		Iterator<Reference> refItr = refs.iterator();
-		while(refItr.hasNext()){
-			Reference currentRef = refItr.next();
-			if(!geoRefNumbers.contains(currentRef.getName())){
-				numbersToLookup.add(currentRef.getName());
-			}
-		}
-
-		//look up these numbers without a match
-		ArrayList<GeoReference> matchingRefs = geoDAO.referencesByNumber(numbersToLookup);		
-		//add them to the current georefs
-		geoRefs.addAll(matchingRefs);				
 		
-		s.setGeoReferences(geoDAO.fill(geoRefs));
+		for(Reference currRef : refs)
+		{
+	
+			ArrayList<String> referenceNumber = new ArrayList<String>();
+			referenceNumber.add(currRef.getName());
+			
+		ArrayList<GeoReference> geoRefs = geoDAO.referencesByNumber(referenceNumber);		
+		//add them to the current georefs
+
+		if (geoRefs.size() > 0)
+			currRef.setGeoref(geoRefs.get(0));
+		
+		}
+		
 	}
 	
 	public Set<MetamorphicRegion> getMatchingMetamorphicRegions(final Sample s){

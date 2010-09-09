@@ -15,6 +15,7 @@
     <property name="journalName" column="journal_name"/>
     <property name="fullText" column="full_text"/>
     <property name="referenceNumber" column="reference_number"/>
+    <property name="referenceId" column="reference_id"/>
   </class>
   
   <query name="GeoReference.byName">
@@ -40,8 +41,7 @@
    
    <query name="GeoReference.Count">
     Select count(*)
-    from GeoReference g, Sample s
-    where g in elements(s.geoReferences)
+    from GeoReference g
    </query>
 
 </hibernate-mapping>

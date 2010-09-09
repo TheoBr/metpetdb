@@ -9,7 +9,6 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.dao.ChemicalAnalysisNotFoundException;
 import edu.rpi.metpetdb.client.error.dao.ReferenceNotFoundException;
 import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
-import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.server.MpDbServlet;

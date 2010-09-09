@@ -42,7 +42,8 @@ public class RegionDAO extends MpDbDAO<Region> {
 	
 	public Object[] allNames() throws MpDbException{
 		final Query q = namedQuery("Region.all/name");
-		return	((List<Region>)getResults(q)).toArray();
+		List<Region> allRegions = (List<Region>)getResults(q);
+		return	allRegions.toArray();
 	}
 
 }

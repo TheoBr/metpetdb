@@ -30,7 +30,7 @@
     <property name="subsampleName" formula="(select s.name from subsamples s
     										where s.subsample_id=subsample_id)" />
     <many-to-one name="owner" column="user_id" update="false"/>
-	<many-to-one name="reference" column="reference_id" class="Reference" lazy="false" cascade="save-update"/>
+<!--  <many-to-one name="reference" column="reference_id" class="Reference" lazy="false" cascade="none" update="false" insert="false"/>-->
 	<many-to-one name="image" column="image_id" class="Image" lazy="false" cascade="none"/>
     <many-to-one name="subsample" column="subsample_id" class="Subsample"  cascade="none" update="false"/>
 
@@ -38,8 +38,9 @@
 	<property name="total" column="total" />
 	<many-to-one name="mineral" column="mineral_id" class="Mineral" lazy="false" cascade="none"/>
 	
-	<property name="referenceName" formula="(select r.name from reference r where
-    										reference_id = r.reference_id)" />
+	<!--<property name="referenceName" formula="(select r.name from reference r where
+    										reference_id = r.reference_id)" />-->							
+    										
     <property name="analysisMaterial" formula="(case 
     													when exists (select 1 from minerals m where mineral_id = m.mineral_id)
     														 then (select m.name from minerals m where mineral_id = m.mineral_id)
@@ -73,7 +74,8 @@
         <many-to-one name="oxide" class="Oxide" column="oxide_id" lazy="false" not-null="true"/>
 	  </composite-element>
     </set>
-    
+
+            
       <filter name="chemicalAnalysisPublicOrUser"
 	 		condition="(user_id=:userId or public_data='Y' or
 	 		(select ss.sample_id from subsamples ss where ss.subsample_id = subsample_id)
@@ -82,6 +84,9 @@
 	 		project_members pm where pm.user_id = :userId)))" />
      		
 
+
+
+ 
   </class>
 
   <query name="ChemicalAnalysis.byId">
@@ -144,11 +149,6 @@
     from ChemicalAnalysis ma
     where ma.subsample.id = :id
     order by ma.analysisDate
-  </query>
-  <query name="ChemicalAnalysis.bySubsampleId/reference">
-    from ChemicalAnalysis ma
-    where ma.subsample.id = :id
-    order by (lower(ma.referenceName))
   </query>
   <query name="ChemicalAnalysis.bySubsampleId/total">
     from ChemicalAnalysis ma

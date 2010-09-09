@@ -12,6 +12,8 @@ import java.util.Set;
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.model.GeoReference;
+import edu.rpi.metpetdb.client.model.Reference;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
@@ -20,6 +22,7 @@ import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.service.SampleService;
 import edu.rpi.metpetdb.server.DataStore;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.GeoReferenceDAO;
 import edu.rpi.metpetdb.server.dao.impl.ProjectDAO;
 import edu.rpi.metpetdb.server.dao.impl.SampleDAO;
 
@@ -88,6 +91,18 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 		s.setId(id);
 		s = (new SampleDAO(this.currentSession())).fill(s);
 		s.getImages().size();
+		
+		ArrayList<String> referenceNumbers = new ArrayList<String>();
+		
+		for (Reference currReference : s.getReferences())
+		{			
+			ArrayList<String> refName = new ArrayList();
+			refName.add(currReference.getName());
+			List<GeoReference> geoRef = new GeoReferenceDAO(this.currentSession()).referencesByNumber(refName);
+			s.getGeoReferences().add(geoRef.get(0));
+		}
+		
+		
 		return s;
 	}
 	
