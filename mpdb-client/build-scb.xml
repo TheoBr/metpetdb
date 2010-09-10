@@ -2,9 +2,9 @@
 <project name="mpdb" basedir="." >
 
 	
-	<property name="gwt.sdk" location="/home/mpdb_test/gwt-2.0.3"/>
+	<property name="gwt.sdk" location="/home/hudson/gwt-2.0.3"/>
 	
-		<property name="mpdb-build-dir" location="/home/mpdb_test" />
+		<property name="mpdb-build-dir" location="/home/hudson" />
 
        	<property name="mpdb-common-dir" location="../mpdb-common" />
         <property name="mpdb-client-dir" location="." />
@@ -157,23 +157,24 @@
 	</target>
 	
 	<target name="stage-war" depends="copy-stuff">
-		<property file="${mpdb-common-dir}/stage-build.properties" />
+		<property file="${mpdb-build-dir}/stage-build.properties" />
 	
 		<filterset id="props">
 			<filter token="APPUSER" value="${APPUSER}" />
 			<filter token="APPPASS" value="${APPPASS}" />
 			<filter token="DATABASE" value="${DATABASE}" />
+			<filter token="DATABASE_HOST" value="${DATABASE_HOST}" />
 			<filter token="postgis" value="${postgis}" />
 			<filter token="INDICES" value="${INDICES}" />
 		</filterset>
 
-		<replace file="${build}/../../MetPetDBApplication.html" token="APIKEY" value="ABQIAAAALpV_9VK8HGf6x3ThZh8BVRQ4VwJ8OAJiFKz00rLbR8TvXezRQhTrqir6CXQt9WI_DZrexB5aMSCsHw" />
+		<replace file="${build}/../../MetPetDBApplication.html" token="APIKEY" value="ABQIAAAAhO0Df5we99eWtl64s0e8iBRUG88I3_UgDafUkh_vxhyskhFYVRS6ucJfvp2umNMHzTqCn-gs4wFg0g" />
 
 		<copy tofile="${build}/${hibernate_cfg}" file="${mpdb-server-dir}/hibernate.cfg.in">
 			<filterset refid="props" />
 		</copy>
 
-		<copy tofile="${build}/files.properties" file="${mpdb-server-dir}/stage-files.properties">
+		<copy tofile="${build}/files.properties" file="${mpdb-build-dir}/stage-files.properties">
 			<filterset refid="props" />
 		</copy>
 
