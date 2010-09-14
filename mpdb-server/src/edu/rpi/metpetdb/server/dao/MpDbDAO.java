@@ -134,6 +134,8 @@ public abstract class MpDbDAO<T extends MObject> {
 	protected void _delete(final T u) throws MpDbException {
 		try {
 			sess.delete(u);
+			sess.flush();
+			sess.clear();
 		} catch (CallbackException e) {
 			sess.clear();
 			throw ConvertSecurityException.convertToException(e);

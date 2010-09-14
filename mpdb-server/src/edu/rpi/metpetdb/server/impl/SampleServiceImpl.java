@@ -99,7 +99,9 @@ public class SampleServiceImpl extends MpDbServlet implements SampleService {
 			ArrayList<String> refName = new ArrayList();
 			refName.add(currReference.getName());
 			List<GeoReference> geoRef = new GeoReferenceDAO(this.currentSession()).referencesByNumber(refName);
-			s.getGeoReferences().add(geoRef.get(0));
+	
+			if (geoRef != null && geoRef.size() > 0)
+				s.getGeoReferences().add(geoRef.get(0));
 		}
 		
 		
