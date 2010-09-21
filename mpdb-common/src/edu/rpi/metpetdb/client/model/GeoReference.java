@@ -3,7 +3,7 @@ package edu.rpi.metpetdb.client.model;
 public class GeoReference  extends MObject implements Comparable {
 	private static final long serialVersionUID = 1L;
 	
-	private long id;
+	private Long id;
 	private String referenceNumber;
 	private String title;
 	private String firstAuthor;
@@ -11,13 +11,13 @@ public class GeoReference  extends MObject implements Comparable {
 	private String journalName;
 	private String fullText;
 	private Reference reference;
-	private long referenceId;
+	private Long referenceId;
 	
-	public long getId(){
+	public Long getId(){
 		return id;
 	}
 	
-	public void setId(final long i){
+	public void setId(final Long i){
 		id = i;
 	}
 	
@@ -92,11 +92,11 @@ public class GeoReference  extends MObject implements Comparable {
 		this.reference = reference;
 	}
 
-	public long getReferenceId() {
+	public Long getReferenceId() {
 		return referenceId;
 	}
 
-	public void setReferenceId(long referenceId) {
+	public void setReferenceId(Long referenceId) {
 		this.referenceId = referenceId;
 	}
 
