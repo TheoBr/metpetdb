@@ -75,7 +75,7 @@ public class GeoReference  extends MObject implements Comparable {
 	}
 	
 	public int hashCode() {
-		return title != null ? title.hashCode() + (int)id : 0;
+		return title != null ? title.hashCode() + (int)id.intValue() : 0;
 	}
 
 	public int compareTo(Object g) {
