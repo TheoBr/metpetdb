@@ -18,9 +18,9 @@ import edu.rpi.metpetdb.client.ui.widgets.NumericKeyboardListener;
 
 public class TextAttribute extends GenericAttribute {
 	protected int visibleLength;
-	private boolean numeric = false;
-	private boolean integer = false;
-	private boolean negative = false;
+	protected boolean numeric = false;
+	protected boolean integer = false;
+	protected boolean negative = false;
 
 	public TextAttribute(final StringConstraint sc) {
 		super(sc);

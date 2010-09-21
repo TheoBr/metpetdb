@@ -295,7 +295,7 @@ public class FlyOutAttribute<T extends HasChildren<T>> extends GenericAttribute<
 			while (itr.hasNext()) {
 				final T next = itr.next();
 				final Mineral parent;
-				// Casting to object first is a workaround for a compiler bug when casting generics
+				// Casting to object first is a workaround for a compiler bug that occurs when casting generics
 				//	if (parent instanceof Mineral && ((Mineral) parent).getRealMineralId() == ((Mineral) parent).getId()) {
 				if ((Object)next instanceof Mineral) {
 					parent = (Mineral) ((Object) next);					

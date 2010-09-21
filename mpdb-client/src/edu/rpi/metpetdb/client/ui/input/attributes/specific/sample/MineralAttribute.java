@@ -179,12 +179,11 @@ public class MineralAttribute extends GenericAttribute<MObject> {
 		for (Widget w : ws) {
 			mineralDPanel.add(w);
 		}
-		vp.add(mineralDPanel);
 
 		// If we want to be able to enter mineral amounts, add the panel to do so
 		if (this.getConstraint().equals(MpDb.doc.Sample_minerals)) {
-			final DisclosurePanel amountsDPanel = new DisclosurePanel();
-			amountsDPanel.setHeader(new Button("Choose Amounts..."));
+			//final DisclosurePanel amountsDPanel = new DisclosurePanel();
+			//amountsDPanel.setHeader(new Button("Choose Amounts..."));
 			
 			final VerticalPanel amountsContentPanel = new VerticalPanel();
 			setAmountsPanel(amountsContentPanel);
@@ -197,9 +196,11 @@ public class MineralAttribute extends GenericAttribute<MObject> {
 				}
 			});
 			
-			amountsDPanel.add(amountsContentPanel);
-		
-			vp.add(amountsDPanel);
+			//amountsDPanel.add(amountsContentPanel);
+
+			//vp.add(amountsDPanel);
+			vp.add(amountsContentPanel);
+			vp.add(mineralDPanel);
 		}
 		
 		return new Widget[] {
@@ -222,7 +223,7 @@ public class MineralAttribute extends GenericAttribute<MObject> {
 		// Clear and repopulate amountsContentPanel
 		amountsContentPanel.clear();
 		if (amountsPanel.getBeans().size() > 0) {
-			amountsContentPanel.add(amountsPanel);	
+			amountsContentPanel.add(amountsPanel);
 		}
 		else {
 			final Label noMineralsLabel = new Label("No minerals selected."); 

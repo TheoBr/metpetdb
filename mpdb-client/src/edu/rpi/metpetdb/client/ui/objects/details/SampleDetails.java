@@ -62,6 +62,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.MetamorphicRe
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.MineralAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.ReferenceAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.RegionAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.UnitTextAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.SubsampleList;
 import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -92,7 +93,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			new RadioButtonAttribute(MpDb.doc.Sample_publicData,
 					LocaleHandler.lc_text.publicDataWarning()),
 			new LocationAttribute(MpDb.doc.Sample_location),
-			new TextAttribute(MpDb.doc.Sample_locationError,true,false,false),
+			new UnitTextAttribute(MpDb.doc.Sample_locationError, "meters"),
 			new CountryAttribute(MpDb.doc.Sample_country),
 			new MineralAttribute(MpDb.doc.Sample_minerals).setPos(DetailsPanelTableLoc.BOTTOM),
 			new TextAttribute(MpDb.doc.Sample_description).setPos(DetailsPanelTableLoc.BOTTOM),
