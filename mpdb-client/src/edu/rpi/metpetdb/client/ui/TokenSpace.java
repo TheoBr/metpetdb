@@ -44,6 +44,7 @@ import edu.rpi.metpetdb.client.ui.project.ProjectDescription;
 import edu.rpi.metpetdb.client.ui.project.ProjectInvite;
 import edu.rpi.metpetdb.client.ui.search.Search;
 import edu.rpi.metpetdb.client.ui.user.Confirmation;
+import edu.rpi.metpetdb.client.ui.user.Contribution;
 import edu.rpi.metpetdb.client.ui.user.EditUserProfile;
 import edu.rpi.metpetdb.client.ui.user.ProjectSamplesList;
 import edu.rpi.metpetdb.client.ui.user.RequestRoleChange;
@@ -410,6 +411,18 @@ public class TokenSpace implements HistoryListener {
 			}.execute();
 		}
 	};
+	
+	public static final Screen contribution = new Screen("ContributorCode") {
+		public void executeToken(final String args) {
+			new VoidLoggedInOp() {
+				@Override
+				public void command() {
+					show(new Contribution().fill(args));
+				}
+			}.execute();
+		}
+	};
+	
 	public static final Screen requestRoleChange = new Screen(
 			"RequestRoleChange") {
 		public void executeToken(final String args) {
@@ -496,6 +509,7 @@ public class TokenSpace implements HistoryListener {
 		register(newChemicalAnalysis);
 		register(createImageMap);
 		register(confirmation);
+		register(contribution);
 		register(rebuildSearchIndex);
 		register(requestRoleChange);
 		register(reviewRoleChanges);

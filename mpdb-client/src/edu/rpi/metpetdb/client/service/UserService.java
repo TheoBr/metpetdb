@@ -4,13 +4,14 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
+
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 import edu.rpi.metpetdb.client.error.ValidationException;
+import edu.rpi.metpetdb.client.error.validation.InvalidProfileRequestException;
 import edu.rpi.metpetdb.client.error.validation.LoginFailureException;
 import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
 import edu.rpi.metpetdb.client.model.Role;
@@ -74,7 +75,7 @@ public interface UserService extends RemoteService {
 	 * @throws UnableToSendEmailException
 	 * 		the welcome message could not be sent to the user's account.
 	 */
-	User registerNewUser(UserWithPassword newbie) throws ValidationException,
+	User registerNewUser(UserWithPassword newbie, String challenge, String response) throws ValidationException,
 			MpDbException, UnableToSendEmailException;
 
 	/**
@@ -138,6 +139,10 @@ public interface UserService extends RemoteService {
 	
 	User confirmUser(String confirmationCode) throws MpDbException,
 			LoginRequiredException;
+
+	User confirmContributor(String contributionCode) throws MpDbException,
+	LoginRequiredException;
+
 	
 	User save(User user) throws MpDbException, ValidationException;
 	
@@ -145,6 +150,10 @@ public interface UserService extends RemoteService {
 	
 	public void sendConfirmationCode(User u) throws ValidationException,
 	MpDbException, UnableToSendEmailException;
+	
+	public User sendContributorCode(User u, String explanationText) throws ValidationException,
+	MpDbException, UnableToSendEmailException,  InvalidProfileRequestException;
+	
 	
 	Collection<User> getEligableSponsors(Role e) throws MpDbException;
 	

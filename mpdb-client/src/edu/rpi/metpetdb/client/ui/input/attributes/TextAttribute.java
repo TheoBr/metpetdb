@@ -22,6 +22,12 @@ public class TextAttribute extends GenericAttribute {
 	protected boolean integer = false;
 	protected boolean negative = false;
 
+    public TextAttribute(final String labelString)
+    {
+            super(labelString);
+    }
+
+	
 	public TextAttribute(final StringConstraint sc) {
 		super(sc);
 		visibleLength = sc.maxLength < 30 ? sc.maxLength : 30;

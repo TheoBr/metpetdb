@@ -19,7 +19,7 @@ public class UserDetails extends FlowPanel {
 			new TextAttribute(MpDb.doc.User_country),
 			new TextAttribute(MpDb.doc.User_postalCode), 
 			new TextAttribute(MpDb.doc.User_institution), 
-			new TextAttribute(MpDb.doc.User_referenceEmail)
+			new TextAttribute(MpDb.doc.User_professionalUrl)
 	};
 
 	private final DetailsPanel<User> p_user;

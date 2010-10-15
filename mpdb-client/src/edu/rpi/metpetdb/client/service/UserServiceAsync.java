@@ -24,7 +24,7 @@ public interface UserServiceAsync {
 
 	void beginEditMyProfile(AsyncCallback<User> ac);
 
-	void registerNewUser(UserWithPassword newbie, AsyncCallback<User> ac);
+	void registerNewUser(UserWithPassword newbie, String challenge, String response, AsyncCallback<User> ac);
 
 	void changePassword(UserWithPassword uwp, AsyncCallback<MObject> ac);
 
@@ -33,6 +33,8 @@ public interface UserServiceAsync {
 	void emailPassword(String username, AsyncCallback<Void> ac);
 
 	void confirmUser(String confirmationCode, AsyncCallback<User> ac);
+
+	void confirmContributor(String confirmationCode, AsyncCallback<User> ac);
 
 	void allNames(AsyncCallback<Set<String>> ac);
 	
@@ -43,6 +45,8 @@ public interface UserServiceAsync {
 	void endSession(AsyncCallback<Void> ac);
 
 	public void sendConfirmationCode(User u, AsyncCallback<Void> ac);
+
+	public void sendContributorCode(User u, String explanationText, AsyncCallback<User> ac);
 
 	public void getEligableSponsors(Role e, AsyncCallback<Collection<User>> ac);
 

@@ -114,7 +114,8 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 					break;
 				}
 			}
-			dpEntries.put(atts[row], new DetailsPanelEntry(atts[row], newRow));
+	
+				dpEntries.put(atts[row], new DetailsPanelEntry(atts[row], newRow));
 		}
 
 		if (actions != null && actions.length > 0) {
@@ -153,20 +154,31 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 		DOM.appendChild(tr, labelTD);
 		final Element label = DOM.createLabel();
 		DOM.appendChild(labelTD, label);
-		DOM.setInnerText(label, labelText);
+	
+	
 
-		if (attr.getConstraint().required) {
+			DOM.setInnerText(label, labelText);
+
+		if (attr.getConstraint() != null && attr.getConstraint().required) {
 			final Element em = DOM.createElement("em");
 			DOM.setInnerText(em, "(required)");
 			DOM.appendChild(labelTD, em);
 		}
 
+		
+		
 		final Element valueTD = DOM.createTD();
+
+
 		DOM.appendChild(tr, valueTD);
 
+		
+
+		
 		attr.setMyPanel(this);
-		return new DetailsPanelRow(tr, labelTD, valueTD, label, attr
-				.getConstraint().required);
+		
+			
+		return new DetailsPanelRow(tr, labelTD, valueTD, label, attr.getConstraint().required);			
 	}
 
 	public T getBean() {
@@ -259,7 +271,10 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 				(GenericAttribute) attributes.get(row);
 			final DetailsPanelEntry dpEntry = 
 				(DetailsPanelEntry) dpEntries.get(attr);
-			showEditWidget(dpEntry, attr);
+			
+				showEditWidget(dpEntry, attr);
+			
+			
 			final CurrentError err = new CurrentError();
 			dpEntry.setCurrentError(err);
 			add(err, dpEntry.getLastRow().getTdValue());
@@ -362,7 +377,7 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 		return panelId + "_" + row;
 	}
 
-	private Widget[] getEditWidgets(final GenericAttribute attr) {
+	public Widget[] getEditWidgets(final GenericAttribute attr) {
 		if (!isEditMode())
 			throw new IllegalStateException();
 		final DetailsPanelEntry dpEntry = (DetailsPanelEntry) dpEntries
@@ -375,6 +390,14 @@ public class DetailsPanel<T extends MObject> extends ComplexPanel {
 			throw new IllegalStateException();;
 		return ((DetailsPanelEntry) dpEntries.get(attr)).getCurrentError();
 	}
+	
+	
+
+	public CurrentMessage getCurrentMessage(final GenericAttribute attr) {
+
+		return ((DetailsPanelEntry) dpEntries.get(attr)).getCurrentMessage();
+	}
+	
 
 	protected boolean isEditMode() {
 		return isEditMode;

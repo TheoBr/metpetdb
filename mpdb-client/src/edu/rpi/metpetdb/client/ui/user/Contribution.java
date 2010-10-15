@@ -13,54 +13,47 @@ import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 
-public class Confirmation extends FlowPanel implements ClickListener {
+public class Contribution extends FlowPanel implements ClickListener {
 
-	private final TextBox confirmationCode;
-	private final Button confirm;
+	private final TextBox contributionCode;
+	private final Button contribute;
 	private final Label instructions;
 
-	public Confirmation() {
+	public Contribution() {
 		instructions = new Label(
-				"Enter your confirmation code and click Confirm");
-		confirmationCode = new TextBox();
-		confirm = new Button("Confirm", this);
+				"Enter your confirmation code and click Approve");
+		contributionCode = new TextBox();
+		contribute = new Button("Approve", this);
 		add(instructions);
-		
-		if (!MpDb.currentUser().getEnabled()) {
-			add(confirmationCode);
-			add(confirm);
-			
-		} else {
-			instructions
-					.setText("Your account is already enabled - you cannot confirm it.");
-		}
-		
-		
+		add(contributionCode);
+		add(contribute);
+
 	}
 
-	public Confirmation fill(final String uuid) {
-		confirmationCode.setText(uuid);
+	public Contribution fill(final String uuid) {
+		contributionCode.setText(uuid);
 		return this;
 	}
 
 	public void onClick(final Widget sender) {
-		if (sender == confirm) {
+		if (sender == contribute) {
 			new ServerOp<User>() {
 
 				@Override
 				public void begin() {
-					MpDb.user_svc.confirmUser(confirmationCode.getText(), this);
+					MpDb.user_svc.confirmContributor(contributionCode.getText(), this);
 				}
 
 				public void onSuccess(User result) {
-					MpDb.setCurrentUser(result);
-					instructions.setText("Your account is now enabled");
+
+					if (result != null)
+					{
+					instructions.setText(result.getName() + "is now a contributor");
 					History.newItem(TokenSpace.editProfile.makeToken(null));
-					
+					}
 				}
 			}.begin();
 		}
-		
 	}
 
 }

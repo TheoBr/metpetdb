@@ -3,9 +3,13 @@ package edu.rpi.metpetdb.client.ui.input;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Widget;
 
+import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.TextAreaAttribute;
 
 /**
  * Comprised of all of the DetailsPanelRow for this GenericAttribute
@@ -19,7 +23,8 @@ public class DetailsPanelEntry {
 	private CurrentError currentError;
 	private Widget[] currentEditWidgets;
 	private Widget[] currentDisplayWidgets;
-
+	private CurrentMessage currentMessage = new CurrentMessage();
+	
 	/**
 	 * Creates a new DetailsPanelEntry, all of them need to have atleast 1 row
 	 * or they are worthless
@@ -34,6 +39,31 @@ public class DetailsPanelEntry {
 		this.entryRows = new ArrayList<DetailsPanelRow>();
 		this.entryRows.add(row);
 		this.attr = ga;
+		
+		if (ga instanceof TextAreaAttribute)// && MpDb.currentUser() != null && !MpDb.currentUser().getContributorEnabled())
+		{
+			
+			currentMessage.setText(((TextAreaAttribute)ga).getDescription());
+			
+
+			
+			Element label = DOM.createTD();
+
+			CSS.setStyleName(label, "description-message");
+			label.setClassName("description-message");
+			
+			
+			Element description = DOM.createDiv();
+			
+			description.setClassName("description");
+			
+			description.setInnerText((((TextAreaAttribute)ga).getDescription()));
+			
+			label.appendChild(description);
+			
+			row.getRow().appendChild(label);
+		}
+
 	}
 
 	public DetailsPanelEntry() {
@@ -111,5 +141,13 @@ public class DetailsPanelEntry {
 
 	public void setCurrentError(CurrentError currentError) {
 		this.currentError = currentError;
+	}
+
+	public CurrentMessage getCurrentMessage() {
+		return currentMessage;
+	}
+
+	public void setCurrentMessage(CurrentMessage currentMessage) {
+		this.currentMessage = currentMessage;
 	}
 }

@@ -490,10 +490,17 @@ public class MetPetDBApplication implements EntryPoint {
 			}
 		});
 
-		hdrnav.addItem("My Samples", TokenSpace.samplesForUser);
-		hdrnav.addItem(LocaleHandler.lc_text.projectMenu(), TokenSpace.allProjects);
+		if (MpDb.currentUser() != null && MpDb.currentUser().getContributorEnabled())
+			hdrnav.addItem("My Samples", TokenSpace.samplesForUser);
+
+		if (MpDb.currentUser() != null && MpDb.currentUser().getContributorEnabled())		
+			hdrnav.addItem(LocaleHandler.lc_text.projectMenu(), TokenSpace.allProjects);
+
 		hdrnav.addItem("Search", TokenSpace.search);
-		hdrnav.addItem("Upload Data", TokenSpace.bulkUpload);
+
+		if (MpDb.currentUser() != null && MpDb.currentUser().getContributorEnabled())
+			hdrnav.addItem("Upload Data", TokenSpace.bulkUpload);
+		
 		hdrnav.addItem("Wiki", new Command() {
 			public void execute() {
 				Window.open(MpDb.WIKI_URL, "mpdb_wiki", "");

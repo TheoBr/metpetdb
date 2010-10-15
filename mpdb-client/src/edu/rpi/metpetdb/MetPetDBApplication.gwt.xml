@@ -2,6 +2,7 @@
 <module rename-to="MetPetDBApplication">
 	
 	<inherits name="com.google.gwt.user.User"/>
+	<inherits name="com.claudiushauptmann.gwt.recaptcha.gwt-recaptcha"/>
 	<!--  <inherits name="rocket.User" />-->
 	<inherits name="com.google.gwt.i18n.I18N"/>
 	<inherits name="edu.rpi.metpetdb.java_emu.Emulation"/>
@@ -13,13 +14,13 @@
 	<inherits name="com.google.gwt.xml.XML"/> 
 	<inherits name="com.google.gwt.http.HTTP"/>
 	<inherits name="com.objetdirect.tatami.Tatami"/>
-
 	
 	<entry-point class='edu.rpi.metpetdb.client.ui.MetPetDBApplication'/>
 	
 	
 
 	<source path="client" />
+	
 <extend-property name="locale" values="en_US"></extend-property>
     
     <set-property name="user.agent" value="gecko1_8"/>
@@ -53,6 +54,8 @@
 	<servlet path="/searchIPhonePost.svc" class="edu.rpi.metpetdb.server.search.SearchIPhonePost"/>
 	<servlet path="/searchIPhone1_1.scv" class= "edu.rpi.metpetdb.server.search.SearchIPhone1_1"/>
 	
+	
+	<servlet class="edu.rpi.metpetdb.server.recaptcha.RecaptchaRemoteServiceImpl" path="/recaptcha"/>
 <!-- 	<replace-with class="com.google.gwt.dom.client.DOMImplMozillaFix">
     	<when-type-is class="com.google.gwt.dom.client.DOMImpl"/>
     	<when-property-is name="user.agent" value="gecko1_8"/>

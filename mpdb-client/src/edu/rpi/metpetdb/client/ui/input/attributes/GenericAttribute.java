@@ -16,6 +16,7 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.PropertyConstraint;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.input.CurrentError;
+import edu.rpi.metpetdb.client.ui.input.CurrentMessage;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanel;
 import edu.rpi.metpetdb.client.ui.input.DetailsPanelTableLoc;
 
@@ -38,6 +39,12 @@ public abstract class GenericAttribute<DataType extends MObject> {
 	 *            {@link edu.rpi.metpetdb.client.model.validation.PropertyConstraint}
 	 *            that are a part of this attribute
 	 */
+	
+	protected GenericAttribute(final String labelString)
+	{
+		labels = new String[] {labelString, null};
+	}
+	
 	protected GenericAttribute(final PropertyConstraint[] pcs) {
 		if (pcs.length == 1) {
 			constraints = pcs;
@@ -91,6 +98,16 @@ public abstract class GenericAttribute<DataType extends MObject> {
 		this(new PropertyConstraint[] {
 			pc
 		});
+	}
+	
+	protected  GenericAttribute(final PropertyConstraint pc, Widget widget)
+	{
+		this(new PropertyConstraint[] {
+				pc
+				
+		});
+		
+		this.getMyPanel().add(widget);
 	}
 
 	/**
@@ -157,7 +174,10 @@ public abstract class GenericAttribute<DataType extends MObject> {
 	 * @return the property constraint
 	 */
 	public PropertyConstraint getConstraint() {
-		return constraints[0];
+		if (constraints != null && constraints.length > 0)
+			return constraints[0];
+		else
+			return null;
 	}
 	/**
 	 * Gets the whole array of property constraints for this attribute
@@ -189,7 +209,10 @@ public abstract class GenericAttribute<DataType extends MObject> {
 		return obj;
 	}
 	protected Object mGet(final MObject obj) {
-		return resolve(obj).mGet(constraints[0].property);
+		if (constraints != null && constraints.length > 0)
+			return resolve(obj).mGet(constraints[0].property);
+		else
+			return labels[0];
 	}
 	protected HashMap<PropertyConstraint, Object> mGetAll(final DataType obj) {
 		final HashMap<PropertyConstraint, Object> map = new HashMap<PropertyConstraint, Object>();
@@ -234,6 +257,10 @@ public abstract class GenericAttribute<DataType extends MObject> {
 	}
 
 	protected void applyStyle(final Widget editWidget, final boolean valid) {
+		
+		if (constraints == null || constraints.length == 0)
+			return;
+		
 		if (constraints[0].required)
 			editWidget.addStyleName(CSS.REQUIRED);
 		else
@@ -246,6 +273,10 @@ public abstract class GenericAttribute<DataType extends MObject> {
 
 	public void commitEdit(final DataType obj, final Widget[] editWidget,
 			final CurrentError err, final Command r) {
+		
+		if (constraints == null || constraints.length == 0)
+			return;
+		
 		for (int i = 0; i < constraints.length; ++i) {
 			try {
 				constraints[i]
@@ -267,7 +298,7 @@ public abstract class GenericAttribute<DataType extends MObject> {
 		applyStyle(w, false);
 		err.setText(whybad.format());
 	}
-
+	
 	protected Object get(final Widget[] editWidgets,
 			final PropertyConstraint constraint, final int i)
 			throws ValidationException {

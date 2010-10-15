@@ -26,6 +26,8 @@ import edu.rpi.metpetdb.client.service.MpDbGenericService;
 import edu.rpi.metpetdb.client.service.MpDbGenericServiceAsync;
 import edu.rpi.metpetdb.client.service.ProjectService;
 import edu.rpi.metpetdb.client.service.ProjectServiceAsync;
+import edu.rpi.metpetdb.client.service.RecaptchaRemoteService;
+import edu.rpi.metpetdb.client.service.RecaptchaRemoteServiceAsync;
 import edu.rpi.metpetdb.client.service.ReferenceService;
 import edu.rpi.metpetdb.client.service.ReferenceServiceAsync;
 import edu.rpi.metpetdb.client.service.RegionService;
@@ -102,6 +104,8 @@ public class MpDb {
 	public static final SampleCommentServiceAsync sampleComment_svc;
 	
 	public static final GeoReferenceServiceAsync geoReference_svc;
+	
+	public static final RecaptchaRemoteServiceAsync recaptcha_svc;
 
 	public static DatabaseObjectConstraints doc;
 
@@ -190,6 +194,8 @@ public class MpDb {
 		
 		geoReference_svc = (GeoReferenceServiceAsync) bindService(GWT
 				.create(GeoReferenceService.class), "geoReference");
+		
+		recaptcha_svc = (RecaptchaRemoteServiceAsync) bindService(GWT.create(RecaptchaRemoteService.class), "recaptcha");
 
 		// factory = (HtmlFactory) GWT.create(HtmlFactory.class);
 	}

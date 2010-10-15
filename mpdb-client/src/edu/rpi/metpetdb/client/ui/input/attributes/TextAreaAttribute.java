@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.input.attributes;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -14,6 +15,13 @@ import edu.rpi.metpetdb.client.ui.Util;
 public class TextAreaAttribute extends GenericAttribute {
 	protected int visibleLength;
 
+	private String description;
+	public TextAreaAttribute(final  StringConstraint sc, String description)
+	{
+		super(sc);
+		this.description = description;
+	}
+	
 	public TextAreaAttribute(final StringConstraint sc) {
 		super(sc);
 		visibleLength = sc.maxLength < 30 ? sc.maxLength : 30;
@@ -37,6 +45,11 @@ public class TextAreaAttribute extends GenericAttribute {
 		b.setCharacterWidth(25);
 		b.setVisibleLines(3);
 		applyStyle(b, true);
+
+		Label descriptionLabel = new Label(description);
+		
+		DOM.setElementAttribute(descriptionLabel.getElement(), "label" , "label");
+
 		return new Widget[] {
 			b
 		};
@@ -56,5 +69,13 @@ public class TextAreaAttribute extends GenericAttribute {
 	}
 	protected void set(final MObject obj, final Object v) {
 		mSet(obj, v != null && ((String) v).length() > 0 ? v : null);
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }
