@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  
+  
+
+
+  
+
+  <head>
+    <title>
+      Dates - MetPetDB
+    </title>
+  </head>
+  <body>
+   <div class="wikipage">
+    <div id="searchable"><p>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://metpetdb.rpi.edu/">To MetPetDB</a>
+</p>
+<hr />
+<h1 id="FormattingDatestobereadbyMetPetDBbulkuploader">Formatting Dates to be read by MetPetDB bulk uploader</h1>
+<p>
+A date must be in a specific format in order to be recognized by MetPetDB. MM-DD-YYYY, YYYY-MM-DD or any shortened version (i.e. YYYY, or, YYYY-MM) is acceptable.  Microsoft excel has a number of built in date formats, yet dates are stored as serial dates and are not reable by the MetPetDB uploader.  To solve this problem, MetPetDB recommends:
+</p>
+<ul><li>Note that dates, in order for this to work, must be in date format in excel--year dates should have a "holder" month+day included.
+<ul><li><i>e.g. "1979" should be changed to "01/01/1979"</i>
+</li></ul></li><li>First, create a blank column adjacent to your date column in the spreadsheet.
+</li><li>Then, convert your date in whatever format to MetPetDB format by entering in the new column ("C2" means a cell reference to your date column):
+<ul><li><strong>=TEXT(C2,"yyyy-mm-dd")</strong> <i>for dates with specific days</i>
+</li><li><strong>=TEXT(C2,"yyyy-mm")</strong> <i>for dates with just month and year information</i>
+</li><li><strong>=TEXT(C2,"yyyy")</strong> <i>for dates with just the year</i>
+</li></ul></li><li>Apply these formulas to all of your dates.
+</li><li>Create a column of dates in text format by copying the entire column and "paste special" with just values to the date column.
+</li><li>Remove any unreadable columns containing formulas or other information that MetPetDB does not include.
+</li></ul><p>
+<br />
+<br />
+
+  </body>
+</html>

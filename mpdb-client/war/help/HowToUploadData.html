@@ -12,7 +12,7 @@
 
    <div class="wikipage">
     <div id="searchable"><p>
-<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://metpetdb.rpi.edu/">To MetPetDB</a>
 </p>
 <hr />
 <h1 id="UploadingData">Uploading Data</h1>
@@ -104,18 +104,17 @@ Now you can upload your chemical analyses.
 Watch the downloadable <a class="wiki" href="VideoTutorials.html">Video Tutorial</a>.
 </p>
 <p>
-Image upload is performed by compressing a folder containing the images (the <strong>image folder</strong>) <i>plus</i> a metadata spreadsheet. <a class="wiki" href="Image.html">Images</a> are referenced to a sample number which is required and possibly to a <a class="wiki" href="Subsample.html">subsample</a>, which is not required. <i>Note: The sample must be uploaded/added first, before images can be uploaded.</i>
+Image upload is performed by uploading a metadata spreadsheet <i>plus</i> a compressed group of images (the <strong>image archive.zip</strong>). <a class="wiki" href="Image.html">Images</a> are referenced to a sample number which is required and possibly to a <a class="wiki" href="Subsample.html">subsample</a>, which is not required. <i>Note: The sample must be uploaded/added first, before images can be uploaded.</i>
 </p>
 <h3 id="PrepareImages">Prepare Images</h3>
 <ul><li>The same image file may be uploaded to more than one sample (e.g. a map with multiple sample locations).
 </li><li>Filenames should be cataloged in the accompanying image upload spreadsheet. 
 </li><li>Acceptable image formats are: .jpg , .gif , .tif , and .png.
 </li><li>The current size limit is 50 megabytes per image.
-</li><li>Images should be placed in an <strong>image folder</strong>.
-<ul><li>Images may also be included in subdirectories/subfolders within the image folder.  This requires that the image upload spreadsheet contains the path information for the images (e.g. [subfolder name]/image.png).  See below for how to prepare the image upload spreadsheet.
+<ul><li>Images may be included in subdirectories/subfolders within the image archive.zip.  This requires that the image upload spreadsheet contains the path information for the images (e.g. [subfolder name]/image.png).  See below for how to prepare the image upload spreadsheet.
 </li></ul></li></ul><h3 id="PrepareImageUploadSpreadsheet">Prepare Image Upload Spreadsheet</h3>
 <p>
-The image upload spreadsheet must have the image data are on the first worksheet. An upload spreadsheet contains data arranged in columns, each with an <a class="wiki" href="UploadHeaders.html#Images">appropriate header</a>. The first row is reserved for the column headers. Each additional row should contain data for each image to be uploaded. Only some fields are required in order to upload your images, as indicated below, but we encourage you to be thorough to maintain a database that is as versatile as possible (<a class="attachment" href="ExampleUploadSheet.xls" title="Attachment HowToUploadData: ExampleUploadSheet.xls">download an example</a>).
+The image upload spreadsheet must have the image data on the first worksheet. An upload spreadsheet contains data arranged in columns, each with an <a class="wiki" href="UploadHeaders.html#Images">appropriate header</a>. The first row is reserved for the column headers. Each additional row should contain data for each image to be uploaded. Only some fields are required in order to upload your images, as indicated below, but we encourage you to be thorough to maintain a database that is as versatile as possible (<a class="attachment" href="ExampleUploadSheet.xls" title="Attachment HowToUploadData: ExampleUploadSheet.xls">download an example</a>).
 </p>
 <ul><li>Be sure your data follows the requirements for <a class="wiki" href="Image.html">images</a>.
 </li><li><strong>Lists of set data types:</strong>
@@ -123,27 +122,25 @@ The image upload spreadsheet must have the image data are on the first worksheet
 </li><li><a class="wiki" href="Image.html#Types">Image Types</a>
 </li></ul></li><li>Detailed descriptions of <a class="wiki" href="ImageObject.html">image attributes</a>.
 </li><li><a class="wiki" href="UploadHeaders.html#Images">List of accepted headers</a>.
+</li><li>Be sure the image worksheet is on the top of the workbook (drag tab to the far left).
+</li><li>Save the file.
 </li></ul><h3 id="PrepareArchive.zipFile">Prepare Archive (.zip) File</h3>
 <p>
-<a class="attachment" href="/trac/metpetdb/attachment/wiki/HowToUploadData/ArchiveExample.zip" title="Attachment HowToUploadData: ArchiveExample.zip">Download an example archive.zip</a>.
+<a class="attachment" href="ArchiveExample.zip" title="Attachment HowToUploadData: ArchiveExample.zip">Download an example archive.zip</a>.
 </p>
-<ol><li>Save the image upload file <i>with your images worksheet on top</i> (the farthest tab to the left).
+<ol><li>Select all of the images and subfolders to compress.
 </li><li>Compress/create the Archive (.zip).
 </li></ol><ul><li>If you have archiving software, this is commonly done (in windows and in Mac OSX) by selecting/highlighting the files to be archived, right-clicking on one of them, and choosing "create archive of...".
-</li><li>If the image upload spreadsheet is the only excel spreadsheet in the archive (.zip) file, it can have any name.
-</li><li>If another .xls spreadsheet is included in the .zip archive (for any reason), the image upload spreadsheet <i>must</i> have the name <strong>image_upload.xls</strong>.
-</li><li>If the image upload spreadsheet is within the image folder, the path of the images need not contain the image folder; <i>however</i>, if it was compressed external to the image folder, the images must have [image folder name]/ as the beginning of their path (the image file location is referenced to the image spreadsheet location).
-</li></ul><p>
-<i>Note that the Image Upload Spreadsheet  must be in the archive (.zip).</i>
-</p>
-<h3 id="UploadArchive.zip">Upload Archive (.zip)</h3>
+</li><li>If you compress a folder as opposed to the image files themselves, the  images must contain <strong>[image folder name]/</strong> as the beginning of their path within the image upload spreadsheet (the image file location is referenced to the top of the archive and not to directories within).
+</li></ul><h3 id="UploadImageSpreadsheetandArchive.zip">Upload Image Spreadsheet and Archive.zip)</h3>
 <ol><li>Log in to MetPetDB.
 </li><li>Click <strong>Upload Data</strong> (on the page menu bar).
 </li><li>Select the <strong>Images</strong> radio button.
-</li><li>Choose your image archive (.zip) by clicking <strong>browse</strong>.
-</li><li>Click <strong>Upload</strong>. This will tell you if there are errors with your data, and how many analyses will be added to MetPetDB. 
+</li><li>Choose your image upload spreadsheet (.xls) by clicking <strong>browse</strong>.
+</li><li>Click <strong>Upload</strong>. This will tell you if there are errors with your metadata, and how many images will be added to MetPetDB. 
 </li><li>Check to see which headers were matched to MetPetDB. Check if you have any errors by clicking the <strong>errors</strong> tab. If you have an error or made a mistake with a header, edit and save your spreadsheet, save it, and re-upload.
-</li><li>If you have no errors and all of your headers are matched by MetPetDB, you are ready to submit your data to MetPetDB. Click <strong>Submit Data</strong>.
+</li><li>If you have no errors and all of your headers are matched by MetPetDB, you are ready to upload the image archive.zip to MetPetDB. Click <strong>browse</strong>.
+</li><li>Find the image archive.zip and click <strong>Upload</strong>. If all of the expected images are successully added, you will receive a message to this effect. Otherwise you will receive a message with which images were excluded/missing and were not uploaded.
 </li><li>Navigate to <strong>My Samples</strong> to see that your samples have uploaded. Or, alternatively, find your new samples with a search. In this case it will help to input your screen name as the owner to exclude published samples and the samples of others.
 </li></ol><p>
 <br />
@@ -154,7 +151,7 @@ Below are some example files that are ready to be uploaded to MetPetDB. If you a
 </p>
 <hr />
 <p>
-<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://samana.cs.rpi.edu/metpetweb/">To MetPetDB</a>
+<a class="wiki" href="helphome.html">Home</a> | <a class="wiki" href="HowToUploadData.html">Uploading</a> | <a class="wiki" href="HowToViewData.html">Viewing Data</a> | <a class="wiki" href="Search.html">Search</a> | <a class="wiki" href="HowToMakePublic.html">Making Public</a> | <a class="wiki" href="Lists.html">Lists</a> | <a class="wiki" href="SampleObject.html">Sample Attributes</a> | <a class="wiki" href="ChemicalAnalysisObject.html">Chemical Analysis Attributes</a> | <a class="wiki" href="ImageObject.html">Image Attributes</a> | <a href="http://metpetdb.rpi.edu/">To MetPetDB</a>
 </p>
 </div>
    </div>
