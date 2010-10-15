@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.net.URLDecoder;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,7 +10,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.mail.MessagingException;
+
+import net.tanesha.recaptcha.ReCaptcha;
+import net.tanesha.recaptcha.ReCaptchaFactory;
+import net.tanesha.recaptcha.ReCaptchaResponse;
+
 import org.hibernate.exception.ConstraintViolationException;
+
+import com.google.gwt.core.client.GWT;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
@@ -17,6 +26,8 @@ import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
 import edu.rpi.metpetdb.client.error.validation.DuplicateValueException;
+import edu.rpi.metpetdb.client.error.validation.InvalidCaptchaException;
+import edu.rpi.metpetdb.client.error.validation.InvalidProfileRequestException;
 import edu.rpi.metpetdb.client.error.validation.LoginFailureException;
 import edu.rpi.metpetdb.client.model.ResumeSessionResponse;
 import edu.rpi.metpetdb.client.model.Role;
@@ -34,7 +45,6 @@ import edu.rpi.metpetdb.server.dao.impl.RoleChangeDAO;
 import edu.rpi.metpetdb.server.dao.impl.UserDAO;
 import edu.rpi.metpetdb.server.security.Action;
 import edu.rpi.metpetdb.server.security.PasswordEncrypter;
-import edu.rpi.metpetdb.server.security.permissions.principals.AdminPrincipal;
 import edu.rpi.metpetdb.server.security.permissions.principals.EnabledPrincipal;
 import edu.rpi.metpetdb.server.security.permissions.principals.OwnerPrincipal;
 
@@ -103,8 +113,8 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 				final Collection<Principal> principals = new ArrayList<Principal>();
 				principals.add(new OwnerPrincipal(u));
 				principals.add(new EnabledPrincipal(u));
-				if (ssr.getEmailAddress().equals("watera2@cs.rpi.edu"))
-					principals.add(new AdminPrincipal());
+			//	if (ssr.getEmailAddress().equals("watera2@cs.rpi.edu"))
+			//		principals.add(new AdminPrincipal());
 				setCurrentUser(u, principals);
 			}
 			return u;
@@ -129,8 +139,6 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			final Collection<Principal> principals = new ArrayList<Principal>();
 			principals.add(new OwnerPrincipal(u));
 			principals.add(new EnabledPrincipal(u));
-			if (u.getEmailAddress().equals("watera2@cs.rpi.edu"))
-				principals.add(new AdminPrincipal());
 			setCurrentUser(u, principals);
 		} catch (MpDbException daoe) {
 			r.user = null;
@@ -146,13 +154,30 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return (u);
 	}
 
-	public User registerNewUser(final UserWithPassword newbie)
+	private Boolean validateCaptcha(String remoteAddress, String challenge, String responseStr)
+	{
+		ReCaptcha r = ReCaptchaFactory.newReCaptcha("6LeCaL0SAAAAAD-dKyj9t3PTOqdW8j9svbfHn9P2",
+				"6LeCaL0SAAAAAH8GxuMBrXBZLFZ0EQdBRbl_Wr2Q", true);
+		ReCaptchaResponse response = r.checkAnswer(remoteAddress, challenge, responseStr);
+		
+		return response.isValid();
+	}
+
+	
+	public User registerNewUser(final UserWithPassword newbie, final String challenge, final String response)
 			throws ValidationException, MpDbException,
-			UnableToSendEmailException {
+			UnableToSendEmailException, InvalidCaptchaException {
+		User u = null;
+	
+		if (!validateCaptcha(getThreadLocalRequest().getRemoteAddr().toString(), challenge, response))
+			throw new InvalidCaptchaException("Failed to pass captcha test");
+			
 		doc.UserWithPassword_user.validateEntity(newbie);
 		doc.UserWithPassword_newPassword.validateEntity(newbie);
 		doc.UserWithPassword_vrfPassword.validateEntity(newbie);
 
+		
+		
 		final User newUser = newbie.getUser();
 		if (!newUser.mIsNew())
 			throw new GenericDAOException("Cannot register non-new user.");
@@ -160,8 +185,11 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		final String pass = newbie.getNewPassword();
 		newUser.setEncryptedPassword(PasswordEncrypter.crypt(pass));
 		doc.validate(newUser);
-		User u = newUser;
+		u = newUser;
 		u.setEnabled(false);
+		u.setContributorEnabled(false);
+		u.setRequestContributor(false);
+		
 		u.setRole((Role) currentSession().createQuery(
 				"from Role r where r.rank=1").uniqueResult());
 		u.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-", ""));
@@ -185,7 +213,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			else
 				throw new RuntimeException("i dont know what happened");
 		}
-
+	
 		return u;
 	}
 
@@ -245,7 +273,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		EmailSupport.sendMessage(this, u.getEmailAddress(),
 				"sendConfirmationCode", new Object[] {
 						u.toString(),
-						getModuleBaseURL() + "#ConfirmationCode/"
+						GWT.getHostPageBaseURL() + "#ConfirmationCode/"
 								+ u.getConfirmationCode()
 				});
 		setCurrentUser(u, null);
@@ -357,4 +385,115 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 	public User userById(int user_id) throws MpDbException {
 		return (new UserDAO(currentSession()).getNameById(user_id));
 	}
+	
+	public User sendContributorCode(User u, String explanationText) throws ValidationException,
+	MpDbException, UnableToSendEmailException, InvalidProfileRequestException
+	{		
+		this.currentSession().beginTransaction();
+		
+		User persistedUser = null;
+			
+			final UserDAO uDAO = new UserDAO(this.currentSession());
+
+
+			persistedUser = uDAO.fill(u);
+			
+			if (!persistedUser.getEnabled())
+				{
+				this.currentSession().getTransaction().rollback();
+				throw new InvalidProfileRequestException("You cannot become a Contributor, if you are not a confirmed user");
+				}
+
+			if (persistedUser.getContributorEnabled() || persistedUser.getRequestContributor())
+				{
+				this.currentSession().getTransaction().rollback();			
+				throw new InvalidProfileRequestException("You are already a Contributor, or have asked to become one");
+				}
+			
+
+	persistedUser.setContributorCode(UUID.randomUUID().toString().replaceAll("-", ""));
+	persistedUser.setRequestContributor(true);
+	persistedUser.setResearchInterests(u.getResearchInterests());
+	persistedUser = uDAO.save(persistedUser);
+
+	commit();
+
+	String decodedText = "";
+	
+	if (explanationText != null)
+		decodedText = URLDecoder.decode(explanationText);
+	
+	try {
+		EmailSupport.sendMessage(this, EmailSupport.getApproverAddress(),
+				"approval", new Object[] {
+						persistedUser.toString(), decodedText ,
+						getModuleBaseURL() + "#ContributorCode/"
+								+ persistedUser.getContributorCode()
+				});
+	} catch (MessagingException e) {
+		// TODO Auto-generated catch block
+		throw new UnableToSendEmailException();
+	}
+
+	setCurrentUser(persistedUser, null);
+		
+		return persistedUser;
+		
+	}
+
+public User confirmContributor(String contributorCode) throws MpDbException,
+	LoginRequiredException {
+	try
+	{
+final UserDAO ud = new UserDAO(this.currentSession());
+User u = ud.getUserByContributorCode(contributorCode);
+
+u = (ud).fill(u);
+
+
+if (u.getContributorCode().equals(contributorCode) && !u.getContributorEnabled()) {
+	u.setContributorEnabled(true);
+	u = ud.save(u);
+	commit();
+	
+	EmailSupport.sendMessage(this, u.getAddress(),
+			"approvee", new Object[] {
+					u.toString()							
+			});
+
+	
+	EmailSupport.sendMessage(this, EmailSupport.getApproverAddress(),
+			"approver", new Object[] {
+					u.toString()
+			});
+
+	
+	// update session with new permission
+//	final Collection<Principal> principals;
+//	if (currentReq().principals != null)
+//		principals = currentReq().principals;
+//	else
+//		principals = new HashSet<Principal>();
+	// remove any old enabled principals
+//	principals.remove(new EnabledPrincipal(false));
+//	principals.add(new EnabledPrincipal(u));
+//	setCurrentUser(u, principals);
+	return u;
+} else {
+	throw new GenericDAOException("Confirmation code does not equal");
+}
+
+
+	}
+	catch (Exception e)
+	{
+		e.printStackTrace();
+	}
+	catch (Throwable t)
+	{
+		t.printStackTrace();
+	}
+	
+	return null;
+}
 }

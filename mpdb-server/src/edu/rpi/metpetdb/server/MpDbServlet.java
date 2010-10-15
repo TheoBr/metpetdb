@@ -87,6 +87,7 @@ public abstract class MpDbServlet extends PersistentRemoteService {
 
 	protected static final Properties fileProps = new Properties();
 
+	//TODO: Watch out.  Don't check this in!!!
 	private static int autoLoginId = -1;
 
 	private static final String fileUploadPath;
@@ -242,8 +243,9 @@ public abstract class MpDbServlet extends PersistentRemoteService {
 	 *         {@link com.google.gwt.core.client.GWT#getModuleBaseURL()}.
 	 */
 	protected String getModuleBaseURL() {
-		final StringBuffer u = getThreadLocalRequest().getRequestURL();
-		u.setLength(u.lastIndexOf("/") + 1);
+		StringBuffer u = getThreadLocalRequest().getRequestURL();		
+		u = new StringBuffer(u.substring(0, u.lastIndexOf("/") - 1));
+		u = new StringBuffer(u.substring(0, u.lastIndexOf("/")  + 1));
 		return u.toString();
 	}
 

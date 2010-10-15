@@ -19,9 +19,16 @@
     <property name="country" />
     <property name="postalCode" column="postal_code" />
     <property name="institution" />
-    <property name="referenceEmail" column="reference_email" />
+    <property name="professionalUrl" column="professional_url" />
 	<property name="enabled" type="yes_no" />
-	<property name="confirmationCode" column="confirmation_code" />    
+	<property name="confirmationCode" column="confirmation_code" />   
+	<property name="contributorEnabled" column="contributor_enabled" type="yes_no" />
+	<property name="contributorCode" column="contributor_code" />
+	
+	<property name="researchInterests" column="research_interests"/>
+	<property name="requestContributor" column="request_contributor" type="yes_no"/>
+	
+	 
 	<property name="rank" formula="(select r.rank from roles r where r.role_id=role_id)" />
 
     <set name="projects" table="project_members">
@@ -77,6 +84,12 @@
     from User u
     where u.emailAddress = :emailAddress
   </query>
+  
+  <query name="User.byContributorCode">
+  	from User u
+  	where u.contributorCode = :contributorCode
+  </query>
+  
   <query name="User.all/name">
   	select name
   	from User u

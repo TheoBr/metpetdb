@@ -61,6 +61,13 @@ public class UserDAO extends MpDbDAO<User> {
 		q.setParameter("rank", currentRank);
 		return getResults(q);
 	}
+
+	public User getUserByContributorCode(String contributorCode) throws MpDbException {
+		final Query q = namedQuery("User.byContributorCode");
+		q.setParameter("contributorCode", contributorCode);
+		return (User) getResult(q);
+	}
+	
 	
 	public Results<RoleChange> getSponsorRoleChanges(int sponsorId, PaginationParameters p) throws MpDbException {
 		final Query q = namedQuery("RoleChange.bySponsorId");
@@ -93,5 +100,7 @@ public class UserDAO extends MpDbDAO<User> {
 		u = fill(u);
 		return u;
 	}
+	
+	
 
 }
