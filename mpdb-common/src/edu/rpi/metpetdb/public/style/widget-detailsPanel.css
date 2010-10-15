@@ -27,6 +27,21 @@
 	display: none;
 }
 
+
+.detailsPanel td.description-message {
+	margin-top: 7px;
+	font-size: 0.9em;
+}
+.detailsPanel td.description-message span {
+	color: #A20110;
+	background-color: #eee;
+	padding: 4px 6px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+}
+
+
 .detailsPanel .invalid-message {
 	margin-top: 7px;
 	font-size: 0.9em;

@@ -131,6 +131,8 @@ public interface LocaleText extends Messages {
 	String errorDesc_NotEqual(String fieldA, String fieldB);
 	String errorDesc_NotAfter(String fieldA, String fieldB);
 	String errorDesc_Duplicate(String field, String taken);
+	String errorDesc_InvalidCaptcha();
+	String errorDesc_InvalidProfileRequest(String value);
 	String errorDesc_UnableToSendEmail();
 	String errorDesc_InvalidImageType(String field);
 	String errorDesc_InvalidSubsampleType(String value);
@@ -223,4 +225,11 @@ public interface LocaleText extends Messages {
 	String bulkUpload_Images();
 	String bulkUpload_References();
 	String bulkUpload_LooksGoodSoCommit();
+	
+	String editProfile_description_1();
+	String editProfile_description_2();
+	String editProfile_description_3();
+
+	
+	String registration_researchDescription();
 }

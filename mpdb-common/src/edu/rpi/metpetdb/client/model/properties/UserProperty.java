@@ -75,13 +75,36 @@ public enum UserProperty implements Property<User> {
 			((User) user).setInstitution((String) value);
 		}
 	},
-	referenceEmail {
+
+	
+	professionalUrl {
 		public String get(final User user) {
-			return ((User) user).getReferenceEmail();
+			return ((User) user).getProfessionalUrl();
 		}
 
 		public void set(final User user, final Object value) {
-			((User) user).setReferenceEmail((String) value);
+			((User) user).setProfessionalUrl((String) value);
+		}
+	},
+	
+
+	researchInterests {
+		public String get(final User user) {
+			return ((User) user).getResearchInterests();
+		}
+
+		public void set(final User user, final Object value) {
+			((User) user).setResearchInterests((String) value);
+		}
+	},
+	
+	requestContributor {
+		public Boolean get(final User user) {
+			return ((User) user).getRequestContributor();
+		}
+
+		public void set(final User user, final Object value) {
+			((User) user).setRequestContributor((Boolean) value);
 		}
 	}
 }

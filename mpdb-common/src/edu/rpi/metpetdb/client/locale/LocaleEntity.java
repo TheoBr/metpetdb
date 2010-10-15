@@ -63,7 +63,9 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String User_country();
 	String User_postalCode();
 	String User_institution();
-	String User_referenceEmail();
+	String User_professionalUrl();
+	String User_researchInterests();
+	String User_requestContributor();
 	/* UserWithPassword */
 	String UserWithPassword();
 	String UserWithPassword_oldPassword();

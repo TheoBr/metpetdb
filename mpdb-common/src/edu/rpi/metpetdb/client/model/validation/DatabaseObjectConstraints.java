@@ -307,7 +307,9 @@ public class DatabaseObjectConstraints implements IsSerializable {
 	public StringConstraint User_country;
 	public StringConstraint User_postalCode;
 	public StringConstraint User_institution;
-	public StringConstraint User_referenceEmail;
+	public StringConstraint User_professionalUrl;
+	public StringConstraint User_researchInterests;
+	public BooleanConstraint User_requestContributor;
 
 	public void validate(final User u) throws ValidationException {
 		validate(u, User__all);

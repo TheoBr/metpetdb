@@ -38,7 +38,7 @@ public class StringConstraint extends PropertyConstraint implements
 		final String s = (String) value;
 		if (s.length() < minLength)
 			throw new ValueTooShortException(this);
-		if (s.length() > maxLength)
+		if (s.length() > maxLength && maxLength > 0)
 			throw new ValueTooLongException(this);
 	}
 

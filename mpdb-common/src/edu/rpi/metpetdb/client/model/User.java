@@ -28,10 +28,15 @@ public class User extends MObject {
 	private String country;
 	private String postalCode;
 	private String institution;
-	private String referenceEmail;
+	private String professionalUrl;
 	private Boolean enabled;
 	private transient String confirmationCode;
-
+	private Boolean contributorEnabled;
+	private transient String contributorCode;
+	
+	private String researchInterests;
+	private Boolean requestContributor;
+	
 	private Set<Project> projects;
 	@ContainedIn
 	private Set<Sample> samples;
@@ -40,7 +45,7 @@ public class User extends MObject {
 	private Integer rank;
 
 	private transient byte[] encryptedPassword;
-
+	
 	public int getId() {
 		return id;
 	}
@@ -121,12 +126,12 @@ public class User extends MObject {
 		this.institution = institution;
 	}
 
-	public String getReferenceEmail() {
-		return referenceEmail;
+	public String getProfessionalUrl() {
+		return professionalUrl;
 	}
 
-	public void setReferenceEmail(final String referenceEmail) {
-		this.referenceEmail = referenceEmail;
+	public void setProfessionalUrl(final String professionalUrl) {
+		this.professionalUrl = professionalUrl;
 	}
 
 	public byte[] getEncryptedPassword() {
@@ -180,6 +185,9 @@ public class User extends MObject {
 	}
 
 	public void setConfirmationCode(String confirmationCode) {
+		if (confirmationCode == null || confirmationCode.equals(""))
+			return;
+
 		this.confirmationCode = confirmationCode;
 	}
 
@@ -214,4 +222,50 @@ public class User extends MObject {
 	public boolean mIsNew() {
 		return id == 0;
 	}
+
+	public Boolean getContributorEnabled() {
+		return contributorEnabled;
+	}
+
+	public void setContributorEnabled(Boolean contributorEnabled) {
+		this.contributorEnabled = contributorEnabled;
+	}
+
+	public String getContributorCode() {
+		return contributorCode;
+	}
+
+	public void setContributorCode(String contributorCode) {
+		if (contributorCode == null || contributorCode.equals(""))
+			return;
+		
+		this.contributorCode = contributorCode;
+	}
+	
+	public String getResearchInterests() {
+		return researchInterests;
+	}
+	
+	public void setResearchInterests(String researchInterests)
+	{
+		this.researchInterests = researchInterests;
+	}
+
+	public Boolean getRequestContributor() {
+		return requestContributor;
+	}
+
+	public void setRequestContributor(Boolean requestContributor) {		
+		this.requestContributor = requestContributor;
+	}
+	
+	public boolean getUserAlreadyConfirmedAndNotRequested()
+	{
+		if (this.enabled)
+			return true;
+		else
+			return false;
+	}
+	
+
 }
