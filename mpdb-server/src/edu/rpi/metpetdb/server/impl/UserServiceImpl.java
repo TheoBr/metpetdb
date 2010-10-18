@@ -401,7 +401,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			if (!persistedUser.getEnabled())
 				{
 				this.currentSession().getTransaction().rollback();
-				throw new InvalidProfileRequestException("You cannot become a Contributor, if you are not a confirmed user");
+				throw new InvalidProfileRequestException("You cannot become a Contributor until you are a confirmed Member");
 				}
 
 			if (persistedUser.getContributorEnabled() || persistedUser.getRequestContributor())
