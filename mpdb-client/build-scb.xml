@@ -25,6 +25,10 @@
 		<target name="clean">
 			<delete dir="${build}" />
 			<mkdir dir="${build}" />
+			<tstamp>
+				<format property="build.time" pattern="MM/dd/yyyy hh:mm aa"
+						              offset="-5" unit="hour"/>
+			</tstamp>
 		</target>
 		
 		<path id="project.class.path">
@@ -70,6 +74,9 @@
 				<copy todir="${build}" includeemptydirs="no">
 						<fileset dir="${mpdb-server-dir}/src" includes="**/*.hbm.xml"/>				
 				</copy>  
+				
+				<echo message="builddate=${build.time}" file="${build}/builddate.properties">
+			    </echo>
         </target>
         
         <target name="gwt-compile" depends="compile" description="Executes the GWT compiler to convert java code to javascript">
