@@ -456,7 +456,7 @@ if (u.getContributorCode().equals(contributorCode) && !u.getContributorEnabled()
 	u = ud.save(u);
 	commit();
 	
-	EmailSupport.sendMessage(this, u.getAddress(),
+	EmailSupport.sendMessage(this, u.getEmailAddress(),
 			"approvee", new Object[] {
 					u.toString()							
 			});
