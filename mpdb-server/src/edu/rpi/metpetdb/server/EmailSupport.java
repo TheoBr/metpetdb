@@ -2,6 +2,7 @@ package edu.rpi.metpetdb.server;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Properties;
@@ -24,6 +25,33 @@ public class EmailSupport {
 	private static InternetAddress fromAddress;
 	private static Properties allProperties;
 
+	
+	public static String getHostName()
+	{
+		try {
+			return java.net.InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "localhost";
+	}
+	
+	public static String getProperty(String key) 
+	{
+		try
+		{
+		if (allProperties == null)
+			EmailSupport.load();
+		
+		} catch (MessagingException me)
+		{
+			me.printStackTrace();
+		}
+		
+		
+		return allProperties.getProperty(key);
+	}
 	
 	public static String getApproverAddress() throws MessagingException
 	{

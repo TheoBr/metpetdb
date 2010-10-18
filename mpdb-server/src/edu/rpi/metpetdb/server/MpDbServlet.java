@@ -246,7 +246,7 @@ public abstract class MpDbServlet extends PersistentRemoteService {
 		StringBuffer u = getThreadLocalRequest().getRequestURL();		
 		u = new StringBuffer(u.substring(0, u.lastIndexOf("/") - 1));
 		u = new StringBuffer(u.substring(0, u.lastIndexOf("/")  + 1));
-		return u.toString();
+		return u.toString().replaceAll("localhost", EmailSupport.getHostName());
 	}
 
 	/**
