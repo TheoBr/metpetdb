@@ -273,7 +273,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		EmailSupport.sendMessage(this, u.getEmailAddress(),
 				"sendConfirmationCode", new Object[] {
 						u.toString(),
-						GWT.getHostPageBaseURL().replaceAll("localhost",EmailSupport.getHostName()) + "#ConfirmationCode/"
+						GWT.getHostPageBaseURL().replaceAll("\\Qlocalhost\\E",EmailSupport.getHostName()) + "#ConfirmationCode/"
 								+ u.getConfirmationCode()
 				});
 		setCurrentUser(u, null);
