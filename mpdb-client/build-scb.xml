@@ -26,8 +26,7 @@
 			<delete dir="${build}" />
 			<mkdir dir="${build}" />
 			<tstamp>
-				<format property="build.time" pattern="MM/dd/yyyy hh:mm aa"
-						              offset="-5" unit="hour"/>
+				<format property="build.time" pattern="MM/dd/yyyy hh:mm aa"/>
 			</tstamp>
 		</target>
 		
