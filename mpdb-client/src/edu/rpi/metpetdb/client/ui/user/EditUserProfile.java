@@ -1,11 +1,15 @@
 package edu.rpi.metpetdb.client.ui.user;
 
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
@@ -43,22 +47,7 @@ public class EditUserProfile extends MPagePanel implements UsesCurrentUser {
 	public EditUserProfile(final User whoToEdit) {
 		setPageTitle("Edit Profile");
 		
-		Label label1 = new Label(LocaleHandler.lc_text.editProfile_description_1());
-		
-		this.add(label1);
-		DOM.appendChild(label1.getElement(), DOM.createElement("br") );
-		DOM.appendChild(label1.getElement(), DOM.createElement("br") );
-
-		Label label2 = new Label(LocaleHandler.lc_text.editProfile_description_2());
-		this.add(label2);
-		DOM.appendChild(label2.getElement(), DOM.createElement("br"));
-		DOM.appendChild(label2.getElement(), DOM.createElement("br") );
-
-		Label label3 = new Label(LocaleHandler.lc_text.editProfile_description_3());		
-		this.add(label3);
-		DOM.appendChild(label3.getElement(), DOM.createElement("br"));
-		DOM.appendChild(label3.getElement(), DOM.createElement("br") );
-		
+	
 		
 		user = whoToEdit;
 
@@ -71,12 +60,70 @@ public class EditUserProfile extends MPagePanel implements UsesCurrentUser {
 	}
 
 	private void displayMemberStatus() {
+		
+		DecoratorPanel dpanel = new DecoratorPanel();
+		dpanel.getElement().setClassName("detailsPanel");
+		this.add(dpanel);
+		
+		FlexTable t = new FlexTable();
+		t.setWidth("450px");
+		t.getElement().addClassName("memberStatus");
+		dpanel.setWidget(t);
+	
+		
 		if (MpDb.isCurrentUser(user) && user.getContributorEnabled()) {
-			add(new MText("You are a Contributor"));
+			{
+				MText status_pt1 = new MText("You are a ");
+				t.setWidget(t.getRowCount(), 0, status_pt1);
+				Element em = DOM.createElement("b");
+				DOM.appendChild(status_pt1.getElement(), em);				
+				DOM.appendChild(em, new MText("Contributor").getElement());
+			}
 		} else if (MpDb.isCurrentUser(user) && user.getEnabled()) {
-			add(new MText("You are a Member"));
+			{
+				MText status_pt1 = new MText("You are a ");
+				t.setWidget(t.getRowCount(), 0, status_pt1);
+				Element em = DOM.createElement("b");
+				DOM.appendChild(status_pt1.getElement(), em);				
+				DOM.appendChild(em, new MText("Member").getElement());				
+			}
 		} else {
-			add(new MText("You are not a confirmed user"));
+			{
+				MText status_pt1 = new MText("You are not a confirmed ");
+				t.setWidget(t.getRowCount(), 0, status_pt1);
+				Element em = DOM.createElement("b");
+				DOM.appendChild(status_pt1.getElement(), em);				
+				DOM.appendChild(em, new MText("Member").getElement());
+				
+				DOM.appendChild(status_pt1.getElement(), new MText(". Please click the link in your confirmation email.").getElement());
+			}
+		}
+		
+		//HTML empty = ;
+		//empty.setVisible(false);
+		
+		
+		
+		//t.setWidget(t.getRowCount(), 0, new HTML("<BR>"));
+		
+		Label label1 = new Label(LocaleHandler.lc_text.editProfile_description_1());		
+		t.setWidget(t.getRowCount(), 0, label1);
+	//	DOM.appendChild(label1.getElement(), DOM.createElement("br") );
+	//	DOM.appendChild(label1.getElement(), DOM.createElement("br") );
+
+		Label label2 = new Label(LocaleHandler.lc_text.editProfile_description_2());
+		t.setWidget(t.getRowCount(), 0, label2);
+	//	DOM.appendChild(label2.getElement(), DOM.createElement("br"));
+	//	DOM.appendChild(label2.getElement(), DOM.createElement("br") );
+
+		if (!user.getContributorEnabled() && user.getEnabled())
+		{
+		//t.setWidget(t.getRowCount(), 0, new HTML("<BR>"));
+		
+		Label label3 = new Label(LocaleHandler.lc_text.editProfile_description_3());		
+		t.setWidget(t.getRowCount(), 0, label3);
+	//	DOM.appendChild(label3.getElement(), DOM.createElement("br"));
+	//	DOM.appendChild(label3.getElement(), DOM.createElement("br") );
 		}
 	}
 
