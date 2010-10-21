@@ -269,11 +269,11 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		u = uDAO.fill(u);
 		u.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-", ""));
 		u = uDAO.save(u);
-		commit();
+		commit();		
 		EmailSupport.sendMessage(this, u.getEmailAddress(),
 				"sendConfirmationCode", new Object[] {
 						u.toString(),
-						GWT.getHostPageBaseURL().replaceAll("\\Qlocalhost\\E",EmailSupport.getHostName()) + "#ConfirmationCode/"
+						getModuleBaseURL() + "#ConfirmationCode/"
 								+ u.getConfirmationCode()
 				});
 		setCurrentUser(u, null);
