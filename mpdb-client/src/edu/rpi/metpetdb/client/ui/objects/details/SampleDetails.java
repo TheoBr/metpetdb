@@ -93,7 +93,9 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			new RadioButtonAttribute(MpDb.doc.Sample_publicData,
 					LocaleHandler.lc_text.publicDataWarning()),
 			new LocationAttribute(MpDb.doc.Sample_location),
-			new UnitTextAttribute(MpDb.doc.Sample_locationError, "meters"),
+			
+			//TODO: SCB Rolled back this attribute to fix the Sample Edit action
+		//	new UnitTextAttribute(MpDb.doc.Sample_locationError, "meters"),
 			new CountryAttribute(MpDb.doc.Sample_country),
 			new MineralAttribute(MpDb.doc.Sample_minerals).setPos(DetailsPanelTableLoc.BOTTOM),
 			new TextAttribute(MpDb.doc.Sample_description).setPos(DetailsPanelTableLoc.BOTTOM),
