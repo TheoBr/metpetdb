@@ -192,6 +192,7 @@ public class MetPetDBApplication implements EntryPoint {
 	}
 
 	static void onCurrentUserChanged(final User n) {
+		createHdrNav();
 		populateLogbar(n);
 		inPageNotice.clear();
 		if (n != null && !n.getEnabled()) {
@@ -365,7 +366,9 @@ public class MetPetDBApplication implements EntryPoint {
 		return breadcrumbsBar.getWidget(0);
 	}
 
-	private void createHdrNav() {
+	public static void createHdrNav() {
+		hdrnav.clearItems();
+		
 		hdrnav.setAutoOpen(true);
 
 		//		final MMenuBar projects = new MMenuBar(true);
