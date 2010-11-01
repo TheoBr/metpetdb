@@ -258,6 +258,17 @@
   <url-pattern>/excel.svc</url-pattern>
 </servlet-mapping>
 
+
+<servlet>
+  <servlet-name>chemExcelServlet</servlet-name>
+  <servlet-class>edu.rpi.metpetdb.server.ChemExcelServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+  <servlet-name>chemExcelServlet</servlet-name>
+  <url-pattern>/chemExcel.svc</url-pattern>
+</servlet-mapping>
+
+
 <servlet>
   <servlet-name>imageBrowserServiceImpl</servlet-name>
   <servlet-class>edu.rpi.metpetdb.server.impl.ImageBrowserServiceImpl</servlet-class>
