@@ -57,7 +57,7 @@
       	<property name="measurementUnit" column="measurement_unit"/>
       	<property name="minAmount" column="min_amount" />
       	<property name="maxAmount" column="max_amount" />
-        <many-to-one name="element" class="Element" column="element_id" lazy="false" not-null="true"/>
+        <many-to-one name="element" class="Element" column="element_id" lazy="false" not-null="true" />
 	  </composite-element>
     </set>
 

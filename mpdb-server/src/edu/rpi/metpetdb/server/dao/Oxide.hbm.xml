@@ -16,6 +16,7 @@
     <property name="weight" column="weight" />
     <property name="cationsPerOxide" column="cations_per_oxide" />
     <property name="conversionFactor" column="conversion_factor" />
+    <property name="orderId" column="order_id" />
     
     <set name="mineralTypes" table="oxide_mineral_types" cascade="none" lazy="false">
       <key column="oxide_id" />
@@ -27,6 +28,7 @@
     from Oxide o
     order by o.oxideId
   </query>
+ 
   
   <query name="Oxide.bySpecies">
     from Oxide o
@@ -36,5 +38,10 @@
   <query name="Oxide.byId">
     from Oxide o
     where o.id = :id
+  </query>
+  
+   <query name="Oxide.ordered">
+    from Oxide o
+    order by o.orderId
   </query>
 </hibernate-mapping>

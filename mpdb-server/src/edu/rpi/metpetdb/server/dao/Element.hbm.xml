@@ -15,7 +15,7 @@
     <property name="symbol" column="symbol" length="4" />
     <property name="atomicNumber" column="atomic_number" />
     <property name="weight" column="weight" />
-    
+    <property name="orderId" column="order_id" />
 
 	<set name="mineralTypes" table="element_mineral_types" cascade="none" lazy="false">
       <key column="element_id" />
@@ -35,5 +35,10 @@
   <query name="Element.bySymbol">
     from Element e
     where e.symbol = :symbol
+  </query>
+  
+    <query name="Element.ordered">
+    from Element e
+    order by e.orderId
   </query>
 </hibernate-mapping>

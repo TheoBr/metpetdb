@@ -1,9 +1,17 @@
 package edu.rpi.metpetdb.server.impl;
 
+import java.util.List;
+
 import edu.rpi.metpetdb.client.service.ConstantsService;
 import edu.rpi.metpetdb.server.MpDbServlet;
+import edu.rpi.metpetdb.server.dao.impl.ConstantsDAO;
 
 public class ConstantsServiceImpl extends MpDbServlet implements
 		ConstantsService {
-	private static final long serialVersionUID = 1L;
+
+	public List<String> getOxidesAndElementsOrderedBySortOrder()
+	{
+		return new ConstantsDAO(this.currentSession()).getOrderedOxidesAndElements();		
+	}
+
 }
