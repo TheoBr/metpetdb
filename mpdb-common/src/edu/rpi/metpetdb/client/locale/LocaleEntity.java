@@ -120,6 +120,18 @@ public interface LocaleEntity extends ConstantsWithLookup {
 	String ChemicalAnalysis_stageX();
 	String ChemicalAnalysis_stageY();
 	String ChemicalAnalysis_owner();
+	
+	String ChemicalAnalysis_ElementOrOxide_amount();
+	String ChemicalAnalysis_ElementOrOxide_precisionType();
+	String ChemicalAnalysis_ElementOrOxide_measurementUnit();
+	String ChemicalAnalysis_ElementOrOxide_minAmount();
+	String ChemicalAnalysis_ElementOrOxide_maxAmount();
+	String ChemicalAnalysis_ElementOrOxide_name();
+	String ChemicalAnalysis_ElementOrOxide_symbol();
+	String ChemicalAnalysis_ElementOrOxide_atomicNumber();
+	String ChemicalAnalysis_ElementOrOxide_weight();
+
+	
 	/* Image */
 	String Image_imageType();
 	String Image_lut();

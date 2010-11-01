@@ -18,7 +18,8 @@ public class Oxide extends MObject {
 	private short cationsPerOxide;
 	private Float conversionFactor;
 	private Set<MineralType> mineralTypes;
-
+	private int orderId;
+	
 	public Oxide() {
 
 	}
@@ -118,4 +119,12 @@ public class Oxide extends MObject {
 		var s = this.@edu.rpi.metpetdb.client.model.Oxide::species;
 		return s.replace(/(\d+)/g, "<sub>$1</sub>");
 	}-*/;
+
+	public int getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
+	}
 }

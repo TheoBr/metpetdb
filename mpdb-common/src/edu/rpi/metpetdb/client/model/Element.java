@@ -19,6 +19,7 @@ public class Element extends MObject implements IHasName {
 	private int atomicNumber;
 	private Float weight;
 	private Set<MineralType> mineralTypes;
+	private int orderId;
 	
 	public Element() {
 		
@@ -99,5 +100,13 @@ public class Element extends MObject implements IHasName {
 
 	public String toString() {
 		return name;
+	}
+
+	public int getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
 	}
 }
