@@ -1,8 +1,10 @@
 package edu.rpi.metpetdb.client.ui.excel;
 
-import com.google.gwt.user.client.ui.Hidden;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
+import edu.rpi.metpetdb.client.ui.MpDb;
 
 public class ExcelUtil {
 	final public static String[] columnHeaders = {
@@ -26,4 +28,35 @@ public class ExcelUtil {
 		LocaleHandler.lc_entity.Sample_locationText()
 	};
 	final public static String columnHeaderParameter = "column";
+	
+	final public static List<String> chemColumnHeaders = new ArrayList<String>();
+	
+	static
+	{
+		
+
+		chemColumnHeaders.add(LocaleHandler.lc_entity.ChemicalAnalysis_sampleName());
+		chemColumnHeaders.add(LocaleHandler.lc_entity.ChemicalAnalysis_subsampleName());
+				
+		chemColumnHeaders.add(LocaleHandler.lc_entity.ChemicalAnalysis_spotId());
+		chemColumnHeaders.add(LocaleHandler.lc_entity.ChemicalAnalysis_mineral());
+		chemColumnHeaders.add(LocaleHandler.lc_entity.ChemicalAnalysis_method());
+										
+		chemColumnHeaders.add(LocaleHandler.lc_entity.Subsample_subsampleType());
+												
+		chemColumnHeaders.add(LocaleHandler.lc_entity.ChemicalAnalysis_analyst());
+			
+	/*	chemColumnHeaders.add(LocaleHandler.lc_entity.ChemicalAnalysis_ElementOrOxide_amount());
+		chemColumnHeaders.add(LocaleHandler.lc_entity.ChemicalAnalysis_ElementOrOxide_precisionType());
+		chemColumnHeaders.add(LocaleHandler.lc_entity.ChemicalAnalysis_ElementOrOxide_measurementUnit());
+		chemColumnHeaders.add(LocaleHandler.lc_entity.ChemicalAnalysis_ElementOrOxide_minAmount());
+		chemColumnHeaders.add(LocaleHandler.lc_entity.ChemicalAnalysis_ElementOrOxide_maxAmount());
+		chemColumnHeaders.add(LocaleHandler.lc_entity.ChemicalAnalysis_ElementOrOxide_name());
+		chemColumnHeaders.add(LocaleHandler.lc_entity.ChemicalAnalysis_ElementOrOxide_symbol());
+		chemColumnHeaders.add(LocaleHandler.lc_entity. ChemicalAnalysis_ElementOrOxide_atomicNumber());
+		chemColumnHeaders.add(LocaleHandler.lc_entity.ChemicalAnalysis_ElementOrOxide_weight()); */
+		
+		
+	}
+	
 }

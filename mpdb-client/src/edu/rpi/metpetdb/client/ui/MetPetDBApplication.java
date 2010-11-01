@@ -36,6 +36,7 @@ import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.LoginDialog;
 import edu.rpi.metpetdb.client.ui.dialogs.UnknownErrorDialog;
+import edu.rpi.metpetdb.client.ui.excel.ExcelUtil;
 import edu.rpi.metpetdb.client.ui.html.MetamorphicRegionsView;
 import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
 import edu.rpi.metpetdb.client.ui.widgets.MHtmlList;
@@ -113,6 +114,24 @@ public class MetPetDBApplication implements EntryPoint {
 		pageChangeWatchers = new HashSet<Widget>();
 
 		appenBreadCrumbs(new Breadcrumbs());
+		MpDb.constants_svc.getOxidesAndElementsOrderedBySortOrder(new AsyncCallback<List<String>>()
+				{
+
+					public void onFailure(Throwable caught) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					public void onSuccess(List<String> result) {
+						// TODO Auto-generated method stub
+							ExcelUtil.chemColumnHeaders.addAll(result);
+
+							ExcelUtil.chemColumnHeaders.add(LocaleHandler.lc_entity.ChemicalAnalysis_total());
+					}
+			
+				});
+		
+		
 
 		// Try to restore the user's current session.
 		MpDb.user_svc.resumeSession(new AsyncCallback<ResumeSessionResponse>() {

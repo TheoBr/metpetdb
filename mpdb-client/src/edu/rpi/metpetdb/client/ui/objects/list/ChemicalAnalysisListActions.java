@@ -8,6 +8,9 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.Hidden;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -23,11 +26,15 @@ import edu.rpi.metpetdb.client.ui.commands.VoidServerOp;
 import edu.rpi.metpetdb.client.ui.dialogs.ConfirmationDialogBox;
 import edu.rpi.metpetdb.client.ui.dialogs.MDialogBox;
 import edu.rpi.metpetdb.client.ui.dialogs.MakePublicDialog;
+import edu.rpi.metpetdb.client.ui.excel.ExcelUtil;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.paging.DataList;
 
 public class ChemicalAnalysisListActions extends FlowPanel implements ClickListener {
 
+	private static final String chemicalAnalysesParameter = "ChemicalAnalyses";
+	private static final String urlParameter = "url";
+	
 	private final DataList<ChemicalAnalysis> list;
 
 	private enum SelectOption {
@@ -107,6 +114,9 @@ public class ChemicalAnalysisListActions extends FlowPanel implements ClickListe
 
 	private final MLink remove;
 	
+	private final MLink exportExcel;
+
+	
 	public ChemicalAnalysisListActions(final DataList<ChemicalAnalysis> list) {
 		this.list = list;
 		setupSelect(list);
@@ -115,6 +125,12 @@ public class ChemicalAnalysisListActions extends FlowPanel implements ClickListe
 		remove.addStyleName("item");
 		
 		add(remove);
+		
+		exportExcel = new MLink("Excel", this);
+		exportExcel.addStyleName("item");
+		
+		add(exportExcel);
+		
 		setStylePrimaryName("scrolltable-actions");
 	}
 
@@ -186,6 +202,10 @@ public class ChemicalAnalysisListActions extends FlowPanel implements ClickListe
 				}.begin();
 			}
 		}
+		
+	 if (sender == exportExcel) 
+		doExportExcel();
+
 	}
 	
 	private void noAnalysesSelected(){
@@ -202,4 +222,49 @@ public class ChemicalAnalysisListActions extends FlowPanel implements ClickListe
 		noAnalysesBox.setWidget(container);
 		noAnalysesBox.show();
 	}
+	
+	private void doExportExcel() {
+		final FormPanel fp = new FormPanel();
+		fp.setMethod(FormPanel.METHOD_GET);
+		fp.setEncoding(FormPanel.ENCODING_URLENCODED);
+		final HorizontalPanel hp = new HorizontalPanel();
+
+		new ServerOp<List<ChemicalAnalysis>>() {
+			@Override
+			public void begin() {
+				final ArrayList<Integer> checkedChemicalAnalysisIds = new ArrayList<Integer>();
+				for (Object id : list.getSelectedValues()){
+					checkedChemicalAnalysisIds.add((Integer) id);
+				}
+				MpDb.chemicalAnalysis_svc.details(checkedChemicalAnalysisIds, this);
+			}
+			public void onSuccess(List<ChemicalAnalysis> result) {
+				if (result != null && result.size() > 0) {
+					for (String columnHeader : ExcelUtil.chemColumnHeaders) {
+						hp.add(new Hidden(ExcelUtil.columnHeaderParameter,
+								columnHeader));
+					}
+					
+					for (int i = 0; i < result.size(); i++) {
+						Hidden sample = new Hidden(chemicalAnalysesParameter, String
+								.valueOf(result.get(i).getId()));
+						hp.add(sample);
+					}
+					Hidden url = new Hidden(urlParameter,  "#"
+							+ LocaleHandler.lc_entity.TokenSpace_ChemicalAnalysis_Details()
+							+ LocaleHandler.lc_text.tokenSeparater());
+					hp.add(url);
+					fp.add(hp);
+					fp.setAction("chemExcel.svc?");
+					fp.setVisible(false);
+					add(fp);
+					fp.submit();
+				} else {
+					new ConfirmationDialogBox("There are no chemical analyses to export",false).show();
+				}
+			}
+		}.begin();
+	}
+
+	
 }

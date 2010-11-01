@@ -1,5 +1,7 @@
 package edu.rpi.metpetdb.client.service;
 
+import java.util.List;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 
 /**
@@ -12,4 +14,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
  * </p>
  */
 public interface ConstantsService extends RemoteService {
+	
+	public List<String> getOxidesAndElementsOrderedBySortOrder();
+	
 }
