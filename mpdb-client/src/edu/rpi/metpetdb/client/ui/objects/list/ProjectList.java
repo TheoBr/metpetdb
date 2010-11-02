@@ -64,6 +64,7 @@ public abstract class ProjectList extends DataList<Project> {
 			defaultColumns.addColumn(col);
 		}
 		//Member Count
+		/* Remove references to project members, not currently implemented
 		{
 			StringColumn<Project> col = new StringColumn<Project>(enttxt.Project_MemberCount(),
 					ProjectProperty.memberCount);
@@ -74,6 +75,7 @@ public abstract class ProjectList extends DataList<Project> {
 			columns.addColumn(col);
 			defaultColumns.addColumn(col);
 		}
+		*/
 		//View Details/Members
 		{
 			Column<Project, MLink> col = new Column<Project, MLink>(enttxt.Project_ViewDetails(),

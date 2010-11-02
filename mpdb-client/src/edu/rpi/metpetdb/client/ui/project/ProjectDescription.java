@@ -41,6 +41,8 @@ public class ProjectDescription extends MPagePanel{
 				setPageTitle(result.getName());
 				add(new Label("Creator: " + result.getOwner().getName()));
 				add(new Label(result.getDescription()));
+				
+				/* Remove references to project members, not currently implemented 
 				addPageActionItem(new MLink("Invite Member", TokenSpace.sendNewInvite(result)));
 				addPageActionItem(new MLink("View Status of Invites", TokenSpace.viewInviteStatus(result)));
 				
@@ -58,7 +60,7 @@ public class ProjectDescription extends MPagePanel{
 				add(list);
 				
 				add(new Label("Comments will go here"));
-				
+				*/
 			}
 		}.begin();
 		
