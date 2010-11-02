@@ -18,8 +18,6 @@ import net.tanesha.recaptcha.ReCaptchaResponse;
 
 import org.hibernate.exception.ConstraintViolationException;
 
-import com.google.gwt.core.client.GWT;
-
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
 import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.UnableToSendEmailException;
@@ -78,19 +76,23 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		user.setEncryptedPassword(null);
 		return (user);
 	}
-	
+
 	public Set<String> allNames() throws MpDbException {
-		return objectArrayToStringSet((new UserDAO(this.currentSession())).allNames());
+		return objectArrayToStringSet((new UserDAO(this.currentSession()))
+				.allNames());
 	}
-	
-	public Set<String> viewableNamesForUser(final int userId) throws MpDbException {
-		this.currentSession().enableFilter("hasSamplePublicOrUser").setParameter("userId", userId);
-		return objectArrayToStringSet((new UserDAO(this.currentSession())).allNames());
+
+	public Set<String> viewableNamesForUser(final int userId)
+			throws MpDbException {
+		this.currentSession().enableFilter("hasSamplePublicOrUser")
+				.setParameter("userId", userId);
+		return objectArrayToStringSet((new UserDAO(this.currentSession()))
+				.allNames());
 	}
-	
-	private Set<String> objectArrayToStringSet(final Object[] o){
+
+	private Set<String> objectArrayToStringSet(final Object[] o) {
 		final Set<String> options = new HashSet();
-		for (int i = 0; i < o.length; i++){
+		for (int i = 0; i < o.length; i++) {
 			if (o[i] != null)
 				options.add(o[i].toString());
 		}
@@ -113,8 +115,8 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 				final Collection<Principal> principals = new ArrayList<Principal>();
 				principals.add(new OwnerPrincipal(u));
 				principals.add(new EnabledPrincipal(u));
-			//	if (ssr.getEmailAddress().equals("watera2@cs.rpi.edu"))
-			//		principals.add(new AdminPrincipal());
+				// if (ssr.getEmailAddress().equals("watera2@cs.rpi.edu"))
+				// principals.add(new AdminPrincipal());
 				setCurrentUser(u, principals);
 			}
 			return u;
@@ -131,8 +133,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		try {
 			User u = new User();
 			u.setId(currentUserId());
-			
-			
+
 			currentReq().action = Action.LOGIN;
 			u = (new UserDAO(this.currentSession())).fill(u);
 			r.user = (User) clone(u);
@@ -154,30 +155,32 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return (u);
 	}
 
-	private Boolean validateCaptcha(String remoteAddress, String challenge, String responseStr)
-	{
-		ReCaptcha r = ReCaptchaFactory.newReCaptcha("6LeCaL0SAAAAAD-dKyj9t3PTOqdW8j9svbfHn9P2",
+	private Boolean validateCaptcha(String remoteAddress, String challenge,
+			String responseStr) {
+		ReCaptcha r = ReCaptchaFactory.newReCaptcha(
+				"6LeCaL0SAAAAAD-dKyj9t3PTOqdW8j9svbfHn9P2",
 				"6LeCaL0SAAAAAH8GxuMBrXBZLFZ0EQdBRbl_Wr2Q", true);
-		ReCaptchaResponse response = r.checkAnswer(remoteAddress, challenge, responseStr);
-		
+		ReCaptchaResponse response = r.checkAnswer(remoteAddress, challenge,
+				responseStr);
+
 		return response.isValid();
 	}
 
-	
-	public User registerNewUser(final UserWithPassword newbie, final String challenge, final String response)
+	public User registerNewUser(final UserWithPassword newbie,
+			final String challenge, final String response)
 			throws ValidationException, MpDbException,
 			UnableToSendEmailException, InvalidCaptchaException {
 		User u = null;
-	
-		if (!validateCaptcha(getThreadLocalRequest().getRemoteAddr().toString(), challenge, response))
+
+		if (!validateCaptcha(
+				getThreadLocalRequest().getRemoteAddr().toString(), challenge,
+				response))
 			throw new InvalidCaptchaException("Failed to pass captcha test");
-			
+
 		doc.UserWithPassword_user.validateEntity(newbie);
 		doc.UserWithPassword_newPassword.validateEntity(newbie);
 		doc.UserWithPassword_vrfPassword.validateEntity(newbie);
 
-		
-		
 		final User newUser = newbie.getUser();
 		if (!newUser.mIsNew())
 			throw new GenericDAOException("Cannot register non-new user.");
@@ -189,7 +192,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		u.setEnabled(false);
 		u.setContributorEnabled(false);
 		u.setRequestContributor(false);
-		
+
 		u.setRole((Role) currentSession().createQuery(
 				"from Role r where r.rank=1").uniqueResult());
 		u.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-", ""));
@@ -203,6 +206,8 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 							getModuleBaseURL() + "#ConfirmationCode/"
 									+ u.getConfirmationCode()
 					});
+
+			requestMantisAccount(u, pass);
 			final Collection<Principal> principals = new ArrayList<Principal>();
 			principals.add(new OwnerPrincipal(u));
 			setCurrentUser(u, principals);
@@ -213,7 +218,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 			else
 				throw new RuntimeException("i dont know what happened");
 		}
-	
+
 		return u;
 	}
 
@@ -240,7 +245,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 		uDAO.save(u);
 		commit();
-		
+
 		return null;
 	}
 
@@ -269,7 +274,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		u = uDAO.fill(u);
 		u.setConfirmationCode(UUID.randomUUID().toString().replaceAll("-", ""));
 		u = uDAO.save(u);
-		commit();		
+		commit();
 		EmailSupport.sendMessage(this, u.getEmailAddress(),
 				"sendConfirmationCode", new Object[] {
 						u.toString(),
@@ -317,11 +322,12 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return rc;
 	}
 
-	public RoleChange saveRoleChange(RoleChange rc) throws MpDbException, UnableToSendEmailException {
+	public RoleChange saveRoleChange(RoleChange rc) throws MpDbException,
+			UnableToSendEmailException {
 		rc = new RoleChangeDAO(this.currentSession()).save(rc);
 		commit();
-		//if we get here the role change saved successfully so now
-		//we should send an email to the sponsor
+		// if we get here the role change saved successfully so now
+		// we should send an email to the sponsor
 		EmailSupport.sendMessage(this, rc.getSponsor().getEmailAddress(),
 				"sendRoleRequest", new Object[] {
 						rc.getSponsor().toString(),
@@ -332,27 +338,33 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		return rc;
 	}
 
-	public Collection<Role> getEligableRoles(int currentRank) throws MpDbException {
+	public Collection<Role> getEligableRoles(int currentRank)
+			throws MpDbException {
 		return new UserDAO(currentSession()).getEligableRoles(currentRank);
 	}
-	
-	public Results<RoleChange> getSponsorRoleChanges(int sponsorId, PaginationParameters p) throws MpDbException {
-		return new UserDAO(currentSession()).getSponsorRoleChanges(sponsorId, p);
+
+	public Results<RoleChange> getSponsorRoleChanges(int sponsorId,
+			PaginationParameters p) throws MpDbException {
+		return new UserDAO(currentSession())
+				.getSponsorRoleChanges(sponsorId, p);
 	}
-	
+
 	/**
-	 * used for pagination tables to select all/public/private
-	 * the boolean is null because users are not public or private
+	 * used for pagination tables to select all/public/private the boolean is
+	 * null because users are not public or private
 	 */
-	public Map<Object,Boolean> getSponsorRoleChangeIds(int sponsorId) throws MpDbException {
-		Map<Object,Boolean> ids = new HashMap<Object,Boolean>();
-		for (Long l : new UserDAO(this.currentSession()).getSponsorRoleChangeIds(sponsorId)){
-			ids.put(l,null);
+	public Map<Object, Boolean> getSponsorRoleChangeIds(int sponsorId)
+			throws MpDbException {
+		Map<Object, Boolean> ids = new HashMap<Object, Boolean>();
+		for (Long l : new UserDAO(this.currentSession())
+				.getSponsorRoleChangeIds(sponsorId)) {
+			ids.put(l, null);
 		}
 		return ids;
 	}
 
-	public void approveRoleChange(RoleChange rc) throws MpDbException, UnableToSendEmailException {
+	public void approveRoleChange(RoleChange rc) throws MpDbException,
+			UnableToSendEmailException {
 		rc.setGranted(true);
 		final UserDAO uDAO = new UserDAO(currentSession());
 		rc.setUser(uDAO.fill(rc.getUser()));
@@ -360,24 +372,23 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 		new UserDAO(currentSession()).save(rc.getUser());
 		new RoleChangeDAO(currentSession()).save(rc);
 		commit();
-		//send approval message
+		// send approval message
 		EmailSupport.sendMessage(this, rc.getUser().getEmailAddress(),
 				"roleChangeApproved", new Object[] {
-						rc.getUser().toString(),
-						rc.getSponsor().toString(),
+						rc.getUser().toString(), rc.getSponsor().toString(),
 						rc.getGrantReason()
 				});
 	}
 
-	public void denyRoleChange(RoleChange rc) throws MpDbException, UnableToSendEmailException {
+	public void denyRoleChange(RoleChange rc) throws MpDbException,
+			UnableToSendEmailException {
 		rc.setGranted(false);
 		new RoleChangeDAO(currentSession()).save(rc);
 		commit();
-		//send denial message
+		// send denial message
 		EmailSupport.sendMessage(this, rc.getUser().getEmailAddress(),
 				"roleChangeDenied", new Object[] {
-						rc.getUser().toString(),
-						rc.getSponsor().toString(),
+						rc.getUser().toString(), rc.getSponsor().toString(),
 						rc.getGrantReason()
 				});
 	}
@@ -385,115 +396,116 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 	public User userById(int user_id) throws MpDbException {
 		return (new UserDAO(currentSession()).getNameById(user_id));
 	}
-	
-	public User sendContributorCode(User u, String explanationText) throws ValidationException,
-	MpDbException, UnableToSendEmailException, InvalidProfileRequestException
-	{		
+
+	public User sendContributorCode(User u, String explanationText)
+			throws ValidationException, MpDbException,
+			UnableToSendEmailException, InvalidProfileRequestException {
 		this.currentSession().beginTransaction();
-		
+
 		User persistedUser = null;
-			
-			final UserDAO uDAO = new UserDAO(this.currentSession());
 
+		final UserDAO uDAO = new UserDAO(this.currentSession());
 
-			persistedUser = uDAO.fill(u);
-			
-			if (!persistedUser.getEnabled())
-				{
-				this.currentSession().getTransaction().rollback();
-				throw new InvalidProfileRequestException("You cannot become a Contributor until you are a confirmed Member");
-				}
+		persistedUser = uDAO.fill(u);
 
-			if (persistedUser.getContributorEnabled() || persistedUser.getRequestContributor())
-				{
-				this.currentSession().getTransaction().rollback();			
-				throw new InvalidProfileRequestException("You are already a Contributor, or have asked to become one");
-				}
-			
+		if (!persistedUser.getEnabled()) {
+			this.currentSession().getTransaction().rollback();
+			throw new InvalidProfileRequestException(
+					"You cannot become a Contributor until you are a confirmed Member");
+		}
 
-	persistedUser.setContributorCode(UUID.randomUUID().toString().replaceAll("-", ""));
-	persistedUser.setRequestContributor(true);
-	persistedUser.setResearchInterests(u.getResearchInterests());
-	persistedUser = uDAO.save(persistedUser);
+		if (persistedUser.getContributorEnabled()
+				|| persistedUser.getRequestContributor()) {
+			this.currentSession().getTransaction().rollback();
+			throw new InvalidProfileRequestException(
+					"You are already a Contributor, or have asked to become one");
+		}
 
-	commit();
+		persistedUser.setContributorCode(UUID.randomUUID().toString()
+				.replaceAll("-", ""));
+		persistedUser.setRequestContributor(true);
+		persistedUser.setResearchInterests(u.getResearchInterests());
+		persistedUser = uDAO.save(persistedUser);
 
-	String decodedText = "";
-	
-	if (explanationText != null)
-		decodedText = URLDecoder.decode(explanationText);
-	
-	try {
-		EmailSupport.sendMessage(this, EmailSupport.getApproverAddress(),
-				"approval", new Object[] {
-						persistedUser.toString(), decodedText ,
-						getModuleBaseURL() + "#ContributorCode/"
-								+ persistedUser.getContributorCode()
-				});
-	} catch (MessagingException e) {
-		// TODO Auto-generated catch block
-		throw new UnableToSendEmailException();
-	}
+		commit();
 
-	setCurrentUser(persistedUser, null);
-		
+		String decodedText = "";
+
+		if (explanationText != null)
+			decodedText = URLDecoder.decode(explanationText);
+
+		try {
+			EmailSupport.sendMessage(this, EmailSupport.getApproverAddress(),
+					"approval", new Object[] {
+							persistedUser.toString(),
+							decodedText,
+							getModuleBaseURL() + "#ContributorCode/"
+									+ persistedUser.getContributorCode()
+					});
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			throw new UnableToSendEmailException();
+		}
+
+		setCurrentUser(persistedUser, null);
+
 		return persistedUser;
-		
+
 	}
 
-public User confirmContributor(String contributorCode) throws MpDbException,
-	LoginRequiredException {
-	try
-	{
-final UserDAO ud = new UserDAO(this.currentSession());
-User u = ud.getUserByContributorCode(contributorCode);
+	public User confirmContributor(String contributorCode)
+			throws MpDbException, LoginRequiredException {
+		try {
+			final UserDAO ud = new UserDAO(this.currentSession());
+			User u = ud.getUserByContributorCode(contributorCode);
 
-u = (ud).fill(u);
+			u = (ud).fill(u);
 
+			if (u.getContributorCode().equals(contributorCode)
+					&& !u.getContributorEnabled()) {
+				u.setContributorEnabled(true);
+				u = ud.save(u);
+				commit();
 
-if (u.getContributorCode().equals(contributorCode) && !u.getContributorEnabled()) {
-	u.setContributorEnabled(true);
-	u = ud.save(u);
-	commit();
-	
-	EmailSupport.sendMessage(this, u.getEmailAddress(),
-			"approvee", new Object[] {
-					u.toString()							
-			});
+				EmailSupport.sendMessage(this, u.getEmailAddress(), "approvee",
+						new Object[] {
+							u.toString()
+						});
 
-	
-	EmailSupport.sendMessage(this, EmailSupport.getApproverAddress(),
-			"approver", new Object[] {
+				EmailSupport.sendMessage(this, EmailSupport
+						.getApproverAddress(), "approver", new Object[] {
 					u.toString()
-			});
+				});
 
-	
-	// update session with new permission
-//	final Collection<Principal> principals;
-//	if (currentReq().principals != null)
-//		principals = currentReq().principals;
-//	else
-//		principals = new HashSet<Principal>();
-	// remove any old enabled principals
-//	principals.remove(new EnabledPrincipal(false));
-//	principals.add(new EnabledPrincipal(u));
-//	setCurrentUser(u, principals);
-	return u;
-} else {
-	throw new GenericDAOException("Confirmation code does not equal");
-}
+				// update session with new permission
+				// final Collection<Principal> principals;
+				// if (currentReq().principals != null)
+				// principals = currentReq().principals;
+				// else
+				// principals = new HashSet<Principal>();
+				// remove any old enabled principals
+				// principals.remove(new EnabledPrincipal(false));
+				// principals.add(new EnabledPrincipal(u));
+				// setCurrentUser(u, principals);
+				return u;
+			} else {
+				throw new GenericDAOException(
+						"Confirmation code does not equal");
+			}
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
 
+		return null;
 	}
-	catch (Exception e)
-	{
-		e.printStackTrace();
+
+	private void requestMantisAccount(final User u, final String password) {
+
+		Thread t = new Thread(new MantisRunner(u, password));
+		t.start();
 	}
-	catch (Throwable t)
-	{
-		t.printStackTrace();
-	}
-	
-	return null;
-}
+
 }
