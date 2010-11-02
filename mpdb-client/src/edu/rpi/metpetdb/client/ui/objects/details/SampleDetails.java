@@ -7,6 +7,7 @@ import java.util.Set;
 import org.postgis.Point;
 
 import com.google.gwt.maps.client.InfoWindowContent;
+import com.google.gwt.maps.client.MapType;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.control.LargeMapControl;
 import com.google.gwt.maps.client.control.MapTypeControl;
@@ -500,6 +501,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 
 	private void addGoogleMaps() {
 		map.setZoomLevel(4);
+		map.setCurrentMapType(MapType.getHybridMap());
 		map.addControl(new LargeMapControl());
 		map.addControl(new MapTypeControl());
 		map.addControl(new ScaleControl());
