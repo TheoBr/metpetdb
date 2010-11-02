@@ -450,7 +450,12 @@ public abstract class MpDbServlet extends PersistentRemoteService {
 		String response = "Internal server error.";
 		try {
 			response = super.processCall(payload);
-		} finally {
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally {
 			perThreadReq.set(null);
 			r.finishRequest(response);
 		}
