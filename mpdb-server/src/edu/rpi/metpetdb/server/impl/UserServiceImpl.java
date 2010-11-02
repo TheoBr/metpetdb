@@ -504,8 +504,9 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 	private void requestMantisAccount(final User u, final String password) {
 
-		Thread t = new Thread(new MantisRunner(u, password));
-		t.start();
+		MantisRunner mr = new MantisRunner(u, password);
+		mr.run();
+		//t.start();
 	}
 
 }
