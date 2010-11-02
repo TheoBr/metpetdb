@@ -207,7 +207,7 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 									+ u.getConfirmationCode()
 					});
 
-			requestMantisAccount(u, pass);
+		//	requestMantisAccount(u, pass);
 			final Collection<Principal> principals = new ArrayList<Principal>();
 			principals.add(new OwnerPrincipal(u));
 			setCurrentUser(u, principals);
@@ -504,8 +504,8 @@ public class UserServiceImpl extends MpDbServlet implements UserService {
 
 	private void requestMantisAccount(final User u, final String password) {
 
-		MantisRunner mr = new MantisRunner(u, password);
-		mr.run();
+	//	MantisRunner mr = new MantisRunner(u, password);
+	//	mr.run();
 		//t.start();
 	}
 
