@@ -9,7 +9,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 
 import edu.rpi.metpetdb.client.model.User;
 
-public class MantisRunner // implements Runnable
+public class MantisRunner implements Runnable
 {
 
 	private User u;
@@ -55,12 +55,18 @@ public class MantisRunner // implements Runnable
 		}
 	}
 
-	/*
-	 * public static void main(String args[]) { User u = new User();
-	 * u.setEmailAddress("scball@yahoo.com"); u.setName("Steve Ball");
-	 * 
-	 * String password = "foobar";
-	 * 
-	 * Thread t = new Thread(new MantisRunner(u, password)); t.start(); }
-	 */
+	
+/*	 public static void main(String args[]) { 
+	
+     User u = new User();
+	 u.setEmailAddress("scball@yahoo.com"); 
+	 u.setName("Steve Ball");
+	 
+	 String password = "foobar";
+	 MantisRunner mr  = new MantisRunner(u, password);
+	 mr.run();
+	 //Thread t = new Thread(new MantisRunner(u, password)); t.start(); 
+	 }
+	*/
+	
 }
