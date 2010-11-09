@@ -83,7 +83,7 @@
   <query name="Project.byMemberId.Ids">
     select p.id
     from Project p
-    where p.owner = :id
+    where p.owner.id = :id
   </query>
   
   <query name="Project.byMemberId,size">
