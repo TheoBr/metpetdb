@@ -38,7 +38,7 @@ public interface ProjectService extends RemoteService {
 
 	List<Project> all(final long userId) throws MpDbException;
 	
-	Map<Object,Boolean> allIdsForUser(final long userId) throws MpDbException;
+	Map<Object,Boolean> allIdsForUser(final int userId) throws MpDbException;
 
 	/**
 	 * Create or update an existing project.

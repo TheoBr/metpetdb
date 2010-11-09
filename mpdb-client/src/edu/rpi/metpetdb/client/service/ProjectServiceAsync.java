@@ -20,7 +20,7 @@ public interface ProjectServiceAsync {
 	void all(PaginationParameters p, long ownerId,
 			AsyncCallback<Results<Project>> ac);
 	
-	void allIdsForUser(long userId, AsyncCallback<Map<Object,Boolean>> ac);
+	void allIdsForUser(int userId, AsyncCallback<Map<Object,Boolean>> ac);
 
 	void details(int projectId, AsyncCallback<Project> ac);
 	

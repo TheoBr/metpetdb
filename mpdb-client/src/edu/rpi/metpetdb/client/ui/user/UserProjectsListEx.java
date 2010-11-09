@@ -76,7 +76,7 @@ public class UserProjectsListEx extends MPagePanel implements ClickListener {
 
 			@Override
 			public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
-				long id = (long) (MpDb.currentUser().getId());
+				int id = MpDb.currentUser().getId();
 				MpDb.project_svc.allIdsForUser(id, ac);	
 			}			
 		};		
