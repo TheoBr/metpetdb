@@ -68,6 +68,11 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 				MpDb.chemicalAnalysis_svc.details(
 						ma != null && !ma.mIsNew() ? ma.getId()
 								: chemicalAnalysisId, ac);
+				
+				if (!MpDb.isCurrentUser(ma.getSubsample().getOwner()))
+						{
+						p_chemicalAnalysis.hideEditButtons();
+						}
 			}
 
 			protected void saveBean(final AsyncCallback<ChemicalAnalysis> ac) {
@@ -137,6 +142,9 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 				History.newItem(TokenSpace.detailsOf((subsampleObj)));
 			}
 		};
+		
+
+		
 		add(new OnEnterPanel.ObjectEditor(p_chemicalAnalysis));
 	}
 	public ChemicalAnalysisDetails showById(final long id) {

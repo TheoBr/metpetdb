@@ -17,11 +17,18 @@ import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
 
 public abstract class ObjectEditorPanel<T extends MObject> extends DetailsPanel<T> implements
 		ClickListener, UsesCurrentUser {
-	private final Button edit;
-	private final Button delete;
-	final Button cancel;
-	final Button save;
+	 final Button edit;
+	 final Button delete;
+	 final Button cancel;
+	 final Button save;
 
+	 
+	 public void hideEditButtons()
+	 {
+		 this.edit.setVisible(false);
+		 this.delete.setVisible(false);
+		 
+	 }
 	protected ObjectEditorPanel(final GenericAttribute[] atts,
 			final String header, final String description) {
 		edit = new Button(LocaleHandler.lc_text.buttonEdit(), this);
