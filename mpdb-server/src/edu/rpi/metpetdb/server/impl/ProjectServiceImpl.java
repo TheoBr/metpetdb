@@ -45,7 +45,7 @@ public class ProjectServiceImpl extends MpDbServlet implements ProjectService {
 	 * used for pagination tables to select all
 	 * the boolean is null because projects are not public or private
 	 */
-	public Map<Object,Boolean> allIdsForUser(final long userId) throws MpDbException {
+	public Map<Object,Boolean> allIdsForUser(final int userId) throws MpDbException {
 		Map<Object,Boolean> ids = new HashMap<Object,Boolean>();
 		for (Integer i : new ProjectDAO(this.currentSession()).getAllIdsForUser(userId)){
 			ids.put(i,null);
