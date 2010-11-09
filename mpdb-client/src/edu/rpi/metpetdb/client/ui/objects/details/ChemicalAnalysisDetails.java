@@ -71,12 +71,6 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 						loadBean(this);
 					}
 					public void onSuccess(final ChemicalAnalysis result) {
-						
-						if (!MpDb.isCurrentUser(result.getSubsample().getOwner()))
-						{
-						p_chemicalAnalysis.hideEditButtons();
-						}
-						
 						onLoadCompletion(result);
 					}
 				}.begin();
@@ -129,13 +123,24 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 					}.show();
 			}
 
+			@Override
 			protected boolean canEdit() {
 				final Subsample s = ((ChemicalAnalysis) getBean()).getSubsample();
 				if (MpDb.isCurrentUser(s.getOwner()))
 					return true;
-				return true;
+				else
+					return false;
 			}
 
+			@Override
+			protected boolean canDelete() {
+				final Subsample s = ((ChemicalAnalysis) getBean()).getSubsample();
+				if (MpDb.isCurrentUser(s.getOwner()))
+					return true;
+				else
+					return false;
+			}
+			
 			protected void onSaveCompletion(final ChemicalAnalysis result) {
 				if (History.getToken().equals(
 						TokenSpace.detailsOf((ChemicalAnalysis) result))) {
