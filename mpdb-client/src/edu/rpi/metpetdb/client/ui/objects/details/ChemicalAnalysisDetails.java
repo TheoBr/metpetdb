@@ -63,16 +63,31 @@ public class ChemicalAnalysisDetails extends MPagePanel {
 	public ChemicalAnalysisDetails() {
 		p_chemicalAnalysis = new ObjectEditorPanel<ChemicalAnalysis>(
 				chemicalAnalysisAtts) {
+			
+			@Override
+			public void load() {
+				new ServerOp<ChemicalAnalysis>() {
+					public void begin() {
+						loadBean(this);
+					}
+					public void onSuccess(final ChemicalAnalysis result) {
+						
+						if (!MpDb.isCurrentUser(result.getSubsample().getOwner()))
+						{
+						p_chemicalAnalysis.hideEditButtons();
+						}
+						
+						onLoadCompletion(result);
+					}
+				}.begin();
+			}
+			
 			protected void loadBean(final AsyncCallback<ChemicalAnalysis> ac) {
 				final ChemicalAnalysis ma = (ChemicalAnalysis) getBean();
 				MpDb.chemicalAnalysis_svc.details(
 						ma != null && !ma.mIsNew() ? ma.getId()
 								: chemicalAnalysisId, ac);
 				
-				if (!MpDb.isCurrentUser(ma.getSubsample().getOwner()))
-						{
-						p_chemicalAnalysis.hideEditButtons();
-						}
 			}
 
 			protected void saveBean(final AsyncCallback<ChemicalAnalysis> ac) {
