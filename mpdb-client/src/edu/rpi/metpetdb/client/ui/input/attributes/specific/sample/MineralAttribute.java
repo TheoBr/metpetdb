@@ -102,6 +102,8 @@ public class MineralAttribute extends GenericAttribute<MObject> {
 		
 		this.obj = obj;
 		
+		//return new Widget[] { new Label("Widget!!") };
+		
 		FlexTable mineral_table = new FlexTable();
 		List<String> vals = new ArrayList<String>();
 		
@@ -163,13 +165,6 @@ public class MineralAttribute extends GenericAttribute<MObject> {
 		
 		this.obj = obj;
 		
-		// Fixes a bug where minerals carry over from previous uses
-		amountsPanel = null;
-		amountsPanel = new MultipleObjectDetailsPanel<SampleMineral>(
-				new GenericAttribute[] {
-					new TextAttribute(MpDb.doc.SampleMineral_Sample_minerals_amount)
-				});
-		
 		final VerticalPanel vp = new VerticalPanel(); 
 		
 		// Clicking the "Choose Minerals..." button reveals the mineral chooser widget
@@ -182,6 +177,14 @@ public class MineralAttribute extends GenericAttribute<MObject> {
 
 		// If we want to be able to enter mineral amounts, add the panel to do so
 		if (this.getConstraint().equals(MpDb.doc.Sample_minerals)) {
+
+			// Fixes a bug where minerals carry over from previous uses
+			amountsPanel = null;
+			amountsPanel = new MultipleObjectDetailsPanel<SampleMineral>(
+					new GenericAttribute[] {
+						new TextAttribute(MpDb.doc.SampleMineral_Sample_minerals_amount)
+					});
+			
 			//final DisclosurePanel amountsDPanel = new DisclosurePanel();
 			//amountsDPanel.setHeader(new Button("Choose Amounts..."));
 			
@@ -200,8 +203,9 @@ public class MineralAttribute extends GenericAttribute<MObject> {
 
 			//vp.add(amountsDPanel);
 			vp.add(amountsContentPanel);
-			vp.add(mineralDPanel);
 		}
+
+		vp.add(mineralDPanel);
 		
 		return new Widget[] {
 			vp

@@ -16,7 +16,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.MineralAttrib
 
 /**
  * Basically a mineral attribute but the user can choose if it is not a mineral
- * but part of a large rock as well
+ * but a bulk rock sample (called "large rock" in the code)
  * 
  */
 public class AnalysisMaterialAttribute extends GenericAttribute {
@@ -48,7 +48,7 @@ public class AnalysisMaterialAttribute extends GenericAttribute {
 		final Widget[] mineralWidgets = ma.createEditWidget(obj, id, ma);
 		final Widget[] rbWidgets = rb.createEditWidget(obj, id);
 		return new Widget[] {
-				mineralWidgets[0], rbWidgets[0]
+			mineralWidgets[0], rbWidgets[0]
 		};
 	}
 
