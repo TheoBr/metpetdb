@@ -8,6 +8,8 @@ import java.util.Set;
 
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -25,6 +27,7 @@ public class AddImageAttribute<DataType extends HasImages> extends
 		GenericAttribute<DataType> implements ClickListener {
 
 	private final Button addImage;
+	//private final Button addXrayImage;
 	private Set<Image> images;
 	private MHtmlList list;
 	private final VerticalPanel vp;
@@ -32,8 +35,12 @@ public class AddImageAttribute<DataType extends HasImages> extends
 	public AddImageAttribute(final ObjectConstraint<Image> ic) {
 		super(ic);
 		addImage = new Button("Add Image", this);
+		//addXrayImage = new Button("Add X-Ray Image", this);
+		FlowPanel fp = new FlowPanel();
+		fp.add(addImage);
+		//fp.add(addXrayImage);
 		vp = new VerticalPanel();
-		vp.add(addImage);
+		vp.add(fp);
 	}
 
 	@Override
@@ -117,12 +124,20 @@ public class AddImageAttribute<DataType extends HasImages> extends
 				imageContainer.add(new Label("Element: " + xray.getElement()));
 		}
 		if (editMode) {
-			imageContainer.add(new Button("Remove", new ClickListener() {
+			FlowPanel hr = new FlowPanel();
+			hr.add(new Button("Edit", new ClickListener() {
+				public void onClick(final Widget sender) {
+					//Open a panel to edit the image
+					new EditImageWizard(image).show();
+				}
+			}));
+			hr.add(new Button("Remove", new ClickListener() {
 				public void onClick(final Widget sender) {
 					images.remove(image);
 					imageContainer.removeFromParent();
 				}
 			}));
+			imageContainer.add(hr);
 		}
 		return imageContainer;
 	}
@@ -136,8 +151,11 @@ public class AddImageAttribute<DataType extends HasImages> extends
 	}
 
 	public void onClick(final Widget sender) {
+		// X-ray images not implemented
+		//if (sender == addImage || sender == addXrayImage) {
+		//	new AddImageWizard((sender == addXrayImage), new MCommand<Image>() {
 		if (sender == addImage) {
-			new AddImageWizard(new MCommand<Image>() {
+			new AddImageWizard(false, new MCommand<Image>() {
 				@Override
 				public void execute(Image result) {
 					images.add(result);

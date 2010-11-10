@@ -28,6 +28,7 @@ public class ChooseImageDialog extends MDialogBox implements ClickListener {
 	private Button cancel;
 	private Button ok;
 	private Button newImage;
+	private Button newXrayImage;
 	private ImageBrowserImageList list;
 	private Subsample s;
 
@@ -53,10 +54,12 @@ public class ChooseImageDialog extends MDialogBox implements ClickListener {
 		cancel = new Button(LocaleHandler.lc_text.buttonCancel(), this);
 		ok = new Button("Ok", this);
 		newImage = new Button("New Image", this);
+		newXrayImage = new Button("New X-Ray Image", this);
 
 		this.s = s;
 
 		fp.add(newImage);
+		fp.add(newXrayImage);
 		fp.add(ok);
 		fp.add(cancel);
 		this.setWidget(fp);
@@ -84,8 +87,8 @@ public class ChooseImageDialog extends MDialogBox implements ClickListener {
 					}
 				}.begin();
 			}
-		} else if (sender == newImage) {
-			new AddImageWizard(new MCommand<Image>() {
+		} else if (sender == newImage || sender == newXrayImage) {
+			new AddImageWizard(sender == newXrayImage, new MCommand<Image>() {
 				@Override
 				public void execute(Image result) {
 					s.addImage(result);
