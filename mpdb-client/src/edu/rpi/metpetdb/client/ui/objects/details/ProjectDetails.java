@@ -66,7 +66,7 @@ public class ProjectDetails extends FlowPanel {
 	public ProjectDetails createNew() {
 		final Project p = new Project();
 		p.setOwner(MpDb.currentUser());
-		p.getMembers().add(MpDb.currentUser());
+		//p.getMembers().add(MpDb.currentUser());
 		p_project.edit(p);
 		return this;
 	}
