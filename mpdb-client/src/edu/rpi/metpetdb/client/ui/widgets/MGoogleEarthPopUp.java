@@ -9,6 +9,7 @@ import com.google.gwt.maps.client.MapType;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.control.SmallMapControl;
 import com.google.gwt.maps.client.event.EarthInstanceHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -55,6 +56,25 @@ public class MGoogleEarthPopUp extends MDialogBox{
 	    map.addControl(new SmallMapControl());
 	    map.addMapType(MapType.getEarthMap());
 	    map.setCurrentMapType(MapType.getEarthMap());
+
+	    // Automatically zoom to the first sample in the list
+	    if (list.size() > 0) {
+	    	map.getEarthInstance(new EarthInstanceHandler(){
+	    		public void onEarthInstance(final EarthInstanceEvent e){
+	    	    	Point zoom_point = ((Point)list.get(list.size() - 1).getLocation());
+					MGoogleEarth.setView(e, zoom_point.x, zoom_point.y);
+					// Hack to fix zoom; the call to setView calls a native function
+					// after a 1000ms timer and we need to wait for that to have been called
+					new Timer() {
+			            @Override
+			            public void run() {
+			            	map.setZoomLevel(3);
+			            }
+			        }.schedule(1010);
+					
+	    		}
+	    	});
+		}
 	    
     	earthContainer.add(map);
     	final ListBox locationLinks = new ListBox();
@@ -78,6 +98,7 @@ public class MGoogleEarthPopUp extends MDialogBox{
     	earthContainer.add(close);
 		setWidget(earthContainer);
 	}
+	
 	public void createUIMetamorphicRegions(){
 		final FlowPanel earthContainer = new FlowPanel();
 		final Button close = new Button("Close");
