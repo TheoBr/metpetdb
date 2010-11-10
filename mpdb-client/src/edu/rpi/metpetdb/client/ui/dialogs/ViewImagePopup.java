@@ -2,7 +2,6 @@ package edu.rpi.metpetdb.client.ui.dialogs;
 
 import java.util.ArrayList;
 
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -11,44 +10,61 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.KeyboardListener;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.MouseListener;
-import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 
+/**
+ * Displays an image in a pop up dialog. Supports browsing between 
+ * multiple images.
+ * 
+ * @author ?, millib2
+ */
 public class ViewImagePopup extends MDialogBox implements ClickListener,
 		KeyboardListener {
-	private final MLink close;
+	
+	private FocusPanel f;
 	private FlexTable ft;
-	final FocusPanel f;
-	private int index;
+	private MLink closeBtn;
 	private Label imageTitle;
-	private Label page;
+	private Label pageLbl;
+	private Label descriptionLbl;
+	private Label scaleLbl;
 	private com.google.gwt.user.client.ui.Image displayImage;
 	private ArrayList<Image> images;
+	private int index;
 
-	public ViewImagePopup(final ArrayList<Image> images,
-			final com.google.gwt.user.client.ui.Image image, int indexStart) {
-		close = new MLink("", this);
+	/**
+	 * Creates a pop-up to display the given collection of images.
+	 * 
+	 * @param images List of images to display.
+	 * @param indexStart Index of image to display initially.
+	 */
+	public ViewImagePopup(final ArrayList<Image> images, 
+			final com.google.gwt.user.client.ui.Image image, int indexStart) {		
+		// We want the dialog to close when we click outside it
+		super(true, false);
+		
+		closeBtn = new MLink("", this);
 		this.images = images;
-		// close.setStyleName(Styles.PRIMARY_BUTTON);
-		close.addStyleName("lbCloseLink");
+		closeBtn.addStyleName("lbCloseLink");
 		ft = new FlexTable();
 		displayImage = image;
 		
 		index = indexStart;
 		Image currentImage = (Image) images.get(index);
-		imageTitle = new Label(parseFilename(currentImage.getFilename()));
-		page = new Label("Image " + (index + 1) + " of " + images.size());
+		setupFields(currentImage);
 
 		displayImage.setStyleName("image-title");
-		imageTitle.setStyleName("gray");
-		ft.setWidget(3, 0, displayImage);
-		ft.setWidget(1, 0, imageTitle);
-		ft.setWidget(2, 0, page);
-		ft.setWidget(0, 0, close);
+		//imageTitle.setStyleName("gray");
+		ft.setWidget(0, 0, this.closeBtn);
+		ft.setWidget(1, 0, this.imageTitle);
+		ft.setWidget(2, 0, this.pageLbl);
+		ft.setWidget(3, 0, this.descriptionLbl);
+		ft.setWidget(4, 0, this.scaleLbl);
+		ft.setWidget(5, 0, this.displayImage);
+		
 		ft.getFlexCellFormatter().setRowSpan(1, 1, 2);
 		ft.getFlexCellFormatter().setColSpan(0, 0, 2);
 		ft.getFlexCellFormatter().setAlignment(1, 1,
@@ -67,27 +83,78 @@ public class ViewImagePopup extends MDialogBox implements ClickListener,
 		setWidget(f);
 	}
 
-	private void nextImage(final boolean direction) {
-		if (direction)
+	/**
+	 * Change the image being displayed in the pop-up.
+	 * 
+	 * @param right 
+	 * 		If true increases the index by one (moves to the right in the list of images.)
+	 */
+	private void nextImage(final boolean right) {
+		if (right)
 			index = ++index % images.size();
 		else {
 			--index;
 			if (index < 0)
 				index = images.size() - 1;
 		}
-
-		Image temp = (Image) images.get(index);
-		com.google.gwt.user.client.ui.Image tempImage = new com.google.gwt.user.client.ui.Image();
-		tempImage.setUrl(temp.getServerPath());
-		ViewImagePopup.this.imageTitle = new Label(parseFilename(temp.getFilename()));
-		ViewImagePopup.this.page = new Label("Image " + (index + 1) + " of "
-				+ images.size());
-		ViewImagePopup.this.displayImage.setUrl(tempImage.getUrl());
-		ft.setWidget(0, 0, ViewImagePopup.this.displayImage);
-		ft.setWidget(1, 0, ViewImagePopup.this.imageTitle);
-		ft.setWidget(2, 0, ViewImagePopup.this.page);
+		
+		setCurrentImage(index);		
+		setDimensions();
+	}
+	
+	/**
+	 * Sets the values of the data fields to match the given image.
+	 * 
+	 * @param currentImage
+	 */
+	private void setupFields(Image currentImage) {
+		imageTitle = new Label(parseFilename(currentImage.getFilename()));
+		imageTitle.setStyleName("gray");	
+		pageLbl = new Label("Image " + (index + 1) + " of " + images.size());
+		descriptionLbl = new Label(currentImage.getDescription());
+		scaleLbl = new Label(currentImage.getScale().toString() + " millimeters in width");
+	}
+	
+	/**
+	 * Rebuilds the pop-up to display the image at the given index.
+	 * 
+	 * @param index
+	 */
+	private void setCurrentImage(int index) {
+		ft = new FlexTable();
+		closeBtn = new MLink("", this);
+		closeBtn.addStyleName("lbCloseLink");	
+		
+		Image currentImage = (Image)images.get(index);
+		
+		displayImage = new com.google.gwt.user.client.ui.Image();
+		displayImage.setUrl(currentImage.getServerPath());
 		displayImage.setStyleName("image-title");
-		imageTitle.setStyleName("gray");
+		setupFields(currentImage);
+		ft.setWidget(0, 0, this.closeBtn);
+		ft.setWidget(1, 0, this.imageTitle);
+		ft.setWidget(2, 0, this.pageLbl);
+		ft.setWidget(3, 0, this.descriptionLbl);
+		ft.setWidget(4, 0, this.scaleLbl);
+		ft.setWidget(5, 0, this.displayImage);	
+		
+		ft.getFlexCellFormatter().setRowSpan(1, 1, 2);
+		ft.getFlexCellFormatter().setColSpan(0, 0, 2);
+		ft.getFlexCellFormatter().setAlignment(1, 1,
+				HasHorizontalAlignment.ALIGN_RIGHT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		ft.getFlexCellFormatter().setAlignment(1, 0,
+				HasHorizontalAlignment.ALIGN_LEFT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		ft.getFlexCellFormatter().setAlignment(2, 0,
+				HasHorizontalAlignment.ALIGN_LEFT,
+				HasVerticalAlignment.ALIGN_MIDDLE);
+		ft.setCellSpacing(4);	
+		
+		f = new FocusPanel();
+		f.addKeyboardListener(this);
+		f.setWidget(ft);
+		setWidget(f);
 	}
 
 	private String parseFilename(final String filename) {
@@ -98,7 +165,7 @@ public class ViewImagePopup extends MDialogBox implements ClickListener,
 	}
 
 	public void onClick(Widget sender) {
-		if (sender == close) {
+		if (sender == closeBtn) {
 			this.hide();
 		}
 	}
@@ -112,17 +179,20 @@ public class ViewImagePopup extends MDialogBox implements ClickListener,
 		else if (kc == 'p')
 			nextImage(false);
 	}
-	public void onKeyDown(final Widget sender, final char kc, final int mod) {
+	
+	public void onKeyDown(final Widget sender, final char kc, final int mod) { }
+	
+	public void onKeyUp(final Widget sender, final char kc, final int mod) { }
 
-	}
-	public void onKeyUp(final Widget sender, final char kc, final int mod) {
-
-	}
-
+	@Override
 	protected void onLoad() {
-		final int left2 = (Window.getClientWidth() - getOffsetWidth()) / 2;
-		final int top2 = (Window.getClientHeight() - getOffsetHeight()) / 2;
-		setPopupPosition(left2, top2);
+		setDimensions();
+	}
+	
+	/**
+	 * Positions the pop-up and scales the displayed image.
+	 */
+	private void setDimensions() {
 		
 		//resize the image if it exceeds the size of the browser window
 		int imageHeight = displayImage.getHeight();
@@ -144,5 +214,7 @@ public class ViewImagePopup extends MDialogBox implements ClickListener,
 			displayImage.setSize(((int) (imageWidth * imageMultiplier)) + "px",
 					((int) (imageHeight * imageMultiplier)) + "px");
 		}
+
+		super.onLoad();
 	}
 }

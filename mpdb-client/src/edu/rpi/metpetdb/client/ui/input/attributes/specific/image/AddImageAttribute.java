@@ -101,6 +101,9 @@ public class AddImageAttribute<DataType extends HasImages> extends
 		});
 		imageContainer.add(img);
 		imageContainer.add(new Label(image.getImageType().toString()));
+		if (!image.getCollector().equals("") && !image.getCollector().equals(null) && !image.getCollector().equals("null")) {
+			imageContainer.add(new Label("Collected by: " + image.getCollector()));
+		}
 		if (image.getImageType().getImageType().contains("X-ray")) {
 			final XrayImage xray = (XrayImage) image;
 			if (xray.getCurrent() != null)
