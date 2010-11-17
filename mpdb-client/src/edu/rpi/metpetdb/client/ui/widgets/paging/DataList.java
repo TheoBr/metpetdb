@@ -241,13 +241,16 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 	 * @param pageValues
 	 */
 	public void setSelectionsForPage(List<RowType> pageValues){
+		/*
 		for (int i = 0; i < pageValues.size(); i++) {
 			RowType t = pageValues.get(i);
 			Object id = getId(t);
 			if (tableSelections.containsKey(id)){
 				dataTable.selectRow(i, false);
 			}
-		}
+		}*/
+		tableSelections.clear();
+		dataTable.deselectAllRows();
 	}
 
 	/**
