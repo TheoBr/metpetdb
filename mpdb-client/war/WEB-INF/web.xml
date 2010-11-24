@@ -120,7 +120,7 @@
 </servlet>
 <servlet-mapping>
   <servlet-name>fileUploadServlet</servlet-name>
-  <url-pattern>/MetPetDBApplication/spreadsheetUpload</url-pattern>
+  <url-pattern>/spreadsheetUpload</url-pattern>
 </servlet-mapping>
 
 <servlet>
