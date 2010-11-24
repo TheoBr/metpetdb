@@ -199,7 +199,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		progressTimer = new Timer() {
 			public void run() {
 				RequestBuilder builder = new RequestBuilder(RequestBuilder.GET,
-						 "./spreadsheetUpload");
+						 "../spreadsheetUpload");
 				try {
 					builder.sendRequest("", new RequestCallback() {
 						public void onError(Request request, Throwable exception) {}
