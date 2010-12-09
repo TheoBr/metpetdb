@@ -55,28 +55,7 @@ public class ViewImagePopup extends MDialogBox implements ClickListener,
 		index = indexStart;
 		Image currentImage = (Image) images.get(index);
 		setupFields(currentImage);
-
-		displayImage.setStyleName("image-title");
-		//imageTitle.setStyleName("gray");
-		ft.setWidget(0, 0, this.closeBtn);
-		ft.setWidget(1, 0, this.imageTitle);
-		ft.setWidget(2, 0, this.pageLbl);
-		ft.setWidget(3, 0, this.descriptionLbl);
-		ft.setWidget(4, 0, this.scaleLbl);
-		ft.setWidget(5, 0, this.displayImage);
 		
-		ft.getFlexCellFormatter().setRowSpan(1, 1, 2);
-		ft.getFlexCellFormatter().setColSpan(0, 0, 2);
-		ft.getFlexCellFormatter().setAlignment(1, 1,
-				HasHorizontalAlignment.ALIGN_RIGHT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		ft.getFlexCellFormatter().setAlignment(1, 0,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		ft.getFlexCellFormatter().setAlignment(2, 0,
-				HasHorizontalAlignment.ALIGN_LEFT,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		ft.setCellSpacing(4);
 		f = new FocusPanel();
 		f.addKeyboardListener(this);
 		f.setWidget(ft);
@@ -111,26 +90,16 @@ public class ViewImagePopup extends MDialogBox implements ClickListener,
 		imageTitle = new Label(parseFilename(currentImage.getFilename()));
 		imageTitle.setStyleName("gray");	
 		pageLbl = new Label("Image " + (index + 1) + " of " + images.size());
-		descriptionLbl = new Label(currentImage.getDescription());
-		scaleLbl = new Label(currentImage.getScale().toString() + " millimeters in width");
-	}
-	
-	/**
-	 * Rebuilds the pop-up to display the image at the given index.
-	 * 
-	 * @param index
-	 */
-	private void setCurrentImage(int index) {
-		ft = new FlexTable();
-		closeBtn = new MLink("", this);
-		closeBtn.addStyleName("lbCloseLink");	
+		if (currentImage.getDescription() != null && currentImage.getDescription() != "")
+			descriptionLbl = new Label(currentImage.getDescription());
+		else
+			descriptionLbl = new Label(currentImage.getFilename());
+		if (currentImage.getScale() != null && currentImage.getScale() > 0)
+			scaleLbl = new Label(currentImage.getScale().toString() + " millimeters in width");
+		else
+			scaleLbl = new Label("No scale specified for this image.");
 		
-		Image currentImage = (Image)images.get(index);
-		
-		displayImage = new com.google.gwt.user.client.ui.Image();
-		displayImage.setUrl(currentImage.getServerPath());
 		displayImage.setStyleName("image-title");
-		setupFields(currentImage);
 		ft.setWidget(0, 0, this.closeBtn);
 		ft.setWidget(1, 0, this.imageTitle);
 		ft.setWidget(2, 0, this.pageLbl);
@@ -149,7 +118,24 @@ public class ViewImagePopup extends MDialogBox implements ClickListener,
 		ft.getFlexCellFormatter().setAlignment(2, 0,
 				HasHorizontalAlignment.ALIGN_LEFT,
 				HasVerticalAlignment.ALIGN_MIDDLE);
-		ft.setCellSpacing(4);	
+		ft.setCellSpacing(4);
+	}
+	
+	/**
+	 * Rebuilds the pop-up to display the image at the given index.
+	 * 
+	 * @param index
+	 */
+	private void setCurrentImage(int index) {
+		ft = new FlexTable();
+		closeBtn = new MLink("", this);
+		closeBtn.addStyleName("lbCloseLink");	
+		
+		Image currentImage = (Image)images.get(index);
+		
+		displayImage = new com.google.gwt.user.client.ui.Image();
+		displayImage.setUrl(currentImage.getServerPath());
+		setupFields(currentImage);
 		
 		f = new FocusPanel();
 		f.addKeyboardListener(this);
