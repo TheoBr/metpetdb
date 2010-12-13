@@ -116,7 +116,7 @@ public class MpDb {
 	public static final String WIKI_URL = "http://wiki.cs.rpi.edu/trac/metpetdb";
 	public static final String JAVADOC_URL = "http://samana.cs.rpi.edu:8080/metpetwebtst/api/index.html";
 	public static final String JUNIT_URL = "http://samana.cs.rpi.edu:8080/metpetwebtst/reports/index.html";
-	public static final String BUG_REPORT_URL = "http://trinity.db.cs.rpi.edu:8080/mantis/login_page.php";
+	public static final String BUG_REPORT_URL = "http://metpetdb.rpi.edu/mantis/";
 	public static final String METPETDB_HELP_URL = GWT.getHostPageBaseURL() + "help/helphome.html";
 	public static final String HOW_TO_BULK_UPLOAD_URL = GWT.getHostPageBaseURL() + "help/HowToUploadData.html";
 	public static final String HOW_TO_VIEW_DATA_URL = GWT.getHostPageBaseURL() +"help/HowToViewData.html";
