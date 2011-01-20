@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+
+    <link rel="stylesheet" type="text/css" href="css/basic.css" media="screen" />
+    
+    <script  type="text/javascript" src="js/jquery-1.4.4.js"></script>
+    <script type="text/javascript">
+
+   $(function() {
+
+
+       $("<ul>").insertAfter("#userblock");
+       $.getJSON('http://localhost:8080/MetPetRest/user.json', {foo:'bar'},function(userDataArray)
+       {
+
+          $.each(userDataArray, function(index, userData)
+         {
+              $("<div class='indexcard' id='" + userData.userId + "'><dl>" 
+                     + ((userData.name!= null) ? "<dt>name: </dt><dd>" + userData.name : "")  + "</dd>" 
+                     + ((userData.institution != null) ? "<dt>Institution: </dt><dd>" +  userData.institution : "") + "</dd>" 
+                     +	 ((userData.professionalUrl != null) ? "<dt>Professional URL: </dt><dd>" + userData.professionalUrl : "") + "</dd></dl>" + 
+                      "<div  id='" + userData.userId + "'></div></div>"
+
+            ).appendTo("#userblock");
+
+
+                 
+             $.getJSON('http://localhost:8080/MetPetRest/usersample.json', {userId:userData.userId}, function(sampleDataArray)
+             {
+            	 $("<div class=\"label\">Samples</div>").appendTo('#' + userData.userId);
+
+                 $.each(sampleDataArray, function(index, sampleData)
+                {
+                    $("<div><a href='http://metpetdb.rpi.edu/metpetweb/#sample/" + sampleData.sampleId + "'>http://metpetdb.rpi.edu/metpetweb/#sample/" + sampleData.sampleId + "</a> Owner: " + sampleData.sampleOwner + "</div>").appendTo('#' + userData.userId);
+
+         
+                });
+
+
+             });
+
+
+
+
+             
+          });
+
+       });
+
+
+        $("</ul>").insertAfter("#userblock");
+
+
+
+    });
+
+</script>
+
+</head>
+
+
+<body>
+
+
+<div id="userblock">
+
+
+</div>
+
+
+</body>
+</html>

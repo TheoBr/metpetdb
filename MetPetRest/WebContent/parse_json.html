@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+
+
+    <link rel="stylesheet" type="text/css" href="css/basic.css" media="screen" />
+
+
+    <script  type="text/javascript" src="js/jquery-1.4.4.js"></script>
+
+
+    <script type="text/javascript">
+
+   $(function() {
+
+
+       $.getJSON('http://localhost:8080/MetPetRest/sample.json', {foo:'bar'},function(urlDataArray)
+       {
+
+          $.each(urlDataArray, function(index, urlData)
+          {
+              $("<a href=\"" + index + "\"><div class='indexcard'>Metpetdb publication sample, author: " + ((urlData.author != null) ? urlData.author : "") + ", title: \"" + ((urlData.title != null) ? urlData.title : "") + "\" region: "  + ((urlData.description != null) ? urlData.description : "") + "</div></a>").insertAfter("#urlblock");
+          });
+           
+       });
+
+
+
+    });
+
+</script>
+    
+</head>
+
+
+<body>
+
+
+<div id="urlblock">
+
+
+</div>
+
+
+</body>
+</html>

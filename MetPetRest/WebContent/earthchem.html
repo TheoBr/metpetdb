@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title></title>
+
+     <link rel="stylesheet" type="text/css" href="css/basic.css" media="screen" />
+
+    <script  type="text/javascript" src="js/jquery-1.4.4.js"></script>
+
+
+    <script type="text/javascript">
+
+   $(function() {
+
+       $.getJSON('http://localhost:8080/MetPetRest/samples.json', {foo:'bar'},function(sampleNumbers)
+       {
+    	   
+   // 	   $(sampleNumbers).appendTo("earthchemblock");
+
+           $.each(sampleNumbers, function(index, sampleNumber)
+        	          {
+		
+	                     $.getJSON('http://localhost:8080/MetPetRest/earthchem_sample/' + sampleNumber.sampleNumber + '.xml', {}, function(sampleData)
+	                     {
+	                
+	                    	 $(sampleData).appendTo("#earthchemblock")
+
+	                     });
+
+	           
+
+        	          });
+           
+           });
+
+    });
+
+</script>
+
+</head>
+
+
+<body>
+
+
+<div id="earthchemblock">
+</div>
+
+
+</body>
+</html>
