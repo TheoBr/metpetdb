@@ -56,7 +56,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 	private static final LocaleEntity lc_entity = LocaleHandler.lc_entity;
 	private final MText desc = new MText(lc_text.bulkUpload_Desc(), "p");
 	private final MLink help = new MLink(lc_text.bulkUpload_Help(),
-			"docs/mpdb-bulkupload-help.pdf", true);
+			"help/HowToUploadData.html", true);
 
 	private final FlowPanel main = new FlowPanel();
 	private final FormPanel form = new FormPanel();
@@ -122,7 +122,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		addPageActionItem(help);
 		help.setStyleName(CSS.LINK_LARGE_ICON);
 		help.addStyleName(CSS.LINK_INFO);
-		help.setTitle("Instructional PDF on how to use Bulk Upload.");
+		help.setTitle("Instructions on how to use Bulk Upload.");
 
 		add(main);
 		main.setStyleName(CSS.MAIN);
