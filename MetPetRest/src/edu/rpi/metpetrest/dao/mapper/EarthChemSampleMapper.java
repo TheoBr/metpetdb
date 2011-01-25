@@ -31,6 +31,7 @@ public class EarthChemSampleMapper implements
 
 			data.setLocation((Point) geometry.getGeometry());
 
+			data.setLocationPrecision(rs.getDouble(5));
 			EarthChemPublicationDataMapper pubDataMapper = new EarthChemPublicationDataMapper();
 			PublicationData pubData = pubDataMapper.mapRow(rs, 0);
 

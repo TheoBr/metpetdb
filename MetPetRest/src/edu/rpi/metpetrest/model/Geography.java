@@ -15,10 +15,10 @@ public class Geography {
 		
 	}
 	
-	public Geography(double x, double y) {
+	public Geography(double x, double y, Double locationError) {
 
 		location = new Location(x, y);
-		locationPrecision = new String("100");
+		locationPrecision = locationError.toString();
 
 	}
 
@@ -34,14 +34,7 @@ public class Geography {
 		return this.locationPrecision;
 	}
 	
-	public void toXML(StringBuilder sb) {
-		sb.append("<Geography><Location><Point><coord>");
-	//	sb.append("<X>" + this.x + "</X>");
-	//	sb.append("<Y>" + this.y + "</Y>");
-		sb.append("</coord></Point></Location>");
-		sb.append("<Location_Precision>100</Location_Precision>");
-		sb.append("</Geography>");
-	}
+
 }
 
 

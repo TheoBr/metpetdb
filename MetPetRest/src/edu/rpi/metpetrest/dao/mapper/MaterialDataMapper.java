@@ -12,8 +12,8 @@ public class MaterialDataMapper implements RowMapper<MaterialData> {
 	@Override
 	public MaterialData mapRow(ResultSet rs, int arg1) throws SQLException {
 
-		MaterialData materialData = new MaterialData(rs.getString(9),
-				rs.getString(10));
+		MaterialData materialData = new MaterialData(rs.getString(10),
+				rs.getString(11));
 
 		return materialData;
 	}

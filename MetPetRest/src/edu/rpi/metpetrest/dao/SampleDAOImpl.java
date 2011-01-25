@@ -4,6 +4,10 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.Element;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import edu.rpi.metpetrest.dao.mapper.EarthChemChemicalsMapper;
@@ -33,7 +37,7 @@ public class SampleDAOImpl extends JdbcTemplate {
 
 	private static final String sampleQueryForUser = "SELECT  samples.sample_id, samples.user_id, users.name from samples, users where samples.user_id = ? and samples.user_id = users.user_id and samples.public_data = 'Y'";
 
-	private static final String earthChemSampleQuery = "select samples.sample_id, samples.number, samples.sesar_number, samples.location, georeference.title, georeference.first_author, georeference.second_authors, georeference.journal_name, metamorphic_grades.name, rock_type.rock_type, chemical_analyses.large_rock, minerals.name FROM samples LEFT OUTER JOIN subsamples ON (samples.sample_id = subsamples.sample_id) LEFT OUTER JOIN chemical_analyses ON (subsamples.subsample_id = chemical_analyses.subsample_id) LEFT OUTER JOIN sample_metamorphic_grades ON (samples.sample_id = sample_metamorphic_grades.sample_id) LEFT OUTER JOIN metamorphic_grades ON ( sample_metamorphic_grades.metamorphic_grade_id = metamorphic_grades.metamorphic_grade_id) LEFT OUTER JOIN sample_reference ON (samples.sample_id = sample_reference.sample_id) LEFT OUTER JOIN georeference ON (sample_reference.reference_id = georeference.reference_id) LEFT OUTER JOIN sample_minerals ON ( samples.sample_id = sample_minerals.sample_id) LEFT OUTER JOIN minerals ON (sample_minerals.mineral_id = minerals.mineral_id) LEFT OUTER JOIN rock_type ON (samples.rock_type_id = rock_type.rock_type_id) WHERE samples.number = ?";
+	private static final String earthChemSampleQuery = "select samples.sample_id, samples.number, samples.sesar_number, samples.location, samples.location_error, georeference.title, georeference.first_author, georeference.second_authors, georeference.journal_name, metamorphic_grades.name, rock_type.rock_type, chemical_analyses.large_rock, minerals.name FROM samples LEFT OUTER JOIN subsamples ON (samples.sample_id = subsamples.sample_id) LEFT OUTER JOIN chemical_analyses ON (subsamples.subsample_id = chemical_analyses.subsample_id) LEFT OUTER JOIN sample_metamorphic_grades ON (samples.sample_id = sample_metamorphic_grades.sample_id) LEFT OUTER JOIN metamorphic_grades ON ( sample_metamorphic_grades.metamorphic_grade_id = metamorphic_grades.metamorphic_grade_id) LEFT OUTER JOIN sample_reference ON (samples.sample_id = sample_reference.sample_id) LEFT OUTER JOIN georeference ON (sample_reference.reference_id = georeference.reference_id) LEFT OUTER JOIN sample_minerals ON ( samples.sample_id = sample_minerals.sample_id) LEFT OUTER JOIN minerals ON (sample_minerals.mineral_id = minerals.mineral_id) LEFT OUTER JOIN rock_type ON (samples.rock_type_id = rock_type.rock_type_id) WHERE samples.number = ?";
 
 	private static final String earthChemMineralsQuery = "select minerals.name FROM samples LEFT OUTER JOIN sample_minerals ON ( samples.sample_id = sample_minerals.sample_id) LEFT OUTER JOIN minerals ON (sample_minerals.mineral_id = minerals.mineral_id) WHERE samples.number = ?";
 
@@ -43,16 +47,57 @@ public class SampleDAOImpl extends JdbcTemplate {
 
 	private DataSource dataSource = null;
 
-	public SampleDAOImpl() {
+	private final Ehcache cache;
+	
+	public SampleDAOImpl(CacheManager cacheManager) {
 
+
+		this.cache = cacheManager.getEhcache("earthChemSamples");
+		
 	}
+	
+	
+    public EarthChemSample readEarthChemSample(String sampleNumber) 
+    {
+    	Element element = cache.get(sampleNumber);
+    	
+    	if (element != null)
+    		return (EarthChemSample)element.getValue();
+    	else
+    		return null;
+    	
+    }
 
+    
 	public EarthChemSample getEarthChemSample(String sampleNumber) {
-		return this.query(earthChemSampleQuery, new Object[] { sampleNumber },
-				new EarthChemSampleMapper());
+		
+		EarthChemSample sampleFound = null;
+		
+		if ((sampleFound = readEarthChemSample(sampleNumber)) != null)
+			return sampleFound;
+		else
+			{
+			sampleFound = this.query(earthChemSampleQuery, new Object[] { sampleNumber },new EarthChemSampleMapper());
+			
+			List<String> minerals = this.getEarthChemMinerals(sampleNumber);
+			
+			Method method = this.getEarthChemChemicals(sampleNumber);
+
+			sampleFound.getEarthChemData().getCitation().getSampleType()
+					.addMinerals(minerals);
+
+			if (method != null && method.getItems() != null
+					&& method.getItems().size() > 0)
+				sampleFound.getEarthChemData().getCitation().getSampleType()
+						.addMethod(method);// addChemicals(chemicals);
+
+			
+			cache.put(new Element(sampleFound.getSampleNumber(), sampleFound));
+			return sampleFound;
+			}
 	}
 
-	public List<String> getEarthChemMinerals(String sampleNumber) {
+	public List<String> getEarthChemMinerals(String sampleNumber) {	
 		return this.query(earthChemMineralsQuery,
 				new Object[] { sampleNumber }, new EarthChemMineralsMapper());
 	}

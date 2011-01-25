@@ -15,14 +15,14 @@ public class EarthChemPublicationDataMapper implements
 
 		PublicationData publicationData = new PublicationData();
 		 
-		publicationData.setTitle((rs.getString(5) != null) ? rs.getString(5)
+		publicationData.setTitle((rs.getString(6) != null) ? rs.getString(6)
 				: "");
-		publicationData.setAuthor((rs.getString(6) != null) ? rs.getString(6)
+		publicationData.setAuthor((rs.getString(7) != null) ? rs.getString(7)
 				: "");
-		publicationData.setSecondAuthors((rs.getString(7) != null) ? rs
-				.getString(7) : "");
-		publicationData.setJournalName((rs.getString(8) != null) ? rs
+		publicationData.setSecondAuthors((rs.getString(8) != null) ? rs
 				.getString(8) : "");
+		publicationData.setJournalName((rs.getString(9) != null) ? rs
+				.getString(9) : "");
 
 		return publicationData;
 

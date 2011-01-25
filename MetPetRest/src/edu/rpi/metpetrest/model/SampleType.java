@@ -114,10 +114,10 @@ class Rock {
 
 	@XmlElement(name = "rockclass")
 	public String getRockClass() {
-		if (rockclass != null)
-			return "metamorphic: " + this.rockclass;
-		else
-			return "";
+		    if (this.rockclass == null)
+		    	return "metamorphic: ";
+		    else
+		    	return "metamorphic: " + this.rockclass;
 	}
 
 	@XmlElement(name = "rockname")

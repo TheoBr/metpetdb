@@ -1,5 +1,7 @@
 package edu.rpi.metpetrest.model;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -10,7 +12,7 @@ import org.postgis.Point;
 
 @XmlRootElement(name="EarthChemSample")
 
-public class EarthChemSample {
+public class EarthChemSample implements Serializable {
 
 	private String igsn;
 	
@@ -24,6 +26,9 @@ public class EarthChemSample {
 	
 	private Point location;
 
+	
+	private Double locationPrecision = null;
+	
 	private EarthChemData earthChemData = null;
 	
 
@@ -79,7 +84,7 @@ public class EarthChemSample {
 	@XmlElement(name="Geography")
 	public Geography getGeography()
 	{
-		return new Geography(this.location.getX(), this.location.getY());
+		return new Geography(this.location.getX(), this.location.getY(), this.locationPrecision);
 
 	}
 
@@ -99,6 +104,18 @@ public class EarthChemSample {
 
 	public void setEarthChemData(EarthChemData earthChemData) {
 		this.earthChemData = earthChemData;
+	}
+
+	@XmlTransient()
+	public Double getLocationPrecision() {
+		if (locationPrecision == null)
+			return new Double(1000);
+		else
+			return locationPrecision;
+	}
+
+	public void setLocationPrecision(Double locationPrecision) {
+		this.locationPrecision = locationPrecision;
 	}
 	
 	

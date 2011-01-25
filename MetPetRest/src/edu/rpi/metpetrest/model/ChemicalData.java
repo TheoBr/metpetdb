@@ -1,6 +1,8 @@
 package edu.rpi.metpetrest.model;
 
-public class ChemicalData {
+import java.io.Serializable;
+
+public class ChemicalData implements Serializable {
 
 	private String name;
 	private String quality;

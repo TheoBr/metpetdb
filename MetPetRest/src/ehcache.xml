@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ehcache >
+   <diskStore path="java.io.tmpdir"/>
+   
+    <defaultCache
+            maxElementsInMemory="0"
+            eternal="false"
+            timeToIdleSeconds="0"
+            timeToLiveSeconds="0"
+            overflowToDisk="false"
+            maxElementsOnDisk="0"
+            diskPersistent="false"
+            diskExpiryThreadIntervalSeconds="120"
+            memoryStoreEvictionPolicy="LRU"
+            />
+  
+  
+  <cache
+    name="earthChemSamples"
+    maxElementsInMemory="10000"
+    eternal="false"
+    timeToIdleSeconds="3600"
+    timeToLiveSeconds="3600"
+    overflowToDisk="true"
+  />
+</ehcache>

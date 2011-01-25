@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="mpdb-web-service" basedir="." >
+
+	
+	<property name="mpdb-build-dir" location="/home/hudson" />
+    <property name="build" location="${basedir}/build/WEB-INF/classes" />
+    <property name="ctx_lib" location="${basedir}/WebContent/WEB-INF/lib" />
+    <property name="war" location="${build}/MetPetRest.war" />
+
+	
+	<target name="clean">
+			<delete dir="${build}" />
+			<mkdir dir="${build}" />
+			<tstamp>
+				<format property="build.time" pattern="MM/dd/yyyy hh:mm aa"/>
+			</tstamp>
+		</target>
+		
+		<path id="project.class.path">
+	    <pathelement location="${build}"/>
+	    <fileset dir="${ctx_lib}" includes="**/*.jar"/>
+		</path>
+     
+        <target name="compile" depends="clean" description="Compiles the java code">
+
+               <javac destdir="${build}" srcdir="${basedir}/src" classpathref="project.class.path" source="1.6" target="1.6" debug="false" optimize="false"/>
+
+				<copy todir="${build}" includeemptydirs="no">
+						<fileset dir="${mpdb-common-dir}/src" includes="**/*.java" />				
+				</copy>
+				
+				<copy todir="${build}" includeemptydirs="no">
+						<fileset dir="${mpdb-common-dir}/src" includes="**/*.properties" />				
+				</copy>
+				<copy todir="${build}" includeemptydirs="no">
+						<fileset dir="${mpdb-server-dir}/src" includes="**/*.properties" />				
+				</copy>				
+        </target>
+        
+ 
+	<target name="copy-stuff" depends="compile">
+		<copy todir="${build}/../lib" includeemptydirs="no" flatten="true">
+			<fileset dir="${ctx_lib}" includes="**/*.jar"/>
+		</copy>								
+		
+
+	</target>
+
+	<target name="war" depends="copy-stuff">
+		<property file="${mpdb-build-dir}/test-build.properties" />
+		
+		<filterset id="props">
+			<filter token="APPUSER" value="${APPUSER}" />
+			<filter token="APPPASS" value="${APPPASS}" />
+			<filter token="DATABASE" value="${DATABASE}" />
+			<filter token="DATABASE_HOST" value="${DATABASE_HOST}" />
+			<filter token="postgis" value="${postgis}" />
+			<filter token="INDICES" value="${INDICES}" />
+		</filterset>
+
+		<copy tofile="${build}/services-servlet.xml" file="${mpdb-build-dir}/test-files.properties">
+			<filterset refid="props" />
+		</copy>
+
+		
+		<war destfile="MetPetRest.war">
+			<fileset dir="${build}/../.."/>
+		</war>
+		
+	</target>
+</project>

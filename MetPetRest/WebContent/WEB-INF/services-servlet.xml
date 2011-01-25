@@ -21,7 +21,12 @@
  <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
  <tx:annotation-driven  transaction-manager="transactionManager"/>
   
+ <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+    <property name="configLocation" value="classpath:/ehcache.xml"/>
+</bean>
+  
  <bean id="sampleDAO" class="edu.rpi.metpetrest.dao.SampleDAOImpl">
+ 	<constructor-arg ref="cacheManager"/>
  	<property name="dataSource" ref="dataSource"></property>
  </bean>
  
@@ -51,13 +56,7 @@
   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
   	<property name="dataSource" ref="dataSource"/>
   </bean>
-  
- 
- <!--  <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
-     <property name="viewClass" value="edu.rpi.metpetrest.EarthChemXMLView"/>
-    <property name="prefix" value="/WEB-INF/jsp/"/>
-    <property name="suffix" value=".xml"/>
- </bean>-->
+
  
    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
   <property name="mediaTypes">
@@ -97,15 +96,6 @@
 	            		<value>edu.rpi.metpetrest.model.EarthChemModel</value>
            			</list>
         		</property>
-        		
-      <!--   		<property name="schemas">
-        			<list>
-        				<bean name="foo" class=""/>
-        				<bean name="bar" class=""/>
-        				<bean name="baz" class=""/>
-        				
-        			</list>
-        		</property> -->
       		</bean>
    			</constructor-arg>
   	
@@ -126,9 +116,35 @@
   	
   	  </bean>
 
+<bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+  <property name="targetObject" ref="urlRestService" />
+  <property name="targetMethod" value="getEarthChemSamples" />
+  <property name="concurrent" value="false" />
+</bean>
    
+<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+    <property name="jobDetail" ref="jobDetail" />
+    <property name="startDelay" value="10" />
+    <property name="repeatCount" value="0" />
+    <property name="repeatInterval" value="0" />
+</bean>
 
-  
+<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <property name="jobDetail" ref="jobDetail" />
+    <property name="cronExpression" value="5 0 * * * ?" />
+</bean>
+
+<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <property name="triggers">
+        <list>
+            <ref bean="cronTrigger" />
+            <ref bean="simpleTrigger" />
+        </list>
+    </property>
+</bean>
+    
+   
+    
   
    
 </beans>

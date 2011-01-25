@@ -1,8 +1,10 @@
 package edu.rpi.metpetrest.model;
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlElement;
 
-public class EarthChemData {
+public class EarthChemData implements Serializable{
 
 	private MaterialData materialData = null;
 

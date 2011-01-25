@@ -3,6 +3,10 @@ package edu.rpi.metpetrest;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,14 +19,13 @@ import edu.rpi.metpetrest.dao.SampleDAOImpl;
 import edu.rpi.metpetrest.dao.UserDAOImpl;
 import edu.rpi.metpetrest.model.EarthChemModel;
 import edu.rpi.metpetrest.model.EarthChemSample;
-import edu.rpi.metpetrest.model.Method;
 import edu.rpi.metpetrest.model.PublicationData;
 import edu.rpi.metpetrest.model.SampleData;
 import edu.rpi.metpetrest.model.UserData;
 import edu.rpi.metpetrest.model.UserSampleData;
 
 @Controller
-public class UrlController {
+public class UrlController  {
 
 	private SampleDAOImpl sampleDAO = null;
 
@@ -32,6 +35,15 @@ public class UrlController {
 
 	private static final String uriRoot = "http://metpetdb.rpi.edu/metpetweb/";
 
+
+
+	
+	public UrlController()
+	{
+
+	}
+	
+	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public ModelAndView getAllUsers() {
 		ModelAndView mav = new ModelAndView();
@@ -166,16 +178,6 @@ public class UrlController {
 		EarthChemSample earthChemSample = sampleDAO
 				.getEarthChemSample(sampleNumber);
 
-		List<String> minerals = sampleDAO.getEarthChemMinerals(sampleNumber);
-		Method method = sampleDAO.getEarthChemChemicals(sampleNumber);
-
-		earthChemSample.getEarthChemData().getCitation().getSampleType()
-				.addMinerals(minerals);
-
-		if (method != null && method.getItems() != null
-				&& method.getItems().size() > 0)
-			earthChemSample.getEarthChemData().getCitation().getSampleType()
-					.addMethod(method);// addChemicals(chemicals);
 
 		return earthChemSample;
 	}
@@ -213,5 +215,6 @@ public class UrlController {
 	public void setUserDAO(UserDAOImpl userDAO) {
 		this.userDAO = userDAO;
 	}
+
 
 }

@@ -1,6 +1,8 @@
 package edu.rpi.metpetrest.model;
 
-public class MineralData {
+import java.io.Serializable;
+
+public class MineralData implements Serializable{
 
 	private String name;
 	
