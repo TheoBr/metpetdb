@@ -41,16 +41,9 @@
 
 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
     <property name="driverClassName" value="org.postgis.DriverWrapper"/>
-	
-	<property name="url" value="jdbc:postgresql_postGIS://localhost/mpdb3"/>
-    <property name="username" value="metpetwebdev"/>
-    <property name="password" value="metpetwebdev"/>
-     
-    <!-- 
-    <property name="url" value="jdbc:postgresql_postGIS://samana.cs.rpi.edu/mpdb_stable"/>
-    <property name="username" value="metpetdb_md5"/>
-    <property name="password" value="Dz6azO4P"/>
-    -->
+	<property name="url" value="jdbc:postgresql_postGIS://@DATABASE_HOST@/@DATABASE@"/>
+    <property name="username" value="@APPUSER@"/>
+    <property name="password" value="@APPPASS@"/>
   </bean>
 	
   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
