@@ -35,8 +35,11 @@
         </target>
         
  
-	<target name="copy-stuff" depends="compile">
-			
+
+	<target name="stage-war" depends="compile">
+		
+		<property file="${mpdb-build-dir}/stage-build.properties" />
+	
 		<filterset id="props">
 			<filter token="APPUSER" value="${APPUSER}" />
 			<filter token="APPPASS" value="${APPPASS}" />
@@ -47,27 +50,48 @@
 		<copy todir="${build}/../.." includeemptydirs="no" flatten="false">
 			<fileset dir="${ctx_web}" includes="**/*"/>
 			<filterset refid="props"/>
-		</copy>								
-	</target>
-
-	<target name="stage-war" depends="copy-stuff">
-		<property file="${mpdb-build-dir}/stage-build.properties" />
-	
+		</copy>		
+		
 		<war destfile="MetPetRest.war">
 			<fileset dir="${build}/../.."/>
 		</war>
 	</target>
 
-	<target name="test-war" depends="copy-stuff">
+	<target name="test-war" depends="compile">
 		<property file="${mpdb-build-dir}/test-build.properties" />
 	
+		<filterset id="props">
+			<filter token="APPUSER" value="${APPUSER}" />
+			<filter token="APPPASS" value="${APPPASS}" />
+			<filter token="DATABASE" value="${DATABASE}" />
+			<filter token="DATABASE_HOST" value="${DATABASE_HOST}" />
+		</filterset>
+				
+		<copy todir="${build}/../.." includeemptydirs="no" flatten="false">
+			<fileset dir="${ctx_web}" includes="**/*"/>
+			<filterset refid="props"/>
+		</copy>		
+		
 		<war destfile="MetPetRest.war">
 			<fileset dir="${build}/../.."/>
 		</war>
 	</target>
 		
-	<target name="local-war" depends="copy-stuff">
+	<target name="local-war" depends="compile">
 		<property file="${mpdb-build-dir}/local-build.properties" />
+		
+		<filterset id="props">
+			<filter token="APPUSER" value="${APPUSER}" />
+			<filter token="APPPASS" value="${APPPASS}" />
+			<filter token="DATABASE" value="${DATABASE}" />
+			<filter token="DATABASE_HOST" value="${DATABASE_HOST}" />
+		</filterset>
+				
+		<copy todir="${build}/../.." includeemptydirs="no" flatten="false">
+			<fileset dir="${ctx_web}" includes="**/*"/>
+			<filterset refid="props"/>
+		</copy>		
+
 		<war destfile="MetPetRest.war">
 			<fileset dir="${build}/../.."/>
 		</war>
