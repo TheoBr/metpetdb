@@ -51,7 +51,7 @@
 	</target>
 
 	<target name="stage-war" depends="copy-stuff">
-		<property file="${mpdb-build-dir}/test-build.properties" />
+		<property file="${mpdb-build-dir}/stage-build.properties" />
 	
 		<war destfile="MetPetRest.war">
 			<fileset dir="${build}/../.."/>
