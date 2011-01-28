@@ -1,12 +1,11 @@
 package edu.rpi.metpetrest;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +22,8 @@ import edu.rpi.metpetrest.model.PublicationData;
 import edu.rpi.metpetrest.model.SampleData;
 import edu.rpi.metpetrest.model.UserData;
 import edu.rpi.metpetrest.model.UserSampleData;
+import edu.rpi.metpetrest.sitemap.model.SitemapModel;
+import edu.rpi.metpetrest.sitemap.model.Url;
 
 @Controller
 public class UrlController  {
@@ -36,13 +37,29 @@ public class UrlController  {
 	private static final String uriRoot = "http://metpetdb.rpi.edu/metpetweb/";
 
 
+	private static final DateFormatter formatter = new DateFormatter("yyyy-MM-dd");
 
 	
 	public UrlController()
 	{
 
 	}
-	
+
+	@RequestMapping(value = "/sitemap", method = RequestMethod.GET)
+	public ModelAndView getSitemap()
+	{
+		SitemapModel sitemap = new SitemapModel();
+		
+		for (SampleData sample : sampleDAO
+				.findPublicSampleDataOwnedByPublication()) {
+			sitemap.addUrl(new Url(uriRoot + "#sample/" + sample.getSampleId(), formatter.print(new Date(), Locale.ENGLISH) , "always", "0.5"));
+		}
+		
+		ModelAndView mav = new ModelAndView("sitemapView",
+				BindingResult.MODEL_KEY_PREFIX + "siteMap", sitemap);
+		
+		return mav;
+	}
 	
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public ModelAndView getAllUsers() {

@@ -109,6 +109,18 @@
   	
   	  </bean>
 
+    <bean id="sitemapView" name="sitemapView" class="org.springframework.web.servlet.view.xml.MarshallingView">  	
+  	  		<constructor-arg>
+      		<bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+          		<property name="classesToBeBound">
+            		<list>           		
+	            		<value>edu.rpi.metpetrest.sitemap.model.SitemapModel</value>
+           			</list>
+        		</property> 
+      		</bean>
+   			</constructor-arg>
+  	
+  	  </bean>
 <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
   <property name="targetObject" ref="urlRestService" />
   <property name="targetMethod" value="getEarthChemSamples" />
