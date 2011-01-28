@@ -558,11 +558,13 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 	
 	private void makeImagesPublicIfPublic(Sample sample) {
 		//If it's private, just return, images default to private
-		if(!sample.isPublicData()) return;
+		//if(!sample.isPublicData()) return; do they?
+		
+		Boolean pub = sample.isPublicData();
 		
 		Set<edu.rpi.metpetdb.client.model.Image> images = sample.getImages();
 		for(edu.rpi.metpetdb.client.model.Image i: images){
-			i.setPublicData(true);
+			i.setPublicData(pub);
 		}
 		return;
 	}
