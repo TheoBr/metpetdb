@@ -133,12 +133,23 @@ public class KMLCreater {
 
 
 				org.postgis.Point labelLoc = (org.postgis.Point) region.getLabelLocation();
-
+				
+			
 				KML += "<Placemark>\n";
 				KML += "<name>" + region.getName() + "</name>\n";
 				KML += "<description>" + region.getDescription() + "</description>\n";
+	
+				if (labelLoc != null)
+				{
 				KML += "<Point>\n <coordinates>";
 				KML += labelLoc.x +","+ labelLoc.y + ",0 </coordinates>\n</Point>\n";
+				}
+				else
+				{
+				KML += "<Point>\n <coordinates>";
+				KML += "0,0,0 </coordinates>\n</Point>\n";
+				}
+				
 				KML += "</Placemark>\n";
 
 				KML += " <Placemark>\n";
@@ -186,9 +197,10 @@ public class KMLCreater {
 			return KML;
 		}
 		catch (Exception e) {
-			System.out.print(e.getMessage());
+			e.printStackTrace();
+			//System.out.print(e.getMessage());
+			return "";
 		}
-		return "";
-
+	
 	}
 }
