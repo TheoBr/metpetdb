@@ -27,7 +27,7 @@ public class AddImageAttribute<DataType extends HasImages> extends
 		GenericAttribute<DataType> implements ClickListener {
 
 	private final Button addImage;
-	//private final Button addXrayImage;
+	private final Button addXrayImage;
 	private Set<Image> images;
 	private MHtmlList list;
 	private final VerticalPanel vp;
@@ -35,10 +35,10 @@ public class AddImageAttribute<DataType extends HasImages> extends
 	public AddImageAttribute(final ObjectConstraint<Image> ic) {
 		super(ic);
 		addImage = new Button("Add Image", this);
-		//addXrayImage = new Button("Add X-Ray Image", this);
+		addXrayImage = new Button("Add X-Ray Image", this);
 		FlowPanel fp = new FlowPanel();
 		fp.add(addImage);
-		//fp.add(addXrayImage);
+		fp.add(addXrayImage);
 		vp = new VerticalPanel();
 		vp.add(fp);
 	}
@@ -152,10 +152,10 @@ public class AddImageAttribute<DataType extends HasImages> extends
 
 	public void onClick(final Widget sender) {
 		// X-ray images not implemented
-		//if (sender == addImage || sender == addXrayImage) {
-		//	new AddImageWizard((sender == addXrayImage), new MCommand<Image>() {
-		if (sender == addImage) {
-			new AddImageWizard(false, new MCommand<Image>() {
+		if (sender == addImage || sender == addXrayImage) {
+			new AddImageWizard((sender == addXrayImage), new MCommand<Image>() {
+		//if (sender == addImage) {
+		//	new AddImageWizard(false, new MCommand<Image>() {
 				@Override
 				public void execute(Image result) {
 					images.add(result);

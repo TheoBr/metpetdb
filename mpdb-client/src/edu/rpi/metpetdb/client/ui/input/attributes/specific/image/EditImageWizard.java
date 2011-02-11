@@ -49,8 +49,10 @@ public class EditImageWizard extends WizardDialog {
 			public void execute(final Object result) {
 				if (result instanceof ImageType) {
 					if (((ImageType) result).getImageType().contains("X-ray")) {
+						EditImageWizard.this.removeStep(1);
 						xrayPanel.edit(EditImageWizard.this.image);
-						EditImageWizard.this.addStep(xrayPanel, 1,
+						EditImageWizard.this.addStep(xrayPanel, 
+								EditImageWizard.this.getPanelCount(),
 								" X-ray Attributes");
 						EditImageWizard.this.enableNextButton(true);
 						EditImageWizard.this.enableFinishButton(false);

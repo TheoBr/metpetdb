@@ -189,5 +189,9 @@ public class WizardDialog extends MDialogBox implements ClickListener {
 	public HashMap<GenericAttribute, DetailsPanelEntry> getPanelEntries(int id){
 		return panels.get(id).dpEntries;
 	}
+	
+	public int getPanelCount() {
+		return panels.size();
+	}
 
 }
