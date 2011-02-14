@@ -2,15 +2,19 @@ package edu.rpi.metpetrest.model;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlAccessorOrder;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 import org.postgis.Point;
 
 
+
 @XmlRootElement(name="EarthChemSample")
+@XmlType(propOrder={"geography", "earthChemData"})
 
 public class EarthChemSample implements Serializable {
 
@@ -43,8 +47,8 @@ public class EarthChemSample implements Serializable {
 	public void setIgsn(String igsn) {
 		this.igsn = igsn;
 	}
-
-	@XmlAttribute(name="samplenumber")
+//No, this is not a mistake
+	@XmlAttribute(name="sample_id")
 	public String getSampleNumber() {
 		return sampleNumber;
 	}
@@ -52,8 +56,8 @@ public class EarthChemSample implements Serializable {
 	public void setSampleNumber(String sampleNumber) {
 		this.sampleNumber = sampleNumber;
 	}
-
-	@XmlAttribute(name="sample_id")	
+//No, this is not a mistake.  
+	@XmlAttribute(name="samplenumber")	
 	public String getSampleId() {
 		return sampleId;
 	}

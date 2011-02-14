@@ -28,7 +28,7 @@ public class Geography {
 		return this.location;
 	}
 	
-	@XmlElement(name="LocationPrecision")
+	@XmlElement(name="Location_Precision")
 	public String getLocationPrecision()
 	{
 		return this.locationPrecision;

@@ -5,6 +5,11 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
+
+
+@XmlType(propOrder={"phase", "materials"})
+
 
 public class SampleType {
 	private Phase phase;
@@ -15,18 +20,24 @@ public class SampleType {
 	}
 
 	public SampleType(String rockclass, String rockname) {
+		
 		this.phase = new Phase(rockclass, rockname);
 
 	}
 
-	@XmlElement(name = "PHASE")
+	@XmlElement(name = "Phase")
 	public Phase getPhase() {
 		return this.phase;
 	}
 
-	@XmlElement(name = "Material")
+	@XmlElement(name = "Material", required=true)
 	public List<Material> getMaterials() {
+		if (materials.size() == 0)
+		{
+			this.materials.add(new Material(null, "unspecified", null));
+		}
 		return this.materials;
+		
 	}
 
 	public void addMinerals(List<String> minerals) {
@@ -115,7 +126,7 @@ class Rock {
 	@XmlElement(name = "rockclass")
 	public String getRockClass() {
 		    if (this.rockclass == null)
-		    	return "metamorphic: ";
+		    	return "metamorphic";
 		    else
 		    	return "metamorphic: " + this.rockclass;
 	}

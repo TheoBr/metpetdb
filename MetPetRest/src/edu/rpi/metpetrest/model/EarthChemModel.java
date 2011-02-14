@@ -18,7 +18,7 @@ public class EarthChemModel {
 
 	@XmlAttribute(name = "firstResultPosition")
 	int firstResultPosition = 0;
-	@XmlAttribute(name = "majordataupdated")
+	@XmlAttribute(name = "majordateupdated")
 	int majordateupdated = 0;
 	@XmlAttribute(name = "totalResultsAvailable")
 	int totalResultsAvailable = 0;
@@ -31,11 +31,11 @@ public class EarthChemModel {
 		any = new HashMap<QName, Object>();
 
 		any.put(new QName("xmlns"),
-				"http://geoportal.kgs.ku.edu/earthchem/schema");
+				"http://www.earthchemportal.org/schema");
 		any.put(new QName("xmlns:xsi"),
 				"http://www.w3.org/2001/XMLSchema-instance");
 		any.put(new QName("xsi:schemaLocation"),
-				"http://geoportal.kgs.ku.edu/earthchem/schema http://geoportal.kgs.ku.edu/earthchem/schema/earthchem_v26.xsd");
+				"http://www.earthchemportal.org/schema http://www.earthchemportal.org/schema/earthchem_schema.xsd");
 	}
 
 	@XmlAnyAttribute()
