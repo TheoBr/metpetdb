@@ -128,7 +128,7 @@ class Rock {
 		    if (this.rockclass == null)
 		    	return "metamorphic";
 		    else
-		    	return "metamorphic: " + this.rockclass;
+		    	return "metamorphic : " + this.rockclass;
 	}
 
 	@XmlElement(name = "rockname")
