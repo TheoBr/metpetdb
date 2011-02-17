@@ -30,9 +30,17 @@ public class Item {
 			String units, String value) {
 		super();
 		this.group = group;
-		this.name = name;
+		if (name != null)
+			this.name = name.toUpperCase();
+
 		this.qualityrank = qualityrank;
-		this.type = type;
+		
+		if (type!= null && type.equals("oxides"))
+			this.type = "major_oxides";
+		else			
+			this.type = type;
+		//end if
+		
 		this.units = units;
 		this.value = value;
 	}
