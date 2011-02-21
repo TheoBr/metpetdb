@@ -14,12 +14,19 @@
 	NSMutableArray *buttonArray=[[NSMutableArray alloc] init];
 	refineButton=[[UIBarButtonItem alloc] initWithTitle:@"Add" style:UIBarButtonItemStyleBordered target:self action:@selector(backToCriteria)];
 	[buttonArray addObject:refineButton];
-	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
-	toolbar = [ [ UIToolbar alloc ] init ];
-	toolbar.frame = toolBarFrame;
-	toolbar.backgroundColor= [UIColor blackColor];
-	toolbar.items= buttonArray;
-	[self.view addSubview:toolbar];
+//	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
+//	toolbar = [ [ UIToolbar alloc ] init ];
+//	toolbar.frame = toolBarFrame;
+//	toolbar.backgroundColor= [UIColor blackColor];
+//	toolbar.items= buttonArray;
+//	[self.view addSubview:toolbar];
+	
+	
+	
+	[self.navigationController setToolbarHidden:NO animated:YES];
+	[self.navigationController.toolbar setBarStyle:UIBarStyleBlack];
+
+	[self setToolbarItems:buttonArray animated:YES];
 	
 	if([myMetamorphicGrades count]==0)//none of the samples in the specified search have a metamorphic grade listed, so display a message in the picker view
 	{
@@ -39,21 +46,21 @@
 	//before adding the new metamorphic grade to the array, loop through to make sure it has not already been added to the currentMetamorphicGrades array
 	int p;
 	bool alreadyAdded=FALSE;
-	for(p=0; p<[[currentSearchData metamorphicGrades] count]; p++)
+	for(p=0; p<[[CurrentSearchData getMetamorphicGrades] count]; p++)
 	{
-		if([[[currentSearchData metamorphicGrades] objectAtIndex:p] isEqualToString:gradeName])
+		if([[[CurrentSearchData getMetamorphicGrades] objectAtIndex:p] isEqualToString:gradeName])
 		{
 			alreadyAdded=TRUE; //this metamorphic grade is already in the array and should not be added again
 		}
 	}
 	if(alreadyAdded==FALSE)
 	{
-		[[currentSearchData metamorphicGrades] addObject:gradeName];
+		[[CurrentSearchData getMetamorphicGrades] addObject:gradeName];
 	}		
 	
 	SearchCriteriaController *viewController= [[SearchCriteriaController alloc] initWithNibName:@"SearchCriteriaSummary" bundle:nil];
 	[viewController setData:modifiedLocations2:searchCriteria];
-	[viewController setCurrentSearchData: currentSearchData];
+//	[viewController setCurrentSearchData: currentSearchData];
 	self.criteriaController=viewController;
 	[viewController release];
 	UIView *ControllersView =[criteriaController view];
@@ -83,10 +90,11 @@
 	mylocations=locations;
 	myMetamorphicGrades=metgrades;
 }
+/*
 -(void)setCurrentSearchData:(CurrentSearchData*)data
 {
 	currentSearchData=data;
-}
+}*/
 
 
 - (void)didReceiveMemoryWarning {
@@ -102,7 +110,7 @@
 	[myMetamorphicGrades release];
 	[currentStringValue release];
 	[newAnnotation release];
-	[toolbar release];
+//	[toolbar release];
 	[mylocations release];
 	[modifiedLocations release];
 	[refineButton release];

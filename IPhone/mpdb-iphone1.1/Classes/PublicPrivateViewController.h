@@ -18,7 +18,7 @@
 	NSMutableArray *myLocations;
 	AnnotationObjects *newAnnotation;
 	SearchCriteriaController *criteriaController;
-	UIToolbar *toolbar;
+//	UIToolbar *toolbar;
 	UIBarButtonItem *refineButton;
 	NSMutableArray *modifiedLocations; //this array holds the rocks that are of the rock type the user specifies
 	CLLocationCoordinate2D center;
@@ -35,7 +35,7 @@
 	UISegmentedControl *segControl;
 	NSString *Uname;
 	IBOutlet UIButton *okButton;
-	CurrentSearchData *currentSearchData;
+//	CurrentSearchData *currentSearchData;
 }
 @property (nonatomic, retain) IBOutlet UIButton *okButton;
 @property(nonatomic,copy) NSString *Uname;
@@ -48,7 +48,7 @@
 @property (nonatomic, retain) AnnotationObjects *newAnnotation;
 @property (nonatomic, copy) NSString *rockName;
 @property (nonatomic, retain) SearchCriteriaController *criteriaController;
-@property(nonatomic, retain) UIToolbar *toolbar;
+//@property(nonatomic, retain) UIToolbar *toolbar;
 @property (nonatomic, retain) UIBarButtonItem *refineButton;
 @property (nonatomic, copy) NSString *region;
 @property (nonatomic, copy) NSString *mapType;

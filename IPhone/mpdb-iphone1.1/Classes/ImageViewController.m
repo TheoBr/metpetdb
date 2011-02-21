@@ -52,10 +52,15 @@
 	height=40;
 	int max;
 	NSMutableArray *buttons=[[NSMutableArray alloc] init];
-	CGRect toolBarFrame= CGRectMake (0, 377, self.view.bounds.size.width, 40);
+/*	CGRect toolBarFrame= CGRectMake (0, 377, self.view.bounds.size.width, 40);
 	toolbar = [ [ UIToolbar alloc ] init ];
 	toolbar.frame = toolBarFrame;
-	[toolbar setBarStyle:1];
+	[toolbar setBarStyle:1];*/
+	
+	[self.navigationController setToolbarHidden:NO animated:YES];
+	[self.navigationController.toolbar setBarStyle:UIBarStyleBlack];	
+	[self setToolbarItems:buttons animated:YES];
+
 	
 	if(remainingCount>9)
 	{
@@ -163,7 +168,7 @@
 	ImageViewController *viewController=[[ImageViewController alloc] initWithNibName:@"ImageView" bundle:nil];
 	[viewController setVars:remainingCount:imageCount:imagePaths:imageIDs:pagesDisplayed];
 	[viewController setSamples:sampleAnnotation:locations:searchCriteria];
-	[viewController setCurrentSearchData:currentSearchData];
+	//[viewController setCurrentSearchData:currentSearchData];
 	
 	self.imageViewController=viewController;
 	UIView *newView= [imageViewController view];
@@ -182,7 +187,7 @@
 	SampleInfoController *viewController = [[SampleInfoController alloc] initWithNibName:@"SampleInfo" bundle:nil];
 	//[viewController setData:selectedSample:mySamples];
 	[viewController setSamples:locations:sampleAnnotation:searchCriteria];
-	[viewController setCurrentSearchData:currentSearchData];
+//	[viewController setCurrentSearchData:currentSearchData];
 	self.sampleController = viewController;
 	[viewController release];
 	UIView *ControllersView=[sampleController view];
@@ -231,11 +236,11 @@
 	locations=mylocations; 
 	searchCriteria=criteria;
 }
--(void)setCurrentSearchData:(CurrentSearchData*)data
+/*-(void)setCurrentSearchData:(CurrentSearchData*)data
 {
 	currentSearchData=data;
 	
-}
+}*/
 /*-(void)setCoordinate:(CLLocationCoordinate2D)center:(double)latSpan:(double) longSpan:(double)latmax:(double)latmin:(double)longmax:(double)longmin
  {
  //this function gets called the first time the map loads and it provides the center coordinate and zoom for the initial map view

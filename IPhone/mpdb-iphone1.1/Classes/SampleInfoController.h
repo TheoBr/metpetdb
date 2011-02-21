@@ -38,7 +38,7 @@
 	UIBarButtonItem *backButton;
 	IBOutlet UITextView *textView; //displays information about the sample below the title label
 	AnnotationObjects *sampleAnnotation;
-	UIToolbar *toolbar;
+//	UIToolbar *toolbar;
 	NSMutableArray *buttons;
 	UIBarButtonItem *subsampleButton;
 	UIBarButtonItem *commentButton;
@@ -73,9 +73,9 @@
 	CriteriaSummary *searchCriteria;
 	//if coordinates are used as a search criteria, an array must be kept with the original north, south, east, west
 	NSString *Uname;
-	CurrentSearchData *currentSearchData;
+//	CurrentSearchData *currentSearchData;
 }
-@property(nonatomic, retain)CurrentSearchData *currentSearchData;
+//@property(nonatomic, retain)CurrentSearchData *currentSearchData;
 @property (nonatomic, copy) NSString *currentPublicStatus;
 @property(nonatomic, copy)NSString *Uname;
 @property(nonatomic, retain)CriteriaSummary *searchCriteria;
@@ -96,7 +96,7 @@
 @property (nonatomic, retain) IBOutlet UITextView *textView;
 @property (nonatomic, retain) AnnotationObjects *sampleAnnotation;
 @property (nonatomic, copy) NSString *titleText;
-@property (nonatomic, retain) UIToolbar *toolbar;
+//@property (nonatomic, retain) UIToolbar *toolbar;
 @property (nonatomic, retain) UIBarButtonItem *subsampleButton;
 @property (nonatomic, retain) AnalysisSummary *analysisSummary;
 @property (nonatomic, retain) ImageViewController *imageViewController;

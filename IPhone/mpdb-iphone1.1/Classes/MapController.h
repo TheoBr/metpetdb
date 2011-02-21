@@ -41,7 +41,7 @@
 	UIButton *details;
 	NSString *selectedID;
 	NSMutableArray *buttonArray;
-	UIToolbar *toolbar;
+//	UIToolbar *toolbar;
 	NSMutableArray *buttons;
 	UINavigationBar *navBar;
 	UIBarButtonItem *narrowSearch;
@@ -67,7 +67,7 @@
 	double viewWidth; //the width of the view, constant, 320
 	double viewHeight; //the height of the view, constant, 480
 	SearchCriteriaController *criteriaController;
-	CurrentSearchData *currentSearchData;
+	//CurrentSearchData *currentSearchData;
 	NSMutableArray *currentRemovedSamples; //this array represents the samples that have been removed from the map as search criteria have been specified
 	uniqueSamples *selectedSample;
 	double maxLat, minLat, minLong, maxLong; //these will be used to make the points that will be used to make the search square;
@@ -116,7 +116,7 @@
 	NSString *rock;
 	CriteriaSummary *searchCriteria;
 }
-@property(nonatomic, retain)CurrentSearchData *currentSearchData;
+//@property(nonatomic, retain)CurrentSearchData *currentSearchData;
 @property (nonatomic, copy) NSString *currentPublicStatus;
 @property(nonatomic, retain) CriteriaSummary *searchCriteria;
 @property (nonatomic, retain) NSString *description;

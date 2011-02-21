@@ -25,9 +25,9 @@
 	NSString *sampleCategory;
 	bool visibleLocation;
 	CriteriaSummary *searchCriteria;
-	CurrentSearchData *currentSearchData;
+	//CurrentSearchData *currentSearchData;
 }
-@property(nonatomic, retain) CurrentSearchData *currentSearchData;
+// @property(nonatomic, retain) CurrentSearchData *currentSearchData;
 @property (nonatomic, retain) CriteriaSummary *searchCriteria;
 @property(nonatomic, copy) NSString *sampleCategory;
 @property(nonatomic, retain) UISegmentedControl *segControl;

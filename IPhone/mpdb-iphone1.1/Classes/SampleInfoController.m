@@ -15,7 +15,7 @@
 
 @implementation SampleInfoController
 @synthesize currentStringValue, rocktype, sampleID, locations, mapController, outputText, backButton, sampleAnnotation, imageCount;
-@synthesize toolbar, textView, titleLabel, titleText, subsampleButton, id, imageViewController, commentDisplay,  analysisSummary, imageButton;
+@synthesize textView, titleLabel, titleText, subsampleButton, id, imageViewController, commentDisplay,  analysisSummary, imageButton;
 @synthesize sampleName;
 @synthesize searchCriteria, Uname;
 
@@ -211,12 +211,17 @@
 	commentButton=[[UIBarButtonItem alloc] initWithTitle:commentTitle style: UIBarButtonItemStyleBordered target:self action: @selector(viewComments)];
 	[buttons addObject:subsampleButton];
 	[buttons addObject:commentButton];
-	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
+/*	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
 	toolbar = [ [ UIToolbar alloc ] init ];
 	toolbar.frame = toolBarFrame;
 	toolbar.items=buttons;	
 	[toolbar setBarStyle:1];
-	[self.view addSubview:toolbar];
+	[self.view addSubview:toolbar];*/
+	
+	
+	[self.navigationController setToolbarHidden:NO animated:YES];
+	[self.navigationController.toolbar setBarStyle:UIBarStyleBlack];
+	[self setToolbarItems:buttons animated:YES];
 }
 -(void)makeImageButton
 {
@@ -379,7 +384,7 @@
 		ImageViewController *viewController=[[ImageViewController alloc] initWithNibName:@"ImageView" bundle:nil];
 		[viewController setVars: remainingCount : 0:imagePaths :imageIDs:0]; 
 		[viewController setSamples:sampleAnnotation:locations:searchCriteria];
-		[viewController setCurrentSearchData:currentSearchData];
+	//	[viewController setCurrentSearchData:currentSearchData];
 		//[viewController setCoordinate:myLocation:latitudeSpan:longitudeSpan: maxLat:minLat: maxLong: minLong];
 		self.imageViewController=viewController;
 		[viewController release];
@@ -395,7 +400,7 @@
 	MapController *viewController=[[MapController alloc] initWithNibName:@"MapView" bundle:nil];
 	//[viewController setType:mapType];
 	[viewController setData:locations:searchCriteria];
-	[viewController setCurrentSearchData:currentSearchData];
+	//[viewController setCurrentSearchData:currentSearchData];
 	[mapController makeNavBar];
 	self.mapController= viewController;
 	[viewController release];
@@ -415,11 +420,11 @@
 	searchCriteria=criteria;
 	//originalCoordinates=original;
 }
-
+/*
 -(void)setCurrentSearchData:(CurrentSearchData*)data
 {
 	currentSearchData=data;
-}
+}*/
 - (void)dealloc {
 	[titleLabel release];
 	[sampleResponse release];
@@ -434,7 +439,7 @@
 	[backButton release];
 	[textView release];
 	[sampleAnnotation release];
-	[toolbar release];
+//	[toolbar release];
 	[buttons release];
 	[subsampleButton release];
 	[commentButton release];

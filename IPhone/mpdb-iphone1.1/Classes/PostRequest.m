@@ -134,11 +134,21 @@
 		UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"Network failure: unable to connect to internet." message:@"Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 		[alert show];
 	}
-//	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/scball/Documents/testpost.txt"];
 	
-//	[fh writeData:postReturn];
+	/*
+	NSFileManager *nsfm = [NSFileManager defaultManager];
 	
+   
+	NSString *sfh = [[NSString alloc] init];
 	
+	sfh=[sfh stringByAppendingFormat:@"/Users/scball/Desktop/"];	
+	sfh=[sfh  stringByAppendingFormat:@"%d", rand()];
+	sfh=[sfh stringByAppendingFormat:@".txt"];
+	
+	[nsfm createFileAtPath:sfh contents:myData attributes: nil];
+	*/
+	
+
 	return postReturn;
 }
 

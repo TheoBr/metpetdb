@@ -84,7 +84,7 @@
 {
 	MapController *viewController=[[MapController alloc] initWithNibName:@"MapView" bundle:nil];
 	[viewController setData:samples:searchCriteria];
-	[viewController setCurrentSearchData:currentSearchData];
+	//[viewController setCurrentSearchData:currentSearchData];
 	self.mapController= viewController;
 	[viewController release];
 	UIView *newView=[mapController view];
@@ -100,11 +100,11 @@
 	searchCriteria=criteria;
 	samples=mySamples;
 }
-
+/*
 -(void)setCurrentSearchData:(CurrentSearchData*)data
 {
 	currentSearchData= data;
-}
+}*/
 
 - (void)dealloc {
 	[segControl release];

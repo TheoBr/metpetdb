@@ -14,7 +14,7 @@
 #import "constants.h"
 
 @implementation SampleTableController
-@synthesize tableView, sampleID, sampleInfo, tempSample, tempName, tempOwner, toolbar;
+@synthesize tableView, sampleID, sampleInfo, tempSample, tempName, tempOwner;
 @synthesize searchCriteria;
 -(void)viewDidLoad{
 	
@@ -78,12 +78,18 @@
 	UIBarButtonItem *emailButton= [[UIBarButtonItem alloc] initWithTitle:@"Email Sample Info" style:UIBarButtonItemStyleBordered target:self action:@selector(sendEmail)];
 	//self.navigationItem.rightBarButtonItem=emailButton;
 	[buttons addObject:emailButton];
-	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
+/*	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
 	toolbar = [ [ UIToolbar alloc ] init ];
 	toolbar.frame = toolBarFrame;
 	toolbar.items=buttons;	
 	[toolbar setBarStyle:1];
 	[self.view addSubview:toolbar];
+ */
+	
+	
+	[self.navigationController setToolbarHidden:NO animated:YES];
+	[self.navigationController.toolbar setBarStyle:UIBarStyleBlack];
+	[self setToolbarItems:buttons animated:YES];
 	
 }
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)table {
@@ -143,7 +149,7 @@
 	SampleInfoController *viewController = [[SampleInfoController alloc] initWithNibName:@"SampleInfo" bundle:nil];
 	//[viewController setData:selectedSample:mySamples];
 	[viewController setSamples:locations:selectedSample:searchCriteria];
-	[viewController setCurrentSearchData:currentSearchData];
+	//[viewController setCurrentSearchData:currentSearchData];
 	self.sampleInfo = viewController;
 	[viewController release];
 	UIView *ControllersView=[sampleInfo view];
@@ -208,11 +214,11 @@
 	//originalCoordinates= original;
 }
 
--(void)setCurrentSearchData:(CurrentSearchData*)data
+/*-(void)setCurrentSearchData:(CurrentSearchData*)data
 {
 	currentSearchData= data;
 }
-
+*/
 
 
 - (void)didReceiveMemoryWarning {

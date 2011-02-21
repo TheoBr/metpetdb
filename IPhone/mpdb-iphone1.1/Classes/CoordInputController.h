@@ -21,15 +21,15 @@
 	IBOutlet UITextField *longitudeTextField;
 	IBOutlet UIButton *mapButton;
 	IBOutlet UIButton *focusButton;
-	UIToolbar *toolbar;
+//	UIToolbar *toolbar;
 	NSString *latitude;
 	NSString *longitude;
 	NSString *currentPublicStatus;
 	NSString *username;
 	bool locationVisible;
-	CurrentSearchData *currentSearchData;
+//	CurrentSearchData *currentSearchData;
 }
-@property(nonatomic, retain)CurrentSearchData *currentSearchData;
+//@property(nonatomic, retain)CurrentSearchData *currentSearchData;
 @property (nonatomic, retain) DropMapViewController *dropMap;
 @property (nonatomic, retain) IBOutlet UIButton *mapButton;
 @property (nonatomic, retain) IBOutlet UIButton *focusButton;
@@ -38,7 +38,7 @@
 @property(nonatomic, retain)RadiusController *radiusController;
 @property(nonatomic, retain)IBOutlet UITextField *latitudeTextField;
 @property(nonatomic, retain) IBOutlet UITextField *longitudeTextField;
-@property(nonatomic, retain) UIToolbar *toolbar;
+//@property(nonatomic, retain) UIToolbar *toolbar;
 @property(nonatomic, copy) NSString *latitude;
 @property(nonatomic, copy) NSString *longitude;
 

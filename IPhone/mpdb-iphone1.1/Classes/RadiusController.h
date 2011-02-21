@@ -22,7 +22,7 @@
 	IBOutlet UIPickerView *radiusPicker;
 	IBOutlet UIBarButtonItem *searchButton;
 	IBOutlet UILabel *outputlabel;
-	IBOutlet UIToolbar *toolbar;
+	//IBOutlet UIToolbar *toolbar;
 	BOOL isCurrentlyUpdating;
 	BOOL firstUpdate;
 	NSString *radius;
@@ -62,10 +62,10 @@
 	NSXMLParser *myParser;
 	CriteriaSummary *searchCriteria;
 	NSData *myReturn;
-	CurrentSearchData *currentSearchData;
+//	CurrentSearchData *currentSearchData;
 	NSMutableArray *tempArray;
 }
-@property(nonatomic, retain) CurrentSearchData *currentSearchData;
+//@property(nonatomic, retain) CurrentSearchData *currentSearchData;
 @property(nonatomic, copy)NSString *north;
 @property(nonatomic, copy)NSString *south;
 @property(nonatomic, copy)NSString *east;
@@ -83,7 +83,7 @@
 @property (nonatomic, copy) NSString *radius;
 @property (nonatomic, copy) NSString *latitude;
 @property (nonatomic, copy) NSString *longitude;
-@property (nonatomic, retain) UIToolbar *toolbar;
+//@property (nonatomic, retain) UIToolbar *toolbar;
 @property (nonatomic, retain) CLLocation *mylocationCoordinate;
 @property (nonatomic, retain) MapController *mapController;
 @property (nonatomic, copy) NSString *sampleID;

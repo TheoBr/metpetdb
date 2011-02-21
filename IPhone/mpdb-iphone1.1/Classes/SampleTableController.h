@@ -30,7 +30,7 @@
 	NSString *locations;
 	NSString *tempName;
 	NSString *tempOwner;
-	UIToolbar *toolbar;
+//	UIToolbar *toolbar;
 	int currentSampleCount;
 	
 	//the following variables store information about the range of the map view so it can be reset to exactly how it was when the user presses the back button
@@ -50,9 +50,9 @@
 	CriteriaSummary *searchCriteria;
 	//if coordinates are used as a search criteria, an array must be kept with the original north, south, east, west
 	//NSMutableArray *originalCoordinates;
-	CurrentSearchData *currentSearchData;
+	//CurrentSearchData *currentSearchData;
 }
-@property (nonatomic, retain)CurrentSearchData *currentSearchData;
+//@property (nonatomic, retain)CurrentSearchData *currentSearchData;
 @property (nonatomic, copy) CriteriaSummary *searchCriteria;
 @property(nonatomic, copy) NSString *region;
 @property (nonatomic, copy) NSString *mapType;
@@ -64,7 +64,7 @@
 
 @property (nonatomic, retain) NSMutableArray *currentOwners;
 
-@property (nonatomic, retain) UIToolbar *toolbar;
+//@property (nonatomic, retain) UIToolbar *toolbar;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
 @property (nonatomic, copy) NSString *sampleID;
 @property (nonatomic, retain) SampleInfoController *sampleInfo;

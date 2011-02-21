@@ -42,9 +42,9 @@
 	NSMutableArray *points;
 	//bool buttonVisible;
 	CriteriaSummary *searchCriteria;
-	CurrentSearchData *currentSearchData;
+//	CurrentSearchData *currentSearchData;
 }
-@property(nonatomic, retain) CurrentSearchData *currentSearchData;
+//@property(nonatomic, retain) CurrentSearchData *currentSearchData;
 @property (nonatomic, retain) CriteriaSummary *searchCriteria;
 @property (nonatomic, retain) uniqueSamples *group;
 @property (nonatomic, retain) uniqueSamples *newgroup;

@@ -20,7 +20,7 @@
 
 @interface DropMapViewController : UIViewController< MKReverseGeocoderDelegate, MKMapViewDelegate> {
 	MKMapView *mapView;
-	UIToolbar *toolbar;
+//	UIToolbar *toolbar;
 	double viewWidth;
 	CLLocationCoordinate2D selectedCoordinate;
 	MKAnnotationView *pin;
@@ -32,9 +32,9 @@
 	UIBarButtonItem *navButton;
 	UILabel *latLongLabel;
 	UIBarButtonItem *barButton;
-	CurrentSearchData *currentSearchData;
+//	CurrentSearchData *currentSearchData;
 }
-@property(nonatomic, retain)CurrentSearchData *currentSearchData;
+//@property(nonatomic, retain)CurrentSearchData *currentSearchData;
 @property (nonatomic, retain) UIBarButtonItem *barButton;
 @property (nonatomic, retain) UILabel *latLongLabel;
 @property (nonatomic, retain) UIBarButtonItem *navButton;
@@ -42,7 +42,7 @@
 @property(nonatomic, retain) RadiusController *radiusController;
 @property (nonatomic, copy) NSString *currentPublicStatus;
 @property (nonatomic, retain) DDAnnotationView *annotationView;
-@property(nonatomic, retain)UIToolbar *toolbar;
+//@property(nonatomic, retain)UIToolbar *toolbar;
 
-
+//-(IBAction)loadMap;
 @end

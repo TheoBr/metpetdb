@@ -76,7 +76,7 @@
         titleLabel.textAlignment = UITextAlignmentCenter;
 		titleLabel.numberOfLines=2;
         titleLabel.textColor = [UIColor blackColor];
-        titleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
+    //    titleLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
 		//set the background of the labels to be alternating colors
 		[cell.contentView addSubview:titleLabel];
 		
@@ -88,7 +88,7 @@
 			usernametext.enablesReturnKeyAutomatically= YES;
 			usernametext.font = [UIFont systemFontOfSize:15.0];
 			usernametext.textAlignment = UITextAlignmentLeft;
-			usernametext.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
+		//	usernametext.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
 			usernametext.autocorrectionType=UITextAutocorrectionTypeNo;
 			usernametext.returnKeyType= UIReturnKeyGo;
 			usernametext.placeholder=@"email@domain.com";
@@ -306,7 +306,7 @@
 	[usernametext release];
 	[passwordtext release];
 	[loginButton release];
-	[toolbar release];
+//	[toolbar release];
 	[mainViewController release];
 	[username release];
 	[password release];

@@ -11,7 +11,7 @@
 #import "constants.h"
 
 @implementation CommentDisplayController
-@synthesize sampleID, titleText, addCommentButton, toolbar, addComment, textView, currentStringValue, sampleName, commentCount, Uname;
+@synthesize sampleID, titleText, addCommentButton, addComment, textView, currentStringValue, sampleName, commentCount, Uname;
 
 -(void)viewDidLoad
 {
@@ -29,12 +29,18 @@
 	NSMutableArray *buttons=[[NSMutableArray alloc] init];
 	//addCommentButton=[[UIBarButtonItem alloc] initWithTitle:@"Add a Comment" style: UIBarButtonItemStyleBordered target:self action: @selector(addComment)];
 	//[buttons addObject:addCommentButton];
-	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
+	
+/*	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
 	toolbar = [ [ UIToolbar alloc ] init ];
 	toolbar.frame = toolBarFrame;
 	toolbar.items=buttons;	
 	[toolbar setBarStyle:1];
-	[self.view addSubview:toolbar];
+	[self.view addSubview:toolbar]; */
+	
+	[self.navigationController setToolbarHidden:NO animated:YES];
+	[self.navigationController.toolbar setBarStyle:UIBarStyleBlack];	
+	[self setToolbarItems:buttons animated:YES];
+	
 	
 	//only call the getComment function if the boolean is true
 	if(callCommentFunction== TRUE)
@@ -217,7 +223,7 @@
 - (void)dealloc {
 	[sampleID release];
 	[titleText release];
-	[toolbar release];
+//	[toolbar release];
 	[addCommentButton release];
 	[addComment release];
 	[textView release];

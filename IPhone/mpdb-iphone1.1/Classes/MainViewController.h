@@ -44,7 +44,6 @@
 	IBOutlet UILabel *copyrightLabel;
 	AlertViewController *alertController;
 	CLLocation *coord;
-	CurrentSearchData *currentSearchData;
 	UITableViewCell *usernameCell;
 	NSString *Uname;
 	id dataSource;
@@ -52,9 +51,12 @@
 	MainViewController *mainViewController;
 	UIAlertView *logoutAlertView;
 }
+
+//CurrentSearchData *currentSearchData;
+
 @property(nonatomic, retain) UIAlertView *logoutAlertView;
 @property(nonatomic, retain)MainViewController *mainViewController;
-@property(nonatomic, retain) CurrentSearchData *currentSearchData;
+//@property(nonatomic, retain) CurrentSearchData *currentSearchData;
 @property (nonatomic, copy) NSString *existingPassword;
 @property (nonatomic, retain) SecurityController *security;
 @property(nonatomic, retain) UISegmentedControl *segControl;

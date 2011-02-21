@@ -29,7 +29,7 @@
 	AnnotationObjects *newAnnotation;
 	NSMutableArray *myRockTypes; //this is the data source for the picker view and the list of all the rock types of the returned samples
 	SearchCriteriaController *criteriaController;
-	UIToolbar *toolbar;
+//	UIToolbar *toolbar;
 	UIBarButtonItem *refineButton;
 	NSMutableArray *modifiedLocations; //this array holds the rocks that are of the rock type the user specifies
 	//CLLocationCoordinate2D center;
@@ -41,9 +41,9 @@
 	NSString* mapType; //indicates map, hybrid or satellite
 	NSMutableArray *points;
 	CriteriaSummary *searchCriteria;
-	CurrentSearchData *currentSearchData;
+//	CurrentSearchData *currentSearchData;
 }
-@property (nonatomic, retain) CurrentSearchData *currentSearchData;
+//@property (nonatomic, retain) CurrentSearchData *currentSearchData;
 @property (nonatomic, retain) CriteriaSummary *searchCriteria;
 @property (nonatomic, retain) uniqueSamples *group;
 @property (nonatomic, retain) uniqueSamples *newgroup;
@@ -55,7 +55,7 @@
 @property (nonatomic, retain) AnnotationObjects *newAnnotation;
 @property (nonatomic, copy) NSString *rockName;
 @property (nonatomic, retain) SearchCriteriaController *criteriaController;
-@property(nonatomic, retain) UIToolbar *toolbar;
+//@property(nonatomic, retain) UIToolbar *toolbar;
 @property (nonatomic, retain) UIBarButtonItem *refineButton;
 @property (nonatomic, copy) NSString *region;
 @property (nonatomic, copy) NSString *mapType;

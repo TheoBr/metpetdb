@@ -80,16 +80,16 @@
 	bool edit;
 	NSString *Uname;
 	PublicPrivateViewController *publicPrivateController;
-	CurrentSearchData *currentSearchData;
+	//CurrentSearchData *currentSearchData;
 }
-@property(nonatomic, retain)CurrentSearchData *currentSearchData;
+//@property(nonatomic, retain)CurrentSearchData *currentSearchData;
 @property(nonatomic, retain) PublicPrivateViewController *publicPrivateController;
 @property(nonatomic, copy)NSString *Uname;
 //@property(nonatomic, copy) NSString *currentPublicStatus;
 @property(nonatomic, retain) CriteriaSummary *searchCriteria;
 //@property(nonatomic, retain) IBOutlet UITableView *tableView;
 @property (nonatomic, retain) TableController *tableController;
-@property (nonatomic, retain) UIToolbar *toolbar;
+//@property (nonatomic, retain) UIToolbar *toolbar;
 @property (nonatomic, retain) UIBarButtonItem *addButton;
 @property (nonatomic, retain) UIBarButtonItem *removeButton;
 @property (nonatomic, retain) UIBarButtonItem *clearButton;

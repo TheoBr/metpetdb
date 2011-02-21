@@ -14,7 +14,7 @@
 @interface CommentDisplayController : UIViewController <UITextViewDelegate, UITextFieldDelegate>  {
 	NSString *sampleID;
 	NSString *titleText;
-	UIToolbar *toolbar;
+//	UIToolbar *toolbar;
 	UIBarButtonItem *addCommentButton;
 	AddCommentController *addComment;
 	UITextView *textView;
@@ -33,7 +33,7 @@
 @property (nonatomic, copy) NSString *sampleID;
 //@property (nonatomic, retain)IBOutlet UITextView *textView;
 @property (nonatomic, copy) NSString *titleText;
-@property (nonatomic, retain) UIToolbar *toolbar;
+//@property (nonatomic, retain) UIToolbar *toolbar;
 @property (nonatomic, retain) UIBarButtonItem *addCommentButton;
 @property (nonatomic, retain) AddCommentController *addComment;
 @property (nonatomic, retain) IBOutlet UITextView *textView;

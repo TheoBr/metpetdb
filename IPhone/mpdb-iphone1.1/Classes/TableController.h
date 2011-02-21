@@ -51,9 +51,9 @@
 	//NSMutableArray *originalCoordinates;
 	NSString *Uname;
 	//NSString *currentPublicStatus;
-	CurrentSearchData *currentSearchData;
+	//CurrentSearchData *currentSearchData;
 }
-@property(nonatomic, retain)CurrentSearchData *currentSearchData;
+//@property(nonatomic, retain)CurrentSearchData *currentSearchData;
 @property (nonatomic, copy) NSString *currentPublicStatus;
 @property(nonatomic, copy) NSString *Uname;
 @property (nonatomic, retain) CriteriaSummary *searchCriteria;

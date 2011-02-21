@@ -15,11 +15,24 @@
 
 
 @implementation RadiusController
-@synthesize searchButton, radius, outputlabel, toolbar, mylocationCoordinate, timer;
+@synthesize searchButton, radius, outputlabel, mylocationCoordinate, timer;
 @synthesize mapController, sampleID, sampleName, indicator, searchCriteria;
-@synthesize north, south, east, west, currentSearchData;
+@synthesize north, south, east, west;//, currentSearchData;
 -(void)viewDidLoad{
-	toolbar.barStyle=UIBarStyleBlack;
+	
+	//[toolbar setToolbarHidden:YES animated:NO];
+
+	UIBarButtonItem *barButton=[[UIBarButtonItem alloc] initWithTitle:@"Search" style:UIBarButtonItemStyleBordered target:self action:@selector(showMap:) ];
+	NSMutableArray *buttons= [[NSMutableArray alloc] init];
+	[buttons addObject:barButton];
+
+	
+	[self.navigationController setToolbarHidden:NO animated:YES];
+	[self.navigationController.toolbar setBarStyle:UIBarStyleBlack];
+	[self setToolbarItems:buttons animated:YES];
+	
+	
+	//toolbar.barStyle=UIBarStyleBlack;
 	locations=[[NSMutableArray alloc] init];
 	
 	//build the array that the picker view will use
@@ -43,9 +56,12 @@
 	
 	CLLocationCoordinate2D centerCoordinate = [CurrentSearchData getCenterCoordinate];
 	
-	double lat = centerCoordinate.latitude;
+//	double lat = centerCoordinate.latitude;
 	
-	double longish = centerCoordinate.longitude;
+//	double longish = centerCoordinate.longitude;
+		
+	latitude= [[NSString alloc] initWithFormat:@"%.5f", centerCoordinate.latitude];
+	longitude=[[NSString alloc] initWithFormat:@"%.5f", centerCoordinate.longitude];
 	
 	NSString *output=[[NSString alloc] initWithFormat:@"Latitude: %.5f\nLongitude: %.5f\nSelect a radius (in Kilometers) to\nuse for your search:", centerCoordinate.latitude, centerCoordinate.longitude];
 	outputlabel.text=output;
@@ -55,6 +71,10 @@
 	radiusPicker.delegate=self;
 	[radiusPicker selectRow:7 inComponent:0 animated:NO];
 	radius=[[NSString alloc] initWithString:[radii objectAtIndex:7]];
+	
+	
+
+	
 	
 }
 
@@ -110,7 +130,7 @@
 	[tempCoordinates addObject:west];
 	
 	PostRequest *post = [[PostRequest alloc] init];
-	[post setData:nil:nil :nil :nil :currentSearchData.currentPublicStatus :nil:tempCoordinates:0:@"true": [CurrentSearchData getCenterCoordinate].latitude: [CurrentSearchData getCenterCoordinate].longitude];
+	[post setData:nil:nil :nil :nil :[CurrentSearchData getCurrentPublicStatus] :nil:tempCoordinates:0:@"true": [CurrentSearchData getCenterCoordinate].latitude: [CurrentSearchData getCenterCoordinate].longitude];
 	myReturn=[post buildPostString];
 	
 //	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/scball/Documents/test1.txt"];
@@ -146,7 +166,7 @@
 		
 		MapController *viewController = [[MapController alloc] initWithNibName:@"MapView" bundle:nil];
 		[viewController setData:locations:searchCriteria];
-		[viewController setCurrentSearchData:currentSearchData];
+//		[viewController setCurrentSearchData:currentSearchData];
 		//since there is no region the geographic search criteria displayed will be a lat and long coordinate
 		//set the point we want to be the center of the map view when it first appears and the zoom information
 		//first convert lat and long strings to doubles and then make a cllocation to pass to the map
@@ -177,7 +197,7 @@
 	//create a post request by sending the necessary data to a PostRequest object
 	//since the user has not yet specified any 
 	PostRequest *post= [[PostRequest alloc] init];
-	[post setData:nil:nil :nil :nil :currentSearchData.currentPublicStatus :nil:coordinates:0:@"false":nil:nil];
+	[post setData:nil:nil :nil :nil :[CurrentSearchData getCurrentPublicStatus] :nil:coordinates:0:@"false":nil:nil];
 
 
 	myReturn=[post buildPostString];
@@ -206,7 +226,7 @@
 
 -(void)setData:(CurrentSearchData*)data
 {
-	currentSearchData=data;
+	//currentSearchData=data;
 	
 	CLLocationCoordinate2D centerCoord = [CurrentSearchData getCenterCoordinate];
 	
@@ -223,7 +243,7 @@
 	[radiusPicker release];
 	[searchButton release];
 	[outputlabel release];
-	[toolbar release];
+	//[toolbar release];
 	[radius release];
 	[latitude release];
 	[longitude release];

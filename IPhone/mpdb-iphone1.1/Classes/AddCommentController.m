@@ -11,7 +11,7 @@
 #import "constants.h"
 
 @implementation AddCommentController
-@synthesize titleText, sampleID, textView, toolbar, Uname;
+@synthesize titleText, sampleID, textView, Uname;
 -(void)viewDidLoad
 {
 	textCleared=FALSE;
@@ -50,6 +50,11 @@
 	 toolbar.items=buttons;	
 	 [toolbar setBarStyle:1];
 	 [self.view addSubview:toolbar];*/
+	
+	[self.navigationController setToolbarHidden:NO animated:YES];
+	[self.navigationController.toolbar setBarStyle:UIBarStyleBlack];	
+	[self setToolbarItems:buttons animated:YES];
+	
 	
 	//if the user is logged in, get the username so the comment can be attached to the user who posted it
 	KeychainWrapper *keychain= [[KeychainWrapper alloc] init];
@@ -175,7 +180,7 @@
 	[sampleID release];
 	[titleText release];
 	[textView release];
-	[toolbar release];
+	//[toolbar release];
 	[myReturn release];
 	
     [super dealloc];

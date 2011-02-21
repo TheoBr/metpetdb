@@ -16,9 +16,12 @@
 #import "MetPetDBAppDelegate.h"
 #import "constants.h"
 
+#import <CoreLocation/CoreLocation.h>
+#import <Foundation/Foundation.h>
+
 @implementation MapController
 @synthesize sampleinfo, details, selectedID, navBar, satelliteView, mapViewButton, narrowSearch, mapView, infoButton, homeButton;
-@synthesize tableController, rockTypeController, sampleTableController, mainViewController, mapTypeController, currentSearchData;
+@synthesize tableController, rockTypeController, sampleTableController, mainViewController, mapTypeController;
 @synthesize boxView, criteriaController, hybridView, selectedSample, indicator, radiusController, myLocationButton, viewNextButton;
 @synthesize sampleName, rock, currentOwner, sampleID, description, currentStringValue, publicStatus, searchCriteria, sampleCategory;
 
@@ -47,7 +50,7 @@
 	multiplePoints=[[NSMutableArray alloc] init];
 	buttonArray=[[NSMutableArray alloc] init];
 	mapView=[[MKMapView alloc] initWithFrame:self.view.bounds];
-	if(currentSearchData.zoomed==TRUE)
+	if([CurrentSearchData getZoomed]==TRUE)
 	{
 		//the user has changed the zoom level of the map, call the setSpan2 function which uses the span in the currentSearchData object
 		//even if the user has not changed the zoom level, zoomed will be true when going back to the map after all the samples have been loaded
@@ -57,7 +60,7 @@
 	{
 		[self setSpan];
 	}
-	if(currentSearchData.locationVisible==TRUE)
+	if([CurrentSearchData getLocationVisible]==TRUE)
 	{
 		mapView.showsUserLocation=TRUE;
 		
@@ -81,7 +84,7 @@
 	//this array will contain only unique annotations, no duplicates
 	[self.view addSubview:mapView];
 	//if the region is null, then we are searching using a coordinate and a radius and should draw a search box
-	if(currentSearchData.region==nil)
+	if([CurrentSearchData getRegion] == nil)
 	{
 		//the following function creates the map annotations for the boundary points
 		
@@ -187,7 +190,7 @@ UIImage *buttonImage= [UIImage imageWithData: [NSData dataWithContentsOfURL: [NS
 	
 	CLLocation *averageCoordinate= [[CLLocation alloc] initWithLatitude:averageLat longitude:averageLong];
 	
-	[currentSearchData setCenterCoordinate: averageCoordinate.coordinate];
+	[CurrentSearchData setCenterCoordinate: averageCoordinate];
 	//mapRegion.center= currentSearchData.centerCoordinate;
 	latitudeSpan= searchCriteria.maxLat - searchCriteria.minLat;
 	longitudeSpan= searchCriteria.maxLong- searchCriteria.minLong;
@@ -202,11 +205,18 @@ UIImage *buttonImage= [UIImage imageWithData: [NSData dataWithContentsOfURL: [NS
 }	
 -(void)setSpan2
 {
+//	MKCoordinateRegion mapRegion = 
+//	MKCoordinateSpan mapSpan;
 	MKCoordinateRegion mapRegion;
 	MKCoordinateSpan mapSpan;
-	mapRegion.center= currentSearchData.zoomedCenter;
-	mapSpan.latitudeDelta=currentSearchData.latitudeSpan;
-	mapSpan.longitudeDelta=currentSearchData.longitudeSpan;
+
+	mapSpan = MKCoordinateSpanMake([CurrentSearchData getLatitudeSpan], [CurrentSearchData getLongitudeSpan]);
+	mapRegion = MKCoordinateRegionMake([CurrentSearchData getZoomedCenter], mapSpan);  
+	
+	
+//	mapRegion.center = [CurrentSearchData getZoomedCenter];
+//	mapSpan.latitudeDelta=[CurrentSearchData getLatitudeSpan];
+//	mapSpan.longitudeDelta=[CurrentSearchData getLongitudeSpan];
 	mapRegion.span=mapSpan;
 	mapView.region=mapRegion;
 	
@@ -266,7 +276,7 @@ UIImage *buttonImage= [UIImage imageWithData: [NSData dataWithContentsOfURL: [NS
 	SampleTableController *viewController = [[SampleTableController alloc] initWithNibName:@"SampleTableView" bundle:nil];
 	[viewController setData:mySamples:TRUE];
 	[viewController setSamples:mySamples:searchCriteria];
-	[viewController setCurrentSearchData:currentSearchData];
+//	[viewController setCurrentSearchData:currentSearchData];
 	//[viewController setCoordinate:myLocation:latitudeSpan:longitudeSpan: maxLat:minLat: maxLong: minLong];
 	
 	self.sampleTableController= viewController;
@@ -310,12 +320,19 @@ UIImage *buttonImage= [UIImage imageWithData: [NSData dataWithContentsOfURL: [NS
 	[buttons addObject:infoBarButtonItem];
 	//[buttons addObject:myLocationButton];
 	
-	CGRect toolBarFrame= CGRectMake (0, 377, viewWidth, 40);
-	toolbar = [ [ UIToolbar alloc ] init ];
-	toolbar.frame = toolBarFrame;
-	toolbar.items=buttons;	
-	[toolbar setBarStyle:1];
-	[mapView addSubview:toolbar];
+	//CGRect toolBarFrame= CGRectMake (0, 377, viewWidth, 40);
+//	toolbar = [ [ UIToolbar alloc ] init ];
+	//toolbar.frame = toolBarFrame;
+	//toolbar.items=buttons;	
+	//[toolbar setBarStyle:1];
+	//[mapView addSubview:toolbar];
+	
+	
+	[self.navigationController setToolbarHidden:NO animated:YES];
+	[self.navigationController.toolbar setBarStyle:UIBarStyleBlack];
+
+	[self setToolbarItems:buttons animated:YES];
+	
 }		
 
 -(void)returnHome
@@ -330,14 +347,18 @@ UIImage *buttonImage= [UIImage imageWithData: [NSData dataWithContentsOfURL: [NS
 }
 -(void)infoButtonPressed
 {
-	currentSearchData.zoomedCenter= mapView.region.center;
-	currentSearchData.latitudeSpan=mapView.region.span.latitudeDelta;
-	currentSearchData.longitudeSpan=mapView.region.span.longitudeDelta;
-	currentSearchData.zoomed=TRUE;
+	
+	
+	CLLocation *centerLocation = [[CLLocation alloc] initWithLatitude:mapView.region.center.latitude longitude:mapView.region.center.longitude];
+	
+	[CurrentSearchData setZoomedCenter:centerLocation];
+	CurrentSearchData.latitudeSpan=mapView.region.span.latitudeDelta;
+	CurrentSearchData.longitudeSpan=mapView.region.span.longitudeDelta;
+	CurrentSearchData.zoomed=TRUE;
 	MapTypeController *viewController= [[MapTypeController alloc] initWithNibName:@"MapTypeView" bundle:nil];
 	self.mapTypeController= viewController;
 	[viewController setSamples:mySamples:searchCriteria];
-	[viewController setCurrentSearchData:currentSearchData];
+//	[viewController setCurrentSearchData:currentSearchData];
 	UIView *newView= [mapTypeController view];
 	[self.view addSubview:newView];
 	[self.navigationController pushViewController:mapTypeController animated:YES];
@@ -352,9 +373,16 @@ UIImage *buttonImage= [UIImage imageWithData: [NSData dataWithContentsOfURL: [NS
 	 else
 	 {*/
 	SearchCriteriaController *viewController= [[SearchCriteriaController alloc] initWithNibName:@"SearchCriteriaSummary" bundle:nil];
+	
+	if (searchCriteria == nil)
+		NSLog(@"%@", @"searchCriteria is nil");
+
 	[viewController setData:mySamples:searchCriteria];
 	//[viewController setCurrentSearchData:searchCriteria :myLocation :region];
-	[viewController setCurrentSearchData:currentSearchData];
+	
+
+	
+//	[viewController setCurrentSearchData:currentSearchData];
 	self.criteriaController=viewController;
 	[viewController release];
 	UIView *ControllersView =[criteriaController view];
@@ -386,13 +414,14 @@ UIImage *buttonImage= [UIImage imageWithData: [NSData dataWithContentsOfURL: [NS
 		}
 		
 	}
-	currentSearchData.zoomedCenter= mapView.region.center;
-	currentSearchData.latitudeSpan=mapView.region.span.latitudeDelta;
-	currentSearchData.longitudeSpan=mapView.region.span.longitudeDelta;
-	currentSearchData.zoomed=TRUE;
+	CLLocationCoordinate2D *centerLocation = [[CLLocation alloc]initWithLatitude:mapView.region.center.latitude longitude:mapView.region.center.longitude ];
+	[CurrentSearchData setZoomedCenter:centerLocation];
+	CurrentSearchData.latitudeSpan=mapView.region.span.latitudeDelta;
+	CurrentSearchData.longitudeSpan=mapView.region.span.longitudeDelta;
+	CurrentSearchData.zoomed=TRUE;
 	SampleInfoController *viewController = [[SampleInfoController alloc] initWithNibName:@"SampleInfo" bundle:nil];
 	[viewController setSamples:mySamples:selectedSample:searchCriteria];
-	[viewController setCurrentSearchData:currentSearchData];
+//	[viewController setCurrentSearchData:currentSearchData];
 	self.sampleinfo = viewController;
 	[viewController release];
 	UIView *ControllersView=[sampleinfo view];
@@ -419,7 +448,7 @@ UIImage *buttonImage= [UIImage imageWithData: [NSData dataWithContentsOfURL: [NS
 	SampleTableController *viewController = [[SampleTableController alloc] initWithNibName:@"SampleTableView" bundle:nil];
 	[viewController setData:selectedArray:FALSE];
 	[viewController setSamples:mySamples:searchCriteria];
-	[viewController setCurrentSearchData:currentSearchData];
+//	[viewController setCurrentSearchData:currentSearchData];
 	self.sampleTableController= viewController;
 	[viewController release];
 	UIView *ControllersView=[sampleTableController view];
@@ -499,13 +528,13 @@ UIImage *buttonImage= [UIImage imageWithData: [NSData dataWithContentsOfURL: [NS
 										   
 	if (existingCoords > 0)
 	{
-	[post setData:[currentSearchData minerals] :[currentSearchData rockTypes] :[currentSearchData owners] :[currentSearchData metamorphicGrades] :currentSearchData.currentPublicStatus :
-	 currentSearchData.region:[CurrentSearchData getOriginalCoordinates]:currentSampleCount:@"false":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
+	[post setData:[CurrentSearchData getMinerals] :[CurrentSearchData getRockTypes] :[CurrentSearchData getOwners] :[CurrentSearchData getMetamorphicGrades] : [CurrentSearchData getCurrentPublicStatus] :
+	 [CurrentSearchData getRegion]:[CurrentSearchData getOriginalCoordinates]:currentSampleCount:@"false":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
 	}
 	else
 	{
-	[post setData:[currentSearchData minerals] :[currentSearchData rockTypes] :[currentSearchData owners] :[currentSearchData metamorphicGrades] :currentSearchData.currentPublicStatus :
-	 currentSearchData.region:nil:currentSampleCount:@"false":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
+	[post setData:[CurrentSearchData getMinerals] :[CurrentSearchData getRockTypes] :[CurrentSearchData getOwners] :[CurrentSearchData getMetamorphicGrades] : [CurrentSearchData getCurrentPublicStatus] :
+	 [CurrentSearchData getRegion]:nil:currentSampleCount:@"false":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
 	}
 										   
 	myReturn=[post buildPostString];
@@ -546,11 +575,11 @@ UIImage *buttonImage= [UIImage imageWithData: [NSData dataWithContentsOfURL: [NS
 //this array must store 4 arrays with search criteria to be displayed in the search criteria summary
 //the data will be passed in from the rocktypeController, metamorphicgradecontroller, mineralscontroller, and the ownerController
 //based on what the user chooses as search criteria
--(void)setCurrentSearchData:(CurrentSearchData*)data
+/*-(void)setCurrentSearchData:(CurrentSearchData*)data
 {
 	currentSearchData= data;
 	
-}
+}*/
 
 
 -(void)setIndicator:(UIActivityIndicatorView*)activity
@@ -572,7 +601,7 @@ UIImage *buttonImage= [UIImage imageWithData: [NSData dataWithContentsOfURL: [NS
 	[details release];
 	[selectedID release];
 	[buttonArray release];
-	[toolbar release];
+//	[toolbar release];
 	[buttons release];
 	[navBar release];
 	[narrowSearch release];

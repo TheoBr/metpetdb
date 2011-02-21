@@ -117,7 +117,7 @@
 		
 		MineralsController *viewController= [[MineralsController alloc] initWithNibName:@"MineralsView" bundle:nil];
 		[viewController setData:locations:myMinerals:searchCriteria];
-		[viewController setCurrentSearchData:currentSearchData];
+	//	[viewController setCurrentSearchData:currentSearchData];
 		self.mineralsController=viewController;
 		[viewController release];
 		UIView *ControllersView =[mineralsController view];
@@ -140,7 +140,7 @@
 		
 		MetamorphicGradeController *viewController=[[MetamorphicGradeController alloc] initWithNibName:@"MetamorphicGradeView" bundle:nil];
 		[viewController setData:locations:myMetamorphicGrades:searchCriteria];
-		[viewController setCurrentSearchData:currentSearchData];
+	//	[viewController setCurrentSearchData:currentSearchData];
 		self.metamorphicGradeController= viewController;
 		[viewController release];
 		UIView *ControllersView=[metamorphicGradeController view];
@@ -165,7 +165,9 @@
 		RockTypeController *viewController = [[RockTypeController alloc] initWithNibName:@"RockTypeView" bundle:nil];
 		//all of the following values must be passed so they can be passed back to the map straight from the rock view
 		[viewController setData:locations:myRockTypes:searchCriteria];
-		[viewController setCurrentSearchData:currentSearchData];
+	
+		
+		//[viewController setCurrentSearchData:currentSearchData];
 		self.rockTypeController = viewController;
 		[viewController release];
 		UIView *ControllersView = [rockTypeController view];
@@ -188,7 +190,7 @@
 	{
 		OwnerViewController *viewController = [[OwnerViewController alloc] initWithNibName:@"OwnerView" bundle:nil];
 		[viewController setData:locations:owners:searchCriteria];
-		[viewController setCurrentSearchData:currentSearchData];
+	//	[viewController setCurrentSearchData:currentSearchData];
 		self.ownerController= viewController;
 		[viewController release];
 		UIView *ControllersView= [ownerController view];
@@ -204,10 +206,10 @@
 	searchCriteria=criteria;
 	locations= sampleLocations;
 }
--(void)setCurrentSearchData:(CurrentSearchData*)data
+/*-(void)setCurrentSearchData:(CurrentSearchData*)data
 {
 	currentSearchData=data;
-}
+}*/
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];

@@ -15,13 +15,13 @@
 	UITextView *textView;
 	//IBOutlet UIScrollView *scrollView;
 	CGRect keyboardBounds;
-	UIToolbar *toolbar;
+//	UIToolbar *toolbar;
 	NSData *myReturn;
 	bool textCleared;
 	NSString *Uname;
 }
 @property(nonatomic, copy)NSString *Uname;
-@property(nonatomic, retain) UIToolbar *toolbar;
+//@property(nonatomic, retain) UIToolbar *toolbar;
 @property(nonatomic, copy)NSString *sampleID;
 @property (nonatomic, copy) NSString *titleText;
 @property (nonatomic, retain) IBOutlet UITextView *textView;

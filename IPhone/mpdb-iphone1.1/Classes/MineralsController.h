@@ -32,9 +32,9 @@
 	uniqueSamples *newgroup;
 	bool modified;
 	CriteriaSummary *searchCriteria;
-	CurrentSearchData *currentSearchData;
+//	CurrentSearchData *currentSearchData;
 }
-@property(nonatomic, retain)CurrentSearchData *currentSearchData;
+//@property(nonatomic, retain)CurrentSearchData *currentSearchData;
 @property (nonatomic, retain) CriteriaSummary *searchCriteria;
 @property (nonatomic, retain) uniqueSamples *newgroup;
 @property (nonatomic, retain) UIPickerView *sampleSelector;

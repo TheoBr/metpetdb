@@ -35,9 +35,9 @@
 	CriteriaSummary *searchCriteria;
 	//if coordinates are used as a search criteria, an array must be kept with the original north, south, east, west
 	NSMutableArray *originalCoordinates;
-	CurrentSearchData *currentSearchData;
+//	CurrentSearchData *currentSearchData;
 }
-@property(nonatomic, copy)CurrentSearchData *currentSearchData;
+//@property(nonatomic, copy)CurrentSearchData *currentSearchData;
 @property (nonatomic, copy) NSString *currentPublicStatus;
 @property (nonatomic, retain) CriteriaSummary *searchCriteria;
 @property (nonatomic, retain) uniqueSamples *group;

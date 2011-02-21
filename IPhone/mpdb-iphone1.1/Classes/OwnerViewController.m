@@ -25,11 +25,16 @@
 	NSMutableArray *buttonArray=[[NSMutableArray alloc] init];
 	refineButton=[[UIBarButtonItem alloc] initWithTitle:@"Add" style:UIBarButtonItemStyleBordered target:self action:@selector(backToCriteria)];
 	[buttonArray addObject:refineButton];
-	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
-	toolbar = [ [ UIToolbar alloc ] init ];
-	toolbar.frame = toolBarFrame;
-	toolbar.items= buttonArray;
-	[self.view addSubview:toolbar];
+//	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
+//	toolbar = [ [ UIToolbar alloc ] init ];
+//	toolbar.frame = toolBarFrame;
+//	toolbar.items= buttonArray;
+//	[self.view addSubview:toolbar];
+
+	[self.navigationController setToolbarHidden:NO animated:YES];
+	[self.navigationController.toolbar setBarStyle:UIBarStyleBlack];
+
+	[self setToolbarItems:buttonArray animated:YES];
 	
 	if([owners count]==0) //if the search has been narrowed and none of the remaining samples have a rock type listed, we still display something in the picker
 	{
@@ -60,21 +65,21 @@
 	//before adding the new owner to the array, loop through to make sure it has not already been added to the currentOwners array
 	int p;
 	bool alreadyAdded=FALSE;
-	for(p=0; p<[[currentSearchData owners] count]; p++)
+	for(p=0; p<[[CurrentSearchData getOwners] count]; p++)
 	{
-		if([[[currentSearchData owners] objectAtIndex:p] isEqualToString:ownerName])
+		if([[[CurrentSearchData getOwners] objectAtIndex:p] isEqualToString:ownerName])
 		{
 			alreadyAdded=TRUE; //this owner name is already in the array and should not be added again
 		}
 	}
 	if(alreadyAdded==FALSE)
 	{
-		[[currentSearchData owners] addObject:ownerName];
+		[[CurrentSearchData getOwners] addObject:ownerName];
 	}	
 	
 	SearchCriteriaController *viewController= [[SearchCriteriaController alloc] initWithNibName:@"SearchCriteriaSummary" bundle:nil];
 	[viewController setData:modifiedLocations:searchCriteria];
-	[viewController setCurrentSearchData:currentSearchData];
+	//[viewController setCurrentSearchData:currentSearchData];
 	self.criteriaController=viewController;
 	[viewController release];
 	UIView *ControllersView =[criteriaController view];
@@ -89,11 +94,11 @@
 	myLocations=locations;
 	owners=people;
 }
-
+/*
 -(void)setCurrentSearchData:(CurrentSearchData*)data
 {
 	currentSearchData= data;
-}
+}*/
 
 
 - (void)didReceiveMemoryWarning {
@@ -118,7 +123,7 @@
 	[newAnnotation release];
 	[owners release];
 	[criteriaController release];
-	[toolbar release];
+//	[toolbar release];
 	[refineButton release];
 	[modifiedLocations release];
 	[tempOwner release];

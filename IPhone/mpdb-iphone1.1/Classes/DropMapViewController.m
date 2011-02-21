@@ -13,7 +13,7 @@
 
 
 @implementation DropMapViewController
-@synthesize toolbar, currentPublicStatus, radiusController, annotObj, navButton, latLongLabel, barButton;
+@synthesize annotationView, currentPublicStatus, radiusController, annotObj, navButton, latLongLabel, barButton;
 -(void)viewDidLoad
 {
 	
@@ -21,35 +21,60 @@
 	mapView.delegate=self;
 	[self.view addSubview:mapView];
 	
-	barButton=[[UIBarButtonItem alloc] initWithTitle:@"Select Coordinate" style:UIBarButtonItemStyleBordered target:self action:@selector(loadMap)];
-	navButton=[[UIBarButtonItem alloc] initWithTitle:@"Drop Pin" style:UIBarButtonItemStyleBordered target:self action:@selector(dropPin)];
+	barButton=[[[UIBarButtonItem alloc] initWithTitle:@"Select" style:UIBarButtonItemStyleBordered target:self action:@selector(loadMap)] autorelease];
+
+	
+//	barButton=[[[UIBarButtonItem alloc] initWithTitle:@"Select Coordinate" style:UIBarButtonItemStyleBordered target:self action:@selector(loadMap)] autorelease];
+//	[barButton setTarget:mapView];
+//	[barButton setAction:@selector(loadMap)];
+	
+	navButton=[[[UIBarButtonItem alloc] initWithTitle:@"Drop Pin" style:UIBarButtonItemStyleBordered target:self action:@selector(dropPin)] autorelease];
 	self.navigationItem.rightBarButtonItem=navButton;
+	
+//	self.navigationItem.leftBarButtonItem=barButton;
+	
 	NSMutableArray *buttons= [[NSMutableArray alloc] init];
 	[buttons addObject:barButton];
 	viewWidth=self.view.bounds.size.width;
-	CGRect toolBarFrame= CGRectMake (0, 377, viewWidth, 40);
-	toolbar = [ [ UIToolbar alloc ] init ];
-	toolbar.frame = toolBarFrame;
-	toolbar.items=buttons;	
-	[toolbar setBarStyle:1];
-	[mapView addSubview:toolbar];
-	barButton.enabled=NO;
+	//CGRect toolBarFrame= CGRectMake (0, 377, viewWidth, 40);
+	
+//	toolbar = [ [ UIToolbar alloc ] init ];
+	
+//	toolbar.frame = toolBarFrame;
+//	toolbar.items=buttons;	
+	//[self.toolbar setBarStyle:1];
+	[self.navigationController setToolbarHidden:NO animated:YES];
+	[self.navigationController.toolbar setBarStyle:UIBarStyleBlack];
+	[self setToolbarItems:buttons animated:YES];
+	
+	 
+	
+	//[mapView addSubview:toolbar];
+	
+	//[mapView addSubview:toolbar];
+	//barButton.enabled=NO;
 }
+
 -(void)dropPin
 {
 	pin=[[MKAnnotationView alloc] init];
 	[self.view addSubview:[self mapView:mapView viewForAnnotation:pin]];
-	barButton.enabled=YES;
-	navButton.enabled=NO;/*
+	//barButton.enabled=YES;
+	//barButton.
+//	navButton.enabled=NO;
+	/*
 						  latLongLabel=[[UILabel alloc] initWithFrame:CGRectMake(5, 20, 100, 30)];
 						  latLongLabel.text=[[NSString alloc] initWithFormat:@"%@g, %@g", selectedCoordinate.latitude, selectedCoordinate.longitude];
 						  //[self.view addSubview:latLongLabel];*/
 	
 	
+	[self.navigationController setToolbarHidden:NO animated:YES];
+	
+	
 }
+
 -(void)loadMap
 {
-	//selectedCoordinate= annotationView.newCoordinate;
 	selectedCoordinate=	[mapView convertPoint:annotationView.center toCoordinateFromView:self.view];	
 	RadiusController *viewController = [[RadiusController alloc] initWithNibName:@"SearchView" bundle:nil];
 
@@ -65,17 +90,18 @@
 	[CurrentSearchData setCenterCoordinateLongitude:prelongcheck];
 
 	
-	CLLocationCoordinate2D postCoordCheck = [CurrentSearchData getCenterCoordinate];
+//	CLLocationCoordinate2D postCoordCheck = [CurrentSearchData getCenterCoordinate];
 	
 
-	[viewController setData:currentSearchData];
+//	[viewController setData:currentSearchData];
 	
 	self.radiusController=viewController;
-	[viewController release];
+//	[viewController release];
 	UIView *newview=[radiusController view];
 	[self.view addSubview:newview];
 	[self.navigationController pushViewController:radiusController animated:NO];
 	
+	///[self.navigationController setToolbarHidden:YES animated:YES];
 	
 }
 
@@ -110,24 +136,24 @@
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
 }
--(void)setData:(CurrentSearchData*)data
+/*-(void)setData:(CurrentSearchData*)data
 {
 	currentSearchData=data;
 	
-}
+}*/
 
 
 - (void)dealloc {
 	[mapView release];
-	[toolbar release];
+//	[toolbar release];
 	[pin release];
 	[annotationView release];
 	[currentPublicStatus release];
 	[radiusController release];
 	[annotObj release];
-	[navButton release];
+//	[navButton release];
 	[latLongLabel release];
-	[barButton release];
+//	[barButton release];
 	
     [super dealloc];
 }

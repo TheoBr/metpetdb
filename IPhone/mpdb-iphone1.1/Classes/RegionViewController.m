@@ -132,7 +132,7 @@
 	//PostRequest *post= nil;
 	//[[post init] alloc];
 	
-	[post setData:nil :nil :nil :nil :currentSearchData.currentPublicStatus :selectedRegion:nil:0:@"true":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
+	[post setData:nil :nil :nil :nil :[CurrentSearchData getCurrentPublicStatus] :selectedRegion:nil:0:@"true":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
 	myReturn=[post buildPostString]; 
 	
 	
@@ -157,11 +157,11 @@
 		//[myThread start];
 		[self getSamples];
 		//set the current search data so it can be passed to the map view
-		[currentSearchData setRegion:selectedRegion];
+		[CurrentSearchData setRegion:selectedRegion];
 		
 		MapController *viewController = [[MapController alloc] initWithNibName:@"MapView" bundle:nil];
 		[viewController setData:sampleLocations:criteria];
-		[viewController setCurrentSearchData:currentSearchData];
+	//	[viewController setCurrentSearchData:currentSearchData];
 		self.mapController = viewController;
 		[viewController release];
 		UIView *ControllersView = [mapController view];
@@ -180,7 +180,7 @@
 	PostRequest *post= [[PostRequest alloc] init];
 	
 	//since the user has not yet been able to narrow the search, nil can be passed instead of the arrays
-	[post setData:nil:nil:nil :nil:currentSearchData.currentPublicStatus :selectedRegion:nil:0:@"false":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
+	[post setData:nil:nil:nil :nil:[CurrentSearchData getCurrentPublicStatus] :selectedRegion:nil:0:@"false":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
 	myReturn=[post buildPostString];
 //	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test3.txt"];
 //	[fh writeData:myReturn];
@@ -242,10 +242,11 @@
 	[y release];
 	
 }
+/*
 -(void)setData:(CurrentSearchData*)data
 {
 	currentSearchData=data;
-}
+}*/
 
 
 - (void)didReceiveMemoryWarning {

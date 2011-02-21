@@ -9,7 +9,7 @@
 #import "PublicPrivateViewController.h"
 
 @implementation PublicPrivateViewController
-@synthesize segControl, criteriaController, searchCriteria, group, newgroup, newAnnotation, toolbar;
+@synthesize segControl, criteriaController, searchCriteria, group, newgroup, newAnnotation;
 @synthesize refineButton, Uname, okButton;
 -(void)viewDidLoad{
 	NSMutableArray *segControlItems=[[NSMutableArray alloc] init];
@@ -22,15 +22,15 @@
 	CGRect frame = CGRectMake(0.0, 120.0, 320.0, 44.0);
 	[segControl setFrame:frame];
 	segControl.segmentedControlStyle= UISegmentedControlStylePlain;
-	if([[currentSearchData currentPublicStatus] isEqualToString:@"public"])
+	if([[CurrentSearchData getCurrentPublicStatus] isEqualToString:@"public"])
 	{
 		[segControl setSelectedSegmentIndex:0];
 	}
-	else if([[currentSearchData currentPublicStatus] isEqualToString:@"private"])
+	else if([[CurrentSearchData getCurrentPublicStatus] isEqualToString:@"private"])
 	{
 		[segControl setSelectedSegmentIndex:1];
 	}
-	else if([[currentSearchData currentPublicStatus]
+	else if([[CurrentSearchData getCurrentPublicStatus]
 			 isEqualToString:@"both"])
 	{
 		[segControl setSelectedSegmentIndex:2];
@@ -43,17 +43,17 @@
 -(IBAction)changeStatus:(id)sender{
 	if([segControl selectedSegmentIndex]==0)
 	{
-		[currentSearchData setCurrentPublicStatus:@"public"];
+		[CurrentSearchData setCurrentPublicStatus:@"public"];
 		[segControl setSelectedSegmentIndex:0];
 	}
 	else if([segControl selectedSegmentIndex]==1)
 	{
-		[currentSearchData setCurrentPublicStatus:@"private"];
+		[CurrentSearchData setCurrentPublicStatus:@"private"];
 		[segControl setSelectedSegmentIndex:1];
 	}
 	else if([segControl selectedSegmentIndex] == 2)
 	{
-		[currentSearchData setCurrentPublicStatus:@"both"];
+		[CurrentSearchData setCurrentPublicStatus:@"both"];
 		[segControl setSelectedSegmentIndex:2];
 	}
 	//after the user has selected whether they want to view private, public, or both types of samples, they should be taken back to the search criteria view
@@ -63,7 +63,7 @@
 -(IBAction)backToCriteria{
 	SearchCriteriaController *viewController= [[SearchCriteriaController alloc] initWithNibName:@"SearchCriteriaSummary" bundle:nil];
 	[viewController setData:myLocations:searchCriteria];
-	[viewController setCurrentSearchData:currentSearchData];
+	//[viewController setCurrentSearchData:currentSearchData];
 	self.criteriaController=viewController;
 	[viewController release];
 	UIView *ControllersView =[criteriaController view];
@@ -93,10 +93,11 @@
 	searchCriteria=criteria;
 	myLocations=locations;
 }
+/*
 -(void)setCurrentSearchData:(CurrentSearchData*)data
 {
 	currentSearchData=data;
-}
+}*/
 
 
 

@@ -49,9 +49,9 @@
 	NSString *sampleCategory;
 	CriteriaSummary *criteria;
 	NSString *Uname;
-	CurrentSearchData *currentSearchData;
+//	CurrentSearchData *currentSearchData;
 }
-@property(nonatomic, retain)CurrentSearchData *currentSearchData;
+//@property(nonatomic, retain)CurrentSearchData *currentSearchData;
 @property(nonatomic, copy)NSString *Uname;
 @property(nonatomic, copy) CriteriaSummary *criteria;
 @property(nonatomic, copy) NSString *sampleCategory;

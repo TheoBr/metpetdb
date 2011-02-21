@@ -9,7 +9,7 @@
 #import "CoordInputController.h"
 
 @implementation CoordInputController
-@synthesize radiusController, longitudeTextField, latitudeTextField, toolbar, latitude, longitude, currentPublicStatus, username, mapButton, dropMap, focusButton;
+@synthesize radiusController, longitudeTextField, latitudeTextField, latitude, longitude, currentPublicStatus, username, mapButton, dropMap, focusButton;
 
 -(void)viewDidLoad
 {
@@ -18,12 +18,17 @@
 	NSMutableArray *buttons=[[NSMutableArray alloc] init];
 	UIBarButtonItem *barButton=[[UIBarButtonItem alloc] initWithTitle:@"Continue" style:UIBarButtonItemStyleBordered target:self action:@selector(chooseRadius)];
 	[buttons addObject:barButton];
-	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
+/*	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
 	toolbar = [ [ UIToolbar alloc ] init ];
 	toolbar.frame = toolBarFrame;
 	toolbar.items=buttons;	
 	[toolbar setBarStyle:1];
-	[self.view addSubview:toolbar];
+	[self.view addSubview:toolbar]; */
+	
+	[self.navigationController setToolbarHidden:NO animated:YES];
+	[self.navigationController.toolbar setBarStyle:UIBarStyleBlack];
+	[self setToolbarItems:buttons animated:YES];
+	
 
 }
 
@@ -55,7 +60,7 @@
 		[CurrentSearchData setCenterCoordinateLongitude:myLocation.coordinate.longitude];
 		
 		//[currentSearchData setCenterCoordinate:myCoord];
-		[viewController setData:currentSearchData];
+	//	[viewController setData:currentSearchData];
 		[viewController release];
 		UIView *newview=[radiusController view];
 		[self.view addSubview:newview];
@@ -78,17 +83,18 @@
 	
 	return YES;
 }
+/*
 -(void)setData:(CurrentSearchData*)data
 {
 	currentSearchData=data;
-}
+}*/
 -(IBAction)loadMap:(id)sender
 {
 	//MKAnnotationView *pin=[[MKAnnotationView alloc] init];
 	
 	//[self.view addSubview:[self mapView:mapView viewForAnnotation:pin]];
 	DropMapViewController *viewController= [[DropMapViewController alloc] initWithNibName:@"dropMapView" bundle:nil];
-	[viewController setData:currentSearchData];
+//	[viewController setData:currentSearchData];
 	self.dropMap= viewController;
 	[viewController release];
 	UIView *newView= [dropMap view];
@@ -117,7 +123,7 @@
 	[latitudeTextField release];
 	[longitudeTextField release]; 
 	[mapButton release];
-	[toolbar release];
+	//[toolbar release];
 	[latitude release];
 	[longitude release];
 	[currentPublicStatus release];

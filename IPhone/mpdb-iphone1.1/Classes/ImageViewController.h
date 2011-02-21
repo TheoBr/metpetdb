@@ -41,7 +41,7 @@
 	int pagesDisplayed;
 	int index;
 	UIBarButtonItem *nextButton;
-	UIToolbar *toolbar;
+//	UIToolbar *toolbar;
 	AnnotationObjects *sampleAnnotation;
 	NSMutableArray *locations;
 	CGPoint startTouchPosition;
@@ -60,9 +60,9 @@
 	//the following are more map variables
 	NSMutableArray *samples;
 	CriteriaSummary *searchCriteria;
-	CurrentSearchData *currentSearchData;
+//	CurrentSearchData *currentSearchData;
 }
-@property(nonatomic, retain)CurrentSearchData *currentSearchData;
+//@property(nonatomic, retain)CurrentSearchData *currentSearchData;
 @property(nonatomic, retain) CriteriaSummary *searchCriteria;
 @property (nonatomic, retain) NSMutableArray *samples;
 @property(nonatomic, getter=isNetworkActivityIndicatorVisible) 
@@ -72,7 +72,7 @@ BOOL networkActivityIndicatorVisible;
 @property (nonatomic, retain)IBOutlet UIPageControl *pageControl;
 @property (nonatomic, retain) AnnotationObjects *sampleAnnotation;
 @property (nonatomic, retain) SampleInfoController *sampleController;
-@property (nonatomic, retain) UIToolbar *toolbar;
+//@property (nonatomic, retain) UIToolbar *toolbar;
 @property (nonatomic, retain) UIBarButtonItem *nextButton;
 @property (nonatomic, retain) UIBarButtonItem *prevButton;
 @property(nonatomic, copy) NSString *fullPath;

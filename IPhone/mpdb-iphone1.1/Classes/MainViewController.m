@@ -8,14 +8,17 @@
 @implementation MainViewController
 @synthesize radiusController, myLat, myLong, myCoordinate, loginController, existingPassword;
 @synthesize coordController, regionController, tableView, username, segControl, security;
-@synthesize currentSearchData, mainViewController, logoutAlertView, infoController;
+//@synthesize currentSearchData, mainViewController, logoutAlertView, infoController;
+@synthesize mainViewController, logoutAlertView, infoController;
 
 
 #define LocStr(key) [[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:nil]
 -(void)viewDidLoad
 {
 	self.navigationItem.hidesBackButton=YES;
-	currentSearchData=[[currentSearchData alloc] init];
+	
+	[self.navigationController.toolbar setBarStyle:UIBarStyleBlack];
+	[self.navigationController setToolbarHidden:YES animated:YES];
 	
 
 	
@@ -30,7 +33,7 @@
 	CGRect frame= CGRectMake(0, 120, 320, 200);
 	tableView=[[UITableView alloc] initWithFrame:frame style:UITableViewStyleGrouped];
 	
-	tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+	//tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
 	
 	tableView.dataSource=self;
 	tableView.delegate=self;
@@ -60,7 +63,7 @@
 	if(signedIn==TRUE)
 	{
 		//if the user is signed in they will initially view public and private samples and can later refine
-		[currentSearchData setCurrentPublicStatus:@"both"];
+		[CurrentSearchData setCurrentPublicStatus:@"both"];
 		
 		CGRect frameButton=CGRectMake(228, 348, 72, 23);
 		UIButton *signOutButton=[UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -68,7 +71,7 @@
 	}
 	else
 	{
-		[currentSearchData setCurrentPublicStatus:@"public"]; //the user is not signed in, so they cannot see private samples
+		[CurrentSearchData setCurrentPublicStatus:@"public"]; //the user is not signed in, so they cannot see private samples
 	}
 	UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoLight];
 	[infoButton addTarget:self action:@selector(infoButtonPressed) forControlEvents:UIControlEventTouchUpInside];
@@ -136,9 +139,9 @@
 	if(indexPath.row==0)
 	{
 		if(tableView==self.tableView){
-			currentSearchData.locationVisible=TRUE;
+			CurrentSearchData.locationVisible=TRUE;
 			[self useMyLocation];
-			currentSearchData.locationVisible=FALSE;
+			CurrentSearchData.locationVisible=FALSE;
 		}
 		else{
 			if(signedIn==TRUE){
@@ -196,7 +199,7 @@
 	[keychain deleteKeychainValue:@"Username"];
 	
 	username=nil;
-	currentSearchData.currentPublicStatus=@"public"; //the user is not signed in, so they cannot see private samples
+	CurrentSearchData.currentPublicStatus=@"public"; //the user is not signed in, so they cannot see private samples
 	MainViewController *viewController = [[MainViewController alloc] initWithNibName:@"MainView" bundle:nil];
 	self.mainViewController = viewController;
 	UIView *controllersview= [mainViewController view];
@@ -227,10 +230,10 @@
 }
 -(void)enterCoordinate
 {
-	currentSearchData.locationVisible =FALSE;
-	currentSearchData.zoomed=FALSE;
+	CurrentSearchData.locationVisible =FALSE;
+	CurrentSearchData.zoomed=FALSE;
 	CoordInputController *viewController=[[CoordInputController alloc] initWithNibName: @"CoordinateInputView" bundle:nil];
-	[viewController setData:currentSearchData];
+	//[viewController setData:currentSearchData];
 	self.coordController= viewController;
 	[viewController release];
 	UIView *newview=[coordController view];
@@ -242,10 +245,10 @@
 -(void)chooseRegion
 {	
 	[(MetPetDBAppDelegate *)[[UIApplication sharedApplication] delegate] setNetworkActivityIndicatorVisible:YES];
-	currentSearchData.locationVisible=FALSE;
-	currentSearchData.zoomed=FALSE;
+	CurrentSearchData.locationVisible=FALSE;
+	CurrentSearchData.zoomed=FALSE;
 	RegionViewController *viewController= [[RegionViewController alloc] initWithNibName:@"RegionView" bundle:nil];
-	[viewController setData:currentSearchData];
+	//[viewController setData:currentSearchData];
 	self.regionController = viewController;
 	[viewController release];
 	UIView *newView= [regionController view];
@@ -288,14 +291,14 @@
 	[self addTextToLog:text];
 	//now the the latitude and longitude have been obtained, load the next view 
 	//set the bool in the following view according to whether the user wants to view private or public samples
-	currentSearchData.locationVisible=TRUE;
-	currentSearchData.zoomed=FALSE;
+	CurrentSearchData.locationVisible=TRUE;
+	CurrentSearchData.zoomed=FALSE;
 	RadiusController *viewController=[[RadiusController alloc] initWithNibName:@"SearchView" bundle:nil];
 	
 	
 	[CurrentSearchData setCenterCoordinateLatitude:myCoordinate.coordinate.latitude];
 	[CurrentSearchData setCenterCoordinateLongitude:myCoordinate.coordinate.longitude];
-	[viewController setData:currentSearchData];
+	//[viewController setData:currentSearchData];
 	self.radiusController= viewController;
 	[viewController release];
 	UIView *newview= [radiusController view];

@@ -16,7 +16,7 @@
 #define PHOTO_TAG 3
 
 @implementation SearchCriteriaController
-@synthesize tableController, toolbar, addButton, removeButton, clearButton, searchButton, mapController, editButton, group, newgroup;
+@synthesize tableController, addButton, removeButton, clearButton, searchButton, mapController, editButton, group, newgroup;
 @synthesize  deleteButton, minimumLat, maximumLat, minimumLong, maximumLong, newTag, doneButton, searchCriteria;
 @synthesize  Uname, publicPrivateController;
 
@@ -44,9 +44,9 @@
 	//the only criteria that is automatically displayed is the geographic location, the rest are only displayed if they have been added
 	[rowTitles addObject:@"Geographic Location"];
 	[rowTitles addObject:@"Public Status"];
-	if(currentSearchData.region!=nil)
+	if([CurrentSearchData getRegion]!=nil)
 	{
-		NSString *regionName=[[NSString alloc] initWithFormat:@"Region: %@", currentSearchData.region];
+		NSString *regionName=[[NSString alloc] initWithFormat:@"Region: %@", [CurrentSearchData getRegion]];
 		[rowSubtitles addObject:regionName];
 	}
 	else
@@ -56,57 +56,64 @@
 		[rowSubtitles addObject:coordinate];
 	}
 	//make a subtitle depending on whether the user is logged in and whether they are viewing private, public, or both types of samples
-	if([currentSearchData.currentPublicStatus isEqualToString:@"public"])
+	if([[CurrentSearchData getCurrentPublicStatus] isEqualToString:@"public"])
 	{
 		[rowSubtitles addObject:@"Public Samples Only"];
 	}
-	else if([currentSearchData.currentPublicStatus isEqualToString:@"private"])
+	else if([[CurrentSearchData getCurrentPublicStatus] isEqualToString:@"private"])
 	{
 		[rowSubtitles addObject:@"Private Samples Only"];
 	}
-	else if([currentSearchData.currentPublicStatus isEqualToString:@"both"])
+	else if([[CurrentSearchData getCurrentPublicStatus] isEqualToString:@"both"])
 	{
 		[rowSubtitles addObject:@"Public and Private Samples"];
 	}
-	if([[currentSearchData rockTypes] count]!=0)
+	//[CurrentSearchData addRock:rockName];
+	
+//	NSLog(@"count %@", [[CurrentSearchData getRockTypes] count]);
+	
+	NSMutableArray *rockTypes = [NSMutableArray alloc];
+	rockTypes = [CurrentSearchData getRockTypes];
+	
+	if([rockTypes count] > 0)
 	{
 		[rowTitles addObject:@"Rock Type"];
-		NSString *myRockTypes=[[NSString alloc] initWithFormat:@"%@",[[currentSearchData rockTypes] objectAtIndex:0]];
+		NSString *myRockTypes=[[NSString alloc] initWithFormat:@"%@",[rockTypes objectAtIndex:0]];
 		
-		for(z=1; z<[[currentSearchData rockTypes] count]; z++)
+		for(z=1; z<[rockTypes count]; z++)
 		{
-			myRockTypes=[myRockTypes stringByAppendingFormat:@", %@",[[currentSearchData rockTypes] objectAtIndex:z]];
+			myRockTypes=[myRockTypes stringByAppendingFormat:@", %@",[rockTypes objectAtIndex:z]];
 		}
 		[rowSubtitles addObject:myRockTypes];
 	}
-	if([[currentSearchData owners] count]!=0)
+	if([[CurrentSearchData getOwners] count] > 0)
 	{
 		[rowTitles addObject:@"Sample Owner"];
-		NSString *myOwners=[[NSString alloc] initWithFormat:@"%@", [[currentSearchData owners] objectAtIndex:0]];
+		NSString *myOwners=[[NSString alloc] initWithFormat:@"%@", [[CurrentSearchData getOwners] objectAtIndex:0]];
 		
-		for(z=1; z<[[currentSearchData owners] count]; z++)
+		for(z=1; z<[[CurrentSearchData getOwners] count]; z++)
 		{
-			myOwners=[[NSString alloc] initWithFormat:@"%@", [[currentSearchData owners] objectAtIndex:z]];
+			myOwners=[[NSString alloc] initWithFormat:@"%@", [[CurrentSearchData getOwners] objectAtIndex:z]];
 		}
 		[rowSubtitles addObject:myOwners];
 	}
-	if([[currentSearchData minerals] count]!=0)
+	if([[CurrentSearchData getMinerals] count]!=0)
 	{
 		[rowTitles addObject:@"Minerals"];
-		NSString *myMinerals=[[NSString alloc] initWithFormat:@"%@",[[currentSearchData minerals] objectAtIndex:0]];
-		for(z=1; z<[[currentSearchData minerals] count]; z++)
+		NSString *myMinerals=[[NSString alloc] initWithFormat:@"%@",[[CurrentSearchData getMinerals] objectAtIndex:0]];
+		for(z=1; z<[[CurrentSearchData getMinerals] count]; z++)
 		{
-			myMinerals=[myMinerals stringByAppendingFormat:@", %@",[[currentSearchData minerals] objectAtIndex:z]];
+			myMinerals=[myMinerals stringByAppendingFormat:@", %@",[[CurrentSearchData getMinerals] objectAtIndex:z]];
 		}
 		[rowSubtitles addObject:myMinerals];
 	}
-	if([[currentSearchData metamorphicGrades] count]!=0)
+	if([[CurrentSearchData getMetamorphicGrades] count]!=0)
 	{
 		[rowTitles addObject:@"Metamorphic Grade"];
-		NSString *myMetGrades=[[NSString alloc] initWithFormat:@"%@",[[currentSearchData metamorphicGrades] objectAtIndex:0]];
-		for(z=1; z<[[currentSearchData metamorphicGrades] count]; z++)
+		NSString *myMetGrades=[[NSString alloc] initWithFormat:@"%@",[[CurrentSearchData getMetamorphicGrades] objectAtIndex:0]];
+		for(z=1; z<[[CurrentSearchData getMetamorphicGrades] count]; z++)
 		{
-			myMetGrades=[myMetGrades stringByAppendingFormat:@", %@",[[currentSearchData metamorphicGrades] objectAtIndex:z]];
+			myMetGrades=[myMetGrades stringByAppendingFormat:@", %@",[[CurrentSearchData getMetamorphicGrades] objectAtIndex:z]];
 		}
 		[rowSubtitles addObject:myMetGrades];
 		
@@ -132,8 +139,8 @@
 {
 	//recaluclate the search criteria
 	PostRequest *post= [[PostRequest alloc] init];
-		
-	[post setData:[currentSearchData minerals] :[currentSearchData rockTypes] :[currentSearchData owners] :[currentSearchData metamorphicGrades] :currentSearchData.currentPublicStatus :currentSearchData.region:[currentSearchData originalCoordinates]:0:@"true":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
+	
+	[post setData:[CurrentSearchData getMinerals] :[CurrentSearchData getRockTypes] :[CurrentSearchData getOwners] :[CurrentSearchData getMetamorphicGrades] :[CurrentSearchData getCurrentPublicStatus] :[CurrentSearchData getRegion]:[CurrentSearchData getOriginalCoordinates]:0:@"true":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
 	postReturn=[post buildPostString]; 
 	
 	xmlParser *x= [[xmlParser alloc] init];
@@ -157,29 +164,40 @@
 	[buttons addObject:searchButton];
 	[buttons addObject:addButton]; 
 	//if some search criteria has been specified OR the user is logged in, display the edit button
-	if([currentSearchData.rockTypes count]>0 || [currentSearchData.owners count]>0 || [currentSearchData.metamorphicGrades count]>0 || [currentSearchData.minerals count]>0 || Uname!=nil)
+	if([[CurrentSearchData getRockTypes] count]>0 || [[CurrentSearchData getOwners] count]>0 || [[CurrentSearchData getMetamorphicGrades] count]>0 || [[CurrentSearchData getMinerals] count]>0 || Uname!=nil)
 	{
 		
 		editButton=[[UIBarButtonItem alloc] initWithTitle:@"Edit Criteria" style: UIBarButtonItemStyleBordered target:self action:@selector(edit)];
 		[buttons addObject:editButton];
 	}
 	
-	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
-	toolbar = [ [ UIToolbar alloc ] init ];
-	toolbar.frame = toolBarFrame;
-	toolbar.items=buttons;	
-	[toolbar setBarStyle:1];
-	[self.view addSubview:toolbar];
+	//CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
+	//toolbar = [ [ UIToolbar alloc ] init ];
+	//toolbar.frame = toolBarFrame;
+	//toolbar.items=buttons;	
+	//[toolbar setBarStyle:1];
+	//[self.view addSubview:toolbar];
+	
+	[self.navigationController setToolbarHidden:NO animated:YES];
+	[self.navigationController.toolbar setBarStyle:UIBarStyleBlack];
+
+	[self setToolbarItems:buttons animated:YES];
+	
 }
 -(void)edit
 {
 	edit=TRUE;
-	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
+/*	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
 	toolbar = [ [ UIToolbar alloc ] init ];
 	toolbar.frame = toolBarFrame;
 	toolbar.items=buttons;	
 	[toolbar setBarStyle:1];
-	[self.view addSubview:toolbar];	
+	[self.view addSubview:toolbar];	*/
+	
+	
+	[self.navigationController setToolbarHidden:NO animated:YES];
+	[self.navigationController.toolbar setBarStyle:UIBarStyleBlack];
+	[self setToolbarItems:buttons animated:YES];
 	
 	
 	UITableView *tableView= [[UITableView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]
@@ -208,12 +226,19 @@
 	tableView.dataSource=self;
 	tableView.delegate=self;
 	[self.view addSubview:tableView];
-	CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
+	/*CGRect toolBarFrame= CGRectMake (0, 377, 320, 40);
 	toolbar = [ [ UIToolbar alloc ] init ];
 	toolbar.frame = toolBarFrame;
 	toolbar.items=buttons;	
 	[toolbar setBarStyle:1];
 	[self.view addSubview:toolbar];	
+	 */
+	
+	
+	[self.navigationController setToolbarHidden:NO animated:YES];
+	[self.navigationController.toolbar setBarStyle:UIBarStyleBlack];
+	[self setToolbarItems:buttons animated:YES];
+	
 	self.navigationItem.rightBarButtonItem=nil;
 	
 	//self.navigationItem.rightBarButtonItem=editButton;
@@ -241,7 +266,7 @@
 		MapController *viewController = [[MapController alloc] initWithNibName:@"MapView" bundle:nil];
 		[viewController setData:remainingSamples:searchCriteria];
 		//[viewController setType:@"map"];
-		[viewController setCurrentSearchData:currentSearchData];
+	//	[viewController setCurrentSearchData:currentSearchData];
 		self.mapController = viewController;
 		[viewController release];
 		UIView *ControllersView = [mapController view];
@@ -254,7 +279,7 @@
 	//make a post request to get the samples that match the search criteria
 	PostRequest *post= [[PostRequest alloc] init];
 	
-	[post setData:[currentSearchData minerals] :[currentSearchData rockTypes] :[currentSearchData owners] :[currentSearchData metamorphicGrades] :currentSearchData.currentPublicStatus :currentSearchData.region:[currentSearchData originalCoordinates]:0:@"false":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
+	[post setData:[CurrentSearchData getMinerals] :[CurrentSearchData getRockTypes] :[CurrentSearchData getOwners] :[CurrentSearchData getMetamorphicGrades] : [CurrentSearchData getCurrentPublicStatus] :[CurrentSearchData getRegion]:[CurrentSearchData getOriginalCoordinates]:0:@"false":[CurrentSearchData getCenterCoordinate].latitude:[CurrentSearchData getCenterCoordinate].longitude];
 	postReturn=[post buildPostString];
 	NSFileHandle *fh= [NSFileHandle fileHandleForWritingAtPath:@"/Users/heatherbuletti/Documents/test2.txt"];
 	[fh writeData:postReturn];
@@ -305,19 +330,19 @@
 		}
 		if([rowToDelete isEqualToString:@"Rock Type"])
 		{
-			[[currentSearchData rockTypes] removeAllObjects];
+			[[CurrentSearchData getRockTypes] removeAllObjects];
 		}
 		if([rowToDelete isEqualToString:@"Minerals"])
 		{
-			[[currentSearchData minerals] removeAllObjects];
+			[[CurrentSearchData getMinerals] removeAllObjects];
 		} 
 		if([rowToDelete isEqualToString:@"Metamorphic Grade"])
 		{
-			[[currentSearchData metamorphicGrades] removeAllObjects];
+			[[CurrentSearchData getMetamorphicGrades] removeAllObjects];
 		}
 		if([rowToDelete isEqualToString:@"Sample Owner"])
 		{
-			[[currentSearchData owners] removeAllObjects];
+			[[CurrentSearchData getOwners] removeAllObjects];
 		}
 		
 	}
@@ -336,7 +361,7 @@
 	tableView.dataSource=self;
 	tableView.delegate=self;
 	
-	if([[currentSearchData rockTypes] count]>0 || [[currentSearchData owners] count]>0 || [[currentSearchData metamorphicGrades] count]>0 || [[currentSearchData minerals] count]>0)
+	if([[CurrentSearchData getRockTypes] count]>0 || [[CurrentSearchData getOwners] count]>0 || [[CurrentSearchData getMetamorphicGrades] count]>0 || [[CurrentSearchData getMinerals] count]>0)
 	{
 	}
 	else
@@ -357,8 +382,12 @@
 	NSMutableArray *tempRows=[[NSMutableArray alloc] init];
 	tableController=tempRows;
 	TableController *viewController = [[TableController alloc] initWithNibName:@"TableView" bundle:nil];
+	
+	[viewController setSearchCriteria:searchCriteria];
 	[viewController setData:remainingSamples:searchCriteria];
-	[viewController setCurrentSearchData:currentSearchData];
+	
+		
+	//[viewController setCurrentSearchData:currentSearchData];
 	self.tableController = viewController;
 	[viewController release];
 	UIView *ControllersView = [tableController view];
@@ -512,7 +541,7 @@
 	{
 		PublicPrivateViewController *viewController= [[PublicPrivateViewController alloc] initWithNibName:@"PublicPrivateView" bundle:nil];
 		[viewController setData:locations:searchCriteria];
-		[viewController setCurrentSearchData:currentSearchData];
+	//	[viewController setCurrentSearchData:currentSearchData];
 		self.publicPrivateController = viewController;
 		[viewController release];
 		UIViewController *ControllersView= [publicPrivateController view];
@@ -532,10 +561,10 @@
 }
 
 //this function will set the data that has been specified in the current search
--(void)setCurrentSearchData:(CurrentSearchData*)data
+/*-(void)setCurrentSearchData:(CurrentSearchData*)data
 {
 	currentSearchData=data;
-}	
+}	*/
 
 
 - (void)didReceiveMemoryWarning {
@@ -556,7 +585,7 @@
 	[rowSubtitles release];
 	[tableController release];
 	[buttons release];
-	[toolbar release];
+//	[toolbar release];
 	[addButton release];
 	[removeButton release];
 	[clearButton release];
