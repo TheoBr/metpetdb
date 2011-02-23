@@ -197,8 +197,17 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 		add(panel);
 		setStyleName(CSS.PAGE_SAMPLE_DETAILS);
 	}
+	
 	private void addExtraElements() {
+		
+		// Required items star reminder
+		final Label star_reminder = 
+			new HTML("Fields marked with a <img src=\"images/icon-required-star.png\"></img> are required.");
+		star_reminder.addStyleName("ml1");
+		star_reminder.addStyleName("mb1");
+		this.add(star_reminder);
 
+		// Sub-samples table
 		final FlexTable subsamples_ft = new FlexTable();
 
 		final MLink addSubsample = new MLink(LocaleHandler.lc_text
