@@ -161,7 +161,7 @@ public class KMLCreater {
 				KML += "$wnd.alert(region);";
 				KML += "var myfunc=@edu.rpi.metpetdb.client.ui.input.attributes.specific.search.searchMetamorphicRegionsAttribute::addRegion(Ljava/lang/String;)";
 				KML += "myfunc(region);}</script></head><body>";
-				KML += "<br/><br/><br/><a onclick= addCriteria("+region.getName()+"); href=#>Add to Search Criteria</a>";
+				//KML += "<br/><br/><br/><a onclick= addCriteria("+region.getName()+"); href=#>Add to Search Criteria</a>";
 				KML += "</body></html>]]>";
 				KML+= "</description>";
 				KML += " <Polygon>\n";
