@@ -52,6 +52,7 @@ import edu.rpi.metpetdb.client.ui.input.attributes.DateAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.GenericAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.ListboxAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.RadioButtonAttribute;
+import edu.rpi.metpetdb.client.ui.input.attributes.TextAreaAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.TextAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.image.AddImageAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.AliasAttribute;
@@ -99,7 +100,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 		//	new UnitTextAttribute(MpDb.doc.Sample_locationError, "meters"),
 			new CountryAttribute(MpDb.doc.Sample_country),
 			new MineralAttribute(MpDb.doc.Sample_minerals).setPos(DetailsPanelTableLoc.BOTTOM),
-			new TextAttribute(MpDb.doc.Sample_description).setPos(DetailsPanelTableLoc.BOTTOM),
+			new TextAreaAttribute(MpDb.doc.Sample_description).setPos(DetailsPanelTableLoc.BOTTOM),
 			new TextAttribute(MpDb.doc.Sample_collector).setPos(DetailsPanelTableLoc.RIGHT),
 			new TextAttribute(MpDb.doc.Sample_locationText).setPos(DetailsPanelTableLoc.RIGHT),
 			new RegionAttribute(MpDb.doc.Sample_regions).setPos(DetailsPanelTableLoc.RIGHT),
