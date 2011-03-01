@@ -3,11 +3,15 @@
 
 	
 	<property name="mpdb-build-dir" location="/home/hudson" />
+	<properyt name="tomcat-dir" location="/usr/share/tomcat6" />
+	
 	<!--<property name="mpdb-build-dir" location="/Users/scball" />-->
 		
     <property name="build" location="${basedir}/build/WEB-INF/classes" />
     <property name="ctx_web" location="${basedir}/WebContent" />
     <property name="ctx_lib" location="${basedir}/WebContent/WEB-INF/lib" />
+	<property name="tomcat_lib" location="{tomcatdir}/lib" />
+	
     <property name="war" location="${build}/MetPetRest.war" />
 
 	
@@ -22,6 +26,8 @@
 		<path id="project.class.path">
 	    <pathelement location="${build}"/>
 	    <fileset dir="${ctx_lib}" includes="**/*.jar"/>
+	    <fileset dir="${tomcat_lib}" includes="**/*.jar"/>
+			
 		</path>
      
         <target name="compile" depends="clean" description="Compiles the java code">
