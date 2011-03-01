@@ -1,5 +1,6 @@
 package edu.rpi.metpetdb.client.model;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,14 +9,13 @@ import java.util.Set;
 
 import javax.persistence.ManyToOne;
 
-import org.hibernate.search.annotations.ContainedIn;
-import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.Store;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.interfaces.HasDate;
@@ -92,6 +92,29 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 
 	}
 
+	public ChemicalAnalysis(ChemicalAnalysisJSON chemJSON)
+	{
+		
+		this.id = Integer.valueOf(chemJSON.getId());
+		this.spotId = Integer.valueOf(chemJSON.getSpotId());
+		this.referenceX = Integer.valueOf(chemJSON.getX());
+		this.referenceY = Integer.valueOf(chemJSON.getY());
+		
+		this.analysisMethod = chemJSON.getAnalysisMethod();
+		this.analysisMaterial = chemJSON.getAnalysisMaterial();
+		this.location = chemJSON.getAnalysisLocation();
+		this.analyst = chemJSON.getAnalyst();
+		
+		
+		if (chemJSON.getAnalysisDate() != null)
+			this.analysisDate = Timestamp.valueOf(chemJSON.getAnalysisDate());
+		
+		this.total = Double.valueOf(chemJSON.getTotal());
+		
+		this.image = new Image();
+		
+		
+	}
 	public ChemicalAnalysis(int id, int spotId) {
 		this.id = id;
 		this.spotId = spotId;
@@ -403,15 +426,15 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		this.isLocked = isLocked;
 	}
 
-	@Override
-	public boolean equals(final Object o) {
-		return o instanceof ChemicalAnalysis && id == ((ChemicalAnalysis) o).id;
-	}
+//	@Override
+//	public boolean equals(final Object o) {
+//		return o instanceof ChemicalAnalysis && id == ((ChemicalAnalysis) o).id;
+//	}
 
-	@Override
-	public int hashCode() {
-		return id;
-	}
+//	@Override
+//	public int hashCode() {
+//		return id;
+//	}
 
 	@Override
 	public boolean mIsNew() {
@@ -485,8 +508,9 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	}
 	
 
-	@Override
-	public String toString() {
-		return Integer.toString(spotId);
-	}
+//	@Override
+//	public String toString() {
+//		return Integer.toString(spotId);
+//	}
+	
 }

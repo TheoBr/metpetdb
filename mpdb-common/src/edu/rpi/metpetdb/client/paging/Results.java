@@ -15,7 +15,7 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
  * @param <
  * 		T> the subtype of the list representing the results
  */
-public class Results<T extends MObject> implements IsSerializable {
+public class Results<T> implements IsSerializable {
 
 	private List<T> list;
 	private int count;
