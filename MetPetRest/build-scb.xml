@@ -3,7 +3,7 @@
 
 	
 	<property name="mpdb-build-dir" location="/home/hudson" />
-	<properyt name="tomcat-dir" location="/usr/share/tomcat6" />
+	<property name="tomcat-dir" location="/usr/share/tomcat6" />
 	
 	<!--<property name="mpdb-build-dir" location="/Users/scball" />-->
 		
