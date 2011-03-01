@@ -21,12 +21,12 @@
     maxElementsInMemory="10000"
     maxElementsOnDisk="0"
     eternal="false"
-    timeToIdleSeconds="0"
+    timeToIdleSeconds="3600"
     timeToLiveSeconds="3600"
     overflowToDisk="true"
     diskPersistent="false"
     diskExpiryThreadIntervalSeconds="3600"
-    statistics="true"
+    statistics="false"
     memoryStoreEvictionPolicy="LRU"
  
   />

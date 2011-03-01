@@ -8,6 +8,8 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import edu.rpi.metpetrest.dao.mapper.EarthChemChemicalsMapper;
@@ -48,39 +50,44 @@ public class SampleDAOImpl extends JdbcTemplate {
 	private DataSource dataSource = null;
 
 	private final Ehcache cache;
-	
+
+	Logger logger = LoggerFactory.getLogger(SampleDAOImpl.class);
+
 	public SampleDAOImpl(CacheManager cacheManager) {
 
-
 		this.cache = cacheManager.getEhcache("earthChemSamples");
-		
-	}
-	
-	
-    public EarthChemSample readEarthChemSample(String sampleNumber) 
-    {
-    	Element element = cache.get(sampleNumber);
-    	
-    	if (element != null)
-    		return (EarthChemSample)element.getValue();
-    	else
-    		return null;
-    	
-    }
 
-    
+		// this.cache.getCacheEventNotificationService().registerListener(new
+		// MyCacheListener());
+
+		// logger.info("DTIS/TTIS/TTLS" +
+		// this.cache.getCacheConfiguration().getDiskExpiryThreadIntervalSeconds()
+		// + "/" + this.cache.getCacheConfiguration().getTimeToIdleSeconds() +
+		// "/" + this.cache.getCacheConfiguration().getTimeToLiveSeconds());
+	}
+
+	public EarthChemSample readEarthChemSample(String sampleNumber) {
+		Element element = cache.get(sampleNumber);
+
+		if (element != null)
+			return (EarthChemSample) element.getValue();
+		else
+			return null;
+
+	}
+
 	public EarthChemSample getEarthChemSample(String sampleNumber) {
-		
+
 		EarthChemSample sampleFound = null;
-		
+
 		if ((sampleFound = readEarthChemSample(sampleNumber)) != null)
 			return sampleFound;
-		else
-			{
-			sampleFound = this.query(earthChemSampleQuery, new Object[] { sampleNumber },new EarthChemSampleMapper());
-			
+		else {
+			sampleFound = this.query(earthChemSampleQuery,
+					new Object[] { sampleNumber }, new EarthChemSampleMapper());
+
 			List<String> minerals = this.getEarthChemMinerals(sampleNumber);
-			
+
 			Method method = this.getEarthChemChemicals(sampleNumber);
 
 			sampleFound.getEarthChemData().getCitation().getSampleType()
@@ -91,13 +98,13 @@ public class SampleDAOImpl extends JdbcTemplate {
 				sampleFound.getEarthChemData().getCitation().getSampleType()
 						.addMethod(method);// addChemicals(chemicals);
 
-			
 			cache.put(new Element(sampleFound.getSampleNumber(), sampleFound));
+
 			return sampleFound;
-			}
+		}
 	}
 
-	public List<String> getEarthChemMinerals(String sampleNumber) {	
+	public List<String> getEarthChemMinerals(String sampleNumber) {
 		return this.query(earthChemMineralsQuery,
 				new Object[] { sampleNumber }, new EarthChemMineralsMapper());
 	}
@@ -143,5 +150,9 @@ public class SampleDAOImpl extends JdbcTemplate {
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
+	}
+
+	public Ehcache getCache() {
+		return cache;
 	}
 }

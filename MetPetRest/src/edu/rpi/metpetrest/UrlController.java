@@ -4,7 +4,10 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -12,7 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.json.MappingJacksonJsonView;
 
+import edu.rpi.metpetrest.dao.ChemicalAnalysisDAOImpl;
 import edu.rpi.metpetrest.dao.PublicationDAOImpl;
 import edu.rpi.metpetrest.dao.SampleDAOImpl;
 import edu.rpi.metpetrest.dao.UserDAOImpl;
@@ -26,7 +31,7 @@ import edu.rpi.metpetrest.sitemap.model.SitemapModel;
 import edu.rpi.metpetrest.sitemap.model.Url;
 
 @Controller
-public class UrlController  {
+public class UrlController {
 
 	private SampleDAOImpl sampleDAO = null;
 
@@ -34,33 +39,58 @@ public class UrlController  {
 
 	private UserDAOImpl userDAO = null;
 
+	private ChemicalAnalysisDAOImpl chemicalAnalysisDAO = null;
+
 	private static final String uriRoot = "http://metpetdb.rpi.edu/metpetweb/";
 
+	private static final DateFormatter formatter = new DateFormatter(
+			"yyyy-MM-dd");
 
-	private static final DateFormatter formatter = new DateFormatter("yyyy-MM-dd");
+	Logger logger = LoggerFactory.getLogger(UrlController.class);
 
-	
-	public UrlController()
-	{
+	public UrlController() {
 
+	}
+
+	@RequestMapping(value = "/chemical_analyses/{subSampleId}/{startRowNum}/{endRowNum}", method = RequestMethod.GET)
+	public ModelAndView getChemicalAnalyses(
+			@PathVariable("subSampleId") String subSampleId,
+			@PathVariable("startRowNum") String startRowNum,
+			@PathVariable("endRowNum") String endRowNum) {
+
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("chemicalAnalyses");
+		mav.setView(new MappingJacksonJsonView());
+		MappingJacksonJsonView myView = (MappingJacksonJsonView) mav.getView();
+
+		myView.setContentType("text/javascript");
+
+		List<Map<String, String>> jsonChemAnalyses = chemicalAnalysisDAO
+				.getAllChemicalAnalyses(subSampleId, Long.valueOf(startRowNum),
+						Long.valueOf(endRowNum));
+
+		mav.addObject("chemicalAnalyses", jsonChemAnalyses);
+
+		return mav;
 	}
 
 	@RequestMapping(value = "/sitemap", method = RequestMethod.GET)
-	public ModelAndView getSitemap()
-	{
+	public ModelAndView getSitemap() {
 		SitemapModel sitemap = new SitemapModel();
-		
+
 		for (SampleData sample : sampleDAO
 				.findPublicSampleDataOwnedByPublication()) {
-			sitemap.addUrl(new Url(uriRoot + "#sample/" + sample.getSampleId(), formatter.print(new Date(), Locale.ENGLISH) , "always", "0.5"));
+			sitemap.addUrl(new Url(uriRoot + "#sample/" + sample.getSampleId(),
+					formatter.print(new Date(), Locale.ENGLISH), "always",
+					"0.5"));
 		}
-		
+
 		ModelAndView mav = new ModelAndView("sitemapView",
 				BindingResult.MODEL_KEY_PREFIX + "siteMap", sitemap);
-		
+
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public ModelAndView getAllUsers() {
 		ModelAndView mav = new ModelAndView();
@@ -177,15 +207,30 @@ public class UrlController  {
 	@RequestMapping(value = "/earthchem_samples", method = RequestMethod.GET)
 	public ModelAndView getEarthChemSamples() {
 
+		logger.info("grabbing earth chem samples...");
+
 		EarthChemModel samples = new EarthChemModel();
 
 		for (String sampleNumber : sampleDAO.getSamples()) {
 			samples.addEarthChemSample(this.getSample(sampleNumber));
 		}
 
+		// logger.info("hit/miss" +
+		// sampleDAO.getCache().getLiveCacheStatistics().getCacheHitCount() +
+		// "/" +
+		// sampleDAO.getCache().getLiveCacheStatistics().getCacheMissCount());
+		// logger.info("evicted/expired" +
+		// sampleDAO.getCache().getLiveCacheStatistics().getEvictedCount() + "/"
+		// + sampleDAO.getCache().getLiveCacheStatistics().getExpiredCount());
+		// logger.info("imhit/immiss" +
+		// sampleDAO.getCache().getLiveCacheStatistics().getInMemoryHitCount() +
+		// "/" +
+		// sampleDAO.getCache().getLiveCacheStatistics().getInMemoryMissCount());
+
 		ModelAndView mav = new ModelAndView("earthChemSamplesView",
 				BindingResult.MODEL_KEY_PREFIX + "earthChemSamples", samples);
 
+		logger.info("done grabbing earth chem samples");
 		return mav;
 
 	}
@@ -194,7 +239,6 @@ public class UrlController  {
 
 		EarthChemSample earthChemSample = sampleDAO
 				.getEarthChemSample(sampleNumber);
-
 
 		return earthChemSample;
 	}
@@ -233,5 +277,13 @@ public class UrlController  {
 		this.userDAO = userDAO;
 	}
 
+	public ChemicalAnalysisDAOImpl getChemicalAnalysisDAO() {
+		return chemicalAnalysisDAO;
+	}
+
+	public void setChemicalAnalysisDAO(
+			ChemicalAnalysisDAOImpl chemicalAnalysisDAO) {
+		this.chemicalAnalysisDAO = chemicalAnalysisDAO;
+	}
 
 }

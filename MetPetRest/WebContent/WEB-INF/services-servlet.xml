@@ -24,6 +24,7 @@
  <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
     <property name="configLocation" value="classpath:/ehcache.xml"/>
 </bean>
+ 
   
  <bean id="sampleDAO" class="edu.rpi.metpetrest.dao.SampleDAOImpl">
  	<constructor-arg ref="cacheManager"/>
@@ -38,14 +39,26 @@
  <bean id="userDAO" class="edu.rpi.metpetrest.dao.UserDAOImpl">
  	<property name="dataSource" ref="dataSource"></property>
  </bean>
+ 
+ <bean id="chemicalAnalysisDAO" class="edu.rpi.metpetrest.dao.ChemicalAnalysisDAOImpl">
+ 	<property name="dataSource" ref="dataSource"></property> 	
+ </bean>
 
-<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+ <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
     <property name="driverClassName" value="org.postgis.DriverWrapper"/>
 	<property name="url" value="jdbc:postgresql_postGIS://@DATABASE_HOST@/@DATABASE@"/>
     <property name="username" value="@APPUSER@"/>
     <property name="password" value="@APPPASS@"/>
-  </bean>
-	
+  </bean> 
+
+<!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <property name="driverClassName" value="org.postgis.DriverWrapper"/>
+    <property name="url" value="jdbc:postgresql_postGIS://localhost/mpdb3"/>
+    <property name="username" value="metpetwebdev"/>
+    <property name="password" value="metpetwebdev"/>
+  </bean> -->
+    
+    	
   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
   	<property name="dataSource" ref="dataSource"/>
   </bean>
@@ -79,6 +92,7 @@
   	<property name="sampleDAO" ref="sampleDAO"></property>
   	<property name="publicationDAO" ref="publicationDAO"></property>
   	<property name="userDAO" ref="userDAO"></property>
+  	<property name="chemicalAnalysisDAO" ref="chemicalAnalysisDAO"></property>
   </bean>
 
      <bean id="earthChemSamplesView" name="earthChemSamplesView" class="org.springframework.web.servlet.view.xml.MarshallingView">  	
@@ -121,6 +135,8 @@
    			</constructor-arg>
   	
   	  </bean>
+ 
+   
 <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
   <property name="targetObject" ref="urlRestService" />
   <property name="targetMethod" value="getEarthChemSamples" />
@@ -136,18 +152,24 @@
 
 <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
     <property name="jobDetail" ref="jobDetail" />
-    <property name="cronExpression" value="5 0 * * * ?" />
+    <property name="cronExpression" value="0 0 * * * ?" />
 </bean>
 
-<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+<bean id="simple" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="triggers">
         <list>
-            <ref bean="cronTrigger" />
             <ref bean="simpleTrigger" />
         </list>
     </property>
 </bean>
     
+<bean id="cron" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <property name="triggers">
+        <list>
+            <ref bean="cronTrigger" />
+        </list>
+    </property>
+</bean>
    
     
   
