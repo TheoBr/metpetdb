@@ -10,7 +10,7 @@
     <property name="build" location="${basedir}/build/WEB-INF/classes" />
     <property name="ctx_web" location="${basedir}/WebContent" />
     <property name="ctx_lib" location="${basedir}/WebContent/WEB-INF/lib" />
-	<property name="tomcat_lib" location="{tomcatdir}/lib" />
+	<property name="tomcat_lib" location="${tomcatdir}/lib" />
 	
     <property name="war" location="${build}/MetPetRest.war" />
 
