@@ -13,7 +13,7 @@ import edu.rpi.metpetdb.client.paging.PaginationParameters;
 
 public class ListCookieJar {
 
-	private static final int DEFAULT_PAGE_SIZE = 10;
+	private static final int DEFAULT_PAGE_SIZE = 75;
 
 	private enum CookieData {
 		PAGE_SIZE, COLUMNS, PAGINATION_PARAMETERS,
