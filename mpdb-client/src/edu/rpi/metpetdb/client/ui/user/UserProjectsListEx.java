@@ -5,34 +5,25 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gwt.user.client.History;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.table.client.FixedWidthFlexTable;
 
-import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.Invite;
 import edu.rpi.metpetdb.client.model.Project;
-import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.TokenSpace;
-import edu.rpi.metpetdb.client.ui.commands.LoggedInServerOp;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
-import edu.rpi.metpetdb.client.ui.dialogs.CustomTableView;
 import edu.rpi.metpetdb.client.ui.objects.list.ProjectList;
-import edu.rpi.metpetdb.client.ui.objects.list.ProjectListEx;
 import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
@@ -44,8 +35,7 @@ public class UserProjectsListEx extends MPagePanel implements ClickListener {
 	private ListBox lb;
 	private FlexTable Projects_ft;
 
-	public UserProjectsListEx() {
-	}
+	public UserProjectsListEx() {}
 
 	private void adpRows() {
 		header1 = new FlexTable();
@@ -54,7 +44,6 @@ public class UserProjectsListEx extends MPagePanel implements ClickListener {
 
 		final MLink createProject = new MLink("Create New Project",
 				TokenSpace.newProject);
-		
 
 		setPageTitle("My Projects");
 		createProject.setStylePrimaryName(CSS.LINK_LARGE_ICON);
@@ -63,7 +52,7 @@ public class UserProjectsListEx extends MPagePanel implements ClickListener {
 	}
 
 	public void onClick(Widget sender) {
-		//CustomTableView myView = new CustomTableView(list, cookieString);
+	// CustomTableView myView = new CustomTableView(list, cookieString);
 	}
 
 	private void addProjects() {
@@ -77,9 +66,10 @@ public class UserProjectsListEx extends MPagePanel implements ClickListener {
 			@Override
 			public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
 				int id = MpDb.currentUser().getId();
-				MpDb.project_svc.allIdsForUser(id, ac);	
-			}			
-		};		
+				MpDb.project_svc.allIdsForUser(id, ac);
+			}
+
+		};
 		Projects_ft = new FlexTable();
 		Projects_ft.setWidth("100%");
 		Projects_ft.setWidget(0, 0, list);
@@ -110,20 +100,18 @@ public class UserProjectsListEx extends MPagePanel implements ClickListener {
 		adpRows();
 		addProjects();
 		list.getScrollTable().reloadPage();
-		
-		/*new ServerOp() {
-			@Override
-			public void begin() {
-				MpDb.project_svc.all(MpDb.currentUser().getId(), this);
-			}
-			public void onSuccess(Object result) {
-				adpRows();
-				addProjects();
-		
-				List<Project> projects = (List<Project>)result;
 
-			}
-		}.begin();*/
+		/*
+		 * new ServerOp() {
+		 * 
+		 * @Override public void begin() {
+		 * MpDb.project_svc.all(MpDb.currentUser().getId(), this); } public void
+		 * onSuccess(Object result) { adpRows(); addProjects();
+		 * 
+		 * List<Project> projects = (List<Project>)result;
+		 * 
+		 * } }.begin();
+		 */
 		return this;
 	}
 

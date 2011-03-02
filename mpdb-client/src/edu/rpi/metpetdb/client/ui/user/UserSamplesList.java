@@ -1,12 +1,12 @@
 package edu.rpi.metpetdb.client.ui.user;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import edu.rpi.metpetdb.client.model.Sample;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.CSS;
@@ -18,7 +18,7 @@ import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 
 public class UserSamplesList extends MPagePanel {
 	private final SampleList list;
-	
+
 	public UserSamplesList() {
 		list = new SampleList() {
 			public void update(final PaginationParameters p,
@@ -30,15 +30,14 @@ public class UserSamplesList extends MPagePanel {
 			@Override
 			public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
 				long id = (long) (MpDb.currentUser().getId());
-				MpDb.sample_svc.allIdsForUser(id,ac);	
+				MpDb.sample_svc.allIdsForUser(id, ac);
 			}
-
 
 		};
 		addPageHeader();
 		add(list);
 	}
-	
+
 	public void reload() {
 		list.getScrollTable().reloadPage();
 	}
@@ -47,8 +46,7 @@ public class UserSamplesList extends MPagePanel {
 		setPageTitle("My Samples");
 
 		final MLink addSample = new MLink("Add Sample", TokenSpace.enterSample);
-		final MLink bulkUpload = new MLink("Upload Data",
-				TokenSpace.bulkUpload);
+		final MLink bulkUpload = new MLink("Upload Data", TokenSpace.bulkUpload);
 
 		addSample.setStylePrimaryName(CSS.LINK_LARGE_ICON);
 		addSample.addStyleName(CSS.LINK_ADD);

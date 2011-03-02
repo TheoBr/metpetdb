@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.gen2.table.client.DefaultTableDefinition;
 import com.google.gwt.gen2.table.client.TableModel;
 import com.google.gwt.gen2.table.client.TableModelHelper.ColumnSortInfo;
@@ -28,7 +30,9 @@ import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.MObject;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
+import edu.rpi.metpetdb.client.model.ChemicalAnalysisArray;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
@@ -48,7 +52,7 @@ import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
  * @param < T>
  *            the types of objects that will be paginated in this table
  */
-public abstract class DataList<RowType extends MObject> extends FlowPanel {
+public abstract class DataList<RowType> extends FlowPanel {
 	private final static String STORAGE_COOKIE = "mpdb-list";
 	private final static String STYLENAME = "scrolltable";
 	/**
@@ -58,17 +62,17 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 
 	private final ListCookieJar cookies;
 	private final InlineLabel results;
-	
+
 	/**
-	 * Object is the Id of the value in the row
-	 * Boolean is whether or not the value is public or private,
-	 *         or null if the object doesn't support public/private
+	 * Object is the Id of the value in the row Boolean is whether or not the
+	 * value is public or private, or null if the object doesn't support
+	 * public/private
 	 */
-	private Map<Object,Boolean> tableSelections;
-	
+	private Map<Object, Boolean> tableSelections;
+
 	protected abstract Object getId(RowType obj);
-	
-	public abstract void getAllIds(final AsyncCallback<Map<Object,Boolean>> ac);
+
+	public abstract void getAllIds(final AsyncCallback<Map<Object, Boolean>> ac);
 
 	/**
 	 * Returns the name of the list for use in the cookie (YUM!)
@@ -91,7 +95,7 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 	 * that this list supports
 	 */
 	private ColumnDefinition<RowType> allColumns;
-	
+
 	/**
 	 * Map of the columns that are being shown NOW!
 	 */
@@ -99,31 +103,29 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 	private DefaultTableDefinition<RowType> tableDefinition = new DefaultTableDefinition<RowType>();
 
 	private MpDbPagingScrollTable<RowType> scrollTable;
-	
+
 	public MpDbPagingScrollTable<RowType> getScrollTable() {
 		if (scrollTable == null) {
 			scrollTable = new MpDbPagingScrollTable<RowType>(getTableModel(),
 					getDataTable(), getHeaderTable(), tableDefinition) {
-				
+
 				@Override
 				public Widget getNoResultsWidgetImpl() {
 					return getNoResultsWidget();
 				}
-				
+
 				/*
-				@Override
-				protected void onLoad() {
-					// Notify the Paging object that the display widget is loaded
-					// so that it can position the notification popup
-					options.notifyParentOnLoad();					
-				}
-				*/
+				 * @Override protected void onLoad() { // Notify the Paging
+				 * object that the display widget is loaded // so that it can
+				 * position the notification popup options.notifyParentOnLoad();
+				 * }
+				 */
 			};
-			
+
 		}
 		return scrollTable;
 	}
-	
+
 	private MPagingOptions options;
 
 	private MpDbTableModel tableModel;
@@ -142,34 +144,39 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 	private SimplePanel tableActions;
 
 	private MpDbDataTable dataTable;
-	
+
 	private boolean ignoreSelections = true;
+
 	public MpDbDataTable getDataTable() {
 		if (dataTable == null) {
-			dataTable = new MpDbDataTable(){
-				public void onBrowserEvent(Event e){
-					if(e.getTypeInt() == Event.ONMOUSEDOWN){
+			dataTable = new MpDbDataTable() {
+				public void onBrowserEvent(Event e) {
+					if (e.getTypeInt() == Event.ONMOUSEDOWN) {
 						ignoreSelections = false;
 					}
 					super.onBrowserEvent(e);
 				}
 			};
-			dataTable.addRowSelectionHandler(new RowSelectionHandler(){
-				public void onRowSelection(final RowSelectionEvent e){
+			dataTable.addRowSelectionHandler(new RowSelectionHandler() {
+				public void onRowSelection(final RowSelectionEvent e) {
 					if (!ignoreSelections) {
-						for (Row r : e.getSelectedRows()){
-							if (!tableSelections.containsKey(getId(getRowValue(r.getRowIndex())))){
-								tableSelections.put(getId(getRowValue(r.getRowIndex())),null);
+						for (Row r : e.getSelectedRows()) {
+							if (!tableSelections
+									.containsKey(getId(getRowValue(r
+											.getRowIndex())))) {
+								tableSelections.put(getId(getRowValue(r
+										.getRowIndex())), null);
 							}
 						}
-						for (Row r : e.getDeselectedRows()){
-							tableSelections.remove(getId(getRowValue(r.getRowIndex())));
+						for (Row r : e.getDeselectedRows()) {
+							tableSelections.remove(getId(getRowValue(r
+									.getRowIndex())));
 						}
 						ignoreSelections = true;
 					}
 				}
 			});
-			
+
 		}
 		return dataTable;
 	}
@@ -223,9 +230,12 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 				}
 
 				public void onSuccess(final Results<RowType> result) {
+					
 					results.setText(result.getCount() + " results");
 					setRowCount(result.getCount());
-					final SerializableResponse<RowType> response = new SerializableResponse<RowType>(
+					
+					//TODO: Rewrite the table implementation since some things are not GWT-RPC based anymore; they'll never extends IsSerializable 
+					final SerializableResponse response = new SerializableResponse(
 							result.getList());
 					callback.onRowsReady(request, response);
 					setSelectionsForPage(result.getList());
@@ -233,22 +243,19 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 			}.begin();
 		}
 	}
-	
-	
+
 	/**
-	 * selects the rows that are in the list of tableSelections
-	 * called when the user navigates to a different page
+	 * selects the rows that are in the list of tableSelections called when the
+	 * user navigates to a different page
+	 * 
 	 * @param pageValues
 	 */
-	public void setSelectionsForPage(List<RowType> pageValues){
+	public void setSelectionsForPage(List<RowType> pageValues) {
 		/*
-		for (int i = 0; i < pageValues.size(); i++) {
-			RowType t = pageValues.get(i);
-			Object id = getId(t);
-			if (tableSelections.containsKey(id)){
-				dataTable.selectRow(i, false);
-			}
-		}*/
+		 * for (int i = 0; i < pageValues.size(); i++) { RowType t =
+		 * pageValues.get(i); Object id = getId(t); if
+		 * (tableSelections.containsKey(id)){ dataTable.selectRow(i, false); } }
+		 */
 		tableSelections.clear();
 		dataTable.deselectAllRows();
 	}
@@ -273,12 +280,13 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 	public abstract void update(final PaginationParameters p,
 			final AsyncCallback<Results<RowType>> ac);
 
+
 	public void addRowSelectionHandler(RowSelectionHandler handler) {
 		dataTable.addRowSelectionHandler(handler);
 	}
 
 	public Set<Object> getSelectedValues() {
-		return tableSelections.keySet();	
+		return tableSelections.keySet();
 	}
 
 	public RowType getRowValue(int row) {
@@ -363,29 +371,30 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 		// topbar contains pagination and column options
 		topbar = new MTwoColPanel();
 		topbar.addStyleName(STYLENAME + "-topbar");
-		
+
 		topbar.getLeftCol().add(results);
-		
+
 		// so the pagination displays correctly even without custom columns
-		final MLink customCols = new MLink("Customize Columns", new ClickListener() {
-			public void onClick(Widget sender) {
-				CustomTableView<RowType> myView = new CustomTableView<RowType>(
-						allColumns, displayColumns) {
+		final MLink customCols = new MLink("Customize Columns",
+				new ClickListener() {
+					public void onClick(Widget sender) {
+						CustomTableView<RowType> myView = new CustomTableView<RowType>(
+								allColumns, displayColumns) {
 
-					@Override
-					public void onSetNewColumns(
-							ColumnDefinition<RowType> newCols) {
-						displayColumns = newCols;
-						refreshColumns();
+							@Override
+							public void onSetNewColumns(
+									ColumnDefinition<RowType> newCols) {
+								displayColumns = newCols;
+								refreshColumns();
+							}
+
+						};
+						myView.show();
 					}
-
-				};
-				myView.show();
-			}
-		});
+				});
 		customCols.setStyleName("custom-col-link");
 		topbar.getRightCol().add(customCols);
-		
+
 		final PageSizeChooser psc = new PageSizeChooser() {
 
 			@Override
@@ -396,11 +405,12 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 		};
 		psc.setSelectedPageSize(cookies.getPageSize());
 		topbar.getRightCol().add(psc);
-		
-		// Widget for navigating paginated results, also shows loading notifications
+
+		// Widget for navigating paginated results, also shows loading
+		// notifications
 		options = new MPagingOptions(getScrollTable(), true);
 		topbar.getRightCol().add(options);
-		
+
 		// container for widgets used to do stuff with selected rows
 		tableActions = new SimplePanel();
 		setPageSizeInitial(cookies.getPageSize());
@@ -421,23 +431,24 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 		cookies = new ListCookieJar(getCookieName());
 		results = new InlineLabel("");
 		setUpColumns();
-		tableSelections = new HashMap<Object,Boolean>();
+		tableSelections = new HashMap<Object, Boolean>();
 	}
-	
+
 	@Override
 	protected void onLoad() {
-		//options.updateNoticePosition(this.getAbsoluteLeft(), this.getAbsoluteTop(), 
-		//		this.getOffsetWidth(), this.getOffsetHeight());
-		
+		// options.updateNoticePosition(this.getAbsoluteLeft(),
+		// this.getAbsoluteTop(),
+		// this.getOffsetWidth(), this.getOffsetHeight());
+
 		options.setNoticeParent(tableActions);
-		
+
 		super.onLoad();
 	}
 
 	public FlowPanel getTopBar() {
 		return topbar.getLeftCol();
 	}
-	
+
 	public void setPageSizeInitial(final int pageSize) {
 		if (pageSize > 0) {
 			dataTable.resize(pageSize, allColumns.size());
@@ -452,61 +463,63 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 			getScrollTable().setPageSize(pageSize);
 			cookies.setPageSize(pageSize);
 			getScrollTable().gotoFirstPage();
-			getScrollTable().reloadPage();	
+			getScrollTable().reloadPage();
 		}
 	}
-	
+
 	public void setTableActions(Widget w) {
 		tableActions.setWidget(w);
 	}
-	
+
 	/**
-	 * The selection functions are wrappers of the dataTable selections
-	 * 		but they also update the tableSelections Map
+	 * The selection functions are wrappers of the dataTable selections but they
+	 * also update the tableSelections Map
+	 * 
 	 * @param row
 	 * @param unselectAll
 	 */
-	public void selectRow(int row, boolean unselectAll){
-		getDataTable().selectRow(row,unselectAll);
-		if (!tableSelections.containsKey(getId(getRowValue(row)))){
+	public void selectRow(int row, boolean unselectAll) {
+		getDataTable().selectRow(row, unselectAll);
+		if (!tableSelections.containsKey(getId(getRowValue(row)))) {
 			tableSelections.put(getId(getRowValue(row)), null);
 		}
 	}
-	public void deselectRow(int row){
+	public void deselectRow(int row) {
 		getDataTable().deselectRow(row);
 		tableSelections.remove(getId(getRowValue(row)));
 	}
-	
-	public void deselectAllPageRows(){
+
+	public void deselectAllPageRows() {
 		for (int i = 0; i < getDataTable().getRowCount(); i++) {
-	        deselectRow(i);
+			deselectRow(i);
 		}
 	}
-	
-	public void deselectAllRows(){
+
+	public void deselectAllRows() {
 		for (int i = 0; i < getDataTable().getRowCount(); i++) {
-	        deselectRow(i);
+			deselectRow(i);
 		}
 		tableSelections.clear();
 	}
-	
-	public void selectAllPageRows(){
+
+	public void selectAllPageRows() {
 		for (int i = 0; i < getDataTable().getRowCount(); i++) {
-		    selectRow(i, false);
+			selectRow(i, false);
 		}
 	}
-	
-	public void selectAllRows(final Boolean isPublic){
-		new ServerOp<Map<Object,Boolean>>(){
+
+	public void selectAllRows(final Boolean isPublic) {
+		new ServerOp<Map<Object, Boolean>>() {
 			@Override
-			public void begin(){
+			public void begin() {
 				getAllIds(this);
-			}			
-			public void onSuccess(Map<Object,Boolean> results){
+			}
+			public void onSuccess(Map<Object, Boolean> results) {
 				tableSelections = results;
 				// only select the ones that match isPublic
 				for (int i = 0; i < getDataTable().getRowCount(); i++) {
-					if (tableSelections.containsKey(getId(getRowValue(i))) && tableSelections.get(getId(getRowValue(i))) == isPublic){
+					if (tableSelections.containsKey(getId(getRowValue(i)))
+							&& tableSelections.get(getId(getRowValue(i))) == isPublic) {
 						selectRow(i, false);
 					} else {
 						deselectRow(i);
@@ -515,25 +528,25 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 				// remove the entries with a different value for isPublic
 				// since they are not being selected
 				List<Object> toRemove = new LinkedList<Object>();
-				for (Object key : results.keySet()){
-					if (tableSelections.get(key) != isPublic){
+				for (Object key : results.keySet()) {
+					if (tableSelections.get(key) != isPublic) {
 						toRemove.add(key);
 					}
 				}
-				for (Object key : toRemove){
+				for (Object key : toRemove) {
 					tableSelections.remove(key);
 				}
 			}
 		}.begin();
 	}
-	
-	public void selectAllRows(){
-		new ServerOp<Map<Object,Boolean>>(){
+
+	public void selectAllRows() {
+		new ServerOp<Map<Object, Boolean>>() {
 			@Override
-			public void begin(){
+			public void begin() {
 				getAllIds(this);
-			}			
-			public void onSuccess(Map<Object,Boolean> results){
+			}
+			public void onSuccess(Map<Object, Boolean> results) {
 				tableSelections = results;
 				for (int i = 0; i < getDataTable().getRowCount(); i++) {
 					selectRow(i, false);
@@ -541,7 +554,7 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 			}
 		}.begin();
 	}
-	
+
 	public void onAttach() {
 		super.onAttach();
 		DeferredCommand.addCommand(new Command() {
@@ -550,10 +563,10 @@ public abstract class DataList<RowType extends MObject> extends FlowPanel {
 			}
 		});
 	}
-	
+
 	public void fillWidth() {
-		//HACK: forces the scroll table to resize based on the header column
-		//size as opposed to the data table
+		// HACK: forces the scroll table to resize based on the header column
+		// size as opposed to the data table
 		getDataTable().resizeColumns(0);
 		getScrollTable().fillWidth();
 		getDataTable().resizeColumns(displayColumns.size());

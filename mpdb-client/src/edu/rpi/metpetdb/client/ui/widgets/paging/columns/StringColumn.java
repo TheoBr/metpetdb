@@ -1,9 +1,8 @@
 package edu.rpi.metpetdb.client.ui.widgets.paging.columns;
 
-import edu.rpi.metpetdb.client.model.MObject;
 import edu.rpi.metpetdb.client.model.properties.Property;
 
-public class StringColumn<RowType extends MObject> extends
+public class StringColumn<RowType> extends
 		Column<RowType, String> {
 
 

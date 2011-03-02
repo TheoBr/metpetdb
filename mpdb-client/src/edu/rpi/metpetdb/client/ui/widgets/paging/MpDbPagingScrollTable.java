@@ -8,9 +8,7 @@ import com.google.gwt.gen2.table.client.TableDefinition;
 import com.google.gwt.gen2.table.client.TableModel;
 import com.google.gwt.user.client.ui.Widget;
 
-import edu.rpi.metpetdb.client.model.MObject;
-
-public abstract class MpDbPagingScrollTable<RowType extends MObject> extends PagingScrollTable<RowType> {
+public abstract class MpDbPagingScrollTable<RowType> extends PagingScrollTable<RowType> {
 
 	public MpDbPagingScrollTable(TableModel<RowType> tableModel,
 			FixedWidthGrid dataTable, FixedWidthFlexTable headerTable,

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.gen2.table.event.client.PageLoadEvent;
 import com.google.gwt.gen2.table.event.client.PageLoadHandler;
 import com.google.gwt.user.client.DOM;
@@ -18,13 +19,13 @@ import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
 import edu.rpi.metpetdb.client.ui.commands.ServerOp;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageBrowserImageList;
 import edu.rpi.metpetdb.client.ui.image.browser.ImageOnGridContainer;
-import edu.rpi.metpetdb.client.ui.input.attributes.ChooseImageDialog;
 
 public class AddExistingImagePopup extends PopupPanel {
 
@@ -46,6 +47,7 @@ public class AddExistingImagePopup extends PopupPanel {
 			public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
 				MpDb.image_svc.allImageIds(subsample.getId(), ac);
 			}
+
 		};
 		list.addPageLoadHandler(new PageLoadHandler() {
 			public void onPageLoad(PageLoadEvent event) {
@@ -60,21 +62,21 @@ public class AddExistingImagePopup extends PopupPanel {
 		});
 		vp.add(new Button("Add Selected", new ClickListener() {
 			public void onClick(final Widget sender) {
-				new ServerOp<List<Image>>(){
-					public void begin(){
+				new ServerOp<List<Image>>() {
+					public void begin() {
 						List<Long> ids = new ArrayList<Long>();
-						for (Object id : list.getSelectedValues()){
+						for (Object id : list.getSelectedValues()) {
 							ids.add((Long) id);
 						}
 						MpDb.image_svc.details(ids, this);
 					}
-					
-					public void onSuccess(List<Image> result){
+
+					public void onSuccess(List<Image> result) {
 						r.onSuccess(result);
 						((PopupPanel) sender.getParent().getParent()).hide();
 					}
-					
-					public void onFailure(Throwable e){
+
+					public void onFailure(Throwable e) {
 						((PopupPanel) sender.getParent().getParent()).hide();
 						super.onFailure(e);
 					}

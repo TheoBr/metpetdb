@@ -14,7 +14,7 @@ import edu.rpi.metpetdb.client.model.interfaces.MObject;
  * @author anthony
  * 
  */
-public class ColumnDefinition<RowType extends MObject> implements
+public class ColumnDefinition<RowType> implements
 		Iterable<Column<RowType, ?>> {
 
 	private class ColumnDefinitionIterator implements

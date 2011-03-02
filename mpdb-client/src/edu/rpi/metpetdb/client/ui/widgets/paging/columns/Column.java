@@ -11,7 +11,7 @@ import edu.rpi.metpetdb.client.model.properties.Property;
  * @author anthony
  * 
  */
-public abstract class Column<RowType extends MObject, ColType> extends AbstractColumnDefinition<RowType, ColType>{
+public abstract class Column<RowType, ColType> extends AbstractColumnDefinition<RowType, ColType>{
 
 	private Object header;
 	protected Property<RowType> property;

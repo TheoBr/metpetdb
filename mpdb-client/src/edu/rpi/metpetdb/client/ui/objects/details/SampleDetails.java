@@ -64,7 +64,6 @@ import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.MetamorphicRe
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.MineralAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.ReferenceAttribute;
 import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.RegionAttribute;
-import edu.rpi.metpetdb.client.ui.input.attributes.specific.sample.UnitTextAttribute;
 import edu.rpi.metpetdb.client.ui.objects.list.SubsampleList;
 import edu.rpi.metpetdb.client.ui.user.UsesCurrentUser;
 import edu.rpi.metpetdb.client.ui.widgets.MLink;
@@ -73,11 +72,11 @@ import edu.rpi.metpetdb.client.ui.widgets.panels.MPagePanel;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MTwoColPanel;
 import edu.rpi.metpetdb.client.ui.widgets.panels.MNoticePanel.NoticeType;
 
-public class SampleDetails extends MPagePanel implements UsesCurrentUser{
+public class SampleDetails extends MPagePanel implements UsesCurrentUser {
 	private LatLng samplePosition;
 	private MapWidget map;
 	private MTwoColPanel panel = new MTwoColPanel();
-	//private boolean geInit = false;
+	// private boolean geInit = false;
 	private FlowPanel commentsContainer = new FlowPanel();
 	private TextArea commentBox;
 	private MNoticePanel commentNotice;
@@ -95,9 +94,10 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			new RadioButtonAttribute(MpDb.doc.Sample_publicData,
 					LocaleHandler.lc_text.publicDataWarning()),
 			new LocationAttribute(MpDb.doc.Sample_location),
-			
-			//TODO: SCB Rolled back this attribute to fix the Sample Edit action
-		//	new UnitTextAttribute(MpDb.doc.Sample_locationError, "meters"),
+
+			// TODO: SCB Rolled back this attribute to fix the Sample Edit
+			// action
+			// new UnitTextAttribute(MpDb.doc.Sample_locationError, "meters"),
 			new CountryAttribute(MpDb.doc.Sample_country),
 			new MineralAttribute(MpDb.doc.Sample_minerals).setPos(DetailsPanelTableLoc.BOTTOM),
 			new TextAreaAttribute(MpDb.doc.Sample_description).setPos(DetailsPanelTableLoc.BOTTOM),
@@ -109,14 +109,17 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			new ReferenceAttribute(MpDb.doc.Sample_references).setPos(DetailsPanelTableLoc.RIGHT),
 			new GeoReferenceAttribute(MpDb.doc.Sample_geoReferences).setPos(DetailsPanelTableLoc.RIGHT),
 			// new CommentAttribute(MpDb.doc.Sample_comments),
-			new TextAttribute(MpDb.doc.Sample_subsampleCount).setReadOnly(true).setPos(DetailsPanelTableLoc.RIGHT),
-			new AddImageAttribute<Sample>(MpDb.doc.Sample_images).setPos(DetailsPanelTableLoc.RIGHT)
+			new TextAttribute(MpDb.doc.Sample_subsampleCount).setReadOnly(true)
+					.setPos(DetailsPanelTableLoc.RIGHT),
+			new AddImageAttribute<Sample>(MpDb.doc.Sample_images)
+					.setPos(DetailsPanelTableLoc.RIGHT)
 	};
 
 	private final ObjectEditorPanel<Sample> p_sample;
 	private long sampleId;
 	private Sample sample;
-	//private boolean canEdit;
+
+	// private boolean canEdit;
 
 	public SampleDetails() {
 		p_sample = new ObjectEditorPanel<Sample>(sampleAtts,
@@ -134,12 +137,13 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			}
 
 			protected void deleteBean(final AsyncCallback<MObject> ac) {
-				new ConfirmationDialogBox("Are you sure you want to delete this sample?"
-							, true) {
+				new ConfirmationDialogBox(
+						"Are you sure you want to delete this sample?", true) {
 					public void onSubmit() {
-						MpDb.sample_svc.delete(((Sample) getBean()).getId(), ac);
+						MpDb.sample_svc
+								.delete(((Sample) getBean()).getId(), ac);
 					}
-					
+
 					public void onCancel() {
 						p_sample.setEnabled(true);
 					}
@@ -188,7 +192,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 		try {
 			map = new MapWidget();
 		} catch (Exception e) {
-			//ignore any exceptions from google about the map
+			// ignore any exceptions from google about the map
 		}
 		oep.setStylePrimaryName("sd-details");
 		oep.addStyleName("mpdb-dataTable");
@@ -217,23 +221,27 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 					@Override
 					public void command() {
 						final Sample s = (Sample) p_sample.getBean();
-						if(MpDb.currentUser() == null) noPermissionWarning();
-						if(MpDb.isCurrentUser(s.getOwner())){
-							History.newItem(TokenSpace.createNewSubsample(p_sample
-									.getBean()));
-						} else{
-							//check to see if the sample is part of a project that the current user
-							//is a member of
+						if (MpDb.currentUser() == null)
+							noPermissionWarning();
+						if (MpDb.isCurrentUser(s.getOwner())) {
+							History.newItem(TokenSpace
+									.createNewSubsample(p_sample.getBean()));
+						} else {
+							// check to see if the sample is part of a project
+							// that the current user
+							// is a member of
 							new ServerOp<Boolean>() {
 								public void begin() {
 									MpDb.sample_svc.canEdit(s.getId(), this);
 								}
 
 								public void onSuccess(Boolean result) {
-									if(result){
-										History.newItem(TokenSpace.createNewSubsample(p_sample
-												.getBean()));
-									} else noPermissionWarning();
+									if (result) {
+										History.newItem(TokenSpace
+												.createNewSubsample(p_sample
+														.getBean()));
+									} else
+										noPermissionWarning();
 								}
 							}.begin();
 						}
@@ -246,7 +254,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 
 		Label Subsamples_label = new Label(LocaleHandler.lc_text.subsamples());;
 		subsamples_ft.setWidget(0, 0, Subsamples_label);
-		
+
 		SubsampleList list = new SubsampleList() {
 			public void update(final PaginationParameters p,
 					final AsyncCallback<Results<Subsample>> ac) {
@@ -257,10 +265,11 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
 				MpDb.subsample_svc.allIdsForSample(sampleId, ac);
 			}
+
 		};
-		
+
 		subsamples_ft.setWidget(1, 0, list);
-		
+
 		subsamples_ft.getFlexCellFormatter().setColSpan(1, 0, 2);
 
 		// format to look pretty
@@ -282,27 +291,23 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 		this.add(subsamples_ft);
 
 	}
-	
-	public void onCurrentUserChanged(final User u){
-		if (commentPanel.getParent() != null){
+
+	public void onCurrentUserChanged(final User u) {
+		if (commentPanel.getParent() != null) {
 			remove(commentPanel);
 		}
 		addCommentsModule();
 		populateComments();
 	}
-	
+
 	private void addCommentsModule() {
-		commentPanel = new HTMLPanel(
-				"<h2>"+LocaleHandler.lc_text.comments()+"</h2>" +
-				"<div id=\"comments-notice\"></div>" +
-				"<div id=\"comments-container\"></div>" +
-				"<div class=\"comment-form\">" +
-				"<h4>Add Comment</h4>" +
-				"<span id=\"comment-form-textarea\"></span>" +
-				"<span id=\"comment-form-submit\"></span>" +
-				"<span id=\"comment-form-clear\"></span>" +
-				"</div>"
-		);
+		commentPanel = new HTMLPanel("<h2>" + LocaleHandler.lc_text.comments()
+				+ "</h2>" + "<div id=\"comments-notice\"></div>"
+				+ "<div id=\"comments-container\"></div>"
+				+ "<div class=\"comment-form\">" + "<h4>Add Comment</h4>"
+				+ "<span id=\"comment-form-textarea\"></span>"
+				+ "<span id=\"comment-form-submit\"></span>"
+				+ "<span id=\"comment-form-clear\"></span>" + "</div>");
 		commentBox = new TextArea();
 		Button submit = new Button(LocaleHandler.lc_text.buttonSubmit());
 		submit.addClickListener(new ClickListener() {
@@ -314,45 +319,47 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 				addNewComment(comment);
 			}
 		});
-		final MLink clear = new MLink("Clear", new ClickListener(){
-			public void onClick(Widget sender){
+		final MLink clear = new MLink("Clear", new ClickListener() {
+			public void onClick(Widget sender) {
 				commentBox.setText("");
 			}
 		});
-		if (!MpDb.isLoggedIn()){
+		if (!MpDb.isLoggedIn()) {
 			commentBox.setText("You must be logged in to add comments");
 			commentBox.setEnabled(false);
 			clear.setVisible(false);
 			submit.setEnabled(false);
-		} else if (!MpDb.currentUser().getEnabled()){
-			commentBox.setText("You must activate your account to add comments");
+		} else if (!MpDb.currentUser().getEnabled()) {
+			commentBox
+					.setText("You must activate your account to add comments");
 			commentBox.setEnabled(false);
 			clear.setVisible(false);
 			submit.setEnabled(false);
 		}
-		
+
 		commentNotice = new MNoticePanel();
 		commentsContainer.setStyleName("comment-list");
 		commentPanel.addAndReplaceElement(commentNotice, "comments-notice");
-		commentPanel.addAndReplaceElement(commentsContainer, "comments-container");
+		commentPanel.addAndReplaceElement(commentsContainer,
+				"comments-container");
 		commentPanel.addAndReplaceElement(commentBox, "comment-form-textarea");
 		commentPanel.addAndReplaceElement(submit, "comment-form-submit");
 		commentPanel.addAndReplaceElement(clear, "comment-form-clear");
 		commentPanel.setStyleName("comments");
 		add(commentPanel);
 	}
-	
+
 	private void addNewComment(final SampleComment comment) {
 		new ServerOp<SampleComment>() {
-			public void begin() {				
+			public void begin() {
 				MpDb.sampleComment_svc.save(comment, this);
 			}
 
 			public void onSuccess(SampleComment result) {
-				if (empty.getParent() != null){
+				if (empty.getParent() != null) {
 					commentsContainer.remove(empty);
 				}
-				commentsContainer.add(new SampleCommentPanel(result,true));
+				commentsContainer.add(new SampleCommentPanel(result, true));
 				commentBox.setText("");
 				commentNotice.hide();
 			}
@@ -366,124 +373,136 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 			}
 
 			public void onSuccess(final List<SampleComment> result) {
-				new ServerOp<Long>(){
-					public void begin(){
+				new ServerOp<Long>() {
+					public void begin() {
 						MpDb.mpdbGeneric_svc.getCurrentTime(this);
 					}
-					
-					public void onSuccess(Long now){
+
+					public void onSuccess(Long now) {
 						commentsContainer.clear();
 						commentNotice.hide();
-						if (result.isEmpty()) {				
+						if (result.isEmpty()) {
 							empty.setStyleName(CSS.NULLSET);
 							commentsContainer.add(empty);
 						} else {
-							for (SampleComment sc : result){
-								final boolean isEditable = now<(sc.getDateAdded().getTime()+SampleComment.EDIT_TIMER);
-								commentsContainer.add(new SampleCommentPanel(sc, isEditable));
+							for (SampleComment sc : result) {
+								final boolean isEditable = now < (sc
+										.getDateAdded().getTime() + SampleComment.EDIT_TIMER);
+								commentsContainer.add(new SampleCommentPanel(
+										sc, isEditable));
 							}
 						}
 					}
 				}.begin();
 			}
-			
+
 			public void onFailure(final Throwable e) {
 				super.onFailure(e);
-				commentNotice.sendNotice(NoticeType.ERROR, "Sorry, could not load comments at this time.");
+				commentNotice.sendNotice(NoticeType.ERROR,
+						"Sorry, could not load comments at this time.");
 			}
 		}.begin();
 	}
-	
-	protected class SampleCommentPanel extends FlowPanel implements ClickListener {
+
+	protected class SampleCommentPanel extends FlowPanel implements
+			ClickListener {
 		private SampleComment comment;
-		
+
 		private HTML authorLine = new HTML();
 		private Image trash = new Image("images/icon-trash-small.png");
 		private HTML body = new HTML();
-		
+
 		private MLink editLink = new MLink("Edit");
 		private FlowPanel editPanel = new FlowPanel();
 		private TextArea editTextArea = new TextArea();
-		private Button editSubmit = new Button(LocaleHandler.lc_text.buttonSubmit());
-		private MLink editCancel = new MLink(LocaleHandler.lc_text.buttonCancel());
-		
+		private Button editSubmit = new Button(LocaleHandler.lc_text
+				.buttonSubmit());
+		private MLink editCancel = new MLink(LocaleHandler.lc_text
+				.buttonCancel());
+
 		private boolean isCommentOwner;
 		private boolean isSampleOwnerComment;
 		private boolean canDelete;
-		
-		protected SampleCommentPanel(final SampleComment sc, final boolean isEditable) {
+
+		protected SampleCommentPanel(final SampleComment sc,
+				final boolean isEditable) {
 			this.comment = sc;
-			isCommentOwner = MpDb.isLoggedIn() && MpDb.currentUser().getId() == sc.getOwner().getId();
-			isSampleOwnerComment = sc.getOwner().getId() == sample.getOwner().getId();
-			canDelete = MpDb.isLoggedIn() && (isCommentOwner || MpDb.currentUser().getId() == sample.getOwner().getId());
+			isCommentOwner = MpDb.isLoggedIn()
+					&& MpDb.currentUser().getId() == sc.getOwner().getId();
+			isSampleOwnerComment = sc.getOwner().getId() == sample.getOwner()
+					.getId();
+			canDelete = MpDb.isLoggedIn()
+					&& (isCommentOwner || MpDb.currentUser().getId() == sample
+							.getOwner().getId());
 			setStyleName("comment");
-			
-			//if the sample comment isn't loaded from the database then
-			//sc.getOwnerName will be null
+
+			// if the sample comment isn't loaded from the database then
+			// sc.getOwnerName will be null
 			final String ownerName;
 			if (sc.getOwnerName() == null) {
-				ownerName = sc.getOwner() == null ? "" : sc.getOwner().getName();
+				ownerName = sc.getOwner() == null ? "" : sc.getOwner()
+						.getName();
 			} else {
 				ownerName = sc.getOwnerName();
 			}
 			if (isSampleOwnerComment) {
-				authorLine.setHTML("<strong>" + ownerName + "</strong>" +
-						" <span>" + sc.getDateAddedDisplay() + "</span>");
+				authorLine.setHTML("<strong>" + ownerName + "</strong>"
+						+ " <span>" + sc.getDateAddedDisplay() + "</span>");
 			} else {
-				authorLine.setHTML(ownerName +
-						" <span>" + sc.getDateAddedDisplay() + "</span>");
+				authorLine.setHTML(ownerName + " <span>"
+						+ sc.getDateAddedDisplay() + "</span>");
 			}
 			authorLine.setStyleName("author");
 			add(authorLine);
-			
+
 			body.setHTML(sc.getText());
 			body.setStyleName("body");
 			body.setVisible(true);
 			add(body);
-			
+
 			if (isCommentOwner && isEditable) {
 				editLink.addClickListener(this);
 				editLink.setVisible(true);
 				editLink.setStyleName("edit");
 				add(editLink);
-				
+
 				editPanel.add(editTextArea);
-				
+
 				editSubmit.addClickListener(this);
 				editPanel.add(editSubmit);
-				
+
 				editCancel.addClickListener(this);
 				editPanel.add(editCancel);
-				
+
 				editPanel.setStyleName("edit-panel");
 				editPanel.setVisible(false);
 				add(editPanel);
 			}
-			
+
 			if (canDelete) {
 				trash.setStyleName("trash");
 				trash.addClickListener(this);
 				add(trash);
 			}
-			
+
 		}
-		
+
 		private void editMode(boolean edit) {
 			body.setVisible(!edit);
 			editLink.setVisible(!edit);
 			editPanel.setVisible(edit);
 		}
-		
-		public void onClick(Widget sender){
+
+		public void onClick(Widget sender) {
 			if (sender == trash) {
 				new ServerOp<MObject>() {
 					public void begin() {
 						MpDb.sampleComment_svc.delete(comment.getId(), this);
 					}
-	
+
 					public void onSuccess(MObject result) {
 						commentsContainer.remove(trash.getParent());
-						if(sample.getComments().size()==0){
+						if (sample.getComments().size() == 0) {
 							commentsContainer.add(empty);
 						}
 					}
@@ -550,14 +569,15 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 		p_sample.edit(s);
 		return this;
 	}
-	
-	private void noPermissionWarning(){
+
+	private void noPermissionWarning() {
 		final MDialogBox noPermissionBox = new MDialogBox();
 		final FlowPanel container = new FlowPanel();
-		container.add(new Label("You do not have the correct permissions to add a subsample."));
+		container.add(new Label(
+				"You do not have the correct permissions to add a subsample."));
 		Button ok = new Button("Ok");
-		ok.addClickListener(new ClickListener(){
-			public void onClick(final Widget sender){
+		ok.addClickListener(new ClickListener() {
+			public void onClick(final Widget sender) {
 				noPermissionBox.hide();
 			}
 		});
@@ -565,7 +585,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 		noPermissionBox.setWidget(container);
 		noPermissionBox.show();
 	}
-	
+
 	private void makeImagesPublicIfPublic(Sample sample) {
 		//If it's private, just return, images default to private
 		//if(!sample.isPublicData()) return; do they?
@@ -573,7 +593,7 @@ public class SampleDetails extends MPagePanel implements UsesCurrentUser{
 		Boolean pub = sample.isPublicData();
 		
 		Set<edu.rpi.metpetdb.client.model.Image> images = sample.getImages();
-		for(edu.rpi.metpetdb.client.model.Image i: images){
+		for (edu.rpi.metpetdb.client.model.Image i : images) {
 			i.setPublicData(pub);
 		}
 		return;

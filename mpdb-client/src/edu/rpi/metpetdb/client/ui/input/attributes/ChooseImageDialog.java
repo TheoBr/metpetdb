@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.input.attributes;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.gen2.table.client.SelectionGrid.SelectionPolicy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -13,6 +14,7 @@ import com.google.gwt.user.client.ui.Widget;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Subsample;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.MpDb;
@@ -70,18 +72,19 @@ public class ChooseImageDialog extends MDialogBox implements ClickListener {
 			this.hide();
 		} else if (sender == ok) {
 			if (continuation != null && list.getSelectedValues().size() > 0) {
-				new ServerOp<Image>(){
-					public void begin(){
-						Iterator<Object> itr = list.getSelectedValues().iterator();
-						MpDb.image_svc.details((Long)itr.next(), this);
+				new ServerOp<Image>() {
+					public void begin() {
+						Iterator<Object> itr = list.getSelectedValues()
+								.iterator();
+						MpDb.image_svc.details((Long) itr.next(), this);
 					}
-					
-					public void onSuccess(Image result){
+
+					public void onSuccess(Image result) {
 						continuation.execute(result);
 						ChooseImageDialog.this.hide();
 					}
-					
-					public void onFailure(Throwable e){
+
+					public void onFailure(Throwable e) {
 						ChooseImageDialog.this.hide();
 						super.onFailure(e);
 					}

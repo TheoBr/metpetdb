@@ -78,7 +78,7 @@ public class MpDb {
 	public static final ImageServiceAsync image_svc;
 
 	public static final ChemicalAnalysisServiceAsync chemicalAnalysis_svc;
-
+	
 	public static final MpDbGenericServiceAsync mpdbGeneric_svc;
 
 	public static final BulkUploadSampleServiceAsync bulkUploadSamples_svc;
@@ -153,8 +153,8 @@ public class MpDb {
 				.create(ImageService.class), "image");
 
 		chemicalAnalysis_svc = (ChemicalAnalysisServiceAsync) bindService(GWT
-				.create(ChemicalAnalysisService.class), "chemicalAnalysis");
-
+			.create(ChemicalAnalysisService.class), "chemicalAnalysis");
+		
 		mpdbGeneric_svc = (MpDbGenericServiceAsync) bindService(GWT
 				.create(MpDbGenericService.class), "mpdbGeneric");
 

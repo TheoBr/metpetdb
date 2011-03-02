@@ -22,7 +22,7 @@ import edu.rpi.metpetdb.client.ui.widgets.MCheckBox;
 import edu.rpi.metpetdb.client.ui.widgets.paging.columns.Column;
 import edu.rpi.metpetdb.client.ui.widgets.paging.columns.ColumnDefinition;
 
-public abstract class CustomTableView<RowType extends MObject> extends
+public abstract class CustomTableView<RowType> extends
 		MDialogBox implements ClickListener, KeyboardListener {
 	private final Button submit;
 	private final Button cancel;

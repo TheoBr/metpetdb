@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.HistoryListener;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -19,6 +20,7 @@ import edu.rpi.metpetdb.client.model.Project;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
+import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
 import edu.rpi.metpetdb.client.ui.TokenHandler.IKey;
@@ -175,6 +177,7 @@ public class TokenSpace implements HistoryListener {
 	public static final Screen bulkUpload = new Screen(LocaleHandler.lc_entity
 			.TokenSpace_Bulk_Upload()) {
 		BulkUploadPanel bup;
+
 		public void executeToken(final String args) {
 			new VoidLoggedInOp() {
 				public void command() {
@@ -188,19 +191,20 @@ public class TokenSpace implements HistoryListener {
 	public static final Screen search = new Screen(LocaleHandler.lc_entity
 			.TokenSpace_Search()) {
 		Search s;
+
 		public void executeToken(final String args) {
-			if (s == null)
-			{
-				s = new Search() {	
-				@Override
-					public void onCurrentUserChanged(User whoIsIt) throws LoginRequiredException {
+			if (s == null) {
+				s = new Search() {
+					@Override
+					public void onCurrentUserChanged(User whoIsIt)
+							throws LoginRequiredException {
 						s = null;
 						search.executeToken("");
-					}			
+					}
 				};
 			}
-			
-			//else 
+
+			// else
 			s.reload();
 			show(s);
 		}
@@ -270,14 +274,14 @@ public class TokenSpace implements HistoryListener {
 			}.begin();
 		}
 	};
-	
+
 	private static final TokenHandler projectDescription = new IKey(
 			LocaleHandler.lc_entity.TokenSpace_Project_Description()) {
 
 		public int get(Object obj) {
 			return ((Project) obj).getId();
 		}
-		
+
 		public void execute(final int id) {
 			new VoidLoggedInOp() {
 				public void command() {
@@ -290,8 +294,9 @@ public class TokenSpace implements HistoryListener {
 	public static final Screen samplesForUser = new Screen(
 			LocaleHandler.lc_entity.TokenSpace_Samples_For_User()) {
 		UserSamplesList list;
+
 		public void executeToken(final String args) {
-			
+
 			new VoidLoggedInOp() {
 				public void command() {
 					if (list == null)
@@ -325,7 +330,7 @@ public class TokenSpace implements HistoryListener {
 			}.begin();
 		}
 	};
-	
+
 	public static final TokenHandler projectInvite = new IKey(
 			LocaleHandler.lc_entity.TokenSpace_Project_Invite()) {
 		public int get(final Object obj) {
@@ -342,7 +347,7 @@ public class TokenSpace implements HistoryListener {
 			}.begin();
 		}
 	};
-	
+
 	public static final TokenHandler projectViewInvites = new IKey(
 			LocaleHandler.lc_entity.TokenSpace_Project_View_Invites()) {
 		public int get(final Object obj) {
@@ -352,8 +357,7 @@ public class TokenSpace implements HistoryListener {
 			show(new InviteStatus().showById(id));
 		}
 	};
-	
-	
+
 	private static final TokenHandler newSubsample = new LKey(
 			LocaleHandler.lc_entity.TokenSpace_Enter_Subsample()) {
 		public long get(final Object obj) {
@@ -411,7 +415,7 @@ public class TokenSpace implements HistoryListener {
 			}.execute();
 		}
 	};
-	
+
 	public static final Screen contribution = new Screen("ContributorCode") {
 		public void executeToken(final String args) {
 			new VoidLoggedInOp() {
@@ -422,7 +426,7 @@ public class TokenSpace implements HistoryListener {
 			}.execute();
 		}
 	};
-	
+
 	public static final Screen requestRoleChange = new Screen(
 			"RequestRoleChange") {
 		public void executeToken(final String args) {
@@ -470,7 +474,7 @@ public class TokenSpace implements HistoryListener {
 		public long get(Object obj) {
 			return ((User) obj).getId();
 		}
-		
+
 		public void execute(final long id) {
 			new VoidLoggedInOp() {
 				public void command() {
@@ -479,7 +483,7 @@ public class TokenSpace implements HistoryListener {
 			}.begin();
 		}
 	};
-	
+
 	static {
 		register(sampleDetails);
 		register(userDetails);
@@ -570,11 +574,11 @@ public class TokenSpace implements HistoryListener {
 	public static String listOf(final Project p) {
 		return projectSamples.makeToken(p);
 	}
-	
+
 	public static String sendNewInvite(final Project p) {
 		return projectInvite.makeToken(p);
 	}
-	
+
 	public static String viewInviteStatus(final Project p) {
 		return projectViewInvites.makeToken(p);
 	}
@@ -598,15 +602,15 @@ public class TokenSpace implements HistoryListener {
 	public static String samplesOf(final Project p) {
 		return projectSamples.makeToken(p);
 	}
-	
+
 	public static String descriptionOf(Project p) {
 		return projectDescription.makeToken(p);
 	}
-	
+
 	public static String viewMyInvites(User u) {
 		return myInvites.makeToken(u);
 	}
-	
+
 	public static void dispatch(final String historyToken) {
 		try {
 			internalDispatch(historyToken);
@@ -644,10 +648,10 @@ public class TokenSpace implements HistoryListener {
 		}
 		if (h == null)
 			throw new NoSuchObjectException("Page", historyToken);
-		MetPetDBApplication.dispatchBeforeCurrentPageChanged(h,args);
+		MetPetDBApplication.dispatchBeforeCurrentPageChanged(h, args);
 	}
-	
-	public static void executeToken(final TokenHandler h, final String args){
+
+	public static void executeToken(final TokenHandler h, final String args) {
 		h.executeToken(args);
 	}
 
@@ -659,5 +663,4 @@ public class TokenSpace implements HistoryListener {
 
 	private TokenSpace() {}
 
-	
 }

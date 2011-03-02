@@ -3,6 +3,7 @@ package edu.rpi.metpetdb.client.ui.objects.details;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -15,8 +16,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 import edu.rpi.metpetdb.client.error.LoginRequiredException;
+import edu.rpi.metpetdb.client.json.request.JSONChemicalAnalysisService;
 import edu.rpi.metpetdb.client.locale.LocaleHandler;
-import edu.rpi.metpetdb.client.model.ChemicalAnalysis;
 import edu.rpi.metpetdb.client.model.Image;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
@@ -77,39 +78,43 @@ public class SubsampleDetails extends MPagePanel {
 
 			protected void saveBean(final AsyncCallback<Subsample> ac) {
 				makeImagesPublicIfPublic((Subsample) getBean());
-				//If the user attempts to make the subsample public, make sure the owning sample is public
-				if(((Subsample) getBean()).isPublicData()){
-					new ServerOp(){
+				// If the user attempts to make the subsample public, make sure
+				// the owning sample is public
+				if (((Subsample) getBean()).isPublicData()) {
+					new ServerOp() {
 						@Override
-						public void begin(){
-							MpDb.sample_svc.details(((Subsample) getBean()).getSampleId(), this);
+						public void begin() {
+							MpDb.sample_svc.details(((Subsample) getBean())
+									.getSampleId(), this);
 						}
-						public void onSuccess(Object result){
-							if(!((Sample) result).isPublicData()){
-								//Can't save this subsample as public
+						public void onSuccess(Object result) {
+							if (!((Sample) result).isPublicData()) {
+								// Can't save this subsample as public
 								cannotMakePublic();
 							} else {
-								MpDb.subsample_svc.save((Subsample) getBean(), ac);
+								MpDb.subsample_svc.save((Subsample) getBean(),
+										ac);
 							}
 						}
 					}.begin();
-				} else{
+				} else {
 					MpDb.subsample_svc.save((Subsample) getBean(), ac);
 				}
 			}
 
 			protected void deleteBean(final AsyncCallback<MObject> ac) {
 				sampleId = getBean().getSampleId();
-						new ConfirmationDialogBox("Are you sure you want to delete this subsample?"
-								, true) {
-							public void onCancel() {
-								p_subsample.setEnabled(true);
-							}
-							
-							public void onSubmit() {
-								MpDb.subsample_svc.delete(((Subsample) getBean()).getId(), ac);
-							}
-					}.show();
+				new ConfirmationDialogBox(
+						"Are you sure you want to delete this subsample?", true) {
+					public void onCancel() {
+						p_subsample.setEnabled(true);
+					}
+
+					public void onSubmit() {
+						MpDb.subsample_svc.delete(((Subsample) getBean())
+								.getId(), ac);
+					}
+				}.show();
 			}
 
 			protected boolean canEdit() {
@@ -133,13 +138,14 @@ public class SubsampleDetails extends MPagePanel {
 				super.onLoadCompletion(result);
 				final Subsample s = (Subsample) result;
 				if (s.getGrid() == null) {
-					//Only the owner should be able to create an image map
-					if(s.getOwner() != null && MpDb.currentUser() != null && 
-						s.getOwner().equals(MpDb.currentUser())){
+					// Only the owner should be able to create an image map
+					if (s.getOwner() != null && MpDb.currentUser() != null
+							&& s.getOwner().equals(MpDb.currentUser())) {
 						map.setText("Create Map");
-						map.setTargetHistoryToken(TokenSpace.createNewImageMap(s));
+						map.setTargetHistoryToken(TokenSpace
+								.createNewImageMap(s));
 					} else {
-						//map.setText("No Image Map exists");
+						// map.setText("No Image Map exists");
 					}
 				} else {
 					map.setText("View Map");
@@ -182,17 +188,22 @@ public class SubsampleDetails extends MPagePanel {
 		FlexTable chemft = new FlexTable();
 
 		final ChemicalAnalysisList list = new ChemicalAnalysisList() {
-			public void update(final PaginationParameters p,
-					final AsyncCallback<Results<ChemicalAnalysis>> ac) {
-				MpDb.chemicalAnalysis_svc.all(p, subsampleId, ac);
-			}
 
 			@Override
 			public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
 				MpDb.chemicalAnalysis_svc.allIdsForSubsample(subsampleId, ac);
 			}
+
+
+			@Override
+			public void update(PaginationParameters p,
+					AsyncCallback ac) {
+
+				new JSONChemicalAnalysisService().all(p, subsampleId, ac);
+	
+			}
 		};
-		
+
 		chemft.setWidget(1, 0, list);
 		chemft.getFlexCellFormatter().setColSpan(1, 0, 10);
 
@@ -201,10 +212,10 @@ public class SubsampleDetails extends MPagePanel {
 			public void onClick(final Widget sender) {
 				new VoidLoggedInOp() {
 					public void command() {
-						if(canEdit()){
+						if (canEdit()) {
 							History.newItem(TokenSpace
-								.createNewChemicalAnalysis(p_subsample
-										.getBean()));
+									.createNewChemicalAnalysis(p_subsample
+											.getBean()));
 						} else {
 							noPermissionWarning();
 						}
@@ -266,19 +277,21 @@ public class SubsampleDetails extends MPagePanel {
 		}.begin();
 		return this;
 	}
-	
-	private boolean canEdit(){
+
+	private boolean canEdit() {
 		final Subsample s = ((Subsample) p_subsample.getBean());
 		return MpDb.isCurrentUser(s.getOwner());
 	}
-	
-	private void noPermissionWarning(){
+
+	private void noPermissionWarning() {
 		final MDialogBox noPermissionBox = new MDialogBox();
 		final FlowPanel container = new FlowPanel();
-		container.add(new Label("You do not have the correct permissions to add a chemical analysis."));
+		container
+				.add(new Label(
+						"You do not have the correct permissions to add a chemical analysis."));
 		Button ok = new Button("Ok");
-		ok.addClickListener(new ClickListener(){
-			public void onClick(final Widget sender){
+		ok.addClickListener(new ClickListener() {
+			public void onClick(final Widget sender) {
 				noPermissionBox.hide();
 			}
 		});
@@ -286,14 +299,16 @@ public class SubsampleDetails extends MPagePanel {
 		noPermissionBox.setWidget(container);
 		noPermissionBox.show();
 	}
-	
-	private void cannotMakePublic(){
+
+	private void cannotMakePublic() {
 		final MDialogBox box = new MDialogBox();
 		final FlowPanel container = new FlowPanel();
-		container.add(new Label("Cannot make subsample public. It is owned by a private Sample"));
+		container
+				.add(new Label(
+						"Cannot make subsample public. It is owned by a private Sample"));
 		Button ok = new Button("Ok");
-		ok.addClickListener(new ClickListener(){
-			public void onClick(final Widget sender){
+		ok.addClickListener(new ClickListener() {
+			public void onClick(final Widget sender) {
 				box.hide();
 				p_subsample.getBean().setPublicData(false);
 				p_subsample.edit(p_subsample.getBean());
@@ -303,13 +318,14 @@ public class SubsampleDetails extends MPagePanel {
 		box.setWidget(container);
 		box.show();
 	}
-	
-	private void makeImagesPublicIfPublic(Subsample subsample){
-		//If it's private, just return, images default to private
-		if(!subsample.isPublicData()) return;
-		
+
+	private void makeImagesPublicIfPublic(Subsample subsample) {
+		// If it's private, just return, images default to private
+		if (!subsample.isPublicData())
+			return;
+
 		Set<edu.rpi.metpetdb.client.model.Image> images = subsample.getImages();
-		for(edu.rpi.metpetdb.client.model.Image i: images){
+		for (edu.rpi.metpetdb.client.model.Image i : images) {
 			i.setPublicData(true);
 		}
 		return;

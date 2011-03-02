@@ -1,9 +1,8 @@
 package edu.rpi.metpetdb.client.ui.user;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
@@ -40,56 +39,53 @@ public class ReviewRoleChanges extends DataList<RoleChange> {
 	static {
 		columns = new ColumnDefinition<RoleChange>();
 
-		columns.addColumn(new StringColumn<RoleChange>(enttxt.RoleChange_user(),
-				RoleChangeProperty.user));
-		columns.addColumn(new StringColumn<RoleChange>(enttxt.RoleChange_role(),
-				RoleChangeProperty.role));
+		columns.addColumn(new StringColumn<RoleChange>(
+				enttxt.RoleChange_user(), RoleChangeProperty.user));
+		columns.addColumn(new StringColumn<RoleChange>(
+				enttxt.RoleChange_role(), RoleChangeProperty.role));
 		columns.addColumn(new StringColumn<RoleChange>(enttxt
 				.RoleChange_requestDate(), RoleChangeProperty.requestDate));
 		columns.addColumn(new StringColumn<RoleChange>(enttxt
 				.RoleChange_requestReason(), RoleChangeProperty.requestReason));
-		columns
-				.addColumn(new Column<RoleChange, FlowPanel>(enttxt
-						.RoleChange_grant()) {
-					@Override
-					// TODO grant/deny reasons
-					public FlowPanel getCellValue(final RoleChange rowValue) {
-						//
-						final FlowPanel actions = new FlowPanel();
-						actions.add(new Button("Yes", new ClickListener() {
-							public void onClick(final Widget sender) {
-								new VoidServerOp() {
-									public void begin() {
-										MpDb.user_svc.approveRoleChange(
-												rowValue, this);
-									}
-									@Override
-									public void onSuccess() {
-										actions.clear();
-										actions.add(new Label("Processed"));
-									}
-								}.begin();
+		columns.addColumn(new Column<RoleChange, FlowPanel>(enttxt
+				.RoleChange_grant()) {
+			@Override
+			// TODO grant/deny reasons
+			public FlowPanel getCellValue(final RoleChange rowValue) {
+				//
+				final FlowPanel actions = new FlowPanel();
+				actions.add(new Button("Yes", new ClickListener() {
+					public void onClick(final Widget sender) {
+						new VoidServerOp() {
+							public void begin() {
+								MpDb.user_svc.approveRoleChange(rowValue, this);
 							}
-						}));
-						actions.add(new Button("No", new ClickListener() {
-							public void onClick(final Widget sender) {
-								new VoidServerOp() {
-									public void begin() {
-										MpDb.user_svc.denyRoleChange(rowValue,
-												this);
-									}
-									@Override
-									public void onSuccess() {
-										actions.clear();
-										actions.add(new Label("Processed"));
-									}
-								}.begin();
+							@Override
+							public void onSuccess() {
+								actions.clear();
+								actions.add(new Label("Processed"));
 							}
-						}));
-						return actions;
+						}.begin();
 					}
+				}));
+				actions.add(new Button("No", new ClickListener() {
+					public void onClick(final Widget sender) {
+						new VoidServerOp() {
+							public void begin() {
+								MpDb.user_svc.denyRoleChange(rowValue, this);
+							}
+							@Override
+							public void onSuccess() {
+								actions.clear();
+								actions.add(new Label("Processed"));
+							}
+						}.begin();
+					}
+				}));
+				return actions;
+			}
 
-				});
+		});
 
 	}
 
@@ -123,13 +119,14 @@ public class ReviewRoleChanges extends DataList<RoleChange> {
 	protected ColumnDefinition<RoleChange> getDefaultColumns() {
 		return columns;
 	}
-	
-	protected Object getId(RoleChange rc){
+
+	protected Object getId(RoleChange rc) {
 		return rc.getId();
 	}
 
 	@Override
 	public void getAllIds(AsyncCallback<Map<Object, Boolean>> ac) {
-		MpDb.user_svc.getSponsorRoleChangeIds(MpDb.currentUser().getId(),ac);
+		MpDb.user_svc.getSponsorRoleChangeIds(MpDb.currentUser().getId(), ac);
 	}
+
 }
