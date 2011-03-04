@@ -4,8 +4,15 @@
 	
 	<property name="gwt.sdk" location="/home/hudson/gwt-2.0.3"/>
 	
-		<property name="mpdb-build-dir" location="/home/hudson" />
-
+		<property name="mpdb-build-dir" location="/home/hudson" /> 
+	
+	
+	<!--	
+	<property name="gwt.sdk" location="/Users/scball/Downloads/gwt-2.0.3"/>
+	
+		<property name="mpdb-build-dir" location="/Users/scball/metpetweb5" />
+	-->
+	
        	<property name="mpdb-common-dir" location="../mpdb-common" />
         <property name="mpdb-client-dir" location="." />
         <property name="mpdb-server-dir" location="../mpdb-server" />
@@ -80,6 +87,11 @@
         
         <target name="gwt-compile" depends="compile" description="Executes the GWT compiler to convert java code to javascript">
 		<echo message="${basedir}"/>
+ 
+ 
+	   	<copy tofile="${build}/edu/rpi/metpetdb/client/util/ServicesConstants.properties" file="${mpdb-client-dir}/src/edu/rpi/metpetdb/client/util/ServicesConstants.properties">
+    	</copy>
+    	
 		<java fork="true" classname="com.google.gwt.dev.Compiler" taskname="gwtc" maxmemory="512m">
 			<classpath>
 				<pathelement location="${basedir}/build/WEB-INF/classes" />
@@ -143,6 +155,8 @@
 			<filter token="DATABASE_HOST" value="${DATABASE_HOST}" />
 			<filter token="postgis" value="${postgis}" />
 			<filter token="INDICES" value="${INDICES}" />
+			<filter token="SERVICE_URL" value="${SERVICE_URL}" />
+
 		</filterset>
 
 		<replace file="${build}/../../MetPetDBApplication.html" token="APIKEY" value="ABQIAAAAhO0Df5we99eWtl64s0e8iBTWQqxVFO-LeYugN6a85m0oQvPlBBTx6BXIJ2e4kQTrLjK81DmWqw8Yvg" />
@@ -155,7 +169,11 @@
 			<filterset refid="props" />
 		</copy>
 
-		
+	   	<copy overwrite="true" tofile="${build}/edu/rpi/metpetdb/client/util/ServicesConstants.properties" file="${mpdb-client-dir}/src/edu/rpi/metpetdb/client/util/ServicesConstants.properties">
+    			<filterset refid="props" />
+    	</copy>
+
+
 		<war destfile="metpetwebtst.war">
 			<fileset dir="${build}/../.."/>
 		</war>
@@ -172,6 +190,7 @@
 			<filter token="DATABASE_HOST" value="${DATABASE_HOST}" />
 			<filter token="postgis" value="${postgis}" />
 			<filter token="INDICES" value="${INDICES}" />
+			<filter token="SERVICE_URL" value="${SERVICE_URL}" />
 		</filterset>
 
 		<replace file="${build}/../../MetPetDBApplication.html" token="APIKEY" value="ABQIAAAAhO0Df5we99eWtl64s0e8iBTWQqxVFO-LeYugN6a85m0oQvPlBBTx6BXIJ2e4kQTrLjK81DmWqw8Yvg" />
@@ -183,6 +202,11 @@
 		<copy tofile="${build}/files.properties" file="${mpdb-build-dir}/stage-files.properties">
 			<filterset refid="props" />
 		</copy>
+
+	   	<copy overwrite="true" tofile="${build}/edu/rpi/metpetdb/client/util/ServicesConstants.properties" file="${mpdb-client-dir}/src/edu/rpi/metpetdb/client/util/ServicesConstants.properties">
+    			<filterset refid="props" />
+    	</copy>
+
 
 		<war destfile="metpetweb.war">
 			<fileset dir="${build}/../.."/>
