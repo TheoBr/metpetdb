@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -14,16 +15,19 @@ import edu.rpi.metpetdb.client.model.ChemicalAnalysisArray;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
 import edu.rpi.metpetdb.client.paging.Results;
+import edu.rpi.metpetdb.client.util.ServicesConstants;
 
 public class JSONChemicalAnalysisService
 
 {
 
+	private ServicesConstants constants = GWT.create(ServicesConstants.class);
+	
 	public void all(PaginationParameters parameters, long subsampleId,
 			final AsyncCallback<Results<ChemicalAnalysis>> ac) {
 
 		//TODO: Externalize the resource
-		String requestUrl = "http://127.0.0.1:8080/MetPetRest/chemical_analyses/"
+		String requestUrl =  constants.serviceUrl()  + "/chemical_analyses/"
 				+ subsampleId
 				+ "/"
 				+ parameters.getFirstResult()
