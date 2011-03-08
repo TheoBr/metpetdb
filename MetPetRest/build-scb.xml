@@ -78,7 +78,7 @@
 			<filterset refid="props"/>
 		</copy>		
 		
-		<war destfile="MetPetRest.war">
+		<war destfile="MetPetRestTest.war">
 			<fileset dir="${build}/../.."/>
 		</war>
 	</target>
