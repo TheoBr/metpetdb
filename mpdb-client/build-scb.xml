@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <project name="mpdb" basedir="." >
 
-	
+<!--	
 	<property name="gwt.sdk" location="/home/hudson/gwt-2.0.3"/>
 	
 		<property name="mpdb-build-dir" location="/home/hudson" /> 
+-->	
 	
-	
-<!--		
+		
 	<property name="gwt.sdk" location="/Users/scball/Downloads/gwt-2.0.3"/>
 	
 		<property name="mpdb-build-dir" location="/Users/scball/metpetweb5" />
--->
+
 	
        	<property name="mpdb-common-dir" location="../mpdb-common" />
         <property name="mpdb-client-dir" location="." />
@@ -45,7 +45,7 @@
 	    <fileset dir="${ctx_lib_server}" includes="**/*.jar"/>
 		</path>
      
-        <target name="compile" depends="clean" description="Compiles the java code">
+        <target name="compile" description="Compiles the java code">
 
                <javac destdir="${build}" srcdir="${mpdb-common-dir}/src" classpathref="project.class.path" source="1.5" target="1.5" debug="false" optimize="false" excludes="**/java_emu/**/*.java" />
 
@@ -87,7 +87,7 @@
 	
 	<!-- Do token filtering for SERVICE_URL here before the GWT compile messes everything up-->
         
-        <target name="gwt-compile" depends="compile" description="Executes the GWT compiler to convert java code to javascript">
+        <target name="gwt-compile" description="Executes the GWT compiler to convert java code to javascript">
 		<echo message="${basedir}"/>
  
  
@@ -119,7 +119,7 @@
 		</java>
 	</target>
 
-	<target name="copy-stuff" depends="gwt-compile">
+	<target name="copy-stuff">
 		<copy todir="${build}/../lib" includeemptydirs="no" flatten="true">
 	    		<path>
 				<pathelement location="${gwt.sdk}/gwt-servlet.jar"/>
@@ -148,8 +148,9 @@
 
 	</target>
 
-	<target name="test-war-unfiltered" depends="copy-stuff">
+	<target name="test-war-unfiltered" >
 
+		
 		<replace file="${build}/../../MetPetDBApplication.html" token="APIKEY" value="ABQIAAAAhO0Df5we99eWtl64s0e8iBTWQqxVFO-LeYugN6a85m0oQvPlBBTx6BXIJ2e4kQTrLjK81DmWqw8Yvg" />
 
 		<copy tofile="${build}/${hibernate_cfg}" file="${mpdb-server-dir}/hibernate.cfg.in">
@@ -171,7 +172,7 @@
 		
 	</target>
 	
-	<target name="stage-war-unfiltered" depends="copy-stuff">
+	<target name="stage-war-unfiltered">
 
 		<replace file="${build}/../../MetPetDBApplication.html" token="APIKEY" value="ABQIAAAAhO0Df5we99eWtl64s0e8iBTWQqxVFO-LeYugN6a85m0oQvPlBBTx6BXIJ2e4kQTrLjK81DmWqw8Yvg" />
 
@@ -202,9 +203,11 @@
 			<filter token="SERVICE_URL" value="${SERVICE_URL}" />
 		</filterset>
 		
-		<antcall target="stage-war">
-
-		</antcall>
+		<antcall target="clean" inheritAll="true" inheritRefs="true"/>
+		<antcall target="compile" inheritAll="true" inheritRefs="true"/>
+		<antcall target="gwt-compile" inheritAll="true" inheritRefs="true"/>
+		<antcall target="copy-stuff" inheritAll="true" inheritRefs="true"/>
+		<antcall target="stage-war-unfiltered" inheritAll="true" inheritRefs="true"/>
 		
 	</target>
 	
@@ -222,9 +225,11 @@
 			<filter token="SERVICE_URL" value="${SERVICE_URL}" />
 		</filterset>
 		
-		<antcall target="test-war-unfiltered">
-
-		</antcall>
+		<antcall target="clean" inheritAll="true" inheritRefs="true"/>
+		<antcall target="compile" inheritAll="true" inheritRefs="true"/>
+		<antcall target="gwt-compile" inheritAll="true" inheritRefs="true"/>
+		<antcall target="copy-stuff" inheritAll="true" inheritRefs="true"/>
+		<antcall target="test-war-unfiltered" inheritAll="true" inheritRefs="true"/>
 		
 	</target>
 </project>
