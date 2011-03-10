@@ -95,10 +95,17 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 	public ChemicalAnalysis(ChemicalAnalysisJSON chemJSON)
 	{
 		
-		this.id = Integer.valueOf(chemJSON.getId());
-		this.spotId = Integer.valueOf(chemJSON.getSpotId());
-		this.referenceX = Integer.valueOf(chemJSON.getX());
-		this.referenceY = Integer.valueOf(chemJSON.getY());
+		if (chemJSON.getId() != null)
+			this.id = Integer.valueOf(chemJSON.getId());
+		
+		if (chemJSON.getSpotId() != null)
+			this.spotId = Integer.valueOf(chemJSON.getSpotId());
+		
+		if (chemJSON.getX() != null)
+			this.referenceX = Integer.valueOf(chemJSON.getX());
+		
+		if (chemJSON.getY() != null)
+			this.referenceY = Integer.valueOf(chemJSON.getY());
 		
 		this.analysisMethod = chemJSON.getAnalysisMethod();
 		this.analysisMaterial = chemJSON.getAnalysisMaterial();
@@ -109,7 +116,8 @@ public class ChemicalAnalysis extends MObject implements HasDate, HasSubsample,
 		if (chemJSON.getAnalysisDate() != null)
 			this.analysisDate = Timestamp.valueOf(chemJSON.getAnalysisDate());
 		
-		this.total = Double.valueOf(chemJSON.getTotal());
+		if (chemJSON.getTotal() != null)
+			this.total = Double.valueOf(chemJSON.getTotal());
 		
 		this.image = new Image();
 		
