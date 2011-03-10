@@ -55,7 +55,11 @@
 				
 		<copy todir="${build}/../.." includeemptydirs="no" flatten="false">
 			<fileset dir="${ctx_web}" includes="**/*"/>
-			<filterset refid="props"/>
+		</copy>	
+
+		<copy todir="${build}/../.." includeemptydirs="no" flatten="false">
+				<fileset dir="${ctx_web}" includes="**/*.xml"/>
+				<filterset refid="props"/>
 		</copy>		
 		
 		<war destfile="MetPetRest.war">
@@ -75,7 +79,11 @@
 				
 		<copy todir="${build}/../.." includeemptydirs="no" flatten="false">
 			<fileset dir="${ctx_web}" includes="**/*"/>
-			<filterset refid="props"/>
+		</copy>	
+
+		<copy todir="${build}/../.." includeemptydirs="no" flatten="false">
+				<fileset dir="${ctx_web}" includes="**/*.xml"/>
+				<filterset refid="props"/>
 		</copy>		
 		
 		<war destfile="MetPetRestTest.war">
@@ -91,13 +99,16 @@
 			<filter token="APPPASS" value="${APPPASS}" />
 			<filter token="DATABASE" value="${DATABASE}" />
 			<filter token="DATABASE_HOST" value="${DATABASE_HOST}" />
-		</filterset>
-				
+		</filterset>	
+		
 		<copy todir="${build}/../.." includeemptydirs="no" flatten="false">
 			<fileset dir="${ctx_web}" includes="**/*"/>
-			<filterset refid="props"/>
-		</copy>		
+		</copy>	
 
+		<copy todir="${build}/../.." includeemptydirs="no" flatten="false">
+				<fileset dir="${ctx_web}" includes="**/*.xml"/>
+				<filterset refid="props"/>
+		</copy>		
 		<war destfile="MetPetRest.war">
 			<fileset dir="${build}/../.."/>
 		</war>
