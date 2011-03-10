@@ -38,8 +38,8 @@ public class ChemicalAnalysisDataListMapper implements ResultSetExtractor<List> 
 
 			item.put("count", rs.getString("count"));
 
-			item.put("analysis_date", formatter.print(
-					rs.getDate("analysis_date"), Locale.ENGLISH));
+			if (rs.getDate("analysis_date") != null)
+				item.put("analysis_date", formatter.print(rs.getDate("analysis_date"), Locale.ENGLISH));
 
 			item.put("total", rs.getString("total"));
 
