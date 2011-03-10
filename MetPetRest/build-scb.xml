@@ -57,7 +57,7 @@
 			<fileset dir="${ctx_web}" includes="**/*"/>
 		</copy>	
 
-		<copy todir="${build}/../.." includeemptydirs="no" flatten="false">
+		<copy todir="${build}/../.." includeemptydirs="no" flatten="false" overwrite="true">
 				<fileset dir="${ctx_web}" includes="**/*.xml"/>
 				<filterset refid="props"/>
 		</copy>		
@@ -81,7 +81,7 @@
 			<fileset dir="${ctx_web}" includes="**/*"/>
 		</copy>	
 
-		<copy todir="${build}/../.." includeemptydirs="no" flatten="false">
+		<copy todir="${build}/../.." includeemptydirs="no" flatten="false" overwrite="true">
 				<fileset dir="${ctx_web}" includes="**/*.xml"/>
 				<filterset refid="props"/>
 		</copy>		
@@ -105,7 +105,7 @@
 			<fileset dir="${ctx_web}" includes="**/*"/>
 		</copy>	
 
-		<copy todir="${build}/../.." includeemptydirs="no" flatten="false">
+		<copy todir="${build}/../.." includeemptydirs="no" flatten="false" overwrite="true">
 				<fileset dir="${ctx_web}" includes="**/*.xml"/>
 				<filterset refid="props"/>
 		</copy>		
