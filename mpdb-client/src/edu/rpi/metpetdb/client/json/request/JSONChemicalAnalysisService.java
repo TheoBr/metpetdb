@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -32,11 +33,13 @@ public class JSONChemicalAnalysisService
 				+ "/"
 				+ parameters.getFirstResult()
 				+ "/"
-				+ parameters.getMaxResults() + ".json";
+				+ parameters.getMaxResults() + ".json" + "?identity=" + Cookies.getCookie("identity");
 
 		JsonpRequestBuilder builder = new JsonpRequestBuilder();
 		builder.setTimeout(120000);
 
+		
+		
 		builder.requestObject(requestUrl,
 				new AsyncCallback<ChemicalAnalysisArray>() {
 
