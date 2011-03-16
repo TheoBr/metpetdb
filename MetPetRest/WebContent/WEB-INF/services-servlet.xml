@@ -5,6 +5,7 @@
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:oxm="http://www.springframework.org/schema/oxm"
+       xmlns:security="http://www.springframework.org/schema/security"
        
        xsi:schemaLocation="http://www.springframework.org/schema/beans 
            http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
@@ -15,12 +16,48 @@
              http://www.springframework.org/schema/util
            http://www.springframework.org/schema/util/spring-util-3.0.xsd
              http://www.springframework.org/schema/oxm
-           http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd "
+           http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd 
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.0.xsd
+           "
            >
  
  <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
  <tx:annotation-driven  transaction-manager="transactionManager"/>
-  
+ 
+ 
+ 
+ <!-- BEGINNING OF SECURITY RELATED BUSINESS  -->
+ 
+ <security:http  auto-config='false' >
+  <security:intercept-url pattern="/secure/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+  <security:custom-filter position="FORM_LOGIN_FILTER" ref="myFilter" />
+  <security:custom-filter position="LAST" ref="jsonpFilter" />
+  <security:http-basic/> 
+ </security:http>
+
+
+  <bean id="myFilter" class="edu.rpi.metpetrest.security.MyAuthenticationFilter">
+  	<property name="authenticationManager" ref="authenticationManager"/>
+  </bean>
+
+
+  <bean id="jsonpFilter" class="edu.rpi.metpetrest.MyJsonpFilter"/>
+   
+ <security:authentication-manager alias="authenticationManager">
+    <security:authentication-provider user-service-ref='loginDAO'/>
+  </security:authentication-manager>
+
+  <bean id="loginDAO"  class="edu.rpi.metpetrest.dao.LoginDAOImpl">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+    
+    
+    
+  <!-- END OF SECURITY RELATED BUSINESS -->
+    
+    
+    
  <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
     <property name="configLocation" value="classpath:/ehcache.xml"/>
 </bean>
@@ -44,19 +81,20 @@
  	<property name="dataSource" ref="dataSource"></property> 	
  </bean>
 
- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+   <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
     <property name="driverClassName" value="org.postgis.DriverWrapper"/>
 	<property name="url" value="jdbc:postgresql_postGIS://@DATABASE_HOST@/@DATABASE@"/>
     <property name="username" value="@APPUSER@"/>
     <property name="password" value="@APPPASS@"/>
   </bean> 
 
-<!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+<!--
+<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
     <property name="driverClassName" value="org.postgis.DriverWrapper"/>
     <property name="url" value="jdbc:postgresql_postGIS://localhost/mpdb3"/>
     <property name="username" value="metpetwebdev"/>
     <property name="password" value="metpetwebdev"/>
-  </bean> -->
+  </bean>  -->
     
     	
   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -87,6 +125,12 @@
      </list>
   </property>
 </bean> 
+
+
+  <bean id="secureUrlRestService" class="edu.rpi.metpetrest.security.SecureUrlController">
+  	<property name="userDAO" ref="userDAO"></property>
+  	<property name="chemicalAnalysisDAO" ref="chemicalAnalysisDAO"></property>
+  </bean>
 
   <bean id="urlRestService" class="edu.rpi.metpetrest.UrlController">
   	<property name="sampleDAO" ref="sampleDAO"></property>
@@ -136,7 +180,7 @@
   	
   	  </bean>
  
-   
+<!--  
 <bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
   <property name="targetObject" ref="urlRestService" />
   <property name="targetMethod" value="getEarthChemSamples" />
@@ -169,7 +213,7 @@
             <ref bean="cronTrigger" />
         </list>
     </property>
-</bean>
+</bean>-->
    
     
   
