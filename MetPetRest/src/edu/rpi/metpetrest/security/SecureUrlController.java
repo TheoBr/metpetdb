@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,7 @@ public class SecureUrlController {
 
 	}
 
+	@PreAuthorize("hasRole('MEMBER')")
 	@RequestMapping(value = "/secure/chemical_analyses/{subSampleId}/{startRowNum}/{endRowNum}", method = RequestMethod.GET)
 	public ModelAndView getChemicalAnalyses(
 			@PathVariable("subSampleId") String subSampleId,
