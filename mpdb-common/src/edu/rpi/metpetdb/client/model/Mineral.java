@@ -22,6 +22,15 @@ public class Mineral extends MObject implements IHasName, HasChildren<Mineral> {
 	private Set<Mineral> children;
 	private Set<Mineral> parents;
 
+	public Mineral()
+	{
+		super();
+	}
+	
+	public Mineral(String name)
+	{
+		this.name = name;
+	}
 	
 	/*Used to remove the substring "(x)" if found in the name of the mineral.
 	 *For instance Biotite (x) should just be Biotite since (x) just means

@@ -17,6 +17,8 @@ import org.hibernate.search.annotations.Store;
 import org.postgis.Geometry;
 import org.postgis.Point;
 
+import com.google.gwt.core.client.JsArrayString;
+
 import edu.rpi.metpetdb.client.model.interfaces.HasDate;
 import edu.rpi.metpetdb.client.model.interfaces.HasImages;
 import edu.rpi.metpetdb.client.model.interfaces.HasOwner;
@@ -119,6 +121,65 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 		"August", "September", "October", "November", "December",
 	};
 
+	
+	public Sample()
+	{
+		super();
+	}
+	
+	public Sample(SampleJSON json)
+	{
+	
+		if (json.getId() != null)
+			this.id = Long.valueOf(json.getId());
+		
+		if (json.getImageCount() != null)
+			this.imageCount = Integer.valueOf(json.getImageCount());
+		
+		if (json.getSubsampleCount() != null)
+			this.subsampleCount = Integer.valueOf(json.getSubsampleCount());
+		
+		if (json.getAnalysisCount() != null)
+			this.analysisCount =  Integer.valueOf(json.getAnalysisCount());
+		
+		if (json.getCollectionDate() != null)
+		this.collectionDate = Timestamp.valueOf(json.getCollectionDate());
+		
+		
+		if (json.getMinerals() != null)
+		{
+			JsArrayString minerals = (JsArrayString)json.getMinerals();
+					
+			for (int i = 0; i < minerals.length(); i++)
+			{
+				this.minerals.add(new SampleMineral(new Mineral(minerals.get(i))));
+			}
+		}
+		
+		
+		this.owner = new User(json.getOwner());
+		
+		
+		if (json.getRockType() != null)
+			this.rockType = new RockType(json.getRockType());
+		
+		this.number = json.getSampleNumber();
+		
+		
+		if (json.getPublicData() != null)
+		{
+			if (json.getPublicData().equals("Y"))
+				this.publicData = Boolean.TRUE;
+			
+			if (json.getPublicData().equals("N"))
+				this.publicData = Boolean.FALSE;
+		
+		}
+		
+		
+		//TODO:  fill this out...
+	}
+	
 	public long getId() {
 		return id;
 	}
@@ -560,9 +621,9 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 		final String m = months[month];
 		final String d = day < 10 ? "0" + day : String.valueOf(day);
 
-		if (precision == 0)
+		if (precision == null || precision == 0)
 			return m + " " + d + ", " + String.valueOf(year);
-		if (precision >= 365)
+		if (precision != null && precision >= 365)
 			return year + "";
 		else
 			return m + " " + year;

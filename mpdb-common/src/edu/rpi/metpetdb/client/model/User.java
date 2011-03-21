@@ -46,6 +46,16 @@ public class User extends MObject {
 
 	private transient byte[] encryptedPassword;
 	
+	public User()
+	{
+		super();
+	}
+	
+	public User(String name)
+	{
+		this.name = name;
+	}
+	
 	public int getId() {
 		return id;
 	}
