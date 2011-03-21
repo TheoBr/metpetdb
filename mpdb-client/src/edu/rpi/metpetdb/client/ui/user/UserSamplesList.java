@@ -5,6 +5,7 @@ import java.util.Map;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import edu.rpi.metpetdb.client.json.request.JSONSampleService;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.paging.PaginationParameters;
@@ -23,8 +24,10 @@ public class UserSamplesList extends MPagePanel {
 		list = new SampleList() {
 			public void update(final PaginationParameters p,
 					final AsyncCallback<Results<Sample>> ac) {
-				long id = (long) (MpDb.currentUser().getId());
-				MpDb.sample_svc.allSamplesForUser(p, id, ac);
+			//	long id = (long) (MpDb.currentUser().getId());
+				//MpDb.sample_svc.allSamplesForUser(p, id, ac);
+				 new JSONSampleService().allSamplesForUser(p, ac);
+				
 			}
 
 			@Override
