@@ -40,7 +40,10 @@ public class MySampleMineralsMapper extends JdbcTemplate implements
 			currentSample.put("publicData", rs.getString("public_data"));
 			currentSample.put("owner", rs.getString("owner"));
 			currentSample.put("rockType", rs.getString("rock_type"));
-			currentSample.put("collectionDate",formatter.print(rs.getDate("collection_date"), Locale.ENGLISH));
+			
+			if (rs.getDate("collection_date") != null)
+				currentSample.put("collectionDate",formatter.print(rs.getDate("collection_date"), Locale.ENGLISH));
+		
 			currentSample.put("count", rs.getString("count"));
 			
 			currentSample.put("imageCount", rs.getString("image_count"));
