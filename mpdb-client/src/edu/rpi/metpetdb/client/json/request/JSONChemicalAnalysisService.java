@@ -28,7 +28,7 @@ public class JSONChemicalAnalysisService
 			final AsyncCallback<Results<ChemicalAnalysis>> ac) {
 
 		//TODO: Externalize the resource
-		String requestUrl =  constants.serviceUrl()  + "/chemical_analyses/"
+		String requestUrl =  constants.serviceUrl()  + "/secure/chemical_analyses/"
 				+ subsampleId
 				+ "/"
 				+ parameters.getFirstResult()
