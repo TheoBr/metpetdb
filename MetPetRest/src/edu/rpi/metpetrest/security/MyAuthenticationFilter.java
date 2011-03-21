@@ -40,9 +40,9 @@ public class MyAuthenticationFilter extends OncePerRequestFilter {
 		}
 
 		// TODO:  If we can't verify you, send a 403, is this working?
-		if (SecurityContextHolder.getContext().getAuthentication() == null  && SecurityContextHolder.getContext().getAuthentication().getName() != null) {
+		if (SecurityContextHolder.getContext().getAuthentication() != null  && SecurityContextHolder.getContext().getAuthentication().getName() != null) {
 			HttpServletResponse response = (HttpServletResponse) res;
-			response.sendError(403);
+			response.setStatus(403);
 		}
 
 	}

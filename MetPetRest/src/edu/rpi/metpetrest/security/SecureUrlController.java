@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJacksonJsonView;
 
 import edu.rpi.metpetrest.dao.ChemicalAnalysisDAOImpl;
+import edu.rpi.metpetrest.dao.SampleDAOImpl;
 import edu.rpi.metpetrest.dao.UserDAOImpl;
 
 @Controller()
@@ -22,6 +23,8 @@ public class SecureUrlController {
 	private UserDAOImpl userDAO = null;
 
 	private ChemicalAnalysisDAOImpl chemicalAnalysisDAO = null;
+	
+	private SampleDAOImpl sampleDAO = null;
 
 	Logger logger = LoggerFactory.getLogger(SecureUrlController.class);
 
@@ -52,6 +55,28 @@ public class SecureUrlController {
 		return mav;
 	}
 
+	
+	@PreAuthorize("hasRole('MEMBER')")
+	@RequestMapping(value = "/secure/mysamples/{startRowNum}/{endRowNum}", method = RequestMethod.GET)
+	public ModelAndView getMySamples(
+			@PathVariable("startRowNum") String startRowNum,
+			@PathVariable("endRowNum") String endRowNum) {
+
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("samples");
+		mav.setView(new MappingJacksonJsonView());
+		MappingJacksonJsonView myView = (MappingJacksonJsonView) mav.getView();
+
+		myView.setContentType("text/javascript");
+
+		List<Map<String, Object>> jsonSamples = sampleDAO.getMySamples(Long.valueOf(startRowNum),
+						Long.valueOf(endRowNum));
+
+		mav.addObject("samples", jsonSamples);
+
+		return mav;
+	}
+	
 	public UserDAOImpl getUserDAO() {
 		return userDAO;
 	}
@@ -67,6 +92,14 @@ public class SecureUrlController {
 	public void setChemicalAnalysisDAO(
 			ChemicalAnalysisDAOImpl chemicalAnalysisDAO) {
 		this.chemicalAnalysisDAO = chemicalAnalysisDAO;
+	}
+
+	public SampleDAOImpl getSampleDAO() {
+		return sampleDAO;
+	}
+
+	public void setSampleDAO(SampleDAOImpl sampleDAO) {
+		this.sampleDAO = sampleDAO;
 	}
 
 }

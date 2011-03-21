@@ -1,6 +1,7 @@
 package edu.rpi.metpetrest.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -10,7 +11,13 @@ import net.sf.ehcache.Element;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import edu.rpi.metpetrest.dao.mapper.EarthChemChemicalsMapper;
 import edu.rpi.metpetrest.dao.mapper.EarthChemMineralsMapper;
@@ -23,7 +30,10 @@ import edu.rpi.metpetrest.model.Method;
 import edu.rpi.metpetrest.model.SampleData;
 import edu.rpi.metpetrest.model.UserSampleData;
 
-public class SampleDAOImpl extends JdbcTemplate {
+public class SampleDAOImpl extends JdbcTemplate implements
+		ApplicationContextAware {
+
+	private static final String mySampleQuery = "select sample_id, number, public_data, (select count(image_id) from images where sample_id = samples.sample_id) as image_count, (select count(chemical_analysis_id) from chemical_analyses where subsample_id IN (select distinct(subsample_id) from subsamples where sample_id = samples.sample_id)) as analysis_count, (select count(subsample_id) from subsamples where sample_id = samples.sample_id) as subsample_count, (select name from users where user_id = ?) as owner, (select rock_type.rock_type from rock_type where rock_type_id = samples.rock_type_id ) as rock_type, collection_date,  (select count(sample_id) from samples where user_id = ?) as count from samples where samples.user_id = ? order by sample_id asc LIMIT ? OFFSET ?";
 
 	private static final String samplesQuery = "select distinct(samples.number) from samples where samples.user_id =  (select user_id from users where email = \'PUBLICATION\' and name = \'PUBLICATION\')";
 
@@ -50,6 +60,8 @@ public class SampleDAOImpl extends JdbcTemplate {
 	private DataSource dataSource = null;
 
 	private final Ehcache cache;
+
+	private ApplicationContext ctx;
 
 	Logger logger = LoggerFactory.getLogger(SampleDAOImpl.class);
 
@@ -114,6 +126,19 @@ public class SampleDAOImpl extends JdbcTemplate {
 				sampleNumber }, new EarthChemChemicalsMapper());
 	}
 
+	public List<Map<String, Object>> getMySamples(Long startResult,
+			Long maxResults) {
+
+		String userId = ((UserDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal()).getPassword();
+
+		return this
+				.query(mySampleQuery, new Object[] { userId, userId, userId,
+						maxResults, startResult },
+						((ResultSetExtractor<List<Map<String, Object>>>) ctx
+								.getBean("sampleMineralMapper")));
+	}
+
 	public List<UserSampleData> getSamplesForUser(String userId) {
 		return this.query(sampleQueryForUser, new Object[] { userId },
 				new UserSampleDataMapper());
@@ -154,5 +179,11 @@ public class SampleDAOImpl extends JdbcTemplate {
 
 	public Ehcache getCache() {
 		return cache;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext ctx)
+			throws BeansException {
+		this.ctx = ctx;
 	}
 }
