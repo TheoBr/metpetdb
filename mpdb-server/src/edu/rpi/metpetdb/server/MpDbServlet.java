@@ -23,6 +23,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
 
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.SerializationException;
 
 import edu.rpi.metpetdb.client.error.DAOException;
@@ -260,6 +261,7 @@ public abstract class MpDbServlet extends PersistentRemoteService {
 			final Collection<Principal> principals) {
 		final String v = u != null ? SessionEncrypter.crypt(u.getId()) : null;
 		final Cookie c = new Cookie(MpDbConstants.USERID_COOKIE, v);
+		c.setPath("/");
 		c.setMaxAge(u != null ? -1 : 0); // Only for this browser session.
 		getThreadLocalResponse().addCookie(c);
 		currentReq().userId = u != null ? new Integer(u.getId()) : null;
