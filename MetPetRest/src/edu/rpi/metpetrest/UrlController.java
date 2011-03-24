@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.rpi.metpetrest.dao.ChemicalAnalysisDAOImpl;
@@ -146,7 +147,7 @@ public class UrlController {
 	}
 
 	@RequestMapping(value = "/publicationsample", method = RequestMethod.GET)
-	public ModelAndView getSamplesForPublication(String referenceId) {
+	public ModelAndView getSamplesForPublication(@RequestParam("referenceId") String referenceId) {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("publicationsample");
 
