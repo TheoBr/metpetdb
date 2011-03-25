@@ -53,10 +53,20 @@ public class ImageUploadServlet extends HttpServlet {
 		ArrayList<String> al = new ArrayList<String>();
 		RenderedOp ro = loadImage(uploadItem);
 		// final String originalChecksum = writeFile(uploadItem.get());
-		al.add(generateFullsize(ro, false));
-		al.add(generate64x64(ro, false));
-		al.add(generateMobileVersion(ro, false));
-		al.add(generateHalf(ro, false));
+		
+		//If the image is a png we want to encode it as such instead of 
+		// as a jpeg in order to avoid a bug with safari
+		Boolean isaPng = false;
+		String filename = uploadItem.getName();
+		String extension = filename.substring(filename.lastIndexOf(".") + 1);
+		extension.toLowerCase();
+		if (extension.equals("png"))
+			isaPng = true;
+		
+		al.add(generateFullsize(ro, isaPng));
+		al.add(generate64x64(ro, isaPng));
+		al.add(generateMobileVersion(ro, isaPng));
+		al.add(generateHalf(ro, isaPng));
 		al.add(String.valueOf(ro.getWidth()));
 		al.add(String.valueOf(ro.getHeight()));
 		al.add(uploadItem.getName());
