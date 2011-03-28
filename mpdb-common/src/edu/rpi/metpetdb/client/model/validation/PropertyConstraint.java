@@ -52,7 +52,7 @@ public class PropertyConstraint implements IsSerializable {
 	public boolean equals(final Object o) {
 		if (!(o instanceof PropertyConstraint))
 			return false;
-		final PropertyConstraint p = (PropertyConstraint) o;
-		return entityName.equals(p.entityName) && property == p.property;
+		final PropertyConstraint p = (PropertyConstraint) o;	
+		return entityName.equals(p.entityName) && property.equals(p.property);
 	}
 }

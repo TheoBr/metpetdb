@@ -1,7 +1,6 @@
 package edu.rpi.metpetdb.client.model.validation;
 
 import edu.rpi.metpetdb.client.error.ValidationException;
-import edu.rpi.metpetdb.client.error.validation.InvalidDateStringException;
 import edu.rpi.metpetdb.client.model.validation.primitive.StringConstraint;
 
 public class DateStringConstraint extends StringConstraint {
@@ -48,7 +47,9 @@ public class DateStringConstraint extends StringConstraint {
 				return;
 			}
 		}
-		throw new InvalidDateStringException(this, value == null ? "" : value.toString());
+		
+		// When I commented out this line, lots of useful errors got printed to the screen about data formatting errors.
+		//throw new InvalidDateStringException(this, value == null ? "" : value.toString());
 	}
 
 	// This is quite naive, but still better than nothing
