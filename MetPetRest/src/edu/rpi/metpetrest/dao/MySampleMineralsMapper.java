@@ -10,6 +10,8 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.postgis.PGgeometry;
+import org.postgis.Point;
 import org.springframework.dao.DataAccessException;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,6 +27,10 @@ public class MySampleMineralsMapper extends JdbcTemplate implements
 	
 	private static final String mySampleMineralsQuery = "select minerals.name from samples, sample_minerals, minerals where samples.sample_id = sample_minerals.sample_id and sample_minerals.mineral_id = minerals.mineral_id and samples.sample_id = ?";
 
+	private static final String myRegionsQuery = "select name from regions LEFT OUTER JOIN sample_regions ON (regions.region_id = sample_regions.region_id) where sample_regions.sample_id = ?";
+	
+	private static final String myMetamorphicRegionsQuery = "select name from metamorphic_regions LEFT OUTER JOIN sample_metamorphic_regions ON (metamorphic_regions.metamorphic_region_id = sample_metamorphic_regions.metamorphic_region_id) where sample_metamorphic_regions.sample_id = ?";
+	
 	@Override
 	public List<Map<String, Object>> extractData(ResultSet rs)
 			throws SQLException, DataAccessException {
@@ -50,6 +56,28 @@ public class MySampleMineralsMapper extends JdbcTemplate implements
 			currentSample.put("analysisCount", rs.getString("analysis_count"));
 			currentSample.put("subsampleCount", rs.getString("subsample_count"));
 			
+			currentSample.put("country", rs.getString("country"));
+			
+			
+			currentSample.put("collector", rs.getString("collector"));
+			
+
+			currentSample.put("gradeName", rs.getString("grade_name"));
+
+			currentSample.put("locationText", rs.getString("location_text"));
+			
+			
+			if (rs.getObject("location") != null)
+			{
+				PGgeometry geometry = (PGgeometry)rs.getObject("location");
+				
+				Point point = (Point)geometry.getGeometry();
+				
+				currentSample.put("longitude", String.valueOf(point.getX()));
+				currentSample.put("latitude", String.valueOf(point.getY()));
+				
+				
+			}
 			
 			List<String> minerals = this.query(mySampleMineralsQuery,
 					new Object[] { rs.getInt("sample_id") },
@@ -67,10 +95,60 @@ public class MySampleMineralsMapper extends JdbcTemplate implements
 							return minerals;
 						}
 					});
-
+			
 			currentSample.put("minerals", minerals);
+			
+			List<String> regions = this.query(myRegionsQuery, new Object[] {rs.getInt("sample_id")}, new ResultSetExtractor<List<String>>(){
 
+				@Override
+				public List<String> extractData(ResultSet rs)
+						throws SQLException, DataAccessException {
+
+
+					List<String> regions = new ArrayList<String>();
+
+					while (rs.next()) {
+						regions.add(rs.getString("name"));
+					}
+
+					return regions;
+
+					
+				}
+				
+			});
+			
+			currentSample.put("regions", regions);
+			
+			List<String> metamorphic_regions = this.query(myMetamorphicRegionsQuery, new Object[] {rs.getInt("sample_id")}, new ResultSetExtractor<List<String>>(){
+
+				@Override
+				public List<String> extractData(ResultSet rs)
+						throws SQLException, DataAccessException {
+
+
+					List<String> metamorphic_regions = new ArrayList<String>();
+
+					while (rs.next()) {
+						metamorphic_regions.add(rs.getString("name"));
+					}
+
+					return metamorphic_regions;
+
+				}
+				
+			});
+
+			currentSample.put("metamorphicRegions", metamorphic_regions);
+		
+			
+			
+			
+			
 			data.add(currentSample);
+
+			
+
 		}
 
 		return data;
