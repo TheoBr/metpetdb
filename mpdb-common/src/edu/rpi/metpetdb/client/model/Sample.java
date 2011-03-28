@@ -146,6 +146,23 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 		this.collectionDate = Timestamp.valueOf(json.getCollectionDate());
 		
 		
+		this.location = new Point();
+		location.dimension = 2;
+		location.srid = MpDbConstants.WGS84;
+		
+		if (json.getLongitude() != null)
+			((Point)location).x = Double.valueOf(json.getLongitude());
+		
+		if (json.getLatitude() != null)
+			((Point)location).y = Double.valueOf(json.getLatitude());
+		
+		this.locationText = json.getLocationText();
+		
+		this.country = json.getCountry();
+		
+		this.collector = json.getCollector();
+		
+		
 		if (json.getMinerals() != null)
 		{
 			JsArrayString minerals = (JsArrayString)json.getMinerals();
@@ -155,6 +172,41 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 				this.minerals.add(new SampleMineral(new Mineral(minerals.get(i))));
 			}
 		}
+
+		if (json.getRegions() != null)
+		{
+			JsArrayString regions = (JsArrayString)json.getRegions();
+					
+			for (int i = 0; i < regions.length(); i++)
+			{
+				this.regions.add(new Region(regions.get(i)));
+			}
+		}
+
+		
+		if (json.getMetamorphicRegions() != null)
+		{
+			JsArrayString metamorphicRegions = (JsArrayString)json.getMetamorphicRegions();
+					
+			for (int i = 0; i < metamorphicRegions.length(); i++)
+			{
+				this.metamorphicRegions.add(new MetamorphicRegion(metamorphicRegions.get(i)));
+			}
+		}
+
+		
+		if (json.getMetamorphicGrades() != null)
+		{
+			JsArrayString metamorphicGrades = (JsArrayString)json.getMetamorphicGrades();
+					
+			for (int i = 0; i < metamorphicGrades.length(); i++)
+			{
+				this.metamorphicGrades.add(new MetamorphicGrade(metamorphicGrades.get(i)));
+			}
+		}
+
+		if (json.getGradeName() != null)
+		this.metamorphicGrades.add(new MetamorphicGrade(json.getGradeName()));
 		
 		
 		this.owner = new User(json.getOwner());
@@ -175,6 +227,8 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 				this.publicData = Boolean.FALSE;
 		
 		}
+		
+		
 		
 		
 		//TODO:  fill this out...
