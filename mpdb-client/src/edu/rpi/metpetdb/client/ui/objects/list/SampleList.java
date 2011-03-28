@@ -51,7 +51,7 @@ public abstract class SampleList extends DataList<Sample> {
 		}
 		
 		// info icon (click to get sample info popup)
-		{
+	/*	{
 			Column<Sample, Image> col = new Column<Sample, Image>("Info", null){
 				@Override
 				public Image getCellValue(final Sample rowValue) {
@@ -76,7 +76,7 @@ public abstract class SampleList extends DataList<Sample> {
 			col.setName("info");
 			columns.addColumn(col);
 			defaultColumns.addColumn(col);
-		}
+		} */
 		
 		// public or private
 		{
@@ -258,12 +258,19 @@ public abstract class SampleList extends DataList<Sample> {
 				public String getCellValue(Sample rowValue) {
 					final Point location = (Point) rowValue
 							.mGet(SampleProperty.location);
+					if (location != null)
+					{
 					return "("
 							+ ListExUtil.formatDouble(location.x,
 									ListExUtil.latlngDigits)
 							+ ", "
 							+ ListExUtil.formatDouble(location.y,
 									ListExUtil.latlngDigits) + ")";
+					}
+					else
+					{
+						return "Lat/Long unavailable";
+					}
 				}
 			};
 			col.setColumnSortable(false);
@@ -367,7 +374,8 @@ public abstract class SampleList extends DataList<Sample> {
 		return w;
 	}
 	
-	private static String processTooltipData(Sample data){
+	/*
+	 private static String processTooltipData(Sample data){
 		String tooltipData = "<table class=\"info\" cellspacing=\"0\"><tbody>";
 		
 		for(Column<Sample, ?> c: columns){	
@@ -388,7 +396,7 @@ public abstract class SampleList extends DataList<Sample> {
 		tooltipData += "</tbody></table>";
 		return tooltipData;
 	}
-	
+	*/
 	protected ColumnDefinition<Sample> getDefaultColumns() {
 		return defaultColumns;
 	}
