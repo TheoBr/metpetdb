@@ -79,8 +79,8 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 			.bulkUpload_ChemicalAnalyses());
 	private final RadioButton imagesRadio = new RadioButton("type", lc_text
 			.bulkUpload_Images());
-	private final RadioButton referenceRadio = new RadioButton("type", lc_text
-			.bulkUpload_References());
+	//private final RadioButton referenceRadio = new RadioButton("type", lc_text
+	//		.bulkUpload_References());
 
 	private final MButton uploadButton = new MButton(lc_text
 			.bulkUpload_Upload());
@@ -160,7 +160,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				clearResults();
 			}
 		});
-		referenceRadio.addClickListener(new ClickListener() {
+		/*referenceRadio.addClickListener(new ClickListener() {
 			public void onClick(Widget sender) {
 				clearResults();
 			}
@@ -171,6 +171,7 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 				(MpDb.currentUser() != null && MpDb.currentUser().getName().equals("PUBLICATION"))) {
 			uploadTypeList.add(referenceRadio);
 		}
+		*/
 
 		main.add(uploadButton);
 		uploadButton.addClickListener(new ClickListener() {
@@ -341,10 +342,11 @@ public class BulkUploadPanel extends MPagePanel implements FormHandler {
 		} else if (imagesRadio.isChecked()) {
 			updateContentType(imagesRadio.getText());
 			service = MpDb.bulkUploadImages_svc;
-		} else if (referenceRadio.isChecked()) {
+		} 
+		/* else if (referenceRadio.isChecked()) {
 			updateContentType(referenceRadio.getText());
 			service = MpDb.bulkUploadReferences_svc;
-		}
+		} */
 	}
 
 	private void updateContentType(String type) {
