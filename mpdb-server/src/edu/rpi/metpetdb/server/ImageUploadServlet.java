@@ -54,13 +54,15 @@ public class ImageUploadServlet extends HttpServlet {
 		RenderedOp ro = loadImage(uploadItem);
 		// final String originalChecksum = writeFile(uploadItem.get());
 		
-		//If the image is a png we want to encode it as such instead of 
-		// as a jpeg in order to avoid a bug with safari
+		//If the image is a .png we want to encode it as such instead of 
+		//as a .jpeg in order to avoid a bug with Safari. The root issue 
+		//could be with how the alpha layer is encoded so there may be a 
+		//better fix.
 		Boolean isaPng = false;
 		String filename = uploadItem.getName();
 		String extension = filename.substring(filename.lastIndexOf(".") + 1);
 		extension.toLowerCase();
-		if (extension.equals("png"))
+		if (extension.equals("png") || extension.equals("tif") || extension.equals("tiff"))
 			isaPng = true;
 		
 		al.add(generateFullsize(ro, isaPng));
