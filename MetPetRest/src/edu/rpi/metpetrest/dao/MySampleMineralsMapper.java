@@ -31,6 +31,8 @@ public class MySampleMineralsMapper extends JdbcTemplate implements
 	
 	private static final String myMetamorphicRegionsQuery = "select name from metamorphic_regions LEFT OUTER JOIN sample_metamorphic_regions ON (metamorphic_regions.metamorphic_region_id = sample_metamorphic_regions.metamorphic_region_id) where sample_metamorphic_regions.sample_id = ?";
 	
+	private static final String myReferencesQuery = "select name from georeference LEFT OUTER JOIN reference ON (georeference.reference_id = reference.reference_id) LEFT OUTER JOIN sample_reference ON (sample_reference.reference_id = reference.reference_id) where sample_reference.sample_id = ?";
+	
 	@Override
 	public List<Map<String, Object>> extractData(ResultSet rs)
 			throws SQLException, DataAccessException {
@@ -142,6 +144,27 @@ public class MySampleMineralsMapper extends JdbcTemplate implements
 			currentSample.put("metamorphicRegions", metamorphic_regions);
 		
 			
+			List<String> references = this.query(myReferencesQuery, new Object[] {rs.getInt("sample_id")}, new ResultSetExtractor<List<String>>(){
+
+				@Override
+				public List<String> extractData(ResultSet rs)
+						throws SQLException, DataAccessException {
+
+
+					List<String> references = new ArrayList<String>();
+
+					while (rs.next()) {
+						references.add(rs.getString("name"));
+					}
+
+					return references;
+
+				}
+				
+			});
+
+			currentSample.put("references", references);
+		
 			
 			
 			
