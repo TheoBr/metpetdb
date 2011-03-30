@@ -205,6 +205,19 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 			}
 		}
 
+		
+		if (json.getReferences() != null)
+		{
+			JsArrayString references = (JsArrayString)json.getReferences();
+					
+			for (int i = 0; i < references.length(); i++)
+			{
+				this.references.add(new Reference(references.get(i)));
+				
+			}
+		}
+
+		
 		if (json.getGradeName() != null)
 		this.metamorphicGrades.add(new MetamorphicGrade(json.getGradeName()));
 		

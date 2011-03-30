@@ -46,6 +46,11 @@ public class SampleJSON extends JavaScriptObject {
 	public final native JsArrayString getMinerals() /*-{
 		return this.minerals;
 	}-*/;
+	
+	public final native JsArrayString getReferences() /*-{
+	return this.references;
+}-*/;
+
 
 	public final native String getLatitude() /*-{
 		return this.latitude;
