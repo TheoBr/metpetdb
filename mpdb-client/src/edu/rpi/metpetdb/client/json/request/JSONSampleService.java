@@ -26,13 +26,15 @@ public class JSONSampleService {
 		
 		
 		
-		for (String cookieName : Cookies.getCookieNames())
+		final String identity;
+		
+		if (Cookies.getCookie("identity") == null)
 		{
-		
-			String cookieVal = Cookies.getCookie(cookieName);
-			
-			System.out.println(cookieName + ":" + cookieVal);
-		
+			identity = "ANONYMOUS";
+		}
+		else
+		{
+			identity = Cookies.getCookie("identity");
 		}
 		
 		
@@ -40,7 +42,7 @@ public class JSONSampleService {
 		String requestUrl =  constants.serviceUrl()  + "/secure/mysamples/"
 				+ parameters.getFirstResult()
 				+ "/"
-				+ parameters.getMaxResults() + ".json" + "?identity=" + Cookies.getCookie("identity");
+				+ parameters.getMaxResults() + ".json" + "?identity=" + identity;
 
 		JsonpRequestBuilder builder = new JsonpRequestBuilder();
 		builder.setTimeout(120000);

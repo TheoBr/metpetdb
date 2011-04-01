@@ -28,12 +28,24 @@ public class JSONChemicalAnalysisService
 			final AsyncCallback<Results<ChemicalAnalysis>> ac) {
 
 		//TODO: Externalize the resource
+		
+		final String identity;
+		
+		if (Cookies.getCookie("identity") == null)
+		{
+			identity = "ANONYMOUS";
+		}
+		else
+		{
+			identity = Cookies.getCookie("identity");
+		}
+	
 		String requestUrl =  constants.serviceUrl()  + "/secure/chemical_analyses/"
 				+ subsampleId
 				+ "/"
 				+ parameters.getFirstResult()
 				+ "/"
-				+ parameters.getMaxResults() + ".json" + "?identity=" + Cookies.getCookie("identity");
+				+ parameters.getMaxResults() + ".json" + "?identity=" + identity;
 
 		JsonpRequestBuilder builder = new JsonpRequestBuilder();
 		builder.setTimeout(120000);
