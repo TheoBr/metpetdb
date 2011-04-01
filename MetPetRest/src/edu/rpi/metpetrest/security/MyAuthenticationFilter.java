@@ -26,8 +26,13 @@ public class MyAuthenticationFilter extends OncePerRequestFilter {
 
 		if (request.getParameter("identity") != null) {
 
-			Integer userId = SessionEncrypter.verify(request
-					.getParameter("identity"));
+			Integer userId = null;
+			
+			if (request.getParameter("identity").equals("ANONYMOUS"))
+				userId = 9999;
+			else
+				userId = SessionEncrypter.verify(request
+						.getParameter("identity"));
 
 			if (userId != null) {
 				UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(

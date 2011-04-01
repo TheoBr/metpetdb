@@ -32,7 +32,7 @@ public class SecureUrlController {
 
 	}
 
-	@PreAuthorize("hasRole('MEMBER')")
+	@PreAuthorize("hasAnyRole('MEMBER', 'ANONYMOUS')")
 	@RequestMapping(value = "/secure/chemical_analyses/{subSampleId}/{startRowNum}/{endRowNum}", method = RequestMethod.GET)
 	public ModelAndView getChemicalAnalyses(
 			@PathVariable("subSampleId") String subSampleId,

@@ -11,6 +11,7 @@ public class LoginDAOImpl extends JdbcDaoImpl {
 	 * Custom filter is what translates the hashed token to a userId
 	 */
 	public UserDetails loadUserByUsername(String userId) {
+			
 		return this.getJdbcTemplate().query(selectUserRolesProjects,
 				new Object[] { userId, userId }, new UserCredentialsMapper());
 	}
