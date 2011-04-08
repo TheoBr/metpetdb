@@ -135,7 +135,7 @@ public class SampleDAOImpl extends JdbcTemplate implements
 				.getAuthentication().getPrincipal()).getPassword();
 
 		return this
-				.query(mySampleQuery, new Object[] { userId, userId, userId,
+				.query(mySampleQuery, new Object[] { Integer.valueOf(userId), Integer.valueOf(userId), Integer.valueOf(userId),
 						maxResults, startResult },
 						((ResultSetExtractor<List<Map<String, Object>>>) ctx
 								.getBean("sampleMineralMapper")));

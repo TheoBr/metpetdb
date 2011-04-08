@@ -13,7 +13,7 @@ public class LoginDAOImpl extends JdbcDaoImpl {
 	public UserDetails loadUserByUsername(String userId) {
 			
 		return this.getJdbcTemplate().query(selectUserRolesProjects,
-				new Object[] { userId, userId }, new UserCredentialsMapper());
+				new Object[] { Integer.valueOf(userId), Integer.valueOf(userId) }, new UserCredentialsMapper());
 	}
 
 }

@@ -38,8 +38,8 @@ public class ChemicalAnalysisDAOImpl extends NamedParameterJdbcTemplate {
 		Map<String, Object> params = new HashMap<String, Object>();
 
 		params.put("subsampleId", Integer.valueOf(subSampleId));
-		params.put("userId", ((UserDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal()).getPassword());
+		params.put("userId", Integer.valueOf(((UserDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal()).getPassword()));
 		params.put("projects", buildProjectCriteria());
 		params.put("startResult", startResult);
 		params.put("maxResults", maxResults);
