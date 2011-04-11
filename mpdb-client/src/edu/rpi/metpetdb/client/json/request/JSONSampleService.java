@@ -2,7 +2,6 @@ package edu.rpi.metpetdb.client.json.request;
 
 import java.util.ArrayList;
 
-import com.gargoylesoftware.htmlunit.util.Cookie;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.jsonp.client.JsonpRequestBuilder;
 import com.google.gwt.user.client.Cookies;
@@ -19,66 +18,52 @@ public class JSONSampleService {
 
 	private ServicesConstants constants = GWT.create(ServicesConstants.class);
 
-	
 	public void allSamplesForUser(PaginationParameters parameters,
-			final AsyncCallback<Results<Sample>> ac)
-	{
-		
-		
-		
+			final AsyncCallback<Results<Sample>> ac) {
+
 		final String identity;
-		
-		if (Cookies.getCookie("identity") == null)
-		{
+
+		if (Cookies.getCookie("identity") == null) {
 			identity = "ANONYMOUS";
-		}
-		else
-		{
+		} else {
 			identity = Cookies.getCookie("identity");
 		}
-		
-		
-		//TODO: Externalize the resource
-		String requestUrl =  constants.serviceUrl()  + "/secure/mysamples/"
-				+ parameters.getFirstResult()
-				+ "/"
-				+ parameters.getMaxResults() + ".json" + "?identity=" + identity;
+
+		// TODO: Externalize the resource
+		String requestUrl = constants.serviceUrl() + "/secure/mysamples/"
+				+ parameters.getFirstResult() + "/"
+				+ parameters.getMaxResults() + ".json" + "?identity="
+				+ identity;
 
 		JsonpRequestBuilder builder = new JsonpRequestBuilder();
 		builder.setTimeout(120000);
 
-		
-		
-		builder.requestObject(requestUrl,
-				new AsyncCallback<SampleArray>() {
+		builder.requestObject(requestUrl, new AsyncCallback<SampleArray>() {
 
-					public void onFailure(Throwable caught) {
-						Window.alert(caught.toString());
-						caught.printStackTrace();
-					}
+			public void onFailure(Throwable caught) {
+				Window.alert(caught.toString());
+				caught.printStackTrace();
+			}
 
-					public void onSuccess(SampleArray cal) {
+			public void onSuccess(SampleArray cal) {
 
-						Results<Sample> rs = new Results<Sample>();
-						rs.setList(new ArrayList<Sample>());
+				Results<Sample> rs = new Results<Sample>();
+				rs.setList(new ArrayList<Sample>());
 
-						for (int i = 0; i < cal.getSamples().length(); i++) {
-							rs.getList().add(
-									new Sample(cal
-											.getSamples().get(i)));
-							rs.setCount(Integer.valueOf(cal
-									.getSamples().get(i).getCount()));
-						}
+				for (int i = 0; i < cal.getSamples().length(); i++) {
+					rs.getList().add(new Sample(cal.getSamples().get(i)));
+					rs.setCount(Integer.valueOf(cal.getSamples().get(i)
+							.getCount()));
+				}
 
-						ac.onSuccess(rs);
+				ac.onSuccess(rs);
 
-					}
-				});
+			}
+		});
 	}
-	
-	public void allIdsForUser(Long id, AsyncCallback<Results<Sample>> ac)
-	{
-		
+
+	public void allIdsForUser(Long id, AsyncCallback<Results<Sample>> ac) {
+
 	}
-	
+
 }
