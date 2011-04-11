@@ -27,8 +27,8 @@ import edu.rpi.metpetdb.client.model.interfaces.PublicData;
 import edu.rpi.metpetdb.client.service.MpDbConstants;
 
 @Indexed
-public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasImages,
-		PublicData {
+public class Sample extends MObject implements IHasName, HasDate, HasOwner,
+		HasImages, PublicData {
 	private static final long serialVersionUID = 1L;
 
 	@DocumentId
@@ -44,7 +44,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 
 	@Field(index = Index.TOKENIZED, store = Store.NO)
 	private String number;
-	
+
 	private Set<SampleAlias> aliases = new HashSet<SampleAlias>();
 
 	@Field(index = Index.UN_TOKENIZED)
@@ -58,7 +58,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 
 	@IndexedEmbedded(prefix = "rockType_")
 	private RockType rockType;
-	
+
 	private String rockTypeName;
 
 	@ContainedIn
@@ -68,7 +68,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 
 	@IndexedEmbedded(prefix = "sampleMineral_")
 	private Set<SampleMineral> minerals = new HashSet<SampleMineral>();
-	
+
 	private String firstMineral;
 
 	private Set<Image> images = new HashSet<Image>();
@@ -89,23 +89,23 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 
 	@IndexedEmbedded(prefix = "region_")
 	private Set<Region> regions = new HashSet<Region>();
-	
+
 	private String firstRegion;
-	
+
 	@IndexedEmbedded(depth = 1, prefix = "metamorphicRegion_")
 	private Set<MetamorphicRegion> metamorphicRegions = new HashSet<MetamorphicRegion>();
 	private String firstMetamorphicRegion;
 
 	@IndexedEmbedded(depth = 1, prefix = "metamorphicGrade_")
 	private Set<MetamorphicGrade> metamorphicGrades = new HashSet<MetamorphicGrade>();
-	
+
 	private String firstMetamorphicGrade;
-	
+
 	@IndexedEmbedded(depth = 1, prefix = "reference_")
 	private Set<Reference> references = new HashSet<Reference>();
-	
+
 	private String firstReference;
-	
+
 	private Set<GeoReference> geoReferences = new HashSet<GeoReference>();
 
 	private Set<SampleComment> comments = new HashSet<SampleComment>();
@@ -115,138 +115,120 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	private int imageCount;
 
 	private int analysisCount;
-	
+
 	private static final String[] months = {
-		"January", "February", "March", "April", "May", "June", "July",
-		"August", "September", "October", "November", "December",
+			"January", "February", "March", "April", "May", "June", "July",
+			"August", "September", "October", "November", "December",
 	};
 
-	
-	public Sample()
-	{
+	public Sample() {
 		super();
 	}
-	
-	public Sample(SampleJSON json)
-	{
-	
+
+
+
+	public Sample(SampleJSON json) {
+
 		if (json.getId() != null)
 			this.id = Long.valueOf(json.getId());
-		
+
 		if (json.getImageCount() != null)
 			this.imageCount = Integer.valueOf(json.getImageCount());
-		
+
 		if (json.getSubsampleCount() != null)
 			this.subsampleCount = Integer.valueOf(json.getSubsampleCount());
-		
+
 		if (json.getAnalysisCount() != null)
-			this.analysisCount =  Integer.valueOf(json.getAnalysisCount());
-		
+			this.analysisCount = Integer.valueOf(json.getAnalysisCount());
+
 		if (json.getCollectionDate() != null)
-		this.collectionDate = Timestamp.valueOf(json.getCollectionDate());
-		
-		
+			this.collectionDate = Timestamp.valueOf(json.getCollectionDate());
+
 		this.location = new Point();
 		location.dimension = 2;
 		location.srid = MpDbConstants.WGS84;
-		
+
 		if (json.getLongitude() != null)
-			((Point)location).x = Double.valueOf(json.getLongitude());
-		
+			((Point) location).x = Double.valueOf(json.getLongitude());
+
 		if (json.getLatitude() != null)
-			((Point)location).y = Double.valueOf(json.getLatitude());
-		
+			((Point) location).y = Double.valueOf(json.getLatitude());
+
 		this.locationText = json.getLocationText();
-		
+
 		this.country = json.getCountry();
-		
+
 		this.collector = json.getCollector();
-		
-		
-		if (json.getMinerals() != null)
-		{
-			JsArrayString minerals = (JsArrayString)json.getMinerals();
-					
-			for (int i = 0; i < minerals.length(); i++)
-			{
-				this.minerals.add(new SampleMineral(new Mineral(minerals.get(i))));
+
+		if (json.getMinerals() != null) {
+			JsArrayString minerals = (JsArrayString) json.getMinerals();
+
+			for (int i = 0; i < minerals.length(); i++) {
+				this.minerals.add(new SampleMineral(
+						new Mineral(minerals.get(i))));
 			}
 		}
 
-		if (json.getRegions() != null)
-		{
-			JsArrayString regions = (JsArrayString)json.getRegions();
-					
-			for (int i = 0; i < regions.length(); i++)
-			{
+		if (json.getRegions() != null) {
+			JsArrayString regions = (JsArrayString) json.getRegions();
+
+			for (int i = 0; i < regions.length(); i++) {
 				this.regions.add(new Region(regions.get(i)));
 			}
 		}
 
-		
-		if (json.getMetamorphicRegions() != null)
-		{
-			JsArrayString metamorphicRegions = (JsArrayString)json.getMetamorphicRegions();
-					
-			for (int i = 0; i < metamorphicRegions.length(); i++)
-			{
-				this.metamorphicRegions.add(new MetamorphicRegion(metamorphicRegions.get(i)));
+		if (json.getMetamorphicRegions() != null) {
+			JsArrayString metamorphicRegions = (JsArrayString) json
+					.getMetamorphicRegions();
+
+			for (int i = 0; i < metamorphicRegions.length(); i++) {
+				this.metamorphicRegions.add(new MetamorphicRegion(
+						metamorphicRegions.get(i)));
 			}
 		}
 
-		
-		if (json.getMetamorphicGrades() != null)
-		{
-			JsArrayString metamorphicGrades = (JsArrayString)json.getMetamorphicGrades();
-					
-			for (int i = 0; i < metamorphicGrades.length(); i++)
-			{
-				this.metamorphicGrades.add(new MetamorphicGrade(metamorphicGrades.get(i)));
+		if (json.getMetamorphicGrades() != null) {
+			JsArrayString metamorphicGrades = (JsArrayString) json
+					.getMetamorphicGrades();
+
+			for (int i = 0; i < metamorphicGrades.length(); i++) {
+				this.metamorphicGrades.add(new MetamorphicGrade(
+						metamorphicGrades.get(i)));
 			}
 		}
 
-		
-		if (json.getReferences() != null)
-		{
-			JsArrayString references = (JsArrayString)json.getReferences();
-					
-			for (int i = 0; i < references.length(); i++)
-			{
+		if (json.getReferences() != null) {
+			JsArrayString references = (JsArrayString) json.getReferences();
+
+			for (int i = 0; i < references.length(); i++) {
 				this.references.add(new Reference(references.get(i)));
-				
+
 			}
 		}
 
-		
 		if (json.getGradeName() != null)
-		this.metamorphicGrades.add(new MetamorphicGrade(json.getGradeName()));
-		
-		
+			this.metamorphicGrades
+					.add(new MetamorphicGrade(json.getGradeName()));
+
 		this.owner = new User(json.getOwner());
-		
-		
+
 		if (json.getRockType() != null)
 			this.rockType = new RockType(json.getRockType());
-		
+
 		this.number = json.getSampleNumber();
-		
-		
-		if (json.getPublicData() != null)
-		{
+
+		if (json.getPublicData() != null) {
 			if (json.getPublicData().equals("Y"))
 				this.publicData = Boolean.TRUE;
-			
+
 			if (json.getPublicData().equals("N"))
 				this.publicData = Boolean.FALSE;
-		
+
 		}
 		
 		
-		
-		
-		//TODO:  fill this out...
 	}
-	
+
 	public long getId() {
 		return id;
 	}
@@ -352,7 +334,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	public void setRockType(final RockType rt) {
 		rockType = rt;
 	}
-	
+
 	public String getRockTypeName() {
 		return rockTypeName;
 	}
@@ -374,10 +356,10 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	public void setPublicData(final Boolean p) {
 		publicData = p;
 	}
-	
+
 	public void setAliases(final Set<SampleAlias> sa) {
 		aliases = sa;
-		for (SampleAlias alias : aliases){
+		for (SampleAlias alias : aliases) {
 			alias.setSample(this);
 		}
 	}
@@ -388,12 +370,12 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 			aliases = new HashSet<SampleAlias>();
 		aliases.add(sa);
 	}
-	
-	public void addAlias(final String alias){
+
+	public void addAlias(final String alias) {
 		SampleAlias sa = new SampleAlias(alias);
 		addAlias(sa);
 	}
-	
+
 	public Set<SampleAlias> getAliases() {
 		if (aliases == null)
 			aliases = new HashSet<SampleAlias>();
@@ -453,11 +435,11 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	public void addMineral(final Mineral min) {
 		this.addMineral(min, "");
 	}
-	
+
 	public void setFirstMineral(final String s) {
 		this.firstMineral = s;
 	}
-	
+
 	public String getFirstMineral() {
 		return firstMineral;
 	}
@@ -536,19 +518,19 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 		final Region r = new Region(name);
 		regions.add(r);
 	}
-	
+
 	public String getFirstRegion() {
 		return firstRegion;
 	}
-	
+
 	public void setFirstRegion(final String region) {
 		firstRegion = region;
 	}
 	public Set<MetamorphicRegion> getMetamorphicRegions() {
 		return metamorphicRegions;
 	}
-	public void setMetamorphicRegions (final Set<MetamorphicRegion> mr) {
-		metamorphicRegions= mr;
+	public void setMetamorphicRegions(final Set<MetamorphicRegion> mr) {
+		metamorphicRegions = mr;
 	}
 	public void addMetamorphicRegion(final MetamorphicRegion newRegion) {
 		if (metamorphicRegions == null)
@@ -559,7 +541,7 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 		return firstMetamorphicRegion;
 	}
 	public void setFirstMetamorphicRegion(final String s) {
-		firstMetamorphicRegion= s;
+		firstMetamorphicRegion = s;
 	}
 
 	public Set<MetamorphicGrade> getMetamorphicGrades() {
@@ -576,11 +558,11 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 			metamorphicGrades = new HashSet<MetamorphicGrade>();
 		metamorphicGrades.add(mg);
 	}
-	
+
 	public String getFirstMetamorphicGrade() {
 		return firstMetamorphicGrade;
 	}
-	
+
 	public void setFirstMetamorphicGrade(final String s) {
 		firstMetamorphicGrade = s;
 	}
@@ -592,20 +574,20 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	public void setReferences(final Set<Reference> r) {
 		references = r;
 	}
-	
+
 	public String getFirstReference() {
 		return firstReference;
 	}
-	
+
 	public void setFirstReference(final String s) {
 		firstReference = s;
 	}
-	
-	public Set<GeoReference> getGeoReferences(){
+
+	public Set<GeoReference> getGeoReferences() {
 		return geoReferences;
 	}
-	
-	public void setGeoReferences(final Set<GeoReference> g){
+
+	public void setGeoReferences(final Set<GeoReference> g) {
 		geoReferences = g;
 	}
 
@@ -669,14 +651,14 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 	public void setDate(Timestamp date) {
 		setCollectionDate(date);
 	}
-	
+
 	public String toString() {
 		if (number != null && number.length() > 0)
 			return number;
 		else
 			return String.valueOf(id);
 	}
-	
+
 	public final static String dateToString(final Date dt, final Short precision) {
 		if (dt == null)
 			return "";
@@ -695,5 +677,5 @@ public class Sample extends MObject implements IHasName, HasDate, HasOwner, HasI
 		else
 			return m + " " + year;
 	}
-	
+
 }

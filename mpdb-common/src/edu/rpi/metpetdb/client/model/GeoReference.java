@@ -13,6 +13,15 @@ public class GeoReference  extends MObject implements Comparable {
 	private Reference reference;
 	private Long referenceId;
 	
+	public GeoReference()
+	{
+		
+	}
+	
+	public GeoReference(String referenceNumber)
+	{
+		this.referenceNumber = referenceNumber;
+	}
 	public Long getId(){
 		return id;
 	}
