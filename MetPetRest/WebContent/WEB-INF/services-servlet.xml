@@ -71,6 +71,10 @@
  </bean>
  
  
+  <bean id="namedSampleDAO" class="edu.rpi.metpetrest.dao.NamedSampleDAOImpl">
+ 	<constructor-arg ref="dataSource"/>
+ </bean>
+ 
  <bean id="sampleMineralMapper" class="edu.rpi.metpetrest.dao.MySampleMineralsMapper" scope="prototype">
  	 	<property name="dataSource" ref="dataSource"></property>
  </bean>
@@ -141,6 +145,7 @@
   	<property name="userDAO" ref="userDAO"></property>
   	<property name="chemicalAnalysisDAO" ref="chemicalAnalysisDAO"></property>
   	<property name="sampleDAO" ref="sampleDAO"></property>
+  	<property name="namedSampleDAO" ref="namedSampleDAO"></property>
   	
   </bean>
 

@@ -51,7 +51,10 @@ public class MySampleMineralsMapper extends JdbcTemplate implements
 			
 			if (rs.getDate("collection_date") != null)
 				currentSample.put("collectionDate",formatter.print(rs.getDate("collection_date"), Locale.ENGLISH));
-		
+			else
+				currentSample.put("collectionDate", null);
+			//end if
+			
 			currentSample.put("count", rs.getString("count"));
 			
 			currentSample.put("imageCount", rs.getString("image_count"));
