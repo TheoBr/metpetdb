@@ -53,6 +53,9 @@ public class Search extends MPagePanel implements UsesCurrentUser {
 
 	private SampleList sampleList;
 	private ChemicalAnalysisList chemList;
+	
+	private RadioButton returnSamples;
+	private RadioButton returnChemicalAnalyses;
 
 	public void init() {
 		searchPanel = new ObjectSearchPanel(sui) {
@@ -71,7 +74,7 @@ public class Search extends MPagePanel implements UsesCurrentUser {
 			@Override
 			public void update(PaginationParameters p,
 					AsyncCallback<Results<Sample>> ac) {
-				if (ss != null && !initLoad && searched)
+				if (ss != null && !initLoad && searched && returnSamples.getValue().equals(Boolean.TRUE))
 					MpDb.search_svc.sampleSearch(p, ss, MpDb.currentUser(), ac);
 				else {
 					ac
@@ -96,10 +99,15 @@ public class Search extends MPagePanel implements UsesCurrentUser {
 			@Override
 			public void update(PaginationParameters p,
 					AsyncCallback<Results<ChemicalAnalysis>> ac) {
-				if (ss != null && !initLoad && searched)
+				
+			
+					
+				
+				if (ss != null && !initLoad && searched && returnChemicalAnalyses.getValue().equals(Boolean.TRUE))
 					MpDb.search_svc.chemicalAnalysisSearch(p, ss, MpDb
 							.currentUser(), ac);
 				else {
+					
 					ac.onSuccess(new Results<ChemicalAnalysis>(0,
 							new ArrayList<ChemicalAnalysis>()));
 					initLoad = false;
@@ -144,11 +152,16 @@ public class Search extends MPagePanel implements UsesCurrentUser {
 		final HTMLPanel container = new HTMLPanel(
 				"<span>Search for:</span> <span id=\"radio-samples\"></span><span id=\"radio-analyses\"></span>");
 		final String groupString = "resultType_attribute";
-		final RadioButton returnSamples = new RadioButton(groupString,
+	//	final RadioButton 
+		returnSamples = new RadioButton(groupString,
 				"Samples");
-		final RadioButton returnChemicalAnalyses = new RadioButton(groupString,
+		//final RadioButton 
+		returnChemicalAnalyses = new RadioButton(groupString,
 				"Chemical Analyses");
 
+		
+		
+		/*
 		returnSamples.addClickListener(new ClickListener() {
 			public void onClick(final Widget sender) {
 				outputSamples = true;
@@ -163,6 +176,29 @@ public class Search extends MPagePanel implements UsesCurrentUser {
 			}
 		});
 
+*/
+		
+		searchPanel.getSearchBtn().addClickListener(new ClickListener() {
+			
+			public void onClick(Widget sender) {
+			
+				if (returnSamples.getValue().equals(Boolean.TRUE))
+				{
+					outputSamples = true;
+					updateResults();
+				//	sampleList.doSearch();
+				}
+				
+				if (returnChemicalAnalyses.getValue().equals(Boolean.TRUE))
+				{
+					outputSamples = false;
+					updateResults();
+				//	chemList.doSearch();
+				}
+			
+			}
+		});
+		
 		returnSamples.setChecked(true);
 
 		container.addAndReplaceElement(returnSamples, "radio-samples");
