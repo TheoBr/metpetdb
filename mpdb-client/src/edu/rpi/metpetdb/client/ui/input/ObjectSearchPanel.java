@@ -64,6 +64,7 @@ public abstract class ObjectSearchPanel extends FlowPanel {
 	public void doSearch() {
 		new FormOp<SearchSample>(this) {
 			protected void onSubmit() {
+				//TODO:  Check to see if the radio button is toggled on samples/chemical analyses
 				startValidation(this);
 			}
 			public void onSuccess(final SearchSample result) {
@@ -130,11 +131,17 @@ public abstract class ObjectSearchPanel extends FlowPanel {
 	private Widget[] getEditWidgets(final SearchGenericAttribute attr) {
 		return currentEditWidgets.get(attributes.indexOf(attr));
 	}
+	
+	
 
 	protected void performSearch() {
 		throw new UnsupportedOperationException();
 	}
 	protected void onSearchCompletion(final FormOp<SearchSample> ac) {
 
+	}
+
+	public MButton getSearchBtn() {
+		return searchBtn;
 	}
 }
