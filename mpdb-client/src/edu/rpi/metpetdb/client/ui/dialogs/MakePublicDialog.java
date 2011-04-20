@@ -441,12 +441,14 @@ public class MakePublicDialog extends MDialogBox{
 							public void onSuccess(List<Grid> result) {
 								imageMaps.addAll(result);
 								// all data retrieved, we're ready to display the dialog
+								/* Always want to see step one
 								if(samples.size() == 1){
 									MakePublicDialog.this.setWidget(createInterfaceMakeSamplesPublicCustom());
 								}
 								else if(samples.size() > 1){
 									MakePublicDialog.this.setWidget(createInterfaceMakeSamplesPublicOptions());
-								}
+								}*/
+								MakePublicDialog.this.setWidget(createInterfaceMakeSamplesPublicOptions());
 							}
 						}.begin();
 					}
