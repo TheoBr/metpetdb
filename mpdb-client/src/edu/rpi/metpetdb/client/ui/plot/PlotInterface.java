@@ -299,6 +299,9 @@ public class PlotInterface implements ClickListener, ChangeListener{
 	private Button export = new Button("Export");
 	private DisclosurePanel disclosurePanel;
 	private MTwoColPanel panel = new MTwoColPanel();
+	private Label noticeLbl = new Label("Please note that the plotting " +
+			"feature is under construction and may not work as intended. " +
+			"If you have any problems please report them to the developers.");
 	
 	public void onClick(final Widget sender){
 	
@@ -402,6 +405,8 @@ public class PlotInterface implements ClickListener, ChangeListener{
 		leftContainer.add(createGraphTypeContainer());
 		leftContainer.add(axisContainer);
 		leftContainer.add(draw);
+		noticeLbl.setWidth("285px");
+		leftContainer.add(noticeLbl);
 //		leftContainer.add(export);
 		panel.getLeftCol().add(leftContainer);
 		
