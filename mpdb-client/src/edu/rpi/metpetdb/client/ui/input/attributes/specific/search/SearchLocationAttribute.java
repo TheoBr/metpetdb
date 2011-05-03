@@ -42,7 +42,7 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 		ClickListener {
 	private final MTwoColPanel panel = new MTwoColPanel();
 	private Button showOnMap = new Button("Show on Map", this);
-	private final MLink clear = new MLink("Clear", this);
+	private final Button clear = new Button("Clear", this);
 	private MapWidget map;
 	private Marker markerPoint1;
 	private Marker markerPoint2;
@@ -63,7 +63,7 @@ public class SearchLocationAttribute extends SearchGenericAttribute implements
 	private final Label southLabel = new Label("South Latitude");
 	private final Label eastLabel = new Label("East Longitude");
 	private final Label westLabel = new Label("West Longitude");
-	
+
 	private double downX;
 	private double downY;
 
