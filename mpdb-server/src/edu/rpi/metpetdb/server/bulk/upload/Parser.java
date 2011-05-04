@@ -336,6 +336,8 @@ public abstract class Parser<T extends MObject> {
 							newObject.mSet(pc.property, getIntegerValue(cell));
 						} else if (pc instanceof NumberConstraint<?>) {
 							newObject.mSet(pc.property, getDoubleValue(cell));
+						} else if (pc == doc.Sample_aliases && newObject instanceof Sample) {
+							((Sample)newObject).addAlias(cell.toString());
 						} else if (pc instanceof TimestampConstraint) {
 							// handle dates differently
 							if (newObject instanceof HasDate) {
