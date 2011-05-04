@@ -340,7 +340,7 @@ public abstract class DataList<RowType> extends FlowPanel {
 	/**
 	 * Refreshes the currently shown columns
 	 */
-	protected void refreshColumns() {
+	private void refreshColumns() {
 		for (Column<RowType, ?> c : allColumns) {
 			tableDefinition.setColumnVisible(c, false);
 		}
