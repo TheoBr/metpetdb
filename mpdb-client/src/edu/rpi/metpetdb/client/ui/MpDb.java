@@ -123,7 +123,7 @@ public class MpDb {
 	public static final String HOW_TO_SEARCH_METPETDB_URL = GWT.getHostPageBaseURL() +"help/Search.html";
 	public static final String VIDEO_TUTORIALS_URL = GWT.getHostPageBaseURL() +"help/VideoTutorials.html";
 	public static final String LISTS_OF_DATA_TYPES_URL = GWT.getHostPageBaseURL() +"help/DataTypeIndex.html";*/
-	public static final String METPETDB_HELP_URL = "http://wiki.cs.rpi.edu/trac/metpetdb/wiki";
+	public static final String METPETDB_HELP_URL = "http://wiki.cs.rpi.edu/trac/metpetdb/wiki#Help";
 	public static final String HOW_TO_BULK_UPLOAD_URL = "http://wiki.cs.rpi.edu/trac/metpetdb/wiki/HowToUploadData";
 	public static final String HOW_TO_VIEW_DATA_URL = "http://wiki.cs.rpi.edu/trac/metpetdb/wiki/HowToViewData";
 	public static final String HOW_TO_SEARCH_METPETDB_URL = "http://wiki.cs.rpi.edu/trac/metpetdb/wiki/Search";
