@@ -61,6 +61,8 @@ public class SampleParser extends Parser<Sample> {
 				doc.Sample_number));
 		columns.add(new ColumnMapping(RegularExpressions.MINERALS,
 				doc.Sample_minerals));
+		columns.add(new ColumnMapping(RegularExpressions.ALIAS, 
+				doc.Sample_aliases));
 	}
 
 	public List<ColumnMapping> getColumMappings() {

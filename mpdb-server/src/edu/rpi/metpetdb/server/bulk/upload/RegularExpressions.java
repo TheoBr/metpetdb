@@ -15,6 +15,7 @@ public class RegularExpressions {
 	public static final String LOCATION_ERROR = "(lat/lon error)|(Location Error)";
 	public static final String REGION = "\\s*region\\s*";
 	public static final String COUNTRY = "\\s*country\\s*";
+	public static final String ALIAS = "\\s*alias\\s*";
 
 	public static final String METAMORPHIC_GRADES = "(grade)|(facies)";
 	public static final String LATITUDE = "(\\s*latitude\\s*$)|(lat\\s*$)";
