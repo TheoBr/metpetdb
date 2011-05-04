@@ -30,6 +30,8 @@ public abstract class ImageListViewer extends DataList<Image> {
 	private static final LocaleEntity enttxt = LocaleHandler.lc_entity;
 	private static ColumnDefinition<Image> columns;
 	
+	private boolean firstload = true;
+	
 	static {
 		// copy the columns from the image browser
 		columns = new ColumnDefinition<Image>();
@@ -99,6 +101,15 @@ public abstract class ImageListViewer extends DataList<Image> {
 	@Override
 	protected Object getId(Image i){
 		return i.getId();
+	}
+	
+	@Override
+	protected void initialize() {
+		super.initialize();
+		if (this.firstload) {
+			this.firstload = false;
+			this.refreshColumns();
+		}
 	}
 
 }
