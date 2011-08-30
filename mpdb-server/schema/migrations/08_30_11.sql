@@ -1,0 +1,1 @@
+INSERT into oxides(oxide_id, element_id, oxidation_state, species, weight,cations_per_oxide,conversion_factor,order_id) VALUES(43,54,3,'Nd2O3',168.24,2,1.166389351,44);
