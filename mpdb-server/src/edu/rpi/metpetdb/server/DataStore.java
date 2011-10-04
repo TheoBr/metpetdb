@@ -1,4 +1,4 @@
-package edu.rpi.metpetdb.server;
+
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -86,8 +86,6 @@ public class DataStore {
 			cfg.configure(x);
 			config = cfg;
 			
-			//TODO:  Disabling the PermissionInterceptor at Frank's request.  Let's see what happens...
-			//config.setInterceptor(new PermissionInterceptor());
 		}
 		return config;
 	}
@@ -173,8 +171,6 @@ public class DataStore {
 		if (f.getType().isArray())
 			return;
 		final String[] v = f.getName().split("_");
-		// if (v.length != 2)
-		// throw new RuntimeException("Cannot populate field " + f.getName());
 
 		final String pkg = "edu.rpi.metpetdb.client.model";
 		final String entityName;
@@ -238,13 +234,13 @@ public class DataStore {
 			if (prop.getValue().getClass() == org.hibernate.mapping.Set.class
 					|| prop.getValue().getClass() == org.hibernate.mapping.Bag.class) {
 				col = null;
-				// prop.getGetter(cm.getMappedClass()).getReturnType()
+
 				final Iterator fkItr = ((org.hibernate.mapping.Set) prop
 						.getValue()).getCollectionTable()
 						.getForeignKeyIterator();
 				while (fkItr.hasNext()) {
 					final ForeignKey fk = (ForeignKey) fkItr.next();
-					// fk.getReferencedColumns().get(0);
+					
 					// The from of the foreign key
 					final String fromEntity = entityName;
 					// The to of the foreign key
