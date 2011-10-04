@@ -52,8 +52,7 @@ public class ImageUploadServlet extends HttpServlet {
 	private ArrayList<String> writeFiles(FileItem uploadItem) {
 		ArrayList<String> al = new ArrayList<String>();
 		RenderedOp ro = loadImage(uploadItem);
-		// final String originalChecksum = writeFile(uploadItem.get());
-		
+				
 		//If the image is a .png we want to encode it as such instead of 
 		//as a .jpeg in order to avoid a bug with Safari. The root issue 
 		//could be with how the alpha layer is encoded so there may be a 

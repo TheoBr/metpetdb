@@ -105,12 +105,7 @@ public class FileUploadServlet extends HttpServlet {
 		final byte[] file = uploadItem.get();
 		final String checksum = PasswordEncrypter.calculateChecksum(file);
 		final String filename = checksum;
-		// String temp = "";
-		// try {
-		// temp = path.getCanonicalPath();
-		// } catch (IOException ioe) {
-		// throw new IllegalStateException(ioe.getMessage());
-		// }
+
 		try {
 			final FileOutputStream writer = new FileOutputStream(MpDbServlet.getFileUploadPath()
 					+ "/" + filename);

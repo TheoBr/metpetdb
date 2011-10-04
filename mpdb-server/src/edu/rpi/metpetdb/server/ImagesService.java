@@ -34,9 +34,9 @@ public class ImagesService extends HttpServlet {
 				try {
 					input = new BufferedInputStream(new FileInputStream(file));
 					int contentLength = input.available();
-					// final String contentType = "image/jpeg";
+					
 					response.setContentLength(contentLength);
-					// response.setContentType(contentType);
+					
 					response.setHeader("Content-disposition",
 							"inline; filename=\"" + filename + "\"");
 					output = new BufferedOutputStream(response

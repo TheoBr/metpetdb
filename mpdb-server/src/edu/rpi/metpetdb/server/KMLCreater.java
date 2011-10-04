@@ -189,16 +189,13 @@ public class KMLCreater {
 			}
 			KML += " </Folder>\n";
 			KML += "</Document>";
-			//FileOutputStream fos = new FileOutputStream("/Users/Dennis/MetPetDB/testkml.kml", true);
-			//PrintStream p = new PrintStream(fos);
-			//p.print(KML);
-			//System.out.print(KML);
+			
 
 			return KML;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			//System.out.print(e.getMessage());
+			
 			return "";
 		}
 	
