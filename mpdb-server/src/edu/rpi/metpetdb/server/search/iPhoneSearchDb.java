@@ -86,9 +86,6 @@ public class iPhoneSearchDb {
 				return new Results<Sample>(0, new ArrayList<Sample>());
 			}
 			
-			//select samples.*, ST_Distance_Sphere(location, ST_GeomFromText('POINT(-118 38)',4326)) as distance from samples where sample_id in (225)  order by distance DESC
-		//	org.hibernate.Query resultQuery = session.createSQLQuery("select samples.* from samples where sample_id in (" + sampleIds + ")").addEntity(Sample.class);
-		//	org.hibernate.Query sizeQuery = session.createSQLQuery("select count(*) from samples where id in (" + sampleIds + ") ").addEntity(Sample.class);
 			org.hibernate.Query resultQuery = session.createQuery("from Sample s where s.id in (" + sampleIds + ")");
 			org.hibernate.Query sizeQuery = session.createQuery("select count(*) " + resultQuery.getQueryString());
 		
@@ -420,7 +417,7 @@ public class iPhoneSearchDb {
 			if (p.getParameter() != null && !p.getParameter().equals("")){
 				String queryString = q.getQueryString();
 				
-				
+				//So they grab the parameter first...and add the column name to it
 				String parameter = p.getParameter();
 				if (parameter.equals("owner"))
 					parameter += ".name";
@@ -441,6 +438,7 @@ public class iPhoneSearchDb {
 				}
 				String realParameter = null;
 				
+				// This is fantastically broken...
 				if (!parameter.equals("distance"))
 						realParameter = ((isSample) ? "s." : "ca.") + parameter;
 			//	else
@@ -468,7 +466,7 @@ public class iPhoneSearchDb {
 		}
 		return q;
 	}
-	
+   
 
 		
 	private static String getLongIdString(final List<Object[]> projectedIds){
