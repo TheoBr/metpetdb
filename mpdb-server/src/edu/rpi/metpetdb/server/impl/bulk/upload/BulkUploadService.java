@@ -1,6 +1,7 @@
 package edu.rpi.metpetdb.server.impl.bulk.upload;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,7 +18,13 @@ import edu.rpi.metpetdb.client.error.MpDbException;
 import edu.rpi.metpetdb.client.error.ValidationException;
 import edu.rpi.metpetdb.client.error.bulk.upload.ImageForAnalysisNotFound;
 import edu.rpi.metpetdb.client.error.dao.GenericDAOException;
+import edu.rpi.metpetdb.client.error.dao.MetamorphicGradeNotFoundException;
+import edu.rpi.metpetdb.client.error.validation.InvalidMetamorphicGradeException;
+import edu.rpi.metpetdb.client.error.validation.InvalidRockTypeException;
+import edu.rpi.metpetdb.client.error.validation.ValueNotInCollectionException;
 import edu.rpi.metpetdb.client.model.Image;
+import edu.rpi.metpetdb.client.model.MetamorphicGrade;
+import edu.rpi.metpetdb.client.model.RockType;
 import edu.rpi.metpetdb.client.model.Sample;
 import edu.rpi.metpetdb.client.model.Subsample;
 import edu.rpi.metpetdb.client.model.User;
@@ -132,9 +139,44 @@ public abstract class BulkUploadService extends MpDbServlet {
 		final Iterator<Integer> itr = keys.iterator();
 		while (itr.hasNext()) {
 			final Integer i = itr.next();
-			results.addError(i.intValue(), existingErrors.get(i).getColumn(),
-					existingErrors.get(i).getCellData(),
-					getNiceException(existingErrors.get(i).getException()));
+			// ValueNotInCollectionException seemed to have broken the error checking for bulk upload
+			// Converting the exception its more appropriate exception determined by the type
+			// of the property that threw the error
+			if((existingErrors.get(i).getException()) instanceof ValueNotInCollectionException) {
+				ValueNotInCollectionException ex = (ValueNotInCollectionException) existingErrors.get(i).getException();
+				if(ex.getPropertyName().equals("rockType")) {
+					ArrayList<String> rockTypesString = new ArrayList<String>();
+					ArrayList<MObject> rtCollection = new ArrayList<MObject>(ex.getCollection());
+					for(MObject j : rtCollection) {
+						RockType rtTemp = (RockType) j;
+						rockTypesString.add(rtTemp.getRockType());
+					}
+					InvalidRockTypeException rtEx = new InvalidRockTypeException(ex.getValue(), rockTypesString);
+					results.addError(i.intValue(), existingErrors.get(i).getColumn(),
+							existingErrors.get(i).getCellData(), rtEx);
+				}
+				else if(ex.getPropertyName().equals("metamorphicGrades")) {
+					ArrayList<String> metGradesString = new ArrayList<String>();
+					ArrayList<MObject> mgCollection = new ArrayList<MObject>(ex.getCollection());
+					for(MObject j : mgCollection) {
+						MetamorphicGrade mgTemp = (MetamorphicGrade) j;
+						metGradesString.add(mgTemp.toString());
+					}
+					InvalidMetamorphicGradeException mgEx = new InvalidMetamorphicGradeException(ex.getValue(), metGradesString);
+					results.addError(i.intValue(), existingErrors.get(i).getColumn(),
+							existingErrors.get(i).getCellData(), mgEx);
+				}
+				else {
+					results.addError(i.intValue(), existingErrors.get(i).getColumn(),
+							existingErrors.get(i).getCellData(),
+							getNiceException(existingErrors.get(i).getException()));
+				}
+			}
+			else {
+				results.addError(i.intValue(), existingErrors.get(i).getColumn(),
+						existingErrors.get(i).getCellData(),
+						getNiceException(existingErrors.get(i).getException()));
+			}
 		}
 	}
 	
