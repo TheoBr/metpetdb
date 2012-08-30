@@ -137,6 +137,8 @@ public interface LocaleText extends Messages {
 	String errorDesc_InvalidImageType(String field);
 	String errorDesc_InvalidSubsampleType(String value);
 	String errorDesc_InvalidRockType(String rockType, String rockTypes);
+	String errorDesc_InvalidMetamorphicGrade(String grade, String grades);
+	
 	String errorDesc_InvalidFormat();
 	String errorDesc_InvalidDateString();
 	String errorDesc_InvalidLongitude(String field);
