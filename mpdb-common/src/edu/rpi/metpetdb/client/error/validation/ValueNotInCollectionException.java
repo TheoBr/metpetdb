@@ -36,4 +36,14 @@ public class ValueNotInCollectionException extends ValidationException {
 		return LocaleHandler.lc_text.errorDesc_ValueNotInCollection(formatPropertyName(),value,
 				collectionItems);
 	}
+	
+	public Collection<? extends MObject> getCollection()
+	{
+		return this.collection;
+	}
+	
+	public String getValue()
+	{
+		return this.value;
+	}
 }
