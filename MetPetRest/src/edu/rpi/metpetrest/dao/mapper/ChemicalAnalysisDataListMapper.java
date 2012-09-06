@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.text.NumberFormat;
 import java.util.Map;
 
 import org.springframework.dao.DataAccessException;
@@ -16,6 +17,13 @@ public class ChemicalAnalysisDataListMapper implements ResultSetExtractor<List> 
 
 	private static final DateFormatter formatter = new DateFormatter(
 			"yyyy-MM-dd HH:mm:ss");
+
+		NumberFormat nf = NumberFormat.getInstance(Locale.ENGLISH);
+
+		public ChemicalAnalysisDataListMapper()
+		{
+		nf.setMinimumFractionDigits(2);
+		}
 
 	@Override
 	public List<Map<String, String>> extractData(ResultSet rs)
@@ -28,8 +36,13 @@ public class ChemicalAnalysisDataListMapper implements ResultSetExtractor<List> 
 
 			item.put("id", rs.getString("chemical_analysis_id"));
 			item.put("spot_id", rs.getString("spot_id"));
-			item.put("x", rs.getString("reference_x"));
-			item.put("y", rs.getString("reference_y"));
+			
+			if (rs.getBigDecimal("reference_x") != null)
+					item.put ("x", nf.format(rs.getBigDecimal("reference_x")));
+			
+			if (rs.getBigDecimal("reference_y") != null)
+					item.put ("y", nf.format(rs.getBigDecimal("reference_y")));
+		
 			item.put("analysis_method", rs.getString("analysis_method"));
 			item.put("analysis_material", rs.getString("analysis_material"));
 
@@ -41,8 +54,8 @@ public class ChemicalAnalysisDataListMapper implements ResultSetExtractor<List> 
 			if (rs.getDate("analysis_date") != null)
 				item.put("analysis_date", formatter.print(rs.getDate("analysis_date"), Locale.ENGLISH));
 
-			if (rs.getString("total") != null)
-				item.put("total", rs.getString("total"));
+			if (rs.getBigDecimal("total") != null)
+				item.put("total", nf.format(nf.format(rs.getBigDecimal("total"))));
 
 			data.add(item);
 
