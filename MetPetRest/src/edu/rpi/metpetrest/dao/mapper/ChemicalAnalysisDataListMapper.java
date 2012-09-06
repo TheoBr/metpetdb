@@ -38,10 +38,10 @@ public class ChemicalAnalysisDataListMapper implements ResultSetExtractor<List> 
 			item.put("spot_id", rs.getString("spot_id"));
 			
 			if (rs.getBigDecimal("reference_x") != null)
-					item.put ("x", nf.format(rs.getBigDecimal("reference_x")));
+					item.put ("x", nf.format(rs.getDouble("reference_x")));
 			
 			if (rs.getBigDecimal("reference_y") != null)
-					item.put ("y", nf.format(rs.getBigDecimal("reference_y")));
+					item.put ("y", nf.format(rs.getDouble("reference_y")));
 		
 			item.put("analysis_method", rs.getString("analysis_method"));
 			item.put("analysis_material", rs.getString("analysis_material"));
@@ -55,7 +55,7 @@ public class ChemicalAnalysisDataListMapper implements ResultSetExtractor<List> 
 				item.put("analysis_date", formatter.print(rs.getDate("analysis_date"), Locale.ENGLISH));
 
 			if (rs.getBigDecimal("total") != null)
-				item.put("total", nf.format(nf.format(rs.getBigDecimal("total"))));
+				item.put("total", nf.format(nf.format(rs.getDouble("total"))));
 
 			data.add(item);
 
