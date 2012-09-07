@@ -12,14 +12,14 @@ import edu.rpi.metpetdb.client.model.Oxide;
 
 public class ConstantsDAO  {
 	
-	final protected Session sess;
+	//final protected Session sess;
 
-	public ConstantsDAO(Session sess)
+	public ConstantsDAO()
 	{
-		this.sess = sess;
+		//this.sess = sess;
 	}
 	
-	public List<String> getOrderedOxidesAndElements()
+	public List<String> getOrderedOxidesAndElements(Session sess)
 	{
 		List<String> orderedOxidesAndElements = new ArrayList<String>();
 

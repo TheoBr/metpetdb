@@ -11,7 +11,7 @@ public class ConstantsServiceImpl extends MpDbServlet implements
 
 	public List<String> getOxidesAndElementsOrderedBySortOrder()
 	{
-		return new ConstantsDAO(this.currentSession()).getOrderedOxidesAndElements();		
+		return new ConstantsDAO().getOrderedOxidesAndElements(this.currentSession());		
 	}
 
 }
