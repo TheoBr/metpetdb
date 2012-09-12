@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  
+  	<servlet>
+		<servlet-name>services</servlet-name>
+		<servlet-class>
+			org.springframework.web.servlet.DispatcherServlet  <!--  This is a Spring configuration-->
+		</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>services</servlet-name>
+		<url-pattern>/metpetdb2/services/*</url-pattern>
+	</servlet-mapping>
+	
+	
+
+ 
+<context-param>
+  <param-name>contextConfigLocation</param-name>
+  <param-value>/WEB-INF/services-servlet.xml</param-value>
+</context-param>
+
+<listener>
+  <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+</listener>
+
+	<servlet>	
+		<servlet-name>upload</servlet-name>
+		<servlet-class>edu.rpi.metpetdb.server.http.service.UploadServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>upload</servlet-name>
+		<url-pattern>/upload</url-pattern>
+	</servlet-mapping>
+
+  <!-- Servlets -->
+<!--   <servlet>
+    <servlet-name>greetServlet</servlet-name>
+    <servlet-class>edu.rpi.metpetdb.gwt.server.GreetingServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>greetServlet</servlet-name>
+    <url-pattern>/metpetdb2/greet</url-pattern>
+  </servlet-mapping>
+-->  
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>Metpetdb2.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>

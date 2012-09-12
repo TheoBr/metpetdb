@@ -1,0 +1,24 @@
+#MyEclipse Hibernate Properties
+#Wed Jun 16 12:16:32 EDT 2010
+sessionFactoryName=edu.rpi.metpetdb.server.HibernateSessionFactory
+genBasicCompId=true
+profile=
+daoSFId=
+version=3.3
+jndiPath=
+detectM2M=true
+reStrategyClass=
+detectO2O=true
+springDaoFile=
+useJavaTypes=true
+keyGenerator=sequence
+libInstallFolder=
+addLibs2Project=false
+genVersionTag=true
+sessionFactoryId=
+basePersistenceClass=
+genAnnotations=true
+reSettingsFile=/metpetdb2/hibernate.reveng.xml
+configFile=/metpetdb2/client-src/hibernate.cfg.xml
+createConfigFile=true
+addLibs2Classpath=false

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="metpetdb2" basedir="." >
+
+	
+	<property name="gwt.sdk" location="/home/hudson/gwt-2.0.3"/>
+	
+	<!--	<property name="mpdb-build-dir" location="/home/mpdb_test" />-->
+
+        <property name="mpdb-src-dir" location="." />
+    	<property name="mpdb-lib-dir" location="${mpdb-src-dir}/war/WEB-INF/lib/." />
+
+        <property name="build" location="${basedir}/build/WEB-INF/classes" />
+        
+        <property name="war" location="${build}/metpetdb2.war" />
+        <property name="app_name" value="MetPetDBApplication"/>
+
+	
+	
+
+		<target name="clean">
+			<delete dir="${basedir}/build" />
+			<mkdir dir="${basedir}/build/WEB-INF/classes" />
+		</target>
+		
+		<path id="project.class.path">
+	    <pathelement location="${build}"/>
+	    <pathelement location="${gwt.sdk}/gwt-user.jar"/>
+	    <pathelement location="${gwt.sdk}/gwt-dev.jar"/>
+	    <fileset dir="${mpdb-lib-dir}" includes="**/*.jar"/>
+		</path>
+     
+        <target name="compile" depends="clean" description="Compiles the java code">
+
+
+               <javac destdir="${build}" srcdir="${mpdb-src-dir}/server-src" classpathref="project.class.path" source="1.5" target="1.5" debug="true" optimize="false" />
+
+               <javac destdir="${build}" srcdir="${mpdb-src-dir}/client-src" classpathref="project.class.path" source="1.5" target="1.5" debug="false" optimize="false" />
+ 
+
+				<copy todir="${build}" includeemptydirs="no">
+						<fileset dir="${mpdb-src-dir}/client-src" includes="**/*.java"/>				
+				</copy>                	
+				
+				<copy todir="${build}" includeemptydirs="no">
+						<fileset dir="${mpdb-src-dir}/client-src" includes="**/*.xml"/>				
+				</copy>
+        	
+				<copy todir="${build}/.." includeemptydirs="no" flatten="true">
+					<fileset dir="${basedir}/war/WEB-INF" includes="**/*.xml"/>				
+				</copy>
+        	
+			<copy todir="${build}/../lib" includeemptydirs="no">
+				<fileset dir="${basedir}/war/WEB-INF/lib" includes="**/*.jar"/>				
+			</copy>
+        	
+			<copy todir="${build}/../.." includeemptydirs="no">
+				<fileset dir="${basedir}/war" includes="**/*.html"/>				
+			</copy>
+
+			<copy todir="${build}/../.." includeemptydirs="no">
+				<fileset dir="${basedir}/war" includes="**/*.css"/>				
+			</copy>
+        </target>
+        
+        <target name="gwt-compile" depends="compile" description="Executes the GWT compiler to convert java code to javascript">
+		<echo message="${basedir}"/>
+		<java fork="true" classname="com.google.gwt.dev.Compiler" taskname="gwtc" maxmemory="512m">
+			<classpath>
+				<pathelement location="${basedir}/build/WEB-INF/classes" />
+				<fileset dir="${mpdb-lib-dir}" includes="**/*.jar"/>
+	   					
+				<path>
+					<fileset dir="${gwt.sdk}" includes="**/**.jar" />
+				</path>
+		
+				
+			</classpath>
+			<arg value="-logLevel"/>
+			<arg value="WARN"/>
+
+			<arg value="-war" />
+			<arg value="${build}/../.." />
+			<arg value="edu.rpi.metpetdb.gwt.Metpetdb2" />
+			<arg value="-style" />
+			<arg value="PRETTY" />
+			<arg value="-localWorkers" />
+			<arg value="2" />
+		</java>
+	</target>
+
+
+	<target name="test-war" depends="gwt-compile">
+			
+		<war destfile="metpetdb2.war">
+			<fileset dir="${build}/../../"/>
+		</war>
+		
+	</target>
+
+</project>
