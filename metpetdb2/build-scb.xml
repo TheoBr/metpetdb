@@ -9,6 +9,7 @@
         <property name="mpdb-src-dir" location="." />
     	<property name="mpdb-lib-dir" location="${mpdb-src-dir}/war/WEB-INF/lib/." />
 
+		<property name="war-dir" location="${mpdb-src-dir}/war"/>
         <property name="build" location="${basedir}/build/WEB-INF/classes" />
         
         <property name="war" location="${build}/metpetdb2.war" />
@@ -46,9 +47,14 @@
 				</copy>
         	
 				<copy todir="${build}/.." includeemptydirs="no" flatten="true">
-					<fileset dir="${basedir}/war/WEB-INF" includes="**/*.xml"/>				
+					<fileset dir="${basedir}/war/WEB-INF" includes="**/web.xml"/>				
 				</copy>
-        	
+				
+				<copy todir="${build}/.." includeemptydirs="no" flatten="true">
+					<fileset dir="${basedir}/war/WEB-INF" includes="**/Metpetdb2.gwt.xml"/>
+				</copy>
+				
+			
 			<copy todir="${build}/../lib" includeemptydirs="no">
 				<fileset dir="${basedir}/war/WEB-INF/lib" includes="**/*.jar"/>				
 			</copy>
@@ -87,13 +93,77 @@
 			<arg value="2" />
 		</java>
 	</target>
+	
+	<target name="copy-stuff">
+		<copy tofile="${build}/../classes/hibernate.cfg.xml" file="${mpdb-src-dir}/client-src/hibernate.cfg.xml.in">
+			<filterset refid="props" />
+		</copy>
+		
+		<copy tofile="${build}/../services-servlet.xml" file="${war-dir}/WEB-INF/services-servlet.xml.in">
+			<filterset refid="props" />
+		</copy>
+		
+	</target>
 
+	<target name="test-war-unfiltered">
 
-	<target name="test-war" depends="gwt-compile">
-			
+<!--		<copy tofile="${build}/${hibernate_cfg}" file="${mpdb-server-dir}/hibernate.cfg.in">
+			<filterset refid="props" />
+		</copy>-->
+
 		<war destfile="metpetdb2.war">
-			<fileset dir="${build}/../../"/>
+			<fileset dir="${build}/../.."/>
 		</war>
+	</target>
+
+
+	<target name="stage-war">
+		
+		<property file="${mpdb-build-dir}/stage-build.properties" />
+			
+			<filterset id="props">
+				<filter token="APPUSER" value="${APPUSER}" />
+				<filter token="APPPASS" value="${APPPASS}" />
+				<filter token="DATABASE" value="${DATABASE}" />
+				<filter token="DATABASE_HOST" value="${DATABASE_HOST}" />
+				<filter token="postgis" value="${postgis}" />
+				<filter token="INDICES" value="${INDICES}" />
+				<filter token="SERVICE_URL" value="${SERVICE_URL}" />
+			</filterset>
+			
+			<antcall target="clean" inheritAll="true" inheritRefs="true"/>
+			<antcall target="compile" inheritAll="true" inheritRefs="true"/>
+			<antcall target="gwt-compile" inheritAll="true" inheritRefs="true"/>
+			<antcall target="copy-stuff" inheritAll="true" inheritRefs="true"/>
+			<antcall target="test-war-unfiltered" inheritAll="true" inheritRefs="true"/>
+			
+			
+			
+		
+	</target>
+
+	<target name="test-war">
+		
+		<property file="${mpdb-build-dir}/test-build.properties" />
+			
+			<filterset id="props">
+				<filter token="APPUSER" value="${APPUSER}" />
+				<filter token="APPPASS" value="${APPPASS}" />
+				<filter token="DATABASE" value="${DATABASE}" />
+				<filter token="DATABASE_HOST" value="${DATABASE_HOST}" />
+				<filter token="postgis" value="${postgis}" />
+				<filter token="INDICES" value="${INDICES}" />
+				<filter token="SERVICE_URL" value="${SERVICE_URL}" />
+			</filterset>
+			
+			<antcall target="clean" inheritAll="true" inheritRefs="true"/>
+			<antcall target="compile" inheritAll="true" inheritRefs="true"/>
+			<antcall target="gwt-compile" inheritAll="true" inheritRefs="true"/>
+			<antcall target="copy-stuff" inheritAll="true" inheritRefs="true"/>
+			<antcall target="test-war-unfiltered" inheritAll="true" inheritRefs="true"/>
+			
+			
+			
 		
 	</target>
 
