@@ -3,7 +3,8 @@
 
 	
 	<property name="gwt.sdk" location="/home/hudson/gwt-2.0.3"/>
-	
+			<property name="mpdb-build-dir" location="/home/hudson" /> 
+			
 	<!--	<property name="mpdb-build-dir" location="/home/mpdb_test" />-->
 
         <property name="mpdb-src-dir" location="." />
