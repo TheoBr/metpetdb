@@ -12,6 +12,8 @@ public class GeoReference  extends MObject implements Comparable {
 	private String fullText;
 	private Reference reference;
 	private Long referenceId;
+	private String doi;
+	private String journalName2;
 	
 	public GeoReference()
 	{
@@ -36,6 +38,16 @@ public class GeoReference  extends MObject implements Comparable {
 	
 	public void setReferenceNumber(String r){
 		referenceNumber = r;
+	}
+	
+	public String getDOI()
+	{
+		return doi;
+	}
+	
+	public void setDOI(String r)
+	{
+		doi = r;
 	}
 	
 	public String getTitle(){
@@ -68,6 +80,14 @@ public class GeoReference  extends MObject implements Comparable {
 	
 	public void setJournalName(final String j){
 		journalName = j;
+	}
+	
+	public String getJournalName2(){
+		return journalName2;
+	}
+	
+	public void setJournalName2(final String j){
+		journalName2 = j;
 	}
 	
 	public String getFullText(){
