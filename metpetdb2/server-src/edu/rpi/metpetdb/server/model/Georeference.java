@@ -43,10 +43,12 @@ public class Georeference {
 	private String journalName;
 	@NotNull
 	private String fullText;
+	private String doi;
+	private String journalName2;
 
 	private Pattern myPattern = Pattern
 			.compile(
-					"(MO-|MA-|MF-|NR-|AF-|TI-|AU-|JN-|SO-|PU-|PD-|LA-|ES-|SU-|NO-|PT-|CD-|IS-|RS-|UC-|AN-|UR-|CY-|ES-|AB-|AV-)+",
+					"(MO-|MA-|MF-|NR-|AF-|TI-|AU-|JN-|SO-|PU-|PD-|LA-|ES-|SU-|NO-|PT-|CD-|IS-|RS-|UC-|AN-|UR-|CY-|ES-|AB-|AV-|DO-)+",
 					Pattern.MULTILINE);
 
 	public Georeference() {
@@ -99,6 +101,17 @@ public class Georeference {
 	public void setReference_Id(Long referenceId) {
 		this.referenceId = referenceId;
 	}*/
+	
+	@Column(name = "doi", nullable = true)
+	public String getDOI() {
+		return doi;
+	}
+	
+	@Foo(expression = "\\QDO-\\E")
+	public void setDOI(String r)
+	{
+		doi = r;
+	}
 
 	@Column(name = "reference_number", nullable = true)
 	public String getReferenceNumber() {
@@ -153,6 +166,15 @@ public class Georeference {
 		journalName = j;
 	}
 
+	@Column(name = "journal_name_2", nullable = false)
+	public String getJournalName2() {
+		return journalName;
+	}
+
+	@Foo(expression = "\\QJN-\\E")
+	public void setJournalName2(final String j) {
+		journalName = j;
+	}
 	@Column(name = "full_text", nullable = false)
 	public String getFullText() {
 		return fullText;
