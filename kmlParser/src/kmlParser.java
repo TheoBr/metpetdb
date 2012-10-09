@@ -37,8 +37,8 @@ public class kmlParser {
 			// prompt the user for the complete path of the file they would like
 			// to use
 
-			File file = new File("/Users/heatherbuletti/MetPetDB/Global_Metamorphic_Regions.kml");
-			FileOutputStream fos = new FileOutputStream("/Users/heatherbuletti/MetPetDB/newRegionsSQL.txt", true);
+			File file = new File(args[0]);
+			FileOutputStream fos = new FileOutputStream(args[1], true);
 			PrintStream p = new PrintStream(fos);
 			// OutputStreamWriter out = new OutputStreamWriter(fos, "UTF-8");
 
