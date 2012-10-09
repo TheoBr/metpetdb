@@ -45,10 +45,12 @@ public class Georeference {
 	private String fullText;
 	private String doi;
 	private String journalName2;
+	
+	private String publicationYear;
 
 	private Pattern myPattern = Pattern
 			.compile(
-					"(MO-|MA-|MF-|NR-|AF-|TI-|AU-|JN-|SO-|PU-|PD-|LA-|ES-|SU-|NO-|PT-|CD-|IS-|RS-|UC-|AN-|UR-|CY-|ES-|AB-|AV-|DO-|BL-)+",
+					"(MO-|MA-|MF-|NR-|AF-|TI-|AU-|JN-|SO-|PU-|PD-|CO-|LA-|ES-|SU-|NO-|PT-|CD-|IS-|RS-|UC-|AN-|UR-|CY-|ES-|AB-|AV-|DO-|BL-)+",
 					Pattern.MULTILINE);
 
 	public Georeference() {
@@ -184,12 +186,28 @@ public class Georeference {
 	public void setFullText(final String t) {
 		fullText = t;
 	}
+	
+	@Column(name = "publication_year", nullable = true)
+	public String getPublicationYear() {
+		return publicationYear;
+	}
+
+	@Foo(expression = "\\QPD-\\E")
+	public void setPublicationYear(final String t) {
+		Matcher pubYearMatch = Pattern.compile("\\d{4}",
+				Pattern.CASE_INSENSITIVE).matcher(t);
+				
+		if (pubYearMatch.matches())
+		{
+			publicationYear = pubYearMatch.group(1);
+		}
+	}
 
 	public void add(String key, String value)  {
 		Method matchedMethod = this.findMethodMatch(key);
 		if (matchedMethod != null)
 			try {
-				matchedMethod.invoke(this, value);
+				matchedMethod.invoke(this, sanitize(value));
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -204,6 +222,19 @@ public class Georeference {
 				throw new RuntimeException(e);
 			}
 		
+	}
+	
+	public String sanitize(String dirty)
+	{
+		String[] dirtyChars = new String[]{"\u00c2","\u00a0","\u00ef", "\u00bf", "\u00bd"};
+
+		
+		for (String dirtyChar : dirtyChars)
+		{
+			dirty = dirty.replace(dirtyChar, "");
+		}
+
+		return dirty;
 	}
 
 	public Method findMethodMatch(String headerName) {
