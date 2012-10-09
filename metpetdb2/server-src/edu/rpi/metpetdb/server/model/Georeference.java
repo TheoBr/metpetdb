@@ -194,10 +194,13 @@ public class Georeference {
 
 	@Foo(expression = "\\QPD-\\E")
 	public void setPublicationYear(final String t) {
+		if (t == null)
+			return;
+			
 		Matcher pubYearMatch = Pattern.compile("\\d{4}",
 				Pattern.CASE_INSENSITIVE).matcher(t);
 				
-		if (pubYearMatch.find())
+		if (pubYearMatch != null && pubYearMatch.find())
 		{
 			publicationYear = pubYearMatch.group();
 		}
