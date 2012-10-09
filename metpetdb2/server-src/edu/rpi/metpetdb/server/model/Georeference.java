@@ -197,9 +197,9 @@ public class Georeference {
 		Matcher pubYearMatch = Pattern.compile("\\d{4}",
 				Pattern.CASE_INSENSITIVE).matcher(t);
 				
-		if (pubYearMatch.matches())
+		if (pubYearMatch.find())
 		{
-			publicationYear = pubYearMatch.group(1);
+			publicationYear = pubYearMatch.group();
 		}
 	}
 
