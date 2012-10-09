@@ -51,6 +51,7 @@
 			<filter token="APPPASS" value="${APPPASS}" />
 			<filter token="DATABASE" value="${DATABASE}" />
 			<filter token="DATABASE_HOST" value="${DATABASE_HOST}" />
+			<filter token="SERVICE_URL" value="${SERVICE_URL}" />
 		</filterset>
 				
 		<copy todir="${build}/../.." includeemptydirs="no" flatten="false">
@@ -59,6 +60,8 @@
 
 		<copy todir="${build}/../.." includeemptydirs="no" flatten="false" overwrite="true">
 				<fileset dir="${ctx_web}" includes="**/*.xml"/>
+				<fileset dir="${ctx_web}" includes="**/*.html"/>
+				
 				<filterset refid="props"/>
 		</copy>		
 		
@@ -75,6 +78,8 @@
 			<filter token="APPPASS" value="${APPPASS}" />
 			<filter token="DATABASE" value="${DATABASE}" />
 			<filter token="DATABASE_HOST" value="${DATABASE_HOST}" />
+			<filter token="SERVICE_URL" value="${SERVICE_URL}" />
+			
 		</filterset>
 				
 		<copy todir="${build}/../.." includeemptydirs="no" flatten="false">
@@ -83,6 +88,8 @@
 
 		<copy todir="${build}/../.." includeemptydirs="no" flatten="false" overwrite="true">
 				<fileset dir="${ctx_web}" includes="**/*.xml"/>
+				<fileset dir="${ctx_web}" includes="**/*.html"/>
+				
 				<filterset refid="props"/>
 		</copy>		
 		
@@ -99,6 +106,8 @@
 			<filter token="APPPASS" value="${APPPASS}" />
 			<filter token="DATABASE" value="${DATABASE}" />
 			<filter token="DATABASE_HOST" value="${DATABASE_HOST}" />
+			<filter token="SERVICE_URL" value="${SERVICE_URL}" />
+			
 		</filterset>	
 		
 		<copy todir="${build}/../.." includeemptydirs="no" flatten="false">
@@ -107,6 +116,8 @@
 
 		<copy todir="${build}/../.." includeemptydirs="no" flatten="false" overwrite="true">
 				<fileset dir="${ctx_web}" includes="**/*.xml"/>
+				<fileset dir="${ctx_web}" includes="**/*.html"/>
+				
 				<filterset refid="props"/>
 		</copy>		
 		<war destfile="MetPetRest.war">

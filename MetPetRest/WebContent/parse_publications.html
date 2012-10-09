@@ -16,7 +16,7 @@
 		var publicationDataArray = new Array();
 		var counter = 0;
 
-       $.getJSON('http://localhost:8080/MetPetRest/publication.json', {foo:'bar'},function(publicationDataJSON)
+       $.getJSON('@SERVICE_URL@/publication.json', {foo:'bar'},function(publicationDataJSON)
        {
    			
   
@@ -60,7 +60,7 @@
               ).appendTo("#publicationblock");
              
 
-                     $.getJSON('http://localhost:8080/MetPetRest/publicationsample.json', {referenceId:publicationData.referenceId}, function(sampleDataArray)
+                     $.getJSON('@SERVICE_URL@/publicationsample.json', {referenceId:publicationData.referenceId}, function(sampleDataArray)
                      {
                     	 $("<div class=\"label\">Samples</div>").appendTo('#' + publicationData.referenceId);
                     	 

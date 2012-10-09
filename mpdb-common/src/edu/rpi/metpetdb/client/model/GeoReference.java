@@ -14,6 +14,7 @@ public class GeoReference  extends MObject implements Comparable {
 	private Long referenceId;
 	private String doi;
 	private String journalName2;
+	private String publicationYear;
 	
 	public GeoReference()
 	{
@@ -97,6 +98,15 @@ public class GeoReference  extends MObject implements Comparable {
 	public void setFullText(final String t){
 		fullText = t;
 	}
+
+	public String getPublicationYear(){
+		return publicationYear;
+	}
+	
+	public void setPublicationYear(final String t){
+		publicationYear = t;
+	}
+
 	
 	@Override
 	public boolean mIsNew() {

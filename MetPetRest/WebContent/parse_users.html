@@ -13,7 +13,7 @@
 
 
        $("<ul>").insertAfter("#userblock");
-       $.getJSON('http://localhost:8080/MetPetRest/user.json', {foo:'bar'},function(userDataArray)
+       $.getJSON('@SERVICE_URL@/user.json', {foo:'bar'},function(userDataArray)
        {
 
           $.each(userDataArray, function(index, userData)
@@ -28,7 +28,7 @@
 
 
                  
-             $.getJSON('http://localhost:8080/MetPetRest/usersample.json', {userId:userData.userId}, function(sampleDataArray)
+             $.getJSON('@SERVICE_URL@/usersample.json', {userId:userData.userId}, function(sampleDataArray)
              {
             	 $("<div class=\"label\">Samples</div>").appendTo('#' + userData.userId);
 
