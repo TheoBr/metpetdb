@@ -25,8 +25,8 @@ public class PublicationDataMapper implements RowMapper<PublicationData> {
 				.getString(5) : "");
 		publicationData.setReferenceId((rs.getString(6) != null) ? rs
 				.getString(6) : "");
-		publicationData.setJournalName2((rs.getString(7) != null) ? rs.getString(7) : "");
-		publicationData.setDOI((rs.getString(8) != null) ? rs.getString(8) : "");
+		publicationData.setJournalName2((rs.getString(8) != null) ? rs.getString(8) : "");
+		publicationData.setDOI((rs.getString(9) != null) ? rs.getString(9) : "");
 		return publicationData;
 
 	}
