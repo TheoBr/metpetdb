@@ -166,7 +166,7 @@ public class Georeference {
 		journalName = j;
 	}
 
-	@Column(name = "journal_name_2", nullable = false)
+	@Column(name = "journal_name_2", nullable = true)
 	public String getJournalName2() {
 		return journalName2;
 	}
