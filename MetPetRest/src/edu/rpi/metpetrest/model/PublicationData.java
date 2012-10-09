@@ -8,6 +8,8 @@ public class PublicationData implements Comparable<PublicationData>{
 	private String author;
 	private String secondAuthors;
 	private String journalName;
+	private String journalName2;
+	private String doi;
 	private String abstractTxt;
 	public String getReferenceId() {
 		return referenceId;
@@ -38,6 +40,20 @@ public class PublicationData implements Comparable<PublicationData>{
 	}
 	public void setJournalName(String journalName) {
 		this.journalName = journalName;
+	}
+	public String getJournalName2() {
+		return journalName2;
+	}
+	public void setJournalName2(String journalName2) {
+		this.journalName2 = journalName2;
+	}
+	public String getDOI()
+	{
+		return this.doi;
+	}
+	public void setDOI(String doi)
+	{
+		this.doi = doi;
 	}
 	public String getAbstractTxt() {
 		return abstractTxt;

@@ -12,7 +12,7 @@ import edu.rpi.metpetrest.model.PublicationData;
 public class PublicationDAOImpl extends JdbcTemplate {
 
 	
-	private static final String publicationQuery = "select title, first_author, second_authors, journal_name, full_text as abstract, reference_number, reference_id from georeference;";
+	private static final String publicationQuery = "select title, first_author, second_authors, journal_name, full_text as abstract, reference_number, reference_id, journal_name_2, doi from georeference;";
 
 	private DataSource dataSource = null;
 	
