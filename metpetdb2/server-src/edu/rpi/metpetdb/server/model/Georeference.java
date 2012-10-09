@@ -48,7 +48,7 @@ public class Georeference {
 
 	private Pattern myPattern = Pattern
 			.compile(
-					"(MO-|MA-|MF-|NR-|AF-|TI-|AU-|JN-|SO-|PU-|PD-|LA-|ES-|SU-|NO-|PT-|CD-|IS-|RS-|UC-|AN-|UR-|CY-|ES-|AB-|AV-|DO-)+",
+					"(MO-|MA-|MF-|NR-|AF-|TI-|AU-|JN-|SO-|PU-|PD-|LA-|ES-|SU-|NO-|PT-|CD-|IS-|RS-|UC-|AN-|UR-|CY-|ES-|AB-|AV-|DO-|BL-)+",
 					Pattern.MULTILINE);
 
 	public Georeference() {
@@ -168,12 +168,12 @@ public class Georeference {
 
 	@Column(name = "journal_name_2", nullable = false)
 	public String getJournalName2() {
-		return journalName;
+		return journalName2;
 	}
 
 	@Foo(expression = "\\QJN-\\E")
 	public void setJournalName2(final String j) {
-		journalName = j;
+		journalName2 = j;
 	}
 	@Column(name = "full_text", nullable = false)
 	public String getFullText() {
