@@ -53,8 +53,12 @@
                         "<dt >Title:</dt><dd>" + ((publicationData.title!= null) ? publicationData.title : "") + "</dd>" + 
                         "<dt >Author:</dt><dd>" + ((publicationData.author!= null) ? publicationData.author : "") + "</dd>" + 
                         "<dt >Second Authors:</dt><dd>" + ((publicationData.secondAuthors!= null) ? publicationData.secondAuthors : "") + "</dd>" + 
-                        "<dt >Journal Name:</dt><dd>" + ((publicationData.journalName!= null) ? publicationData.journalName : "") + "</dd>" + 
+                        "<dt >Source:</dt><dd>" + ((publicationData.journalName!= null) ? publicationData.journalName : "") + "</dd>" + 
+                        "<dt >Journal:</dt><dd>" + ((publicationData.journalName2!= null) ? publicationData.journalName2 : "") + "</dd>" + 
                         "<dt >Abstract:</dt><dd>" + ((publicationData.abstractTxt != null) ? publicationData.abstractTxt : "") + "</dd></dl>" + 
+                        "<dt >Publication Year:</dt><dd>" + ((publicationData.publicationYear != null) ? publicationData.publicationYear : "") + "</dd></dl>" +
+                       	"<dt >DOI:</dt><dd>" + ((publicationData.doi != null) ? publicationData.doi : "") + "</dd></dl>" + 
+
                         "<div  id='" + publicationData.referenceId + "'></div></div>"
 
               ).appendTo("#publicationblock");

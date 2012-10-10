@@ -10,6 +10,7 @@ public class PublicationData implements Comparable<PublicationData>{
 	private String journalName;
 	private String journalName2;
 	private String doi;
+	private String publicationYear;
 	private String abstractTxt;
 	public String getReferenceId() {
 		return referenceId;
@@ -55,6 +56,16 @@ public class PublicationData implements Comparable<PublicationData>{
 	{
 		this.doi = doi;
 	}
+	
+	public String getPublicationYear()
+	{
+		return this.publicationYear;
+	}
+	public void setPublicationYear(String publicationYear)
+	{
+		this.publicationYear = publicationYear;
+	}
+	
 	public String getAbstractTxt() {
 		return abstractTxt;
 	}
@@ -67,7 +78,17 @@ public class PublicationData implements Comparable<PublicationData>{
 		{
 			if (o.author != null && this.author != null) 
 			{
-				return this.author.compareTo(o.author);
+				if (this.author.equals(o.author))
+				{
+					if (this.publicationYear.equals(o.publicationYear))
+						return this.secondAuthors.compareTo(o.secondAuthors);
+					else
+						return this.publicationYear.compareTo(o.publicationYear);
+				}
+				else
+				{
+					return this.author.compareTo(o.author);
+				}
 			}
 		}
 		
