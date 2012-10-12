@@ -229,7 +229,7 @@ public class Georeference {
 	
 	public String sanitize(String dirty)
 	{
-		String[] dirtyChars = new String[]{"\u00c2","\u00a0","\u00ef", "\u00bf", "\u00bd", "<C2>", "<A0>", "<BD>", "<BF>", "<EF>"};
+		String[] dirtyChars = new String[]{"\u00c2","\u00a0","\u00ef", "\u00bf", "\u00bd", "\ufffc", "<C2>", "<A0>", "<BD>", "<BF>", "<EF>"};
 
 		
 		for (String dirtyChar : dirtyChars)
