@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class SearchOxide implements IsSerializable {
+public class SearchOxide extends MObject implements IsSerializable {
 	private String species;
 	private Double lowerBound;
 	private Double upperBound;
