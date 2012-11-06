@@ -40,6 +40,8 @@ import edu.rpi.metpetdb.client.model.Element;
 import edu.rpi.metpetdb.client.model.Mineral;
 import edu.rpi.metpetdb.client.model.Oxide;
 import edu.rpi.metpetdb.client.model.SearchSample;
+import edu.rpi.metpetdb.client.model.SearchElement;
+import edu.rpi.metpetdb.client.model.SearchOxide;
 import edu.rpi.metpetdb.client.model.User;
 import edu.rpi.metpetdb.client.model.interfaces.MObject;
 import edu.rpi.metpetdb.client.model.validation.DatabaseObjectConstraints;
