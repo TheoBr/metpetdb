@@ -137,7 +137,7 @@ public abstract class MpDbServlet extends PersistentRemoteService {
 				if (clazz.equals(Results.class)) {
 					return true;
 				} 
-				else if (clazz.equals(SearchSample.class))
+				else if (clazz.equals(SearchSample.class) || clazz.equals(SearchElement.class) || clazz.equals(SearchOxide.class))
 				{
 					return true;
 				}

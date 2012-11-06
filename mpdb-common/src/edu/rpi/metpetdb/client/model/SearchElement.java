@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class SearchElement implements IsSerializable {
+public class SearchElement extends MObject implements IsSerializable {
 	private String elementSymbol;
 	private Double lowerBound;
 	private Double upperBound;
