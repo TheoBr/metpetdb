@@ -23,7 +23,7 @@ public class ChemicalAnalysisDAOImpl extends NamedParameterJdbcTemplate {
 	
 	private static final String chemicalAnalysisQuery = "select  chemical_analyses.chemical_analysis_id, chemical_analyses.spot_id, chemical_analyses.reference_x, chemical_analyses.reference_y, chemical_analyses.analysis_method, minerals.name as analysis_material, chemical_analyses.where_done as analysis_location, chemical_analyses.analyst, chemical_analyses.analysis_date, chemical_analyses.total, (select count(chemical_analysis_id) from chemical_analyses where subsample_id = :subsampleId) as count " 
 	+ "from chemical_analyses, minerals "
-	+ "where chemical_analyses.mineral_id = minerals.mineral_id "
+	+ "where left outer join (chemical_analyses.mineral_id on minerals.mineral_id) "
 	+ "and chemical_analyses.subsample_id = :subsampleId "
 	+ "AND (user_id = :userId "
 	+ "OR subsample_id IN (select subsample_id from subsamples where sample_id IN (select distinct(samples.sample_id) from samples, project_samples, projects where samples.sample_id = project_samples.sample_id and project_samples.project_id = projects.project_id and projects.name IN (:projects) )) "
