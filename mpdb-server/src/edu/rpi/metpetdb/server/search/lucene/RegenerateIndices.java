@@ -34,9 +34,9 @@ public class RegenerateIndices {
 
 		try {
 			// FIXME fake an admin to regenerate search index
-			MpDbServlet.testReq = new MpDbServlet.Req();
-			MpDbServlet.testReq.principals = new HashSet<Principal>();
-			MpDbServlet.testReq.principals.add(new AdminPrincipal());
+		//	MpDbServlet.testReq = new MpDbServlet.Req();
+		//	MpDbServlet.testReq.principals = new HashSet<Principal>();
+		//	MpDbServlet.testReq.principals.add(new AdminPrincipal());
 			FullTextSession fullTextSession = Search.createFullTextSession(session);
 			
 			
@@ -57,17 +57,17 @@ public class RegenerateIndices {
 			//Scrollable results will avoid loading too many objects in memory
 			ScrollableResults results = session.createCriteria(Sample.class ).scroll( ScrollMode.FORWARD_ONLY );
 			reindex(results,fullTextSession);
-			results = session.createCriteria(Subsample.class ).scroll( ScrollMode.FORWARD_ONLY );
-			reindex(results,fullTextSession);
-			results = session.createCriteria(User.class ).scroll( ScrollMode.FORWARD_ONLY );
-			reindex(results,fullTextSession);
+		//	ScrollableResults results = session.createCriteria(Subsample.class ).scroll( ScrollMode.FORWARD_ONLY );
+		//	reindex(results,fullTextSession);
+		//	results = session.createCriteria(User.class ).scroll( ScrollMode.FORWARD_ONLY );
+		//	reindex(results,fullTextSession);
 			tx.commit();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			session.close();
-			MpDbServlet.testReq = null;
+			//MpDbServlet.testReq = null;
 		}
 	}
 	
