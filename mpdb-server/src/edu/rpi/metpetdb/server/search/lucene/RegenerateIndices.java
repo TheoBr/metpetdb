@@ -57,10 +57,10 @@ public class RegenerateIndices {
 			//Scrollable results will avoid loading too many objects in memory
 			ScrollableResults results = session.createCriteria(Sample.class ).scroll( ScrollMode.FORWARD_ONLY );
 			reindex(results,fullTextSession);
-		//	ScrollableResults results = session.createCriteria(Subsample.class ).scroll( ScrollMode.FORWARD_ONLY );
-		//	reindex(results,fullTextSession);
-		//	results = session.createCriteria(User.class ).scroll( ScrollMode.FORWARD_ONLY );
-		//	reindex(results,fullTextSession);
+			results = session.createCriteria(Subsample.class ).scroll( ScrollMode.FORWARD_ONLY );
+			reindex(results,fullTextSession);
+			results = session.createCriteria(User.class ).scroll( ScrollMode.FORWARD_ONLY );
+			reindex(results,fullTextSession);
 			tx.commit();
 
 		} catch (Exception e) {
