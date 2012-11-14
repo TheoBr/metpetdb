@@ -34,9 +34,9 @@ public class RegenerateIndices {
 
 		try {
 			// FIXME fake an admin to regenerate search index
-			MpDbServlet.testReq = new MpDbServlet.Req();
-			MpDbServlet.testReq.principals = new HashSet<Principal>();
-			MpDbServlet.testReq.principals.add(new AdminPrincipal());
+		//	MpDbServlet.testReq = new MpDbServlet.Req();
+		//	MpDbServlet.testReq.principals = new HashSet<Principal>();
+		//	MpDbServlet.testReq.principals.add(new AdminPrincipal());
 			FullTextSession fullTextSession = Search.createFullTextSession(session);
 			
 			
@@ -67,7 +67,7 @@ public class RegenerateIndices {
 			e.printStackTrace();
 		} finally {
 			session.close();
-			MpDbServlet.testReq = null;
+			//MpDbServlet.testReq = null;
 		}
 	}
 	
