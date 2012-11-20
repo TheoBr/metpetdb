@@ -7,7 +7,7 @@ public class DoubleBridge implements StringBridge {
 
 	public String objectToString(Object object) {
 		if (object == null)
-			return "";
+			return "0.00";
 		else
 			return NumberUtils.double2sortableStr((Double) object);
 	}
