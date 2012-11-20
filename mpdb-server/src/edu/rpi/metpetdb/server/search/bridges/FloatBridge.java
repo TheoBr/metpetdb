@@ -7,7 +7,7 @@ public class FloatBridge implements StringBridge {
 
 	public String objectToString(Object object) {
 		if (object == null)
-			return "";
+			return "0.0";
 		else
 			return NumberUtils.float2sortableStr((Float) object);
 	}
