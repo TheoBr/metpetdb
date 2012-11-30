@@ -851,11 +851,11 @@ public class SearchDb {
 					parameter = "analysisMaterial";
 				}
 				String realParameter = ((isSample) ? "s." : "ca.") + parameter;
-				String lowerParam = parameter.toLowerCase();
-				if (!(lowerParam.contains("count") || lowerParam.contains("date") || lowerParam.contains("spotid") ||
-						lowerParam.equalsIgnoreCase("referenceX") || lowerParam.equalsIgnoreCase("referenceY"))){
-					realParameter = "lower(" +realParameter +")";
-				}
+				//String lowerParam = parameter.toLowerCase();
+				//if (!(lowerParam.contains("count") || lowerParam.contains("date") || lowerParam.contains("spotid") ||
+				//		lowerParam.equalsIgnoreCase("referenceX") || lowerParam.equalsIgnoreCase("referenceY"))){
+				//	realParameter = "lower(" +realParameter +")";
+				//}
 				queryString += " order by "  + realParameter;
 				queryString += (p.isAscending()) ? "" : " DESC";
 				org.hibernate.Query q2 = session.createQuery(queryString);
