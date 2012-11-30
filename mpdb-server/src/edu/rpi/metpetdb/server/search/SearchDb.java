@@ -850,6 +850,10 @@ public class SearchDb {
 				else if (parameter.equals("mineral")){
 					parameter = "analysisMaterial";
 				}
+				else if (parameter.equals("metamorphicRegions")){
+					parameter = "firstMetamorphicRegion";
+				}
+				
 				String realParameter = ((isSample) ? "s." : "ca.") + parameter;
 				//String lowerParam = parameter.toLowerCase();
 				//if (!(lowerParam.contains("count") || lowerParam.contains("date") || lowerParam.contains("spotid") ||
